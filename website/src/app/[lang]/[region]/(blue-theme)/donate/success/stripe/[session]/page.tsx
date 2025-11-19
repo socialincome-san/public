@@ -20,16 +20,20 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
 
 	const stripeService = new StripeService();
-	const result = await stripeService.getSuccessPageSessionData(session);
-
-	if (!result.success) {
-		throw new Error(result.error);
+	const sessionResult = await stripeService.getCheckoutSession(session);
+	if (!sessionResult.success) {
+		throw new Error(sessionResult.error);
 	}
 
-	const { checkoutSession, contributorExists } = result.data;
+	const checkoutSession = sessionResult.data;
 
-	if (contributorExists) {
-		redirect(`/${lang}/${region}/me/contributions`);
+	const contributorResult = await stripeService.getContributorFromCheckoutSession(checkoutSession);
+	if (!contributorResult.success) {
+		throw new Error(contributorResult.error);
+	}
+
+	if (contributorResult.data?.id) {
+		redirect(`/${lang}/${region}/dashboard/contributions`);
 	}
 
 	return (

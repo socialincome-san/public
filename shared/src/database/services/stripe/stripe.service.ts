@@ -362,7 +362,7 @@ export class StripeService extends BaseService {
 		}
 	}
 
-	async getSuccessPageSessionData(sessionId: string) {
+	async getCheckoutSession(sessionId: string) {
 		try {
 			const checkoutSession = await this.stripe.checkout.sessions.retrieve(sessionId);
 
@@ -370,23 +370,32 @@ export class StripeService extends BaseService {
 				return this.resultFail('Checkout session has no Stripe customer');
 			}
 
-			const contributorResult = await this.contributorService.findByStripeCustomerId(
-				checkoutSession.customer.toString(),
-			);
+			return this.resultOk(checkoutSession);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not load Stripe checkout session');
+		}
+	}
 
-			if (!contributorResult.success && contributorResult.error !== 'Contributor not found') {
+	async getContributorFromCheckoutSession(session: Stripe.Checkout.Session) {
+		try {
+			if (!session.customer) {
+				return this.resultFail('Checkout session has no Stripe customer');
+			}
+
+			const stripeCustomerId = session.customer.toString();
+			const email = session.customer_details?.email ?? undefined;
+
+			const contributorResult = await this.contributorService.findByStripeCustomerOrEmail(stripeCustomerId, email);
+
+			if (!contributorResult.success) {
 				return contributorResult;
 			}
 
-			const contributor = contributorResult.success ? contributorResult.data : null;
-
-			return this.resultOk({
-				checkoutSession,
-				contributorExists: Boolean(contributor?.id),
-			});
+			return this.resultOk(contributorResult.data ?? null);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not load Stripe success page data');
+			return this.resultFail('Could not load contributor from checkout session');
 		}
 	}
 

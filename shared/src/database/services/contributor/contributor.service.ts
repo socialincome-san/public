@@ -264,7 +264,7 @@ export class ContributorService extends BaseService {
 		}
 	}
 
-	async findByStripeCustomerId(stripeCustomerId: string): Promise<ServiceResult<ContributorWithContact>> {
+	async findByStripeCustomerId(stripeCustomerId: string): Promise<ServiceResult<ContributorWithContact | null>> {
 		try {
 			const contributor = await this.db.contributor.findFirst({
 				where: { stripeCustomerId },
@@ -272,7 +272,7 @@ export class ContributorService extends BaseService {
 			});
 
 			if (!contributor) {
-				return this.resultFail('Contributor not found');
+				return this.resultOk(null);
 			}
 
 			return this.resultOk(contributor);
