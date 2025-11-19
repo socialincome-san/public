@@ -107,7 +107,6 @@ export class PaymentFileImportService extends BaseService {
 		const contributions: BankContribution[] = [];
 
 		for (let node of nodes) {
-			const transactionId = select('string(//ns:Refs/ns:EndToEndId)', node) as string;
 			const referenceId = select('string(//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
 			contributions.push({
