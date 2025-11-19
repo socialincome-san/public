@@ -167,6 +167,7 @@ export const TEST_CONTRIBUTOR_ACCOUNT: Prisma.AccountCreateInput = {
 	contributor: {
 		create: {
 			referral: 'other',
+			stripeCustomerId: 'cus_P5HppFJ7kXIDxI',
 			contact: {
 				create: {
 					firstName: 'Test',

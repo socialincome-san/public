@@ -264,44 +264,6 @@ export class ContributorService extends BaseService {
 		}
 	}
 
-	async findByStripeCustomerId(stripeCustomerId: string): Promise<ServiceResult<ContributorWithContact | null>> {
-		try {
-			const contributor = await this.db.contributor.findFirst({
-				where: { stripeCustomerId },
-				include: { contact: true },
-			});
-
-			if (!contributor) {
-				return this.resultOk(null);
-			}
-
-			return this.resultOk(contributor);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor by Stripe customer ID');
-		}
-	}
-
-	async findByEmail(email: string): Promise<ServiceResult<ContributorWithContact>> {
-		try {
-			const contributor = await this.db.contributor.findFirst({
-				where: {
-					contact: { email },
-				},
-				include: { contact: true },
-			});
-
-			if (!contributor) {
-				return this.resultFail('Contributor not found');
-			}
-
-			return this.resultOk(contributor);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor by email');
-		}
-	}
-
 	async findByStripeCustomerOrEmail(
 		stripeCustomerId: string,
 		email?: string,
@@ -330,7 +292,7 @@ export class ContributorService extends BaseService {
 		contributorData: StripeContributorData,
 	): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> {
 		try {
-			const existingResult = await this.findExistingContributor(
+			const existingResult = await this.findByStripeCustomerOrEmail(
 				contributorData.stripeCustomerId,
 				contributorData.email || undefined,
 			);
@@ -395,30 +357,6 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not create contributor with Firebase Auth user');
-		}
-	}
-
-	private async findExistingContributor(
-		stripeCustomerId: string,
-		email?: string,
-	): Promise<ServiceResult<ContributorWithContact | null>> {
-		try {
-			let contributor = await this.db.contributor.findFirst({
-				where: { stripeCustomerId },
-				include: { contact: true },
-			});
-
-			if (!contributor && email) {
-				contributor = await this.db.contributor.findFirst({
-					where: { contact: { email } },
-					include: { contact: true },
-				});
-			}
-
-			return this.resultOk(contributor);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor');
 		}
 	}
 
