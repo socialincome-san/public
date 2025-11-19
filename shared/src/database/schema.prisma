@@ -100,6 +100,12 @@ enum PaymentProvider {
   orange_money
 }
 
+enum DonationInterval {
+  monthly
+  quarterly
+  yearly
+}
+
 model Account {
   id String @id @default(cuid()) @map("id")
 
@@ -161,7 +167,7 @@ model Contribution {
   currency          String             @map("currency")
   amountChf         Decimal            @map("amount_chf") @db.Decimal(12, 4)
   feesChf           Decimal            @map("fees_chf") @db.Decimal(12, 4)
-  monthlyInterval   Int?               @map("monthly_interval")
+  interval          DonationInterval?  @map("interval")
   contributorId     String             @map("contributor_id")
   contributor       Contributor        @relation(fields: [contributorId], references: [id])
   status            ContributionStatus @map("status")
