@@ -106,9 +106,8 @@ export class TwilioService extends BaseService {
 
 			// Return the custom token and user information
 			return this.resultOk({
-				success: true,
-				token: customToken,
-				isNewUser: isNewUser,
+				customToken,
+				isNewUser,
 				uid: userRecord.uid,
 			});
 		} catch (error) {

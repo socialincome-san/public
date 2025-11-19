@@ -21,6 +21,7 @@ export class DonationCertificateTransformer extends BaseTransformer<
 			transformed.push({
 				legacyFirestoreId: `${user.id}_${certificate.id}`,
 				year: certificate.year,
+				language: user.language,
 				storagePath: certificate.storage_path ?? (certificate as any).url ?? '',
 				contributor: {
 					connect: { legacyFirestoreId: user.id },

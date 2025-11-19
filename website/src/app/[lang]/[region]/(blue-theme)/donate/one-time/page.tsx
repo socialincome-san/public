@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { DonationInterval } from '@/components/donation/donation-interval';
-import { GenericDonationForm } from '@/components/donation/generic-donation-form';
+import { DonationInterval } from '@/components/legacy/donation/donation-interval';
+import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 

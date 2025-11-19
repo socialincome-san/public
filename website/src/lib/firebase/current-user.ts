@@ -1,40 +1,41 @@
-import { authAdmin } from '@/lib/firebase/firebase-admin';
+import { FirebaseService } from '@socialincome/shared/src/database/services/firebase/firebase.service';
 import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
-import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 import { readSessionCookie } from './session';
 
-async function verifySessionToken(cookie: string) {
-	return authAdmin.auth.verifySessionCookie(cookie, true);
-}
-
-async function findUserByAuthId(authUserId: string): Promise<UserInformation | null> {
+async function findUserByAuthId(authUserId: string): Promise<UserSession | null> {
 	const service = new UserService();
-	const result = await service.getCurrentUserInformation(authUserId);
-	return result.success ? (result.data as UserInformation) : null;
+	const result = await service.getCurrentUserSession(authUserId);
+	return result.success ? result.data : null;
 }
 
-async function loadCurrentUser(): Promise<UserInformation | null> {
+async function loadCurrentUser(): Promise<UserSession | null> {
 	const cookie = await readSessionCookie();
-	if (!cookie) return null;
-	try {
-		const decodedToken = await verifySessionToken(cookie);
-		return await findUserByAuthId(decodedToken.uid);
-	} catch {
+	if (!cookie) {
 		return null;
 	}
+	const decodedTokenResult = await new FirebaseService().verifySessionCookie(cookie);
+	if (!decodedTokenResult.success) {
+		return null;
+	}
+
+	const authUserId = decodedTokenResult.data.uid;
+	return findUserByAuthId(authUserId);
 }
 
 const getCurrentUser = cache(loadCurrentUser);
 
-export async function getAuthenticatedUserOrRedirect(): Promise<UserInformation> {
+export async function getAuthenticatedUserOrRedirect(): Promise<UserSession> {
 	const user = await getCurrentUser();
-	if (!user) redirect('/portal/login');
+	if (!user) {
+		redirect('/login');
+	}
 	return user;
 }
 
-export async function getAuthenticatedUserOrThrow(): Promise<UserInformation> {
+export async function getAuthenticatedUserOrThrow(): Promise<UserSession> {
 	const user = await getCurrentUser();
 	if (!user) {
 		throw new Error('Not authenticated');
@@ -42,7 +43,7 @@ export async function getAuthenticatedUserOrThrow(): Promise<UserInformation> {
 	return user;
 }
 
-export async function requireAdmin(user: UserInformation): Promise<UserInformation> {
+export async function requireAdmin(user: UserSession): Promise<UserSession> {
 	if (user.role !== 'admin') {
 		notFound();
 	}

@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { ProseAccordion } from '@/components/faq/prose-accordion';
+import { ProseAccordion } from '@/components/legacy/faq/prose-accordion';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';

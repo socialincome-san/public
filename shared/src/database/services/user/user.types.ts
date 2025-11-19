@@ -1,6 +1,6 @@
 import { UserRole } from '@prisma/client';
 
-export type UserInformation = {
+export type UserSession = {
 	id: string;
 	firstName: string | null;
 	lastName: string | null;

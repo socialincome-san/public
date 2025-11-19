@@ -42,6 +42,16 @@ export type ContributorOption = {
 	name: string;
 };
 
+export type ContributorDonationCertificate = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	email: string | null;
+	language: string | null;
+	address: Address | null;
+	authId: string;
+};
+
 export type ContributorWithContact = Prisma.ContributorGetPayload<{
 	include: { contact: true };
 }>;
@@ -60,4 +70,11 @@ export type BankContributorData = {
 	firstName: string;
 	lastName: string;
 	referral: ContributorReferralSource;
+};
+
+export type ContributorSession = {
+	id: string;
+	firstName: string | null;
+	lastName: string | null;
+	stripeCustomerId: string | null;
 };

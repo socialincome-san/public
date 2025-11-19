@@ -1,6 +1,6 @@
 resource "google_sql_database_instance" "google_sql_database_instance" {
   name                = "${var.env}-${var.app_name}-google-sql-database-instance"
-  database_version    = "POSTGRES_15"
+  database_version    = "POSTGRES_18"
   region              = var.gcp_region
   deletion_protection = true
 
@@ -14,8 +14,23 @@ resource "google_sql_database_instance" "google_sql_database_instance" {
     }
 
     ip_configuration {
-      ipv4_enabled    = false
+      ipv4_enabled    = true
       private_network = google_compute_network.google_compute_network.self_link
+
+      authorized_networks {
+        name  = "smartive-zh-intern"
+        value = "85.195.221.58/32"
+      }
+
+      authorized_networks {
+        name  = "smartive-zh-dmz"
+        value = "85.195.221.61/32"
+      }
+
+      authorized_networks {
+        name  = "smartive-sg"
+        value = "85.195.251.214/32"
+      }
     }
 
     backup_configuration {

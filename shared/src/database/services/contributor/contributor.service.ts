@@ -6,8 +6,10 @@ import { FirebaseService } from '../firebase/firebase.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
 	BankContributorData,
+	ContributorDonationCertificate,
 	ContributorOption,
 	ContributorPayload,
+	ContributorSession,
 	ContributorTableView,
 	ContributorTableViewRow,
 	ContributorUpdateInput,
@@ -201,6 +203,81 @@ export class ContributorService extends BaseService {
 		}
 	}
 
+	async getByIds(contributorIds?: string[]): Promise<ServiceResult<ContributorDonationCertificate[]>> {
+		try {
+			const result = await this.db.contributor.findMany({
+				where: contributorIds && contributorIds.length > 0 ? { id: { in: contributorIds } } : {},
+				select: {
+					id: true,
+					account: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							language: true,
+							email: true,
+							address: true,
+						},
+					},
+				},
+				orderBy: { contact: { firstName: 'asc' } },
+			});
+
+			const contributors = result.map((c) => ({
+				id: c.id,
+				firstName: c.contact.firstName,
+				lastName: c.contact.lastName,
+				language: c.contact.language,
+				email: c.contact.email,
+				address: c.contact.address,
+				authId: c.account.firebaseAuthUserId,
+			}));
+
+			return this.resultOk(contributors);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch contributor IDs for certificates');
+		}
+	}
+
+	async findByStripeCustomerId(stripeCustomerId: string): Promise<ServiceResult<ContributorWithContact>> {
+		try {
+			const contributor = await this.db.contributor.findFirst({
+				where: { stripeCustomerId },
+				include: { contact: true },
+			});
+
+			if (!contributor) {
+				return this.resultFail('Contributor not found');
+			}
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not find contributor by Stripe customer ID');
+		}
+	}
+
+	async findByEmail(email: string): Promise<ServiceResult<ContributorWithContact>> {
+		try {
+			const contributor = await this.db.contributor.findFirst({
+				where: {
+					contact: { email },
+				},
+				include: { contact: true },
+			});
+
+			if (!contributor) {
+				return this.resultFail('Contributor not found');
+			}
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not find contributor by email');
+		}
+	}
+
 	async findByStripeCustomerOrEmail(
 		stripeCustomerId: string,
 		email?: string,
@@ -389,6 +466,40 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not update contributor Stripe customer ID');
+		}
+	}
+
+	async getCurrentContributorSession(firebaseAuthUserId: string): Promise<ServiceResult<ContributorSession>> {
+		try {
+			const contributor = await this.db.contributor.findFirst({
+				where: { account: { firebaseAuthUserId } },
+				select: {
+					id: true,
+					stripeCustomerId: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+				},
+			});
+
+			if (!contributor) {
+				return this.resultFail('Contributor not found');
+			}
+
+			const session: ContributorSession = {
+				id: contributor.id,
+				firstName: contributor.contact?.firstName ?? null,
+				lastName: contributor.contact?.lastName ?? null,
+				stripeCustomerId: contributor.stripeCustomerId ?? null,
+			};
+
+			return this.resultOk(session);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch contributor session');
 		}
 	}
 }

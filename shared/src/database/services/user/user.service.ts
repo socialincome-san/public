@@ -1,9 +1,9 @@
 import { UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserInformation } from './user.types';
+import { UserSession } from './user.types';
 export class UserService extends BaseService {
-	async getCurrentUserInformation(firebaseAuthUserId: string): Promise<ServiceResult<UserInformation>> {
+	async getCurrentUserSession(firebaseAuthUserId: string): Promise<ServiceResult<UserSession>> {
 		try {
 			const user = await this.db.user.findFirst({
 				where: { account: { firebaseAuthUserId } },
@@ -39,7 +39,7 @@ export class UserService extends BaseService {
 				name: access.program.name,
 			}));
 
-			const userInfo: UserInformation = {
+			const userInfo: UserSession = {
 				id: user.id,
 				firstName: user.contact?.firstName ?? null,
 				lastName: user.contact?.lastName ?? null,

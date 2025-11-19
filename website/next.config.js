@@ -23,6 +23,9 @@ let nextConfig = {
 		});
 		return config;
 	},
+	experimental: {
+		serverComponentsExternalPackages: ['pdfkit'],
+	},
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {

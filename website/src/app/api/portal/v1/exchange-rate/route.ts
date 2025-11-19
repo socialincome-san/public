@@ -9,13 +9,13 @@ import { NextRequest, NextResponse } from 'next/server';
  *   type: apiKey
  *   in: header
  *   name: x-api-key
- * @response 201 - Exchange rates imported successfully
+ * @response ExchangeRatesImportSuccess
  * @openapi
  */
 export async function POST(request: NextRequest) {
 	const apiKey = request.headers.get('x-api-key');
 
-	if (apiKey !== process.env.EXCHANGE_RATES_IMPORT_API || !process.env.EXCHANGE_RATES_IMPORT_API) {
+	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
 		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 	}
 

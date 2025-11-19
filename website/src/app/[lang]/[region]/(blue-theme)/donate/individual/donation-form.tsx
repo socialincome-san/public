@@ -1,9 +1,9 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { BankTransferForm, BankTransferFormProps } from '@/components/donation/bank-transfer-form';
-import { PaymentTypes } from '@/components/donation/generic-donation-form';
-import { CurrencySelector } from '@/components/ui/currency-selector';
+import { BankTransferForm, BankTransferFormProps } from '@/components/legacy/donation/bank-transfer-form';
+import { PaymentTypes } from '@/components/legacy/donation/generic-donation-form';
+import { CurrencySelector } from '@/components/legacy/ui/currency-selector';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { websiteCurrencies, WebsiteLanguage } from '@/lib/i18n/utils';

@@ -1,8 +1,10 @@
 import { Contribution, PaymentEvent } from '@prisma/client';
+import { endOfYear, startOfYear } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	ContributionDonationEntry,
 	ContributionPayload,
 	ContributionTableView,
 	ContributionTableViewRow,
@@ -10,6 +12,7 @@ import {
 	PaymentEventCreateData,
 	PaymentEventCreateInput,
 	StripeContributionCreateData,
+	YourContributionsTableView,
 } from './contribution.types';
 
 export class ContributionService extends BaseService {
@@ -163,6 +166,47 @@ export class ContributionService extends BaseService {
 		}
 	}
 
+	async getForContributorsAndYear(
+		contributorsIds: string[],
+		year: number,
+	): Promise<ServiceResult<ContributionDonationEntry[]>> {
+		try {
+			const start = startOfYear(new Date(year, 0, 1));
+			const end = endOfYear(new Date(year, 0, 1));
+
+			const result = await this.db.contribution.findMany({
+				where: {
+					contributorId: { in: contributorsIds },
+					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }],
+				},
+				select: {
+					contributorId: true,
+					amount: true,
+					currency: true,
+					amountChf: true,
+					feesChf: true,
+					status: true,
+					createdAt: true,
+				},
+			});
+
+			const contributions = result.map((r) => ({
+				contributorId: r.contributorId,
+				amount: Number(r.amount),
+				currency: r.currency,
+				amountChf: Number(r.amountChf),
+				feesChf: Number(r.feesChf),
+				status: r.status,
+				createdAt: r.createdAt,
+			}));
+
+			return this.resultOk(contributions);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch contributions for contributors ${contributorsIds.join(', ')}`);
+		}
+	}
+
 	async upsertFromStripeEvent(
 		contributionData: StripeContributionCreateData,
 		paymentEventData: PaymentEventCreateData,
@@ -208,6 +252,35 @@ export class ContributionService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not create payment events with contributions');
+		}
+	}
+
+	async getYourContributionsTableView(contributorId: string): Promise<ServiceResult<YourContributionsTableView>> {
+		try {
+			const contributions = await this.db.contribution.findMany({
+				where: { contributorId },
+				select: {
+					createdAt: true,
+					amount: true,
+					currency: true,
+					campaign: {
+						select: { title: true },
+					},
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			const tableRows = contributions.map((c) => ({
+				createdAt: c.createdAt,
+				amount: c.amount ? Number(c.amount) : 0,
+				currency: c.currency ?? '',
+				campaignTitle: c.campaign?.title ?? '',
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch contributions for contributor');
 		}
 	}
 }

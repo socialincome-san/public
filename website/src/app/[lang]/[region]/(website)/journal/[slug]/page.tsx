@@ -1,9 +1,9 @@
-import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
-import { RichTextRenderer } from '@/components/storyblok/RichTextRenderer';
-import { generateMetaDataForBlog, getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
-import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
-import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
-import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
+import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
+import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
+import { generateMetaDataForBlog, getArticle, getRelativeArticles } from '@/components/legacy/storyblok/StoryblokApi';
+import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
+import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
+import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
 import { WebsiteRegion } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokAuthor, StoryblokTag } from '@/types/journal';
