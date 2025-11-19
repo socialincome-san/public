@@ -250,14 +250,16 @@ export class StripeService extends BaseService {
 		return { firstName, lastName };
 	}
 
-	async getSubscriptionsTableView(customerId: string | null): Promise<ServiceResult<StripeSubscriptionTableView>> {
+	async getSubscriptionsTableView(
+		stripeCustomerId: string | null,
+	): Promise<ServiceResult<StripeSubscriptionTableView>> {
 		try {
-			if (!customerId) {
+			if (!stripeCustomerId) {
 				return this.resultOk({ rows: [] });
 			}
 
 			const subscriptions = await this.stripe.subscriptions.list({
-				customer: customerId,
+				customer: stripeCustomerId,
 				status: 'all',
 			});
 
@@ -287,7 +289,10 @@ export class StripeService extends BaseService {
 		}
 	}
 
-	async createManageSubscriptionsSession(stripeCustomerId: string | null): Promise<ServiceResult<string>> {
+	async createManageSubscriptionsSession(
+		stripeCustomerId: string | null,
+		language: string | null,
+	): Promise<ServiceResult<string>> {
 		try {
 			if (!stripeCustomerId) {
 				return this.resultFail('Missing Stripe customer ID');
@@ -296,7 +301,7 @@ export class StripeService extends BaseService {
 			const session = await this.stripe.billingPortal.sessions.create({
 				customer: stripeCustomerId,
 				return_url: `${process.env.BASE_URL}/dashboard/subscriptions`,
-				locale: 'en', // todo get lang
+				locale: (language as Stripe.BillingPortal.SessionCreateParams.Locale) ?? 'auto',
 			});
 
 			if (!session.url) {
