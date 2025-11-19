@@ -454,6 +454,7 @@ export class StripeService extends BaseService {
 			const updateInput: ContributorUpdateInput = {
 				id: contributor.id,
 				referral: user.personal.referral ?? ContributorReferralSource.other,
+				needsOnboarding: false,
 				contact: {
 					update: {
 						data: {
@@ -463,8 +464,17 @@ export class StripeService extends BaseService {
 							gender: user.personal.gender ?? null,
 							language: user.language,
 							address: {
-								update: {
-									country: user.address.country,
+								upsert: {
+									update: {
+										country: user.address.country,
+									},
+									create: {
+										street: '',
+										number: '',
+										city: '',
+										zip: '',
+										country: user.address.country,
+									},
 								},
 							},
 						},

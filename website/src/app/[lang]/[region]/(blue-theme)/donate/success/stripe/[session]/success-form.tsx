@@ -8,7 +8,6 @@ import { ContributorReferralSource } from '@prisma/client';
 import { UpdateContributorAfterCheckoutInput } from '@socialincome/shared/src/database/services/stripe/stripe.types';
 import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
 import { GENDER_OPTIONS } from '@socialincome/shared/src/types/user';
-import { rndString } from '@socialincome/shared/src/utils/crypto';
 import {
 	Button,
 	Checkbox,
@@ -27,7 +26,6 @@ import {
 	SelectValue,
 } from '@socialincome/ui';
 import { FirebaseError } from 'firebase/app';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -106,12 +104,9 @@ export function SuccessForm({
 		setSubmitting(true);
 
 		try {
-			const { user } = await createUserWithEmailAndPassword(auth, values.email, await rndString(16));
-
 			const payload: UpdateContributorAfterCheckoutInput = {
 				stripeCheckoutSessionId,
 				user: {
-					auth_user_id: user.uid,
 					email: values.email,
 					language: lang,
 					personal: {

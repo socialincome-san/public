@@ -32,7 +32,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 		throw new Error(contributorResult.error);
 	}
 
-	if (contributorResult.data?.id) {
+	if (contributorResult.data && !contributorResult.data.needsOnboarding) {
 		redirect(`/${lang}/${region}/dashboard/contributions`);
 	}
 
@@ -50,7 +50,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 				<CardContent>
 					<SuccessForm
 						lang={lang}
-						onSuccessURL={`/${lang}/${region}/me/personal-info`}
+						onSuccessURL={`/${lang}/${region}/dashboard/contributions`}
 						stripeCheckoutSessionId={checkoutSession.id}
 						firstname={checkoutSession.customer_details?.name?.split(' ')[0] || undefined}
 						lastname={checkoutSession.customer_details?.name?.split(' ')[1] || undefined}

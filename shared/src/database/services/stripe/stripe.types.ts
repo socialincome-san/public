@@ -53,7 +53,6 @@ export type StripeSubscriptionTableView = {
 export type UpdateContributorAfterCheckoutInput = {
 	stripeCheckoutSessionId: string;
 	user: {
-		auth_user_id: string;
 		email: string;
 		language: string;
 		personal: {
