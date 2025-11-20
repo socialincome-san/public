@@ -15,24 +15,38 @@
 						"description": "Identify and understand key actors (recipients, families, friends, community).",
 						"implementation": "Social Income works closely with local NGOs, local staff, recipients, and their networks to map and understand the relevant actors and social relationships involved. NGO partners themselves are carefully assessed prior to collaboration.",
 						"links": [
-							{ "label": "Local Partners", "url": "https://socialincome.org/partners" },
-							{ "label": "Local Staff", "url": "https://socialincome.org/about-us#team" }
+							{
+								"label": "Local Partners",
+								"url": "https://socialincome.org/partners"
+							},
+							{
+								"label": "Local Staff",
+								"url": "https://socialincome.org/about-us#team"
+							}
 						]
 					},
 					{
 						"description": "Assess previous conflict lines and tensions.",
 						"implementation": "Through local partners, staff, and close contact with recipients, Social Income accounts for post-conflict dynamics and societal fault lines. We intentionally work with a diverse set of local NGOs that address different causes and communities, and, where relevant, we employ staff from different religious backgrounds to strengthen trust and cultural understanding.",
 						"links": [
-							{ "label": "Local Partners", "url": "https://socialincome.org/partners" },
-							{ "label": "Local Staff", "url": "https://socialincome.org/about-us#team" }
+							{
+								"label": "Local Partners",
+								"url": "https://socialincome.org/partners"
+							},
+							{
+								"label": "Local Staff",
+								"url": "https://socialincome.org/about-us#team"
+							}
 						]
 					},
 					{
 						"description": "Assess cultural attitudes toward money and its role in past conflicts.",
 						"implementation": "Social Income focuses on understanding how money is perceived in the local community through personal onboarding interviews, ongoing monthly contact with recipients and their networks, and regular surveys, ensuring that cash transfers align with local cultural attitudes and avoid tensions linked to money’s role in past conflicts.",
 						"links": [
-							{ "label": "Local Staff", "url": "https://socialincome.org/about-us#team" },
-							{ "label": "Surveys", "url": "https://socialincome.org/survey/responses" }
+							{
+								"label": "Local Staff",
+								"url": "https://socialincome.org/about-us#team"
+							}
 						]
 					}
 				]
@@ -44,13 +58,21 @@
 						"description": "Avoid favoritism in selection",
 						"implementation": "Randomized selection promotes fairness and helps prevent favoritism and social tensions. Recipients are distributed across different groups and locations through partnerships with diverse local NGOs. Within each group, we limit the number of individuals from the same subgroup to ensure inclusion and avoid perceptions of exclusion.",
 						"links": [
-							{ "label": "Recipient Selection", "url": "https://socialincome.org/transparency/recipient-selection" }
+							{
+								"label": "Recipient Selection",
+								"url": "https://socialincome.org/transparency/recipient-selection"
+							}
 						]
 					},
 					{
 						"description": "Distribute aid equitably to avoid creating power imbalances",
 						"implementation": "Social Income distributes aid across the entire population of individuals affected by poverty, rather than focusing on specific subgroups such as women, persons with disabilities, or widows. However, through targeted partnerships with local NGOs, specific groups can be reached when there is a defined need.",
-						"links": [{ "label": "Local Partners", "url": "https://socialincome.org/partners" }]
+						"links": [
+							{
+								"label": "Local Partners",
+								"url": "https://socialincome.org/partners"
+							}
+						]
 					}
 				]
 			},
@@ -61,15 +83,24 @@
 						"description": "Use clear, non-discriminatory selection criteria",
 						"implementation": "Social Income uses clear eligibility criteria, focusing on individuals aged 16 and above who live in poverty. With the help of local partners and their knowledge of the community, we build a pool of eligible recipients. To keep the process transparent, impartial, and free from favoritism, recipients are selected by lottery.",
 						"links": [
-							{ "label": "Recipient Selection", "url": "https://socialincome.org/transparency/recipient-selection" }
+							{
+								"label": "Recipient Selection",
+								"url": "https://socialincome.org/transparency/recipient-selection"
+							}
 						]
 					},
 					{
 						"description": "Avoid clustering recipients in specific communities",
 						"implementation": "Social Income diversifies its beneficiaries through partnerships with different local organizations that work in non-overlapping communities. The lottery-based selection ensures recipients are distributed within these communities. Although there is a small chance that individuals living close to each other or from the same household may be selected, this circumstance needs to be weighed against the complexity, potential tensions, and costs involved in mapping household structures or precisely tracking residences.",
 						"links": [
-							{ "label": "Recipient Selection", "url": "https://socialincome.org/transparency/recipient-selection" },
-							{ "label": "Local Partners", "url": "https://socialincome.org/partners" }
+							{
+								"label": "Recipient Selection",
+								"url": "https://socialincome.org/transparency/recipient-selection"
+							},
+							{
+								"label": "Local Partners",
+								"url": "https://socialincome.org/partners"
+							}
 						]
 					},
 					{
@@ -90,12 +121,22 @@
 					{
 						"description": "Define a time limit for aid",
 						"implementation": "Social Income provides time-bound support with a fixed program duration. Recipients are informed from the beginning that the program runs for a limited period, currently set at three years. Throughout the program, they receive regular reminders about the remaining time.",
-						"links": [{ "label": "Exit Strategy (upcoming)", "url": "https://socialincome.org" }]
+						"links": [
+							{
+								"label": "Exit Strategy (upcoming)",
+								"url": "https://socialincome.org"
+							}
+						]
 					},
 					{
 						"description": "Avoid creating reliance on external support",
 						"implementation": "By clearly communicating that the transfers are temporary, Social Income encourages recipients to plan for the period after the program ends and to work towards long-term financial independence.",
-						"links": [{ "label": "Exit Strategy (upcoming)", "url": "https://socialincome.org" }]
+						"links": [
+							{
+								"label": "Exit Strategy (upcoming)",
+								"url": "https://socialincome.org"
+							}
+						]
 					}
 				]
 			},
@@ -140,7 +181,7 @@
 					{
 						"description": "Establish a system for tracking impact",
 						"implementation": "Social Income continuously tracks the effects of its support through regular surveys and targeted questions, ensuring that the aid remains effective and does not lead to unintended consequences.",
-						"links": [{ "label": "Impact Measurement", "url": "https://socialincome.org/survey/responses" }]
+						"links": []
 					},
 					{
 						"description": "Collect feedback and adapt the program accordingly",
