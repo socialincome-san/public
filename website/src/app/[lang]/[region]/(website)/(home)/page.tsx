@@ -11,7 +11,6 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { CampaignStatsCalculator } from '@socialincome/shared/src/utils/stats/CampaignStatsCalculator';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import _ from 'lodash';
-import { ActiveFundraisers } from './(sections)/active-fundraisers';
 import { ExplainerVideo } from './(sections)/explainer-video';
 import { HeroVideo } from './(sections)/hero-video';
 import { MobileIllustration } from './(sections)/mobile-illustration';
@@ -62,12 +61,6 @@ export default async function Page(props: DefaultPageProps) {
 	return (
 		<div className="hero-video -mb-28 -mt-24 md:-mt-36">
 			<HeroVideo lang={lang} region={region} />
-			<ActiveFundraisers
-				lang={lang}
-				region={region}
-				campaignProps={campaignProps}
-				translations={translator.t('badges')}
-			/>
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
 			<ExplainerVideo lang={lang} region={region} />
