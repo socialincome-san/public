@@ -31,7 +31,8 @@ export const campaignsData: Campaign[] = [
 		organizationId: 'organization-1',
 		programId: 'program-1',
 		createdAt: new Date(),
-		updatedAt: null
+		updatedAt: null,
+		isFallback: true,
 	},
 	{
 		id: 'campaign-2',
@@ -63,7 +64,8 @@ export const campaignsData: Campaign[] = [
 		organizationId: 'organization-1',
 		programId: null,
 		createdAt: new Date(),
-		updatedAt: null
+		updatedAt: null,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-3',
@@ -95,7 +97,8 @@ export const campaignsData: Campaign[] = [
 		organizationId: 'organization-2',
 		programId: null,
 		createdAt: new Date(),
-		updatedAt: null
+		updatedAt: null,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-4',
@@ -127,7 +130,8 @@ export const campaignsData: Campaign[] = [
 		organizationId: 'organization-3',
 		programId: null,
 		createdAt: new Date(),
-		updatedAt: null
+		updatedAt: null,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-5',
@@ -159,6 +163,7 @@ export const campaignsData: Campaign[] = [
 		organizationId: 'organization-4',
 		programId: null,
 		createdAt: new Date(),
-		updatedAt: null
+		updatedAt: null,
+		isFallback: false,
 	}
 ];
