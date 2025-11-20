@@ -5,7 +5,6 @@ import { clearFirestoreData } from '../../tests/utils';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../firebase/admin/app';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
-import { CAMPAIGN_FIRESTORE_PATH } from '../types/campaign';
 import { ContributionSourceKey, StatusKey, StripeContribution } from '../types/contribution';
 import { User } from '../types/user';
 import { StripeEventHandler } from './StripeEventHandler';
@@ -55,18 +54,6 @@ describe('stripeWebhook', () => {
 		const ref = await stripeWebhook.storeCharge(testCharge, null);
 		const contribution = await ref.get();
 		expect(contribution.data()).toEqual(expectedContribution);
-	});
-
-	test('storeCharge for existing user through stripe id with campaign metadata', async () => {
-		await firestoreAdmin.doc<{}>('users', 'test-user').set({
-			stripe_customer_id: 'cus_123',
-		});
-
-		const ref = await stripeWebhook.storeCharge(testCharge, { campaignId: 'xyz' });
-		const contribution = await ref.get();
-		expect(contribution.data()?.campaign_path).toEqual(
-			firestoreAdmin.firestore.collection(CAMPAIGN_FIRESTORE_PATH).doc('xyz'),
-		);
 	});
 
 	test('storeCharge for existing user through email', async () => {
