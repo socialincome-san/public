@@ -1,7 +1,6 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { UserContextProvider } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
 import { BankTransferForm, BankTransferFormProps } from '@/components/legacy/donation/bank-transfer-form';
 import { DonationInterval } from '@/components/legacy/donation/donation-interval';
 import { CurrencySelector } from '@/components/legacy/ui/currency-selector';
@@ -203,16 +202,14 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 					)}
 					{form.watch('paymentType') === PaymentTypes.BANK_TRANSFER ? (
 						<div className="flex flex-col space-y-4 rounded-lg bg-blue-50 p-4 md:p-8">
-							<UserContextProvider>
-								<BankTransferForm
-									amount={form.watch('amount')}
-									intervalCount={form.watch('interval') === DonationInterval.Monthly ? 1 : 0}
-									translations={translations.bankTransfer}
-									lang={lang}
-									region={region}
-									qrBillType="QRCODE"
-								/>
-							</UserContextProvider>
+							<BankTransferForm
+								amount={form.watch('amount')}
+								intervalCount={form.watch('interval') === DonationInterval.Monthly ? 1 : 0}
+								translations={translations.bankTransfer}
+								lang={lang}
+								region={region}
+								qrBillType="QRCODE"
+							/>
 						</div>
 					) : (
 						<Button

@@ -73,6 +73,7 @@ export type BankContributorData = {
 
 export type ContributorSession = {
 	id: string;
+	email: string | null;
 	firstName: string | null;
 	lastName: string | null;
 	language: string | null;

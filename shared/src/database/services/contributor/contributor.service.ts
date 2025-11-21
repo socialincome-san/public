@@ -461,6 +461,7 @@ export class ContributorService extends BaseService {
 					stripeCustomerId: true,
 					contact: {
 						select: {
+							email: true,
 							firstName: true,
 							lastName: true,
 							language: true,
@@ -475,6 +476,7 @@ export class ContributorService extends BaseService {
 
 			const session: ContributorSession = {
 				id: contributor.id,
+				email: contributor.contact?.email ?? null,
 				firstName: contributor.contact?.firstName ?? null,
 				lastName: contributor.contact?.lastName ?? null,
 				stripeCustomerId: contributor.stripeCustomerId ?? null,
