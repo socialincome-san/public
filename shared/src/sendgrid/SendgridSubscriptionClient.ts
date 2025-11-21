@@ -3,11 +3,13 @@ import { SendgridContactType } from '@socialincome/shared/src/sendgrid/types';
 import { CountryCode } from '../types/country';
 import { Suppression } from './types';
 
+export type SupportedLanguage = 'de' | 'en' | 'fr' | 'it';
+
 export type NewsletterSubscriptionData = {
 	firstname?: string;
 	lastname?: string;
 	email: string;
-	language: 'de' | 'en' | 'fr' | 'it';
+	language: SupportedLanguage;
 	country?: CountryCode;
 	status?: 'subscribed' | 'unsubscribed';
 	isContributor?: boolean;

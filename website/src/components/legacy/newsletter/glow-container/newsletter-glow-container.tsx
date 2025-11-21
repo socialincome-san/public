@@ -4,12 +4,12 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { GlowHoverContainer, Typography } from '@socialincome/ui';
 
 import NewsletterForm from '@/components/legacy/newsletter/form/newsletter-form';
-import { NewsletterPopupTranslations } from '@/components/legacy/newsletter/popup/newsletter-popup-client';
+import { NewsletterTranslations } from '../types';
 
 type NewsletterGlowContainerProps = {
 	title: string;
 	lang: LanguageCode;
-	formTranslations: NewsletterPopupTranslations;
+	formTranslations: NewsletterTranslations;
 	className?: string;
 };
 

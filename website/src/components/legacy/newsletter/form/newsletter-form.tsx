@@ -1,23 +1,21 @@
 'use client';
 
-import { CreateNewsletterSubscription } from '@/app/api/newsletter/subscription/public/route';
-import { NewsletterPopupTranslations } from '@/components/legacy/newsletter/popup/newsletter-popup-client';
-import { useApiClient } from '@/lib/api/useApiClient';
+import { CreateNewsletterSubscription, subscribeToNewsletter } from '@/lib/server-actions/newsletter-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
 import { useForm } from 'react-hook-form';
 import toast, { Toast } from 'react-hot-toast';
 import * as z from 'zod';
+import { NewsletterTranslations } from '../types';
 
 type NewsletterFormProps = {
 	lang: LanguageCode;
 	t?: Toast;
-	translations: NewsletterPopupTranslations;
+	translations: NewsletterTranslations;
 };
 
 const NewsletterForm = ({ t, lang, translations }: NewsletterFormProps) => {
-	const api = useApiClient();
 	const formSchema = z.object({ email: z.string().email() });
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({
@@ -26,20 +24,20 @@ const NewsletterForm = ({ t, lang, translations }: NewsletterFormProps) => {
 	});
 
 	const onSubmit = async (values: FormSchema) => {
-		const body: CreateNewsletterSubscription = {
+		const data: CreateNewsletterSubscription = {
 			email: values.email,
 			language: lang === 'de' ? 'de' : 'en',
 		};
-		api.post('/api/newsletter/subscription/public', body).then((response) => {
-			if (response.status === 200) {
-				if (t && t.id) {
-					toast.dismiss(t.id);
-				}
-				toast.success(translations.toastSuccess);
-			} else {
-				toast.error(translations.toastFailure);
+
+		try {
+			await subscribeToNewsletter(data);
+			if (t && t.id) {
+				toast.dismiss(t.id);
 			}
-		});
+			toast.success(translations.toastSuccess);
+		} catch (error) {
+			toast.error(translations.toastFailure);
+		}
 	};
 
 	return (
