@@ -151,6 +151,16 @@ export const ErrorResponse = z.object({
 	error: z.string(),
 });
 
+export const PaymentFilesImportResult = z.object({
+	id: z.string(),
+	contributionId: z.string(),
+	type: z.string(),
+	transactionId: z.string(),
+	metadata: z.string().nullable(),
+	createdAt: z.date(),
+	updatedAt: z.date().nullable(),
+});
+
 export const ExchangeRatesImportSuccess = z.object({
 	success: z.literal(true),
 });

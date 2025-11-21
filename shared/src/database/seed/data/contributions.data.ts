@@ -1,4 +1,4 @@
-import { Contribution, ContributionStatus, Prisma } from '@prisma/client';
+import { Contribution, ContributionStatus, DonationInterval, Prisma } from '@prisma/client';
 
 export const contributionsData: Contribution[] = [
 	{
@@ -12,7 +12,8 @@ export const contributionsData: Contribution[] = [
 		status: ContributionStatus.succeeded,
 		campaignId: 'campaign-1',
 		createdAt: new Date('2025-01-05'),
-		updatedAt: null
+		updatedAt: null,
+		interval: DonationInterval.monthly
 	},
 	{
 		id: 'contribution-2',
@@ -25,7 +26,8 @@ export const contributionsData: Contribution[] = [
 		status: ContributionStatus.succeeded,
 		campaignId: 'campaign-1',
 		createdAt: new Date('2025-02-12'),
-		updatedAt: null
+		updatedAt: null,
+		interval: DonationInterval.quarterly
 	},
 	{
 		id: 'contribution-3',
@@ -38,7 +40,8 @@ export const contributionsData: Contribution[] = [
 		status: ContributionStatus.succeeded,
 		campaignId: 'campaign-2',
 		createdAt: new Date('2025-03-10'),
-		updatedAt: null
+		updatedAt: null,
+		interval: null
 	},
 	{
 		id: 'contribution-4',
@@ -51,7 +54,8 @@ export const contributionsData: Contribution[] = [
 		status: ContributionStatus.succeeded,
 		campaignId: 'campaign-1',
 		createdAt: new Date('2025-04-15'),
-		updatedAt: null
+		updatedAt: null,
+		interval: DonationInterval.monthly
 	},
 	{
 		id: 'contribution-5',
@@ -64,7 +68,8 @@ export const contributionsData: Contribution[] = [
 		status: ContributionStatus.succeeded,
 		campaignId: 'campaign-3',
 		createdAt: new Date('2025-05-20'),
-		updatedAt: null
+		updatedAt: null,
+		interval: DonationInterval.yearly
 	},
 	{
 		id: 'contribution-6',
@@ -77,7 +82,8 @@ export const contributionsData: Contribution[] = [
 		status: ContributionStatus.succeeded,
 		campaignId: 'campaign-2',
 		createdAt: new Date('2025-06-11'),
-		updatedAt: null
+		updatedAt: null,
+		interval: null
 	},
 	{
 		id: 'contribution-7',
@@ -90,6 +96,7 @@ export const contributionsData: Contribution[] = [
 		status: ContributionStatus.succeeded,
 		campaignId: 'campaign-3',
 		createdAt: new Date('2025-07-22'),
-		updatedAt: null
+		updatedAt: null,
+		interval: DonationInterval.monthly
 	}
 ];

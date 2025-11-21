@@ -15,6 +15,14 @@ let nextConfig = {
 		],
 	},
 	output: 'standalone',
+	webpack: (config, context) => {
+		// needed for ssh2-sftp-client in payment-file-import
+		config.module.rules.push({
+			test: /\.node$/,
+			loader: 'node-loader',
+		});
+		return config;
+	},
 	experimental: {
 		serverComponentsExternalPackages: ['pdfkit'],
 	},
