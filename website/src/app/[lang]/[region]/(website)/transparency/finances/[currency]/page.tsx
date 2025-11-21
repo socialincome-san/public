@@ -9,10 +9,6 @@ import {
 } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { ExpensesStatsCalculator, ExpenseStats } from '@socialincome/shared/src/utils/stats/ExpensesStatsCalculator';
 import { PaymentStats, PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
-import {
-	RecipientStats,
-	RecipientStatsCalculator,
-} from '@socialincome/shared/src/utils/stats/RecipientStatsCalculator';
 import { BaseContainer } from '@socialincome/ui';
 import { Section1 } from './section-1';
 import { Section2 } from './section-2';
@@ -35,7 +31,6 @@ export type SectionProps = {
 	expensesStats: ExpenseStats;
 	params: TransparencyPageParams;
 	paymentStats: PaymentStats;
-	recipientStats: RecipientStats;
 };
 
 export default async function Page(props: TransparencyPageProps) {
@@ -45,21 +40,19 @@ export default async function Page(props: TransparencyPageProps) {
 		const contributionStats = contributionCalculator.allStats();
 		const paymentCalculator = await PaymentStatsCalculator.build(firestoreAdmin, currency);
 		const paymentStats = paymentCalculator.allStats();
-		const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
-		const recipientStats = recipientCalculator.allStats();
 		const expensesStatsCalculator = await ExpensesStatsCalculator.build(firestoreAdmin, currency);
 		const expensesStats = expensesStatsCalculator.allStats();
-		return { contributionStats, expensesStats, paymentStats, recipientStats };
+		return { contributionStats, expensesStats, paymentStats };
 	};
 	const currency = params.currency.toUpperCase() as WebsiteCurrency;
-	const { contributionStats, expensesStats, paymentStats, recipientStats } = await getStats(currency);
+	const { contributionStats, expensesStats, paymentStats } = await getStats(currency);
 	const currencyLocales = {
 		style: 'currency' as keyof Intl.NumberFormatOptionsStyleRegistry,
 		currency: params.currency,
 		locale: toLocale(params.lang, params.region),
 		maximumFractionDigits: 0,
 	};
-	const sectionProps = { contributionStats, expensesStats, params, paymentStats, recipientStats, currencyLocales };
+	const sectionProps = { contributionStats, expensesStats, params, paymentStats, currencyLocales };
 
 	return (
 		<BaseContainer className="flex flex-col space-y-16">

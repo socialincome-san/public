@@ -1,7 +1,6 @@
 import { toCurrencyLocale } from '@/lib/i18n/utils';
-import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Badge, Card, CardContent, Typography } from '@socialincome/ui';
+import { Card, CardContent, Typography } from '@socialincome/ui';
 import { SectionProps } from './page';
 
 export const roundAmount = (amount: number) => {
@@ -10,7 +9,7 @@ export const roundAmount = (amount: number) => {
 	return rounded === 0 ? 10 : rounded;
 };
 
-export async function Section1({ params, paymentStats, contributionStats, recipientStats }: SectionProps) {
+export async function Section1({ params, paymentStats, contributionStats }: SectionProps) {
 	const { lang, region, currency } = params;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-finances'] });
 	const currencyLocale = toCurrencyLocale(lang, region, currency, { maximumFractionDigits: 0 });
@@ -34,26 +33,6 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 								context: { value: paymentStats.totalPaymentsCount },
 							})}
 						</Typography>
-					</CardContent>
-				</Card>
-				<Card className="duration-100 hover:scale-[101%]">
-					<CardContent className="flex flex-col items-start space-y-2 py-8 sm:flex-row sm:justify-between sm:space-y-0">
-						<Typography size="xl" weight="normal">
-							{translator.t('section-1.totalRecipients', {
-								context: {
-									value:
-										(recipientStats.recipientsCountByStatus['total'] ?? 0) -
-										(recipientStats.recipientsCountByStatus[RecipientProgramStatus.Waitlisted] ?? 0),
-								},
-							})}
-						</Typography>
-						<Badge variant="accent" size="md">
-							{translator.t('section-1.activeRecipients', {
-								context: {
-									value: recipientStats.recipientsCountByStatus[RecipientProgramStatus.Active] ?? 0,
-								},
-							})}
-						</Badge>
 					</CardContent>
 				</Card>
 				<Card className="duration-100 hover:scale-[101%]">
