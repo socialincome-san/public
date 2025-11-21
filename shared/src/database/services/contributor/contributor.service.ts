@@ -71,6 +71,44 @@ export class ContributorService extends BaseService {
 		}
 	}
 
+	private async applyContributorUpdate(
+		contributorId: string,
+		data: ContributorUpdateInput,
+	): Promise<ServiceResult<Contributor>> {
+		try {
+			const existing = await this.db.contributor.findUnique({
+				where: { id: contributorId },
+				select: { account: true },
+			});
+
+			if (!existing) {
+				return this.resultFail('Contributor not found');
+			}
+
+			if (!data.contact?.update?.data?.email) {
+				return this.resultFail('Contributor email is required');
+			}
+
+			const firebaseResult = await this.firebaseService.updateByUid(existing.account.firebaseAuthUserId, {
+				email: data.contact?.update?.data?.email?.toString() ?? undefined,
+			});
+
+			if (!firebaseResult.success) {
+				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
+			}
+
+			const updatedContributor = await this.db.contributor.update({
+				where: { id: contributorId },
+				data,
+			});
+
+			return this.resultOk(updatedContributor);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not update contributor');
+		}
+	}
+
 	async update(userId: string, contributor: ContributorUpdateInput): Promise<ServiceResult<Contributor>> {
 		try {
 			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
@@ -82,36 +120,24 @@ export class ContributorService extends BaseService {
 				return this.resultFail('No permissions to update contributor');
 			}
 
-			const existing = await this.db.contributor.findUnique({
-				where: { id: contributor.id?.toString() },
-				select: { account: true },
-			});
-
-			if (!existing) {
-				return this.resultFail('Contributor not found');
+			const contributorId = contributor.id?.toString();
+			if (!contributorId) {
+				return this.resultFail('Contributor ID is required');
 			}
 
-			if (!contributor.contact?.update?.data?.email) {
-				return this.resultFail('Contributor email is required');
-			}
-
-			const firebaseResult = await this.firebaseService.updateByUid(existing.account.firebaseAuthUserId, {
-				email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
-			});
-			if (!firebaseResult.success) {
-				// for now, dont fail the update if firebase user cannot be updated, because there is no auth user for every contributor
-				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
-			}
-
-			const updatedContributor = await this.db.contributor.update({
-				where: { id: contributor.id?.toString() },
-				data: contributor,
-			});
-
-			return this.resultOk(updatedContributor);
+			return this.applyContributorUpdate(contributorId, contributor);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not update contributor');
+		}
+	}
+
+	async updateSelf(contributorId: string, data: ContributorUpdateInput): Promise<ServiceResult<Contributor>> {
+		try {
+			return this.applyContributorUpdate(contributorId, data);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not update contributor (self)');
 		}
 	}
 
@@ -240,44 +266,6 @@ export class ContributorService extends BaseService {
 		}
 	}
 
-	async findByStripeCustomerId(stripeCustomerId: string): Promise<ServiceResult<ContributorWithContact>> {
-		try {
-			const contributor = await this.db.contributor.findFirst({
-				where: { stripeCustomerId },
-				include: { contact: true },
-			});
-
-			if (!contributor) {
-				return this.resultFail('Contributor not found');
-			}
-
-			return this.resultOk(contributor);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor by Stripe customer ID');
-		}
-	}
-
-	async findByEmail(email: string): Promise<ServiceResult<ContributorWithContact>> {
-		try {
-			const contributor = await this.db.contributor.findFirst({
-				where: {
-					contact: { email },
-				},
-				include: { contact: true },
-			});
-
-			if (!contributor) {
-				return this.resultFail('Contributor not found');
-			}
-
-			return this.resultOk(contributor);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor by email');
-		}
-	}
-
 	async findByStripeCustomerOrEmail(
 		stripeCustomerId: string,
 		email?: string,
@@ -316,14 +304,12 @@ export class ContributorService extends BaseService {
 			}
 
 			if (existingResult.data) {
-				// Link Stripe customer ID if missing (for existing email-matched users)
 				if (!existingResult.data.stripeCustomerId) {
 					await this.updateStripeCustomerId(existingResult.data.id, contributorData.stripeCustomerId);
 				}
 				return this.resultOk({ contributor: existingResult.data, isNewContributor: false });
 			}
 
-			// Create new contributor with Firebase Auth user
 			const createResult = await this.createContributorWithFirebaseAuth(contributorData);
 			if (!createResult.success) {
 				return this.resultFail(createResult.error);
@@ -477,6 +463,7 @@ export class ContributorService extends BaseService {
 						select: {
 							firstName: true,
 							lastName: true,
+							language: true,
 						},
 					},
 				},
@@ -491,6 +478,7 @@ export class ContributorService extends BaseService {
 				firstName: contributor.contact?.firstName ?? null,
 				lastName: contributor.contact?.lastName ?? null,
 				stripeCustomerId: contributor.stripeCustomerId ?? null,
+				language: contributor.contact?.language ?? null,
 			};
 
 			return this.resultOk(session);

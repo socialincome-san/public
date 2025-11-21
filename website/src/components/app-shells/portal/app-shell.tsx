@@ -1,6 +1,6 @@
 import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { ReactNode } from 'react';
-import { Navbar } from '../navbar/navbar';
+import { Navbar } from './navbar/navbar';
 
 type PortalAppShellProps = {
 	children: ReactNode;

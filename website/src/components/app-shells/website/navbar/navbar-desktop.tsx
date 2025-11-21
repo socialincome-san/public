@@ -2,13 +2,7 @@
 
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/components/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
 import type { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
@@ -63,12 +57,6 @@ export const NavbarDesktop = ({ contributor }: { contributor?: ContributorSessio
 				</DropdownMenuTrigger>
 
 				<DropdownMenuContent align="end" className="w-64">
-					<DropdownMenuItem asChild>
-						<Link href="/contributor/profile">Profil</Link>
-					</DropdownMenuItem>
-
-					<DropdownMenuSeparator />
-
 					<DropdownMenuItem
 						onSelect={(e) => {
 							e.preventDefault();

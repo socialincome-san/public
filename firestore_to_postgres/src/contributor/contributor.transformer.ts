@@ -23,7 +23,7 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 			if (doc.auth_user_id) {
 				authId = doc.auth_user_id;
 			} else {
-				authId = this.generateManualAuthId();
+				authId = this.generateManualAuthId(); // Todo: create real auth users and remove authuser-creation form login.
 				generatedManualIds++;
 			}
 
@@ -36,6 +36,7 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 						referral: this.mapReferral(personal?.referral),
 						paymentReferenceId: doc.payment_reference_id?.toString() ?? null,
 						stripeCustomerId: doc.stripe_customer_id ?? null,
+						needsOnboarding: doc.auth_user_id ? false : true,
 						contact: {
 							create: {
 								firstName: personal?.name ?? '',

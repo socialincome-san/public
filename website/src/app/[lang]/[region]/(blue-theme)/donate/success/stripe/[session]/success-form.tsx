@@ -1,13 +1,13 @@
 'use client';
-
-import { UpdateUserData } from '@/app/api/user/update/route';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ContributorReferralSource } from '@prisma/client';
+import { UpdateContributorAfterCheckoutInput } from '@socialincome/shared/src/database/services/stripe/stripe.types';
 import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
-import { GENDER_OPTIONS, UserReferralSource } from '@socialincome/shared/src/types/user';
-import { rndString } from '@socialincome/shared/src/utils/crypto';
+import { GENDER_OPTIONS } from '@socialincome/shared/src/types/user';
 import {
 	Button,
 	Checkbox,
@@ -26,7 +26,6 @@ import {
 	SelectValue,
 } from '@socialincome/ui';
 import { FirebaseError } from 'firebase/app';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -85,7 +84,7 @@ export function SuccessForm({
 		email: z.string().email(),
 		country: z.enum([firstCountry, ...restCountries]),
 		gender: z.enum(GENDER_OPTIONS).optional(),
-		referral: z.nativeEnum(UserReferralSource).optional(),
+		referral: z.nativeEnum(ContributorReferralSource).optional(),
 		termsAndConditions: z.literal<boolean>(true),
 	});
 
@@ -93,10 +92,10 @@ export function SuccessForm({
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			email: email,
+			email,
 			firstname: firstname || '',
 			lastname: lastname || '',
-			country: country,
+			country,
 			termsAndConditions: false,
 		},
 	});
@@ -105,11 +104,9 @@ export function SuccessForm({
 		setSubmitting(true);
 
 		try {
-			const { user } = await createUserWithEmailAndPassword(auth, values.email, await rndString(16));
-			const data: UpdateUserData = {
-				stripeCheckoutSessionId: stripeCheckoutSessionId,
+			const payload: UpdateContributorAfterCheckoutInput = {
+				stripeCheckoutSessionId,
 				user: {
-					auth_user_id: user.uid,
 					email: values.email,
 					language: lang,
 					personal: {
@@ -123,21 +120,25 @@ export function SuccessForm({
 					},
 				},
 			};
-			const response = await fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) });
-			if (!response.ok) {
+
+			const result = await updateContributorAfterCheckoutAction(payload);
+
+			if (!result.success) {
 				toast.error(translations.updateUserError);
+				setSubmitting(false);
+				return;
 			}
+
 			router.push(onSuccessURL);
 		} catch (error: unknown) {
 			if (error instanceof FirebaseError) {
-				switch (error.code) {
-					case 'auth/email-already-in-use':
-						router.push('/login');
-						break;
-					default:
-						toast.error(translations.updateUserError);
-						break;
+				if (error.code === 'auth/email-already-in-use') {
+					router.push('/login');
+				} else {
+					toast.error(translations.updateUserError);
 				}
+			} else {
+				toast.error(translations.updateUserError);
 			}
 
 			setSubmitting(false);

@@ -75,5 +75,6 @@ export type ContributorSession = {
 	id: string;
 	firstName: string | null;
 	lastName: string | null;
+	language: string | null;
 	stripeCustomerId: string | null;
 };

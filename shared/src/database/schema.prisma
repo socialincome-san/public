@@ -148,6 +148,7 @@ model Contributor {
   contactId          String                    @unique @map("contact_id")
   contact            Contact                   @relation(fields: [contactId], references: [id])
   referral           ContributorReferralSource @map("referral")
+  needsOnboarding    Boolean                   @default(true) @map("needs_onboarding")
   paymentReferenceId String?                   @map("payment_reference_id")
   stripeCustomerId   String?                   @map("stripe_customer_id")
 

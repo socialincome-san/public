@@ -34,3 +34,7 @@ export async function getAuthenticatedContributorOrRedirect(): Promise<Contribut
 	}
 	return contributor;
 }
+
+export async function getOptionalContributor(): Promise<ContributorSession | null> {
+	return await getCurrentContributor();
+}
