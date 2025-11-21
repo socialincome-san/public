@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       component:
-        description: The component to deploy (admin|functions|rules)
+        description: The component to deploy (rules)
         type: string
         required: true
       project:
@@ -13,92 +13,6 @@ on:
         required: true
 
 jobs:
-  deploy-admin:
-    name: Deploy admin on Firebase
-    runs-on: ubuntu-latest
-    if: inputs.component == 'admin'
-    env:
-      VITE_WEBSITE_BASE_URL: ${{ (inputs.project == 'social-income-prod' && 'https://socialincome.org') || 'https://staging.socialincome.org' }}
-      VITE_ADMIN_ALGOLIA_APPLICATION_ID: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }}
-      VITE_ADMIN_ALGOLIA_SEARCH_KEY: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Initialize repository
-        uses: ./.github/workflows/actions/init
-        with:
-          firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
-
-      - name: Build admin
-        run: npm run admin:build
-
-      - name: Deploy preview on Firebase (social-income-staging)
-        if: ${{ inputs.project == 'social-income-staging' && github.ref != 'refs/heads/main' }}
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
-          projectId: social-income-staging
-          target: admin
-
-      - name: Deploy on Firebase (social-income-staging)
-        if: ${{ inputs.project == 'social-income-staging' && github.ref == 'refs/heads/main' }}
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
-          projectId: social-income-staging
-          target: admin
-          channelId: live
-
-      - name: Deploy on Firebase (social-income-prod)
-        if: inputs.project == 'social-income-prod'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
-          projectId: social-income-prod
-          target: admin
-          channelId: live
-
-  deploy-functions:
-    name: Deploy functions on Firebase
-    runs-on: ubuntu-latest
-    if: inputs.component == 'functions'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Initialize repository
-        uses: ./.github/workflows/actions/init
-        with:
-          installFirebaseTools: "true"
-          firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
-
-      - name: Add secrets to functions/.env file
-        working-directory: functions
-        run: |
-          echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
-          echo POSTFINANCE_FTP_HOST=${{ vars.POSTFINANCE_FTP_HOST }} >> .env
-          echo POSTFINANCE_FTP_PORT=${{ vars.POSTFINANCE_FTP_PORT }} >> .env
-          echo POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64=${{ secrets.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 }} >> .env
-          echo POSTFINANCE_FTP_USER=${{ vars.POSTFINANCE_FTP_USER }} >> .env
-          echo POSTFINANCE_PAYMENTS_FILES_BUCKET=${{ (inputs.project == 'social-income-prod' && vars.POSTFINANCE_PAYMENTS_FILES_BUCKET) || vars.POSTFINANCE_PAYMENTS_FILES_BUCKET_STAGING }} >> .env
-          echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
-          echo SENDGRID_LIST_ID=${{ secrets.SENDGRID_LIST_ID }} >> .env
-          echo STRIPE_API_READ_KEY=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_API_READ_KEY) || secrets.STRIPE_API_READ_KEY_STAGING }} >> .env
-          echo STRIPE_WEBHOOK_SECRET=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_WEBHOOK_SECRET) || secrets.STRIPE_WEBHOOK_SECRET_STAGING }} >> .env
-          echo TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }} >> .env
-          echo TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} >> .env
-          echo TWILIO_VERIFY_SERVICE_SID=${{ (inputs.project == 'social-income-prod' && secrets.TWILIO_VERIFY_SERVICE_SID) || secrets.TWILIO_VERIFY_SERVICE_SID_STAGING }} >> .env
-
-      - name: Build functions
-        run: npm run functions:build
-
-      - name: Deploy on Firebase (${{ inputs.project }})
-        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project ${{ inputs.project }}
-
   deploy-rules:
     name: Deploy Firestore and Storage rules on Firebase
     runs-on: ubuntu-latest

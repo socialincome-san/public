@@ -1,6 +1,6 @@
-import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { LANGUAGE_COOKIE, REGION_COOKIE } from '@socialincome/website/src/app/[lang]/[region]';
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
 

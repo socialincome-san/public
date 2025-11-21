@@ -1,9 +1,0 @@
-# Compiled JavaScript files
-dist/
-
-# playwright
-/test-results/
-/playwright-report/
-/playwright/.cache/
-
-/.env
