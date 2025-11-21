@@ -41,7 +41,7 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 	const { sendSignInEmail, sendingEmail, signingIn, emailSent } = useEmailLogin({
 		lang,
 		onLoginSuccess: async () => {
-			router.push(`/${lang}/${region}/dashboard/contributions`);
+			router.push(`/${lang}/${region}/me`);
 		},
 	});
 
