@@ -30,5 +30,4 @@ jobs:
 
       - name: Deploy on Firebase (${{ inputs.project }})
         run: |
-          GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}
           GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only storage --project ${{ inputs.project }}
