@@ -39,6 +39,9 @@ jobs:
       - name: Run linters
         run: npm run website:lint
 
+      - name: Run typecheck
+        run: npm run typecheck
+
       - name: Run unit tests
         run: npm run website:test:emulator
 

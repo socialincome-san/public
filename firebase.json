@@ -12,16 +12,8 @@
 			]
 		}
 	],
-	"functions": {
-		"ignore": ["**/*.log", "scripts/", "src/", "tests/"],
-		"source": "functions",
-		"runtime": "nodejs22"
-	},
 	"storage": {
 		"rules": "storage.rules"
-	},
-	"firestore": {
-		"rules": "firestore.rules"
 	},
 	"emulators": {
 		"singleProjectMode": false,
@@ -32,18 +24,6 @@
 		},
 		"firestore": {
 			"port": 8080,
-			"host": "0.0.0.0"
-		},
-		"hosting": {
-			"port": 5005,
-			"host": "0.0.0.0"
-		},
-		"functions": {
-			"port": 5001,
-			"host": "0.0.0.0"
-		},
-		"pubsub": {
-			"port": 8085,
 			"host": "0.0.0.0"
 		},
 		"storage": {
