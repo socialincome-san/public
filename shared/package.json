@@ -43,6 +43,7 @@
 		"firecms": "^2.2.1",
 		"i18next": "^23.15.2",
 		"i18next-resources-to-backend": "^1.2.1",
+		"ssh2-sftp-client": "^11.0.0",
 		"luxon": "^3.5.0",
 		"pdfkit": "^0.15.0",
 		"prisma": "^6.19.0",
