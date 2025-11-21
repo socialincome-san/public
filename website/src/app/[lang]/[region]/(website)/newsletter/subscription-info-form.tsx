@@ -1,9 +1,9 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useApiClient } from '@/lib/api/useApiClient';
+import { subscribeToNewsletter } from '@/lib/server-actions/newsletter-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { NewsletterSubscriptionData } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
+import { NewsletterSubscriptionData } from '@socialincome/shared/src/database/services/sendgrid/types';
 import {
 	Button,
 	Form,
@@ -31,7 +31,6 @@ type PersonalInfoFormProps = {
 } & DefaultParams;
 
 export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
-	const api = useApiClient();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const formSchema = z.object({
@@ -54,17 +53,12 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 			firstname: values.firstname,
 			email: values.email,
 			language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : lang === 'it' ? 'it' : 'en',
-			status: 'subscribed',
 		};
 
 		try {
-			const response = await api.post('/api/newsletter/subscription/public', data);
-			if (response.status === 200) {
-				toast.success(translations.toastMessage);
-				form.reset();
-			} else {
-				toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
-			}
+			await subscribeToNewsletter(data);
+			toast.success(translations.toastMessage);
+			form.reset();
 		} catch (error) {
 			toast.error(translations.toastErrorMessage);
 		} finally {

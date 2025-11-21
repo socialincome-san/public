@@ -465,6 +465,11 @@ export class ContributorService extends BaseService {
 							firstName: true,
 							lastName: true,
 							language: true,
+							address: {
+								select: {
+									country: true,
+								},
+							},
 						},
 					},
 				},
@@ -481,6 +486,7 @@ export class ContributorService extends BaseService {
 				lastName: contributor.contact?.lastName ?? null,
 				stripeCustomerId: contributor.stripeCustomerId ?? null,
 				language: contributor.contact?.language ?? null,
+				country: contributor.contact?.address?.country ?? null,
 			};
 
 			return this.resultOk(session);
