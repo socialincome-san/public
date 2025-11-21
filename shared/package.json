@@ -21,7 +21,6 @@
 		"ts-jest": "^29.2.5"
 	},
 	"dependencies": {
-		"@sendgrid/mail": "^8.1.3",
 		"axios": "^1.8.2",
 		"date-fns": "^4.1.0",
 		"firebase-admin": "^12.7.0",

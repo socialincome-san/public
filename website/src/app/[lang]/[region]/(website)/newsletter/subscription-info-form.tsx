@@ -2,8 +2,8 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { subscribeToNewsletter } from '@/lib/server-actions/newsletter-actions';
+import { NewsletterSubscriptionData } from '@/lib/services/sendgrid/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { NewsletterSubscriptionData } from '@socialincome/shared/src/database/services/sendgrid/types';
 import {
 	Button,
 	Form,
