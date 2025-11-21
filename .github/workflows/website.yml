@@ -40,7 +40,7 @@ jobs:
         run: npm run website:lint
 
       - name: Run typecheck
-        run: npm run typecheck
+        run: npm run website:build-paths && npm run typecheck
 
       - name: Run unit tests
         run: npm run website:test:emulator
