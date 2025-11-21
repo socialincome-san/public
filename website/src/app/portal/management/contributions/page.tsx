@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ContributionService } from '@socialincome/shared/src/database/services/contribution/contribution.service';
-import type { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
+import { ContributionService } from '@/lib/services/contribution/contribution.service';
+import type { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
 import ContributionsTable from './contributions-table';
 
 export default async function ContributionsPage() {

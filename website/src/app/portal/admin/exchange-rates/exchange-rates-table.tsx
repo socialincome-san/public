@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { makeExchangeRatesColumns } from '@/components/data-table/columns/exchange-rates';
 import DataTable from '@/components/data-table/data-table';
 import { importExchangeRatesAction } from '@/lib/server-actions/exchange-rates-actions';
-import { ExchangeRatesTableViewRow } from '@socialincome/shared/src/database/services/exchange-rate/exchange-rate.types';
+import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
 import { useState, useTransition } from 'react';
 
 export default function ExchangeRatesTable({

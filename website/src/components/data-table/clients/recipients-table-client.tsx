@@ -5,8 +5,8 @@ import { makeRecipientColumns } from '@/components/data-table/columns/recipients
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { RecipientForm } from '@/components/recipient/recipient-form';
-import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { logger } from '@/utils/logger';
 import { useState } from 'react';
 
 export function RecipientsTableClient({

@@ -9,7 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
-import type { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
+import type { UserSession } from '@/lib/services/user/user.types';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

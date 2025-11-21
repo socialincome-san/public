@@ -1,5 +1,5 @@
-import { PaymentFileImportService } from '@socialincome/shared/src/database/services/payment-file-import/payment-file-import.service';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import { PaymentFileImportService } from '@/lib/services/payment-file-import/payment-file-import.service';
+import { logger } from '@/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**

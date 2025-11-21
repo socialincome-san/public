@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { CampaignService } from '@socialincome/shared/src/database/services/campaign/campaign.service';
-import type { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
+import { CampaignService } from '@/lib/services/campaign/campaign.service';
+import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
 import CampaignsTable from './campaigns-table';
 
 export default async function CampaignsPage() {

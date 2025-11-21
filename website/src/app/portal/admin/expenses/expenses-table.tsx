@@ -5,8 +5,8 @@ import { Button } from '@/components/button';
 import { makeExpenseColumns } from '@/components/data-table/columns/expenses';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { ExpenseTableViewRow } from '@socialincome/shared/src/database/services/expense/expense.types';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
+import { logger } from '@/utils/logger';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';
 

@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { ExpenseService } from '@socialincome/shared/src/database/services/expense/expense.service';
-import type { ExpenseTableViewRow } from '@socialincome/shared/src/database/services/expense/expense.types';
+import { ExpenseService } from '@/lib/services/expense/expense.service';
+import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
 import ExpensesTable from './expenses-table';
 
 export default async function ExpensesPage() {

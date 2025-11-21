@@ -1,9 +1,9 @@
+import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
-import { LanguageCode } from '../../../types/language';
-import { Translator } from '../../../utils/i18n';
 import { ContributionDonationEntry } from '../contribution/contribution.types';
 import { ContributorDonationCertificate } from '../contributor/contributor.types';
 

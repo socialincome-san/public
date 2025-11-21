@@ -1,7 +1,7 @@
 'use server';
 
-import { StripeService } from '@socialincome/shared/src/database/services/stripe/stripe.service';
-import { UpdateContributorAfterCheckoutInput } from '@socialincome/shared/src/database/services/stripe/stripe.types';
+import { StripeService } from '@/lib/services/stripe/stripe.service';
+import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
 import { getOptionalContributor } from '../firebase/current-contributor';
 
 export async function createStripeCheckoutAction(input: {

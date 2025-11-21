@@ -1,12 +1,9 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import { SurveyService } from '@socialincome/shared/src/database/services/survey/survey.service';
-import type {
-	SurveyCreateInput,
-	SurveyUpdateInput,
-} from '@socialincome/shared/src/database/services/survey/survey.types';
+import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { SurveyService } from '@/lib/services/survey/survey.service';
+import type { SurveyCreateInput, SurveyUpdateInput } from '@/lib/services/survey/survey.types';
 import { revalidatePath } from 'next/cache';
 
 export async function createSurveyAction(input: SurveyCreateInput) {

@@ -1,6 +1,6 @@
-import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
-import { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
-import { FirebaseService } from '@socialincome/shared/src/database/services/firebase/firebase.service';
+import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { FirebaseService } from '@/lib/services/firebase/firebase.service';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { readSessionCookie } from './session';

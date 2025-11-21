@@ -1,8 +1,4 @@
-import {
-	ExpenseCreateInput,
-	ExpensePayload,
-	ExpenseUpdateInput,
-} from '@socialincome/shared/src/database/services/expense/expense.types';
+import { ExpenseCreateInput, ExpensePayload, ExpenseUpdateInput } from '@/lib/services/expense/expense.types';
 import { ExpenseFormSchema } from './expenses-form';
 
 export function buildCreateExpenseInput(schema: ExpenseFormSchema): ExpenseCreateInput {

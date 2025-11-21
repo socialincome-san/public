@@ -3,7 +3,7 @@
 import { Button } from '@/components/button';
 import { makeDonationCertificateColumns } from '@/components/data-table/columns/donation-certificates';
 import DataTable from '@/components/data-table/data-table';
-import { DonationCertificateTableViewRow } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.types';
+import { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
 import { useState } from 'react';
 import GenerateDonationCertificatesDialog from './generate-donation-certificates-dialog';
 

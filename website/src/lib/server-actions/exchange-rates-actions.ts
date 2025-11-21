@@ -1,7 +1,7 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { ExchangeRateService } from '@socialincome/shared/src/database/services/exchange-rate/exchange-rate.service';
+import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.service';
 import { revalidatePath } from 'next/cache';
 
 export async function importExchangeRatesAction() {

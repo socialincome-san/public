@@ -1,6 +1,6 @@
 import { ProgramPermission, SurveyStatus } from '@prisma/client';
+import { rndString } from '@socialincome/shared/src/utils/crypto';
 import { addMonths, isFuture } from 'date-fns';
-import { rndString } from '../../../utils/crypto';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';

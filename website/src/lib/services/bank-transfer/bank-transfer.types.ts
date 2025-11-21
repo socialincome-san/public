@@ -1,4 +1,4 @@
-import { Currency } from '../../../types/currency';
+import { Currency } from '@socialincome/shared/src/types/currency';
 
 export type BankTransferPayment = {
 	amount: number;
