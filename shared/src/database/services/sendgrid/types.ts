@@ -53,4 +53,5 @@ export type SendgridClientProps = {
 	SENDGRID_LIST_ID: string;
 	SENDGRID_SUPPRESSION_LIST_ID: number;
 };
+
 export type CreateNewsletterSubscription = Omit<NewsletterSubscriptionData, 'status'>;
