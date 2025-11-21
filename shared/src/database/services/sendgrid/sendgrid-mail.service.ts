@@ -1,6 +1,6 @@
 import { MailService } from '@sendgrid/mail';
-import { Currency } from '../types/currency';
-import { LanguageCode } from '../types/language';
+import { Currency } from '../../../types/currency';
+import { LanguageCode } from '../../../types/language';
 
 export type FirstPayoutEmailTemplateData = {
 	first_name?: string;
@@ -12,7 +12,7 @@ export type FirstPayoutEmailTemplateData = {
 	one_time_donation: boolean;
 };
 
-export class SendgridMailClient extends MailService {
+export class SendgridMailService extends MailService {
 	constructor(apiKey: string) {
 		super();
 		this.setApiKey(apiKey);
