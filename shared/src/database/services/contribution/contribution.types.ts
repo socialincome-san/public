@@ -66,6 +66,8 @@ export type PaymentEventCreateData = {
 	metadata?: Record<string, unknown>;
 };
 
+export type PaymentEventCreateInput = Prisma.PaymentEventCreateInput;
+
 export type YourContributionsTableViewRow = {
 	createdAt: Date;
 	amount: number;
