@@ -4,13 +4,7 @@ import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { FirebaseError } from 'firebase/app';
-import {
-	fetchSignInMethodsForEmail,
-	isSignInWithEmailLink,
-	sendSignInLinkToEmail,
-	signInWithEmailLink,
-	signOut,
-} from 'firebase/auth';
+import { isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -75,7 +69,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		const url = window.location.href;
 
 		try {
-			await createUserIfNotExists(email);
 			const { user } = await signInWithEmailLink(auth, email, url);
 
 			const ok = await setServerSession();
@@ -124,20 +117,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			translator && toast.error(translator.t('error.unknown'));
 		} finally {
 			setSendingEmail(false);
-		}
-	};
-
-	const createUserIfNotExists = async (email: string) => {
-		const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-		const userExists = signInMethods.length > 0;
-		if (userExists) return;
-
-		const response = await fetch('/api/user/create', {
-			method: 'POST',
-			body: JSON.stringify({ email }),
-		});
-		if (!response.ok) {
-			translator && toast.error(translator.t('error.unknown'));
 		}
 	};
 
