@@ -3,7 +3,6 @@ import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
-import { CAMPAIGN_FIRESTORE_PATH } from '../types/campaign';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
 	ContributionSourceKey,
@@ -113,14 +112,7 @@ export class StripeEventHandler {
 			status: this.constructStatus(charge.status),
 		} as StripeContribution;
 
-		return checkoutMetadata?.campaignId
-			? ({
-					...contribution,
-					campaign_path: this.firestoreAdmin.firestore
-						.collection(CAMPAIGN_FIRESTORE_PATH)
-						.doc(checkoutMetadata?.campaignId),
-				} as StripeContribution)
-			: contribution;
+		return contribution;
 	};
 
 	getCheckoutMetadata = async (charge: Stripe.Charge): Promise<Stripe.Metadata | null> => {
