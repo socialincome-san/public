@@ -1,4 +1,4 @@
-import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
+import { UserSession } from '@/lib/services/user/user.types';
 import { LucideIcon, Settings, Settings2 } from 'lucide-react';
 
 export type NavLink = {

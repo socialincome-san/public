@@ -1,8 +1,8 @@
 import { makeProgramMembersColumns } from '@/components/data-table/columns/program-members';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { OrganizationMemberTableViewRow } from '@socialincome/shared/src/database/services/organization/organization.types';
-import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
+import { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
+import { ProgramService } from '@/lib/services/program/program.service';
 
 type Props = { params: Promise<{ programId: string }> };
 

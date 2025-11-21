@@ -1,7 +1,7 @@
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
+import { ProgramService } from '@/lib/services/program/program.service';
 
 import { CountryBadge } from '@/components/badges/country-badge';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';

@@ -1,10 +1,6 @@
 import { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/legacy/dynamic-form/helper';
-import {
-	RecipientCreateInput,
-	RecipientPayload,
-	RecipientUpdateInput,
-} from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { RecipientFormSchema } from './recipient-form';
 
 export function buildUpdateRecipientInput(

@@ -1,9 +1,6 @@
 import { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/legacy/dynamic-form/helper';
-import {
-	ContributorPayload,
-	ContributorUpdateInput,
-} from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import { ContributorPayload, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { ContributorFormSchema } from './contributors-form';
 
 export function buildUpdateContributorsInput(

@@ -1,7 +1,7 @@
-import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
-import { FirebaseService } from '@socialincome/shared/src/database/services/firebase/firebase.service';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
 import { cache } from 'react';
+import { ContributorService } from '../services/contributor/contributor.service';
+import { FirebaseService } from '../services/firebase/firebase.service';
+import { UserService } from '../services/user/user.service';
 import { readSessionCookie } from './session';
 
 export type CurrentAccountType = 'user' | 'contributor' | null;

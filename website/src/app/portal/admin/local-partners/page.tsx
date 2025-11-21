@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { LocalPartnerService } from '@socialincome/shared/src/database/services/local-partner/local-partner.service';
-import type { LocalPartnerTableViewRow } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
+import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import LocalPartnersTable from './local-partners-table';
 
 export default async function LocalPartnersPage() {

@@ -3,7 +3,7 @@
 import { Button } from '@/components/button';
 import { makePayoutColumns } from '@/components/data-table/columns/payouts';
 import DataTable from '@/components/data-table/data-table';
-import type { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
+import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import { useState } from 'react';
 import { PayoutFormDialog } from './payout-form-dialog';
 import { StartPayoutProcessDialog } from './start-payout-process-dialog';

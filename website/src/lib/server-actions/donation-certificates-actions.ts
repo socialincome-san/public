@@ -1,8 +1,8 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
-import { DonationCertificateService } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.service';
+import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { DonationCertificateService } from '@/lib/services/donation-certificate/donation-certificate.service';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { revalidatePath } from 'next/cache';
 

@@ -8,11 +8,8 @@ import {
 	getProgramsOptions,
 	updateCampaignsAction,
 } from '@/lib/server-actions/campaigns-actions';
-import {
-	CampaignsCreateInput,
-	CampaignsUpdateInput,
-} from '@socialincome/shared/src/database/services/campaign/campaign.types';
-import { ProgramOption } from '@socialincome/shared/src/database/services/program/program.types';
+import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { ProgramOption } from '@/lib/services/program/program.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCampaignsInput, buildUpdateCampaignsInput, initialFormSchema } from './campaigns-form-helper';

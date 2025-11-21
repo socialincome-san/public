@@ -1,8 +1,4 @@
-import type {
-	SurveyCreateInput,
-	SurveyPayload,
-	SurveyUpdateInput,
-} from '@socialincome/shared/src/database/services/survey/survey.types';
+import type { SurveyCreateInput, SurveyPayload, SurveyUpdateInput } from '@/lib/services/survey/survey.types';
 import { SurveyFormSchema } from './survey-form';
 
 export function buildCreateSurveyInput(schema: SurveyFormSchema): SurveyCreateInput {

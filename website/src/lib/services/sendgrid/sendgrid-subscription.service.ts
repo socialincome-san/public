@@ -1,5 +1,5 @@
 import { Client } from '@sendgrid/client';
-import { CountryCode } from '../../../types/country';
+import { CountryCode } from '@socialincome/shared/src/types/country';
 import { ContributorSession } from '../contributor/contributor.types';
 import {
 	CreateNewsletterSubscription,

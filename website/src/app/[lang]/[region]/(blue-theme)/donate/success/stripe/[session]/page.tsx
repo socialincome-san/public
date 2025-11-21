@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
-import { StripeService } from '@socialincome/shared/src/database/services/stripe/stripe.service';
+import { StripeService } from '@/lib/services/stripe/stripe.service';
 import { CountryCode } from '@socialincome/shared/src/types/country';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';

@@ -1,7 +1,7 @@
 'use client';
 
 import { getOptionalContributorAction } from '@/lib/server-actions/contributor-actions';
-import { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { useEffect, useState } from 'react';
 
 export function useContributorSession() {

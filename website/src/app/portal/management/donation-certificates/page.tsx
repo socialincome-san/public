@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { DonationCertificateService } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.service';
-import type { DonationCertificateTableViewRow } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.types';
+import { DonationCertificateService } from '@/lib/services/donation-certificate/donation-certificate.service';
+import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
 import { DonationCertificateTable } from './donation-certificates-table';
 
 export default async function DonationCertificatesPage() {

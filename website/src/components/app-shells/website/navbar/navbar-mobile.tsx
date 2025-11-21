@@ -1,6 +1,6 @@
 'use client';
 
-import { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import Link from 'next/link';
 import { Logo } from './logo';
 

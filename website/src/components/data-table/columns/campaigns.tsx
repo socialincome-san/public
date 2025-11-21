@@ -5,7 +5,7 @@ import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import type { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
+import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {

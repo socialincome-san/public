@@ -1,13 +1,9 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
-import {
-	type PayoutCreateInput,
-	type PayoutUpdateInput,
-	YearMonth,
-} from '@socialincome/shared/src/database/services/payout/payout.types';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
+import { PayoutService } from '@/lib/services/payout/payout.service';
+import { type PayoutCreateInput, type PayoutUpdateInput, YearMonth } from '@/lib/services/payout/payout.types';
+import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { revalidatePath } from 'next/cache';
 
 function toYearMonth(date: Date): YearMonth {

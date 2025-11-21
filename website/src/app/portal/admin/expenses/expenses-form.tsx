@@ -8,8 +8,8 @@ import {
 	getExpenseOptionsAction,
 	updateExpenseAction,
 } from '@/lib/server-actions/expense-action';
+import { ExpensePayload } from '@/lib/services/expense/expense.types';
 import { ExpenseType } from '@prisma/client';
-import { ExpensePayload } from '@socialincome/shared/src/database/services/expense/expense.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateExpenseInput, buildUpdateExpenseInput } from './expenses-form-helper';

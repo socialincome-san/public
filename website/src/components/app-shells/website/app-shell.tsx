@@ -1,4 +1,4 @@
-import { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { ReactNode } from 'react';
 import { Navbar } from './navbar/navbar';
 

@@ -1,5 +1,5 @@
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import { logger } from '@/utils/logger';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 

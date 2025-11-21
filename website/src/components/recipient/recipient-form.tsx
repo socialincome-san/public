@@ -9,14 +9,10 @@ import {
 	getRecipientOptions,
 	updateRecipientAction,
 } from '@/lib/server-actions/recipient-actions';
+import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
+import { ProgramOption } from '@/lib/services/program/program.types';
+import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { PaymentProvider, RecipientStatus } from '@prisma/client';
-import { LocalPartnerOption } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
-import { ProgramOption } from '@socialincome/shared/src/database/services/program/program.types';
-import {
-	RecipientCreateInput,
-	RecipientPayload,
-	RecipientUpdateInput,
-} from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateRecipientInput, buildUpdateRecipientInput } from './recipient-form-helpers';

@@ -2,7 +2,7 @@
 
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import type { OrganizationMemberTableViewRow } from '@socialincome/shared/src/database/services/organization/organization.types';
+import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export function makeOrganizationMemberColumns(): ColumnDef<OrganizationMemberTableViewRow>[] {

@@ -1,8 +1,4 @@
-import {
-	PayoutCreateInput,
-	PayoutPayload,
-	PayoutUpdateInput,
-} from '@socialincome/shared/src/database/services/payout/payout.types';
+import { PayoutCreateInput, PayoutPayload, PayoutUpdateInput } from '@/lib/services/payout/payout.types';
 import { PayoutFormSchema } from './payout-form';
 
 export function buildCreatePayoutInput(schema: PayoutFormSchema): PayoutCreateInput {

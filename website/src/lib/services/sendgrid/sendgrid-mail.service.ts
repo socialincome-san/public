@@ -1,6 +1,6 @@
 import { MailService } from '@sendgrid/mail';
-import { Currency } from '../../../types/currency';
-import { LanguageCode } from '../../../types/language';
+import { Currency } from '@socialincome/shared/src/types/currency';
+import { LanguageCode } from '@socialincome/shared/src/types/language';
 
 export type FirstPayoutEmailTemplateData = {
 	first_name?: string;

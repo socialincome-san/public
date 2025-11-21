@@ -1,5 +1,5 @@
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import { SurveyService } from '@socialincome/shared/src/database/services/survey/survey.service';
+import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { SurveyService } from '@/lib/services/survey/survey.service';
 import { NextResponse } from 'next/server';
 
 /**

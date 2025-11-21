@@ -1,6 +1,6 @@
 import { Wallet } from '@/components/wallet';
+import { ProgramService } from '@/lib/services/program/program.service';
 import { ProgramPermission } from '@prisma/client';
-import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 
 type Props = {
 	userId: string;

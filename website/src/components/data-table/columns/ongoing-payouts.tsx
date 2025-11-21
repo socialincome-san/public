@@ -4,7 +4,7 @@ import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import type { OngoingPayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
+import type { OngoingPayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef, HeaderContext } from '@tanstack/react-table';
 
 function getMonthLabelFromData(ctx: HeaderContext<OngoingPayoutTableViewRow, unknown>, index: number): string {

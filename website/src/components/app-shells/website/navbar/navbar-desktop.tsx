@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
-import type { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import type { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 import { useLogout } from './hooks/use-logout';

@@ -1,7 +1,7 @@
 import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
+import { PayoutService } from '@/lib/services/payout/payout.service';
 
 type Props = { params: Promise<{ programId: string }> };
 const MONTHS_AHEAD = 6;

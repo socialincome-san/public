@@ -1,5 +1,5 @@
 import { ContributionStatus, DonationInterval, PaymentEventType } from '@prisma/client';
-import { Currency } from '../../../types/currency';
+import { Currency } from '@socialincome/shared/src/types/currency';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';

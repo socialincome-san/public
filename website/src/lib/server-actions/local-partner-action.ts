@@ -1,11 +1,8 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { LocalPartnerService } from '@socialincome/shared/src/database/services/local-partner/local-partner.service';
-import {
-	LocalPartnerCreateInput,
-	LocalPartnerUpdateInput,
-} from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
+import { LocalPartnerCreateInput, LocalPartnerUpdateInput } from '@/lib/services/local-partner/local-partner.types';
 import { revalidatePath } from 'next/cache';
 
 export async function createLocalPartnerAction(localPartner: LocalPartnerCreateInput) {

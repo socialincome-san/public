@@ -1,13 +1,10 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { LocalPartnerService } from '@socialincome/shared/src/database/services/local-partner/local-partner.service';
-import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import {
-	RecipientCreateInput,
-	RecipientUpdateInput,
-} from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
+import { ProgramService } from '@/lib/services/program/program.service';
+import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { RecipientCreateInput, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { revalidatePath } from 'next/cache';
 
 export async function createRecipientAction(recipient: RecipientCreateInput) {

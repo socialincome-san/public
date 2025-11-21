@@ -1,9 +1,9 @@
 'use server';
 
-import { BankTransferService } from '@socialincome/shared/src/database/services/bank-transfer/bank-transfer.service';
-import { BankTransferPayment } from '@socialincome/shared/src/database/services/bank-transfer/bank-transfer.types';
-import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
-import { BankContributorData } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import { BankTransferService } from '@/lib/services/bank-transfer/bank-transfer.service';
+import { BankTransferPayment } from '@/lib/services/bank-transfer/bank-transfer.types';
+import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { BankContributorData } from '@/lib/services/contributor/contributor.types';
 import { DateTime } from 'luxon';
 
 export async function getReferenceIds(

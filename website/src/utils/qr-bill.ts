@@ -9,7 +9,7 @@
 import {
 	CONTRIBUTION_REFERENCE_ID_LENGTH,
 	CONTRIBUTOR_REFERENCE_ID_LENGTH,
-} from '@socialincome/shared/src/database/services/bank-transfer/bank-transfer-config';
+} from '@/lib/services/bank-transfer/bank-transfer-config';
 import { Data } from 'swissqrbill/lib/cjs/shared/types';
 import { SwissQRBill, SwissQRCode } from 'swissqrbill/svg';
 

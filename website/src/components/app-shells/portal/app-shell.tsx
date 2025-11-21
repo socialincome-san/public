@@ -1,4 +1,4 @@
-import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
+import { UserSession } from '@/lib/services/user/user.types';
 import { ReactNode } from 'react';
 import { Navbar } from './navbar/navbar';
 

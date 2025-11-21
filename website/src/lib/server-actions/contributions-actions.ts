@@ -1,10 +1,10 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { CampaignService } from '@socialincome/shared/src/database/services/campaign/campaign.service';
-import { ContributionService } from '@socialincome/shared/src/database/services/contribution/contribution.service';
-import { ContributionUpdateInput } from '@socialincome/shared/src/database/services/contribution/contribution.types';
-import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
+import { CampaignService } from '@/lib/services/campaign/campaign.service';
+import { ContributionService } from '@/lib/services/contribution/contribution.service';
+import { ContributionUpdateInput } from '@/lib/services/contribution/contribution.types';
+import { ContributorService } from '@/lib/services/contributor/contributor.service';
 import { revalidatePath } from 'next/cache';
 
 export async function updateContributionAction(contribution: ContributionUpdateInput) {

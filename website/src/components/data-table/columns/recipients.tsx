@@ -7,7 +7,7 @@ import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export function makeRecipientColumns(hideProgramName = false): ColumnDef<RecipientTableViewRow>[] {

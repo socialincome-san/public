@@ -1,5 +1,5 @@
-import { ExchangeRateImportService } from '@socialincome/shared/src/database/services/exchange-rate/exchange-rate-import.service';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import { ExchangeRateImportService } from '@/lib/services/exchange-rate/exchange-rate-import.service';
+import { logger } from '@/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**

@@ -4,11 +4,8 @@ import { getFormSchema as getContactFormSchema } from '@/components/legacy/dynam
 import DynamicForm, { FormField, FormSchema } from '@/components/legacy/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/legacy/dynamic-form/helper';
 import { getContributorAction, updateContributorAction } from '@/lib/server-actions/contributor-actions';
+import { ContributorPayload, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { ContributorReferralSource } from '@prisma/client';
-import {
-	ContributorPayload,
-	ContributorUpdateInput,
-} from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildUpdateContributorsInput } from './contributors-form-helper';
