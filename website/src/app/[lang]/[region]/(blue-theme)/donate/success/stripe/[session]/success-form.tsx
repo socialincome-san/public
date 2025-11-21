@@ -1,5 +1,4 @@
 'use client';
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
@@ -74,7 +73,6 @@ export function SuccessForm({
 	const router = useRouter();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
-	const { auth } = useAuth();
 	const [submitting, setSubmitting] = useState(false);
 	const [firstCountry, ...restCountries] = COUNTRY_CODES;
 
