@@ -1,3 +1,5 @@
+import { CountryCode } from '../../../types/country';
+
 export type Suppression = {
 	name: string;
 	id: number;
@@ -33,3 +35,22 @@ export type SendgridContactType = {
 	updated_at: string;
 	status?: 'subscribed' | 'unsubscribed';
 };
+
+export type SupportedLanguage = 'de' | 'en' | 'fr' | 'it';
+
+export type NewsletterSubscriptionData = {
+	firstname?: string;
+	lastname?: string;
+	email: string;
+	language: SupportedLanguage;
+	country?: CountryCode;
+	status?: 'subscribed' | 'unsubscribed';
+	isContributor?: boolean;
+};
+
+export type SendgridClientProps = {
+	SENDGRID_API_KEY: string;
+	SENDGRID_LIST_ID: string;
+	SENDGRID_SUPPRESSION_LIST_ID: number;
+};
+export type CreateNewsletterSubscription = Omit<NewsletterSubscriptionData, 'status'>;
