@@ -1,7 +1,8 @@
 'use client';
 
-import { CreateNewsletterSubscription, subscribeToNewsletter } from '@/lib/server-actions/newsletter-actions';
+import { subscribeToNewsletter } from '@/lib/server-actions/newsletter-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateNewsletterSubscription } from '@socialincome/shared/src/database/services/sendgrid/types';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
 import { useForm } from 'react-hook-form';
