@@ -60,13 +60,9 @@ async function Navbar({ lang, region }: DefaultParams) {
 				},
 				{
 					id: 'transparency',
-					href: `/${lang}/${region}/transparency/finances`,
+					href: `/${lang}/${region}/transparency/recipient-selection`,
 					title: translator.t('navigation.transparency'),
 					links: [
-						{
-							title: translator.t('navigation.finances'),
-							href: `/${lang}/${region}/transparency/finances`,
-						},
 						{
 							title: translator.t('navigation.recipient-selection'),
 							href: `/${lang}/${region}/transparency/recipient-selection`,
