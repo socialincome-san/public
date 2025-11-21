@@ -7,7 +7,7 @@
 	},
 	"scripts": {
 		"test": "firebase emulators:exec --only firestore,storage,functions --project demo-social-income-local --config ../firebase.json --import ../seed 'npm run test:app'",
-		"test:app": "jest --forceExit --roots tests/ src/",
+		"test:app": "jest --forceExit --roots src/",
 		"db:generate": "prisma generate --schema=src/database/schema.prisma",
 		"db:migrate:deploy": "prisma migrate deploy --schema=src/database/schema.prisma",
 		"db:migrate:dev": "prisma migrate dev --schema=src/database/schema.prisma",
