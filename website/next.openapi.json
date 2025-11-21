@@ -1,9 +1,9 @@
 {
 	"openapi": "3.1.0",
 	"info": {
-		"title": "Social Income Portal API",
+		"title": "Social Income API",
 		"version": "1.0.0",
-		"description": "The Social Income Portal API enables recipients to authenticate and securely access their personal data and program information. Most endpoints require a valid Firebase ID token (Bearer JWT), except authentication endpoints which are used to obtain the token."
+		"description": "Secure API with Firebase-based authentication; most endpoints require an ID token, except authentication and public webhook routes"
 	},
 	"servers": [
 		{
@@ -96,10 +96,10 @@
 			}
 		}
 	},
-	"apiDir": "./src/app/api/portal",
-	"schemaDir": "./src/app/api/portal/v1",
+	"apiDir": "./src/app/api/v1",
+	"schemaDir": "./src/app/api/v1",
 	"schemaType": "zod",
-	"docsUrl": "portal/v1/api-docs",
+	"docsUrl": "api-docs",
 	"ui": "scalar",
 	"outputFile": "openapi.json",
 	"outputDir": "./public",

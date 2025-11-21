@@ -1,4 +1,4 @@
-import { VerifyOtpRequest } from '@/app/api/portal/v1/models';
+import { VerifyOtpRequest } from '@/app/api/v1/models';
 import { TwilioService } from '@socialincome/shared/src/database/services/twilio/twilio.service';
 import { NextResponse } from 'next/server';
 
