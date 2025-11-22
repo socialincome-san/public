@@ -12,7 +12,7 @@ import { notFound } from 'next/navigation';
 import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
 
 const STANDARD_ARTICLE_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
-const DEFAULT_LIMIT = 50;
+const DEFAULT_PAGE_SIZE = 50;
 const NOT_FOUND = 404;
 const CONTENT = 'content';
 const LEAD_TEXT = 'leadText';
@@ -86,8 +86,9 @@ export async function getArticleCountByAuthorForDefaultLang(authorId: string): P
 	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
 }
 
-export async function getAuthors(lang: string): Promise<ISbStories<StoryblokAuthor>> {
+export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<StoryblokAuthor>[]> {
 	const params: ISbStoriesParams = {
+		per_page: DEFAULT_PAGE_SIZE,
 		language: lang,
 		content_type: StoryblokContentType.Author,
 		filter_query: {
@@ -96,11 +97,12 @@ export async function getAuthors(lang: string): Promise<ISbStories<StoryblokAuth
 			},
 		},
 	};
-	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
 
-export async function getTags(lang: string): Promise<ISbStories<StoryblokTag>> {
+export async function getOverviewTags(lang: string): Promise<ISbStoryData<StoryblokTag>[]> {
 	const params: ISbStoriesParams = {
+		per_page: DEFAULT_PAGE_SIZE,
 		language: lang,
 		content_type: StoryblokContentType.Tag,
 		filter_query: {
@@ -109,16 +111,12 @@ export async function getTags(lang: string): Promise<ISbStories<StoryblokTag>> {
 			},
 		},
 	};
-	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
 
-export async function getArticlesByTag(
-	tagId: string,
-	lang: string,
-	limit = DEFAULT_LIMIT,
-): Promise<ISbStories<StoryblokArticle>> {
+export async function getArticlesByTag(tagId: string, lang: string): Promise<ISbStoryData<StoryblokArticle>[]> {
 	const params: ISbStoriesParams = {
-		per_page: limit,
+		per_page: DEFAULT_PAGE_SIZE,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 		language: lang,
 		excluding_fields: CONTENT,
@@ -126,16 +124,12 @@ export async function getArticlesByTag(
 		content_type: StoryblokContentType.Article,
 		filter_query: articleByTagsFilter(tagId),
 	};
-	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
 
-export async function getArticlesByAuthor(
-	authorId: string,
-	lang: string,
-	limit = DEFAULT_LIMIT,
-): Promise<ISbStories<StoryblokArticle>> {
+export async function getArticlesByAuthor(authorId: string, lang: string): Promise<ISbStoryData<StoryblokArticle>[]> {
 	const params: ISbStoriesParams = {
-		per_page: limit,
+		per_page: DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 		language: lang,
@@ -143,16 +137,16 @@ export async function getArticlesByAuthor(
 		content_type: StoryblokContentType.Article,
 		filter_query: articlesByAuthorFilter(authorId),
 	};
-	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
 
 export async function getOverviewArticles(
 	lang: string,
 	idsToIgnore: string | undefined = undefined,
-	limit = DEFAULT_LIMIT,
-): Promise<ISbStories<StoryblokArticle>> {
+	limit: number | undefined = undefined,
+): Promise<ISbStoryData<StoryblokArticle>[]> {
 	const params: ISbStoriesParams = {
-		per_page: limit,
+		per_page: limit || DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 		language: lang,
@@ -165,7 +159,12 @@ export async function getOverviewArticles(
 		},
 		...(idsToIgnore ? { excluding_ids: idsToIgnore } : {}),
 	};
-	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
+	const parameters = await addVersionParameter(params);
+	if (limit) {
+		return (await getStoryblokApi().get(STORIES_PATH, parameters)).data.stories;
+	} else {
+		return getStoryblokApi().getAll(STORIES_PATH, parameters);
+	}
 }
 
 export async function getTag(slug: string, lang: string): Promise<ISbStory<StoryblokTag>> {
@@ -279,7 +278,7 @@ export async function getRelativeArticles(
 		const idsToIgnore = [...result.map((s) => s.id), articleId].join(',');
 		const remaining = numberOfArticles - result.length;
 		const overviewArticles = await getOverviewArticles(lang, idsToIgnore, remaining);
-		result = [...result, ...overviewArticles.data.stories];
+		result = [...result, ...overviewArticles];
 	}
 
 	return result;
@@ -299,11 +298,11 @@ export async function getArticle(lang: string, slug: string): Promise<ISbStory<S
 	);
 }
 
-export function generateMetaDataForBlog(storyblokStory: ISbStoryData<StoryblokArticle>, url: string): Metadata {
+export function generateMetaDataForArticle(storyblokStory: ISbStoryData<StoryblokArticle>, url: string): Metadata {
 	const storyblokArticle = storyblokStory.content;
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;
-	const author = storyblokArticle.author.content.fullName;
+	const authorsFullName = `${storyblokArticle.author.content.firstName} ${storyblokArticle.author.content.lastName}`;
 	const dimensions = getDimensionsFromStoryblokImageUrl(storyblokArticle.image.filename);
 	const imageUrl = formatStoryblokUrl(
 		storyblokArticle.image.filename,
@@ -323,7 +322,7 @@ export function generateMetaDataForBlog(storyblokStory: ISbStoryData<StoryblokAr
 		title: title,
 		description: description,
 		keywords: tags,
-		authors: { name: author },
+		authors: { name: authorsFullName },
 		openGraph: {
 			title: title,
 			description: description,
@@ -342,7 +341,7 @@ export function generateMetaDataForBlog(storyblokStory: ISbStoryData<StoryblokAr
 		other: {
 			'article:published_time': formatStoryblokDateToIso(storyblokStory.first_published_at),
 			'article:modified_time': formatStoryblokDateToIso(storyblokStory.updated_at),
-			'article:author': author,
+			'article:author': authorsFullName,
 			'article:section': 'News',
 			'article:tag': tags,
 		},
