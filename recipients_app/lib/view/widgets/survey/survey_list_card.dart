@@ -47,7 +47,7 @@ class SurveyListCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       _formatDate(
-                        mappedSurvey.survey.dueDateAt?.toDate(),
+                        mappedSurvey.survey.dueDateAt,
                         context.l10n,
                         locale,
                       ),
