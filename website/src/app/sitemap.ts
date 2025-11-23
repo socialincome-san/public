@@ -1,8 +1,13 @@
-import { getOverviewArticles, getOverviewAuthors, getOverviewTags } from '@/components/legacy/storyblok/StoryblokApi';
+import {
+	getOverviewArticles,
+	getOverviewArticleTypes,
+	getOverviewAuthors,
+	getOverviewTags
+} from '@/components/legacy/storyblok/StoryblokApi';
 import { toDateObject } from '@/components/legacy/storyblok/StoryblokUtils';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
-import { type StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@/types/journal';
+import { type StoryblokArticle, StoryblokArticleType, StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import type { MetadataRoute } from 'next';
 import { ISbStoryData } from 'storyblok-js-client/src/interfaces';
 import staticRoutes from './static-pages.json';
@@ -16,6 +21,10 @@ const SUPPORTED_LANGUAGES: WebsiteLanguage[] = ['de', 'fr', 'it'];
 function articleUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
 	return `${url}/${lang}/${region}/journal/${slug}`;
 }
+function articleTypeUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
+	return `${url}/${lang}/${region}/journal/article-type/${slug}`;
+}
+
 
 function tagUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
 	return `${url}/${lang}/${region}/journal/tag/${slug}`;
@@ -61,6 +70,16 @@ function generateStoryblokAuthorsSitemap(authors: ISbStoryData<StoryblokAuthor>[
 	}));
 }
 
+function generateStoryblokArticleTypeSitemap(tags: ISbStoryData<StoryblokArticleType>[]): MetadataRoute.Sitemap {
+	return tags.map((tag) => ({
+		url: articleTypeUrl(tag.slug, defaultLanguage),
+		alternates: {
+			languages: Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, articleTypeUrl(tag.slug, lang)])),
+		},
+		changeFrequency: 'weekly',
+	}));
+}
+
 function generateStoryblokTagSitemap(tags: ISbStoryData<StoryblokTag>[]): MetadataRoute.Sitemap {
 	return tags.map((tag) => ({
 		url: tagUrl(tag.slug, defaultLanguage),
@@ -98,16 +117,18 @@ function getArticlesInAlternativeLanguages() {
 const STATIC_SITEMAP = generateStaticPagesSitemap();
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	try {
-		const [articles, articlesAlternativeLanguages, authors, tags] = await Promise.all([
+		const [articles, articlesAlternativeLanguages, authors, tags, articleTypes] = await Promise.all([
 			getOverviewArticles(defaultLanguage),
 			getArticlesInAlternativeLanguages(),
 			getOverviewAuthors(defaultLanguage),
 			getOverviewTags(defaultLanguage),
+			getOverviewArticleTypes(defaultLanguage),
 		]);
 		return STATIC_SITEMAP.concat(
 			generateStoryblokArticlesSitemap(articles, articlesAlternativeLanguages),
 			generateStoryblokAuthorsSitemap(authors),
 			generateStoryblokTagSitemap(tags),
+			generateStoryblokArticleTypeSitemap(articleTypes),
 		);
 	} catch (error) {
 		console.error('Failed to generate full sitemap', error);

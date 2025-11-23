@@ -4,7 +4,13 @@ import {
 	getDimensionsFromStoryblokImageUrl,
 } from '@/components/legacy/storyblok/StoryblokUtils';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
+import {
+	type StoryblokArticle,
+	StoryblokArticleType,
+	StoryblokAuthor,
+	StoryblokContentType,
+	StoryblokTag
+} from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { Metadata } from 'next';
 import { draftMode } from 'next/headers';
@@ -43,6 +49,15 @@ export async function getOverviewArticlesCountForDefaultLang(): Promise<number> 
 	};
 	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
 }
+
+function articleByArticleTypeFilter(articleTypeId: string) {
+	return {
+		type: {
+			in: articleTypeId,
+		},
+	};
+}
+
 
 function articleByTagsFilter(tagId: string) {
 	return {
@@ -86,11 +101,38 @@ export async function getArticleCountByAuthorForDefaultLang(authorId: string): P
 	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
 }
 
+// To the best of my knowledge Storyblok doesn't support any aggregation functions API, therefore we are querying all of them
+// with a limit of 1 article per page. Therefore, the response doesn't transfer much not needed data but still contains the count
+export async function getArticleCountByArticleTypeForDefaultLang(articleTypeId: string): Promise<number> {
+	const params: ISbStoriesParams = {
+		per_page: 1,
+		language: defaultLanguage,
+		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
+		content_type: StoryblokContentType.Article,
+		filter_query: articleByArticleTypeFilter(articleTypeId),
+	};
+	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
+}
+
 export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<StoryblokAuthor>[]> {
 	const params: ISbStoriesParams = {
 		per_page: DEFAULT_PAGE_SIZE,
 		language: lang,
 		content_type: StoryblokContentType.Author,
+		filter_query: {
+			displayInOverviewPage: {
+				is: true,
+			},
+		},
+	};
+	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
+}
+
+export async function getOverviewArticleTypes(lang: string): Promise<ISbStoryData<StoryblokArticleType>[]> {
+	const params: ISbStoriesParams = {
+		per_page: DEFAULT_PAGE_SIZE,
+		language: lang,
+		content_type: StoryblokContentType.ArticleType,
 		filter_query: {
 			displayInOverviewPage: {
 				is: true,
@@ -110,6 +152,19 @@ export async function getOverviewTags(lang: string): Promise<ISbStoryData<Storyb
 				is: true,
 			},
 		},
+	};
+	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
+}
+
+export async function getArticlesByArticleType(articleTypeId: string, lang: string): Promise<ISbStoryData<StoryblokArticle>[]> {
+	const params: ISbStoriesParams = {
+		per_page: DEFAULT_PAGE_SIZE,
+		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
+		language: lang,
+		excluding_fields: CONTENT,
+		sort_by: 'first_published_at:desc',
+		content_type: StoryblokContentType.Article,
+		filter_query: articleByArticleTypeFilter(articleTypeId),
 	};
 	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
@@ -165,6 +220,19 @@ export async function getOverviewArticles(
 	} else {
 		return getStoryblokApi().getAll(STORIES_PATH, parameters);
 	}
+}
+
+export async function getArticleType(slug: string, lang: string): Promise<ISbStory<StoryblokArticleType>> {
+	return getWithFallback(
+		async (lang: string, slug: string): Promise<ISbStory<StoryblokArticleType>> => {
+			const params: ISbStoriesParams = {
+				language: lang,
+			};
+			return getStoryblokApi().get(`cdn/stories/article-type/${slug}`, await addVersionParameter(params));
+		},
+		lang,
+		slug,
+	);
 }
 
 export async function getTag(slug: string, lang: string): Promise<ISbStory<StoryblokTag>> {

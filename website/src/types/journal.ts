@@ -5,6 +5,7 @@ export enum StoryblokContentType {
 	Article = 'article',
 	Author = 'author',
 	Tag = 'topic',
+	ArticleType = 'articleType'
 }
 
 export interface StoryblokEmbeddedVideo {
@@ -40,6 +41,8 @@ export interface StoryblokImage {
 export interface StoryblokArticleType {
 	id: number;
 	value: string;
+	description: string;
+	displayInOverviewPage: boolean;
 }
 
 export interface StoryblokTag {
