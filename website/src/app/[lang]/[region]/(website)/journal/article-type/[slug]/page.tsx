@@ -3,7 +3,7 @@ import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink
 import {
 	getArticleCountByArticleTypeForDefaultLang,
 	getArticlesByArticleType,
-	getArticleType
+	getArticleType,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import { defaultLanguage } from '@/lib/i18n/utils';
@@ -23,7 +23,9 @@ interface PageProps {
 }
 
 async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
-	return lang == defaultLanguage ? totalArticlesInSelectedLanguage : await getArticleCountByArticleTypeForDefaultLang(tagId);
+	return lang == defaultLanguage
+		? totalArticlesInSelectedLanguage
+		: await getArticleCountByArticleTypeForDefaultLang(tagId);
 }
 
 export default async function Page({ params }: PageProps) {
@@ -33,7 +35,11 @@ export default async function Page({ params }: PageProps) {
 	const articles = await getArticlesByArticleType(articleType.uuid, lang);
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 	const totalArticlesInSelectedLanguage = articles.length;
-	const totalArticlesInDefault = await getTotalArticlesInDefault(lang, articleType.uuid, totalArticlesInSelectedLanguage);
+	const totalArticlesInDefault = await getTotalArticlesInDefault(
+		lang,
+		articleType.uuid,
+		totalArticlesInSelectedLanguage,
+	);
 	return (
 		<BaseContainer>
 			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">

@@ -9,7 +9,7 @@ import {
 	StoryblokArticleType,
 	StoryblokAuthor,
 	StoryblokContentType,
-	StoryblokTag
+	StoryblokTag,
 } from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { Metadata } from 'next';
@@ -57,7 +57,6 @@ function articleByArticleTypeFilter(articleTypeId: string) {
 		},
 	};
 }
-
 
 function articleByTagsFilter(tagId: string) {
 	return {
@@ -156,7 +155,10 @@ export async function getOverviewTags(lang: string): Promise<ISbStoryData<Storyb
 	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
 
-export async function getArticlesByArticleType(articleTypeId: string, lang: string): Promise<ISbStoryData<StoryblokArticle>[]> {
+export async function getArticlesByArticleType(
+	articleTypeId: string,
+	lang: string,
+): Promise<ISbStoryData<StoryblokArticle>[]> {
 	const params: ISbStoriesParams = {
 		per_page: DEFAULT_PAGE_SIZE,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,

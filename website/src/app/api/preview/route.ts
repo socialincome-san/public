@@ -1,7 +1,7 @@
 import { cookies, draftMode, type UnsafeUnwrappedCookies, type UnsafeUnwrappedDraftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
-const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag','article-type'];
+const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag', 'article-type'];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';

@@ -2,9 +2,10 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
 	getOverviewArticles,
-	getOverviewArticlesCountForDefaultLang, getOverviewArticleTypes,
+	getOverviewArticlesCountForDefaultLang,
+	getOverviewArticleTypes,
 	getOverviewAuthors,
-	getOverviewTags
+	getOverviewTags,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';

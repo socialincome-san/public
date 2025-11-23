@@ -5,7 +5,7 @@ export enum StoryblokContentType {
 	Article = 'article',
 	Author = 'author',
 	Tag = 'topic',
-	ArticleType = 'articleType'
+	ArticleType = 'articleType',
 }
 
 export interface StoryblokEmbeddedVideo {

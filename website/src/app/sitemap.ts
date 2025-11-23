@@ -2,7 +2,7 @@ import {
 	getOverviewArticles,
 	getOverviewArticleTypes,
 	getOverviewAuthors,
-	getOverviewTags
+	getOverviewTags,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { toDateObject } from '@/components/legacy/storyblok/StoryblokUtils';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
@@ -24,7 +24,6 @@ function articleUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion =
 function articleTypeUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
 	return `${url}/${lang}/${region}/journal/article-type/${slug}`;
 }
-
 
 function tagUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
 	return `${url}/${lang}/${region}/journal/tag/${slug}`;
