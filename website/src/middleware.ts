@@ -10,7 +10,7 @@ const CLOUDFLARE_IP_COUNTRY_HEADER = 'cf-ipcountry';
 export const config = {
 	matcher: [
 		// Skip internal paths (_next)
-		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|portal|api-docs|openapi.json|sitemap.xml).*)',
+		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|portal|v1/api-docs|openapi.json|sitemap.xml).*)',
 	],
 };
 
@@ -18,6 +18,7 @@ export const config = {
  * Checks if a valid country is set as a cookie and set it based on the request header if available.
  */
 const countryMiddleware = (request: NextRequest, response: NextResponse) => {
+	console.log('------------');
 	if (request.cookies.has(COUNTRY_COOKIE) && isValidCountryCode(request.cookies.get(COUNTRY_COOKIE)?.value!))
 		return response;
 
