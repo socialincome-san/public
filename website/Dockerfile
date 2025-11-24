@@ -75,6 +75,8 @@ COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder /app/website/.next/standalone ./
 COPY --from=builder /app/website/.next/static ./.next/static
 COPY --from=builder /app/shared ./shared
+COPY --from=builder /app/website/src ./src
+
 COPY --from=base /app/.env .env
 
 USER nextjs
