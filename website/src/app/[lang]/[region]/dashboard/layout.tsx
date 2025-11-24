@@ -20,6 +20,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const sections = [
 		{ href: `/${lang}/${region}/dashboard/contributions`, label: 'Contributions' },
 		{ href: `/${lang}/${region}/dashboard/subscriptions`, label: 'Subscriptions' },
+		{ href: `/${lang}/${region}/dashboard/donation-certificates`, label: 'Donation Certificates' },
 	];
 
 	return (

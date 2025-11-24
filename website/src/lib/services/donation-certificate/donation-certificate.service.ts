@@ -16,6 +16,8 @@ import {
 	DonationCertificateCreateManyInput,
 	DonationCertificateTableView,
 	DonationCertificateTableViewRow,
+	YourDonationCertificateTableView,
+	YourDonationCertificateTableViewRow,
 } from './donation-certificate.types';
 
 function groupCertificatesByContribution(certificates: DonationCertificate[]): Map<string, string[]> {
@@ -87,6 +89,35 @@ export class DonationCertificateService extends BaseService {
 				storagePath: c.storagePath,
 				createdAt: c.createdAt,
 				permission,
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch donation certificates');
+		}
+	}
+
+	async getYourCertificatesTableView(contributorId: string): Promise<ServiceResult<YourDonationCertificateTableView>> {
+		try {
+			const certificates = await this.db.donationCertificate.findMany({
+				where: { contributorId },
+				select: {
+					id: true,
+					year: true,
+					storagePath: true,
+					createdAt: true,
+					language: true,
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			const tableRows: YourDonationCertificateTableViewRow[] = certificates.map((c) => ({
+				id: c.id,
+				year: c.year,
+				language: c.language,
+				createdAt: c.createdAt,
+				storagePath: c.storagePath,
 			}));
 
 			return this.resultOk({ tableRows });
@@ -210,7 +241,7 @@ export class DonationCertificateService extends BaseService {
 			this.logger.error(error);
 		}
 
-		if (creationWithFailures.length !== 0) {
+		if (successCount === 0) {
 			return this.resultFail(`Error while creating donation certificates for ${year}.
 	Successfully created ${successCount} donation certificates 
 	Creations skipped (${creationSkipped.length}): ${creationSkipped.join(', ')}.

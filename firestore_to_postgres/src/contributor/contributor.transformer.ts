@@ -3,12 +3,9 @@ import { BaseTransformer } from '../core/base.transformer';
 import { ContributorCreateInput, FirestoreContributorWithId } from './contributor.types';
 
 export class ContributorTransformer extends BaseTransformer<FirestoreContributorWithId, ContributorCreateInput> {
-	private manualIdCounter = 1;
-
 	transform = async (input: FirestoreContributorWithId[]): Promise<ContributorCreateInput[]> => {
 		const transformed: ContributorCreateInput[] = [];
 		let skipped = 0;
-		let generatedManualIds = 0;
 
 		for (const doc of input) {
 			if (doc.test_user) {
@@ -19,16 +16,8 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 			const { personal, address } = doc;
 			const email = doc.email.toLowerCase();
 
-			let authId: string;
-			if (doc.auth_user_id) {
-				authId = doc.auth_user_id;
-			} else {
-				authId = this.generateManualAuthId(); // Todo: create real auth users and remove authuser-creation form login.
-				generatedManualIds++;
-			}
-
 			transformed.push({
-				firebaseAuthUserId: authId,
+				firebaseAuthUserId: doc.auth_user_id || 'create-manual-auth-user',
 				contributor: {
 					create: {
 						legacyFirestoreId: doc.id,
@@ -67,16 +56,8 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 			console.log(`⚠️ Skipped ${skipped} test contributors`);
 		}
 
-		if (generatedManualIds > 0) {
-			console.log(`🆔 Generated ${generatedManualIds} manual auth IDs`);
-		}
-
 		return transformed;
 	};
-
-	private generateManualAuthId(): string {
-		return `manual_${this.manualIdCounter++}`;
-	}
 
 	private mapGender(value?: string): Gender {
 		switch (value) {

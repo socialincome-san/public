@@ -1,6 +1,5 @@
 import { AnalyticsInitializer } from '@/components/legacy/analytics/analytics-initializer';
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
-import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
 import { getMetadata } from '@/metadata';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import type { Viewport } from 'next';
@@ -29,9 +28,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 				<meta name="app-build-timestamp" content={buildTime} />
 			</head>
 			<FirebaseAppProvider>
-				<I18nContextProvider>
-					<body>{children}</body>
-				</I18nContextProvider>
+				<body>{children}</body>
 				<AnalyticsInitializer />
 			</FirebaseAppProvider>
 		</html>
