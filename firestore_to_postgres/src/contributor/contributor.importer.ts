@@ -12,22 +12,22 @@ export class ContributorImporter extends BaseImporter<ContributorCreateInput> {
 		let emailDuplicates = 0;
 		let authDuplicates = 0;
 
+		let firebaseUsersCreated = 0;
+		let firebaseUsersReused = 0;
+
 		for (const data of contributors) {
 			const email = data.contributor?.create?.contact?.create?.email ?? 'unknown';
 			// If no firebaseAuthUserId is present, create (or fetch) a Firebase Auth user in the target project
 			if (data.firebaseAuthUserId === 'create-manual-auth-user') {
-				const displayName = [
-					data.contributor?.create?.contact?.create?.firstName,
-					data.contributor?.create?.contact?.create?.lastName,
-				]
-					.filter(Boolean)
-					.join(' ');
-				const result = await firebaseAuth.createOrGetUser(email, displayName || undefined);
+				const displayName = this.extractDisplayName(data);
+				const result = await firebaseAuth.createOrGetUser(email, displayName);
+
 				data.firebaseAuthUserId = result.uid;
+
 				if (result.created) {
-					console.log(`🔐 Created Firebase Auth user for ${email}, ${displayName} -> uid=${result.uid}`);
+					firebaseUsersCreated++;
 				} else {
-					console.log(`🔁 Reused existing Firebase Auth user for ${email}, ${displayName} -> uid=${result.uid}`);
+					firebaseUsersReused++;
 				}
 			}
 
@@ -37,6 +37,8 @@ export class ContributorImporter extends BaseImporter<ContributorCreateInput> {
 			authDuplicates += authAttempts;
 		}
 
+		console.log(`🔐 Firebase Auth: created ${firebaseUsersCreated}, reused ${firebaseUsersReused}`);
+
 		if (emailDuplicates > 0 || authDuplicates > 0) {
 			console.log(
 				`⚠️ ContributorImporter: handled ${emailDuplicates} duplicate email(s) and ${authDuplicates} duplicate firebase_auth_user_id(s).`,
@@ -45,6 +47,14 @@ export class ContributorImporter extends BaseImporter<ContributorCreateInput> {
 
 		return createdCount;
 	};
+
+	private extractDisplayName(data: ContributorCreateInput): string | undefined {
+		const contact = data.contributor?.create?.contact?.create;
+		if (!contact) return undefined;
+
+		const displayName = [contact.firstName, contact.lastName].filter(Boolean).join(' ');
+		return displayName || undefined;
+	}
 
 	/**
 	 * Creates an account while ensuring unique email and firebase_auth_user_id
