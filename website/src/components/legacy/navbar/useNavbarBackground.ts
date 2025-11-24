@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext } from 'react';
+import { NavbarBackgroundContext } from './navbar-background-provider';
 
 export function useNavbarBackground() {
-	const [backgroundColor, setBackgroundColor] = useState<string | null>();
+	const { backgroundColor, setBackgroundColor } = useContext(NavbarBackgroundContext);
 
 	return { backgroundColor, setBackgroundColor };
 }
