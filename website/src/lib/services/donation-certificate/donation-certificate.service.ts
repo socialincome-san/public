@@ -1,5 +1,5 @@
+import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { DonationCertificate } from '@prisma/client';
-import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
 import {
 	DEFAULT_DONATION_CERTIFICATE_LANGUAGE,
 	LANGUAGE_CODES,
@@ -37,7 +37,6 @@ export class DonationCertificateService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
 	private contributorService = new ContributorService();
 	private contributionService = new ContributionService();
-	private storageAdmin = new StorageAdmin();
 	private bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
 
 	async getTableView(userId: string): Promise<ServiceResult<DonationCertificateTableView>> {
@@ -184,8 +183,8 @@ export class DonationCertificateService extends BaseService {
 
 					await withFile(async ({ path }) => {
 						await writer.writeDonationCertificatePDF(path, lang);
-						const bucket = this.storageAdmin.storage.bucket(this.bucketName);
-						await this.storageAdmin.uploadFile({ bucket, sourceFilePath: path, destinationFilePath });
+						const bucket = storageAdmin.storage.bucket(this.bucketName);
+						await storageAdmin.uploadFile({ bucket, sourceFilePath: path, destinationFilePath });
 						donationCertificatesToCreate.push({
 							year: year,
 							language: lang,
