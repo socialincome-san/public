@@ -18,16 +18,9 @@ export function YourDonationCertificateTable({
 	const [open, setOpen] = useState<boolean>(false);
 	const storage = useStorage();
 
-	// const newRows = rows.map((r) => {
-	// 	const { data } = useStorageDownloadURL(ref(storage, r.storagePath));
-
-	// 	return { ...r, storagePath: data };
-	// });
-
 	return (
 		<>
 			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} />
-
 			<DataTable
 				title="Your Donation Certificates"
 				error={error}

@@ -26,7 +26,7 @@ export function makeYourCertificatesColumns(): ColumnDef<YourDonationCertificate
 		},
 		{
 			accessorKey: 'storagePath',
-			header: (ctx) => <SortableHeader ctx={ctx}>Download</SortableHeader>,
+			header: '',
 			cell: (ctx) => <DownloadCell ctx={ctx} />,
 		},
 	];
