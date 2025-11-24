@@ -59,7 +59,8 @@
 	"donation-certificates": {
 		"year": "Anno",
 		"download-pdf": "Scarica il PDF",
-		"no-certificates-yet": "Non hai ancora certificati di donazione. Assicurati di fornire il tuo indirizzo completo."
+		"no-certificates-yet": "Non hai ancora certificati di donazione. Assicurati di fornire il tuo indirizzo completo.",
+		"no-contributions": "Nessuna contribuzione trovata, quindi niente certificato. Se pensi che sia un errore, contatta contributors@socialincome.org."
 	},
 	"personal-info": {
 		"alert-title": "Certificati di donazione",

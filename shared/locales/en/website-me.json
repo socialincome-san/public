@@ -59,7 +59,8 @@
 	"donation-certificates": {
 		"year": "Year",
 		"download-pdf": "Download PDF",
-		"no-certificates-yet": "You have no donation certificates yet. Make sure you provide your full address with."
+		"no-certificates-yet": "You have no donation certificates yet. Make sure you provide your full address with.",
+		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org."
 	},
 	"personal-info": {
 		"alert-title": "Donation certificates",

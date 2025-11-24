@@ -3,6 +3,8 @@
 import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { generateDonationCertificateForCurrentUser } from '@/lib/server-actions/donation-certificates-actions';
 import {
 	DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE,
@@ -16,15 +18,18 @@ const LANGUAGES: LanguageCode[] = ['en', 'de', 'fr', 'it'];
 export default function GenerateDonationCertificateDialog({
 	open,
 	setOpen,
+	lang,
 }: {
 	open: boolean;
 	setOpen: (open: boolean) => void;
+	lang: WebsiteLanguage;
 }) {
 	const [year, setYear] = useState<number>(CURRENT_YEAR - 1);
 	const [language, setLanguage] = useState<LanguageCode | undefined>(DEFAULT_LANGUAGE);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<string | undefined>();
 	const [error, setError] = useState<string | undefined>();
+	const translator = useTranslator(lang, 'website-me');
 
 	const generateCertificates = () => {
 		setSuccess(undefined);
@@ -90,7 +95,9 @@ export default function GenerateDonationCertificateDialog({
 					{(success || error) && (
 						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
 							{success && <p className="text-sm text-green-700">Generated successfully</p>}
-							{error && <p className="text-sm text-red-700">Error generating certificate: {error}</p>}
+							{error && (
+								<p className="text-sm text-red-700">{translator?.t('donation-certificates.no-contributions')}</p>
+							)}
 						</div>
 					)}
 				</div>

@@ -242,7 +242,7 @@ export class DonationCertificateService extends BaseService {
 			this.logger.error(error);
 		}
 
-		if (creationWithFailures.length !== 0) {
+		if (successCount === 0) {
 			return this.resultFail(`Error while creating donation certificates for ${year}.
 	Successfully created ${successCount} donation certificates 
 	Creations skipped (${creationSkipped.length}): ${creationSkipped.join(', ')}.

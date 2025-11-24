@@ -3,7 +3,7 @@
 import { Button } from '@/components/button';
 import { makeYourCertificatesColumns } from '@/components/data-table/columns/your-donation-certificates';
 import DataTable from '@/components/data-table/data-table';
-import { useStorage } from '@/lib/firebase/hooks/useStorage';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { YourDonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
 import { useState } from 'react';
 import GenerateDonationCertificateDialog from './generate-donation-certificate-dialog';
@@ -11,16 +11,17 @@ import GenerateDonationCertificateDialog from './generate-donation-certificate-d
 export function YourDonationCertificateTable({
 	rows,
 	error,
+	lang,
 }: {
 	rows: YourDonationCertificateTableViewRow[];
 	error: string | null;
+	lang: WebsiteLanguage;
 }) {
 	const [open, setOpen] = useState<boolean>(false);
-	const storage = useStorage();
 
 	return (
 		<>
-			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} />
+			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} lang={lang} />
 			<DataTable
 				title="Your Donation Certificates"
 				error={error}
