@@ -1,8 +1,10 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseImporter } from '../core/base.importer';
+import { FirebaseAuthService } from '../core/firebase-auth.service';
 import { ContributorCreateInput } from './contributor.types';
 
 const prisma = new PrismaClient();
+const firebaseAuth = new FirebaseAuthService();
 
 export class ContributorImporter extends BaseImporter<ContributorCreateInput> {
 	import = async (contributors: ContributorCreateInput[]): Promise<number> => {
@@ -12,6 +14,23 @@ export class ContributorImporter extends BaseImporter<ContributorCreateInput> {
 
 		for (const data of contributors) {
 			const email = data.contributor?.create?.contact?.create?.email ?? 'unknown';
+			// If no firebaseAuthUserId is present, create (or fetch) a Firebase Auth user in the target project
+			if (data.firebaseAuthUserId === 'create-manual-auth-user') {
+				const displayName = [
+					data.contributor?.create?.contact?.create?.firstName,
+					data.contributor?.create?.contact?.create?.lastName,
+				]
+					.filter(Boolean)
+					.join(' ');
+				const result = await firebaseAuth.createOrGetUser(email, displayName || undefined);
+				data.firebaseAuthUserId = result.uid;
+				if (result.created) {
+					console.log(`🔐 Created Firebase Auth user for ${email}, ${displayName} -> uid=${result.uid}`);
+				} else {
+					console.log(`🔁 Reused existing Firebase Auth user for ${email}, ${displayName} -> uid=${result.uid}`);
+				}
+			}
+
 			const { emailAttempts, authAttempts } = await this.createAccountWithUniqueFields(data, email);
 			createdCount++;
 			emailDuplicates += emailAttempts;
@@ -36,7 +55,7 @@ export class ContributorImporter extends BaseImporter<ContributorCreateInput> {
 		baseEmail: string,
 	): Promise<{ emailAttempts: number; authAttempts: number }> {
 		let email = baseEmail;
-		let authId = data.firebaseAuthUserId ?? 'manual_missing';
+		let authId = data.firebaseAuthUserId ?? '';
 		let emailAttempts = 0;
 		let authAttempts = 0;
 
