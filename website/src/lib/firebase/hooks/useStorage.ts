@@ -38,6 +38,6 @@ export function useStorageDownloadURL(storageRef: StorageReference | undefined) 
 			setUrl(undefined);
 			setError(undefined);
 		}
-	}, [storageRef]);
+	}, []);
 	return { data: url, loading, error };
 }

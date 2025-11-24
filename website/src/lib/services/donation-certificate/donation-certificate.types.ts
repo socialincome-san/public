@@ -15,4 +15,16 @@ export type DonationCertificateTableView = {
 	tableRows: DonationCertificateTableViewRow[];
 };
 
+export type YourDonationCertificateTableViewRow = {
+	id: string;
+	year: number;
+	language: string | null;
+	storagePath: string | null;
+	createdAt: Date;
+};
+
+export type YourDonationCertificateTableView = {
+	tableRows: YourDonationCertificateTableViewRow[];
+};
+
 export type DonationCertificateCreateManyInput = Prisma.DonationCertificateCreateManyInput;
