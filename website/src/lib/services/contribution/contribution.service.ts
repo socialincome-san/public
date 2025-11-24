@@ -4,6 +4,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	ContributionCreateInput,
 	ContributionDonationEntry,
 	ContributionPayload,
 	ContributionTableView,
@@ -71,7 +72,7 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async update(userId: string, contribution: ContributionUpdateInput): Promise<ServiceResult<Contribution>> {
+	async update(userId: string, contribution: ContributionUpdateInput): Promise<ServiceResult<ContributionPayload>> {
 		try {
 			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
 
@@ -80,7 +81,7 @@ export class ContributionService extends BaseService {
 			}
 
 			if (accessResult.data.permission !== 'edit') {
-				return this.resultFail('No permissions to create campaign');
+				return this.resultFail('No permissions to update contribution');
 			}
 
 			const existing = await this.db.contribution.findUnique({
@@ -97,12 +98,65 @@ export class ContributionService extends BaseService {
 			const updatedContribution = await this.db.contribution.update({
 				where: { id: contribution.id?.toString() },
 				data: contribution,
+				select: {
+					id: true,
+					amount: true,
+					currency: true,
+					amountChf: true,
+					feesChf: true,
+					status: true,
+					contributor: { select: { id: true } },
+					campaign: { select: { id: true } },
+				},
 			});
 
-			return this.resultOk(updatedContribution);
+			return this.resultOk({
+				...updatedContribution,
+				amount: Number(updatedContribution.amount),
+				amountChf: Number(updatedContribution.amountChf),
+				feesChf: Number(updatedContribution.feesChf),
+			});
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not update contribution');
+		}
+	}
+
+	async create(userId: string, contribution: ContributionCreateInput): Promise<ServiceResult<ContributionPayload>> {
+		try {
+			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			if (accessResult.data.permission !== 'edit') {
+				return this.resultFail('No permissions to create contribution');
+			}
+
+			const created = await this.db.contribution.create({
+				data: contribution,
+				select: {
+					id: true,
+					amount: true,
+					currency: true,
+					amountChf: true,
+					feesChf: true,
+					status: true,
+					contributor: { select: { id: true } },
+					campaign: { select: { id: true } },
+				},
+			});
+
+			return this.resultOk({
+				...created,
+				amount: Number(created.amount),
+				amountChf: Number(created.amountChf),
+				feesChf: Number(created.feesChf),
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not create contribution');
 		}
 	}
 
