@@ -4,7 +4,7 @@ import { createContext, PropsWithChildren, useState } from 'react';
 
 export const NavbarBackgroundContext = createContext<{
 	backgroundColor: string | null;
-	setBackgroundColor: (background: string) => void;
+	setBackgroundColor: (background: string | null) => void;
 }>({
 	backgroundColor: null,
 	setBackgroundColor: () => {},
