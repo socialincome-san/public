@@ -54,7 +54,12 @@ export function ContributionsTableClient({
 				onRowClick={openEditForm}
 			/>
 
-			<ContributionFormDialog readOnly={readOnly} open={isFormOpen} onOpenChange={handleClose} contributionId={contributionId} />
+			<ContributionFormDialog
+				readOnly={readOnly}
+				open={isFormOpen}
+				onOpenChange={handleClose}
+				contributionId={contributionId}
+			/>
 		</>
 	);
 }
