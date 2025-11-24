@@ -5,8 +5,8 @@ import { Button } from '@/components/button';
 import { makeLocalPartnerColumns } from '@/components/data-table/columns/local-partners';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { LocalPartnerTableViewRow } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
+import { logger } from '@/utils/logger';
 import { useState } from 'react';
 import LocalPartnersForm from './local-partners-form';
 

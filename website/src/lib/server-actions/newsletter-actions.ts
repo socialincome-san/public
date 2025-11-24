@@ -1,11 +1,8 @@
 'use server';
 
-import { SendgridSubscriptionService } from '@socialincome/shared/src/database/services/sendgrid/sendgrid-subscription.service';
-import {
-	CreateNewsletterSubscription,
-	SendgridContactType,
-} from '@socialincome/shared/src/database/services/sendgrid/types';
 import { getOptionalContributor } from '../firebase/current-contributor';
+import { SendgridSubscriptionService } from '../services/sendgrid/sendgrid-subscription.service';
+import { CreateNewsletterSubscription, SendgridContactType } from '../services/sendgrid/types';
 
 export async function subscribeToNewsletter(subscription: CreateNewsletterSubscription) {
 	const sendGridService = new SendgridSubscriptionService();

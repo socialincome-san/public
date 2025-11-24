@@ -8,9 +8,9 @@ import {
 	getSurveyRecipientOptionsAction,
 	updateSurveyAction,
 } from '@/lib/server-actions/survey-actions';
+import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
+import type { SurveyPayload } from '@/lib/services/survey/survey.types';
 import { SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
-import type { RecipientOption } from '@socialincome/shared/src/database/services/recipient/recipient.types';
-import type { SurveyPayload } from '@socialincome/shared/src/database/services/survey/survey.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';

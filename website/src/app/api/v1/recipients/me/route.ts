@@ -1,5 +1,5 @@
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import { RecipientPrismaUpdateInput } from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
 

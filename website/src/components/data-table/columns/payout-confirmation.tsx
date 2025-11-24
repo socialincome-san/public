@@ -4,7 +4,7 @@ import { DateCell } from '@/components/data-table/elements/date-cell';
 import { PayoutConfirmationActionsCell } from '@/components/data-table/elements/payout-confirmation-actions-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
-import type { PayoutConfirmationTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
+import type { PayoutConfirmationTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef } from '@tanstack/react-table';
 import { CurrencyCell } from '../elements/currency-cell';
 

@@ -4,7 +4,7 @@ import {
 	LocalPartnerCreateInput,
 	LocalPartnerPayload,
 	LocalPartnerUpdateInput,
-} from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+} from '@/lib/services/local-partner/local-partner.types';
 import { LocalPartnerFormSchema } from './local-partners-form';
 
 export function buildUpdateLocalPartnerInput(

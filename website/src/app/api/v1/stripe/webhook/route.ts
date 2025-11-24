@@ -1,5 +1,5 @@
-import { StripeService } from '@socialincome/shared/src/database/services/stripe/stripe.service';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import { StripeService } from '@/lib/services/stripe/stripe.service';
+import { logger } from '@/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**

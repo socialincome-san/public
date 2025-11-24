@@ -2,8 +2,8 @@ import { Button } from '@/components/button';
 import { makeYourStripeSubscriptionsColumns } from '@/components/data-table/columns/your-stripe-subscriptions';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
-import { StripeService } from '@socialincome/shared/src/database/services/stripe/stripe.service';
-import { StripeSubscriptionRow } from '@socialincome/shared/src/database/services/stripe/stripe.types';
+import { StripeService } from '@/lib/services/stripe/stripe.service';
+import { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
 import Link from 'next/link';
 
 export async function SubscriptionsTable() {

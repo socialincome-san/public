@@ -1,8 +1,8 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
+import { PayoutService } from '@/lib/services/payout/payout.service';
 import { PayoutStatus } from '@prisma/client';
-import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
 import { revalidatePath } from 'next/cache';
 
 export async function confirmPayoutAction(payoutId: string) {

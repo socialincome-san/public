@@ -8,7 +8,7 @@ import {
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
 } from '@/lib/server-actions/local-partner-action';
-import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+import { LocalPartnerPayload } from '@/lib/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateLocalPartnerInput, buildUpdateLocalPartnerInput } from './local-partners-form-helper';

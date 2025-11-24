@@ -14,7 +14,7 @@ on:
 
 jobs:
   deploy-rules:
-    name: Deploy Firestore and Storage rules on Firebase
+    name: Deploy Storage rules on Firebase
     runs-on: ubuntu-latest
     if: inputs.component == 'rules'
     steps:

@@ -1,5 +1,5 @@
-import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
+import { PayoutService } from '@/lib/services/payout/payout.service';
+import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { NextResponse } from 'next/server';
 
 /**

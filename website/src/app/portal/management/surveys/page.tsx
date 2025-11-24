@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { SurveyService } from '@socialincome/shared/src/database/services/survey/survey.service';
-import type { SurveyTableViewRow } from '@socialincome/shared/src/database/services/survey/survey.types';
+import { SurveyService } from '@/lib/services/survey/survey.service';
+import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
 import { SurveysTableClient } from './surveys-table-client';
 
 export default async function SurveysPage() {

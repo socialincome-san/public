@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Separator } from '@/components/breadcrumb/separator';
 import { Button } from '@/components/button';
-import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
+import { UserSession } from '@/lib/services/user/user.types';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

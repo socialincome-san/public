@@ -1,8 +1,8 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
-import { ContributorUpdateInput } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { revalidatePath } from 'next/cache';
 import { getOptionalContributor } from '../firebase/current-contributor';
 

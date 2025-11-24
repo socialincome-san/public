@@ -8,9 +8,9 @@ import {
 	getPayoutRecipientOptionsAction,
 	updatePayoutAction,
 } from '@/lib/server-actions/payout-actions';
+import type { PayoutPayload } from '@/lib/services/payout/payout.types';
+import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import { PayoutStatus } from '@prisma/client';
-import type { PayoutPayload } from '@socialincome/shared/src/database/services/payout/payout.types';
-import type { RecipientOption } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';

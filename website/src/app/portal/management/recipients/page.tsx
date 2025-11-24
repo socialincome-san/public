@@ -1,7 +1,7 @@
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 
 export default async function RecipientsPage() {
 	const user = await getAuthenticatedUserOrRedirect();

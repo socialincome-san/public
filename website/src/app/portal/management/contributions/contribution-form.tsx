@@ -7,10 +7,10 @@ import {
 	getContributionsOptionsAction,
 	updateContributionAction,
 } from '@/lib/server-actions/contributions-actions';
+import { CampaignOption } from '@/lib/services/campaign/campaign.types';
+import { ContributionUpdateInput } from '@/lib/services/contribution/contribution.types';
+import { ContributorOption } from '@/lib/services/contributor/contributor.types';
 import { ContributionStatus } from '@prisma/client';
-import { CampaignOption } from '@socialincome/shared/src/database/services/campaign/campaign.types';
-import { ContributionUpdateInput } from '@socialincome/shared/src/database/services/contribution/contribution.types';
-import { ContributorOption } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 

@@ -1,6 +1,6 @@
-import { FirebaseService } from '@socialincome/shared/src/database/services/firebase/firebase.service';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
-import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
+import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { UserService } from '@/lib/services/user/user.service';
+import { UserSession } from '@/lib/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 import { readSessionCookie } from './session';

@@ -1,6 +1,6 @@
+import { logger } from '@/utils/logger';
 import { PrismaClient } from '@prisma/client';
-import { logger } from '../../../utils/logger';
-import { prisma } from '../../prisma';
+import { prisma } from '../../database/prisma';
 import { ServiceResult } from './base.types';
 
 export abstract class BaseService {

@@ -1,7 +1,7 @@
 import { PayoutsTableClient } from '@/app/portal/delivery/make-payouts/payouts-table-client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
-import type { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
+import { PayoutService } from '@/lib/services/payout/payout.service';
+import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 
 export default async function PayoutsPage() {
 	const user = await getAuthenticatedUserOrRedirect();

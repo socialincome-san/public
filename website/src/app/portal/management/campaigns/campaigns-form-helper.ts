@@ -1,8 +1,5 @@
 import { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
-import {
-	CampaignsCreateInput,
-	CampaignsUpdateInput,
-} from '@socialincome/shared/src/database/services/campaign/campaign.types';
+import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
 import z from 'zod';
 
 type CampaignsFormSchema = {

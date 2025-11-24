@@ -3,7 +3,7 @@
 import { CurrencyCell } from '@/components/data-table/elements/currency-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import type { PayoutForecastTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
+import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export function makePayoutForecastColumns(): ColumnDef<PayoutForecastTableViewRow>[] {

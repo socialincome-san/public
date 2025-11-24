@@ -3,7 +3,7 @@
 import { Button } from '@/components/button';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
-import type { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
+import type { UserSession } from '@/lib/services/user/user.types';
 import { FC, useState, useTransition } from 'react';
 
 type OrganizationSwitcherProps = {

@@ -1,12 +1,9 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { CampaignService } from '@socialincome/shared/src/database/services/campaign/campaign.service';
-import {
-	CampaignsCreateInput,
-	CampaignsUpdateInput,
-} from '@socialincome/shared/src/database/services/campaign/campaign.types';
-import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
+import { CampaignService } from '@/lib/services/campaign/campaign.service';
+import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { ProgramService } from '@/lib/services/program/program.service';
 import { revalidatePath } from 'next/cache';
 
 export async function createCampaignsAction(campaigns: CampaignsCreateInput) {
