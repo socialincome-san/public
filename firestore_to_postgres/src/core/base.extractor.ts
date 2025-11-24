@@ -7,7 +7,7 @@ export abstract class BaseExtractor<T> {
 	protected readonly firestore: FirestoreAdmin;
 
 	constructor() {
-		const app = getOrInitializeFirebaseAdmin(this.buildFirebaseOptions());
+		const app = getOrInitializeFirebaseAdmin(this.buildFirebaseOptions(), 'source');
 		this.firestore = new FirestoreAdmin(app);
 	}
 
