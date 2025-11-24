@@ -2,7 +2,6 @@ import { QueryClientProvider } from '@/app/query-client-provider';
 import { AnalyticsInitializer } from '@/components/legacy/analytics/analytics-initializer';
 import { ApiClientProvider } from '@/lib/api/api-client-provider';
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
-import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
 import { getMetadata } from '@/metadata';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import type { Viewport } from 'next';
@@ -33,9 +32,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 			<QueryClientProvider>
 				<FirebaseAppProvider>
 					<ApiClientProvider>
-						<I18nContextProvider>
-							<body>{children}</body>
-						</I18nContextProvider>
+						<body>{children}</body>
 					</ApiClientProvider>
 					<AnalyticsInitializer />
 				</FirebaseAppProvider>
