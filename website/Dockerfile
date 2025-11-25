@@ -21,15 +21,6 @@ RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET \
     --mount=type=secret,id=NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID \
     --mount=type=secret,id=NEXT_PUBLIC_LINKEDIN_TRACKING_ID \
-    --mount=type=secret,id=SENDGRID_API_KEY \
-    --mount=type=secret,id=SENDGRID_LIST_ID \
-    --mount=type=secret,id=SENDGRID_SUPPRESSION_LIST_ID \
-    --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-    --mount=type=secret,id=STORYBLOK_PREVIEW_SECRET \
-    --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \
-    --mount=type=secret,id=TWILIO_ACCOUNT_SID \
-    --mount=type=secret,id=TWILIO_AUTH_TOKEN \
-    --mount=type=secret,id=TWILIO_VERIFY_SERVICE_SID \
     sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
 
 # -------- Dependencies Layer --------
