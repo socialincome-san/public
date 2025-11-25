@@ -44,6 +44,50 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
           name  = "STRIPE_WEBHOOK_SECRET"
           value = var.stripe_webhook_secret
         }
+        env {
+          name  = "SENDGRID_API_KEY"
+          value = var.sendgrid_api_key
+        }
+
+        env {
+          name  = "SENDGRID_LIST_ID"
+          value = var.sendgrid_list_id
+        }
+
+        env {
+          name  = "SENDGRID_SUPPRESSION_LIST_ID"
+          value = var.sendgrid_suppression_list_id
+        }
+
+        env {
+          name  = "SENTRY_AUTH_TOKEN"
+          value = var.sentry_auth_token
+        }
+
+        env {
+          name  = "STORYBLOK_PREVIEW_SECRET"
+          value = var.storyblok_preview_secret
+        }
+
+        env {
+          name  = "STORYBLOK_PREVIEW_TOKEN"
+          value = var.storyblok_preview_token
+        }
+
+        env {
+          name  = "TWILIO_ACCOUNT_SID"
+          value = var.twilio_account_sid
+        }
+
+        env {
+          name  = "TWILIO_AUTH_TOKEN"
+          value = var.twilio_auth_token
+        }
+
+        env {
+          name  = "TWILIO_VERIFY_SERVICE_SID"
+          value = var.twilio_verify_service_sid
+        }
 
         ports {
           container_port = 3000
