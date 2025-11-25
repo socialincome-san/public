@@ -1,5 +1,4 @@
-import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
-import { AuthAdmin } from '@socialincome/shared/src/firebase/admin/AuthAdmin';
+import { authAdmin } from '@/lib/firebase/firebase-admin';
 import { credential } from 'firebase-admin';
 import { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
 import { BaseService } from '../core/base.service';
@@ -17,8 +16,6 @@ const credentials =
 		: undefined;
 
 export class FirebaseService extends BaseService {
-	private authAdmin = new AuthAdmin(getOrInitializeFirebaseAdmin(credentials));
-
 	async createByPhoneNumber(phoneNumber: string): Promise<ServiceResult<UserRecord>> {
 		try {
 			const existingUserResult = await this.getByPhoneNumber(phoneNumber);
@@ -31,7 +28,7 @@ export class FirebaseService extends BaseService {
 				return this.resultOk(existingUserResult.data);
 			}
 
-			const userRecord = await this.authAdmin.auth.createUser({
+			const userRecord = await authAdmin.auth.createUser({
 				phoneNumber,
 			});
 			return this.resultOk(userRecord);
@@ -52,7 +49,7 @@ export class FirebaseService extends BaseService {
 				return this.resultFail('Auth user not found');
 			}
 
-			const updatedUser = await this.authAdmin.auth.updateUser(existingUserResult.data.uid, {
+			const updatedUser = await authAdmin.auth.updateUser(existingUserResult.data.uid, {
 				phoneNumber: newPhoneNumber,
 			});
 			return this.resultOk(updatedUser);
@@ -64,7 +61,7 @@ export class FirebaseService extends BaseService {
 
 	async getByPhoneNumber(phoneNumber: string): Promise<ServiceResult<UserRecord | null>> {
 		try {
-			const userRecord = await this.authAdmin.auth.getUserByPhoneNumber(phoneNumber);
+			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
 			return this.resultOk(userRecord);
 		} catch (error: any) {
 			if (error?.code === 'auth/user-not-found') {
@@ -77,11 +74,11 @@ export class FirebaseService extends BaseService {
 
 	async updateByUid(uid: string, updates: UpdateRequest): Promise<ServiceResult<UserRecord>> {
 		try {
-			const existingUser = await this.authAdmin.auth.getUser(uid);
+			const existingUser = await authAdmin.auth.getUser(uid);
 			if (!existingUser) {
 				return this.resultFail('Auth user not found');
 			}
-			const updatedUser = await this.authAdmin.auth.updateUser(uid, updates);
+			const updatedUser = await authAdmin.auth.updateUser(uid, updates);
 			return this.resultOk(updatedUser);
 		} catch (error) {
 			this.logger.error(`Error updating user by UID ${uid}:`, { uid, updates, error });
@@ -91,7 +88,7 @@ export class FirebaseService extends BaseService {
 
 	async createSurveyUser(email: string, password: string): Promise<ServiceResult<UserRecord>> {
 		try {
-			const userRecord = await this.authAdmin.auth.createUser({
+			const userRecord = await authAdmin.auth.createUser({
 				email,
 				password,
 				emailVerified: true,
@@ -105,7 +102,7 @@ export class FirebaseService extends BaseService {
 
 	async createCustomToken(uid: string): Promise<ServiceResult<string>> {
 		try {
-			const token = await this.authAdmin.auth.createCustomToken(uid);
+			const token = await authAdmin.auth.createCustomToken(uid);
 			return this.resultOk(token);
 		} catch (error) {
 			this.logger.error('Error creating custom token:', { uid, error });
@@ -121,7 +118,7 @@ export class FirebaseService extends BaseService {
 
 		const token = header.slice('Bearer '.length);
 		try {
-			const decodedToken = await this.authAdmin.auth.verifyIdToken(token);
+			const decodedToken = await authAdmin.auth.verifyIdToken(token);
 			return this.resultOk(decodedToken);
 		} catch (error) {
 			this.logger.error('Error verifying ID token:', { error });
@@ -131,7 +128,7 @@ export class FirebaseService extends BaseService {
 
 	async getByEmail(email: string): Promise<ServiceResult<UserRecord | null>> {
 		try {
-			const userRecord = await this.authAdmin.auth.getUserByEmail(email);
+			const userRecord = await authAdmin.auth.getUserByEmail(email);
 			return this.resultOk(userRecord);
 		} catch (error: any) {
 			if (error?.code === 'auth/user-not-found') {
@@ -156,7 +153,7 @@ export class FirebaseService extends BaseService {
 				return this.resultOk(existingUserResult.data);
 			}
 
-			const userRecord = await this.authAdmin.auth.createUser({
+			const userRecord = await authAdmin.auth.createUser({
 				email: userData.email,
 				displayName: userData.displayName,
 			});
@@ -168,7 +165,7 @@ export class FirebaseService extends BaseService {
 
 	async verifySessionCookie(cookie: string): Promise<ServiceResult<DecodedIdToken>> {
 		try {
-			const decoded = await this.authAdmin.auth.verifySessionCookie(cookie, true);
+			const decoded = await authAdmin.auth.verifySessionCookie(cookie, true);
 			return this.resultOk(decoded);
 		} catch (error) {
 			return this.resultFail('Invalid or expired session cookie');
