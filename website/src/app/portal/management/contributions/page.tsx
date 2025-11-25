@@ -1,7 +1,7 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributionService } from '@/lib/services/contribution/contribution.service';
-import type { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
-import ContributionsTable from './contributions-table';
+import { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
+import { ContributionsTableClient } from './contributions-table-client';
 
 export default async function ContributionsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
@@ -13,5 +13,5 @@ export default async function ContributionsPage() {
 	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];
 	const readOnly = result.success ? result.data.permission !== 'edit' : true;
 
-	return <ContributionsTable rows={rows} error={error} readOnly={readOnly} />;
+	return <ContributionsTableClient rows={rows} error={error} readOnly={readOnly} />;
 }
