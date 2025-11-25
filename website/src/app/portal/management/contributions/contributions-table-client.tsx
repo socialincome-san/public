@@ -45,11 +45,9 @@ export function ContributionsTableClient({
 				data={rows}
 				makeColumns={makeContributionsColumns}
 				actions={
-					<div className="flex gap-2">
-						<Button disabled={readOnly} onClick={openEmptyForm}>
-							Add contribution
-						</Button>
-					</div>
+					<Button disabled={readOnly} onClick={openEmptyForm}>
+						Add contribution
+					</Button>
 				}
 				onRowClick={openEditForm}
 			/>
