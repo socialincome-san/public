@@ -67,3 +67,17 @@ jobs:
         run: |
           mv website/.env.development website/.env.production
           npm run website:build:emulator
+
+      - name: Set up Terraform CLI
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: Terraform Init (no backend)
+        run: terraform -chdir=website/infra init -backend=false
+
+      - name: Terraform Format Check
+        run: terraform -chdir=website/infra fmt -check
+
+      - name: Terraform Validate
+        run: terraform -chdir=website/infra validate

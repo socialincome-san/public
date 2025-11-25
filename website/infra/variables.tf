@@ -33,3 +33,27 @@ variable "scheduler_api_key" {
   type        = string
   sensitive   = true
 }
+
+variable "stripe_product_onetime" {
+  description = "Stripe product ID for one-time payments"
+  type        = string
+  sensitive   = true
+}
+
+variable "stripe_product_recurring" {
+  description = "Stripe product ID for recurring payments"
+  type        = string
+  sensitive   = true
+}
+
+variable "stripe_secret_key" {
+  description = "Stripe secret API key"
+  type        = string
+  sensitive   = true
+}
+
+variable "stripe_webhook_secret" {
+  description = "Stripe webhook signing secret"
+  type        = string
+  sensitive   = true
+}
