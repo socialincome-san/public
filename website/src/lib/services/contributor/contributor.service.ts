@@ -327,9 +327,25 @@ export class ContributorService extends BaseService {
 			let referenceId: string;
 			const existingContributor = await this.db.contributor.findFirst({
 				where: { contact: { email: email } },
-				select: { paymentReferenceId: true },
+				select: { id: true, contact: { select: { email: true } }, paymentReferenceId: true },
 			});
 			referenceId = existingContributor?.paymentReferenceId || DateTime.now().toMillis().toString();
+			if (existingContributor && !existingContributor?.paymentReferenceId) {
+				const res = await this.updateSelf(existingContributor.id, {
+					paymentReferenceId: referenceId,
+					contact: {
+						update: {
+							data: {
+								email: existingContributor.contact.email,
+							},
+						},
+					},
+				});
+				if (!res.success) {
+					this.logger.error(res.error);
+					return this.resultFail('Could not udate existing contributor with newly created reference ID');
+				}
+			}
 
 			return this.resultOk(referenceId);
 		} catch (error) {
