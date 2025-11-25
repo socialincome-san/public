@@ -23,12 +23,6 @@ variable "docker_image_url" {
   type        = string
 }
 
-variable "google_sql_db_password" {
-  description = "Password for the Google SQL database user"
-  type        = string
-  sensitive   = true
-}
-
 variable "website_domain" {
   description = "Domain name for the website"
   type        = string

@@ -1,3 +1,12 @@
+resource "random_password" "psql_admin_password" {
+  length  = 16
+  special = false
+
+  keepers = {
+    rotation = timestamp()
+  }
+}
+
 resource "google_sql_database_instance" "google_sql_database_instance" {
   name                = "${var.env}-${var.app_name}-google-sql-database-instance"
   database_version    = "POSTGRES_18"
@@ -49,5 +58,5 @@ resource "google_sql_database" "google_sql_database" {
 resource "google_sql_user" "google_sql_user" {
   name     = "${var.env}-${var.app_name}_google_sql_user"
   instance = google_sql_database_instance.google_sql_database_instance.name
-  password = var.google_sql_db_password
+  password = random_password.psql_admin_password.result
 }
