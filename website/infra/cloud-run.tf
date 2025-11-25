@@ -25,6 +25,26 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
           value = var.env == "prod" ? "false" : "true"
         }
 
+        env {
+          name  = "STRIPE_PRODUCT_ONETIME"
+          value = var.stripe_product_onetime
+        }
+
+        env {
+          name  = "STRIPE_PRODUCT_RECURRING"
+          value = var.stripe_product_recurring
+        }
+
+        env {
+          name  = "STRIPE_SECRET_KEY"
+          value = var.stripe_secret_key
+        }
+
+        env {
+          name  = "STRIPE_WEBHOOK_SECRET"
+          value = var.stripe_webhook_secret
+        }
+
         ports {
           container_port = 3000
         }

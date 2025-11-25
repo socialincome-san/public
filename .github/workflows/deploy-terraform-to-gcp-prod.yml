@@ -66,10 +66,6 @@ jobs:
           echo "${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_SECRET }}" > secrets/STORYBLOK_PREVIEW_SECRET
           echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
-          echo "${{ secrets.TF_PROD_STRIPE_PRODUCT_ONETIME }}" > secrets/STRIPE_PRODUCT_ONETIME
-          echo "${{ secrets.TF_PROD_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
-          echo "${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
-          echo "${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}" > secrets/STRIPE_WEBHOOK_SECRET
           echo "${{ secrets.TF_PROD_TWILIO_ACCOUNT_SID }}" > secrets/TWILIO_ACCOUNT_SID
           echo "${{ secrets.TF_PROD_TWILIO_AUTH_TOKEN }}" > secrets/TWILIO_AUTH_TOKEN
           echo "${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}" > secrets/TWILIO_VERIFY_SERVICE_SID
@@ -99,6 +95,10 @@ jobs:
           TF_VAR_google_sql_db_password: ${{ secrets.TF_PROD_GOOGLE_SQL_DB_PASSWORD }}
           TF_VAR_website_domain: ${{ env.WEBSITE_DOMAIN }}
           TF_VAR_scheduler_api_key: ${{ secrets.TF_PROD_SCHEDULER_API_KEY }}
+          TF_VAR_stripe_product_onetime: ${{ secrets.TF_PROD_STRIPE_PRODUCT_ONETIME }}
+          TF_VAR_stripe_product_recurring: ${{ secrets.TF_PROD_STRIPE_PRODUCT_RECURRING }}
+          TF_VAR_stripe_secret_key: ${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}
+          TF_VAR_stripe_webhook_secret: ${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."
