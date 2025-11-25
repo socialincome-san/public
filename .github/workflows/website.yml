@@ -68,6 +68,9 @@ jobs:
           mv website/.env.development website/.env.production
           npm run website:build:emulator
 
+      - name: Terraform Init (no backend)
+        run: terraform -chdir=website/infra init -backend=false
+
       - name: Terraform Format Check
         uses: hashicorp/setup-terraform@v2
         with:
