@@ -1,4 +1,7 @@
+'use client';
+
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { logoutAction } from '@/lib/server-actions/session-actions';
 import { logger } from '@/utils/logger';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
@@ -9,13 +12,10 @@ export const useLogout = () => {
 
 	const logout = async () => {
 		try {
-			const res = await fetch('/api/logout', {
-				method: 'POST',
-				credentials: 'include',
-			});
+			const result = await logoutAction();
 
-			if (!res.ok) {
-				logger.error('Logout API failed', { status: res.status });
+			if (!result.success) {
+				logger.error('Logout failed', { error: result.error });
 			}
 
 			await signOut(auth).catch((err) => {

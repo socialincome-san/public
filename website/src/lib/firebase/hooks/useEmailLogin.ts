@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { createSessionAction } from '@/lib/server-actions/session-actions';
 import { FirebaseError } from 'firebase/app';
 import { isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
@@ -44,7 +45,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		});
 
 		return () => unsubscribe();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth, authListenerRegistered, translator]);
 
 	const setServerSession = async (): Promise<boolean> => {
@@ -53,13 +53,9 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		try {
 			const idToken = await user.getIdToken(true);
-			const res = await fetch('/api/session', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ idToken }),
-				credentials: 'include',
-			});
-			return res.ok;
+
+			const result = await createSessionAction(idToken);
+			return result.success;
 		} catch {
 			return false;
 		}

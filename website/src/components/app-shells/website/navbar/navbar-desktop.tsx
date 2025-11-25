@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import type { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
-import { useLogout } from './hooks/use-logout';
+import { useLogout } from '../../use-logout';
 import { Logo } from './logo';
 
 export const NavbarDesktop = ({ contributor }: { contributor?: ContributorSession }) => {

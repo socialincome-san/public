@@ -8,7 +8,7 @@ import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { useLogout } from './hooks/use-logout';
+import { useLogout } from '../../use-logout';
 import { useNavbarLinks } from './hooks/use-navbar-links';
 import { Logo } from './logo';
 import { ProgramDropdown } from './program-dropdown';
