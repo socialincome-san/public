@@ -1,3 +1,7 @@
+locals {
+  is_prod = var.env == "prod"
+}
+
 resource "random_password" "psql_admin_password" {
   length  = 16
   special = false
@@ -14,12 +18,12 @@ resource "google_sql_database_instance" "google_sql_database_instance" {
   deletion_protection = true
 
   settings {
-    tier            = "db-f1-micro"
+    tier            = local.is_prod ? "db-g1-small" : "db-f1-micro"
     disk_autoresize = true
 
     database_flags {
       name  = "log_statement"
-      value = "all"
+      value = local.is_prod ? "ddl" : "all"
     }
 
     ip_configuration {
@@ -43,7 +47,8 @@ resource "google_sql_database_instance" "google_sql_database_instance" {
     }
 
     backup_configuration {
-      enabled = true
+      enabled                        = true
+      point_in_time_recovery_enabled = local.is_prod
     }
   }
 
