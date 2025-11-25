@@ -1,5 +1,5 @@
-import { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
-import { buildAddressInput, buildCommonContactData } from '@/components/legacy/dynamic-form/helper';
+import { FormField } from '@/components/dynamic-form/dynamic-form';
+import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
 import { ContributorPayload, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { ContributorFormSchema } from './contributors-form';
 
