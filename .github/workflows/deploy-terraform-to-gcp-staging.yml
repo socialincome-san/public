@@ -92,7 +92,6 @@ jobs:
           TF_VAR_app_name: ${{ env.APP_NAME }}
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
-          TF_VAR_google_sql_db_password: ${{ secrets.TF_STAGING_GOOGLE_SQL_DB_PASSWORD }}
           TF_VAR_website_domain: ${{ env.WEBSITE_DOMAIN }}
           TF_VAR_scheduler_api_key: ${{ secrets.TF_STAGING_SCHEDULER_API_KEY }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
