@@ -355,12 +355,10 @@ export class ContributorService extends BaseService {
 	}
 
 	async getOrCreateByReferenceId(contributorData: BankContributorData): Promise<ServiceResult<Contributor>> {
-		console.log('contributorData: ', contributorData);
 		try {
 			const existingContributor = await this.db.contributor.findFirst({
 				where: { paymentReferenceId: contributorData.paymentReferenceId },
 			});
-			console.log('existingContributor: ', existingContributor);
 			if (existingContributor) return this.resultOk(existingContributor);
 
 			const firebaseResult = await this.firebaseService.getOrCreateUser({
