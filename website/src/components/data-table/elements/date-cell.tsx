@@ -18,6 +18,7 @@ export function DateCell<TData, TValue extends Date | string | null>({
 		hour: '2-digit',
 		minute: '2-digit',
 		second: '2-digit',
+		timeZone: 'Europe/Zurich',
 	},
 }: DateCellProps<TData, TValue>) {
 	const value = ctx.getValue();
