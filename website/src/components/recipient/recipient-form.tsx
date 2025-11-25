@@ -1,8 +1,8 @@
 'use client';
 
-import { getFormSchema as getContactFormSchema } from '@/components/legacy/dynamic-form/contact-form-schemas';
-import DynamicForm, { FormField, FormSchema } from '@/components/legacy/dynamic-form/dynamic-form';
-import { getContactValuesFromPayload, getZodEnum } from '@/components/legacy/dynamic-form/helper';
+import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
+import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import {
 	createRecipientAction,
 	getRecipientAction,

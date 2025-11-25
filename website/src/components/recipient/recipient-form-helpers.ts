@@ -1,5 +1,5 @@
-import { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
-import { buildAddressInput, buildCommonContactData } from '@/components/legacy/dynamic-form/helper';
+import { FormField } from '@/components/dynamic-form/dynamic-form';
+import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { RecipientFormSchema } from './recipient-form';
 

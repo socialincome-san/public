@@ -1,4 +1,4 @@
-import { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
+import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
 import z from 'zod';
 
