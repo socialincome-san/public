@@ -14,7 +14,7 @@ export type UserCreateInput = {
 	lastName: string;
 	email: string;
 	role: UserRole;
-	organizationId: string | null;
+	organizationId: string;
 };
 
 export type UserUpdateInput = {
@@ -23,7 +23,7 @@ export type UserUpdateInput = {
 	lastName: string;
 	email: string;
 	role: UserRole;
-	organizationId: string | null;
+	organizationId: string;
 };
 
 export type UserTableViewRow = {

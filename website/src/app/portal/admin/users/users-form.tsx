@@ -28,7 +28,7 @@ export type UserFormSchema = {
 		lastName: FormField;
 		email: FormField;
 		role: FormField;
-		organization: FormField;
+		organizationId: FormField;
 	};
 };
 
@@ -55,7 +55,7 @@ const initialFormSchema: UserFormSchema = {
 			label: 'Role',
 			zodSchema: z.nativeEnum(UserRole),
 		},
-		organization: {
+		organizationId: {
 			placeholder: 'Organization',
 			label: 'Organization',
 		},
@@ -91,7 +91,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 				next.fields.lastName.value = result.data.lastName;
 				next.fields.email.value = result.data.email;
 				next.fields.role.value = result.data.role;
-				next.fields.organization.value = result.data.organizationId;
+				next.fields.organizationId.value = result.data.organizationId;
 				setFormSchema(next);
 			} else {
 				onError?.(result.error);
@@ -111,8 +111,8 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 			...prev,
 			fields: {
 				...prev.fields,
-				organization: {
-					...prev.fields.organization,
+				organizationId: {
+					...prev.fields.organizationId,
 					zodSchema: z.nativeEnum(orgEnum),
 				},
 			},

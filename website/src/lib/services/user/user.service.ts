@@ -10,6 +10,7 @@ import {
 	UserTableViewRow,
 	UserUpdateInput,
 } from './user.types';
+
 export class UserService extends BaseService {
 	private firebaseService = new FirebaseService();
 
@@ -35,7 +36,11 @@ export class UserService extends BaseService {
 			const createdUser = await this.db.user.create({
 				data: {
 					role: input.role,
-					activeOrganization: input.organizationId ? { connect: { id: input.organizationId } } : undefined,
+
+					activeOrganization: {
+						connect: { id: input.organizationId },
+					},
+
 					contact: {
 						create: {
 							firstName: input.firstName,
@@ -43,12 +48,21 @@ export class UserService extends BaseService {
 							email: input.email,
 						},
 					},
+
 					account: {
 						create: {
 							firebaseAuthUserId: firebaseAuthUser.uid,
 						},
 					},
+
+					organizationAccesses: {
+						create: {
+							organizationId: input.organizationId,
+							permission: 'edit',
+						},
+					},
 				},
+
 				include: {
 					contact: true,
 					activeOrganization: true,
@@ -101,12 +115,24 @@ export class UserService extends BaseService {
 				where: { id: input.id },
 				data: {
 					role: input.role,
-					activeOrganization: input.organizationId ? { connect: { id: input.organizationId } } : { disconnect: true },
+
+					activeOrganization: {
+						connect: { id: input.organizationId },
+					},
+
 					contact: {
 						update: {
 							firstName: input.firstName,
 							lastName: input.lastName,
 							email: input.email,
+						},
+					},
+
+					organizationAccesses: {
+						deleteMany: { userId: input.id },
+						create: {
+							organizationId: input.organizationId,
+							permission: 'edit',
 						},
 					},
 				},

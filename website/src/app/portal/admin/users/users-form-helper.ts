@@ -7,7 +7,7 @@ export function buildCreateUserInput(schema: UserFormSchema): UserCreateInput {
 		lastName: schema.fields.lastName.value,
 		email: schema.fields.email.value,
 		role: schema.fields.role.value,
-		organizationId: schema.fields.organization.value,
+		organizationId: schema.fields.organizationId.value,
 	};
 }
 
@@ -18,6 +18,6 @@ export function buildUpdateUserInput(schema: UserFormSchema, existing: UserPaylo
 		lastName: schema.fields.lastName.value,
 		email: schema.fields.email.value,
 		role: schema.fields.role.value,
-		organizationId: schema.fields.organization.value,
+		organizationId: schema.fields.organizationId.value,
 	};
 }
