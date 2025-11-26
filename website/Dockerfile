@@ -5,13 +5,8 @@ WORKDIR /app
 RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
     --mount=type=secret,id=NEXT_PUBLIC_APP_ENVIRONMENT \
     --mount=type=secret,id=APP_BUILD_TIMESTAMP \
-    --mount=type=secret,id=BASE_URL \
-    --mount=type=secret,id=EXCHANGE_RATES_API \
-    --mount=type=secret,id=SCHEDULER_API_KEY \
     --mount=type=secret,id=FIREBASE_DATABASE_URL \
     --mount=type=secret,id=FIREBASE_SERVICE_ACCOUNT_JSON \
-    --mount=type=secret,id=GITHUB_PAT \
-    --mount=type=secret,id=NEXT_PUBLIC_FACEBOOK_TRACKING_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_API_KEY \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_APP_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN \
@@ -19,8 +14,6 @@ RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_PROJECT_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET \
-    --mount=type=secret,id=NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID \
-    --mount=type=secret,id=NEXT_PUBLIC_LINKEDIN_TRACKING_ID \
     --mount=type=secret,id=SENTRY_AUTH_TOKEN \
     --mount=type=secret,id=STORYBLOK_PREVIEW_SECRET \
     --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \

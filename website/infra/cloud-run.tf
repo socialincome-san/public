@@ -99,6 +99,36 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
           value = var.twilio_verify_service_sid
         }
 
+        env {
+          name  = "BASE_URL"
+          value = var.base_url
+        }
+
+        env {
+          name  = "EXCHANGE_RATES_API"
+          value = var.exchange_rates_api
+        }
+
+        env {
+          name  = "GITHUB_PAT"
+          value = var.github_pat
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FACEBOOK_TRACKING_ID"
+          value = var.next_public_facebook_tracking_id
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID"
+          value = var.next_public_google_tag_manager_id
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_LINKEDIN_TRACKING_ID"
+          value = var.next_public_linkedin_tracking_id
+        }
+
         ports {
           container_port = 3000
         }

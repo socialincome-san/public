@@ -44,12 +44,8 @@ jobs:
           echo "${{ github.sha }}" > secrets/NEXT_PUBLIC_APP_VERSION
           echo "${{ env.ENVIRONMENT }}" > secrets/NEXT_PUBLIC_APP_ENVIRONMENT
           echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > secrets/APP_BUILD_TIMESTAMP
-          echo "${{ secrets.TF_STAGING_BASE_URL }}" > secrets/BASE_URL
-          echo "${{ secrets.TF_STAGING_EXCHANGE_RATES_API }}" > secrets/EXCHANGE_RATES_API
-          echo "${{ secrets.TF_STAGING_SCHEDULER_API_KEY }}" > secrets/SCHEDULER_API_KEY
           echo "${{ secrets.TF_STAGING_FIREBASE_DATABASE_URL }}" > secrets/FIREBASE_DATABASE_URL
           echo "${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }}" > secrets/FIREBASE_SERVICE_ACCOUNT_JSON
-          echo "${{ secrets.TF_STAGING_GITHUB_PAT }}" > secrets/GITHUB_PAT
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_API_KEY }}" > secrets/NEXT_PUBLIC_FIREBASE_API_KEY
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_APP_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_APP_ID
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}" > secrets/NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
@@ -100,6 +96,9 @@ jobs:
           TF_VAR_twilio_account_sid: ${{ secrets.TF_STAGING_TWILIO_ACCOUNT_SID }}
           TF_VAR_twilio_auth_token: ${{ secrets.TF_STAGING_TWILIO_AUTH_TOKEN }}
           TF_VAR_twilio_verify_service_sid: ${{ secrets.TF_STAGING_TWILIO_VERIFY_SERVICE_SID }}
+          TF_VAR_base_url: ${{ secrets.TF_STAGING_BASE_URL }}
+          TF_VAR_exchange_rates_api: ${{ secrets.TF_STAGING_EXCHANGE_RATES_API }}
+          TF_VAR_github_pat: ${{ secrets.TF_STAGING_GITHUB_PAT }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."
