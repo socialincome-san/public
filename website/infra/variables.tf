@@ -113,3 +113,35 @@ variable "twilio_verify_service_sid" {
   type      = string
   sensitive = true
 }
+
+variable "base_url" {
+  description = "Base URL of the website"
+  type        = string
+}
+
+variable "exchange_rates_api" {
+  description = "API key for exchange rates service"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_pat" {
+  description = "GitHub Personal Access Token for accessing private repositories"
+  type        = string
+  sensitive   = true
+}
+
+variable "next_public_facebook_tracking_id" {
+  description = "Facebook Tracking ID for the website"
+  type        = string
+}
+
+variable "next_public_google_tag_manager_id" {
+  description = "Google Tag Manager ID for the website"
+  type        = string
+}
+
+variable "next_public_linkedin_tracking_id" {
+  description = "LinkedIn Tracking ID for the website"
+  type        = string
+}
