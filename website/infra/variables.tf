@@ -134,14 +134,17 @@ variable "github_pat" {
 variable "next_public_facebook_tracking_id" {
   description = "Facebook Tracking ID for the website"
   type        = string
+  default     = ""
 }
 
 variable "next_public_google_tag_manager_id" {
   description = "Google Tag Manager ID for the website"
   type        = string
+  default     = ""
 }
 
 variable "next_public_linkedin_tracking_id" {
   description = "LinkedIn Tracking ID for the website"
   type        = string
+  default     = ""
 }
