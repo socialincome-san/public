@@ -73,21 +73,6 @@ variable "sendgrid_suppression_list_id" {
   sensitive = true
 }
 
-variable "sentry_auth_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "storyblok_preview_secret" {
-  type      = string
-  sensitive = true
-}
-
-variable "storyblok_preview_token" {
-  type      = string
-  sensitive = true
-}
-
 variable "twilio_account_sid" {
   type      = string
   sensitive = true

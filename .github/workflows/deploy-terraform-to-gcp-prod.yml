@@ -60,6 +60,9 @@ jobs:
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID}}" > secrets/NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_LINKEDIN_TRACKING_ID}}" > secrets/NEXT_PUBLIC_LINKEDIN_TRACKING_ID
+          echo "${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
+          echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_SECRET }}" > secrets/STORYBLOK_PREVIEW_SECRET
+          echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
 
       - name: 📤 Build and Push Docker Image
         env:
@@ -92,9 +95,6 @@ jobs:
           TF_VAR_sendgrid_api_key: ${{ secrets.TF_PROD_SENDGRID_API_KEY }}
           TF_VAR_sendgrid_list_id: ${{ secrets.TF_PROD_SENDGRID_LIST_ID }}
           TF_VAR_sendgrid_suppression_list_id: ${{ secrets.TF_PROD_SENDGRID_SUPPRESSION_LIST_ID }}
-          TF_VAR_sentry_auth_token: ${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}
-          TF_VAR_storyblok_preview_secret: ${{ secrets.TF_PROD_STORYBLOK_PREVIEW_SECRET }}
-          TF_VAR_storyblok_preview_token: ${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}
           TF_VAR_twilio_account_sid: ${{ secrets.TF_PROD_TWILIO_ACCOUNT_SID }}
           TF_VAR_twilio_auth_token: ${{ secrets.TF_PROD_TWILIO_AUTH_TOKEN }}
           TF_VAR_twilio_verify_service_sid: ${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}

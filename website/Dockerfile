@@ -21,6 +21,9 @@ RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET \
     --mount=type=secret,id=NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID \
     --mount=type=secret,id=NEXT_PUBLIC_LINKEDIN_TRACKING_ID \
+    --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    --mount=type=secret,id=STORYBLOK_PREVIEW_SECRET \
+    --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \
     sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
 
 # -------- Dependencies Layer --------
