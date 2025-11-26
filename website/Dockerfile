@@ -2,6 +2,7 @@
 FROM node:22-alpine AS base
 WORKDIR /app
 
+# This secrets are used during build time. All others are provided at runtime.
 RUN --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_API_KEY \
     --mount=type=secret,id=SENTRY_AUTH_TOKEN \
     --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \
