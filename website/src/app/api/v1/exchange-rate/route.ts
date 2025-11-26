@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
 	const apiKey = request.headers.get('x-api-key');
 
 	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
+		logger.alert('Scheduler API key not set or wrong');
 		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 	}
 

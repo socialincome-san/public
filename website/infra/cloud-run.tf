@@ -26,6 +26,31 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "POSTFINANCE_FTP_HOST"
+          value = var.postfinance_ftp_host
+        }
+
+        env {
+          name  = "POSTFINANCE_FTP_PORT"
+          value = var.postfinance_ftp_port
+        }
+
+        env {
+          name  = "POSTFINANCE_FTP_USER"
+          value = var.postfinance_ftp_user
+        }
+
+        env {
+          name  = "POSTFINANCE_PAYMENTS_FILES_BUCKET"
+          value = var.postfinance_payments_files_bucket
+        }
+
+        env {
+          name  = "POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64"
+          value = var.postfinance_ftp_rsa_private_key_base64
+        }
+
+        env {
           name  = "STRIPE_PRODUCT_ONETIME"
           value = var.stripe_product_onetime
         }

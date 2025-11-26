@@ -17,12 +17,12 @@ export async function POST(request: NextRequest) {
 	const apiKey = request.headers.get('x-api-key');
 
 	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
-		logger.error('Scheduler API key not set or wrong');
+		logger.alert('Scheduler API key not set or wrong');
 		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 	}
 
 	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
-		logger.error('Payment files storage bucket env var not set');
+		logger.alert('Payment files storage bucket env var not set');
 		return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
 	}
 

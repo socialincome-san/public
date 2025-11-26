@@ -84,6 +84,11 @@ jobs:
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
           TF_VAR_website_domain: ${{ env.WEBSITE_DOMAIN }}
+          TF_VAR_postfinance_ftp_host: ${{ vars.POSTFINANCE_FTP_HOST }}
+          TF_VAR_postfinance_ftp_port: ${{ vars.POSTFINANCE_FTP_PORT }}
+          TF_VAR_postfinance_ftp_user: ${{ vars.POSTFINANCE_FTP_USER }}
+          TF_VAR_postfinance_payments_files_bucket: ${{ vars.POSTFINANCE_PAYMENTS_FILES_BUCKET_STAGING }}
+          TF_VAR_postfinance_ftp_rsa_private_key_base64: ${{ secrets.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 }}
           TF_VAR_scheduler_api_key: ${{ secrets.TF_STAGING_SCHEDULER_API_KEY }}
           TF_VAR_stripe_product_onetime: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}
           TF_VAR_stripe_product_recurring: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}
