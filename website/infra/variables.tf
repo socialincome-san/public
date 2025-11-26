@@ -28,6 +28,27 @@ variable "website_domain" {
   type        = string
 }
 
+variable "postfinance_ftp_host" {
+  description = "Host name for payment file FTP import"
+  type        = string
+}
+
+variable "postfinance_ftp_port" {
+  description = "Port for payment file FTP import"
+  type        = string
+}
+
+variable "postfinance_payments_files_bucket" {
+  description = "Firebase Storage Bucket name for payment file import"
+  type        = string
+}
+
+variable "postfinance_ftp_rsa_private_key_base64" {
+  description = "Private key for payment file FTP import"
+  type        = string
+  sensitive   = true
+}
+
 variable "scheduler_api_key" {
   description = "API key for the scheduler API endpoints"
   type        = string
