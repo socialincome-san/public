@@ -148,3 +148,61 @@ variable "next_public_linkedin_tracking_id" {
   type        = string
   default     = ""
 }
+
+variable "next_public_app_version" {
+  description = "Git commit SHA used for the deployed build"
+  type        = string
+}
+
+variable "app_build_timestamp" {
+  description = "UTC timestamp of the build"
+  type        = string
+}
+
+variable "firebase_database_url" {
+  description = "Firebase Realtime Database URL"
+  type        = string
+  sensitive   = true
+}
+
+variable "firebase_service_account_json" {
+  description = "Firebase Service Account JSON"
+  type        = string
+  sensitive   = true
+}
+
+variable "next_public_fire_base_app_id" {
+  description = "Firebase App ID"
+  type        = string
+}
+
+variable "next_public_fire_base_auth_domain" {
+  description = "Firebase Auth Domain"
+  type        = string
+}
+
+variable "next_public_fire_base_measurement_id" {
+  description = "Firebase Measurement ID"
+  type        = string
+}
+
+variable "next_public_fire_base_messaging_sender_id" {
+  description = "Firebase Messaging Sender ID"
+  type        = string
+}
+
+variable "next_public_fire_base_project_id" {
+  description = "Firebase Project ID"
+  type        = string
+}
+
+variable "next_public_fire_base_storage_bucket" {
+  description = "Firebase Storage Bucket"
+  type        = string
+}
+
+variable "storyblok_preview_secret" {
+  description = "Storyblok Preview Secret"
+  type        = string
+  sensitive   = true
+}

@@ -16,6 +16,61 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         image = var.docker_image_url
 
         env {
+          name  = "NEXT_PUBLIC_APP_VERSION"
+          value = var.next_public_app_version
+        }
+
+        env {
+          name  = "APP_BUILD_TIMESTAMP"
+          value = var.app_build_timestamp
+        }
+
+        env {
+          name  = "FIREBASE_DATABASE_URL"
+          value = var.firebase_database_url
+        }
+
+        env {
+          name  = "FIREBASE_SERVICE_ACCOUNT_JSON"
+          value = var.firebase_service_account_json
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FIREBASE_APP_ID"
+          value = var.next_public_fire_base_app_id
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"
+          value = var.next_public_fire_base_auth_domain
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID"
+          value = var.next_public_fire_base_measurement_id
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID"
+          value = var.next_public_fire_base_messaging_sender_id
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FIREBASE_PROJECT_ID"
+          value = var.next_public_fire_base_project_id
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET"
+          value = var.next_public_fire_base_storage_bucket
+        }
+
+        env {
+          name  = "STORYBLOK_PREVIEW_SECRET"
+          value = var.storyblok_preview_secret
+        }
+
+        env {
           name  = "DATABASE_URL"
           value = "postgresql://${google_sql_user.google_sql_user.name}:${random_password.psql_admin_password.result}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}?sslmode=require"
         }
@@ -69,6 +124,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
           name  = "STRIPE_WEBHOOK_SECRET"
           value = var.stripe_webhook_secret
         }
+
         env {
           name  = "SENDGRID_API_KEY"
           value = var.sendgrid_api_key
