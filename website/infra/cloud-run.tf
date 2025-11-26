@@ -8,6 +8,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         "run.googleapis.com/vpc-access-connector" = google_vpc_access_connector.google_vpc_access_connector.name
         "run.googleapis.com/vpc-access-egress"    = "all-traffic"
         "autoscaling.knative.dev/minScale"        = "1"
+        "autoscaling.knative.dev/maxScale"        = "3"
       }
     }
 
