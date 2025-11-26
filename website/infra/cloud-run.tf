@@ -36,6 +36,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "POSTFINANCE_FTP_USER"
+          value = var.postfinance_ftp_user
+        }
+
+        env {
           name  = "POSTFINANCE_PAYMENTS_FILES_BUCKET"
           value = var.postfinance_payments_files_bucket
         }

@@ -38,6 +38,11 @@ variable "postfinance_ftp_port" {
   type        = string
 }
 
+variable "postfinance_ftp_user" {
+  description = "User name for payment file FTP import"
+  type        = string
+}
+
 variable "postfinance_payments_files_bucket" {
   description = "Firebase Storage Bucket name for payment file import"
   type        = string
