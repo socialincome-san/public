@@ -60,21 +60,6 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
-          name  = "SENTRY_AUTH_TOKEN"
-          value = var.sentry_auth_token
-        }
-
-        env {
-          name  = "STORYBLOK_PREVIEW_SECRET"
-          value = var.storyblok_preview_secret
-        }
-
-        env {
-          name  = "STORYBLOK_PREVIEW_TOKEN"
-          value = var.storyblok_preview_token
-        }
-
-        env {
           name  = "TWILIO_ACCOUNT_SID"
           value = var.twilio_account_sid
         }
