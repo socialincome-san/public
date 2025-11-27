@@ -60,7 +60,9 @@
 		"year": "Year",
 		"download-pdf": "Download PDF",
 		"no-certificates-yet": "You have no donation certificates yet. Make sure you provide your full address with.",
-		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org."
+		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org.",
+		"already-exists": "Certificate for selected year and language already exists. If this seems wrong, please contact contributors@socialincome.org.",
+		"technical-error": "A technical error has occurred, please try again. If this continues to happen, please contact contributors@socialincome.org."
 	},
 	"personal-info": {
 		"alert-title": "Donation certificates",
