@@ -1,6 +1,5 @@
 'use client';
 
-import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { CopyUrlCell } from '@/components/data-table/elements/copy-url-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
@@ -66,13 +65,6 @@ export function makeSurveyColumns(hideProgramName = false): ColumnDef<SurveyTabl
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		});
 	}
-
-	columns.push({
-		id: 'actions',
-		header: '',
-		enableSorting: false,
-		cell: (ctx) => <ActionCell ctx={ctx} />,
-	});
 
 	return columns;
 }
