@@ -45,11 +45,11 @@ export const getContactValuesFromPayload = (
 // Helper to structure contact address for Prisma upsert/create
 export function buildAddressInput(contactFields: { [key: string]: FormField }) {
 	return {
-		street: contactFields.street.value,
-		number: contactFields.number.value,
-		city: contactFields.city.value,
-		zip: contactFields.zip.value,
-		country: contactFields.country.value,
+		street: contactFields.street.value || '',
+		number: contactFields.number.value || '',
+		city: contactFields.city.value || '',
+		zip: contactFields.zip.value || '',
+		country: contactFields.country.value || '',
 	};
 }
 
