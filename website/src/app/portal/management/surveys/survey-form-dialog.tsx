@@ -14,17 +14,17 @@ type SurveyFormDialogProps = {
 };
 
 export function SurveyFormDialog({ open, onOpenChange, surveyId, readOnly = false }: SurveyFormDialogProps) {
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	const onError = (e?: unknown) => {
-		setHasError(true);
-		logger.error('Survey Form Error', { error: e });
+	const onError = (error?: unknown) => {
+		setErrorMessage(`Error saving survey: ${error}`);
+		logger.error('Survey Form Error', { error });
 	};
 
 	const handleOpenChange = (newOpen: boolean) => {
 		onOpenChange(newOpen);
 		if (!newOpen) {
-			setHasError(false);
+			setErrorMessage(null);
 		}
 	};
 
@@ -34,10 +34,10 @@ export function SurveyFormDialog({ open, onOpenChange, surveyId, readOnly = fals
 				<DialogHeader>
 					<DialogTitle>{surveyId ? 'Edit Survey' : 'Add Survey'}</DialogTitle>
 				</DialogHeader>
-				{hasError && (
+				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>Something went wrong. Please try again.</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 				<SurveyForm

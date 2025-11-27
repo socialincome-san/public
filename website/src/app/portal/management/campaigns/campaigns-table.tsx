@@ -12,24 +12,24 @@ import CampaignsForm from './campaigns-form';
 
 export default function CampaignsTable({ rows, error }: { rows: CampaignTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [campaignId, setCampaignId] = useState<string | undefined>(undefined);
 	const readOnly = rows.some((row) => row.permission === 'readonly');
 
 	const openEmptyForm = () => {
 		setCampaignId(undefined);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: CampaignTableViewRow) => {
 		setCampaignId(row.id);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const onError = (error: unknown) => {
-		setHasError(true);
+		setErrorMessage(`Error saving campaign: ${error}`);
 		logger.error('Campaigns Form Error', { error });
 	};
 
@@ -54,10 +54,10 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 					<DialogHeader>
 						<DialogTitle>{campaignId ? (readOnly ? 'View' : 'Edit') : 'Add'} Campaign</DialogTitle>
 					</DialogHeader>
-					{hasError && (
+					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>Error saving campaign</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<CampaignsForm

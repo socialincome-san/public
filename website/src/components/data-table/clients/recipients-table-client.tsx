@@ -42,7 +42,7 @@ export function RecipientsTableClient({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(error as string);
+		setErrorMessage(`Error saving recipient: ${error}`);
 		logger.error('Recipient Form Error', { error });
 	};
 
@@ -72,7 +72,7 @@ export function RecipientsTableClient({
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>Error saving recipient: {errorMessage}</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<RecipientForm
