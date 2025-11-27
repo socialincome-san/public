@@ -1,5 +1,6 @@
 'use client';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import DataTable from '@/components/data-table/data-table';
@@ -23,25 +24,25 @@ export function RecipientsTableClient({
 	const [open, setOpen] = useState(false);
 
 	const [recipientId, setRecipientId] = useState<string | undefined>();
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [rowReadOnly, setRowReadOnly] = useState(readOnly ?? false);
 
 	const openEmptyForm = () => {
 		setRecipientId(undefined);
 		setRowReadOnly(readOnly ?? false);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: RecipientTableViewRow) => {
 		setRecipientId(row.id);
 		setRowReadOnly(row.permission === 'readonly' ? true : (readOnly ?? false));
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const onError = (error: unknown) => {
-		setHasError(true);
+		setErrorMessage(`Error saving recipient: ${error}`);
 		logger.error('Recipient Form Error', { error });
 	};
 
@@ -68,6 +69,12 @@ export function RecipientsTableClient({
 							{rowReadOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}
 						</DialogTitle>
 					</DialogHeader>
+					{errorMessage && (
+						<Alert variant="destructive">
+							<AlertTitle>Error</AlertTitle>
+							<AlertDescription>{errorMessage}</AlertDescription>
+						</Alert>
+					)}
 					<RecipientForm
 						recipientId={recipientId}
 						readOnly={rowReadOnly}

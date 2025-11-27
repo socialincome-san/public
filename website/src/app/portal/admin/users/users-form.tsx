@@ -122,7 +122,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 	const onSubmit = (schema: UserFormSchema) => {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: unknown };
+				let res: { success: boolean; error?: string };
 				if (userId && user) {
 					const data = buildUpdateUserInput(schema, user);
 					res = await updateUserAction(data);

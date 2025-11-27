@@ -87,12 +87,14 @@ export class RecipientService extends BaseService {
 				return this.resultFail('No phone number available for recipient update');
 			}
 
-			const firebaseResult = await this.firebaseService.updateByPhoneNumber(
-				existing.paymentInformation?.phone.number,
-				phoneNumber,
-			);
-			if (!firebaseResult.success) {
-				return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
+			if (existing.paymentInformation?.phone.number !== phoneNumber) {
+				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
+					existing.paymentInformation?.phone.number,
+					phoneNumber,
+				);
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
+				}
 			}
 
 			const updatedRecipient = await this.db.recipient.update({

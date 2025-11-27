@@ -11,18 +11,18 @@ import ContributorsForm from './contributors-form';
 
 export default function ContributorsTable({ rows, error }: { rows: ContributorTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [contributorId, setContributorId] = useState<string | undefined>(undefined);
 	const readOnly = rows.some((r) => r.permission === 'readonly');
 
 	const openEditForm = (row: ContributorTableViewRow) => {
 		setContributorId(row.id);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const onError = (error: unknown) => {
-		setHasError(true);
+		setErrorMessage(`Error saving contributor: ${error}`);
 		logger.error('Contributor Form Error', { error });
 	};
 
@@ -42,10 +42,10 @@ export default function ContributorsTable({ rows, error }: { rows: ContributorTa
 					<DialogHeader>
 						<DialogTitle>{readOnly ? 'View' : 'Edit'} Contributor</DialogTitle>
 					</DialogHeader>
-					{hasError && (
+					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>Error saving contributor</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<ContributorsForm

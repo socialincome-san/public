@@ -12,24 +12,24 @@ import UsersForm from './users-form';
 
 export default function UsersTable({ rows, error }: { rows: UserTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [userId, setUserId] = useState<string | undefined>(undefined);
 
 	const openEmptyForm = () => {
 		setUserId(undefined);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: UserTableViewRow) => {
 		setUserId(row.id);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
-	const onError = (e?: unknown) => {
-		setHasError(true);
-		logger.error('User Form Error', { error: e });
+	const onError = (error?: unknown) => {
+		setErrorMessage(`Error saving user: ${error}`);
+		logger.error('User Form Error', { error });
 	};
 
 	return (
@@ -50,10 +50,10 @@ export default function UsersTable({ rows, error }: { rows: UserTableViewRow[]; 
 						<DialogTitle>{userId ? 'Edit' : 'Add'} user</DialogTitle>
 					</DialogHeader>
 
-					{hasError && (
+					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>Error saving user</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 

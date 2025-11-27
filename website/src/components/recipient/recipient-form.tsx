@@ -184,7 +184,7 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 	const onSubmit = (schema: RecipientFormSchema) => {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: unknown };
+				let res: { success: boolean; error?: string };
 				const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
 
 				if (recipientId && recipient) {

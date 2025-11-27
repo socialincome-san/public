@@ -66,24 +66,24 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 			street: {
 				placeholder: 'Street',
 				label: 'Address Street',
-				zodSchema: z.string().min(2),
+				zodSchema: z.string().nullable(),
 			},
 			number: {
 				placeholder: 'Number',
 				label: 'Address Number',
-				zodSchema: z.string().min(1),
+				zodSchema: z.string().nullable(),
 			},
 			city: {
 				placeholder: 'City',
 				label: 'Address City',
-				zodSchema: z.string().min(2),
+				zodSchema: z.string().nullable(),
 			},
 			zip: {
 				placeholder: 'ZIP',
 				label: 'Address ZIP Code',
-				zodSchema: z.string().min(2),
+				zodSchema: z.string().nullable(),
 			},
-			country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().min(2) },
+			country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().nullable() },
 		},
 	};
 };
