@@ -210,7 +210,7 @@ export default async function Page(props: {
 						<Typography size="4xl" className="text-center" weight="semibold">
 							{translator.t('article.keep-reading')}
 						</Typography>
-						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-10 md:pl-20 md:pr-20 lg:grid-cols-3">
+						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-5 md:pl-20 md:pr-20 lg:grid-cols-3">
 							{articles.map((article) => (
 								<StoryblokArticleCard
 									key={article.uuid}
