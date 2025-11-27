@@ -72,7 +72,7 @@ export class PaymentFileImportService extends BaseService {
 					await this.storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
 				});
 			}
-			const result = await this.createContributions(allContributions);
+			const result = await this.createOrUpdateContributions(allContributions);
 			sftp.end();
 
 			if (!result.success) {
@@ -118,7 +118,9 @@ export class PaymentFileImportService extends BaseService {
 	 * @param bankContributions contributions from payment files
 	 */
 	// TODO: create or update
-	private async createContributions(bankContributions: BankContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
+	private async createOrUpdateContributions(
+		bankContributions: BankContribution[],
+	): Promise<ServiceResult<PaymentEvent[]>> {
 		try {
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 			if (!fallbackCampaignResult.success) {
@@ -143,7 +145,9 @@ export class PaymentFileImportService extends BaseService {
 						contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
 				);
 				if (!contributor) {
-					this.logger.alert(`Contributor for reference ID ${c.referenceId} does not exist`);
+					this.logger.alert(
+						`Contributor for reference ID ${this.getReferenceIds(c.referenceId).contributorReferenceId} does not exist`,
+					);
 					continue;
 				}
 
