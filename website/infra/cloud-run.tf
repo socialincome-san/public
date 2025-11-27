@@ -107,6 +107,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "SCHEDULER_API_KEY"
+          value = var.scheduler_api_key
+        }
+
+        env {
           name  = "STRIPE_PRODUCT_ONETIME"
           value = var.stripe_product_onetime
         }
