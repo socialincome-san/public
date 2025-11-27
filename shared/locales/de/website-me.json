@@ -60,7 +60,9 @@
 		"year": "Jahr",
 		"download-pdf": "PDF herunterladen",
 		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Stelle sicher, dass du deine Adresse unter \"Kontaktangaben\" hinterleget hast. <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>.",
-		"no-contributions": "Keine Beiträge gefunden, daher kein Zertifikat. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org."
+		"no-contributions": "Keine Beiträge gefunden, daher kein Zertifikat. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
+		"already-exists": "Zertifikat für ausgewähltes Jahr und Sprache existiert bereits. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
+		"technical-error": "Es ist ein technischer Fehler aufgetreten, bitte probiere es noch einmal. Wenn dies weiterhin passiert, melde dich bei contributors@socialincome.org."
 	},
 	"personal-info": {
 		"alert-title": "Spendebescheinigung",

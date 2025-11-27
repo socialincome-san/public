@@ -60,7 +60,9 @@
 		"year": "Année",
 		"download-pdf": "Télécharger le PDF",
 		"no-certificates-yet": "Tu n’as pas reçu d’attestation de don? Vérifie si tu as bien indiqué ton adresse dans  \"Informations personnelles\".<br></br> Pour toute question, prends <a href='mailto:hello@socialincome.org' class='underline'> contact avec nous</a>.",
-		"no-contributions": "Aucune contribution trouvée, donc pas de certificat. Si tu penses que c’est une erreur, écris à contributors@socialincome.org."
+		"no-contributions": "Aucune contribution trouvée, donc pas de certificat. Si tu penses que c’est une erreur, écris à contributors@socialincome.org.",
+		"already-exists": "Le certificat pour l'année et la langue sélectionnées existe déjà. Si tu penses que c’est une erreur, écris à contributors@socialincome.org.",
+		"technical-error": "Une erreur technique est survenue, veuillez réessayer. Si cela persiste, veuillez contacter contributors@socialincome.org."
 	},
 	"personal-info": {
 		"alert-title": "Attestations de don",

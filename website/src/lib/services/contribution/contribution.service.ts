@@ -220,8 +220,8 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async getForContributorsAndYear(
-		contributorsIds: string[],
+	async getForContributorAndYear(
+		contributorId: string,
 		year: number,
 	): Promise<ServiceResult<ContributionDonationEntry[]>> {
 		try {
@@ -230,7 +230,7 @@ export class ContributionService extends BaseService {
 
 			const result = await this.db.contribution.findMany({
 				where: {
-					contributorId: { in: contributorsIds },
+					contributorId: contributorId,
 					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }],
 				},
 				select: {
@@ -257,7 +257,7 @@ export class ContributionService extends BaseService {
 			return this.resultOk(contributions);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not fetch contributions for contributors ${contributorsIds.join(', ')}`);
+			return this.resultFail(`Could not fetch contributions for contributor ${contributorId}`);
 		}
 	}
 
