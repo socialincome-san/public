@@ -66,6 +66,7 @@ export class PaymentFileImportService extends BaseService {
 							`Skipped processing ${file.name} because it does not contain relevant payment data. Storing anyway.`,
 						);
 					} else {
+						this.logger.info(`Importing contributions from file ${file.name}.`);
 						const contributions = this.getContributionsFromPaymentFile(tmpPath);
 						allContributions.push(...contributions);
 					}
