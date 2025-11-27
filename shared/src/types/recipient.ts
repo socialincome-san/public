@@ -44,6 +44,7 @@ export type Recipient = {
 	test_recipient?: boolean;
 	twitter_handle?: string;
 	successor?: string;
+	terms_accepted?: boolean;
 };
 
 export const toPaymentDate = (dateTime: DateTime) => {

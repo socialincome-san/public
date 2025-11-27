@@ -1,15 +1,15 @@
 import { BaseMigrator } from '../core/base.migrator';
-import { RecipientsExtractor } from './recipient.extractor';
-import { RecipientsImporter } from './recipient.importer';
-import { RecipientsTransformer } from './recipient.transformer';
+import { RecipientExtractor } from './recipient.extractor';
+import { RecipientImporter } from './recipient.importer';
+import { RecipientTransformer } from './recipient.transformer';
 
 export class RecipientMigrator extends BaseMigrator {
-	private readonly extractor = new RecipientsExtractor();
-	private readonly transformer = new RecipientsTransformer();
-	private readonly importer = new RecipientsImporter();
+	private readonly extractor = new RecipientExtractor();
+	private readonly transformer = new RecipientTransformer();
+	private readonly importer = new RecipientImporter();
 
 	async migrate(): Promise<number> {
-		console.log('🚀 Starting recipients migration...');
+		console.log('🚀 Starting recipient migration...');
 
 		const extracted = await this.extractor.extract();
 		console.log(`📦 Extracted ${extracted.length} recipient records`);

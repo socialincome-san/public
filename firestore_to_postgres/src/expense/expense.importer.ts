@@ -1,25 +1,15 @@
-import { ExpenseService } from '@socialincome/shared/src/database/services/expense/expense.service';
-import { CreateExpenseInput } from '@socialincome/shared/src/database/services/expense/expense.types';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseImporter } from '../core/base.importer';
 
-export class ExpenseImporter extends BaseImporter<CreateExpenseInput> {
-	private readonly expenseService = new ExpenseService();
+const prisma = new PrismaClient();
 
-	import = async (expenses: CreateExpenseInput[]): Promise<number> => {
+export class ExpenseImporter extends BaseImporter<Prisma.ExpenseCreateInput> {
+	import = async (expenses: Prisma.ExpenseCreateInput[]): Promise<number> => {
 		let createdCount = 0;
 
 		for (const expense of expenses) {
-			const result = await this.expenseService.create(expense);
-
-			if (result.success) {
-				createdCount++;
-			} else {
-				console.warn('[ExpenseImporter] Skipped expense entry:', {
-					year: expense.year,
-					type: expense.type,
-					reason: result.error,
-				});
-			}
+			await prisma.expense.create({ data: expense });
+			createdCount++;
 		}
 
 		return createdCount;

@@ -1,0 +1,108 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Social Income API",
+		"version": "1.0.0",
+		"description": "Secure API with Firebase-based authentication; most endpoints require an ID token, except authentication and public webhook routes"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:3001/api",
+			"description": "Local development"
+		},
+		{
+			"url": "https://staging.socialincome.org/api",
+			"description": "Staging"
+		},
+		{
+			"url": "https://socialincome.org/api",
+			"description": "Production"
+		}
+	],
+	"components": {
+		"securitySchemes": {
+			"BearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			},
+			"ApiKeyAuth": {
+				"type": "apiKey",
+				"in": "header",
+				"name": "x-api-key"
+			}
+		}
+	},
+	"defaultResponseSet": "common",
+	"responseSets": {
+		"common": ["401", "403", "404", "500"]
+	},
+	"errorConfig": {
+		"template": {
+			"type": "object",
+			"properties": {
+				"error": {
+					"type": "string",
+					"example": "{{ERROR_MESSAGE}}"
+				},
+				"code": {
+					"type": "string",
+					"example": "{{ERROR_CODE}}"
+				}
+			}
+		},
+		"codes": {
+			"400": {
+				"description": "Bad Request",
+				"variables": {
+					"ERROR_MESSAGE": "Invalid request parameters",
+					"ERROR_CODE": "BAD_REQUEST"
+				}
+			},
+			"401": {
+				"description": "Unauthorized",
+				"variables": {
+					"ERROR_MESSAGE": "Authentication required",
+					"ERROR_CODE": "UNAUTHORIZED"
+				}
+			},
+			"403": {
+				"description": "Forbidden",
+				"variables": {
+					"ERROR_MESSAGE": "Access denied",
+					"ERROR_CODE": "FORBIDDEN"
+				}
+			},
+			"404": {
+				"description": "Not Found",
+				"variables": {
+					"ERROR_MESSAGE": "Resource not found",
+					"ERROR_CODE": "NOT_FOUND"
+				}
+			},
+			"409": {
+				"description": "Conflict",
+				"variables": {
+					"ERROR_MESSAGE": "Resource already exists",
+					"ERROR_CODE": "CONFLICT"
+				}
+			},
+			"500": {
+				"description": "Internal Server Error",
+				"variables": {
+					"ERROR_MESSAGE": "An unexpected error occurred",
+					"ERROR_CODE": "INTERNAL_ERROR"
+				}
+			}
+		}
+	},
+	"apiDir": "./src/app/api/v1",
+	"schemaDir": "./src/app/api/v1",
+	"schemaType": "zod",
+	"docsUrl": "api-docs",
+	"ui": "scalar",
+	"outputFile": "openapi.json",
+	"outputDir": "./public",
+	"includeOpenApiRoutes": false,
+	"debug": false
+}

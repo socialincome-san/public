@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new DonationCertificateMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Donation certificate migration failed:', err);
+		console.log('❌ Donation certificate migration failed:', err);
 		process.exit(1);
 	}
 };

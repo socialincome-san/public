@@ -1,9 +1,9 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { BankTransferForm, BankTransferFormProps } from '@/components/donation/bank-transfer-form';
-import { PaymentTypes } from '@/components/donation/generic-donation-form';
-import { CurrencySelector } from '@/components/ui/currency-selector';
+import { BankTransferForm, BankTransferFormProps } from '@/components/legacy/donation/bank-transfer-form';
+import { PaymentTypes } from '@/components/legacy/donation/generic-donation-form';
+import { CurrencySelector } from '@/components/legacy/ui/currency-selector';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { websiteCurrencies, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -22,7 +22,6 @@ import {
 } from '@socialincome/ui';
 import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
-import { UserContextProvider } from '../../../(website)/me/user-context-provider';
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PaymentTypeSelector } from './payment-type-selector';
 import { StripePaymentButton } from './stripe-payment-button';
@@ -200,16 +199,14 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										translations={translations.paymentType}
 										bankTransferForm={
 											<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
-												<UserContextProvider>
-													<BankTransferForm
-														lang={lang}
-														region={region}
-														qrBillType={window.innerWidth < 768 ? 'QRCODE' : 'QRBILL'}
-														intervalCount={Number(form.watch('donationInterval'))}
-														amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
-														translations={translations.bankTransfer}
-													/>
-												</UserContextProvider>
+												<BankTransferForm
+													lang={lang}
+													region={region}
+													qrBillType={window.innerWidth < 768 ? 'QRCODE' : 'QRBILL'}
+													intervalCount={Number(form.watch('donationInterval'))}
+													amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
+													translations={translations.bankTransfer}
+												/>
 											</div>
 										}
 									/>

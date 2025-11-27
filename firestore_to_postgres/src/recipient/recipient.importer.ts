@@ -1,74 +1,89 @@
-import { LocalPartnerService } from '@socialincome/shared/src/database/services/local-partner/local-partner.service';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { DEFAULT_PROGRAM } from '../../scripts/seed-defaults';
 import { BaseImporter } from '../core/base.importer';
-import { OrganizationUtils } from '../organization/organization.utils';
-import { ProgramUtils } from '../program/program.utils';
-import { CreateRecipientWithUser } from './recipient.transformer';
+import { RecipientCreateInput } from './recipient.types';
 
-export class RecipientsImporter extends BaseImporter<CreateRecipientWithUser> {
-	private readonly userService = new UserService();
-	private readonly recipientService = new RecipientService();
-	private readonly localPartnerService = new LocalPartnerService();
+const prisma = new PrismaClient();
 
-	import = async (records: CreateRecipientWithUser[]): Promise<number> => {
+export class RecipientImporter extends BaseImporter<RecipientCreateInput> {
+	import = async (recipients: RecipientCreateInput[]): Promise<number> => {
 		let createdCount = 0;
+		let duplicateEmails = 0;
+		let duplicateCodes = 0;
 
-		const organizationId = await OrganizationUtils.getOrCreateDefaultOrganizationId();
-		if (!organizationId) {
-			console.error('❌ Failed to resolve organization. Aborting import.');
-			return 0;
+		const program = await prisma.program.findUnique({
+			where: { name: DEFAULT_PROGRAM.name },
+		});
+
+		if (!program) {
+			throw new Error(`[RecipientImporter] Default program "${DEFAULT_PROGRAM.name}" not found.`);
 		}
 
-		const programId = await ProgramUtils.getOrCreateDefaultProgramId(organizationId);
-		if (!programId) {
-			console.error('❌ Failed to resolve program. Aborting import.');
-			return 0;
+		for (const data of recipients) {
+			const email = data.contact?.create?.email ?? 'unknown';
+			const { emailAttempts, codeAttempts } = await this.createRecipientWithUniqueFields(data, email, program.id);
+			createdCount++;
+			duplicateEmails += emailAttempts;
+			duplicateCodes += codeAttempts;
 		}
 
-		for (const record of records) {
-			const userResult = await this.userService.create({
-				...record.user,
-				organizationId,
-			});
-
-			if (!userResult.success) {
-				console.warn(`[RecipientsImporter] Skipped user due to conflict:`, {
-					email: record.user.email,
-					authUserId: record.user.authUserId,
-					reason: userResult.error,
-				});
-				continue;
-			}
-
-			let localPartnerId: string | null = null;
-			if (record.partnerOrgName) {
-				const localPartner = await this.localPartnerService.findByName(record.partnerOrgName);
-				localPartnerId = localPartner?.id ?? null;
-			}
-
-			if (!localPartnerId) {
-				console.warn(`[RecipientsImporter] Skipped recipient, could not resolve local partner:`, {
-					email: record.user.email,
-					partnerOrgName: record.partnerOrgName,
-				});
-				continue;
-			}
-
-			const recipientResult = await this.recipientService.create({
-				...record.recipient,
-				userId: userResult.data.id,
-				programId,
-				localPartnerId,
-			});
-
-			if (recipientResult.success) {
-				createdCount++;
-			} else {
-				console.error(`[RecipientsImporter] Failed to create recipient for user ${record.user.email}`);
-			}
+		if (duplicateEmails > 0 || duplicateCodes > 0) {
+			console.log(
+				`⚠️ RecipientImporter summary: handled ${duplicateEmails} duplicate email(s) and ${duplicateCodes} duplicate code(s).`,
+			);
 		}
 
 		return createdCount;
 	};
+
+	private async createRecipientWithUniqueFields(
+		data: RecipientCreateInput,
+		baseEmail: string,
+		programId: string,
+	): Promise<{ emailAttempts: number; codeAttempts: number }> {
+		let email = baseEmail;
+		let emailAttempts = 0;
+		let codeAttempts = 0;
+
+		while (true) {
+			try {
+				await prisma.recipient.create({
+					data: {
+						...data,
+						program: { connect: { id: programId } },
+					},
+				});
+				return { emailAttempts, codeAttempts };
+			} catch (error) {
+				if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+					const targets = (error.meta?.target as string[]) ?? [];
+
+					if (targets.includes('email')) {
+						emailAttempts++;
+						email = `${baseEmail}-UNIQUE-${emailAttempts}`;
+						data.contact!.create!.email = email;
+						continue;
+					}
+
+					if (targets.includes('code')) {
+						if (process.env.FIREBASE_DATABASE_URL?.includes('staging')) {
+							codeAttempts++;
+							const baseCode = data.paymentInformation?.create?.code ?? 'missing_code';
+							const newCode = `${baseCode}-UNIQUE-${codeAttempts}`;
+							if (data.paymentInformation?.create) {
+								data.paymentInformation.create.code = newCode;
+							}
+							console.log(`💡 Duplicate paymentInformation.code (staging only) → adjusted to ${newCode}`);
+							continue;
+						}
+						throw new Error(
+							`Duplicate paymentInformation.code "${data.paymentInformation?.create?.code}" detected in production.`,
+						);
+					}
+				}
+
+				throw error;
+			}
+		}
+	}
 }

@@ -24,18 +24,4 @@ type CountryBadgeType = {
 	countryAbbreviation: string;
 };
 
-type RecipientsBadgeType = {
-	hoverCardOrgName: string;
-	hoverCardTotalRecipients?: number;
-	hoverCardTotalActiveRecipients?: number;
-	hoverCardTotalFormerRecipients?: number;
-	hoverCardTotalSuspendedRecipients?: number;
-	isInsideHoverCard?: boolean;
-	translatorBadgeRecipients: string;
-	translatorBadgeRecipientsBy: string;
-	translatorBadgeActive: string;
-	translatorBadgeFormer: string;
-	translatorBadgeSuspended: string;
-};
-
-export type { CountryBadgeType, FundRaiserBadgeType, QuoteType, RecipientsBadgeType, SdgBadgeType };
+export type { CountryBadgeType, FundRaiserBadgeType, QuoteType, SdgBadgeType };

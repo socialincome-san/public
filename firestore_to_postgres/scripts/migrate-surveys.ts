@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new SurveyMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Survey migration failed:', err);
+		console.log('❌ Survey migration failed:', err);
 		process.exit(1);
 	}
 };

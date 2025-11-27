@@ -1,5 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { VimeoVideo } from '@/components/vimeo-video';
+import { VimeoVideo } from '@/components/legacy/vimeo-video';
 import { PlayIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';

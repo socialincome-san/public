@@ -1,43 +1,22 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { PartnerHome } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerHome';
-import { NgoEntryJSON, NgoHomeProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
-import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
+import { NgoEntryJSON } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import {
-	OrganisationRecipientsByStatus,
-	RecipientStatsCalculator,
-} from '@socialincome/shared/src/utils/stats/RecipientStatsCalculator';
 import { redirect } from 'next/navigation';
 import { ngos } from '../(sections)/ngolist';
 
-async function getNGOTranslationAndStats(
+async function getNGOTranslations(
 	translator: Translator,
 	slug: string,
-): Promise<{ translation: NgoEntryJSON | undefined; stats: NgoHomeProps['recipientCounts'] }> {
+): Promise<{ translation: NgoEntryJSON | undefined }> {
 	let currentNgo: NgoEntryJSON | undefined = undefined;
-	let stats: NgoHomeProps['recipientCounts'] = {
-		totalRecipients: 0,
-		activeRecipients: 0,
-		formerRecipients: 0,
-		suspendedRecipients: 0,
-	};
-	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
-	const recipientStats: OrganisationRecipientsByStatus =
-		recipientCalculator.allStats().recipientsCountByOrganisationAndStatus;
 	for (const ngo of ngos) {
 		if ((translator.t(ngo) as NgoEntryJSON)['org-slug'] === slug) {
 			currentNgo = translator.t(ngo);
-			const currentOrgRecipientStats = recipientStats[ngo];
-			stats = {
-				totalRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['total'] : 0,
-				activeRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['active'] : 0,
-				suspendedRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['suspended'] : 0,
-				formerRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['former'] : 0,
-			};
 			break;
 		}
 	}
-	return { translation: currentNgo, stats: stats };
+	return { translation: currentNgo };
 }
 
 interface PartnerPageParams extends DefaultParams {
@@ -76,10 +55,7 @@ export default async function Page({ params }: PartnerPageProps) {
 		permalink: translator.t('ngo-generic.permalink'),
 	};
 
-	const { translation: currentNgo, stats: recipientCounts } = await getNGOTranslationAndStats(
-		translator,
-		slug.replaceAll('%26', '&'),
-	);
+	const { translation: currentNgo } = await getNGOTranslations(translator, slug.replaceAll('%26', '&'));
 	if (!currentNgo) {
 		redirect('/not-found');
 	}
@@ -92,7 +68,6 @@ export default async function Page({ params }: PartnerPageProps) {
 			currentNgo={currentNgo}
 			currentNgoCountry={currentNgoCountry}
 			translations={translations}
-			recipientCounts={recipientCounts}
 		/>
 	);
 }

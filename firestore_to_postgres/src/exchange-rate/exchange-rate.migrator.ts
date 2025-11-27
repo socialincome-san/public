@@ -1,24 +1,24 @@
 import { BaseMigrator } from '../core/base.migrator';
-import { ExchangeRatesExtractor } from './exchange-rate.extractor';
-import { ExchangeRatesImporter } from './exchange-rate.importer';
-import { ExchangeRatesTransformer } from './exchange-rate.transformer';
+import { ExchangeRateExtractor } from './exchange-rate.extractor';
+import { ExchangeRateImporter } from './exchange-rate.importer';
+import { ExchangeRateTransformer } from './exchange-rate.transformer';
 
 export class ExchangeRateMigrator extends BaseMigrator {
-	private readonly extractor = new ExchangeRatesExtractor();
-	private readonly transformer = new ExchangeRatesTransformer();
-	private readonly importer = new ExchangeRatesImporter();
+	private readonly extractor = new ExchangeRateExtractor();
+	private readonly transformer = new ExchangeRateTransformer();
+	private readonly importer = new ExchangeRateImporter();
 
 	async migrate(): Promise<number> {
-		console.log('🚀 Starting exchange rates migration...');
+		console.log('🚀 Starting exchange rate migration...');
 
 		const extracted = await this.extractor.extract();
-		console.log(`📦 Extracted ${extracted.length} exchange rate collections`);
+		console.log(`📦 Extracted ${extracted.length} exchange rate entries`);
 
 		const transformed = await this.transformer.transform(extracted);
-		console.log(`🔁 Transformed ${transformed.length} exchange rate collections`);
+		console.log(`🔁 Transformed ${transformed.length} exchange rate records`);
 
 		const insertedCount = await this.importer.import(transformed);
-		console.log(`✅ Imported ${insertedCount} exchange rate collections`);
+		console.log(`✅ Imported ${insertedCount} exchange rate records`);
 
 		return insertedCount;
 	}

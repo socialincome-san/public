@@ -15,6 +15,17 @@ let nextConfig = {
 		],
 	},
 	output: 'standalone',
+	webpack: (config, context) => {
+		// needed for ssh2-sftp-client in payment-file-import
+		config.module.rules.push({
+			test: /\.node$/,
+			loader: 'node-loader',
+		});
+		return config;
+	},
+	experimental: {
+		serverComponentsExternalPackages: ['pdfkit'],
+	},
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {
@@ -23,6 +34,9 @@ if (process.env.SENTRY_AUTH_TOKEN) {
 		org: 'social-income',
 		project: 'website',
 		authToken: process.env.SENTRY_AUTH_TOKEN,
+		release: {
+			name: process.env.NEXT_PUBLIC_APP_VERSION,
+		},
 
 		// Only print logs for uploading source maps in CI
 		silent: !process.env.CI,

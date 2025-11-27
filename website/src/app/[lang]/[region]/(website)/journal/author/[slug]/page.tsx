@@ -1,11 +1,11 @@
-import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
+import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
 	getArticleCountByAuthorForDefaultLang,
 	getArticlesByAuthor,
 	getAuthor,
-} from '@/components/storyblok/StoryblokApi';
-import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
-import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+} from '@/components/legacy/storyblok/StoryblokApi';
+import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
+import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { LanguageCode } from '@socialincome/shared/src/types/language';

@@ -1,7 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
-import { getArticleCountByTagForDefaultLang, getArticlesByTag, getTag } from '@/components/storyblok/StoryblokApi';
-import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
+import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
+import {
+	getArticleCountByTagForDefaultLang,
+	getArticlesByTag,
+	getTag,
+} from '@/components/legacy/storyblok/StoryblokApi';
+import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';

@@ -1,5 +1,5 @@
-import { getOverviewArticles, getOverviewAuthors, getOverviewTags } from '@/components/storyblok/StoryblokApi';
-import { toDateObject } from '@/components/storyblok/StoryblokUtils';
+import { getOverviewArticles, getOverviewAuthors, getOverviewTags } from '@/components/legacy/storyblok/StoryblokApi';
+import { toDateObject } from '@/components/legacy/storyblok/StoryblokUtils';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@/types/journal';

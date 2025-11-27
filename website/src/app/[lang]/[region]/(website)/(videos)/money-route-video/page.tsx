@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { VimeoVideo } from '@/components/vimeo-video';
+import { VimeoVideo } from '@/components/legacy/vimeo-video';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	BaseContainer,
