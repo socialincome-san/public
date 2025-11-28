@@ -17,11 +17,6 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         image = var.docker_image_url
 
         env {
-          name  = "NEXT_PUBLIC_APP_VERSION"
-          value = var.next_public_app_version
-        }
-
-        env {
           name  = "APP_BUILD_TIMESTAMP"
           value = var.app_build_timestamp
         }
@@ -34,36 +29,6 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "FIREBASE_SERVICE_ACCOUNT_JSON"
           value = var.firebase_service_account_json
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_APP_ID"
-          value = var.next_public_fire_base_app_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"
-          value = var.next_public_fire_base_auth_domain
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID"
-          value = var.next_public_fire_base_measurement_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID"
-          value = var.next_public_fire_base_messaging_sender_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_PROJECT_ID"
-          value = var.next_public_fire_base_project_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET"
-          value = var.next_public_fire_base_storage_bucket
         }
 
         env {
@@ -174,21 +139,6 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "GITHUB_PAT"
           value = var.github_pat
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FACEBOOK_TRACKING_ID"
-          value = var.next_public_facebook_tracking_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID"
-          value = var.next_public_google_tag_manager_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_LINKEDIN_TRACKING_ID"
-          value = var.next_public_linkedin_tracking_id
         }
 
         ports {
