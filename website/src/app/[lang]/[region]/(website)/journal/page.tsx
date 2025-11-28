@@ -3,6 +3,7 @@ import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink
 import {
 	getOverviewArticles,
 	getOverviewArticlesCountForDefaultLang,
+	getOverviewArticleTypes,
 	getOverviewAuthors,
 	getOverviewTags,
 } from '@/components/legacy/storyblok/StoryblokApi';
@@ -21,10 +22,11 @@ export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 
-	const [articles, authors, tags] = await Promise.all([
+	const [articles, authors, tags, articleTypes] = await Promise.all([
 		getOverviewArticles(lang),
 		getOverviewAuthors(lang),
 		getOverviewTags(lang),
+		getOverviewArticleTypes(lang),
 	]);
 
 	const totalArticlesInDefaultLang =
@@ -80,7 +82,14 @@ export default async function Page({ params }: DefaultPageProps) {
 				{tags.map((tag) => (
 					<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 						<Badge size="md" variant="outline" className="whitespace-nowrap">
-							{tag.content?.value}
+							{tag.content.value}
+						</Badge>
+					</Link>
+				))}
+				{articleTypes.map((articleType) => (
+					<Link key={articleType.slug} href={`/${lang}/${region}/journal/article-type/${articleType.slug}`}>
+						<Badge size="md" variant="outline" className="whitespace-nowrap">
+							{articleType.content.value}
 						</Badge>
 					</Link>
 				))}
