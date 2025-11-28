@@ -1,6 +1,7 @@
 {
 	"metadata": {
-		"title": "Mein Profil | Social Income"
+		"title": "Mein Profil | Social Income",
+		"home-link": "Zurück zur Startseite"
 	},
 	"sections": {
 		"account": {
@@ -23,6 +24,8 @@
 		"total": "Total",
 		"one-time-payment": "Neue einmalige Spende",
 		"amount-currency": "{{ amount, currency }}",
+		"currency": "Währung",
+		"campaign": "Kampagne",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Bar",
@@ -36,11 +39,15 @@
 			"failed": "Fehlgeschlagen",
 			"unknown": "Unbekannt"
 		},
-		"status-title": "Status"
+		"status-title": "Status",
+		"no-contributions": "Keine Zahlungen gefunden",
+		"new-contribution": "Neue Spende"
 	},
 	"subscriptions": {
 		"amount": "Betrag",
 		"date": "Datum",
+		"from": "Von",
+		"to": "Bis",
 		"source": "Quelle",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
@@ -54,11 +61,16 @@
 			"canceled": "Beendet",
 			"paused": "Pausiert"
 		},
-		"manage-subscriptions": "Abonnemente verwalten"
+		"status-title": "Status",
+		"manage-subscriptions": "Abonnemente verwalten",
+		"no-subscriptions": "Keine Abonnemente gefunden"
 	},
 	"donation-certificates": {
+		"created": "Erstellt",
+		"language": "Sprache",
 		"year": "Jahr",
 		"download-pdf": "PDF herunterladen",
+		"generate-certificate": "Spendebescheinigung erstellen",
 		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Stelle sicher, dass du deine Adresse unter \"Kontaktangaben\" hinterleget hast. <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>.",
 		"no-contributions": "Keine Beiträge gefunden, daher kein Zertifikat. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org."
 	},
