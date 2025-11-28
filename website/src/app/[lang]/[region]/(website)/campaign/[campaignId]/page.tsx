@@ -3,8 +3,8 @@ import { DonationInterval } from '@/components/legacy/donation/donation-interval
 import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
 import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
-import { CampaignService } from '@/lib/services/campaign/campaign.service';
-import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.service';
+import { getCampaignByLegacyIdAction } from '@/lib/server-actions/campaigns-actions';
+import { getLatestRateForCurrency } from '@/lib/server-actions/exchange-rates-actions';
 import { getMetadata } from '@/metadata';
 import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -37,8 +37,7 @@ export type CampaignPageProps = {
 
 export async function generateMetadata({ params }: CampaignPageProps) {
 	const { campaignId, lang } = await params;
-	const campaignService = new CampaignService();
-	const result = await campaignService.getByLegacyId(campaignId);
+	const result = await getCampaignByLegacyIdAction(campaignId);
 	if (!result.success) {
 		return getMetadata(lang, 'website-campaign');
 	}
@@ -72,9 +71,7 @@ export default async function Page({ params }: CampaignPageProps) {
 		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq', 'website-newsletter'],
 	});
 
-	const campaignService = new CampaignService();
-	const exchangeRateService = new ExchangeRateService();
-	const result = await campaignService.getByLegacyId(campaignId);
+	const result = await getCampaignByLegacyIdAction(campaignId);
 
 	console.log('result', result);
 
@@ -92,7 +89,7 @@ export default async function Page({ params }: CampaignPageProps) {
 
 	const campaign = result.data;
 
-	const exchangeRateRes = await exchangeRateService.getLatestRateForCurrency(campaign.currency);
+	const exchangeRateRes = await getLatestRateForCurrency(campaign.currency);
 	const exchangeRate = exchangeRateRes.success ? exchangeRateRes.data.rate : 1.0;
 
 	let amountCollected = campaign.contributions?.reduce((sum, c) => sum + c.amountChf, 0) || 0;
