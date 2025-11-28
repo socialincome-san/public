@@ -39,3 +39,9 @@ export async function getProgramsOptions() {
 
 	return programs;
 }
+
+export async function getCampaignByLegacyIdAction(campaignLegacyId: string) {
+	const campaignService = new CampaignService();
+
+	return await campaignService.getByLegacyId(campaignLegacyId);
+}

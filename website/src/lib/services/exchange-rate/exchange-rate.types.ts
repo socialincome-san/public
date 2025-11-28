@@ -8,6 +8,11 @@ export type ExchangeRatesTableViewRow = {
 	createdAt: Date;
 };
 
+export type ExchangeRate = {
+	currency: string;
+	rate: number;
+};
+
 export type ExchangeRatesTableView = {
 	tableRows: ExchangeRatesTableViewRow[];
 };
