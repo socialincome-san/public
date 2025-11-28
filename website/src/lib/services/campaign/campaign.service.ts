@@ -124,6 +124,62 @@ export class CampaignService extends BaseService {
 		}
 	}
 
+	async getByLegacyId(campaignLegacyId: string): Promise<ServiceResult<CampaignPayload>> {
+		try {
+			const campaign = await this.db.campaign.findFirst({
+				where: { legacyFirestoreId: campaignLegacyId },
+				select: {
+					id: true,
+					title: true,
+					description: true,
+					secondDescriptionTitle: true,
+					secondDescription: true,
+					thirdDescriptionTitle: true,
+					thirdDescription: true,
+					linkWebsite: true,
+					linkFacebook: true,
+					linkInstagram: true,
+					goal: true,
+					currency: true,
+					additionalAmountChf: true,
+					endDate: true,
+					isActive: true,
+					public: true,
+					featured: true,
+					slug: true,
+					metadataDescription: true,
+					metadataOgImage: true,
+					metadataTwitterImage: true,
+					creatorName: true,
+					creatorEmail: true,
+					program: { select: { id: true, name: true } },
+					createdAt: true,
+					updatedAt: true,
+					contributions: { select: { id: true, amount: true, amountChf: true } },
+				},
+			});
+
+			if (!campaign) {
+				return this.resultFail('Campaign not found');
+			}
+
+			// convert decimal fields to number
+			return this.resultOk({
+				...campaign,
+				goal: campaign.goal ? Number(campaign.goal) : null,
+				additionalAmountChf: campaign.additionalAmountChf ? Number(campaign.additionalAmountChf) : null,
+				contributions: campaign.contributions.map((contribution) => ({
+					...contribution,
+					amount: Number(contribution.amount),
+					amountChf: Number(contribution.amountChf),
+				})),
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch campaign');
+		}
+	}
+
 	async getOptions(userId: string): Promise<ServiceResult<CampaignOption[]>> {
 		try {
 			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);

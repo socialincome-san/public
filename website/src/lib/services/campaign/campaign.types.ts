@@ -46,6 +46,11 @@ export type CampaignPayload = {
 		id: string;
 		name: string;
 	} | null;
+	contributions?: {
+		id: string;
+		amount: number;
+		amountChf: number;
+	}[];
 };
 
 // campaign will be created using current users organization ID
