@@ -1,6 +1,7 @@
 {
 	"metadata": {
-		"title": "Mon profil | Social Income"
+		"title": "Mon profil | Social Income",
+		"home-link": "Retour à l’accueil"
 	},
 	"sections": {
 		"account": {
@@ -23,6 +24,8 @@
 		"total": "Total",
 		"one-time-payment": "Nouveau don unique",
 		"amount-currency": "{{ amount, currency }}",
+		"currency": "Devise",
+		"campaign": "Campagne",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Cash",
@@ -36,12 +39,16 @@
 			"failed": "Échoué",
 			"unknown": "Inconnu"
 		},
-		"status-title": "Statut"
+		"status-title": "Statut",
+		"no-contributions": "Aucune contribution trouvée",
+		"new-contribution": "Faire une contribution"
 	},
 	"subscriptions": {
 		"amount": "Montant",
-		"date": "Datum",
-		"source": "Quelle",
+		"date": "Date",
+		"from": "De",
+		"to": "À",
+		"source": "Source",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
 		"new-subscription": "Nouvelle souscription",
@@ -54,11 +61,16 @@
 			"canceled": "Annulé",
 			"paused": "En paus"
 		},
-		"manage-subscriptions": "Gérer les souscriptions"
+		"status-title": "Statut",
+		"manage-subscriptions": "Gérer les souscriptions",
+		"no-subscriptions": "Aucune souscription trouvée"
 	},
 	"donation-certificates": {
+		"created": "Créé",
+		"language": "Langue",
 		"year": "Année",
 		"download-pdf": "Télécharger le PDF",
+		"generate-certificate": "Générer une attestation de don",
 		"no-certificates-yet": "Tu n’as pas reçu d’attestation de don? Vérifie si tu as bien indiqué ton adresse dans  \"Informations personnelles\".<br></br> Pour toute question, prends <a href='mailto:hello@socialincome.org' class='underline'> contact avec nous</a>.",
 		"no-contributions": "Aucune contribution trouvée, donc pas de certificat. Si tu penses que c’est une erreur, écris à contributors@socialincome.org."
 	},

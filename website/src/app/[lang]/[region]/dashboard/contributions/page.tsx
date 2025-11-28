@@ -3,9 +3,10 @@ import { DefaultPageProps } from '../..';
 import { ContributionsTable } from './contributions-table';
 
 export default async function Page({ params }: DefaultPageProps) {
+	const { lang } = await params;
 	return (
 		<Suspense fallback={<div>Loading contributions…</div>}>
-			<ContributionsTable />
+			<ContributionsTable lang={lang} />
 		</Suspense>
 	);
 }

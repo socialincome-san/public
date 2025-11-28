@@ -2,12 +2,16 @@ import { Button } from '@/components/button';
 import { makeYourContributionsColumns } from '@/components/data-table/columns/your-contributions';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributionService } from '@/lib/services/contribution/contribution.service';
 import { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
 import Link from 'next/link';
 
-export async function ContributionsTable() {
+export async function ContributionsTable({ lang }: { lang: WebsiteLanguage }) {
 	const contributor = await getAuthenticatedContributorOrRedirect();
+
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
 
 	const service = new ContributionService();
 	const result = await service.getYourContributionsTableView(contributor.id);
@@ -17,16 +21,17 @@ export async function ContributionsTable() {
 
 	return (
 		<DataTable
-			title="Your Contributions"
+			title={translator.t('sections.contributions.payments')}
 			error={error}
-			emptyMessage="No contributions found"
+			emptyMessage={translator.t('contributions.no-contributions')}
 			data={rows}
 			actions={
 				<Link href="/donate/individual">
-					<Button>Make a Contribution</Button>
+					<Button>{translator.t('contributions.new-contribution')}</Button>
 				</Link>
 			}
 			makeColumns={makeYourContributionsColumns}
+			lang={lang}
 		/>
 	);
 }

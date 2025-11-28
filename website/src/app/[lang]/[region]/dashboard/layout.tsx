@@ -15,18 +15,21 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const { lang, region } = await params;
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
 
 	const sections = [
-		{ href: `/${lang}/${region}/dashboard/contributions`, label: 'Contributions' },
-		{ href: `/${lang}/${region}/dashboard/subscriptions`, label: 'Subscriptions' },
-		{ href: `/${lang}/${region}/dashboard/donation-certificates`, label: 'Donation Certificates' },
+		{ href: `/${lang}/${region}/dashboard/contributions`, label: translator.t('sections.contributions.payments') },
+		{ href: `/${lang}/${region}/dashboard/subscriptions`, label: translator.t('sections.contributions.subscriptions') },
+		{
+			href: `/${lang}/${region}/dashboard/donation-certificates`,
+			label: translator.t('sections.contributions.donation-certificates-long'),
+		},
 	];
 
 	return (
-		<WebsiteAppShell contributor={contributor}>
+		<WebsiteAppShell contributor={contributor} lang={lang}>
 			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
-				<h1 className="py-8 text-5xl">Dashboard</h1>
+				<h1 className="py-8 text-5xl">{translator.t('sections.contributions.title')}</h1>
 			</div>
 			<TabNavigation sections={sections} />
 			<Card>{children}</Card>
