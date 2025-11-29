@@ -14,7 +14,7 @@ dependencies:
   cloud_firestore: ^6.0.1
   cloud_functions: ^6.0.1
   collection: ^1.19.1
-  equatable: ^2.0.7
+  dart_mappable: ^4.6.0
   firebase_analytics: ^12.0.2 # Is required to use Firebase Remote Config.
   firebase_app_check: ^0.4.0+1
   firebase_auth: ^6.0.2
@@ -34,7 +34,6 @@ dependencies:
     git:
       url: https://github.com/natintosh/intl_phone_number_input.git
       ref: v0.8.0
-  json_annotation: ^4.9.0
   package_info_plus: ^8.3.1
   # https://github.com/chrisedg87/flutter_rounded_loading_button/pull/74
   rounded_loading_button:
@@ -50,10 +49,10 @@ dev_dependencies:
   alchemist: ^0.12.1
   bloc_test: ^10.0.0
   build_runner: ^2.6.0
+  dart_mappable_builder: ^4.6.0
 
   flutter_test:
     sdk: flutter
-  json_serializable: ^6.11.0
   lint: ^2.8.0
   mocktail: ^1.0.4
 
