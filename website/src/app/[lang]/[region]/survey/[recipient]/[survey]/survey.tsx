@@ -1,7 +1,7 @@
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getByIdAndRecipient, saveChanges } from '@/lib/server-actions/survey-actions';
-import { SurveyWithrecipient } from '@/lib/services/survey/survey.types';
+import { SurveyWithRecipient } from '@/lib/services/survey/survey.types';
 import { SurveyStatus } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { Model } from 'survey-core';
@@ -20,7 +20,7 @@ interface SurveyProps {
 }
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
-	const [survey, setSurvey] = useState<SurveyWithrecipient | null>(null);
+	const [survey, setSurvey] = useState<SurveyWithRecipient | null>(null);
 
 	useEffect(() => {
 		async function fetchSurvey() {

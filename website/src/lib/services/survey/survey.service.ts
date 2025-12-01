@@ -15,7 +15,7 @@ import {
 	SurveyTableView,
 	SurveyTableViewRow,
 	SurveyUpdateInput,
-	SurveyWithrecipient,
+	SurveyWithRecipient,
 } from './survey.types';
 
 export class SurveyService extends BaseService {
@@ -428,7 +428,7 @@ export class SurveyService extends BaseService {
 		}
 	}
 
-	async getByIdAndRecipient(surveyId: string, recipientId: string): Promise<ServiceResult<SurveyWithrecipient>> {
+	async getByIdAndRecipient(surveyId: string, recipientId: string): Promise<ServiceResult<SurveyWithRecipient>> {
 		try {
 			const surveys = await this.db.survey.findUnique({
 				where: { id: surveyId, recipientId },
@@ -471,7 +471,6 @@ export class SurveyService extends BaseService {
 		try {
 			const survey = await this.db.survey.findUnique({
 				where: { id: surveyId },
-				select: { recipient: { select: { program: { select: { id: true } } } } },
 			});
 
 			if (!survey) {

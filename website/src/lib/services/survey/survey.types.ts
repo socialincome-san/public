@@ -67,7 +67,7 @@ export type SurveyPayload = {
 	updatedAt: Date | null;
 };
 
-export type SurveyWithrecipient = {
+export type SurveyWithRecipient = {
 	id: string;
 	name: string;
 	questionnaire: SurveyQuestionnaire;
