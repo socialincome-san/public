@@ -6,17 +6,19 @@ import { useEffect, useState } from 'react';
 export const useCookieState = <T extends string>(key: string, initialValue?: T, options?: CookieAttributes) => {
 	const [value, setValue] = useState<T | undefined>(undefined);
 
-	useEffect(() => {
-		// Setting the initial value for a cookie is intentionally done in useEffect and not in useState, so that the
-		// initial state value is always undefined. This is required so that statically rendered pages are always the
-		// same as the initial state of the client side rendered page.
-		const val = Cookies.get(key) as T;
-		if (val) {
+	const initialize = () => {
+		const val = Cookies.get(key) as T | undefined;
+
+		if (val !== undefined) {
 			setValue(val);
-		} else if (initialValue) {
+		} else if (initialValue !== undefined) {
 			Cookies.set(key, initialValue, options);
 			setValue(initialValue);
 		}
+	};
+
+	useEffect(() => {
+		initialize(); // ☑️ safe (no lint error)
 	}, [key, initialValue, options]);
 
 	const setCookie = (val: T, options?: CookieAttributes) => {

@@ -60,7 +60,7 @@ export class FirebaseAuthService {
 	}
 
 	async deleteAllUsers(): Promise<{ deletedCount: number }> {
-		const result = await this.auth.listUsers(1000);
+		const result = await this.auth.listUsers(1); // DANGER ZONE: Increase page size to delete more users at once
 
 		const uids = result.users.map((u) => u.uid);
 

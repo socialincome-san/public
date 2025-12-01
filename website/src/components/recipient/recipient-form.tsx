@@ -111,22 +111,6 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 	const [recipient, setRecipient] = useState<RecipientPayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	useEffect(() => {
-		if (recipientId) {
-			// Load recipient in edit mode
-			startTransition(async () => await loadRecipient(recipientId));
-		}
-	}, [recipientId]);
-
-	useEffect(() => {
-		// load options for program and local partners
-		startTransition(async () => {
-			const { programs, localPartner } = await getRecipientOptions();
-			if (!programs.success || !localPartner.success) return;
-			setOptions(localPartner.data, programs.data);
-		});
-	}, []);
-
 	const loadRecipient = async (recipientId: string) => {
 		try {
 			const result = await getRecipientAction(recipientId);
@@ -202,6 +186,21 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 		});
 	};
 
+	useEffect(() => {
+		if (recipientId) {
+			// Load recipient in edit mode
+			startTransition(async () => await loadRecipient(recipientId));
+		}
+	}, [recipientId]);
+
+	useEffect(() => {
+		// load options for program and local partners
+		startTransition(async () => {
+			const { programs, localPartner } = await getRecipientOptions();
+			if (!programs.success || !localPartner.success) return;
+			setOptions(localPartner.data, programs.data);
+		});
+	}, []);
 	return (
 		<DynamicForm
 			formSchema={formSchema}
