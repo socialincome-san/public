@@ -46,7 +46,6 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 
 	const translator = useTranslator(lang, 'website-survey');
 
-	// TODO: implement session storage caching
 	const saveSurveyData = (survey: Model, status: SurveyStatus) => {
 		const data = survey.data;
 		data.pageNo = survey.currentPageNo;

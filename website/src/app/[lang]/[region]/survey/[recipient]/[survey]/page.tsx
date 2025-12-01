@@ -3,7 +3,6 @@
 import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { Button, Input } from '@socialincome/ui';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, use, useEffect, useState } from 'react';
@@ -16,13 +15,6 @@ export default function Page({ params }: SurveyPageProps) {
 	const [password, setPassword] = useState<string | null>(null);
 	const [user, setUser] = useState<User>();
 	const searchParams = useSearchParams();
-	const queryClient = new QueryClient({
-		defaultOptions: {
-			queries: {
-				staleTime: 3600000, // 1 hour
-			},
-		},
-	});
 
 	useEffect(() => {
 		setEmail(searchParams.get('email'));
@@ -50,11 +42,7 @@ export default function Page({ params }: SurveyPageProps) {
 	}
 
 	if (user) {
-		return (
-			<QueryClientProvider client={queryClient}>
-				<Survey surveyId={survey} recipientId={recipient} lang={lang as SurveyLanguage} />
-			</QueryClientProvider>
-		);
+		return <Survey surveyId={survey} recipientId={recipient} lang={lang as SurveyLanguage} />;
 	} else {
 		return (
 			<form className="theme-new mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>
