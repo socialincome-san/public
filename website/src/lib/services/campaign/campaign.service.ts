@@ -1,9 +1,12 @@
 import { Campaign } from '@prisma/client';
+import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
 	CampaignOption,
+	CampaignPage,
 	CampaignPayload,
 	CampaignsCreateInput,
 	CampaignsUpdateInput,
@@ -13,6 +16,7 @@ import {
 
 export class CampaignService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
+	private exchangeRateService = new ExchangeRateService();
 
 	async get(userId: string, campaignId: string): Promise<ServiceResult<CampaignPayload>> {
 		const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
@@ -121,6 +125,71 @@ export class CampaignService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not update campaign');
+		}
+	}
+
+	async getByLegacyId(campaignLegacyId: string): Promise<ServiceResult<CampaignPage>> {
+		try {
+			const campaign = await this.db.campaign.findFirst({
+				where: { legacyFirestoreId: campaignLegacyId },
+				select: {
+					id: true,
+					title: true,
+					description: true,
+					secondDescriptionTitle: true,
+					secondDescription: true,
+					thirdDescriptionTitle: true,
+					thirdDescription: true,
+					linkWebsite: true,
+					linkFacebook: true,
+					linkInstagram: true,
+					goal: true,
+					currency: true,
+					additionalAmountChf: true,
+					endDate: true,
+					isActive: true,
+					public: true,
+					featured: true,
+					slug: true,
+					metadataDescription: true,
+					metadataOgImage: true,
+					metadataTwitterImage: true,
+					creatorName: true,
+					creatorEmail: true,
+					program: { select: { id: true, name: true } },
+					createdAt: true,
+					updatedAt: true,
+					contributions: { select: { id: true, amount: true, amountChf: true } },
+				},
+			});
+
+			if (!campaign) {
+				return this.resultFail('Campaign not found');
+			}
+
+			const exchangeRateRes = await this.exchangeRateService.getLatestRateForCurrency(campaign.currency);
+			const exchangeRate = exchangeRateRes.success ? exchangeRateRes.data.rate : 1.0;
+
+			let amountCollected = campaign.contributions?.reduce((sum, c) => sum + Number(c.amountChf), 0) || 0;
+			amountCollected += Number(campaign.additionalAmountChf) || 0;
+			amountCollected *= exchangeRate;
+
+			const percentageCollected = campaign.goal ? Math.round((amountCollected / Number(campaign.goal)) * 100) : null;
+			const daysLeft = daysUntilTs(campaign.endDate);
+
+			// convert decimal fields to number
+			return this.resultOk({
+				...campaign,
+				goal: campaign.goal ? Number(campaign.goal) : null,
+				additionalAmountChf: campaign.additionalAmountChf ? Number(campaign.additionalAmountChf) : null,
+				numberOfContributions: campaign.contributions.length,
+				percentageCollected,
+				daysLeft,
+				amountCollected,
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch campaign');
 		}
 	}
 
