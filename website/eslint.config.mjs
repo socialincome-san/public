@@ -6,8 +6,6 @@ export default defineConfig([
 		extends: [...nextCoreWebVitals],
 		rules: {
 			'react-hooks/set-state-in-effect': 'off',
-			'react/no-access-in-render': 'off',
-			'react-hooks/exhaustive-deps': 'off',
 			'react-hooks/refs': 'off',
 			'react-hooks/static-components': 'off',
 		},
