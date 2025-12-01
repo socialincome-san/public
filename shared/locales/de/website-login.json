@@ -16,5 +16,7 @@
 		"user-not-found": "Benutzer nicht gefunden",
 		"invalid-email": "Ungültige E-Mail-Adresse",
 		"unknown": "Login fehlgeschlagen"
-	}
+	},
+	"detect-account-type": "Konto-Typ wird erkannt...",
+	"invalid-account-type": "Ungültiger Konto-Typ, bitte versuchen Sie es erneut, oder kontaktieren Sie den Support."
 }
