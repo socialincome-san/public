@@ -94,7 +94,7 @@ const DynamicForm: FC<{
 					//nested
 					for (const [nestedName, nestedField] of Object.entries(field.fields)) {
 						if (isFormField(nestedField) && nestedField.value != null)
-							form.setValue(`${name}.${nestedName}`, nestedField.value);
+							form.setValue(`${name}.${nestedName}` as any, nestedField.value);
 					}
 				} else if (field.value != null) {
 					form.setValue(name, field.value);
@@ -111,23 +111,25 @@ const DynamicForm: FC<{
 	// TODO: move to recursive function
 	// get values from Zod Schema and map back to form schema
 	const beforeSubmit = (values: z.infer<typeof zodSchema>) => {
-		for (const key in formSchema.fields) {
-			const fields = formSchema.fields[key];
+		const v = values as Record<string, any>;
+		const schema = JSON.parse(JSON.stringify(formSchema));
+
+		for (const key in schema.fields) {
+			const fields = schema.fields[key];
 
 			if (isFormField(fields)) {
-				fields.value = values[key];
+				fields.value = v[key];
 			} else {
-				// nested object
 				for (const k in fields.fields) {
-					const nestedField = (fields as FormSchema).fields[k];
-
+					const nestedField = fields.fields[k];
 					if (isFormField(nestedField)) {
-						nestedField.value = values[key][k];
+						nestedField.value = v[key]?.[k];
 					}
 				}
 			}
 		}
-		onSubmit(formSchema);
+
+		onSubmit(schema);
 	};
 
 	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
@@ -147,7 +149,7 @@ const DynamicForm: FC<{
 							type="single"
 							collapsible
 							value={openAccordion ? (openAccordion === 'all' ? `accordion-${option}` : openAccordion) : 'closed'}
-							onValueChange={(value) => setOpenAccordion(value ? `accordion-${option}` : undefined)}
+							onValueChange={(value: string) => setOpenAccordion(value ? `accordion-${option}` : undefined)}
 						>
 							{/* TODO: find better solution to hide collapsed content */}
 							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">

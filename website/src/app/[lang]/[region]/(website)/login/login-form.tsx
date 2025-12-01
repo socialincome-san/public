@@ -2,6 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useEmailLogin } from '@/lib/firebase/hooks/useEmailLogin';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Button,
@@ -39,7 +40,7 @@ type LoginFormProps = {
 export default function LoginForm({ lang, region, translations }: LoginFormProps) {
 	const router = useRouter();
 	const { sendSignInEmail, sendingEmail, signingIn, emailSent } = useEmailLogin({
-		lang,
+		lang: lang as WebsiteLanguage,
 		onLoginSuccess: async () => {
 			router.push(`/${lang}/${region}/me`);
 		},

@@ -4,6 +4,7 @@ import { Card, Typography } from '@socialincome/ui';
 import { getCommits } from '../(components)/get-commits';
 import { getForkCount } from '../(components)/get-forks';
 import { getStarCount } from '../(components)/get-stars';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type OverviewProp = {
 	title: string;
@@ -63,7 +64,7 @@ export function OverviewCard({ title, total, time }: OverviewProp) {
 
 export async function Overview({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-open-source'],
 	});
 

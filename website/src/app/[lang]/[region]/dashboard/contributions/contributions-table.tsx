@@ -11,7 +11,7 @@ import Link from 'next/link';
 export async function ContributionsTable({ lang }: { lang: WebsiteLanguage }) {
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
 	const service = new ContributionService();
 	const result = await service.getYourContributionsTableView(contributor.id);

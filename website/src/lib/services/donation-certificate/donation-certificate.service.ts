@@ -19,6 +19,7 @@ import {
 	YourDonationCertificateTableViewRow,
 } from './donation-certificate.types';
 import { DonationCertificateError } from './types';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export class DonationCertificateService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
@@ -214,7 +215,7 @@ export class DonationCertificateService extends BaseService {
 			await this.db.donationCertificate.createMany({
 				data: {
 					year: year,
-					language: lang,
+					language: lang as WebsiteLanguage,
 					storagePath: destinationFilePath,
 					contributorId: contributor.id,
 				},

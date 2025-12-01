@@ -2,6 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Badge, BaseContainer, Button, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import Link from 'next/link';
@@ -62,7 +63,7 @@ function Box({ active, number, title, subtitle, onClick }: BoxProps) {
 }
 
 export function SelectionProcess({ lang }: DefaultParams) {
-	const translator = useTranslator(lang, 'website-selection');
+	const translator = useTranslator(lang as WebsiteLanguage, 'website-selection');
 	const [activeBox, setActiveBox] = useState<'preselection' | 'selection'>('preselection');
 	const { ref, isIntersecting, entry } = useIntersectionObserver({ threshold: 0.2 });
 

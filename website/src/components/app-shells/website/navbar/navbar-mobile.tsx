@@ -40,7 +40,7 @@ export const NavbarMobile = ({ contributor, lang }: { contributor?: ContributorS
 						</DropdownMenuItem>
 					))}
 					<DropdownMenuItem
-						onSelect={(e) => {
+						onSelect={(e: React.MouseEvent) => {
 							e.preventDefault();
 							logout();
 						}}

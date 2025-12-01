@@ -1,4 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Card, linkCn, Typography } from '@socialincome/ui';
 
@@ -17,7 +18,10 @@ type DoNoHarmContent = {
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-do-no-harm'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-do-no-harm'],
+	});
 
 	const data = translator.t('content') as DoNoHarmContent;
 

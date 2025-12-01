@@ -1,5 +1,6 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import { LayoutClient } from '@/app/[lang]/[region]/(website)/legal/layout-client';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
@@ -7,12 +8,12 @@ import { PropsWithChildren } from 'react';
 
 export async function generateMetadata(props: DefaultLayoutProps) {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-legal');
+	return getMetadata(params.lang as WebsiteLanguage, 'website-legal');
 }
 
 export default async function Layout({ children, ...props }: PropsWithChildren<DefaultLayoutProps>) {
 	const params = await props.params;
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: 'website-legal' });
+	const translator = await Translator.getInstance({ language: params.lang as WebsiteLanguage, namespaces: 'website-legal' });
 
 	return (
 		<BaseContainer>

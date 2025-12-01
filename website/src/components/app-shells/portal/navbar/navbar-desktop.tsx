@@ -94,7 +94,7 @@ export const NavbarDesktop = ({ user }: { user: UserSession }) => {
 					<DropdownMenuSeparator />
 
 					<DropdownMenuItem
-						onSelect={(e) => {
+						onSelect={(e: React.MouseEvent) => {
 							e.preventDefault();
 							logout();
 						}}

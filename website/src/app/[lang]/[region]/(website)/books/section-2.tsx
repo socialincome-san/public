@@ -11,9 +11,10 @@ import book1cover from './(assets)/life.jpg';
 import book8cover from './(assets)/lowrey.jpg';
 import book9cover from './(assets)/poor-economics.jpg';
 import book3cover from './(assets)/utopia.jpg';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export default async function Section2({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-books'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-books'] });
 
 	return (
 		<BaseContainer className="mx-auto flex w-full max-w-4xl flex-col space-y-8 py-8">

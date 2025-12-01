@@ -6,11 +6,11 @@ import {
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
-import { defaultLanguage } from '@/lib/i18n/utils';
+import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Separator, Typography, linkCn } from '@socialincome/ui';
+import { BaseContainer, linkCn, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export const revalidate = 900;
@@ -47,7 +47,10 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		totalArticlesInSelectedLanguage,
 		authorId,
 	);
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage as WebsiteLanguage,
+		namespaces: ['website-journal', 'common'],
+	});
 	return (
 		<BaseContainer>
 			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">

@@ -47,7 +47,7 @@ export async function PATCH(request: Request) {
 	const parsed = RecipientSelfUpdate.safeParse(body);
 
 	if (!parsed.success) {
-		return new Response(parsed.error.errors[0]?.message ?? 'Invalid input', { status: 400 });
+		return new Response(parsed.error.message, { status: 400 });
 	}
 
 	const recipient = recipientResult.data;

@@ -12,9 +12,13 @@ import kaiImg from '../(assets)/kai.jpg';
 import laminImg from '../(assets)/lamin.jpeg';
 import nenehImg from '../(assets)/neneh.jpeg';
 import onikehImg from '../(assets)/onikeh.jpeg';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export async function Recipients({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-our-work'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['countries', 'website-our-work'],
+	});
 
 	return (
 		<BaseContainer id="recipients" className="flex scroll-mt-36 flex-col justify-center space-y-8">

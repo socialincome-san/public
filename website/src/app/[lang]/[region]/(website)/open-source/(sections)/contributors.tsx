@@ -2,6 +2,7 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { OpenSourceContributorsClient } from '../(components)/contributors-client';
 import { getContributors } from '../(components)/get-contributors';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type Metadata = {
 	heading: string;
@@ -9,7 +10,7 @@ type Metadata = {
 
 export async function OpenSourceContributors({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-open-source'],
 	});
 

@@ -5,6 +5,7 @@ import Image, { StaticImageData } from 'next/image';
 import { ReactElement } from 'react';
 import avatarImgData from '../(assets)/aurelie.png';
 import townImgData from '../(assets)/sdg-town.jpg';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type JournalCardDetails = {
 	title: string;
@@ -14,7 +15,7 @@ type JournalCardDetails = {
 	sideImgData?: StaticImageData;
 };
 
-const JournalCard = ({ title, author, description, sideImgData }: JournalCardDetails): ReactElement => {
+const JournalCard = ({ title, author, description, sideImgData }: JournalCardDetails): ReactElement<any> => {
 	return (
 		<div className="mx-3">
 			<div className="ml-3 flex flex-col items-start justify-start">
@@ -40,7 +41,7 @@ const JournalCard = ({ title, author, description, sideImgData }: JournalCardDet
 
 export async function Journal({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'common'],
 	});
 

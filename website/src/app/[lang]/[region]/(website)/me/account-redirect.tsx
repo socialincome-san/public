@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export async function AccountRedirect({ lang }: { lang: WebsiteLanguage }) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-login'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-login'] });
 	const accountType = await getCurrentAccountType();
 
 	if (accountType === 'contributor') {

@@ -20,7 +20,7 @@ type SdgBadgeType = {
 };
 
 type CountryBadgeType = {
-	countryFlagComponent?: ReactElement;
+	countryFlagComponent?: ReactElement<any>;
 	countryAbbreviation: string;
 };
 

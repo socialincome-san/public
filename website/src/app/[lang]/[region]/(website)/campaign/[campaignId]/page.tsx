@@ -3,6 +3,7 @@ import { DonationInterval } from '@/components/legacy/donation/donation-interval
 import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
 import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCampaignByLegacyIdAction } from '@/lib/server-actions/campaigns-actions';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 	const { campaignId, lang } = await params;
 	const result = await getCampaignByLegacyIdAction(campaignId);
 	if (!result.success) {
-		return getMetadata(lang, 'website-campaign');
+		return getMetadata(lang as WebsiteLanguage, 'website-campaign');
 	}
 	const campaign = result.data;
 	const campaignMetadata =
@@ -59,13 +60,13 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 					},
 				}
 			: undefined;
-	return getMetadata(lang, 'website-campaign', campaignMetadata);
+	return getMetadata(lang as WebsiteLanguage, 'website-campaign', campaignMetadata);
 }
 
 export default async function Page({ params }: CampaignPageProps) {
 	const { lang, campaignId, region } = await params;
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq', 'website-newsletter'],
 	});
 
@@ -282,7 +283,7 @@ export default async function Page({ params }: CampaignPageProps) {
 			)}
 			<NewsletterGlowContainer
 				title={translator.t('campaign.information-label')}
-				lang={lang}
+				lang={lang as WebsiteLanguage}
 				formTranslations={{
 					informationLabel: translator.t('popup.information-label'),
 					toastSuccess: translator.t('popup.toast-success'),

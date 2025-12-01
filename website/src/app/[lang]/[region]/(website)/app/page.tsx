@@ -5,10 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Applestore from './(assets)/applestore.svg';
 import Playstore from './(assets)/playstore.svg';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-app'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-app'] });
 
 	return (
 		<BaseContainer className="flex flex-col items-start space-y-8">

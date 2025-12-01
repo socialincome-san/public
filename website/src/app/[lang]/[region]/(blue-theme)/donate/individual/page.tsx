@@ -1,5 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { DonationForm } from '@/app/[lang]/[region]/(blue-theme)/donate/individual/donation-form';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
@@ -11,7 +12,10 @@ export default async function Page(props: DefaultPageProps) {
 	const { lang, region } = params;
 
 	const amount = Number(searchParams.amount) || undefined;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-donate'],
+	});
 
 	return (
 		<BaseContainer className="mx-auto max-w-5xl">

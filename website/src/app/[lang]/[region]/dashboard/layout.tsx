@@ -2,6 +2,7 @@ import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { notFound } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
@@ -15,7 +16,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const { lang, region } = await params;
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
 	const sections = [
 		{ href: `/${lang}/${region}/dashboard/contributions`, label: translator.t('sections.contributions.payments') },
@@ -27,7 +28,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	];
 
 	return (
-		<WebsiteAppShell contributor={contributor} lang={lang}>
+		<WebsiteAppShell contributor={contributor} lang={lang as WebsiteLanguage}>
 			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
 				<h1 className="py-8 text-5xl">{translator.t('sections.contributions.title')}</h1>
 			</div>

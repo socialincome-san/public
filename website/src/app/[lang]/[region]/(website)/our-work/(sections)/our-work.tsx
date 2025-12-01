@@ -5,10 +5,11 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import phonesGif from '../(assets)/phones-1.gif';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export async function OurWork({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-our-work', 'website-videos'],
 	});
 

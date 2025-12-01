@@ -5,10 +5,11 @@ import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import Town from '../(assets)/sdg-town.jpg';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export async function SDGGoals({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-home'],
 	});
 

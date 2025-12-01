@@ -6,7 +6,7 @@ import {
 	getTag,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
-import { defaultLanguage } from '@/lib/i18n/utils';
+import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
@@ -32,7 +32,10 @@ export default async function Page({ params }: PageProps) {
 	const tag = (await getTag(slug, lang)).data.story;
 	const blogsResponse = await getArticlesByTag(tag.uuid, lang);
 	const blogs = blogsResponse.data.stories;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-journal', 'common'],
+	});
 	const totalArticlesInSelectedLanguage = blogsResponse.total;
 	const totalArticlesInDefault = await getTotalArticlesInDefault(lang, tag.uuid, totalArticlesInSelectedLanguage);
 	return (

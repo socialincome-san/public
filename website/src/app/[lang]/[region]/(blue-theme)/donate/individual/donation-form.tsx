@@ -180,11 +180,11 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 					{form.watch('monthlyIncome') > 0 && (
 						<Card className="theme-default bg-white">
 							<CardHeader>
-								<DonationImpact lang={lang} translations={translations.donationImpact} />
+								<DonationImpact lang={lang as WebsiteLanguage} translations={translations.donationImpact} />
 							</CardHeader>
 							<CardContent className="mt-8 space-y-8">
 								<DonationIntervalSelector
-									lang={lang}
+									lang={lang as WebsiteLanguage}
 									monthlyIncome={form.watch('monthlyIncome')}
 									translations={{
 										title: translations.howToPay,
@@ -195,12 +195,12 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 								/>
 								{region === 'ch' && currency && ['CHF', 'EUR'].includes(currency) && (
 									<PaymentTypeSelector
-										lang={lang}
+										lang={lang as WebsiteLanguage}
 										translations={translations.paymentType}
 										bankTransferForm={
 											<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
 												<BankTransferForm
-													lang={lang}
+													lang={lang as WebsiteLanguage}
 													region={region}
 													qrBillType={window.innerWidth < 768 ? 'QRCODE' : 'QRBILL'}
 													intervalCount={Number(form.watch('donationInterval'))}
@@ -217,7 +217,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 									<StripePaymentButton
 										amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
 										intervalCount={Number(form.watch('donationInterval'))}
-										lang={lang}
+										lang={lang as WebsiteLanguage}
 										region={region}
 										buttonText={translations.buttonText}
 									/>
