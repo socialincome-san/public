@@ -5,6 +5,7 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import type { ColumnDef, SortingState } from '@tanstack/react-table';
+import DOMPurify from 'isomorphic-dompurify';
 import { ReactNode } from 'react';
 
 type DataTableProps<Row> = {
@@ -48,7 +49,7 @@ export default function DataTable<Row>({
 			{error ? (
 				<div className="p-4 text-red-600">Error: {error}</div>
 			) : isEmpty ? (
-				<div className="p-4 text-gray-500">{emptyMessage}</div>
+				<div className="p-4 text-gray-500" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}></div>
 			) : (
 				<BaseTable data={data} columns={columns} onRowClick={onRowClick} initialSorting={initialSorting} />
 			)}
