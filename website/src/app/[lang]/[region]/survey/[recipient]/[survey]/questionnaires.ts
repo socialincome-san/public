@@ -26,13 +26,13 @@ import {
 
 export const getQuestionnaire = (questionnaire: SurveyQuestionnaire, t: TranslateFunction, name: string) => {
 	switch (questionnaire) {
-		case 'onboarding':
+		case SurveyQuestionnaire.onboarding:
 			return onboardingQuestionnaire(t, name);
-		case 'checkin':
+		case SurveyQuestionnaire.checkin:
 			return checkinQuestionnaire(t, name);
-		case 'offboarding':
+		case SurveyQuestionnaire.offboarding:
 			return offboardingQuestionnaire(t, name);
-		case 'offboarded_checkin':
+		case SurveyQuestionnaire.offboarded_checkin:
 			return offboardingCheckinQuestionnaire(t, name);
 	}
 	return [];
