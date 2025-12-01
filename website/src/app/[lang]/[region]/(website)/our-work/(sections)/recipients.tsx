@@ -5,14 +5,14 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
+import aminataImg from '@socialincome/website/src/app/[lang]/[region]/(website)/our-work/(assets)/aminata.jpg';
+import gbassayImg from '@socialincome/website/src/app/[lang]/[region]/(website)/our-work/(assets)/gbassay.jpg';
+import kaiImg from '@socialincome/website/src/app/[lang]/[region]/(website)/our-work/(assets)/kai.jpg';
+import laminImg from '@socialincome/website/src/app/[lang]/[region]/(website)/our-work/(assets)/lamin.jpg';
+import nenehImg from '@socialincome/website/src/app/[lang]/[region]/(website)/our-work/(assets)/neneh.jpg';
+import onikehImg from '@socialincome/website/src/app/[lang]/[region]/(website)/our-work/(assets)/onikeh.jpg';
 import _ from 'lodash';
 import Image from 'next/image';
-import aminataImg from '../(assets)/aminata.jpeg';
-import gbassayImg from '../(assets)/gbassay.jpeg';
-import kaiImg from '../(assets)/kai.jpg';
-import laminImg from '../(assets)/lamin.jpeg';
-import nenehImg from '../(assets)/neneh.jpeg';
-import onikehImg from '../(assets)/onikeh.jpeg';
 
 export async function Recipients({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
