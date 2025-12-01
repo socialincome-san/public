@@ -1,5 +1,5 @@
-import SdgIcon from '@/app/[lang]/[region]/(website)/partners/(assets)/sdg-circle.svg';
 import { FundRaiserBadgeType, SdgBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
+import SdgIcon from '@/app/[lang]/[region]/(website)/partners/assets/sdg-circle.svg';
 import { Badge, HoverCard, HoverCardContent, HoverCardTrigger, Separator, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 

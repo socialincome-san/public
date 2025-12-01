@@ -5,7 +5,7 @@ import { MapPinIcon } from '@heroicons/react/24/solid';
 import { Card, Carousel, CarouselContent, Typography } from '@socialincome/ui';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
-import doubleQuotesSVG from '../(assets)/double-quotes.svg';
+import doubleQuotesSVG from '../assets/double-quotes.svg';
 
 type PortraitProps = {
 	name: string;

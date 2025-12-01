@@ -5,7 +5,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import _ from 'lodash';
 import Image from 'next/image';
-import phonesGif from '../(assets)/phones-2.gif';
+import phonesGif from '../assets/phones-2.gif';
 
 export async function HowItWorks({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({

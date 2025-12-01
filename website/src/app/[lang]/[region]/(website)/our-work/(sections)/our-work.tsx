@@ -5,7 +5,7 @@ import { PlayIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';
 import Image from 'next/image';
-import phonesGif from '../(assets)/phones-1.gif';
+import phonesGif from '../assets/phones-1.gif';
 
 export async function OurWork({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({

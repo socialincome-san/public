@@ -4,7 +4,7 @@ import { Badge, BaseContainer, linkCn, Popover, PopoverContent, PopoverTrigger, 
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import Link from 'next/link';
-import changeGif from '../(assets)/change.gif';
+import changeGif from '../assets/change.gif';
 
 export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({

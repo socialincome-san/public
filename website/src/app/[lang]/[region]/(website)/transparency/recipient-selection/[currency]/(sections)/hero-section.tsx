@@ -4,8 +4,8 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
-import globeRotating from '../(assets)/globe.svg';
 import ScrollToChevron from '../(components)/scroll-to-chevron';
+import globeRotating from '../assets/globe.svg';
 
 export async function HeroSection({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
