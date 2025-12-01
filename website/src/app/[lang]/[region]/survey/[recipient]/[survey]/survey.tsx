@@ -21,7 +21,6 @@ interface SurveyProps {
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	const [survey, setSurvey] = useState<SurveyWithrecipient | null>(null);
-	const [data, setData] = useState<Model | undefined>(undefined);
 
 	useEffect(() => {
 		async function fetchSurvey() {
@@ -34,15 +33,6 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 		}
 		fetchSurvey();
 	}, [surveyId, recipientId]);
-
-	useEffect(() => {
-		if (!survey) return;
-		try {
-			setData(survey.data as Model);
-		} catch (e) {
-			console.error('Error parsing survey data', e);
-		}
-	}, [survey]);
 
 	const translator = useTranslator(lang, 'website-survey');
 
@@ -61,14 +51,14 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 			});
 	};
 
-	if (survey && data && translator) {
+	if (survey && translator) {
 		if (survey.status == SurveyStatus.completed) return <div>Survey already completed</div>;
 
 		const model = new Model({
 			...settings(translator.t),
 			pages: getQuestionnaire(survey.questionnaire, translator.t, survey.nameOfRecipient),
 		});
-		model.currentPageNo = data.pageNo;
+		model.currentPageNo = (survey.data as Model).pageNo;
 
 		model.onPartialSend.add((data) => saveSurveyData(data, SurveyStatus.in_progress));
 		model.onComplete.add((data) => saveSurveyData(data, SurveyStatus.completed));
