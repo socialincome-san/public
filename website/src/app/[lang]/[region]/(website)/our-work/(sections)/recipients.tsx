@@ -1,6 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import mapAfrica from '@/app/[lang]/[region]/(website)/our-work/(assets)/map-africa.svg';
 import { RecipientsCarousel } from '@/app/[lang]/[region]/(website)/our-work/(sections)/recipients-carousel';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
@@ -12,7 +13,6 @@ import kaiImg from '../(assets)/kai.jpg';
 import laminImg from '../(assets)/lamin.jpeg';
 import nenehImg from '../(assets)/neneh.jpeg';
 import onikehImg from '../(assets)/onikeh.jpeg';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export async function Recipients({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({

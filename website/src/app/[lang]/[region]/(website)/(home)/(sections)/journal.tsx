@@ -1,11 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Image, { StaticImageData } from 'next/image';
 import { ReactElement } from 'react';
 import avatarImgData from '../(assets)/aurelie.png';
 import townImgData from '../(assets)/sdg-town.jpg';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type JournalCardDetails = {
 	title: string;

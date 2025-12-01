@@ -32,12 +32,12 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 	useEventListener('scroll', () => setHideOverlay(false));
 
 	return (
-        <div
+		<div
 			className={classNames('absolute inset-2 transition duration-500 ease-in-out', {
 				'opacity-0': hideOverlay,
 			})}
 		>
-            <div className="flex h-full flex-col justify-around">
+			<div className="flex h-full flex-col justify-around">
 				<div className="hidden md:block" />
 				<div className="mx-auto max-w-4xl text-center text-white">
 					{translations.mainText.map((title, index) => (
@@ -53,13 +53,16 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 					))}
 				</div>
 				<Link href={`/${lang}/${region}/donate/individual`}>
-					<Button className="mx-auto hidden hover:text-black md:block" ref={refButton as RefObject<HTMLButtonElement | null>}>
+					<Button
+						className="mx-auto hidden hover:text-black md:block"
+						ref={refButton as RefObject<HTMLButtonElement | null>}
+					>
 						<Typography>{translations.buttonText}</Typography>
 					</Button>
 				</Link>
 			</div>
-        </div>
-    );
+		</div>
+	);
 };
 
 export default HeroVideoOverlay;

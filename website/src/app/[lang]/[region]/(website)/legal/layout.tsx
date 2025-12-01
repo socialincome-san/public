@@ -13,7 +13,10 @@ export async function generateMetadata(props: DefaultLayoutProps) {
 
 export default async function Layout({ children, ...props }: PropsWithChildren<DefaultLayoutProps>) {
 	const params = await props.params;
-	const translator = await Translator.getInstance({ language: params.lang as WebsiteLanguage, namespaces: 'website-legal' });
+	const translator = await Translator.getInstance({
+		language: params.lang as WebsiteLanguage,
+		namespaces: 'website-legal',
+	});
 
 	return (
 		<BaseContainer>

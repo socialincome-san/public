@@ -1,11 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import _ from 'lodash';
 import Image from 'next/image';
 import phonesGif from '../(assets)/phones-2.gif';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export async function HowItWorks({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({

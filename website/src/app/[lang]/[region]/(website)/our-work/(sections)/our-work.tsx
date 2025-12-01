@@ -1,11 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { PlayIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import phonesGif from '../(assets)/phones-1.gif';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export async function OurWork({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({

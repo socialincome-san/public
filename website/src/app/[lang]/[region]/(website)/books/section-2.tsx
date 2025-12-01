@@ -1,5 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import Book from '@/components/legacy/ui/book';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 import book6cover from './(assets)/better.jpg';
@@ -11,7 +12,6 @@ import book1cover from './(assets)/life.jpg';
 import book8cover from './(assets)/lowrey.jpg';
 import book9cover from './(assets)/poor-economics.jpg';
 import book3cover from './(assets)/utopia.jpg';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export default async function Section2({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-books'] });

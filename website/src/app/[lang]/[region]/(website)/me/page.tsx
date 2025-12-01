@@ -1,9 +1,9 @@
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 import { Suspense } from 'react';
 import { DefaultPageProps } from '../..';
 import { AccountRedirect } from './account-redirect';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
