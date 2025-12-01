@@ -27,7 +27,7 @@ export async function generateDonationCertificateForCurrentUser(year: number, la
 	const contributorSession = await getAuthenticatedContributorOrRedirect();
 	const donationCertificateService = new DonationCertificateService();
 
-	const result = await donationCertificateService.createDonationCertificates(year, [contributorSession.id], language);
+	const result = await donationCertificateService.createDonationCertificate(year, contributorSession.id, language);
 	revalidatePath('/dashboard/donation-certificates');
 	return result;
 }

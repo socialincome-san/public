@@ -1,6 +1,7 @@
 {
 	"metadata": {
-		"title": "My Profile | Social Income"
+		"title": "My Profile | Social Income",
+		"home-link": "Back to Home"
 	},
 	"sections": {
 		"account": {
@@ -23,6 +24,8 @@
 		"total": "Total",
 		"one-time-payment": "New one-time donation",
 		"amount-currency": "{{ amount, currency }}",
+		"currency": "Currency",
+		"campaign": "Campaign",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Cash",
@@ -36,11 +39,15 @@
 			"failed": "Failed",
 			"unknown": "Unknown"
 		},
-		"status-title": "Status"
+		"status-title": "Status",
+		"no-contributions": "No contributions found",
+		"new-contribution": "Make a contribution"
 	},
 	"subscriptions": {
 		"amount": "Amount",
 		"date": "Date",
+		"from": "From",
+		"to": "To",
 		"source": "Source",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
@@ -54,13 +61,20 @@
 			"canceled": "Canceled",
 			"paused": "Paused"
 		},
-		"manage-subscriptions": "Manage Subscriptions"
+		"status-title": "Status",
+		"manage-subscriptions": "Manage Subscriptions",
+		"no-subscriptions": "No subscriptions found"
 	},
 	"donation-certificates": {
+		"created": "Created",
+		"language": "Language",
 		"year": "Year",
 		"download-pdf": "Download PDF",
+		"generate-certificate": "Generate Donation Certificate",
 		"no-certificates-yet": "You have no donation certificates yet. Make sure you provide your full address with.",
-		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org."
+		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org.",
+		"already-exists": "Certificate for selected year and language already exists. If this seems wrong, please contact contributors@socialincome.org.",
+		"technical-error": "A technical error has occurred, please try again. If this continues to happen, please contact contributors@socialincome.org."
 	},
 	"personal-info": {
 		"alert-title": "Donation certificates",

@@ -1,6 +1,9 @@
 'use client';
 
 import { BaseTable } from '@/components/data-table/elements/base-table';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
 import type { ColumnDef, SortingState } from '@tanstack/react-table';
 import { ReactNode } from 'react';
 
@@ -10,10 +13,11 @@ type DataTableProps<Row> = {
 	emptyMessage: string;
 	actions?: ReactNode;
 	data: Row[];
-	makeColumns: (hideProgramName?: boolean) => ColumnDef<Row>[];
+	makeColumns: (hideProgramName?: boolean, translator?: Translator) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
 	onRowClick?: (row: Row) => void;
 	initialSorting?: SortingState;
+	lang?: WebsiteLanguage;
 };
 
 export default function DataTable<Row>({
@@ -26,8 +30,10 @@ export default function DataTable<Row>({
 	hideProgramName = false,
 	onRowClick,
 	initialSorting,
+	lang,
 }: DataTableProps<Row>) {
-	const columns = makeColumns(hideProgramName);
+	const translator = useTranslator(lang || 'en', 'website-me');
+	const columns = makeColumns(hideProgramName, translator);
 	const isEmpty = data.length === 0;
 
 	return (
