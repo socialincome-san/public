@@ -4,9 +4,7 @@ import { GenericDonationForm } from '@/components/legacy/donation/generic-donati
 import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
 import { getCampaignByLegacyIdAction } from '@/lib/server-actions/campaigns-actions';
-import { getLatestRateForCurrency } from '@/lib/server-actions/exchange-rates-actions';
 import { getMetadata } from '@/metadata';
-import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	Accordion,
@@ -73,8 +71,6 @@ export default async function Page({ params }: CampaignPageProps) {
 
 	const result = await getCampaignByLegacyIdAction(campaignId);
 
-	console.log('result', result);
-
 	if (!result.success || !result.data || !result.data.isActive) {
 		return (
 			<BaseContainer className="mx-auto flex max-w-3xl flex-col pt-8 md:pt-16">
@@ -88,16 +84,6 @@ export default async function Page({ params }: CampaignPageProps) {
 	}
 
 	const campaign = result.data;
-
-	const exchangeRateRes = await getLatestRateForCurrency(campaign.currency);
-	const exchangeRate = exchangeRateRes.success ? exchangeRateRes.data.rate : 1.0;
-
-	let amountCollected = campaign.contributions?.reduce((sum, c) => sum + c.amountChf, 0) || 0;
-	amountCollected += campaign.additionalAmountChf || 0;
-	amountCollected *= exchangeRate;
-
-	const percentageCollected = campaign.goal ? Math.round((amountCollected / campaign.goal) * 100) : undefined;
-	const daysLeft = daysUntilTs(campaign.endDate);
 
 	return (
 		<>
@@ -131,8 +117,8 @@ export default async function Page({ params }: CampaignPageProps) {
 										<Typography size="2xl" weight="medium" color="secondary">
 											{translator?.t('campaign.without-goal.collected', {
 												context: {
-													count: campaign.contributions?.length,
-													amount: amountCollected,
+													count: campaign.numberOfContributions,
+													amount: campaign.amountCollected,
 													currency: campaign.currency,
 													total: campaign.goal,
 												},
@@ -140,14 +126,14 @@ export default async function Page({ params }: CampaignPageProps) {
 										</Typography>
 									</div>
 								)}
-								{percentageCollected !== undefined && (
+								{campaign.percentageCollected !== undefined && (
 									<div>
 										<div className="flex pb-2">
 											<div className="flex-1 text-left">
 												<Typography size="md" color="primary">
 													{translator.t('campaign.with-goal.collected-percentage', {
 														context: {
-															percentage: percentageCollected,
+															percentage: campaign.percentageCollected,
 														},
 													})}
 												</Typography>
@@ -159,15 +145,15 @@ export default async function Page({ params }: CampaignPageProps) {
 											</div>
 										</div>
 										<div>
-											<Progress value={percentageCollected} className={'h-6'} />
+											<Progress value={campaign.percentageCollected} className={'h-6'} />
 										</div>
 										<div className="flex pt-2">
 											<div className="flex-1 text-left">
 												<Typography size="md" color="primary">
 													{translator.t('campaign.with-goal.collected-amount', {
 														context: {
-															count: campaign.contributions?.length,
-															amount: amountCollected,
+															count: campaign.numberOfContributions,
+															amount: campaign.amountCollected,
 															currency: campaign.currency,
 														},
 													})}
@@ -188,7 +174,7 @@ export default async function Page({ params }: CampaignPageProps) {
 								)}
 							</div>
 						</div>
-						{daysLeft >= 0 && (
+						{campaign.daysLeft >= 0 && (
 							<>
 								<div className="flex items-center justify-center" style={{ height: '500px' }}>
 									<div className="card bg-primary w-full rounded-xl p-6">
@@ -234,19 +220,19 @@ export default async function Page({ params }: CampaignPageProps) {
 												campaignId={campaignId}
 											/>
 										</div>
-										{daysLeft >= 0 && (
+										{campaign.daysLeft >= 0 && (
 											<>
 												<div className="mt-4 text-center">
 													<Typography size="md" color="popover">
-														{translator?.t('campaign.days-left', { context: { count: daysLeft } })}
+														{translator?.t('campaign.days-left', { context: { count: campaign.daysLeft } })}
 													</Typography>
 												</div>
 											</>
 										)}
-										{daysLeft < 0 && (
+										{campaign.daysLeft < 0 && (
 											<div className="mt-4 text-center">
 												<Typography size="md" color="popover">
-													{translator?.t('campaign.ended', { context: { count: daysLeft } })}
+													{translator?.t('campaign.ended', { context: { count: campaign.daysLeft } })}
 												</Typography>
 											</div>
 										)}
@@ -254,10 +240,10 @@ export default async function Page({ params }: CampaignPageProps) {
 								</div>
 							</>
 						)}
-						{daysLeft < 0 && (
+						{campaign.daysLeft < 0 && (
 							<div className="flex flex-col justify-center">
 								<Typography size="xl" weight="medium" color="accent">
-									{translator?.t('campaign.ended', { context: { count: daysLeft } })}
+									{translator?.t('campaign.ended', { context: { count: campaign.daysLeft } })}
 								</Typography>
 							</div>
 						)}

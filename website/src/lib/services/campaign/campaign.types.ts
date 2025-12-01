@@ -46,11 +46,13 @@ export type CampaignPayload = {
 		id: string;
 		name: string;
 	} | null;
-	contributions?: {
-		id: string;
-		amount: number;
-		amountChf: number;
-	}[];
+};
+
+export type CampaignPage = CampaignPayload & {
+	numberOfContributions: number;
+	amountCollected: number;
+	percentageCollected: number | null;
+	daysLeft: number;
 };
 
 // campaign will be created using current users organization ID
