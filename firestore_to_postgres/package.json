@@ -17,6 +17,7 @@
 		"migrate:expenses": "npm run env:local tsx scripts/migrate-expenses.ts",
 		"migrate:surveys": "npm run env:local tsx scripts/migrate-surveys.ts",
 		"migrate:reset": "npm --workspace=@socialincome/website run db:migrate:reset",
+		"delete:all:firebase:users": "npm run env:local tsx scripts/delete-all-firebase-users.ts",
 		"typecheck": "tsc --noEmit"
 	}
 }
