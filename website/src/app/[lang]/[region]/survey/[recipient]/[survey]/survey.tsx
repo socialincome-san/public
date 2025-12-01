@@ -1,9 +1,9 @@
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getByIdAndRecipient } from '@/lib/server-actions/survey-actions';
+import { getByIdAndRecipient, saveChanges } from '@/lib/server-actions/survey-actions';
 import { SurveyWithrecipient } from '@/lib/services/survey/survey.types';
-import { SurveyStatus } from '@socialincome/shared/src/types/survey';
-import { useCallback, useEffect, useState } from 'react';
+import { SurveyStatus } from '@prisma/client';
+import { useEffect, useState } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/defaultV2.min.css';
 import { Survey as SurveyReact } from 'survey-react-ui';
@@ -19,11 +19,6 @@ interface SurveyProps {
 }
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
-	// const firestore = useFirestore();
-	// const surveyDocRef = doc(
-	// 	firestore,
-	// 	[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'),
-	// );
 	const [survey, setSurvey] = useState<SurveyWithrecipient | null>(null);
 	const [data, setData] = useState<Model | undefined>(undefined);
 
@@ -50,32 +45,24 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 
 	const translator = useTranslator(lang, 'website-survey');
 
-	// const { data: survey } = useQuery({
-	// 	queryFn: () => getDoc(surveyDocRef).then((snapshot) => snapshot.data() as SurveyModel),
-	// 	queryKey: [recipientId, surveyId],
-	// });
-
 	// TODO: implement session storage caching
-	const saveSurveyData = useCallback(
-		(survey: Model, status: SurveyStatus) => {
-			// 	const data = survey.data;
-			// 	data.pageNo = survey.currentPageNo;
-			// 	updateDoc(surveyDocRef, {
-			// 		data: data,
-			// 		status: status,
-			// 		completed_at: status == SurveyStatus.Completed ? new Date(Date.now()) : null,
-			// 	})
-			// 		.then(() => console.log('saved successfully'))
-			// 		.catch(() => {
-			// 			console.log('error saving');
-			// 			window.setTimeout(() => saveSurveyData(survey, status), 3000);
-			// 		});
-		},
-		[survey],
-	);
+	const saveSurveyData = (survey: Model, status: SurveyStatus) => {
+		const data = survey.data;
+		data.pageNo = survey.currentPageNo;
+		saveChanges(surveyId, {
+			data: data,
+			status: status,
+			completedAt: status == SurveyStatus.completed ? new Date(Date.now()) : null,
+		})
+			.then(() => console.log('saved successfully'))
+			.catch(() => {
+				console.log('error saving');
+				window.setTimeout(() => saveSurveyData(survey, status), 3000);
+			});
+	};
 
 	if (survey && data && translator) {
-		if (survey.status == SurveyStatus.Completed) return <div>Survey already completed</div>;
+		if (survey.status == SurveyStatus.completed) return <div>Survey already completed</div>;
 
 		const model = new Model({
 			...settings(translator.t),
@@ -83,8 +70,8 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 		});
 		model.currentPageNo = data.pageNo;
 
-		model.onPartialSend.add((data) => saveSurveyData(data, SurveyStatus.InProgress));
-		model.onComplete.add((data) => saveSurveyData(data, SurveyStatus.Completed));
+		model.onPartialSend.add((data) => saveSurveyData(data, SurveyStatus.in_progress));
+		model.onComplete.add((data) => saveSurveyData(data, SurveyStatus.completed));
 
 		return <SurveyReact id="react-survey" model={model} />;
 	}

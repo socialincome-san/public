@@ -466,4 +466,44 @@ export class SurveyService extends BaseService {
 			return this.resultFail('Could not fetch surveys');
 		}
 	}
+
+	async saveChanges(surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> {
+		try {
+			const survey = await this.db.survey.findUnique({
+				where: { id: surveyId },
+				select: { recipient: { select: { program: { select: { id: true } } } } },
+			});
+
+			if (!survey) {
+				return this.resultFail('Survey not found');
+			}
+
+			const updatedSurvey = await this.db.survey.update({
+				where: { id: surveyId },
+				data: input,
+			});
+
+			const payload: SurveyPayload = {
+				id: updatedSurvey.id,
+				name: updatedSurvey.name,
+				questionnaire: updatedSurvey.questionnaire,
+				language: updatedSurvey.language,
+				dueAt: updatedSurvey.dueAt,
+				completedAt: updatedSurvey.completedAt,
+				status: updatedSurvey.status,
+				data: updatedSurvey.data,
+				accessEmail: updatedSurvey.accessEmail,
+				accessPw: updatedSurvey.accessPw,
+				accessToken: updatedSurvey.accessToken,
+				recipientId: updatedSurvey.recipientId,
+				surveyScheduleId: updatedSurvey.surveyScheduleId,
+				createdAt: updatedSurvey.createdAt,
+				updatedAt: updatedSurvey.updatedAt,
+			};
+			return this.resultOk(payload);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Failed to update survey: ${error}`);
+		}
+	}
 }

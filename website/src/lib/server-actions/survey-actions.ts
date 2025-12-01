@@ -65,3 +65,10 @@ export async function getByIdAndRecipient(surveyId: string, recipientId: string)
 	const result = await service.getByIdAndRecipient(surveyId, recipientId);
 	return result;
 }
+
+export async function saveChanges(surveyId: string, input: SurveyUpdateInput) {
+	const service = new SurveyService();
+
+	const result = await service.saveChanges(surveyId, input);
+	return result;
+}
