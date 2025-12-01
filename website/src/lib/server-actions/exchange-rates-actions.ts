@@ -12,9 +12,3 @@ export async function importExchangeRatesAction() {
 	revalidatePath('/portal/admin/exchange-rates');
 	return result;
 }
-
-export async function getLatestRateForCurrency(currency: string) {
-	const service = new ExchangeRateService();
-	const result = await service.getLatestRateForCurrency(currency);
-	return result;
-}
