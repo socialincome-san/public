@@ -9,6 +9,7 @@ import 'survey-core/defaultV2.min.css';
 import { Survey as SurveyReact } from 'survey-react-ui';
 import { settings } from './common';
 import { getQuestionnaire } from './questionnaires';
+import './survey.css';
 
 export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
 
