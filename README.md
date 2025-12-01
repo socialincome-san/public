@@ -119,10 +119,12 @@ Run all commands from the **root** – they delegate to
 `@socialincome/shared`.
 
 ### How to copy Data with PGDUMP
+
 Make a dump from your local DB:
 `pg_dump -Fc --no-owner "postgresql://social-income:social-income@localhost:5432/social-income" > local.dump`
 
 Insert this data to staging:
+
 ```
 pg_restore \
   --clean --if-exists \
