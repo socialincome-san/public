@@ -116,7 +116,7 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 	const onSubmit = (schema: ExpenseFormSchema) => {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: unknown };
+				let res: { success: boolean; error?: string };
 				if (expenseId && expense) {
 					const data = buildUpdateExpenseInput(schema, expense);
 					res = await updateExpenseAction(data);
