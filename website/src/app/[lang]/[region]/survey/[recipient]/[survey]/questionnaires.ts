@@ -1,4 +1,4 @@
-import { SurveyQuestionnaire } from '@socialincome/shared/src/types/survey';
+import { SurveyQuestionnaire } from '@prisma/client';
 import { TranslateFunction } from '@socialincome/shared/src/utils/i18n';
 import {
 	achievementsAchievedPage,
@@ -26,13 +26,13 @@ import {
 
 export const getQuestionnaire = (questionnaire: SurveyQuestionnaire, t: TranslateFunction, name: string) => {
 	switch (questionnaire) {
-		case SurveyQuestionnaire.Onboarding:
+		case 'onboarding':
 			return onboardingQuestionnaire(t, name);
-		case SurveyQuestionnaire.Checkin:
+		case 'checkin':
 			return checkinQuestionnaire(t, name);
-		case SurveyQuestionnaire.Offboarding:
+		case 'offboarding':
 			return offboardingQuestionnaire(t, name);
-		case SurveyQuestionnaire.OffboardedCheckin:
+		case 'offboarded_checkin':
 			return offboardingCheckinQuestionnaire(t, name);
 	}
 	return [];

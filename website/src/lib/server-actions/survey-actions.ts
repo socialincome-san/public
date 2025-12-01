@@ -58,3 +58,10 @@ export async function generateSurveysAction() {
 	revalidatePath('/portal/management/surveys');
 	return result;
 }
+
+export async function getByIdAndRecipient(surveyId: string, recipientId: string) {
+	const service = new SurveyService();
+
+	const result = await service.getByIdAndRecipient(surveyId, recipientId);
+	return result;
+}

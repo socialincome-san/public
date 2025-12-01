@@ -15,6 +15,7 @@ import {
 	SurveyTableView,
 	SurveyTableViewRow,
 	SurveyUpdateInput,
+	SurveyWithrecipient,
 } from './survey.types';
 
 export class SurveyService extends BaseService {
@@ -421,6 +422,45 @@ export class SurveyService extends BaseService {
 				orderBy: [{ dueAt: 'desc' }, { createdAt: 'desc' }],
 			});
 			return this.resultOk(surveys);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch surveys');
+		}
+	}
+
+	async getByIdAndRecipient(surveyId: string, recipientId: string): Promise<ServiceResult<SurveyWithrecipient>> {
+		try {
+			const surveys = await this.db.survey.findUnique({
+				where: { id: surveyId, recipientId },
+				select: {
+					id: true,
+					name: true,
+					questionnaire: true,
+					status: true,
+					data: true,
+					language: true,
+					recipient: {
+						select: {
+							id: true,
+							contact: {
+								select: {
+									firstName: true,
+									lastName: true,
+								},
+							},
+						},
+					},
+				},
+			});
+
+			if (!surveys) {
+				return this.resultFail('Survey not found');
+			}
+			return this.resultOk({
+				...surveys,
+				nameOfRecipient:
+					`${surveys.recipient.contact?.firstName ?? ''} ${surveys.recipient.contact?.lastName ?? ''}`.trim(),
+			});
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch surveys');
