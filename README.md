@@ -118,6 +118,21 @@ Edit the schema at:
 Run all commands from the **root** – they delegate to
 `@socialincome/shared`.
 
+### How to copy Data with PGDUMP
+
+Make a dump from your local DB:
+`pg_dump -Fc --no-owner "postgresql://social-income:social-income@localhost:5432/social-income" > local.dump`
+
+Insert this data to staging:
+
+```
+pg_restore \
+  --clean --if-exists \
+  --no-owner \
+  -d "postgresql://staging-website_google_sql_user:xxxx@yyyy:5432/staging-website-google-sql-database" \
+  local.dump
+```
+
 ### 🚀 Common DB Commands
 
 ```bash
