@@ -9,9 +9,9 @@ type ContributorProp = {
 	commits: number;
 	avatarUrl: string;
 };
+const GITHUB_BASE_URL = 'https://github.com';
 
 function Contributor({ name, commits, avatarUrl }: ContributorProp) {
-	const GITHUB_BASE_URL = 'https://www.github.com';
 	return (
 		<article className="flex min-w-60 flex-row items-center py-2">
 			<Avatar className="h-12 w-12 flex-shrink-0">
