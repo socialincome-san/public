@@ -34,7 +34,6 @@ export class Translator {
 		await translator.instance
 			.use(
 				resourcesToBackend((lng: string, ns: string) => {
-					// Always load from shared package
 					return import(`@socialincome/shared/locales/${lng}/${ns}.json`);
 				}),
 			)
