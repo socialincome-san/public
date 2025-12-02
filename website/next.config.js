@@ -15,15 +15,7 @@ let nextConfig = {
 		],
 	},
 	output: 'standalone',
-	turbopack: (config, context) => {
-		// needed for ssh2-sftp-client in payment-file-import
-		config.module.rules.push({
-			test: /\.node$/,
-			loader: 'node-loader',
-		});
-		return config;
-	},
-	serverExternalPackages: ['pdfkit'],
+	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {
