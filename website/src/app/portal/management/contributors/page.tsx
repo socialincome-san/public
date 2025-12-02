@@ -1,9 +1,18 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributorService } from '@/lib/services/contributor/contributor.service';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
+import { Suspense } from 'react';
 import ContributorsTable from './contributors-table';
 
-export default async function ContributorsPage() {
+export default function ContributorsPage() {
+	return (
+		<Suspense>
+			<ContributorsDataLoader />
+		</Suspense>
+	);
+}
+
+async function ContributorsDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributorService();

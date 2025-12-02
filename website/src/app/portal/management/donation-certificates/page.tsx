@@ -1,9 +1,18 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { DonationCertificateService } from '@/lib/services/donation-certificate/donation-certificate.service';
 import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
+import { Suspense } from 'react';
 import { DonationCertificateTable } from './donation-certificates-table';
 
-export default async function DonationCertificatesPage() {
+export default function DonationCertificatesPage() {
+	return (
+		<Suspense>
+			<DonationCertificatesDataLoader />
+		</Suspense>
+	);
+}
+
+async function DonationCertificatesDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new DonationCertificateService();

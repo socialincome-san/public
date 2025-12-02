@@ -3,8 +3,17 @@ import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { OrganizationService } from '@/lib/services/organization/organization.service';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
+import { Suspense } from 'react';
 
-export default async function OrganizationsPage() {
+export default function OrganizationsPage() {
+	return (
+		<Suspense>
+			<OrganizationsDataLoader />
+		</Suspense>
+	);
+}
+
+async function OrganizationsDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

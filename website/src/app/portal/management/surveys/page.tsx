@@ -1,9 +1,18 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyService } from '@/lib/services/survey/survey.service';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
+import { Suspense } from 'react';
 import { SurveysTableClient } from './surveys-table-client';
 
-export default async function SurveysPage() {
+export default function SurveysPage() {
+	return (
+		<Suspense>
+			<SurveysDataLoader />
+		</Suspense>
+	);
+}
+
+async function SurveysDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new SurveyService();
