@@ -36,7 +36,6 @@
 		"embla-carousel-autoplay": "^8.1.6",
 		"embla-carousel-react": "^8.1.6",
 		"lucide-react": "^0.539.0",
-		
 		"react-hook-form": "^7.52.1",
 		"tailwindcss-animate": "^1.0.7",
 		"tailwind-merge": "^2.5.3",
