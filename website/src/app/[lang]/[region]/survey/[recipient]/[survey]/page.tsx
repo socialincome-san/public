@@ -1,20 +1,19 @@
 'use client';
 
 import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { Button, Input } from '@socialincome/ui';
-import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, use, useEffect, useState } from 'react';
 import { SurveyPageProps } from './layout';
+import { useSurvey } from './use-survey';
 
 export default function Page({ params }: SurveyPageProps) {
 	const { recipient, survey, lang } = use(params);
-	const { auth } = useAuth();
 	const [email, setEmail] = useState<string | null>(null);
 	const [password, setPassword] = useState<string | null>(null);
-	const [user, setUser] = useState<User>();
+	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 	const searchParams = useSearchParams();
+	const { hasError, login } = useSurvey();
 
 	useEffect(() => {
 		setEmail(searchParams.get('email'));
@@ -23,15 +22,11 @@ export default function Page({ params }: SurveyPageProps) {
 
 	useEffect(() => {
 		if (email && password) {
-			signInWithEmailAndPassword(auth, email, password)
-				.then((userCredential) => {
-					setUser(userCredential.user);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			login(email, password).then((loggedIn) => {
+				setIsLoggedIn(loggedIn);
+			});
 		}
-	}, [auth, email, password]);
+	}, [email, password]);
 
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		// Prevent the browser from reloading the page
@@ -41,8 +36,10 @@ export default function Page({ params }: SurveyPageProps) {
 		setPassword(formData.get('password') as string);
 	}
 
-	if (user) {
+	if (isLoggedIn && !hasError) {
 		return <Survey surveyId={survey} recipientId={recipient} lang={lang as SurveyLanguage} />;
+	} else if (hasError) {
+		return <div className="theme-new mx-auto max-w-md">Error logging in. Please check your credentials.</div>;
 	} else {
 		return (
 			<form className="theme-new mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>

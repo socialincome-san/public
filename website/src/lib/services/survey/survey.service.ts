@@ -428,6 +428,21 @@ export class SurveyService extends BaseService {
 		}
 	}
 
+	async getByEmail(email: string): Promise<ServiceResult<SurveyPayload>> {
+		try {
+			const surveys = await this.db.survey.findFirst({
+				where: { accessEmail: email },
+			});
+			if (!surveys) {
+				return this.resultFail('Survey not found');
+			}
+			return this.resultOk(surveys);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch surveys');
+		}
+	}
+
 	async getByIdAndRecipient(surveyId: string, recipientId: string): Promise<ServiceResult<SurveyWithRecipient>> {
 		try {
 			const surveys = await this.db.survey.findUnique({

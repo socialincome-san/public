@@ -1,15 +1,14 @@
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getByIdAndRecipient, saveChanges } from '@/lib/server-actions/survey-actions';
-import { SurveyWithRecipient } from '@/lib/services/survey/survey.types';
 import { SurveyStatus } from '@prisma/client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/defaultV2.min.css';
 import { Survey as SurveyReact } from 'survey-react-ui';
 import { settings } from './common';
 import { getQuestionnaire } from './questionnaires';
 import './survey.css';
+import { useSurvey } from './use-survey';
 
 export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
 
@@ -20,38 +19,15 @@ interface SurveyProps {
 }
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
-	const [survey, setSurvey] = useState<SurveyWithRecipient | null>(null);
+	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
 
 	useEffect(() => {
-		async function fetchSurvey() {
-			const result = await getByIdAndRecipient(surveyId, recipientId);
-			if (result.success) {
-				setSurvey(result.data);
-			} else {
-				setSurvey(null);
-			}
-		}
-		fetchSurvey();
+		loadSurvey(surveyId, recipientId);
 	}, [surveyId, recipientId]);
 
 	const translator = useTranslator(lang, 'website-survey');
 
-	const saveSurveyData = (survey: Model, status: SurveyStatus) => {
-		const data = survey.data;
-		data.pageNo = survey.currentPageNo;
-		saveChanges(surveyId, {
-			data: data,
-			status: status,
-			completedAt: status == SurveyStatus.completed ? new Date(Date.now()) : null,
-		})
-			.then(() => console.log('saved successfully'))
-			.catch(() => {
-				console.log('error saving');
-				window.setTimeout(() => saveSurveyData(survey, status), 3000);
-			});
-	};
-
-	if (survey && translator) {
+	if (!hasError && survey && translator) {
 		if (survey.status == SurveyStatus.completed) return <div>Survey already completed</div>;
 
 		const model = new Model({
@@ -60,10 +36,12 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 		});
 		model.currentPageNo = (survey.data as Model).pageNo;
 
-		model.onPartialSend.add((data) => saveSurveyData(data, SurveyStatus.in_progress));
-		model.onComplete.add((data) => saveSurveyData(data, SurveyStatus.completed));
+		model.onPartialSend.add((data) => saveSurvey(surveyId, data, SurveyStatus.in_progress));
+		model.onComplete.add((data) => saveSurvey(surveyId, data, SurveyStatus.completed));
 
 		return <SurveyReact id="react-survey" model={model} />;
+	} else if (hasError) {
+		return <div>Error loading survey. Please try again later.</div>;
 	}
 
 	return <div>Loading...</div>;
