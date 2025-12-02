@@ -72,7 +72,7 @@ export default function GenerateDonationCertificateDialog({
 						<p className="text-muted-foreground mb-1 text-xs">
 							Specify for which year the certificate should be generated:
 						</p>
-						<Select value={year.toString()} onValueChange={(e) => setYear(parseInt(e))}>
+						<Select value={year.toString()} onValueChange={(e: string) => setYear(parseInt(e))}>
 							<SelectTrigger>
 								<SelectValue placeholder={'Select Year'} />
 							</SelectTrigger>
@@ -90,7 +90,7 @@ export default function GenerateDonationCertificateDialog({
 						<p className="text-muted-foreground mb-1 text-xs">
 							Specify for which language the certificate should be generated in:
 						</p>
-						<Select value={language} disabled={!language} onValueChange={(l) => setLanguage(l as LanguageCode)}>
+						<Select value={language} disabled={!language} onValueChange={(l: string) => setLanguage(l as LanguageCode)}>
 							<SelectTrigger>
 								<SelectValue placeholder={'Select language'} />
 							</SelectTrigger>

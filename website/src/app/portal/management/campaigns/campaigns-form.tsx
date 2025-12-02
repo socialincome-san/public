@@ -30,22 +30,6 @@ export default function CampaignsForm({
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [isLoading, startTransition] = useTransition();
 
-	useEffect(() => {
-		if (campaignId) {
-			// Load campaign
-			startTransition(async () => await loadCampaign(campaignId));
-		}
-	}, [campaignId]);
-
-	useEffect(() => {
-		// load options for program
-		startTransition(async () => {
-			const programs = await getProgramsOptions();
-			if (!programs.success) return;
-			setOptions(programs.data);
-		});
-	}, []);
-
 	const loadCampaign = async (campaignId: string) => {
 		if (campaignId) {
 			try {
@@ -120,6 +104,22 @@ export default function CampaignsForm({
 			}
 		});
 	}
+
+	useEffect(() => {
+		if (campaignId) {
+			// Load campaign
+			startTransition(async () => await loadCampaign(campaignId));
+		}
+	}, [campaignId]);
+
+	useEffect(() => {
+		// load options for program
+		startTransition(async () => {
+			const programs = await getProgramsOptions();
+			if (!programs.success) return;
+			setOptions(programs.data);
+		});
+	}, []);
 
 	return (
 		<DynamicForm

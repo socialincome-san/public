@@ -6,23 +6,26 @@ import {
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { CH, SL } from 'country-flag-icons/react/1x1';
-import { ReactElement } from 'react';
 
-const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
-	SL: <SL className="h-5 w-5 rounded-full" />,
-	CH: <CH className="h-5 w-5 rounded-full" />,
+const SL_Flag = SL as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+const CH_Flag = CH as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
+	SL: <SL_Flag className="h-5 w-5 rounded-full" />,
+	CH: <CH_Flag className="h-5 w-5 rounded-full" />,
 };
 
-function getFlag(abbreviation: string): ReactElement {
-	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
+export function getFlag(abbreviation: string): React.ReactElement {
+	return country_abbreviations_to_flag_map[abbreviation] ?? <SL_Flag className="h-5 w-5 rounded-full" />;
 }
 export const ngos = ['aurora', 'jamil', 'reachout', 'equal_rights', 'united_polio', 'slaes', 'lizardearth', 'rainbo'];
 
 export async function NgoList({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-partners'],
 	});
 	const image_base_path = '/assets/partners/';
@@ -72,8 +75,8 @@ export async function NgoList({ lang, region }: DefaultParams) {
 			countryBadge: countryBadge,
 			sdgBadges: sdgBadges,
 			ngoHoverCard: ngoHoverCard,
-			lang: lang,
-			region: region,
+			lang: lang as WebsiteLanguage,
+			region: region as WebsiteRegion,
 		};
 		ngoCardPropsArray.push(ngoCardProps);
 	}

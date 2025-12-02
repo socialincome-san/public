@@ -1,17 +1,18 @@
 import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[region]';
 import LoginForm from '@/app/[lang]/[region]/(website)/login/login-form';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 
 export async function generateMetadata(props: DefaultLayoutProps) {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-login');
+	return getMetadata(params.lang as WebsiteLanguage, 'website-login');
 }
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-login'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-login'] });
 
 	return (
 		<BaseContainer className="min-h-screen-navbar mx-auto flex max-w-lg flex-col">

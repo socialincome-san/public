@@ -7,6 +7,7 @@ import { useNavbarBackground } from '@/components/legacy/navbar/useNavbarBackgro
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CountryCode } from '@socialincome/shared/src/types/country';
 import { DonateIcon, SIIcon, Typography } from '@socialincome/ui';
 import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
 import classNames from 'classnames';
@@ -214,7 +215,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							{(!isIntRegion || (isIntRegion && country)) && (
 								<Image
 									className="mx-3 rounded-full"
-									src={getFlagImageURL(isIntRegion ? country! : region)}
+									src={getFlagImageURL(isIntRegion ? country! : (region as WebsiteRegion as CountryCode))}
 									width={24}
 									height={24}
 									alt="Country flag"
@@ -343,7 +344,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					{(!isIntRegion || (isIntRegion && country)) && (
 						<Image
 							className="m-auto mx-2 rounded-full"
-							src={getFlagImageURL(isIntRegion ? country! : region)}
+							src={getFlagImageURL(isIntRegion ? country! : (region as WebsiteRegion as CountryCode))}
 							width={20}
 							height={20}
 							alt="Country flag"

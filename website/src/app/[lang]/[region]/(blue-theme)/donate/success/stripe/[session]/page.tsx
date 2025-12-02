@@ -1,5 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { StripeService } from '@/lib/services/stripe/stripe.service';
 import { CountryCode } from '@socialincome/shared/src/types/country';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -10,14 +11,14 @@ interface StripeSuccessPageParams extends DefaultParams {
 	session: string;
 }
 
-export interface StripeSuccessPageProps {
+interface StripeSuccessPageProps {
 	params: Promise<StripeSuccessPageParams>;
 }
 
 export default async function Page({ params }: StripeSuccessPageProps) {
 	const { lang, region, session } = await params;
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: 'website-donate' });
 
 	const stripeService = new StripeService();
 	const sessionResult = await stripeService.getCheckoutSession(session);
@@ -49,7 +50,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 				</CardHeader>
 				<CardContent>
 					<SuccessForm
-						lang={lang}
+						lang={lang as WebsiteLanguage}
 						onSuccessURL={`/${lang}/${region}/dashboard/contributions`}
 						stripeCheckoutSessionId={checkoutSession.id}
 						firstname={checkoutSession.customer_details?.name?.split(' ')[0] || undefined}

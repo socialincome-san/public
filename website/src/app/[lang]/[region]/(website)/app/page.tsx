@@ -1,4 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, linkCn, Typography } from '@socialincome/ui';
 import Image from 'next/image';
@@ -8,7 +9,7 @@ import Playstore from './(assets)/playstore.svg';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-app'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-app'] });
 
 	return (
 		<BaseContainer className="flex flex-col items-start space-y-8">

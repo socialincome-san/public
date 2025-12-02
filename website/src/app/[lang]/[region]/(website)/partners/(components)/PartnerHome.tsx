@@ -9,13 +9,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
-const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
-	SL: <SL className="h-5 w-5 rounded-full" />,
-	CH: <CH className="h-5 w-5 rounded-full" />,
+const SL_Flag = SL as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+const CH_Flag = CH as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
+	SL: <SL_Flag className="h-5 w-5 rounded-full" />,
+	CH: <CH_Flag className="h-5 w-5 rounded-full" />,
 };
 
-function getFlag(abbreviation: string): ReactElement {
-	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
+function getFlag(abbreviation: string): ReactElement<any> {
+	return country_abbreviations_to_flag_map[abbreviation] || <SL_Flag className="h-5 w-5 rounded-full" />;
 }
 
 export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang, region }: NgoHomeProps) {
@@ -81,7 +84,7 @@ export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang,
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
 							<Badge variant="interactive" size="md" className="space-x-2">
-								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
+								{countryBadge?.countryFlagComponent || <SL_Flag className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
 									{currentNgoCountry}
 								</Typography>

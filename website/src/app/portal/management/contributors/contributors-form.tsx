@@ -59,13 +59,6 @@ export default function ContributorsForm({
 	const [contributor, setContributor] = useState<ContributorPayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	useEffect(() => {
-		if (contributorId) {
-			// Load contributor
-			startTransition(async () => await loadContributor(contributorId));
-		}
-	}, [contributorId]);
-
 	const loadContributor = async (id: string) => {
 		startTransition(async () => {
 			if (contributorId) {
@@ -103,6 +96,13 @@ export default function ContributorsForm({
 			}
 		});
 	}
+
+	useEffect(() => {
+		if (contributorId) {
+			// Load contributor
+			startTransition(async () => await loadContributor(contributorId));
+		}
+	}, [contributorId]);
 
 	return (
 		<DynamicForm

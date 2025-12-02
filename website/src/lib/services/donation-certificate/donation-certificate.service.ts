@@ -1,4 +1,5 @@
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DonationCertificate } from '@prisma/client';
 import {
 	DEFAULT_DONATION_CERTIFICATE_LANGUAGE,
@@ -214,7 +215,7 @@ export class DonationCertificateService extends BaseService {
 			await this.db.donationCertificate.createMany({
 				data: {
 					year: year,
-					language: lang,
+					language: lang as WebsiteLanguage,
 					storagePath: destinationFilePath,
 					contributorId: contributor.id,
 				},

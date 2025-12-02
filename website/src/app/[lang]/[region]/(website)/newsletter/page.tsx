@@ -1,6 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/newsletter/subscription-info-form';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
@@ -9,7 +10,7 @@ import Link from 'next/link';
 
 export async function generateMetadata(props: DefaultPageProps) {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-newsletter');
+	return getMetadata(params.lang as WebsiteLanguage, 'website-newsletter');
 }
 
 export default async function Page(props: DefaultPageProps) {
@@ -18,7 +19,7 @@ export default async function Page(props: DefaultPageProps) {
 	const { lang, region } = params;
 
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-newsletter'],
 	});
 

@@ -1,11 +1,12 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import Navbar from '@/components/legacy/navbar/navbar';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { PropsWithChildren } from 'react';
 
 export async function generateMetadata(props: DefaultLayoutProps) {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-donate');
+	return getMetadata(params.lang as WebsiteLanguage, 'website-donate');
 }
 
 export default async function Layout(props: PropsWithChildren<DefaultLayoutProps>) {

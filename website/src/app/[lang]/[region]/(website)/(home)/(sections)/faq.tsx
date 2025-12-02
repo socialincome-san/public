@@ -1,12 +1,13 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { FaqQuestion, FAQSection } from '@/components/legacy/faq/faq-section';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
 
 export async function FAQ({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'website-faq'],
 	});
 

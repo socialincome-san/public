@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 	const parsed = VerifyOtpRequest.safeParse(body);
 
 	if (!parsed.success) {
-		return new Response(parsed.error.errors[0]?.message ?? 'Invalid input', { status: 400 });
+		return new Response(parsed.error.message, { status: 400 });
 	}
 
 	const service = new TwilioService();

@@ -106,7 +106,7 @@ export function SuccessForm({
 				stripeCheckoutSessionId,
 				user: {
 					email: values.email,
-					language: lang,
+					language: lang as WebsiteLanguage,
 					personal: {
 						name: values.firstname,
 						lastname: values.lastname,

@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
@@ -7,7 +8,10 @@ import Image from 'next/image';
 import phonesGif from '../(assets)/phones-2.gif';
 
 export async function HowItWorks({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-our-work'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-our-work'],
+	});
 
 	return (
 		<BaseContainer id="how-it-works" className="flex flex-col justify-center space-y-8">
