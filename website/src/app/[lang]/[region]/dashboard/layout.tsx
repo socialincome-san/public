@@ -8,11 +8,7 @@ import { notFound } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
 import { DefaultLayoutProps } from '..';
 
-const ENABLE_PORTAL = process.env.NEXT_PUBLIC_FEATURE_ENABLE_PORTAL === 'true';
-
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	if (!ENABLE_PORTAL) notFound();
-
 	const { lang, region } = await params;
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
