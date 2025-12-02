@@ -69,5 +69,5 @@ CMD ["sh", "-c", "\
   . .env && \
   set +a && \
   npx prisma migrate deploy --schema=./src/lib/database/schema.prisma && \
-  node server.js \
+  node website/server.js \
 "]
