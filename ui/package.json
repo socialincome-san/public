@@ -38,8 +38,7 @@
 		"lucide-react": "^0.539.0",
 		"react-hook-form": "^7.52.1",
 		"tailwindcss-animate": "^1.0.7",
-		"tailwind-merge": "^2.5.3",
-		"zod": "^3.23.8"
+		"tailwind-merge": "^2.5.3"
 	},
 	"devDependencies": {
 		"@storybook/addon-essentials": "^8.5.1",
