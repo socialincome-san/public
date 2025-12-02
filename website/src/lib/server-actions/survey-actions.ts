@@ -5,6 +5,7 @@ import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { SurveyService } from '@/lib/services/survey/survey.service';
 import type { SurveyCreateInput, SurveyUpdateInput } from '@/lib/services/survey/survey.types';
 import { revalidatePath } from 'next/cache';
+import { getCurrentSurvey } from '../firebase/current-survey';
 
 export async function createSurveyAction(input: SurveyCreateInput) {
 	const user = await getAuthenticatedUserOrThrow();
@@ -57,4 +58,32 @@ export async function generateSurveysAction() {
 
 	revalidatePath('/portal/management/surveys');
 	return result;
+}
+
+export async function getByIdAndRecipient(surveyId: string, recipientId: string) {
+	const survey = await getCurrentSurvey();
+	if (!survey || survey.id !== surveyId || survey.recipientId !== recipientId) {
+		throw new Error('Unauthorized');
+	}
+	const service = new SurveyService();
+
+	const result = await service.getByIdAndRecipient(surveyId, recipientId);
+	if (!result.success) {
+		throw new Error('Survey not found');
+	}
+	return result.data;
+}
+
+export async function saveChanges(surveyId: string, input: SurveyUpdateInput) {
+	const survey = await getCurrentSurvey();
+	if (!survey || survey.id !== surveyId) {
+		throw new Error('Unauthorized');
+	}
+	const service = new SurveyService();
+
+	const result = await service.saveChanges(surveyId, input);
+	if (!result.success) {
+		throw new Error('Could not save survey changes');
+	}
+	return result.data;
 }
