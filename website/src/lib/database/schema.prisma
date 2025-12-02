@@ -265,7 +265,7 @@ model Survey {
   completedAt       DateTime?           @map("completed_at") @db.Timestamptz(3)
   status            SurveyStatus        @map("status")
   data              Json                @map("data")
-  accessEmail       String              @map("access_email")
+  accessEmail       String              @unique @map("access_email")
   accessPw          String              @map("access_pw")
   accessToken       String              @map("access_token")
 

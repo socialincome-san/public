@@ -325,6 +325,7 @@ export class SurveyService extends BaseService {
 				select: {
 					recipientId: true,
 					name: true,
+					accessEmail: true,
 				},
 			});
 
@@ -349,7 +350,12 @@ export class SurveyService extends BaseService {
 					const dueDate = addMonths(recipient.startDate, schedule.dueInMonthsAfterStart);
 					const surveyStatus = dueDate < new Date() ? SurveyStatus.missed : SurveyStatus.new;
 
-					const email = (await rndString(16)).toLowerCase() + '@si.org';
+					let email: string;
+					do {
+						// ensure uniqueness in preview list
+						email = (await rndString(16)).toLowerCase() + '@si.org';
+					} while (existingSurveys.some((s) => s.accessEmail === email));
+
 					const password = await rndString(16);
 					const token = await rndString(3, 'hex');
 
@@ -430,7 +436,7 @@ export class SurveyService extends BaseService {
 
 	async getByAccessEmail(email: string): Promise<ServiceResult<SurveyPayload>> {
 		try {
-			const surveys = await this.db.survey.findFirst({
+			const surveys = await this.db.survey.findUnique({
 				where: { accessEmail: email },
 			});
 			if (!surveys) {
