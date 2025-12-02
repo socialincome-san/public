@@ -1,8 +1,8 @@
+export const runtime = 'nodejs';
+
 import { PaymentFileImportService } from '@/lib/services/payment-file-import/payment-file-import.service';
 import { logger } from '@/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
-
-export const runtime = 'nodejs';
 
 /**
  * Import payment files
