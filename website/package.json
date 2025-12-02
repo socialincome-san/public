@@ -78,6 +78,7 @@
 		"react-day-picker": "^9.11.1",
 		"react-hot-toast": "^2.4.1",
 		"recharts": "^2.12.7",
+		"saxes": "^6.0.0",
 		"server-only": "^0.0.1",
 		"sharp": "^0.33.5",
 		"ssh2-sftp-client": "^11.0.0",
