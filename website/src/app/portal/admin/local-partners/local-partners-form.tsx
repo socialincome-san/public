@@ -78,7 +78,7 @@ export default function LocalPartnersForm({
 	async function onSubmit(schema: typeof initialFormSchema) {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: unknown };
+				let res: { success: boolean; error?: string };
 				const contactFields: {
 					[key: string]: FormField;
 				} = schema.fields.contact.fields;

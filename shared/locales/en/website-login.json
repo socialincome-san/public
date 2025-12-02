@@ -16,5 +16,7 @@
 		"user-not-found": "User not found",
 		"invalid-email": "Invalid email address",
 		"unknown": "Login failed"
-	}
+	},
+	"detect-account-type": "Detecting account type...",
+	"invalid-account-type": "Invalid account type, please try again or contact support."
 }

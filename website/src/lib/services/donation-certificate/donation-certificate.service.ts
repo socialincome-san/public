@@ -13,27 +13,12 @@ import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { DonationCertificateWriter } from './donation-certificate-writer';
 import {
-	DonationCertificateCreateManyInput,
 	DonationCertificateTableView,
 	DonationCertificateTableViewRow,
 	YourDonationCertificateTableView,
 	YourDonationCertificateTableViewRow,
 } from './donation-certificate.types';
-
-function groupCertificatesByContribution(certificates: DonationCertificate[]): Map<string, string[]> {
-	const groupedCertificates = new Map<string, string[]>();
-
-	for (const cert of certificates) {
-		const { contributorId, language } = cert;
-		if (!language) continue;
-		if (groupedCertificates.has(contributorId)) {
-			groupedCertificates.get(contributorId)!.push(language);
-		} else {
-			groupedCertificates.set(contributorId, [language]);
-		}
-	}
-	return groupedCertificates;
-}
+import { DonationCertificateError } from './types';
 
 export class DonationCertificateService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
@@ -146,110 +131,140 @@ export class DonationCertificateService extends BaseService {
 		}
 	}
 
-	async createDonationCertificates(
+	async findByYearAndLanguage(
 		year: number,
-		contributorsIds?: string[],
-		language?: LanguageCode,
-	): Promise<ServiceResult<string>> {
-		let [successCount, creationWithFailures, creationSkipped] = [0, [] as string[], [] as string[]];
+		contributorsId: string,
+		language: LanguageCode,
+	): Promise<ServiceResult<DonationCertificate | null>> {
+		try {
+			const existingCertificate = await this.db.donationCertificate.findFirst({
+				where: {
+					year: year,
+					contributorId: contributorsId,
+					language: language,
+				},
+			});
 
+			return this.resultOk(existingCertificate);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch existing donation certificates');
+		}
+	}
+
+	async createDonationCertificate(
+		year: number,
+		contributorsId: string,
+		language?: LanguageCode,
+	): Promise<ServiceResult<void>> {
 		if (!this.bucketName) {
 			this.logger.error('Firebase Storage bucket name missing');
-			return this.resultFail('Firebase Storage bucket name missing');
+			return this.resultFail(DonationCertificateError.bucketMissing);
 		}
 
-		const result = await this.contributorService.getByIds(contributorsIds);
-		if (!result.success || !result.data?.length) return this.resultFail('Could not get contributors');
-		const contributors = result.data;
+		// get contributor language or "en" as fallback
+		const lang =
+			LANGUAGE_CODES.find((l) => l === language) ||
+			LANGUAGE_CODES.find((l) => l === contributor.language) ||
+			DEFAULT_DONATION_CERTIFICATE_LANGUAGE;
 
-		const existingCertificates = await this.findByYearAndContributor(
-			year,
-			contributors.map((c) => c.id),
-		);
-		if (!existingCertificates.success) return this.resultFail('Could not get existing certificates for contributors');
-		const existingCertificatesWithLanguages = groupCertificatesByContribution(existingCertificates.data);
+		// check if certificate was already generated
+		const existingCertificate = await this.findByYearAndLanguage(year, contributorsId, lang);
+		if (!existingCertificate.success) {
+			this.logger.info(`Could not load existing certificates for contributor ${contributorsId}`);
+			return this.resultFail(DonationCertificateError.technicalError);
+		}
+		if (existingCertificate.data) {
+			this.logger.info(`Donation certificates already exists for contributor ${contributorsId}`);
+			return this.resultFail(DonationCertificateError.alreadyExists);
+		}
 
-		let contributions = await this.contributionService.getForContributorsAndYear(
-			contributors.map((c) => c.id),
-			year,
-		);
-		if (!contributions.success) return this.resultFail('Could not get contributions for contributors');
+		// check if there are contributions to generate a certificate for
+		let contributions = await this.contributionService.getForContributorAndYear(contributorsId, year);
+		if (!contributions.success) {
+			this.logger.info(`Could not load contributions for contributor ${contributorsId}`);
+			return this.resultFail(DonationCertificateError.technicalError);
+		}
+		if (!contributions.data.length) {
+			this.logger.info(`Contributor ${contributorsId} has no contributions`);
+			return this.resultFail(DonationCertificateError.noContributions);
+		}
 
-		const donationCertificatesToCreate: DonationCertificateCreateManyInput[] = [];
+		// get contributor for ID
+		const result = await this.contributorService.getByIds([contributorsId]);
+		if (!result.success || !result.data?.length) {
+			this.logger.info(`Could not load contributor for contributor ID ${contributorsId}`);
+			return this.resultFail(DonationCertificateError.technicalError);
+		}
+		const contributor = result.data[0];
+
+		try {
+			const writer = new DonationCertificateWriter(contributor, contributions.data, year);
+
+			// The Firebase auth user ID is used in the storage path to check the user's permissions in the storage rules.
+			const destinationFilePath = `users/${contributor.authId}/donation-certificates/${year}_${lang}.pdf`;
+
+			await withFile(async ({ path }) => {
+				await writer.writeDonationCertificatePDF(path, lang);
+				const bucket = storageAdmin.storage.bucket(this.bucketName);
+				await storageAdmin.uploadFile({ bucket, sourceFilePath: path, destinationFilePath });
+
+				this.logger.info(`Donation certificate document written for user ${contributor.id}`);
+			});
+			await this.db.donationCertificate.createMany({
+				data: {
+					year: year,
+					language: lang,
+					storagePath: destinationFilePath,
+					contributorId: contributor.id,
+				},
+			});
+		} catch (e) {
+			this.logger.error(`Error while generating Donation Certificate file: ${e}`);
+			return this.resultFail(DonationCertificateError.technicalError);
+		}
+		return this.resultOk(undefined);
+	}
+
+	async createDonationCertificates(
+		year: number,
+		contributorsIds: string[],
+		language?: LanguageCode,
+	): Promise<ServiceResult<string>> {
+		let [successCount, creationWithFailures, skippedExists, skippedNoContributions] = [
+			0,
+			[] as string[],
+			[] as string[],
+			[] as string[],
+		];
 
 		await Promise.all(
-			contributors.map(async (contributor) => {
-				try {
-					if (contributor.authId === undefined) {
-						this.logger.info(`User ${contributor.id} has no auth_user_id, skipping donation certificate creation`);
-						creationSkipped.push(contributor.id);
-						return;
+			contributorsIds.map(async (contributorsId) => {
+				const result = await this.createDonationCertificate(year, contributorsId, language);
+				if (!result.success) {
+					switch (result.error) {
+						case DonationCertificateError.alreadyExists:
+							skippedExists.push(contributorsId);
+						case DonationCertificateError.noContributions:
+							skippedNoContributions.push(contributorsId);
+
+						default:
+							creationWithFailures.push(contributorsId);
 					}
-
-					const contributionsForContributor = contributions.data?.filter((c) => c.contributorId === contributor.id);
-
-					if (!contributionsForContributor?.length) {
-						this.logger.info(`User ${contributor.id} has no contributions, skipping donation certificate creation`);
-						creationSkipped.push(contributor.id);
-						return;
-					}
-					const writer = new DonationCertificateWriter(contributor, contributionsForContributor, year);
-
-					// get contributor language or "en" as fallback
-					const lang =
-						LANGUAGE_CODES.find((l) => l === language) ||
-						LANGUAGE_CODES.find((l) => l === contributor.language) ||
-						DEFAULT_DONATION_CERTIFICATE_LANGUAGE;
-					// The Firebase auth user ID is used in the storage path to check the user's permissions in the storage rules.
-					const destinationFilePath = `users/${contributor.authId}/donation-certificates/${year}_${lang}.pdf`;
-					// get existing languages and check if file was already written for this contributor and language
-					const existingLanguages = existingCertificatesWithLanguages.get(contributor.id);
-					if (existingLanguages?.includes(lang)) {
-						this.logger.info(
-							`User ${contributor.id} already has a certificate for year ${year} and language ${lang}, skipping donation certificate creation`,
-						);
-						creationSkipped.push(contributor.id);
-						return;
-					}
-
-					await withFile(async ({ path }) => {
-						await writer.writeDonationCertificatePDF(path, lang);
-						const bucket = storageAdmin.storage.bucket(this.bucketName);
-						await storageAdmin.uploadFile({ bucket, sourceFilePath: path, destinationFilePath });
-						donationCertificatesToCreate.push({
-							year: year,
-							language: lang,
-							storagePath: destinationFilePath,
-							contributorId: contributor.id,
-						});
-
-						this.logger.info(`Donation certificate document written for user ${contributor.id}`);
-					});
-				} catch (e) {
-					creationWithFailures.push(contributor.id);
-					this.logger.error(e);
-				}
+				} else successCount++;
 			}),
 		);
-		try {
-			await this.db.donationCertificate.createMany({
-				data: donationCertificatesToCreate,
-			});
-			successCount = donationCertificatesToCreate.length;
-		} catch (error) {
-			creationWithFailures.push(...donationCertificatesToCreate.map((d) => d.contributorId));
-			this.logger.error(error);
-		}
-
 		if (successCount === 0) {
 			return this.resultFail(`Error while creating donation certificates for ${year}.
-	Successfully created ${successCount} donation certificates 
-	Creations skipped (${creationSkipped.length}): ${creationSkipped.join(', ')}.
-	Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`);
+				No donation certificates created.
+				Skipped, because certificate already exists (${skippedExists.length}): ${skippedExists.join(', ')}
+				Skipped, because no contributions available for contributor (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
+				Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`);
 		} else {
-			const success = `Successfully created ${successCount} donation certificates for ${year}. 
-	Creations skipped (${creationSkipped.length}): ${creationSkipped.join(', ')}.
-	Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`;
+			const success = `Successfully created ${successCount} donation certificates for ${year}.
+				Skipped, because certificate already exists (${skippedExists.length}): ${skippedExists.join(', ')}
+				Skipped, because no contributions available for contribot (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
+				Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`;
 			this.logger.info(success);
 			return this.resultOk(success);
 		}

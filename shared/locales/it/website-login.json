@@ -16,5 +16,7 @@
 		"user-not-found": "Utente non trovato",
 		"invalid-email": "Indirizzo email non valido",
 		"unknown": "Accesso fallito"
-	}
+	},
+	"detect-account-type": "Rilevamento del tipo di account in corso...",
+	"invalid-account-type": "Tipo di account non valido, riprova o contatta il supporto."
 }

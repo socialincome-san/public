@@ -48,6 +48,13 @@ export type CampaignPayload = {
 	} | null;
 };
 
+export type CampaignPage = CampaignPayload & {
+	numberOfContributions: number;
+	amountCollected: number;
+	percentageCollected: number | null;
+	daysLeft: number;
+};
+
 // campaign will be created using current users organization ID
 export type CampaignsCreateInput = Omit<Prisma.CampaignCreateInput, 'organization'>;
 export type CampaignsUpdateInput = Prisma.CampaignUpdateInput;
