@@ -2,8 +2,17 @@ import { RecipientsTableClient } from '@/components/data-table/clients/recipient
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { Suspense } from 'react';
 
-export default async function RecipientsPage() {
+export default function RecipientsPage() {
+	return (
+		<Suspense>
+			<RecipientsDataLoader />
+		</Suspense>
+	);
+}
+
+async function RecipientsDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const recipientService = new RecipientService();

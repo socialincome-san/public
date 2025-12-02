@@ -2,8 +2,17 @@ import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyService } from '@/lib/services/survey/survey.service';
+import { Suspense } from 'react';
 
-export default async function UpcomingSurveysPage() {
+export default function UpcomingSurveysPage() {
+	return (
+		<Suspense>
+			<UpcomingSurveysDataLoader />
+		</Suspense>
+	);
+}
+
+async function UpcomingSurveysDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new SurveyService();

@@ -1,9 +1,18 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { UserService } from '@/lib/services/user/user.service';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
+import { Suspense } from 'react';
 import UsersTable from './users-table';
 
-export default async function UsersPage() {
+export default function UsersPage() {
+	return (
+		<Suspense>
+			<UsersDataLoader />
+		</Suspense>
+	);
+}
+
+async function UsersDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

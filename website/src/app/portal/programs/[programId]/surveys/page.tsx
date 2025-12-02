@@ -4,10 +4,19 @@ import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyService } from '@/lib/services/survey/survey.service';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
+import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
 
-export default async function SurveysPageProgramScoped({ params }: Props) {
+export default function SurveysPageProgramScoped({ params }: Props) {
+	return (
+		<Suspense>
+			<SurveysProgramScopedDataLoader params={params} />
+		</Suspense>
+	);
+}
+
+async function SurveysProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 

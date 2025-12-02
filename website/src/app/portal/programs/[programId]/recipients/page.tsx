@@ -2,10 +2,19 @@ import { RecipientsTableClient } from '@/components/data-table/clients/recipient
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
 
-export default async function RecipientsPageProgramScoped({ params }: Props) {
+export default function RecipientsPageProgramScoped({ params }: Props) {
+	return (
+		<Suspense>
+			<RecipientsProgramScopedDataLoader params={params} />
+		</Suspense>
+	);
+}
+
+async function RecipientsProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 

@@ -1,7 +1,16 @@
 import { UserPrograms } from '@/app/portal/user-programs';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { Suspense } from 'react';
 
-export default async function PortalPage() {
+export default function PortalPage() {
+	return (
+		<Suspense>
+			<PortalDataLoader />
+		</Suspense>
+	);
+}
+
+async function PortalDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	return (
