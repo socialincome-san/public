@@ -428,7 +428,7 @@ export class SurveyService extends BaseService {
 		}
 	}
 
-	async getByEmail(email: string): Promise<ServiceResult<SurveyPayload>> {
+	async getByAccessEmail(email: string): Promise<ServiceResult<SurveyPayload>> {
 		try {
 			const surveys = await this.db.survey.findFirst({
 				where: { accessEmail: email },

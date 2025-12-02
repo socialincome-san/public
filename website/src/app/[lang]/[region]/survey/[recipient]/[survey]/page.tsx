@@ -9,31 +9,27 @@ import { useSurvey } from './use-survey';
 
 export default function Page({ params }: SurveyPageProps) {
 	const { recipient, survey, lang } = use(params);
-	const [email, setEmail] = useState<string | null>(null);
-	const [password, setPassword] = useState<string | null>(null);
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 	const { hasError, login } = useSurvey();
 
-	useEffect(() => {
-		setEmail(searchParams.get('email'));
-		setPassword(searchParams.get('pw'));
-	}, [searchParams]);
-
-	useEffect(() => {
+	const tryLogin = async (email: string | null, password: string | null) => {
 		if (email && password) {
 			login(email, password).then((loggedIn) => {
 				setIsLoggedIn(loggedIn);
 			});
 		}
-	}, [email, password]);
+	};
+
+	useEffect(() => {
+		tryLogin(searchParams.get('email'), searchParams.get('pw'));
+	}, []);
 
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		// Prevent the browser from reloading the page
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
-		setEmail(formData.get('email') as string);
-		setPassword(formData.get('password') as string);
+		tryLogin(formData.get('email') as string, formData.get('password') as string);
 	}
 
 	if (isLoggedIn && !hasError) {

@@ -7,7 +7,7 @@ const firebaseService = new FirebaseService();
 
 async function findSurveyByEmail(email: string): Promise<SurveyPayload | null> {
 	const service = new SurveyService();
-	const result = await service.getByEmail(email);
+	const result = await service.getByAccessEmail(email);
 	return result.success ? result.data : null;
 }
 

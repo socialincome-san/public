@@ -68,7 +68,10 @@ export async function getByIdAndRecipient(surveyId: string, recipientId: string)
 	const service = new SurveyService();
 
 	const result = await service.getByIdAndRecipient(surveyId, recipientId);
-	return result;
+	if (!result.success) {
+		throw new Error('Survey not found');
+	}
+	return result.data;
 }
 
 export async function saveChanges(surveyId: string, input: SurveyUpdateInput) {
@@ -79,5 +82,8 @@ export async function saveChanges(surveyId: string, input: SurveyUpdateInput) {
 	const service = new SurveyService();
 
 	const result = await service.saveChanges(surveyId, input);
-	return result;
+	if (!result.success) {
+		throw new Error('Could not save survey changes');
+	}
+	return result.data;
 }
