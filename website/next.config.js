@@ -2,11 +2,13 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 
+const path = require('path');
+
 let nextConfig = {
 	transpilePackages: ['@socialincome/ui'],
 	reactStrictMode: true,
 	turbopack: {
-		root: __dirname,
+		root: path.join(__dirname, '..'),
 	},
 	images: {
 		remotePatterns: [
