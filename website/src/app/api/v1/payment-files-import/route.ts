@@ -2,6 +2,8 @@ import { PaymentFileImportService } from '@/lib/services/payment-file-import/pay
 import { logger } from '@/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
+
 /**
  * Import payment files
  * @description Imports payment files from post finance.
