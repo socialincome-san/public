@@ -74,9 +74,7 @@
 		"next": "16.0.6",
 		"pdfkit": "^0.15.0",
 		"prisma": "^6.15.0",
-		"react": "19.2.0",
 		"react-day-picker": "^9.11.1",
-		"react-dom": "19.2.0",
 		"react-hot-toast": "^2.4.1",
 		"recharts": "^2.12.7",
 		"server-only": "^0.0.1",
@@ -97,7 +95,6 @@
 	"devDependencies": {
 		"@types/accept-language-parser": "^1.5.6",
 		"@types/node": "^22.7.4",
-		"@types/react": "19.2.0",
 		"@types/react-dom": "19.2.0",
 		"@types/ssh2-sftp-client": "^9.0.4",
 		"@types/vimeo__player": "^2.18.3",

@@ -101,7 +101,7 @@ export const SURVEY_SCHEDULES: (Omit<Prisma.SurveyScheduleCreateInput, 'program'
 ];
 
 export const ADMIN_STAGING_ACCOUNT: Prisma.AccountCreateInput = {
-	firebaseAuthUserId: 'V7t5fgxerMgVKiPZZTpsVCKIwW43',
+	firebaseAuthUserId: 'QpbWBHmI5fOsLQsZ5fEKc4zvSo72',
 	user: {
 		create: {
 			role: UserRole.admin,

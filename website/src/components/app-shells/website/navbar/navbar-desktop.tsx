@@ -61,7 +61,7 @@ export const NavbarDesktop = ({ contributor, lang }: { contributor?: Contributor
 
 				<DropdownMenuContent align="end" className="w-64">
 					<DropdownMenuItem
-						onSelect={(e: React.MouseEvent) => {
+						onSelect={(e: Event) => {
 							e.preventDefault();
 							logout();
 						}}
