@@ -111,8 +111,26 @@ export class RecipientService extends BaseService {
 	async updateSelf(
 		recipientId: string,
 		data: RecipientPrismaUpdateInput,
+		options: {
+			oldPaymentPhone: string | null;
+			newPaymentPhone: string | null;
+		},
 	): Promise<ServiceResult<RecipientWithPaymentInfo>> {
 		try {
+			const phoneChanged =
+				options.oldPaymentPhone && options.newPaymentPhone && options.oldPaymentPhone !== options.newPaymentPhone;
+
+			if (phoneChanged) {
+				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
+					options.oldPaymentPhone!,
+					options.newPaymentPhone!,
+				);
+
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to update Firebase phone number: ${firebaseResult.error}`);
+				}
+			}
+
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipientId },
 				data,

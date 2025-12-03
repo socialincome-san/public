@@ -53,6 +53,9 @@ export async function PATCH(request: Request) {
 	const recipient = recipientResult.data;
 	const data = parsed.data;
 
+	const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
+	const newPaymentPhone = data.paymentPhone ?? null;
+
 	const updateData: RecipientPrismaUpdateInput = {
 		contact: {
 			update: {
@@ -103,7 +106,10 @@ export async function PATCH(request: Request) {
 				: undefined,
 	};
 
-	const updateResult = await recipientService.updateSelf(recipient.id, updateData);
+	const updateResult = await recipientService.updateSelf(recipient.id, updateData, {
+		oldPaymentPhone,
+		newPaymentPhone,
+	});
 
 	if (!updateResult.success) {
 		return new Response(updateResult.error, { status: 500 });
