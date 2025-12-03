@@ -218,7 +218,7 @@ export default async function Page({ params }: CampaignPageProps) {
 														},
 													},
 												}}
-												campaignId={campaignId}
+												campaignId={campaign.id}
 											/>
 										</div>
 										{campaign.daysLeft >= 0 && (
