@@ -18,7 +18,6 @@ import {
 	Input,
 	Typography,
 } from '@socialincome/ui';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -73,7 +72,9 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 						<Typography>{translations.checkEmail}</Typography>
 					</CardContent>
 					<CardFooter>
-						<Link href={`/${lang}/${region}/login`}>{translations.backToLogin}</Link>
+						<Button variant="link" onClick={() => window.location.reload()}>
+							{translations.backToLogin}
+						</Button>
 					</CardFooter>
 				</Card>
 			</div>
