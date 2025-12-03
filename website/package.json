@@ -109,5 +109,8 @@
 		"tailwindcss": "^3.4.13",
 		"tsx": "^4.20.3",
 		"typescript": "^5.6.2"
+	},
+	"prisma": {
+		"seed": "tsx src/lib/database/seed/seed.ts"
 	}
 }

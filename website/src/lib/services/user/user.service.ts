@@ -263,9 +263,22 @@ export class UserService extends BaseService {
 					role: true,
 					accountId: true,
 					contact: { select: { firstName: true, lastName: true } },
-					activeOrganization: { select: { id: true, name: true } },
-					organizationAccesses: { select: { organization: { select: { id: true, name: true } } } },
-					programAccesses: { select: { program: { select: { id: true, name: true } } } },
+					activeOrganization: {
+						select: {
+							id: true,
+							name: true,
+							programAccesses: {
+								select: {
+									program: { select: { id: true, name: true } },
+								},
+							},
+						},
+					},
+					organizationAccesses: {
+						select: {
+							organization: { select: { id: true, name: true } },
+						},
+					},
 				},
 			});
 
@@ -285,10 +298,12 @@ export class UserService extends BaseService {
 					}
 				: null;
 
-			const programs = user.programAccesses.map((access) => ({
-				id: access.program.id,
-				name: access.program.name,
-			}));
+			const programs = user.activeOrganization
+				? user.activeOrganization.programAccesses.map((access) => ({
+						id: access.program.id,
+						name: access.program.name,
+					}))
+				: [];
 
 			const userInfo: UserSession = {
 				id: user.id,

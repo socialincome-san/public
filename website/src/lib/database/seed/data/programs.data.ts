@@ -9,7 +9,6 @@ export const programsData: Program[] = [
 		payoutCurrency: 'SLE',
 		payoutInterval: 30,
 		country: 'Sierra Leone',
-		ownerOrganizationId: 'organization-1',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -21,7 +20,6 @@ export const programsData: Program[] = [
 		payoutCurrency: 'SLE',
 		payoutInterval: 30,
 		country: 'Sierra Leone',
-		ownerOrganizationId: 'organization-1',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -33,7 +31,6 @@ export const programsData: Program[] = [
 		payoutCurrency: 'SLE',
 		payoutInterval: 30,
 		country: 'Sierra Leone',
-		ownerOrganizationId: 'organization-2',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -45,7 +42,6 @@ export const programsData: Program[] = [
 		payoutCurrency: 'SLE',
 		payoutInterval: 30,
 		country: 'Sierra Leone',
-		ownerOrganizationId: 'organization-3',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -57,7 +53,6 @@ export const programsData: Program[] = [
 		payoutCurrency: 'LRD',
 		payoutInterval: 30,
 		country: 'Liberia',
-		ownerOrganizationId: 'organization-4',
 		createdAt: new Date(),
 		updatedAt: null
 	}
