@@ -42,11 +42,6 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
-          name  = "NEXT_PUBLIC_FEATURE_ENABLE_PORTAL"
-          value = var.env == "prod" ? "false" : "true"
-        }
-
-        env {
           name  = "POSTFINANCE_FTP_HOST"
           value = var.postfinance_ftp_host
         }
