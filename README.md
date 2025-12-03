@@ -8,288 +8,256 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 
 ### ![SDG Icon](https://i.imgur.com/LHoR8Et.png) [SDG 1](https://sdgs.un.org/goals/goal1) &nbsp;&nbsp; ![SDG Icon](https://i.imgur.com/LHoR8Et.png) [SDG 10](https://sdgs.un.org/goals/goal10)
 
-## OSS Tools by Social Income
+# Social Income – Monorepo Overview
 
-|                  |                                                Admin Tool                                                 |                                                                                       Website                                                                                        |                                                                                  Mobile App                                                                                   |
-| ---------------- | :-------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                  |    ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a)    |                                         ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8)                                          |                                      ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                                      |
-| **Purpose**      |                      Make it simple to manage payments, contributors and recipients                       |                                                                       Raising donations and inform the public                                                                        |                                                         Make it simple for recipients to manage payments and surveys                                                          |
-| **Instructions** |                                         [Readme](admin/README.md)                                         |                                                                             [Readme](website/README.md)                                                                              |                                              [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md)                                              |
-| **Localhost**    |                  [localhost:3000](http://localhost:3000) / [4000](http://localhost:4000)                  |                                                                       [localhost:3001](http://localhost:3001)                                                                        |                                                                                       –                                                                                       |
-| **Staging**      |                 [staging-admin.socialincome.org](https://staging-admin.socialincome.org)                  |                                                            [staging.socialincome.org](https://staging.socialincome.org/)                                                             |                         [Testflight](https://developer.apple.com/testflight/) / [App Distribution](https://firebase.google.com/docs/app-distribution)                         |
-| **Production**   |                         [admin.socialincome.org](https://admin.socialincome.org)                          |                                                                     [socialincome.org](https://socialincome.org)                                                                     | [iOS](https://apps.apple.com/ch/app/social-income/id6444860109?l=en-GB) / [Android](https://play.google.com/store/apps/details?id=org.socialincome.app&pcampaignid=web_share) |
-| **Issues**       | [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Aadmintool) |                                       [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Awebsite)                                        |                                   [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Amobileapp)                                   |
-| **UI Library**   |                                                     –                                                     | [Storybook](http://design.socialincome.org/) / [Figma](<https://www.figma.com/design/qGO3YI21AWIjWEyMPGUczM/Social-Income-Main-(Web%2C-App)?node-id=1653-6882&t=7cJ3pA0DfVrVtrDA-1>) |                                                                                       –                                                                                       |
+Welcome to the **Social Income monorepo**.
 
-# Code Contributions
+---
 
-### Basic Steps to Contribute
+# 📁 Repository Structure
 
-1. Choose an issue and leave a comment that you'd like to work on it
-   (upon we assign it to you) `↗`
-   [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue)
-   `↗`
-   [Help wanted](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
-   `↗`
-   [Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+```
+/
+├─ recipients_app/        → Mobile app for recipients
+├─ recipients_selection/  → Verifiable draw process for selecting recipients
+├─ seed/                  → Firebase emulator seed data
+├─ shared/                → Shared code (being merged into /website)
+├─ ui/                    → Legacy Storybook component library
+└─ website/               → Next.js (public site, portal, dashboard, infra, backend services)
+```
 
-2. Setup the basic development environment `↓`
-   [Setup](#basic-development-setup)
-3. Clone the repo and work on it `↓` [Developing](#developing)
-4. Create a PR and wait for it to be reviewed
-5. If approved, the PR will be merged into the `main` branch, first on
-   the staging and subsequently on production `↓`
-   [Deployments](#deployments)
+---
 
-**Frontend developers:** You can also develop UI components with
-[Tailwind CSS](https://tailwindcss.com) and
-[shadcn/ui](https://ui.shadcn.com) independent of the website
-([Readme](ui/README.md) / [Contributing](ui/CONTRIBUTING.md)). The
-components are all collected in our
-[Storybook](http://design.socialincome.org/) and
-[Figma file](<https://www.figma.com/design/qGO3YI21AWIjWEyMPGUczM/Social-Income-Main-(Web%2C-App)?node-id=1653-6882&t=7cJ3pA0DfVrVtrDA-1>).
+# 📱 recipients_app
 
-### Basic Development Setup
+Mobile app where recipients can:
 
-We are mainly leveraging the following tools:
+- Log in
+- View payment history
+- Complete surveys
 
-- [Firestore](https://firebase.google.com/docs/firestore) for data
-  management
-- [Firebase Authentication](https://firebase.google.com/docs/auth) for
-  user management
-- [Firebase Hosting](https://firebase.google.com/docs/hosting) to serve
-  static content, such as the admin app
-- [Vercel](https://vercel.com) for website hosting
-- [Firebase Functions](https://firebase.google.com/docs/functions) to
-  run backend code in a serverless framework
-- [Firebase Storage](https://firebase.google.com/docs/storage) to store
-  documents and other files
-- [Firebase Emulators](https://firebase.google.com/docs/emulator-suite)
-  for the local dev environment
+See `/recipients_app/README.md` for platform‑specific setup.
 
-### Local development environment
+---
 
-We use [mise-en-place](https://mise.jdx.dev/) to run the local
-development environment. Please familiarize yourself with the
-documentation to understand how to set up and use it.
+# 🎲 recipients_selection
 
-If you have mise installed, you can run the following command to set up
-the local development environment:
+Implements the **cryptographically verifiable and bias‑proof recipient
+draw**:
 
-```bash
+- Raw recipient lists → salted → hashed → committed to `/lists`
+- GitHub Action triggers `draw.sh`
+- Draw randomness comes from **drand** → https://drand.love
+- Results written to `/draws`
+- Draws are reproducible using **dchoose** →
+  https://github.com/drand/dchoose
+- Full transparency explanation:  
+  https://socialincome.org/transparency/recipient-selection
+
+---
+
+# 🌱 seed
+
+Contains seed data for the local development environment:
+
+- Firebase Authentication Emulator
+- Firebase Storage Emulator
+
+Automatically imported when running `mise dev`.
+
+---
+
+# 🔗 shared
+
+Temporary shared library (TS/Node).  
+Will eventually be migrated into `/website`.
+
+---
+
+# 🎨 ui (Storybook Components)
+
+Legacy UI component package using:
+
+- Tailwind CSS
+- shadcn/ui
+
+📘 Storybook preview: **http://design.socialincome.org**
+
+The long‑term plan is to phase this out and maintain all components
+inside `/website`.
+
+---
+
+# 🌐 website (Main Next.js Application)
+
+A Next.js project containing:
+
+### **1. Public Website**
+
+- Currently partly hardcoded
+- Migration underway → **Storyblok CMS**
+- Journal already uses Storyblok  
+  Docs: https://www.storyblok.com/docs
+
+---
+
+### **2. Portal**
+
+Internal operations tool:
+
+- Program management
+- Payments & transfers
+- Recipients & contributor tools
+- Admin functions
+
+---
+
+### **3. Dashboard**
+
+Contributor self‑service area:
+
+- View payments
+- Manage subscriptions
+- Update personal details
+
+---
+
+### **4. Infrastructure (`/infra`)**
+
+Infrastructure-as-code via **Terraform**:
+
+- GCP Cloud Run
+- GCP Cloud SQL (PostgreSQL)
+- Networks, service accounts, secrets, etc.
+
+Docs: https://developer.hashicorp.com/terraform/docs
+
+---
+
+### **5. Backend Services (`website/lib/`)**
+
+Shared backend modules using:
+
+- **Prisma ORM** → https://www.prisma.io
+- **PostgreSQL**
+- **Firebase Storage**
+- Misc. utilities and API integrations
+
+---
+
+# 🛠 Local Development Setup (Simple & Minimal)
+
+We use:
+
+- **mise-en-place** → https://mise.jdx.dev
+- **Docker** (for PostgreSQL)
+- **Firebase Emulators**
+- **Node.js + npm**
+- **Terraform** (infra work only)
+
+---
+
+## 1. Install mise
+
+```
+brew install mise
+```
+
+---
+
+## 2. Install all required tool versions
+
+```
 mise install
 ```
 
-and then start the local development environment with:
+---
 
-```bash
+## 3. Start the complete local dev environment
+
+```
 mise dev
 ```
 
-> 🐳 **Docker Required:** Install and run
-> [Docker Desktop](https://www.docker.com/products/docker-desktop) to
-> use the local database.
+This starts:
 
-To run the tools separately either use the scripts in the package.json
-file or run the mise tasks, e.g. both these commands start the admin
-tool:
+- **Local PostgreSQL** via Docker Compose
+- **Firebase Emulators** (Auth + Firestore + Storage)
+- **Next.js website** (public site, portal, dashboard)
 
-```bash
-mise run admin
+---
 
-npm run admin:serve
-```
+## 4. Running individual tools
 
-### Firestore ➜ PostgreSQL Migration
-
-We’re moving from **Firestore** to **PostgreSQL** to improve relational
-data modeling and consistency.  
-We’re using **[Prisma](https://www.prisma.io)** as our type-safe ORM.
-
-> 🐳 **Docker Required:** Install and run
-> [Docker Desktop](https://www.docker.com/products/docker-desktop) to
-> use the local database.
-
-### Local Setup
-
-Edit the schema at:  
-`shared/src/database/schema.prisma`
-
-Run all commands from the **root** – they delegate to
-`@socialincome/shared`.
-
-### How to copy Data with PGDUMP
-
-Make a dump from your local DB:
-`pg_dump -Fc --no-owner "postgresql://social-income:social-income@localhost:5432/social-income" > local.dump`
-
-Insert this data to staging:
+Website:
 
 ```
-pg_restore \
-  --clean --if-exists \
-  --no-owner \
-  -d "postgresql://staging-website_google_sql_user:xxxx@yyyy:5432/staging-website-google-sql-database" \
-  local.dump
+mise run website
 ```
 
-### 🚀 Common DB Commands
+or
 
-```bash
-npm run db:up               # Start local PostgreSQL via Docker
-npm run db:down             # Stop and remove DB container
-npm run db:generate         # Generate Prisma client
-npm run db:studio           # Open Prisma Studio (GUI)
-
-npm run db:migrate:dev      # Create & apply new migration (dev)
-npm run db:migrate:create   # Only create migration (no apply)
-npm run db:migrate:deploy   # Deploy migrations (staging/prod)
-npm run db:migrate:reset    # Reset DB (dev only)
-npm run db:migrate:status   # Check migration status
-npm run db:introspect       # Pull schema from existing DB
-npm run db:seed             # Run seed script
+```
+npm run website:serve
 ```
 
-> 🧱 **To create a migration**, run `npm run db:migrate:dev`.  
-> To just generate a file, use `npm run db:migrate:create`.
+Mobile app:
 
-#### Developer Logins
+```
+cd recipients_app
+# follow README
+```
 
-No production credentials are needed for local development.
+---
 
-<details>
-  <summary>Developer Login for Admin Tool</summary>
+# 🧪 pg_dump / pg_restore
 
-#### Localhost Admin Tool Login ([Link](http://localhost:3000/))
+Useful commands for copying local DB → staging (or vice versa).
 
-Choose "Sign in with Google" and select the listed "Admin
-(admin@socialincome.org)" account.
+### Dump your local database:
 
-#### Staging Admin Tool Login ([Link](https://staging-admin.socialincome.org))
+```
+pg_dump -Fc --no-owner "postgresql://social-income:social-income@localhost:5432/social-income" > local.dump
+```
 
-Contact the dev team
-([dev@socialincome.org](mailto:dev@socialincome.org)) which can assign
-you access rights to login.
+### Restore into staging:
 
-#### Production Admin Tool Login ([Link](http://admin.socialincome.org))
+```
+pg_restore   --clean --if-exists   --no-owner   -d "postgresql://staging-website_google_sql_user:xxxx@yyyy:5432/staging-website-google-sql-database"   local.dump
+```
 
-Only selected people from the SI team have access.
+---
 
-</details>
+# 🧩 Storyblok Development
 
-<details>
-  <summary>Developer Login for Website (Donor Dashboard)</summary>
+1. Read the Storyblok docs → https://www.storyblok.com/docs
+2. Set env vars in `website/.env.local`:
+   - `STORYBLOK_PREVIEW_TOKEN`
+   - `STORYBLOK_PREVIEW_SECRET`
+3. Optional: run SSL proxy for live preview
 
-#### Localhost Website Login ([Link](http://localhost:3000/login))
+```
+npm run dev:ssl-proxy
+```
 
-1. Go to the [Login page](http://localhost:3000/login) and select
-2. Sign in with:
-   - **For a contributor**: email `test@test.org`
-   - **For a portal user**: email `test@portal.org`
+---
 
-#### Staging Website Login ([Link](https://staging.socialincome.org/login))
+# 🙋 Troubleshooting
 
-To create a donor account in the staging environment, proceed through
-the
-[donation process](https://staging.socialincome.org/donate/one-time).
-Utilize the [Stripe test card](https://stripe.com/docs/testing) (4242
-4242 4242 4242) for making a test donation.
+### Translations not updating?
 
-#### Production Website Login ([Link](https://socialincome.org/login))
+```
+rm -rf website/.next
+mise dev
+```
 
-Only actual donors have accounts and can log in. Consider making a
-(symbolic) donation to create your own account.
+### Firebase seed not updating?
 
-</details>
+```
+npm run firebase:export
+```
 
-#### Data Seed
-
-An initial dataset is imported into the Firebase emulators at startup.
-You have the flexibility to add, delete, or modify data directly through
-your [Admin Tool](http://localhost:3000) or the
-[Firestore Admin Interface](http://localhost:4000/firestore/data)
-locally. After making any changes, you can export the updated data to
-the seed folder using the command `npm run firebase:export`.
-
-#### Storyblok Development
-
-1. Read the storyblok [documentation](https://www.storyblok.com/docs).
-2. Set the values `STORYBLOK_PREVIEW_TOKEN` and
-   `STORYBLOK_PREVIEW_SECRET` to the
-   [env.development](website/.env.local). You can find the
-   `STORYBLOK_PREVIEW_TOKEN` at the
-   [storyblok_token](https://app.storyblok.com/#/me/spaces/109655/settings?tab=api)
-   and the `STORYBLOK_PREVIEW_SECRET` at the
-   [VISUAL_EDITOR](https://app.storyblok.com/#/me/spaces/109655/settings?tab=editor)
-   in the `preview-url`.
-3. (optional-step) `npm run dev:ssl-proxy`, this is needed if you want
-   to preview the changes on the storyblok live editor for the local
-   environment.
-
-#### Format Code
-
-We are using [Prettier](https://prettier.io) to format the code:
-`npm run format-code`.
-
-#### Deployments
-
-**Staging:** PRs merged into `main` are automatically deployed to
-staging ([Admin Tool](https://staging-admin.socialincome.org) /
-[Website](https://staging.socialincome.org/)) upon core developer
-approval. Check [Github Actions](./.github/workflows) for details.
-Experienced contributors can deploy directly
-[without approval](mailto:dev@socialincome.org).
-
-**Production:** Deployments are made by core developers via
-[GitHub releases](https://github.com/socialincome-san/public/actions/workflows/production-deployment.yml).
-
-<details>
-<summary>Naming Convention</summary>
-
-Use the format "release-YYYY-MM-DD" for naming releases (example:
-`release-2021-02-27`). For multiple releases on the same day, append a
-suffix such as ".2", ".3", and so forth, to distinguish them (example:
-`release-2021-02-27.2`).
-
-</details>
-
-#### Backups
-
-We have a
-[function](https://console.cloud.google.com/logs/query;query=resource.type%3D%22cloud_function%22%20resource.labels.function_name%3D%22siWebFirestoreExport%22%20resource.labels.region%3D%22us-central1%22?project=social-income-prod&authuser=1&hl=en)
-which triggers hourly backups of our production firestore database. The
-exports are saved to the
-[social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
-bucket with a retention period of 30 days.
-
-<details>
-<summary>Restore Database</summary>
-
-To restore the database you can
-[import](https://console.cloud.google.com/firestore/import-export?authuser=1&project=social-income-prod)
-the most recent folder directly from the
-[social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
-bucket.
-
-</details>
-
-#### Bugs & Feature Requests
-
-You can report an issue or request a feature on our
-[issue page](https://github.com/socialincome-san/public/issues/new/choose).
-If you want to report a vulnareablity please refer to our
-[security policy](https://github.com/socialincome-san/public/blob/main/SECURITY.md).
-
-<details>
-<summary>Troubleshooting Development</summary>
-
-**Problem**: Added or amended translations do not appear in the
-localhost preview.
-
-**Solution**: Remove the `website/.next` folder, which is automatically
-generated, then re-execute `npm run website:serve`.
-
-</details>
+---
 
 # Financial Contributions
 
