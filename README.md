@@ -197,7 +197,6 @@ This starts:
 - **Firebase Emulators** (Auth + Firestore + Storage)
 - **Next.js website** (public site, portal, dashboard)
 
-
 ---
 
 # 🧪 pg_dump / pg_restore
