@@ -173,7 +173,19 @@ mise install
 
 ---
 
-## 3. Start the complete local dev environment
+## 3. Prepare environment variables
+
+Inside `/website`, copy the sample file:
+
+```
+cp website/.env.local.sample website/.env.local
+```
+
+Edit values as necessary.
+
+---
+
+## 4. Start the complete local dev environment
 
 ```
 mise dev
@@ -184,29 +196,6 @@ This starts:
 - **Local PostgreSQL** via Docker Compose
 - **Firebase Emulators** (Auth + Firestore + Storage)
 - **Next.js website** (public site, portal, dashboard)
-
----
-
-## 4. Running individual tools
-
-Website:
-
-```
-mise run website
-```
-
-or
-
-```
-npm run website:serve
-```
-
-Mobile app:
-
-```
-cd recipients_app
-# follow README
-```
 
 ---
 
