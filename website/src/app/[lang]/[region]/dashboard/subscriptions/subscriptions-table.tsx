@@ -35,7 +35,7 @@ export async function SubscriptionsTable({ lang }: { lang: WebsiteLanguage }) {
 			makeColumns={makeYourStripeSubscriptionsColumns}
 			lang={lang}
 			actions={
-				<div className="flex gap-4">
+				<div className="flex flex-wrap gap-4">
 					<Link href="/donate/individual">
 						<Button>{translator.t('subscriptions.new-subscription')}</Button>
 					</Link>
