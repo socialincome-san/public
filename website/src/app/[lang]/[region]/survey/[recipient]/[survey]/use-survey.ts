@@ -36,14 +36,11 @@ export function useSurvey() {
 	};
 
 	const loadSurvey = async (surveyId: string, recipientId: string) => {
-		logger.info(`loadSurvey called with ${{ surveyId, recipientId }}`);
 		try {
 			const survey = await getByIdAndRecipient(surveyId, recipientId);
-			logger.info('loaded survey', survey);
 			setSurvey(survey);
 			setHasError(false);
 		} catch (error) {
-			logger.info(`error loading survey ${error}`);
 			logger.error(`error loading survey: ${error}`);
 			setSurvey(null);
 			setHasError(true);

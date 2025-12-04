@@ -4,7 +4,6 @@ import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { SurveyService } from '@/lib/services/survey/survey.service';
 import type { SurveyCreateInput, SurveyUpdateInput } from '@/lib/services/survey/survey.types';
-import { logger } from '@/utils/logger';
 import { revalidatePath } from 'next/cache';
 import { getCurrentSurvey } from '../firebase/current-survey';
 
@@ -62,17 +61,12 @@ export async function generateSurveysAction() {
 }
 
 export async function getByIdAndRecipient(surveyId: string, recipientId: string) {
-	logger.info('getByIdAndRecipient called');
 	const survey = await getCurrentSurvey();
-	console.info(`suvrey ${survey}`);
-	logger.info(`surveyId ${surveyId}`);
-	logger.info(`recipientId ${recipientId}`);
 	if (!survey || survey.id !== surveyId || survey.recipientId !== recipientId) {
 		const reason = !survey ? 'no survey' : survey.id !== surveyId ? 'survey ID mismatch' : 'recipient ID mismatch';
 		throw new Error(`Unauthorized: ${reason}`);
 	}
 	const service = new SurveyService();
-	logger.info('loading survey from service');
 	const result = await service.getByIdAndRecipient(surveyId, recipientId);
 	if (!result.success) {
 		throw new Error(`Survey cannot be loaded: ${result.error}`);

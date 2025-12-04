@@ -2,7 +2,6 @@
 
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { logger } from '@/utils/logger';
 import { SurveyStatus } from '@prisma/client';
 import { useEffect } from 'react';
 import { Model } from 'survey-core';
@@ -24,16 +23,11 @@ interface SurveyProps {
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
 
-	// loadSurvey(surveyId, recipientId);
 	useEffect(() => {
 		loadSurvey(surveyId, recipientId);
-	}, []);
-
-	logger.info(`Survey render:  ${{ surveyId, recipientId, lang, survey, hasError }}`);
+	}, [surveyId, recipientId]);
 
 	const translator = useTranslator(lang, 'website-survey');
-
-	logger.info(`translator ${translator}`);
 
 	if (!hasError && survey && translator) {
 		if (survey.status == SurveyStatus.completed) return <div>Survey already completed</div>;
