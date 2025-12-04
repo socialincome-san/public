@@ -1,4 +1,5 @@
 import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { logger } from '@/utils/logger';
 import { cache } from 'react';
 import { SurveyService } from '../services/survey/survey.service';
 import { SurveyPayload } from '../services/survey/survey.types';
@@ -6,10 +7,10 @@ import { SurveyPayload } from '../services/survey/survey.types';
 const firebaseService = new FirebaseService();
 
 async function findSurveyByEmail(email: string): Promise<SurveyPayload | null> {
-	console.log('findSurveyByEmail', email);
+	logger.info(`findSurveyByEmail ${email}`);
 	const service = new SurveyService();
 	const result = await service.getByAccessEmail(email);
-	console.log('findSurveyByEmail result', result);
+	logger.info(`findSurveyByEmail result ${result}`);
 	return result.success ? result.data : null;
 }
 
@@ -22,7 +23,7 @@ async function loadCurrentSurvey(): Promise<SurveyPayload | null> {
 	if (!decodedTokenResult.success) {
 		return null;
 	}
-	console.log('decodedTokenResult', decodedTokenResult);
+	logger.info(`decodedTokenResult ${decodedTokenResult}`);
 
 	const email = decodedTokenResult.data.email;
 	if (!email) {
