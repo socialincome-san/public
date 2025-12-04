@@ -10,7 +10,7 @@ async function findSurveyByEmail(email: string): Promise<SurveyPayload | null> {
 	logger.info(`findSurveyByEmail ${email}`);
 	const service = new SurveyService();
 	const result = await service.getByAccessEmail(email);
-	logger.info(`findSurveyByEmail result ${result}`);
+	console.info(`findSurveyByEmail result ${result}`);
 	return result.success ? result.data : null;
 }
 
@@ -23,7 +23,7 @@ async function loadCurrentSurvey(): Promise<SurveyPayload | null> {
 	if (!decodedTokenResult.success) {
 		return null;
 	}
-	logger.info(`decodedTokenResult ${decodedTokenResult}`);
+	console.info(`decodedTokenResult ${decodedTokenResult}`);
 
 	const email = decodedTokenResult.data.email;
 	if (!email) {

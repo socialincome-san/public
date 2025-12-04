@@ -64,7 +64,7 @@ export async function generateSurveysAction() {
 export async function getByIdAndRecipient(surveyId: string, recipientId: string) {
 	logger.info('getByIdAndRecipient called');
 	const survey = await getCurrentSurvey();
-	logger.info(`suvrey ${survey}`);
+	console.info(`suvrey ${survey}`);
 	logger.info(`surveyId ${surveyId}`);
 	logger.info(`recipientId ${recipientId}`);
 	if (!survey || survey.id !== surveyId || survey.recipientId !== recipientId) {
