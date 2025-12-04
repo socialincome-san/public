@@ -1,6 +1,8 @@
 'use client';
 
-import { Button, TableCell, TableRow } from '@socialincome/ui';
+import { buttonVariants } from '@/components/button';
+import { TableCell, TableRow } from '@socialincome/ui';
+import { cn } from '@socialincome/ui/src/lib/utils';
 import Link from 'next/link';
 
 interface Issue {
@@ -19,11 +21,14 @@ export function Issue({ title, url, text }: IssueProps) {
 		<TableRow className="p-5 hover:bg-transparent">
 			<TableCell className="text-xl">{title}</TableCell>
 			<TableCell className="text-right text-xl">
-				<Button asChild variant="link" className="hover:underline">
-					<Link href={url} target="_blank" rel="noopener noreferrer">
-						{text}
-					</Link>
-				</Button>
+				<Link
+					href={url}
+					target="_blank"
+					rel="noopener noreferrer"
+					className={cn(buttonVariants({ variant: 'link', size: 'default' }), 'hover:underline')}
+				>
+					{text}
+				</Link>
 			</TableCell>
 		</TableRow>
 	);
