@@ -23,7 +23,7 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 
 	useEffect(() => {
 		loadSurvey(surveyId, recipientId);
-	}, [surveyId, recipientId]);
+	}, []);
 
 	const translator = useTranslator(lang, 'website-survey');
 
