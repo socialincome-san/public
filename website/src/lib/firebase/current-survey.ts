@@ -6,8 +6,10 @@ import { SurveyPayload } from '../services/survey/survey.types';
 const firebaseService = new FirebaseService();
 
 async function findSurveyByEmail(email: string): Promise<SurveyPayload | null> {
+	console.log('findSurveyByEmail', email);
 	const service = new SurveyService();
 	const result = await service.getByAccessEmail(email);
+	console.log('findSurveyByEmail result', result);
 	return result.success ? result.data : null;
 }
 
@@ -20,6 +22,7 @@ async function loadCurrentSurvey(): Promise<SurveyPayload | null> {
 	if (!decodedTokenResult.success) {
 		return null;
 	}
+	console.log('decodedTokenResult', decodedTokenResult);
 
 	const email = decodedTokenResult.data.email;
 	if (!email) {
