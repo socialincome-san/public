@@ -104,6 +104,11 @@ export class PaymentFileImportService extends BaseService {
 		for (let node of nodes) {
 			const referenceId = select('string(//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
+			if (!referenceId) {
+				this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
+				continue;
+			}
+
 			contributions.push({
 				referenceId,
 				amount: parseFloat(select('string(//ns:Amt)', node) as string),
@@ -153,6 +158,10 @@ export class PaymentFileImportService extends BaseService {
 				}
 
 				const contributionReferenceId = this.getReferenceIds(c.referenceId).contributionReferenceId;
+
+				if (!contributionReferenceId) {
+					this.logger.info(`Legacy reference ID detected for contributor ${contributor.id}.`);
+				}
 
 				const paymentEvent: PaymentEventCreateInput = {
 					type: PaymentEventType.bank_transfer,
