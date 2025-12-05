@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/d
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { logger } from '@/utils/logger';
+import { ProgramPermission } from '@prisma/client';
 import { useState } from 'react';
 
 export function RecipientsTableClient({
@@ -36,7 +37,7 @@ export function RecipientsTableClient({
 
 	const openEditForm = (row: RecipientTableViewRow) => {
 		setRecipientId(row.id);
-		setRowReadOnly(row.permission === 'readonly' ? true : (readOnly ?? false));
+		setRowReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
 		setErrorMessage(null);
 		setOpen(true);
 	};

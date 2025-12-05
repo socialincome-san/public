@@ -63,7 +63,7 @@ export class PayoutService extends BaseService {
 
 			const tableRows: PayoutTableViewRow[] = payouts.map((payout) => {
 				const program = accessiblePrograms.find((x) => x.programId === payout.recipient.program.id);
-				const permission = program?.permission ?? ProgramPermission.readonly;
+				const permission = program?.permission ?? ProgramPermission.owner;
 
 				return {
 					id: payout.id,
@@ -113,7 +113,7 @@ export class PayoutService extends BaseService {
 
 			const tableRows: OngoingPayoutTableViewRow[] = recipients.map((recipient) => {
 				const access = accessiblePrograms.find((p) => p.programId === recipient.program.id);
-				const permission = access?.permission ?? ProgramPermission.readonly;
+				const permission = access?.permission ?? ProgramPermission.owner;
 
 				const payoutsReceived = recipient.payouts.length;
 				const payoutsTotal = recipient.program.totalPayments ?? 0;
@@ -275,7 +275,7 @@ export class PayoutService extends BaseService {
 
 			const tableRows: PayoutConfirmationTableViewRow[] = payouts.map((payout) => {
 				const access = accessiblePrograms.find((x) => x.programId === payout.recipient.program.id);
-				const permission = access?.permission ?? ProgramPermission.readonly;
+				const permission = access?.permission ?? ProgramPermission.operator;
 
 				return {
 					id: payout.id,
@@ -323,7 +323,7 @@ export class PayoutService extends BaseService {
 				return this.resultFail('Access denied for this payout');
 			}
 
-			if (access.permission !== ProgramPermission.edit) {
+			if (access.permission !== ProgramPermission.operator) {
 				return this.resultFail('You do not have permission to modify payouts for this program');
 			}
 
@@ -589,7 +589,7 @@ export class PayoutService extends BaseService {
 		}
 
 		const allowed = access.data.find(
-			(p) => p.programId === recipient.programId && p.permission === ProgramPermission.edit,
+			(p) => p.programId === recipient.programId && p.permission === ProgramPermission.operator,
 		);
 		if (!allowed) {
 			return this.resultFail('No edit access for this program');
@@ -647,7 +647,7 @@ export class PayoutService extends BaseService {
 		}
 
 		const allowed = access.data.some(
-			(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.edit,
+			(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.operator,
 		);
 		if (!allowed) {
 			return this.resultFail('No edit permission for this payout');

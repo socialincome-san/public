@@ -9,7 +9,7 @@ export const accountsData: Account[] = [
 	},
 	{
 		id: 'account-2',
-		firebaseAuthUserId: 'firebase-auth-user-2',
+		firebaseAuthUserId: 'u43IydQbr8lgeGeevbSBoP9ui3WP',
 		createdAt: new Date(),
 		updatedAt: null
 	},

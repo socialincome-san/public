@@ -64,7 +64,7 @@ export class SurveyService extends BaseService {
 			const tableRows: SurveyTableViewRow[] = surveys.map((survey) => {
 				const programId = survey.recipient.program.id;
 				const access = accessiblePrograms.find((p) => p.programId === programId);
-				const permission = access?.permission ?? ProgramPermission.readonly;
+				const permission = access?.permission ?? ProgramPermission.owner;
 
 				return {
 					id: survey.id,
@@ -160,7 +160,7 @@ export class SurveyService extends BaseService {
 			}
 
 			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.readonly) {
+			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
 				return this.resultFail('Access denied');
 			}
 
@@ -258,7 +258,7 @@ export class SurveyService extends BaseService {
 			}
 
 			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.readonly) {
+			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
 				return this.resultFail('Access denied');
 			}
 

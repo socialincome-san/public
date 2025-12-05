@@ -2,13 +2,7 @@ import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
-import {
-	ProgramMemberTableView,
-	ProgramMemberTableViewRow,
-	ProgramOption,
-	ProgramWallet,
-	ProgramWallets,
-} from './program.types';
+import { ProgramOption, ProgramWallet, ProgramWallets } from './program.types';
 
 export class ProgramService extends BaseService {
 	private programAccessService = new ProgramAccessService();
@@ -49,7 +43,7 @@ export class ProgramService extends BaseService {
 
 			const wallets: ProgramWallet[] = programs.map((program) => {
 				const permission =
-					accessiblePrograms.find((a) => a.programId === program.id)?.permission ?? ProgramPermission.readonly;
+					accessiblePrograms.find((a) => a.programId === program.id)?.permission ?? ProgramPermission.owner;
 
 				const recipientsCount = program.recipients.length;
 
@@ -92,58 +86,6 @@ export class ProgramService extends BaseService {
 		}
 
 		return this.resultOk(wallet);
-	}
-
-	async getMembersTableView(userId: string, programId: string): Promise<ServiceResult<ProgramMemberTableView>> {
-		try {
-			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-
-			if (!accessResult.success) {
-				return this.resultFail(accessResult.error);
-			}
-
-			const accessible = accessResult.data.find((a) => a.programId === programId);
-
-			if (!accessible) {
-				return this.resultFail('User does not have access to this program');
-			}
-
-			const myPermission = accessible.permission;
-
-			const accesses = await this.db.programAccess.findMany({
-				where: { programId },
-				select: {
-					user: {
-						select: {
-							id: true,
-							role: true,
-							contact: {
-								select: {
-									firstName: true,
-									lastName: true,
-									email: true,
-								},
-							},
-						},
-					},
-				},
-				orderBy: { user: { contact: { firstName: 'asc' } } },
-			});
-
-			const tableRows: ProgramMemberTableViewRow[] = accesses.map((entry) => ({
-				id: entry.user.id,
-				firstName: entry.user.contact?.firstName ?? '',
-				lastName: entry.user.contact?.lastName ?? '',
-				email: entry.user.contact?.email ?? '',
-				role: entry.user.role ?? null,
-				permission: myPermission ?? ProgramPermission.readonly,
-			}));
-
-			return this.resultOk({ tableRows });
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not fetch program members');
-		}
 	}
 
 	async getOptions(userId: string): Promise<ServiceResult<ProgramOption[]>> {

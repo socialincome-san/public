@@ -16,15 +16,15 @@ export async function UserPrograms({ userId }: Props) {
 
 	const wallets = result.data?.wallets ?? [];
 
-	const editablePrograms = wallets.filter((p) => p.permission === ProgramPermission.edit);
-	const readonlyPrograms = wallets.filter((p) => p.permission === ProgramPermission.readonly);
+	const operatedPrograms = wallets.filter((p) => p.permission === ProgramPermission.operator);
+	const ownedPrograms = wallets.filter((p) => p.permission === ProgramPermission.owner);
 
 	return (
 		<section className="space-y-16">
 			<div>
-				<h2 className="py-6 text-3xl font-medium">Your Programs</h2>
+				<h2 className="py-6 text-3xl font-medium">Operated Programs</h2>
 				<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
-					{editablePrograms.map((program) => (
+					{operatedPrograms.map((program) => (
 						<Wallet
 							key={program.id}
 							href={`/portal/programs/${program.id}/recipients`}
@@ -46,11 +46,11 @@ export async function UserPrograms({ userId }: Props) {
 				</div>
 			</div>
 
-			{readonlyPrograms.length > 0 && (
+			{ownedPrograms.length > 0 && (
 				<div>
-					<h2 className="py-6 text-3xl font-medium">Other Programs (View Only)</h2>
+					<h2 className="py-6 text-3xl font-medium">Owned Programs</h2>
 					<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
-						{readonlyPrograms.map((program) => (
+						{ownedPrograms.map((program) => (
 							<Wallet
 								key={program.id}
 								href={`/portal/programs/${program.id}/recipients`}

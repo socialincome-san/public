@@ -4,6 +4,7 @@ import { Button } from '@/components/button';
 import { makePayoutColumns } from '@/components/data-table/columns/payouts';
 import DataTable from '@/components/data-table/data-table';
 import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
+import { ProgramPermission } from '@prisma/client';
 import { useState } from 'react';
 import { PayoutFormDialog } from './payout-form-dialog';
 import { StartPayoutProcessDialog } from './start-payout-process-dialog';
@@ -22,7 +23,7 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 
 	const openEditForm = (row: PayoutTableViewRow) => {
 		setPayoutId(row.id);
-		setReadOnly(row.permission === 'readonly');
+		setReadOnly(row.permission === ProgramPermission.owner);
 		setIsPayoutFormOpen(true);
 	};
 

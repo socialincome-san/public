@@ -14,8 +14,8 @@ export const usersData: User[] = [
 		id: 'user-2',
 		accountId: 'account-2',
 		contactId: 'contact-17',
-		role: UserRole.user,
-		activeOrganizationId: 'organization-2',
+		role: UserRole.admin,
+		activeOrganizationId: 'organization-1',
 		createdAt: new Date(),
 		updatedAt: null
 	},

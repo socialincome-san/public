@@ -2,6 +2,7 @@ import { RecipientsTableClient } from '@/components/data-table/clients/recipient
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { ProgramPermission } from '@prisma/client';
 import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
@@ -23,7 +24,7 @@ async function RecipientsProgramScopedDataLoader({ params }: { params: Promise<{
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];
-	const readOnly = recipientsResult.success ? recipientsResult.data.permission !== 'edit' : true;
+	const readOnly = recipientsResult.success ? recipientsResult.data.permission !== ProgramPermission.operator : true;
 
 	return <RecipientsTableClient rows={rows} error={error} programId={programId} readOnly={readOnly} />;
 }
