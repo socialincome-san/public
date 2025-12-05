@@ -1,4 +1,4 @@
-import { Contributor, ContributorReferralSource } from '@prisma/client';
+import { Contributor, ContributorReferralSource, OrganizationPermission } from '@prisma/client';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -7,6 +7,7 @@ import { OrganizationAccessService } from '../organization-access/organization-a
 import {
 	BankContributorData,
 	ContributorDonationCertificate,
+	ContributorFormCreateInput,
 	ContributorOption,
 	ContributorPayload,
 	ContributorSession,
@@ -28,14 +29,23 @@ export class ContributorService extends BaseService {
 				return this.resultFail(activeOrgResult.error);
 			}
 
+			const { id: organizationId } = activeOrgResult.data;
+
 			const contributor = await this.db.contributor.findUnique({
 				where: {
 					id: contributorId,
-					contributions: {
-						some: {
-							campaign: { organizationId: activeOrgResult.data.id },
+					OR: [
+						{
+							contributions: {
+								some: { campaign: { organizationId } },
+							},
 						},
-					},
+						{
+							contributions: {
+								none: {},
+							},
+						},
+					],
 				},
 				select: {
 					id: true,
@@ -148,13 +158,22 @@ export class ContributorService extends BaseService {
 				return this.resultFail(activeOrgResult.error);
 			}
 
+			const { id: organizationId } = activeOrgResult.data;
+
 			const contributors = await this.db.contributor.findMany({
 				where: {
-					contributions: {
-						some: {
-							campaign: { organizationId: activeOrgResult.data.id },
+					OR: [
+						{
+							contributions: {
+								some: { campaign: { organizationId } },
+							},
 						},
-					},
+						{
+							contributions: {
+								none: {},
+							},
+						},
+					],
 				},
 				select: {
 					id: true,
@@ -191,11 +210,18 @@ export class ContributorService extends BaseService {
 
 			const contributors = await this.db.contributor.findMany({
 				where: {
-					contributions: {
-						some: {
-							campaign: { organizationId },
+					OR: [
+						{
+							contributions: {
+								some: { campaign: { organizationId } },
+							},
 						},
-					},
+						{
+							contributions: {
+								none: {},
+							},
+						},
+					],
 				},
 				select: {
 					id: true,
@@ -451,6 +477,57 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not create contributor with Firebase Auth user');
+		}
+	}
+
+	async create(userId: string, input: ContributorFormCreateInput): Promise<ServiceResult<Contributor>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			if (activeOrgResult.data.permission !== OrganizationPermission.edit) {
+				return this.resultFail('No permission to create contributor');
+			}
+
+			const firebaseResult = await this.firebaseService.getOrCreateUser({
+				email: input.email,
+				displayName: `${input.firstName} ${input.lastName}`,
+			});
+
+			if (!firebaseResult.success) {
+				return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			}
+
+			const contributor = await this.db.contributor.create({
+				data: {
+					referral: input.referral,
+					account: {
+						create: {
+							firebaseAuthUserId: firebaseResult.data.uid,
+						},
+					},
+					contact: {
+						create: {
+							firstName: input.firstName,
+							lastName: input.lastName,
+							callingName: input.callingName ?? null,
+							email: input.email,
+							gender: input.gender,
+							language: input.language,
+							dateOfBirth: input.dateOfBirth,
+							profession: input.profession,
+							address: input.address ? { create: input.address } : undefined,
+						},
+					},
+				},
+			});
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not create contributor');
 		}
 	}
 
