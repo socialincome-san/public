@@ -14,6 +14,7 @@
     "male": "Man",
     "female": "Uman",
     "other": "Nɔto man ɔ uman",
+    "private": "Private",
     "genderError": "Duya pik wetin yu bi",
     "dateOfBirth": "Wɛn dɛn bɔn yu",
     "dateOfBirthError": "Duya pik wɛn dɛn bɔn yu",
