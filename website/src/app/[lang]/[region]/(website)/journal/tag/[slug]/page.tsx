@@ -31,7 +31,10 @@ export default async function Page({ params }: PageProps) {
 
 	const tag = (await getTag(slug, lang)).data.story;
 	const articles = await getArticlesByTag(tag.uuid, lang);
-	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-journal', 'common'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-journal', 'common'],
+	});
 	const totalArticlesInSelectedLanguage = articles.length;
 	const totalArticlesInDefault = await getTotalArticlesInDefault(lang, tag.uuid, totalArticlesInSelectedLanguage);
 	return (
