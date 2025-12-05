@@ -84,6 +84,7 @@ jobs:
           TF_VAR_postfinance_ftp_port: ${{ vars.POSTFINANCE_FTP_PORT }}
           TF_VAR_postfinance_ftp_user: ${{ vars.POSTFINANCE_FTP_USER }}
           TF_VAR_postfinance_payments_files_bucket: ${{ vars.POSTFINANCE_PAYMENTS_FILES_BUCKET_STAGING }}
+          TF_VAR_base_url: ${{ vars.TF_STAGING_BASE_URL }}
           TF_VAR_postfinance_ftp_rsa_private_key_base64: ${{ secrets.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 }}
           TF_VAR_scheduler_api_key: ${{ secrets.TF_STAGING_SCHEDULER_API_KEY }}
           TF_VAR_stripe_product_onetime: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}
@@ -96,7 +97,6 @@ jobs:
           TF_VAR_twilio_account_sid: ${{ secrets.TF_STAGING_TWILIO_ACCOUNT_SID }}
           TF_VAR_twilio_auth_token: ${{ secrets.TF_STAGING_TWILIO_AUTH_TOKEN }}
           TF_VAR_twilio_verify_service_sid: ${{ secrets.TF_STAGING_TWILIO_VERIFY_SERVICE_SID }}
-          TF_VAR_base_url: ${{ secrets.TF_STAGING_BASE_URL }}
           TF_VAR_exchange_rates_api: ${{ secrets.TF_STAGING_EXCHANGE_RATES_API }}
           TF_VAR_github_pat: ${{ secrets.TF_STAGING_GITHUB_PAT }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
