@@ -66,13 +66,14 @@ export class PaymentFileImportService extends BaseService {
 							`Skipped processing ${file.name} because it does not contain relevant payment data. Storing anyway.`,
 						);
 					} else {
+						this.logger.info(`Importing contributions from file ${file.name}.`);
 						const contributions = this.getContributionsFromPaymentFile(tmpPath);
 						allContributions.push(...contributions);
 					}
 					await this.storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
 				});
 			}
-			const result = await this.createContributions(allContributions);
+			const result = await this.createOrUpdateContributions(allContributions);
 			sftp.end();
 
 			if (!result.success) {
@@ -103,6 +104,11 @@ export class PaymentFileImportService extends BaseService {
 		for (let node of nodes) {
 			const referenceId = select('string(//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
+			if (!referenceId) {
+				this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
+				continue;
+			}
+
 			contributions.push({
 				referenceId,
 				amount: parseFloat(select('string(//ns:Amt)', node) as string),
@@ -118,7 +124,9 @@ export class PaymentFileImportService extends BaseService {
 	 * @param bankContributions contributions from payment files
 	 */
 	// TODO: create or update
-	private async createContributions(bankContributions: BankContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
+	private async createOrUpdateContributions(
+		bankContributions: BankContribution[],
+	): Promise<ServiceResult<PaymentEvent[]>> {
 		try {
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 			if (!fallbackCampaignResult.success) {
@@ -143,11 +151,17 @@ export class PaymentFileImportService extends BaseService {
 						contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
 				);
 				if (!contributor) {
-					this.logger.alert(`Contributor for reference ID ${c.referenceId} does not exist`);
+					this.logger.alert(
+						`Contributor for reference ID ${this.getReferenceIds(c.referenceId).contributorReferenceId} does not exist`,
+					);
 					continue;
 				}
 
 				const contributionReferenceId = this.getReferenceIds(c.referenceId).contributionReferenceId;
+
+				if (!contributionReferenceId) {
+					this.logger.info(`Legacy reference ID detected for contributor ${contributor.id}.`);
+				}
 
 				const paymentEvent: PaymentEventCreateInput = {
 					type: PaymentEventType.bank_transfer,

@@ -34,6 +34,9 @@ export async function POST(request: NextRequest) {
 			logger.alert(`Payment files import failed: ${result.error}`, { result }, { component: 'payment-files-import' });
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
+		logger.info(
+			`Payment files import succeeded. Updated following contributions: ${result.data.map((c) => c.id).join(', ')}`,
+		);
 		return NextResponse.json(result.data, { status: 201 });
 	} catch (error) {
 		logger.alert(`Payment files import failed: ${error}`, { error }, { component: 'payment-files-import' });
