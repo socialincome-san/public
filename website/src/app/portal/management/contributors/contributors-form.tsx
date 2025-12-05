@@ -122,15 +122,6 @@ export default function ContributorsForm({
 		}
 	}, [contributorId]);
 
-	useEffect(() => {
-		if (contributorId) {
-			loadContributor(contributorId);
-		} else {
-			setContributor(undefined);
-			setFormSchema(initialFormSchema);
-		}
-	}, [contributorId]);
-
 	return (
 		<DynamicForm
 			formSchema={formSchema}
