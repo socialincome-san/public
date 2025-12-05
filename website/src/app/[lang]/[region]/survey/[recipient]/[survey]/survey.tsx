@@ -1,3 +1,5 @@
+'use client';
+
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { SurveyStatus } from '@prisma/client';

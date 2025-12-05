@@ -63,13 +63,13 @@ export async function generateSurveysAction() {
 export async function getByIdAndRecipient(surveyId: string, recipientId: string) {
 	const survey = await getCurrentSurvey();
 	if (!survey || survey.id !== surveyId || survey.recipientId !== recipientId) {
-		throw new Error('Unauthorized');
+		const reason = !survey ? 'no survey' : survey.id !== surveyId ? 'survey ID mismatch' : 'recipient ID mismatch';
+		throw new Error(`Unauthorized: ${reason}`);
 	}
 	const service = new SurveyService();
-
 	const result = await service.getByIdAndRecipient(surveyId, recipientId);
 	if (!result.success) {
-		throw new Error('Survey not found');
+		throw new Error(`Survey cannot be loaded: ${result.error}`);
 	}
 	return result.data;
 }
