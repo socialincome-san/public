@@ -113,6 +113,17 @@ export default function ContributorsForm({
 
 	useEffect(() => {
 		if (contributorId) {
+			startTransition(async () => {
+				loadContributor(contributorId);
+			});
+		} else {
+			setContributor(undefined);
+			setFormSchema(initialFormSchema);
+		}
+	}, [contributorId]);
+
+	useEffect(() => {
+		if (contributorId) {
 			loadContributor(contributorId);
 		} else {
 			setContributor(undefined);
