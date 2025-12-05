@@ -6,6 +6,7 @@ import {
 	LANGUAGE_CODES,
 	LanguageCode,
 } from '@socialincome/shared/src/types/language';
+import { getDownloadURL } from 'firebase-admin/storage';
 import { withFile } from 'tmp-promise';
 import { ContributionService } from '../contribution/contribution.service';
 import { ContributorService } from '../contributor/contributor.service';
@@ -66,22 +67,38 @@ export class DonationCertificateService extends BaseService {
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const tableRows: DonationCertificateTableViewRow[] = certificates.map((c) => ({
-				id: c.id,
-				year: c.year,
-				contributorFirstName: c.contributor.contact?.firstName ?? '',
-				contributorLastName: c.contributor.contact?.lastName ?? '',
-				email: c.contributor.contact?.email ?? '',
-				storagePath: c.storagePath,
-				createdAt: c.createdAt,
-				permission,
-			}));
+			const tableRows: DonationCertificateTableViewRow[] = await Promise.all(
+				certificates.map(async (c) => ({
+					id: c.id,
+					year: c.year,
+					contributorFirstName: c.contributor.contact?.firstName ?? '',
+					contributorLastName: c.contributor.contact?.lastName ?? '',
+					email: c.contributor.contact?.email ?? '',
+					storagePath: await this.getDownloadUrl(c.storagePath),
+					createdAt: c.createdAt,
+					permission,
+				})),
+			);
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch donation certificates');
 		}
+	}
+
+	async getDownloadUrl(storagePath: string): Promise<string> {
+		const bucket = storageAdmin.storage.bucket(this.bucketName);
+		const file = bucket.file(storagePath);
+		let downloadURL: string;
+		try {
+			downloadURL = await getDownloadURL(file);
+		} catch (error) {
+			this.logger.error(`Could not get download URL for donation certificate at path ${storagePath}: ${error}`);
+			downloadURL = '';
+		}
+
+		return downloadURL;
 	}
 
 	async getYourCertificatesTableView(contributorId: string): Promise<ServiceResult<YourDonationCertificateTableView>> {
