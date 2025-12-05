@@ -1,7 +1,15 @@
-import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import { BaseContainer } from '@socialincome/ui';
-import { PropsWithChildren } from 'react';
+import { ReactNode } from 'react';
 
-export default function Layout({ children }: PropsWithChildren<DefaultLayoutProps>) {
+type LayoutProps = {
+	children: ReactNode;
+	params: Promise<{
+		lang: string;
+		region: string;
+		session: string;
+	}>;
+};
+
+export default function Layout({ children }: LayoutProps) {
 	return <BaseContainer className="pt-16">{children}</BaseContainer>;
 }

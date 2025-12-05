@@ -2,9 +2,6 @@
 	"name": "@socialincome/shared",
 	"version": "1.0.0",
 	"private": true,
-	"prisma": {
-		"seed": "tsx src/database/seed/seed.ts"
-	},
 	"scripts": {
 		"test": "firebase emulators:exec --only firestore,storage,functions --project demo-social-income-local --config ../firebase.json --import ../seed 'npm run test:app'",
 		"test:app": "jest --forceExit --roots src/",

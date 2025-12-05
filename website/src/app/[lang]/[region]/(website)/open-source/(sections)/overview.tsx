@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, Typography } from '@socialincome/ui';
 import { getCommits } from '../(components)/get-commits';
@@ -63,7 +64,7 @@ export function OverviewCard({ title, total, time }: OverviewProp) {
 
 export async function Overview({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-open-source'],
 	});
 

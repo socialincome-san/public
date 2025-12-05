@@ -2,8 +2,17 @@ import { PayoutsTableClient } from '@/app/portal/delivery/make-payouts/payouts-t
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutService } from '@/lib/services/payout/payout.service';
 import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
+import { Suspense } from 'react';
 
-export default async function PayoutsPage() {
+export default function PayoutsPage() {
+	return (
+		<Suspense>
+			<PayoutsDataLoader />
+		</Suspense>
+	);
+}
+
+async function PayoutsDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const payoutService = new PayoutService();

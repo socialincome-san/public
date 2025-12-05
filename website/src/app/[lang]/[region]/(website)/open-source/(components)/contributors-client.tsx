@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage, Button, Typography } from '@socialincome/ui';
+import Link from 'next/link';
 import { useState } from 'react';
 
 type ContributorProp = {
@@ -8,6 +9,7 @@ type ContributorProp = {
 	commits: number;
 	avatarUrl: string;
 };
+const GITHUB_BASE_URL = 'https://github.com';
 
 function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 	return (
@@ -17,9 +19,11 @@ function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 				<AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
 			</Avatar>
 			<div className="ml-4 flex flex-col items-start">
-				<Typography as="p" size="xl">
-					{name}
-				</Typography>
+				<Link href={`${GITHUB_BASE_URL}/${name}`}>
+					<Typography as="p" size="xl">
+						{name}
+					</Typography>
+				</Link>
 				<Typography as="span" size="md" className="text-card-foreground-muted mt-1">
 					{commits} {commits === 1 ? 'commit' : 'commits'}
 				</Typography>

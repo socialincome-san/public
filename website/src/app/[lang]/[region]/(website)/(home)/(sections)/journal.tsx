@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Image, { StaticImageData } from 'next/image';
@@ -14,7 +15,7 @@ type JournalCardDetails = {
 	sideImgData?: StaticImageData;
 };
 
-const JournalCard = ({ title, author, description, sideImgData }: JournalCardDetails): ReactElement => {
+const JournalCard = ({ title, author, description, sideImgData }: JournalCardDetails): ReactElement<any> => {
 	return (
 		<div className="mx-3">
 			<div className="ml-3 flex flex-col items-start justify-start">
@@ -40,7 +41,7 @@ const JournalCard = ({ title, author, description, sideImgData }: JournalCardDet
 
 export async function Journal({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'common'],
 	});
 

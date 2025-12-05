@@ -72,7 +72,7 @@ export default function GenerateDonationCertificatesDialog({
 						<p className="text-muted-foreground mb-1 text-xs">
 							Specify for which year the certificate(s) should be generated:
 						</p>
-						<Select value={year.toString()} onValueChange={(e) => setYear(parseInt(e))}>
+						<Select value={year.toString()} onValueChange={(e: string) => setYear(parseInt(e))}>
 							<SelectTrigger>
 								<SelectValue placeholder={'Select Year'} />
 							</SelectTrigger>
@@ -90,7 +90,7 @@ export default function GenerateDonationCertificatesDialog({
 						<p className="text-muted-foreground mb-1 text-xs">
 							Specify for which language the certificate(s) should be generated in:
 						</p>
-						<Select value={language} disabled={!language} onValueChange={(l) => setLanguage(l as LanguageCode)}>
+						<Select value={language} disabled={!language} onValueChange={(l: string) => setLanguage(l as LanguageCode)}>
 							<SelectTrigger>
 								<SelectValue placeholder={'Select language'} />
 							</SelectTrigger>
@@ -103,7 +103,7 @@ export default function GenerateDonationCertificatesDialog({
 							</SelectContent>
 						</Select>
 						<div className="flex flex-row gap-4">
-							<Switch onCheckedChange={(checked) => setLanguage(checked ? undefined : DEFAULT_LANGUAGE)} />
+							<Switch onCheckedChange={(checked: boolean) => setLanguage(checked ? undefined : DEFAULT_LANGUAGE)} />
 							<p className="text-muted-foreground mb-1 text-sm">
 								Create certificate in contributor language if available (&quot;{DEFAULT_LANGUAGE}&quot; as fallback)
 							</p>

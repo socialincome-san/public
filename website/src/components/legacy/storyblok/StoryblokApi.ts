@@ -3,7 +3,7 @@ import {
 	formatStoryblokUrl,
 	getDimensionsFromStoryblokImageUrl,
 } from '@/components/legacy/storyblok/StoryblokUtils';
-import { defaultLanguage } from '@/lib/i18n/utils';
+import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { Metadata } from 'next';
@@ -89,7 +89,7 @@ export async function getArticleCountByAuthorForDefaultLang(authorId: string): P
 export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<StoryblokAuthor>[]> {
 	const params: ISbStoriesParams = {
 		per_page: DEFAULT_PAGE_SIZE,
-		language: lang,
+		language: lang as WebsiteLanguage,
 		content_type: StoryblokContentType.Author,
 		filter_query: {
 			displayInOverviewPage: {
@@ -103,7 +103,7 @@ export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<Sto
 export async function getOverviewTags(lang: string): Promise<ISbStoryData<StoryblokTag>[]> {
 	const params: ISbStoriesParams = {
 		per_page: DEFAULT_PAGE_SIZE,
-		language: lang,
+		language: lang as WebsiteLanguage,
 		content_type: StoryblokContentType.Tag,
 		filter_query: {
 			displayInOverviewPage: {
@@ -118,7 +118,7 @@ export async function getArticlesByTag(tagId: string, lang: string): Promise<ISb
 	const params: ISbStoriesParams = {
 		per_page: DEFAULT_PAGE_SIZE,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-		language: lang,
+		language: lang as WebsiteLanguage,
 		excluding_fields: CONTENT,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
@@ -132,7 +132,7 @@ export async function getArticlesByAuthor(authorId: string, lang: string): Promi
 		per_page: DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-		language: lang,
+		language: lang as WebsiteLanguage,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
 		filter_query: articlesByAuthorFilter(authorId),
@@ -149,7 +149,7 @@ export async function getOverviewArticles(
 		per_page: limit || DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-		language: lang,
+		language: lang as WebsiteLanguage,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
 		filter_query: {
@@ -171,7 +171,7 @@ export async function getTag(slug: string, lang: string): Promise<ISbStory<Story
 	return getWithFallback(
 		async (lang: string, slug: string): Promise<ISbStory<StoryblokTag>> => {
 			const params: ISbStoriesParams = {
-				language: lang,
+				language: lang as WebsiteLanguage,
 			};
 			return getStoryblokApi().get(`cdn/stories/tag/${slug}`, await addVersionParameter(params));
 		},
@@ -184,7 +184,7 @@ export async function getAuthor(slug: string, lang: string): Promise<ISbStory<St
 	return getWithFallback(
 		async (lang: string, slug: string): Promise<ISbStory<StoryblokAuthor>> => {
 			const params: ISbStoriesParams = {
-				language: lang,
+				language: lang as WebsiteLanguage,
 			};
 			return getStoryblokApi().get(`cdn/stories/author/${slug}`, await addVersionParameter(params));
 		},
@@ -246,7 +246,7 @@ async function getRelativeArticlesByAuthorAndTags(
 		per_page: numberOfArticles,
 		excluding_fields: CONTENT,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-		language: lang,
+		language: lang as WebsiteLanguage,
 		sort_by: 'first_published_at:desc',
 		excluding_ids: articleId.toString(),
 		content_type: StoryblokContentType.Article,
@@ -289,7 +289,7 @@ export async function getArticle(lang: string, slug: string): Promise<ISbStory<S
 		async (lang: string, slug: string): Promise<ISbStory<StoryblokArticle>> => {
 			const params: ISbStoriesParams = {
 				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-				language: lang,
+				language: lang as WebsiteLanguage,
 			};
 			return getStoryblokApi().get(`cdn/stories/journal/${slug}`, await addVersionParameter(params));
 		},

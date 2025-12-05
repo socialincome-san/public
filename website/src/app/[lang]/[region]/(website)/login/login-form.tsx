@@ -2,6 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useEmailLogin } from '@/lib/firebase/hooks/useEmailLogin';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Button,
@@ -17,7 +18,6 @@ import {
 	Input,
 	Typography,
 } from '@socialincome/ui';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -39,7 +39,7 @@ type LoginFormProps = {
 export default function LoginForm({ lang, region, translations }: LoginFormProps) {
 	const router = useRouter();
 	const { sendSignInEmail, sendingEmail, signingIn, emailSent } = useEmailLogin({
-		lang,
+		lang: lang as WebsiteLanguage,
 		onLoginSuccess: async () => {
 			router.push(`/${lang}/${region}/me`);
 		},
@@ -72,7 +72,9 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 						<Typography>{translations.checkEmail}</Typography>
 					</CardContent>
 					<CardFooter>
-						<Link href={`/${lang}/${region}/login`}>{translations.backToLogin}</Link>
+						<Button variant="link" onClick={() => window.location.reload()}>
+							{translations.backToLogin}
+						</Button>
 					</CardFooter>
 				</Card>
 			</div>

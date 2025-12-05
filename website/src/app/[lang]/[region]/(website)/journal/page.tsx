@@ -8,7 +8,7 @@ import {
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
-import { defaultLanguage } from '@/lib/i18n/utils';
+import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Carousel, CarouselContent, Separator, Typography } from '@socialincome/ui';
@@ -19,7 +19,10 @@ storyblokInitializationWorkaround();
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-journal', 'common'],
+	});
 
 	const [articles, authors, tags] = await Promise.all([
 		getOverviewArticles(lang),

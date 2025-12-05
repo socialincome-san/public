@@ -17,7 +17,7 @@
 	"title-sandino": "Geschäftsführer",
 	"text-1": "Hiermit wird bestätigt, dass Social Income von {{ firstname }} {{ lastname }}, im Jahr {{ year }} gesamthaft folgende Zuwendungen erhalten hat:",
 	"text-2": "Berücksichtigt wurden sämtliche eingegangenen Spenden zwischen dem {{ start, datetime }} und dem {{ end, datetime }}.",
-	"text-3": "Bitte beachten Sie für einen möglichen Steuerabzug die kantonalen Regelungen in Ihrem Steuerkanton.",
+	"text-3": "Bitte beachten Sie für einen möglichen Steuerabzug die geltenden lokalen Steuervorschriften.",
 	"text-4": "Vielen Dank für Ihre Unterstützung.",
 	"text-5": "Freundliche Grüsse",
 	"title": "Spendenbescheinigung {{ year }}"

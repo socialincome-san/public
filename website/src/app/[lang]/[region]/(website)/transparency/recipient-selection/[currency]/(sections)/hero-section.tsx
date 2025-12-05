@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
@@ -7,7 +8,10 @@ import globeRotating from '../(assets)/globe.svg';
 import ScrollToChevron from '../(components)/scroll-to-chevron';
 
 export async function HeroSection({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-selection'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-selection'],
+	});
 
 	return (
 		<div className="theme-blue flex h-[calc(100svh)] min-h-[600px] flex-col">

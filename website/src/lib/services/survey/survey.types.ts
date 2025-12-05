@@ -67,6 +67,16 @@ export type SurveyPayload = {
 	updatedAt: Date | null;
 };
 
+export type SurveyWithRecipient = {
+	id: string;
+	name: string;
+	questionnaire: SurveyQuestionnaire;
+	language: string;
+	status: SurveyStatus;
+	data: Prisma.JsonValue;
+	nameOfRecipient: string;
+};
+
 export type SurveyPreview = {
 	questionnaire: SurveyQuestionnaire;
 	language: string;

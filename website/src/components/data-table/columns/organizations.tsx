@@ -15,7 +15,12 @@ export function makeOrganizationAdminColumns(): ColumnDef<OrganizationTableViewR
 		},
 		{
 			accessorKey: 'ownedProgramsCount',
-			header: (ctx) => <SortableHeader ctx={ctx}>Programs</SortableHeader>,
+			header: (ctx) => <SortableHeader ctx={ctx}>Owned Programs</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'operatedProgramsCount',
+			header: (ctx) => <SortableHeader ctx={ctx}>Operated Programs</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

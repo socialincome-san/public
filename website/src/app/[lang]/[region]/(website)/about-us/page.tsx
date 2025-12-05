@@ -1,4 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { BaseContainer } from '@socialincome/ui';
 import FlowOfFunds from './(sections)/flow-of-funds';
@@ -9,13 +10,13 @@ import Team from './(sections)/team';
 
 export async function generateMetadata(props: DefaultPageProps) {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-about-us');
+	return getMetadata(params.lang as WebsiteLanguage, 'website-about-us');
 }
 
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;
 
-	const { lang } = params;
+	const { lang } = params as { lang: WebsiteLanguage };
 
 	return (
 		<BaseContainer className="space-y-56 pt-40">

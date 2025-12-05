@@ -1,6 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { ContributorsOrgsCarousel } from '@/app/[lang]/[region]/(website)/our-work/(sections)/contributors-orgs-carousel';
 import { ContributorsPeopleCarousel } from '@/app/[lang]/[region]/(website)/our-work/(sections)/contributors-people-carousel';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import carlosImg from '../(assets)/carlos.jpg';
@@ -9,7 +10,10 @@ import rubenImage from '../(assets)/ruben.jpg';
 import vanjaImg from '../(assets)/vanja.jpg';
 
 export async function Contributors({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-our-work'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['countries', 'website-our-work'],
+	});
 
 	return (
 		<BaseContainer id="contributors" className="flex scroll-mt-36 flex-col justify-center space-y-24 lg:space-y-36">

@@ -58,4 +58,18 @@ export class FirebaseAuthService {
 			throw err;
 		}
 	}
+
+	async deleteAllUsers(): Promise<{ deletedCount: number }> {
+		const result = await this.auth.listUsers(1); // DANGER ZONE: Increase page size to delete more users at once
+
+		const uids = result.users.map((u) => u.uid);
+
+		if (uids.length === 0) {
+			return { deletedCount: 0 };
+		}
+
+		await this.auth.deleteUsers(uids);
+
+		return { deletedCount: uids.length };
+	}
 }

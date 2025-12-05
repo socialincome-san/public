@@ -1,6 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { PartnerHome } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerHome';
 import { NgoEntryJSON } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { redirect } from 'next/navigation';
 import { ngos } from '../(sections)/ngolist';
@@ -31,7 +32,7 @@ export default async function Page({ params }: PartnerPageProps) {
 	const { lang, region, slug } = await params;
 
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-partners', 'website-common', 'countries'],
 	});
 
@@ -63,8 +64,8 @@ export default async function Page({ params }: PartnerPageProps) {
 
 	return (
 		<PartnerHome
-			lang={lang}
-			region={region}
+			lang={lang as WebsiteLanguage}
+			region={region as WebsiteRegion}
 			currentNgo={currentNgo}
 			currentNgoCountry={currentNgoCountry}
 			translations={translations}

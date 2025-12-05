@@ -4,6 +4,7 @@ import { Button } from '@/components/button';
 import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import DataTable from '@/components/data-table/data-table';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
+import { ProgramPermission } from '@prisma/client';
 import { useState } from 'react';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';
 import { SurveyFormDialog } from './survey-form-dialog';
@@ -22,7 +23,7 @@ export function SurveysTableClient({ rows, error }: { rows: SurveyTableViewRow[]
 
 	const openEditForm = (row: SurveyTableViewRow) => {
 		setSurveyId(row.id);
-		setReadOnly(row.permission === 'readonly');
+		setReadOnly(row.permission === ProgramPermission.owner);
 		setIsSurveyFormOpen(true);
 	};
 

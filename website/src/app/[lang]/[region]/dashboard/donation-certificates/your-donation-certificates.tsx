@@ -1,5 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DonationCertificateService } from '@/lib/services/donation-certificate/donation-certificate.service';
 import { YourDonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
 import { YourDonationCertificateTable } from './your-donation-certificate-table-client';
@@ -11,5 +12,5 @@ export default async function YourDonationCertificates({ lang }: DefaultParams) 
 	const result = await service.getYourCertificatesTableView(contributor.id);
 	const error = result.success ? null : result.error;
 	const rows: YourDonationCertificateTableViewRow[] = result.success ? result.data.tableRows : [];
-	return <YourDonationCertificateTable rows={rows} error={error} lang={lang} />;
+	return <YourDonationCertificateTable rows={rows} error={error} lang={lang as WebsiteLanguage} />;
 }

@@ -2,9 +2,14 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 
+const path = require('path');
+
 let nextConfig = {
 	transpilePackages: ['@socialincome/ui'],
 	reactStrictMode: true,
+	turbopack: {
+		root: path.join(__dirname, '..'),
+	},
 	images: {
 		remotePatterns: [
 			{
@@ -15,17 +20,7 @@ let nextConfig = {
 		],
 	},
 	output: 'standalone',
-	webpack: (config, context) => {
-		// needed for ssh2-sftp-client in payment-file-import
-		config.module.rules.push({
-			test: /\.node$/,
-			loader: 'node-loader',
-		});
-		return config;
-	},
-	experimental: {
-		serverComponentsExternalPackages: ['pdfkit'],
-	},
+	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {

@@ -5,7 +5,7 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
 export default async function OurMission({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-about-us'],
 	});
 

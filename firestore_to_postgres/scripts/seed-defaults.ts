@@ -13,7 +13,7 @@ export const DEFAULT_ORGANIZATION: Prisma.OrganizationCreateInput = {
 	name: 'Default Social Income Organization',
 };
 
-export const DEFAULT_PROGRAM: Omit<Prisma.ProgramCreateInput, 'ownerOrganization'> = {
+export const DEFAULT_PROGRAM: Prisma.ProgramCreateInput = {
 	name: 'Default Social Income Program',
 	totalPayments: 36,
 	payoutAmount: 700,
@@ -101,7 +101,7 @@ export const SURVEY_SCHEDULES: (Omit<Prisma.SurveyScheduleCreateInput, 'program'
 ];
 
 export const ADMIN_STAGING_ACCOUNT: Prisma.AccountCreateInput = {
-	firebaseAuthUserId: 'V7t5fgxerMgVKiPZZTpsVCKIwW43',
+	firebaseAuthUserId: 'QpbWBHmI5fOsLQsZ5fEKc4zvSo72',
 	user: {
 		create: {
 			role: UserRole.admin,
@@ -204,10 +204,7 @@ async function main() {
 	const program = await prisma.program.upsert({
 		where: { name: DEFAULT_PROGRAM.name },
 		update: {},
-		create: {
-			...DEFAULT_PROGRAM,
-			ownerOrganization: { connect: { id: organization.id } },
-		},
+		create: DEFAULT_PROGRAM,
 	});
 
 	await prisma.campaign.upsert({
@@ -234,7 +231,12 @@ async function main() {
 		if (!user) continue;
 
 		await prisma.organizationAccess.upsert({
-			where: { userId_organizationId: { userId: user.id, organizationId: organization.id } },
+			where: {
+				userId_organizationId: {
+					userId: user.id,
+					organizationId: organization.id,
+				},
+			},
 			update: {},
 			create: {
 				user: { connect: { id: user.id } },
@@ -244,12 +246,17 @@ async function main() {
 		});
 
 		await prisma.programAccess.upsert({
-			where: { userId_programId: { userId: user.id, programId: program.id } },
+			where: {
+				organizationId_programId: {
+					organizationId: organization.id,
+					programId: program.id,
+				},
+			},
 			update: {},
 			create: {
-				user: { connect: { id: user.id } },
+				organization: { connect: { id: organization.id } },
 				program: { connect: { id: program.id } },
-				permission: ProgramPermission.edit,
+				permission: ProgramPermission.operator,
 			},
 		});
 

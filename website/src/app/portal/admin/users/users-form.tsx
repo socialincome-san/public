@@ -67,19 +67,6 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 	const [user, setUser] = useState<UserPayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	useEffect(() => {
-		if (!userId) return;
-		startTransition(async () => await loadUser(userId));
-	}, [userId]);
-
-	useEffect(() => {
-		startTransition(async () => {
-			const res = await getUserOptionsAction();
-			if (!res.success) return;
-			setOptions(res.data);
-		});
-	}, []);
-
 	const loadUser = async (id: string) => {
 		try {
 			const result = await getUserAction(id);
@@ -122,7 +109,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 	const onSubmit = (schema: UserFormSchema) => {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: unknown };
+				let res: { success: boolean; error?: string };
 				if (userId && user) {
 					const data = buildUpdateUserInput(schema, user);
 					res = await updateUserAction(data);
@@ -137,6 +124,19 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 			}
 		});
 	};
+
+	useEffect(() => {
+		if (!userId) return;
+		startTransition(async () => await loadUser(userId));
+	}, [userId]);
+
+	useEffect(() => {
+		startTransition(async () => {
+			const res = await getUserOptionsAction();
+			if (!res.success) return;
+			setOptions(res.data);
+		});
+	}, []);
 
 	return (
 		<DynamicForm

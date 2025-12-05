@@ -3,7 +3,18 @@ FROM node:22-alpine AS base
 WORKDIR /app
 
 # This secrets are used during build time. All others are provided at runtime.
-RUN --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_API_KEY \
+RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
+    --mount=type=secret,id=NEXT_PUBLIC_APP_ENVIRONMENT \
+    --mount=type=secret,id=NEXT_PUBLIC_FACEBOOK_TRACKING_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_API_KEY \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_APP_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_PROJECT_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET \
+    --mount=type=secret,id=NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_LINKEDIN_TRACKING_ID \
     --mount=type=secret,id=SENTRY_AUTH_TOKEN \
     --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \
     sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
@@ -41,11 +52,12 @@ ENV PORT=3000
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/website/public ./public
+COPY --from=builder /app/website/public ./website/public
+COPY --from=builder /app/website/.next/static ./website/.next/static
+
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder /app/website/.next/standalone ./
-COPY --from=builder /app/website/.next/static ./.next/static
 COPY --from=builder /app/shared ./shared
 COPY --from=builder /app/website/src ./src
 
@@ -58,5 +70,5 @@ CMD ["sh", "-c", "\
   . .env && \
   set +a && \
   npx prisma migrate deploy --schema=./src/lib/database/schema.prisma && \
-  node server.js \
+  node website/server.js \
 "]

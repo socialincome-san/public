@@ -15,6 +15,7 @@ import {
 	SurveyTableView,
 	SurveyTableViewRow,
 	SurveyUpdateInput,
+	SurveyWithRecipient,
 } from './survey.types';
 
 export class SurveyService extends BaseService {
@@ -63,7 +64,7 @@ export class SurveyService extends BaseService {
 			const tableRows: SurveyTableViewRow[] = surveys.map((survey) => {
 				const programId = survey.recipient.program.id;
 				const access = accessiblePrograms.find((p) => p.programId === programId);
-				const permission = access?.permission ?? ProgramPermission.readonly;
+				const permission = access?.permission ?? ProgramPermission.owner;
 
 				return {
 					id: survey.id,
@@ -159,7 +160,7 @@ export class SurveyService extends BaseService {
 			}
 
 			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.readonly) {
+			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
 				return this.resultFail('Access denied');
 			}
 
@@ -257,7 +258,7 @@ export class SurveyService extends BaseService {
 			}
 
 			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.readonly) {
+			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
 				return this.resultFail('Access denied');
 			}
 
@@ -324,6 +325,7 @@ export class SurveyService extends BaseService {
 				select: {
 					recipientId: true,
 					name: true,
+					accessEmail: true,
 				},
 			});
 
@@ -348,7 +350,12 @@ export class SurveyService extends BaseService {
 					const dueDate = addMonths(recipient.startDate, schedule.dueInMonthsAfterStart);
 					const surveyStatus = dueDate < new Date() ? SurveyStatus.missed : SurveyStatus.new;
 
-					const email = (await rndString(16)).toLowerCase() + '@si.org';
+					let email: string;
+					do {
+						// ensure uniqueness in preview list
+						email = (await rndString(16)).toLowerCase() + '@si.org';
+					} while (existingSurveys.some((s) => s.accessEmail === email));
+
 					const password = await rndString(16);
 					const token = await rndString(3, 'hex');
 
@@ -424,6 +431,99 @@ export class SurveyService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch surveys');
+		}
+	}
+
+	async getByAccessEmail(email: string): Promise<ServiceResult<SurveyPayload>> {
+		try {
+			const surveys = await this.db.survey.findUnique({
+				where: { accessEmail: email },
+			});
+			if (!surveys) {
+				return this.resultFail('Survey not found');
+			}
+			return this.resultOk(surveys);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch surveys');
+		}
+	}
+
+	async getByIdAndRecipient(surveyId: string, recipientId: string): Promise<ServiceResult<SurveyWithRecipient>> {
+		try {
+			const surveys = await this.db.survey.findUnique({
+				where: { id: surveyId, recipientId },
+				select: {
+					id: true,
+					name: true,
+					questionnaire: true,
+					status: true,
+					data: true,
+					language: true,
+					recipient: {
+						select: {
+							id: true,
+							contact: {
+								select: {
+									firstName: true,
+									lastName: true,
+								},
+							},
+						},
+					},
+				},
+			});
+
+			if (!surveys) {
+				return this.resultFail('Survey not found');
+			}
+			return this.resultOk({
+				...surveys,
+				nameOfRecipient:
+					`${surveys.recipient.contact?.firstName ?? ''} ${surveys.recipient.contact?.lastName ?? ''}`.trim(),
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch surveys');
+		}
+	}
+
+	async saveChanges(surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> {
+		try {
+			const survey = await this.db.survey.findUnique({
+				where: { id: surveyId },
+			});
+
+			if (!survey) {
+				return this.resultFail('Survey not found');
+			}
+
+			const updatedSurvey = await this.db.survey.update({
+				where: { id: surveyId },
+				data: input,
+			});
+
+			const payload: SurveyPayload = {
+				id: updatedSurvey.id,
+				name: updatedSurvey.name,
+				questionnaire: updatedSurvey.questionnaire,
+				language: updatedSurvey.language,
+				dueAt: updatedSurvey.dueAt,
+				completedAt: updatedSurvey.completedAt,
+				status: updatedSurvey.status,
+				data: updatedSurvey.data,
+				accessEmail: updatedSurvey.accessEmail,
+				accessPw: updatedSurvey.accessPw,
+				accessToken: updatedSurvey.accessToken,
+				recipientId: updatedSurvey.recipientId,
+				surveyScheduleId: updatedSurvey.surveyScheduleId,
+				createdAt: updatedSurvey.createdAt,
+				updatedAt: updatedSurvey.updatedAt,
+			};
+			return this.resultOk(payload);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Failed to update survey: ${error}`);
 		}
 	}
 }

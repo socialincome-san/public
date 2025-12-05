@@ -14,17 +14,17 @@ type PayoutFormDialogProps = {
 };
 
 export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = false }: PayoutFormDialogProps) {
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	const onError = (e?: unknown) => {
-		setHasError(true);
-		logger.error('Payout Form Error', { error: e });
+	const onError = (error?: unknown) => {
+		setErrorMessage(`Error saving payout: ${error}`);
+		logger.error('Payout Form Error', { error });
 	};
 
 	const handleOpenChange = (newOpen: boolean) => {
 		onOpenChange(newOpen);
 		if (!newOpen) {
-			setHasError(false);
+			setErrorMessage(null);
 		}
 	};
 
@@ -35,10 +35,10 @@ export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = fals
 					<DialogTitle>{readOnly ? 'View payout' : payoutId ? 'Edit payout' : 'Add payout'}</DialogTitle>
 				</DialogHeader>
 
-				{hasError && (
-					<Alert variant="destructive" className="mb-3">
+				{errorMessage && (
+					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>Error saving payout</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 

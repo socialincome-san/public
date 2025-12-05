@@ -1,9 +1,18 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { ExpenseService } from '@/lib/services/expense/expense.service';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
+import { Suspense } from 'react';
 import ExpensesTable from './expenses-table';
 
-export default async function ExpensesPage() {
+export default function ExpensesPage() {
+	return (
+		<Suspense>
+			<ExpensesDataLoader />
+		</Suspense>
+	);
+}
+
+async function ExpensesDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

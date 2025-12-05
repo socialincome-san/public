@@ -1,6 +1,7 @@
 {
 	"metadata": {
-		"title": "Il Mio Profilo | Social Income"
+		"title": "Il Mio Profilo | Social Income",
+		"home-link": "Torna alla Home"
 	},
 	"sections": {
 		"account": {
@@ -23,6 +24,8 @@
 		"total": "Totale",
 		"one-time-payment": "Nuova donazione una tantum",
 		"amount-currency": "{{ amount, currency }}",
+		"currency": "Valuta",
+		"campaign": "Campagna",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Contanti",
@@ -36,11 +39,15 @@
 			"failed": "Fallito",
 			"unknown": "Sconosciuto"
 		},
-		"status-title": "Stato"
+		"status-title": "Stato",
+		"no-contributions": "Nessuna contribuzione trovata",
+		"new-contribution": "Effettua una contribuzione"
 	},
 	"subscriptions": {
 		"amount": "Importo",
 		"date": "Data",
+		"from": "Da",
+		"to": "A",
 		"source": "Fonte",
 		"total": "Totale",
 		"amount-currency": "{{ amount, currency }}",
@@ -54,13 +61,20 @@
 			"canceled": "Cancellato",
 			"paused": "In pausa"
 		},
-		"manage-subscriptions": "Gestisci le sottoscrizioni"
+		"status-title": "Stato",
+		"manage-subscriptions": "Gestisci le sottoscrizioni",
+		"no-subscriptions": "Nessuna sottoscrizione trovata"
 	},
 	"donation-certificates": {
+		"created": "Creato",
+		"language": "Lingua",
 		"year": "Anno",
 		"download-pdf": "Scarica il PDF",
-		"no-certificates-yet": "Non hai ancora certificati di donazione. Assicurati di fornire il tuo indirizzo completo.",
-		"no-contributions": "Nessuna contribuzione trovata, quindi niente certificato. Se pensi che sia un errore, contatta contributors@socialincome.org."
+		"generate-certificate": "Genera certificato di donazione",
+		"no-certificates-yet": "Non hai ancora certificati di donazione. Creane uno cliccando su \"Genera certificato di donazione\". <br></br> Se avete domande, non esitate a <a href='mailto:hello@socialincome.org' class='underline'>contattarci</a>.",
+		"no-contributions": "Nessuna contribuzione trovata, quindi niente certificato. Se pensi che sia un errore, contatta contributors@socialincome.org.",
+		"already-exists": "Il certificato per l'anno e la lingua selezionati esiste già. Se pensi che sia un errore, contatta contributors@socialincome.org.",
+		"technical-error": "Si è verificato un errore tecnico, riprova. Se questo continua ad accadere, contatta contributors@socialincome.org."
 	},
 	"personal-info": {
 		"alert-title": "Certificati di donazione",

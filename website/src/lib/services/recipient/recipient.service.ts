@@ -27,7 +27,7 @@ export class RecipientService extends BaseService {
 
 		const program = accessResult.data.find((a) => a.programId === recipient.program.connect?.id);
 
-		if (!program || program.permission !== ProgramPermission.edit) {
+		if (!program || program.permission !== ProgramPermission.operator) {
 			return this.resultFail('Permission denied');
 		}
 
@@ -59,7 +59,7 @@ export class RecipientService extends BaseService {
 
 		const program = accessResult.data.find((a) => a.programId === recipient.program?.connect?.id);
 
-		if (!program || program.permission !== ProgramPermission.edit) {
+		if (!program || program.permission !== ProgramPermission.operator) {
 			return this.resultFail('Permission denied');
 		}
 
@@ -87,12 +87,14 @@ export class RecipientService extends BaseService {
 				return this.resultFail('No phone number available for recipient update');
 			}
 
-			const firebaseResult = await this.firebaseService.updateByPhoneNumber(
-				existing.paymentInformation?.phone.number,
-				phoneNumber,
-			);
-			if (!firebaseResult.success) {
-				return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
+			if (existing.paymentInformation?.phone.number !== phoneNumber) {
+				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
+					existing.paymentInformation?.phone.number,
+					phoneNumber,
+				);
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
+				}
 			}
 
 			const updatedRecipient = await this.db.recipient.update({
@@ -109,8 +111,26 @@ export class RecipientService extends BaseService {
 	async updateSelf(
 		recipientId: string,
 		data: RecipientPrismaUpdateInput,
+		options: {
+			oldPaymentPhone: string | null;
+			newPaymentPhone: string | null;
+		},
 	): Promise<ServiceResult<RecipientWithPaymentInfo>> {
 		try {
+			const phoneChanged =
+				options.oldPaymentPhone && options.newPaymentPhone && options.oldPaymentPhone !== options.newPaymentPhone;
+
+			if (phoneChanged) {
+				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
+					options.oldPaymentPhone!,
+					options.newPaymentPhone!,
+				);
+
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to update Firebase phone number: ${firebaseResult.error}`);
+				}
+			}
+
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipientId },
 				data,
@@ -204,7 +224,7 @@ export class RecipientService extends BaseService {
 
 			const accessiblePrograms = accessResult.data;
 			if (accessiblePrograms.length === 0) {
-				return this.resultOk({ tableRows: [], permission: ProgramPermission.readonly });
+				return this.resultOk({ tableRows: [], permission: ProgramPermission.owner });
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
@@ -260,13 +280,13 @@ export class RecipientService extends BaseService {
 					payoutsTotal,
 					payoutsProgressPercent,
 					createdAt: recipient.createdAt,
-					permission: access?.permission ?? ProgramPermission.readonly,
+					permission: access?.permission ?? ProgramPermission.owner,
 				};
 			});
 
-			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.edit)
-				? ProgramPermission.edit
-				: ProgramPermission.readonly;
+			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.operator)
+				? ProgramPermission.operator
+				: ProgramPermission.owner;
 
 			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
@@ -290,7 +310,7 @@ export class RecipientService extends BaseService {
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
 		return this.resultOk({
 			tableRows: filteredRows,
-			permission: programAccess?.permission ?? ProgramPermission.readonly,
+			permission: programAccess?.permission ?? ProgramPermission.owner,
 		});
 	}
 
@@ -373,7 +393,9 @@ export class RecipientService extends BaseService {
 			return this.resultFail(access.error);
 		}
 
-		const editablePrograms = access.data.filter((p) => p.permission === ProgramPermission.edit).map((p) => p.programId);
+		const editablePrograms = access.data
+			.filter((p) => p.permission === ProgramPermission.operator)
+			.map((p) => p.programId);
 
 		if (editablePrograms.length === 0) {
 			return this.resultOk([]);

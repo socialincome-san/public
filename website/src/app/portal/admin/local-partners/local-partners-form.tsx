@@ -50,13 +50,6 @@ export default function LocalPartnersForm({
 	const [localPartner, setLocalPartner] = useState<LocalPartnerPayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	useEffect(() => {
-		if (localPartnerId) {
-			// Load local partner in edit mode
-			startTransition(async () => await loadLocalPartner(localPartnerId));
-		}
-	}, [localPartnerId]);
-
 	const loadLocalPartner = async (localPartnerId: string) => {
 		try {
 			const partner = await getLocalPartnerAction(localPartnerId);
@@ -78,7 +71,7 @@ export default function LocalPartnersForm({
 	async function onSubmit(schema: typeof initialFormSchema) {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: unknown };
+				let res: { success: boolean; error?: string };
 				const contactFields: {
 					[key: string]: FormField;
 				} = schema.fields.contact.fields;
@@ -95,6 +88,13 @@ export default function LocalPartnersForm({
 			}
 		});
 	}
+
+	useEffect(() => {
+		if (localPartnerId) {
+			// Load local partner in edit mode
+			startTransition(async () => await loadLocalPartner(localPartnerId));
+		}
+	}, [localPartnerId]);
 
 	return (
 		<DynamicForm

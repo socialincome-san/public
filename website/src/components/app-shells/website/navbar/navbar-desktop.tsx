@@ -3,16 +3,19 @@
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 import { useLogout } from '../../use-logout';
 import { Logo } from './logo';
 
-export const NavbarDesktop = ({ contributor }: { contributor?: ContributorSession }) => {
+export const NavbarDesktop = ({ contributor, lang }: { contributor?: ContributorSession; lang: WebsiteLanguage }) => {
 	const { logout } = useLogout();
+	const translator = useTranslator(lang, 'website-me');
 
-	const mainLinks = [{ href: '/', label: 'Back to Website' }];
+	const mainLinks = [{ href: '/', label: translator?.t('metadata.home-link') }];
 
 	return (
 		<nav className="container mt-6 flex h-20 items-center justify-between rounded-full bg-white">
@@ -58,13 +61,13 @@ export const NavbarDesktop = ({ contributor }: { contributor?: ContributorSessio
 
 				<DropdownMenuContent align="end" className="w-64">
 					<DropdownMenuItem
-						onSelect={(e) => {
+						onSelect={(e: Event) => {
 							e.preventDefault();
 							logout();
 						}}
 						className="text-destructive focus:text-destructive"
 					>
-						<span>Logout</span>
+						<span>{translator?.t('security.sign-out.button')}</span>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

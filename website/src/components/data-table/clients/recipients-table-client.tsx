@@ -1,5 +1,6 @@
 'use client';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import DataTable from '@/components/data-table/data-table';
@@ -7,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/d
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { logger } from '@/utils/logger';
+import { ProgramPermission } from '@prisma/client';
 import { useState } from 'react';
 
 export function RecipientsTableClient({
@@ -23,25 +25,25 @@ export function RecipientsTableClient({
 	const [open, setOpen] = useState(false);
 
 	const [recipientId, setRecipientId] = useState<string | undefined>();
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [rowReadOnly, setRowReadOnly] = useState(readOnly ?? false);
 
 	const openEmptyForm = () => {
 		setRecipientId(undefined);
 		setRowReadOnly(readOnly ?? false);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: RecipientTableViewRow) => {
 		setRecipientId(row.id);
-		setRowReadOnly(row.permission === 'readonly' ? true : (readOnly ?? false));
-		setHasError(false);
+		setRowReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const onError = (error: unknown) => {
-		setHasError(true);
+		setErrorMessage(`Error saving recipient: ${error}`);
 		logger.error('Recipient Form Error', { error });
 	};
 
@@ -68,6 +70,12 @@ export function RecipientsTableClient({
 							{rowReadOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}
 						</DialogTitle>
 					</DialogHeader>
+					{errorMessage && (
+						<Alert variant="destructive">
+							<AlertTitle>Error</AlertTitle>
+							<AlertDescription>{errorMessage}</AlertDescription>
+						</Alert>
+					)}
 					<RecipientForm
 						recipientId={recipientId}
 						readOnly={rowReadOnly}

@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';
@@ -24,7 +25,7 @@ function FooterLink({ label, url, Icon, target = '_self' }: FooterLinkProps) {
 
 export default async function Footer({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
 

@@ -63,8 +63,8 @@ enum SurveyQuestionnaire {
 }
 
 enum ProgramPermission {
-  readonly
-  edit
+  owner
+  operator
 }
 
 enum OrganizationPermission {
@@ -129,7 +129,6 @@ model User {
   role      UserRole @map("role")
 
   organizationAccesses OrganizationAccess[]
-  programAccesses      ProgramAccess[]
 
   activeOrganizationId String?       @map("active_organization_id")
   activeOrganization   Organization? @relation(fields: [activeOrganizationId], references: [id])
@@ -265,7 +264,7 @@ model Survey {
   completedAt       DateTime?           @map("completed_at") @db.Timestamptz(3)
   status            SurveyStatus        @map("status")
   data              Json                @map("data")
-  accessEmail       String              @map("access_email")
+  accessEmail       String              @unique @map("access_email")
   accessPw          String              @map("access_pw")
   accessToken       String              @map("access_token")
 
@@ -328,18 +327,18 @@ model OrganizationAccess {
 }
 
 model ProgramAccess {
-  id        String  @id @default(cuid())
-  userId    String  @map("user_id")
-  user      User    @relation(fields: [userId], references: [id])
-  programId String
-  program   Program @relation(fields: [programId], references: [id])
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  programId      String
+  program        Program      @relation(fields: [programId], references: [id])
 
-  permission ProgramPermission @default(readonly)
+  permission ProgramPermission @default(owner)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@unique([userId, programId])
+  @@unique([organizationId, programId])
   @@map("program_access")
 }
 
@@ -347,11 +346,11 @@ model Organization {
   id   String @id @default(cuid()) @map("id")
   name String @unique @map("name")
 
-  accesses      OrganizationAccess[]
-  campaigns     Campaign[]           @relation("OrganizationCampaigns")
-  ownedPrograms Program[]            @relation("ProgramOwner")
-  expenses      Expense[]
-  activeUsers   User[]
+  campaigns            Campaign[]           @relation("OrganizationCampaigns")
+  expenses             Expense[]
+  users                User[]
+  organizationAccesses OrganizationAccess[]
+  programAccesses      ProgramAccess[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -360,19 +359,17 @@ model Organization {
 }
 
 model Program {
-  id                  String       @id @default(cuid()) @map("id")
-  name                String       @unique @map("name")
-  totalPayments       Int          @map("total_payments")
-  payoutAmount        Decimal      @map("payout_amount") @db.Decimal(12, 4)
-  payoutCurrency      String       @map("payout_currency")
-  payoutInterval      Int          @map("payout_interval")
-  country             String       @default("Sierra Leone") @map("country")
-  ownerOrganizationId String       @map("owner_organization_id")
-  ownerOrganization   Organization @relation("ProgramOwner", fields: [ownerOrganizationId], references: [id])
+  id             String  @id @default(cuid()) @map("id")
+  name           String  @unique @map("name")
+  totalPayments  Int     @map("total_payments")
+  payoutAmount   Decimal @map("payout_amount") @db.Decimal(12, 4)
+  payoutCurrency String  @map("payout_currency")
+  payoutInterval Int     @map("payout_interval")
+  country        String  @default("Sierra Leone") @map("country")
 
   campaigns       Campaign[]
   recipients      Recipient[]
-  accesses        ProgramAccess[]
+  programAccesses ProgramAccess[]
   surveySchedules SurveySchedule[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)

@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
@@ -9,7 +10,10 @@ export const revalidate = 3600 * 24; // update once a day
 
 export async function PastRounds({ lang }: DefaultParams) {
 	const pastDraws = await loadPastDraws();
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-selection'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-selection'],
+	});
 
 	return (
 		<BaseContainer className="bg-background mx-auto mb-16 mt-28 flex flex-col items-center justify-center md:mb-28">
@@ -34,7 +38,7 @@ export async function PastRounds({ lang }: DefaultParams) {
 					{pastDraws.map((draw, index) => (
 						<DrawCard
 							key={index}
-							lang={lang}
+							lang={lang as WebsiteLanguage}
 							draw={draw}
 							translations={{
 								summary: translator.t('section-4.draw-card.summary', {

@@ -8,7 +8,7 @@ import {
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
-import { WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
@@ -71,7 +71,7 @@ export default async function Page(props: {
 	);
 	const articleWithImageStyling = !articleData.useImageOnlyForPreview;
 	let translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
 	});
 

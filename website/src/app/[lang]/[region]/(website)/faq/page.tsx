@@ -1,17 +1,18 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { FAQSection } from '@/components/legacy/faq/faq-section';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata(props: DefaultPageProps) {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-faq');
+	return getMetadata(params.lang as WebsiteLanguage, 'website-faq');
 }
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-faq'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-faq'] });
 
 	return (
 		<BaseContainer className="space-y-20">

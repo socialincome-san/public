@@ -2,8 +2,18 @@ import { RecipientsTableClient } from '@/components/data-table/clients/recipient
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { ProgramPermission } from '@prisma/client';
+import { Suspense } from 'react';
 
-export default async function RecipientsPage() {
+export default function RecipientsPage() {
+	return (
+		<Suspense>
+			<RecipientsDataLoader />
+		</Suspense>
+	);
+}
+
+async function RecipientsDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const recipientService = new RecipientService();
@@ -11,7 +21,7 @@ export default async function RecipientsPage() {
 
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
-	const readOnly = result.success ? result.data.permission !== 'edit' : true;
+	const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
 
 	return <RecipientsTableClient rows={rows} error={error} readOnly={readOnly} />;
 }

@@ -18,22 +18,22 @@ export default function LocalPartnersTable({
 	error: string | null;
 }) {
 	const [open, setOpen] = useState(false);
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [partnerId, setPartnerId] = useState<string | undefined>(undefined);
 	const openEmptyForm = () => {
 		setPartnerId(undefined);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: LocalPartnerTableViewRow) => {
 		setPartnerId(row.id);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const onError = (error: unknown) => {
-		setHasError(true);
+		setErrorMessage(`Error saving local partner: ${error}`);
 		logger.error('Local Partner Form Error', { error });
 	};
 
@@ -54,11 +54,10 @@ export default function LocalPartnersTable({
 					<DialogHeader>
 						<DialogTitle>{partnerId ? 'Edit' : 'Add'} local partner</DialogTitle>
 					</DialogHeader>
-					{hasError && (
-						// TODO: add proper error handling
+					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>Error saving local partner</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<LocalPartnersForm

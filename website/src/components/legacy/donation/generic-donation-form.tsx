@@ -5,6 +5,7 @@ import { BankTransferForm, BankTransferFormProps } from '@/components/legacy/don
 import { DonationInterval } from '@/components/legacy/donation/donation-interval';
 import { CurrencySelector } from '@/components/legacy/ui/currency-selector';
 import { useI18n } from '@/lib/i18n/useI18n';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
@@ -116,7 +117,7 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 										type="single"
 										className={'bg-popover mb-4 inline-flex rounded-full'}
 										value={field.value}
-										onValueChange={(v) => form.setValue('interval', v)}
+										onValueChange={(v: string) => form.setValue('interval', v)}
 									>
 										<ToggleGroupItem
 											key={DonationInterval.OneTime}
@@ -149,7 +150,7 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 												type="single"
 												className={'mb-4'}
 												value={field.value.toString()}
-												onValueChange={(v) => {
+												onValueChange={(v: string) => {
 													if (v) {
 														form.setValue('amount', Number.parseInt(v));
 													}
@@ -185,7 +186,7 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 												type="single"
 												className="bg-popover mb-4 inline-flex rounded-full"
 												value={field.value}
-												onValueChange={(value) => form.setValue('paymentType', value)}
+												onValueChange={(value: string) => form.setValue('paymentType', value)}
 											>
 												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.CREDIT_CARD}>
 													{translations.paymentType.creditCard}
@@ -206,8 +207,8 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 								amount={form.watch('amount')}
 								intervalCount={form.watch('interval') === DonationInterval.Monthly ? 1 : 0}
 								translations={translations.bankTransfer}
-								lang={lang}
-								region={region}
+								lang={lang as WebsiteLanguage}
+								region={region as WebsiteRegion}
 								qrBillType="QRCODE"
 							/>
 						</div>

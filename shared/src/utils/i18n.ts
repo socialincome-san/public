@@ -30,17 +30,11 @@ export class Translator {
 
 	public static async getInstance({ language, namespaces }: TranslatorProps): Promise<Translator> {
 		const translator = new Translator(language, namespaces);
+
 		await translator.instance
 			.use(
-				resourcesToBackend((language: string, namespace: string) => {
-					try {
-						// for translations to work in the functions runtime, we need to import the local translation files
-						const fs = require('fs');
-						const path = require('path');
-						const localPath = path.join(__dirname, `../../locales/${language}/${namespace}.json`);
-						if (fs.existsSync(localPath)) return import(localPath);
-					} catch (e) {} // do nothing if module not found
-					return import(`@socialincome/shared/locales/${language}/${namespace}.json`);
+				resourcesToBackend((lng: string, ns: string) => {
+					return import(`@socialincome/shared/locales/${lng}/${ns}.json`);
 				}),
 			)
 			.init({
@@ -52,6 +46,7 @@ export class Translator {
 					escapeValue: false,
 				},
 			});
+
 		return translator;
 	}
 

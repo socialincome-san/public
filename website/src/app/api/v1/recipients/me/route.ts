@@ -47,11 +47,14 @@ export async function PATCH(request: Request) {
 	const parsed = RecipientSelfUpdate.safeParse(body);
 
 	if (!parsed.success) {
-		return new Response(parsed.error.errors[0]?.message ?? 'Invalid input', { status: 400 });
+		return new Response(parsed.error.message, { status: 400 });
 	}
 
 	const recipient = recipientResult.data;
 	const data = parsed.data;
+
+	const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
+	const newPaymentPhone = data.paymentPhone ?? null;
 
 	const updateData: RecipientPrismaUpdateInput = {
 		contact: {
@@ -103,7 +106,10 @@ export async function PATCH(request: Request) {
 				: undefined,
 	};
 
-	const updateResult = await recipientService.updateSelf(recipient.id, updateData);
+	const updateResult = await recipientService.updateSelf(recipient.id, updateData, {
+		oldPaymentPhone,
+		newPaymentPhone,
+	});
 
 	if (!updateResult.success) {
 		return new Response(updateResult.error, { status: 500 });

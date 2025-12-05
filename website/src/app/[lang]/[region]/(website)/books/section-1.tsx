@@ -1,11 +1,12 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ClockIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export default async function Section1({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-books'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-books'] });
 
 	return (
 		<BaseContainer className="mt-12 flex flex-col items-center space-y-4">

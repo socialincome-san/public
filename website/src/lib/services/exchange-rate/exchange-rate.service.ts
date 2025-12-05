@@ -2,7 +2,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
 import { ExchangeRateImportService } from './exchange-rate-import.service';
-import { ExchangeRates, ExchangeRatesTableView, ExchangeRatesTableViewRow } from './exchange-rate.types';
+import { ExchangeRate, ExchangeRates, ExchangeRatesTableView, ExchangeRatesTableViewRow } from './exchange-rate.types';
 export class ExchangeRateService extends BaseService {
 	private userService = new UserService();
 	private importService = new ExchangeRateImportService();
@@ -39,6 +39,28 @@ export class ExchangeRateService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch latest exchange rates');
+		}
+	}
+
+	async getLatestRateForCurrency(currency: string): Promise<ServiceResult<ExchangeRate>> {
+		try {
+			const result = await this.db.exchangeRate.findFirst({
+				where: { currency },
+				select: { currency: true, rate: true },
+				orderBy: { timestamp: 'desc' },
+			});
+
+			if (!result) {
+				return this.resultFail('No exchange rate found');
+			}
+
+			return this.resultOk({
+				...result,
+				rate: Number(result.rate),
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch latest exchange rate');
 		}
 	}
 

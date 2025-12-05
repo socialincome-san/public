@@ -33,6 +33,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
 

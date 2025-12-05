@@ -29,7 +29,6 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
 		{ href: `/portal/programs/${programId}/payout-forecast`, label: 'Payout Forecast' },
 		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
-		{ href: `/portal/programs/${programId}/members`, label: 'Program Members' },
 	];
 
 	const breadcrumbLinks = [

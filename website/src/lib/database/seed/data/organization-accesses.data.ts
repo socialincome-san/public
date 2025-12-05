@@ -12,14 +12,14 @@ export const organizationAccessesData: OrganizationAccess[] = [
 	{
 		id: 'organization-access-2',
 		userId: 'user-2',
-		organizationId: 'organization-2',
+		organizationId: 'organization-1',
 		permission: OrganizationPermission.edit,
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'organization-access-3',
-		userId: 'user-3',
+		userId: 'user-2',
 		organizationId: 'organization-3',
 		permission: OrganizationPermission.edit,
 		createdAt: new Date(),
