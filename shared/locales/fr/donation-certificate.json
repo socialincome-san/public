@@ -19,7 +19,7 @@
 	"text-1_female": "Par la présente, nous attestons auprès des autorités fiscales que {{ firstname }} {{ lastname }} a effectué en {{ year }} des dons à l’association Social Income pour un montant total de:",
 	"text-1_male": "Par la présente, nous attestons auprès des autorités fiscales que {{ firstname }} {{ lastname }} a effectué en {{ year }} des dons à l’association Social Income pour un montant total de:",
 	"text-2": "Tous les dons reçus entre le {{ start, datetime }} et le {{ end, datetime }} ont été pris en compte.",
-	"text-3": "Pour bénéficier d’une éventuelle déduction fiscale, nous vous invitons à vous renseigner sur la réglementation fiscale de votre canton concernant les donations à une organisation d’utilité publique.",
+	"text-3": "Pour une éventuelle déduction fiscale, veuillez consulter la réglementation fiscale locale.",
 	"text-4": "Nous vous remercions chaleureusement de votre soutien.",
 	"text-5": "Bien cordialement,",
 	"title": "Attestation de dons pour {{ year }}"
