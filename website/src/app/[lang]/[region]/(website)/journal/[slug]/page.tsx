@@ -1,6 +1,10 @@
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
-import { generateMetaDataForBlog, getArticle, getRelativeArticles } from '@/components/legacy/storyblok/StoryblokApi';
+import {
+	generateMetaDataForArticle,
+	getArticle,
+	getRelativeArticles,
+} from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
@@ -24,7 +28,7 @@ export async function generateMetadata(props: {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
 	const url = `https://socialincome.org/${lang}/journal/${articleResponse.data.story.slug}`;
-	return generateMetaDataForBlog(articleResponse.data.story, url);
+	return generateMetaDataForArticle(articleResponse.data.story, url);
 }
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
@@ -58,7 +62,7 @@ export default async function Page(props: {
 	const articleData = articleResponse.data.story.content;
 	const author: ISbStoryData<StoryblokAuthor> = articleData.author;
 
-	const blogs = await getRelativeArticles(
+	const articles = await getRelativeArticles(
 		author.uuid,
 		articleResponse.data.story.id,
 		articleData.tags?.map((it) => it.uuid),
@@ -144,7 +148,7 @@ export default async function Page(props: {
 									color={articleWithImageStyling ? 'popover' : 'foreground'}
 									className="ml-1"
 								>
-									{author.content.fullName}
+									{`${author.content.firstName} ${author.content.lastName}`}
 								</Typography>
 							</div>
 						</Link>
@@ -195,7 +199,7 @@ export default async function Page(props: {
 						<div className="mt-5 flex items-center space-x-4">
 							<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />
 							<Typography size="lg" as="span" className="ml-1" color="foreground">
-								{author.content.fullName}
+								{`${author.content.firstName} ${author.content.lastName}`}
 							</Typography>
 						</div>
 					</Link>
@@ -206,14 +210,14 @@ export default async function Page(props: {
 						<Typography size="4xl" className="text-center" weight="semibold">
 							{translator.t('article.keep-reading')}
 						</Typography>
-						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-10 md:pl-20 md:pr-20 lg:grid-cols-3">
-							{blogs.map((blog) => (
+						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-5 md:pl-20 md:pr-20 lg:grid-cols-3">
+							{articles.map((article) => (
 								<StoryblokArticleCard
-									key={blog.uuid}
+									key={article.uuid}
 									lang={lang}
 									region={region}
-									blog={blog}
-									author={blog.content.author}
+									article={article}
+									author={article.content.author}
 								/>
 							))}
 						</div>

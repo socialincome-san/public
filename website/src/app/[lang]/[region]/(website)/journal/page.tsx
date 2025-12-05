@@ -1,17 +1,17 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
-	getAuthors,
 	getOverviewArticles,
 	getOverviewArticlesCountForDefaultLang,
-	getTags,
+	getOverviewAuthors,
+	getOverviewTags,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Badge, BaseContainer, Separator, Typography } from '@socialincome/ui';
+import { Badge, BaseContainer, Carousel, CarouselContent, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export const revalidate = 900;
@@ -24,17 +24,14 @@ export default async function Page({ params }: DefaultPageProps) {
 		namespaces: ['website-journal', 'common'],
 	});
 
-	const [blogsResponse, authorsResponse, tagsResponse] = await Promise.all([
+	const [articles, authors, tags] = await Promise.all([
 		getOverviewArticles(lang),
-		getAuthors(lang),
-		getTags(lang),
+		getOverviewAuthors(lang),
+		getOverviewTags(lang),
 	]);
-	const blogs = blogsResponse.data.stories;
-	const totalArticlesInSelectedLanguage = blogsResponse.total;
+
 	const totalArticlesInDefaultLang =
-		lang == defaultLanguage ? totalArticlesInSelectedLanguage : await getOverviewArticlesCountForDefaultLang();
-	const authors = authorsResponse.data.stories;
-	const tags = tagsResponse.data.stories;
+		lang == defaultLanguage ? articles.length : await getOverviewArticlesCountForDefaultLang();
 
 	return (
 		<BaseContainer>
@@ -47,18 +44,35 @@ export default async function Page({ params }: DefaultPageProps) {
 			<Typography className="mb-4 mt-12 text-center" size="3xl" weight="medium">
 				{translator.t('overview.editors')}
 			</Typography>
-			<div className="mx-auto mb-10 grid max-w-lg grid-cols-[repeat(auto-fit,minmax(60px,1fr))] place-items-center gap-2">
-				{authors.map((author, index) => (
-					<div key={index} className="flex flex-col justify-center text-center">
-						<Link href={`/${lang}/${region}/journal/author/${author.slug}`}>
-							<StoryblokAuthorImage className="mb-1" author={author} size="extra-large" lang={lang} region={region} />
-
-							<Typography>{author.content.firstName}</Typography>
-							<Typography>{author.content.lastName}</Typography>
+			<Carousel
+				className="mx-auto mb-10 max-w-lg"
+				options={{
+					loop: true,
+					autoPlay: { enabled: true, delay: 5000 },
+				}}
+				showControls
+			>
+				{authors.map((author) => (
+					<CarouselContent key={author.id} className="mx-1 flex flex-col justify-center text-center">
+						<Link
+							href={`/${lang}/${region}/journal/author/${author.slug}`}
+							title={`${author.content.firstName} ${author.content.lastName}`}
+						>
+							<StoryblokAuthorImage
+								className="mx-auto mb-1"
+								author={author}
+								size="extra-large"
+								lang={lang}
+								region={region}
+							/>
+							<div className="line-clamp-2 max-w-24 overflow-hidden break-words">
+								<Typography>{author.content.firstName}</Typography>
+								<Typography>{author.content.lastName}</Typography>
+							</div>
 						</Link>
-					</div>
+					</CarouselContent>
 				))}
-			</div>
+			</Carousel>
 
 			<div className="mt-16 flex flex-wrap gap-2">
 				<div>
@@ -76,12 +90,18 @@ export default async function Page({ params }: DefaultPageProps) {
 			</div>
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{blogs.map((blog) => (
-					<StoryblokArticleCard lang={lang} region={region} blog={blog} author={blog.content.author} key={blog.uuid} />
+				{articles.map((article) => (
+					<StoryblokArticleCard
+						lang={lang}
+						region={region}
+						article={article}
+						author={article.content.author}
+						key={article.uuid}
+					/>
 				))}
 			</div>
 
-			{totalArticlesInDefaultLang > totalArticlesInSelectedLanguage && (
+			{totalArticlesInDefaultLang > articles.length && (
 				<div>
 					<Separator className="my-8" />
 					<MoreArticlesLink text={translator.t('overview.more-articles')} />
