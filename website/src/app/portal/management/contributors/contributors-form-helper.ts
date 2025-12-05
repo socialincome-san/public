@@ -1,7 +1,33 @@
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
-import { ContributorPayload, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
+import {
+	ContributorFormCreateInput,
+	ContributorPayload,
+	ContributorUpdateInput,
+} from '@/lib/services/contributor/contributor.types';
 import { ContributorFormSchema } from './contributors-form';
+
+export function buildCreateContributorInput(schema: ContributorFormSchema): ContributorFormCreateInput {
+	const contactFields: {
+		[key: string]: FormField;
+	} = schema.fields.contact.fields;
+
+	return {
+		firstName: contactFields.firstName.value ?? '',
+		lastName: contactFields.lastName.value ?? '',
+		callingName: contactFields.callingName.value ?? null,
+		email: contactFields.email.value ?? '',
+
+		referral: schema.fields.referral.value,
+
+		gender: contactFields.gender.value,
+		language: contactFields.language.value,
+		dateOfBirth: contactFields.dateOfBirth.value,
+		profession: contactFields.profession.value,
+
+		address: buildAddressInput(contactFields),
+	};
+}
 
 export function buildUpdateContributorsInput(
 	schema: ContributorFormSchema,
