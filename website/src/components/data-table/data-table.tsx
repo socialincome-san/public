@@ -39,7 +39,7 @@ export default function DataTable<Row>({
 
 	return (
 		<div>
-			<div className="mb-4 flex items-center justify-between">
+			<div className="mb-4 flex flex-wrap items-center justify-between">
 				<h2 className="pb-4 text-3xl">
 					{title} <span className="text-lg text-gray-500">({data.length})</span>
 				</h2>
