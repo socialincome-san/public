@@ -16,7 +16,7 @@ const _kOverdueEndDay = 15;
 const _kOverduePeriodDays = 6;
 const _kEndOfDisplaySurveyDay = 20;
 
-const _kSurveyBaseUrlKey = "SURVEY_BASE_URL";
+const _kBaseUrlKey = "BASE_URL";
 
 class SurveyCubit extends Cubit<SurveyState> {
   final Recipient recipient;
@@ -78,7 +78,7 @@ class SurveyCubit extends Cubit<SurveyState> {
     };
 
     final uri = Uri.https(
-      const String.fromEnvironment(_kSurveyBaseUrlKey),
+      const String.fromEnvironment(_kBaseUrlKey),
       "survey/$recipientId/${survey.id}",
       params,
     );

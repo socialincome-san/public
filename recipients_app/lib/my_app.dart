@@ -24,6 +24,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
+import "package:si_api_client/api.dart";
 
 class MyApp extends StatelessWidget {
   final FirebaseMessaging messaging;
@@ -45,6 +46,8 @@ class MyApp extends StatelessWidget {
 
   final AppVersionInfo? appVersionInfo;
 
+  final V1Api apiClient;
+
   const MyApp({
     super.key,
     required this.messaging,
@@ -61,6 +64,7 @@ class MyApp extends StatelessWidget {
     required this.firebaseRemoteConfigService,
     required this.crashReportingRepository,
     required this.appVersionInfo,
+    required this.apiClient,
   });
 
   // This widget is the root of your application.
@@ -96,6 +100,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<FirebaseRemoteConfigService>.value(
           value: firebaseRemoteConfigService,
         ),
+        RepositoryProvider<V1Api>.value(value: apiClient),
       ],
       child: MultiBlocProvider(
         providers: [
