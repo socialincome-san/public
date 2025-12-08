@@ -2,7 +2,7 @@ name: Rules (firestore & storage)
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   deploy:

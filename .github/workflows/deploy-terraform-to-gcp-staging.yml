@@ -3,7 +3,7 @@ name: Website / Deploy with Terraform to GCP / Staging
 on:
   push:
     branches:
-      - staging
+      - main
 
 env:
   ENVIRONMENT: staging
