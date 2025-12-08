@@ -88,6 +88,7 @@ export async function getArticleCountByAuthorForDefaultLang(authorId: string): P
 
 export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<StoryblokAuthor>[]> {
 	const params: ISbStoriesParams = {
+		per_page: DEFAULT_PAGE_SIZE,
 		language: lang as WebsiteLanguage,
 		content_type: StoryblokContentType.Author,
 		filter_query: {
@@ -101,6 +102,7 @@ export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<Sto
 
 export async function getOverviewTags(lang: string): Promise<ISbStoryData<StoryblokTag>[]> {
 	const params: ISbStoriesParams = {
+		per_page: DEFAULT_PAGE_SIZE,
 		language: lang as WebsiteLanguage,
 		content_type: StoryblokContentType.Tag,
 		filter_query: {
