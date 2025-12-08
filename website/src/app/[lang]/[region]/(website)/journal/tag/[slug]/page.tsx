@@ -30,13 +30,12 @@ export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;
 
 	const tag = (await getTag(slug, lang)).data.story;
-	const blogsResponse = await getArticlesByTag(tag.uuid, lang);
-	const blogs = blogsResponse.data.stories;
+	const articles = await getArticlesByTag(tag.uuid, lang);
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common'],
 	});
-	const totalArticlesInSelectedLanguage = blogsResponse.total;
+	const totalArticlesInSelectedLanguage = articles.length;
 	const totalArticlesInDefault = await getTotalArticlesInDefault(lang, tag.uuid, totalArticlesInSelectedLanguage);
 	return (
 		<BaseContainer>
