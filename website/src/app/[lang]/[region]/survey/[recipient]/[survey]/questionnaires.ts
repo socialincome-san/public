@@ -1,5 +1,5 @@
+import { TranslateFunction } from '@/lib/i18n/translator';
 import { SurveyQuestionnaire } from '@prisma/client';
-import { TranslateFunction } from '@socialincome/shared/src/utils/i18n';
 import {
 	achievementsAchievedPage,
 	debtHouseholdPage,

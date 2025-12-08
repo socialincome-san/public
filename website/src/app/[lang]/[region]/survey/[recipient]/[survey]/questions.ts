@@ -1,4 +1,5 @@
 // Generic set of question pages and choices
+import { TranslateFunction } from '@/lib/i18n/translator';
 import {
 	ACHIEVEMENTS_ACHIEVED,
 	ACHIEVEMENTS_NOT_ACHIEVED,
@@ -32,7 +33,6 @@ import {
 	SPENDING,
 	UNEXPECTED_EXPENSES_COVERED,
 } from '@/lib/types/question';
-import { TranslateFunction } from '@socialincome/shared/src/utils/i18n';
 
 // Final question pages
 export const welcomePage = (t: TranslateFunction, name: string) => {

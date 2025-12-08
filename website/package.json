@@ -63,6 +63,8 @@
 		"date-fns": "^4.1.0",
 		"dotenv-cli": "^11.0.0",
 		"firebase": "^11.9.1",
+		"i18next": "^23.15.2",
+		"i18next-resources-to-backend": "^1.2.1",
 		"isomorphic-dompurify": "^2.33.0",
 		"js-cookie": "^3.0.5",
 		"lodash": "^4.17.21",

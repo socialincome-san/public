@@ -1,5 +1,5 @@
+import { Translator } from '@/lib/i18n/translator';
 import { LanguageCode } from '@/lib/types/language';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';

@@ -1,8 +1,8 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import { LayoutClient } from '@/app/[lang]/[region]/(website)/legal/layout-client';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 import { PropsWithChildren } from 'react';
 

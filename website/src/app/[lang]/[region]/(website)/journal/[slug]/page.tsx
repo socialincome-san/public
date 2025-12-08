@@ -8,11 +8,11 @@ import {
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { StoryblokAuthor, StoryblokTag } from '@/lib/types/journal';
 import { LanguageCode } from '@/lib/types/language';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Separator, Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';

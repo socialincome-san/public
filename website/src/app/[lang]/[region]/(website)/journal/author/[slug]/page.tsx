@@ -6,10 +6,10 @@ import {
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
+import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
 import { LanguageCode } from '@/lib/types/language';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, linkCn, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 

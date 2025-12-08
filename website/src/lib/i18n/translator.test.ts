@@ -1,4 +1,4 @@
-import { Translator } from './i18n';
+import { Translator } from './translator';
 
 describe('Test translations', () => {
 	it('German translations', async () => {

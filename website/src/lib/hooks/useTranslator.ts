@@ -1,5 +1,5 @@
+import { Translator } from '@/lib/i18n/translator';
 import { LanguageCode } from '@/lib/types/language';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { useEffect, useState } from 'react';
 
 export function useTranslator(language: LanguageCode, namespace: string) {

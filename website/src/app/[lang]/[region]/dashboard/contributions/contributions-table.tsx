@@ -2,10 +2,10 @@ import { Button } from '@/components/button';
 import { makeYourContributionsColumns } from '@/components/data-table/columns/your-contributions';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributionService } from '@/lib/services/contribution/contribution.service';
 import { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import Link from 'next/link';
 
 export async function ContributionsTable({ lang }: { lang: WebsiteLanguage }) {

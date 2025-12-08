@@ -6,8 +6,8 @@ import {
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { CH, SL } from 'country-flag-icons/react/1x1';
 
 const SL_Flag = SL as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
