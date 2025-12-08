@@ -7,6 +7,7 @@ const config: KnipConfig = {
 		'react-hook-form',
 		'zod',
 		'@hookform/resolvers',
+		'jest',
 		'@sendgrid/mail',
 		'dotenv-cli',
 		'prisma',
@@ -25,7 +26,6 @@ const config: KnipConfig = {
 		'tsx',
 		'next',
 		'firebase',
-		'jest',
 		'playwright',
 		'eslint',
 		'next-openapi-gen',
@@ -34,6 +34,7 @@ const config: KnipConfig = {
 		'prisma',
 		'knip',
 	],
+	ignoreUnresolved: ['dotenv/config'],
 };
 
 export default config;
