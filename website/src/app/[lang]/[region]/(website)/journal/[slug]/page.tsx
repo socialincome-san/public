@@ -12,7 +12,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { StoryblokAuthor, StoryblokTag } from '@/lib/types/journal';
 import { LanguageCode } from '@/lib/types/language';
-import { storyblokInitializationWorkaround } from '@/storyblok-init';
+import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
 import { Badge, Separator, Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';

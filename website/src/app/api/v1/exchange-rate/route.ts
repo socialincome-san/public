@@ -1,5 +1,5 @@
 import { ExchangeRateImportService } from '@/lib/services/exchange-rate/exchange-rate-import.service';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**

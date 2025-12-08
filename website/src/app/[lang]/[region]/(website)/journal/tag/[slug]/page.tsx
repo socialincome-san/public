@@ -8,7 +8,7 @@ import {
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { storyblokInitializationWorkaround } from '@/storyblok-init';
+import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;

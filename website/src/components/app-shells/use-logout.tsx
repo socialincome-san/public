@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { logoutAction } from '@/lib/server-actions/session-actions';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 

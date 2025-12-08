@@ -2,7 +2,7 @@ import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[region]';
 import LoginForm from '@/app/[lang]/[region]/(website)/login/login-form';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
+import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer } from '@socialincome/ui';
 
 export async function generateMetadata(props: DefaultLayoutProps) {

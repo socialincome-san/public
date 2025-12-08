@@ -6,7 +6,7 @@ import { VimeoVideo } from '@/components/legacy/vimeo-video';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCampaignByLegacyIdAction } from '@/lib/server-actions/campaigns-actions';
-import { getMetadata } from '@/metadata';
+import { getMetadata } from '@/lib/utils/metadata';
 import {
 	Accordion,
 	AccordionContent,

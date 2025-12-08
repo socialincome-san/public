@@ -2,7 +2,7 @@ import { getOverviewArticles, getOverviewAuthors, getOverviewTags } from '@/comp
 import { toDateObject } from '@/components/legacy/storyblok/StoryblokUtils';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@/lib/types/journal';
-import { storyblokInitializationWorkaround } from '@/storyblok-init';
+import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
 import type { MetadataRoute } from 'next';
 import { ISbStoryData } from 'storyblok-js-client/src/interfaces';
 import staticRoutes from './static-pages.json';

@@ -7,7 +7,7 @@ import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { ProgramPermission } from '@prisma/client';
 import { useState } from 'react';
 

@@ -3,7 +3,7 @@ import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aure
 import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/newsletter/subscription-info-form';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
+import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';

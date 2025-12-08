@@ -2,7 +2,7 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { ProseAccordion } from '@/components/legacy/faq/prose-accordion';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
+import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata(props: DefaultPageProps) {

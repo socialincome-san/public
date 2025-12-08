@@ -1,7 +1,7 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import Navbar from '@/components/legacy/navbar/navbar';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
+import { getMetadata } from '@/lib/utils/metadata';
 import { PropsWithChildren } from 'react';
 
 export async function generateMetadata(props: DefaultLayoutProps) {

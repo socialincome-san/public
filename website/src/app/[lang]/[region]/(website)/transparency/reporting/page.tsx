@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
+import { getMetadata } from '@/lib/utils/metadata';
 import {
 	BaseContainer,
 	Table,
