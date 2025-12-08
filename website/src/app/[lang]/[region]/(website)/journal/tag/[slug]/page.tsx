@@ -50,8 +50,14 @@ export default async function Page({ params }: PageProps) {
 			</div>
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{blogs.map((blog) => (
-					<StoryblokArticleCard key={blog.uuid} lang={lang} region={region} blog={blog} author={blog.content.author} />
+				{articles.map((article) => (
+					<StoryblokArticleCard
+						key={article.uuid}
+						lang={lang}
+						region={region}
+						article={article}
+						author={article.content.author}
+					/>
 				))}
 			</div>
 
