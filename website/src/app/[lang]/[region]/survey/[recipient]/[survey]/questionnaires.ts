@@ -38,7 +38,7 @@ export const getQuestionnaire = (questionnaire: SurveyQuestionnaire, t: Translat
 	return [];
 };
 
-export const onboardingQuestionnaire = (t: TranslateFunction, name: string) => [
+const onboardingQuestionnaire = (t: TranslateFunction, name: string) => [
 	welcomePage(t, name),
 	plannedAchievementsPage(t),
 	livingLocationPage(t),
@@ -55,7 +55,7 @@ export const onboardingQuestionnaire = (t: TranslateFunction, name: string) => [
 	otherSupportPage(t),
 ];
 
-export const checkinQuestionnaire = (t: TranslateFunction, name: string) => [
+const checkinQuestionnaire = (t: TranslateFunction, name: string) => [
 	welcomePage(t, name),
 	spendingPage(t),
 	plannedAchievementsRemainingPage(t),
@@ -73,7 +73,7 @@ export const checkinQuestionnaire = (t: TranslateFunction, name: string) => [
 	otherSupportPage(t),
 ];
 
-export const offboardingQuestionnaire = (t: TranslateFunction, name: string) => [
+const offboardingQuestionnaire = (t: TranslateFunction, name: string) => [
 	welcomePage(t, name),
 	impactFinancialPage(t),
 	impactLifePage(t),
@@ -91,7 +91,7 @@ export const offboardingQuestionnaire = (t: TranslateFunction, name: string) => 
 	savingsPage(t),
 ];
 
-export const offboardingCheckinQuestionnaire = (t: TranslateFunction, name: string) => [
+const offboardingCheckinQuestionnaire = (t: TranslateFunction, name: string) => [
 	welcomePage(t, name),
 	impactFinancialPage(t),
 	longEnoughPage(t),

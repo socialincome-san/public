@@ -81,7 +81,6 @@ BreadcrumbEllipsis.displayName = 'BreadcrumbElipsis';
 
 export {
 	BreadcrumbElements,
-	BreadcrumbEllipsis,
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbList,

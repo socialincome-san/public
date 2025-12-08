@@ -24,5 +24,3 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 		<OpenSourceContributorsClient contributors={contributors} heading={heading} totalContributors={totalContributors} />
 	);
 }
-
-export default OpenSourceContributors;

@@ -18,7 +18,7 @@ const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
 	CH: <CH_Flag className="h-5 w-5 rounded-full" />,
 };
 
-export function getFlag(abbreviation: string): React.ReactElement {
+function getFlag(abbreviation: string): React.ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] ?? <SL_Flag className="h-5 w-5 rounded-full" />;
 }
 export const ngos = ['aurora', 'jamil', 'reachout', 'equal_rights', 'united_polio', 'slaes', 'lizardearth', 'rainbo'];

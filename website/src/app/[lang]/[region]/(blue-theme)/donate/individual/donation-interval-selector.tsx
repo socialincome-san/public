@@ -8,7 +8,7 @@ import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography }
 import classNames from 'classnames';
 import { useFormContext } from 'react-hook-form';
 
-export const DONATION_INTERVALS = ['1', '3', '12'] as const;
+const DONATION_INTERVALS = ['1', '3', '12'] as const;
 type DonationInterval = (typeof DONATION_INTERVALS)[number];
 
 type DonationIntervalTranslations = {

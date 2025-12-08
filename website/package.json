@@ -31,7 +31,8 @@
 		"db:seed": "npm run prisma:env-local -- db seed --schema=src/lib/database/schema.prisma",
 		"db:studio": "npm run prisma:env-local -- studio --schema=src/lib/database/schema.prisma",
 		"db:up": "docker compose up -d postgres",
-		"db:down": "docker compose down"
+		"db:down": "docker compose down",
+		"check:unused": "knip --config knip.config.ts"
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.1.5",
@@ -103,6 +104,7 @@
 		"autoprefixer": "^10.4.20",
 		"eslint": "^9",
 		"eslint-config-next": "16.0.7",
+		"knip": "^5.72.0",
 		"next-openapi-gen": "^0.7.11",
 		"node-loader": "^2.1.0",
 		"postcss": "^8.4.47",

@@ -347,7 +347,7 @@ export const longEnoughPage = (t: TranslateFunction) => {
 	};
 };
 
-export const translateChoices = (t: TranslateFunction, choices: any[], choicesTranslationKey: String) =>
+const translateChoices = (t: TranslateFunction, choices: any[], choicesTranslationKey: String) =>
 	choices.map((key) => {
 		return {
 			value: key,

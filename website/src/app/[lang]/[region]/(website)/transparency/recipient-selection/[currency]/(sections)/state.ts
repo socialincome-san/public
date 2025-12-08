@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 
 const DRAWS_PATH = process.cwd() + '/../recipients_selection/draws';
 
-export type Draw = {
+type Draw = {
 	name: string;
 	time: number;
 	count: number;
