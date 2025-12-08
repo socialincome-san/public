@@ -34,7 +34,7 @@ export class Translator {
 		await translator.instance
 			.use(
 				resourcesToBackend((lng: string, ns: string) => {
-					return import(`@socialincome/shared/locales/${lng}/${ns}.json`);
+					return import(`@socialincome/website/src/lib/i18n/locales/${lng}/${ns}.json`);
 				}),
 			)
 			.init({

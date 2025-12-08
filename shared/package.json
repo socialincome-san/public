@@ -2,22 +2,6 @@
 	"name": "@socialincome/shared",
 	"version": "1.0.0",
 	"private": true,
-	"scripts": {
-		"typecheck": "tsc --noEmit"
-	},
-	"devDependencies": {
-		"@jest/globals": "^29.7.0",
-		"@types/jest": "^29.5.13",
-		"@types/luxon": "^3.4.2",
-		"@types/nodemailer": "^6.4.16",
-		"@types/pdfkit": "^0.17.3",
-		"firebase-functions-test": "^3.4.0"
-	},
-	"dependencies": {
-		"axios": "^1.8.2",
-		"date-fns": "^4.1.0",
-		"firebase-admin": "^12.7.0",
-		"firecms": "^2.2.1",
-		"luxon": "^3.5.0"
-	}
+	"devDependencies": {},
+	"dependencies": {}
 }

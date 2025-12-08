@@ -19,8 +19,8 @@ const config: KnipConfig = {
 		'@radix-ui/react-progress',
 		'@radix-ui/react-switch',
 		'@firebase/analytics',
-		'firebase-admin',
 		'@sendgrid/client',
+		'@google-cloud/storage',
 	],
 	ignoreBinaries: [
 		'tsx',
