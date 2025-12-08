@@ -1,8 +1,8 @@
 import { ShowMoreToggle } from '@/components/legacy/storyblok/ShowMore';
 import { formatStoryblokDate } from '@/components/legacy/storyblok/StoryblokUtils';
 import { ThumbnailImage } from '@/components/legacy/storyblok/ThumbnailImage';
-import { ReferenceArticle, ReferencesGroup, StoryblokImage } from '@/types/journal';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { ReferenceArticle, ReferencesGroup, StoryblokImage } from '@/lib/types/journal';
+import { LanguageCode } from '@/lib/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { linkCn, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';

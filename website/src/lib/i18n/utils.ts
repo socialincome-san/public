@@ -1,8 +1,8 @@
-import { Currency } from '@socialincome/shared/src/types/currency';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { LANGUAGE_COOKIE, REGION_COOKIE } from '@socialincome/website/src/app/[lang]/[region]';
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
+import { Currency } from '../types/currency';
+import { LanguageCode } from '../types/language';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
 export const defaultLanguage: WebsiteLanguage = 'en';

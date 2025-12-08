@@ -1,6 +1,6 @@
+import { Currency } from '@/lib/types/currency';
 import { ContributionStatus, PaymentEvent, PaymentEventType } from '@prisma/client';
 import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
-import { Currency } from '@socialincome/shared/src/types/currency';
 import xmldom from '@xmldom/xmldom';
 import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';

@@ -1,4 +1,4 @@
-import { StoryblokEmbeddedVideo } from '@/types/journal';
+import { StoryblokEmbeddedVideo } from '@/lib/types/journal';
 import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from '@socialincome/shared/src/utils/UrlVideoParser';
 import { Typography } from '@socialincome/ui';
 

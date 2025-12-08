@@ -5,7 +5,7 @@ import { StoryblokEmbeddedVideoPlayer } from '@/components/legacy/storyblok/Stor
 import { StoryblokImageWithCaption } from '@/components/legacy/storyblok/StoryblokImageWithCaption';
 import { StoryblokReferencesGroup } from '@/components/legacy/storyblok/StoryblokReferencesGroup';
 import { WebsiteRegion } from '@/lib/i18n/utils';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { LanguageCode } from '@/lib/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { QuotedText, Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/ui';
 import Link from 'next/link';

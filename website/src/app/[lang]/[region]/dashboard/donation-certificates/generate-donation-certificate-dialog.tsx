@@ -7,10 +7,7 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { generateDonationCertificateForCurrentUser } from '@/lib/server-actions/donation-certificates-actions';
 import { DonationCertificateError } from '@/lib/services/donation-certificate/types';
-import {
-	DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE,
-	LanguageCode,
-} from '@socialincome/shared/src/types/language';
+import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
 import _ from 'lodash';
 import { useState, useTransition } from 'react';
 

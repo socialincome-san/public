@@ -31,7 +31,7 @@ import {
 	SKIPPING_MEALS_LAST_WEEK_3_MEALS,
 	SPENDING,
 	UNEXPECTED_EXPENSES_COVERED,
-} from '@socialincome/shared/src/types/question';
+} from '@/lib/types/question';
 import { TranslateFunction } from '@socialincome/shared/src/utils/i18n';
 
 // Final question pages

@@ -1,11 +1,7 @@
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, LanguageCode } from '@/lib/types/language';
 import { DonationCertificate } from '@prisma/client';
-import {
-	DEFAULT_DONATION_CERTIFICATE_LANGUAGE,
-	LANGUAGE_CODES,
-	LanguageCode,
-} from '@socialincome/shared/src/types/language';
 import { withFile } from 'tmp-promise';
 import { ContributionService } from '../contribution/contribution.service';
 import { ContributorService } from '../contributor/contributor.service';

@@ -3,10 +3,10 @@
 import { useIsPage } from '@/lib/hooks/useIsPage';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { Currency } from '@/lib/types/currency';
+import { LanguageCode } from '@/lib/types/language';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
-import { Currency } from '@socialincome/shared/src/types/currency';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
 import {
 	Dialog,
 	DialogContent,

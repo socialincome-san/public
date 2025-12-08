@@ -4,7 +4,7 @@ import {
 	getDimensionsFromStoryblokImageUrl,
 } from '@/components/legacy/storyblok/StoryblokUtils';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
+import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/lib/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { Metadata } from 'next';
 import { draftMode } from 'next/headers';
