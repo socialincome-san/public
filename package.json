@@ -8,8 +8,7 @@
 	"workspaces": [
 		"shared",
 		"ui",
-		"website",
-		"firestore_to_postgres"
+		"website"
 	],
 	"scripts": {
 		"postinstall": "npm run db:generate",
@@ -48,7 +47,8 @@
 		"db:up": "npm --workspace=@socialincome/website run db:up",
 		"db:down": "npm --workspace=@socialincome/website run db:down",
 		"typecheck": "npm run typecheck:all",
-		"typecheck:all": "npm run typecheck --workspaces --if-present"
+		"typecheck:all": "npm run typecheck --workspaces --if-present",
+		"check:unused": "knip --config knip.config.ts"
 	},
 	"devDependencies": {
 		"@types/react": "19.2.1",

@@ -2,7 +2,7 @@ import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import { LanguageCode } from '../types/language';
 
-export const FALLBACK_LANGUAGE = 'en';
+const FALLBACK_LANGUAGE = 'en';
 
 interface TranslateProps {
 	namespace?: string;

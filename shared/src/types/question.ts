@@ -7,7 +7,7 @@ export interface Question {
 	descriptionTranslationKey?: string;
 }
 
-export enum QuestionInputType {
+enum QuestionInputType {
 	RADIO_GROUP = 'radiogroup',
 	COMMENT = 'comment',
 	CHECKBOX = 'checkbox',
@@ -38,7 +38,7 @@ export const LIVING_LOCATION: Question = {
 	choicesTranslationKey: 'survey.questions.livingLocationChoices',
 };
 
-export const BOOLEAN_CHOICES = { choices: [true, false], choicesTranslationKey: 'survey.questions.yesNoChoices' };
+const BOOLEAN_CHOICES = { choices: [true, false], choicesTranslationKey: 'survey.questions.yesNoChoices' };
 
 export const HAS_DEPENDENTS: Question = {
 	type: QuestionInputType.RADIO_GROUP,
@@ -236,38 +236,3 @@ export const RANKING: Question = {
 	translationKey: 'survey.questions.spendingRankingTitleV1',
 	descriptionTranslationKey: 'survey.questions.spendingRankingDescV1',
 };
-
-const ALL_QUESTIONS = [
-	MARITAL_STATUS,
-	LIVING_LOCATION,
-	HAS_DEPENDENTS,
-	NUMBER_OF_DEPENDENTS,
-	SCHOOL_ATTENDANCE,
-	EMPLOYMENT_STATUS,
-	DISABILITY,
-	SKIPPING_MEALS,
-	SKIPPING_MEALS_LAST_WEEK,
-	SKIPPING_MEALS_LAST_WEEK_3_MEALS,
-	UNEXPECTED_EXPENSES_COVERED,
-	SAVINGS,
-	DEBT_PERSONAL,
-	DEBT_PERSONAL_REPAY,
-	DEBT_HOUSEHOLD,
-	DEBT_HOUSEHOLD_WHO_REPAYS,
-	OTHER_SUPPORT,
-	PLANNED_ACHIEVEMENT,
-	SPENDING,
-	PLANNED_ACHIEVEMENT_REMAINING,
-	IMPACT_FINANCIAL_INDEPENDENCE,
-	IMPACT_LIFE_GENERAL,
-	ACHIEVEMENTS_ACHIEVED,
-	ACHIEVEMENTS_NOT_ACHIEVED,
-	HAPPIER,
-	HAPPIER_COMMENT,
-	NOT_HAPPIER_COMMENT,
-	LONG_ENOUGH,
-	RANKING,
-	NOT_EMPLOYED,
-];
-
-export const QUESTIONS_DICTIONARY: Map<string, Question> = new Map(ALL_QUESTIONS.map((obj) => [obj.name, obj]));

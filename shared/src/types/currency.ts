@@ -1,7 +1,7 @@
 import { CountryCode } from './country';
 
 // ISO 4217 currency codes
-export const CURRENCIES = [
+const CURRENCIES = [
 	'AED', // United Arab Emirates
 	'AFN', // Afghanistan
 	'ALL', // Albania
@@ -178,7 +178,7 @@ export const CURRENCIES = [
 ] as const;
 export type Currency = (typeof CURRENCIES)[number];
 
-export const FALLBACK_CURRENCY: Currency = 'USD';
+const FALLBACK_CURRENCY: Currency = 'USD';
 const countryToCurrency = new Map<CountryCode, Currency>([
 	['AD', 'EUR'],
 	['AL', 'EUR'],

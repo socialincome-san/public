@@ -17,7 +17,7 @@
 		"test:e2e:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e'",
 		"test:e2e:update": "npx playwright install --with-deps && playwright test --update-snapshots",
 		"test:e2e:update:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e:update'",
-		"lint": "eslint .",
+		"lint": "eslint . && npm run check:unused",
 		"openapi:generate": "next-openapi-gen generate",
 		"typecheck": "tsc --noEmit",
 		"prisma:env-local": "dotenv -e .env.local -- prisma",

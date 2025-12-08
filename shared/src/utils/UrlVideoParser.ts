@@ -1,4 +1,4 @@
-export interface VideoMatchAndExtract {
+interface VideoMatchAndExtract {
 	parseUrl(string: string): string | null;
 }
 
