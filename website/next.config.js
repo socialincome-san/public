@@ -2,9 +2,14 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 
+const path = require('path');
+
 let nextConfig = {
 	transpilePackages: ['@socialincome/ui'],
 	reactStrictMode: true,
+	turbopack: {
+		root: path.join(__dirname, '..'),
+	},
 	images: {
 		remotePatterns: [
 			{
@@ -15,9 +20,7 @@ let nextConfig = {
 		],
 	},
 	output: 'standalone',
-	experimental: {
-		serverComponentsExternalPackages: ['pdfkit'],
-	},
+	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {

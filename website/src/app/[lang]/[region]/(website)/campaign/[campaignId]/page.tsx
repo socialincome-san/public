@@ -1,11 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { DonationInterval } from '@/components/legacy/donation/donation-interval';
+import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
+import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
-import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getCampaignByLegacyIdAction } from '@/lib/server-actions/campaigns-actions';
 import { getMetadata } from '@/metadata';
-import { Campaign, CAMPAIGN_FIRESTORE_PATH, CampaignStatus } from '@socialincome/shared/src/types/campaign';
-import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
-import { daysUntilTs } from '@socialincome/shared/src/utils/date';
-import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	Accordion,
@@ -26,10 +26,6 @@ import {
 import { Progress } from '@socialincome/ui/src/components/progress';
 import Link from 'next/link';
 
-import { DonationInterval } from '@/components/legacy/donation/donation-interval';
-import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
-import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
-
 interface CampaignPageParams extends DefaultParams {
 	campaignId: string;
 }
@@ -40,40 +36,43 @@ export type CampaignPageProps = {
 
 export async function generateMetadata({ params }: CampaignPageProps) {
 	const { campaignId, lang } = await params;
-	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(campaignId).get();
-	const campaign = campaignDoc.data();
+	const result = await getCampaignByLegacyIdAction(campaignId);
+	if (!result.success) {
+		return getMetadata(lang as WebsiteLanguage, 'website-campaign');
+	}
+	const campaign = result.data;
 	const campaignMetadata =
-		campaign?.metadata_description && campaign?.metadata_ogImage && campaign?.metadata_twitterImage
+		campaign.metadataDescription && campaign?.metadataOgImage && campaign?.metadataTwitterImage
 			? {
 					title: campaign?.title,
-					description: campaign?.metadata_description,
+					description: campaign?.metadataDescription,
 					openGraph: {
 						title: campaign?.title,
-						description: campaign?.metadata_description,
-						images: campaign?.metadata_ogImage,
+						description: campaign?.metadataDescription,
+						images: campaign?.metadataOgImage,
 					},
 					twitter: {
 						title: campaign?.title,
 						card: 'summary_large_image',
 						site: '@so_income',
 						creator: '@so_income',
-						images: campaign?.metadata_twitterImage,
+						images: campaign?.metadataTwitterImage,
 					},
 				}
 			: undefined;
-	return getMetadata(lang, 'website-campaign', campaignMetadata);
+	return getMetadata(lang as WebsiteLanguage, 'website-campaign', campaignMetadata);
 }
 
 export default async function Page({ params }: CampaignPageProps) {
 	const { lang, campaignId, region } = await params;
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq', 'website-newsletter'],
 	});
-	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(campaignId).get();
-	const campaign = campaignDoc.data();
 
-	if (!campaign || campaign.status === CampaignStatus.Inactive) {
+	const result = await getCampaignByLegacyIdAction(campaignId);
+
+	if (!result.success || !result.data || !result.data.isActive) {
 		return (
 			<BaseContainer className="mx-auto flex max-w-3xl flex-col pt-8 md:pt-16">
 				<div className="flex flex-col items-center">
@@ -85,20 +84,7 @@ export default async function Page({ params }: CampaignPageProps) {
 		);
 	}
 
-	const exchangeRate = campaign.goal_currency
-		? await getLatestExchangeRate(firestoreAdmin, campaign.goal_currency)
-		: 1.0;
-
-	const contributions = await firestoreAdmin
-		.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
-		.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, campaignId].join('/')))
-		.get();
-	let amountCollected = contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0);
-	amountCollected += campaign.additional_amount_chf || 0;
-	amountCollected *= exchangeRate;
-
-	const percentageCollected = campaign.goal ? Math.round((amountCollected / campaign.goal) * 100) : undefined;
-	const daysLeft = daysUntilTs(campaign.end_date.toDate());
+	const campaign = result.data;
 
 	return (
 		<>
@@ -108,7 +94,7 @@ export default async function Page({ params }: CampaignPageProps) {
 						<div className="flex flex-col justify-center gap-3">
 							<div>
 								<Typography size="xl" color="muted-foreground">
-									{translator.t('campaign.by', { context: { creator: campaign.creator_name } })}
+									{translator.t('campaign.by', { context: { creator: campaign.creatorName } })}
 								</Typography>
 							</div>
 							<div>
@@ -132,23 +118,23 @@ export default async function Page({ params }: CampaignPageProps) {
 										<Typography size="2xl" weight="medium" color="secondary">
 											{translator?.t('campaign.without-goal.collected', {
 												context: {
-													count: contributions.docs.length,
-													amount: amountCollected,
-													currency: campaign.goal_currency,
+													count: campaign.numberOfContributions,
+													amount: campaign.amountCollected,
+													currency: campaign.currency,
 													total: campaign.goal,
 												},
 											})}
 										</Typography>
 									</div>
 								)}
-								{percentageCollected !== undefined && (
+								{campaign.percentageCollected !== undefined && (
 									<div>
 										<div className="flex pb-2">
 											<div className="flex-1 text-left">
 												<Typography size="md" color="primary">
 													{translator.t('campaign.with-goal.collected-percentage', {
 														context: {
-															percentage: percentageCollected,
+															percentage: campaign.percentageCollected,
 														},
 													})}
 												</Typography>
@@ -160,16 +146,16 @@ export default async function Page({ params }: CampaignPageProps) {
 											</div>
 										</div>
 										<div>
-											<Progress value={percentageCollected} className={'h-6'} />
+											<Progress value={campaign.percentageCollected} className={'h-6'} />
 										</div>
 										<div className="flex pt-2">
 											<div className="flex-1 text-left">
 												<Typography size="md" color="primary">
 													{translator.t('campaign.with-goal.collected-amount', {
 														context: {
-															count: contributions.docs.length,
-															amount: amountCollected,
-															currency: campaign.goal_currency,
+															count: campaign.numberOfContributions,
+															amount: campaign.amountCollected,
+															currency: campaign.currency,
 														},
 													})}
 												</Typography>
@@ -179,7 +165,7 @@ export default async function Page({ params }: CampaignPageProps) {
 													{translator.t('campaign.with-goal.goal-amount', {
 														context: {
 															amount: campaign.goal,
-															currency: campaign.goal_currency,
+															currency: campaign.currency,
 														},
 													})}
 												</Typography>
@@ -189,7 +175,7 @@ export default async function Page({ params }: CampaignPageProps) {
 								)}
 							</div>
 						</div>
-						{daysLeft >= 0 && (
+						{campaign.daysLeft >= 0 && (
 							<>
 								<div className="flex items-center justify-center" style={{ height: '500px' }}>
 									<div className="card bg-primary w-full rounded-xl p-6">
@@ -232,22 +218,22 @@ export default async function Page({ params }: CampaignPageProps) {
 														},
 													},
 												}}
-												campaignId={campaignId}
+												campaignId={campaign.id}
 											/>
 										</div>
-										{daysLeft >= 0 && (
+										{campaign.daysLeft >= 0 && (
 											<>
 												<div className="mt-4 text-center">
 													<Typography size="md" color="popover">
-														{translator?.t('campaign.days-left', { context: { count: daysLeft } })}
+														{translator?.t('campaign.days-left', { context: { count: campaign.daysLeft } })}
 													</Typography>
 												</div>
 											</>
 										)}
-										{daysLeft < 0 && (
+										{campaign.daysLeft < 0 && (
 											<div className="mt-4 text-center">
 												<Typography size="md" color="popover">
-													{translator?.t('campaign.ended', { context: { count: daysLeft } })}
+													{translator?.t('campaign.ended', { context: { count: campaign.daysLeft } })}
 												</Typography>
 											</div>
 										)}
@@ -255,40 +241,40 @@ export default async function Page({ params }: CampaignPageProps) {
 								</div>
 							</>
 						)}
-						{daysLeft < 0 && (
+						{campaign.daysLeft < 0 && (
 							<div className="flex flex-col justify-center">
 								<Typography size="xl" weight="medium" color="accent">
-									{translator?.t('campaign.ended', { context: { count: daysLeft } })}
+									{translator?.t('campaign.ended', { context: { count: campaign.daysLeft } })}
 								</Typography>
 							</div>
 						)}
 					</div>
 				</div>
 			</BaseContainer>
-			{campaign.second_description && campaign.third_description && (
+			{campaign.secondDescription && campaign.thirdDescription && (
 				<BaseContainer>
 					<div className="grid grid-cols-1 gap-20 py-16 lg:grid-cols-2">
 						<div>
 							<div className="flex flex-col justify-center">
 								<Typography size="2xl" color="foreground" weight="medium">
-									{campaign.second_description_title}
+									{campaign.secondDescriptionTitle}
 								</Typography>
 							</div>
 							<div className="flex flex-col justify-center">
 								<Typography className={'mt-4'} color="muted-foreground" size="xl">
-									{campaign.second_description}
+									{campaign.secondDescription}
 								</Typography>
 							</div>
 						</div>
 						<div>
 							<div className="flex flex-col justify-center">
 								<Typography size="2xl" color="foreground" weight="medium">
-									{campaign.third_description_title}
+									{campaign.thirdDescriptionTitle}
 								</Typography>
 							</div>
 							<div className="flex flex-col justify-center">
 								<Typography className={'mt-4'} color="muted-foreground" size="xl">
-									{campaign.third_description}
+									{campaign.thirdDescription}
 								</Typography>
 							</div>
 						</div>
@@ -297,7 +283,7 @@ export default async function Page({ params }: CampaignPageProps) {
 			)}
 			<NewsletterGlowContainer
 				title={translator.t('campaign.information-label')}
-				lang={lang}
+				lang={lang as WebsiteLanguage}
 				formTranslations={{
 					informationLabel: translator.t('popup.information-label'),
 					toastSuccess: translator.t('popup.toast-success'),

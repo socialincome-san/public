@@ -1,15 +1,15 @@
 'use client';
 
-import DynamicForm, { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
+import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/dynamic-form/helper';
 import {
 	createExpenseAction,
 	getExpenseAction,
 	getExpenseOptionsAction,
 	updateExpenseAction,
 } from '@/lib/server-actions/expense-action';
+import { ExpensePayload } from '@/lib/services/expense/expense.types';
 import { ExpenseType } from '@prisma/client';
-import { ExpensePayload } from '@socialincome/shared/src/database/services/expense/expense.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateExpenseInput, buildUpdateExpenseInput } from './expenses-form-helper';
@@ -61,21 +61,6 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 	const [expense, setExpense] = useState<ExpensePayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	useEffect(() => {
-		if (!expenseId) {
-			return;
-		}
-		startTransition(async () => await loadExpense(expenseId));
-	}, [expenseId]);
-
-	useEffect(() => {
-		startTransition(async () => {
-			const res = await getExpenseOptionsAction();
-			if (!res.success) return;
-			setOptions(res.data);
-		});
-	}, []);
-
 	const loadExpense = async (id: string) => {
 		try {
 			const result = await getExpenseAction(id);
@@ -116,7 +101,7 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 	const onSubmit = (schema: ExpenseFormSchema) => {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: unknown };
+				let res: { success: boolean; error?: string };
 				if (expenseId && expense) {
 					const data = buildUpdateExpenseInput(schema, expense);
 					res = await updateExpenseAction(data);
@@ -130,6 +115,21 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 			}
 		});
 	};
+
+	useEffect(() => {
+		if (!expenseId) {
+			return;
+		}
+		startTransition(async () => await loadExpense(expenseId));
+	}, [expenseId]);
+
+	useEffect(() => {
+		startTransition(async () => {
+			const res = await getExpenseOptionsAction();
+			if (!res.success) return;
+			setOptions(res.data);
+		});
+	}, []);
 
 	return (
 		<DynamicForm

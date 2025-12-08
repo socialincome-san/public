@@ -2,15 +2,9 @@
 FROM node:22-alpine AS base
 WORKDIR /app
 
+# This secrets are used during build time. All others are provided at runtime.
 RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
     --mount=type=secret,id=NEXT_PUBLIC_APP_ENVIRONMENT \
-    --mount=type=secret,id=APP_BUILD_TIMESTAMP \
-    --mount=type=secret,id=BASE_URL \
-    --mount=type=secret,id=EXCHANGE_RATES_API \
-    --mount=type=secret,id=SCHEDULER_API_KEY \
-    --mount=type=secret,id=FIREBASE_DATABASE_URL \
-    --mount=type=secret,id=FIREBASE_SERVICE_ACCOUNT_JSON \
-    --mount=type=secret,id=GITHUB_PAT \
     --mount=type=secret,id=NEXT_PUBLIC_FACEBOOK_TRACKING_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_API_KEY \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_APP_ID \
@@ -21,19 +15,8 @@ RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET \
     --mount=type=secret,id=NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID \
     --mount=type=secret,id=NEXT_PUBLIC_LINKEDIN_TRACKING_ID \
-    --mount=type=secret,id=SENDGRID_API_KEY \
-    --mount=type=secret,id=SENDGRID_LIST_ID \
-    --mount=type=secret,id=SENDGRID_SUPPRESSION_LIST_ID \
     --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-    --mount=type=secret,id=STORYBLOK_PREVIEW_SECRET \
     --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \
-    --mount=type=secret,id=STRIPE_PRODUCT_ONETIME \
-    --mount=type=secret,id=STRIPE_PRODUCT_RECURRING \
-    --mount=type=secret,id=STRIPE_SECRET_KEY \
-    --mount=type=secret,id=STRIPE_WEBHOOK_SECRET \
-    --mount=type=secret,id=TWILIO_ACCOUNT_SID \
-    --mount=type=secret,id=TWILIO_AUTH_TOKEN \
-    --mount=type=secret,id=TWILIO_VERIFY_SERVICE_SID \
     sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
 
 # -------- Dependencies Layer --------
@@ -56,7 +39,7 @@ COPY --from=deps /app/recipients_selection ../recipients_selection
 COPY --from=base /app/.env /app/.env
 
 RUN set -a && . /app/.env && set +a && \
-    npx prisma generate --schema=../shared/src/database/schema.prisma && \
+    npx prisma generate --schema=./src/lib/database/schema.prisma && \
     npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
 
 # -------- Runtime Layer --------
@@ -69,12 +52,15 @@ ENV PORT=3000
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/website/public ./public
+COPY --from=builder /app/website/public ./website/public
+COPY --from=builder /app/website/.next/static ./website/.next/static
+
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder /app/website/.next/standalone ./
-COPY --from=builder /app/website/.next/static ./.next/static
 COPY --from=builder /app/shared ./shared
+COPY --from=builder /app/website/src ./src
+
 COPY --from=base /app/.env .env
 
 USER nextjs
@@ -83,6 +69,6 @@ CMD ["sh", "-c", "\
   set -a && \
   . .env && \
   set +a && \
-  npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && \
-  node server.js \
+  npx prisma migrate deploy --schema=./src/lib/database/schema.prisma && \
+  node website/server.js \
 "]

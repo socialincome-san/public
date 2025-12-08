@@ -2,7 +2,8 @@
 
 import { Button } from '@/components/button';
 import { confirmPayoutAction, contestPayoutAction } from '@/lib/server-actions/payout-confirmation-actions';
-import type { PayoutConfirmationTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
+import type { PayoutConfirmationTableViewRow } from '@/lib/services/payout/payout.types';
+import { ProgramPermission } from '@prisma/client';
 import { CheckIcon, XIcon } from 'lucide-react';
 import { useTransition } from 'react';
 
@@ -13,7 +14,7 @@ type Props = {
 export function PayoutConfirmationActionsCell({ payout }: Props) {
 	const [isPending, startTransition] = useTransition();
 
-	const hasEditAccess = payout.permission === 'edit';
+	const hasEditAccess = payout.permission === ProgramPermission.operator;
 
 	return (
 		<div className="flex gap-2">

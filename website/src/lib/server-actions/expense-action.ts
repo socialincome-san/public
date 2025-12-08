@@ -1,12 +1,9 @@
 'use server';
 
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ExpenseService } from '@socialincome/shared/src/database/services/expense/expense.service';
-import type {
-	ExpenseCreateInput,
-	ExpenseUpdateInput,
-} from '@socialincome/shared/src/database/services/expense/expense.types';
-import { OrganizationService } from '@socialincome/shared/src/database/services/organization/organization.service';
+import { ExpenseService } from '@/lib/services/expense/expense.service';
+import type { ExpenseCreateInput, ExpenseUpdateInput } from '@/lib/services/expense/expense.types';
+import { OrganizationService } from '@/lib/services/organization/organization.service';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/expenses';

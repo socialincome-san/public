@@ -1,9 +1,18 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { CampaignService } from '@socialincome/shared/src/database/services/campaign/campaign.service';
-import type { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
+import { CampaignService } from '@/lib/services/campaign/campaign.service';
+import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
+import { Suspense } from 'react';
 import CampaignsTable from './campaigns-table';
 
-export default async function CampaignsPage() {
+export default function CampaignsPage() {
+	return (
+		<Suspense>
+			<CampaignsDataLoader />
+		</Suspense>
+	);
+}
+
+async function CampaignsDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const campaignService = new CampaignService();

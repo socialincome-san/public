@@ -1,14 +1,9 @@
-import { SubmitBankTransferRequest } from '@/app/api/bank-transfer/submit/route';
+import { BankTransferPayment } from '@/lib/services/bank-transfer/bank-transfer.types';
+import { BankContributorData } from '@/lib/services/contributor/contributor.types';
 import { generateQrBillSvg } from '@/utils/qr-bill';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import toast from 'react-hot-toast';
-
-type UserFormData = {
-	email: string;
-	firstName: string;
-	lastName: string;
-	paymentReferenceId: number;
-};
+import { createContributionForContributor, getReferenceIds } from '../server-actions/bank-transfer-action';
 
 type UseBankTransferProps = {
 	amount: number;
@@ -24,77 +19,70 @@ type UseBankTransferProps = {
 };
 
 export function useBankTransfer({ amount, intervalCount, currency, qrBillType, translations }: UseBankTransferProps) {
-	const [userData, setUserData] = useState<UserFormData | null>(null);
+	const [userData, setUserData] = useState<BankContributorData | null>(null);
+	const [contributionReference, setContributionReference] = useState<string | null>(null);
 	const [qrBillSvg, setQrBillSvg] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, startTransition] = useTransition();
 	const [paid, setPaid] = useState(false);
 
 	const generateQRCode = async (email: string, firstName: string, lastName: string) => {
-		setIsLoading(true);
-
 		if (!currency) {
-			toast.error(translations.errors.qrBillError);
-		}
-
-		const response = await fetch(`/api/bank-transfer/payment-reference/create`, {
-			method: 'POST',
-			body: JSON.stringify({ email }),
-		});
-
-		if (!response.ok) {
 			toast.error(translations.errors.qrBillError);
 			return;
 		}
 
-		const { paymentReferenceId } = await response.json();
+		startTransition(async () => {
+			const result = await getReferenceIds(email);
+			if (!result) {
+				toast.error(translations.errors.qrBillError);
+				return;
+			}
 
-		setUserData({
-			email,
-			firstName,
-			lastName,
-			paymentReferenceId,
+			const { contributorReferenceId, contributionReferenceId } = result;
+
+			setUserData({
+				email,
+				firstName,
+				lastName,
+				paymentReferenceId: contributorReferenceId,
+			});
+			setContributionReference(contributionReferenceId);
+
+			setQrBillSvg(
+				generateQrBillSvg({
+					amount,
+					contributorReferenceId,
+					contributionReferenceId,
+					currency: currency as 'CHF' | 'EUR',
+					type: qrBillType,
+				}),
+			);
 		});
-
-		setQrBillSvg(
-			generateQrBillSvg({
-				amount,
-				paymentIntervalMonths: intervalCount,
-				paymentReferenceId,
-				currency: currency as 'CHF' | 'EUR',
-				type: qrBillType,
-			}),
-		);
-
-		setIsLoading(false);
 	};
 
 	const confirmPayment = async () => {
-		setIsLoading(true);
-
-		if (!userData) {
-			toast.error(translations.errors.paymentFailed);
-		}
-
-		const response = await fetch('/api/bank-transfer/submit', {
-			method: 'POST',
-			body: JSON.stringify({
-				user: userData,
-				payment: {
-					amount: amount,
-					intervalCount: intervalCount,
-					currency: currency,
-					recurring: true,
-				},
-			} as SubmitBankTransferRequest),
-		});
-
-		if (!response.ok) {
+		if (!userData || !contributionReference) {
 			toast.error(translations.errors.paymentFailed);
 			return;
 		}
 
-		setIsLoading(false);
-		setPaid(true);
+		const payment: BankTransferPayment = {
+			amount: amount,
+			currency: currency as 'CHF' | 'EUR',
+			referenceId: contributionReference,
+			interval: intervalCount,
+		};
+
+		startTransition(async () => {
+			const pendingContribution = await createContributionForContributor(payment, userData);
+
+			if (!pendingContribution.success) {
+				toast.error(translations.errors.paymentFailed);
+				return;
+			}
+
+			setPaid(true);
+		});
 	};
 
 	return {

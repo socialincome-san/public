@@ -1,11 +1,21 @@
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { ProgramPermission } from '@prisma/client';
+import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
 
-export default async function RecipientsPageProgramScoped({ params }: Props) {
+export default function RecipientsPageProgramScoped({ params }: Props) {
+	return (
+		<Suspense>
+			<RecipientsProgramScopedDataLoader params={params} />
+		</Suspense>
+	);
+}
+
+async function RecipientsProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
@@ -14,7 +24,7 @@ export default async function RecipientsPageProgramScoped({ params }: Props) {
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];
-	const readOnly = recipientsResult.success ? recipientsResult.data.permission !== 'edit' : true;
+	const readOnly = recipientsResult.success ? recipientsResult.data.permission !== ProgramPermission.operator : true;
 
 	return <RecipientsTableClient rows={rows} error={error} programId={programId} readOnly={readOnly} />;
 }

@@ -1,38 +1,31 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import NgoCard from '@/app/[lang]/[region]/(website)/partners/(sections)/ngocard';
-import {
-	CountryBadgeType,
-	RecipientsBadgeType,
-	SdgBadgeType,
-} from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
+import { CountryBadgeType, SdgBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
 import {
 	NgoCardProps,
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
-import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
-import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import {
-	OrganisationRecipientsByStatus,
-	RecipientStatsCalculator,
-} from '@socialincome/shared/src/utils/stats/RecipientStatsCalculator';
 import { CH, SL } from 'country-flag-icons/react/1x1';
-import { ReactElement } from 'react';
 
-const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
-	SL: <SL className="h-5 w-5 rounded-full" />,
-	CH: <CH className="h-5 w-5 rounded-full" />,
+const SL_Flag = SL as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+const CH_Flag = CH as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
+	SL: <SL_Flag className="h-5 w-5 rounded-full" />,
+	CH: <CH_Flag className="h-5 w-5 rounded-full" />,
 };
 
-function getFlag(abbreviation: string): ReactElement {
-	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
+export function getFlag(abbreviation: string): React.ReactElement {
+	return country_abbreviations_to_flag_map[abbreviation] ?? <SL_Flag className="h-5 w-5 rounded-full" />;
 }
 export const ngos = ['aurora', 'jamil', 'reachout', 'equal_rights', 'united_polio', 'slaes', 'lizardearth', 'rainbo'];
 
 export async function NgoList({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-partners'],
 	});
 	const image_base_path = '/assets/partners/';
@@ -40,31 +33,7 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	const ngoArray: NgoEntryJSON[] = ngos.map((slug: string) => translator.t(slug));
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
-	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
-	const recipientStats: OrganisationRecipientsByStatus =
-		recipientCalculator.allStats().recipientsCountByOrganisationAndStatus;
-
 	for (let i = 0; i < ngoArray.length; ++i) {
-		const currentOrgRecipientStats = recipientStats[ngos[i]];
-
-		const recipientsBadge: RecipientsBadgeType = {
-			hoverCardOrgName: ngoArray[i]['org-long-name'],
-			hoverCardTotalRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['total'] : 0,
-			hoverCardTotalActiveRecipients: currentOrgRecipientStats
-				? currentOrgRecipientStats[RecipientProgramStatus.Active]
-				: 0,
-			hoverCardTotalFormerRecipients: currentOrgRecipientStats
-				? currentOrgRecipientStats[RecipientProgramStatus.Former]
-				: 0,
-			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats
-				? currentOrgRecipientStats[RecipientProgramStatus.Suspended]
-				: 0,
-			translatorBadgeRecipients: '',
-			translatorBadgeRecipientsBy: '',
-			translatorBadgeActive: '',
-			translatorBadgeFormer: '',
-			translatorBadgeSuspended: '',
-		};
 		const sdgBadges: SdgBadgeType[] = [];
 		ngoArray[i]['org-focus-sdg-numbers'].forEach((sdgNumber) => {
 			sdgBadges.push({
@@ -104,11 +73,10 @@ export async function NgoList({ lang, region }: DefaultParams) {
 			orgShortName: ngoArray[i]['org-short-name'],
 			orgMission: ngoArray[i]['org-mission'],
 			countryBadge: countryBadge,
-			recipientsBadge: recipientsBadge,
 			sdgBadges: sdgBadges,
 			ngoHoverCard: ngoHoverCard,
-			lang: lang,
-			region: region,
+			lang: lang as WebsiteLanguage,
+			region: region as WebsiteRegion,
 		};
 		ngoCardPropsArray.push(ngoCardProps);
 	}

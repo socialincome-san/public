@@ -1,9 +1,18 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { ExchangeRateService } from '@socialincome/shared/src/database/services/exchange-rate/exchange-rate.service';
-import { ExchangeRatesTableViewRow } from '@socialincome/shared/src/database/services/exchange-rate/exchange-rate.types';
+import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.service';
+import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
+import { Suspense } from 'react';
 import ExchangeRatesTable from './exchange-rates-table';
 
-export default async function ExchangeRatesPage() {
+export default function ExchangeRatesPage() {
+	return (
+		<Suspense>
+			<ExchangeRatesDataLoader />
+		</Suspense>
+	);
+}
+
+async function ExchangeRatesDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

@@ -1,6 +1,5 @@
 import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
 import { AuthAdmin } from '@socialincome/shared/src/firebase/admin/AuthAdmin';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
 import { credential } from 'firebase-admin';
 
@@ -17,5 +16,4 @@ const credentials =
 
 export const app = getOrInitializeFirebaseAdmin(credentials);
 export const authAdmin = new AuthAdmin(app);
-export const firestoreAdmin = new FirestoreAdmin(app);
 export const storageAdmin = new StorageAdmin(app);

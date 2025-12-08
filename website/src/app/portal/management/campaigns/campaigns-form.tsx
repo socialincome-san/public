@@ -1,18 +1,15 @@
 'use client';
 
-import DynamicForm from '@/components/legacy/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
+import DynamicForm from '@/components/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/dynamic-form/helper';
 import {
 	createCampaignsAction,
 	getCampaignsAction,
 	getProgramsOptions,
 	updateCampaignsAction,
 } from '@/lib/server-actions/campaigns-actions';
-import {
-	CampaignsCreateInput,
-	CampaignsUpdateInput,
-} from '@socialincome/shared/src/database/services/campaign/campaign.types';
-import { ProgramOption } from '@socialincome/shared/src/database/services/program/program.types';
+import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { ProgramOption } from '@/lib/services/program/program.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCampaignsInput, buildUpdateCampaignsInput, initialFormSchema } from './campaigns-form-helper';
@@ -32,22 +29,6 @@ export default function CampaignsForm({
 }) {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [isLoading, startTransition] = useTransition();
-
-	useEffect(() => {
-		if (campaignId) {
-			// Load campaign
-			startTransition(async () => await loadCampaign(campaignId));
-		}
-	}, [campaignId]);
-
-	useEffect(() => {
-		// load options for program
-		startTransition(async () => {
-			const programs = await getProgramsOptions();
-			if (!programs.success) return;
-			setOptions(programs.data);
-		});
-	}, []);
 
 	const loadCampaign = async (campaignId: string) => {
 		if (campaignId) {
@@ -123,6 +104,22 @@ export default function CampaignsForm({
 			}
 		});
 	}
+
+	useEffect(() => {
+		if (campaignId) {
+			// Load campaign
+			startTransition(async () => await loadCampaign(campaignId));
+		}
+	}, [campaignId]);
+
+	useEffect(() => {
+		// load options for program
+		startTransition(async () => {
+			const programs = await getProgramsOptions();
+			if (!programs.success) return;
+			setOptions(programs.data);
+		});
+	}, []);
 
 	return (
 		<DynamicForm

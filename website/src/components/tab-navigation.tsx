@@ -27,7 +27,7 @@ export function TabNavigation({ sections }: TabNavigationProps) {
 						href={section.href}
 						aria-current={active ? 'page' : undefined}
 						className={[
-							'block rounded-full px-2.5 py-2 text-sm font-medium transition-colors',
+							'flex items-center rounded-full px-2.5 py-2 text-center text-sm font-medium transition-colors',
 							active ? 'bg-primary text-primary-foreground font-medium' : 'hover:bg-accent',
 						].join(' ')}
 					>

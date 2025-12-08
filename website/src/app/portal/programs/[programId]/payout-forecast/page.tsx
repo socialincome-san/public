@@ -1,17 +1,25 @@
 import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
+import { PayoutService } from '@/lib/services/payout/payout.service';
+import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
 const MONTHS_AHEAD = 6;
 
-export default async function FinancesPageProgramScoped({ params }: Props) {
+export default function FinancesPageProgramScoped({ params }: Props) {
+	return (
+		<Suspense>
+			<FinancesProgramScopedDataLoader params={params} />
+		</Suspense>
+	);
+}
+
+async function FinancesProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const payoutService = new PayoutService();
-
 	const result = await payoutService.getForecastTableView(user.id, programId, MONTHS_AHEAD);
 
 	const error = result.success ? null : result.error;

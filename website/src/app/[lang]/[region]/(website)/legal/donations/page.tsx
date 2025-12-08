@@ -1,17 +1,24 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	const { lang } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-terms-and-conditions'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-terms-and-conditions'],
+	});
 
 	return { title: translator.t('metadata.title') };
 }
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-terms-and-conditions'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-terms-and-conditions'],
+	});
 
 	return (
 		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-12 py-8">

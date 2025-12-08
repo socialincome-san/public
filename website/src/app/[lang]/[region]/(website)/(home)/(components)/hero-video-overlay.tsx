@@ -53,7 +53,10 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 					))}
 				</div>
 				<Link href={`/${lang}/${region}/donate/individual`}>
-					<Button className="mx-auto hidden hover:text-black md:block" ref={refButton as RefObject<HTMLButtonElement>}>
+					<Button
+						className="mx-auto hidden hover:text-black md:block"
+						ref={refButton as RefObject<HTMLButtonElement | null>}
+					>
 						<Typography>{translations.buttonText}</Typography>
 					</Button>
 				</Link>

@@ -1,4 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { BaseContainer } from '@socialincome/ui';
 import { Contributors } from './(sections)/contributors';
@@ -8,7 +9,7 @@ import { Recipients } from './(sections)/recipients';
 
 export async function generateMetadata(props: DefaultPageProps) {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-our-work');
+	return getMetadata(params.lang as WebsiteLanguage, 'website-our-work');
 }
 
 export default async function Page(props: DefaultPageProps) {

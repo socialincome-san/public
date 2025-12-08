@@ -20,6 +20,7 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 
 	const sections = [
 		{ href: `/portal/admin/organizations`, label: 'Organizations' },
+		{ href: `/portal/admin/users`, label: 'Users' },
 		{ href: `/portal/admin/local-partners`, label: 'Local Partners' },
 		{ href: `/portal/admin/expenses`, label: 'Expenses' },
 		{ href: `/portal/admin/exchange-rates`, label: 'Exchange Rates' },

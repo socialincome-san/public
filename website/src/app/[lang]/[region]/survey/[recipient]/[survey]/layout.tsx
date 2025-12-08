@@ -1,6 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { I18nDialog } from '@/components/legacy/i18n-dialog';
 import { SILogo } from '@/components/legacy/logos/si-logo';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Button } from '@socialincome/ui';
@@ -19,7 +20,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Sur
 	const { lang } = await params;
 
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
 

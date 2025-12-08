@@ -1,9 +1,18 @@
 import { makePayoutConfirmationColumns } from '@/components/data-table/columns/payout-confirmation';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
+import { PayoutService } from '@/lib/services/payout/payout.service';
+import { Suspense } from 'react';
 
-export default async function ConfirmPayoutsPage() {
+export default function ConfirmPayoutsPage() {
+	return (
+		<Suspense>
+			<ConfirmPayoutsDataLoader />
+		</Suspense>
+	);
+}
+
+async function ConfirmPayoutsDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new PayoutService();

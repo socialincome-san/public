@@ -1,11 +1,12 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata(props: DefaultPageProps) {
 	const params = await props.params;
 	const translator = await Translator.getInstance({
-		language: params.lang,
+		language: params.lang as WebsiteLanguage,
 		namespaces: ['website-fundraisers'],
 	});
 	return { title: translator.t('metadata.title') };
@@ -13,7 +14,7 @@ export async function generateMetadata(props: DefaultPageProps) {
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;
 	const translator = await Translator.getInstance({
-		language: params.lang,
+		language: params.lang as WebsiteLanguage,
 		namespaces: ['website-fundraisers'],
 	});
 

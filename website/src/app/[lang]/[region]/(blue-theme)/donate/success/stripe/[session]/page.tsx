@@ -1,9 +1,8 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
-import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
-import { initializeStripe } from '@socialincome/shared/src/stripe';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { StripeService } from '@/lib/services/stripe/stripe.service';
 import { CountryCode } from '@socialincome/shared/src/types/country';
-import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
@@ -12,22 +11,31 @@ interface StripeSuccessPageParams extends DefaultParams {
 	session: string;
 }
 
-export interface StripeSuccessPageProps {
+interface StripeSuccessPageProps {
 	params: Promise<StripeSuccessPageParams>;
 }
 
 export default async function Page({ params }: StripeSuccessPageProps) {
 	const { lang, region, session } = await params;
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
-	const stripe = initializeStripe(process.env.STRIPE_SECRET_KEY!);
-	// The stripeCheckoutSessionId search param is defined in the donation form and passed to the Stripe checkout session.
-	const checkoutSession = await stripe.checkout.sessions.retrieve(session);
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: 'website-donate' });
 
-	const userDoc = await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (q) =>
-		q.where('stripe_customer_id', '==', checkoutSession.customer),
-	);
-	if (userDoc?.exists && userDoc.get('auth_user_id')) redirect(`/${lang}/${region}/me/contributions`);
+	const stripeService = new StripeService();
+	const sessionResult = await stripeService.getCheckoutSession(session);
+	if (!sessionResult.success) {
+		throw new Error(sessionResult.error);
+	}
+
+	const checkoutSession = sessionResult.data;
+
+	const contributorResult = await stripeService.getContributorFromCheckoutSession(checkoutSession);
+	if (!contributorResult.success) {
+		throw new Error(contributorResult.error);
+	}
+
+	if (contributorResult.data && !contributorResult.data.needsOnboarding) {
+		redirect(`/${lang}/${region}/dashboard/contributions`);
+	}
 
 	return (
 		<div className="mx-auto flex max-w-3xl flex-col space-y-8">
@@ -42,8 +50,8 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 				</CardHeader>
 				<CardContent>
 					<SuccessForm
-						lang={lang}
-						onSuccessURL={`/${lang}/${region}/me/personal-info`}
+						lang={lang as WebsiteLanguage}
+						onSuccessURL={`/${lang}/${region}/dashboard/contributions`}
 						stripeCheckoutSessionId={checkoutSession.id}
 						firstname={checkoutSession.customer_details?.name?.split(' ')[0] || undefined}
 						lastname={checkoutSession.customer_details?.name?.split(' ')[1] || undefined}

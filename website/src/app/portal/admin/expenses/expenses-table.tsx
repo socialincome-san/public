@@ -5,31 +5,31 @@ import { Button } from '@/components/button';
 import { makeExpenseColumns } from '@/components/data-table/columns/expenses';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { ExpenseTableViewRow } from '@socialincome/shared/src/database/services/expense/expense.types';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
+import { logger } from '@/utils/logger';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';
 
 export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [expenseId, setExpenseId] = useState<string | undefined>(undefined);
 
 	const openEmptyForm = () => {
 		setExpenseId(undefined);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: ExpenseTableViewRow) => {
 		setExpenseId(row.id);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
-	const onError = (e?: unknown) => {
-		setHasError(true);
-		logger.error('Expense Form Error', { error: e });
+	const onError = (error: unknown) => {
+		setErrorMessage(`Error saving expense: ${error}`);
+		logger.error('Expense Form Error', { error });
 	};
 
 	return (
@@ -49,14 +49,12 @@ export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewR
 					<DialogHeader>
 						<DialogTitle>{expenseId ? 'Edit' : 'Add'} expense</DialogTitle>
 					</DialogHeader>
-
-					{hasError && (
+					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>Error saving expense</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
-
 					<ExpensesForm
 						expenseId={expenseId}
 						onSuccess={() => setOpen(false)}

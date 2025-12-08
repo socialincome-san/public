@@ -5,31 +5,31 @@ import { Button } from '@/components/button';
 import { makeCampaignColumns } from '@/components/data-table/columns/campaigns';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
-import { logger } from '@socialincome/shared/src/utils/logger';
+import { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
+import { logger } from '@/utils/logger';
 import { useState } from 'react';
 import CampaignsForm from './campaigns-form';
 
 export default function CampaignsTable({ rows, error }: { rows: CampaignTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
-	const [hasError, setHasError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [campaignId, setCampaignId] = useState<string | undefined>(undefined);
 	const readOnly = rows.some((row) => row.permission === 'readonly');
 
 	const openEmptyForm = () => {
 		setCampaignId(undefined);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: CampaignTableViewRow) => {
 		setCampaignId(row.id);
-		setHasError(false);
+		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const onError = (error: unknown) => {
-		setHasError(true);
+		setErrorMessage(`Error saving campaign: ${error}`);
 		logger.error('Campaigns Form Error', { error });
 	};
 
@@ -54,10 +54,10 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 					<DialogHeader>
 						<DialogTitle>{campaignId ? (readOnly ? 'View' : 'Edit') : 'Add'} Campaign</DialogTitle>
 					</DialogHeader>
-					{hasError && (
+					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>Error saving campaign</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<CampaignsForm

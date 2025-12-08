@@ -4,22 +4,6 @@ on:
     tags:
       - release-*
 jobs:
-  deploy-admin:
-    name: Deploy admin to social-income-prod Firebase Project
-    uses: ./.github/workflows/deployment.yml
-    secrets: inherit
-    with:
-      component: admin
-      project: social-income-prod
-
-  deploy-functions:
-    name: Deploy functions to social-income-prod Firebase Project
-    uses: ./.github/workflows/deployment.yml
-    secrets: inherit
-    with:
-      component: functions
-      project: social-income-prod
-
   deploy-rules:
     name: Deploy rules to social-income-prod Firebase Project
     uses: ./.github/workflows/deployment.yml

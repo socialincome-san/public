@@ -17,7 +17,7 @@
 	"title-sandino": "Director",
 	"text-1": "We hereby confirm to the tax authorities that Social Income received the following donations from {{ firstname }} {{ lastname }}, in the year {{ year }}:",
 	"text-2": "All donations received between {{ start, datetime }} and {{ end, datetime }} were taken into account.",
-	"text-3": "Please refer to the cantonal tax regulations for more information on how to deduct your donations.",
+	"text-3": "Please refer to your local tax regulations for more information on how to deduct your donations.",
 	"text-4": "Thank you for your support.",
 	"text-5": "All the best,",
 	"title": "Donation receipt {{ year }}"

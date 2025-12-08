@@ -1,7 +1,7 @@
 'use client';
 
-import { FundraiserBadge, RecipientsBadge } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
-import { CountryBadgeType, RecipientsBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
+import { FundraiserBadge } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
+import { CountryBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
 import { NgoHomeProps, NgoHoverCardType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { Badge, Separator, Typography } from '@socialincome/ui';
 import { CH, SL } from 'country-flag-icons/react/1x1';
@@ -9,36 +9,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
-const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
-	SL: <SL className="h-5 w-5 rounded-full" />,
-	CH: <CH className="h-5 w-5 rounded-full" />,
+const SL_Flag = SL as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+const CH_Flag = CH as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
+	SL: <SL_Flag className="h-5 w-5 rounded-full" />,
+	CH: <CH_Flag className="h-5 w-5 rounded-full" />,
 };
 
-function getFlag(abbreviation: string): ReactElement {
-	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
+function getFlag(abbreviation: string): ReactElement<any> {
+	return country_abbreviations_to_flag_map[abbreviation] || <SL_Flag className="h-5 w-5 rounded-full" />;
 }
 
-export function PartnerHome({
-	currentNgo,
-	currentNgoCountry,
-	translations,
-	lang,
-	region,
-	recipientCounts,
-}: NgoHomeProps) {
+export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang, region }: NgoHomeProps) {
 	const image_base_path = '/assets/partners/';
-	const recipientsBadge: RecipientsBadgeType = {
-		hoverCardOrgName: currentNgo!['org-long-name'],
-		hoverCardTotalRecipients: recipientCounts.totalRecipients,
-		hoverCardTotalActiveRecipients: recipientCounts.activeRecipients,
-		hoverCardTotalFormerRecipients: recipientCounts.formerRecipients,
-		hoverCardTotalSuspendedRecipients: recipientCounts.suspendedRecipients,
-		translatorBadgeRecipients: '',
-		translatorBadgeRecipientsBy: '',
-		translatorBadgeActive: '',
-		translatorBadgeFormer: '',
-		translatorBadgeSuspended: '',
-	};
 
 	const countryBadge: CountryBadgeType = {
 		countryAbbreviation: currentNgo!['org-country'],
@@ -99,17 +83,8 @@ export function PartnerHome({
 							</Typography>
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-							<RecipientsBadge
-								{...recipientsBadge}
-								isInsideHoverCard={true}
-								translatorBadgeRecipients={translations.badgeRecipient}
-								translatorBadgeRecipientsBy={translations.badgeRecipientBy}
-								translatorBadgeActive={translations.badgeActive}
-								translatorBadgeFormer={translations.badgeFormer}
-								translatorBadgeSuspended={translations.badgeSuspended}
-							/>
 							<Badge variant="interactive" size="md" className="space-x-2">
-								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
+								{countryBadge?.countryFlagComponent || <SL_Flag className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
 									{currentNgoCountry}
 								</Typography>

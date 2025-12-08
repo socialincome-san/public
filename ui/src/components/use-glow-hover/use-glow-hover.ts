@@ -8,12 +8,13 @@ export type GlowHoverHookOptions = GlowHoverOptions & { disabled?: boolean };
 export const useGlowHover = <T extends HTMLElement>({
 	disabled = false,
 	...options
-}: GlowHoverHookOptions): RefObject<T> => {
+}: GlowHoverHookOptions): RefObject<T | null> => {
 	const ref = useRef<T>(null);
 
 	useEffect(
 		() => (!disabled && ref.current ? glowHoverEffect(ref.current, options as GlowHoverOptions) : () => {}),
 		[disabled, ...Object.values(options)],
 	);
+
 	return ref;
 };

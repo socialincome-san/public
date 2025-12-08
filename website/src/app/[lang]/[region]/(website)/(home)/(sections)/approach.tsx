@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { CardContent, CardHeader, GlowHoverCard, Typography } from '@socialincome/ui';
 
@@ -12,7 +13,7 @@ type ApproachCardProps = {
 
 export async function Approach({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: lang,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-home'],
 	});
 	const cards = translator.t<ApproachCardProps[]>('section-7.cards');

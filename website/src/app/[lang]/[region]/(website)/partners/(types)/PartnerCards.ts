@@ -1,7 +1,6 @@
 import {
 	CountryBadgeType,
 	QuoteType,
-	RecipientsBadgeType,
 	SdgBadgeType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -35,7 +34,6 @@ type NgoCardProps = {
 	orgShortName: string;
 	orgMission: string;
 	countryBadge: CountryBadgeType;
-	recipientsBadge: RecipientsBadgeType;
 	sdgBadges: SdgBadgeType[];
 	ngoHoverCard: NgoHoverCardType;
 	lang: WebsiteLanguage;
@@ -80,12 +78,6 @@ type NgoEntryJSON = {
 type NgoHomeProps = {
 	currentNgo: NgoEntryJSON;
 	currentNgoCountry: string;
-	recipientCounts: {
-		totalRecipients: number;
-		activeRecipients?: number;
-		formerRecipients?: number;
-		suspendedRecipients?: number;
-	};
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	translations: {

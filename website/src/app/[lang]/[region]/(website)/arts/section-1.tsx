@@ -1,10 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
 export default async function Section1({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-arts'] });
+	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-arts'] });
 
 	return (
 		<BaseContainer className="min-h-screen-navbar flex items-center justify-center">

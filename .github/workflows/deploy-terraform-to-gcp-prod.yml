@@ -43,13 +43,6 @@ jobs:
           mkdir -p secrets
           echo "${GITHUB_REF_NAME}" > secrets/NEXT_PUBLIC_APP_VERSION
           echo "${{ env.ENVIRONMENT }}" > secrets/NEXT_PUBLIC_APP_ENVIRONMENT
-          echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > secrets/APP_BUILD_TIMESTAMP
-          echo "${{ secrets.TF_PROD_BASE_URL }}" > secrets/BASE_URL
-          echo "${{ secrets.TF_PROD_EXCHANGE_RATES_API }}" > secrets/EXCHANGE_RATES_API
-          echo "${{ secrets.TF_PROD_SCHEDULER_API_KEY }}" > secrets/SCHEDULER_API_KEY
-          echo "${{ secrets.TF_PROD_FIREBASE_DATABASE_URL }}" > secrets/FIREBASE_DATABASE_URL
-          echo "${{ secrets.TF_PROD_FIREBASE_SERVICE_ACCOUNT_JSON }}" > secrets/FIREBASE_SERVICE_ACCOUNT_JSON
-          echo "${{ secrets.TF_PROD_GITHUB_PAT }}" > secrets/GITHUB_PAT
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FACEBOOK_TRACKING_ID}}" > secrets/NEXT_PUBLIC_FACEBOOK_TRACKING_ID
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FIREBASE_API_KEY }}" > secrets/NEXT_PUBLIC_FIREBASE_API_KEY
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FIREBASE_APP_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_APP_ID
@@ -60,19 +53,8 @@ jobs:
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID}}" > secrets/NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_LINKEDIN_TRACKING_ID}}" > secrets/NEXT_PUBLIC_LINKEDIN_TRACKING_ID
-          echo "${{ secrets.TF_PROD_SENDGRID_API_KEY }}" > secrets/SENDGRID_API_KEY
-          echo "${{ secrets.TF_PROD_SENDGRID_LIST_ID }}" > secrets/SENDGRID_LIST_ID
-          echo "${{ secrets.TF_PROD_SENDGRID_SUPPRESSION_LIST_ID }}" > secrets/SENDGRID_SUPPRESSION_LIST_ID
           echo "${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
-          echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_SECRET }}" > secrets/STORYBLOK_PREVIEW_SECRET
           echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
-          echo "${{ secrets.TF_PROD_STRIPE_PRODUCT_ONETIME }}" > secrets/STRIPE_PRODUCT_ONETIME
-          echo "${{ secrets.TF_PROD_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
-          echo "${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
-          echo "${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}" > secrets/STRIPE_WEBHOOK_SECRET
-          echo "${{ secrets.TF_PROD_TWILIO_ACCOUNT_SID }}" > secrets/TWILIO_ACCOUNT_SID
-          echo "${{ secrets.TF_PROD_TWILIO_AUTH_TOKEN }}" > secrets/TWILIO_AUTH_TOKEN
-          echo "${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}" > secrets/TWILIO_VERIFY_SERVICE_SID
 
       - name: 📤 Build and Push Docker Image
         env:
@@ -92,13 +74,34 @@ jobs:
       - name: 🌱 Terraform Init, Validate & Apply
         env:
           TF_LOG: INFO
+          TF_VAR_app_build_timestamp: ${{ steps.build_time.outputs.timestamp }}
+          TF_VAR_firebase_database_url: ${{ secrets.TF_PROD_FIREBASE_DATABASE_URL }}
+          TF_VAR_firebase_service_account_json: ${{ secrets.TF_PROD_FIREBASE_SERVICE_ACCOUNT_JSON }}
+          TF_VAR_storyblok_preview_secret: ${{ secrets.TF_PROD_STORYBLOK_PREVIEW_SECRET }}
           TF_VAR_env: ${{ env.ENVIRONMENT }}
           TF_VAR_app_name: ${{ env.APP_NAME }}
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
-          TF_VAR_google_sql_db_password: ${{ secrets.TF_PROD_GOOGLE_SQL_DB_PASSWORD }}
           TF_VAR_website_domain: ${{ env.WEBSITE_DOMAIN }}
+          TF_VAR_postfinance_ftp_host: ${{ vars.POSTFINANCE_FTP_HOST }}
+          TF_VAR_postfinance_ftp_port: ${{ vars.POSTFINANCE_FTP_PORT }}
+          TF_VAR_postfinance_ftp_user: ${{ vars.POSTFINANCE_FTP_USER }}
+          TF_VAR_postfinance_payments_files_bucket: ${{ vars.POSTFINANCE_PAYMENTS_FILES_BUCKET }}
+          TF_VAR_base_url: ${{ vars.TF_PROD_BASE_URL }}
+          TF_VAR_postfinance_ftp_rsa_private_key_base64: ${{ secrets.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 }}
           TF_VAR_scheduler_api_key: ${{ secrets.TF_PROD_SCHEDULER_API_KEY }}
+          TF_VAR_stripe_product_onetime: ${{ secrets.TF_PROD_STRIPE_PRODUCT_ONETIME }}
+          TF_VAR_stripe_product_recurring: ${{ secrets.TF_PROD_STRIPE_PRODUCT_RECURRING }}
+          TF_VAR_stripe_secret_key: ${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}
+          TF_VAR_stripe_webhook_secret: ${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}
+          TF_VAR_sendgrid_api_key: ${{ secrets.TF_PROD_SENDGRID_API_KEY }}
+          TF_VAR_sendgrid_list_id: ${{ secrets.TF_PROD_SENDGRID_LIST_ID }}
+          TF_VAR_sendgrid_suppression_list_id: ${{ secrets.TF_PROD_SENDGRID_SUPPRESSION_LIST_ID }}
+          TF_VAR_twilio_account_sid: ${{ secrets.TF_PROD_TWILIO_ACCOUNT_SID }}
+          TF_VAR_twilio_auth_token: ${{ secrets.TF_PROD_TWILIO_AUTH_TOKEN }}
+          TF_VAR_twilio_verify_service_sid: ${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}
+          TF_VAR_exchange_rates_api: ${{ secrets.TF_PROD_EXCHANGE_RATES_API }}
+          TF_VAR_github_pat: ${{ secrets.TF_PROD_GITHUB_PAT }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."

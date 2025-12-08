@@ -1,9 +1,10 @@
-import { FirebaseService } from '@socialincome/shared/src/database/services/firebase/firebase.service';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
-import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
+import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { UserService } from '@/lib/services/user/user.service';
+import { UserSession } from '@/lib/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
-import { readSessionCookie } from './session';
+
+const firebaseService = new FirebaseService();
 
 async function findUserByAuthId(authUserId: string): Promise<UserSession | null> {
 	const service = new UserService();
@@ -12,11 +13,11 @@ async function findUserByAuthId(authUserId: string): Promise<UserSession | null>
 }
 
 async function loadCurrentUser(): Promise<UserSession | null> {
-	const cookie = await readSessionCookie();
+	const cookie = await firebaseService.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await new FirebaseService().verifySessionCookie(cookie);
+	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}

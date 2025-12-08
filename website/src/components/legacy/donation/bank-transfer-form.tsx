@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser } from '@/app/[lang]/[region]/(website)/me/hooks';
+import { useContributorSession } from '@/lib/firebase/hooks/useContributorSession';
 import { useBankTransfer } from '@/lib/hooks/useBankTransfer';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -46,17 +46,17 @@ export function BankTransferForm({
 }: BankTransferFormProps) {
 	const form = useFormContext();
 	const { currency } = useI18n();
-	const user = useUser();
+	const { contributorSession } = useContributorSession();
 
 	useEffect(() => {
-		if (!user) {
+		if (!contributorSession) {
 			return;
 		}
-		form.setValue('email', user.get('email') || '');
-		form.setValue('firstName', user.get('personal.name') || '');
-		form.setValue('lastName', user.get('personal.lastname') || '');
+		form.setValue('email', contributorSession.email ?? '');
+		form.setValue('firstName', contributorSession.firstName ?? '');
+		form.setValue('lastName', contributorSession.lastName ?? '');
 		form.trigger();
-	}, [user]);
+	}, [contributorSession]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
 		amount,
@@ -76,8 +76,8 @@ export function BankTransferForm({
 			{paid ? (
 				<div className="space-y-4 pb-8">
 					<p>{translations.paymentSuccess}</p>
-					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/me/contributions`}>
-						{user ? translations.profileLink : translations.loginLink}
+					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/dashboard/contributions`}>
+						{contributorSession ? translations.profileLink : translations.loginLink}
 					</Link>
 				</div>
 			) : qrBillSvg ? (
@@ -105,7 +105,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!user?.get('personal.name')}
+											disabled={!!contributorSession?.firstName}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -124,7 +124,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!user?.get('personal.lastname')}
+											disabled={!!contributorSession?.lastName}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -143,7 +143,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!user}
+											disabled={!!contributorSession}
 										/>
 									</FormControl>
 									<FormMessage />

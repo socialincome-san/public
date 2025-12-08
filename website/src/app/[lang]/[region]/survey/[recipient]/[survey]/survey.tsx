@@ -1,17 +1,16 @@
-import { useFirestore } from '@/lib/firebase/hooks/useFirestore';
+'use client';
+
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types/recipient';
-import { SURVEY_FIRETORE_PATH, Survey as SurveyModel, SurveyStatus } from '@socialincome/shared/src/types/survey';
-import { useQuery } from '@tanstack/react-query';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { useCallback } from 'react';
+import { SurveyStatus } from '@prisma/client';
+import { useEffect } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/defaultV2.min.css';
 import { Survey as SurveyReact } from 'survey-react-ui';
 import { settings } from './common';
 import { getQuestionnaire } from './questionnaires';
 import './survey.css';
+import { useSurvey } from './use-survey';
 
 export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
 
@@ -22,49 +21,29 @@ interface SurveyProps {
 }
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
-	const firestore = useFirestore();
-	const surveyDocRef = doc(
-		firestore,
-		[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'),
-	);
+	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
+
+	useEffect(() => {
+		loadSurvey(surveyId, recipientId);
+	}, [surveyId, recipientId]);
+
 	const translator = useTranslator(lang, 'website-survey');
-	const { data: survey } = useQuery({
-		queryFn: () => getDoc(surveyDocRef).then((snapshot) => snapshot.data() as SurveyModel),
-		queryKey: [recipientId, surveyId],
-	});
 
-	// TODO: implement session storage caching
-	const saveSurveyData = useCallback(
-		(survey: Model, status: SurveyStatus) => {
-			const data = survey.data;
-			data.pageNo = survey.currentPageNo;
-			updateDoc(surveyDocRef, {
-				data: data,
-				status: status,
-				completed_at: status == SurveyStatus.Completed ? new Date(Date.now()) : null,
-			})
-				.then(() => console.log('saved successfully'))
-				.catch(() => {
-					console.log('error saving');
-					window.setTimeout(() => saveSurveyData(survey, status), 3000);
-				});
-		},
-		[surveyDocRef],
-	);
-
-	if (survey && translator) {
-		if (survey.status == SurveyStatus.Completed) return <div>Survey already completed</div>;
+	if (!hasError && survey && translator) {
+		if (survey.status == SurveyStatus.completed) return <div>Survey already completed</div>;
 
 		const model = new Model({
 			...settings(translator.t),
-			pages: getQuestionnaire(survey.questionnaire, translator.t, survey.recipient_name),
+			pages: getQuestionnaire(survey.questionnaire, translator.t, survey.nameOfRecipient),
 		});
-		model.currentPageNo = survey.data.pageNo;
+		model.currentPageNo = (survey.data as Model).pageNo;
 
-		model.onPartialSend.add((data) => saveSurveyData(data, SurveyStatus.InProgress));
-		model.onComplete.add((data) => saveSurveyData(data, SurveyStatus.Completed));
+		model.onPartialSend.add((data) => saveSurvey(surveyId, data, SurveyStatus.in_progress));
+		model.onComplete.add((data) => saveSurvey(surveyId, data, SurveyStatus.completed));
 
 		return <SurveyReact id="react-survey" model={model} />;
+	} else if (hasError) {
+		return <div>Error loading survey. Please try again later.</div>;
 	}
 
 	return <div>Loading...</div>;

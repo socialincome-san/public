@@ -25,6 +25,11 @@ export function DatePicker({
 }) {
 	const [open, setOpen] = React.useState(false);
 	const [date, setDate] = React.useState<Date | undefined>(selected);
+	const formatter = new Intl.DateTimeFormat('de-CH', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	});
 
 	useEffect(() => {
 		setDate(selected);
@@ -35,7 +40,7 @@ export function DatePicker({
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
 					<Button disabled={disabled} variant="outline" id="date" className="w-full justify-between font-normal">
-						{date ? date.toLocaleDateString() : placeholder}
+						{date ? formatter.format(date) : placeholder}
 						<ChevronDownIcon className="h-4 w-4 opacity-50" />
 					</Button>
 				</PopoverTrigger>

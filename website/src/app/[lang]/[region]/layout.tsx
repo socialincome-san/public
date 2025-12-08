@@ -1,6 +1,7 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]/index';
 import { CookieConsentBanner } from '@/components/legacy/analytics/cookie-consent-banner';
-import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
+import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
+import { mainWebsiteLanguages, WebsiteLanguage, websiteRegions } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { PropsWithChildren } from 'react';
@@ -11,15 +12,18 @@ export const generateStaticParams = () =>
 
 export const generateMetadata = async (props: DefaultLayoutProps) => {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-common');
+	return getMetadata(params.lang as WebsiteLanguage, 'website-common');
 };
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-common'],
+	});
 
 	return (
-		<>
+		<I18nContextProvider>
 			<Toaster />
 			{children}
 			<CookieConsentBanner
@@ -29,6 +33,6 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 					buttonRefuse: translator.t('cookie-consent-banner.button-refuse'),
 				}}
 			/>
-		</>
+		</I18nContextProvider>
 	);
 }

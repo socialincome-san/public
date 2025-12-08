@@ -1,5 +1,3 @@
-import { handleApiError } from '@/app/api/auth';
-
 export async function GET(request: Request) {
 	try {
 		const country = request.headers.get('cf-ipcountry') || 'Unknown';
@@ -14,6 +12,6 @@ export async function GET(request: Request) {
 			ip,
 		});
 	} catch (error: any) {
-		return handleApiError(error);
+		return new Response(null, { status: 500, statusText: error.message });
 	}
 }

@@ -1,10 +1,10 @@
-import { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
-import { buildAddressInput, buildCommonContactData } from '@/components/legacy/dynamic-form/helper';
+import { FormField } from '@/components/dynamic-form/dynamic-form';
+import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
 import {
 	LocalPartnerCreateInput,
 	LocalPartnerPayload,
 	LocalPartnerUpdateInput,
-} from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+} from '@/lib/services/local-partner/local-partner.types';
 import { LocalPartnerFormSchema } from './local-partners-form';
 
 export function buildUpdateLocalPartnerInput(

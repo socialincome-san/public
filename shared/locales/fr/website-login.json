@@ -16,5 +16,7 @@
 		"user-not-found": "Utilisateur non trouvé",
 		"invalid-email": "Adresse e-mail incorrecte",
 		"unknown": "Connexion impossible"
-	}
+	},
+	"detect-account-type": "Détection du type de compte...",
+	"invalid-account-type": "Type de compte invalide, veuillez réessayer ou contacter le support."
 }

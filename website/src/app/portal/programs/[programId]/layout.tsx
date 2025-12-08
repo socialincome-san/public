@@ -1,7 +1,7 @@
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
+import { ProgramService } from '@/lib/services/program/program.service';
 
 import { CountryBadge } from '@/components/badges/country-badge';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
@@ -29,7 +29,6 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
 		{ href: `/portal/programs/${programId}/payout-forecast`, label: 'Payout Forecast' },
 		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
-		{ href: `/portal/programs/${programId}/members`, label: 'Program Members' },
 	];
 
 	const breadcrumbLinks = [

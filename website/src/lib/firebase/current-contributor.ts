@@ -1,9 +1,10 @@
-import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
-import { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
-import { FirebaseService } from '@socialincome/shared/src/database/services/firebase/firebase.service';
+import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { FirebaseService } from '@/lib/services/firebase/firebase.service';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { readSessionCookie } from './session';
+
+const firebaseService = new FirebaseService();
 
 async function findContributorByAuthId(authUserId: string): Promise<ContributorSession | null> {
 	const service = new ContributorService();
@@ -12,11 +13,11 @@ async function findContributorByAuthId(authUserId: string): Promise<ContributorS
 }
 
 async function loadCurrentContributor(): Promise<ContributorSession | null> {
-	const cookie = await readSessionCookie();
+	const cookie = await firebaseService.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await new FirebaseService().verifySessionCookie(cookie);
+	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
@@ -33,4 +34,8 @@ export async function getAuthenticatedContributorOrRedirect(): Promise<Contribut
 		redirect('/login');
 	}
 	return contributor;
+}
+
+export async function getOptionalContributor(): Promise<ContributorSession | null> {
+	return await getCurrentContributor();
 }

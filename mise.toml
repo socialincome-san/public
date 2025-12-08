@@ -12,10 +12,6 @@ run = "npm run db:up"
 run = "npm run firebase:serve"
 depends = ["install"]
 
-[tasks.admin]
-run = "npm run admin:serve"
-depends = ["install", "db"]
-
 [tasks.build-paths]
 run = "npm run website:build-paths"
 
@@ -23,9 +19,5 @@ run = "npm run website:build-paths"
 run = "npm run website:serve"
 depends = ["install", "db", "build-paths"]
 
-[tasks.functions]
-run = "npm run functions:serve"
-depends = ["install", "db"]
-
 [tasks.dev]
-depends = ["firebase", "admin", "website", "functions"]
+depends = ["firebase", "website"]
