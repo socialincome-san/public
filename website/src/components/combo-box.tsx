@@ -7,7 +7,7 @@ import { cn } from '@/utils/cn';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
 
-export type ComboboxOption = {
+type ComboboxOption = {
 	id: string;
 	label: string;
 };

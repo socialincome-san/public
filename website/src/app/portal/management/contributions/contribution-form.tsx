@@ -18,7 +18,7 @@ import { ContributionPayload } from '@/lib/services/contribution/contribution.ty
 import { ContributorOption } from '@/lib/services/contributor/contributor.types';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 
-export type ContributionFormProps = {
+type ContributionFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;

@@ -37,7 +37,7 @@ export interface StoryblokImage {
 	id: number;
 }
 
-export interface StoryblokArticleType {
+interface StoryblokArticleType {
 	id: number;
 	value: string;
 }

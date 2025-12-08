@@ -14,6 +14,6 @@ const credentials =
 			}
 		: undefined;
 
-export const app = getOrInitializeFirebaseAdmin(credentials);
+const app = getOrInitializeFirebaseAdmin(credentials);
 export const authAdmin = new AuthAdmin(app);
 export const storageAdmin = new StorageAdmin(app);

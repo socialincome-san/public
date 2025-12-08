@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export type Section = {
+type Section = {
 	href: string;
 	label: string;
 };

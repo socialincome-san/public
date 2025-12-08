@@ -14,26 +14,7 @@ export const defaultRegion: WebsiteRegion = 'int';
 export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];
 
 export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
-export const defaultCurrency: WebsiteCurrency = 'USD';
 export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
-
-export const toLocale = (language: WebsiteLanguage, region: WebsiteRegion): string => {
-	return language + (region === 'ch' ? '-CH' : '');
-};
-
-export const toCurrencyLocale = (
-	language: WebsiteLanguage,
-	region: WebsiteRegion,
-	currency: Currency,
-	options?: Partial<Intl.ResolvedNumberFormatOptions>,
-): Partial<Intl.ResolvedNumberFormatOptions> => {
-	return {
-		style: 'currency' as keyof Intl.NumberFormatOptionsStyleRegistry,
-		currency: currency,
-		locale: toLocale(language, region),
-		...options,
-	};
-};
 
 /**
  * Check if the user has set a language and region cookie, and if they are valid. If so, return them.

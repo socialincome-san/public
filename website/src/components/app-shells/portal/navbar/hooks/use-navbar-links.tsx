@@ -1,7 +1,7 @@
 import { UserSession } from '@/lib/services/user/user.types';
 import { LucideIcon, Settings, Settings2 } from 'lucide-react';
 
-export type NavLink = {
+type NavLink = {
 	href: string;
 	label: string;
 	activeBase?: string;

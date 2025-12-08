@@ -22,7 +22,7 @@ import { Separator } from './separator';
 /**
  * Animation types and configurations
  */
-export interface AnimationConfig {
+interface AnimationConfig {
 	/** Badge animation type */
 	badgeAnimation?: 'bounce' | 'pulse' | 'wiggle' | 'fade' | 'slide' | 'none';
 	/** Popover animation type */
@@ -268,7 +268,7 @@ interface MultiSelectProps
 /**
  * Imperative methods exposed through ref
  */
-export interface MultiSelectRef {
+interface MultiSelectRef {
 	/**
 	 * Programmatically reset the component to its default value
 	 */
@@ -1091,4 +1091,5 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 );
 
 MultiSelect.displayName = 'MultiSelect';
-export type { MultiSelectGroup, MultiSelectOption, MultiSelectProps };
+
+export type { MultiSelectOption };

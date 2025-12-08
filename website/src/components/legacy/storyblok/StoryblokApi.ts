@@ -191,7 +191,7 @@ export async function getAuthor(slug: string, lang: string): Promise<ISbStory<St
 	);
 }
 
-export async function getWithFallback<T>(
+async function getWithFallback<T>(
 	loader: (lang: string, slug: string) => Promise<T>,
 	lang: string,
 	slug: string,

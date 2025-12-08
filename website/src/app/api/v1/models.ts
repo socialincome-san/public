@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const Phone = z.object({
+const Phone = z.object({
 	id: z.string(),
 	number: z.string(),
 	hasWhatsApp: z.boolean(),
@@ -8,7 +8,7 @@ export const Phone = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-export const PaymentInformation = z.object({
+const PaymentInformation = z.object({
 	id: z.string(),
 	provider: z.string(),
 	code: z.string(),
@@ -18,7 +18,7 @@ export const PaymentInformation = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-export const Contact = z.object({
+const Contact = z.object({
 	id: z.string(),
 	firstName: z.string(),
 	lastName: z.string(),
@@ -36,7 +36,7 @@ export const Contact = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-export const LocalPartner = z.object({
+const LocalPartner = z.object({
 	id: z.string(),
 	name: z.string(),
 	contact: Contact,
@@ -44,7 +44,7 @@ export const LocalPartner = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-export const Program = z.object({
+const Program = z.object({
 	id: z.string(),
 	name: z.string(),
 	country: z.string(),
@@ -57,7 +57,7 @@ export const Program = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-export const Recipient = z.object({
+const Recipient = z.object({
 	id: z.string(),
 	contactId: z.string(),
 	status: z.string(),
@@ -75,7 +75,7 @@ export const Recipient = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-export const Payout = z.object({
+const Payout = z.object({
 	id: z.string(),
 	amount: z.number(),
 	amountChf: z.number().nullable(),
@@ -89,7 +89,7 @@ export const Payout = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-export const Survey = z.object({
+const Survey = z.object({
 	id: z.string(),
 	name: z.string(),
 	recipientId: z.string(),
@@ -121,7 +121,7 @@ export const RecipientSelfUpdate = z.object({
 	successorName: z.string().optional(),
 });
 
-export const PayoutParams = z.object({
+const PayoutParams = z.object({
 	payoutId: z.string().describe('Payout ID'),
 });
 
@@ -130,13 +130,13 @@ export const VerifyOtpRequest = z.object({
 	otp: z.string(),
 });
 
-export const VerifyOtpResponse = z.object({
+const VerifyOtpResponse = z.object({
 	customToken: z.string(),
 	isNewUser: z.boolean(),
 	uid: z.string(),
 });
 
-export const StripeWebhookResponse = z.object({
+const StripeWebhookResponse = z.object({
 	received: z.literal(true),
 	data: z
 		.object({
@@ -147,11 +147,11 @@ export const StripeWebhookResponse = z.object({
 		.optional(),
 });
 
-export const ErrorResponse = z.object({
+const ErrorResponse = z.object({
 	error: z.string(),
 });
 
-export const PaymentFilesImportResult = z.object({
+const PaymentFilesImportResult = z.object({
 	id: z.string(),
 	contributionId: z.string(),
 	type: z.string(),
@@ -161,6 +161,6 @@ export const PaymentFilesImportResult = z.object({
 	updatedAt: z.date().nullable(),
 });
 
-export const ExchangeRatesImportSuccess = z.object({
+const ExchangeRatesImportSuccess = z.object({
 	success: z.literal(true),
 });
