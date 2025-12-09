@@ -35,7 +35,17 @@
 				"other": "Autre"
 			},
 			"save-button": "Enregistrer",
-			"update-error": "Impossible de mettre à jour le profil"
+			"update-error": "Impossible de mettre à jour le profil",
+			"user-updated-toast": "Les informations personnelles ont été mises à jour",
+			"firstname": "Prénom",
+			"lastname": "Nom",
+			"email": "E-mail",
+			"country": "Pays",
+			"gender": "Sexe",
+			"street": "Rue",
+			"street-number": "Numéro",
+			"city": "Localité",
+			"zip": "Code postal"
 		}
 	},
 	"sections": {

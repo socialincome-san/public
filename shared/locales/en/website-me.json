@@ -35,7 +35,17 @@
 				"other": "Other"
 			},
 			"save-button": "Save",
-			"update-error": "Could not update profile"
+			"update-error": "Could not update profile",
+			"user-updated-toast": "Your personal info has been updated",
+			"firstname": "First Name",
+			"lastname": "Last Name",
+			"email": "Email",
+			"country": "Country",
+			"gender": "Gender",
+			"street": "Street",
+			"street-number": "Number",
+			"city": "City",
+			"zip": "Zip"
 		}
 	},
 	"sections": {
@@ -145,4 +155,3 @@
 		"no-longer-work-here": "I no longer work here"
 	}
 }
-

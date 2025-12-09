@@ -35,7 +35,17 @@
 				"other": "Andere"
 			},
 			"save-button": "Speichern",
-			"update-error": "Profil konnte nicht aktualisiert werden"
+			"update-error": "Profil konnte nicht aktualisiert werden",
+			"user-updated-toast": "Deine Kontaktangaben wurden aktualisiert",
+			"firstname": "Vorname",
+			"lastname": "Nachname",
+			"email": "E-Mail",
+			"country": "Land",
+			"gender": "Geschlecht",
+			"street": "Strasse",
+			"street-number": "Nummer",
+			"city": "Ort",
+			"zip": "PLZ"
 		}
 	},
 	"sections": {

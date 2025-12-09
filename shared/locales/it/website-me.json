@@ -35,7 +35,17 @@
 				"other": "Altro"
 			},
 			"save-button": "Salva",
-			"update-error": "Impossibile aggiornare il profilo"
+			"update-error": "Impossibile aggiornare il profilo",
+			"user-updated-toast": "Le tue informazioni personali sono state aggiornate",
+			"firstname": "Nome",
+			"lastname": "Cognome",
+			"email": "Email",
+			"country": "Paese",
+			"gender": "Genere",
+			"street": "Via",
+			"street-number": "Numero",
+			"city": "Città",
+			"zip": "CAP"
 		}
 	},
 	"sections": {
