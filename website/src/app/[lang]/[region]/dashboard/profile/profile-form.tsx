@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ContributorReferralSource, Gender } from '@prisma/client';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as z from 'zod';
 
 const formSchema = z.object({
@@ -57,9 +58,16 @@ export type ProfileFormTranslations = {
 	zip: string;
 	saveButton: string;
 	updateError: string;
+	userUpdatedToast: string;
 };
 
-export function ProfileForm({ contributor, translations }: { contributor: ContributorSession; translations: ProfileFormTranslations }) {
+export function ProfileForm({
+	contributor,
+	translations,
+}: {
+	contributor: ContributorSession;
+	translations: ProfileFormTranslations;
+}) {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isPending, startTransition] = useTransition();
 
@@ -123,7 +131,10 @@ export function ProfileForm({ contributor, translations }: { contributor: Contri
 			const result = await updateSelfAction(contributor.id, updateInput);
 
 			if (!result.success) {
-				setErrorMessage(result.error || 'Could not update profile');
+				setErrorMessage(result.error || translations.updateError);
+			} else {
+				toast.success(translations.userUpdatedToast);
+				form.reset(values);
 			}
 		});
 	};
@@ -297,7 +308,9 @@ export function ProfileForm({ contributor, translations }: { contributor: Contri
 					)}
 				/>
 
-				{errorMessage ? <div className="text-destructive md:col-span-2">{errorMessage || translations.updateError}</div> : null}
+				{errorMessage ? (
+					<div className="text-destructive md:col-span-2">{errorMessage || translations.updateError}</div>
+				) : null}
 
 				<div className="flex justify-start pt-4 md:col-span-2">
 					<Button type="submit" disabled={loading}>

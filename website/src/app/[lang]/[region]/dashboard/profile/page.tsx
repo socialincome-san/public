@@ -1,8 +1,8 @@
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { DefaultPageProps } from '../..';
 import { ProfileForm } from './profile-form';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
@@ -37,6 +37,7 @@ export default async function Page({ params }: DefaultPageProps) {
 		zip: translator.t('personal-info.zip'),
 		saveButton: translator.t('profile.form.save-button') || translator.t('personal-info.submit-button'),
 		updateError: translator.t('profile.form.update-error'),
+		userUpdatedToast: translator.t('personal-info.user-updated-toast'),
 	};
 
 	return <ProfileForm contributor={contributor} translations={translations} />;
