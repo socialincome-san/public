@@ -4,29 +4,29 @@ import { Button } from '@/components/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
-
 import { updateSelfAction } from '@/lib/server-actions/contributor-actions';
 import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ContributorReferralSource, Gender } from '@prisma/client';
+import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
 
 const formSchema = z.object({
-	firstName: z.string().min(1, 'Required'),
-	lastName: z.string().min(1, 'Required'),
-	email: z.string().email('Invalid email').default(''),
+	firstName: z.string().min(1),
+	lastName: z.string().min(1),
+	email: z.string().email(),
 
-	country: z.string().default(''),
+	country: z.string(),
 	gender: z.nativeEnum(Gender).optional(),
 	referral: z.nativeEnum(ContributorReferralSource).optional(),
 
-	street: z.string().default(''),
-	number: z.string().default(''),
-	city: z.string().default(''),
-	zip: z.string().default(''),
+	street: z.string(),
+	number: z.string(),
+	city: z.string(),
+	zip: z.string(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -59,6 +59,7 @@ export type ProfileFormTranslations = {
 	saveButton: string;
 	updateError: string;
 	userUpdatedToast: string;
+	countries: Record<CountryCode, string>;
 };
 
 export function ProfileForm({
@@ -108,18 +109,18 @@ export function ProfileForm({
 							address: {
 								upsert: {
 									update: {
-										street: street || '',
-										number: number || '',
-										city: city || '',
-										zip: zip || '',
-										country: country || '',
+										street,
+										number,
+										city,
+										zip,
+										country,
 									},
 									create: {
-										street: street || '',
-										number: number || '',
-										city: city || '',
-										zip: zip || '',
-										country: country || '',
+										street,
+										number,
+										city,
+										zip,
+										country,
 									},
 								},
 							},
@@ -192,9 +193,21 @@ export function ProfileForm({
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>{translations.country}</FormLabel>
-							<FormControl>
-								<Input {...field} disabled={loading} />
-							</FormControl>
+							<Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder={translations.selectOptionPlaceholder} />
+									</SelectTrigger>
+								</FormControl>
+
+								<SelectContent className="max-h-[16rem] overflow-y-auto">
+									{COUNTRY_CODES.map((code) => (
+										<SelectItem key={code} value={code}>
+											{translations.countries[code]}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -212,6 +225,7 @@ export function ProfileForm({
 										<SelectValue placeholder={translations.selectGenderPlaceholder} />
 									</SelectTrigger>
 								</FormControl>
+
 								<SelectContent>
 									<SelectItem value="male">{translations.genderMale}</SelectItem>
 									<SelectItem value="female">{translations.genderFemale}</SelectItem>
@@ -308,9 +322,7 @@ export function ProfileForm({
 					)}
 				/>
 
-				{errorMessage ? (
-					<div className="text-destructive md:col-span-2">{errorMessage || translations.updateError}</div>
-				) : null}
+				{errorMessage ? <div className="text-destructive md:col-span-2">{errorMessage}</div> : null}
 
 				<div className="flex justify-start pt-4 md:col-span-2">
 					<Button type="submit" disabled={loading}>

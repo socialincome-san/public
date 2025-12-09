@@ -3,15 +3,24 @@ import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-co
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { DefaultPageProps } from '../..';
-import { ProfileForm } from './profile-form';
+import { ProfileForm, ProfileFormTranslations } from './profile-form';
+
+import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
-	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
+	const translator = await Translator.getInstance({
+		language: lang as WebsiteLanguage,
+		namespaces: ['website-me', 'countries'],
+	});
 
-	const translations = {
+	const translatedCountries: Record<CountryCode, string> = Object.fromEntries(
+		COUNTRY_CODES.map((code) => [code, translator.t(code)]),
+	) as Record<CountryCode, string>;
+
+	const translations: ProfileFormTranslations = {
 		personalInfoTitle: translator.t('profile.form.personal-info-title'),
 		addressTitle: translator.t('profile.form.address-title'),
 		firstName: translator.t('profile.form.firstname'),
@@ -39,6 +48,7 @@ export default async function Page({ params }: DefaultPageProps) {
 		saveButton: translator.t('profile.form.save-button'),
 		updateError: translator.t('profile.form.update-error'),
 		userUpdatedToast: translator.t('profile.form.user-updated-toast'),
+		countries: translatedCountries,
 	};
 
 	return (
