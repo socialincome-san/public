@@ -30,7 +30,36 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-export function ProfileForm({ contributor }: { contributor: ContributorSession }) {
+export type ProfileFormTranslations = {
+	personalInfoTitle: string;
+	addressTitle: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	country: string;
+	gender: string;
+	howDidYouHear: string;
+	selectGenderPlaceholder: string;
+	selectOptionPlaceholder: string;
+	genderMale: string;
+	genderFemale: string;
+	genderOther: string;
+	genderPrivate: string;
+	referralFamily: string;
+	referralWork: string;
+	referralSocial: string;
+	referralMedia: string;
+	referralPresentation: string;
+	referralOther: string;
+	street: string;
+	number: string;
+	city: string;
+	zip: string;
+	saveButton: string;
+	updateError: string;
+};
+
+export function ProfileForm({ contributor, translations }: { contributor: ContributorSession; translations: ProfileFormTranslations }) {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isPending, startTransition] = useTransition();
 
@@ -102,14 +131,14 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-y-6 md:grid-cols-2 md:gap-x-8">
-				<h3 className="text-lg font-semibold md:col-span-2">Personal Information</h3>
+				<h3 className="text-lg font-semibold md:col-span-2">{translations.personalInfoTitle}</h3>
 
 				<FormField
 					control={form.control}
 					name="firstName"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>First name</FormLabel>
+							<FormLabel>{translations.firstName}</FormLabel>
 							<FormControl>
 								<Input {...field} disabled={loading} />
 							</FormControl>
@@ -123,7 +152,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					name="lastName"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Last name</FormLabel>
+							<FormLabel>{translations.lastName}</FormLabel>
 							<FormControl>
 								<Input {...field} disabled={loading} />
 							</FormControl>
@@ -137,7 +166,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					name="email"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Email</FormLabel>
+							<FormLabel>{translations.email}</FormLabel>
 							<FormControl>
 								<Input type="email" {...field} readOnly disabled aria-disabled />
 							</FormControl>
@@ -151,7 +180,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					name="country"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Country</FormLabel>
+							<FormLabel>{translations.country}</FormLabel>
 							<FormControl>
 								<Input {...field} disabled={loading} />
 							</FormControl>
@@ -165,18 +194,18 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					name="gender"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Gender</FormLabel>
+							<FormLabel>{translations.gender}</FormLabel>
 							<Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
 								<FormControl>
 									<SelectTrigger>
-										<SelectValue placeholder="Select gender" />
+										<SelectValue placeholder={translations.selectGenderPlaceholder} />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									<SelectItem value="male">Male</SelectItem>
-									<SelectItem value="female">Female</SelectItem>
-									<SelectItem value="other">Other</SelectItem>
-									<SelectItem value="private">Prefer not to say</SelectItem>
+									<SelectItem value="male">{translations.genderMale}</SelectItem>
+									<SelectItem value="female">{translations.genderFemale}</SelectItem>
+									<SelectItem value="other">{translations.genderOther}</SelectItem>
+									<SelectItem value="private">{translations.genderPrivate}</SelectItem>
 								</SelectContent>
 							</Select>
 							<FormMessage />
@@ -189,20 +218,20 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					name="referral"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>How did you hear about us?</FormLabel>
+							<FormLabel>{translations.howDidYouHear}</FormLabel>
 							<Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
 								<FormControl>
 									<SelectTrigger>
-										<SelectValue placeholder="Select option" />
+										<SelectValue placeholder={translations.selectOptionPlaceholder} />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									<SelectItem value="familyfriends">Family & Friends</SelectItem>
-									<SelectItem value="work">Work</SelectItem>
-									<SelectItem value="socialmedia">Social Media</SelectItem>
-									<SelectItem value="media">Media</SelectItem>
-									<SelectItem value="presentation">Presentation</SelectItem>
-									<SelectItem value="other">Other</SelectItem>
+									<SelectItem value="familyfriends">{translations.referralFamily}</SelectItem>
+									<SelectItem value="work">{translations.referralWork}</SelectItem>
+									<SelectItem value="socialmedia">{translations.referralSocial}</SelectItem>
+									<SelectItem value="media">{translations.referralMedia}</SelectItem>
+									<SelectItem value="presentation">{translations.referralPresentation}</SelectItem>
+									<SelectItem value="other">{translations.referralOther}</SelectItem>
 								</SelectContent>
 							</Select>
 							<FormMessage />
@@ -210,14 +239,14 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					)}
 				/>
 
-				<h3 className="mt-4 text-lg font-semibold md:col-span-2">Address</h3>
+				<h3 className="mt-4 text-lg font-semibold md:col-span-2">{translations.addressTitle}</h3>
 
 				<FormField
 					control={form.control}
 					name="street"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Street</FormLabel>
+							<FormLabel>{translations.street}</FormLabel>
 							<FormControl>
 								<Input {...field} disabled={loading} />
 							</FormControl>
@@ -231,7 +260,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					name="number"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Nr.</FormLabel>
+							<FormLabel>{translations.number}</FormLabel>
 							<FormControl>
 								<Input {...field} disabled={loading} />
 							</FormControl>
@@ -245,7 +274,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					name="city"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>City</FormLabel>
+							<FormLabel>{translations.city}</FormLabel>
 							<FormControl>
 								<Input {...field} disabled={loading} />
 							</FormControl>
@@ -259,7 +288,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					name="zip"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>ZIP</FormLabel>
+							<FormLabel>{translations.zip}</FormLabel>
 							<FormControl>
 								<Input {...field} disabled={loading} />
 							</FormControl>
@@ -268,11 +297,11 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					)}
 				/>
 
-				{errorMessage ? <div className="text-destructive md:col-span-2">{errorMessage}</div> : null}
+				{errorMessage ? <div className="text-destructive md:col-span-2">{errorMessage || translations.updateError}</div> : null}
 
 				<div className="flex justify-start pt-4 md:col-span-2">
 					<Button type="submit" disabled={loading}>
-						Save
+						{translations.saveButton}
 					</Button>
 				</div>
 			</form>

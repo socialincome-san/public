@@ -13,7 +13,30 @@
 		"profile": "Profilo"
 	},
 	"profile": {
-		"link": "Profilo"
+		"link": "Profilo",
+		"form": {
+			"personal-info-title": "Informazioni personali",
+			"address-title": "Indirizzo",
+			"how-did-you-hear": "Come hai saputo di noi?",
+			"select-gender-placeholder": "Seleziona il genere",
+			"select-option-placeholder": "Seleziona un'opzione",
+			"genders": {
+				"male": "Maschio",
+				"female": "Femmina",
+				"other": "Altro",
+				"private": "Preferisco non dirlo"
+			},
+			"referrals": {
+				"familyfriends": "Famiglia e amici",
+				"work": "Lavoro",
+				"socialmedia": "Social Media",
+				"media": "Media",
+				"presentation": "Presentazione",
+				"other": "Altro"
+			},
+			"save-button": "Salva",
+			"update-error": "Impossibile aggiornare il profilo"
+		}
 	},
 	"sections": {
 		"account": {
