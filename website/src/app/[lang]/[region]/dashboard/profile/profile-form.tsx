@@ -5,9 +5,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { updateSelfAction } from '@/lib/server-actions/contributor-actions';
+import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ContributorReferralSource, Gender } from '@prisma/client';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -29,6 +31,9 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export function ProfileForm({ contributor }: { contributor: ContributorSession }) {
+	const [errorMessage, setErrorMessage] = useState('');
+	const [isPending, startTransition] = useTransition();
+
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -45,8 +50,53 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 		},
 	});
 
-	const onSubmit = async (values: FormSchema) => {
-		console.log('Profile update', values);
+	const loading = form.formState.isSubmitting || isPending;
+
+	const onSubmit = (values: FormSchema) => {
+		setErrorMessage('');
+
+		startTransition(async () => {
+			const { firstName, lastName, email, country, gender, referral, street, number, city, zip } = values;
+
+			const updateInput: ContributorUpdateInput = {
+				id: contributor.id,
+				referral: referral ?? contributor.referral ?? ContributorReferralSource.other,
+				contact: {
+					update: {
+						data: {
+							firstName,
+							lastName,
+							email,
+							gender: gender ?? null,
+							address: {
+								upsert: {
+									update: {
+										street: street || '',
+										number: number || '',
+										city: city || '',
+										zip: zip || '',
+										country: country || '',
+									},
+									create: {
+										street: street || '',
+										number: number || '',
+										city: city || '',
+										zip: zip || '',
+										country: country || '',
+									},
+								},
+							},
+						},
+					},
+				},
+			};
+
+			const result = await updateSelfAction(contributor.id, updateInput);
+
+			if (!result.success) {
+				setErrorMessage(result.error || 'Could not update profile');
+			}
+		});
 	};
 
 	return (
@@ -61,7 +111,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 						<FormItem>
 							<FormLabel>First name</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} disabled={loading} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -75,7 +125,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 						<FormItem>
 							<FormLabel>Last name</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} disabled={loading} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -89,7 +139,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 						<FormItem>
 							<FormLabel>Email</FormLabel>
 							<FormControl>
-								<Input type="email" {...field} readOnly disabled />
+								<Input type="email" {...field} readOnly disabled aria-disabled />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -103,7 +153,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 						<FormItem>
 							<FormLabel>Country</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} disabled={loading} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -116,7 +166,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Gender</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
+							<Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
 								<FormControl>
 									<SelectTrigger>
 										<SelectValue placeholder="Select gender" />
@@ -140,7 +190,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>How did you hear about us?</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
+							<Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
 								<FormControl>
 									<SelectTrigger>
 										<SelectValue placeholder="Select option" />
@@ -169,7 +219,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 						<FormItem>
 							<FormLabel>Street</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} disabled={loading} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -183,7 +233,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 						<FormItem>
 							<FormLabel>Nr.</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} disabled={loading} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -197,7 +247,7 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 						<FormItem>
 							<FormLabel>City</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} disabled={loading} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -211,15 +261,19 @@ export function ProfileForm({ contributor }: { contributor: ContributorSession }
 						<FormItem>
 							<FormLabel>ZIP</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} disabled={loading} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
 
+				{errorMessage ? <div className="text-destructive md:col-span-2">{errorMessage}</div> : null}
+
 				<div className="flex justify-start pt-4 md:col-span-2">
-					<Button type="submit">Save</Button>
+					<Button type="submit" disabled={loading}>
+						Save
+					</Button>
 				</div>
 			</form>
 		</Form>

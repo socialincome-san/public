@@ -34,3 +34,11 @@ export async function getContributorAction(contributorId: string) {
 export async function getOptionalContributorAction() {
 	return await getOptionalContributor();
 }
+
+export async function updateSelfAction(contributorId: string, data: ContributorUpdateInput) {
+	const contributorService = new ContributorService();
+
+	const res = await contributorService.updateSelf(contributorId, data);
+	revalidatePath('/dashboard/profile');
+	return res;
+}
