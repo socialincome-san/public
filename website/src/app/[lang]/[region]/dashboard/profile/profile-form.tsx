@@ -23,10 +23,10 @@ const formSchema = z.object({
 	gender: z.nativeEnum(Gender).optional(),
 	referral: z.nativeEnum(ContributorReferralSource).optional(),
 
-	street: z.string(),
-	number: z.string(),
-	city: z.string(),
-	zip: z.string(),
+	street: z.string().optional(),
+	number: z.string().optional(),
+	city: z.string().optional(),
+	zip: z.string().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -97,7 +97,6 @@ export function ProfileForm({
 			const { firstName, lastName, email, country, gender, referral, street, number, city, zip } = values;
 
 			const updateInput: ContributorUpdateInput = {
-				id: contributor.id,
 				referral: referral ?? contributor.referral ?? ContributorReferralSource.other,
 				contact: {
 					update: {
@@ -116,10 +115,10 @@ export function ProfileForm({
 										country,
 									},
 									create: {
-										street,
-										number,
-										city,
-										zip,
+										street: street ?? '',
+										number: number ?? '',
+										city: city ?? '',
+										zip: zip ?? '',
 										country,
 									},
 								},
@@ -129,7 +128,7 @@ export function ProfileForm({
 				},
 			};
 
-			const result = await updateSelfAction(contributor.id, updateInput);
+			const result = await updateSelfAction(updateInput);
 
 			if (!result.success) {
 				setErrorMessage(result.error || translations.updateError);
@@ -251,12 +250,22 @@ export function ProfileForm({
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									<SelectItem value="familyfriends">{translations.referralFamily}</SelectItem>
-									<SelectItem value="work">{translations.referralWork}</SelectItem>
-									<SelectItem value="socialmedia">{translations.referralSocial}</SelectItem>
-									<SelectItem value="media">{translations.referralMedia}</SelectItem>
-									<SelectItem value="presentation">{translations.referralPresentation}</SelectItem>
-									<SelectItem value="other">{translations.referralOther}</SelectItem>
+									{Object.values(ContributorReferralSource).map((ref) => {
+										const translation = {
+											family_and_friends: translations.referralFamily,
+											work: translations.referralWork,
+											social_media: translations.referralSocial,
+											media: translations.referralMedia,
+											presentation: translations.referralPresentation,
+											other: translations.referralOther,
+										}[ref];
+
+										return (
+											<SelectItem key={ref} value={ref}>
+												{translation}
+											</SelectItem>
+										);
+									})}
 								</SelectContent>
 							</Select>
 							<FormMessage />

@@ -12,9 +12,9 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
 	const breadcrumbLinks = [
-		{ href: '/', label: translator.t('breadcrumb.website') },
-		{ href: '/dashboard/contributions', label: translator.t('breadcrumb.dashboard') },
-		{ href: '/dashboard/profile', label: translator.t('breadcrumb.profile') },
+		{ href: `/${lang}/${region}`, label: translator.t('breadcrumb.website') },
+		{ href: `/${lang}/${region}/dashboard/contributions`, label: translator.t('breadcrumb.dashboard') },
+		{ href: `/${lang}/${region}/dashboard/profile`, label: translator.t('breadcrumb.profile') },
 	];
 
 	return (
