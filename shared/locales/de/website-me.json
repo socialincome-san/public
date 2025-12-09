@@ -3,6 +3,18 @@
 		"title": "Mein Profil | Social Income",
 		"home-link": "Zurück zur Startseite"
 	},
+	"breadcrumb": {
+		"website": "Website",
+		"dashboard": "Dashboard",
+		"profile": "Profil"
+	},
+	"title": {
+		"dashboard": "Dashboard",
+		"profile": "Profil"
+	},
+	"profile": {
+		"link": "Profil"
+	},
 	"sections": {
 		"account": {
 			"title": "Mein Profil",

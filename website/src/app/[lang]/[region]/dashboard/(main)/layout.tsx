@@ -23,14 +23,14 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	];
 
 	const breadcrumbLinks = [
-		{ href: '/', label: 'Website' },
-		{ href: '/dashboard', label: 'Dashboard' },
+		{ href: '/', label: translator.t('breadcrumb.website') },
+		{ href: '/dashboard', label: translator.t('breadcrumb.dashboard') },
 	];
 
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<h1 className="py-8 text-5xl">Dashboard</h1>
+			<h1 className="py-8 text-5xl">{translator.t('title.dashboard')}</h1>
 			<TabNavigation sections={sections} />
 			<Card>{children}</Card>
 		</>

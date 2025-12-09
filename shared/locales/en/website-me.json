@@ -3,6 +3,18 @@
 		"title": "My Profile | Social Income",
 		"home-link": "Back to Home"
 	},
+	"breadcrumb": {
+		"website": "Website",
+		"dashboard": "Dashboard",
+		"profile": "Profile"
+	},
+	"title": {
+		"dashboard": "Dashboard",
+		"profile": "Profile"
+	},
+	"profile": {
+		"link": "Profile"
+	},
 	"sections": {
 		"account": {
 			"title": "My Account",
@@ -110,3 +122,4 @@
 		"no-longer-work-here": "I no longer work here"
 	}
 }
+
