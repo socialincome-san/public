@@ -1,3 +1,4 @@
+import { Card } from '@/components/card';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -40,5 +41,9 @@ export default async function Page({ params }: DefaultPageProps) {
 		userUpdatedToast: translator.t('profile.form.user-updated-toast'),
 	};
 
-	return <ProfileForm contributor={contributor} translations={translations} />;
+	return (
+		<Card>
+			<ProfileForm contributor={contributor} translations={translations} />
+		</Card>
+	);
 }
