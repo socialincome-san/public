@@ -12,7 +12,6 @@
 		"start": "next start -p 3001",
 		"start:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run start'",
 		"test": "firebase emulators:exec --only firestore,storage,functions --project demo-social-income-local --config ../firebase.json --import ../seed 'jest --forceExit --roots src/'",
-		"test:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test'",
 		"test:e2e": "npx playwright install --with-deps && playwright test",
 		"test:e2e:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e'",
 		"test:e2e:update": "npx playwright install --with-deps && playwright test --update-snapshots",

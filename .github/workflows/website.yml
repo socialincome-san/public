@@ -39,6 +39,7 @@ jobs:
           node-version: 22
           cache: npm
 
+      # ⬇️ **Added — matches the Shared workflow**
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
@@ -49,24 +50,9 @@ jobs:
         run: npm run website:build-paths && npm run typecheck
 
       - name: Run unit tests
-        run: npm run website:test:emulator
-
-      # TODO: re-enable
-      #      - name: Run e2e tests
-      #        run: npm run website:test:e2e:emulator
-      #
-      #      - name: Deploy Playwright report to GitHub Pages
-      #        uses: rossjrw/pr-preview-action@v1
-      #        if: always()
-      #        with:
-      #          source-dir: website/playwright-report/
-      #          preview-branch: gh-pages
-      #          umbrella-dir: website-playwright-report
-      #          action: auto
+        run: npm run website:test
 
       - name: Test build
-        # To use the emulator during the build, we need to rename the .env.development file to .env.production.
-        # Next.js doesn't now allow to use NODE_ENV=development in the build process.
         env:
           STORYBLOK_PREVIEW_SECRET: ${{ secrets.STORYBLOK_PREVIEW_SECRET }}
           STORYBLOK_PREVIEW_TOKEN: ${{ secrets.STORYBLOK_PREVIEW_TOKEN }}
