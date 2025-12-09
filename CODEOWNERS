@@ -5,7 +5,6 @@ firestore.rules raphael@socialincome.org fabrice@socialincome.org marco@socialin
 package.json raphael@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org
 storage.rules raphael@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org
 
-shared/ raphael@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org dev@socialincome.org
 recipients_app/ verena@socialincome.org mikolaj@socialincome.org sandino@socialincome.org karin@socialincome.org
 codemagic.yaml verena@socialincome.org mikolaj@socialincome.org sandino@socialincome.org karin@socialincome.org
 website/ raphael@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org dev@socialincome.org

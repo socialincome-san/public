@@ -21,7 +21,6 @@ Welcome to the **Social Income monorepo**.
 ├─ recipients_app/        → Mobile app for recipients
 ├─ recipients_selection/  → Verifiable draw process for selecting recipients
 ├─ seed/                  → Firebase emulator seed data
-├─ shared/                → Shared code (being merged into /website)
 ├─ ui/                    → Legacy Storybook component library
 └─ website/               → Next.js (public site, portal, dashboard, infra, backend services)
 ```
@@ -64,13 +63,6 @@ Contains seed data for the local development environment:
 - Firebase Storage Emulator
 
 Automatically imported when running `mise dev`.
-
----
-
-# 🔗 shared
-
-Temporary shared library (TS/Node).  
-Will eventually be migrated into `/website`.
 
 ---
 

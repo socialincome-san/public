@@ -30,25 +30,25 @@ const sendExceptionToSentry = (err: unknown, extra?: Record<string, unknown>) =>
 export const logger = {
 	debug(message: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(message);
-		console.debug(msg, attributes);
+		console.debug({ message: msg }, attributes);
 		sendToSentry('debug', msg, attributes);
 	},
 
 	info(message: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(message);
-		console.info(msg, attributes);
+		console.info({ message: msg }, attributes);
 		sendToSentry('info', msg, attributes);
 	},
 
 	warn(message: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(message);
-		console.warn(msg, attributes);
+		console.warn({ message: msg }, attributes);
 		sendToSentry('warning', msg, attributes);
 	},
 
 	error(error: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(error);
-		console.error(msg, attributes);
+		console.error({ message: msg }, attributes);
 		sendExceptionToSentry(error, attributes);
 	},
 
