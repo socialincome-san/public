@@ -23,8 +23,8 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	];
 
 	const breadcrumbLinks = [
-		{ href: '/', label: translator.t('breadcrumb.website') },
-		{ href: '/dashboard', label: translator.t('breadcrumb.dashboard') },
+		{ href: `/${lang}/${region}`, label: translator.t('breadcrumb.website') },
+		{ href: `/${lang}/${region}/dashboard`, label: translator.t('breadcrumb.dashboard') },
 	];
 
 	return (
