@@ -4,8 +4,8 @@ import { CurrencyCell } from '@/components/data-table/elements/currency-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import { Translator } from '@/lib/i18n/translator';
 import type { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export function makeYourStripeSubscriptionsColumns(

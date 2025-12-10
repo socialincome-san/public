@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { OpenSourceContributorsClient } from '../(components)/contributors-client';
 import { getContributors } from '../(components)/get-contributors';
 
@@ -24,5 +24,3 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 		<OpenSourceContributorsClient contributors={contributors} heading={heading} totalContributors={totalContributors} />
 	);
 }
-
-export default OpenSourceContributors;

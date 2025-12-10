@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils/cn';
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import * as React from 'react';
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
@@ -158,4 +158,4 @@ function CalendarDayButton({ className, day, modifiers, ...props }: React.Compon
 	);
 }
 
-export { Calendar, CalendarDayButton };
+export { Calendar };

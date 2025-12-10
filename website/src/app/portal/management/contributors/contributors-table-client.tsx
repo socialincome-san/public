@@ -6,7 +6,7 @@ import { makeContributorColumns } from '@/components/data-table/columns/contribu
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import ContributorsForm from './contributors-form';
 

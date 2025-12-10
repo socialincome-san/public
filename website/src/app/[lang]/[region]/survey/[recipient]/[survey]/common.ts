@@ -1,4 +1,4 @@
-import { TranslateFunction } from '@socialincome/shared/src/utils/i18n';
+import { TranslateFunction } from '@/lib/i18n/translator';
 
 /**
  * Shared settings among all surveys

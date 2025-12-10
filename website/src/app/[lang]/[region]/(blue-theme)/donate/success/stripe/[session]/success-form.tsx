@@ -3,10 +3,10 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
+import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
+import { GENDER_OPTIONS } from '@/lib/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ContributorReferralSource } from '@prisma/client';
-import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
-import { GENDER_OPTIONS } from '@socialincome/shared/src/types/user';
 import {
 	Button,
 	Checkbox,

@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 

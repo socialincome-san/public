@@ -1,4 +1,4 @@
-import { OrganizationPermission, Prisma } from '@prisma/client';
+import { OrganizationPermission } from '@prisma/client';
 
 export type DonationCertificateTableViewRow = {
 	id: string;
@@ -26,5 +26,3 @@ export type YourDonationCertificateTableViewRow = {
 export type YourDonationCertificateTableView = {
 	tableRows: YourDonationCertificateTableViewRow[];
 };
-
-export type DonationCertificateCreateManyInput = Prisma.DonationCertificateCreateManyInput;

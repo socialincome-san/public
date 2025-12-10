@@ -1,9 +1,9 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import mapAfrica from '@/app/[lang]/[region]/(website)/our-work/(assets)/map-africa.svg';
 import { RecipientsCarousel } from '@/app/[lang]/[region]/(website)/our-work/(sections)/recipients-carousel';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import _ from 'lodash';
 import Image from 'next/image';

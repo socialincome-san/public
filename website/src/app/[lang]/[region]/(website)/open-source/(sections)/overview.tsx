@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, Typography } from '@socialincome/ui';
 import { getCommits } from '../(components)/get-commits';
 import { getForkCount } from '../(components)/get-forks';
@@ -23,7 +23,7 @@ interface Overview {
 	stars: OverviewItem;
 }
 
-export function OverviewCard({ title, total, time }: OverviewProp) {
+function OverviewCard({ title, total, time }: OverviewProp) {
 	return (
 		<Card className="bg-background hover:bg-primary rounded-lg border-2 border-opacity-80 px-2 py-5 shadow-none hover:bg-opacity-10 md:px-5 md:py-5">
 			{/* Large screens layout */}

@@ -6,17 +6,14 @@
 		"node": "22"
 	},
 	"workspaces": [
-		"shared",
 		"ui",
-		"website",
-		"firestore_to_postgres"
+		"website"
 	],
 	"scripts": {
 		"postinstall": "npm run db:generate",
 		"firebase:export": "firebase emulators:export --project demo-social-income-local --force ./seed",
 		"firebase:serve": "firebase emulators:start --project demo-social-income-local --config firebase.json --import ./seed",
 		"format-code": "prettier --write .",
-		"shared:test": "npm --workspace=@socialincome/shared run test",
 		"website:build-paths": "npm --workspace=@socialincome/website run build-paths",
 		"website:build": "npm --workspace=@socialincome/website run build",
 		"website:build:emulator": "npm --workspace=@socialincome/website run build:emulator",
@@ -48,7 +45,8 @@
 		"db:up": "npm --workspace=@socialincome/website run db:up",
 		"db:down": "npm --workspace=@socialincome/website run db:down",
 		"typecheck": "npm run typecheck:all",
-		"typecheck:all": "npm run typecheck --workspaces --if-present"
+		"typecheck:all": "npm run typecheck --workspaces --if-present",
+		"check:unused": "knip --config knip.config.ts"
 	},
 	"devDependencies": {
 		"@types/react": "19.2.1",

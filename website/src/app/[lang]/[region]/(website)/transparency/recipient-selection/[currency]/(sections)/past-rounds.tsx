@@ -1,12 +1,12 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { DrawCard } from '../(components)/draw-card';
 import { loadPastDraws } from './state';
 
-export const revalidate = 3600 * 24; // update once a day
+const revalidate = 3600 * 24; // update once a day
 
 export async function PastRounds({ lang }: DefaultParams) {
 	const pastDraws = await loadPastDraws();

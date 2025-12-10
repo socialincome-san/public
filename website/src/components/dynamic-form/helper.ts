@@ -67,7 +67,7 @@ export function buildCommonContactData(contactFields: { [key: string]: FormField
 	};
 }
 
-export type DropdownItem = {
+type DropdownItem = {
 	id: string;
 	label: string;
 };
@@ -80,5 +80,3 @@ export function getZodEnum(items: DropdownItem[]) {
 
 	return object;
 }
-
-type ExtractTypeFromObj<T> = T[keyof T];

@@ -1,5 +1,5 @@
 import { formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
-import { StoryblokAuthor } from '@/types/journal';
+import { StoryblokAuthor } from '@/lib/types/journal';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 

@@ -9,10 +9,7 @@ import {
 	generateDonationCertificates,
 	getContributorOptions,
 } from '@/lib/server-actions/donation-certificates-actions';
-import {
-	DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE,
-	LanguageCode,
-} from '@socialincome/shared/src/types/language';
+import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
 import _ from 'lodash';
 import { useEffect, useState, useTransition } from 'react';
 

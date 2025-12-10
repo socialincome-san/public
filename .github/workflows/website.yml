@@ -20,7 +20,7 @@ jobs:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@v5
         with:
-          paths: '["website/**", "shared/**", ".github/workflows/website.yml"]'
+          paths: '["website/**", ".github/workflows/website.yml"]'
           skip_after_successful_duplicate: "false"
           do_not_skip: '["push"]'
 
@@ -49,24 +49,9 @@ jobs:
         run: npm run website:build-paths && npm run typecheck
 
       - name: Run unit tests
-        run: npm run website:test:emulator
-
-      # TODO: re-enable
-      #      - name: Run e2e tests
-      #        run: npm run website:test:e2e:emulator
-      #
-      #      - name: Deploy Playwright report to GitHub Pages
-      #        uses: rossjrw/pr-preview-action@v1
-      #        if: always()
-      #        with:
-      #          source-dir: website/playwright-report/
-      #          preview-branch: gh-pages
-      #          umbrella-dir: website-playwright-report
-      #          action: auto
+        run: npm run website:test
 
       - name: Test build
-        # To use the emulator during the build, we need to rename the .env.development file to .env.production.
-        # Next.js doesn't now allow to use NODE_ENV=development in the build process.
         env:
           STORYBLOK_PREVIEW_SECRET: ${{ secrets.STORYBLOK_PREVIEW_SECRET }}
           STORYBLOK_PREVIEW_TOKEN: ${{ secrets.STORYBLOK_PREVIEW_TOKEN }}

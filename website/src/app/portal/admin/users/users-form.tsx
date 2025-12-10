@@ -14,7 +14,7 @@ import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateUserInput, buildUpdateUserInput } from './users-form-helper';
 
-export type UserFormProps = {
+type UserFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;

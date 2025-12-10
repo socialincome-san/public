@@ -1,6 +1,6 @@
 import { BankTransferPayment } from '@/lib/services/bank-transfer/bank-transfer.types';
 import { BankContributorData } from '@/lib/services/contributor/contributor.types';
-import { generateQrBillSvg } from '@/utils/qr-bill';
+import { generateQrBillSvg } from '@/lib/utils/qr-bill';
 import { useState, useTransition } from 'react';
 import toast from 'react-hot-toast';
 import { createContributionForContributor, getReferenceIds } from '../server-actions/bank-transfer-action';

@@ -14,7 +14,7 @@ import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateExpenseInput, buildUpdateExpenseInput } from './expenses-form-helper';
 
-export type ExpenseFormProps = {
+type ExpenseFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;

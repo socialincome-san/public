@@ -2,7 +2,7 @@ import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { createSessionAction, logoutAction } from '@/lib/server-actions/session-actions';
 import { getByIdAndRecipient, saveChanges } from '@/lib/server-actions/survey-actions';
 import { SurveyWithRecipient } from '@/lib/services/survey/survey.types';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { SurveyStatus } from '@prisma/client';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';

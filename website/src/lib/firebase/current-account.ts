@@ -3,7 +3,7 @@ import { ContributorService } from '../services/contributor/contributor.service'
 import { FirebaseService } from '../services/firebase/firebase.service';
 import { UserService } from '../services/user/user.service';
 
-export type CurrentAccountType = 'user' | 'contributor' | null;
+type CurrentAccountType = 'user' | 'contributor' | null;
 
 const firebaseService = new FirebaseService();
 

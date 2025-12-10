@@ -4,9 +4,9 @@ import { StoryblokCampaignDonate } from '@/components/legacy/storyblok/Storyblok
 import { StoryblokEmbeddedVideoPlayer } from '@/components/legacy/storyblok/StoryblokEmbeddedVideoPlayer';
 import { StoryblokImageWithCaption } from '@/components/legacy/storyblok/StoryblokImageWithCaption';
 import { StoryblokReferencesGroup } from '@/components/legacy/storyblok/StoryblokReferencesGroup';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteRegion } from '@/lib/i18n/utils';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { LanguageCode } from '@/lib/types/language';
 import { QuotedText, Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/ui';
 import Link from 'next/link';
 import {

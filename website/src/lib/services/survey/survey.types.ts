@@ -77,18 +77,6 @@ export type SurveyWithRecipient = {
 	nameOfRecipient: string;
 };
 
-export type SurveyPreview = {
-	questionnaire: SurveyQuestionnaire;
-	language: string;
-	dueAt: Date;
-	status: SurveyStatus;
-	recipientId: string;
-	recipientName: string;
-	surveyScheduleId: string;
-	programId: string;
-	programName: string;
-};
-
 export type SurveyGenerationPreviewResult = {
 	surveys: SurveyCreateInput[];
 };

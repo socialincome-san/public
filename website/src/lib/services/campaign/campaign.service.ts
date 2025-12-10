@@ -1,5 +1,4 @@
 import { Campaign } from '@prisma/client';
-import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
@@ -17,6 +16,11 @@ import {
 export class CampaignService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
 	private exchangeRateService = new ExchangeRateService();
+
+	private daysUntilTs(ts: Date): number {
+		const diffInMs = ts.getTime() - new Date().getTime();
+		return Math.ceil(diffInMs / (24 * 60 * 60 * 1000));
+	}
 
 	async get(userId: string, campaignId: string): Promise<ServiceResult<CampaignPayload>> {
 		const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
@@ -175,7 +179,7 @@ export class CampaignService extends BaseService {
 			amountCollected *= exchangeRate;
 
 			const percentageCollected = campaign.goal ? Math.round((amountCollected / Number(campaign.goal)) * 100) : null;
-			const daysLeft = daysUntilTs(campaign.endDate);
+			const daysLeft = this.daysUntilTs(campaign.endDate);
 
 			// convert decimal fields to number
 			return this.resultOk({

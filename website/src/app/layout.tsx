@@ -1,7 +1,7 @@
 import { AnalyticsInitializer } from '@/components/legacy/analytics/analytics-initializer';
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
-import { getMetadata } from '@/metadata';
-import { storyblokInitializationWorkaround } from '@/storyblok-init';
+import { getMetadata } from '@/lib/utils/metadata';
+import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
 import type { Viewport } from 'next';
 import { PropsWithChildren } from 'react';
 import './globals.css';

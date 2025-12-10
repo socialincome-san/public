@@ -1,5 +1,5 @@
 'use client';
-import { ActionButton } from '@/types/journal';
+import { ActionButton } from '@/lib/types/journal';
 import { Button, useGlowHover } from '@socialincome/ui';
 import Link from 'next/link';
 

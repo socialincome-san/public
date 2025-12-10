@@ -45,10 +45,6 @@ export type ContributionDonationEntry = {
 	createdAt: Date;
 };
 
-export type ContributionWithRelations = Prisma.ContributionGetPayload<{
-	include: { contributor: true; campaign: true };
-}>;
-
 export type StripeContributionCreateData = {
 	contributorId: string;
 	amount: number;

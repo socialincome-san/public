@@ -6,7 +6,7 @@ import { makeUserColumns } from '@/components/data-table/columns/users';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import UsersForm from './users-form';
 

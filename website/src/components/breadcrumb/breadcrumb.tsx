@@ -7,7 +7,7 @@ import {
 } from '@/components/breadcrumb/breadcrumb-elements';
 import React from 'react';
 
-export interface BreadcrumbLinkType {
+interface BreadcrumbLinkType {
 	label: string;
 	href: string;
 }
