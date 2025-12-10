@@ -220,7 +220,7 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async getForContributorAndYear(
+	async getSucceededForContributorAndYear(
 		contributorId: string,
 		year: number,
 	): Promise<ServiceResult<ContributionDonationEntry[]>> {
@@ -231,7 +231,7 @@ export class ContributionService extends BaseService {
 			const result = await this.db.contribution.findMany({
 				where: {
 					contributorId: contributorId,
-					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }],
+					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }, { status: 'succeeded' }],
 				},
 				select: {
 					contributorId: true,
