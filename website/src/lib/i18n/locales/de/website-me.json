@@ -3,6 +3,51 @@
 		"title": "Mein Profil | Social Income",
 		"home-link": "Zurück zur Startseite"
 	},
+	"breadcrumb": {
+		"website": "Website",
+		"dashboard": "Dashboard",
+		"profile": "Profil"
+	},
+	"title": {
+		"dashboard": "Dashboard",
+		"profile": "Profil"
+	},
+	"profile": {
+		"link": "Profil",
+		"form": {
+			"personal-info-title": "Persönliche Informationen",
+			"address-title": "Adresse",
+			"how-did-you-hear": "Wie haben Sie von uns erfahren?",
+			"select-gender-placeholder": "Geschlecht wählen",
+			"select-option-placeholder": "Option wählen",
+			"genders": {
+				"male": "Männlich",
+				"female": "Weiblich",
+				"other": "Andere",
+				"private": "Möchte ich nicht angeben"
+			},
+			"referrals": {
+				"familyfriends": "Familie & Freunde",
+				"work": "Arbeit",
+				"socialmedia": "Soziale Medien",
+				"media": "Medien",
+				"presentation": "Präsentation",
+				"other": "Andere"
+			},
+			"save-button": "Speichern",
+			"update-error": "Profil konnte nicht aktualisiert werden",
+			"user-updated-toast": "Deine Kontaktangaben wurden aktualisiert",
+			"firstname": "Vorname",
+			"lastname": "Nachname",
+			"email": "E-Mail",
+			"country": "Land",
+			"gender": "Geschlecht",
+			"street": "Strasse",
+			"street-number": "Nummer",
+			"city": "Ort",
+			"zip": "PLZ"
+		}
+	},
 	"sections": {
 		"account": {
 			"title": "Mein Profil",

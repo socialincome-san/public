@@ -1,7 +1,7 @@
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { SpinnerIcon } from '@socialincome/ui';
 import { Suspense } from 'react';
-import { DefaultPageProps } from '../..';
+import { DefaultPageProps } from '../../..';
 import { SubscriptionsTable } from './subscriptions-table';
 
 export default async function Page({ params }: DefaultPageProps) {

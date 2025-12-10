@@ -14,13 +14,23 @@ export const NavbarMobile = ({ contributor, lang }: { contributor?: ContributorS
 	const { logout } = useLogout();
 	const translator = useTranslator(lang, 'website-me');
 
-	const menuLinks = [{ href: '/', label: translator?.t('metadata.home-link') }];
+	const menuLinks = [
+		{
+			href: '/',
+			label: translator?.t('metadata.home-link'),
+		},
+		{
+			href: '/dashboard/profile',
+			label: translator?.t('profile.link') ?? 'Profile',
+		},
+	];
 
 	return (
 		<nav className="container flex h-20 items-center justify-between">
 			<Link href="/">
 				<Logo />
 			</Link>
+
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3">
@@ -36,9 +46,12 @@ export const NavbarMobile = ({ contributor, lang }: { contributor?: ContributorS
 				<DropdownMenuContent align="end" className="w-64">
 					{menuLinks.map(({ href, label }) => (
 						<DropdownMenuItem key={href} asChild>
-							<Link href={href}>{label}</Link>
+							<Link href={href} className="cursor-pointer">
+								{label}
+							</Link>
 						</DropdownMenuItem>
 					))}
+
 					<DropdownMenuItem
 						onSelect={(e: Event) => {
 							e.preventDefault();

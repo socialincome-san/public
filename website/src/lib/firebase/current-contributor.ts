@@ -39,3 +39,11 @@ export async function getAuthenticatedContributorOrRedirect(): Promise<Contribut
 export async function getOptionalContributor(): Promise<ContributorSession | null> {
 	return await getCurrentContributor();
 }
+
+export async function getAuthenticatedContributorOrThrow(): Promise<ContributorSession> {
+	const contributor = await getCurrentContributor();
+	if (!contributor) {
+		throw new Error('No authenticated contributor found');
+	}
+	return contributor;
+}
