@@ -72,10 +72,16 @@ export type BankContributorData = {
 
 export type ContributorSession = {
 	id: string;
+	gender: Gender | null;
+	referral: ContributorReferralSource;
 	email: string | null;
 	firstName: string | null;
 	lastName: string | null;
 	language: string | null;
+	street: string | null;
+	number: string | null;
+	city: string | null;
+	zip: string | null;
 	country: string | null;
 	stripeCustomerId: string | null;
 };

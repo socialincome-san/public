@@ -17,6 +17,13 @@ export const NavbarDesktop = ({ contributor, lang }: { contributor?: Contributor
 
 	const mainLinks = [{ href: '/', label: translator?.t('metadata.home-link') }];
 
+	const userMenuLinks = [
+		{
+			href: '/dashboard/profile',
+			label: translator?.t('profile.link') ?? 'Profile',
+		},
+	];
+
 	return (
 		<nav className="container mt-6 flex h-20 items-center justify-between rounded-full bg-white">
 			<Link href="/">
@@ -60,6 +67,14 @@ export const NavbarDesktop = ({ contributor, lang }: { contributor?: Contributor
 				</DropdownMenuTrigger>
 
 				<DropdownMenuContent align="end" className="w-64">
+					{userMenuLinks.map(({ href, label }) => (
+						<DropdownMenuItem key={href} asChild>
+							<Link href={href} className="cursor-pointer">
+								{label}
+							</Link>
+						</DropdownMenuItem>
+					))}
+
 					<DropdownMenuItem
 						onSelect={(e: Event) => {
 							e.preventDefault();

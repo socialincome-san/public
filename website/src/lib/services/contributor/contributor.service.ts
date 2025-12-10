@@ -552,14 +552,20 @@ export class ContributorService extends BaseService {
 				select: {
 					id: true,
 					stripeCustomerId: true,
+					referral: true,
 					contact: {
 						select: {
+							gender: true,
 							email: true,
 							firstName: true,
 							lastName: true,
 							language: true,
 							address: {
 								select: {
+									street: true,
+									number: true,
+									city: true,
+									zip: true,
 									country: true,
 								},
 							},
@@ -574,11 +580,17 @@ export class ContributorService extends BaseService {
 
 			const session: ContributorSession = {
 				id: contributor.id,
+				gender: contributor.contact?.gender ?? null,
+				referral: contributor.referral ?? null,
 				email: contributor.contact?.email ?? null,
 				firstName: contributor.contact?.firstName ?? null,
 				lastName: contributor.contact?.lastName ?? null,
 				stripeCustomerId: contributor.stripeCustomerId ?? null,
 				language: contributor.contact?.language ?? null,
+				street: contributor.contact?.address?.street ?? null,
+				number: contributor.contact?.address?.number ?? null,
+				city: contributor.contact?.address?.city ?? null,
+				zip: contributor.contact?.address?.zip ?? null,
 				country: contributor.contact?.address?.country ?? null,
 			};
 

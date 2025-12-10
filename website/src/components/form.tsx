@@ -135,4 +135,4 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
 );
 FormMessage.displayName = 'FormMessage';
 
-export { Form, FormControl, FormField, FormItem, FormMessage };
+export { Form, FormControl, FormField, FormItem, FormLabel, FormMessage };
