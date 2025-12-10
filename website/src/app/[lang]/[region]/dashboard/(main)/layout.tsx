@@ -1,30 +1,28 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
-import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { PropsWithChildren } from 'react';
 import { DefaultLayoutProps } from '../..';
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	const { lang, region } = await params;
-	const contributor = await getAuthenticatedContributorOrRedirect();
+	const { lang } = await params;
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
 	const sections = [
-		{ href: `/${lang}/${region}/dashboard/contributions`, label: translator.t('sections.contributions.payments') },
-		{ href: `/${lang}/${region}/dashboard/subscriptions`, label: translator.t('sections.contributions.subscriptions') },
+		{ href: '/dashboard/contributions', label: translator.t('sections.contributions.payments') },
+		{ href: '/dashboard/subscriptions', label: translator.t('sections.contributions.subscriptions') },
 		{
-			href: `/${lang}/${region}/dashboard/donation-certificates`,
+			href: '/dashboard/donation-certificates',
 			label: translator.t('sections.contributions.donation-certificates-long'),
 		},
 	];
 
 	const breadcrumbLinks = [
-		{ href: `/${lang}/${region}`, label: translator.t('breadcrumb.website') },
-		{ href: `/${lang}/${region}/dashboard`, label: translator.t('breadcrumb.dashboard') },
+		{ href: '/', label: translator.t('breadcrumb.website') },
+		{ href: '/dashboard', label: translator.t('breadcrumb.dashboard') },
 	];
 
 	return (

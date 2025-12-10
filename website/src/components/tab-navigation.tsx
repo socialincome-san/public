@@ -15,7 +15,7 @@ type TabNavigationProps = {
 export function TabNavigation({ sections }: TabNavigationProps) {
 	const pathname = usePathname();
 
-	const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+	const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`) || pathname.endsWith(href);
 
 	return (
 		<nav className="mb-9 flex gap-6 overflow-x-auto">
