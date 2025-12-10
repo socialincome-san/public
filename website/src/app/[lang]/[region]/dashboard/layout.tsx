@@ -1,6 +1,5 @@
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
-import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { PropsWithChildren } from 'react';
 import { DefaultLayoutProps } from '..';
