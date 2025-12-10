@@ -35,7 +35,6 @@ export type ContributorPayload = {
 };
 
 export type ContributorUpdateInput = Prisma.ContributorUpdateInput;
-export type ContributorCreateInput = Prisma.ContributorCreateInput;
 
 export type ContributorOption = {
 	id: string;

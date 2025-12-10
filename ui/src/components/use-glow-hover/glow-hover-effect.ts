@@ -29,7 +29,7 @@ type Coords = {
 
 const BURST_TIME = 300;
 
-export function parseColor(colorToParse: string) {
+function parseColor(colorToParse: string) {
 	const div = document.createElement('div');
 	div.style.color = colorToParse;
 	div.style.position = 'absolute';

@@ -1,6 +1,6 @@
 import { getCurrentAccountType } from '@/lib/firebase/current-account';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Button } from '@socialincome/ui';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';

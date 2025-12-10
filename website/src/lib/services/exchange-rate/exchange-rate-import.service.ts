@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateCreateInput, ExchangeRates } from './exchange-rate.types';
-export type ExchangeRateResponse = {
+type ExchangeRateResponse = {
 	base: string;
 	date: string;
 	rates: ExchangeRates;

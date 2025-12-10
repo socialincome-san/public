@@ -1,4 +1,4 @@
-import { CountryCode } from '@socialincome/shared/src/types/country';
+import { CountryCode } from '@/lib/types/country';
 
 export type Suppression = {
 	name: string;

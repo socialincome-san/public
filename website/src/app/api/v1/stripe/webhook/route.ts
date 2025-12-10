@@ -1,5 +1,5 @@
 import { StripeService } from '@/lib/services/stripe/stripe.service';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**

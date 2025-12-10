@@ -3,10 +3,10 @@ import { DonationInterval } from '@/components/legacy/donation/donation-interval
 import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
 import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCampaignByLegacyIdAction } from '@/lib/server-actions/campaigns-actions';
-import { getMetadata } from '@/metadata';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { getMetadata } from '@/lib/utils/metadata';
 import {
 	Accordion,
 	AccordionContent,

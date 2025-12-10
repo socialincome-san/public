@@ -4,19 +4,19 @@
 
 @font-face {
 	font-family: 'Unica77';
-	src: url('../../../shared/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
+	src: url('../../../ui/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
 	font-weight: normal;
 }
 
 @font-face {
 	font-family: 'Unica77';
-	src: url('../../../shared/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
+	src: url('../../../ui/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
 	font-weight: 500;
 }
 
 @font-face {
 	font-family: 'Unica77';
-	src: url('../../../shared/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
+	src: url('../../../ui/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
 	font-weight: 700;
 }
 

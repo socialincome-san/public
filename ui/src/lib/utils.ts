@@ -1,7 +1,7 @@
-import { CountryCode } from '@socialincome/shared/src/types/country';
 import { WebsiteRegion } from '@socialincome/website/src/lib/i18n/utils';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { CountryCode } from './country';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

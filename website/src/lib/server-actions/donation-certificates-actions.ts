@@ -3,7 +3,7 @@
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { ContributorService } from '@/lib/services/contributor/contributor.service';
 import { DonationCertificateService } from '@/lib/services/donation-certificate/donation-certificate.service';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { LanguageCode } from '@/lib/types/language';
 import { revalidatePath } from 'next/cache';
 import { getAuthenticatedContributorOrRedirect } from '../firebase/current-contributor';
 

@@ -33,7 +33,6 @@ WORKDIR /app/website
 
 COPY --from=deps /app/node_modules ../node_modules
 COPY --from=deps /app/website ./
-COPY --from=deps /app/shared ../shared
 COPY --from=deps /app/ui ../ui
 COPY --from=deps /app/recipients_selection ../recipients_selection
 COPY --from=base /app/.env /app/.env
@@ -58,7 +57,6 @@ COPY --from=builder /app/website/.next/static ./website/.next/static
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder /app/website/.next/standalone ./
-COPY --from=builder /app/shared ./shared
 COPY --from=builder /app/website/src ./src
 
 COPY --from=base /app/.env .env

@@ -1,5 +1,5 @@
 import { ProgramPermission, SurveyStatus } from '@prisma/client';
-import { rndString } from '@socialincome/shared/src/utils/crypto';
+import crypto from 'crypto';
 import { addMonths, isFuture } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -353,12 +353,11 @@ export class SurveyService extends BaseService {
 					let email: string;
 					do {
 						// ensure uniqueness in preview list
-						email = (await rndString(16)).toLowerCase() + '@si.org';
+						email = this.rndString(16).toLowerCase() + '@si.org';
 					} while (existingSurveys.some((s) => s.accessEmail === email));
 
-					const password = await rndString(16);
-					const token = await rndString(3, 'hex');
-
+					const password = this.rndString(16);
+					const token = this.rndString(3);
 					surveys.push({
 						name: schedule.name,
 						recipient: { connect: { id: recipient.id } },
@@ -525,5 +524,9 @@ export class SurveyService extends BaseService {
 			this.logger.error(error);
 			return this.resultFail(`Failed to update survey: ${error}`);
 		}
+	}
+
+	private rndString(bytes: number): string {
+		return crypto.randomBytes(bytes).toString('base64url');
 	}
 }

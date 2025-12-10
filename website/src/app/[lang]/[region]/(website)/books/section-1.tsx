@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ClockIcon } from '@heroicons/react/24/solid';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 

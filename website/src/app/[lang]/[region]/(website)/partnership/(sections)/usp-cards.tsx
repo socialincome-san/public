@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { CardContent, CardHeader, GlowHoverCard, Typography } from '@socialincome/ui';
 
 export async function UspCards({ lang }: DefaultParams) {

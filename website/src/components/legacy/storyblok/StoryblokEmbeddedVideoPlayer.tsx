@@ -1,5 +1,5 @@
-import { StoryblokEmbeddedVideo } from '@/types/journal';
-import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from '@socialincome/shared/src/utils/UrlVideoParser';
+import { StoryblokEmbeddedVideo } from '@/lib/types/journal';
+import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
 import { Typography } from '@socialincome/ui';
 
 const SUPPORTED_VIDEO_PROVIDERS_MATCHERS = [new YouTubeVideoMatchAndExtract(), new VimeoVideoMatchAndExtract()];
