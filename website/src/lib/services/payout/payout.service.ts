@@ -21,7 +21,6 @@ import {
 	PayoutUpdateInput,
 	PreviewPayout,
 	RecipientCompletionPreview,
-	YearMonth,
 } from './payout.types';
 
 export class PayoutService extends BaseService {
@@ -369,7 +368,7 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async generatePayoutCSV(userId: string, target: YearMonth): Promise<ServiceResult<string>> {
+	async generatePayoutCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
 		try {
 			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
 			if (!recipientsResult.success) {
@@ -377,8 +376,7 @@ export class PayoutService extends BaseService {
 			}
 
 			const recipients = recipientsResult.data;
-			const targetDate = new Date(target.year, target.month - 1);
-			const monthLabel = format(targetDate, 'MMMM yyyy');
+			const monthLabel = format(selectedDate, 'MMMM yyyy');
 
 			const csvRows: string[][] = [
 				['Mobile Number*', 'Amount*', 'First Name', 'Last Name', 'Id Number', 'Remarks*', 'User Type*'],
@@ -413,7 +411,7 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async previewCurrentMonthPayouts(userId: string, target: YearMonth): Promise<ServiceResult<PreviewPayout[]>> {
+	async previewCurrentMonthPayouts(userId: string, selectedDate: Date): Promise<ServiceResult<PreviewPayout[]>> {
 		try {
 			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
 			if (!recipientsResult.success) {
@@ -432,10 +430,8 @@ export class PayoutService extends BaseService {
 
 			const rates = exchangeRateResult.data;
 
-			const startOfCurrentMonth = startOfMonth(new Date(target.year, target.month - 1));
-
 			const toCreate: PreviewPayout[] = recipients
-				.filter((r) => !r.payouts.some((p) => isSameMonth(p.paymentAt, startOfCurrentMonth)))
+				.filter((r) => !r.payouts.some((p) => isSameMonth(p.paymentAt, startOfMonth(selectedDate))))
 				.map((r) => {
 					const payoutAmount = r.program.payoutAmount;
 					const currency = r.program.payoutCurrency;
@@ -452,7 +448,7 @@ export class PayoutService extends BaseService {
 						currency,
 						amount: payoutAmount,
 						amountChf,
-						paymentAt: new Date(),
+						paymentAt: selectedDate,
 						status: PayoutStatus.paid,
 					};
 				});
@@ -464,9 +460,9 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async generateCurrentMonthPayouts(userId: string, target: YearMonth): Promise<ServiceResult<string>> {
+	async generateCurrentMonthPayouts(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
 		try {
-			const previewResult = await this.previewCurrentMonthPayouts(userId, target);
+			const previewResult = await this.previewCurrentMonthPayouts(userId, selectedDate);
 			if (!previewResult.success) {
 				return this.resultFail(previewResult.error);
 			}
@@ -489,9 +485,7 @@ export class PayoutService extends BaseService {
 
 			await this.db.payout.createMany({ data: dbPayload });
 
-			return this.resultOk(
-				`Created ${dbPayload.length} payouts for ${target.year}-${String(target.month).padStart(2, '0')}.`,
-			);
+			return this.resultOk(`Created ${dbPayload.length} payouts for ${format(selectedDate, 'yyyy-MM')}.`);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not generate payouts');
