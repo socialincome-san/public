@@ -1,6 +1,6 @@
 import { SpinnerIcon } from '@socialincome/ui';
 import { Suspense } from 'react';
-import { DefaultPageProps } from '../..';
+import { DefaultPageProps } from '../../..';
 import YourDonationCertificates from './your-donation-certificates';
 
 export default async function Page({ params }: DefaultPageProps) {
