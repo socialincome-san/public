@@ -431,10 +431,11 @@ export class PayoutService extends BaseService {
 			}
 
 			const rates = exchangeRateResult.data;
-			const currentMonth = startOfMonth(new Date(target.year, target.month - 1));
+
+			const startOfCurrentMonth = startOfMonth(new Date(target.year, target.month - 1));
 
 			const toCreate: PreviewPayout[] = recipients
-				.filter((r) => !r.payouts.some((p) => isSameMonth(p.paymentAt, currentMonth)))
+				.filter((r) => !r.payouts.some((p) => isSameMonth(p.paymentAt, startOfCurrentMonth)))
 				.map((r) => {
 					const payoutAmount = r.program.payoutAmount;
 					const currency = r.program.payoutCurrency;
@@ -451,7 +452,7 @@ export class PayoutService extends BaseService {
 						currency,
 						amount: payoutAmount,
 						amountChf,
-						paymentAt: currentMonth,
+						paymentAt: new Date(),
 						status: PayoutStatus.paid,
 					};
 				});
