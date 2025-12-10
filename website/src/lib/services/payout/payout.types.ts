@@ -69,8 +69,6 @@ export type PayoutForecastTableView = {
 	tableRows: PayoutForecastTableViewRow[];
 };
 
-export type YearMonth = { year: number; month: number }; // month = 1..12
-
 export type PreviewPayout = {
 	recipientId: string;
 	firstName: string;
