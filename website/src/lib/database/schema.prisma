@@ -106,6 +106,13 @@ enum DonationInterval {
   yearly
 }
 
+enum Cause {
+  proverty
+  health
+  gener_based_violence
+  climate
+}
+
 enum NetworkTechnology {
   g3
   g4
@@ -236,8 +243,8 @@ model Recipient {
   termsAccepted        Boolean             @default(false) @map("terms_accepted")
   paymentInformationId String?             @map("payment_information_id")
   paymentInformation   PaymentInformation? @relation(fields: [paymentInformationId], references: [id])
-  programId            String              @map("program_id")
-  program              Program             @relation(fields: [programId], references: [id])
+  programId            String?             @map("program_id")
+  program              Program?            @relation(fields: [programId], references: [id])
   localPartnerId       String              @map("local_partner_id")
   localPartner         LocalPartner        @relation(fields: [localPartnerId], references: [id])
 
@@ -314,6 +321,7 @@ model LocalPartner {
   id                String  @id @default(cuid()) @map("id")
   legacyFirestoreId String? @unique @map("legacy_firestore_id")
   name              String  @unique @map("name")
+  cause             Cause?  @map("cause")
   contactId         String  @unique @map("contact_id")
   contact           Contact @relation(fields: [contactId], references: [id])
 
