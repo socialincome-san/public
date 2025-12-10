@@ -1,11 +1,10 @@
 import { Card } from '@/components/card';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { DefaultPageProps } from '../..';
 import { ProfileForm, ProfileFormTranslations } from './profile-form';
-
-import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
