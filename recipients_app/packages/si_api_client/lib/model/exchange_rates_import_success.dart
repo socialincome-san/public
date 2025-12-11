@@ -120,7 +120,7 @@ class ExchangeRatesImportSuccessSuccessEnum {
 
   bool toJson() => value;
 
-  static const true_ = ExchangeRatesImportSuccessSuccessEnum._('true');
+  static const true_ = ExchangeRatesImportSuccessSuccessEnum._(true);
 
   /// List of all possible values in this [enum][ExchangeRatesImportSuccessSuccessEnum].
   static const values = <ExchangeRatesImportSuccessSuccessEnum>[

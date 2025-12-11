@@ -137,7 +137,7 @@ class StripeWebhookResponseReceivedEnum {
 
   bool toJson() => value;
 
-  static const true_ = StripeWebhookResponseReceivedEnum._('true');
+  static const true_ = StripeWebhookResponseReceivedEnum._(true);
 
   /// List of all possible values in this [enum][StripeWebhookResponseReceivedEnum].
   static const values = <StripeWebhookResponseReceivedEnum>[
