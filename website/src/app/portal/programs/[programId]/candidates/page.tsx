@@ -7,28 +7,28 @@ import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
 
-export default function RecipientsPageProgramScoped({ params }: Props) {
+export default function CandidatesPageProgramScoped({ params }: Props) {
 	return (
 		<Suspense>
-			<RecipientsProgramScopedDataLoader params={params} />
+			<CandidatesProgramScopedDataLoader params={params} />
 		</Suspense>
 	);
 }
 
-async function RecipientsProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
+async function CandidatesProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const recipientService = new RecipientService();
 	const recipientsResult = await recipientService.getTableViewProgramAndStatusScoped(user.id, programId, [
-		RecipientStatus.active,
-		RecipientStatus.former,
-		RecipientStatus.suspended,
+		RecipientStatus.waitlisted,
 	]);
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];
 	const readOnly = recipientsResult.success ? recipientsResult.data.permission !== ProgramPermission.operator : true;
 
-	return <RecipientsTableClient rows={rows} error={error} programId={programId} readOnly={readOnly} />;
+	return (
+		<RecipientsTableClient rows={rows} error={error} programId={programId} readOnly={readOnly} title="Candidate Pool" />
+	);
 }

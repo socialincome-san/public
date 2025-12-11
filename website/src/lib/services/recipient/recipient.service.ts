@@ -295,7 +295,11 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<RecipientTableView>> {
+	async getTableViewProgramAndStatusScoped(
+		userId: string,
+		programId: string,
+		status: RecipientStatus[] = [],
+	): Promise<ServiceResult<RecipientTableView>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 		if (!accessResult.success) {
 			return this.resultFail(accessResult.error);
@@ -307,7 +311,10 @@ export class RecipientService extends BaseService {
 			return base;
 		}
 
-		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+		let filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+		if (status.length > 0) {
+			filteredRows = filteredRows.filter((row) => status.includes(row.status));
+		}
 		return this.resultOk({
 			tableRows: filteredRows,
 			permission: programAccess?.permission ?? ProgramPermission.owner,
