@@ -1,5 +1,5 @@
 import "package:app/data/services/auth_service.dart";
-import "package:cloud_functions/cloud_functions.dart";
+import "package:si_api_client/api.dart";
 import "package:twilio_flutter/twilio_flutter.dart";
 
 class TwilioOtpService extends AuthService {
@@ -64,16 +64,26 @@ class TwilioOtpService extends AuthService {
     if (_otpCode == null) {
       throw AuthException("OTP code not set – call submitVerificationCode first");
     }
+    if (_phoneNumber == null) {
+      throw AuthException("phoneNumber not set – call verifyPhoneNumber first");
+    }
 
-    // Call the Cloud Function to verify OTP and get a custom token
-    final result = await FirebaseFunctions.instanceFor(
-      region: "europe-west6",
-    ).httpsCallable("webhookTwilioOtpVerification").call({"phoneNumber": _phoneNumber, "otp": _otpCode});
+    final apiClient = V1Api(ApiClient(basePath: "https://staging.socialincome.org/api"));
+    try {
+      final request = VerifyOtpRequest(
+        phoneNumber: _phoneNumber!,
+        otp: _otpCode!,
+      );
+      final response = await apiClient.postV1AuthVerifyOtp(verifyOtpRequest: request);
+      final customToken = response?.customToken;
+      if (customToken == null || customToken.isEmpty) {
+        throw AuthException("Failed to obtain custom token from OTP verification");
+      }
 
-    // ignore: avoid_dynamic_calls
-    final customToken = result.data["token"] as String;
-
-    // Sign in with the custom token
-    await firebaseAuth.signInWithCustomToken(customToken);
+      // Sign in with the custom token
+      await firebaseAuth.signInWithCustomToken(customToken);
+    } catch (e) {
+        throw AuthException("Exception when calling PortalApi->postPortalV1AuthVerifyOtp: $e\n");
+    }
   }
 }
