@@ -111,7 +111,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		},
 		isActive: {
 			label: 'Active',
-			zodSchema: z.boolean(),
+			zodSchema: z.boolean().optional(),
 		},
 		public: {
 			placeholder: 'Is the item publicly visible?',

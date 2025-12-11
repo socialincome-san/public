@@ -19,6 +19,7 @@ export type FormField = {
 	zodSchema?: ZodTypeAny;
 	value?: any;
 	useCombobox?: boolean;
+	disabled?: boolean;
 };
 
 export type FormSchema = {
@@ -279,7 +280,7 @@ const GenericFormField = ({
 									<Input
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey)}
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -298,7 +299,7 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<FormControl>
 									<DatePicker
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 										{...form.register(optionKey)}
 										onSelect={field.onChange}
 										selected={field.value}
@@ -331,7 +332,7 @@ const GenericFormField = ({
 											value={field.value ?? ''}
 											onChange={field.onChange}
 											placeholder={formFieldSchema.placeholder}
-											disabled={isLoading || readOnly}
+											disabled={formFieldSchema.disabled || isLoading || readOnly}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -349,7 +350,11 @@ const GenericFormField = ({
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
-								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
+								<Select
+									value={field.value}
+									onValueChange={field.onChange}
+									disabled={formFieldSchema.disabled || isLoading || readOnly}
+								>
 									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
@@ -380,7 +385,7 @@ const GenericFormField = ({
 								<Label htmlFor={optionKey}>{label}</Label>
 								<Switch
 									id={optionKey}
-									disabled={isLoading || readOnly}
+									disabled={formFieldSchema.disabled || isLoading || readOnly}
 									onCheckedChange={field.onChange}
 									checked={field.value}
 								/>
@@ -407,7 +412,7 @@ const GenericFormField = ({
 											// avoid NaN when input is empty, see https://github.com/orgs/react-hook-form/discussions/6980#discussioncomment-1785009
 											setValueAs: (v) => (v === '' ? null : parseInt(v, 10)),
 										})}
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
 								</FormControl>
 								<FormMessage />

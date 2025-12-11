@@ -37,7 +37,7 @@ export function makeUserColumns(): ColumnDef<UserTableViewRow>[] {
 		{
 			accessorKey: 'createdAt',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
+			cell: (ctx) => <DateCell ctx={ctx} options={{ year: 'numeric', month: '2-digit', day: '2-digit' }} />,
 		},
 		{
 			id: 'actions',

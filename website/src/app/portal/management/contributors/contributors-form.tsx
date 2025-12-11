@@ -45,6 +45,7 @@ const initialFormSchema: ContributorFormSchema = {
 			placeholder: 'Stripe Customer ID',
 			label: 'Stripe Customer ID',
 			zodSchema: z.string().nullable(),
+			disabled: true,
 		},
 		contact: {
 			...getContactFormSchema({ isEmailRequired: true }),
