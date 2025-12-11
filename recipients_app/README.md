@@ -120,9 +120,12 @@ run app is on the Android emulator. Real devices need some additional
 setup.
 
 ## Generate/Update si_api_client packages
+
 OpenAPI client generation:
+
 - Install openapi-generator via `brew install openapi-generator`
-- Run `openapi-generator generate -i ./api-configs/social-income-api.yaml -g dart -o ./packages/si_api_client -c ./api-configs/social-income-api-client-config.json`
+- Run
+  `openapi-generator generate -i ./api-configs/social-income-api.yaml -g dart -o ./packages/si_api_client -c ./api-configs/social-income-api-client-config.json`
 
 ## Communication Channel
 

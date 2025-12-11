@@ -1,8 +1,8 @@
 {
-  "pubName": "si_api_client",
-  "pubDescription": "OpenAPI API client of the Social Income Portal API",
-  "pubAuthorEmail" : "info@social-income.org",
-  "pubLibrary" : "si.api",
-  "pubHomepage": "https://socialincome.org",
-  "pubVersion": "1.0.0"
+	"pubName": "si_api_client",
+	"pubDescription": "OpenAPI API client of the Social Income Portal API",
+	"pubAuthorEmail": "info@social-income.org",
+	"pubLibrary": "si.api",
+	"pubHomepage": "https://socialincome.org",
+	"pubVersion": "1.0.0"
 }

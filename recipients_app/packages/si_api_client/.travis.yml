@@ -5,10 +5,10 @@
 #
 language: dart
 dart:
-# Install a specific stable release
-- "2.12"
+  # Install a specific stable release
+  - "2.12"
 install:
-- pub get
+  - pub get
 
 script:
-- pub run test
+  - pub run test
