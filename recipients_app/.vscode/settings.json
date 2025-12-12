@@ -1,9 +1,10 @@
 {
-	"java.configuration.updateBuildConfiguration": "automatic",
-	"dart.lineLength": 120,
-	"[dart]": {
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "dart.lineLength": 120,
+  "[dart]": {
     "editor.rulers": [
-        120
-    ],
-}
+      120
+    ]
+  },
+  "dart.flutterSdkPath": ".fvm/versions/3.35.5"
 }

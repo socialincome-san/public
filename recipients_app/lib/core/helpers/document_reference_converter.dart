@@ -1,4 +1,5 @@
-import "package:cloud_firestore/cloud_firestore.dart";
+// TODO(Verena): move to dart_mappable hook
+/* import "package:cloud_firestore/cloud_firestore.dart";
 import "package:json_annotation/json_annotation.dart";
 
 class DocumentReferenceConverter
@@ -11,3 +12,4 @@ class DocumentReferenceConverter
   @override
   Object toJson(DocumentReference documentReference) => documentReference;
 }
+ */

@@ -1,43 +1,52 @@
 import "dart:async";
+import "dart:developer";
 
-import "package:app/data/models/organization.dart";
+import "package:app/data/models/gender.dart";
+import "package:app/data/models/language_code.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "auth_cubit.mapper.dart";
 part "auth_state.dart";
 
 class AuthCubit extends Cubit<AuthState> {
   final UserRepository userRepository;
-  final OrganizationRepository organizationRepository;
   final CrashReportingRepository crashReportingRepository;
   final AuthService authService;
 
   late final StreamSubscription<User?> _authSubscription;
+  late final StreamSubscription<User?> _idTokenChanges;
 
   AuthCubit({
     required this.userRepository,
-    required this.organizationRepository,
     required this.crashReportingRepository,
     required this.authService,
   }) : super(const AuthState()) {
+    /// Register a listener which will be triggered if the id token of the user
+    /// changes for whatever reason.
+    _idTokenChanges = FirebaseAuth.instance.idTokenChanges().listen((user) async {
+      if (user != null) {
+        final idToken = await user.getIdToken();
+        log("idToken changed: $idToken");
+      }
+    });
+
     /// Register a listener which will be triggered if the auth state of the user
     /// changes for whatever reason.
     _authSubscription = authService.authStateChanges().listen((user) async {
       if (user != null) {
         try {
           final recipient = await userRepository.fetchRecipient(user);
-          final Organization? organization = await _fetchOrganization(recipient);
 
           emit(
             AuthState(
               status: AuthStatus.authenticated,
               firebaseUser: user,
               recipient: recipient,
-              organization: organization,
             ),
           );
         } on Exception catch (ex, stackTrace) {
@@ -65,14 +74,12 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (user != null) {
       final recipient = await userRepository.fetchRecipient(user);
-      final Organization? organization = await _fetchOrganization(recipient);
 
       emit(
         AuthState(
           status: AuthStatus.authenticated,
           firebaseUser: user,
           recipient: recipient,
-          organization: organization,
         ),
       );
     } else {
@@ -80,11 +87,48 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> updateRecipient(Recipient recipient) async {
+  Future<void> updateRecipient({
+    String? firstName,
+    String? lastName,
+    String? callingName,
+    DateTime? dateOfBirth,
+    Gender? gender,
+    LanguageCode? languageCode,
+    String? email,
+    String? communicationMobilePhone,
+    // PhoneNumber? communicationMobilePhone,
+    String? mobileMoneyPhone,
+    // PhoneNumber? mobileMoneyPhone,
+    String? paymentProvider,
+    bool? termsAccepted,
+  }) async {
     emit(state.copyWith(status: AuthStatus.updatingRecipient));
 
+    // TODO(Verena):
+    // how to handle paymentProvider?
+    // how to handle communicationMobilePhone and mobileMoneyPhone?
+    // how to handle termsAccepted?
+
+    final recipient = state.recipient!;
+    final user = recipient.user;
+
+    final updatedUser = user.copyWith(
+      firstName: firstName,
+      lastName: lastName,
+      dateOfBirth: dateOfBirth,
+      gender: gender,
+      languageCode: languageCode,
+      // communicationMobilePhone: communicationMobilePhone,
+      // mobileMoneyPhone: mobileMoneyPhone,
+    );
+
+    final updatedRecipient = recipient.copyWith(
+      user: updatedUser,
+      callingName: callingName,
+    );
+
     try {
-      await userRepository.updateRecipient(recipient);
+      await userRepository.updateRecipient(updatedRecipient);
 
       emit(
         state.copyWith(
@@ -109,16 +153,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState());
   }
 
-  Future<Organization?> _fetchOrganization(Recipient? recipient) async {
-    if (recipient?.organizationRef != null) {
-      return await organizationRepository.fetchOrganization(recipient!.organizationRef!);
-    }
-    return null;
-  }
-
   @override
   Future<void> close() {
     _authSubscription.cancel();
+    _idTokenChanges.cancel();
     return super.close();
   }
 }

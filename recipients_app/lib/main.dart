@@ -1,9 +1,7 @@
 import "package:app/core/helpers/custom_bloc_observer.dart";
-import "package:app/data/datasource/demo/organization_demo_data_source.dart";
 import "package:app/data/datasource/demo/payment_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/remote/organization_remote_data_source.dart";
 import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
@@ -26,10 +24,13 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:sentry_flutter/sentry_flutter.dart";
+import "package:si_api_client/api.dart";
 
 // Important: Why we have separate main file per flavor (main_stage.dart, main_prod.dart)?
 // This approach ensures that only the required Firebase configuration file is bundled, making it a secure and efficient solution for managing multiple flavors.
 // For more details see: https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/#option-2-use-multiple-entry-points
+
+const _kBaseUrlKey = "BASE_URL";
 
 // Async for Firebase
 Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
@@ -56,10 +57,16 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final messaging = FirebaseMessaging.instance;
   final demoManager = DemoManager();
 
+  // Initialize Social Income api client
+  const baseUrl = String.fromEnvironment(_kBaseUrlKey);
+  final uri = Uri.https(const String.fromEnvironment(baseUrl), "api");
+  final apiClient = V1Api(ApiClient(basePath: uri.toString()));
+
   //final authService = FirebaseOtpService(firebaseAuth: firebaseAuth, demoManager: demoManager,);
   final authService = TwilioOtpService(
     firebaseAuth: firebaseAuth,
     demoManager: demoManager,
+    apiClient: apiClient,
     accountSid: const String.fromEnvironment("TWILIO_ACCOUNT_SID"),
     authToken: const String.fromEnvironment("TWILIO_AUTH_TOKEN"),
     twilioNumber: const String.fromEnvironment("TWILIO_NUMBER"),
@@ -78,8 +85,8 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final surveyRemoteDataSource = SurveyRemoteDataSource(firestore: firestore);
   final surveyDemoDataSource = SurveyDemoDataSource();
 
-  final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
-  final organizationDemoDataSource = OrganizationDemoDataSource();
+  // final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
+  // final organizationDemoDataSource = OrganizationDemoDataSource();
 
   final packageInfo = await PackageInfo.fromPlatform();
 
@@ -114,12 +121,13 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
         paymentDemoDataSource: paymentDemoDataSource,
         surveyRemoteDataSource: surveyRemoteDataSource,
         surveyDemoDataSource: surveyDemoDataSource,
-        organizationRemoteDataSource: organizationRemoteDataSource,
-        organizationDemoDataSource: organizationDemoDataSource,
+        // organizationRemoteDataSource: organizationRemoteDataSource,
+        // organizationDemoDataSource: organizationDemoDataSource,
         authService: authService,
         firebaseRemoteConfigService: firebaseRemoteConfigService,
         crashReportingRepository: crashReportingRepository,
         appVersionInfo: appVersionInfo,
+        apiClient: apiClient,
       ),
     ),
   );
