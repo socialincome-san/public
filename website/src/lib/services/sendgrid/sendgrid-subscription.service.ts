@@ -37,7 +37,6 @@ export class SendgridSubscriptionService extends Client {
 	subscribeToNewsletter = async (subscription: CreateNewsletterSubscription) => {
 		try {
 			await this.upsertSubscription({ ...subscription, status: 'subscribed' });
-			throw new Error('Cannot subscribe to Newsletter');
 		} catch (error: any) {
 			throw new Error(error);
 		}

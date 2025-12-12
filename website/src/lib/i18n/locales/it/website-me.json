@@ -41,6 +41,7 @@
 			"lastname": "Cognome",
 			"email": "Email",
 			"country": "Paese",
+			"language": "Lingua",
 			"gender": "Genere",
 			"street": "Via",
 			"street-number": "Numero",
