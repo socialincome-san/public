@@ -16,11 +16,13 @@ export function RecipientsTableClient({
 	error,
 	programId,
 	readOnly,
+	title = 'Recipients',
 }: {
 	rows: RecipientTableViewRow[];
 	error: string | null;
 	programId?: string;
 	readOnly?: boolean;
+	title?: string;
 }) {
 	const [open, setOpen] = useState(false);
 
@@ -50,7 +52,7 @@ export function RecipientsTableClient({
 	return (
 		<>
 			<DataTable
-				title="Recipients"
+				title={title}
 				error={error}
 				emptyMessage="No recipients found"
 				data={rows}
