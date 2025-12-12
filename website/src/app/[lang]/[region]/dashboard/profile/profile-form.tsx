@@ -3,9 +3,14 @@
 import { Button } from '@/components/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input';
+import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { Switch } from '@/components/switch';
+import { mainWebsiteLanguages, WebsiteLanguage } from '@/lib/i18n/utils';
 import { updateSelfAction } from '@/lib/server-actions/contributor-actions';
+import { subscribeToNewsletter, unsubscribeFromNewsletter } from '@/lib/server-actions/newsletter-actions';
 import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
+import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ContributorReferralSource, Gender } from '@prisma/client';
@@ -20,6 +25,7 @@ const formSchema = z.object({
 	email: z.string().email(),
 
 	country: z.string(),
+	language: z.string(),
 	gender: z.nativeEnum(Gender).optional(),
 	referral: z.nativeEnum(ContributorReferralSource).optional(),
 
@@ -27,6 +33,8 @@ const formSchema = z.object({
 	number: z.string().optional(),
 	city: z.string().optional(),
 	zip: z.string().optional(),
+
+	newsletter: z.boolean().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -60,14 +68,18 @@ export type ProfileFormTranslations = {
 	updateError: string;
 	userUpdatedToast: string;
 	countries: Record<CountryCode, string>;
+	newsletterLabel: string;
+	language: string;
 };
 
 export function ProfileForm({
 	contributor,
 	translations,
+	isNewsletterSubscribed,
 }: {
 	contributor: ContributorSession;
 	translations: ProfileFormTranslations;
+	isNewsletterSubscribed: boolean;
 }) {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isPending, startTransition] = useTransition();
@@ -79,22 +91,29 @@ export function ProfileForm({
 			lastName: contributor.lastName ?? '',
 			email: contributor.email ?? '',
 			country: contributor.country ?? '',
+			language: contributor.language ?? 'en',
 			gender: contributor.gender ?? undefined,
 			referral: contributor.referral ?? undefined,
 			street: contributor.street ?? '',
 			number: contributor.number ?? '',
 			city: contributor.city ?? '',
 			zip: contributor.zip ?? '',
+			newsletter: isNewsletterSubscribed,
 		},
 	});
 
 	const loading = form.formState.isSubmitting || isPending;
 
+	const getNewsletterLanguage = (lang: string | null): SupportedLanguage => {
+		return lang && mainWebsiteLanguages.includes(lang as WebsiteLanguage) ? (lang as SupportedLanguage) : 'en';
+	};
+
 	const onSubmit = (values: FormSchema) => {
 		setErrorMessage('');
 
 		startTransition(async () => {
-			const { firstName, lastName, email, country, gender, referral, street, number, city, zip } = values;
+			const { firstName, lastName, email, country, gender, referral, street, number, city, zip, language, newsletter } =
+				values;
 
 			const updateInput: ContributorUpdateInput = {
 				referral: referral ?? contributor.referral ?? ContributorReferralSource.other,
@@ -105,6 +124,7 @@ export function ProfileForm({
 							lastName,
 							email,
 							gender: gender ?? null,
+							language,
 							address: {
 								upsert: {
 									update: {
@@ -127,6 +147,26 @@ export function ProfileForm({
 					},
 				},
 			};
+
+			try {
+				if (newsletter !== isNewsletterSubscribed && contributor.email) {
+					if (newsletter) {
+						await subscribeToNewsletter({
+							email: contributor.email,
+							firstname: contributor.firstName || undefined,
+							lastname: contributor.lastName || undefined,
+							language: getNewsletterLanguage(language),
+							country: contributor.country as CountryCode,
+							isContributor: true,
+						});
+					} else {
+						await unsubscribeFromNewsletter();
+					}
+				}
+			} catch (error) {
+				setErrorMessage(translations.updateError);
+				return;
+			}
 
 			const result = await updateSelfAction(updateInput);
 
@@ -203,6 +243,32 @@ export function ProfileForm({
 									{COUNTRY_CODES.map((code) => (
 										<SelectItem key={code} value={code}>
 											{translations.countries[code]}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="language"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>{translations.language}</FormLabel>
+							<Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue />
+									</SelectTrigger>
+								</FormControl>
+
+								<SelectContent className="max-h-[16rem] overflow-y-auto">
+									{mainWebsiteLanguages.map((language) => (
+										<SelectItem key={language} value={language}>
+											{language.toUpperCase()}
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -326,6 +392,20 @@ export function ProfileForm({
 							<FormControl>
 								<Input {...field} disabled={loading} />
 							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="newsletter"
+					render={({ field }) => (
+						<FormItem>
+							<div className="flex gap-3">
+								<Switch id="newsletter" disabled={loading} onCheckedChange={field.onChange} checked={field.value} />
+								<Label htmlFor="newsletter">{translations.newsletterLabel}</Label>
+							</div>
 							<FormMessage />
 						</FormItem>
 					)}
