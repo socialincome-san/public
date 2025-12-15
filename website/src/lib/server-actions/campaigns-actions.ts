@@ -40,7 +40,7 @@ export async function getProgramsOptions() {
 	return programs;
 }
 
-export async function getCampaignByIdAction(campaignLegacyId: string) {
+export async function getCampaignByIdAction(id: string) {
 	const campaignService = new CampaignService();
 
 	return await campaignService.getById(campaignLegacyId);
