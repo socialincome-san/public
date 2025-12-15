@@ -7,7 +7,7 @@ export const programsData: Program[] = [
 		totalPayments: 12,
 		payoutAmount: new Prisma.Decimal(50),
 		payoutCurrency: 'SLE',
-		payoutInterval: 30,
+		payoutInterval: 'monthly',
 		country: 'Sierra Leone',
 		createdAt: new Date(),
 		updatedAt: null
@@ -18,7 +18,7 @@ export const programsData: Program[] = [
 		totalPayments: 8,
 		payoutAmount: new Prisma.Decimal(40),
 		payoutCurrency: 'SLE',
-		payoutInterval: 30,
+		payoutInterval: 'monthly',
 		country: 'Sierra Leone',
 		createdAt: new Date(),
 		updatedAt: null
@@ -29,7 +29,7 @@ export const programsData: Program[] = [
 		totalPayments: 6,
 		payoutAmount: new Prisma.Decimal(75),
 		payoutCurrency: 'SLE',
-		payoutInterval: 30,
+		payoutInterval: 'monthly',
 		country: 'Sierra Leone',
 		createdAt: new Date(),
 		updatedAt: null
@@ -40,7 +40,7 @@ export const programsData: Program[] = [
 		totalPayments: 9,
 		payoutAmount: new Prisma.Decimal(60),
 		payoutCurrency: 'SLE',
-		payoutInterval: 30,
+		payoutInterval: 'monthly',
 		country: 'Sierra Leone',
 		createdAt: new Date(),
 		updatedAt: null
@@ -51,7 +51,7 @@ export const programsData: Program[] = [
 		totalPayments: 10,
 		payoutAmount: new Prisma.Decimal(80),
 		payoutCurrency: 'LRD',
-		payoutInterval: 30,
+		payoutInterval: 'monthly',
 		country: 'Liberia',
 		createdAt: new Date(),
 		updatedAt: null

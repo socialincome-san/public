@@ -50,7 +50,7 @@ const Program = z.object({
 	country: z.string(),
 	payoutAmount: z.number(),
 	payoutCurrency: z.string(),
-	payoutInterval: z.number(),
+	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
 	totalPayments: z.number(),
 	ownerOrganizationId: z.string(),
 	createdAt: z.string(),
@@ -89,6 +89,8 @@ const Payout = z.object({
 	updatedAt: z.string().nullable(),
 });
 
+const PayoutListResponse = z.array(Payout);
+
 const Survey = z.object({
 	id: z.string(),
 	name: z.string(),
@@ -106,6 +108,8 @@ const Survey = z.object({
 	createdAt: z.string(),
 	updatedAt: z.string().nullable(),
 });
+
+const SurveyListResponse = z.array(Survey);
 
 export const RecipientSelfUpdate = z.object({
 	firstName: z.string().min(1).optional(),
