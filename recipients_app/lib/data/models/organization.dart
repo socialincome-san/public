@@ -1,4 +1,4 @@
-import "package:app/data/models/program.dart";
+import "package:app/data/model/program.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "organization.mapper.dart";

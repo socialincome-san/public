@@ -14,7 +14,7 @@ class AddressMapper extends ClassMapperBase<Address> {
   static AddressMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AddressMapper._());
-      UserMapper.ensureInitialized();
+      ContactMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -36,8 +36,8 @@ class AddressMapper extends ClassMapperBase<Address> {
   static const Field<Address, int> _f$zip = Field('zip', _$zip);
   static String _$country(Address v) => v.country;
   static const Field<Address, String> _f$country = Field('country', _$country);
-  static User _$user(Address v) => v.user;
-  static const Field<Address, User> _f$user = Field('user', _$user);
+  static Contact _$contact(Address v) => v.contact;
+  static const Field<Address, Contact> _f$contact = Field('contact', _$contact);
 
   @override
   final MappableFields<Address> fields = const {
@@ -48,7 +48,7 @@ class AddressMapper extends ClassMapperBase<Address> {
     #city: _f$city,
     #zip: _f$zip,
     #country: _f$country,
-    #user: _f$user,
+    #contact: _f$contact,
   };
 
   static Address _instantiate(DecodingData data) {
@@ -60,7 +60,7 @@ class AddressMapper extends ClassMapperBase<Address> {
       city: data.dec(_f$city),
       zip: data.dec(_f$zip),
       country: data.dec(_f$country),
-      user: data.dec(_f$user),
+      contact: data.dec(_f$contact),
     );
   }
 
@@ -121,7 +121,7 @@ extension AddressValueCopy<$R, $Out> on ObjectCopyWith<$R, Address, $Out> {
 
 abstract class AddressCopyWith<$R, $In extends Address, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  UserCopyWith<$R, User, User> get user;
+  ContactCopyWith<$R, Contact, Contact> get contact;
   $R call({
     String? id,
     String? userId,
@@ -130,7 +130,7 @@ abstract class AddressCopyWith<$R, $In extends Address, $Out>
     String? city,
     int? zip,
     String? country,
-    User? user,
+    Contact? contact,
   });
   AddressCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -144,8 +144,8 @@ class _AddressCopyWithImpl<$R, $Out>
   late final ClassMapperBase<Address> $mapper =
       AddressMapper.ensureInitialized();
   @override
-  UserCopyWith<$R, User, User> get user =>
-      $value.user.copyWith.$chain((v) => call(user: v));
+  ContactCopyWith<$R, Contact, Contact> get contact =>
+      $value.contact.copyWith.$chain((v) => call(contact: v));
   @override
   $R call({
     String? id,
@@ -155,7 +155,7 @@ class _AddressCopyWithImpl<$R, $Out>
     String? city,
     int? zip,
     String? country,
-    User? user,
+    Contact? contact,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
@@ -165,7 +165,7 @@ class _AddressCopyWithImpl<$R, $Out>
       if (city != null) #city: city,
       if (zip != null) #zip: zip,
       if (country != null) #country: country,
-      if (user != null) #user: user,
+      if (contact != null) #contact: contact,
     }),
   );
   @override
@@ -177,7 +177,7 @@ class _AddressCopyWithImpl<$R, $Out>
     city: data.get(#city, or: $value.city),
     zip: data.get(#zip, or: $value.zip),
     country: data.get(#country, or: $value.country),
-    user: data.get(#user, or: $value.user),
+    contact: data.get(#contact, or: $value.contact),
   );
 
   @override

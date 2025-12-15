@@ -1,8 +1,10 @@
 import "package:alchemist/alchemist.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/data/enums/payout_status.dart";
+import "package:app/data/model/currency.dart";
+import "package:app/data/model/payout.dart";
 import "package:app/data/models/payment/payment.dart";
 import "package:app/view/widgets/income/income.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mocktail/mocktail.dart";
 
@@ -27,23 +29,33 @@ void main() {
               status: BalanceCardStatus.allConfirmed,
               nextPayment: const NextPaymentData(
                 amount: 100,
-                currency: "SLE",
+                currency: Currency.sle,
                 daysToPayment: 10,
               ),
               confirmedPaymentsCount: 2,
               unconfirmedPaymentsCount: 0,
               payments: [
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
@@ -70,23 +82,33 @@ void main() {
               status: BalanceCardStatus.allConfirmed,
               nextPayment: const NextPaymentData(
                 amount: 100,
-                currency: "SLE",
+                currency: Currency.sle,
                 daysToPayment: 10,
               ),
               confirmedPaymentsCount: 1,
               unconfirmedPaymentsCount: 1,
               payments: [
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.toReview,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
@@ -113,23 +135,33 @@ void main() {
               status: BalanceCardStatus.allConfirmed,
               nextPayment: const NextPaymentData(
                 amount: 100,
-                currency: "SLE",
+                currency: Currency.sle,
                 daysToPayment: 10,
               ),
               confirmedPaymentsCount: 1,
               unconfirmedPaymentsCount: 1,
               payments: [
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.contested,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
@@ -156,37 +188,57 @@ void main() {
               status: BalanceCardStatus.onHold,
               nextPayment: const NextPaymentData(
                 amount: 100,
-                currency: "SLE",
+                currency: Currency.sle,
                 daysToPayment: 10,
               ),
               confirmedPaymentsCount: 1,
               unconfirmedPaymentsCount: 3,
               payments: [
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 10)),
+                    paymentAt: DateTime(2023, 10).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 10).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.onHoldToReview,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 9)),
+                    paymentAt: DateTime(2023, 9).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 9).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.onHoldToReview,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "3",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "3",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.onHoldToReview,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "4",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "4",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
@@ -213,37 +265,57 @@ void main() {
               status: BalanceCardStatus.allConfirmed,
               nextPayment: const NextPaymentData(
                 amount: 100,
-                currency: "SLE",
+                currency: Currency.sle,
                 daysToPayment: 10,
               ),
               confirmedPaymentsCount: 1,
               unconfirmedPaymentsCount: 0,
               payments: [
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 10)),
+                    paymentAt: DateTime(2023, 10).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 10).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.contested,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 9)),
+                    paymentAt: DateTime(2023, 9).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 9).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.contested,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "3",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "3",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.contested,
                 ),
                 MappedPayment(
-                  payment: SocialIncomePayment(
+                  payment: Payout(
                     id: "4",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "4",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),

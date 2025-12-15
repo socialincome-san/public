@@ -1,3 +1,4 @@
+/* import "package:app/data/enums/payment_status.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
@@ -30,19 +31,4 @@ class SocialIncomePayment with SocialIncomePaymentMappable {
     this.updatedBy,
   });
 }
-
-@MappableEnum()
-enum PaymentStatus {
-  // @JsonValue("created")
-  created,
-  // @JsonValue("paid")
-  paid,
-  // @JsonValue("confirmed")
-  confirmed,
-  // @JsonValue("contested")
-  contested,
-  // @JsonValue("failed")
-  failed,
-  // @JsonValue("other")
-  other,
-}
+ */

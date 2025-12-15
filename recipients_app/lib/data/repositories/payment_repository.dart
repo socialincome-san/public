@@ -1,10 +1,12 @@
-import "package:app/data/datasource/payment_data_source.dart";
-import "package:app/data/models/models.dart";
+import "package:app/data/datasource/demo/payout_demo_data_source.dart";
+import "package:app/data/datasource/payout_data_source.dart";
+import "package:app/data/datasource/remote/payment_remote_data_source.dart";
+import "package:app/data/model/payout.dart";
 import "package:app/demo_manager.dart";
 
 class PaymentRepository {
-  final PaymentDataSource remoteDataSource;
-  final PaymentDataSource demoDataSource;
+  final PayoutRemoteDataSource remoteDataSource;
+  final PayoutDemoDataSource demoDataSource;
 
   final DemoManager demoManager;
 
@@ -14,33 +16,19 @@ class PaymentRepository {
     required this.demoManager,
   });
 
-  PaymentDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
+  PayoutDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
-  Future<List<SocialIncomePayment>> fetchPayments({
-    required String recipientId,
-  }) {
-    return _activeDataSource.fetchPayments(recipientId: recipientId);
-  }
+  Future<List<Payout>> fetchPayouts() => _activeDataSource.fetchPayouts();
 
   Future<void> confirmPayment({
-    required Recipient recipient,
-    required SocialIncomePayment payment,
-  }) async {
-    await _activeDataSource.confirmPayment(
-      recipient: recipient,
-      payment: payment,
-    );
-  }
+    required String payoutId,
+  }) async => await _activeDataSource.confirmPayout(payoutId: payoutId);
 
   Future<void> contestPayment({
-    required Recipient recipient,
-    required SocialIncomePayment payment,
+    required String payoutId,
     required String contestReason,
-  }) async {
-    await _activeDataSource.contestPayment(
-      recipient: recipient,
-      payment: payment,
-      contestReason: contestReason,
-    );
-  }
+  }) async => await _activeDataSource.contestPayout(
+    payoutId: payoutId,
+    contestReason: contestReason,
+  );
 }

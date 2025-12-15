@@ -1,3 +1,4 @@
+import "package:app/data/model/currency.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "program.mapper.dart";
@@ -5,17 +6,12 @@ part "program.mapper.dart";
 @MappableClass()
 class Program with ProgramMappable {
   final String id;
-
   final String name;
-
   final String country;
-
   final double payoutAmount;
-
-  final String payoutCurrency;
+  final Currency payoutCurrency;
 
   final int payoutInterval;
-
   final int totalPayments;
 
   final String ownerOrganizationId;

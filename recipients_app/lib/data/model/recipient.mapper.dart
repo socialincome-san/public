@@ -14,6 +14,7 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
   static RecipientMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = RecipientMapper._());
+      RecipientStatusMapper.ensureInitialized();
       ContactMapper.ensureInitialized();
       ProgramMapper.ensureInitialized();
       LocalPartnerMapper.ensureInitialized();
@@ -32,8 +33,11 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
     'contactId',
     _$contactId,
   );
-  static String _$status(Recipient v) => v.status;
-  static const Field<Recipient, String> _f$status = Field('status', _$status);
+  static RecipientStatus _$status(Recipient v) => v.status;
+  static const Field<Recipient, RecipientStatus> _f$status = Field(
+    'status',
+    _$status,
+  );
   static String? _$startDate(Recipient v) => v.startDate;
   static const Field<Recipient, String> _f$startDate = Field(
     'startDate',
@@ -204,7 +208,7 @@ abstract class RecipientCopyWith<$R, $In extends Recipient, $Out>
   $R call({
     String? id,
     String? contactId,
-    String? status,
+    RecipientStatus? status,
     String? startDate,
     String? successorName,
     bool? termsAccepted,
@@ -247,7 +251,7 @@ class _RecipientCopyWithImpl<$R, $Out>
   $R call({
     String? id,
     String? contactId,
-    String? status,
+    RecipientStatus? status,
     Object? startDate = $none,
     Object? successorName = $none,
     bool? termsAccepted,

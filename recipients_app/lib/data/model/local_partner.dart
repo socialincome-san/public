@@ -1,3 +1,4 @@
+import "package:app/data/model/contact.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "local_partner.mapper.dart";
@@ -5,14 +6,10 @@ part "local_partner.mapper.dart";
 @MappableClass()
 class LocalPartner with LocalPartnerMappable {
   final String id;
-
   final String name;
-
-  // TODO: check this if it cant be contact
-  final Object contact;
+  final Contact contact;
 
   final String createdAt;
-
   final String? updatedAt;
 
   const LocalPartner({

@@ -1,3 +1,5 @@
+import "package:app/data/enums/payout_status.dart";
+import "package:app/data/model/currency.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "payout.mapper.dart";
@@ -5,21 +7,13 @@ part "payout.mapper.dart";
 @MappableClass()
 class Payout with PayoutMappable {
   final String id;
-
-  final double amount;
-
+  final int amount;
   final double? amountChf;
-
-  final String currency;
-
-  final DateTime paymentAt;
-
-  final String status;
-
+  final Currency currency;
+  final String paymentAt;
+  final PayoutStatus status;
   final String? phoneNumber;
-
   final String? comments;
-
   final String recipientId;
 
   final String createdAt;

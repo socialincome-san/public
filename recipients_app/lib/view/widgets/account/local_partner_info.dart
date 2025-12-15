@@ -1,4 +1,4 @@
-import "package:app/data/models/local_partner.dart";
+import "package:app/data/model/local_partner.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
@@ -16,7 +16,11 @@ class LocalPartnerInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO(Verena): check if this is the correct phone number
-    final contactNumber = localPartner.user.phoneNumber.firstWhere((phoneNumber) => phoneNumber.isPrimary).phone;
+    // final contactNumber = localPartner.user.phoneNumber.firstWhere((phoneNumber) => phoneNumber.isPrimary).phone;
+    final contactNumber = localPartner.contact.phone?.number ?? "";
+    if (contactNumber.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

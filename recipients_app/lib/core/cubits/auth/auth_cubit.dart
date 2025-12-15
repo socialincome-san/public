@@ -1,9 +1,9 @@
 import "dart:async";
 import "dart:developer";
 
-import "package:app/data/models/gender.dart";
-import "package:app/data/models/language_code.dart";
-import "package:app/data/models/recipient.dart";
+import "package:app/data/enums/gender.dart";
+import "package:app/data/model/language_code.dart";
+import "package:app/data/model/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:dart_mappable/dart_mappable.dart";
@@ -101,6 +101,7 @@ class AuthCubit extends Cubit<AuthState> {
     // PhoneNumber? mobileMoneyPhone,
     String? paymentProvider,
     bool? termsAccepted,
+    String? successorName,
   }) async {
     emit(state.copyWith(status: AuthStatus.updatingRecipient));
 
@@ -109,23 +110,34 @@ class AuthCubit extends Cubit<AuthState> {
     // how to handle communicationMobilePhone and mobileMoneyPhone?
     // how to handle termsAccepted?
 
-    final recipient = state.recipient!;
-    final user = recipient.user;
+    final recipient = state.recipient;
+    final contact = recipient?.contact;
 
-    final updatedUser = user.copyWith(
+    final updatedContact = contact?.copyWith(
       firstName: firstName,
       lastName: lastName,
-      dateOfBirth: dateOfBirth,
+      dateOfBirth: dateOfBirth?.toIso8601String(),
       gender: gender,
-      languageCode: languageCode,
+      language: languageCode,
+      callingName: callingName,
       // communicationMobilePhone: communicationMobilePhone,
       // mobileMoneyPhone: mobileMoneyPhone,
     );
 
-    final updatedRecipient = recipient.copyWith(
-      user: updatedUser,
-      callingName: callingName,
+    final updatedRecipient = recipient?.copyWith(
+      contact: updatedContact,
+      successorName: successorName,
     );
+
+    if (updatedRecipient == null) {
+      emit(
+        state.copyWith(
+          status: AuthStatus.updateRecipientFailure,
+          exception: Exception("Failed to update recipient"),
+        ),
+      );
+      return;
+    }
 
     try {
       await userRepository.updateRecipient(updatedRecipient);

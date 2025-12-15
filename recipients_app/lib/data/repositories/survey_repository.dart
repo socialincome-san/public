@@ -1,6 +1,5 @@
 import "package:app/data/datasource/survey_data_source.dart";
-import "package:app/data/models/models.dart";
-import "package:app/data/models/survey/survey.dart";
+import "package:app/data/model/survey/survey.dart";
 import "package:app/demo_manager.dart";
 
 class SurveyRepository {
@@ -19,7 +18,5 @@ class SurveyRepository {
 
   Future<List<Survey>> fetchSurveys({
     required String recipientId,
-  }) {
-    return _activeDataSource.fetchSurveys(recipientId: recipientId);
-  }
+  }) => _activeDataSource.fetchSurveys(recipientId: recipientId);
 }

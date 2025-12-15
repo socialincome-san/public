@@ -1,5 +1,6 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/data/enums/payout_status.dart";
 import "package:app/data/models/models.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
@@ -51,7 +52,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        recipient?.mobileMoneyPhone?.phone ?? "",
+                        recipient?.contact.phone?.number ?? "",
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
@@ -145,8 +146,8 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
     for (final payment in paidOrConfirmedPayments) {
       // Some of the users still have the currency SLL from the begining of the program. We will change it to SLE.
-      final factor = (payment.payment.currency == "SLL") ? 1000 : 1;
-      total += (payment.payment.amount ?? 0) ~/ factor;
+      final factor = (payment.payment.currency.name == "SLL") ? 1000 : 1;
+      total += (payment.payment.amount) ~/ factor;
     }
 
     return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $total";
@@ -165,7 +166,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
     final paidOrConfirmedPayments = mappedPayments.where(
       (payment) {
         final paymentStatus = payment.payment.status;
-        return paymentStatus == PaymentStatus.paid || paymentStatus == PaymentStatus.confirmed;
+        return paymentStatus == PayoutStatus.paid || paymentStatus == PayoutStatus.confirmed;
       },
     ).toList();
     return paidOrConfirmedPayments;

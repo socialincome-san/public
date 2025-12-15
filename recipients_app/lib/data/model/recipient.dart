@@ -1,3 +1,4 @@
+import "package:app/data/enums/recipient_status.dart";
 import "package:app/data/model/contact.dart";
 import "package:app/data/model/local_partner.dart";
 import "package:app/data/model/payment_information.dart";
@@ -10,7 +11,7 @@ part "recipient.mapper.dart";
 class Recipient with RecipientMappable {
   final String id;
   final String contactId;
-  final String status;
+  final RecipientStatus status;
   final String? startDate;
   final String? successorName;
   final bool termsAccepted;

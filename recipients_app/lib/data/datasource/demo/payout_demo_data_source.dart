@@ -1,12 +1,29 @@
-import "dart:math";
+import "package:app/data/datasource/payout_data_source.dart";
+import "package:app/data/model/payout.dart";
 
-import "package:app/data/datasource/payment_data_source.dart";
-import "package:app/data/models/models.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
+class PayoutDemoDataSource implements PayoutDataSource {
+  @override
+  Future<void> confirmPayout({required String payoutId}) {
+    // TODO: implement confirmPayout
+    throw UnimplementedError();
+  }
 
-const String paymentCollection = "payments";
+  @override
+  Future<void> contestPayout({required String payoutId, required String contestReason}) {
+    // TODO: implement contestPayout
+    throw UnimplementedError();
+  }
 
-class PaymentDemoDataSource implements PaymentDataSource {
+  @override
+  Future<List<Payout>> fetchPayouts() {
+    // TODO: implement fetchPayouts
+    throw UnimplementedError();
+  }
+}
+
+/* const String paymentCollection = "payments";
+
+class PayoutDemoDataSource implements PayoutDataSource {
   List<SocialIncomePayment> payments = initData();
 
   static List<SocialIncomePayment> initData() {
@@ -58,9 +75,7 @@ class PaymentDemoDataSource implements PaymentDataSource {
   }
 
   @override
-  Future<List<SocialIncomePayment>> fetchPayments({
-    required String recipientId,
-  }) async {
+  Future<List<Payout>> fetchPayouts() async {
     return payments;
   }
 
@@ -68,7 +83,7 @@ class PaymentDemoDataSource implements PaymentDataSource {
   /// and also sets lastUpdatedAt and lastUpdatedBy to the
   /// current time and recipient
   @override
-  Future<void> confirmPayment({
+  Future<void> confirmPayout({
     required Recipient recipient,
     required SocialIncomePayment payment,
   }) async {
@@ -82,7 +97,7 @@ class PaymentDemoDataSource implements PaymentDataSource {
   }
 
   @override
-  Future<void> contestPayment({
+  Future<void> contestPayout({
     required Recipient recipient,
     required SocialIncomePayment payment,
     required String contestReason,
@@ -97,3 +112,4 @@ class PaymentDemoDataSource implements PaymentDataSource {
     payments[indexWhere] = updatedPayment;
   }
 }
+ */

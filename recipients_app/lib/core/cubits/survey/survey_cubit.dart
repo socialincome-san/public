@@ -1,6 +1,8 @@
 import "package:app/data/model/recipient.dart";
-import "package:app/data/models/models.dart" hide Recipient;
-import "package:app/data/models/survey/survey_status.dart";
+import "package:app/data/model/survey/mapped_survey.dart";
+import "package:app/data/model/survey/survey.dart";
+import "package:app/data/model/survey/survey_card_status.dart";
+import "package:app/data/model/survey/survey_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
 import "package:collection/collection.dart";
@@ -51,7 +53,7 @@ class SurveyCubit extends Cubit<SurveyState> {
 
   Future<List<MappedSurvey>> _getSurveys() async {
     final surveys = await surveyRepository.fetchSurveys(
-      recipientId: recipient.userId,
+      recipientId: recipient.id,
     );
 
     final mappedSurveys = surveys
@@ -68,7 +70,7 @@ class SurveyCubit extends Cubit<SurveyState> {
             daysAfterOverdue: _getDaysAfterOverdue(survey),
           ),
         )
-        .sortedBy((element) => element.survey.dueDateAt)
+        .sortedBy((element) => DateTime.parse(element.survey.dueAt))
         .toList();
 
     return mappedSurveys;
@@ -155,7 +157,7 @@ int? _getDaysAfterOverdue(Survey survey) {
 }
 
 int? _getSurveyDueDateAndNowDifferenceInDays(Survey survey) {
-  final dueDateAt = survey.dueDateAt;
+  final dueDateAt = DateTime.parse(survey.dueAt);
 
   final currentDate = DateTime.now();
   final dateDifference = currentDate.difference(dueDateAt);

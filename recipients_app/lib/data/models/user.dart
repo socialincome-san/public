@@ -1,40 +1,15 @@
+// TODO: check if assumption user == contact in recipient is correct
+/* import "package:app/data/enums/gender.dart";
+import "package:app/data/model/currency.dart";
+import "package:app/data/model/language_code.dart";
+import "package:app/data/model/local_partner.dart";
+import "package:app/data/model/recipient.dart";
 import "package:app/data/models/address.dart";
-import "package:app/data/models/currency.dart";
-import "package:app/data/models/gender.dart";
-import "package:app/data/models/language_code.dart";
-import "package:app/data/models/local_partner.dart";
 import "package:app/data/models/phone_number.dart";
-import "package:app/data/models/recipient.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "user.mapper.dart";
 
-/*
-model User {
-  id          String        @id @default(cuid()) @map("id")
-  email       String        @unique @map("email")
-  authUserId  String?       @unique @map("auth_user_id")
-  firstName   String        @map("first_name")
-  lastName    String        @map("last_name")
-  gender      Gender        @default(private) @map("gender")
-  language    LanguageCode? @map("language")
-  currency    Currency?     @map("currency")
-  dateOfBirth DateTime?     @map("date_of_birth") @db.Date
-  Contributor Contributor?
-  Recipient   Recipient?
-  PortalUser  PortalUser?
-
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  Address       Address[]
-  LocalPartner  LocalPartner?
-  PhoneNumber   PhoneNumber[]
-  ProgramAccess ProgramAccess[]
-
-  @@map("user")
-}
-*/
 @MappableClass()
 class User with UserMappable {
   final String id;
@@ -72,3 +47,4 @@ class User with UserMappable {
     this.localPartner,
   });
 }
+ */

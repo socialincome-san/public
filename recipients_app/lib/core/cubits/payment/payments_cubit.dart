@@ -1,5 +1,9 @@
+import "package:app/core/helpers/string_extensions.dart";
+import "package:app/data/enums/payout_status.dart";
+import "package:app/data/model/currency.dart";
+import "package:app/data/model/payout.dart";
+import "package:app/data/model/recipient.dart";
 import "package:app/data/models/payment/payment.dart";
-import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:collection/collection.dart";
 import "package:dart_mappable/dart_mappable.dart";
@@ -12,7 +16,8 @@ part "payments_state.dart";
 const int kMaxReviewDays = 10;
 const int kCurrentPaymentAmount = 700;
 const int kProgramDurationMonths = 36;
-const _kOnHoldCandidateStates = [PaymentStatus.paid, PaymentStatus.contested];
+
+const _kOnHoldCandidateStates = [PayoutStatus.paid, PayoutStatus.contested];
 
 class PaymentsCubit extends Cubit<PaymentsState> {
   final Recipient recipient;
@@ -29,14 +34,12 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     emit(state.copyWith(status: PaymentsStatus.loading));
 
     try {
-      final payments = await paymentRepository.fetchPayments(
-        recipientId: recipient.userId,
-      );
+      final payouts = await paymentRepository.fetchPayouts();
 
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          paymentsUiState: await _mapPaymentsUiState(payments),
+          paymentsUiState: await _mapPayoutsUiState(payouts),
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -50,20 +53,17 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
   }
 
-  Future<void> confirmPayment(SocialIncomePayment payment) async {
+  Future<void> confirmPayment(Payout payout) async {
     emit(state.copyWith(status: PaymentsStatus.loading));
 
     try {
       await paymentRepository.confirmPayment(
-        recipient: recipient,
-        payment: payment,
+        payoutId: payout.id,
       );
 
-      final payments = await paymentRepository.fetchPayments(
-        recipientId: recipient.userId,
-      );
+      final payouts = await paymentRepository.fetchPayouts();
 
-      final paymentUiState = await _mapPaymentsUiState(payments);
+      final paymentUiState = await _mapPayoutsUiState(payouts);
 
       emit(
         state.copyWith(
@@ -83,23 +83,20 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   }
 
   Future<void> contestPayment(
-    SocialIncomePayment payment,
+    Payout payout,
     String contestReason,
   ) async {
     emit(state.copyWith(status: PaymentsStatus.loading));
 
     try {
       await paymentRepository.contestPayment(
-        recipient: recipient,
-        payment: payment,
+        payoutId: payout.id,
         contestReason: contestReason,
       );
 
-      final payments = await paymentRepository.fetchPayments(
-        recipientId: recipient.userId,
-      );
+      final payouts = await paymentRepository.fetchPayouts();
 
-      final paymentUiState = await _mapPaymentsUiState(payments);
+      final paymentUiState = await _mapPayoutsUiState(payouts);
 
       emit(
         state.copyWith(
@@ -118,34 +115,32 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
   }
 
-  Future<PaymentsUiState> _mapPaymentsUiState(
-    List<SocialIncomePayment> payments,
-  ) async {
+  // TODO: fix this
+  Future<PaymentsUiState> _mapPayoutsUiState(List<Payout> payouts) async {
     var unconfirmedPaymentsCount = 0;
     var confirmedPaymentsCount = 0;
     final List<MappedPayment> mappedPayments = [];
 
-    PaymentStatus? previousState;
+    PayoutStatus? previousState;
 
-    for (int i = 0; i < payments.length; i++) {
-      final currentPayment = payments[i];
+    for (int i = 0; i < payouts.length; i++) {
+      final currentPayment = payouts[i];
       PaymentUiStatus paymentUiStatus = PaymentUiStatus.empty;
       switch (currentPayment.status) {
-        case PaymentStatus.created:
+        case PayoutStatus.created:
           paymentUiStatus = PaymentUiStatus.toBePaid;
-        case PaymentStatus.paid:
+        case PayoutStatus.paid:
           final isRecent = _isRecent(currentPayment);
           paymentUiStatus = isRecent ? PaymentUiStatus.recentToReview : PaymentUiStatus.toReview;
           unconfirmedPaymentsCount++;
-        case PaymentStatus.confirmed:
+        case PayoutStatus.confirmed:
           paymentUiStatus = PaymentUiStatus.confirmed;
           confirmedPaymentsCount++;
-        case PaymentStatus.contested:
+        case PayoutStatus.contested:
           paymentUiStatus = PaymentUiStatus.contested;
         // TODO: check what to show in case of those statuses
-        case null:
-        case PaymentStatus.failed:
-        case PaymentStatus.other:
+        case PayoutStatus.failed:
+        case PayoutStatus.other:
           paymentUiStatus = PaymentUiStatus.empty;
       }
 
@@ -204,11 +199,17 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     return balanceCardStatus;
   }
 
-  bool _isRecent(SocialIncomePayment? payment) {
-    final paymentDate = payment?.paymentAt?.toDate();
+  bool _isRecent(Payout? payout) {
+    final paymentDate = payout?.paymentAt;
+
+    if (paymentDate == null) {
+      return false;
+    }
+
+    final paymentDateTime = DateTime.parse(paymentDate);
 
     // checks if days between payment date and now are less than 5
-    return ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) < kMaxReviewDays;
+    return ((paymentDateTime.difference(DateTime.now()).inDays) * -1) < kMaxReviewDays;
   }
 
   NextPaymentData _getNextPaymentData(
@@ -224,10 +225,10 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         )
         ?.payment
         .paymentAt
-        ?.toDate();
+        .toDate();
 
     final nextPaymentDate =
-        nextPayment?.payment.paymentAt?.toDate() ??
+        nextPayment?.payment.paymentAt.toDate() ??
         DateTime(
           previousPaymentDate?.year ?? 2023,
           (previousPaymentDate?.month ?? 1) + 1,
@@ -237,14 +238,14 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
     return NextPaymentData(
       amount: nextPayment?.payment.amount ?? kCurrentPaymentAmount,
-      currency: nextPayment?.payment.currency ?? "SLE",
+      currency: nextPayment?.payment.currency ?? Currency.sle,
       daysToPayment: daysToPayment,
     );
   }
 
-  PaymentUiStatus _getOnHoldStatus(SocialIncomePayment payment) {
+  PaymentUiStatus _getOnHoldStatus(Payout payout) {
     PaymentUiStatus paymentUiStatus;
-    if (payment.status == PaymentStatus.contested) {
+    if (payout.status == PayoutStatus.contested) {
       paymentUiStatus = PaymentUiStatus.onHoldContested;
     } else {
       paymentUiStatus = PaymentUiStatus.onHoldToReview;

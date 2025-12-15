@@ -2,73 +2,84 @@ import "dart:async";
 
 import "package:app/data/datasource/demo/demo_user.dart";
 import "package:app/data/datasource/user_data_source.dart";
-import "package:app/data/models/currency.dart";
-import "package:app/data/models/gender.dart";
-import "package:app/data/models/language_code.dart";
-import "package:app/data/models/local_partner.dart";
-import "package:app/data/models/models.dart";
-import "package:app/data/models/payout_interval.dart";
-import "package:app/data/models/program.dart";
-import "package:app/data/models/recipient_status.dart";
-import "package:app/data/models/user.dart";
+import "package:app/data/enums/gender.dart";
+import "package:app/data/enums/recipient_status.dart";
+import "package:app/data/model/contact.dart";
+import "package:app/data/model/currency.dart";
+import "package:app/data/model/language_code.dart";
+import "package:app/data/model/local_partner.dart";
+import "package:app/data/model/phone.dart";
+import "package:app/data/model/program.dart";
+import "package:app/data/model/recipient.dart";
 import "package:firebase_auth/firebase_auth.dart" as firebase_auth;
 
 class UserDemoDataSource implements UserDataSource {
   Recipient? _recipient = Recipient(
-    id: "demo",
-    user: User(
+    contactId: "demo",
+    termsAccepted: true,
+    programId: "demo",
+    localPartnerId: "demo",
+    contact: Contact(
       id: "demo",
-      email: "demo@socialincome.com",
-      authUserId: "demo",
       firstName: "Demo",
       lastName: "SocialIncome",
+      email: "demo@socialincome.com",
+      phoneId: "demo",
+      phone: Phone(
+        id: "demo",
+        number: "23271118897",
+        hasWhatsApp: true,
+        createdAt: DateTime.now().toIso8601String(),
+        updatedAt: DateTime.now().toIso8601String(),
+      ),
       gender: Gender.male,
-      languageCode: LanguageCode.en,
-      currency: Currency.usd,
-      dateOfBirth: DateTime.now(),
-      address: [],
-      phoneNumber: [
-        const PhoneNumber(
-          id: "demo",
-          phone: "23271118897",
-          type: "mobileMoneyPhone",
-          userId: "",
-          isPrimary: false,
-        ),
-        const PhoneNumber(
-          id: "demo",
-          phone: "23271118897",
-          type: "communicationMobilePhone",
-          userId: "",
-          isPrimary: true,
-        ),
-      ],
+      language: LanguageCode.en,
+      dateOfBirth: DateTime.now().toIso8601String(),
+      profession: "Demo",
+      isInstitution: false,
+      createdAt: DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
     ),
-    localPartner: const LocalPartner(
+    id: "demo",
+    localPartner: LocalPartner(
       id: "demo",
       name: "Demo",
-      user: User(
+      contact: Contact(
         id: "demo",
-        email: "demo@socialincome.com",
-        authUserId: "demo",
         firstName: "Demo",
         lastName: "SocialIncome",
+        email: "demo@socialincome.com",
+        phoneId: "demo",
+        phone: Phone(
+          id: "demo",
+          number: "23271118897",
+          hasWhatsApp: true,
+          createdAt: DateTime.now().toIso8601String(),
+          updatedAt: DateTime.now().toIso8601String(),
+        ),
         gender: Gender.male,
-        address: [],
-        phoneNumber: [],
+        language: LanguageCode.en,
+        dateOfBirth: DateTime.now().toIso8601String(),
+        profession: "Demo",
+        isInstitution: false,
+        createdAt: DateTime.now().toIso8601String(),
+        updatedAt: DateTime.now().toIso8601String(),
       ),
+      createdAt: DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
     ),
     status: RecipientStatus.active,
-    program: const Program(
+    createdAt: DateTime.now().toIso8601String(),
+    program: Program(
+      ownerOrganizationId: "demo",
+      createdAt: DateTime.now().toIso8601String(),
       id: "demo",
       name: "Demo",
       totalPayments: 0,
       payoutAmount: 0,
       payoutCurrency: Currency.usd,
-      payoutInterval: PayoutInterval.monthly,
+      payoutInterval: 1,
       country: "US",
-      viewerOrganizationId: "demo",
-      operatorOrganizationId: "demo",
     ),
   );
   final _user = DemoUser();
@@ -84,7 +95,8 @@ class UserDemoDataSource implements UserDataSource {
   }
 
   @override
-  Future<void> updateRecipient(Recipient recipient) async {
+  Future<Recipient> updateRecipient(Recipient recipient) async {
     _recipient = recipient;
+    return recipient;
   }
 }

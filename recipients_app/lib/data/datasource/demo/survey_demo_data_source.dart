@@ -1,9 +1,7 @@
 import "package:app/data/datasource/survey_data_source.dart";
-import "package:app/data/models/models.dart";
-import "package:app/data/models/recipient_main_language.dart";
-import "package:app/data/models/survey/survey.dart";
-import "package:app/data/models/survey/survey_questionnaire.dart";
-import "package:app/data/models/survey/survey_status.dart";
+import "package:app/data/model/survey/survey.dart";
+import "package:app/data/model/survey/survey_questionnaire.dart";
+import "package:app/data/model/survey/survey_status.dart";
 
 class SurveyDemoDataSource implements SurveyDataSource {
   final List<Survey> _surveys = _generateDemoSurveys();
@@ -14,66 +12,62 @@ class SurveyDemoDataSource implements SurveyDataSource {
       Survey(
         id: "onboarding",
         status: SurveyStatus.scheduled,
-        dueDateAt: now.subtract(const Duration(days: 10)),
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.onboarding,
-        recipientName: "Demo Recipient",
-        language: RecipientMainLanguage.en,
-        sentAt: now,
-        completedAt: now,
-        comments: "Demo comments",
+        language: "en",
         data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
         accessToken: "demo",
+        // new fields
+        name: "Demo Recipient",
+        dueAt: now.subtract(const Duration(days: 10)).toIso8601String(),
+        createdAt: now.toIso8601String(),
       ),
       Survey(
         id: "checkin",
         status: SurveyStatus.scheduled,
-        dueDateAt: now,
+        dueAt: now.toIso8601String(),
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.checkin,
-        recipientName: "Demo Recipient",
-        language: RecipientMainLanguage.en,
-        sentAt: now,
-        completedAt: now,
-        comments: "Demo comments",
+        language: "en",
         data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
         accessToken: "demo",
+        // new fields
+        name: "Demo Recipient",
+        createdAt: now.toIso8601String(),
       ),
       Survey(
         id: "offboarding",
         status: SurveyStatus.scheduled,
-        dueDateAt: now.add(const Duration(days: 11)),
+        dueAt: now.add(const Duration(days: 11)).toIso8601String(),
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.offboarding,
-        recipientName: "Demo Recipient",
-        language: RecipientMainLanguage.en,
-        sentAt: now,
-        completedAt: now,
-        comments: "Demo comments",
+        language: "en",
         data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
         accessToken: "demo",
+        // new fields
+        name: "Demo Recipient",
+        createdAt: now.toIso8601String(),
       ),
       Survey(
         id: "followup",
         status: SurveyStatus.scheduled,
-        dueDateAt: DateTime.now().add(const Duration(days: 16)),
+        dueAt: DateTime.now().add(const Duration(days: 16)).toIso8601String(),
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.offboardedCheckin,
-        recipientName: "Demo Recipient",
-        language: RecipientMainLanguage.en,
-        sentAt: now,
-        completedAt: now,
-        comments: "Demo comments",
+        language: "en",
         data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
         accessToken: "demo",
+        // new fields
+        name: "Demo Recipient",
+        createdAt: now.toIso8601String(),
       ),
     ];
 

@@ -1,3 +1,4 @@
+import "package:app/data/model/currency.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "next_payment_data.mapper.dart";
@@ -5,7 +6,7 @@ part "next_payment_data.mapper.dart";
 @MappableClass()
 class NextPaymentData with NextPaymentDataMappable {
   final int amount;
-  final String currency;
+  final Currency currency;
   final int daysToPayment;
 
   const NextPaymentData({

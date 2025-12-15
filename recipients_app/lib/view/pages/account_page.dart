@@ -1,9 +1,10 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
-import "package:app/data/models/gender.dart";
-import "package:app/data/models/language_code.dart";
-import "package:app/data/models/models.dart";
+import "package:app/core/helpers/string_extensions.dart";
+import "package:app/data/enums/gender.dart";
+import "package:app/data/model/language_code.dart";
+import "package:app/data/model/recipient.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
@@ -54,25 +55,25 @@ class AccountPageState extends State<AccountPage> {
     super.initState();
 
     _nameController = TextEditingController(
-      text: widget.recipient.user.firstName,
+      text: widget.recipient.contact.firstName,
     );
     _surnameController = TextEditingController(
-      text: widget.recipient.user.lastName,
+      text: widget.recipient.contact.lastName,
     );
     _callingNameController = TextEditingController(
-      text: widget.recipient.callingName,
+      text: widget.recipient.contact.callingName,
     );
     _emailController = TextEditingController(
-      text: widget.recipient.user.email,
+      text: widget.recipient.contact.email,
     );
     _birthDateController = TextEditingController(
       text: "",
     );
     _paymentNumberController = TextEditingController(
-      text: widget.recipient.mobileMoneyPhone?.phone ?? "",
+      text: widget.recipient.contact.phone?.number ?? "",
     );
     _contactNumberController = TextEditingController(
-      text: widget.recipient.communicationMobilePhone?.phone ?? "",
+      text: widget.recipient.contact.phone?.number ?? "",
     );
     _successorNameController = TextEditingController(
       text: widget.recipient.successorName ?? "",
@@ -82,7 +83,7 @@ class AccountPageState extends State<AccountPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final locale = Localizations.localeOf(context).toLanguageTag();
-      _birthDateController.text = getFormattedDate(widget.recipient.user.dateOfBirth, locale) ?? "";
+      _birthDateController.text = getFormattedDate(widget.recipient.contact.dateOfBirth?.toDate(), locale) ?? "";
     });
   }
 
@@ -212,7 +213,7 @@ class AccountPageState extends State<AccountPage> {
                       child: Text(context.l10n.private),
                     ),
                   ],
-                  value: recipient.user.gender,
+                  value: recipient.contact.gender,
                   validator: (value) {
                     if (value == null) {
                       return context.l10n.genderError;
@@ -232,7 +233,7 @@ class AccountPageState extends State<AccountPage> {
                       showDatePicker(
                         firstDate: DateTime(1950),
                         lastDate: DateTime(DateTime.now().year - 10),
-                        initialDate: recipient.user.dateOfBirth ?? DateTime(2000),
+                        initialDate: recipient.contact.dateOfBirth?.toDate() ?? DateTime(2000),
                         context: context,
                       ).then((value) {
                         if (value != null) {
@@ -259,12 +260,12 @@ class AccountPageState extends State<AccountPage> {
                 InputDropdown<LanguageCode>(
                   label: "${context.l10n.language}*",
                   items: [
-                    if (recipient.user.languageCode == LanguageCode.en)
+                    if (recipient.contact.language == LanguageCode.en)
                       DropdownMenuItem(
                         value: LanguageCode.en,
                         child: Text(context.l10n.english),
                       ),
-                    if (recipient.user.languageCode == LanguageCode.kri)
+                    if (recipient.contact.language == LanguageCode.kri)
                       DropdownMenuItem(
                         value: LanguageCode.kri,
                         child: Text(context.l10n.krio),
@@ -283,7 +284,7 @@ class AccountPageState extends State<AccountPage> {
                       languageCode: value,
                     );
                   },
-                  value: recipient.user.languageCode,
+                  value: recipient.contact.language,
                 ),
 
                 const SizedBox(height: 16),
@@ -352,7 +353,7 @@ class AccountPageState extends State<AccountPage> {
                       child: Text("Africell Money"),
                     ),
                   ],
-                  value: recipient.paymentProvider,
+                  value: recipient.paymentInformation?.provider,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return context.l10n.paymentProviderError;

@@ -15,6 +15,8 @@ class ContactMapper extends ClassMapperBase<Contact> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ContactMapper._());
       PhoneMapper.ensureInitialized();
+      GenderMapper.ensureInitialized();
+      LanguageCodeMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -64,14 +66,14 @@ class ContactMapper extends ClassMapperBase<Contact> {
     _$email,
     opt: true,
   );
-  static String? _$gender(Contact v) => v.gender;
-  static const Field<Contact, String> _f$gender = Field(
+  static Gender? _$gender(Contact v) => v.gender;
+  static const Field<Contact, Gender> _f$gender = Field(
     'gender',
     _$gender,
     opt: true,
   );
-  static String? _$language(Contact v) => v.language;
-  static const Field<Contact, String> _f$language = Field(
+  static LanguageCode? _$language(Contact v) => v.language;
+  static const Field<Contact, LanguageCode> _f$language = Field(
     'language',
     _$language,
     opt: true,
@@ -211,8 +213,8 @@ abstract class ContactCopyWith<$R, $In extends Contact, $Out>
     String? phoneId,
     Phone? phone,
     String? email,
-    String? gender,
-    String? language,
+    Gender? gender,
+    LanguageCode? language,
     String? dateOfBirth,
     String? profession,
     bool? isInstitution,

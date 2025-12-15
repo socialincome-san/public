@@ -14,6 +14,7 @@ class LocalPartnerMapper extends ClassMapperBase<LocalPartner> {
   static LocalPartnerMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = LocalPartnerMapper._());
+      ContactMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -25,8 +26,8 @@ class LocalPartnerMapper extends ClassMapperBase<LocalPartner> {
   static const Field<LocalPartner, String> _f$id = Field('id', _$id);
   static String _$name(LocalPartner v) => v.name;
   static const Field<LocalPartner, String> _f$name = Field('name', _$name);
-  static Object _$contact(LocalPartner v) => v.contact;
-  static const Field<LocalPartner, Object> _f$contact = Field(
+  static Contact _$contact(LocalPartner v) => v.contact;
+  static const Field<LocalPartner, Contact> _f$contact = Field(
     'contact',
     _$contact,
   );
@@ -123,10 +124,11 @@ extension LocalPartnerValueCopy<$R, $Out>
 
 abstract class LocalPartnerCopyWith<$R, $In extends LocalPartner, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  ContactCopyWith<$R, Contact, Contact> get contact;
   $R call({
     String? id,
     String? name,
-    Object? contact,
+    Contact? contact,
     String? createdAt,
     String? updatedAt,
   });
@@ -142,10 +144,13 @@ class _LocalPartnerCopyWithImpl<$R, $Out>
   late final ClassMapperBase<LocalPartner> $mapper =
       LocalPartnerMapper.ensureInitialized();
   @override
+  ContactCopyWith<$R, Contact, Contact> get contact =>
+      $value.contact.copyWith.$chain((v) => call(contact: v));
+  @override
   $R call({
     String? id,
     String? name,
-    Object? contact,
+    Contact? contact,
     String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(

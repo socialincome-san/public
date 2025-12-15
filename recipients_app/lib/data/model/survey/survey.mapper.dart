@@ -15,7 +15,6 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SurveyMapper._());
       SurveyQuestionnaireMapper.ensureInitialized();
-      RecipientMainLanguageMapper.ensureInitialized();
       SurveyStatusMapper.ensureInitialized();
     }
     return _instance!;
@@ -26,6 +25,8 @@ class SurveyMapper extends ClassMapperBase<Survey> {
 
   static String _$id(Survey v) => v.id;
   static const Field<Survey, String> _f$id = Field('id', _$id);
+  static String _$name(Survey v) => v.name;
+  static const Field<Survey, String> _f$name = Field('name', _$name);
   static String _$recipientId(Survey v) => v.recipientId;
   static const Field<Survey, String> _f$recipientId = Field(
     'recipientId',
@@ -36,28 +37,26 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     'questionnaire',
     _$questionnaire,
   );
-  static String _$recipientName(Survey v) => v.recipientName;
-  static const Field<Survey, String> _f$recipientName = Field(
-    'recipientName',
-    _$recipientName,
-  );
-  static RecipientMainLanguage _$language(Survey v) => v.language;
-  static const Field<Survey, RecipientMainLanguage> _f$language = Field(
+  static String _$language(Survey v) => v.language;
+  static const Field<Survey, String> _f$language = Field(
     'language',
     _$language,
   );
-  static DateTime _$dueDateAt(Survey v) => v.dueDateAt;
-  static const Field<Survey, DateTime> _f$dueDateAt = Field(
-    'dueDateAt',
-    _$dueDateAt,
+  static String _$dueAt(Survey v) => v.dueAt;
+  static const Field<Survey, String> _f$dueAt = Field('dueAt', _$dueAt);
+  static String? _$completedAt(Survey v) => v.completedAt;
+  static const Field<Survey, String> _f$completedAt = Field(
+    'completedAt',
+    _$completedAt,
+    opt: true,
   );
   static SurveyStatus _$status(Survey v) => v.status;
   static const Field<Survey, SurveyStatus> _f$status = Field(
     'status',
     _$status,
   );
-  static String _$data(Survey v) => v.data;
-  static const Field<Survey, String> _f$data = Field('data', _$data);
+  static Object? _$data(Survey v) => v.data;
+  static const Field<Survey, Object> _f$data = Field('data', _$data);
   static String _$accessEmail(Survey v) => v.accessEmail;
   static const Field<Survey, String> _f$accessEmail = Field(
     'accessEmail',
@@ -73,59 +72,60 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     'accessToken',
     _$accessToken,
   );
-  static DateTime? _$sentAt(Survey v) => v.sentAt;
-  static const Field<Survey, DateTime> _f$sentAt = Field(
-    'sentAt',
-    _$sentAt,
+  static String? _$surveyScheduleId(Survey v) => v.surveyScheduleId;
+  static const Field<Survey, String> _f$surveyScheduleId = Field(
+    'surveyScheduleId',
+    _$surveyScheduleId,
     opt: true,
   );
-  static DateTime? _$completedAt(Survey v) => v.completedAt;
-  static const Field<Survey, DateTime> _f$completedAt = Field(
-    'completedAt',
-    _$completedAt,
-    opt: true,
+  static String _$createdAt(Survey v) => v.createdAt;
+  static const Field<Survey, String> _f$createdAt = Field(
+    'createdAt',
+    _$createdAt,
   );
-  static String? _$comments(Survey v) => v.comments;
-  static const Field<Survey, String> _f$comments = Field(
-    'comments',
-    _$comments,
+  static String? _$updatedAt(Survey v) => v.updatedAt;
+  static const Field<Survey, String> _f$updatedAt = Field(
+    'updatedAt',
+    _$updatedAt,
     opt: true,
   );
 
   @override
   final MappableFields<Survey> fields = const {
     #id: _f$id,
+    #name: _f$name,
     #recipientId: _f$recipientId,
     #questionnaire: _f$questionnaire,
-    #recipientName: _f$recipientName,
     #language: _f$language,
-    #dueDateAt: _f$dueDateAt,
+    #dueAt: _f$dueAt,
+    #completedAt: _f$completedAt,
     #status: _f$status,
     #data: _f$data,
     #accessEmail: _f$accessEmail,
     #accessPw: _f$accessPw,
     #accessToken: _f$accessToken,
-    #sentAt: _f$sentAt,
-    #completedAt: _f$completedAt,
-    #comments: _f$comments,
+    #surveyScheduleId: _f$surveyScheduleId,
+    #createdAt: _f$createdAt,
+    #updatedAt: _f$updatedAt,
   };
 
   static Survey _instantiate(DecodingData data) {
     return Survey(
       id: data.dec(_f$id),
+      name: data.dec(_f$name),
       recipientId: data.dec(_f$recipientId),
       questionnaire: data.dec(_f$questionnaire),
-      recipientName: data.dec(_f$recipientName),
       language: data.dec(_f$language),
-      dueDateAt: data.dec(_f$dueDateAt),
+      dueAt: data.dec(_f$dueAt),
+      completedAt: data.dec(_f$completedAt),
       status: data.dec(_f$status),
       data: data.dec(_f$data),
       accessEmail: data.dec(_f$accessEmail),
       accessPw: data.dec(_f$accessPw),
       accessToken: data.dec(_f$accessToken),
-      sentAt: data.dec(_f$sentAt),
-      completedAt: data.dec(_f$completedAt),
-      comments: data.dec(_f$comments),
+      surveyScheduleId: data.dec(_f$surveyScheduleId),
+      createdAt: data.dec(_f$createdAt),
+      updatedAt: data.dec(_f$updatedAt),
     );
   }
 
@@ -177,19 +177,20 @@ abstract class SurveyCopyWith<$R, $In extends Survey, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({
     String? id,
+    String? name,
     String? recipientId,
     SurveyQuestionnaire? questionnaire,
-    String? recipientName,
-    RecipientMainLanguage? language,
-    DateTime? dueDateAt,
+    String? language,
+    String? dueAt,
+    String? completedAt,
     SurveyStatus? status,
-    String? data,
+    Object? data,
     String? accessEmail,
     String? accessPw,
     String? accessToken,
-    DateTime? sentAt,
-    DateTime? completedAt,
-    String? comments,
+    String? surveyScheduleId,
+    String? createdAt,
+    String? updatedAt,
   });
   SurveyCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -203,53 +204,56 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
   @override
   $R call({
     String? id,
+    String? name,
     String? recipientId,
     SurveyQuestionnaire? questionnaire,
-    String? recipientName,
-    RecipientMainLanguage? language,
-    DateTime? dueDateAt,
+    String? language,
+    String? dueAt,
+    Object? completedAt = $none,
     SurveyStatus? status,
-    String? data,
+    Object? data = $none,
     String? accessEmail,
     String? accessPw,
     String? accessToken,
-    Object? sentAt = $none,
-    Object? completedAt = $none,
-    Object? comments = $none,
+    Object? surveyScheduleId = $none,
+    String? createdAt,
+    Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
+      if (name != null) #name: name,
       if (recipientId != null) #recipientId: recipientId,
       if (questionnaire != null) #questionnaire: questionnaire,
-      if (recipientName != null) #recipientName: recipientName,
       if (language != null) #language: language,
-      if (dueDateAt != null) #dueDateAt: dueDateAt,
+      if (dueAt != null) #dueAt: dueAt,
+      if (completedAt != $none) #completedAt: completedAt,
       if (status != null) #status: status,
-      if (data != null) #data: data,
+      if (data != $none) #data: data,
       if (accessEmail != null) #accessEmail: accessEmail,
       if (accessPw != null) #accessPw: accessPw,
       if (accessToken != null) #accessToken: accessToken,
-      if (sentAt != $none) #sentAt: sentAt,
-      if (completedAt != $none) #completedAt: completedAt,
-      if (comments != $none) #comments: comments,
+      if (surveyScheduleId != $none) #surveyScheduleId: surveyScheduleId,
+      if (createdAt != null) #createdAt: createdAt,
+      if (updatedAt != $none) #updatedAt: updatedAt,
     }),
   );
   @override
   Survey $make(CopyWithData data) => Survey(
     id: data.get(#id, or: $value.id),
+    name: data.get(#name, or: $value.name),
     recipientId: data.get(#recipientId, or: $value.recipientId),
     questionnaire: data.get(#questionnaire, or: $value.questionnaire),
-    recipientName: data.get(#recipientName, or: $value.recipientName),
     language: data.get(#language, or: $value.language),
-    dueDateAt: data.get(#dueDateAt, or: $value.dueDateAt),
+    dueAt: data.get(#dueAt, or: $value.dueAt),
+    completedAt: data.get(#completedAt, or: $value.completedAt),
     status: data.get(#status, or: $value.status),
     data: data.get(#data, or: $value.data),
     accessEmail: data.get(#accessEmail, or: $value.accessEmail),
     accessPw: data.get(#accessPw, or: $value.accessPw),
     accessToken: data.get(#accessToken, or: $value.accessToken),
-    sentAt: data.get(#sentAt, or: $value.sentAt),
-    completedAt: data.get(#completedAt, or: $value.completedAt),
-    comments: data.get(#comments, or: $value.comments),
+    surveyScheduleId: data.get(#surveyScheduleId, or: $value.surveyScheduleId),
+    createdAt: data.get(#createdAt, or: $value.createdAt),
+    updatedAt: data.get(#updatedAt, or: $value.updatedAt),
   );
 
   @override

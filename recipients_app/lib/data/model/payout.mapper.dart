@@ -14,6 +14,8 @@ class PayoutMapper extends ClassMapperBase<Payout> {
   static PayoutMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PayoutMapper._());
+      CurrencyMapper.ensureInitialized();
+      PayoutStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -23,26 +25,29 @@ class PayoutMapper extends ClassMapperBase<Payout> {
 
   static String _$id(Payout v) => v.id;
   static const Field<Payout, String> _f$id = Field('id', _$id);
-  static double _$amount(Payout v) => v.amount;
-  static const Field<Payout, double> _f$amount = Field('amount', _$amount);
+  static int _$amount(Payout v) => v.amount;
+  static const Field<Payout, int> _f$amount = Field('amount', _$amount);
   static double? _$amountChf(Payout v) => v.amountChf;
   static const Field<Payout, double> _f$amountChf = Field(
     'amountChf',
     _$amountChf,
     opt: true,
   );
-  static String _$currency(Payout v) => v.currency;
-  static const Field<Payout, String> _f$currency = Field(
+  static Currency _$currency(Payout v) => v.currency;
+  static const Field<Payout, Currency> _f$currency = Field(
     'currency',
     _$currency,
   );
-  static DateTime _$paymentAt(Payout v) => v.paymentAt;
-  static const Field<Payout, DateTime> _f$paymentAt = Field(
+  static String _$paymentAt(Payout v) => v.paymentAt;
+  static const Field<Payout, String> _f$paymentAt = Field(
     'paymentAt',
     _$paymentAt,
   );
-  static String _$status(Payout v) => v.status;
-  static const Field<Payout, String> _f$status = Field('status', _$status);
+  static PayoutStatus _$status(Payout v) => v.status;
+  static const Field<Payout, PayoutStatus> _f$status = Field(
+    'status',
+    _$status,
+  );
   static String? _$phoneNumber(Payout v) => v.phoneNumber;
   static const Field<Payout, String> _f$phoneNumber = Field(
     'phoneNumber',
@@ -151,11 +156,11 @@ abstract class PayoutCopyWith<$R, $In extends Payout, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({
     String? id,
-    double? amount,
+    int? amount,
     double? amountChf,
-    String? currency,
-    DateTime? paymentAt,
-    String? status,
+    Currency? currency,
+    String? paymentAt,
+    PayoutStatus? status,
     String? phoneNumber,
     String? comments,
     String? recipientId,
@@ -174,11 +179,11 @@ class _PayoutCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Payout, $Out>
   @override
   $R call({
     String? id,
-    double? amount,
+    int? amount,
     Object? amountChf = $none,
-    String? currency,
-    DateTime? paymentAt,
-    String? status,
+    Currency? currency,
+    String? paymentAt,
+    PayoutStatus? status,
     Object? phoneNumber = $none,
     Object? comments = $none,
     String? recipientId,

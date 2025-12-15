@@ -14,6 +14,7 @@ class NextPaymentDataMapper extends ClassMapperBase<NextPaymentData> {
   static NextPaymentDataMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = NextPaymentDataMapper._());
+      CurrencyMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -26,8 +27,8 @@ class NextPaymentDataMapper extends ClassMapperBase<NextPaymentData> {
     'amount',
     _$amount,
   );
-  static String _$currency(NextPaymentData v) => v.currency;
-  static const Field<NextPaymentData, String> _f$currency = Field(
+  static Currency _$currency(NextPaymentData v) => v.currency;
+  static const Field<NextPaymentData, Currency> _f$currency = Field(
     'currency',
     _$currency,
   );
@@ -114,7 +115,7 @@ extension NextPaymentDataValueCopy<$R, $Out>
 
 abstract class NextPaymentDataCopyWith<$R, $In extends NextPaymentData, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? amount, String? currency, int? daysToPayment});
+  $R call({int? amount, Currency? currency, int? daysToPayment});
   NextPaymentDataCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -129,7 +130,7 @@ class _NextPaymentDataCopyWithImpl<$R, $Out>
   late final ClassMapperBase<NextPaymentData> $mapper =
       NextPaymentDataMapper.ensureInitialized();
   @override
-  $R call({int? amount, String? currency, int? daysToPayment}) => $apply(
+  $R call({int? amount, Currency? currency, int? daysToPayment}) => $apply(
     FieldCopyWithData({
       if (amount != null) #amount: amount,
       if (currency != null) #currency: currency,

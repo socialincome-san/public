@@ -1,9 +1,38 @@
-import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/datasource/survey_data_source.dart";
-import "package:app/data/models/survey/survey.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
+import "package:app/data/model/survey/survey.dart";
+import "package:firebase_auth/firebase_auth.dart";
+import "package:http/http.dart" as http;
 
-const String surveyCollection = "surveys";
+class SurveyRemoteDataSource implements SurveyDataSource {
+  final String baseUrl;
+  final http.Client httpClient;
+  final FirebaseAuth firebaseAuth;
+
+  const SurveyRemoteDataSource({
+    required this.baseUrl,
+    required this.httpClient,
+    required this.firebaseAuth,
+  });
+
+  /// curl http://localhost:3001/api/v1/recipients/me/surveys
+  @override
+  Future<List<Survey>> fetchSurveys({required String recipientId}) async {
+    final uri = Uri.parse("$baseUrl/api/v1/recipients/me/surveys");
+
+    final response = await httpClient.get(uri);
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to fetch surveys: ${response.statusCode}");
+    }
+
+    // TODO: backend currently only returns a single survey item
+    // return SurveyMapper.fromJson(response.body);
+
+    return [];
+  }
+}
+
+/* const String surveyCollection = "surveys";
 
 class SurveyRemoteDataSource implements SurveyDataSource {
   final FirebaseFirestore firestore;
@@ -37,3 +66,4 @@ class SurveyRemoteDataSource implements SurveyDataSource {
     return surveys;
   }
 }
+ */

@@ -1,5 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/models/recipient.dart";
+import "package:app/data/model/recipient.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
@@ -64,7 +64,7 @@ class _MainAppPageState extends State<MainAppPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "+${recipient?.mobileMoneyPhone?.phone}",
+                      "+${recipient?.contact.phone?.number}",
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: AppColors.primaryColor,
                       ),
@@ -83,12 +83,12 @@ class _MainAppPageState extends State<MainAppPage> {
   }
 
   String _getName(Recipient? recipient) {
-    final preferredName = recipient?.callingName;
+    final preferredName = recipient?.contact.callingName;
     var name = "";
     if (preferredName != null && preferredName.isNotEmpty) {
       name = preferredName;
     } else {
-      name = recipient?.user.firstName ?? "";
+      name = recipient?.contact.firstName ?? "";
     }
 
     return name;

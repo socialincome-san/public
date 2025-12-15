@@ -1,3 +1,5 @@
+import "package:app/data/enums/gender.dart";
+import "package:app/data/model/language_code.dart";
 import "package:app/data/model/phone.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
@@ -13,8 +15,8 @@ class Contact with ContactMappable {
   final String? phoneId;
   final Phone? phone;
   final String? email;
-  final String? gender;
-  final String? language;
+  final Gender? gender;
+  final LanguageCode? language;
   final String? dateOfBirth;
   final String? profession;
   final bool isInstitution;

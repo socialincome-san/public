@@ -14,7 +14,7 @@ class MappedPaymentMapper extends ClassMapperBase<MappedPayment> {
   static MappedPaymentMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = MappedPaymentMapper._());
-      SocialIncomePaymentMapper.ensureInitialized();
+      PayoutMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -22,8 +22,8 @@ class MappedPaymentMapper extends ClassMapperBase<MappedPayment> {
   @override
   final String id = 'MappedPayment';
 
-  static SocialIncomePayment _$payment(MappedPayment v) => v.payment;
-  static const Field<MappedPayment, SocialIncomePayment> _f$payment = Field(
+  static Payout _$payment(MappedPayment v) => v.payment;
+  static const Field<MappedPayment, Payout> _f$payment = Field(
     'payment',
     _$payment,
   );
@@ -108,9 +108,8 @@ extension MappedPaymentValueCopy<$R, $Out>
 
 abstract class MappedPaymentCopyWith<$R, $In extends MappedPayment, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  SocialIncomePaymentCopyWith<$R, SocialIncomePayment, SocialIncomePayment>
-  get payment;
-  $R call({SocialIncomePayment? payment, PaymentUiStatus? uiStatus});
+  PayoutCopyWith<$R, Payout, Payout> get payment;
+  $R call({Payout? payment, PaymentUiStatus? uiStatus});
   MappedPaymentCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -123,10 +122,10 @@ class _MappedPaymentCopyWithImpl<$R, $Out>
   late final ClassMapperBase<MappedPayment> $mapper =
       MappedPaymentMapper.ensureInitialized();
   @override
-  SocialIncomePaymentCopyWith<$R, SocialIncomePayment, SocialIncomePayment>
-  get payment => $value.payment.copyWith.$chain((v) => call(payment: v));
+  PayoutCopyWith<$R, Payout, Payout> get payment =>
+      $value.payment.copyWith.$chain((v) => call(payment: v));
   @override
-  $R call({SocialIncomePayment? payment, PaymentUiStatus? uiStatus}) => $apply(
+  $R call({Payout? payment, PaymentUiStatus? uiStatus}) => $apply(
     FieldCopyWithData({
       if (payment != null) #payment: payment,
       if (uiStatus != null) #uiStatus: uiStatus,

@@ -1,13 +1,15 @@
 import "dart:async";
 
+import "package:app/data/datasource/demo/user_demo_data_source.dart";
+import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/datasource/user_data_source.dart";
-import "package:app/data/models/models.dart";
+import "package:app/data/model/recipient.dart";
 import "package:app/demo_manager.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
 class UserRepository {
-  final UserDataSource remoteDataSource;
-  final UserDataSource demoDataSource;
+  final UserRemoteDataSource remoteDataSource;
+  final UserDemoDataSource demoDataSource;
   final DemoManager demoManager;
 
   const UserRepository({

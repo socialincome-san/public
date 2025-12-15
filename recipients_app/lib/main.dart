@@ -1,8 +1,8 @@
 import "package:app/core/helpers/custom_bloc_observer.dart";
-import "package:app/data/datasource/demo/payment_demo_data_source.dart";
+import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/remote/payment_remote_data_source.dart";
+import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
@@ -12,7 +12,6 @@ import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/data/services/twilio_otp_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
@@ -53,7 +52,6 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
     appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
   );
 
-  final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
   final messaging = FirebaseMessaging.instance;
   final demoManager = DemoManager();
@@ -77,15 +75,24 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   );
 
   final userRemoteDataSource = UserRemoteDataSource(
-    firestore: firestore,
     firebaseAuth: firebaseAuth,
+    baseUrl: baseUrl,
+    httpClient: httpClient,
   );
   final userDemoDataSource = UserDemoDataSource();
 
-  final paymentRemoteDataSource = PaymentRemoteDataSource(firestore: firestore);
-  final paymentDemoDataSource = PaymentDemoDataSource();
+  final paymentRemoteDataSource = PayoutRemoteDataSource(
+    baseUrl: baseUrl,
+    httpClient: httpClient,
+    firebaseAuth: firebaseAuth,
+  );
+  final paymentDemoDataSource = PayoutDemoDataSource();
 
-  final surveyRemoteDataSource = SurveyRemoteDataSource(firestore: firestore);
+  final surveyRemoteDataSource = SurveyRemoteDataSource(
+    baseUrl: baseUrl,
+    httpClient: httpClient,
+    firebaseAuth: firebaseAuth,
+  );
   final surveyDemoDataSource = SurveyDemoDataSource();
 
   // final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);

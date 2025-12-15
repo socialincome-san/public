@@ -14,6 +14,7 @@ class ProgramMapper extends ClassMapperBase<Program> {
   static ProgramMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProgramMapper._());
+      CurrencyMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -32,8 +33,8 @@ class ProgramMapper extends ClassMapperBase<Program> {
     'payoutAmount',
     _$payoutAmount,
   );
-  static String _$payoutCurrency(Program v) => v.payoutCurrency;
-  static const Field<Program, String> _f$payoutCurrency = Field(
+  static Currency _$payoutCurrency(Program v) => v.payoutCurrency;
+  static const Field<Program, Currency> _f$payoutCurrency = Field(
     'payoutCurrency',
     _$payoutCurrency,
   );
@@ -155,7 +156,7 @@ abstract class ProgramCopyWith<$R, $In extends Program, $Out>
     String? name,
     String? country,
     double? payoutAmount,
-    String? payoutCurrency,
+    Currency? payoutCurrency,
     int? payoutInterval,
     int? totalPayments,
     String? ownerOrganizationId,
@@ -179,7 +180,7 @@ class _ProgramCopyWithImpl<$R, $Out>
     String? name,
     String? country,
     double? payoutAmount,
-    String? payoutCurrency,
+    Currency? payoutCurrency,
     int? payoutInterval,
     int? totalPayments,
     String? ownerOrganizationId,

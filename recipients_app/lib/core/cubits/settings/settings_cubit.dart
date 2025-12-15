@@ -1,4 +1,4 @@
-import "package:app/data/models/language_code.dart";
+import "package:app/data/model/language_code.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";

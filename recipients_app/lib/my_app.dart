@@ -1,9 +1,9 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
-import "package:app/data/datasource/demo/payment_demo_data_source.dart";
+import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/remote/payment_remote_data_source.dart";
+import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/models/app_version_info.dart";
@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
   final UserRemoteDataSource userRemoteDataSource;
   final UserDemoDataSource userDemoDataSource;
 
-  final PaymentRemoteDataSource paymentRemoteDataSource;
-  final PaymentDemoDataSource paymentDemoDataSource;
+  final PayoutRemoteDataSource paymentRemoteDataSource;
+  final PayoutDemoDataSource paymentDemoDataSource;
 
   final SurveyRemoteDataSource surveyRemoteDataSource;
   final SurveyDemoDataSource surveyDemoDataSource;
@@ -156,11 +156,12 @@ class _App extends StatelessWidget {
           listener: (context, state) {
             if (state.status == AuthStatus.authenticated) {
               // change language to the user's preferred language
-              final selectedLanguage = state.recipient?.selectedLanguage;
+              // TODO(migration): doesnt exist in backend currently
+              /* final selectedLanguage = state.recipient?.selectedLanguage;
 
               if (selectedLanguage != null) {
                 context.read<SettingsCubit>().changeLanguage(selectedLanguage);
-              }
+              } */
             }
           },
           builder: (context, state) {

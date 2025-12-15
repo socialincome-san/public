@@ -6,10 +6,9 @@ part "payment_information.mapper.dart";
 class PaymentInformation with PaymentInformationMappable {
   final String id;
 
+  // TODO: check this if it cant be paymentProvider
   final String provider;
-
   final String code;
-
   final String phoneId;
 
   // TODO: check this if it cant be phone
