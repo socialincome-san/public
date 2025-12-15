@@ -12,7 +12,10 @@ export default async function Page({ params }: DefaultPageProps) {
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
 	const newsletterSubscription = await getActiveSubscription();
-	const newsletterSubscribed = newsletterSubscription !== null && newsletterSubscription.status == 'subscribed';
+	const newsletterSubscribed =
+		newsletterSubscription.success &&
+		newsletterSubscription.data !== null &&
+		newsletterSubscription.data.status === 'subscribed';
 
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,

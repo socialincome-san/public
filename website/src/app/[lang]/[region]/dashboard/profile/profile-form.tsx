@@ -108,6 +108,30 @@ export function ProfileForm({
 		return lang && mainWebsiteLanguages.includes(lang as WebsiteLanguage) ? (lang as SupportedLanguage) : 'en';
 	};
 
+	const toggleNewsletterSubscription = async (
+		email: string,
+		firstName: string,
+		lastName: string,
+		language: string,
+		newsletter: boolean | undefined,
+	) => {
+		let result;
+		if (newsletter === isNewsletterSubscribed || !email) return;
+		if (newsletter) {
+			result = await subscribeToNewsletter({
+				email: email,
+				firstname: firstName || undefined,
+				lastname: lastName || undefined,
+				language: getNewsletterLanguage(language),
+				country: contributor.country as CountryCode,
+				isContributor: true,
+			});
+		} else {
+			result = await unsubscribeFromNewsletter();
+		}
+		return result;
+	};
+
 	const onSubmit = (values: FormSchema) => {
 		setErrorMessage('');
 
@@ -148,22 +172,8 @@ export function ProfileForm({
 				},
 			};
 
-			try {
-				if (newsletter !== isNewsletterSubscribed && contributor.email) {
-					if (newsletter) {
-						await subscribeToNewsletter({
-							email: contributor.email,
-							firstname: contributor.firstName || undefined,
-							lastname: contributor.lastName || undefined,
-							language: getNewsletterLanguage(language),
-							country: contributor.country as CountryCode,
-							isContributor: true,
-						});
-					} else {
-						await unsubscribeFromNewsletter();
-					}
-				}
-			} catch (error) {
+			const newsletterResult = await toggleNewsletterSubscription(email, firstName, lastName, language, newsletter);
+			if (newsletterResult && !newsletterResult.success) {
 				setErrorMessage(translations.updateError);
 				return;
 			}

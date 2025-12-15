@@ -1,6 +1,7 @@
 import { CountryCode } from '@/lib/types/country';
 import { Client } from '@sendgrid/client';
 import { ContributorSession } from '../contributor/contributor.types';
+import { ServiceResult } from '../core/base.types';
 import {
 	CreateNewsletterSubscription,
 	NewsletterSubscriptionData,
@@ -14,6 +15,14 @@ export class SendgridSubscriptionService extends Client {
 	listId: string;
 	suppressionListId: number; // unsubscribe group id
 
+	protected resultOk<T>(data: T, status?: number): ServiceResult<T> {
+		return { success: true, data, status };
+	}
+
+	protected resultFail<T = never>(error: string, status?: number): ServiceResult<T> {
+		return { success: false, error, status };
+	}
+
 	constructor() {
 		super();
 		const env: SendgridClientProps = this.validateSendgridEnvVars();
@@ -22,30 +31,33 @@ export class SendgridSubscriptionService extends Client {
 		this.suppressionListId = env.SENDGRID_SUPPRESSION_LIST_ID;
 	}
 
-	getActiveSubscription = async (contributor: ContributorSession): Promise<SendgridContactType | null> => {
+	getActiveSubscription = async (
+		contributor: ContributorSession,
+	): Promise<ServiceResult<SendgridContactType | null>> => {
 		try {
 			if (!contributor.email) {
-				throw new Error('Email missing in contributor');
+				return this.resultFail('Email missing in contributor');
 			}
 			const subscriber = await this.getContact(contributor.email);
-			return subscriber;
+			return this.resultOk(subscriber);
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
-	subscribeToNewsletter = async (subscription: CreateNewsletterSubscription) => {
+	subscribeToNewsletter = async (subscription: CreateNewsletterSubscription): Promise<ServiceResult<void>> => {
 		try {
 			await this.upsertSubscription({ ...subscription, status: 'subscribed' });
+			return this.resultOk(undefined);
 		} catch (error: any) {
-			throw new Error(error);
+			return this.resultFail(error);
 		}
 	};
 
-	unsubscribeFromNewsletter = async (contributor: ContributorSession) => {
+	unsubscribeFromNewsletter = async (contributor: ContributorSession): Promise<ServiceResult<void>> => {
 		try {
 			if (!contributor.email) {
-				throw new Error('Email missing contributor');
+				return this.resultFail('Email missing contributor');
 			}
 			await this.upsertSubscription({
 				firstname: contributor.firstName || '',
@@ -55,8 +67,9 @@ export class SendgridSubscriptionService extends Client {
 				language: (contributor.language || 'de') as SupportedLanguage,
 				country: (contributor.country || 'CH') as CountryCode,
 			});
+			return this.resultOk(undefined);
 		} catch (error: any) {
-			throw new Error(error);
+			return this.resultFail(error);
 		}
 	};
 
