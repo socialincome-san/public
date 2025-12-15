@@ -49,13 +49,13 @@ class PaymentFilesImportResultMapper
     _$metadata,
     opt: true,
   );
-  static DateTime _$createdAt(PaymentFilesImportResult v) => v.createdAt;
-  static const Field<PaymentFilesImportResult, DateTime> _f$createdAt = Field(
+  static String _$createdAt(PaymentFilesImportResult v) => v.createdAt;
+  static const Field<PaymentFilesImportResult, String> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
   );
-  static DateTime? _$updatedAt(PaymentFilesImportResult v) => v.updatedAt;
-  static const Field<PaymentFilesImportResult, DateTime> _f$updatedAt = Field(
+  static String? _$updatedAt(PaymentFilesImportResult v) => v.updatedAt;
+  static const Field<PaymentFilesImportResult, String> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
@@ -160,8 +160,8 @@ abstract class PaymentFilesImportResultCopyWith<
     String? type,
     String? transactionId,
     String? metadata,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    String? createdAt,
+    String? updatedAt,
   });
   PaymentFilesImportResultCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -184,7 +184,7 @@ class _PaymentFilesImportResultCopyWithImpl<$R, $Out>
     String? type,
     String? transactionId,
     Object? metadata = $none,
-    DateTime? createdAt,
+    String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

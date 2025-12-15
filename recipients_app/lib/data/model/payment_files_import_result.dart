@@ -14,9 +14,8 @@ class PaymentFilesImportResult with PaymentFilesImportResultMappable {
 
   final String? metadata;
 
-  final DateTime createdAt;
-
-  final DateTime? updatedAt;
+  final String createdAt;
+  final String? updatedAt;
 
   const PaymentFilesImportResult({
     required this.id,

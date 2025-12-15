@@ -60,13 +60,13 @@ class PayoutMapper extends ClassMapperBase<Payout> {
     'recipientId',
     _$recipientId,
   );
-  static DateTime _$createdAt(Payout v) => v.createdAt;
-  static const Field<Payout, DateTime> _f$createdAt = Field(
+  static String _$createdAt(Payout v) => v.createdAt;
+  static const Field<Payout, String> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
   );
-  static DateTime? _$updatedAt(Payout v) => v.updatedAt;
-  static const Field<Payout, DateTime> _f$updatedAt = Field(
+  static String? _$updatedAt(Payout v) => v.updatedAt;
+  static const Field<Payout, String> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
@@ -159,8 +159,8 @@ abstract class PayoutCopyWith<$R, $In extends Payout, $Out>
     String? phoneNumber,
     String? comments,
     String? recipientId,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    String? createdAt,
+    String? updatedAt,
   });
   PayoutCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -182,7 +182,7 @@ class _PayoutCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Payout, $Out>
     Object? phoneNumber = $none,
     Object? comments = $none,
     String? recipientId,
-    DateTime? createdAt,
+    String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

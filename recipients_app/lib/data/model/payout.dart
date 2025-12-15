@@ -22,9 +22,8 @@ class Payout with PayoutMappable {
 
   final String recipientId;
 
-  final DateTime createdAt;
-
-  final DateTime? updatedAt;
+  final String createdAt;
+  final String? updatedAt;
 
   const Payout({
     required this.id,

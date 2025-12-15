@@ -52,8 +52,8 @@ class ProgramMapper extends ClassMapperBase<Program> {
     'ownerOrganizationId',
     _$ownerOrganizationId,
   );
-  static DateTime _$createdAt(Program v) => v.createdAt;
-  static const Field<Program, DateTime> _f$createdAt = Field(
+  static String _$createdAt(Program v) => v.createdAt;
+  static const Field<Program, String> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
   );
@@ -159,7 +159,7 @@ abstract class ProgramCopyWith<$R, $In extends Program, $Out>
     int? payoutInterval,
     int? totalPayments,
     String? ownerOrganizationId,
-    DateTime? createdAt,
+    String? createdAt,
     String? updatedAt,
   });
   ProgramCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -183,7 +183,7 @@ class _ProgramCopyWithImpl<$R, $Out>
     int? payoutInterval,
     int? totalPayments,
     String? ownerOrganizationId,
-    DateTime? createdAt,
+    String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

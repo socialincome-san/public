@@ -20,7 +20,7 @@ class Program with ProgramMappable {
 
   final String ownerOrganizationId;
 
-  final DateTime createdAt;
+  final String createdAt;
   final String? updatedAt;
 
   const Program({
