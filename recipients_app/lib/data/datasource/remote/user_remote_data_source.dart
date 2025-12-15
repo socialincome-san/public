@@ -1,5 +1,5 @@
 import "package:app/data/datasource/user_data_source.dart";
-import "package:app/data/model/recipient.dart";
+import "package:app/data/models/recipient.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:http/http.dart" as http;
 

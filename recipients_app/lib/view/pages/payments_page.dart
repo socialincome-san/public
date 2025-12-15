@@ -1,7 +1,7 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/enums/payout_status.dart";
-import "package:app/data/models/models.dart";
+import "package:app/data/models/payment/payment.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payment_tile.dart";

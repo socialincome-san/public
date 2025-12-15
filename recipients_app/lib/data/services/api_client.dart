@@ -1,5 +1,5 @@
-import "package:app/data/model/api/verify_otp_request.dart";
-import "package:app/data/model/api/verify_otp_response.dart";
+import "package:app/data/models/api/verify_otp_request.dart";
+import "package:app/data/models/api/verify_otp_response.dart";
 import "package:http/http.dart" as http;
 
 class ApiClient {

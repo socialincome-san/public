@@ -1,9 +1,9 @@
 import "package:alchemist/alchemist.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/enums/payout_status.dart";
-import "package:app/data/model/currency.dart";
-import "package:app/data/model/payout.dart";
+import "package:app/data/models/currency.dart";
 import "package:app/data/models/payment/payment.dart";
+import "package:app/data/models/payment/payout.dart";
 import "package:app/view/widgets/income/income.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mocktail/mocktail.dart";

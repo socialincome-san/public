@@ -1,4 +1,4 @@
-import "package:app/data/model/currency.dart";
+import "package:app/data/models/currency.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "program.mapper.dart";

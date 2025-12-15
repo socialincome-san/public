@@ -1,8 +1,8 @@
 import "package:app/data/enums/recipient_status.dart";
-import "package:app/data/model/contact.dart";
-import "package:app/data/model/local_partner.dart";
-import "package:app/data/model/payment_information.dart";
-import "package:app/data/model/program.dart";
+import "package:app/data/models/contact.dart";
+import "package:app/data/models/local_partner.dart";
+import "package:app/data/models/payment_information.dart";
+import "package:app/data/models/program.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "recipient.mapper.dart";

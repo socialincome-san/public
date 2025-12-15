@@ -1,4 +1,4 @@
-import "package:app/data/model/local_partner.dart";
+import "package:app/data/models/local_partner.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";

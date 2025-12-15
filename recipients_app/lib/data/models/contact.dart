@@ -1,6 +1,6 @@
 import "package:app/data/enums/gender.dart";
-import "package:app/data/model/language_code.dart";
-import "package:app/data/model/phone.dart";
+import "package:app/data/models/language_code.dart";
+import "package:app/data/models/phone.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "contact.mapper.dart";

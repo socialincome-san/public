@@ -1,7 +1,7 @@
 import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/payout_data_source.dart";
 import "package:app/data/datasource/remote/payout_remote_data_source.dart";
-import "package:app/data/model/payout.dart";
+import "package:app/data/models/payment/payout.dart";
 import "package:app/demo_manager.dart";
 
 class PaymentRepository {

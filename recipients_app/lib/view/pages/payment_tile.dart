@@ -1,4 +1,4 @@
-import "package:app/data/models/models.dart";
+import "package:app/data/models/payment/payment.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/icons/payment_status_icon_with_text.dart";

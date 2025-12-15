@@ -1,5 +1,6 @@
 import "package:app/core/cubits/survey/survey_cubit.dart";
-import "package:app/data/models/models.dart";
+import "package:app/data/models/survey/mapped_survey.dart";
+import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
@@ -43,8 +44,8 @@ class SurveysOverviewCard extends DashboardItem {
                           Text(
                             context.l10n.mySurveysTitle,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.black,
-                                ),
+                              color: Colors.black,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -53,8 +54,8 @@ class SurveysOverviewCard extends DashboardItem {
                               mappedSurveys.length,
                             ),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: AppColors.darkGrey,
-                                ),
+                              color: AppColors.darkGrey,
+                            ),
                           ),
                         ],
                       ),

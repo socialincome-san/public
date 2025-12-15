@@ -1,4 +1,4 @@
-import "package:app/data/model/recipient.dart";
+import "package:app/data/models/recipient.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
 abstract class UserDataSource {

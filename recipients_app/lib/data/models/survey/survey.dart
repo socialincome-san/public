@@ -1,5 +1,5 @@
-import "package:app/data/model/survey/survey_questionnaire.dart";
-import "package:app/data/model/survey/survey_status.dart";
+import "package:app/data/models/survey/survey_questionnaire.dart";
+import "package:app/data/models/survey/survey_status.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "survey.mapper.dart";

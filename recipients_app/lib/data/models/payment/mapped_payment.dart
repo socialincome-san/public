@@ -1,5 +1,5 @@
-import "package:app/data/model/payout.dart";
 import "package:app/data/models/payment/payment.dart";
+import "package:app/data/models/payment/payout.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "mapped_payment.mapper.dart";

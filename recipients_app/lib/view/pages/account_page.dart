@@ -3,8 +3,8 @@ import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/enums/gender.dart";
-import "package:app/data/model/language_code.dart";
-import "package:app/data/model/recipient.dart";
+import "package:app/data/models/language_code.dart";
+import "package:app/data/models/recipient.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
@@ -353,7 +353,7 @@ class AccountPageState extends State<AccountPage> {
                       child: Text("Africell Money"),
                     ),
                   ],
-                  value: recipient.paymentInformation?.provider,
+                  value: recipient.paymentInformation?.provider.name,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return context.l10n.paymentProviderError;

@@ -18,7 +18,7 @@ class FirebaseRemoteConfigService {
   const FirebaseRemoteConfigService({
     required this.firebaseRemoteConfig,
     required this.packageInfo,
-    required this.crashReportingRepository, 
+    required this.crashReportingRepository,
     this.minimumFetchInterval = const Duration(hours: 1),
   });
 

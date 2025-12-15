@@ -1,5 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/model/recipient.dart";
+import "package:app/data/models/recipient.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";

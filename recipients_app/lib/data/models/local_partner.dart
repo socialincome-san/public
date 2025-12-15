@@ -1,4 +1,4 @@
-import "package:app/data/model/contact.dart";
+import "package:app/data/models/contact.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "local_partner.mapper.dart";

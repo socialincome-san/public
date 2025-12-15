@@ -1,3 +1,5 @@
+import "package:app/data/enums/payment_provider.dart";
+import "package:app/data/models/phone.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "payment_information.mapper.dart";
@@ -6,13 +8,11 @@ part "payment_information.mapper.dart";
 class PaymentInformation with PaymentInformationMappable {
   final String id;
 
-  // TODO: check this if it cant be paymentProvider
-  final String provider;
+  final PaymentProvider provider;
   final String code;
   final String phoneId;
 
-  // TODO: check this if it cant be phone
-  final Object phone;
+  final Phone phone;
 
   final String createdAt;
   final String? updatedAt;

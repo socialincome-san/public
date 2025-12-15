@@ -41,7 +41,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       // TODO: currently payment phone number is used for login, we need to switch that
       // final paymentPhoneNumber = recipient.mobileMoneyPhone;
       // final contactPhoneNumber = recipient.communicationMobilePhone;
-      final paymentPhoneNumber = recipient.contact.phone?.number;
+      // final paymentPhoneNumber = recipient.contact.phone?.number;
 
       // TODO(migration): check if there are multiple phone numbers or if this was removed
       /* if (paymentPhoneNumber == null && contactPhoneNumber != null) {

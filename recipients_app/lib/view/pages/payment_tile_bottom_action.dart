@@ -18,7 +18,8 @@ class PaymentTileBottomAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foregroundColor = _getForegroundColor(mappedPayment.uiStatus);
-    final isContested = mappedPayment.uiStatus == PaymentUiStatus.contested ||
+    final isContested =
+        mappedPayment.uiStatus == PaymentUiStatus.contested ||
         mappedPayment.uiStatus == PaymentUiStatus.onHoldContested;
 
     return Container(

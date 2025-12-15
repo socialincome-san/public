@@ -1,5 +1,5 @@
 import "package:app/data/datasource/payout_data_source.dart";
-import "package:app/data/model/payout.dart";
+import "package:app/data/models/payment/payout.dart";
 
 class PayoutDemoDataSource implements PayoutDataSource {
   @override

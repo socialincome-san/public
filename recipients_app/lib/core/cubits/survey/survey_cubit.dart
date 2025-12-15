@@ -1,8 +1,8 @@
-import "package:app/data/model/recipient.dart";
-import "package:app/data/model/survey/mapped_survey.dart";
-import "package:app/data/model/survey/survey.dart";
-import "package:app/data/model/survey/survey_card_status.dart";
-import "package:app/data/model/survey/survey_status.dart";
+import "package:app/data/models/recipient.dart";
+import "package:app/data/models/survey/mapped_survey.dart";
+import "package:app/data/models/survey/survey.dart";
+import "package:app/data/models/survey/survey_card_status.dart";
+import "package:app/data/models/survey/survey_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
 import "package:collection/collection.dart";

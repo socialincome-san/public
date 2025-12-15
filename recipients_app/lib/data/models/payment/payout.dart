@@ -1,5 +1,5 @@
 import "package:app/data/enums/payout_status.dart";
-import "package:app/data/model/currency.dart";
+import "package:app/data/models/currency.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "payout.mapper.dart";

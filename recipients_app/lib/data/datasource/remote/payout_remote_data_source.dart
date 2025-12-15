@@ -1,7 +1,7 @@
 import "dart:convert";
 
 import "package:app/data/datasource/payout_data_source.dart";
-import "package:app/data/model/payout.dart";
+import "package:app/data/models/payment/payout.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:http/http.dart" as http;
 

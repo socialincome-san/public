@@ -1,4 +1,4 @@
-import "package:app/data/model/payout.dart";
+import "package:app/data/models/payment/payout.dart";
 
 abstract class PayoutDataSource {
   Future<List<Payout>> fetchPayouts();

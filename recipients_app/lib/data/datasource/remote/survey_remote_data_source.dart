@@ -1,5 +1,5 @@
 import "package:app/data/datasource/survey_data_source.dart";
-import "package:app/data/model/survey/survey.dart";
+import "package:app/data/models/survey/survey.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:http/http.dart" as http;
 

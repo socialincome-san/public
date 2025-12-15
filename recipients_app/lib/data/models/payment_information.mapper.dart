@@ -14,6 +14,8 @@ class PaymentInformationMapper extends ClassMapperBase<PaymentInformation> {
   static PaymentInformationMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PaymentInformationMapper._());
+      PaymentProviderMapper.ensureInitialized();
+      PhoneMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -23,8 +25,8 @@ class PaymentInformationMapper extends ClassMapperBase<PaymentInformation> {
 
   static String _$id(PaymentInformation v) => v.id;
   static const Field<PaymentInformation, String> _f$id = Field('id', _$id);
-  static String _$provider(PaymentInformation v) => v.provider;
-  static const Field<PaymentInformation, String> _f$provider = Field(
+  static PaymentProvider _$provider(PaymentInformation v) => v.provider;
+  static const Field<PaymentInformation, PaymentProvider> _f$provider = Field(
     'provider',
     _$provider,
   );
@@ -38,8 +40,8 @@ class PaymentInformationMapper extends ClassMapperBase<PaymentInformation> {
     'phoneId',
     _$phoneId,
   );
-  static Object _$phone(PaymentInformation v) => v.phone;
-  static const Field<PaymentInformation, Object> _f$phone = Field(
+  static Phone _$phone(PaymentInformation v) => v.phone;
+  static const Field<PaymentInformation, Phone> _f$phone = Field(
     'phone',
     _$phone,
   );
@@ -149,12 +151,13 @@ abstract class PaymentInformationCopyWith<
   $Out
 >
     implements ClassCopyWith<$R, $In, $Out> {
+  PhoneCopyWith<$R, Phone, Phone> get phone;
   $R call({
     String? id,
-    String? provider,
+    PaymentProvider? provider,
     String? code,
     String? phoneId,
-    Object? phone,
+    Phone? phone,
     String? createdAt,
     String? updatedAt,
   });
@@ -172,12 +175,15 @@ class _PaymentInformationCopyWithImpl<$R, $Out>
   late final ClassMapperBase<PaymentInformation> $mapper =
       PaymentInformationMapper.ensureInitialized();
   @override
+  PhoneCopyWith<$R, Phone, Phone> get phone =>
+      $value.phone.copyWith.$chain((v) => call(phone: v));
+  @override
   $R call({
     String? id,
-    String? provider,
+    PaymentProvider? provider,
     String? code,
     String? phoneId,
-    Object? phone,
+    Phone? phone,
     String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(

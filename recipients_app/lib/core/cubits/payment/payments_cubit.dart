@@ -1,9 +1,9 @@
 import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/enums/payout_status.dart";
-import "package:app/data/model/currency.dart";
-import "package:app/data/model/payout.dart";
-import "package:app/data/model/recipient.dart";
+import "package:app/data/models/currency.dart";
 import "package:app/data/models/payment/payment.dart";
+import "package:app/data/models/payment/payout.dart";
+import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:collection/collection.dart";
 import "package:dart_mappable/dart_mappable.dart";

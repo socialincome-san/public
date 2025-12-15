@@ -2,8 +2,8 @@ import "dart:async";
 import "dart:developer";
 
 import "package:app/data/enums/gender.dart";
-import "package:app/data/model/language_code.dart";
-import "package:app/data/model/recipient.dart";
+import "package:app/data/models/language_code.dart";
+import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:dart_mappable/dart_mappable.dart";

@@ -1,6 +1,6 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/model/payout.dart";
 import "package:app/data/models/payment/payment.dart";
+import "package:app/data/models/payment/payout.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/inputs/input_text_area.dart";
