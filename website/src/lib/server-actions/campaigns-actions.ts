@@ -43,5 +43,5 @@ export async function getProgramsOptions() {
 export async function getCampaignByIdAction(id: string) {
 	const campaignService = new CampaignService();
 
-	return await campaignService.getById(campaignLegacyId);
+	return await campaignService.getById(id);
 }
