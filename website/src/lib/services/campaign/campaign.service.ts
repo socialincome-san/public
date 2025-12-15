@@ -1,3 +1,4 @@
+import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { Campaign } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -132,10 +133,10 @@ export class CampaignService extends BaseService {
 		}
 	}
 
-	async getByLegacyId(campaignLegacyId: string): Promise<ServiceResult<CampaignPage>> {
+	async getById(campaignId: string): Promise<ServiceResult<CampaignPage>> {
 		try {
 			const campaign = await this.db.campaign.findFirst({
-				where: { legacyFirestoreId: campaignLegacyId },
+				where: { OR: [{ legacyFirestoreId: campaignId }, { id: campaignId }] },
 				select: {
 					id: true,
 					title: true,
@@ -235,6 +236,7 @@ export class CampaignService extends BaseService {
 				where: { organizationId },
 				select: {
 					id: true,
+					legacyFirestoreId: true,
 					title: true,
 					description: true,
 					currency: true,
@@ -248,6 +250,7 @@ export class CampaignService extends BaseService {
 
 			const tableRows: CampaignTableViewRow[] = campaigns.map((campaign) => ({
 				id: campaign.id,
+				link: this.getCampaignLink(campaign.id, campaign.legacyFirestoreId),
 				title: campaign.title,
 				description: campaign.description,
 				currency: campaign.currency,
@@ -283,5 +286,10 @@ export class CampaignService extends BaseService {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch default campaign');
 		}
+	}
+
+	private getCampaignLink(id: string, legacyFirestoreId: string | null): string {
+		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${legacyFirestoreId || id}`;
 	}
 }
