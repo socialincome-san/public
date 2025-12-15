@@ -1,4 +1,4 @@
-import "package:app/data/models/survey/mapped_survey.dart";
+import "package:app/data/model/survey/mapped_survey.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";

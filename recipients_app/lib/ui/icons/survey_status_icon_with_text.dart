@@ -1,4 +1,4 @@
-import "package:app/data/models/survey/survey_card_status.dart";
+import "package:app/data/model/survey/survey_card_status.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
