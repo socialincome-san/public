@@ -7,6 +7,7 @@ import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
 import type { ColumnDef } from '@tanstack/react-table';
+import { CopyUrlCell } from '../elements/copy-url-cell';
 
 export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
 	return [
@@ -44,6 +45,11 @@ export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
 			accessorKey: 'createdAt',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'link',
+			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
+			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
 		},
 		{
 			id: 'actions',
