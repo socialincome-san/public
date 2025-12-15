@@ -40,8 +40,8 @@ export async function getProgramsOptions() {
 	return programs;
 }
 
-export async function getCampaignByLegacyIdAction(campaignLegacyId: string) {
+export async function getCampaignByIdAction(campaignLegacyId: string) {
 	const campaignService = new CampaignService();
 
-	return await campaignService.getByLegacyId(campaignLegacyId);
+	return await campaignService.getById(campaignLegacyId);
 }

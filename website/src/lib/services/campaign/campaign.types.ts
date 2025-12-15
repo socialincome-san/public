@@ -2,6 +2,7 @@ import { OrganizationPermission, Prisma } from '@prisma/client';
 
 export type CampaignTableViewRow = {
 	id: string;
+	link: string;
 	title: string;
 	description: string;
 	currency: string;
