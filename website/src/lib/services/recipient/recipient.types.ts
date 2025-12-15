@@ -55,7 +55,7 @@ export type RecipientPayload = {
 	};
 	paymentInformation: {
 		id: string;
-		code: string;
+		code: string | null;
 		provider: PaymentProvider;
 		phone: Phone | null;
 	} | null;
@@ -86,7 +86,7 @@ export type PayoutRecipient = {
 	id: string;
 	contact: { firstName: string; lastName: string };
 	paymentInformation: {
-		code: string;
+		code: string | null;
 		phone: { number: string } | null;
 	} | null;
 	program: {
