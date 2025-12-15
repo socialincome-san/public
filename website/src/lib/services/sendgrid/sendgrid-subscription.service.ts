@@ -41,7 +41,7 @@ export class SendgridSubscriptionService extends Client {
 			const subscriber = await this.getContact(contributor.email);
 			return this.resultOk(subscriber);
 		} catch (error: any) {
-			throw new Error(error);
+			return this.resultFail(error);
 		}
 	};
 
