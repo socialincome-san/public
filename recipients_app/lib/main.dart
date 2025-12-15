@@ -6,6 +6,7 @@ import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
+import "package:app/data/services/api_client.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 //import "package:app/data/services/firebase_otp_service.dart";
 import "package:app/data/services/twilio_otp_service.dart";
@@ -22,9 +23,9 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
+import "package:http/http.dart" as http;
 import "package:package_info_plus/package_info_plus.dart";
 import "package:sentry_flutter/sentry_flutter.dart";
-import "package:si_api_client/api.dart";
 
 // Important: Why we have separate main file per flavor (main_stage.dart, main_prod.dart)?
 // This approach ensures that only the required Firebase configuration file is bundled, making it a secure and efficient solution for managing multiple flavors.
@@ -60,7 +61,9 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   // Initialize Social Income api client
   const baseUrl = String.fromEnvironment(_kBaseUrlKey);
   final uri = Uri.https(const String.fromEnvironment(baseUrl), "api");
-  final apiClient = V1Api(ApiClient(basePath: uri.toString()));
+
+  final httpClient = http.Client();
+  final apiClient = ApiClient(httpClient: httpClient, basePath: uri.toString());
 
   //final authService = FirebaseOtpService(firebaseAuth: firebaseAuth, demoManager: demoManager,);
   final authService = TwilioOtpService(

@@ -8,6 +8,7 @@ import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/models/app_version_info.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/api_client.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
@@ -24,7 +25,6 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
-import "package:si_api_client/api.dart";
 
 class MyApp extends StatelessWidget {
   final FirebaseMessaging messaging;
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
 
   final AppVersionInfo? appVersionInfo;
 
-  final V1Api apiClient;
+  final ApiClient apiClient;
 
   const MyApp({
     super.key,
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<FirebaseRemoteConfigService>.value(
           value: firebaseRemoteConfigService,
         ),
-        RepositoryProvider<V1Api>.value(value: apiClient),
+        RepositoryProvider<ApiClient>.value(value: apiClient),
       ],
       child: MultiBlocProvider(
         providers: [

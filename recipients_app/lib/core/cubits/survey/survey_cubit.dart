@@ -1,4 +1,5 @@
-import "package:app/data/models/models.dart";
+import "package:app/data/model/recipient.dart";
+import "package:app/data/models/models.dart" hide Recipient;
 import "package:app/data/models/survey/survey_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
@@ -49,7 +50,9 @@ class SurveyCubit extends Cubit<SurveyState> {
   }
 
   Future<List<MappedSurvey>> _getSurveys() async {
-    final surveys = await surveyRepository.fetchSurveys(recipientId: recipient.userId);
+    final surveys = await surveyRepository.fetchSurveys(
+      recipientId: recipient.userId,
+    );
 
     final mappedSurveys = surveys
         .map(
@@ -58,7 +61,7 @@ class SurveyCubit extends Cubit<SurveyState> {
             survey: survey,
             surveyUrl: _getSurveyUrl(
               survey,
-              recipient.userId,
+              recipient.id,
             ),
             cardStatus: _getSurveyCardStatus(survey),
             daysToOverdue: _getDaysToOverdue(survey),

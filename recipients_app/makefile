@@ -10,10 +10,13 @@ test:
 	echo $(VAR)
 
 clean:
-	flutter clean
+	fvm flutter clean
 
 get: 
-	flutter pub get
+	fvm flutter pub get
+
+cleanget:
+	make clean && make get
 
 translations:
 	flutter gen-l10n

@@ -1,18 +1,20 @@
+import "package:app/data/services/api_client.dart";
 import "package:app/data/services/auth_service.dart";
-import "package:si_api_client/api.dart";
 import "package:twilio_flutter/twilio_flutter.dart";
 
 class TwilioOtpService extends AuthService {
-  late V1Api _apiClient;
+  final ApiClient apiClient;
+
   late final TwilioFlutter _twilioFlutter;
   late final String _verificationServiceId;
+
   String? _phoneNumber;
   String? _otpCode;
 
   TwilioOtpService({
-    required super.firebaseAuth, 
+    required super.firebaseAuth,
     required super.demoManager,
-    required V1Api apiClient,
+    required this.apiClient,
     required String accountSid,
     required String authToken,
     required String twilioNumber,
@@ -20,7 +22,6 @@ class TwilioOtpService extends AuthService {
   }) {
     _twilioFlutter = TwilioFlutter(accountSid: accountSid, authToken: authToken, twilioNumber: twilioNumber);
     _verificationServiceId = serviceId;
-    _apiClient = apiClient;
   }
 
   @override
@@ -44,7 +45,9 @@ class TwilioOtpService extends AuthService {
         _phoneNumber = phoneNumber;
         onCodeSend();
       } else {
-        onVerificationFailed(AuthException("Failed to send verification code: ${response.errorData?.message ?? "Unknown error"}"));
+        onVerificationFailed(
+          AuthException("Failed to send verification code: ${response.errorData?.message ?? "Unknown error"}"),
+        );
       }
     } catch (e) {
       onVerificationFailed(AuthException("Failed to send verification code. Try again later"));
@@ -52,7 +55,7 @@ class TwilioOtpService extends AuthService {
     }
   }
 
-    @override
+  @override
   Future<void> submitVerificationCode(String code) async {
     if (_verificationServiceId.isEmpty) throw AuthException("Verification service not initialized");
     if (_phoneNumber == null) throw AuthException("Verification service not initialized");
@@ -71,20 +74,15 @@ class TwilioOtpService extends AuthService {
     }
 
     try {
-      final request = VerifyOtpRequest(
-        phoneNumber: _phoneNumber!,
-        otp: _otpCode!,
+      final response = await apiClient.verifyOtp(
+        _phoneNumber!,
+        _otpCode!,
       );
-      final response = await _apiClient.postV1AuthVerifyOtp(verifyOtpRequest: request);
-      final customToken = response?.customToken;
-      if (customToken == null || customToken.isEmpty) {
-        throw AuthException("Failed to obtain custom token from OTP verification");
-      }
 
       // Sign in with the custom token
-      await firebaseAuth.signInWithCustomToken(customToken);
+      await firebaseAuth.signInWithCustomToken(response.customToken);
     } catch (e) {
-        throw AuthException("Exception when calling PortalApi->postPortalV1AuthVerifyOtp: $e\n");
+      throw AuthException("Exception when calling PortalApi->postPortalV1AuthVerifyOtp: $e\n");
     }
   }
 }

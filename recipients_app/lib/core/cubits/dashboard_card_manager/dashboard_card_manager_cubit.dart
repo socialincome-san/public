@@ -81,16 +81,18 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
   }
 
   Future<void> updatePaymentNumber() async {
-    final recipient = authCubit.state.recipient!;
+    // TODO(Dev): implement this with new PhoneNumber type
+    /* final recipient = authCubit.state.recipient!;
     await authCubit.updateRecipient(
       mobileMoneyPhone: recipient.communicationMobilePhone,
-    );
+    ); */
   }
 
   Future<void> updateContactNumber() async {
-    final recipient = authCubit.state.recipient!;
+    // TODO(Dev): implement this with new PhoneNumber type
+    /* final recipient = authCubit.state.recipient!;
     await authCubit.updateRecipient(
       communicationMobilePhone: recipient.mobileMoneyPhone,
-    );
+    ); */
   }
 }
