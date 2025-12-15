@@ -80,7 +80,7 @@ export class FirebaseService extends BaseService {
 
 			if (existingUserResult.data) {
 				console.log('User already exists for phone number:', phoneNumber);
-				return this.resultOk(existingUserResult.data);
+				return this.resultFail('User already exists for phone number');
 			}
 
 			const userRecord = await authAdmin.auth.createUser({
