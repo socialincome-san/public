@@ -40,13 +40,13 @@ export class RecipientService extends BaseService {
 				const newRecipient = await tx.recipient.create({ data: recipient });
 				const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
 				if (!firebaseResult.success) {
-					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
 				}
 				return this.resultOk(newRecipient);
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create recipient');
+			return this.resultFail(`Could not create recipient ${typeof error === 'string' ? error : ''}`);
 		}
 	}
 
