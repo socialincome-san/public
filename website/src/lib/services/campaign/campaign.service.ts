@@ -133,10 +133,10 @@ export class CampaignService extends BaseService {
 		}
 	}
 
-	async getById(campaignLegacyId: string): Promise<ServiceResult<CampaignPage>> {
+	async getById(campaignId: string): Promise<ServiceResult<CampaignPage>> {
 		try {
 			const campaign = await this.db.campaign.findFirst({
-				where: { OR: [{ legacyFirestoreId: campaignLegacyId }, { id: campaignLegacyId }] },
+				where: { OR: [{ legacyFirestoreId: campaignId }, { id: campaignId }] },
 				select: {
 					id: true,
 					title: true,
