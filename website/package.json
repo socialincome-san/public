@@ -101,7 +101,7 @@
 		"eslint-config-next": "16.0.7",
 		"jest": "^29.7.0",
 		"knip": "^5.72.0",
-		"next-openapi-gen": "^0.7.11",
+		"next-openapi-gen": "^0.8.9",
 		"postcss": "^8.4.47",
 		"tailwindcss": "^3.4.13",
 		"ts-jest": "^29.2.5",
