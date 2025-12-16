@@ -58,6 +58,7 @@ export default function ContributorsTableClient({
 					</Button>
 				}
 				onRowClick={openEditForm}
+				searchKeys={['firstName', 'lastName', 'email']}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>

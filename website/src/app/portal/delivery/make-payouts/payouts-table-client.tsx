@@ -50,6 +50,7 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 					</div>
 				}
 				onRowClick={openEditForm}
+				searchKeys={['recipientFirstName', 'recipientLastName', 'programName']}
 			/>
 
 			<PayoutFormDialog
