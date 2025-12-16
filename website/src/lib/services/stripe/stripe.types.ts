@@ -23,12 +23,12 @@ export type WebhookResult = {
 
 export type StripeSubscriptionRow = {
 	id: string;
-	from: Date;
-	until: Date;
+	created: Date;
 	status: string;
 	amount: number;
 	interval: string;
 	currency: string;
+	paymentMethod: StripePaymentMethod;
 };
 
 export type StripeSubscriptionTableView = {
@@ -50,4 +50,9 @@ export type UpdateContributorAfterCheckoutInput = {
 			country: string;
 		};
 	};
+};
+
+export type StripePaymentMethod = {
+	type: 'card' | 'other';
+	label: string;
 };

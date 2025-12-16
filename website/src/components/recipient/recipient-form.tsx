@@ -87,9 +87,7 @@ const initialFormSchema: RecipientFormSchema = {
 				code: {
 					placeholder: 'Code',
 					label: 'Code',
-					zodSchema: z.string().min(1, {
-						message: 'Code must be at least one characters.',
-					}),
+					zodSchema: z.string().nullable(),
 				},
 				phone: {
 					placeholder: 'Phone Number',

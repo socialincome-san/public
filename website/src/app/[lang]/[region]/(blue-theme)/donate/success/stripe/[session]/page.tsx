@@ -27,6 +27,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 	}
 
 	const checkoutSession = sessionResult.data;
+	const recurring = checkoutSession.mode === 'subscription';
 
 	const contributorResult = await stripeService.getContributorFromCheckoutSession(checkoutSession);
 	if (!contributorResult.success) {
@@ -34,7 +35,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 	}
 
 	if (contributorResult.data && !contributorResult.data.needsOnboarding) {
-		redirect(`/${lang}/${region}/dashboard/contributions`);
+		redirect(`/${lang}/${region}/dashboard/${recurring ? 'subscriptions' : 'contributions'}`);
 	}
 
 	return (
@@ -51,7 +52,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 				<CardContent>
 					<SuccessForm
 						lang={lang as WebsiteLanguage}
-						onSuccessURL={`/${lang}/${region}/dashboard/contributions`}
+						onSuccessURL={`/${lang}/${region}/dashboard/${recurring ? 'subscriptions' : 'contributions'}`}
 						stripeCheckoutSessionId={checkoutSession.id}
 						firstname={checkoutSession.customer_details?.name?.split(' ')[0] || undefined}
 						lastname={checkoutSession.customer_details?.name?.split(' ')[1] || undefined}

@@ -50,6 +50,7 @@ export function SurveysTableClient({ rows, error }: { rows: SurveyTableViewRow[]
 						<Button onClick={() => setIsGenerationDialogOpen(true)}>Generate surveys</Button>
 					</div>
 				}
+				searchKeys={['name', 'recipientName', 'programName']}
 			/>
 
 			<SurveyFormDialog

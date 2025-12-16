@@ -41,6 +41,7 @@
 			"lastname": "Cognome",
 			"email": "Email",
 			"country": "Paese",
+			"language": "Lingua",
 			"gender": "Genere",
 			"street": "Via",
 			"street-number": "Numero",
@@ -91,8 +92,8 @@
 	"subscriptions": {
 		"amount": "Importo",
 		"date": "Data",
-		"from": "Da",
-		"to": "A",
+		"created": "Creato",
+		"payment-method": "Método di pagamento",
 		"source": "Fonte",
 		"total": "Totale",
 		"amount-currency": "{{ amount, currency }}",
