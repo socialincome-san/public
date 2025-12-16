@@ -21,6 +21,8 @@ import { expensesData } from './data/expenses.data';
 import { exchangeRatesData } from './data/exchange-rates.data';
 import { addressesData } from './data/addresses.data';
 import { surveySchedulesData } from './data/survey-schedules.data';
+import { countriesData } from './data/countries.data';
+import { sourceLinksData } from './data/source-links.data';
 
 async function main() {
 	await prisma.$transaction(async (tx) => {
@@ -46,7 +48,11 @@ async function main() {
 		await tx.phone.deleteMany();
 		await tx.address.deleteMany();
 		await tx.account.deleteMany();
+		await tx.country.deleteMany();
+		await tx.sourceLink.deleteMany();
 
+		await tx.sourceLink.createMany({ data: sourceLinksData, skipDuplicates: true });
+		await tx.country.createMany({ data: countriesData, skipDuplicates: true });
 		await tx.account.createMany({ data: accountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });
