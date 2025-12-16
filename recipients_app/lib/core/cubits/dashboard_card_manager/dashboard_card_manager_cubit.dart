@@ -1,6 +1,6 @@
 import "dart:async";
 
-import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/data/models/recipient_self_update.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/view/widgets/account/dashboard_card.dart";
 import "package:dart_mappable/dart_mappable.dart";
@@ -10,28 +10,18 @@ part "dashboard_card_manager_cubit.mapper.dart";
 part "dashboard_card_manager_state.dart";
 
 class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
-  final AuthCubit authCubit;
+  final UserRepository userRepository;
   final CrashReportingRepository crashReportingRepository;
-  late StreamSubscription<AuthState> authSubscription;
 
   DashboardCardManagerCubit({
-    required this.authCubit,
+    required this.userRepository,
     required this.crashReportingRepository,
-  }) : super(const DashboardCardManagerState()) {
-    authSubscription = authCubit.stream.listen((event) {
-      fetchCards();
-    });
-  }
-
-  @override
-  Future<void> close() async {
-    authSubscription.cancel();
-    super.close();
-  }
+  }) : super(const DashboardCardManagerState());
 
   Future<void> fetchCards() async {
     emit(state.copyWith(status: DashboardCardManagerStatus.loading));
-    final recipient = authCubit.state.recipient;
+
+    final recipient = userRepository.currentRecipient;
 
     if (recipient == null) return;
 
@@ -40,23 +30,21 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     try {
       // TODO(dev): currently payment phone number is used for login, we need to switch that
       // TODO(migration): unclear what the comment above means :D
-      // final paymentPhoneNumber = recipient.mobileMoneyPhone;
-      // final contactPhoneNumber = recipient.communicationMobilePhone;
 
       final contactPhoneNumber = recipient.contact.phone?.number;
       final paymentPhoneNumber = recipient.paymentInformation?.phone.number;
 
-      if (paymentPhoneNumber == null && contactPhoneNumber != null) {
-        final paymentPhoneCard = DashboardCard(
-          title: "My Profile",
-          message: "Is your contact phone number ($contactPhoneNumber) also your payment phone number?",
-          primaryButtonText: "Yes",
-          secondaryButtonText: "No",
-          type: DashboardCardType.paymentNumberEqualsContactNumber,
-        );
+      // if (paymentPhoneNumber == null && contactPhoneNumber != null) {
+      final paymentPhoneCard = DashboardCard(
+        title: "My Profile",
+        message: "Is your contact phone number ($contactPhoneNumber) also your payment phone number?",
+        primaryButtonText: "Yes",
+        secondaryButtonText: "No",
+        type: DashboardCardType.paymentNumberEqualsContactNumber,
+      );
 
-        cards.add(paymentPhoneCard);
-      }
+      cards.add(paymentPhoneCard);
+      // }
 
       if (contactPhoneNumber == null && paymentPhoneNumber != null) {
         final contactPhoneCard = DashboardCard(
@@ -85,18 +73,50 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
   }
 
   Future<void> updatePaymentNumber() async {
-    // TODO(Dev): implement this with new PhoneNumber type
-    /* final recipient = authCubit.state.recipient!;
-    await authCubit.updateRecipient(
-      mobileMoneyPhone: recipient.communicationMobilePhone,
-    ); */
+    emit(state.copyWith(status: DashboardCardManagerStatus.updating));
+
+    try {
+      final recipient = userRepository.currentRecipient;
+
+      if (recipient == null) throw Exception("Recipient not found");
+
+      await userRepository.updateRecipient(
+        RecipientSelfUpdate(paymentPhone: recipient.contact.phone?.number),
+      );
+
+      emit(state.copyWith(status: DashboardCardManagerStatus.updated));
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+      emit(
+        state.copyWith(
+          status: DashboardCardManagerStatus.error,
+          exception: ex,
+        ),
+      );
+    }
   }
 
   Future<void> updateContactNumber() async {
-    // TODO(Dev): implement this with new PhoneNumber type
-    /* final recipient = authCubit.state.recipient!;
-    await authCubit.updateRecipient(
-      communicationMobilePhone: recipient.mobileMoneyPhone,
-    ); */
+    emit(state.copyWith(status: DashboardCardManagerStatus.updating));
+
+    try {
+      final recipient = userRepository.currentRecipient;
+
+      if (recipient == null) throw Exception("Recipient not found");
+
+      await userRepository.updateRecipient(
+        RecipientSelfUpdate(contactPhone: recipient.paymentInformation?.phone.number),
+      );
+
+      emit(state.copyWith(status: DashboardCardManagerStatus.updated));
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+      emit(
+        state.copyWith(
+          status: DashboardCardManagerStatus.error,
+          exception: ex,
+        ),
+      );
+    }
   }
 }

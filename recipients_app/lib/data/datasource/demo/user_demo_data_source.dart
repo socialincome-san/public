@@ -73,7 +73,7 @@ class UserDemoDataSource implements UserDataSource {
     status: RecipientStatus.active,
     createdAt: DateTime.now().toIso8601String(),
     program: Program(
-      ownerOrganizationId: "demo",
+      // ownerOrganizationId: "demo",
       createdAt: DateTime.now().toIso8601String(),
       id: "demo",
       name: "Demo",
@@ -117,4 +117,7 @@ class UserDemoDataSource implements UserDataSource {
       ),
     );
   }
+
+  @override
+  Recipient? get currentRecipient => _recipient;
 }

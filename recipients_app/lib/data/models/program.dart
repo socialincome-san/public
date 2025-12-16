@@ -15,10 +15,6 @@ class Program with ProgramMappable {
   final PayoutInterval payoutInterval;
   final int totalPayments;
 
-  // TODO(migration): according to api this is not nullable,
-  // but in reality I'M getting null from the backend.
-  final String? ownerOrganizationId;
-
   final String createdAt;
   final String? updatedAt;
 
@@ -30,7 +26,6 @@ class Program with ProgramMappable {
     required this.payoutCurrency,
     required this.payoutInterval,
     required this.totalPayments,
-    required this.ownerOrganizationId,
     required this.createdAt,
     this.updatedAt,
   });

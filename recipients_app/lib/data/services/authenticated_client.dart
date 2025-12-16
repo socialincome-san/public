@@ -21,8 +21,9 @@ class AuthenticatedClient extends http.BaseClient {
 
     final idToken = await user.getIdToken();
 
-    // Ensure headers exist then mutate.
-    request.headers.putIfAbsent("Content-Type", () => "application/json");
+    // Ensure JSON content type regardless of what `http` added earlier.
+    request.headers.removeWhere((k, v) => k.toLowerCase() == "content-type");
+    request.headers["content-type"] = "application/json";
     request.headers["Authorization"] = "Bearer $idToken";
 
     return _inner.send(request);

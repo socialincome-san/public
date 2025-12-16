@@ -1,3 +1,5 @@
+import "dart:convert";
+
 import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/models/recipient_self_update.dart";
@@ -9,7 +11,9 @@ class UserRemoteDataSource implements UserDataSource {
   final FirebaseAuth firebaseAuth;
   final AuthenticatedClient authenticatedClient;
 
-  const UserRemoteDataSource({
+  Recipient? _currentRecipient;
+
+  UserRemoteDataSource({
     required this.baseUri,
     required this.firebaseAuth,
     required this.authenticatedClient,
@@ -18,6 +22,9 @@ class UserRemoteDataSource implements UserDataSource {
   @override
   User? get currentFirebaseUser => firebaseAuth.currentUser;
 
+  @override
+  Recipient? get currentRecipient => _currentRecipient;
+
   /// curl http://localhost:3001/api/v1/recipients/me
   @override
   Future<Recipient?> fetchRecipient(User firebaseUser) async {
@@ -25,10 +32,13 @@ class UserRemoteDataSource implements UserDataSource {
     final response = await authenticatedClient.get(uri);
 
     if (response.statusCode != 200) {
+      _currentRecipient = null;
       throw Exception("Failed to fetch recipient: ${response.statusCode}");
     }
 
-    return RecipientMapper.fromJson(response.body);
+    final recipient = RecipientMapper.fromJson(response.body);
+    _currentRecipient = recipient;
+    return recipient;
   }
 
   @override
@@ -36,13 +46,15 @@ class UserRemoteDataSource implements UserDataSource {
     final uri = baseUri.resolve("api/v1/recipients/me");
     final response = await authenticatedClient.patch(
       uri,
-      body: selfUpdate.toJson(),
+      body: jsonEncode(selfUpdate.toMap()),
     );
 
     if (response.statusCode != 200) {
       throw Exception("Failed to update recipient: ${response.statusCode}");
     }
 
-    return RecipientMapper.fromJson(response.body);
+    final recipient = RecipientMapper.fromJson(response.body);
+    _currentRecipient = recipient;
+    return recipient;
   }
 }

@@ -31,7 +31,7 @@ class DashboardPage extends StatelessWidget {
         BlocProvider(
           create: (context) => DashboardCardManagerCubit(
             crashReportingRepository: context.read<CrashReportingRepository>(),
-            authCubit: context.read<AuthCubit>(),
+            userRepository: context.read<UserRepository>(),
           )..fetchCards(),
         ),
         BlocProvider(
@@ -106,8 +106,7 @@ class _DashboardViewState extends State<_DashboardView> {
               children: [
                 Expanded(
                   child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 4),
+                    separatorBuilder: (context, index) => const SizedBox(height: 4),
                     itemCount: items.length,
                     itemBuilder: (context, index) => items[index],
                   ),

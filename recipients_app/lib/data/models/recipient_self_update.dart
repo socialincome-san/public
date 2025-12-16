@@ -5,7 +5,7 @@ import "package:dart_mappable/dart_mappable.dart";
 
 part "recipient_self_update.mapper.dart";
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class RecipientSelfUpdate with RecipientSelfUpdateMappable {
   final String? firstName;
   final String? lastName;

@@ -17,7 +17,7 @@ class LocalPartnerInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO(Verena): check if this is the correct phone number
     // final contactNumber = localPartner.user.phoneNumber.firstWhere((phoneNumber) => phoneNumber.isPrimary).phone;
-    final contactNumber = localPartner.contact.phone?.number ?? "";
+    final contactNumber = localPartner.contact?.phone?.number ?? "";
     if (contactNumber.isEmpty) {
       return const SizedBox.shrink();
     }

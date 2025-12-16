@@ -7,7 +7,10 @@ part "local_partner.mapper.dart";
 class LocalPartner with LocalPartnerMappable {
   final String id;
   final String name;
-  final Contact contact;
+
+  // TODO(migration): according to api this is not nullable,
+  // but in reality I'M getting null from the backend.
+  final Contact? contact;
 
   final String createdAt;
   final String? updatedAt;

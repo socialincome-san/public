@@ -64,7 +64,7 @@ class _MainAppPageState extends State<MainAppPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "+${recipient?.contact.phone?.number}",
+                      recipient?.contact.phone?.number ?? "Unknown contact phone number",
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: AppColors.primaryColor,
                       ),

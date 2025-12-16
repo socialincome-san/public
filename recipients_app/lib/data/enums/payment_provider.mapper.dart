@@ -26,7 +26,7 @@ class PaymentProviderMapper extends EnumMapper<PaymentProvider> {
   @override
   PaymentProvider decode(dynamic value) {
     switch (value) {
-      case r'orangeMoney':
+      case "orange_money":
         return PaymentProvider.orangeMoney;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -37,15 +37,15 @@ class PaymentProviderMapper extends EnumMapper<PaymentProvider> {
   dynamic encode(PaymentProvider self) {
     switch (self) {
       case PaymentProvider.orangeMoney:
-        return r'orangeMoney';
+        return "orange_money";
     }
   }
 }
 
 extension PaymentProviderMapperExtension on PaymentProvider {
-  String toValue() {
+  dynamic toValue() {
     PaymentProviderMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<PaymentProvider>(this) as String;
+    return MapperContainer.globals.toValue<PaymentProvider>(this);
   }
 }
 

@@ -23,6 +23,8 @@ class UserRepository {
 
   User? get currentUser => _activeDataSource.currentFirebaseUser;
 
+  Recipient? get currentRecipient => _activeDataSource.currentRecipient;
+
   Future<Recipient?> fetchRecipient(User firebaseUser) => _activeDataSource.fetchRecipient(firebaseUser);
 
   Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) => _activeDataSource.updateRecipient(selfUpdate);

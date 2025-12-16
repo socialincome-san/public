@@ -29,6 +29,8 @@ class DashboardCard extends DashboardItem {
 
   @override
   Widget build(BuildContext context) {
+    final isUpdating = context.watch<DashboardCardManagerCubit>().state.status == DashboardCardManagerStatus.updating;
+
     return Card(
       elevation: 0,
       clipBehavior: Clip.antiAlias,
@@ -60,6 +62,7 @@ class DashboardCard extends DashboardItem {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ButtonSmall(
+                  isLoading: isUpdating,
                   color: Colors.black,
                   label: primaryButtonText,
                   onPressed: () => _onPressPrimary(context),
@@ -67,6 +70,7 @@ class DashboardCard extends DashboardItem {
                 ),
                 const SizedBox(width: 8),
                 ButtonSmall(
+                  isLoading: isUpdating,
                   color: Colors.black,
                   onPressed: () => _onPressSecondary(context),
                   label: secondaryButtonText,

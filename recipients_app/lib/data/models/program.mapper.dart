@@ -49,11 +49,6 @@ class ProgramMapper extends ClassMapperBase<Program> {
     'totalPayments',
     _$totalPayments,
   );
-  static String? _$ownerOrganizationId(Program v) => v.ownerOrganizationId;
-  static const Field<Program, String> _f$ownerOrganizationId = Field(
-    'ownerOrganizationId',
-    _$ownerOrganizationId,
-  );
   static String _$createdAt(Program v) => v.createdAt;
   static const Field<Program, String> _f$createdAt = Field(
     'createdAt',
@@ -75,7 +70,6 @@ class ProgramMapper extends ClassMapperBase<Program> {
     #payoutCurrency: _f$payoutCurrency,
     #payoutInterval: _f$payoutInterval,
     #totalPayments: _f$totalPayments,
-    #ownerOrganizationId: _f$ownerOrganizationId,
     #createdAt: _f$createdAt,
     #updatedAt: _f$updatedAt,
   };
@@ -89,7 +83,6 @@ class ProgramMapper extends ClassMapperBase<Program> {
       payoutCurrency: data.dec(_f$payoutCurrency),
       payoutInterval: data.dec(_f$payoutInterval),
       totalPayments: data.dec(_f$totalPayments),
-      ownerOrganizationId: data.dec(_f$ownerOrganizationId),
       createdAt: data.dec(_f$createdAt),
       updatedAt: data.dec(_f$updatedAt),
     );
@@ -160,7 +153,6 @@ abstract class ProgramCopyWith<$R, $In extends Program, $Out>
     Currency? payoutCurrency,
     PayoutInterval? payoutInterval,
     int? totalPayments,
-    String? ownerOrganizationId,
     String? createdAt,
     String? updatedAt,
   });
@@ -184,7 +176,6 @@ class _ProgramCopyWithImpl<$R, $Out>
     Currency? payoutCurrency,
     PayoutInterval? payoutInterval,
     int? totalPayments,
-    Object? ownerOrganizationId = $none,
     String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
@@ -196,8 +187,6 @@ class _ProgramCopyWithImpl<$R, $Out>
       if (payoutCurrency != null) #payoutCurrency: payoutCurrency,
       if (payoutInterval != null) #payoutInterval: payoutInterval,
       if (totalPayments != null) #totalPayments: totalPayments,
-      if (ownerOrganizationId != $none)
-        #ownerOrganizationId: ownerOrganizationId,
       if (createdAt != null) #createdAt: createdAt,
       if (updatedAt != $none) #updatedAt: updatedAt,
     }),
@@ -211,10 +200,6 @@ class _ProgramCopyWithImpl<$R, $Out>
     payoutCurrency: data.get(#payoutCurrency, or: $value.payoutCurrency),
     payoutInterval: data.get(#payoutInterval, or: $value.payoutInterval),
     totalPayments: data.get(#totalPayments, or: $value.totalPayments),
-    ownerOrganizationId: data.get(
-      #ownerOrganizationId,
-      or: $value.ownerOrganizationId,
-    ),
     createdAt: data.get(#createdAt, or: $value.createdAt),
     updatedAt: data.get(#updatedAt, or: $value.updatedAt),
   );

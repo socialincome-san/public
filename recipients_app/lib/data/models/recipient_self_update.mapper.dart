@@ -110,6 +110,8 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
     #successorName: _f$successorName,
     #termsAccepted: _f$termsAccepted,
   };
+  @override
+  final bool ignoreNull = true;
 
   static RecipientSelfUpdate _instantiate(DecodingData data) {
     return RecipientSelfUpdate(
