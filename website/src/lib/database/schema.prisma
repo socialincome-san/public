@@ -106,6 +106,12 @@ enum DonationInterval {
   yearly
 }
 
+enum PayoutInterval {
+  monthly
+  quarterly
+  yearly
+}
+
 model Account {
   id String @id @default(cuid()) @map("id")
 
@@ -359,13 +365,13 @@ model Organization {
 }
 
 model Program {
-  id             String  @id @default(cuid()) @map("id")
-  name           String  @unique @map("name")
-  totalPayments  Int     @map("total_payments")
-  payoutAmount   Decimal @map("payout_amount") @db.Decimal(12, 4)
-  payoutCurrency String  @map("payout_currency")
-  payoutInterval Int     @map("payout_interval")
-  country        String  @default("Sierra Leone") @map("country")
+  id             String         @id @default(cuid()) @map("id")
+  name           String         @unique @map("name")
+  totalPayments  Int            @map("total_payments")
+  payoutAmount   Decimal        @map("payout_amount") @db.Decimal(12, 4)
+  payoutCurrency String         @map("payout_currency")
+  payoutInterval PayoutInterval @default(monthly) @map("payout_interval")
+  country        String         @default("Sierra Leone") @map("country")
 
   campaigns       Campaign[]
   recipients      Recipient[]
