@@ -57,7 +57,9 @@ export default function DataTable<Row>({
 					{title} <span className="text-lg text-gray-500">({filteredData.length})</span>
 				</h2>
 				<div className="flex flex-wrap items-center gap-2">
-					{searchKeys?.length && <Input className="w-64" placeholder="Search..." onChange={(e) => filter(e.target.value)} />}{' '}
+					{searchKeys?.length && (
+						<Input className="w-64" placeholder="Search..." onChange={(e) => filter(e.target.value)} />
+					)}{' '}
 					{actions ?? null}
 				</div>
 			</div>
