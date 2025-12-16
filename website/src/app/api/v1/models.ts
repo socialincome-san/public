@@ -52,7 +52,6 @@ const Program = z.object({
 	payoutCurrency: z.string(),
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
 	totalPayments: z.number(),
-	ownerOrganizationId: z.string(),
 	createdAt: z.string(),
 	updatedAt: z.string().nullable(),
 });

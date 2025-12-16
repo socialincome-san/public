@@ -56,6 +56,7 @@ export async function PATCH(request: Request) {
 	const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
 	const newPaymentPhone = data.paymentPhone ?? null;
 
+	// todo add term accepted
 	const updateData: RecipientPrismaUpdateInput = {
 		contact: {
 			update: {

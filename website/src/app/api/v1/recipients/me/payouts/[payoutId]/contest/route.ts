@@ -15,6 +15,7 @@ type Params = Promise<{ payoutId: string }>;
 export async function POST(request: NextRequest, { params }: { params: Params }) {
 	const { payoutId } = await params;
 
+	// todo add reason
 	const recipientService = new RecipientService();
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
