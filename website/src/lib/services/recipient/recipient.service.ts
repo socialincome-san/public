@@ -473,7 +473,15 @@ export class RecipientService extends BaseService {
 						},
 					},
 					program: true,
-					localPartner: true,
+					localPartner: {
+						include: {
+							contact: {
+								include: {
+									phone: true,
+								},
+							},
+						},
+					},
 				},
 			});
 
