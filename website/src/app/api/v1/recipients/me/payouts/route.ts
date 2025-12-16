@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
  * List payouts
  * @description Returns all payouts belonging to the authenticated recipient.
  * @auth BearerAuth
- * @response Payout
+ * @response PayoutListResponse
  * @openapi
  */
 export async function GET(request: Request) {
