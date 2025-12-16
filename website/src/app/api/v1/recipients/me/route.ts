@@ -1,5 +1,6 @@
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { logger } from '@/lib/utils/logger';
 import { NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
 
@@ -14,7 +15,14 @@ export async function GET(request: Request) {
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
-		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
+		logger.warn('[GET /recipients/me] Failed', {
+			error: recipientResult.error,
+			status: recipientResult.status,
+		});
+
+		return new Response(recipientResult.error, {
+			status: recipientResult.status ?? 500,
+		});
 	}
 
 	return NextResponse.json(recipientResult.data, { status: 200 });
@@ -30,33 +38,56 @@ export async function GET(request: Request) {
  */
 export async function PATCH(request: Request) {
 	const recipientService = new RecipientService();
+
+	logger.info('[PATCH /recipients/me] Incoming request', {
+		contentType: request.headers.get('content-type'),
+	});
+
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
-		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
+		logger.warn('[PATCH /recipients/me] Recipient resolution failed', {
+			error: recipientResult.error,
+			status: recipientResult.status,
+		});
+
+		return new Response(recipientResult.error, {
+			status: recipientResult.status ?? 500,
+		});
 	}
+
+	const recipient = recipientResult.data;
 
 	let body: unknown;
 
 	try {
 		body = await request.json();
 	} catch {
+		logger.warn('[PATCH /recipients/me] Invalid JSON body');
 		return new Response('Invalid JSON body', { status: 400 });
 	}
 
 	const parsed = RecipientSelfUpdate.safeParse(body);
 
 	if (!parsed.success) {
+		logger.warn('[PATCH /recipients/me] Validation failed', {
+			zodErrors: parsed.error.format(),
+		});
+
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const recipient = recipientResult.data;
 	const data = parsed.data;
 
 	const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
 	const newPaymentPhone = data.paymentPhone ?? null;
 
-	// todo add term accepted
+	logger.info('[PATCH /recipients/me] Phone update intent', {
+		oldPaymentPhone,
+		newPaymentPhone,
+		contactPhone: data.contactPhone === null ? null : typeof data.contactPhone === 'string' ? 'provided' : 'unchanged',
+	});
+
 	const updateData: RecipientPrismaUpdateInput = {
 		contact: {
 			update: {
@@ -67,14 +98,17 @@ export async function PATCH(request: Request) {
 				dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
 				language: data.language,
 				email: data.email,
-				phone: data.contactPhone
-					? {
-							upsert: {
-								update: { number: data.contactPhone },
-								create: { number: data.contactPhone },
-							},
-						}
-					: undefined,
+				phone:
+					data.contactPhone === null
+						? { disconnect: true }
+						: typeof data.contactPhone === 'string'
+							? {
+									connectOrCreate: {
+										where: { number: data.contactPhone },
+										create: { number: data.contactPhone },
+									},
+								}
+							: undefined,
 			},
 		},
 
@@ -88,8 +122,8 @@ export async function PATCH(request: Request) {
 								provider: data.paymentProvider,
 								phone: data.paymentPhone
 									? {
-											upsert: {
-												update: { number: data.paymentPhone },
+											connectOrCreate: {
+												where: { number: data.paymentPhone },
 												create: { number: data.paymentPhone },
 											},
 										}
@@ -99,7 +133,10 @@ export async function PATCH(request: Request) {
 								provider: data.paymentProvider!,
 								code: recipient.paymentInformation?.code ?? '',
 								phone: {
-									create: { number: data.paymentPhone! },
+									connectOrCreate: {
+										where: { number: data.paymentPhone! },
+										create: { number: data.paymentPhone! },
+									},
 								},
 							},
 						},
@@ -113,8 +150,16 @@ export async function PATCH(request: Request) {
 	});
 
 	if (!updateResult.success) {
+		logger.error('[PATCH /recipients/me] Update failed', {
+			error: updateResult.error,
+		});
+
 		return new Response(updateResult.error, { status: 500 });
 	}
+
+	logger.info('[PATCH /recipients/me] Update successful', {
+		recipientId: recipient.id,
+	});
 
 	return NextResponse.json(updateResult.data, { status: 200 });
 }

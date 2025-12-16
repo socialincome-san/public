@@ -118,7 +118,7 @@ export const RecipientSelfUpdate = z.object({
 	dateOfBirth: z.string().optional(),
 	language: z.string().optional(),
 	email: z.string().email().optional(),
-	contactPhone: z.string().optional(),
+	contactPhone: z.string().nullable().optional(),
 	paymentPhone: z.string().optional(),
 	paymentProvider: z.enum(['orange_money']).optional(),
 	successorName: z.string().optional(),
