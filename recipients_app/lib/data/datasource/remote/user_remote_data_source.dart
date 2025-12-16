@@ -5,12 +5,12 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:http/http.dart" as http;
 
 class UserRemoteDataSource implements UserDataSource {
-  final String baseUrl;
+  final Uri baseUri;
   final FirebaseAuth firebaseAuth;
   final http.Client httpClient;
 
   const UserRemoteDataSource({
-    required this.baseUrl,
+    required this.baseUri,
     required this.firebaseAuth,
     required this.httpClient,
   });
@@ -21,7 +21,7 @@ class UserRemoteDataSource implements UserDataSource {
   /// curl http://localhost:3001/api/v1/recipients/me
   @override
   Future<Recipient?> fetchRecipient(User firebaseUser) async {
-    final uri = Uri.parse("$baseUrl/api/v1/recipients/me");
+    final uri = baseUri.resolve("v1/recipients/me");
 
     final response = await httpClient.get(uri);
 
@@ -34,7 +34,7 @@ class UserRemoteDataSource implements UserDataSource {
 
   @override
   Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
-    final uri = Uri.parse("$baseUrl/api/v1/recipients/me");
+    final uri = baseUri.resolve("v1/recipients/me");
 
     final response = await httpClient.patch(
       uri,

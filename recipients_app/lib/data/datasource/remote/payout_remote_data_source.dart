@@ -6,12 +6,12 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:http/http.dart" as http;
 
 class PayoutRemoteDataSource implements PayoutDataSource {
-  final String baseUrl;
+  final Uri baseUri;
   final http.Client httpClient;
   final FirebaseAuth firebaseAuth;
 
   const PayoutRemoteDataSource({
-    required this.baseUrl,
+    required this.baseUri,
     required this.httpClient,
     required this.firebaseAuth,
   });
@@ -20,7 +20,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
   /// --request POST \
   @override
   Future<Payout> confirmPayout({required String payoutId}) async {
-    final uri = Uri.parse("$baseUrl/api/v1/recipients/me/payouts/$payoutId/confirm");
+    final uri = baseUri.resolve("v1/recipients/me/payouts/$payoutId/confirm");
 
     final response = await httpClient.post(uri);
 
@@ -39,7 +39,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     required String payoutId,
     required String contestReason,
   }) async {
-    final uri = Uri.parse("$baseUrl/api/v1/recipients/me/payouts/$payoutId/contest");
+    final uri = baseUri.resolve("v1/recipients/me/payouts/$payoutId/contest");
 
     final response = await httpClient.post(uri);
 
@@ -53,7 +53,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
   /// curl http://localhost:3001/api/v1/recipients/me/payouts
   @override
   Future<List<Payout>> fetchPayouts() async {
-    final uri = Uri.parse("$baseUrl/api/v1/recipients/me/payouts");
+    final uri = baseUri.resolve("v1/recipients/me/payouts");
 
     final response = await httpClient.get(uri);
 

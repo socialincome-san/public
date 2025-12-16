@@ -61,7 +61,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final uri = Uri.https(baseUrl, "api");
 
   final httpClient = http.Client();
-  final apiClient = ApiClient(httpClient: httpClient, basePath: uri.toString());
+  final apiClient = ApiClient(httpClient: httpClient, baseUri: uri);
 
   //final authService = FirebaseOtpService(firebaseAuth: firebaseAuth, demoManager: demoManager,);
   final authService = TwilioOtpService(
@@ -76,20 +76,20 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   final userRemoteDataSource = UserRemoteDataSource(
     firebaseAuth: firebaseAuth,
-    baseUrl: baseUrl,
+    baseUri: uri,
     httpClient: httpClient,
   );
   final userDemoDataSource = UserDemoDataSource();
 
   final paymentRemoteDataSource = PayoutRemoteDataSource(
-    baseUrl: baseUrl,
+    baseUri: uri,
     httpClient: httpClient,
     firebaseAuth: firebaseAuth,
   );
   final paymentDemoDataSource = PayoutDemoDataSource();
 
   final surveyRemoteDataSource = SurveyRemoteDataSource(
-    baseUrl: baseUrl,
+    baseUri: uri,
     httpClient: httpClient,
     firebaseAuth: firebaseAuth,
   );

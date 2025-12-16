@@ -4,11 +4,11 @@ import "package:http/http.dart" as http;
 
 class ApiClient {
   final http.Client httpClient;
-  final String basePath;
+  final Uri baseUri;
 
   const ApiClient({
     required this.httpClient,
-    required this.basePath,
+    required this.baseUri,
   });
 
   /*
@@ -28,7 +28,7 @@ class ApiClient {
   }
   */
   Future<VerifyOtpResponse> verifyOtp(String phoneNumber, String otp) async {
-    final uri = Uri.parse("$basePath/v1/auth/verify-otp");
+    final uri = baseUri.resolve("v1/auth/verify-otp");
 
     final body = VerifyOtpRequest(
       phoneNumber: phoneNumber,

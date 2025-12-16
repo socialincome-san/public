@@ -4,12 +4,12 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:http/http.dart" as http;
 
 class SurveyRemoteDataSource implements SurveyDataSource {
-  final String baseUrl;
+  final Uri baseUri;
   final http.Client httpClient;
   final FirebaseAuth firebaseAuth;
 
   const SurveyRemoteDataSource({
-    required this.baseUrl,
+    required this.baseUri,
     required this.httpClient,
     required this.firebaseAuth,
   });
@@ -17,7 +17,7 @@ class SurveyRemoteDataSource implements SurveyDataSource {
   /// curl http://localhost:3001/api/v1/recipients/me/surveys
   @override
   Future<List<Survey>> fetchSurveys({required String recipientId}) async {
-    final uri = Uri.parse("$baseUrl/api/v1/recipients/me/surveys");
+    final uri = baseUri.resolve("v1/recipients/me/surveys");
 
     final response = await httpClient.get(uri);
 
