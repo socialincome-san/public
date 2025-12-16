@@ -1,3 +1,4 @@
+import "package:app/data/enums/payout_interval.dart";
 import "package:app/data/models/currency.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
@@ -11,10 +12,12 @@ class Program with ProgramMappable {
   final double payoutAmount;
   final Currency payoutCurrency;
 
-  final int payoutInterval;
+  final PayoutInterval payoutInterval;
   final int totalPayments;
 
-  final String ownerOrganizationId;
+  // TODO(migration): according to api this is not nullable,
+  // but in reality I'M getting null from the backend.
+  final String? ownerOrganizationId;
 
   final String createdAt;
   final String? updatedAt;

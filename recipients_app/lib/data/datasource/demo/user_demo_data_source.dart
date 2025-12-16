@@ -3,6 +3,7 @@ import "dart:async";
 import "package:app/data/datasource/demo/demo_user.dart";
 import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/enums/gender.dart";
+import "package:app/data/enums/payout_interval.dart";
 import "package:app/data/enums/recipient_status.dart";
 import "package:app/data/models/contact.dart";
 import "package:app/data/models/currency.dart";
@@ -79,7 +80,7 @@ class UserDemoDataSource implements UserDataSource {
       totalPayments: 0,
       payoutAmount: 0,
       payoutCurrency: Currency.usd,
-      payoutInterval: 1,
+      payoutInterval: PayoutInterval.monthly,
       country: "US",
     ),
   );

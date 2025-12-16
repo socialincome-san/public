@@ -30,6 +30,7 @@ class AppVersionInfoMapper extends ClassMapperBase<AppVersionInfo> {
   static const Field<AppVersionInfo, bool> _f$isOptional = Field(
     'isOptional',
     _$isOptional,
+    key: r'is_optional',
   );
 
   @override

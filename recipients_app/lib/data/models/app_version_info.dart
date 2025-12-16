@@ -5,6 +5,7 @@ part "app_version_info.mapper.dart";
 @MappableClass()
 class AppVersionInfo with AppVersionInfoMappable {
   final String version;
+  @MappableField(key: "is_optional")
   final bool isOptional;
 
   const AppVersionInfo({

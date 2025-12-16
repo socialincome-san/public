@@ -15,6 +15,7 @@ class ProgramMapper extends ClassMapperBase<Program> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProgramMapper._());
       CurrencyMapper.ensureInitialized();
+      PayoutIntervalMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -38,8 +39,8 @@ class ProgramMapper extends ClassMapperBase<Program> {
     'payoutCurrency',
     _$payoutCurrency,
   );
-  static int _$payoutInterval(Program v) => v.payoutInterval;
-  static const Field<Program, int> _f$payoutInterval = Field(
+  static PayoutInterval _$payoutInterval(Program v) => v.payoutInterval;
+  static const Field<Program, PayoutInterval> _f$payoutInterval = Field(
     'payoutInterval',
     _$payoutInterval,
   );
@@ -48,7 +49,7 @@ class ProgramMapper extends ClassMapperBase<Program> {
     'totalPayments',
     _$totalPayments,
   );
-  static String _$ownerOrganizationId(Program v) => v.ownerOrganizationId;
+  static String? _$ownerOrganizationId(Program v) => v.ownerOrganizationId;
   static const Field<Program, String> _f$ownerOrganizationId = Field(
     'ownerOrganizationId',
     _$ownerOrganizationId,
@@ -157,7 +158,7 @@ abstract class ProgramCopyWith<$R, $In extends Program, $Out>
     String? country,
     double? payoutAmount,
     Currency? payoutCurrency,
-    int? payoutInterval,
+    PayoutInterval? payoutInterval,
     int? totalPayments,
     String? ownerOrganizationId,
     String? createdAt,
@@ -181,9 +182,9 @@ class _ProgramCopyWithImpl<$R, $Out>
     String? country,
     double? payoutAmount,
     Currency? payoutCurrency,
-    int? payoutInterval,
+    PayoutInterval? payoutInterval,
     int? totalPayments,
-    String? ownerOrganizationId,
+    Object? ownerOrganizationId = $none,
     String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
@@ -195,7 +196,7 @@ class _ProgramCopyWithImpl<$R, $Out>
       if (payoutCurrency != null) #payoutCurrency: payoutCurrency,
       if (payoutInterval != null) #payoutInterval: payoutInterval,
       if (totalPayments != null) #totalPayments: totalPayments,
-      if (ownerOrganizationId != null)
+      if (ownerOrganizationId != $none)
         #ownerOrganizationId: ownerOrganizationId,
       if (createdAt != null) #createdAt: createdAt,
       if (updatedAt != $none) #updatedAt: updatedAt,
