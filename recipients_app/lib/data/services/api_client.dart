@@ -28,7 +28,7 @@ class ApiClient {
   }
   */
   Future<VerifyOtpResponse> verifyOtp(String phoneNumber, String otp) async {
-    final uri = baseUri.resolve("v1/auth/verify-otp");
+    final uri = baseUri.resolve("api/v1/auth/verify-otp");
 
     final body = VerifyOtpRequest(
       phoneNumber: phoneNumber,

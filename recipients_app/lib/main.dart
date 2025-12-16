@@ -7,6 +7,7 @@ import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/services/api_client.dart";
+import "package:app/data/services/authenticated_client.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 //import "package:app/data/services/firebase_otp_service.dart";
 import "package:app/data/services/twilio_otp_service.dart";
@@ -60,8 +61,11 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   const baseUrl = String.fromEnvironment(_kBaseUrlKey);
   final uri = Uri.https(baseUrl, "api");
 
-  final httpClient = http.Client();
-  final apiClient = ApiClient(httpClient: httpClient, baseUri: uri);
+  // Base client without auth (for endpoints that don't need it)
+  final baseHttpClient = http.Client();
+  // Wrap with authentication for protected endpoints
+  final authenticatedClient = AuthenticatedClient(firebaseAuth, baseHttpClient);
+  final apiClient = ApiClient(httpClient: authenticatedClient, baseUri: uri);
 
   //final authService = FirebaseOtpService(firebaseAuth: firebaseAuth, demoManager: demoManager,);
   final authService = TwilioOtpService(
@@ -77,21 +81,19 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final userRemoteDataSource = UserRemoteDataSource(
     firebaseAuth: firebaseAuth,
     baseUri: uri,
-    httpClient: httpClient,
+    authenticatedClient: authenticatedClient,
   );
   final userDemoDataSource = UserDemoDataSource();
 
   final paymentRemoteDataSource = PayoutRemoteDataSource(
     baseUri: uri,
-    httpClient: httpClient,
-    firebaseAuth: firebaseAuth,
+    authenticatedClient: authenticatedClient,
   );
   final paymentDemoDataSource = PayoutDemoDataSource();
 
   final surveyRemoteDataSource = SurveyRemoteDataSource(
     baseUri: uri,
-    httpClient: httpClient,
-    firebaseAuth: firebaseAuth,
+    authenticatedClient: authenticatedClient,
   );
   final surveyDemoDataSource = SurveyDemoDataSource();
 
