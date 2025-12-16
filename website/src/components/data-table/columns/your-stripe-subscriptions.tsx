@@ -7,8 +7,8 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import { Translator } from '@/lib/i18n/translator';
 import type { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
 import type { ColumnDef } from '@tanstack/react-table';
-import { StatusCell } from '../elements/status-cell';
 import { PaymentMethodCell } from '../elements/payment-method-cell';
+import { StatusCell } from '../elements/status-cell';
 
 export function makeYourStripeSubscriptionsColumns(
 	_?: boolean,
@@ -23,9 +23,10 @@ export function makeYourStripeSubscriptionsColumns(
 		{
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.status-title')}</SortableHeader>,
-			cell: (ctx) => { 
+			cell: (ctx) => {
 				const label = translator?.t(`subscriptions.status.${ctx.row.original.status}`);
-				return <StatusCell ctx={ctx} variant="subscription" label={label} />},
+				return <StatusCell ctx={ctx} variant="subscription" label={label} />;
+			},
 		},
 		{
 			accessorKey: 'interval',

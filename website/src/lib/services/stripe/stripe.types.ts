@@ -55,4 +55,4 @@ export type UpdateContributorAfterCheckoutInput = {
 export type StripePaymentMethod = {
 	type: 'card' | 'other';
 	label: string;
-}
+};
