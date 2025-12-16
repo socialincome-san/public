@@ -1,8 +1,8 @@
 import "dart:async";
 import "dart:developer";
 
+import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/recipient.dart";
-import "package:app/data/models/recipient_self_update.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:dart_mappable/dart_mappable.dart";

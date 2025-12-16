@@ -1,5 +1,5 @@
-import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/payment/payment.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
+import "package:app/data/enums/contest_reason.dart";
 import "package:app/data/models/payment/payout.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
@@ -142,7 +142,7 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
     if (otherReasonComment != null) {
       otherReasonCommentFormatted = ": $otherReasonComment";
     }
-    context.read<PaymentsCubit>().contestPayment(
+    context.read<PayoutsCubit>().contestPayment(
       widget._payout,
       reason.localized(context.l10n) + otherReasonCommentFormatted,
     );

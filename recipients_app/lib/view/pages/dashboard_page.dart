@@ -1,6 +1,6 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cubit.dart";
-import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
@@ -23,7 +23,7 @@ class DashboardPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => PaymentsCubit(
+          create: (context) => PayoutsCubit(
             recipient: authCubit.state.recipient!,
             paymentRepository: context.read<PaymentRepository>(),
             crashReportingRepository: context.read<CrashReportingRepository>(),
@@ -93,12 +93,12 @@ class _DashboardViewState extends State<_DashboardView> {
       items = headerItems + [const EmptyItem()];
     }
 
-    return BlocBuilder<PaymentsCubit, PaymentsState>(
+    return BlocBuilder<PayoutsCubit, PayoutsState>(
       builder: (context, state) {
         return RefreshIndicator(
           key: _refreshIndicatorKey,
           onRefresh: () async {
-            context.read<PaymentsCubit>().loadPayments();
+            context.read<PayoutsCubit>().loadPayments();
             context.read<SurveyCubit>().getSurveys();
           },
           child: BlocListener<DashboardCardManagerCubit, DashboardCardManagerState>(

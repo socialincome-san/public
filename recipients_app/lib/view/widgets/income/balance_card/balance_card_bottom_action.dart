@@ -1,5 +1,8 @@
-import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/payment/payment.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
+import "package:app/data/enums/balance_card_status.dart";
+import "package:app/data/enums/payout_ui_status.dart";
+import "package:app/data/models/payment/mapped_payout.dart";
+import "package:app/data/models/payment/payouts_ui_state.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
@@ -11,7 +14,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 class BalanceCardBottomAction extends StatelessWidget {
-  final PaymentsUiState paymentsUiState;
+  final PayoutsUiState paymentsUiState;
 
   const BalanceCardBottomAction({
     super.key,
@@ -74,11 +77,11 @@ class BalanceCardBottomAction extends StatelessWidget {
     BuildContext context,
   ) {
     if (shouldShowSecondaryActionButton) {
-      final MappedPayment? mappedPayment = paymentsUiState.payments.firstWhereOrNull(
-        (element) => element.uiStatus == PaymentUiStatus.toReview || element.uiStatus == PaymentUiStatus.recentToReview,
+      final MappedPayout? mappedPayment = paymentsUiState.payouts.firstWhereOrNull(
+        (element) => element.uiStatus == PayoutUiStatus.toReview || element.uiStatus == PayoutUiStatus.recentToReview,
       );
       if (mappedPayment != null) {
-        context.read<PaymentsCubit>().confirmPayment(mappedPayment.payment);
+        context.read<PayoutsCubit>().confirmPayment(mappedPayment.payout);
       }
     } else {
       _navigateToPaymentsList(context);
@@ -86,24 +89,24 @@ class BalanceCardBottomAction extends StatelessWidget {
   }
 
   void _onPressedNo(BuildContext context) {
-    final MappedPayment? mappedPayment = paymentsUiState.payments.firstWhereOrNull(
-      (element) => element.uiStatus == PaymentUiStatus.toReview || element.uiStatus == PaymentUiStatus.recentToReview,
+    final MappedPayout? mappedPayment = paymentsUiState.payouts.firstWhereOrNull(
+      (element) => element.uiStatus == PayoutUiStatus.toReview || element.uiStatus == PayoutUiStatus.recentToReview,
     );
 
     if (mappedPayment != null) {
-      final paymentsCubit = context.read<PaymentsCubit>();
+      final paymentsCubit = context.read<PayoutsCubit>();
       showDialog(
         context: context,
         builder: (context) => BlocProvider.value(
           value: paymentsCubit,
-          child: ReviewPaymentModal(mappedPayment.payment),
+          child: ReviewPaymentModal(mappedPayment.payout),
         ),
       );
     }
   }
 
   void _navigateToPaymentsList(BuildContext context) {
-    final paymentsCubit = context.read<PaymentsCubit>();
+    final paymentsCubit = context.read<PayoutsCubit>();
 
     Navigator.push(
       context,
@@ -117,11 +120,11 @@ class BalanceCardBottomAction extends StatelessWidget {
   }
 
   bool _shouldShowSecondaryActionButton(
-    PaymentsUiState paymentsUiState,
+    PayoutsUiState paymentsUiState,
   ) {
     return (paymentsUiState.status == BalanceCardStatus.recentToReview ||
             paymentsUiState.status == BalanceCardStatus.needsAttention) &&
-        paymentsUiState.unconfirmedPaymentsCount == 1;
+        paymentsUiState.unconfirmedPayoutsCount == 1;
   }
 
   Color _getBackgroundColor(BalanceCardStatus status) {
@@ -151,26 +154,26 @@ class BalanceCardBottomAction extends StatelessWidget {
   }
 
   String _getStatusLabel(
-    PaymentsUiState paymentsUiState,
+    PayoutsUiState paymentsUiState,
     AppLocalizations localizations,
   ) {
     switch (paymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
-        return "${paymentsUiState.confirmedPaymentsCount} ${localizations.paymentsConfirmedCount}";
+        return "${paymentsUiState.confirmedPayoutsCount} ${localizations.paymentsConfirmedCount}";
       case BalanceCardStatus.recentToReview:
         return localizations.paymentsInReview;
       case BalanceCardStatus.needsAttention:
-        if (paymentsUiState.unconfirmedPaymentsCount == 1) {
+        if (paymentsUiState.unconfirmedPayoutsCount == 1) {
           return localizations.paymentsInReviewOne;
         }
-        return localizations.paymentsInReviewMany(paymentsUiState.unconfirmedPaymentsCount);
+        return localizations.paymentsInReviewMany(paymentsUiState.unconfirmedPayoutsCount);
       case BalanceCardStatus.onHold:
         return localizations.paymentsInReviewTwo;
     }
   }
 
   String _getPrimaryActionLabel(
-    PaymentsUiState paymentsUiState,
+    PayoutsUiState paymentsUiState,
     AppLocalizations localizations,
   ) {
     switch (paymentsUiState.status) {
@@ -179,7 +182,7 @@ class BalanceCardBottomAction extends StatelessWidget {
 
       case BalanceCardStatus.recentToReview:
       case BalanceCardStatus.needsAttention:
-        if (paymentsUiState.unconfirmedPaymentsCount == 1) {
+        if (paymentsUiState.unconfirmedPayoutsCount == 1) {
           return localizations.yes;
         } else {
           return localizations.review;

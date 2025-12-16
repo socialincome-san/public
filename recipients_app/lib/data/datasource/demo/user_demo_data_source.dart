@@ -5,6 +5,7 @@ import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/enums/gender.dart";
 import "package:app/data/enums/payout_interval.dart";
 import "package:app/data/enums/recipient_status.dart";
+import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/contact.dart";
 import "package:app/data/models/currency.dart";
 import "package:app/data/models/language_code.dart";
@@ -12,7 +13,6 @@ import "package:app/data/models/local_partner.dart";
 import "package:app/data/models/phone.dart";
 import "package:app/data/models/program.dart";
 import "package:app/data/models/recipient.dart";
-import "package:app/data/models/recipient_self_update.dart";
 import "package:firebase_auth/firebase_auth.dart" as firebase_auth;
 
 class UserDemoDataSource implements UserDataSource {

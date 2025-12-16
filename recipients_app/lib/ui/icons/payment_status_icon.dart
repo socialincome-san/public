@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 const statusIconRadius = 10.0;
 
 class PaymentStatusIcon extends StatelessWidget {
-  final PaymentUiStatus status;
+  final PayoutUiStatus status;
 
   const PaymentStatusIcon({
     super.key,

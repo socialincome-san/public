@@ -1,8 +1,8 @@
 import "dart:convert";
 
 import "package:app/data/datasource/user_data_source.dart";
+import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/recipient.dart";
-import "package:app/data/models/recipient_self_update.dart";
 import "package:app/data/services/authenticated_client.dart";
 import "package:firebase_auth/firebase_auth.dart";
 

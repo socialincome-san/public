@@ -1,7 +1,7 @@
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 
-enum PaymentUiStatus {
+enum PayoutUiStatus {
   /// blue label, white font, confirm icon
   confirmed(
     color: AppColors.primaryColor,
@@ -71,7 +71,7 @@ enum PaymentUiStatus {
   final Color textColor;
   final Color iconColor;
 
-  const PaymentUiStatus({
+  const PayoutUiStatus({
     required this.color,
     required this.icon,
     required this.textColor,
