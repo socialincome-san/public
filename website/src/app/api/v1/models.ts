@@ -128,6 +128,14 @@ const PayoutParams = z.object({
 	payoutId: z.string().describe('Payout ID'),
 });
 
+export const ContestPayoutBody = z.object({
+	comments: z.string().optional().nullable(),
+});
+
+export const ConfirmPayoutBody = z.object({
+	comments: z.string().optional().nullable(),
+});
+
 export const VerifyOtpRequest = z.object({
 	phoneNumber: z.string(),
 	otp: z.string(),
