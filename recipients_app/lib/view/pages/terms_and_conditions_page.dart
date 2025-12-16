@@ -1,4 +1,6 @@
+import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
+import "package:app/data/models/recipient_self_update.dart";
 import "package:app/demo_manager.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
@@ -87,10 +89,9 @@ class TermsAndConditionsPage extends StatelessWidget {
               children: [
                 ButtonBig(
                   onPressed: () {
-                    // TODO(migration): missing in backend currently, but was requested on 16.12.
-                    // context.read<AuthCubit>().updateRecipient(
-                    //   selfUpdate: const RecipientSelfUpdate(termsAccepted: true),
-                    // );
+                    context.read<AuthCubit>().updateRecipient(
+                      selfUpdate: const RecipientSelfUpdate(termsAccepted: true),
+                    );
                   },
                   label: demoManager.isDemoEnabled ? context.l10n.createAccountDemo : context.l10n.createAccount,
                 ),

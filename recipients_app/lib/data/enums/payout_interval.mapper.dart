@@ -28,6 +28,10 @@ class PayoutIntervalMapper extends EnumMapper<PayoutInterval> {
     switch (value) {
       case r'monthly':
         return PayoutInterval.monthly;
+      case r'quarterly':
+        return PayoutInterval.quarterly;
+      case r'yearly':
+        return PayoutInterval.yearly;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -38,6 +42,10 @@ class PayoutIntervalMapper extends EnumMapper<PayoutInterval> {
     switch (self) {
       case PayoutInterval.monthly:
         return r'monthly';
+      case PayoutInterval.quarterly:
+        return r'quarterly';
+      case PayoutInterval.yearly:
+        return r'yearly';
     }
   }
 }

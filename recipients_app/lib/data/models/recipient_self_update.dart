@@ -18,6 +18,7 @@ class RecipientSelfUpdate with RecipientSelfUpdateMappable {
   final String? paymentPhone;
   final PaymentProvider? paymentProvider;
   final String? successorName;
+  final bool? termsAccepted;
 
   const RecipientSelfUpdate({
     this.firstName,
@@ -31,5 +32,6 @@ class RecipientSelfUpdate with RecipientSelfUpdateMappable {
     this.paymentPhone,
     this.paymentProvider,
     this.successorName,
+    this.termsAccepted,
   });
 }

@@ -354,11 +354,11 @@ class AccountPageState extends State<AccountPage> {
                       value: PaymentProvider.orangeMoney,
                       child: Text("Orange Money SL"),
                     ),
-                    // TODO(migration): check if this still exists
-                    DropdownMenuItem(
+                    // TODO(migration): raphi said currently theres only orange money
+                    /* DropdownMenuItem(
                       value: PaymentProvider.africellMoney,
                       child: Text("Africell Money"),
-                    ),
+                    ), */
                   ],
                   value: recipient.paymentInformation?.provider,
                   validator: (value) {

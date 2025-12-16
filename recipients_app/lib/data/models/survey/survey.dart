@@ -16,7 +16,7 @@ class Survey with SurveyMappable {
   final SurveyQuestionnaire questionnaire;
   final SurveyStatus status;
 
-  // TODO: what is this?
+  // TODO(migration): what is this?
   final Object? data;
 
   final String accessEmail;

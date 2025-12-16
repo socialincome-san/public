@@ -5,6 +5,6 @@ part "payment_provider.mapper.dart";
 @MappableEnum()
 enum PaymentProvider {
   orangeMoney,
-  // TODO(migration): check if this still exists
-  africellMoney,
+  // TODO(migration): raphi said currently theres only orange money
+  // africellMoney,
 }

@@ -115,7 +115,6 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
   }
 
-  // TODO: fix this
   Future<PaymentsUiState> _mapPayoutsUiState(List<Payout> payouts) async {
     var unconfirmedPaymentsCount = 0;
     var confirmedPaymentsCount = 0;

@@ -38,7 +38,8 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     final List<DashboardCard> cards = [];
 
     try {
-      // TODO: currently payment phone number is used for login, we need to switch that
+      // TODO(dev): currently payment phone number is used for login, we need to switch that
+      // TODO(migration): unclear what the comment above means :D
       // final paymentPhoneNumber = recipient.mobileMoneyPhone;
       // final contactPhoneNumber = recipient.communicationMobilePhone;
 

@@ -1,36 +1,18 @@
+import "dart:math" as math;
+
 import "package:app/data/datasource/payout_data_source.dart";
+import "package:app/data/enums/payout_status.dart";
+import "package:app/data/models/currency.dart";
 import "package:app/data/models/payment/payout.dart";
 
 class PayoutDemoDataSource implements PayoutDataSource {
-  @override
-  Future<void> confirmPayout({required String payoutId}) {
-    // TODO: implement confirmPayout
-    throw UnimplementedError();
-  }
+  List<Payout> payments = initData();
 
-  @override
-  Future<void> contestPayout({required String payoutId, required String contestReason}) {
-    // TODO: implement contestPayout
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Payout>> fetchPayouts() {
-    // TODO: implement fetchPayouts
-    throw UnimplementedError();
-  }
-}
-
-/* const String paymentCollection = "payments";
-
-class PayoutDemoDataSource implements PayoutDataSource {
-  List<SocialIncomePayment> payments = initData();
-
-  static List<SocialIncomePayment> initData() {
-    final List<SocialIncomePayment> payments = <SocialIncomePayment>[];
+  static List<Payout> initData() {
+    final List<Payout> payments = <Payout>[];
 
     final nowDate = DateTime.now();
-    final random = Random();
+    final random = math.Random();
 
     final confirmedPaymentsCount = random.nextInt(12) + 1;
     final notConfirmedPaymentsCount = random.nextInt(2) + 1;
@@ -42,12 +24,14 @@ class PayoutDemoDataSource implements PayoutDataSource {
         15,
       );
       payments.add(
-        SocialIncomePayment(
+        Payout(
           id: "${currentDateTime.year}-${currentDateTime.month}",
-          paymentAt: Timestamp.fromDate(currentDateTime),
-          currency: "SLE",
+          paymentAt: currentDateTime.toIso8601String(),
+          currency: Currency.sle,
           amount: 700,
-          status: PaymentStatus.confirmed,
+          status: PayoutStatus.confirmed,
+          recipientId: "123",
+          createdAt: currentDateTime.toIso8601String(),
         ),
       );
     }
@@ -59,12 +43,14 @@ class PayoutDemoDataSource implements PayoutDataSource {
         15,
       );
       payments.add(
-        SocialIncomePayment(
+        Payout(
           id: "${currentDateTime.year}-${currentDateTime.month}",
-          paymentAt: Timestamp.fromDate(currentDateTime),
-          currency: "SLE",
+          paymentAt: currentDateTime.toIso8601String(),
+          currency: Currency.sle,
           amount: 700,
-          status: PaymentStatus.paid,
+          status: PayoutStatus.paid,
+          recipientId: "123",
+          createdAt: currentDateTime.toIso8601String(),
         ),
       );
     }
@@ -75,41 +61,24 @@ class PayoutDemoDataSource implements PayoutDataSource {
   }
 
   @override
+  Future<void> confirmPayout({required String payoutId}) async {
+    final indexWhere = payments.indexWhere((element) => element.id == payoutId);
+    payments[indexWhere] = payments[indexWhere].copyWith(
+      status: PayoutStatus.confirmed,
+    );
+  }
+
+  @override
+  Future<void> contestPayout({required String payoutId, required String contestReason}) async {
+    final indexWhere = payments.indexWhere((element) => element.id == payoutId);
+    payments[indexWhere] = payments[indexWhere].copyWith(
+      status: PayoutStatus.contested,
+      comments: contestReason,
+    );
+  }
+
+  @override
   Future<List<Payout>> fetchPayouts() async {
     return payments;
   }
-
-  /// This updates the payment status to confirmed
-  /// and also sets lastUpdatedAt and lastUpdatedBy to the
-  /// current time and recipient
-  @override
-  Future<void> confirmPayout({
-    required Recipient recipient,
-    required SocialIncomePayment payment,
-  }) async {
-    final updatedPayment = payment.copyWith(
-      status: PaymentStatus.confirmed,
-      updatedBy: recipient.user.id,
-    );
-
-    final indexWhere = payments.indexWhere((element) => element.id == updatedPayment.id);
-    payments[indexWhere] = updatedPayment;
-  }
-
-  @override
-  Future<void> contestPayout({
-    required Recipient recipient,
-    required SocialIncomePayment payment,
-    required String contestReason,
-  }) async {
-    final updatedPayment = payment.copyWith(
-      status: PaymentStatus.contested,
-      comments: contestReason,
-      updatedBy: recipient.user.id,
-    );
-
-    final indexWhere = payments.indexWhere((element) => element.id == updatedPayment.id);
-    payments[indexWhere] = updatedPayment;
-  }
 }
- */

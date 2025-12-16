@@ -88,6 +88,12 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
     _$successorName,
     opt: true,
   );
+  static bool? _$termsAccepted(RecipientSelfUpdate v) => v.termsAccepted;
+  static const Field<RecipientSelfUpdate, bool> _f$termsAccepted = Field(
+    'termsAccepted',
+    _$termsAccepted,
+    opt: true,
+  );
 
   @override
   final MappableFields<RecipientSelfUpdate> fields = const {
@@ -102,6 +108,7 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
     #paymentPhone: _f$paymentPhone,
     #paymentProvider: _f$paymentProvider,
     #successorName: _f$successorName,
+    #termsAccepted: _f$termsAccepted,
   };
 
   static RecipientSelfUpdate _instantiate(DecodingData data) {
@@ -117,6 +124,7 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
       paymentPhone: data.dec(_f$paymentPhone),
       paymentProvider: data.dec(_f$paymentProvider),
       successorName: data.dec(_f$successorName),
+      termsAccepted: data.dec(_f$termsAccepted),
     );
   }
 
@@ -202,6 +210,7 @@ abstract class RecipientSelfUpdateCopyWith<
     String? paymentPhone,
     PaymentProvider? paymentProvider,
     String? successorName,
+    bool? termsAccepted,
   });
   RecipientSelfUpdateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -229,6 +238,7 @@ class _RecipientSelfUpdateCopyWithImpl<$R, $Out>
     Object? paymentPhone = $none,
     Object? paymentProvider = $none,
     Object? successorName = $none,
+    Object? termsAccepted = $none,
   }) => $apply(
     FieldCopyWithData({
       if (firstName != $none) #firstName: firstName,
@@ -242,6 +252,7 @@ class _RecipientSelfUpdateCopyWithImpl<$R, $Out>
       if (paymentPhone != $none) #paymentPhone: paymentPhone,
       if (paymentProvider != $none) #paymentProvider: paymentProvider,
       if (successorName != $none) #successorName: successorName,
+      if (termsAccepted != $none) #termsAccepted: termsAccepted,
     }),
   );
   @override
@@ -257,6 +268,7 @@ class _RecipientSelfUpdateCopyWithImpl<$R, $Out>
     paymentPhone: data.get(#paymentPhone, or: $value.paymentPhone),
     paymentProvider: data.get(#paymentProvider, or: $value.paymentProvider),
     successorName: data.get(#successorName, or: $value.successorName),
+    termsAccepted: data.get(#termsAccepted, or: $value.termsAccepted),
   );
 
   @override

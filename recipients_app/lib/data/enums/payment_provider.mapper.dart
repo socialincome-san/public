@@ -28,8 +28,6 @@ class PaymentProviderMapper extends EnumMapper<PaymentProvider> {
     switch (value) {
       case r'orangeMoney':
         return PaymentProvider.orangeMoney;
-      case r'africellMoney':
-        return PaymentProvider.africellMoney;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -40,8 +38,6 @@ class PaymentProviderMapper extends EnumMapper<PaymentProvider> {
     switch (self) {
       case PaymentProvider.orangeMoney:
         return r'orangeMoney';
-      case PaymentProvider.africellMoney:
-        return r'africellMoney';
     }
   }
 }

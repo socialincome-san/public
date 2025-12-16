@@ -28,15 +28,18 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     return PayoutMapper.fromJson(response.body);
   }
 
-  /// TODO: contest reason is not yet implemented in backend
+  /// TODO(migration): contest reason is not yet implemented in backend
   /// curl http://localhost:3001/api/v1/recipients/me/payouts/123/contest \
   /// --request POST
   @override
   Future<Payout> contestPayout({
     required String payoutId,
-    required String contestReason,
+    required String? contestReason,
   }) async {
     final uri = baseUri.resolve("api/v1/recipients/me/payouts/$payoutId/contest");
+
+    // if contest reason is not null, add it to the comment in payout
+
     final response = await authenticatedClient.post(uri);
 
     if (response.statusCode != 201) {

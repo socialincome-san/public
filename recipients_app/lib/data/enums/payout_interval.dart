@@ -5,4 +5,6 @@ part "payout_interval.mapper.dart";
 @MappableEnum()
 enum PayoutInterval {
   monthly,
+  quarterly,
+  yearly,
 }
