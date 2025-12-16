@@ -1,5 +1,6 @@
 import "package:app/data/enums/gender.dart";
 import "package:app/data/enums/payment_provider.dart";
+import "package:app/data/models/language_code.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "recipient_self_update.mapper.dart";
@@ -11,7 +12,7 @@ class RecipientSelfUpdate with RecipientSelfUpdateMappable {
   final String? callingName;
   final Gender? gender;
   final String? dateOfBirth;
-  final String? language;
+  final LanguageCode? language;
   final String? email;
   final String? contactPhone;
   final String? paymentPhone;

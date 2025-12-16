@@ -15,6 +15,7 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = RecipientSelfUpdateMapper._());
       GenderMapper.ensureInitialized();
+      LanguageCodeMapper.ensureInitialized();
       PaymentProviderMapper.ensureInitialized();
     }
     return _instance!;
@@ -53,8 +54,8 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
     _$dateOfBirth,
     opt: true,
   );
-  static String? _$language(RecipientSelfUpdate v) => v.language;
-  static const Field<RecipientSelfUpdate, String> _f$language = Field(
+  static LanguageCode? _$language(RecipientSelfUpdate v) => v.language;
+  static const Field<RecipientSelfUpdate, LanguageCode> _f$language = Field(
     'language',
     _$language,
     opt: true,
@@ -195,7 +196,7 @@ abstract class RecipientSelfUpdateCopyWith<
     String? callingName,
     Gender? gender,
     String? dateOfBirth,
-    String? language,
+    LanguageCode? language,
     String? email,
     String? contactPhone,
     String? paymentPhone,

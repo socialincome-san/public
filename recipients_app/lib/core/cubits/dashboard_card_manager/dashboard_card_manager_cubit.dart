@@ -41,13 +41,14 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       // TODO: currently payment phone number is used for login, we need to switch that
       // final paymentPhoneNumber = recipient.mobileMoneyPhone;
       // final contactPhoneNumber = recipient.communicationMobilePhone;
-      // final paymentPhoneNumber = recipient.contact.phone?.number;
 
-      // TODO(migration): check if there are multiple phone numbers or if this was removed
-      /* if (paymentPhoneNumber == null && contactPhoneNumber != null) {
+      final contactPhoneNumber = recipient.contact.phone?.number;
+      final paymentPhoneNumber = recipient.paymentInformation?.phone.number;
+
+      if (paymentPhoneNumber == null && contactPhoneNumber != null) {
         final paymentPhoneCard = DashboardCard(
           title: "My Profile",
-          message: "Is your contact phone number (${contactPhoneNumber.phone}) also your payment phone number?",
+          message: "Is your contact phone number ($contactPhoneNumber) also your payment phone number?",
           primaryButtonText: "Yes",
           secondaryButtonText: "No",
           type: DashboardCardType.paymentNumberEqualsContactNumber,
@@ -59,14 +60,14 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       if (contactPhoneNumber == null && paymentPhoneNumber != null) {
         final contactPhoneCard = DashboardCard(
           title: "My Profile",
-          message: "Is your payment phone number (${paymentPhoneNumber.phone}) also your contact phone number?",
+          message: "Is your payment phone number ($paymentPhoneNumber) also your contact phone number?",
           primaryButtonText: "Yes",
           secondaryButtonText: "No",
           type: DashboardCardType.contactNumberEqualsPaymentNumber,
         );
 
         cards.add(contactPhoneCard);
-      } */
+      }
 
       emit(
         state.copyWith(

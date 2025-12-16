@@ -1,9 +1,8 @@
 import "dart:async";
 import "dart:developer";
 
-import "package:app/data/enums/gender.dart";
-import "package:app/data/models/language_code.dart";
 import "package:app/data/models/recipient.dart";
+import "package:app/data/models/recipient_self_update.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:dart_mappable/dart_mappable.dart";
@@ -87,65 +86,17 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> updateRecipient({
-    String? firstName,
-    String? lastName,
-    String? callingName,
-    DateTime? dateOfBirth,
-    Gender? gender,
-    LanguageCode? languageCode,
-    String? email,
-    String? communicationMobilePhone,
-    // PhoneNumber? communicationMobilePhone,
-    String? mobileMoneyPhone,
-    // PhoneNumber? mobileMoneyPhone,
-    String? paymentProvider,
-    bool? termsAccepted,
-    String? successorName,
-  }) async {
+  /// Use the RecipientSelfUpdate model to update the recipient.
+  Future<void> updateRecipient({required RecipientSelfUpdate selfUpdate}) async {
     emit(state.copyWith(status: AuthStatus.updatingRecipient));
 
-    // TODO(Verena):
-    // how to handle paymentProvider?
-    // how to handle communicationMobilePhone and mobileMoneyPhone?
-    // how to handle termsAccepted?
-
-    final recipient = state.recipient;
-    final contact = recipient?.contact;
-
-    final updatedContact = contact?.copyWith(
-      firstName: firstName,
-      lastName: lastName,
-      dateOfBirth: dateOfBirth?.toIso8601String(),
-      gender: gender,
-      language: languageCode,
-      callingName: callingName,
-      // communicationMobilePhone: communicationMobilePhone,
-      // mobileMoneyPhone: mobileMoneyPhone,
-    );
-
-    final updatedRecipient = recipient?.copyWith(
-      contact: updatedContact,
-      successorName: successorName,
-    );
-
-    if (updatedRecipient == null) {
-      emit(
-        state.copyWith(
-          status: AuthStatus.updateRecipientFailure,
-          exception: Exception("Failed to update recipient"),
-        ),
-      );
-      return;
-    }
-
     try {
-      await userRepository.updateRecipient(updatedRecipient);
+      final updatedRecipient = await userRepository.updateRecipient(selfUpdate);
 
       emit(
         state.copyWith(
           status: AuthStatus.updateRecipientSuccess,
-          recipient: recipient,
+          recipient: updatedRecipient,
         ),
       );
     } on Exception catch (ex, stackTrace) {

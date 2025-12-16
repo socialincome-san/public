@@ -156,12 +156,11 @@ class _App extends StatelessWidget {
           listener: (context, state) {
             if (state.status == AuthStatus.authenticated) {
               // change language to the user's preferred language
-              // TODO(migration): doesnt exist in backend currently
-              /* final selectedLanguage = state.recipient?.selectedLanguage;
+              final selectedLanguage = state.recipient?.contact.language;
 
               if (selectedLanguage != null) {
                 context.read<SettingsCubit>().changeLanguage(selectedLanguage);
-              } */
+              }
             }
           },
           builder: (context, state) {

@@ -11,10 +11,11 @@ import "package:app/data/models/local_partner.dart";
 import "package:app/data/models/phone.dart";
 import "package:app/data/models/program.dart";
 import "package:app/data/models/recipient.dart";
+import "package:app/data/models/recipient_self_update.dart";
 import "package:firebase_auth/firebase_auth.dart" as firebase_auth;
 
 class UserDemoDataSource implements UserDataSource {
-  Recipient? _recipient = Recipient(
+  final Recipient _recipient = Recipient(
     contactId: "demo",
     termsAccepted: true,
     programId: "demo",
@@ -95,8 +96,24 @@ class UserDemoDataSource implements UserDataSource {
   }
 
   @override
-  Future<Recipient> updateRecipient(Recipient recipient) async {
-    _recipient = recipient;
-    return recipient;
+  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
+    return _recipient.copyWith(
+      contact: _recipient.contact.copyWith(
+        firstName: selfUpdate.firstName,
+        lastName: selfUpdate.lastName,
+        dateOfBirth: selfUpdate.dateOfBirth,
+        gender: selfUpdate.gender,
+        language: selfUpdate.language,
+      ),
+      paymentInformation: _recipient.paymentInformation?.copyWith(
+        phone: Phone(
+          id: "demo",
+          number: selfUpdate.paymentPhone ?? "",
+          hasWhatsApp: false,
+          createdAt: DateTime.now().toIso8601String(),
+          updatedAt: DateTime.now().toIso8601String(),
+        ),
+      ),
+    );
   }
 }

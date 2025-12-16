@@ -1,5 +1,6 @@
 import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/models/recipient.dart";
+import "package:app/data/models/recipient_self_update.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:http/http.dart" as http;
 
@@ -32,12 +33,12 @@ class UserRemoteDataSource implements UserDataSource {
   }
 
   @override
-  Future<Recipient> updateRecipient(Recipient recipient) async {
+  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
     final uri = Uri.parse("$baseUrl/api/v1/recipients/me");
 
     final response = await httpClient.patch(
       uri,
-      body: recipient.toJson(),
+      body: selfUpdate.toJson(),
     );
 
     if (response.statusCode != 200) {

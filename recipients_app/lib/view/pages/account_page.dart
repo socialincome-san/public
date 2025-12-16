@@ -3,8 +3,10 @@ import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/enums/gender.dart";
+import "package:app/data/enums/payment_provider.dart";
 import "package:app/data/models/language_code.dart";
 import "package:app/data/models/recipient.dart";
+import "package:app/data/models/recipient_self_update.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
@@ -161,7 +163,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                        firstName: value,
+                        selfUpdate: RecipientSelfUpdate(firstName: value),
                       );
                     }
                   },
@@ -179,7 +181,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                        lastName: value,
+                        selfUpdate: RecipientSelfUpdate(lastName: value),
                       );
                     }
                   },
@@ -189,7 +191,7 @@ class AccountPageState extends State<AccountPage> {
                   controller: _callingNameController,
                   hintText: context.l10n.callingName,
                   onSubmitted: (value) => context.read<AuthCubit>().updateRecipient(
-                    callingName: value,
+                    selfUpdate: RecipientSelfUpdate(callingName: value),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -221,7 +223,7 @@ class AccountPageState extends State<AccountPage> {
                     return null;
                   },
                   onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                    gender: value,
+                    selfUpdate: RecipientSelfUpdate(gender: value),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -239,7 +241,9 @@ class AccountPageState extends State<AccountPage> {
                         if (value != null) {
                           // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
                           if (context.mounted) {
-                            context.read<AuthCubit>().updateRecipient(dateOfBirth: value);
+                            context.read<AuthCubit>().updateRecipient(
+                              selfUpdate: RecipientSelfUpdate(dateOfBirth: value.toIso8601String()),
+                            );
                             _birthDateController.text = getFormattedDate(value, locale) ?? "";
                           }
                         }
@@ -281,7 +285,7 @@ class AccountPageState extends State<AccountPage> {
                     // change language accordingly
                     context.read<SettingsCubit>().changeLanguage(value!);
                     context.read<AuthCubit>().updateRecipient(
-                      languageCode: value,
+                      selfUpdate: RecipientSelfUpdate(language: value),
                     );
                   },
                   value: recipient.contact.language,
@@ -293,7 +297,9 @@ class AccountPageState extends State<AccountPage> {
                   controller: _emailController,
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
-                      context.read<AuthCubit>().updateRecipient(email: value);
+                      context.read<AuthCubit>().updateRecipient(
+                        selfUpdate: RecipientSelfUpdate(email: value),
+                      );
                     }
                   },
                   keyboardType: TextInputType.emailAddress,
@@ -324,7 +330,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                        mobileMoneyPhone: value,
+                        selfUpdate: RecipientSelfUpdate(paymentPhone: value),
                       );
                     }
                   },
@@ -341,26 +347,29 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                InputDropdown<String>(
+                InputDropdown<PaymentProvider>(
                   label: "${context.l10n.mobilePaymentProvider}*",
                   items: const [
                     DropdownMenuItem(
-                      value: "orange_money_sl",
+                      value: PaymentProvider.orangeMoney,
                       child: Text("Orange Money SL"),
                     ),
+                    // TODO(migration): check if this still exists
                     DropdownMenuItem(
-                      value: "africell_money",
+                      value: PaymentProvider.africellMoney,
                       child: Text("Africell Money"),
                     ),
                   ],
-                  value: recipient.paymentInformation?.provider.name,
+                  value: recipient.paymentInformation?.provider,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null) {
                       return context.l10n.paymentProviderError;
                     }
                     return null;
                   },
-                  onChanged: (value) => context.read<AuthCubit>().updateRecipient(paymentProvider: value),
+                  onChanged: (value) => context.read<AuthCubit>().updateRecipient(
+                    selfUpdate: RecipientSelfUpdate(paymentProvider: value),
+                  ),
                 ),
                 const SizedBox(height: 24),
 
@@ -388,7 +397,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                        communicationMobilePhone: value,
+                        selfUpdate: RecipientSelfUpdate(contactPhone: value),
                       );
                     }
                   },
@@ -429,7 +438,9 @@ class AccountPageState extends State<AccountPage> {
                   controller: _successorNameController,
                   keyboardType: TextInputType.name,
                   onSubmitted: (value) {
-                    context.read<AuthCubit>().updateRecipient(successorName: value);
+                    context.read<AuthCubit>().updateRecipient(
+                      selfUpdate: RecipientSelfUpdate(successorName: value),
+                    );
                   },
                 ),
 
