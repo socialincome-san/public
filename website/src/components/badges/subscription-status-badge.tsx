@@ -1,8 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/badge';
-import { ContributionStatus } from '@prisma/client';
-import { CheckIcon, HourglassIcon, RefreshCcw, RefreshCwOff, UserXIcon } from 'lucide-react';
+import { HourglassIcon, RefreshCcw, RefreshCwOff } from 'lucide-react';
 import { ComponentType } from 'react';
 
 type SubscriptionStatusBadgeProps = {
@@ -12,7 +11,7 @@ type SubscriptionStatusBadgeProps = {
 
 const SUBSCRIPTION_STATUS_UI: Record<
 	SubscriptionStatusBadgeProps['status'],
-	{ variant: 'verified' | 'destructive' | 'outline' | 'secondary' | 'default'; Icon: ComponentType<any> }
+	{ variant: 'verified' | 'destructive' | 'outline'; Icon: ComponentType<any> }
 > = {
 	active: { variant: 'verified', Icon: RefreshCcw },
 	paused: { variant: 'outline', Icon: HourglassIcon },
