@@ -61,6 +61,7 @@ export function RecipientsTableClient({
 					</Button>
 				}
 				onRowClick={openEditForm}
+				searchKeys={['firstName', 'lastName', 'localPartnerName', 'programName']}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>

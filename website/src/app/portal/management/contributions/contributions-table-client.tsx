@@ -50,6 +50,7 @@ export function ContributionsTableClient({
 					</Button>
 				}
 				onRowClick={openEditForm}
+				searchKeys={['firstName', 'lastName', 'email', 'campaignTitle', 'programName']}
 			/>
 
 			<ContributionFormDialog

@@ -20,7 +20,6 @@ type DataTableProps<Row> = {
 	onRowClick?: (row: Row) => void;
 	initialSorting?: SortingState;
 	lang?: WebsiteLanguage;
-	showSearch?: boolean;
 	searchKeys?: string[];
 };
 
@@ -35,7 +34,6 @@ export default function DataTable<Row>({
 	onRowClick,
 	initialSorting,
 	lang,
-	showSearch = false,
 	searchKeys,
 }: DataTableProps<Row>) {
 	const translator = useTranslator(lang || 'en', 'website-me');
@@ -58,8 +56,10 @@ export default function DataTable<Row>({
 				<h2 className="pb-4 text-3xl">
 					{title} <span className="text-lg text-gray-500">({filteredData.length})</span>
 				</h2>
-				{showSearch && <Input className="w-64" placeholder="Search..." onChange={(e) => filter(e.target.value)} />}{' '}
-				{actions ?? null}
+				<div className="flex flex-wrap items-center gap-2">
+					{searchKeys?.length && <Input className="w-64" placeholder="Search..." onChange={(e) => filter(e.target.value)} />}{' '}
+					{actions ?? null}
+				</div>
 			</div>
 
 			{error ? (
