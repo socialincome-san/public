@@ -1,5 +1,6 @@
 part of "payments_cubit.dart";
 
+@MappableEnum()
 enum PaymentsStatus {
   initial,
   loading,

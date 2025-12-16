@@ -40,14 +40,18 @@ class SurveyCubit extends Cubit<SurveyState> {
 
       emit(
         SurveyState(
-          status: Status.updatedSuccess,
+          status: SurveyStateStatus.updatedSuccess,
           mappedSurveys: mappedSurveys,
           dashboardMappedSurveys: dashboardSurveys,
         ),
       );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
-      emit(const SurveyState(status: Status.updatedFailure));
+      emit(
+        const SurveyState(
+          status: SurveyStateStatus.updatedFailure,
+        ),
+      );
     }
   }
 

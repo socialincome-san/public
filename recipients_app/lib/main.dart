@@ -58,7 +58,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   // Initialize Social Income api client
   const baseUrl = String.fromEnvironment(_kBaseUrlKey);
-  final uri = Uri.https(const String.fromEnvironment(baseUrl), "api");
+  final uri = Uri.https(baseUrl, "api");
 
   final httpClient = http.Client();
   final apiClient = ApiClient(httpClient: httpClient, basePath: uri.toString());

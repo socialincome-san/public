@@ -7,6 +7,72 @@
 
 part of 'signup_cubit.dart';
 
+class SignupStatusMapper extends EnumMapper<SignupStatus> {
+  SignupStatusMapper._();
+
+  static SignupStatusMapper? _instance;
+  static SignupStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = SignupStatusMapper._());
+    }
+    return _instance!;
+  }
+
+  static SignupStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  SignupStatus decode(dynamic value) {
+    switch (value) {
+      case r'loadingPhoneNumber':
+        return SignupStatus.loadingPhoneNumber;
+      case r'loadingVerificationCode':
+        return SignupStatus.loadingVerificationCode;
+      case r'phoneNumberFailure':
+        return SignupStatus.phoneNumberFailure;
+      case r'enterPhoneNumber':
+        return SignupStatus.enterPhoneNumber;
+      case r'enterVerificationCode':
+        return SignupStatus.enterVerificationCode;
+      case r'verificationSuccess':
+        return SignupStatus.verificationSuccess;
+      case r'verificationFailure':
+        return SignupStatus.verificationFailure;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(SignupStatus self) {
+    switch (self) {
+      case SignupStatus.loadingPhoneNumber:
+        return r'loadingPhoneNumber';
+      case SignupStatus.loadingVerificationCode:
+        return r'loadingVerificationCode';
+      case SignupStatus.phoneNumberFailure:
+        return r'phoneNumberFailure';
+      case SignupStatus.enterPhoneNumber:
+        return r'enterPhoneNumber';
+      case SignupStatus.enterVerificationCode:
+        return r'enterVerificationCode';
+      case SignupStatus.verificationSuccess:
+        return r'verificationSuccess';
+      case SignupStatus.verificationFailure:
+        return r'verificationFailure';
+    }
+  }
+}
+
+extension SignupStatusMapperExtension on SignupStatus {
+  String toValue() {
+    SignupStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<SignupStatus>(this) as String;
+  }
+}
+
 class SignupStateMapper extends ClassMapperBase<SignupState> {
   SignupStateMapper._();
 
@@ -14,6 +80,7 @@ class SignupStateMapper extends ClassMapperBase<SignupState> {
   static SignupStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SignupStateMapper._());
+      SignupStatusMapper.ensureInitialized();
     }
     return _instance!;
   }

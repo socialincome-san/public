@@ -17,6 +17,7 @@ class SignupState with SignupStateMappable {
   });
 }
 
+@MappableEnum()
 enum SignupStatus {
   loadingPhoneNumber,
   loadingVerificationCode,

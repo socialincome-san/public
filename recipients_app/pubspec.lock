@@ -846,23 +846,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
-  rounded_loading_button:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: "76f6a3ea63b24868661ca8a0f5a633fa4491127b"
-      url: "https://github.com/ShamilPP/flutter_rounded_loading_button.git"
-    source: git
-    version: "2.1.0"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.27.7"
   sentry:
     dependency: transitive
     description:

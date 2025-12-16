@@ -1,15 +1,20 @@
 part of "survey_cubit.dart";
 
-enum Status { initial, updatedSuccess, updatedFailure }
+@MappableEnum()
+enum SurveyStateStatus {
+  initial,
+  updatedSuccess,
+  updatedFailure,
+}
 
 @MappableClass()
 class SurveyState with SurveyStateMappable {
-  final Status status;
+  final SurveyStateStatus status;
   final List<MappedSurvey> mappedSurveys;
   final List<MappedSurvey> dashboardMappedSurveys;
 
   const SurveyState({
-    this.status = Status.initial,
+    this.status = SurveyStateStatus.initial,
     this.mappedSurveys = const [],
     this.dashboardMappedSurveys = const [],
   });

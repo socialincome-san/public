@@ -7,6 +7,64 @@
 
 part of 'payments_cubit.dart';
 
+class PaymentsStatusMapper extends EnumMapper<PaymentsStatus> {
+  PaymentsStatusMapper._();
+
+  static PaymentsStatusMapper? _instance;
+  static PaymentsStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = PaymentsStatusMapper._());
+    }
+    return _instance!;
+  }
+
+  static PaymentsStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  PaymentsStatus decode(dynamic value) {
+    switch (value) {
+      case r'initial':
+        return PaymentsStatus.initial;
+      case r'loading':
+        return PaymentsStatus.loading;
+      case r'success':
+        return PaymentsStatus.success;
+      case r'updated':
+        return PaymentsStatus.updated;
+      case r'failure':
+        return PaymentsStatus.failure;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(PaymentsStatus self) {
+    switch (self) {
+      case PaymentsStatus.initial:
+        return r'initial';
+      case PaymentsStatus.loading:
+        return r'loading';
+      case PaymentsStatus.success:
+        return r'success';
+      case PaymentsStatus.updated:
+        return r'updated';
+      case PaymentsStatus.failure:
+        return r'failure';
+    }
+  }
+}
+
+extension PaymentsStatusMapperExtension on PaymentsStatus {
+  String toValue() {
+    PaymentsStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<PaymentsStatus>(this) as String;
+  }
+}
+
 class PaymentsStateMapper extends ClassMapperBase<PaymentsState> {
   PaymentsStateMapper._();
 
@@ -14,6 +72,7 @@ class PaymentsStateMapper extends ClassMapperBase<PaymentsState> {
   static PaymentsStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PaymentsStateMapper._());
+      PaymentsStatusMapper.ensureInitialized();
       PaymentsUiStateMapper.ensureInitialized();
     }
     return _instance!;

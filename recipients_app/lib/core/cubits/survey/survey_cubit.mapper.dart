@@ -7,6 +7,56 @@
 
 part of 'survey_cubit.dart';
 
+class SurveyStateStatusMapper extends EnumMapper<SurveyStateStatus> {
+  SurveyStateStatusMapper._();
+
+  static SurveyStateStatusMapper? _instance;
+  static SurveyStateStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = SurveyStateStatusMapper._());
+    }
+    return _instance!;
+  }
+
+  static SurveyStateStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  SurveyStateStatus decode(dynamic value) {
+    switch (value) {
+      case r'initial':
+        return SurveyStateStatus.initial;
+      case r'updatedSuccess':
+        return SurveyStateStatus.updatedSuccess;
+      case r'updatedFailure':
+        return SurveyStateStatus.updatedFailure;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(SurveyStateStatus self) {
+    switch (self) {
+      case SurveyStateStatus.initial:
+        return r'initial';
+      case SurveyStateStatus.updatedSuccess:
+        return r'updatedSuccess';
+      case SurveyStateStatus.updatedFailure:
+        return r'updatedFailure';
+    }
+  }
+}
+
+extension SurveyStateStatusMapperExtension on SurveyStateStatus {
+  String toValue() {
+    SurveyStateStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<SurveyStateStatus>(this) as String;
+  }
+}
+
 class SurveyStateMapper extends ClassMapperBase<SurveyState> {
   SurveyStateMapper._();
 
@@ -14,6 +64,7 @@ class SurveyStateMapper extends ClassMapperBase<SurveyState> {
   static SurveyStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SurveyStateMapper._());
+      SurveyStateStatusMapper.ensureInitialized();
       MappedSurveyMapper.ensureInitialized();
     }
     return _instance!;
@@ -22,12 +73,12 @@ class SurveyStateMapper extends ClassMapperBase<SurveyState> {
   @override
   final String id = 'SurveyState';
 
-  static Status _$status(SurveyState v) => v.status;
-  static const Field<SurveyState, Status> _f$status = Field(
+  static SurveyStateStatus _$status(SurveyState v) => v.status;
+  static const Field<SurveyState, SurveyStateStatus> _f$status = Field(
     'status',
     _$status,
     opt: true,
-    def: Status.initial,
+    def: SurveyStateStatus.initial,
   );
   static List<MappedSurvey> _$mappedSurveys(SurveyState v) => v.mappedSurveys;
   static const Field<SurveyState, List<MappedSurvey>> _f$mappedSurveys = Field(
@@ -134,7 +185,7 @@ abstract class SurveyStateCopyWith<$R, $In extends SurveyState, $Out>
   >
   get dashboardMappedSurveys;
   $R call({
-    Status? status,
+    SurveyStateStatus? status,
     List<MappedSurvey>? mappedSurveys,
     List<MappedSurvey>? dashboardMappedSurveys,
   });
@@ -173,7 +224,7 @@ class _SurveyStateCopyWithImpl<$R, $Out>
   );
   @override
   $R call({
-    Status? status,
+    SurveyStateStatus? status,
     List<MappedSurvey>? mappedSurveys,
     List<MappedSurvey>? dashboardMappedSurveys,
   }) => $apply(
