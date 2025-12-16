@@ -42,13 +42,15 @@ export default function DataTable<Row>({
 	const columns = makeColumns(hideProgramName, translator);
 	const [filteredData, setFilteredData] = useState(data);
 	const isEmpty = filteredData.length === 0;
-	
+
 	const filter = (search: string) => {
 		const filtered = data.filter((row) => {
-			return searchKeys?.some((key) => (row[key as keyof Row]as string)?.toString().toLowerCase().includes(search.toLowerCase()));
+			return searchKeys?.some((key) =>
+				(row[key as keyof Row] as string)?.toString().toLowerCase().includes(search.toLowerCase()),
+			);
 		});
 		setFilteredData(filtered);
-	}
+	};
 
 	return (
 		<div>
@@ -56,13 +58,8 @@ export default function DataTable<Row>({
 				<h2 className="pb-4 text-3xl">
 					{title} <span className="text-lg text-gray-500">({filteredData.length})</span>
 				</h2>
-				{showSearch && (
-					<Input
-					className='w-64'
-						placeholder='Search...'
-						onChange={(e) => filter(e.target.value)}
-					/>
-				)} {actions ?? null}
+				{showSearch && <Input className="w-64" placeholder="Search..." onChange={(e) => filter(e.target.value)} />}{' '}
+				{actions ?? null}
 			</div>
 
 			{error ? (
