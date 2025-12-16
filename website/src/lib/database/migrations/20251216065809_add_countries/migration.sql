@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Cause" AS ENUM ('proverty', 'health', 'gender_based_violence', 'climate');
+CREATE TYPE "Cause" AS ENUM ('poverty', 'health', 'gender_based_violence', 'climate');
 
 -- CreateEnum
 CREATE TYPE "NetworkTechnology" AS ENUM ('g3', 'g4', 'g5', 'satellite', 'unknown');

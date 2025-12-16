@@ -113,7 +113,7 @@ enum PayoutInterval {
 }
 
 enum Cause {
-  proverty
+  poverty
   health
   gender_based_violence
   climate

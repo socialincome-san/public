@@ -5,7 +5,7 @@ export const localPartnersData: LocalPartner[] = [
 		id: 'local-partner-1',
 		legacyFirestoreId: null,
 		name: 'Makeni Development Initiative',
-		causes: ['proverty'],
+		causes: ['poverty'],
 		contactId: 'contact-13',
 		createdAt: new Date(),
 		updatedAt: null
