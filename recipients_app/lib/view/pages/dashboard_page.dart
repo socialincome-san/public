@@ -2,6 +2,7 @@ import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cubit.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";
@@ -100,18 +101,34 @@ class _DashboardViewState extends State<_DashboardView> {
             context.read<PaymentsCubit>().loadPayments();
             context.read<SurveyCubit>().getSurveys();
           },
-          child: Padding(
-            padding: AppSpacings.h8,
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(height: 4),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) => items[index],
+          child: BlocListener<DashboardCardManagerCubit, DashboardCardManagerState>(
+            listener: (context, state) {
+              if (state.status == DashboardCardManagerStatus.error) {
+                FlushbarHelper.showFlushbar(
+                  context,
+                  message: state.exception?.toString() ?? "An error occurred",
+                  type: FlushbarType.error,
+                );
+              } else if (state.status == DashboardCardManagerStatus.updated) {
+                FlushbarHelper.showFlushbar(
+                  context,
+                  message: "Profile updated successfully",
+                );
+              }
+            },
+            child: Padding(
+              padding: AppSpacings.h8,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => const SizedBox(height: 4),
+                      itemCount: items.length,
+                      itemBuilder: (context, index) => items[index],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

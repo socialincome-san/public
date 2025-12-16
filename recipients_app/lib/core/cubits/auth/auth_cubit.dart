@@ -97,6 +97,7 @@ class AuthCubit extends Cubit<AuthState> {
         state.copyWith(
           status: AuthStatus.updateRecipientSuccess,
           recipient: updatedRecipient,
+          exception: null,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -112,8 +113,18 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     emit(const AuthState(status: AuthStatus.loading));
-    await authService.signOut();
-    emit(const AuthState());
+    try {
+      await authService.signOut();
+      emit(const AuthState());
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          exception: ex,
+        ),
+      );
+    }
   }
 
   @override

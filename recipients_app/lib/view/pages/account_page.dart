@@ -307,7 +307,7 @@ class AccountPageState extends State<AccountPage> {
                     if (value == null || value.isEmpty) return null;
 
                     final emailRegex = RegExp(
-                      r"^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$",
+                      r"^[\w\-\+]+(\.[\w\-\+]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$",
                     );
                     if (!emailRegex.hasMatch(value)) {
                       return context.l10n.errorEmailInvalid;

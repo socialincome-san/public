@@ -7,6 +7,72 @@
 
 part of 'auth_cubit.dart';
 
+class AuthStatusMapper extends EnumMapper<AuthStatus> {
+  AuthStatusMapper._();
+
+  static AuthStatusMapper? _instance;
+  static AuthStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = AuthStatusMapper._());
+    }
+    return _instance!;
+  }
+
+  static AuthStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  AuthStatus decode(dynamic value) {
+    switch (value) {
+      case r'loading':
+        return AuthStatus.loading;
+      case r'unauthenticated':
+        return AuthStatus.unauthenticated;
+      case r'authenticated':
+        return AuthStatus.authenticated;
+      case r'updatingRecipient':
+        return AuthStatus.updatingRecipient;
+      case r'updateRecipientSuccess':
+        return AuthStatus.updateRecipientSuccess;
+      case r'updateRecipientFailure':
+        return AuthStatus.updateRecipientFailure;
+      case r'failure':
+        return AuthStatus.failure;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(AuthStatus self) {
+    switch (self) {
+      case AuthStatus.loading:
+        return r'loading';
+      case AuthStatus.unauthenticated:
+        return r'unauthenticated';
+      case AuthStatus.authenticated:
+        return r'authenticated';
+      case AuthStatus.updatingRecipient:
+        return r'updatingRecipient';
+      case AuthStatus.updateRecipientSuccess:
+        return r'updateRecipientSuccess';
+      case AuthStatus.updateRecipientFailure:
+        return r'updateRecipientFailure';
+      case AuthStatus.failure:
+        return r'failure';
+    }
+  }
+}
+
+extension AuthStatusMapperExtension on AuthStatus {
+  String toValue() {
+    AuthStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<AuthStatus>(this) as String;
+  }
+}
+
 class AuthStateMapper extends ClassMapperBase<AuthState> {
   AuthStateMapper._();
 
@@ -14,6 +80,7 @@ class AuthStateMapper extends ClassMapperBase<AuthState> {
   static AuthStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AuthStateMapper._());
+      AuthStatusMapper.ensureInitialized();
       RecipientMapper.ensureInitialized();
     }
     return _instance!;

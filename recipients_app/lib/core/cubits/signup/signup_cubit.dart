@@ -40,6 +40,7 @@ class SignupCubit extends Cubit<SignupState> {
             state.copyWith(
               status: SignupStatus.enterVerificationCode,
               phoneNumber: phoneNumber,
+              exception: null,
             ),
           );
         },
@@ -59,6 +60,7 @@ class SignupCubit extends Cubit<SignupState> {
               state.copyWith(
                 status: SignupStatus.verificationSuccess,
                 phoneNumber: phoneNumber,
+                exception: null,
               ),
             );
           } on Exception catch (ex, stackTrace) {
@@ -94,6 +96,7 @@ class SignupCubit extends Cubit<SignupState> {
         state.copyWith(
           status: SignupStatus.verificationSuccess,
           phoneNumber: state.phoneNumber,
+          exception: null,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -114,6 +117,7 @@ class SignupCubit extends Cubit<SignupState> {
       state.copyWith(
         status: SignupStatus.enterPhoneNumber,
         phoneNumber: state.phoneNumber,
+        exception: null,
       ),
     );
   }

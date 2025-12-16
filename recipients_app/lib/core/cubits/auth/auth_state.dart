@@ -1,5 +1,6 @@
 part of "auth_cubit.dart";
 
+@MappableEnum()
 enum AuthStatus {
   loading,
   unauthenticated,
