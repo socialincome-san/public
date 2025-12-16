@@ -1,7 +1,11 @@
 import { CellType } from '@/components/data-table/elements/types';
 
-export function TextCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
+type Props<TData, TValue> = CellType<TData, TValue> & {
+	translatedValue?: string;
+};
+
+export function TextCell<TData, TValue>({ ctx, translatedValue }: Props<TData, TValue>) {
 	const value = ctx.getValue();
 
-	return <span>{!value ? '—' : String(value)}</span>;
+	return <span>{!value ? '—' : String(translatedValue || value)}</span>;
 }
