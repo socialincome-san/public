@@ -21,6 +21,7 @@ import { ServiceResult } from '../core/base.types';
 import {
 	CheckoutMetadata,
 	StripeCustomerData,
+	StripePaymentMethod,
 	StripeSubscriptionRow,
 	StripeSubscriptionTableView,
 	UpdateContributorAfterCheckoutInput,
@@ -263,7 +264,8 @@ export class StripeService extends BaseService {
 				status: 'all',
 			});
 
-			const rows: StripeSubscriptionRow[] = subscriptions.data.map((sub) => {
+
+			const rows: StripeSubscriptionRow[] = await Promise.all(subscriptions.data.map(async (sub) => {
 				const item = sub.items.data[0];
 				const price = item?.price;
 
@@ -271,22 +273,38 @@ export class StripeService extends BaseService {
 				const currency = price?.currency?.toUpperCase() ?? '';
 				const interval = price?.recurring?.interval_count?.toString() ?? '';
 
+				const method = await this.stripe.paymentMethods.retrieve(sub.default_payment_method?.toString() ?? '');
+
 				return {
 					id: sub.id,
-					from: new Date(sub.start_date * 1000),
-					until: sub.ended_at ? new Date(sub.ended_at * 1000) : new Date(sub.current_period_end * 1000),
+					created: new Date(sub.start_date * 1000),
 					status: sub.status,
 					amount,
 					interval,
 					currency,
+					paymentMethod: this.getPaymentMethod(method),
 				};
-			});
+			}));
 
 			return this.resultOk({ rows });
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch subscriptions');
 		}
+	}
+
+	private getPaymentMethod(paymentMethod: Stripe.PaymentMethod): StripePaymentMethod {
+		const titleCase = (s: string) => s.replace(/^_*(.)|_+(.)/g, (s, c, d) => c ? c.toUpperCase() : ' ' + d.toUpperCase())
+		if (paymentMethod.type === 'card' && paymentMethod.card) {
+			return {
+				type: 'card',
+				label: titleCase(paymentMethod.card.brand),
+			};
+		}
+		return {
+			type: 'other',
+			label: titleCase(paymentMethod.type),
+		};
 	}
 
 	async createManageSubscriptionsSession(

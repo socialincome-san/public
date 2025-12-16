@@ -91,8 +91,8 @@
 	"subscriptions": {
 		"amount": "Montant",
 		"date": "Date",
-		"from": "De",
-		"to": "À",
+		"created": "Créé",
+		"payment-method": "Méthode de paiement",
 		"source": "Source",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
