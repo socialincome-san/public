@@ -127,7 +127,7 @@ export function SuccessForm({
 				firstname: values.firstname,
 				lastname: values.lastname,
 				email: values.email,
-				language: lang as SupportedLanguage
+				language: lang as SupportedLanguage,
 			});
 
 			if (!result.success) {

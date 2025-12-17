@@ -4,6 +4,8 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
+import { SupportedLanguage } from '../sendgrid/types';
 import {
 	BankContributorData,
 	ContributorDonationCertificate,
@@ -17,8 +19,6 @@ import {
 	ContributorWithContact,
 	StripeContributorData,
 } from './contributor.types';
-import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
-import { SupportedLanguage } from '../sendgrid/types';
 
 export class ContributorService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
@@ -419,7 +419,7 @@ export class ContributorService extends BaseService {
 				},
 				include: { contact: true },
 			});
-			
+
 			await this.sendGridService.subscribeToNewsletter({
 				firstname: contributorData.firstName,
 				lastname: contributorData.lastName,
