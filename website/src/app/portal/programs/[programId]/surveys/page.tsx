@@ -35,6 +35,7 @@ async function SurveysProgramScopedDataLoader({ params }: { params: Promise<{ pr
 			makeColumns={makeSurveyColumns}
 			actions={<Button>Add new survey</Button>}
 			hideProgramName
+			searchKeys={['name', 'recipientName']}
 		/>
 	);
 }
