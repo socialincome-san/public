@@ -1,4 +1,4 @@
-import "package:app/data/enums/payment_ui_status.dart";
+import "package:app/data/enums/payout_ui_status.dart";
 import "package:flutter/material.dart";
 
 const statusIconRadius = 10.0;

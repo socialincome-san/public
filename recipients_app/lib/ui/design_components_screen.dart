@@ -1,4 +1,4 @@
-import "package:app/data/enums/payment_ui_status.dart";
+import "package:app/data/enums/payout_ui_status.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/icons/icons.dart";
