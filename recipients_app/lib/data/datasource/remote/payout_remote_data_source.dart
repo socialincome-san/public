@@ -39,8 +39,11 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     final uri = baseUri.resolve("api/v1/recipients/me/payouts/$payoutId/contest");
 
     // if contest reason is not null, add it to the comment in payout
+    final body = {
+      "comments": contestReason,
+    };
 
-    final response = await authenticatedClient.post(uri);
+    final response = await authenticatedClient.post(uri, body: jsonEncode(body));
 
     if (response.statusCode != 201) {
       throw Exception("Failed to contest payout: ${response.statusCode}");
