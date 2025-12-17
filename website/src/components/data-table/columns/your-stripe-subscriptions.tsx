@@ -26,7 +26,13 @@ export function makeYourStripeSubscriptionsColumns(
 			cell: (ctx) => {
 				const translateKey = `subscriptions.status.${ctx.row.original.status}`;
 				const label = translator?.t(translateKey);
-				return <StatusCell ctx={ctx} variant="subscription" label={label == translateKey ? ctx.row.original.status : label} />;
+				return (
+					<StatusCell
+						ctx={ctx}
+						variant="subscription"
+						label={label == translateKey ? ctx.row.original.status : label}
+					/>
+				);
 			},
 		},
 		{
