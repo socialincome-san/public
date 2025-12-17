@@ -7,15 +7,17 @@ import { CampaignStatusBadge } from '@/components/badges/campaign-status-badge';
 import { ContributionStatusBadge } from '@/components/badges/contribution-status-badge';
 import { PayoutStatusBadge } from '@/components/badges/payout-status-badge';
 import { RecipientStatusBadge } from '@/components/badges/recipient-status-badge';
+import { SubscriptionStatusBadge } from '@/components/badges/subscription-status-badge';
 import { SurveyStatusBadge } from '@/components/badges/survey-status-badge';
 
-type StatusVariant = 'contribution' | 'payout' | 'recipient' | 'survey' | 'campaign';
+type StatusVariant = 'contribution' | 'payout' | 'recipient' | 'survey' | 'campaign' | 'subscription';
 
 type Props<TData, TValue> = CellType<TData, TValue> & {
 	variant: StatusVariant;
+	label?: string;
 };
 
-export function StatusCell<TData, TValue>({ ctx, variant }: Props<TData, TValue>) {
+export function StatusCell<TData, TValue>({ ctx, variant, label }: Props<TData, TValue>) {
 	const value = ctx.getValue();
 
 	switch (variant) {
@@ -29,6 +31,13 @@ export function StatusCell<TData, TValue>({ ctx, variant }: Props<TData, TValue>
 			return <SurveyStatusBadge status={value as SurveyStatus} />;
 		case 'campaign':
 			return <CampaignStatusBadge status={!!value} />;
+		case 'subscription':
+			return (
+				<SubscriptionStatusBadge
+					status={value as 'active' | 'canceled' | 'paused'}
+					label={label || (value as string)}
+				/>
+			);
 		default:
 			return null;
 	}

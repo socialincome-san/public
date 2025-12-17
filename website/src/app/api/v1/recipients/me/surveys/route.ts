@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
  * Get surveys
  * @description Returns all surveys belonging to the authenticated recipient.
  * @auth BearerAuth
- * @response Survey
+ * @response SurveyListResponse
  * @openapi
  */
 export async function GET(request: Request) {

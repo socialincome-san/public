@@ -41,6 +41,7 @@
 			"lastname": "Nachname",
 			"email": "E-Mail",
 			"country": "Land",
+			"language": "Kommunikationssprache",
 			"gender": "Geschlecht",
 			"street": "Strasse",
 			"street-number": "Nummer",
@@ -91,8 +92,8 @@
 	"subscriptions": {
 		"amount": "Betrag",
 		"date": "Datum",
-		"from": "Von",
-		"to": "Bis",
+		"created": "Erstellt",
+		"payment-method": "Zahlungsart",
 		"source": "Quelle",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",

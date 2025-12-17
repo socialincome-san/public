@@ -106,6 +106,34 @@ enum DonationInterval {
   yearly
 }
 
+enum PayoutInterval {
+  monthly
+  quarterly
+  yearly
+}
+
+enum Cause {
+  poverty
+  health
+  gender_based_violence
+  climate
+}
+
+enum NetworkTechnology {
+  g3
+  g4
+  g5
+  satellite
+  unknown
+}
+
+enum SanctionRegime {
+  eu
+  us
+  un
+  other
+}
+
 model Account {
   id String @id @default(cuid()) @map("id")
 
@@ -299,6 +327,7 @@ model LocalPartner {
   id                String  @id @default(cuid()) @map("id")
   legacyFirestoreId String? @unique @map("legacy_firestore_id")
   name              String  @unique @map("name")
+  causes            Cause[] @map("causes")
   contactId         String  @unique @map("contact_id")
   contact           Contact @relation(fields: [contactId], references: [id])
 
@@ -359,13 +388,13 @@ model Organization {
 }
 
 model Program {
-  id             String  @id @default(cuid()) @map("id")
-  name           String  @unique @map("name")
-  totalPayments  Int     @map("total_payments")
-  payoutAmount   Decimal @map("payout_amount") @db.Decimal(12, 4)
-  payoutCurrency String  @map("payout_currency")
-  payoutInterval Int     @map("payout_interval")
-  country        String  @default("Sierra Leone") @map("country")
+  id             String         @id @default(cuid()) @map("id")
+  name           String         @unique @map("name")
+  totalPayments  Int            @map("total_payments")
+  payoutAmount   Decimal        @map("payout_amount") @db.Decimal(12, 4)
+  payoutCurrency String         @map("payout_currency")
+  payoutInterval PayoutInterval @default(monthly) @map("payout_interval")
+  country        String         @default("Sierra Leone") @map("country")
 
   campaigns       Campaign[]
   recipients      Recipient[]
@@ -453,7 +482,7 @@ model Address {
 model PaymentInformation {
   id       String          @id @default(cuid()) @map("id")
   provider PaymentProvider @map("provider")
-  code     String          @unique @map("code")
+  code     String?         @unique @map("code")
   phoneId  String          @map("phone_id")
   phone    Phone           @relation(fields: [phoneId], references: [id])
 
@@ -517,4 +546,60 @@ model ExchangeRate {
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("exchange_rate")
+}
+
+model Country {
+  id   String @id @default(cuid()) @map("id")
+  name String @unique @map("name")
+
+  //
+  // PRECONDITION 1: Suitability of cash
+  // Condition met when microfinanceIndex < 3
+  //
+  microfinanceIndex Decimal?  @map("microfinance_index") @db.Decimal(4, 2)
+  latestSurveyDate  DateTime? @map("latest_survey_date") @db.Date
+
+  microfinanceSourceLinkId String?     @map("microfinance_source_link_id")
+  microfinanceSourceLink   SourceLink? @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
+
+  //
+  // PRECONDITION 2: Mobile Money
+  // Condition met when paymentProviders.length >= 1
+  //
+  paymentProviders PaymentProvider[] @map("payment_providers")
+
+  //
+  // PRECONDITION 3: Mobile Network
+  // Condition met when populationCoverage >= 50
+  //
+  populationCoverage Decimal?           @map("population_coverage") @db.Decimal(5, 2)
+  networkTechnology  NetworkTechnology? @map("network_technology")
+
+  networkSourceLinkId String?     @map("network_source_link_id")
+  networkSourceLink   SourceLink? @relation("networkSource", fields: [networkSourceLinkId], references: [id])
+
+  //
+  // PRECONDITION 4: No sanctions
+  // Condition NOT met → "Restrictions apply" when sanctions.length >= 1
+  //
+  sanctions SanctionRegime[] @map("sanctions")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("country")
+}
+
+model SourceLink {
+  id   String @id @default(cuid()) @map("id")
+  href String @map("href")
+  text String @map("text")
+
+  microfinanceCountries Country[] @relation("microfinanceSource")
+  networkCountries      Country[] @relation("networkSource")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("source_link")
 }

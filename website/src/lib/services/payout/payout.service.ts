@@ -774,6 +774,7 @@ export class PayoutService extends BaseService {
 		recipientId: string,
 		payoutId: string,
 		status: PayoutStatus,
+		comments?: string | null,
 	): Promise<ServiceResult<PayoutEntity>> {
 		try {
 			const payout = await this.db.payout.findFirst({ where: { id: payoutId, recipientId } });
@@ -782,8 +783,12 @@ export class PayoutService extends BaseService {
 			}
 			const updated = await this.db.payout.update({
 				where: { id: payout.id },
-				data: { status },
+				data: {
+					status,
+					comments,
+				},
 			});
+
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
