@@ -3,6 +3,7 @@ import "dart:convert";
 import "package:app/data/datasource/payout_data_source.dart";
 import "package:app/data/models/payment/payout.dart";
 import "package:app/data/services/authenticated_client.dart";
+import "package:http/http.dart";
 
 class PayoutRemoteDataSource implements PayoutDataSource {
   final Uri baseUri;
@@ -39,11 +40,16 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     final uri = baseUri.resolve("api/v1/recipients/me/payouts/$payoutId/contest");
 
     // if contest reason is not null, add it to the comment in payout
-    final body = {
-      "comments": contestReason,
-    };
+    Response? response;
+    if (contestReason != null) {
+      final body = {
+        "comments": contestReason,
+      };
 
-    final response = await authenticatedClient.post(uri, body: jsonEncode(body));
+      response = await authenticatedClient.post(uri, body: jsonEncode(body));
+    } else {
+      response = await authenticatedClient.post(uri);
+    }
 
     if (response.statusCode != 201) {
       throw Exception("Failed to contest payout: ${response.statusCode}");
