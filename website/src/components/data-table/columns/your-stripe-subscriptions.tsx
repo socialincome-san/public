@@ -30,7 +30,7 @@ export function makeYourStripeSubscriptionsColumns(
 					<StatusCell
 						ctx={ctx}
 						variant="subscription"
-						label={label == translateKey ? ctx.row.original.status : label}
+						label={label === translateKey ? ctx.row.original.status : label}
 					/>
 				);
 			},
