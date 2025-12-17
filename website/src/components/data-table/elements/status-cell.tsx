@@ -32,12 +32,7 @@ export function StatusCell<TData, TValue>({ ctx, variant, label }: Props<TData, 
 		case 'campaign':
 			return <CampaignStatusBadge status={!!value} />;
 		case 'subscription':
-			return (
-				<SubscriptionStatusBadge
-					status={value as SubscriptionStatus}
-					label={label || (value as string)}
-				/>
-			);
+			return <SubscriptionStatusBadge status={value as SubscriptionStatus} label={label || (value as string)} />;
 		default:
 			return null;
 	}
