@@ -68,7 +68,7 @@ export function BankTransferForm({
 
 	const handleGenerateQRCode = async () => {
 		const { email, firstName, lastName } = form.getValues();
-		await generateQRCode(email, firstName, lastName);
+		await generateQRCode(email, firstName, lastName, lang);
 	};
 
 	return (
