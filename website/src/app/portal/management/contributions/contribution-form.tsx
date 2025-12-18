@@ -7,6 +7,7 @@ import { ContributionStatus } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
+import { websiteCurrencies } from '@/lib/i18n/utils';
 import {
 	createContributionAction,
 	getContributionAction,
@@ -48,9 +49,9 @@ const initialFormSchema: ContributionFormSchema = {
 			zodSchema: z.number().positive('Amount must be positive'),
 		},
 		currency: {
-			placeholder: 'e.g., USD, EUR, CHF',
+			placeholder: 'USD, EUR, CHF',
 			label: 'Currency Code',
-			zodSchema: z.string().length(3, 'Currency code must be 3 letters.'),
+			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		amountChf: {
 			placeholder: 'Contribution Amount in CHF',

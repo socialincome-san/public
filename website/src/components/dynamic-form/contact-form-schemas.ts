@@ -1,6 +1,8 @@
+import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import { Gender } from '@prisma/client';
 import z from 'zod';
 import { FormSchema } from './dynamic-form';
+import { getZodEnum } from './helper';
 
 export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchema => {
 	return {
@@ -33,7 +35,7 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 			language: {
 				placeholder: 'Language',
 				label: 'Language',
-				zodSchema: z.string().nullable(),
+				zodSchema: z.nativeEnum(getZodEnum(allWebsiteLanguages.map((l) => ({ id: l, label: l })))),
 			},
 			dateOfBirth: {
 				label: 'Date of birth',
