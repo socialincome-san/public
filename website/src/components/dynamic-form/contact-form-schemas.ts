@@ -35,7 +35,7 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 			language: {
 				placeholder: 'Language',
 				label: 'Language',
-				zodSchema: z.nativeEnum(getZodEnum(allWebsiteLanguages.map((l) => ({ id: l, label: l })))),
+				zodSchema: z.nativeEnum(getZodEnum(allWebsiteLanguages.map((l) => ({ id: l, label: l })))).nullable(),
 			},
 			dateOfBirth: {
 				label: 'Date of birth',
