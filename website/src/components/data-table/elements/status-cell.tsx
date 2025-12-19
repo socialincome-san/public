@@ -7,7 +7,7 @@ import { CampaignStatusBadge } from '@/components/badges/campaign-status-badge';
 import { ContributionStatusBadge } from '@/components/badges/contribution-status-badge';
 import { PayoutStatusBadge } from '@/components/badges/payout-status-badge';
 import { RecipientStatusBadge } from '@/components/badges/recipient-status-badge';
-import { SubscriptionStatusBadge } from '@/components/badges/subscription-status-badge';
+import { SubscriptionStatus, SubscriptionStatusBadge } from '@/components/badges/subscription-status-badge';
 import { SurveyStatusBadge } from '@/components/badges/survey-status-badge';
 
 type StatusVariant = 'contribution' | 'payout' | 'recipient' | 'survey' | 'campaign' | 'subscription';
@@ -32,12 +32,7 @@ export function StatusCell<TData, TValue>({ ctx, variant, label }: Props<TData, 
 		case 'campaign':
 			return <CampaignStatusBadge status={!!value} />;
 		case 'subscription':
-			return (
-				<SubscriptionStatusBadge
-					status={value as 'active' | 'canceled' | 'paused'}
-					label={label || (value as string)}
-				/>
-			);
+			return <SubscriptionStatusBadge status={value as SubscriptionStatus} label={label || (value as string)} />;
 		default:
 			return null;
 	}
