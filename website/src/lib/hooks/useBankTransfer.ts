@@ -25,7 +25,7 @@ export function useBankTransfer({ amount, intervalCount, currency, qrBillType, t
 	const [isLoading, startTransition] = useTransition();
 	const [paid, setPaid] = useState(false);
 
-	const generateQRCode = async (email: string, firstName: string, lastName: string) => {
+	const generateQRCode = async (email: string, firstName: string, lastName: string, language: string) => {
 		if (!currency) {
 			toast.error(translations.errors.qrBillError);
 			return;
@@ -45,6 +45,7 @@ export function useBankTransfer({ amount, intervalCount, currency, qrBillType, t
 				firstName,
 				lastName,
 				paymentReferenceId: contributorReferenceId,
+				language,
 			});
 			setContributionReference(contributionReferenceId);
 
