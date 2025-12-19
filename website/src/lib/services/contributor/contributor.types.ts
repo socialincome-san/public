@@ -68,6 +68,7 @@ export type BankContributorData = {
 	email: string;
 	firstName: string;
 	lastName: string;
+	language: string;
 };
 
 export type ContributorSession = {

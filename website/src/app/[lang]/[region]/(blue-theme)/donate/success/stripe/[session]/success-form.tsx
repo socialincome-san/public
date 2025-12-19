@@ -1,7 +1,9 @@
 'use client';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { subscribeToNewsletter } from '@/lib/server-actions/newsletter-actions';
 import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
+import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';
@@ -120,6 +122,13 @@ export function SuccessForm({
 			};
 
 			const result = await updateContributorAfterCheckoutAction(payload);
+
+			await subscribeToNewsletter({
+				firstname: values.firstname,
+				lastname: values.lastname,
+				email: values.email,
+				language: lang as SupportedLanguage,
+			});
 
 			if (!result.success) {
 				toast.error(translations.updateUserError);
