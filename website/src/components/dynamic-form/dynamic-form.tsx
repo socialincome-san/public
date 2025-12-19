@@ -75,6 +75,28 @@ const isOptional = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject
 	return ['ZodOptional', 'ZodNullable'].includes(type);
 };
 
+const unwrapOptional = (def: any) => {
+	if (def?.typeName === 'ZodOptional' || def?.typeName === 'ZodNullable') {
+		return def.innerType?._def;
+	}
+	return def;
+};
+
+const getEnumArrayValues = (
+	key: keyof z.infer<typeof zodSchema>,
+	zodSchema: z.ZodObject<any>,
+	parentOption?: string,
+): Record<string, string> => {
+	let def: any = getDef(key, zodSchema, parentOption);
+	def = unwrapOptional(def);
+
+	if (def?.typeName !== 'ZodArray') {
+		return {};
+	}
+
+	return (def.type?._def?.values ?? {}) as Record<string, string>;
+};
+
 const DynamicForm: FC<{
 	formSchema: FormSchema;
 	isLoading: boolean;
@@ -269,18 +291,8 @@ const GenericFormField = ({
 	if (isFormField(formFieldSchema)) {
 		switch (getType(option, zodSchema, parentOption)) {
 			case 'ZodArray': {
-				let def: any = getDef(option, zodSchema, parentOption);
-
-				if (def?.typeName === 'ZodOptional') {
-					def = def.innerType?._def;
-				}
-
-				const values = (def?.type?._def?.values ?? {}) as Record<string, string>;
-
-				const options = Object.entries(values).map(([label, value]) => ({
-					label,
-					value,
-				}));
+				const values = getEnumArrayValues(option, zodSchema, parentOption);
+				const options = Object.entries(values).map(([label, value]) => ({ label, value }));
 
 				return (
 					<FormField
