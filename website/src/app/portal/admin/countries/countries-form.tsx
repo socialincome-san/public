@@ -23,6 +23,10 @@ export type CountryFormSchema = {
 		populationCoverage: FormField;
 		latestSurveyDate: FormField;
 		networkTechnology: FormField;
+		microfinanceSourceText: FormField;
+		microfinanceSourceHref: FormField;
+		networkSourceText: FormField;
+		networkSourceHref: FormField;
 	};
 };
 
@@ -52,6 +56,26 @@ const initialFormSchema: CountryFormSchema = {
 			placeholder: 'Technology (e.g., 3G, 4G, 5G)',
 			label: 'Technology',
 			zodSchema: z.nativeEnum(NetworkTechnology).optional(),
+		},
+		microfinanceSourceText: {
+			placeholder: 'Microfinance source name (e.g., WFP)',
+			label: 'Microfinance source text',
+			zodSchema: z.string().min(1).optional(),
+		},
+		microfinanceSourceHref: {
+			placeholder: 'Microfinance source URL',
+			label: 'Microfinance source URL',
+			zodSchema: z.string().url().optional(),
+		},
+		networkSourceText: {
+			placeholder: 'Network source name (e.g., ITU)',
+			label: 'Network source text',
+			zodSchema: z.string().min(1).optional(),
+		},
+		networkSourceHref: {
+			placeholder: 'Network source URL',
+			label: 'Network source URL',
+			zodSchema: z.string().url().optional(),
 		},
 	},
 };
@@ -95,6 +119,10 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 						next.fields.populationCoverage.value = result.data.populationCoverage ?? undefined;
 						next.fields.latestSurveyDate.value = result.data.latestSurveyDate ?? undefined;
 						next.fields.networkTechnology.value = result.data.networkTechnology ?? undefined;
+						next.fields.microfinanceSourceText.value = result.data.microfinanceSourceLink?.text ?? undefined;
+						next.fields.microfinanceSourceHref.value = result.data.microfinanceSourceLink?.href ?? undefined;
+						next.fields.networkSourceText.value = result.data.networkSourceLink?.text ?? undefined;
+						next.fields.networkSourceHref.value = result.data.networkSourceLink?.href ?? undefined;
 						return next;
 					});
 				} else {

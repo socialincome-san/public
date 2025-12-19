@@ -28,7 +28,14 @@ export class CountryService extends BaseService {
 					populationCoverage: input.populationCoverage ?? undefined,
 					latestSurveyDate: input.latestSurveyDate ?? undefined,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
+					microfinanceSourceLink: input.microfinanceSourceLink
+						? { create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href } }
+						: undefined,
+					networkSourceLink: input.networkSourceLink
+						? { create: { text: input.networkSourceLink.text, href: input.networkSourceLink.href } }
+						: undefined,
 				},
+				include: { microfinanceSourceLink: true, networkSourceLink: true },
 			});
 
 			return this.resultOk({
@@ -38,6 +45,20 @@ export class CountryService extends BaseService {
 				populationCoverage: created.populationCoverage ? Number(created.populationCoverage) : null,
 				latestSurveyDate: created.latestSurveyDate ?? null,
 				networkTechnology: created.networkTechnology ?? null,
+				microfinanceSourceLink: created.microfinanceSourceLink
+					? {
+							id: created.microfinanceSourceLink.id,
+							text: created.microfinanceSourceLink.text,
+							href: created.microfinanceSourceLink.href,
+						}
+					: null,
+				networkSourceLink: created.networkSourceLink
+					? {
+							id: created.networkSourceLink.id,
+							text: created.networkSourceLink.text,
+							href: created.networkSourceLink.href,
+						}
+					: null,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -61,7 +82,24 @@ export class CountryService extends BaseService {
 					populationCoverage: input.populationCoverage,
 					latestSurveyDate: input.latestSurveyDate,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
+					microfinanceSourceLink: input.microfinanceSourceLink
+						? {
+								upsert: {
+									create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href },
+									update: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href },
+								},
+							}
+						: undefined,
+					networkSourceLink: input.networkSourceLink
+						? {
+								upsert: {
+									create: { text: input.networkSourceLink.text, href: input.networkSourceLink.href },
+									update: { text: input.networkSourceLink.text, href: input.networkSourceLink.href },
+								},
+							}
+						: undefined,
 				},
+				include: { microfinanceSourceLink: true, networkSourceLink: true },
 			});
 
 			return this.resultOk({
@@ -71,6 +109,20 @@ export class CountryService extends BaseService {
 				populationCoverage: updated.populationCoverage ? Number(updated.populationCoverage) : null,
 				latestSurveyDate: updated.latestSurveyDate ?? null,
 				networkTechnology: updated.networkTechnology ?? null,
+				microfinanceSourceLink: updated.microfinanceSourceLink
+					? {
+							id: updated.microfinanceSourceLink.id,
+							text: updated.microfinanceSourceLink.text,
+							href: updated.microfinanceSourceLink.href,
+						}
+					: null,
+				networkSourceLink: updated.networkSourceLink
+					? {
+							id: updated.networkSourceLink.id,
+							text: updated.networkSourceLink.text,
+							href: updated.networkSourceLink.href,
+						}
+					: null,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -86,7 +138,10 @@ export class CountryService extends BaseService {
 		}
 
 		try {
-			const country = await this.db.country.findUnique({ where: { id: countryId } });
+			const country = await this.db.country.findUnique({
+				where: { id: countryId },
+				include: { microfinanceSourceLink: true, networkSourceLink: true },
+			});
 
 			if (!country) {
 				return this.resultFail('Could not get country');
@@ -99,6 +154,20 @@ export class CountryService extends BaseService {
 				populationCoverage: country.populationCoverage ? Number(country.populationCoverage) : null,
 				latestSurveyDate: country.latestSurveyDate ?? null,
 				networkTechnology: country.networkTechnology ?? null,
+				microfinanceSourceLink: country.microfinanceSourceLink
+					? {
+							id: country.microfinanceSourceLink.id,
+							text: country.microfinanceSourceLink.text,
+							href: country.microfinanceSourceLink.href,
+						}
+					: null,
+				networkSourceLink: country.networkSourceLink
+					? {
+							id: country.networkSourceLink.id,
+							text: country.networkSourceLink.text,
+							href: country.networkSourceLink.href,
+						}
+					: null,
 			});
 		} catch (error) {
 			this.logger.error(error);

@@ -5,6 +5,10 @@ export type CountryTableViewRow = {
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
+	microfinanceSourceText?: string | null;
+	microfinanceSourceHref?: string | null;
+	networkSourceText?: string | null;
+	networkSourceHref?: string | null;
 	createdAt: Date;
 };
 
@@ -19,6 +23,8 @@ export type CountryPayload = {
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
+	microfinanceSourceLink?: { id: string; text: string; href: string } | null;
+	networkSourceLink?: { id: string; text: string; href: string } | null;
 };
 
 export type CountryCreateInput = {
@@ -27,6 +33,8 @@ export type CountryCreateInput = {
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
+	microfinanceSourceLink?: { text: string; href: string } | null;
+	networkSourceLink?: { text: string; href: string } | null;
 };
 
 export type CountryUpdateInput = {
@@ -36,4 +44,6 @@ export type CountryUpdateInput = {
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
+	microfinanceSourceLink?: { text: string; href: string } | null;
+	networkSourceLink?: { text: string; href: string } | null;
 };
