@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
 import { CountryPayload } from '@/lib/services/country/country.types';
-import { NetworkTechnology, PaymentProvider } from '@prisma/client';
+import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCountryInput, buildUpdateCountryInput } from './countries-form-helper';
@@ -28,6 +28,7 @@ export type CountryFormSchema = {
 		networkSourceText: FormField;
 		networkSourceHref: FormField;
 		paymentProviders: FormField;
+		sanctions: FormField;
 	};
 };
 
@@ -83,6 +84,11 @@ const initialFormSchema: CountryFormSchema = {
 			placeholder: 'Select payment providers',
 			zodSchema: z.array(z.nativeEnum(PaymentProvider)).optional(),
 		},
+		sanctions: {
+			label: 'Sanctions',
+			placeholder: 'Select sanctions',
+			zodSchema: z.array(z.nativeEnum(SanctionRegime)).optional(),
+		},
 	},
 };
 
@@ -130,6 +136,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 						next.fields.networkSourceText.value = result.data.networkSourceLink?.text ?? undefined;
 						next.fields.networkSourceHref.value = result.data.networkSourceLink?.href ?? undefined;
 						next.fields.paymentProviders.value = result.data.paymentProviders ?? [];
+						next.fields.sanctions.value = result.data.sanctions ?? [];
 						return next;
 					});
 				} else {

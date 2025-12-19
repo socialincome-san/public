@@ -1,4 +1,4 @@
-import { NetworkTechnology, PaymentProvider } from '@prisma/client';
+import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
@@ -29,6 +29,7 @@ export class CountryService extends BaseService {
 					latestSurveyDate: input.latestSurveyDate ?? undefined,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
 					paymentProviders: input.paymentProviders ? (input.paymentProviders as PaymentProvider[]) : undefined,
+					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? { create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href } }
 						: undefined,
@@ -47,6 +48,7 @@ export class CountryService extends BaseService {
 				latestSurveyDate: created.latestSurveyDate ?? null,
 				networkTechnology: created.networkTechnology ?? null,
 				paymentProviders: created.paymentProviders ?? [],
+				sanctions: created.sanctions ?? [],
 				microfinanceSourceLink: created.microfinanceSourceLink
 					? {
 							id: created.microfinanceSourceLink.id,
@@ -85,6 +87,7 @@ export class CountryService extends BaseService {
 					latestSurveyDate: input.latestSurveyDate,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
 					paymentProviders: input.paymentProviders ? (input.paymentProviders as PaymentProvider[]) : undefined,
+					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? {
 								upsert: {
@@ -113,6 +116,7 @@ export class CountryService extends BaseService {
 				latestSurveyDate: updated.latestSurveyDate ?? null,
 				networkTechnology: updated.networkTechnology ?? null,
 				paymentProviders: updated.paymentProviders ?? [],
+				sanctions: updated.sanctions ?? [],
 				microfinanceSourceLink: updated.microfinanceSourceLink
 					? {
 							id: updated.microfinanceSourceLink.id,
@@ -159,6 +163,7 @@ export class CountryService extends BaseService {
 				latestSurveyDate: country.latestSurveyDate ?? null,
 				networkTechnology: country.networkTechnology ?? null,
 				paymentProviders: country.paymentProviders ?? [],
+				sanctions: country.sanctions ?? [],
 				microfinanceSourceLink: country.microfinanceSourceLink
 					? {
 							id: country.microfinanceSourceLink.id,
@@ -197,6 +202,7 @@ export class CountryService extends BaseService {
 					networkTechnology: true,
 					latestSurveyDate: true,
 					paymentProviders: true,
+					sanctions: true,
 					createdAt: true,
 				},
 				orderBy: [{ name: 'asc' }],
@@ -210,6 +216,7 @@ export class CountryService extends BaseService {
 				networkTechnology: c.networkTechnology ?? null,
 				latestSurveyDate: c.latestSurveyDate ?? null,
 				paymentProviders: c.paymentProviders ?? [],
+				sanctions: c.sanctions ?? [],
 				createdAt: c.createdAt,
 			}));
 

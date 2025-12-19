@@ -6,6 +6,7 @@ export type CountryTableViewRow = {
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	paymentProviders?: string[] | null;
+	sanctions?: string[] | null;
 	microfinanceSourceText?: string | null;
 	microfinanceSourceHref?: string | null;
 	networkSourceText?: string | null;
@@ -25,6 +26,7 @@ export type CountryPayload = {
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	paymentProviders?: string[] | null;
+	sanctions?: string[] | null;
 	microfinanceSourceLink?: { id: string; text: string; href: string } | null;
 	networkSourceLink?: { id: string; text: string; href: string } | null;
 };
@@ -36,6 +38,7 @@ export type CountryCreateInput = {
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	paymentProviders?: string[];
+	sanctions?: string[];
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;
 };
@@ -48,6 +51,7 @@ export type CountryUpdateInput = {
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	paymentProviders?: string[];
+	sanctions?: string[];
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;
 };

@@ -9,6 +9,7 @@ export function buildCreateCountryInput(schema: CountryFormSchema): CountryCreat
 		latestSurveyDate: schema.fields.latestSurveyDate.value ?? null,
 		networkTechnology: schema.fields.networkTechnology.value ?? null,
 		paymentProviders: schema.fields.paymentProviders.value ?? [],
+		sanctions: schema.fields.sanctions.value ?? [],
 		microfinanceSourceLink:
 			schema.fields.microfinanceSourceText.value || schema.fields.microfinanceSourceHref.value
 				? {
@@ -35,6 +36,7 @@ export function buildUpdateCountryInput(schema: CountryFormSchema, existing: Cou
 		latestSurveyDate: schema.fields.latestSurveyDate.value ?? null,
 		networkTechnology: schema.fields.networkTechnology.value ?? null,
 		paymentProviders: schema.fields.paymentProviders.value ?? [],
+		sanctions: schema.fields.sanctions.value ?? [],
 		microfinanceSourceLink:
 			schema.fields.microfinanceSourceText.value || schema.fields.microfinanceSourceHref.value
 				? {
