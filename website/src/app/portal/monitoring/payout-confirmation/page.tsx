@@ -29,7 +29,7 @@ async function ConfirmPayoutsDataLoader() {
 			data={rows}
 			makeColumns={makePayoutConfirmationColumns}
 			initialSorting={[{ id: 'paymentAt', desc: false }]}
-			searchKeys={['recipient', 'programName', 'phoneNumber']}
+			searchKeys={['recipientFirstName', 'recipientLastName', 'programName', 'phoneNumber']}
 		/>
 	);
 }
