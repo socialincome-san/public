@@ -24,8 +24,15 @@ export function makeYourStripeSubscriptionsColumns(
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.status-title')}</SortableHeader>,
 			cell: (ctx) => {
-				const label = translator?.t(`subscriptions.status.${ctx.row.original.status}`);
-				return <StatusCell ctx={ctx} variant="subscription" label={label} />;
+				const translateKey = `subscriptions.status.${ctx.row.original.status}`;
+				const label = translator?.t(translateKey);
+				return (
+					<StatusCell
+						ctx={ctx}
+						variant="subscription"
+						label={label === translateKey ? ctx.row.original.status : label}
+					/>
+				);
 			},
 		},
 		{
