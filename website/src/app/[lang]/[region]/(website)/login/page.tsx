@@ -22,7 +22,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				translations={{
 					title: translator.t('title'),
 					email: translator.t('email'),
-					invalidEmail: translator.t('invalid-email'),
+					invalidEmail: translator.t('error.invalid-email'),
 					submitButton: translator.t('submit-button'),
 					checkEmail: translator.t('check-email'),
 					confirmEmail: translator.t('confirm-email'),
