@@ -30,28 +30,27 @@ const initialFormSchema: CountryFormSchema = {
 	label: 'Country',
 	fields: {
 		name: {
-			placeholder: 'Name',
-			label: 'Name',
+			placeholder: 'Country name (e.g., Sierra Leone)',
+			label: 'Country name',
 			zodSchema: z.string().min(1),
 		},
 		microfinanceIndex: {
-			placeholder: 'Microfinance Index',
-			label: 'Microfinance Index',
-			zodSchema: z.coerce.number().min(0).max(100).optional(),
+			placeholder: 'MFI (country average), 0–10 (e.g., 4.92)',
+			label: 'MFI (country average)',
+			zodSchema: z.coerce.number().min(0).max(10).optional(),
 		},
 		populationCoverage: {
-			placeholder: 'Population Coverage %',
-			label: 'Population Coverage %',
+			placeholder: 'Population coverage %, 0–100 (e.g., 85)',
+			label: 'Population coverage %',
 			zodSchema: z.coerce.number().min(0).max(100).optional(),
 		},
 		latestSurveyDate: {
-			placeholder: 'Latest Survey Date',
-			label: 'Latest Survey Date',
+			label: 'Most recent survey date',
 			zodSchema: z.coerce.date().optional(),
 		},
 		networkTechnology: {
-			placeholder: 'Network Technology',
-			label: 'Network Technology',
+			placeholder: 'Technology (e.g., 3G, 4G, 5G)',
+			label: 'Technology',
 			zodSchema: z.nativeEnum(NetworkTechnology).optional(),
 		},
 	},
@@ -61,26 +60,6 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [country, setCountry] = useState<CountryPayload>();
 	const [isLoading, startTransition] = useTransition();
-
-	const loadCountry = async (id: string) => {
-		try {
-			const result = await getCountryAction(id);
-			if (result.success) {
-				setCountry(result.data);
-				const next = { ...formSchema };
-				next.fields.name.value = result.data.name;
-				next.fields.microfinanceIndex.value = result.data.microfinanceIndex ?? undefined;
-				next.fields.populationCoverage.value = result.data.populationCoverage ?? undefined;
-				next.fields.latestSurveyDate.value = result.data.latestSurveyDate ?? undefined;
-				next.fields.networkTechnology.value = result.data.networkTechnology ?? undefined;
-				setFormSchema(next);
-			} else {
-				onError?.(result.error);
-			}
-		} catch (e) {
-			onError?.(e);
-		}
-	};
 
 	const onSubmit = (schema: CountryFormSchema) => {
 		startTransition(async () => {
@@ -104,8 +83,28 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 		if (!countryId) {
 			return;
 		}
-		startTransition(async () => await loadCountry(countryId));
-	}, [countryId]);
+		startTransition(async () => {
+			try {
+				const result = await getCountryAction(countryId);
+				if (result.success) {
+					setCountry(result.data);
+					setFormSchema((prev) => {
+						const next = { ...prev };
+						next.fields.name.value = result.data.name;
+						next.fields.microfinanceIndex.value = result.data.microfinanceIndex ?? undefined;
+						next.fields.populationCoverage.value = result.data.populationCoverage ?? undefined;
+						next.fields.latestSurveyDate.value = result.data.latestSurveyDate ?? undefined;
+						next.fields.networkTechnology.value = result.data.networkTechnology ?? undefined;
+						return next;
+					});
+				} else {
+					onError?.(result.error);
+				}
+			} catch (e) {
+				onError?.(e);
+			}
+		});
+	}, [countryId, onError]);
 
 	return (
 		<DynamicForm
