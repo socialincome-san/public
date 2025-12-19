@@ -20,11 +20,11 @@ export type CountryFormSchema = {
 	fields: {
 		name: FormField;
 		microfinanceIndex: FormField;
+		microfinanceSourceText: FormField;
+		microfinanceSourceHref: FormField;
 		populationCoverage: FormField;
 		latestSurveyDate: FormField;
 		networkTechnology: FormField;
-		microfinanceSourceText: FormField;
-		microfinanceSourceHref: FormField;
 		networkSourceText: FormField;
 		networkSourceHref: FormField;
 	};
@@ -34,17 +34,27 @@ const initialFormSchema: CountryFormSchema = {
 	label: 'Country',
 	fields: {
 		name: {
-			placeholder: 'Country name (e.g., Sierra Leone)',
+			placeholder: 'Sierra Leone',
 			label: 'Country name',
 			zodSchema: z.string().min(1),
 		},
 		microfinanceIndex: {
-			placeholder: 'MFI (country average), 0–10 (e.g., 4.92)',
-			label: 'MFI (country average)',
+			placeholder: '4.92',
+			label: 'MFI',
 			zodSchema: z.coerce.number().min(0).max(10).optional(),
 		},
+		microfinanceSourceText: {
+			placeholder: 'WFP',
+			label: 'MFI source text',
+			zodSchema: z.string().optional(),
+		},
+		microfinanceSourceHref: {
+			placeholder: 'https://www.wfp.org',
+			label: 'MFI source URL',
+			zodSchema: z.string().url().optional(),
+		},
 		populationCoverage: {
-			placeholder: 'Population coverage %, 0–100 (e.g., 85)',
+			placeholder: '85',
 			label: 'Population coverage %',
 			zodSchema: z.coerce.number().min(0).max(100).optional(),
 		},
@@ -53,28 +63,18 @@ const initialFormSchema: CountryFormSchema = {
 			zodSchema: z.coerce.date().optional(),
 		},
 		networkTechnology: {
-			placeholder: 'Technology (e.g., 3G, 4G, 5G)',
+			placeholder: '3G',
 			label: 'Technology',
 			zodSchema: z.nativeEnum(NetworkTechnology).optional(),
 		},
-		microfinanceSourceText: {
-			placeholder: 'Microfinance source name (e.g., WFP)',
-			label: 'Microfinance source text',
-			zodSchema: z.string().min(1).optional(),
-		},
-		microfinanceSourceHref: {
-			placeholder: 'Microfinance source URL',
-			label: 'Microfinance source URL',
-			zodSchema: z.string().url().optional(),
-		},
 		networkSourceText: {
-			placeholder: 'Network source name (e.g., ITU)',
-			label: 'Network source text',
-			zodSchema: z.string().min(1).optional(),
+			placeholder: 'ITU',
+			label: 'Technology source text',
+			zodSchema: z.string().optional(),
 		},
 		networkSourceHref: {
-			placeholder: 'Network source URL',
-			label: 'Network source URL',
+			placeholder: 'https://www.itu.int',
+			label: 'Technology source URL',
 			zodSchema: z.string().url().optional(),
 		},
 	},
@@ -116,11 +116,11 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 						const next = { ...prev };
 						next.fields.name.value = result.data.name;
 						next.fields.microfinanceIndex.value = result.data.microfinanceIndex ?? undefined;
+						next.fields.microfinanceSourceText.value = result.data.microfinanceSourceLink?.text ?? undefined;
+						next.fields.microfinanceSourceHref.value = result.data.microfinanceSourceLink?.href ?? undefined;
 						next.fields.populationCoverage.value = result.data.populationCoverage ?? undefined;
 						next.fields.latestSurveyDate.value = result.data.latestSurveyDate ?? undefined;
 						next.fields.networkTechnology.value = result.data.networkTechnology ?? undefined;
-						next.fields.microfinanceSourceText.value = result.data.microfinanceSourceLink?.text ?? undefined;
-						next.fields.microfinanceSourceHref.value = result.data.microfinanceSourceLink?.href ?? undefined;
 						next.fields.networkSourceText.value = result.data.networkSourceLink?.text ?? undefined;
 						next.fields.networkSourceHref.value = result.data.networkSourceLink?.href ?? undefined;
 						return next;
