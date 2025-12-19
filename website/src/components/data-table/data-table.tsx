@@ -43,6 +43,10 @@ export default function DataTable<Row>({
 	const isEmpty = filteredData.length === 0;
 
 	const filter = (search: string) => {
+		if (!search) {
+			setFilteredData(data);
+			return;
+		}
 		const filtered = data.filter((row) => {
 			return searchKeys?.some((key) =>
 				(row[key as keyof Row] as string)?.toString().toLowerCase().includes(search.toLowerCase()),
