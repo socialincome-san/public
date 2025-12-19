@@ -20,7 +20,7 @@ type DataTableProps<Row> = {
 	onRowClick?: (row: Row) => void;
 	initialSorting?: SortingState;
 	lang?: WebsiteLanguage;
-	searchKeys?: string[];
+	searchKeys?: (keyof Row)[];
 };
 
 export default function DataTable<Row>({
