@@ -1,11 +1,11 @@
 'use client';
 
-import Player, { Options } from '@vimeo/player';
+import Player, { VimeoEmbedParameters } from '@vimeo/player';
 import { useEffect, useRef } from 'react';
 
 type VimeoVideoProps = {
 	videoId: number;
-	videoOptions?: Options;
+	videoOptions?: VimeoEmbedParameters;
 };
 
 export function VimeoVideo({ videoId, videoOptions }: VimeoVideoProps) {
