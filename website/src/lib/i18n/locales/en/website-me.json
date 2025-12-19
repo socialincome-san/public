@@ -120,7 +120,20 @@
 		"no-certificates-yet": "You have no donation certificates yet. Create some by clicking \"Generate Donation Certificate\". <br></br> If you have any questions, feel free to <a href='mailto:hello@socialincome.org' class='underline'>contact</a>. us.",
 		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org.",
 		"already-exists": "Certificate for selected year and language already exists. If this seems wrong, please contact contributors@socialincome.org.",
-		"technical-error": "A technical error has occurred, please try again. If this continues to happen, please contact contributors@socialincome.org."
+		"technical-error": "A technical error has occurred, please try again. If this continues to happen, please contact contributors@socialincome.org.",
+		"generate-dialog": {
+			"dialog_title": "Generate Donation Certificate",
+			"label_year": "Year",
+			"description_year": "Specify for which year the certificate should be generated:",
+			"placeholder_year": "Select Year",
+			"label_language": "Language",
+			"description_language": "Specify for which language the certificate should be generated in:",
+			"placeholder_language": "Select language",
+			"button_generate": "Generate Certificates",
+			"state_generating": "Generating...",
+			"status_success": "Generated successfully",
+			"button_close": "Close"
+		}
 	},
 	"personal-info": {
 		"alert-title": "Donation certificates",
