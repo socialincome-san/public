@@ -41,7 +41,7 @@ export class CountryService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create country');
+			return this.resultFail(`Could not create country: ${error}`);
 		}
 	}
 
@@ -74,7 +74,7 @@ export class CountryService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update country');
+			return this.resultFail(`Could not update country: ${error}`);
 		}
 	}
 
