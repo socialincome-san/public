@@ -51,7 +51,7 @@ const initialFormSchema: CountryFormSchema = {
 		microfinanceSourceHref: {
 			placeholder: 'https://www.wfp.org',
 			label: 'MFI source URL',
-			zodSchema: z.string().url().optional(),
+			zodSchema: z.string().optional(),
 		},
 		populationCoverage: {
 			placeholder: '85',
@@ -75,7 +75,7 @@ const initialFormSchema: CountryFormSchema = {
 		networkSourceHref: {
 			placeholder: 'https://www.itu.int',
 			label: 'Technology source URL',
-			zodSchema: z.string().url().optional(),
+			zodSchema: z.string().optional(),
 		},
 	},
 };
