@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
 import { CountryPayload } from '@/lib/services/country/country.types';
-import { NetworkTechnology } from '@prisma/client';
+import { NetworkTechnology, PaymentProvider } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCountryInput, buildUpdateCountryInput } from './countries-form-helper';
@@ -27,6 +27,7 @@ export type CountryFormSchema = {
 		networkTechnology: FormField;
 		networkSourceText: FormField;
 		networkSourceHref: FormField;
+		paymentProviders: FormField;
 	};
 };
 
@@ -77,6 +78,11 @@ const initialFormSchema: CountryFormSchema = {
 			label: 'Technology source URL',
 			zodSchema: z.string().optional(),
 		},
+		paymentProviders: {
+			label: 'Payment providers',
+			placeholder: 'Select payment providers',
+			zodSchema: z.array(z.nativeEnum(PaymentProvider)).optional(),
+		},
 	},
 };
 
@@ -123,6 +129,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 						next.fields.networkTechnology.value = result.data.networkTechnology ?? undefined;
 						next.fields.networkSourceText.value = result.data.networkSourceLink?.text ?? undefined;
 						next.fields.networkSourceHref.value = result.data.networkSourceLink?.href ?? undefined;
+						next.fields.paymentProviders.value = result.data.paymentProviders ?? [];
 						return next;
 					});
 				} else {

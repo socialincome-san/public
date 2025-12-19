@@ -1,4 +1,4 @@
-import { NetworkTechnology } from '@prisma/client';
+import { NetworkTechnology, PaymentProvider } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
@@ -28,6 +28,7 @@ export class CountryService extends BaseService {
 					populationCoverage: input.populationCoverage ?? undefined,
 					latestSurveyDate: input.latestSurveyDate ?? undefined,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
+					paymentProviders: input.paymentProviders ? (input.paymentProviders as PaymentProvider[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? { create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href } }
 						: undefined,
@@ -45,6 +46,7 @@ export class CountryService extends BaseService {
 				populationCoverage: created.populationCoverage ? Number(created.populationCoverage) : null,
 				latestSurveyDate: created.latestSurveyDate ?? null,
 				networkTechnology: created.networkTechnology ?? null,
+				paymentProviders: created.paymentProviders ?? [],
 				microfinanceSourceLink: created.microfinanceSourceLink
 					? {
 							id: created.microfinanceSourceLink.id,
@@ -82,6 +84,7 @@ export class CountryService extends BaseService {
 					populationCoverage: input.populationCoverage,
 					latestSurveyDate: input.latestSurveyDate,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
+					paymentProviders: input.paymentProviders ? (input.paymentProviders as PaymentProvider[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? {
 								upsert: {
@@ -109,6 +112,7 @@ export class CountryService extends BaseService {
 				populationCoverage: updated.populationCoverage ? Number(updated.populationCoverage) : null,
 				latestSurveyDate: updated.latestSurveyDate ?? null,
 				networkTechnology: updated.networkTechnology ?? null,
+				paymentProviders: updated.paymentProviders ?? [],
 				microfinanceSourceLink: updated.microfinanceSourceLink
 					? {
 							id: updated.microfinanceSourceLink.id,
@@ -154,6 +158,7 @@ export class CountryService extends BaseService {
 				populationCoverage: country.populationCoverage ? Number(country.populationCoverage) : null,
 				latestSurveyDate: country.latestSurveyDate ?? null,
 				networkTechnology: country.networkTechnology ?? null,
+				paymentProviders: country.paymentProviders ?? [],
 				microfinanceSourceLink: country.microfinanceSourceLink
 					? {
 							id: country.microfinanceSourceLink.id,
@@ -191,6 +196,7 @@ export class CountryService extends BaseService {
 					populationCoverage: true,
 					networkTechnology: true,
 					latestSurveyDate: true,
+					paymentProviders: true,
 					createdAt: true,
 				},
 				orderBy: [{ name: 'asc' }],
@@ -203,6 +209,7 @@ export class CountryService extends BaseService {
 				populationCoverage: c.populationCoverage ? Number(c.populationCoverage) : null,
 				networkTechnology: c.networkTechnology ?? null,
 				latestSurveyDate: c.latestSurveyDate ?? null,
+				paymentProviders: c.paymentProviders ?? [],
 				createdAt: c.createdAt,
 			}));
 

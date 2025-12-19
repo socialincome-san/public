@@ -12,6 +12,7 @@ import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
+import { MultiSelect } from '../multi-select';
 
 export type FormField = {
 	label: string;
@@ -267,6 +268,44 @@ const GenericFormField = ({
 
 	if (isFormField(formFieldSchema)) {
 		switch (getType(option, zodSchema, parentOption)) {
+			case 'ZodArray': {
+				let def: any = getDef(option, zodSchema, parentOption);
+
+				if (def?.typeName === 'ZodOptional') {
+					def = def.innerType?._def;
+				}
+
+				const values = (def?.type?._def?.values ?? {}) as Record<string, string>;
+
+				const options = Object.entries(values).map(([label, value]) => ({
+					label,
+					value,
+				}));
+
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<FormControl>
+									<MultiSelect
+										modalPopover
+										options={options}
+										defaultValue={field.value ?? []}
+										onValueChange={field.onChange}
+										placeholder={formFieldSchema.placeholder}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
 			case 'ZodString':
 				return (
 					<FormField
