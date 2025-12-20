@@ -6,7 +6,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { ColumnDef, SortingState } from '@tanstack/react-table';
 import DOMPurify from 'isomorphic-dompurify';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Input } from '../input';
 
 type DataTableProps<Row> = {
@@ -20,7 +20,7 @@ type DataTableProps<Row> = {
 	onRowClick?: (row: Row) => void;
 	initialSorting?: SortingState;
 	lang?: WebsiteLanguage;
-	searchKeys?: string[];
+	searchKeys?: (keyof Row)[];
 };
 
 export default function DataTable<Row>({
@@ -39,9 +39,14 @@ export default function DataTable<Row>({
 	const translator = useTranslator(lang || 'en', 'website-me');
 	const columns = makeColumns(hideProgramName, translator);
 	const [filteredData, setFilteredData] = useState(data);
+	const [searchFilter, setSearchFilter] = useState('');
 	const isEmpty = filteredData.length === 0;
 
 	const filter = (search: string) => {
+		if (!search) {
+			setFilteredData(data);
+			return;
+		}
 		const filtered = data.filter((row) => {
 			return searchKeys?.some((key) =>
 				(row[key as keyof Row] as string)?.toString().toLowerCase().includes(search.toLowerCase()),
@@ -49,6 +54,15 @@ export default function DataTable<Row>({
 		});
 		setFilteredData(filtered);
 	};
+
+	useEffect(() => {
+		setFilteredData(data);
+		filter(searchFilter);
+	}, [data]);
+
+	useEffect(() => {
+		filter(searchFilter);
+	}, [searchFilter]);
 
 	return (
 		<div>
@@ -58,7 +72,7 @@ export default function DataTable<Row>({
 				</h2>
 				<div className="flex flex-wrap items-center gap-2">
 					{searchKeys?.length && (
-						<Input className="w-64" placeholder="Search..." onChange={(e) => filter(e.target.value)} />
+						<Input className="w-64" placeholder="Search..." onChange={(e) => setSearchFilter(e.target.value)} />
 					)}{' '}
 					{actions ?? null}
 				</div>

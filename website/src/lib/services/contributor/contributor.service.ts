@@ -4,6 +4,8 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
+import { SupportedLanguage } from '../sendgrid/types';
 import {
 	BankContributorData,
 	ContributorDonationCertificate,
@@ -21,6 +23,7 @@ import {
 export class ContributorService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
 	private firebaseService = new FirebaseService();
+	private sendGridService = new SendgridSubscriptionService();
 
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
 		try {
@@ -410,11 +413,20 @@ export class ContributorService extends BaseService {
 							firstName: contributorData.firstName,
 							lastName: contributorData.lastName,
 							email: contributorData.email,
+							language: contributorData.language,
 						},
 					},
 				},
 				include: { contact: true },
 			});
+
+			await this.sendGridService.subscribeToNewsletter({
+				firstname: contributorData.firstName,
+				lastname: contributorData.lastName,
+				email: contributorData.email,
+				language: contributorData.language as SupportedLanguage,
+			});
+
 			return this.resultOk(newContributor);
 		} catch (error) {
 			this.logger.error(error);
