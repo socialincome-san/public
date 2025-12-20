@@ -49,8 +49,8 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   await Firebase.initializeApp(options: firebaseOptions);
   await FirebaseAppCheck.instance.activate(
-    androidProvider: kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
-    appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
+    providerAndroid: kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),
+    providerApple: kDebugMode ? const AppleDebugProvider() : const AppleAppAttestProvider(),
   );
 
   final firebaseAuth = FirebaseAuth.instance;
