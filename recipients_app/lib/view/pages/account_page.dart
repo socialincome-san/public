@@ -264,12 +264,10 @@ class AccountPageState extends State<AccountPage> {
                 InputDropdown<LanguageCode>(
                   label: "${context.l10n.language}*",
                   items: [
-                    if (recipient.contact.language == LanguageCode.en)
                       DropdownMenuItem(
                         value: LanguageCode.en,
                         child: Text(context.l10n.english),
                       ),
-                    if (recipient.contact.language == LanguageCode.kri)
                       DropdownMenuItem(
                         value: LanguageCode.kri,
                         child: Text(context.l10n.krio),
