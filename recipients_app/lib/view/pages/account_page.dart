@@ -151,6 +151,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
 
+                /// FIRST NAME
                 InputText(
                   hintText: "${context.l10n.name}*",
                   controller: _nameController,
@@ -169,6 +170,8 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 16),
+
+                /// SURNAME
                 InputText(
                   controller: _surnameController,
                   hintText: "${context.l10n.surname}*",
@@ -187,6 +190,8 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 16),
+
+                /// CALLING NAME
                 InputText(
                   controller: _callingNameController,
                   hintText: context.l10n.callingName,
@@ -195,6 +200,8 @@ class AccountPageState extends State<AccountPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
+
+                /// GENDER
                 InputDropdown<Gender>(
                   label: "${context.l10n.gender}*",
                   items: [
@@ -227,6 +234,8 @@ class AccountPageState extends State<AccountPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
+
+                /// BIRTHDAY
                 InputText(
                   hintText: "${context.l10n.dateOfBirth}*",
                   controller: _birthDateController,
@@ -261,6 +270,8 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 16),
+
+                /// UI LANGUAGE
                 InputDropdown<LanguageCode>(
                   label: "${context.l10n.language}*",
                   items: [
@@ -288,8 +299,9 @@ class AccountPageState extends State<AccountPage> {
                   },
                   value: recipient.contact.language,
                 ),
-
                 const SizedBox(height: 16),
+
+                /// EMAIL ADDRESS
                 InputText(
                   hintText: context.l10n.email,
                   controller: _emailController,
@@ -315,6 +327,8 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 24),
+
+                /// PAYMENT PHONE
                 Text(
                   context.l10n.paymentPhone,
                   style: Theme.of(context).textTheme.bodyLarge,
@@ -345,6 +359,8 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 16),
+
+                /// PAYMENT PROVIDER
                 InputDropdown<PaymentProvider>(
                   label: "${context.l10n.mobilePaymentProvider}*",
                   items: const [
@@ -385,11 +401,9 @@ class AccountPageState extends State<AccountPage> {
                     if (value == null || value.isEmpty) {
                       return context.l10n.contactNumberError;
                     }
-
                     if (int.tryParse(value) == null) {
                       return context.l10n.contactNumberError2;
                     }
-
                     return null;
                   },
                   onSubmitted: (value) {
@@ -401,6 +415,8 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 24),
+
+                /// CONTACT PREFERENCE
                 // TODO add later
                 /*const SizedBox(height: 8),
                      DropdownButtonFormField<String>(
@@ -445,6 +461,8 @@ class AccountPageState extends State<AccountPage> {
                 /// RECOMMENDING ORGA
                 LocalPartnerInfo(localPartner: widget.recipient.localPartner),
                 const SizedBox(height: 24),
+
+                /// SUPPORT
                 Text(
                   context.l10n.support,
                   style: Theme.of(context).textTheme.bodyLarge,
@@ -460,6 +478,8 @@ class AccountPageState extends State<AccountPage> {
                   label: context.l10n.getInTouch,
                 ),
                 const SizedBox(height: 24),
+
+                /// ACCOUNT
                 Text(
                   context.l10n.account,
                   style: Theme.of(context).textTheme.bodyLarge,
@@ -467,11 +487,15 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 Text(context.l10n.accountInfo),
                 const SizedBox(height: 16),
+
+                /// SIGN OUT
                 ButtonBig(
                   onPressed: () => context.read<AuthCubit>().logout(),
                   label: context.l10n.signOut,
                 ),
                 const SizedBox(height: 16),
+
+                /// APP VERSION
                 Text(
                   "${context.l10n.appVersion} ${_packageInfo.version} (${_packageInfo.buildNumber})",
                   textAlign: TextAlign.center,
