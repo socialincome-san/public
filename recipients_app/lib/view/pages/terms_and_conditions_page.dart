@@ -93,7 +93,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                       selfUpdate: const RecipientSelfUpdate(termsAccepted: true),
                     );
                   },
-                  label: demoManager.isDemoEnabled ? context.l10n.createAccountDemo : context.l10n.createAccount,
+                  label: demoManager.isDemoEnabled ? context.l10n.createAccountDemo : context.l10n.createAccount, // TODO: change label to "Accept and Continue" or similar
                 ),
               ],
             ),
