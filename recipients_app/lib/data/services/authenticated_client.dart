@@ -14,17 +14,16 @@ class AuthenticatedClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    final user = _firebaseAuth.currentUser;
-    if (user == null) {
-      throw Exception("User not authenticated");
-    }
-
-    final idToken = await user.getIdToken();
-
     // Ensure JSON content type regardless of what `http` added earlier.
     request.headers.removeWhere((k, v) => k.toLowerCase() == "content-type");
     request.headers["content-type"] = "application/json";
-    request.headers["Authorization"] = "Bearer $idToken";
+
+    // Add Firebase ID token as Bearer authentication if available.
+    final user = _firebaseAuth.currentUser;
+    if (user != null) {
+      final idToken = await user.getIdToken();
+      request.headers["Authorization"] = "Bearer $idToken";
+    }
 
     return _inner.send(request);
   }
