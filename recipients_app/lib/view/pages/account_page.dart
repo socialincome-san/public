@@ -161,8 +161,9 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _nameController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                         selfUpdate: RecipientSelfUpdate(firstName: value),
                       );
@@ -181,8 +182,9 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _surnameController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                         selfUpdate: RecipientSelfUpdate(lastName: value),
                       );
@@ -195,9 +197,12 @@ class AccountPageState extends State<AccountPage> {
                 InputText(
                   controller: _callingNameController,
                   hintText: context.l10n.callingName,
-                  onSubmitted: (value) => context.read<AuthCubit>().updateRecipient(
-                    selfUpdate: RecipientSelfUpdate(callingName: value),
-                  ),
+                  onFocusLostAndValueChanged: () {
+                    final value = _callingNameController.text;
+                    context.read<AuthCubit>().updateRecipient(
+                      selfUpdate: RecipientSelfUpdate(callingName: value),
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
 
@@ -247,7 +252,8 @@ class AccountPageState extends State<AccountPage> {
                         initialDate: recipient.contact.dateOfBirth?.toDate() ?? DateTime(2000),
                         context: context,
                       ).then((value) {
-                        if (value != null) {
+                        // Update value only if changed
+                        if (value != null && value != recipient.contact.dateOfBirth?.toDate()) {
                           // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
                           if (context.mounted) {
                             context.read<AuthCubit>().updateRecipient(
@@ -305,8 +311,9 @@ class AccountPageState extends State<AccountPage> {
                 InputText(
                   hintText: context.l10n.email,
                   controller: _emailController,
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _emailController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                         selfUpdate: RecipientSelfUpdate(email: value),
                       );
@@ -339,8 +346,9 @@ class AccountPageState extends State<AccountPage> {
                   isReadOnly: true,
                   controller: _paymentNumberController,
                   keyboardType: TextInputType.number,
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _paymentNumberController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                         selfUpdate: RecipientSelfUpdate(paymentPhone: value),
                       );
@@ -406,8 +414,9 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _contactNumberController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                         selfUpdate: RecipientSelfUpdate(contactPhone: value),
                       );
@@ -451,7 +460,8 @@ class AccountPageState extends State<AccountPage> {
                   hintText: context.l10n.successorName,
                   controller: _successorNameController,
                   keyboardType: TextInputType.name,
-                  onSubmitted: (value) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _successorNameController.text;
                     context.read<AuthCubit>().updateRecipient(
                       selfUpdate: RecipientSelfUpdate(successorName: value),
                     );
