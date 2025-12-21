@@ -72,7 +72,7 @@ class AccountPageState extends State<AccountPage> {
       text: "",
     );
     _paymentNumberController = TextEditingController(
-      text: widget.recipient.contact.phone?.number ?? "",
+      text: widget.recipient.paymentInformation?.phone.number ?? "",
     );
     _contactNumberController = TextEditingController(
       text: widget.recipient.contact.phone?.number ?? "",
