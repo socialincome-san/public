@@ -1,5 +1,4 @@
 import "dart:async";
-import "dart:developer";
 
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/recipient.dart";
@@ -18,22 +17,12 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthService authService;
 
   late final StreamSubscription<User?> _authSubscription;
-  late final StreamSubscription<User?> _idTokenChanges;
 
   AuthCubit({
     required this.userRepository,
     required this.crashReportingRepository,
     required this.authService,
   }) : super(const AuthState()) {
-    /// Register a listener which will be triggered if the id token of the user
-    /// changes for whatever reason.
-    _idTokenChanges = FirebaseAuth.instance.idTokenChanges().listen((user) async {
-      if (user != null) {
-        final idToken = await user.getIdToken();
-        log("idToken changed: $idToken");
-      }
-    });
-
     /// Register a listener which will be triggered if the auth state of the user
     /// changes for whatever reason.
     _authSubscription = authService.authStateChanges().listen((user) async {
@@ -130,7 +119,6 @@ class AuthCubit extends Cubit<AuthState> {
   @override
   Future<void> close() {
     _authSubscription.cancel();
-    _idTokenChanges.cancel();
     return super.close();
   }
 }
