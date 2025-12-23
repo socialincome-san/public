@@ -29,13 +29,12 @@ function removeLanguagePrefix(slug: string | null, language: string) {
 	return slug?.startsWith(language) ? slug.replace(language, '').replace('/', '') : slug;
 }
 
-function enableDraftModeAndAdaptCookie() {
-	(draftMode() as any).enable();
-
-	const draft = (cookies() as any).get(DRAFT_MODE_COOKIE_NAME);
-	const draftValue = draft?.value;
+async function enableDraftModeAndAdaptCookie() {
+	(await draftMode()).enable();
+	let requestCookies = await cookies();
+	const draftValue = (requestCookies).get(DRAFT_MODE_COOKIE_NAME)?.value;
 	if (draftValue) {
-		(cookies() as any).set({
+		(requestCookies).set({
 			name: DRAFT_MODE_COOKIE_NAME,
 			value: draftValue,
 			httpOnly: true,
@@ -67,7 +66,7 @@ export async function GET(request: Request) {
 	if (!validateSecret(secret)) {
 		return new Response('Invalid token', { status: 401 });
 	}
-	enableDraftModeAndAdaptCookie();
+	await enableDraftModeAndAdaptCookie();
 	const path = slug!.startsWith(JOURNAL) ? slug : `${JOURNAL}/${slug}`;
 	redirect(`/${lang}/${DEFAULT_REGION}/${path}`, RedirectType.push);
 }
