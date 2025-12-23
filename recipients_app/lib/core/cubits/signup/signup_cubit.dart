@@ -1,8 +1,9 @@
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "signup_cubit.mapper.dart";
 part "signup_state.dart";
 
 // TODO add errors while signing up
@@ -39,6 +40,7 @@ class SignupCubit extends Cubit<SignupState> {
             state.copyWith(
               status: SignupStatus.enterVerificationCode,
               phoneNumber: phoneNumber,
+              exception: null,
             ),
           );
         },
@@ -58,6 +60,7 @@ class SignupCubit extends Cubit<SignupState> {
               state.copyWith(
                 status: SignupStatus.verificationSuccess,
                 phoneNumber: phoneNumber,
+                exception: null,
               ),
             );
           } on Exception catch (ex, stackTrace) {
@@ -93,6 +96,7 @@ class SignupCubit extends Cubit<SignupState> {
         state.copyWith(
           status: SignupStatus.verificationSuccess,
           phoneNumber: state.phoneNumber,
+          exception: null,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -106,14 +110,14 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
-  Future<void> resendVerificationCode() =>
-      signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
+  Future<void> resendVerificationCode() => signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
 
   void changeToPhoneInput() {
     emit(
       state.copyWith(
         status: SignupStatus.enterPhoneNumber,
         phoneNumber: state.phoneNumber,
+        exception: null,
       ),
     );
   }

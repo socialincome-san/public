@@ -1,17 +1,20 @@
+import "package:app/data/services/api_client.dart";
 import "package:app/data/services/auth_service.dart";
-import "package:cloud_functions/cloud_functions.dart";
 import "package:twilio_flutter/twilio_flutter.dart";
 
 class TwilioOtpService extends AuthService {
+  final ApiClient apiClient;
 
   late final TwilioFlutter _twilioFlutter;
   late final String _verificationServiceId;
+
   String? _phoneNumber;
   String? _otpCode;
 
   TwilioOtpService({
-    required super.firebaseAuth, 
+    required super.firebaseAuth,
     required super.demoManager,
+    required this.apiClient,
     required String accountSid,
     required String authToken,
     required String twilioNumber,
@@ -42,7 +45,9 @@ class TwilioOtpService extends AuthService {
         _phoneNumber = phoneNumber;
         onCodeSend();
       } else {
-        onVerificationFailed(AuthException("Failed to send verification code: ${response.errorData?.message ?? "Unknown error"}"));
+        onVerificationFailed(
+          AuthException("Failed to send verification code: ${response.errorData?.message ?? "Unknown error"}"),
+        );
       }
     } catch (e) {
       onVerificationFailed(AuthException("Failed to send verification code. Try again later"));
@@ -50,7 +55,7 @@ class TwilioOtpService extends AuthService {
     }
   }
 
-    @override
+  @override
   Future<void> submitVerificationCode(String code) async {
     if (_verificationServiceId.isEmpty) throw AuthException("Verification service not initialized");
     if (_phoneNumber == null) throw AuthException("Verification service not initialized");
@@ -64,16 +69,20 @@ class TwilioOtpService extends AuthService {
     if (_otpCode == null) {
       throw AuthException("OTP code not set – call submitVerificationCode first");
     }
+    if (_phoneNumber == null) {
+      throw AuthException("phoneNumber not set – call verifyPhoneNumber first");
+    }
 
-    // Call the Cloud Function to verify OTP and get a custom token
-    final result = await FirebaseFunctions.instanceFor(
-      region: "europe-west6",
-    ).httpsCallable("webhookTwilioOtpVerification").call({"phoneNumber": _phoneNumber, "otp": _otpCode});
+    try {
+      final response = await apiClient.verifyOtp(
+        _phoneNumber!,
+        _otpCode!,
+      );
 
-    // ignore: avoid_dynamic_calls
-    final customToken = result.data["token"] as String;
-
-    // Sign in with the custom token
-    await firebaseAuth.signInWithCustomToken(customToken);
+      // Sign in with the custom token
+      await firebaseAuth.signInWithCustomToken(response.customToken);
+    } catch (e) {
+      throw AuthException("Exception when calling PortalApi->postPortalV1AuthVerifyOtp: $e\n");
+    }
   }
 }
