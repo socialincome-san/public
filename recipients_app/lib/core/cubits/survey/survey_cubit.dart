@@ -15,7 +15,7 @@ const _kOverdueEndDay = 15;
 const _kOverduePeriodDays = 6;
 const _kEndOfDisplaySurveyDay = 20;
 
-const _kSurveyBaseUrlKey = "SURVEY_BASE_URL";
+const _kBaseUrlKey = "BASE_URL";
 
 class SurveyCubit extends Cubit<SurveyState> {
   final Recipient recipient;
@@ -77,8 +77,13 @@ class SurveyCubit extends Cubit<SurveyState> {
       "pw": survey.accessPassword,
     };
 
+    const baseUrl = String.fromEnvironment(_kBaseUrlKey);
+    if (baseUrl.isEmpty) {
+      throw StateError("BASE_URL environment variable is not configured");
+    }
+
     final uri = Uri.https(
-      const String.fromEnvironment(_kSurveyBaseUrlKey),
+      baseUrl,
       "survey/$recipientId/${survey.id}",
       params,
     );

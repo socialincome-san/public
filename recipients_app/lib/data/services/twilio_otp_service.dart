@@ -1,9 +1,11 @@
+import "package:app/data/models/api/verify_otp_request.dart";
+import "package:app/data/models/api/verify_otp_response.dart";
 import "package:app/data/services/auth_service.dart";
-import "package:cloud_functions/cloud_functions.dart";
+import "package:http/http.dart" as http;
 import "package:twilio_flutter/twilio_flutter.dart";
 
 class TwilioOtpService extends AuthService {
-
+  static const _kBaseUrlKey = "BASE_URL";
   late final TwilioFlutter _twilioFlutter;
   late final String _verificationServiceId;
   String? _phoneNumber;
@@ -65,15 +67,50 @@ class TwilioOtpService extends AuthService {
       throw AuthException("OTP code not set – call submitVerificationCode first");
     }
 
-    // Call the Cloud Function to verify OTP and get a custom token
-    final result = await FirebaseFunctions.instanceFor(
-      region: "europe-west6",
-    ).httpsCallable("webhookTwilioOtpVerification").call({"phoneNumber": _phoneNumber, "otp": _otpCode});
+    if (_phoneNumber == null) {
+      throw AuthException("Phone number not set – call verifyPhoneNumber first");
+    }
 
-    // ignore: avoid_dynamic_calls
-    final customToken = result.data["token"] as String;
+    try {
+      // Call the API to verify OTP and get a custom token
+      final result = await verifyOtp(_phoneNumber!, _otpCode!);
+      final customToken = result.customToken;
+      // Sign in with the custom token
+      await firebaseAuth.signInWithCustomToken(customToken);
+    } catch (e) {
+      throw AuthException("Failed to verify OTP: $e");
+    }
+  }
 
-    // Sign in with the custom token
-    await firebaseAuth.signInWithCustomToken(customToken);
+  Future<VerifyOtpResponse> verifyOtp(String phoneNumber, String otp) async {
+    const baseUrl = String.fromEnvironment(_kBaseUrlKey);
+    if (baseUrl.isEmpty) {
+      throw AuthException("BASE_URL environment variable is not configured!");
+    }
+
+    final Uri uri = Uri.https(
+      baseUrl,
+      "api/v1/auth/verify-otp",
+    );
+
+    final body = VerifyOtpRequest(
+      phoneNumber: phoneNumber,
+      otp: otp,
+    );
+
+    final response = await http.post(
+      uri,
+      headers: {"Content-Type": "application/json"},
+      body: body.toJson(),
+    ).timeout(
+      const Duration(seconds: 30),
+      onTimeout: () => throw AuthException("Request timed out. Please try again."),
+    );
+
+    if (response.statusCode != 200) {
+      throw AuthException("Failed to verify OTP: ${response.statusCode}");
+    }
+
+    return VerifyOtpResponseMapper.fromJson(response.body);
   }
 }
