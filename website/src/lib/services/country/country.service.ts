@@ -241,53 +241,65 @@ export class CountryService extends BaseService {
 				orderBy: { name: 'asc' },
 			});
 
-			const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => ({
-				id: country.id,
+			const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => {
+				const microfinanceIndex = this.toNumber(country.microfinanceIndex);
+				const populationCoverage = this.toNumber(country.populationCoverage);
 
-				country: {
-					name: country.name,
-				},
+				return {
+					id: country.id,
 
-				cash: {
-					condition: this.getCashCondition(this.toNumber(country.microfinanceIndex)),
-					details: {
-						text: this.getCashDetailsText(this.toNumber(country.microfinanceIndex)),
-						source: country.microfinanceSourceLink
-							? {
-									text: country.microfinanceSourceLink.text,
-									href: country.microfinanceSourceLink.href,
-								}
-							: undefined,
+					country: {
+						name: country.name,
 					},
-				},
 
-				mobileMoney: {
-					condition: this.getMobileMoneyCondition(country.paymentProviders),
-					details: {
-						text: this.getMobileMoneyDetailsText(country.paymentProviders),
+					cash: {
+						condition: this.getCashCondition(microfinanceIndex),
+						details: {
+							text: this.getCashDetailsText(country.name, microfinanceIndex),
+							source: country.microfinanceSourceLink
+								? {
+										text: country.microfinanceSourceLink.text,
+										href: country.microfinanceSourceLink.href,
+									}
+								: undefined,
+						},
 					},
-				},
 
-				mobileNetwork: {
-					condition: this.getMobileNetworkCondition(this.toNumber(country.populationCoverage)),
-					details: {
-						text: this.getMobileNetworkDetailsText(this.toNumber(country.populationCoverage)),
-						source: country.networkSourceLink
-							? {
-									text: country.networkSourceLink.text,
-									href: country.networkSourceLink.href,
-								}
-							: undefined,
+					mobileMoney: {
+						condition: this.getMobileMoneyCondition(country.paymentProviders),
+						details: {
+							text: this.getMobileMoneyDetailsText(country.name, country.paymentProviders),
+							source: {
+								text: 'Source: SI Research',
+							},
+						},
 					},
-				},
 
-				sanctions: {
-					condition: this.getSanctionsCondition(country.sanctions),
-					details: {
-						text: this.getSanctionsDetailsText(country.sanctions),
+					mobileNetwork: {
+						condition: this.getMobileNetworkCondition(populationCoverage),
+						details: {
+							text: this.getMobileNetworkDetailsText(country.name, populationCoverage),
+							source: country.networkSourceLink
+								? {
+										text: country.networkSourceLink.text,
+										href: country.networkSourceLink.href,
+									}
+								: undefined,
+						},
 					},
-				},
-			}));
+
+					sanctions: {
+						condition: this.getSanctionsCondition(country.sanctions),
+						details: {
+							text: this.getSanctionsDetailsText(country.name, country.sanctions),
+							source:
+								country.sanctions && country.sanctions.length > 0
+									? { text: 'Source: EU Sanctions Map & US Sanctions List' }
+									: undefined,
+						},
+					},
+				};
+			});
 
 			return this.resultOk({ rows });
 		} catch (error) {
@@ -297,9 +309,7 @@ export class CountryService extends BaseService {
 	}
 
 	private getCashCondition(microfinanceIndex: number | null): CountryCondition {
-		if (microfinanceIndex === null) {
-			return CountryCondition.NOT_MET;
-		}
+		if (microfinanceIndex === null) return CountryCondition.NOT_MET;
 		return microfinanceIndex < 3 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
@@ -308,9 +318,7 @@ export class CountryService extends BaseService {
 	}
 
 	private getMobileNetworkCondition(populationCoverage: number | null): CountryCondition {
-		if (populationCoverage === null) {
-			return CountryCondition.NOT_MET;
-		}
+		if (populationCoverage === null) return CountryCondition.NOT_MET;
 		return populationCoverage >= 50 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
@@ -318,37 +326,52 @@ export class CountryService extends BaseService {
 		return sanctions && sanctions.length > 0 ? CountryCondition.RESTRICTIONS_APPLY : CountryCondition.MET;
 	}
 
-	private getCashDetailsText(microfinanceIndex: number | null): string {
+	private getCashDetailsText(countryName: string, microfinanceIndex: number | null): string {
 		if (microfinanceIndex === null) {
-			return 'No microfinance market data available.';
+			return `Market functionality in ${countryName} may be impaired.`;
 		}
 
-		return microfinanceIndex < 3 ? 'Market functionality is sufficient.' : 'Market functionality is insufficient.';
+		return microfinanceIndex < 3
+			? `Market functionality in ${countryName} is considered sufficient.`
+			: `Market functionality in ${countryName} may be impaired.`;
 	}
 
-	private getMobileMoneyDetailsText(paymentProviders: PaymentProvider[] | null): string {
-		return paymentProviders && paymentProviders.length > 0
-			? 'At least one mobile money provider is available.'
-			: 'No supported mobile money providers available.';
+	private getMobileMoneyDetailsText(countryName: string, paymentProviders: PaymentProvider[] | null): string {
+		if (!paymentProviders || paymentProviders.length === 0) {
+			return `Mobile money infrastructure in ${countryName} is not sufficient.`;
+		}
+
+		const providers = paymentProviders.map(this.formatEnum).join(', ');
+
+		return `Mobile money infrastructure in ${countryName} is considered sufficient. Following ${
+			paymentProviders.length
+		} provider${paymentProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
 	}
 
-	private getMobileNetworkDetailsText(populationCoverage: number | null): string {
-		if (populationCoverage == null) {
-			return 'No population coverage data available.';
+	private getMobileNetworkDetailsText(countryName: string, populationCoverage: number | null): string {
+		if (populationCoverage === null) {
+			return `No reliable mobile network coverage data available for ${countryName}.`;
 		}
 
 		return populationCoverage >= 50
-			? 'Mobile network coverage is sufficient.'
-			: 'Mobile network coverage is insufficient.';
+			? `Mobile network coverage of ${countryName} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
+			: `Mobile network coverage of ${countryName} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
 	}
 
-	private getSanctionsDetailsText(sanctions: SanctionRegime[] | null): string {
+	private getSanctionsDetailsText(countryName: string, sanctions: SanctionRegime[] | null): string {
 		return sanctions && sanctions.length > 0
-			? 'International sanctions or restrictions apply.'
-			: 'No international sanctions apply.';
+			? `${countryName} is subject to international sanctions or restrictions.`
+			: `${countryName} is not on the UN, US or EU sanctioned list.`;
 	}
 
 	private toNumber(value: Decimal | null): number | null {
-		return value == null ? null : Number(value);
+		return value === null ? null : Number(value);
+	}
+
+	private formatEnum(value: string): string {
+		return value
+			.replace(/_/g, ' ')
+			.toLowerCase()
+			.replace(/^\w/, (c) => c.toUpperCase());
 	}
 }

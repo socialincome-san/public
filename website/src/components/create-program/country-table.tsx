@@ -67,7 +67,7 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 				<p>{details.text}</p>
 
 				{details.source &&
-					(details.source.href ? (
+					(details.source.href && details.source.text ? (
 						<Link
 							href={details.source.href}
 							target="_blank"
