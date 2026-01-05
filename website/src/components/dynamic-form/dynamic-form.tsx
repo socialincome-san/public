@@ -12,6 +12,7 @@ import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
+import { MultiSelect } from '../multi-select';
 
 export type FormField = {
 	label: string;
@@ -72,6 +73,28 @@ const isOptional = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject
 	const def = getDef(key, zodSchema, parentOption);
 	const type = def.typeName;
 	return ['ZodOptional', 'ZodNullable'].includes(type);
+};
+
+const unwrapOptional = (def: any) => {
+	if (def?.typeName === 'ZodOptional' || def?.typeName === 'ZodNullable') {
+		return def.innerType?._def;
+	}
+	return def;
+};
+
+const getEnumArrayValues = (
+	key: keyof z.infer<typeof zodSchema>,
+	zodSchema: z.ZodObject<any>,
+	parentOption?: string,
+): Record<string, string> => {
+	let def: any = getDef(key, zodSchema, parentOption);
+	def = unwrapOptional(def);
+
+	if (def?.typeName !== 'ZodArray') {
+		return {};
+	}
+
+	return (def.type?._def?.values ?? {}) as Record<string, string>;
 };
 
 const DynamicForm: FC<{
@@ -267,6 +290,34 @@ const GenericFormField = ({
 
 	if (isFormField(formFieldSchema)) {
 		switch (getType(option, zodSchema, parentOption)) {
+			case 'ZodArray': {
+				const values = getEnumArrayValues(option, zodSchema, parentOption);
+				const options = Object.entries(values).map(([label, value]) => ({ label, value }));
+
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<FormControl>
+									<MultiSelect
+										modalPopover
+										options={options}
+										defaultValue={field.value ?? []}
+										onValueChange={field.onChange}
+										placeholder={formFieldSchema.placeholder}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
 			case 'ZodString':
 				return (
 					<FormField
