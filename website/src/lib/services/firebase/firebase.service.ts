@@ -1,4 +1,5 @@
 import { authAdmin } from '@/lib/firebase/firebase-admin';
+import { appCheck } from 'firebase-admin';
 import { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
 import { cookies } from 'next/headers';
 import { BaseService } from '../core/base.service';
@@ -240,5 +241,37 @@ export class FirebaseService extends BaseService {
 
 		const cookie = match[1];
 		return this.verifySessionCookie(cookie);
+	}
+
+	async verifyAppCheckFromRequest(request: Request): Promise<ServiceResult<boolean>> {
+		const token = request.headers.get('X-Firebase-AppCheck');
+
+		if (!token) {
+			this.logger.warn('App Check failed: missing token', {
+				path: request.url,
+				userAgent: request.headers.get('user-agent'),
+			});
+
+			return this.resultFail('missing-app-check-token', 401);
+		}
+
+		try {
+			const decoded = await appCheck().verifyToken(token);
+
+			this.logger.info('App Check passed', {
+				appId: decoded.appId,
+				path: request.url,
+			});
+
+			return this.resultOk(true);
+		} catch (error) {
+			this.logger.warn('App Check failed: invalid token', {
+				path: request.url,
+				userAgent: request.headers.get('user-agent'),
+				errorMessage: (error as Error)?.message,
+			});
+
+			return this.resultFail('invalid-app-check-token', 401);
+		}
 	}
 }
