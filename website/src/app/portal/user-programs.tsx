@@ -1,3 +1,4 @@
+import { CreateProgramModalLoader } from '@/components/create-program/create-program-modal-loader';
 import { Wallet } from '@/components/wallet';
 import { ProgramService } from '@/lib/services/program/program.service';
 import { ProgramPermission } from '@prisma/client';
@@ -42,7 +43,7 @@ export async function UserPrograms({ userId }: Props) {
 						/>
 					))}
 
-					<Wallet variant="empty" title="Create new program" href="/portal/programs/create" />
+					<CreateProgramModalLoader trigger={<Wallet variant="empty" title="Create new program" />} />
 				</div>
 			</div>
 
