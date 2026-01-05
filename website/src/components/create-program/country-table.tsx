@@ -2,7 +2,8 @@
 
 import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useReducer } from 'react';
 
 import { Button } from '../button';
 import { RadioGroup, RadioGroupItem } from '../radio-group';
@@ -17,24 +18,49 @@ export type CountryTableProps = {
 	onValueChange?: (id: string | null) => void;
 };
 
+type State = {
+	selectedId: string | null;
+	openIds: string[];
+};
+
+type Action = { type: 'select'; id: string } | { type: 'toggle'; id: string };
+
+function openRow(openIds: string[], id: string) {
+	return [...openIds, id];
+}
+
+function closeRow(openIds: string[], id: string) {
+	return openIds.filter((openId) => openId !== id);
+}
+
+function toggleOpenRow(openIds: string[], id: string) {
+	return openIds.includes(id) ? closeRow(openIds, id) : openRow(openIds, id);
+}
+
+function reducer(state: State, action: Action): State {
+	switch (action.type) {
+		case 'select':
+			return { ...state, selectedId: action.id };
+
+		case 'toggle':
+			return {
+				...state,
+				openIds: toggleOpenRow(state.openIds, action.id),
+			};
+
+		default:
+			return state;
+	}
+}
+
+
 export function CountryTable({ rows, value, onValueChange }: CountryTableProps) {
-	const [internalValue, setInternalValue] = useState<string | null>(null);
-	const selectedId = value ?? internalValue;
+	const [state, dispatch] = useReducer(reducer, {
+		selectedId: value ?? null,
+		openIds: [],
+	});
 
-	const [openRows, setOpenRows] = useState<Set<string>>(new Set());
-
-	function setSelected(id: string) {
-		onValueChange?.(id);
-		setInternalValue(id);
-	}
-
-	function toggleRow(id: string) {
-		setOpenRows((prev) => {
-			const next = new Set(prev);
-			next.has(id) ? next.delete(id) : next.add(id);
-			return next;
-		});
-	}
+	const selectedId = value ?? state.selectedId;
 
 	function renderDetails(details: CountryTableRow['cash']['details']) {
 		return (
@@ -43,7 +69,7 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 
 				{details.source &&
 					(details.source.href ? (
-						<a
+						<Link
 							href={details.source.href}
 							target="_blank"
 							rel="noreferrer"
@@ -51,7 +77,7 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 						>
 							{details.source.text}
 							<span aria-hidden>↗</span>
-						</a>
+						</Link>
 					) : (
 						<p className="text-muted-foreground">{details.source.text}</p>
 					))}
@@ -60,7 +86,13 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 	}
 
 	return (
-		<RadioGroup value={selectedId ?? ''} onValueChange={setSelected}>
+		<RadioGroup
+			value={selectedId ?? ''}
+			onValueChange={(id) => {
+				dispatch({ type: 'select', id });
+				onValueChange?.(id);
+			}}
+		>
 			<Table>
 				<TableHeader className="bg-muted/40">
 					<TableRow>
@@ -76,12 +108,11 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 
 				<TableBody>
 					{rows.map((row, index) => {
-						const isOpen = openRows.has(row.id);
+						const isOpen = state.openIds.includes(row.id);
+						const isSelected = selectedId === row.id;
 
-						// Background only for hover or open
-						const bgClass = isOpen ? 'bg-muted' : 'hover:bg-muted';
+						const bgClass = isSelected ? 'bg-muted' : isOpen ? 'bg-muted/50' : 'hover:bg-muted/40';
 
-						// Always separate rows with top border (except first)
 						const topBorder = index !== 0 ? 'border-t' : '';
 
 						return (
@@ -89,7 +120,7 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 								{/* MAIN ROW */}
 								<TableRow
 									key={row.id}
-									onClick={() => toggleRow(row.id)}
+									onClick={() => dispatch({ type: 'toggle', id: row.id })}
 									className={cn('cursor-pointer transition-colors', bgClass, topBorder)}
 								>
 									<TableCell className="w-10" onClick={(e) => e.stopPropagation()}>
@@ -119,7 +150,17 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 									</TableCell>
 
 									<TableCell className="w-10 text-right" onClick={(e) => e.stopPropagation()}>
-										<Button type="button" variant="ghost" size="icon" onClick={() => toggleRow(row.id)}>
+										<Button
+											type="button"
+											variant="ghost"
+											size="icon"
+											onClick={() =>
+												dispatch({
+													type: 'toggle',
+													id: row.id,
+												})
+											}
+										>
 											<ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
 										</Button>
 									</TableCell>
@@ -127,16 +168,13 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 
 								{/* DETAILS ROW */}
 								{isOpen && (
-									<TableRow className="bg-muted">
+									<TableRow className={cn(bgClass, 'border-t')}>
 										<TableCell />
 										<TableCell />
 
 										<TableCell>{renderDetails(row.cash.details)}</TableCell>
-
 										<TableCell>{renderDetails(row.mobileMoney.details)}</TableCell>
-
 										<TableCell>{renderDetails(row.mobileNetwork.details)}</TableCell>
-
 										<TableCell>{renderDetails(row.sanctions.details)}</TableCell>
 
 										<TableCell />
