@@ -1,9 +1,9 @@
 'use client';
 
 import { Badge } from '@/components/badge';
+import { CountryCondition } from '@/lib/services/country/country.types';
 import { AlertTriangleIcon, CheckIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
-import { CountryCondition } from './types';
 
 type CountryConditionBadgeProps = {
 	condition: CountryCondition;

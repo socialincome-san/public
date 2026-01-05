@@ -1,13 +1,17 @@
 import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
 import {
+	CountryCondition,
 	CountryCreateInput,
 	CountryPayload,
 	CountryTableView,
 	CountryTableViewRow,
 	CountryUpdateInput,
+	ProgramCountryFeasibilityRow,
+	ProgramCountryFeasibilityView,
 } from './country.types';
 
 export class CountryService extends BaseService {
@@ -225,5 +229,126 @@ export class CountryService extends BaseService {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch countries');
 		}
+	}
+
+	async getProgramCountryFeasibility(): Promise<ServiceResult<ProgramCountryFeasibilityView>> {
+		try {
+			const countries = await this.db.country.findMany({
+				include: {
+					microfinanceSourceLink: true,
+					networkSourceLink: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => ({
+				id: country.id,
+
+				country: {
+					name: country.name,
+				},
+
+				cash: {
+					condition: this.getCashCondition(this.toNumber(country.microfinanceIndex)),
+					details: {
+						text: this.getCashDetailsText(this.toNumber(country.microfinanceIndex)),
+						source: country.microfinanceSourceLink
+							? {
+									text: country.microfinanceSourceLink.text,
+									href: country.microfinanceSourceLink.href,
+								}
+							: undefined,
+					},
+				},
+
+				mobileMoney: {
+					condition: this.getMobileMoneyCondition(country.paymentProviders),
+					details: {
+						text: this.getMobileMoneyDetailsText(country.paymentProviders),
+					},
+				},
+
+				mobileNetwork: {
+					condition: this.getMobileNetworkCondition(this.toNumber(country.populationCoverage)),
+					details: {
+						text: this.getMobileNetworkDetailsText(this.toNumber(country.populationCoverage)),
+						source: country.networkSourceLink
+							? {
+									text: country.networkSourceLink.text,
+									href: country.networkSourceLink.href,
+								}
+							: undefined,
+					},
+				},
+
+				sanctions: {
+					condition: this.getSanctionsCondition(country.sanctions),
+					details: {
+						text: this.getSanctionsDetailsText(country.sanctions),
+					},
+				},
+			}));
+
+			return this.resultOk({ rows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch program country feasibility');
+		}
+	}
+
+	private getCashCondition(microfinanceIndex: number | null): CountryCondition {
+		if (microfinanceIndex === null) {
+			return CountryCondition.NOT_MET;
+		}
+		return microfinanceIndex < 3 ? CountryCondition.MET : CountryCondition.NOT_MET;
+	}
+
+	private getMobileMoneyCondition(paymentProviders: PaymentProvider[] | null): CountryCondition {
+		return paymentProviders && paymentProviders.length > 0 ? CountryCondition.MET : CountryCondition.NOT_MET;
+	}
+
+	private getMobileNetworkCondition(populationCoverage: number | null): CountryCondition {
+		if (populationCoverage === null) {
+			return CountryCondition.NOT_MET;
+		}
+		return populationCoverage >= 50 ? CountryCondition.MET : CountryCondition.NOT_MET;
+	}
+
+	private getSanctionsCondition(sanctions: SanctionRegime[] | null): CountryCondition {
+		return sanctions && sanctions.length > 0 ? CountryCondition.RESTRICTIONS_APPLY : CountryCondition.MET;
+	}
+
+	private getCashDetailsText(microfinanceIndex: number | null): string {
+		if (microfinanceIndex === null) {
+			return 'No microfinance market data available.';
+		}
+
+		return microfinanceIndex < 3 ? 'Market functionality is sufficient.' : 'Market functionality is insufficient.';
+	}
+
+	private getMobileMoneyDetailsText(paymentProviders: PaymentProvider[] | null): string {
+		return paymentProviders && paymentProviders.length > 0
+			? 'At least one mobile money provider is available.'
+			: 'No supported mobile money providers available.';
+	}
+
+	private getMobileNetworkDetailsText(populationCoverage: number | null): string {
+		if (populationCoverage == null) {
+			return 'No population coverage data available.';
+		}
+
+		return populationCoverage >= 50
+			? 'Mobile network coverage is sufficient.'
+			: 'Mobile network coverage is insufficient.';
+	}
+
+	private getSanctionsDetailsText(sanctions: SanctionRegime[] | null): string {
+		return sanctions && sanctions.length > 0
+			? 'International sanctions or restrictions apply.'
+			: 'No international sanctions apply.';
+	}
+
+	private toNumber(value: Decimal | null): number | null {
+		return value == null ? null : Number(value);
 	}
 }

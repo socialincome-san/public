@@ -3,17 +3,17 @@
 import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import { useReducer } from 'react';
+import { Fragment, useReducer } from 'react';
 
 import { Button } from '../button';
 import { RadioGroup, RadioGroupItem } from '../radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../table';
 
+import { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CountryConditionBadge } from './country-condition-badge';
-import { CountryTableRow } from './types';
 
 export type CountryTableProps = {
-	rows: CountryTableRow[];
+	rows: ProgramCountryFeasibilityRow[];
 	value?: string | null;
 	onValueChange?: (id: string | null) => void;
 };
@@ -53,7 +53,6 @@ function reducer(state: State, action: Action): State {
 	}
 }
 
-
 export function CountryTable({ rows, value, onValueChange }: CountryTableProps) {
 	const [state, dispatch] = useReducer(reducer, {
 		selectedId: value ?? null,
@@ -62,7 +61,7 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 
 	const selectedId = value ?? state.selectedId;
 
-	function renderDetails(details: CountryTableRow['cash']['details']) {
+	function renderDetails(details: ProgramCountryFeasibilityRow['cash']['details']) {
 		return (
 			<div className="space-y-1 text-sm">
 				<p>{details.text}</p>
@@ -116,10 +115,8 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 						const topBorder = index !== 0 ? 'border-t' : '';
 
 						return (
-							<>
-								{/* MAIN ROW */}
+							<Fragment key={row.id}>
 								<TableRow
-									key={row.id}
 									onClick={() => dispatch({ type: 'toggle', id: row.id })}
 									className={cn('cursor-pointer transition-colors', bgClass, topBorder)}
 								>
@@ -180,7 +177,7 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 										<TableCell />
 									</TableRow>
 								)}
-							</>
+							</Fragment>
 						);
 					})}
 				</TableBody>
