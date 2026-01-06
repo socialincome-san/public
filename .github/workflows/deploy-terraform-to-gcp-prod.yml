@@ -98,7 +98,8 @@ jobs:
           TF_VAR_sendgrid_list_id: ${{ secrets.TF_PROD_SENDGRID_LIST_ID }}
           TF_VAR_sendgrid_suppression_list_id: ${{ secrets.TF_PROD_SENDGRID_SUPPRESSION_LIST_ID }}
           TF_VAR_twilio_account_sid: ${{ secrets.TF_PROD_TWILIO_ACCOUNT_SID }}
-          TF_VAR_twilio_auth_token: ${{ secrets.TF_PROD_TWILIO_AUTH_TOKEN }}
+          TF_VAR_twilio_api_key_sid: ${{ secrets.TF_PROD_TWILIO_API_KEY_SID }}
+          TF_VAR_twilio_api_key_secret: ${{ secrets.TF_PROD_TWILIO_API_KEY_SECRET }}
           TF_VAR_twilio_verify_service_sid: ${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}
           TF_VAR_exchange_rates_api: ${{ secrets.TF_PROD_EXCHANGE_RATES_API }}
           TF_VAR_github_pat: ${{ secrets.TF_PROD_GITHUB_PAT }}

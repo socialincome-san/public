@@ -29,7 +29,8 @@
    - Login to [Google Play Console](https://play.google.com/console)
    - Select the production app
    - Go to "Release"->"Testing"->"Internal testing"
-   - A new release should be already published in the Internal Test Track
+   - A new release should be already published in the Internal Test
+     Track
    - Add release notes for all supported languages
    - Save and publish the release in the Internal Testing track
    - Do a quick smoke test of this app release
