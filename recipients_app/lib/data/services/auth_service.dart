@@ -1,30 +1,119 @@
-
 import "dart:async";
 
 import "package:app/data/datasource/demo/demo_user.dart";
+import "package:app/data/models/api/request_otp_request.dart";
+import "package:app/data/models/api/verify_otp_request.dart";
+import "package:app/data/models/api/verify_otp_response.dart";
 import "package:app/demo_manager.dart";
+import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/foundation.dart";
+import "package:http/http.dart" as http;
 
-abstract class AuthService {
+class AuthService {
   final FirebaseAuth firebaseAuth;
   final DemoManager demoManager;
+  static const _kBaseUrlKey = "BASE_URL";
 
   AuthService({
     required this.firebaseAuth,
     required this.demoManager,
   });
 
-  Future<void> verifyPhoneNumber({
-    required String phoneNumber,
-    required void Function() onCodeSend,
-    required void Function(AuthException) onVerificationFailed,
-    required void Function() onVerificationCompleted,
-  });
+  Future<bool> verifyPhoneNumber(String phoneNumber) async {
+    try {
+      final success = await _requestOtp(phoneNumber);
+      if (success) {
+        // Successfully sent verification code
+      }
+      return success;
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw AuthException("Failed to send verification code: $e");
+    }
+  }
 
-  Future<void> submitVerificationCode(String code);
+  Future<void> signInWith({required String verificationCode, required String phoneNumber}) async {
+    try {
+      // Call the API to verify OTP and get a custom auth token
+      final result = await _verifyOtp(phoneNumber, verificationCode);
+      final customToken = result.customToken;
+      // Sign in with the custom token
+      await firebaseAuth.signInWithCustomToken(customToken);
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw AuthException("Failed to verify the verification code: $e");
+    }
+  }
 
-  Future<void> signInWithCredential();
+  Future<bool> _requestOtp(String phoneNumber) async {
+    final body = RequestOtpRequest(phoneNumber: phoneNumber);
+
+    final response = await _makeAuthenticatedRequest(
+      endpoint: "api/v1/auth/request-otp",
+      body: body.toJson(),
+    );
+    if (response.statusCode != 204) {
+      throw AuthException("Failed to request OTP: ${response.statusCode} - ${response.reasonPhrase}");
+    }
+
+    return true;
+  }
+
+  Future<VerifyOtpResponse> _verifyOtp(String phoneNumber, String otp) async {
+    final body = VerifyOtpRequest(phoneNumber: phoneNumber, otp: otp);
+
+    final response = await _makeAuthenticatedRequest(
+      endpoint: "api/v1/auth/verify-otp",
+      body: body.toJson(),
+    );
+    if (response.statusCode != 200) {
+      throw AuthException("Failed to verify OTP: ${response.statusCode} - ${response.reasonPhrase}");
+    }
+
+    return VerifyOtpResponseMapper.fromJson(response.body);
+  }
+
+  Future<http.Response> _makeAuthenticatedRequest({
+    required String endpoint,
+    required String body,
+  }) async {
+    const baseUrl = String.fromEnvironment(_kBaseUrlKey);
+    if (baseUrl.isEmpty) {
+      throw AuthException("BASE_URL environment variable is not configured!");
+    }
+
+    final Uri uri = Uri.https(baseUrl, endpoint);
+    final appCheckToken = await _getAppCheckToken();
+    return await http
+        .post(
+          uri,
+          headers: {"Content-Type": "application/json", "X-Firebase-AppCheck": appCheckToken},
+          body: body,
+        )
+        .timeout(
+          const Duration(seconds: 30),
+          onTimeout: () => throw AuthException("Request timed out. Please try again."),
+        );
+  }
+
+  Future<String> _getAppCheckToken() async {
+    try {
+      final appCheckToken = await FirebaseAppCheck.instance.getToken();
+      if (appCheckToken == null) {
+        throw AuthException(
+          "Failed to get App Check token. Can't verify user. Please try again later and update the app.",
+        );
+      }
+      return appCheckToken;
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw AuthException("Failed to get App Check token. Reason: $e");
+    }
+  }
 
   @nonVirtual
   Stream<User?> authStateChanges() {
@@ -78,7 +167,7 @@ abstract class AuthService {
   }
 
   @nonVirtual
-  Future<void> signOut() async { 
+  Future<void> signOut() async {
     await firebaseAuth.signOut();
     demoManager.isDemoEnabled = false;
   }

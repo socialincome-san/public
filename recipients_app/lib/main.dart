@@ -8,8 +8,8 @@ import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
+import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
-import "package:app/data/services/twilio_otp_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -55,7 +55,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final messaging = FirebaseMessaging.instance;
   final demoManager = DemoManager();
 
-  final authService = TwilioOtpService(
+  final authService = AuthService(
     firebaseAuth: firebaseAuth,
     demoManager: demoManager,
   );
