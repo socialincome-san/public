@@ -1,7 +1,8 @@
 'use client';
 
 import { useMachine } from '@xstate/react';
-import { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useEffect } from 'react';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../dialog';
 import { createProgramWizardMachine } from './wizard/create-program-machine';
@@ -13,7 +14,18 @@ type Props = {
 
 export function CreateProgramModal({ trigger }: Props) {
 	const [state, send] = useMachine(createProgramWizardMachine);
-	const isOpen = state.matches('open');
+	const router = useRouter();
+
+	const isOpen = !state.matches('closed');
+	const createdProgramId = state.context.createdProgramId;
+
+	useEffect(() => {
+		if (!createdProgramId) {
+			return;
+		}
+
+		router.replace(`/portal/programs/${createdProgramId}/recipients`);
+	}, [createdProgramId, router]);
 
 	return (
 		<>

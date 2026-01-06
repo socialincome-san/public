@@ -8,7 +8,8 @@ export const programsData: Program[] = [
 		payoutAmount: new Prisma.Decimal(50),
 		payoutCurrency: 'SLE',
 		payoutInterval: 'monthly',
-		country: 'Sierra Leone',
+		countryId: 'country-algeria',
+		targetCauses: [],
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -19,7 +20,8 @@ export const programsData: Program[] = [
 		payoutAmount: new Prisma.Decimal(40),
 		payoutCurrency: 'SLE',
 		payoutInterval: 'monthly',
-		country: 'Sierra Leone',
+		countryId: 'country-algeria',
+		targetCauses: [],
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -30,7 +32,8 @@ export const programsData: Program[] = [
 		payoutAmount: new Prisma.Decimal(75),
 		payoutCurrency: 'SLE',
 		payoutInterval: 'monthly',
-		country: 'Sierra Leone',
+		countryId: 'country-algeria',
+		targetCauses: [],
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -41,7 +44,8 @@ export const programsData: Program[] = [
 		payoutAmount: new Prisma.Decimal(60),
 		payoutCurrency: 'SLE',
 		payoutInterval: 'monthly',
-		country: 'Sierra Leone',
+		countryId: 'country-algeria',
+		targetCauses: [],
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -52,7 +56,8 @@ export const programsData: Program[] = [
 		payoutAmount: new Prisma.Decimal(80),
 		payoutCurrency: 'LRD',
 		payoutInterval: 'monthly',
-		country: 'Liberia',
+		countryId: 'country-angola',
+		targetCauses: [],
 		createdAt: new Date(),
 		updatedAt: null
 	}

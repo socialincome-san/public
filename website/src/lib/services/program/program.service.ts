@@ -2,7 +2,7 @@ import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
-import { ProgramOption, ProgramWallet, ProgramWallets } from './program.types';
+import { CreateProgramInput, ProgramOption, ProgramWallet, ProgramWallets } from './program.types';
 
 export class ProgramService extends BaseService {
 	private programAccessService = new ProgramAccessService();
@@ -27,7 +27,9 @@ export class ProgramService extends BaseService {
 				select: {
 					id: true,
 					name: true,
-					country: true,
+					country: {
+						select: { name: true },
+					},
 					payoutCurrency: true,
 					recipients: {
 						select: {
@@ -42,8 +44,11 @@ export class ProgramService extends BaseService {
 			});
 
 			const wallets: ProgramWallet[] = programs.map((program) => {
-				const permission =
-					accessiblePrograms.find((a) => a.programId === program.id)?.permission ?? ProgramPermission.owner;
+				const permission = accessiblePrograms.some(
+					(a) => a.programId === program.id && a.permission === ProgramPermission.operator,
+				)
+					? ProgramPermission.operator
+					: ProgramPermission.owner;
 
 				const recipientsCount = program.recipients.length;
 
@@ -57,7 +62,7 @@ export class ProgramService extends BaseService {
 				return {
 					id: program.id,
 					programName: program.name,
-					country: program.country,
+					country: program.country.name,
 					payoutCurrency: program.payoutCurrency,
 					recipientsCount,
 					totalPayoutsSum,
@@ -105,6 +110,63 @@ export class ProgramService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch program options');
+		}
+	}
+
+	async create(userId: string, input: CreateProgramInput): Promise<ServiceResult<{ programId: string }>> {
+		try {
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+				select: { activeOrganizationId: true },
+			});
+
+			if (!user?.activeOrganizationId) {
+				return this.resultFail('User has no active organization');
+			}
+
+			const operatorFallbackOrg = await this.db.organization.findFirst({
+				where: { isOperatorFallback: true },
+				select: { id: true },
+			});
+
+			if (!operatorFallbackOrg) {
+				return this.resultFail('Operator fallback organization not found');
+			}
+
+			const countryName = await this.db.country.findUnique({
+				where: { id: input.countryId },
+				select: { name: true },
+			});
+
+			if (!countryName) {
+				return this.resultFail('Country not found');
+			}
+
+			const program = await this.db.program.create({
+				data: {
+					name: `${countryName.name} Program ${Math.floor(10000 + Math.random() * 90000).toString()}`,
+					countryId: input.countryId,
+					totalPayments: 0,
+					payoutAmount: input.budget,
+					payoutCurrency: 'CHF',
+					targetCauses: input.recipientApproach === 'targeted' ? [] : undefined,
+				},
+			});
+
+			const accessResult = await this.programAccessService.createInitialAccessesForProgram({
+				programId: program.id,
+				ownerOrganizationId: user.activeOrganizationId,
+				operatorFallbackOrganizationId: operatorFallbackOrg.id,
+			});
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			return this.resultOk({ programId: program.id });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not create program');
 		}
 	}
 }

@@ -33,8 +33,8 @@ export function CreateProgramStepIndicator({ state }: { state: CreateProgramWiza
 }
 
 function getCurrentStepIndex(state: CreateProgramWizardState): number {
-	if (state.matches({ open: 'countrySelection' })) return 0;
-	if (state.matches({ open: 'programSetup' })) return 1;
-	if (state.matches({ open: 'budget' })) return 2;
+	if (state.matches('countrySelection')) return 0;
+	if (state.matches('programSetup')) return 1;
+	if (state.matches('budget')) return 2;
 	return 0;
 }
