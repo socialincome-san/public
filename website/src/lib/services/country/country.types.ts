@@ -62,12 +62,12 @@ export enum CountryCondition {
 	RESTRICTIONS_APPLY = 'restrictions_apply',
 }
 
-export type CountryConditionSource = {
+type CountryConditionSource = {
 	text: string;
 	href?: string;
 };
 
-export type CountryFeasibility = {
+type CountryFeasibility = {
 	condition: CountryCondition;
 	details: {
 		text: string;

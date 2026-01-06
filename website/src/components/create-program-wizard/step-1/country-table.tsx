@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CountryConditionBadge } from './country-condition-badge';
 
-export type CountryTableProps = {
+type CountryTableProps = {
 	rows: ProgramCountryFeasibilityRow[];
 	value?: string | null;
 	openIds: string[];
