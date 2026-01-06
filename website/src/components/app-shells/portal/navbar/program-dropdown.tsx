@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { CreateProgramModal } from '@/components/create-program/create-program-modal';
+import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import {
 	DropdownMenu,
 	DropdownMenuContent,

@@ -3,95 +3,48 @@
 import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import { Fragment, useReducer } from 'react';
+import { Fragment } from 'react';
 
-import { Button } from '../button';
-import { RadioGroup, RadioGroupItem } from '../radio-group';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../table';
+import { Button } from '../../button';
+import { RadioGroup, RadioGroupItem } from '../../radio-group';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../table';
 
-import { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CountryConditionBadge } from './country-condition-badge';
 
 export type CountryTableProps = {
 	rows: ProgramCountryFeasibilityRow[];
 	value?: string | null;
-	onValueChange?: (id: string | null) => void;
-};
-
-type State = {
-	selectedId: string | null;
 	openIds: string[];
+	onValueChange?: (id: string | null) => void;
+	onToggleRow: (id: string) => void;
 };
 
-type Action = { type: 'select'; id: string } | { type: 'toggle'; id: string };
-
-function openRow(openIds: string[], id: string) {
-	return [...openIds, id];
-}
-
-function closeRow(openIds: string[], id: string) {
-	return openIds.filter((openId) => openId !== id);
-}
-
-function toggleOpenRow(openIds: string[], id: string) {
-	return openIds.includes(id) ? closeRow(openIds, id) : openRow(openIds, id);
-}
-
-function reducer(state: State, action: Action): State {
-	switch (action.type) {
-		case 'select':
-			return { ...state, selectedId: action.id };
-
-		case 'toggle':
-			return {
-				...state,
-				openIds: toggleOpenRow(state.openIds, action.id),
-			};
-
-		default:
-			return state;
-	}
-}
-
-export function CountryTable({ rows, value, onValueChange }: CountryTableProps) {
-	const [state, dispatch] = useReducer(reducer, {
-		selectedId: value ?? null,
-		openIds: [],
-	});
-
-	const selectedId = value ?? state.selectedId;
-
+export function CountryTable({ rows, value, openIds, onValueChange, onToggleRow }: CountryTableProps) {
 	function renderDetails(details: ProgramCountryFeasibilityRow['cash']['details']) {
 		return (
 			<div className="space-y-1 text-sm">
 				<p>{details.text}</p>
 
-				{details.source &&
-					(details.source.href && details.source.text ? (
-						<Link
-							href={details.source.href}
-							target="_blank"
-							rel="noreferrer"
-							className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition"
-						>
-							{details.source.text}
-							<span aria-hidden>↗</span>
-						</Link>
-					) : (
-						<p className="text-muted-foreground">{details.source.text}</p>
-					))}
+				{details.source?.href ? (
+					<Link
+						href={details.source.href}
+						target="_blank"
+						rel="noreferrer"
+						className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition"
+					>
+						{details.source.text}
+						<span aria-hidden>↗</span>
+					</Link>
+				) : details.source?.text ? (
+					<p className="text-muted-foreground">{details.source.text}</p>
+				) : null}
 			</div>
 		);
 	}
 
 	return (
-		<RadioGroup
-			value={selectedId ?? ''}
-			onValueChange={(id) => {
-				dispatch({ type: 'select', id });
-				onValueChange?.(id);
-			}}
-		>
+		<RadioGroup value={value ?? ''} onValueChange={onValueChange}>
 			<Table>
 				<TableHeader className="bg-muted/40">
 					<TableRow>
@@ -107,25 +60,23 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 
 				<TableBody>
 					{rows.map((row, index) => {
-						const isOpen = state.openIds.includes(row.id);
-						const isSelected = selectedId === row.id;
+						const isOpen = openIds.includes(row.id);
+						const isSelected = value === row.id;
 
 						const bgClass = isSelected ? 'bg-muted' : isOpen ? 'bg-muted/50' : 'hover:bg-muted/40';
-
 						const topBorder = index !== 0 ? 'border-t' : '';
 
 						return (
 							<Fragment key={row.id}>
 								<TableRow
-									onClick={() => dispatch({ type: 'toggle', id: row.id })}
+									onClick={() => onToggleRow(row.id)}
 									className={cn('cursor-pointer transition-colors', bgClass, topBorder)}
 								>
-									<TableCell className="w-10" onClick={(e) => e.stopPropagation()}>
+									<TableCell onClick={(e) => e.stopPropagation()}>
 										<RadioGroupItem value={row.id} />
 									</TableCell>
 
 									<TableCell className="flex items-center gap-3">
-										{/* TODO: add round country flag */}
 										<div className="bg-muted h-6 w-6 rounded-full" />
 										{row.country.name}
 									</TableCell>
@@ -146,34 +97,21 @@ export function CountryTable({ rows, value, onValueChange }: CountryTableProps) 
 										<CountryConditionBadge condition={row.sanctions.condition} />
 									</TableCell>
 
-									<TableCell className="w-10 text-right" onClick={(e) => e.stopPropagation()}>
-										<Button
-											type="button"
-											variant="ghost"
-											size="icon"
-											onClick={() =>
-												dispatch({
-													type: 'toggle',
-													id: row.id,
-												})
-											}
-										>
+									<TableCell onClick={(e) => e.stopPropagation()}>
+										<Button variant="ghost" size="icon" onClick={() => onToggleRow(row.id)}>
 											<ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
 										</Button>
 									</TableCell>
 								</TableRow>
 
-								{/* DETAILS ROW */}
 								{isOpen && (
 									<TableRow className={cn(bgClass, 'border-t')}>
 										<TableCell />
 										<TableCell />
-
 										<TableCell>{renderDetails(row.cash.details)}</TableCell>
 										<TableCell>{renderDetails(row.mobileMoney.details)}</TableCell>
 										<TableCell>{renderDetails(row.mobileNetwork.details)}</TableCell>
 										<TableCell>{renderDetails(row.sanctions.details)}</TableCell>
-
 										<TableCell />
 									</TableRow>
 								)}
