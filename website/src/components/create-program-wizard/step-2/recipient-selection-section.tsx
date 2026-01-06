@@ -1,10 +1,11 @@
 'use client';
 
+import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { RadioGroup, RadioGroupItem } from '../../radio-group';
 
 type Props = {
-	value: 'universal' | 'targeted' | null;
-	onChange: (value: 'universal' | 'targeted') => void;
+	value: RecipientApproachType | null;
+	onChange: (value: RecipientApproachType) => void;
 };
 
 export function RecipientSelectionSection({ value, onChange }: Props) {
@@ -14,7 +15,7 @@ export function RecipientSelectionSection({ value, onChange }: Props) {
 
 			<RadioGroup
 				value={value ?? ''}
-				onValueChange={(v) => onChange(v as 'universal' | 'targeted')}
+				onValueChange={(v) => onChange(v as RecipientApproachType)}
 				className="space-y-3"
 			>
 				<label className="hover:bg-muted/40 flex cursor-pointer items-start gap-3 rounded-lg border p-4">
