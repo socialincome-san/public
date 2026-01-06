@@ -13,11 +13,7 @@ export function RecipientSelectionSection({ value, onChange }: Props) {
 		<div className="space-y-4">
 			<div className="text-lg font-medium">Recipient selection</div>
 
-			<RadioGroup
-				value={value ?? ''}
-				onValueChange={(v) => onChange(v as RecipientApproachType)}
-				className="space-y-3"
-			>
+			<RadioGroup value={value ?? ''} onValueChange={(v) => onChange(v as RecipientApproachType)} className="space-y-3">
 				<label className="hover:bg-muted/40 flex cursor-pointer items-start gap-3 rounded-lg border p-4">
 					<RadioGroupItem value="universal" />
 					<div>
