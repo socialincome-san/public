@@ -141,6 +141,10 @@ export const VerifyOtpRequest = z.object({
 	otp: z.string(),
 });
 
+export const RequestOtpRequest = z.object({
+	phoneNumber: z.string(),
+});
+
 const VerifyOtpResponse = z.object({
 	customToken: z.string(),
 	isNewUser: z.boolean(),
