@@ -47,8 +47,8 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   await Firebase.initializeApp(options: firebaseOptions);
   await FirebaseAppCheck.instance.activate(
-    androidProvider: kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
-    appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
+    providerAndroid: kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),
+    providerApple: kDebugMode ? const AppleDebugProvider() : const AppleAppAttestProvider(),
   );
 
   final firestore = FirebaseFirestore.instance;
@@ -60,10 +60,6 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final authService = TwilioOtpService(
     firebaseAuth: firebaseAuth,
     demoManager: demoManager,
-    accountSid: const String.fromEnvironment("TWILIO_ACCOUNT_SID"),
-    authToken: const String.fromEnvironment("TWILIO_AUTH_TOKEN"),
-    twilioNumber: const String.fromEnvironment("TWILIO_NUMBER"),
-    serviceId: const String.fromEnvironment("TWILIO_SERVICE_SID"),
   );
 
   final userRemoteDataSource = UserRemoteDataSource(

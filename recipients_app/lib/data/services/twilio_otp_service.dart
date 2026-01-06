@@ -1,27 +1,19 @@
+import "package:app/data/models/api/request_otp_request.dart";
 import "package:app/data/models/api/verify_otp_request.dart";
 import "package:app/data/models/api/verify_otp_response.dart";
 import "package:app/data/services/auth_service.dart";
+import "package:firebase_app_check/firebase_app_check.dart";
 import "package:http/http.dart" as http;
-import "package:twilio_flutter/twilio_flutter.dart";
 
 class TwilioOtpService extends AuthService {
   static const _kBaseUrlKey = "BASE_URL";
-  late final TwilioFlutter _twilioFlutter;
-  late final String _verificationServiceId;
   String? _phoneNumber;
   String? _otpCode;
 
   TwilioOtpService({
     required super.firebaseAuth, 
     required super.demoManager,
-    required String accountSid,
-    required String authToken,
-    required String twilioNumber,
-    required String serviceId,
-  }) {
-    _twilioFlutter = TwilioFlutter(accountSid: accountSid, authToken: authToken, twilioNumber: twilioNumber);
-    _verificationServiceId = serviceId;
-  }
+  });
 
   @override
   Future<void> verifyPhoneNumber({
@@ -30,21 +22,15 @@ class TwilioOtpService extends AuthService {
     required void Function(AuthException ex) onVerificationFailed,
     required void Function() onVerificationCompleted,
   }) async {
-    if (_verificationServiceId.isEmpty) throw AuthException("Verification service not initialized");
 
     try {
-      final response = await _twilioFlutter.sendVerificationCode(
-        verificationServiceId: _verificationServiceId,
-        recipient: phoneNumber,
-        verificationChannel: VerificationChannel.SMS,
-      );
-
-      if (response.responseState == ResponseState.SUCCESS) {
+      final success = await requestOtp(phoneNumber);
+      if (success) {
         // Successfully sent verification code
         _phoneNumber = phoneNumber;
         onCodeSend();
       } else {
-        onVerificationFailed(AuthException("Failed to send verification code: ${response.errorData?.message ?? "Unknown error"}"));
+        onVerificationFailed(AuthException("Failed to send verification code"));
       }
     } catch (e) {
       onVerificationFailed(AuthException("Failed to send verification code. Try again later"));
@@ -54,7 +40,6 @@ class TwilioOtpService extends AuthService {
 
     @override
   Future<void> submitVerificationCode(String code) async {
-    if (_verificationServiceId.isEmpty) throw AuthException("Verification service not initialized");
     if (_phoneNumber == null) throw AuthException("Verification service not initialized");
     if (code.isEmpty) throw AuthException("OTP code cannot be empty");
     // Successfully verified OTP code
@@ -82,6 +67,42 @@ class TwilioOtpService extends AuthService {
     }
   }
 
+  Future<bool> requestOtp(String phoneNumber) async {
+    const baseUrl = String.fromEnvironment(_kBaseUrlKey);
+    if (baseUrl.isEmpty) {
+      throw AuthException("BASE_URL environment variable is not configured!");
+    }
+
+    final Uri uri = Uri.https(
+      baseUrl,
+      "api/v1/auth/request-otp",
+    );
+
+    final body = RequestOtpRequest(
+      phoneNumber: phoneNumber,
+    );
+
+    final appCheckToken = await FirebaseAppCheck.instance.getToken();
+    if (appCheckToken == null) {
+      throw AuthException("Failed to get App Check token. Can't verify OTP. Please try again later or update the app.");
+    }
+
+    final response = await http.post(
+      uri,
+      headers: {"Content-Type": "application/json", "X-Firebase-AppCheck": appCheckToken},
+      body: body.toJson(),
+    ).timeout(
+      const Duration(seconds: 30),
+      onTimeout: () => throw AuthException("Request timed out. Please try again."),
+    );
+
+    if (response.statusCode != 204) {
+      throw AuthException("Failed to request OTP: ${response.statusCode}");
+    }
+
+    return true;
+  }
+
   Future<VerifyOtpResponse> verifyOtp(String phoneNumber, String otp) async {
     const baseUrl = String.fromEnvironment(_kBaseUrlKey);
     if (baseUrl.isEmpty) {
@@ -98,9 +119,14 @@ class TwilioOtpService extends AuthService {
       otp: otp,
     );
 
+    final appCheckToken = await FirebaseAppCheck.instance.getToken();
+    if (appCheckToken == null) {
+      throw AuthException("Failed to get App Check token. Can't verify OTP. Please try again later or update the app.");
+    }
+
     final response = await http.post(
       uri,
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json", "X-Firebase-AppCheck": appCheckToken},
       body: body.toJson(),
     ).timeout(
       const Duration(seconds: 30),
