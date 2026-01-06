@@ -103,8 +103,12 @@ variable "twilio_account_sid" {
   type      = string
   sensitive = true
 }
+variable "twilio_api_key_sid" {
+  type      = string
+  sensitive = true
+}
 
-variable "twilio_auth_token" {
+variable "twilio_api_key_secret" {
   type      = string
   sensitive = true
 }
