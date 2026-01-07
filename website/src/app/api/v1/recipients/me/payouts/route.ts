@@ -1,15 +1,16 @@
+import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { PayoutService } from '@/lib/services/payout/payout.service';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * List payouts
- * @description Returns all payouts belonging to the authenticated recipient.
+ * @description Returns all payouts belonging to the authenticated recipient. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @response PayoutListResponse
  * @openapi
  */
-export async function GET(request: Request) {
+export const GET = withAppCheck(async (request: NextRequest) => {
 	const recipientService = new RecipientService();
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
@@ -25,4 +26,4 @@ export async function GET(request: Request) {
 	}
 
 	return NextResponse.json(payoutsResult.data, { status: 200 });
-}
+});

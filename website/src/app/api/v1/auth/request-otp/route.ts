@@ -4,7 +4,7 @@ import { RequestOtpRequest } from '../../models';
 
 /**
  * Request OTP
- * @description Requests an OTP via Twilio SMS for the given phone number. This endpoint is protected by Firebase App Check and only accepts requests originating from authorized applications.
+ * @description Requests an OTP via Twilio SMS for the given phone number. Requires a valid Firebase App Check token.
  * @body RequestOtpRequest
  * @response 204: No Content
  * @response 400: ErrorResponse
