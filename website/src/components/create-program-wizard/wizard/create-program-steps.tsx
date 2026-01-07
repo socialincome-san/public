@@ -49,7 +49,22 @@ export function CreateProgramSteps({ state, send }: Props) {
 	}
 
 	if (state.matches('budget')) {
-		return <BudgetStep value={state.context.budget} onChange={(value) => send({ type: 'SET_BUDGET', value })} />;
+		return (
+			<BudgetStep
+				amountOfRecipients={state.context.amountOfRecipients}
+				programDuration={state.context.programDuration}
+				payoutPerInterval={state.context.payoutPerInterval}
+				payoutInterval={state.context.payoutInterval}
+				currency={state.context.currency}
+				customizePayouts={state.context.customizePayouts}
+				onRecipientsChange={(v) => send({ type: 'SET_AMOUNT_OF_RECIPIENTS', value: v })}
+				onDurationChange={(v) => send({ type: 'SET_PROGRAM_DURATION', value: v })}
+				onPayoutChange={(v) => send({ type: 'SET_PAYOUT_PER_INTERVAL', value: v })}
+				onIntervalChange={(v) => send({ type: 'SET_PAYOUT_INTERVAL', value: v })}
+				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v })}
+				onToggleCustomizePayouts={() => send({ type: 'TOGGLE_CUSTOMIZE_PAYOUTS' })}
+			/>
+		);
 	}
 
 	return null;
