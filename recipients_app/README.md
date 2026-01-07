@@ -6,10 +6,10 @@ Mobile App for Recipients of a Social Income.
 
 - [Homebrew](https://brew.sh/de/)
 - Flutter (Version see file .tool-versions)
-- Java JDK 17
+- Java JDK 21
 - Android Studio LadyBug or later
-- Latest vsCode
-- Xcode 16.x
+- Latest vscode
+- Xcode 26.x
 
 ## Configure the Apple Silicon Mac environment to build our app
 
@@ -45,7 +45,7 @@ Mobile App for Recipients of a Social Income.
       Otherwise, you will get the error "Unsupported class file major
       version XX" when building the app for Android.
     - Restart your terminal and IDE so that these changes take effect
-- Install vsCode
+- Install vscode
   - Install Flutter extension
 - Install Xcode
   - Set is as default via `sudo xcode-select -s <path/to/>Xcode.app`
@@ -70,7 +70,7 @@ Mobile App for Recipients of a Social Income.
   ###########################
   ```
 
-## Build and run the app the first time with vsCode
+## Build and run the app the first time with vscode
 
 - Checkout main branch:
   `git clone https://github.com/socialincome-san/public.git ./social-income/`
@@ -84,8 +84,8 @@ Mobile App for Recipients of a Social Income.
     under "DSN".
   - Decide which flavor and backend environment you want to use and
     change it if necessary. (Normally we use "Stage" for development)
-- Open `recipients_app` project folder in vsCode
-- Open a terminal inside of vsCode and check `flutter --version` is
+- Open `recipients_app` project folder in vscode
+- Open a terminal inside of vscode and check `flutter --version` is
   listing the right flutter version (See above or pubspec.yaml).
 - Add executable permissions to the script clean_build.sh via
   `chmod +x clean_build.sh`
@@ -94,15 +94,15 @@ Mobile App for Recipients of a Social Income.
 - Copy and rename the file "key.properties.example.debug" into
   "key.properties" to be able to sign the Android app for debugging.
 - Run `make flavor-stage` -> choose "Build Configuration" -> Debug-stage
-- Choose in vsCode the device to deploy on (iOS Simulator, Android
+- Choose in vscode the device to deploy on (iOS Simulator, Android
   emulator, real Android or iOS device)
 - Run the launch configuration "stage_recipients_app (debug mode)" to
-  deploy and run the app on the selected devive in debug mode
+  deploy and run the app on the selected device in debug mode
 - Happy testing!!
 
 ## Available app flavors
 
-Building flavor should work seamlessly for Android Studio and VS Code
+Building flavor should work seamlessly for Android Studio and vscode
 with predefined build configs. Info: To let Firebase work with flavors,
 we followed this guide:
 https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/
@@ -175,6 +175,45 @@ CodeMagic documentation:
 https://docs.codemagic.io/yaml-quick-start/building-a-flutter-app/
 CodeMagic Cheetsheet:
 https://docs.codemagic.io/codemagic-yaml-cheatsheet.html
+
+## SI authentication backend API
+
+We have the two authentication APIs to log in the user via its phone
+number. For that the phone number is first verified via OTP and on
+success the user is signed in. The following APIs are involved in this
+sign in process:
+
+- api/v1/auth/request-otp
+- api/v1/auth/verify-otp
+
+This two APIs are secured via Firebase AppCheck, so that only authorized
+callers can use the APIs.
+
+If you want to sign in via debugging, you need to do the following:
+
+- Run the app in debug mode on your device or simulator/emulator
+  - For Android you can run the app from vscode and check the logs there
+  - For iOS you **need** to start the app **via Xcode** and the **scheme
+    "stage"** and check the logs there. You will not see the token in
+    the vscode debug console.
+- In the logs look for "Firebase App Check Debug Token" on iOS or
+  "DebugAppCheckProvider" on Android.
+- Copy the debug token/secret
+- In the App Check section of the Firebase console, select either "iOS
+  Stage" or "Android Stage". Then choose "Manage debug tokens" from the
+  app's overflow menu. Then, register the debug token from the previous
+  step.
+- After you register the token, Firebase backend services will accept it
+  as valid.
+
+Because this token allows access to your Firebase resources without a
+valid device, it is crucial that you keep it private. Don't commit it to
+a public repository, and if a registered token is ever compromised,
+revoke it immediately in the Firebase console.
+
+See the
+[official Firebase documentation](https://firebase.google.com/docs/app-check/flutter/debug-provider)
+for more details.
 
 ## Testing
 
