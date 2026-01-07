@@ -18,9 +18,12 @@ const config: KnipConfig = {
 		'@radix-ui/react-popover',
 		'@radix-ui/react-progress',
 		'@radix-ui/react-switch',
+		'@radix-ui/react-radio-group',
 		'@firebase/analytics',
 		'@sendgrid/client',
 		'@google-cloud/storage',
+		'xstate',
+		'@xstate/react',
 	],
 	ignoreBinaries: [
 		'tsx',

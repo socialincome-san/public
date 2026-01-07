@@ -300,7 +300,12 @@ export class RecipientService extends BaseService {
 		if (!accessResult.success) {
 			return this.resultFail(accessResult.error);
 		}
-		const programAccess = accessResult.data.find((a) => a.programId === programId);
+
+		const permission = accessResult.data.some(
+			(a) => a.programId === programId && a.permission === ProgramPermission.operator,
+		)
+			? ProgramPermission.operator
+			: ProgramPermission.owner;
 
 		const base = await this.getTableView(userId);
 		if (!base.success) {
@@ -308,9 +313,10 @@ export class RecipientService extends BaseService {
 		}
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+
 		return this.resultOk({
 			tableRows: filteredRows,
-			permission: programAccess?.permission ?? ProgramPermission.owner,
+			permission,
 		});
 	}
 

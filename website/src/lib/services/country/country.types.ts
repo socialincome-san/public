@@ -55,3 +55,40 @@ export type CountryUpdateInput = {
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;
 };
+
+export enum CountryCondition {
+	MET = 'met',
+	NOT_MET = 'not_met',
+	RESTRICTIONS_APPLY = 'restrictions_apply',
+}
+
+type CountryConditionSource = {
+	text: string;
+	href?: string;
+};
+
+type CountryFeasibility = {
+	condition: CountryCondition;
+	details: {
+		text: string;
+		source?: CountryConditionSource;
+	};
+};
+
+export type ProgramCountryFeasibilityRow = {
+	id: string;
+
+	country: {
+		name: string;
+		// TODO: add countryFlag later (ISO code or image src)
+	};
+
+	cash: CountryFeasibility;
+	mobileMoney: CountryFeasibility;
+	mobileNetwork: CountryFeasibility;
+	sanctions: CountryFeasibility;
+};
+
+export type ProgramCountryFeasibilityView = {
+	rows: ProgramCountryFeasibilityRow[];
+};

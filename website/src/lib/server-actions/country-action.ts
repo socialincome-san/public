@@ -6,11 +6,11 @@ import type { CountryCreateInput, CountryUpdateInput } from '@/lib/services/coun
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/countries';
+const service = new CountryService();
 
 export async function createCountryAction(input: CountryCreateInput) {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new CountryService();
 	const res = await service.create(user.id, input);
 
 	revalidatePath(REVALIDATE_PATH);
@@ -20,7 +20,6 @@ export async function createCountryAction(input: CountryCreateInput) {
 export async function updateCountryAction(input: CountryUpdateInput) {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new CountryService();
 	const res = await service.update(user.id, input);
 
 	revalidatePath(REVALIDATE_PATH);
@@ -30,6 +29,9 @@ export async function updateCountryAction(input: CountryUpdateInput) {
 export async function getCountryAction(id: string) {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new CountryService();
 	return service.get(user.id, id);
+}
+
+export async function getProgramCountryFeasibilityAction() {
+	return service.getProgramCountryFeasibility();
 }

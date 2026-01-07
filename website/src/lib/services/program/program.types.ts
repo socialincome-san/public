@@ -1,3 +1,4 @@
+import { ProgramManagementType, RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { ProgramPermission } from '@prisma/client';
 
 export type ProgramWallet = {
@@ -17,4 +18,11 @@ export type ProgramWallets = {
 export type ProgramOption = {
 	id: string;
 	name: string;
+};
+
+export type CreateProgramInput = {
+	countryId: string;
+	programManagement: ProgramManagementType;
+	recipientApproach: RecipientApproachType;
+	budget: number;
 };
