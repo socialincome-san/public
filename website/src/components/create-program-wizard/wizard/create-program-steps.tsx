@@ -40,8 +40,10 @@ export function CreateProgramSteps({ state, send }: Props) {
 			<ProgramSetupStep
 				programManagement={state.context.programManagement}
 				recipientApproach={state.context.recipientApproach}
+				targetCauses={state.context.targetCauses}
 				onSelectProgramManagement={(value) => send({ type: 'SELECT_PROGRAM_MANAGEMENT', value })}
 				onSelectRecipientApproach={(value) => send({ type: 'SELECT_RECIPIENT_APPROACH', value })}
+				onToggleCause={(cause) => send({ type: 'TOGGLE_TARGET_CAUSE', cause })}
 			/>
 		);
 	}

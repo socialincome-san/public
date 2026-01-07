@@ -1,6 +1,7 @@
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import { Cause } from '@prisma/client';
 import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 
@@ -12,6 +13,7 @@ export const createProgramWizardMachine = setup({
 			openCountryRowIds: string[];
 			programManagement: ProgramManagementType | null;
 			recipientApproach: RecipientApproachType | null;
+			targetCauses: Cause[];
 			budget: number | null;
 			createdProgramId?: string;
 			error?: string;
@@ -24,6 +26,7 @@ export const createProgramWizardMachine = setup({
 			| { type: 'TOGGLE_COUNTRY_ROW'; id: string }
 			| { type: 'SELECT_PROGRAM_MANAGEMENT'; value: ProgramManagementType }
 			| { type: 'SELECT_RECIPIENT_APPROACH'; value: RecipientApproachType }
+			| { type: 'TOGGLE_TARGET_CAUSE'; cause: Cause }
 			| { type: 'SET_BUDGET'; value: number }
 			| { type: 'NEXT' }
 			| { type: 'BACK' };
@@ -42,6 +45,7 @@ export const createProgramWizardMachine = setup({
 					countryId: string;
 					programManagement: ProgramManagementType;
 					recipientApproach: RecipientApproachType;
+					targetCauses: Cause[];
 					budget: number;
 				};
 			}) => {
@@ -55,7 +59,19 @@ export const createProgramWizardMachine = setup({
 	},
 	guards: {
 		countrySelected: ({ context }) => Boolean(context.selectedCountryId),
-		programSetupValid: ({ context }) => Boolean(context.programManagement) && Boolean(context.recipientApproach),
+
+		programSetupValid: ({ context }) => {
+			if (!context.programManagement || !context.recipientApproach) {
+				return false;
+			}
+
+			if (context.recipientApproach === 'targeted') {
+				return context.targetCauses.length > 0;
+			}
+
+			return true;
+		},
+
 		budgetValid: ({ context }) => typeof context.budget === 'number' && context.budget > 0,
 	},
 }).createMachine({
@@ -68,6 +84,7 @@ export const createProgramWizardMachine = setup({
 		openCountryRowIds: [],
 		programManagement: null,
 		recipientApproach: null,
+		targetCauses: [],
 		budget: null,
 	},
 
@@ -125,16 +142,30 @@ export const createProgramWizardMachine = setup({
 						programManagement: ({ event }) => event.value,
 					}),
 				},
+
 				SELECT_RECIPIENT_APPROACH: {
 					actions: assign({
 						recipientApproach: ({ event }) => event.value,
+						targetCauses: ({ event }) => (event.value === 'universal' ? [] : []),
 					}),
 				},
+
+				TOGGLE_TARGET_CAUSE: {
+					actions: assign({
+						targetCauses: ({ context, event }) =>
+							context.targetCauses.includes(event.cause)
+								? context.targetCauses.filter((c) => c !== event.cause)
+								: [...context.targetCauses, event.cause],
+					}),
+				},
+
 				BACK: 'countrySelection',
+
 				NEXT: {
 					guard: 'programSetupValid',
 					target: 'budget',
 				},
+
 				CLOSE: 'closed',
 			},
 		},
@@ -162,6 +193,7 @@ export const createProgramWizardMachine = setup({
 					countryId: context.selectedCountryId!,
 					programManagement: context.programManagement!,
 					recipientApproach: context.recipientApproach!,
+					targetCauses: context.targetCauses,
 					budget: context.budget!,
 				}),
 				onDone: {

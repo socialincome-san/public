@@ -45,81 +45,90 @@ export function CountryTable({ rows, value, openIds, onValueChange, onToggleRow 
 
 	return (
 		<RadioGroup value={value ?? ''} onValueChange={onValueChange}>
-			<Table>
-				<TableHeader className="bg-muted/40">
-					<TableRow>
-						<TableHead className="w-10" />
-						<TableHead>Country</TableHead>
-						<TableHead>Suitability of cash</TableHead>
-						<TableHead>Mobile money</TableHead>
-						<TableHead>Mobile network</TableHead>
-						<TableHead>No sanctions</TableHead>
-						<TableHead className="w-10" />
-					</TableRow>
-				</TableHeader>
+			<div className="overflow-hidden rounded-xl border">
+				<Table>
+					<TableHeader className="bg-muted/40">
+						<TableRow>
+							<TableHead className="w-10" />
+							<TableHead>Country</TableHead>
+							<TableHead>Suitability of cash</TableHead>
+							<TableHead>Mobile money</TableHead>
+							<TableHead>Mobile network</TableHead>
+							<TableHead>No sanctions</TableHead>
+							<TableHead className="w-10" />
+						</TableRow>
+					</TableHeader>
 
-				<TableBody>
-					{rows.map((row, index) => {
-						const isOpen = openIds.includes(row.id);
-						const isSelected = value === row.id;
+					<TableBody>
+						{rows.map((row, index) => {
+							const isOpen = openIds.includes(row.id);
+							const isSelected = value === row.id;
 
-						const bgClass = isSelected ? 'bg-muted' : isOpen ? 'bg-muted/50' : 'hover:bg-muted/40';
-						const topBorder = index !== 0 ? 'border-t' : '';
+							const bgClass = isSelected ? 'bg-muted' : isOpen ? 'bg-muted/50' : 'hover:bg-muted/40';
 
-						return (
-							<Fragment key={row.id}>
-								<TableRow
-									onClick={() => onToggleRow(row.id)}
-									className={cn('cursor-pointer transition-colors', bgClass, topBorder)}
-								>
-									<TableCell onClick={(e) => e.stopPropagation()}>
-										<RadioGroupItem value={row.id} />
-									</TableCell>
+							return (
+								<Fragment key={row.id}>
+									<TableRow
+										onClick={() => onToggleRow(row.id)}
+										className={cn('cursor-pointer transition-colors', bgClass, index !== 0 && 'border-t')}
+									>
+										<TableCell onClick={(e) => e.stopPropagation()}>
+											<RadioGroupItem value={row.id} />
+										</TableCell>
 
-									<TableCell className="flex items-center gap-3">
-										<div className="bg-muted h-6 w-6 rounded-full" />
-										{row.country.name}
-									</TableCell>
+										<TableCell className="flex items-center gap-3">
+											<div className="bg-muted h-6 w-6 rounded-full" />
+											{row.country.name}
+										</TableCell>
 
-									<TableCell>
-										<CountryConditionBadge condition={row.cash.condition} />
-									</TableCell>
+										<TableCell>
+											<CountryConditionBadge condition={row.cash.condition} />
+										</TableCell>
 
-									<TableCell>
-										<CountryConditionBadge condition={row.mobileMoney.condition} />
-									</TableCell>
+										<TableCell>
+											<CountryConditionBadge condition={row.mobileMoney.condition} />
+										</TableCell>
 
-									<TableCell>
-										<CountryConditionBadge condition={row.mobileNetwork.condition} />
-									</TableCell>
+										<TableCell>
+											<CountryConditionBadge condition={row.mobileNetwork.condition} />
+										</TableCell>
 
-									<TableCell>
-										<CountryConditionBadge condition={row.sanctions.condition} />
-									</TableCell>
+										<TableCell>
+											<CountryConditionBadge condition={row.sanctions.condition} />
+										</TableCell>
 
-									<TableCell onClick={(e) => e.stopPropagation()}>
-										<Button variant="ghost" size="icon" onClick={() => onToggleRow(row.id)}>
-											<ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
-										</Button>
-									</TableCell>
-								</TableRow>
-
-								{isOpen && (
-									<TableRow className={cn(bgClass, 'border-t')}>
-										<TableCell />
-										<TableCell />
-										<TableCell>{renderDetails(row.cash.details)}</TableCell>
-										<TableCell>{renderDetails(row.mobileMoney.details)}</TableCell>
-										<TableCell>{renderDetails(row.mobileNetwork.details)}</TableCell>
-										<TableCell>{renderDetails(row.sanctions.details)}</TableCell>
-										<TableCell />
+										<TableCell onClick={(e) => e.stopPropagation()}>
+											<Button variant="ghost" size="icon" onClick={() => onToggleRow(row.id)}>
+												<ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
+											</Button>
+										</TableCell>
 									</TableRow>
-								)}
-							</Fragment>
-						);
-					})}
-				</TableBody>
-			</Table>
+
+									<TableRow className={cn(bgClass, 'border-t')}>
+										<TableCell colSpan={7} className="p-0">
+											<div
+												className={cn(
+													'overflow-hidden transition-all duration-300 ease-out',
+													isOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0',
+												)}
+											>
+												<div className="grid grid-cols-6 gap-4 px-4 py-3">
+													<div />
+													<div />
+													<div>{renderDetails(row.cash.details)}</div>
+													<div>{renderDetails(row.mobileMoney.details)}</div>
+													<div>{renderDetails(row.mobileNetwork.details)}</div>
+													<div>{renderDetails(row.sanctions.details)}</div>
+												</div>
+											</div>
+										</TableCell>
+									</TableRow>
+								</Fragment>
+							);
+						})}
+					</TableBody>
+				</Table>
+			</div>
 		</RadioGroup>
 	);
 }
