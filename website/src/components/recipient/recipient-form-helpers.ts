@@ -13,26 +13,43 @@ export function buildUpdateRecipientInput(
 		provider: paymentInfoFields.provider.value,
 		code: paymentInfoFields.code.value,
 	};
-	// Payment Information Phone Upsert/Update Logic
-	const paymentPhoneUpdate = paymentInfoFields.phone.value
+
+	const paymentPhoneValue = paymentInfoFields.phone.value ?? null;
+	const contactPhoneValue = contactFields.phone.value ?? null;
+
+	const paymentPhoneChanged =
+		paymentPhoneValue !== null && paymentPhoneValue !== recipient.paymentInformation?.phone?.number;
+
+	const contactPhoneChanged = contactPhoneValue !== null && contactPhoneValue !== recipient.contact.phone?.number;
+
+	const paymentPhoneUpdate = paymentPhoneChanged
 		? {
 				upsert: {
-					update: { number: paymentInfoFields.phone.value },
-					create: { number: paymentInfoFields.phone.value },
+					update: { number: paymentPhoneValue },
+					create: { number: paymentPhoneValue },
 					where: { id: recipient.paymentInformation?.phone?.id },
 				},
 			}
 		: undefined;
-	// Contact Phone Update Logic
-	const contactPhoneUpdate = contactFields.phone.value
+
+	let contactPhoneUpdate = contactPhoneChanged
 		? {
 				update: {
-					data: { number: contactFields.phone.value },
+					data: { number: contactPhoneValue },
 					where: { id: recipient.contact.phone?.id },
 				},
 			}
 		: undefined;
-	// Contact Address Upsert Logic
+
+	const samePhoneId =
+		recipient.paymentInformation?.phone?.id &&
+		recipient.contact.phone?.id &&
+		recipient.paymentInformation.phone.id === recipient.contact.phone.id;
+
+	if (samePhoneId && paymentPhoneChanged) {
+		contactPhoneUpdate = undefined;
+	}
+
 	const addressUpdate = buildAddressInput(contactFields);
 	return {
 		id: recipient.id,
@@ -46,7 +63,11 @@ export function buildUpdateRecipientInput(
 			upsert: {
 				create: {
 					...basePaymentInfo,
-					phone: { create: { number: paymentInfoFields.phone.value } },
+					phone: {
+						create: {
+							number: paymentPhoneValue ?? recipient.paymentInformation?.phone?.number!,
+						},
+					},
 				},
 				update: { ...basePaymentInfo, phone: paymentPhoneUpdate },
 				where: { id: recipient.paymentInformation?.id },
