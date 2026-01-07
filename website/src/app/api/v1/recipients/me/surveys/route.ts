@@ -1,15 +1,16 @@
+import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { SurveyService } from '@/lib/services/survey/survey.service';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Get surveys
- * @description Returns all surveys belonging to the authenticated recipient.
+ * @description Returns all surveys belonging to the authenticated recipient. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @response SurveyListResponse
  * @openapi
  */
-export async function GET(request: Request) {
+export const GET = withAppCheck(async (request: NextRequest) => {
 	const recipientService = new RecipientService();
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
@@ -25,4 +26,4 @@ export async function GET(request: Request) {
 	}
 
 	return NextResponse.json(surveysResult.data, { status: 200 });
-}
+});
