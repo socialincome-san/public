@@ -79,19 +79,20 @@ export class RecipientService extends BaseService {
 		}
 
 		try {
-			const phoneNumber =
-				recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update.number?.toString() ||
-				recipient.paymentInformation?.upsert?.create?.phone?.create?.number?.toString();
+			const rawUpdatedPhone = recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update?.number;
 
-			if (!phoneNumber || !existing.paymentInformation?.phone?.number) {
-				return this.resultFail('No phone number available for recipient update');
-			}
+			const updatedPhone = typeof rawUpdatedPhone === 'string' ? rawUpdatedPhone : rawUpdatedPhone?.set;
 
-			if (existing.paymentInformation?.phone.number !== phoneNumber) {
+			if (
+				updatedPhone &&
+				existing.paymentInformation?.phone?.number &&
+				existing.paymentInformation.phone.number !== updatedPhone
+			) {
 				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
-					existing.paymentInformation?.phone.number,
-					phoneNumber,
+					existing.paymentInformation.phone.number,
+					updatedPhone,
 				);
+
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
 				}
