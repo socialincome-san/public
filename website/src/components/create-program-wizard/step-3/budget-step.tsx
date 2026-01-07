@@ -59,17 +59,17 @@ function ProgramCostsHeader({
 	onCurrencyChange: (value: string) => void;
 }) {
 	return (
-		<div className="flex items-start justify-between">
+		<div className="flex items-start justify-between text-cyan-900">
 			<div className="space-y-1">
-				<p className="text-muted-foreground text-sm font-medium">Total program costs</p>
+				<p className="text-sm font-medium text-black">Total program costs</p>
 
 				<div className="flex items-end gap-4">
 					<div className="flex items-baseline gap-2">
-						<span className="text-muted-foreground text-sm font-semibold">{currency}</span>
-						<span className="text-5xl font-semibold tabular-nums">{totalBudget.toLocaleString('de-CH')}</span>
+						<span className="text-sm font-semibold">{currency}</span>
+						<span className="text-6xl">{totalBudget.toLocaleString('de-CH')}</span>
 					</div>
 
-					<span className="text-muted-foreground pb-1 text-sm">
+					<span className="pb-1 text-sm">
 						{currency} {Math.round(monthlyCost).toLocaleString('de-CH')} / month
 					</span>
 				</div>
@@ -98,13 +98,13 @@ function IndirectImpactNotice({ recipients }: { recipients: number }) {
 		<div className="flex items-center gap-3 rounded-b-xl bg-green-200/70 px-6 py-4 text-sm">
 			<span className="text-lg">🎉</span>
 			<p>
-				<strong>{recipients} recipients</strong> benefit{' '}
-				<strong
-					className="cursor-help underline decoration-dotted underline-offset-4"
+				{recipients} recipients benefit{' '}
+				<p
+					className="inline cursor-help underline decoration-dotted underline-offset-4"
 					title="On average, each supported recipient positively impacts around five additional people in their household and community."
 				>
 					{indirect.toLocaleString('de-CH')} additional indirect people
-				</strong>{' '}
+				</p>{' '}
 				in poverty.
 			</p>
 		</div>
@@ -118,7 +118,7 @@ function RecipientsBox({ value, onChange }: { value: number; onChange: (value: n
 				<h3 className="font-medium">Recipients for program start</h3>
 
 				<div className="flex justify-center">
-					<div className="rounded-lg border px-5 py-2 text-3xl font-semibold tabular-nums">{value}</div>
+					<div className="rounded-lg border px-5 py-2 text-3xl">{value}</div>
 				</div>
 
 				<Slider min={10} max={1540} step={1} value={[value]} onValueChange={([v]) => onChange(v)} />
@@ -192,18 +192,18 @@ function PayoutControls({
 	return (
 		<div className="space-y-6">
 			<div className="space-y-2">
-				<div className="flex justify-between text-sm font-medium">
+				<div className="flex justify-between text-sm">
 					<span>Program duration</span>
-					<span>{programDuration} months</span>
+					<span className="font-medium">{programDuration} months</span>
 				</div>
 
 				<Slider min={6} max={60} step={1} value={[programDuration]} onValueChange={([v]) => onDurationChange(v)} />
 			</div>
 
 			<div className="space-y-2">
-				<div className="flex justify-between text-sm font-medium">
+				<div className="flex justify-between text-sm">
 					<span>Payout per interval</span>
-					<span>
+					<span className="font-medium">
 						{currency} {payoutPerInterval}
 					</span>
 				</div>
