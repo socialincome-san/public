@@ -1,3 +1,4 @@
+import "package:app/data/models/api/request_otp_request.dart";
 import "package:app/data/models/api/verify_otp_request.dart";
 import "package:app/data/models/api/verify_otp_response.dart";
 import "package:http/http.dart" as http;
@@ -41,7 +42,26 @@ class ApiClient {
     );
 
     if (response.statusCode != 200) {
-      throw Exception("Failed to verify OTP: ${response.statusCode}");
+      throw Exception("Failed to verify OTP: ${response.statusCode} - ${response.reasonPhrase}");
+    }
+
+    return VerifyOtpResponseMapper.fromJson(response.body);
+  }
+
+  Future<VerifyOtpResponse> requestOtp(String phoneNumber) async {
+    final uri = baseUri.resolve("api/v1/auth/request-otp");
+
+    final body = RequestOtpRequest(
+      phoneNumber: phoneNumber,
+    );
+
+    final response = await httpClient.post(
+      uri,
+      body: body.toJson(),
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception("Failed to request OTP: ${response.statusCode} - ${response.reasonPhrase}");
     }
 
     return VerifyOtpResponseMapper.fromJson(response.body);

@@ -1,30 +1,41 @@
-
 import "dart:async";
 
 import "package:app/data/datasource/demo/demo_user.dart";
+import "package:app/data/services/api_client.dart";
 import "package:app/demo_manager.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/foundation.dart";
 
-abstract class AuthService {
+class AuthService {
   final FirebaseAuth firebaseAuth;
   final DemoManager demoManager;
+  final ApiClient apiClient;
 
   AuthService({
     required this.firebaseAuth,
     required this.demoManager,
+    required this.apiClient,
   });
 
-  Future<void> verifyPhoneNumber({
-    required String phoneNumber,
-    required void Function() onCodeSend,
-    required void Function(AuthException) onVerificationFailed,
-    required void Function() onVerificationCompleted,
-  });
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
+    try {
+      await apiClient.requestOtp(phoneNumber);
+    } catch (e) {
+      throw AuthException(code: "failed-sent-verification-code", message: "Exception when calling api->requestOtp: $e");
+    }
+  }
 
-  Future<void> submitVerificationCode(String code);
-
-  Future<void> signInWithCredential();
+  Future<void> signInWith({required String verificationCode, required String phoneNumber}) async {
+    try {
+      // Call the API to verify OTP and get a custom auth token
+      final result = await apiClient.verifyOtp(phoneNumber, verificationCode);
+      final customToken = result.customToken;
+      // Sign in with the custom token
+      await firebaseAuth.signInWithCustomToken(customToken);
+    } catch (e) {
+      throw AuthException(code: "failed-code-verification", message: "Exception when calling api->verifyOtp: $e");
+    }
+  }
 
   @nonVirtual
   Stream<User?> authStateChanges() {
@@ -78,7 +89,7 @@ abstract class AuthService {
   }
 
   @nonVirtual
-  Future<void> signOut() async { 
+  Future<void> signOut() async {
     await firebaseAuth.signOut();
     demoManager.isDemoEnabled = false;
   }
@@ -89,9 +100,10 @@ abstract class AuthService {
 }
 
 class AuthException implements Exception {
-  final String message;
-  AuthException(this.message);
+  final String? message;
+  final String code;
+  AuthException({required this.code, this.message});
 
   @override
-  String toString() => "AuthException: $message";
+  String toString() => "AuthException: code: $code ${message != null ? ", message: $message" : ""}";
 }

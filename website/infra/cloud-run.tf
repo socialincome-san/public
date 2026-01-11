@@ -112,8 +112,13 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
-          name  = "TWILIO_AUTH_TOKEN"
-          value = var.twilio_auth_token
+          name  = "TWILIO_API_KEY_SID"
+          value = var.twilio_api_key_sid
+        }
+
+        env {
+          name  = "TWILIO_API_KEY_SECRET"
+          value = var.twilio_api_key_secret
         }
 
         env {

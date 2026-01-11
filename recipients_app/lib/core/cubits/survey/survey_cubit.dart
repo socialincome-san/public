@@ -86,8 +86,13 @@ class SurveyCubit extends Cubit<SurveyState> {
       "pw": survey.accessPw,
     };
 
+    const baseUrl = String.fromEnvironment(_kBaseUrlKey);
+    if (baseUrl.isEmpty) {
+      throw StateError("BASE_URL environment variable is not configured");
+    }
+
     final uri = Uri.https(
-      const String.fromEnvironment(_kBaseUrlKey),
+      baseUrl,
       "survey/$recipientId/${survey.id}",
       params,
     );
