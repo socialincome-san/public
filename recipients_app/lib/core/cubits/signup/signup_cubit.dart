@@ -67,7 +67,7 @@ class SignupCubit extends Cubit<SignupState> {
       emit(
         state.copyWith(
           status: SignupStatus.verificationSuccess,
-          phoneNumber: state.phoneNumber,
+          phoneNumber: phoneNumber,
         ),
       );
     } on Exception catch (ex, stackTrace) {
