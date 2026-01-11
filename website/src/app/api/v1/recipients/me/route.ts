@@ -1,16 +1,17 @@
+import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { logger } from '@/lib/utils/logger';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
 
 /**
  * Get recipient
- * @description Returns the authenticated recipient with all related data.
+ * @description Returns the authenticated recipient with all related data. Requires a valid Firebase App Check token.
  * @response Recipient
  * @openapi
  */
-export async function GET(request: Request) {
+export const GET = withAppCheck(async (request: NextRequest) => {
 	const recipientService = new RecipientService();
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
@@ -26,17 +27,17 @@ export async function GET(request: Request) {
 	}
 
 	return NextResponse.json(recipientResult.data, { status: 200 });
-}
+});
 
 /**
  * Update recipient
- * @description Updates the authenticated recipient’s personal information, contact details, and mobile money payment information.
+ * @description Updates the authenticated recipient’s personal information, contact details, and mobile money payment information. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @body RecipientSelfUpdate
  * @response Recipient
  * @openapi
  */
-export async function PATCH(request: Request) {
+export const PATCH = withAppCheck(async (request: NextRequest) => {
 	const recipientService = new RecipientService();
 
 	logger.info('[PATCH /recipients/me] Incoming request', {
@@ -162,4 +163,4 @@ export async function PATCH(request: Request) {
 	});
 
 	return NextResponse.json(updateResult.data, { status: 200 });
-}
+});
