@@ -13,20 +13,18 @@ import "package:http/http.dart" as http;
 class AuthService {
   final FirebaseAuth firebaseAuth;
   final DemoManager demoManager;
+  final http.Client _httpClient;
   static const _kBaseUrlKey = "BASE_URL";
 
   AuthService({
     required this.firebaseAuth,
     required this.demoManager,
-  });
+    http.Client? httpClient
+  }) : _httpClient = httpClient ?? http.Client();
 
   Future<bool> verifyPhoneNumber(String phoneNumber) async {
     try {
-      final success = await _requestOtp(phoneNumber);
-      if (success) {
-        // Successfully sent verification code
-      }
-      return success;
+      return await _requestOtp(phoneNumber);
     } on AuthException {
       rethrow;
     } catch (e) {
@@ -87,7 +85,7 @@ class AuthService {
 
     final Uri uri = Uri.https(baseUrl, endpoint);
     final appCheckToken = await _getAppCheckToken();
-    return await http
+    return await _httpClient
         .post(
           uri,
           headers: {"Content-Type": "application/json", "X-Firebase-AppCheck": appCheckToken},
@@ -174,6 +172,7 @@ class AuthService {
 
   void dispose() {
     _demoUserStreamController.close();
+    _httpClient.close();
   }
 }
 
