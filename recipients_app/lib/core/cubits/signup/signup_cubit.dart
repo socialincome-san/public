@@ -30,24 +30,13 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(status: SignupStatus.loadingPhoneNumber));
 
     try {
-      final result = await authService.verifyPhoneNumber(phoneNumber);
-      if (result) {
-        emit(
-          state.copyWith(
-            status: SignupStatus.enterVerificationCode,
-            phoneNumber: phoneNumber,
-          ),
-        );
-      } else {
-        final error = AuthException("Failed to send verification code");
-        crashReportingRepository.logError(error, StackTrace.current);
-        emit(
-          state.copyWith(
-            status: SignupStatus.phoneNumberFailure,
-            exception: error,
-          ),
-        );
-      }
+      await authService.verifyPhoneNumber(phoneNumber);
+      emit(
+        state.copyWith(
+          status: SignupStatus.enterVerificationCode,
+          phoneNumber: phoneNumber,
+        ),
+      );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
@@ -61,6 +50,16 @@ class SignupCubit extends Cubit<SignupState> {
 
   Future<void> submit({required String verificationCode, required String phoneNumber}) async {
     emit(state.copyWith(status: SignupStatus.loadingVerificationCode));
+
+    if (verificationCode.isEmpty) {
+      emit(state.copyWith(status: SignupStatus.verificationFailure, exception: Exception("Empty verification code")));
+      return;
+    }
+
+    if (phoneNumber.isEmpty) {
+      emit(state.copyWith(status: SignupStatus.phoneNumberFailure, exception: AuthException(code: "invalid-phone-number", message: "Empty phone number")));
+      return;
+    }
 
     try {
       await authService.signInWith(verificationCode: verificationCode, phoneNumber: phoneNumber);

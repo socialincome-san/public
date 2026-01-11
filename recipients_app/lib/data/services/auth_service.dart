@@ -22,13 +22,13 @@ class AuthService {
     http.Client? httpClient
   }) : _httpClient = httpClient ?? http.Client();
 
-  Future<bool> verifyPhoneNumber(String phoneNumber) async {
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
     try {
-      return await _requestOtp(phoneNumber);
+      await _requestOtp(phoneNumber);
     } on AuthException {
       rethrow;
     } catch (e) {
-      throw AuthException("Failed to send verification code: $e");
+      throw AuthException(code: "failed-sent-verification-code", message: "$e");
     }
   }
 
@@ -42,11 +42,11 @@ class AuthService {
     } on AuthException {
       rethrow;
     } catch (e) {
-      throw AuthException("Failed to verify the verification code: $e");
+      throw AuthException(code: "failed-code-verification", message: "$e");
     }
   }
 
-  Future<bool> _requestOtp(String phoneNumber) async {
+  Future<void> _requestOtp(String phoneNumber) async {
     final body = RequestOtpRequest(phoneNumber: phoneNumber);
 
     final response = await _makeAuthenticatedRequest(
@@ -54,10 +54,8 @@ class AuthService {
       body: body.toJson(),
     );
     if (response.statusCode != 204) {
-      throw AuthException("Failed to request OTP: ${response.statusCode} - ${response.reasonPhrase}");
+      throw AuthException(code: "failed-sent-verification-code", message: "Failed to request OTP: ${response.statusCode} - ${response.reasonPhrase}");
     }
-
-    return true;
   }
 
   Future<VerifyOtpResponse> _verifyOtp(String phoneNumber, String otp) async {
@@ -68,7 +66,7 @@ class AuthService {
       body: body.toJson(),
     );
     if (response.statusCode != 200) {
-      throw AuthException("Failed to verify OTP: ${response.statusCode} - ${response.reasonPhrase}");
+      throw AuthException(code: "failed-code-verification", message: "Failed to verify OTP: ${response.statusCode} - ${response.reasonPhrase}");
     }
 
     return VerifyOtpResponseMapper.fromJson(response.body);
@@ -80,7 +78,7 @@ class AuthService {
   }) async {
     const baseUrl = String.fromEnvironment(_kBaseUrlKey);
     if (baseUrl.isEmpty) {
-      throw AuthException("BASE_URL environment variable is not configured!");
+      throw Exception("BASE_URL environment variable is not configured!");
     }
 
     final Uri uri = Uri.https(baseUrl, endpoint);
@@ -93,24 +91,19 @@ class AuthService {
         )
         .timeout(
           const Duration(seconds: 30),
-          onTimeout: () => throw AuthException("Request timed out. Please try again."),
+          onTimeout: () => throw TimeoutException("Request to '$endpoint' timed out. Please try again."),
         );
   }
 
   Future<String> _getAppCheckToken() async {
-    try {
-      final appCheckToken = await FirebaseAppCheck.instance.getToken();
-      if (appCheckToken == null) {
-        throw AuthException(
-          "Failed to get App Check token. Can't verify user. Please try again later and update the app.",
-        );
-      }
-      return appCheckToken;
-    } on AuthException {
-      rethrow;
-    } catch (e) {
-      throw AuthException("Failed to get App Check token. Reason: $e");
+    final appCheckToken = await FirebaseAppCheck.instance.getToken();
+    if (appCheckToken == null) {
+      throw AuthException(
+        code: "invalid-app-check-token",
+        message: "Failed to get App Check token. Can't verify user. Please try again later and update the app.",
+      );
     }
+    return appCheckToken;
   }
 
   @nonVirtual
@@ -177,9 +170,10 @@ class AuthService {
 }
 
 class AuthException implements Exception {
-  final String message;
-  AuthException(this.message);
+  final String? message;
+  final String code;
+  AuthException({required this.code, this.message});
 
   @override
-  String toString() => "AuthException: $message";
+  String toString() => "AuthException: code: $code ${message != null ? ", message: $message" : ""}";
 }
