@@ -244,7 +244,6 @@ export const createProgramWizardMachine = setup({
 					targetCauses: context.targetCauses,
 				}),
 				onDone: {
-					target: 'closed',
 					actions: assign({
 						createdProgramId: ({ event }) => event.output,
 					}),
