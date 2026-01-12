@@ -25,9 +25,11 @@ export class RecipientService extends BaseService {
 			return this.resultFail(accessResult.error);
 		}
 
-		const program = accessResult.data.find((a) => a.programId === recipient.program.connect?.id);
+		const hasOperatorAccess = accessResult.data.some(
+			(a) => a.programId === recipient.program.connect?.id && a.permission === ProgramPermission.operator,
+		);
 
-		if (!program || program.permission !== ProgramPermission.operator) {
+		if (!hasOperatorAccess) {
 			return this.resultFail('Permission denied');
 		}
 
@@ -36,12 +38,15 @@ export class RecipientService extends BaseService {
 			if (!phoneNumber) {
 				return this.resultFail('No phone number provided for recipient creation');
 			}
+
 			return await this.db.$transaction(async (tx) => {
 				const newRecipient = await tx.recipient.create({ data: recipient });
 				const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
+
 				if (!firebaseResult.success) {
 					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
 				}
+
 				return this.resultOk(newRecipient);
 			});
 		} catch (error) {
