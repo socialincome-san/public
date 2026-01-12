@@ -10,24 +10,38 @@ export function CreateProgramStepIndicator({ state }: { state: CreateProgramWiza
 
 	return (
 		<div className="flex items-center gap-3">
-			{Array.from({ length: STEP_COUNT }).map((_, index) => (
-				<div key={index} className="flex items-center gap-3">
-					<div
-						className={cn(
-							'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium',
-							index === activeIndex
-								? 'bg-primary text-primary-foreground'
-								: index < activeIndex
-									? 'bg-muted text-foreground'
-									: 'text-muted-foreground border',
-						)}
-					>
-						{index + 1}
-					</div>
+			{Array.from({ length: STEP_COUNT }).map((_, index) => {
+				const isActive = index === activeIndex;
+				const isCompleted = index < activeIndex;
 
-					{index < STEP_COUNT - 1 && <div className="bg-muted h-px w-6" />}
-				</div>
-			))}
+				return (
+					<div key={index} className="flex items-center gap-3">
+						<div
+							className={cn(
+								// base
+								'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors',
+
+								isActive &&
+									[
+										'relative isolate z-10',
+										'text-primary-foreground bg-primary/90 shadow',
+										'after:absolute after:inset-0 after:-z-10 after:rounded-full',
+										'after:bg-gradient-to-r after:from-[hsl(var(--gradient-button-from))] after:to-[hsl(var(--gradient-button-to))]',
+										'after:opacity-100 hover:after:opacity-0',
+										'after:transition-opacity',
+									].join(' '),
+
+								isCompleted && 'bg-muted text-foreground',
+								!isActive && !isCompleted && 'text-muted-foreground border',
+							)}
+						>
+							{index + 1}
+						</div>
+
+						{index < STEP_COUNT - 1 && <div className="bg-muted h-px w-6" />}
+					</div>
+				);
+			})}
 		</div>
 	);
 }

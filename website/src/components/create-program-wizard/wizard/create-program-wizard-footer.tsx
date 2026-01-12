@@ -12,7 +12,7 @@ type Props = {
 export function CreateProgramWizardFooter({ state, send }: Props) {
 	return (
 		<div className="flex items-center justify-between border-t pt-4">
-			<Button variant="ghost" onClick={() => send({ type: 'BACK' })} disabled={!state.can({ type: 'BACK' })}>
+			<Button variant="outline" onClick={() => send({ type: 'BACK' })} disabled={!state.can({ type: 'BACK' })}>
 				Back
 			</Button>
 

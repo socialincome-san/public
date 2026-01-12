@@ -40,14 +40,31 @@ export function CreateProgramSteps({ state, send }: Props) {
 			<ProgramSetupStep
 				programManagement={state.context.programManagement}
 				recipientApproach={state.context.recipientApproach}
+				targetCauses={state.context.targetCauses}
 				onSelectProgramManagement={(value) => send({ type: 'SELECT_PROGRAM_MANAGEMENT', value })}
 				onSelectRecipientApproach={(value) => send({ type: 'SELECT_RECIPIENT_APPROACH', value })}
+				onToggleCause={(cause) => send({ type: 'TOGGLE_TARGET_CAUSE', cause })}
 			/>
 		);
 	}
 
 	if (state.matches('budget')) {
-		return <BudgetStep value={state.context.budget} onChange={(value) => send({ type: 'SET_BUDGET', value })} />;
+		return (
+			<BudgetStep
+				amountOfRecipients={state.context.amountOfRecipients}
+				programDuration={state.context.programDuration}
+				payoutPerInterval={state.context.payoutPerInterval}
+				payoutInterval={state.context.payoutInterval}
+				currency={state.context.currency}
+				customizePayouts={state.context.customizePayouts}
+				onRecipientsChange={(v) => send({ type: 'SET_AMOUNT_OF_RECIPIENTS', value: v })}
+				onDurationChange={(v) => send({ type: 'SET_PROGRAM_DURATION', value: v })}
+				onPayoutChange={(v) => send({ type: 'SET_PAYOUT_PER_INTERVAL', value: v })}
+				onIntervalChange={(v) => send({ type: 'SET_PAYOUT_INTERVAL', value: v })}
+				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v })}
+				onToggleCustomizePayouts={() => send({ type: 'TOGGLE_CUSTOMIZE_PAYOUTS' })}
+			/>
+		);
 	}
 
 	return null;

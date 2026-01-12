@@ -149,7 +149,7 @@ export class ProgramService extends BaseService {
 					totalPayments: 0,
 					payoutAmount: input.budget,
 					payoutCurrency: 'CHF',
-					targetCauses: input.recipientApproach === 'targeted' ? [] : undefined,
+					targetCauses: input.targetCauses,
 				},
 			});
 
