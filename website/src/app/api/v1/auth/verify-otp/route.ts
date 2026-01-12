@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 
 /**
  * Verify OTP
- * @description Verifies an OTP sent via Twilio and returns a Firebase custom token for authentication. This endpoint is protected by Firebase App Check and only accepts requests originating from authorized applications.
+ * @description Verifies an OTP sent via Twilio and returns a Firebase custom token for authentication. Requires a valid Firebase App Check token.
  * @body VerifyOtpRequest
  * @response 200:VerifyOtpResponse
  * @response 400:ErrorResponse

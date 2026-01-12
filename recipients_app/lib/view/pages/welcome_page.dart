@@ -32,13 +32,7 @@ class _WelcomeView extends StatelessWidget {
     return Scaffold(
       body: BlocConsumer<SignupCubit, SignupState>(
         listener: (context, state) {
-          if (state.status == SignupStatus.verificationFailure) {
-            FlushbarHelper.showFlushbar(
-              context,
-              message: localizeExceptionMessage(state.exception, context.l10n),
-              type: FlushbarType.error,
-            );
-          } else if (state.status == SignupStatus.phoneNumberFailure) {
+          if (state.status == SignupStatus.verificationFailure || state.status == SignupStatus.phoneNumberFailure) {
             FlushbarHelper.showFlushbar(
               context,
               message: localizeExceptionMessage(state.exception, context.l10n),

@@ -26,73 +26,47 @@ class SignupCubit extends Cubit<SignupState> {
     required this.authService,
   }) : super(const SignupState());
 
-  Future<void> signupWithPhoneNumber({
-    required String phoneNumber,
-  }) async {
+  Future<void> signupWithPhoneNumber({required String phoneNumber}) async {
     emit(state.copyWith(status: SignupStatus.loadingPhoneNumber));
 
     try {
-      await authService.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        onCodeSend: () {
-          emit(
-            state.copyWith(
-              status: SignupStatus.enterVerificationCode,
-              phoneNumber: phoneNumber,
-            ),
-          );
-        },
-        onVerificationFailed: (ex) {
-          crashReportingRepository.logError(ex, StackTrace.current);
-          emit(
-            state.copyWith(
-              status: SignupStatus.phoneNumberFailure,
-              exception: ex,
-            ),
-          );
-        },
-        onVerificationCompleted: () async {
-          try {
-            await authService.signInWithCredential();
-            emit(
-              state.copyWith(
-                status: SignupStatus.verificationSuccess,
-                phoneNumber: phoneNumber,
-              ),
-            );
-          } on Exception catch (ex, stackTrace) {
-            crashReportingRepository.logError(ex, stackTrace);
-            emit(
-              state.copyWith(
-                status: SignupStatus.verificationFailure,
-                exception: ex,
-              ),
-            );
-          }
-        },
+      await authService.verifyPhoneNumber(phoneNumber);
+      emit(
+        state.copyWith(
+          status: SignupStatus.enterVerificationCode,
+          phoneNumber: phoneNumber,
+        ),
       );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
         state.copyWith(
-          status: SignupStatus.verificationFailure,
+          status: SignupStatus.phoneNumberFailure,
           exception: ex,
         ),
       );
     }
   }
 
-  Future<void> submitVerificationCode(String verificationCode) async {
+  Future<void> submit({required String verificationCode, required String phoneNumber}) async {
     emit(state.copyWith(status: SignupStatus.loadingVerificationCode));
 
-    try {
-      await authService.submitVerificationCode(verificationCode);
-      await authService.signInWithCredential();
+    if (verificationCode.isEmpty) {
+      emit(state.copyWith(status: SignupStatus.verificationFailure, exception: Exception("Empty verification code")));
+      return;
+    }
 
+    if (phoneNumber.isEmpty) {
+      emit(state.copyWith(status: SignupStatus.phoneNumberFailure, exception: AuthException(code: "invalid-phone-number", message: "Empty phone number")));
+      return;
+    }
+
+    try {
+      await authService.signInWith(verificationCode: verificationCode, phoneNumber: phoneNumber);
       emit(
         state.copyWith(
           status: SignupStatus.verificationSuccess,
-          phoneNumber: state.phoneNumber,
+          phoneNumber: phoneNumber,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -106,8 +80,14 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
-  Future<void> resendVerificationCode() =>
-      signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
+  Future<void> resendVerificationCode() {
+    final phoneNumber = state.phoneNumber;
+    if (phoneNumber == null || phoneNumber.isEmpty) {
+      emit(state.copyWith(status: SignupStatus.phoneNumberFailure));
+      return Future.value();
+    }
+    return signupWithPhoneNumber(phoneNumber: phoneNumber);
+  }
 
   void changeToPhoneInput() {
     emit(

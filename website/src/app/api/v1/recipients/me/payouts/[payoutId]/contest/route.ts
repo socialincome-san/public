@@ -1,4 +1,5 @@
 import { ContestPayoutBody } from '@/app/api/v1/models';
+import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { PayoutService } from '@/lib/services/payout/payout.service';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { logger } from '@/lib/utils/logger';
@@ -8,14 +9,14 @@ type Params = Promise<{ payoutId: string }>;
 
 /**
  * Contest payout
- * @description Marks a specific payout as contested by the authenticated recipient.
+ * @description Marks a specific payout as contested by the authenticated recipient. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @pathParams PayoutParams
  * @body ContestPayoutBody
  * @response Payout
  * @openapi
  */
-export async function POST(request: NextRequest, { params }: { params: Params }) {
+export const POST = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {
 	const { payoutId } = await params;
 
 	const recipientService = new RecipientService();
@@ -72,4 +73,4 @@ export async function POST(request: NextRequest, { params }: { params: Params })
 	});
 
 	return NextResponse.json(contestResult.data, { status: 200 });
-}
+});

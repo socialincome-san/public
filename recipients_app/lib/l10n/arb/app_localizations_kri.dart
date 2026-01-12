@@ -367,6 +367,15 @@ class AppLocalizationsKri extends AppLocalizations {
   String get invalidPhoneNumberError => 'Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.';
 
   @override
+  String get failedSentVerificationCodeError => 'Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak.';
+
+  @override
+  String get failedCodeVerificationCodeError => 'Failed fɔ chɛk di kɔd. Duya chɛk yu Intanɛt ɛn tray bak.';
+
+  @override
+  String get invalidAppCheckTokenError => 'Invalid Ap Chɛk token. Nɔ ebul fɔ yuz bakɛnd savis. Duya, ɔpdet di ap.';
+
+  @override
   String get invalidVerificationCodeError => 'Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.';
 
   @override
