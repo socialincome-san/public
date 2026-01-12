@@ -194,8 +194,8 @@ export class PayoutService extends BaseService {
 				return this.resultFail('Program not found');
 			}
 
-			const forecastMonths = Array.from({ length: monthsAhead }, (_, i) => {
-				const start = startOfMonth(addMonths(new Date(), i + 1));
+			const forecastMonths = Array.from({ length: monthsAhead + 1 }, (_, i) => {
+				const start = startOfMonth(addMonths(new Date(), i));
 				return format(start, 'yyyy-MM');
 			});
 
