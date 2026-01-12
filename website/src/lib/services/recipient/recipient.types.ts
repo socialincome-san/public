@@ -90,9 +90,9 @@ export type PayoutRecipient = {
 		phone: { number: string } | null;
 	} | null;
 	program: {
-		payoutAmount: number;
+		payoutPerInterval: number;
 		payoutCurrency: string;
-		totalPayments: number;
+		programDurationInMonths: number;
 	};
 	payouts: {
 		paymentAt: Date;

@@ -25,9 +25,11 @@ export class RecipientService extends BaseService {
 			return this.resultFail(accessResult.error);
 		}
 
-		const program = accessResult.data.find((a) => a.programId === recipient.program.connect?.id);
+		const hasOperatorAccess = accessResult.data.some(
+			(a) => a.programId === recipient.program.connect?.id && a.permission === ProgramPermission.operator,
+		);
 
-		if (!program || program.permission !== ProgramPermission.operator) {
+		if (!hasOperatorAccess) {
 			return this.resultFail('Permission denied');
 		}
 
@@ -36,12 +38,15 @@ export class RecipientService extends BaseService {
 			if (!phoneNumber) {
 				return this.resultFail('No phone number provided for recipient creation');
 			}
+
 			return await this.db.$transaction(async (tx) => {
 				const newRecipient = await tx.recipient.create({ data: recipient });
 				const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
+
 				if (!firebaseResult.success) {
 					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
 				}
+
 				return this.resultOk(newRecipient);
 			});
 		} catch (error) {
@@ -265,7 +270,7 @@ export class RecipientService extends BaseService {
 						select: {
 							id: true,
 							name: true,
-							totalPayments: true,
+							programDurationInMonths: true,
 						},
 					},
 					localPartner: {
@@ -282,7 +287,7 @@ export class RecipientService extends BaseService {
 			const tableRows: RecipientTableViewRow[] = recipients.map((recipient) => {
 				const access = accessiblePrograms.find((p) => p.programId === recipient.program?.id);
 				const payoutsReceived = recipient.payouts.length;
-				const payoutsTotal = recipient.program?.totalPayments ?? 0;
+				const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
 				return {
@@ -318,7 +323,12 @@ export class RecipientService extends BaseService {
 		if (!accessResult.success) {
 			return this.resultFail(accessResult.error);
 		}
-		const programAccess = accessResult.data.find((a) => a.programId === programId);
+
+		const permission = accessResult.data.some(
+			(a) => a.programId === programId && a.permission === ProgramPermission.operator,
+		)
+			? ProgramPermission.operator
+			: ProgramPermission.owner;
 
 		const base = await this.getTableView(userId);
 		if (!base.success) {
@@ -326,9 +336,10 @@ export class RecipientService extends BaseService {
 		}
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+
 		return this.resultOk({
 			tableRows: filteredRows,
-			permission: programAccess?.permission ?? ProgramPermission.owner,
+			permission,
 		});
 	}
 
@@ -368,9 +379,9 @@ export class RecipientService extends BaseService {
 					},
 					program: {
 						select: {
-							payoutAmount: true,
+							payoutPerInterval: true,
 							payoutCurrency: true,
-							totalPayments: true,
+							programDurationInMonths: true,
 						},
 					},
 					payouts: {
@@ -390,9 +401,9 @@ export class RecipientService extends BaseService {
 				contact: r.contact,
 				paymentInformation: r.paymentInformation,
 				program: {
-					payoutAmount: Number(r.program.payoutAmount),
+					payoutPerInterval: Number(r.program.payoutPerInterval),
 					payoutCurrency: r.program.payoutCurrency,
-					totalPayments: r.program.totalPayments,
+					programDurationInMonths: r.program.programDurationInMonths,
 				},
 				payouts: r.payouts,
 			}));

@@ -1,13 +1,17 @@
 import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
 import {
+	CountryCondition,
 	CountryCreateInput,
 	CountryPayload,
 	CountryTableView,
 	CountryTableViewRow,
 	CountryUpdateInput,
+	ProgramCountryFeasibilityRow,
+	ProgramCountryFeasibilityView,
 } from './country.types';
 
 export class CountryService extends BaseService {
@@ -225,5 +229,149 @@ export class CountryService extends BaseService {
 			this.logger.error(error);
 			return this.resultFail('Could not fetch countries');
 		}
+	}
+
+	async getProgramCountryFeasibility(): Promise<ServiceResult<ProgramCountryFeasibilityView>> {
+		try {
+			const countries = await this.db.country.findMany({
+				include: {
+					microfinanceSourceLink: true,
+					networkSourceLink: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => {
+				const microfinanceIndex = this.toNumber(country.microfinanceIndex);
+				const populationCoverage = this.toNumber(country.populationCoverage);
+
+				return {
+					id: country.id,
+
+					country: {
+						name: country.name,
+					},
+
+					cash: {
+						condition: this.getCashCondition(microfinanceIndex),
+						details: {
+							text: this.getCashDetailsText(country.name, microfinanceIndex),
+							source: country.microfinanceSourceLink
+								? {
+										text: country.microfinanceSourceLink.text,
+										href: country.microfinanceSourceLink.href,
+									}
+								: undefined,
+						},
+					},
+
+					mobileMoney: {
+						condition: this.getMobileMoneyCondition(country.paymentProviders),
+						details: {
+							text: this.getMobileMoneyDetailsText(country.name, country.paymentProviders),
+							source: {
+								text: 'Source: SI Research',
+							},
+						},
+					},
+
+					mobileNetwork: {
+						condition: this.getMobileNetworkCondition(populationCoverage),
+						details: {
+							text: this.getMobileNetworkDetailsText(country.name, populationCoverage),
+							source: country.networkSourceLink
+								? {
+										text: country.networkSourceLink.text,
+										href: country.networkSourceLink.href,
+									}
+								: undefined,
+						},
+					},
+
+					sanctions: {
+						condition: this.getSanctionsCondition(country.sanctions),
+						details: {
+							text: this.getSanctionsDetailsText(country.name, country.sanctions),
+							source:
+								country.sanctions && country.sanctions.length > 0
+									? { text: 'Source: EU Sanctions Map & US Sanctions List' }
+									: undefined,
+						},
+					},
+				};
+			});
+
+			return this.resultOk({ rows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch program country feasibility');
+		}
+	}
+
+	private getCashCondition(microfinanceIndex: number | null): CountryCondition {
+		if (microfinanceIndex === null) return CountryCondition.NOT_MET;
+		return microfinanceIndex < 3 ? CountryCondition.MET : CountryCondition.NOT_MET;
+	}
+
+	private getMobileMoneyCondition(paymentProviders: PaymentProvider[] | null): CountryCondition {
+		return paymentProviders && paymentProviders.length > 0 ? CountryCondition.MET : CountryCondition.NOT_MET;
+	}
+
+	private getMobileNetworkCondition(populationCoverage: number | null): CountryCondition {
+		if (populationCoverage === null) return CountryCondition.NOT_MET;
+		return populationCoverage >= 50 ? CountryCondition.MET : CountryCondition.NOT_MET;
+	}
+
+	private getSanctionsCondition(sanctions: SanctionRegime[] | null): CountryCondition {
+		return sanctions && sanctions.length > 0 ? CountryCondition.RESTRICTIONS_APPLY : CountryCondition.MET;
+	}
+
+	private getCashDetailsText(countryName: string, microfinanceIndex: number | null): string {
+		if (microfinanceIndex === null) {
+			return `Market functionality in ${countryName} may be impaired.`;
+		}
+
+		return microfinanceIndex < 3
+			? `Market functionality in ${countryName} is considered sufficient.`
+			: `Market functionality in ${countryName} may be impaired.`;
+	}
+
+	private getMobileMoneyDetailsText(countryName: string, paymentProviders: PaymentProvider[] | null): string {
+		if (!paymentProviders || paymentProviders.length === 0) {
+			return `Mobile money infrastructure in ${countryName} is not sufficient.`;
+		}
+
+		const providers = paymentProviders.map(this.formatEnum).join(', ');
+
+		return `Mobile money infrastructure in ${countryName} is considered sufficient. Following ${
+			paymentProviders.length
+		} provider${paymentProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
+	}
+
+	private getMobileNetworkDetailsText(countryName: string, populationCoverage: number | null): string {
+		if (populationCoverage === null) {
+			return `No reliable mobile network coverage data available for ${countryName}.`;
+		}
+
+		return populationCoverage >= 50
+			? `Mobile network coverage of ${countryName} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
+			: `Mobile network coverage of ${countryName} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
+	}
+
+	private getSanctionsDetailsText(countryName: string, sanctions: SanctionRegime[] | null): string {
+		return sanctions && sanctions.length > 0
+			? `${countryName} is subject to international sanctions or restrictions.`
+			: `${countryName} is not on the UN, US or EU sanctioned list.`;
+	}
+
+	private toNumber(value: Decimal | null): number | null {
+		return value === null ? null : Number(value);
+	}
+
+	private formatEnum(value: string): string {
+		return value
+			.replace(/_/g, ' ')
+			.toLowerCase()
+			.replace(/^\w/, (c) => c.toUpperCase());
 	}
 }

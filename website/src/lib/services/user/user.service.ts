@@ -299,10 +299,14 @@ export class UserService extends BaseService {
 				: null;
 
 			const programs = user.activeOrganization
-				? user.activeOrganization.programAccesses.map((access) => ({
-						id: access.program.id,
-						name: access.program.name,
-					}))
+				? Array.from(
+						new Map(
+							user.activeOrganization.programAccesses.map((a) => [
+								a.program.id,
+								{ id: a.program.id, name: a.program.name },
+							]),
+						).values(),
+					)
 				: [];
 
 			const userInfo: UserSession = {

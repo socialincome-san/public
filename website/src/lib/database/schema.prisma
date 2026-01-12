@@ -367,13 +367,14 @@ model ProgramAccess {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@unique([organizationId, programId])
+  @@unique([organizationId, programId, permission])
   @@map("program_access")
 }
 
 model Organization {
-  id   String @id @default(cuid()) @map("id")
-  name String @unique @map("name")
+  id                 String  @id @default(cuid()) @map("id")
+  name               String  @unique @map("name")
+  isOperatorFallback Boolean @default(false) @map("is_operator_fallback")
 
   campaigns            Campaign[]           @relation("OrganizationCampaigns")
   expenses             Expense[]
@@ -388,13 +389,18 @@ model Organization {
 }
 
 model Program {
-  id             String         @id @default(cuid()) @map("id")
-  name           String         @unique @map("name")
-  totalPayments  Int            @map("total_payments")
-  payoutAmount   Decimal        @map("payout_amount") @db.Decimal(12, 4)
-  payoutCurrency String         @map("payout_currency")
-  payoutInterval PayoutInterval @default(monthly) @map("payout_interval")
-  country        String         @default("Sierra Leone") @map("country")
+  id   String @id @default(cuid()) @map("id")
+  name String @unique @map("name")
+
+  amountOfRecipientsForStart Int?           @map("amount_of_recipients_for_start")
+  programDurationInMonths    Int            @map("program_duration_in_months")
+  payoutPerInterval          Decimal        @map("payout_per_interval") @db.Decimal(12, 4)
+  payoutCurrency             String         @map("payout_currency")
+  payoutInterval             PayoutInterval @default(monthly) @map("payout_interval")
+  targetCauses               Cause[]        @map("target_causes")
+
+  countryId String  @map("country_id")
+  country   Country @relation(fields: [countryId], references: [id])
 
   campaigns       Campaign[]
   recipients      Recipient[]
@@ -586,6 +592,7 @@ model Country {
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  programs  Program[]
 
   @@map("country")
 }

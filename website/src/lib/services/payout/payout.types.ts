@@ -86,7 +86,7 @@ export type RecipientCompletionPreview = {
 	firstName: string;
 	lastName: string;
 	paidCount: number;
-	totalPayments: number;
+	programDurationInMonths: number;
 	remaining: number;
 	isCompleted: boolean;
 };

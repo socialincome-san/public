@@ -1,4 +1,4 @@
-import { ProgramPermission } from '@prisma/client';
+import { Cause, PayoutInterval, ProgramPermission } from '@prisma/client';
 
 export type ProgramWallet = {
 	id: string;
@@ -17,4 +17,14 @@ export type ProgramWallets = {
 export type ProgramOption = {
 	id: string;
 	name: string;
+};
+
+export type CreateProgramInput = {
+	countryId: string;
+	amountOfRecipientsForStart?: number | null;
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutCurrency: string;
+	payoutInterval: PayoutInterval;
+	targetCauses: Cause[];
 };
