@@ -171,7 +171,8 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 
 				if (recipientId && recipient) {
 					const data: RecipientUpdateInput = buildUpdateRecipientInput(schema, recipient, contactFields);
-					res = await updateRecipientAction(data);
+					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
+					res = await updateRecipientAction(data, nextPaymentPhoneNumber);
 				} else {
 					const data: RecipientCreateInput = buildCreateRecipientInput(schema, contactFields);
 					res = await createRecipientAction(data);

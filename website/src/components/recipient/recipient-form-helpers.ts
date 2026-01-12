@@ -1,6 +1,20 @@
+/**
+ * PHONE UPDATE CASES
+ *
+ * Contact.phone and PaymentInformation.phone may reference:
+ *   - the same Phone record (shared), or
+ *   - two different Phone records (independent).
+ *
+ * On update:
+ *   1. If independent → update each normally.
+ *   2. If shared + only one changed → split (create new phone for changed side).
+ *   3. If shared + both changed → split both.
+ */
+
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { Prisma } from '@prisma/client';
 import { RecipientFormSchema } from './recipient-form';
 
 export function buildUpdateRecipientInput(
@@ -9,48 +23,89 @@ export function buildUpdateRecipientInput(
 	contactFields: { [key: string]: FormField },
 ): RecipientUpdateInput {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
-	const basePaymentInfo = {
+
+	const basePaymentInformation = {
 		provider: paymentInfoFields.provider.value,
 		code: paymentInfoFields.code.value,
 	};
 
-	const paymentPhoneValue = paymentInfoFields.phone.value ?? null;
-	const contactPhoneValue = contactFields.phone.value ?? null;
+	const nextPaymentPhoneNumber = paymentInfoFields.phone.value ?? null;
+	const nextContactPhoneNumber = contactFields.phone.value ?? null;
 
-	const paymentPhoneChanged =
-		paymentPhoneValue !== null && paymentPhoneValue !== recipient.paymentInformation?.phone?.number;
+	const previousPaymentPhone = recipient.paymentInformation?.phone;
+	const previousContactPhone = recipient.contact.phone;
 
-	const contactPhoneChanged = contactPhoneValue !== null && contactPhoneValue !== recipient.contact.phone?.number;
+	const previousPaymentPhoneNumber = previousPaymentPhone?.number ?? null;
+	const previousContactPhoneNumber = previousContactPhone?.number ?? null;
 
-	const paymentPhoneUpdate = paymentPhoneChanged
-		? {
+	const paymentPhoneHasChanged = !!(nextPaymentPhoneNumber && nextPaymentPhoneNumber !== previousPaymentPhoneNumber);
+
+	const contactPhoneHasChanged = !!(nextContactPhoneNumber && nextContactPhoneNumber !== previousContactPhoneNumber);
+
+	const previouslySharedPhoneRecord =
+		previousPaymentPhone?.id && previousContactPhone?.id && previousPaymentPhone.id === previousContactPhone.id;
+
+	let paymentPhoneWriteOperation: Prisma.PhoneUpdateOneRequiredWithoutPaymentInformationsNestedInput | undefined =
+		undefined;
+
+	let contactPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutContactsNestedInput | undefined = undefined;
+
+	if (!previouslySharedPhoneRecord) {
+		if (paymentPhoneHasChanged) {
+			paymentPhoneWriteOperation = {
 				upsert: {
-					update: { number: paymentPhoneValue },
-					create: { number: paymentPhoneValue },
-					where: { id: recipient.paymentInformation?.phone?.id },
+					update: { number: nextPaymentPhoneNumber! },
+					create: { number: nextPaymentPhoneNumber! },
+					where: { id: previousPaymentPhone?.id },
 				},
-			}
-		: undefined;
+			};
+		}
 
-	let contactPhoneUpdate = contactPhoneChanged
-		? {
+		if (contactPhoneHasChanged) {
+			contactPhoneWriteOperation = {
 				update: {
-					data: { number: contactPhoneValue },
-					where: { id: recipient.contact.phone?.id },
+					data: { number: nextContactPhoneNumber! },
+					where: { id: previousContactPhone?.id },
 				},
-			}
-		: undefined;
+			};
+		}
+	} else {
+		if (paymentPhoneHasChanged && !contactPhoneHasChanged) {
+			paymentPhoneWriteOperation = {
+				connectOrCreate: {
+					where: { number: nextPaymentPhoneNumber! },
+					create: { number: nextPaymentPhoneNumber! },
+				},
+			};
+		}
 
-	const samePhoneId =
-		recipient.paymentInformation?.phone?.id &&
-		recipient.contact.phone?.id &&
-		recipient.paymentInformation.phone.id === recipient.contact.phone.id;
+		if (!paymentPhoneHasChanged && contactPhoneHasChanged) {
+			contactPhoneWriteOperation = {
+				connectOrCreate: {
+					where: { number: nextContactPhoneNumber! },
+					create: { number: nextContactPhoneNumber! },
+				},
+			};
+		}
 
-	if (samePhoneId && paymentPhoneChanged) {
-		contactPhoneUpdate = undefined;
+		if (paymentPhoneHasChanged && contactPhoneHasChanged) {
+			paymentPhoneWriteOperation = {
+				connectOrCreate: {
+					where: { number: nextPaymentPhoneNumber! },
+					create: { number: nextPaymentPhoneNumber! },
+				},
+			};
+			contactPhoneWriteOperation = {
+				connectOrCreate: {
+					where: { number: nextContactPhoneNumber! },
+					create: { number: nextContactPhoneNumber! },
+				},
+			};
+		}
 	}
 
-	const addressUpdate = buildAddressInput(contactFields);
+	const addressUpdateOperation = buildAddressInput(contactFields);
+
 	return {
 		id: recipient.id,
 		startDate: schema.fields.startDate.value,
@@ -59,29 +114,34 @@ export function buildUpdateRecipientInput(
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner.value } },
 		program: { connect: { id: schema.fields.program.value } },
+
 		paymentInformation: {
 			upsert: {
 				create: {
-					...basePaymentInfo,
+					...basePaymentInformation,
 					phone: {
 						create: {
-							number: paymentPhoneValue ?? recipient.paymentInformation?.phone?.number!,
+							number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
 						},
 					},
 				},
-				update: { ...basePaymentInfo, phone: paymentPhoneUpdate },
+				update: {
+					...basePaymentInformation,
+					phone: paymentPhoneWriteOperation,
+				},
 				where: { id: recipient.paymentInformation?.id },
 			},
 		},
+
 		contact: {
 			update: {
 				data: {
 					...buildCommonContactData(contactFields),
-					phone: contactPhoneUpdate,
+					phone: contactPhoneWriteOperation,
 					address: {
 						upsert: {
-							update: addressUpdate,
-							create: addressUpdate,
+							update: addressUpdateOperation,
+							create: addressUpdateOperation,
 							where: { id: recipient.contact.address?.id },
 						},
 					},
@@ -97,6 +157,7 @@ export function buildCreateRecipientInput(
 	contactFields: { [key: string]: FormField },
 ): RecipientCreateInput {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
+
 	return {
 		startDate: schema.fields.startDate.value,
 		status: schema.fields.status.value,
