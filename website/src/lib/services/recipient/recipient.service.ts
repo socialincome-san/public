@@ -50,61 +50,79 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async update(userId: string, recipient: RecipientPrismaUpdateInput): Promise<ServiceResult<Recipient>> {
+	async update(
+		userId: string,
+		updateInput: RecipientPrismaUpdateInput,
+		nextPaymentPhoneNumber: string | null,
+	): Promise<ServiceResult<Recipient>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
 		if (!accessResult.success) {
 			return this.resultFail(accessResult.error);
 		}
 
-		const program = accessResult.data.find((a) => a.programId === recipient.program?.connect?.id);
+		const requestedProgramId = updateInput.program?.connect?.id;
 
-		if (!program || program.permission !== ProgramPermission.operator) {
+		const operatorForRequestedProgram = accessResult.data.find(
+			(a) => a.programId === requestedProgramId && a.permission === ProgramPermission.operator,
+		);
+
+		if (!operatorForRequestedProgram) {
 			return this.resultFail('Permission denied');
 		}
 
 		const existing = await this.db.recipient.findUnique({
-			where: { id: recipient.id?.toString() },
-			select: { programId: true, paymentInformation: { select: { phone: { select: { number: true } } } } },
+			where: { id: updateInput.id as string },
+			select: {
+				programId: true,
+				paymentInformation: {
+					select: {
+						phone: { select: { number: true } },
+					},
+				},
+			},
 		});
 
 		if (!existing) {
 			return this.resultFail('Recipient not found');
 		}
 
-		const hasAccess = accessResult.data.some((a) => a.programId === existing.programId);
+		const hasAccessToExistingProgram = accessResult.data.some(
+			(a) => a.programId === existing.programId && a.permission === ProgramPermission.operator,
+		);
 
-		if (!hasAccess) {
+		if (!hasAccessToExistingProgram) {
 			return this.resultFail('Permission denied');
 		}
 
+		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
+
+		const paymentPhoneHasChanged =
+			previousPaymentPhoneNumber !== null &&
+			nextPaymentPhoneNumber !== null &&
+			previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+
 		try {
-			const phoneNumber =
-				recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update.number?.toString() ||
-				recipient.paymentInformation?.upsert?.create?.phone?.create?.number?.toString();
-
-			if (!phoneNumber || !existing.paymentInformation?.phone?.number) {
-				return this.resultFail('No phone number available for recipient update');
-			}
-
-			if (existing.paymentInformation?.phone.number !== phoneNumber) {
+			if (paymentPhoneHasChanged) {
 				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
-					existing.paymentInformation?.phone.number,
-					phoneNumber,
+					previousPaymentPhoneNumber!,
+					nextPaymentPhoneNumber!,
 				);
+
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
 				}
 			}
 
 			const updatedRecipient = await this.db.recipient.update({
-				where: { id: recipient.id?.toString() },
-				data: recipient,
+				where: { id: updateInput.id as string },
+				data: updateInput,
 			});
+
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update recipient: ' + error);
+			return this.resultFail('Could not update recipient' + error);
 		}
 	}
 

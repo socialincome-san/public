@@ -366,6 +366,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidPhoneNumberError => 'Invalid phone number. Please check your phone number and try again.';
 
   @override
+  String get failedSentVerificationCodeError =>
+      'Failed to send verification code. Please check your Internet and try again.';
+
+  @override
+  String get failedCodeVerificationCodeError => 'Failed to verify the code. Please check your Internet and try again.';
+
+  @override
+  String get invalidAppCheckTokenError => 'Invalid App Check token. Can\'t use backend service. Please update the app.';
+
+  @override
   String get invalidVerificationCodeError => 'Invalid verification code. Please check provided SMS code and try again.';
 
   @override

@@ -17,11 +17,11 @@ export async function createRecipientAction(recipient: RecipientCreateInput) {
 	return res;
 }
 
-export async function updateRecipientAction(recipient: RecipientUpdateInput) {
+export async function updateRecipientAction(updateInput: RecipientUpdateInput, nextPaymentPhoneNumber: string | null) {
 	const user = await getAuthenticatedUserOrThrow();
 	const recipientService = new RecipientService();
 
-	const res = await recipientService.update(user.id, recipient);
+	const res = await recipientService.update(user.id, updateInput, nextPaymentPhoneNumber);
 	revalidatePath('/portal/management/recipients');
 	revalidatePath('/portal/programs/[programId]/recipients', 'page');
 	return res;

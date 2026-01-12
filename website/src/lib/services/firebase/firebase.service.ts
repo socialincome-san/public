@@ -102,7 +102,15 @@ export class FirebaseService extends BaseService {
 			}
 
 			if (!existingUserResult.data) {
-				return this.resultFail('Auth user not found');
+				this.logger.warn('Old Firebase user missing, recreating with new phone', {
+					oldPhoneNumber,
+					newPhoneNumber,
+				});
+
+				const created = await authAdmin.auth.createUser({
+					phoneNumber: newPhoneNumber,
+				});
+				return this.resultOk(created);
 			}
 
 			const updatedUser = await authAdmin.auth.updateUser(existingUserResult.data.uid, {
