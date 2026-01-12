@@ -90,7 +90,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(userRecord);
 		} catch (error) {
 			this.logger.error('Error creating user by phone number:', { error });
-			return this.resultFail('Could not create auth user by phone number');
+			return this.resultFail(`Could not create auth user by phone number: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -119,7 +119,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(updatedUser);
 		} catch (error) {
 			this.logger.error('Error updating user by phone number:', { oldPhoneNumber, newPhoneNumber, error });
-			return this.resultFail('Could not update auth user by phone number');
+			return this.resultFail(`Could not update auth user by phone number: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -146,7 +146,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(updatedUser);
 		} catch (error) {
 			this.logger.error(`Error updating user by UID ${uid}:`, { uid, updates, error });
-			return this.resultFail('Could not update auth user by UID');
+			return this.resultFail(`Could not update auth user by UID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -160,7 +160,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(userRecord);
 		} catch (error) {
 			this.logger.error('Error creating survey user:', { email, error });
-			return this.resultFail('Could not create survey auth user');
+			return this.resultFail(`Could not create survey auth user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -170,7 +170,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(token);
 		} catch (error) {
 			this.logger.error('Error creating custom token:', { uid, error });
-			return this.resultFail('Could not create custom token');
+			return this.resultFail(`Could not create custom token: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -186,7 +186,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(decodedToken);
 		} catch (error) {
 			this.logger.error('Error verifying ID token:', { error });
-			return this.resultFail('Invalid or expired token');
+			return this.resultFail(`Invalid or expired token: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -223,7 +223,7 @@ export class FirebaseService extends BaseService {
 			});
 			return this.resultOk(userRecord);
 		} catch (error) {
-			return this.resultFail('Could not get or create Firebase Auth user');
+			return this.resultFail(`Could not get or create Firebase Auth user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -232,7 +232,7 @@ export class FirebaseService extends BaseService {
 			const decoded = await authAdmin.auth.verifySessionCookie(cookie, true);
 			return this.resultOk(decoded);
 		} catch (error) {
-			return this.resultFail('Invalid or expired session cookie');
+			return this.resultFail(`Invalid or expired session cookie: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -279,7 +279,7 @@ export class FirebaseService extends BaseService {
 				errorMessage: (error as Error)?.message,
 			});
 
-			return this.resultFail('invalid-app-check-token', 401);
+			return this.resultFail(`invalid-app-check-token: ${JSON.stringify(error)}`, 401);
 		}
 	}
 }

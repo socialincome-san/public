@@ -51,7 +51,7 @@ export class RecipientService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create recipient ${typeof error === 'string' ? error : ''}`);
+			return this.resultFail(`Could not create recipient: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -127,7 +127,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update recipient' + error);
+			return this.resultFail(`Could not update recipient: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -168,7 +168,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to update recipient');
+			return this.resultFail(`Failed to update recipient: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -285,7 +285,14 @@ export class RecipientService extends BaseService {
 			});
 
 			const tableRows: RecipientTableViewRow[] = recipients.map((recipient) => {
-				const access = accessiblePrograms.find((p) => p.programId === recipient.program?.id);
+				const programPermissions = accessiblePrograms
+					.filter((p) => p.programId === recipient.program?.id)
+					.map((p) => p.permission);
+
+				const permission = programPermissions.includes(ProgramPermission.operator)
+					? ProgramPermission.operator
+					: ProgramPermission.owner;
+
 				const payoutsReceived = recipient.payouts.length;
 				const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
@@ -303,7 +310,7 @@ export class RecipientService extends BaseService {
 					payoutsTotal,
 					payoutsProgressPercent,
 					createdAt: recipient.createdAt,
-					permission: access?.permission ?? ProgramPermission.owner,
+					permission,
 				};
 			});
 
@@ -314,7 +321,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch recipients');
+			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -411,7 +418,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk(mapped);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch payout recipients');
+			return this.resultFail(`Could not fetch payout recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -476,7 +483,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk(recipients);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get survey recipients');
+			return this.resultFail(`Could not get survey recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -517,7 +524,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk(recipient);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not find recipient by phone number');
+			return this.resultFail(`Could not find recipient by phone number: ${JSON.stringify(error)}`);
 		}
 	}
 

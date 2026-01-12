@@ -63,8 +63,12 @@ export class SurveyService extends BaseService {
 
 			const tableRows: SurveyTableViewRow[] = surveys.map((survey) => {
 				const programId = survey.recipient.program.id;
-				const access = accessiblePrograms.find((p) => p.programId === programId);
-				const permission = access?.permission ?? ProgramPermission.owner;
+
+				const programPermissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
+
+				const permission = programPermissions.includes(ProgramPermission.operator)
+					? ProgramPermission.operator
+					: ProgramPermission.owner;
 
 				return {
 					id: survey.id,
@@ -92,7 +96,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -108,7 +112,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk({ tableRows: upcoming });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch upcoming surveys');
+			return this.resultFail(`Could not fetch upcoming surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -188,7 +192,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to create survey: ${error}`);
+			return this.resultFail(`Failed to create survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -237,7 +241,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to get survey: ${error}`);
+			return this.resultFail(`Failed to get survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -287,7 +291,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${error}`);
+			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -377,7 +381,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk({ surveys });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to preview survey generation: ${error}`);
+			return this.resultFail(`Failed to preview survey generation: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -416,7 +420,7 @@ export class SurveyService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to generate surveys: ${error}`);
+			return this.resultFail(`Failed to generate surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -429,7 +433,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(surveys);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -444,7 +448,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(surveys);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -483,7 +487,7 @@ export class SurveyService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -522,7 +526,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${error}`);
+			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
 		}
 	}
 

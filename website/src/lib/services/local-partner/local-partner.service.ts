@@ -26,7 +26,7 @@ export class LocalPartnerService extends BaseService {
 			return this.resultOk(partner);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create local partner');
+			return this.resultFail(`Could not create local partner: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -46,7 +46,7 @@ export class LocalPartnerService extends BaseService {
 			return this.resultOk(partner);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update local partner');
+			return this.resultFail(`Could not update local partner: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -88,7 +88,7 @@ export class LocalPartnerService extends BaseService {
 			return this.resultOk(partner);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get local partner');
+			return this.resultFail(`Could not get local partner: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -129,7 +129,7 @@ export class LocalPartnerService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch local partners');
+			return this.resultFail(`Could not fetch local partners: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -146,7 +146,7 @@ export class LocalPartnerService extends BaseService {
 			return this.resultOk(partners);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch local partners');
+			return this.resultFail(`Could not fetch local partners: ${JSON.stringify(error)}`);
 		}
 	}
 }

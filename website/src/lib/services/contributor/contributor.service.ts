@@ -80,7 +80,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get contributor');
+			return this.resultFail(`Could not get contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -118,7 +118,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(updatedContributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor');
+			return this.resultFail(`Could not update contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -141,7 +141,7 @@ export class ContributorService extends BaseService {
 			return this.applyContributorUpdate(contributorId, contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor');
+			return this.resultFail(`Could not update contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -150,7 +150,7 @@ export class ContributorService extends BaseService {
 			return this.applyContributorUpdate(contributorId, data);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor (self)');
+			return this.resultFail(`Could not update contributor (self): ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -198,7 +198,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributor options');
+			return this.resultFail(`Could not fetch contributor options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -254,7 +254,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributors');
+			return this.resultFail(`Could not fetch contributors: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -291,7 +291,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributor IDs for certificates');
+			return this.resultFail(`Could not fetch contributor IDs for certificates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -315,7 +315,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not find contributor');
+			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -347,7 +347,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get or create contributor from Stripe customer');
+			return this.resultFail(`Could not get or create contributor from Stripe customer: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -379,7 +379,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(referenceId);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get or generate contributor reference ID');
+			return this.resultFail(`Could not get or generate contributor reference ID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -430,7 +430,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(newContributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get or create contributor by reference ID');
+			return this.resultFail(`Could not get or create contributor by reference ID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -448,7 +448,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not find contributor by Payment Reference ID');
+			return this.resultFail(`Could not find contributor by Payment Reference ID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -488,7 +488,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create contributor with Firebase Auth user');
+			return this.resultFail(`Could not create contributor with Firebase Auth user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -539,7 +539,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create contributor');
+			return this.resultFail(`Could not create contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -553,7 +553,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(undefined);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor Stripe customer ID');
+			return this.resultFail(`Could not update contributor Stripe customer ID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -609,7 +609,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributor session');
+			return this.resultFail(`Could not fetch contributor session: ${JSON.stringify(error)}`);
 		}
 	}
 }
