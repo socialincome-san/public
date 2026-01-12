@@ -48,10 +48,10 @@ const Program = z.object({
 	id: z.string(),
 	name: z.string(),
 	country: z.string(),
-	payoutAmount: z.number(),
+	payoutPerInterval: z.number(),
 	payoutCurrency: z.string(),
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
-	totalPayments: z.number(),
+	programDurationInMonths: z.number(),
 	createdAt: z.string(),
 	updatedAt: z.string().nullable(),
 });

@@ -1,6 +1,7 @@
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import { CreateProgramInput } from '@/lib/services/program/program.types';
 import { Cause, PayoutInterval } from '@prisma/client';
 import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
@@ -65,29 +66,13 @@ export const createProgramWizardMachine = setup({
 			return result.data.rows;
 		}),
 
-		saveProgram: fromPromise(
-			async ({
-				input,
-			}: {
-				input: {
-					countryId: string;
-					programManagement: ProgramManagementType;
-					recipientApproach: RecipientApproachType;
-					targetCauses: Cause[];
-					amountOfRecipients: number;
-					programDuration: number;
-					payoutPerInterval: number;
-					payoutInterval: PayoutInterval;
-					currency: string;
-				};
-			}) => {
-				const result = await createProgramAction(input);
-				if (!result.success) {
-					throw new Error(result.error);
-				}
-				return result.data.programId;
-			},
-		),
+		saveProgram: fromPromise(async ({ input }: { input: CreateProgramInput }) => {
+			const result = await createProgramAction(input);
+			if (!result.success) {
+				throw new Error(result.error);
+			}
+			return result.data.programId;
+		}),
 	},
 
 	guards: {
@@ -223,7 +208,6 @@ export const createProgramWizardMachine = setup({
 		},
 
 		//meta
-
 		closed: {
 			on: { OPEN: 'loading' },
 		},
@@ -250,16 +234,14 @@ export const createProgramWizardMachine = setup({
 		saving: {
 			invoke: {
 				src: 'saveProgram',
-				input: ({ context }) => ({
+				input: ({ context }): CreateProgramInput => ({
 					countryId: context.selectedCountryId!,
-					programManagement: context.programManagement!,
-					recipientApproach: context.recipientApproach!,
-					targetCauses: context.targetCauses,
-					amountOfRecipients: context.amountOfRecipients,
-					programDuration: context.programDuration,
+					amountOfRecipientsForStart: context.amountOfRecipients ?? null,
+					programDurationInMonths: context.programDuration,
 					payoutPerInterval: context.payoutPerInterval,
+					payoutCurrency: context.currency,
 					payoutInterval: context.payoutInterval,
-					currency: context.currency,
+					targetCauses: context.targetCauses,
 				}),
 				onDone: {
 					target: 'closed',

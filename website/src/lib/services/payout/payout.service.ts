@@ -104,7 +104,7 @@ export class PayoutService extends BaseService {
 				select: {
 					id: true,
 					contact: { select: { firstName: true, lastName: true } },
-					program: { select: { id: true, name: true, totalPayments: true } },
+					program: { select: { id: true, name: true, programDurationInMonths: true } },
 					payouts: { select: { status: true, paymentAt: true } },
 					createdAt: true,
 				},
@@ -115,7 +115,7 @@ export class PayoutService extends BaseService {
 				const permission = access?.permission ?? ProgramPermission.owner;
 
 				const payoutsReceived = recipient.payouts.length;
-				const payoutsTotal = recipient.program.totalPayments ?? 0;
+				const payoutsTotal = recipient.program.programDurationInMonths ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
 				const last3Months: PayoutMonth[] = [months.current, months.last, months.twoAgo].map(({ start, end }) => {
@@ -166,8 +166,8 @@ export class PayoutService extends BaseService {
 			const program = await this.db.program.findUnique({
 				where: { id: programId },
 				select: {
-					totalPayments: true,
-					payoutAmount: true,
+					programDurationInMonths: true,
+					payoutPerInterval: true,
 					payoutCurrency: true,
 					recipients: {
 						select: {
@@ -196,7 +196,7 @@ export class PayoutService extends BaseService {
 
 			for (const recipient of program.recipients) {
 				const paid = recipient.payouts.length;
-				const remaining = Math.max(0, program.totalPayments - paid);
+				const remaining = Math.max(0, program.programDurationInMonths - paid);
 				for (let i = 0; i < remaining && i < monthsAhead; i++) {
 					const monthLabel = forecastMonths[i];
 					recipientCountByMonth.set(monthLabel, (recipientCountByMonth.get(monthLabel) ?? 0) + 1);
@@ -215,7 +215,7 @@ export class PayoutService extends BaseService {
 				return this.resultFail('Missing exchange rate');
 			}
 
-			const payoutAmountUsd = (Number(program.payoutAmount) / baseRate) * usdRate;
+			const payoutPerIntervalUsd = (Number(program.payoutPerInterval) / baseRate) * usdRate;
 
 			const tableRows: PayoutForecastTableViewRow[] = forecastMonths.map((label) => {
 				const count = recipientCountByMonth.get(label) ?? 0;
@@ -223,8 +223,8 @@ export class PayoutService extends BaseService {
 				return {
 					period: label,
 					numberOfRecipients: count,
-					amountInProgramCurrency: Number(program.payoutAmount) * count,
-					amountUsd: payoutAmountUsd * count,
+					amountInProgramCurrency: Number(program.payoutPerInterval) * count,
+					amountUsd: payoutPerIntervalUsd * count,
 					programCurrency: program.payoutCurrency,
 				};
 			});
@@ -387,7 +387,7 @@ export class PayoutService extends BaseService {
 				const phone = recipient.paymentInformation?.phone?.number;
 				const firstName = recipient.contact?.firstName ?? '';
 				const lastName = recipient.contact?.lastName ?? '';
-				const amount = Number(recipient.program?.payoutAmount ?? 0);
+				const amount = Number(recipient.program?.payoutPerInterval ?? 0);
 
 				if (!code || !phone) {
 					return this.resultFail(`Orange Money Id or phone number missing for recipient: ${recipient.id}`);
@@ -433,11 +433,11 @@ export class PayoutService extends BaseService {
 			const toCreate: PreviewPayout[] = recipients
 				.filter((r) => !r.payouts.some((p) => isSameMonth(p.paymentAt, startOfMonth(selectedDate))))
 				.map((r) => {
-					const payoutAmount = r.program.payoutAmount;
+					const payoutPerInterval = r.program.payoutPerInterval;
 					const currency = r.program.payoutCurrency;
 					const rateCurrency = rates[currency];
 					const rateChf = rates['CHF'];
-					const amountChf = rateCurrency && rateChf ? (payoutAmount / rateCurrency) * rateChf : null;
+					const amountChf = rateCurrency && rateChf ? (payoutPerInterval / rateCurrency) * rateChf : null;
 					const phoneNumber = r.paymentInformation?.phone?.number ?? null;
 
 					return {
@@ -446,7 +446,7 @@ export class PayoutService extends BaseService {
 						lastName: r.contact.lastName,
 						phoneNumber,
 						currency,
-						amount: payoutAmount,
+						amount: payoutPerInterval,
 						amountChf,
 						paymentAt: selectedDate,
 						status: PayoutStatus.paid,
@@ -520,14 +520,14 @@ export class PayoutService extends BaseService {
 					const paidCount = r.payouts.filter((p) =>
 						([PayoutStatus.paid, PayoutStatus.confirmed] as PayoutStatus[]).includes(p.status),
 					).length;
-					const remaining = r.program.totalPayments - paidCount;
+					const remaining = r.program.programDurationInMonths - paidCount;
 
 					return {
 						id: r.id,
 						firstName: r.contact.firstName,
 						lastName: r.contact.lastName,
 						paidCount,
-						totalPayments: r.program.totalPayments,
+						programDurationInMonths: r.program.programDurationInMonths,
 						remaining,
 						isCompleted: remaining <= 0,
 					};

@@ -247,7 +247,7 @@ export class RecipientService extends BaseService {
 						select: {
 							id: true,
 							name: true,
-							totalPayments: true,
+							programDurationInMonths: true,
 						},
 					},
 					localPartner: {
@@ -264,7 +264,7 @@ export class RecipientService extends BaseService {
 			const tableRows: RecipientTableViewRow[] = recipients.map((recipient) => {
 				const access = accessiblePrograms.find((p) => p.programId === recipient.program?.id);
 				const payoutsReceived = recipient.payouts.length;
-				const payoutsTotal = recipient.program?.totalPayments ?? 0;
+				const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
 				return {
@@ -356,9 +356,9 @@ export class RecipientService extends BaseService {
 					},
 					program: {
 						select: {
-							payoutAmount: true,
+							payoutPerInterval: true,
 							payoutCurrency: true,
-							totalPayments: true,
+							programDurationInMonths: true,
 						},
 					},
 					payouts: {
@@ -378,9 +378,9 @@ export class RecipientService extends BaseService {
 				contact: r.contact,
 				paymentInformation: r.paymentInformation,
 				program: {
-					payoutAmount: Number(r.program.payoutAmount),
+					payoutPerInterval: Number(r.program.payoutPerInterval),
 					payoutCurrency: r.program.payoutCurrency,
-					totalPayments: r.program.totalPayments,
+					programDurationInMonths: r.program.programDurationInMonths,
 				},
 				payouts: r.payouts,
 			}));

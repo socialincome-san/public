@@ -133,22 +133,24 @@ export class ProgramService extends BaseService {
 				return this.resultFail('Operator fallback organization not found');
 			}
 
-			const countryName = await this.db.country.findUnique({
+			const country = await this.db.country.findUnique({
 				where: { id: input.countryId },
 				select: { name: true },
 			});
 
-			if (!countryName) {
+			if (!country) {
 				return this.resultFail('Country not found');
 			}
 
 			const program = await this.db.program.create({
 				data: {
-					name: `${countryName.name} Program ${Math.floor(10000 + Math.random() * 90000).toString()}`,
+					name: `${country.name} Program ${Math.floor(10000 + Math.random() * 90000)}`,
 					countryId: input.countryId,
-					totalPayments: 0,
-					payoutAmount: input.budget,
-					payoutCurrency: 'CHF',
+					amountOfRecipientsForStart: input.amountOfRecipientsForStart ?? null,
+					programDurationInMonths: input.programDurationInMonths,
+					payoutPerInterval: input.payoutPerInterval,
+					payoutCurrency: input.payoutCurrency,
+					payoutInterval: input.payoutInterval,
 					targetCauses: input.targetCauses,
 				},
 			});
