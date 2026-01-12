@@ -207,7 +207,7 @@ export class PayoutService extends BaseService {
 			for (const recipient of program.recipients) {
 				const paid = recipient.payouts.length;
 				const remaining = Math.max(0, program.programDurationInMonths - paid);
-				for (let i = 0; i < remaining && i < monthsAhead; i++) {
+				for (let i = 0; i < remaining && i < forecastMonths.length; i++) {
 					const monthLabel = forecastMonths[i];
 					recipientCountByMonth.set(monthLabel, (recipientCountByMonth.get(monthLabel) ?? 0) + 1);
 				}
