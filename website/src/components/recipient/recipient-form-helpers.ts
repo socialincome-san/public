@@ -9,6 +9,7 @@
  *   1. If independent → update each normally.
  *   2. If shared + only one changed → split (create new phone for changed side).
  *   3. If shared + both changed → split both.
+ *   4. If independent + both become same → converge (connect both to same record).
  */
 
 import { FormField } from '@/components/dynamic-form/dynamic-form';
@@ -39,7 +40,6 @@ export function buildUpdateRecipientInput(
 	const previousContactPhoneNumber = previousContactPhone?.number ?? null;
 
 	const paymentPhoneHasChanged = !!(nextPaymentPhoneNumber && nextPaymentPhoneNumber !== previousPaymentPhoneNumber);
-
 	const contactPhoneHasChanged = !!(nextContactPhoneNumber && nextContactPhoneNumber !== previousContactPhoneNumber);
 
 	const previouslySharedPhoneRecord =
@@ -50,7 +50,28 @@ export function buildUpdateRecipientInput(
 
 	let contactPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutContactsNestedInput | undefined = undefined;
 
-	if (!previouslySharedPhoneRecord) {
+	const willConvergeToSamePhone =
+		nextPaymentPhoneNumber &&
+		nextContactPhoneNumber &&
+		nextPaymentPhoneNumber === nextContactPhoneNumber &&
+		!previouslySharedPhoneRecord;
+
+	if (willConvergeToSamePhone) {
+		paymentPhoneWriteOperation = {
+			upsert: {
+				update: { number: nextPaymentPhoneNumber },
+				create: { number: nextPaymentPhoneNumber },
+				where: { id: previousPaymentPhone?.id },
+			},
+		};
+
+		contactPhoneWriteOperation = {
+			connectOrCreate: {
+				where: { number: nextContactPhoneNumber },
+				create: { number: nextContactPhoneNumber },
+			},
+		};
+	} else if (!previouslySharedPhoneRecord) {
 		if (paymentPhoneHasChanged) {
 			paymentPhoneWriteOperation = {
 				upsert: {
