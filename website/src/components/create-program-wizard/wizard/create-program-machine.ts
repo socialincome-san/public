@@ -18,16 +18,12 @@ export const createProgramWizardMachine = setup({
 			recipientApproach: RecipientApproachType | null;
 			targetCauses: Cause[];
 
-			// step 3 – budget / payouts
+			// step 3
 			amountOfRecipients: number;
-
-			// payouts (defaults = recommended)
 			programDuration: number;
 			payoutPerInterval: number;
 			payoutInterval: PayoutInterval;
 			currency: string;
-
-			// NEW
 			customizePayouts: boolean;
 
 			// meta
@@ -35,13 +31,8 @@ export const createProgramWizardMachine = setup({
 			error?: string;
 		};
 
-		events:
-			| { type: 'OPEN' }
-			| { type: 'CLOSE' }
-			| { type: 'RETRY' }
-
-			// step 1
-			| { type: 'SELECT_COUNTRY'; id: string }
+		events: // step 1
+		| { type: 'SELECT_COUNTRY'; id: string }
 			| { type: 'TOGGLE_COUNTRY_ROW'; id: string }
 
 			// step 2
@@ -57,14 +48,21 @@ export const createProgramWizardMachine = setup({
 			| { type: 'SET_CURRENCY'; value: string }
 			| { type: 'TOGGLE_CUSTOMIZE_PAYOUTS' }
 			| { type: 'NEXT' }
-			| { type: 'BACK' };
+			| { type: 'BACK' }
+
+			// meta
+			| { type: 'OPEN' }
+			| { type: 'CLOSE' }
+			| { type: 'RETRY' };
 	},
 
 	actors: {
 		loadCountries: fromPromise(async () => {
-			const res = await getProgramCountryFeasibilityAction();
-			if (!res.success) throw new Error(res.error);
-			return res.data.rows;
+			const result = await getProgramCountryFeasibilityAction();
+			if (!result.success) {
+				throw new Error(result.error);
+			}
+			return result.data.rows;
 		}),
 
 		saveProgram: fromPromise(
@@ -83,21 +81,26 @@ export const createProgramWizardMachine = setup({
 					currency: string;
 				};
 			}) => {
-				const res = await createProgramAction(input);
-				if (!res.success) throw new Error(res.error);
-				return res.data.programId;
+				const result = await createProgramAction(input);
+				if (!result.success) {
+					throw new Error(result.error);
+				}
+				return result.data.programId;
 			},
 		),
 	},
 
 	guards: {
+		// step 1
 		countrySelected: ({ context }) => Boolean(context.selectedCountryId),
 
+		// step 2
 		programSetupValid: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
 			(context.recipientApproach === 'universal' || context.targetCauses.length > 0),
 
+		// step 3
 		budgetConfigValid: ({ context }) =>
 			context.amountOfRecipients > 0 && context.programDuration > 0 && context.payoutPerInterval > 0,
 	},
@@ -106,53 +109,31 @@ export const createProgramWizardMachine = setup({
 	initial: 'closed',
 
 	context: {
+		// step 1
 		countries: [],
 		selectedCountryId: null,
 		openCountryRowIds: [],
 
-		programManagement: null,
+		// step 2
+		programManagement: 'social_income',
 		recipientApproach: null,
 		targetCauses: [],
 
+		// step 3
 		amountOfRecipients: 20,
-
-		// recommended defaults
 		programDuration: 36,
 		payoutPerInterval: 32,
 		payoutInterval: 'monthly',
 		currency: 'USD',
-
-		// NEW
 		customizePayouts: false,
 
+		// meta
 		createdProgramId: undefined,
 		error: undefined,
 	},
 
 	states: {
-		closed: {
-			on: { OPEN: 'loading' },
-		},
-
-		loading: {
-			invoke: {
-				src: 'loadCountries',
-				onDone: {
-					target: 'countrySelection',
-					actions: assign({
-						countries: ({ event }) => event.output,
-						error: () => undefined,
-					}),
-				},
-				onError: {
-					target: 'error',
-					actions: assign({
-						error: ({ event }) => (event.error instanceof Error ? event.error.message : 'Failed to load data'),
-					}),
-				},
-			},
-		},
-
+		//step 1
 		countrySelection: {
 			on: {
 				SELECT_COUNTRY: {
@@ -173,6 +154,7 @@ export const createProgramWizardMachine = setup({
 			},
 		},
 
+		// Step 2
 		programSetup: {
 			on: {
 				SELECT_PROGRAM_MANAGEMENT: {
@@ -200,6 +182,7 @@ export const createProgramWizardMachine = setup({
 			},
 		},
 
+		// Step 3
 		budget: {
 			on: {
 				SET_AMOUNT_OF_RECIPIENTS: {
@@ -212,8 +195,6 @@ export const createProgramWizardMachine = setup({
 						customizePayouts: ({ context }) => !context.customizePayouts,
 					}),
 				},
-
-				// only meaningful when customizePayouts === true (UI-enforced)
 				SET_PROGRAM_DURATION: {
 					actions: assign({
 						programDuration: ({ event }) => event.value,
@@ -238,6 +219,31 @@ export const createProgramWizardMachine = setup({
 				BACK: 'programSetup',
 				NEXT: { guard: 'budgetConfigValid', target: 'saving' },
 				CLOSE: 'closed',
+			},
+		},
+
+		//meta
+
+		closed: {
+			on: { OPEN: 'loading' },
+		},
+
+		loading: {
+			invoke: {
+				src: 'loadCountries',
+				onDone: {
+					target: 'countrySelection',
+					actions: assign({
+						countries: ({ event }) => event.output,
+						error: () => undefined,
+					}),
+				},
+				onError: {
+					target: 'error',
+					actions: assign({
+						error: ({ event }) => (event.error instanceof Error ? event.error.message : 'Failed to load data'),
+					}),
+				},
 			},
 		},
 

@@ -8,12 +8,26 @@ function humanizeCause(cause: Cause) {
 	return cause.replace(/_/g, ' ');
 }
 
-type TargetCauseSelectorProps = {
+const causeClasses = {
+	base: 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-sm relative z-10 transition-colors',
+	active: [
+		'text-primary-foreground bg-primary/90 shadow',
+		'after:absolute after:inset-0 after:-z-10 after:rounded-full',
+		'after:bg-gradient-to-r',
+		'after:from-[hsl(var(--gradient-button-from))]',
+		'after:to-[hsl(var(--gradient-button-to))]',
+		'after:opacity-100 hover:after:opacity-0',
+		'after:transition-opacity',
+	],
+	inactive: 'bg-background hover:bg-muted border',
+};
+
+type Props = {
 	selected?: Cause[];
 	onToggle: (cause: Cause) => void;
 };
 
-export function TargetCauseSelector({ selected = [], onToggle }: TargetCauseSelectorProps) {
+export function TargetCauseSelector({ selected = [], onToggle }: Props) {
 	return (
 		<div className="space-y-2">
 			<p className="text-sm font-medium">Select target causes</p>
@@ -28,25 +42,9 @@ export function TargetCauseSelector({ selected = [], onToggle }: TargetCauseSele
 							type="button"
 							onClick={() => onToggle(cause)}
 							aria-pressed={isActive}
-							className={cn(
-								'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-sm',
-								'relative z-10 transition-colors',
-
-								isActive
-									? [
-											'text-primary-foreground bg-primary/90 shadow',
-											'after:absolute after:inset-0 after:-z-10 after:rounded-full',
-											'after:bg-gradient-to-r',
-											'after:from-[hsl(var(--gradient-button-from))]',
-											'after:to-[hsl(var(--gradient-button-to))]',
-											'after:opacity-100 hover:after:opacity-0',
-											'after:transition-opacity',
-										].join(' ')
-									: 'bg-background hover:bg-muted border',
-							)}
+							className={cn(causeClasses.base, isActive ? causeClasses.active : causeClasses.inactive)}
 						>
 							<span>{humanizeCause(cause)}</span>
-
 							{isActive && <X className="h-3.5 w-3.5" aria-hidden />}
 						</button>
 					);

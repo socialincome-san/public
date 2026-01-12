@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CountryConditionBadge } from './country-condition-badge';
 
-type CountryTableProps = {
+type Props = {
 	rows: ProgramCountryFeasibilityRow[];
 	value?: string | null;
 	openIds: string[];
@@ -20,7 +20,7 @@ type CountryTableProps = {
 	onToggleRow: (id: string) => void;
 };
 
-export function CountryTable({ rows, value, openIds, onValueChange, onToggleRow }: CountryTableProps) {
+export function CountryTable({ rows, value, openIds, onValueChange, onToggleRow }: Props) {
 	function renderDetails(details: ProgramCountryFeasibilityRow['cash']['details']) {
 		return (
 			<div className="space-y-1 text-sm">

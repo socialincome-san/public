@@ -5,10 +5,6 @@ import { CountryCondition } from '@/lib/services/country/country.types';
 import { AlertTriangleIcon, CheckIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 
-type CountryConditionBadgeProps = {
-	condition: CountryCondition;
-};
-
 const CONDITION_UI: Record<
 	CountryCondition,
 	{
@@ -34,7 +30,11 @@ const CONDITION_UI: Record<
 	},
 };
 
-export function CountryConditionBadge({ condition }: CountryConditionBadgeProps) {
+type Props = {
+	condition: CountryCondition;
+};
+
+export function CountryConditionBadge({ condition }: Props) {
 	const { variant, label, Icon } = CONDITION_UI[condition];
 
 	return (
