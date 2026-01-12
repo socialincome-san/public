@@ -61,8 +61,13 @@ export class PayoutService extends BaseService {
 			});
 
 			const tableRows: PayoutTableViewRow[] = payouts.map((payout) => {
-				const program = accessiblePrograms.find((x) => x.programId === payout.recipient.program.id);
-				const permission = program?.permission ?? ProgramPermission.owner;
+				const programPermissions = accessiblePrograms
+					.filter((x) => x.programId === payout.recipient.program.id)
+					.map((x) => x.permission);
+
+				const permission = programPermissions.includes(ProgramPermission.operator)
+					? ProgramPermission.operator
+					: ProgramPermission.owner;
 
 				return {
 					id: payout.id,
@@ -80,7 +85,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch payouts');
+			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -111,8 +116,13 @@ export class PayoutService extends BaseService {
 			});
 
 			const tableRows: OngoingPayoutTableViewRow[] = recipients.map((recipient) => {
-				const access = accessiblePrograms.find((p) => p.programId === recipient.program.id);
-				const permission = access?.permission ?? ProgramPermission.owner;
+				const programPermissions = accessiblePrograms
+					.filter((p) => p.programId === recipient.program.id)
+					.map((p) => p.permission);
+
+				const permission = programPermissions.includes(ProgramPermission.operator)
+					? ProgramPermission.operator
+					: ProgramPermission.owner;
 
 				const payoutsReceived = recipient.payouts.length;
 				const payoutsTotal = recipient.program.programDurationInMonths ?? 0;
@@ -143,7 +153,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch ongoing payouts');
+			return this.resultFail(`Could not fetch ongoing payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -232,7 +242,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not generate payout forecast');
+			return this.resultFail(`Could not generate payout forecast: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -273,8 +283,13 @@ export class PayoutService extends BaseService {
 			});
 
 			const tableRows: PayoutConfirmationTableViewRow[] = payouts.map((payout) => {
-				const access = accessiblePrograms.find((x) => x.programId === payout.recipient.program.id);
-				const permission = access?.permission ?? ProgramPermission.operator;
+				const programPermissions = accessiblePrograms
+					.filter((p) => p.programId === payout.recipient.program.id)
+					.map((p) => p.permission);
+
+				const permission = programPermissions.includes(ProgramPermission.operator)
+					? ProgramPermission.operator
+					: ProgramPermission.owner;
 
 				return {
 					id: payout.id,
@@ -293,7 +308,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch payout confirmation inbox');
+			return this.resultFail(`Could not fetch payout confirmation inbox: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -338,7 +353,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(`Payout updated to "${newStatus}"`);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update payout');
+			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -364,7 +379,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not generate registration CSV');
+			return this.resultFail(`Could not generate registration CSV: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -407,7 +422,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not generate payout CSV');
+			return this.resultFail(`Could not generate payout CSV: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -456,7 +471,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(toCreate);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not preview payouts');
+			return this.resultFail(`Could not preview payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -488,7 +503,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(`Created ${dbPayload.length} payouts for ${format(selectedDate, 'yyyy-MM')}.`);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not generate payouts');
+			return this.resultFail(`Could not generate payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -537,7 +552,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(completed);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not preview completed recipients');
+			return this.resultFail(`Could not preview completed recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -564,7 +579,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(`Updated ${completed.length} recipients to status "former".`);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update recipients');
+			return this.resultFail(`Could not update recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -622,7 +637,7 @@ export class PayoutService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create payout');
+			return this.resultFail(`Could not create payout: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -681,7 +696,7 @@ export class PayoutService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update payout');
+			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -749,7 +764,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(payouts);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch payouts');
+			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -766,7 +781,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(payout);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not fetch payout "${payoutId}"`);
+			return this.resultFail(`Could not fetch payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -792,7 +807,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update payout "${payoutId}"`);
+			return this.resultFail(`Failed to update payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}
 }

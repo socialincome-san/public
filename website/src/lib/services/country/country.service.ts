@@ -70,7 +70,7 @@ export class CountryService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create country: ${error}`);
+			return this.resultFail(`Could not create country: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -138,7 +138,7 @@ export class CountryService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not update country: ${error}`);
+			return this.resultFail(`Could not update country: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -185,7 +185,7 @@ export class CountryService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get country');
+			return this.resultFail(`Could not get country: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -227,7 +227,7 @@ export class CountryService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch countries');
+			return this.resultFail(`Could not fetch countries: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -304,7 +304,7 @@ export class CountryService extends BaseService {
 			return this.resultOk({ rows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch program country feasibility');
+			return this.resultFail(`Could not fetch program country feasibility: ${JSON.stringify(error)}`);
 		}
 	}
 

@@ -73,7 +73,7 @@ export class ProgramService extends BaseService {
 			return this.resultOk({ wallets });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch programs');
+			return this.resultFail(`Could not fetch programs: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -109,7 +109,7 @@ export class ProgramService extends BaseService {
 			return this.resultOk(programs);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch program options');
+			return this.resultFail(`Could not fetch program options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -168,7 +168,7 @@ export class ProgramService extends BaseService {
 			return this.resultOk({ programId: program.id });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create program');
+			return this.resultFail(`Could not create program: ${JSON.stringify(error)}`);
 		}
 	}
 }

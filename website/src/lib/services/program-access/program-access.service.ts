@@ -37,7 +37,7 @@ export class ProgramAccessService extends BaseService {
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch program accesses');
+			return this.resultFail(`Could not get accessible programs: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -65,7 +65,7 @@ export class ProgramAccessService extends BaseService {
 			return this.resultOk(undefined);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create program accesses');
+			return this.resultFail(`Could not create program accesses: ${JSON.stringify(error)}`);
 		}
 	}
 }
