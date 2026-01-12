@@ -37,6 +37,7 @@ export class SurveyService extends BaseService {
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
+
 			const surveys = await this.db.survey.findMany({
 				where: { recipient: { programId: { in: programIds } } },
 				select: {
@@ -61,37 +62,41 @@ export class SurveyService extends BaseService {
 				orderBy: { dueAt: 'desc' },
 			});
 
-			const tableRows: SurveyTableViewRow[] = surveys.map((survey) => {
-				const programId = survey.recipient.program.id;
+			const tableRows: SurveyTableViewRow[] = surveys
+				.filter((s) => s.recipient.program !== null)
+				.map((survey) => {
+					const programId = survey.recipient.program!.id;
 
-				const programPermissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
+					const programPermissions = accessiblePrograms
+						.filter((p) => p.programId === programId)
+						.map((p) => p.permission);
 
-				const permission = programPermissions.includes(ProgramPermission.operator)
-					? ProgramPermission.operator
-					: ProgramPermission.owner;
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
 
-				return {
-					id: survey.id,
-					name: survey.name,
-					recipientName:
-						`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
-					programId,
-					programName: survey.recipient.program.name,
-					questionnaire: survey.questionnaire,
-					status: survey.status,
-					language: survey.language,
-					dueAt: survey.dueAt,
-					completedAt: survey.completedAt,
-					createdAt: survey.createdAt,
-					surveyUrl: this.buildSurveyUrl({
-						surveyId: survey.id,
-						recipientId: survey.recipient.id,
-						accessEmail: survey.accessEmail,
-						accessPw: survey.accessPw,
-					}),
-					permission,
-				};
-			});
+					return {
+						id: survey.id,
+						name: survey.name,
+						recipientName:
+							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+						programId,
+						programName: survey.recipient.program!.name,
+						questionnaire: survey.questionnaire,
+						status: survey.status,
+						language: survey.language,
+						dueAt: survey.dueAt,
+						completedAt: survey.completedAt,
+						createdAt: survey.createdAt,
+						surveyUrl: this.buildSurveyUrl({
+							surveyId: survey.id,
+							recipientId: survey.recipient.id,
+							accessEmail: survey.accessEmail,
+							accessPw: survey.accessPw,
+						}),
+						permission,
+					};
+				});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
@@ -158,14 +163,17 @@ export class SurveyService extends BaseService {
 				return this.resultFail('Recipient not found');
 			}
 
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
+			if (recipient.program) {
+				const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+				if (!accessibleProgramsResult.success) {
+					return this.resultFail(accessibleProgramsResult.error);
+				}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
-				return this.resultFail('Access denied');
+				const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program!.id);
+
+				if (!programAccess || programAccess.permission !== ProgramPermission.operator) {
+					return this.resultFail('Access denied');
+				}
 			}
 
 			const survey = await this.db.survey.create({
@@ -189,6 +197,7 @@ export class SurveyService extends BaseService {
 				createdAt: survey.createdAt,
 				updatedAt: survey.updatedAt,
 			};
+
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
@@ -211,14 +220,17 @@ export class SurveyService extends BaseService {
 				return this.resultFail('Survey not found');
 			}
 
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
+			if (survey.recipient.program) {
+				const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+				if (!accessibleProgramsResult.success) {
+					return this.resultFail(accessibleProgramsResult.error);
+				}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
-			if (!programAccess) {
-				return this.resultFail('Access denied');
+				const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program!.id);
+
+				if (!programAccess) {
+					return this.resultFail('Access denied');
+				}
 			}
 
 			const payload: SurveyPayload = {
@@ -238,6 +250,7 @@ export class SurveyService extends BaseService {
 				createdAt: survey.createdAt,
 				updatedAt: survey.updatedAt,
 			};
+
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
@@ -256,14 +269,17 @@ export class SurveyService extends BaseService {
 				return this.resultFail('Survey not found');
 			}
 
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
+			if (survey.recipient.program) {
+				const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+				if (!accessibleProgramsResult.success) {
+					return this.resultFail(accessibleProgramsResult.error);
+				}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
-				return this.resultFail('Access denied');
+				const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program!.id);
+
+				if (!programAccess || programAccess.permission !== ProgramPermission.operator) {
+					return this.resultFail('Access denied');
+				}
 			}
 
 			const updatedSurvey = await this.db.survey.update({
@@ -288,6 +304,7 @@ export class SurveyService extends BaseService {
 				createdAt: updatedSurvey.createdAt,
 				updatedAt: updatedSurvey.updatedAt,
 			};
+
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);

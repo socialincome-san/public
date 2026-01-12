@@ -1,7 +1,7 @@
 'use client';
 
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, X } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '@socialincome/ui/src/lib/utils';
@@ -12,21 +12,39 @@ const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
 	React.ElementRef<typeof SelectPrimitive.Trigger>,
-	React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-	<SelectPrimitive.Trigger
-		ref={ref}
-		className={cn(
-			'border-input ring-offset-background data-[placeholder]:text-muted-foreground focus:ring-ring flex h-9 w-full items-center justify-between whitespace-nowrap rounded-full border bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-			className,
+	React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+		clearable?: boolean;
+		onClear?: () => void;
+	}
+>(({ className, children, clearable, onClear, ...props }, ref) => (
+	<div className="relative w-full">
+		<SelectPrimitive.Trigger
+			ref={ref}
+			className={cn(
+				'border-input ring-offset-background data-[placeholder]:text-muted-foreground focus:ring-ring flex h-9 w-full items-center justify-between whitespace-nowrap rounded-full border bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+				className,
+			)}
+			{...props}
+		>
+			{children}
+			<SelectPrimitive.Icon asChild>
+				<ChevronDown className="h-4 w-4 opacity-50" />
+			</SelectPrimitive.Icon>
+		</SelectPrimitive.Trigger>
+
+		{clearable && onClear && (
+			<button
+				type="button"
+				onClick={(e) => {
+					e.stopPropagation();
+					onClear();
+				}}
+				className="hover:bg-muted absolute right-8 top-1/2 -translate-y-1/2 rounded-full p-1"
+			>
+				<X className="h-3 w-3 opacity-60" />
+			</button>
 		)}
-		{...props}
-	>
-		{children}
-		<SelectPrimitive.Icon asChild>
-			<ChevronDown className="h-4 w-4 opacity-50" />
-		</SelectPrimitive.Icon>
-	</SelectPrimitive.Trigger>
+	</div>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
@@ -128,4 +146,4 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
-export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue };
+export { Select, SelectContent, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue };

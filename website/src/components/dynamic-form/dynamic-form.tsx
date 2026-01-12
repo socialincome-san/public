@@ -402,16 +402,21 @@ const GenericFormField = ({
 							<FormItem>
 								<Label>{label}</Label>
 								<Select
-									value={field.value}
-									onValueChange={field.onChange}
+									value={field.value ?? '__none__'}
+									onValueChange={(val) => field.onChange(val === '__none__' ? undefined : val)}
 									disabled={formFieldSchema.disabled || isLoading || readOnly}
 								>
 									<FormControl>
-										<SelectTrigger>
+										<SelectTrigger
+											clearable={!readOnly && field.value != null}
+											onClear={() => field.onChange(undefined)}
+										>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
 										</SelectTrigger>
 									</FormControl>
+
 									<SelectContent {...form.register(optionKey)}>
+										<SelectItem value="__none__">None</SelectItem>
 										{items.map((item) => (
 											<SelectItem value={item.id} key={item.id}>
 												{item.label}
