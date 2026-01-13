@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
-import type { CandidatesTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { Suspense } from 'react';
 import { CandidatesTableClient } from './candidates-table-client';
 
