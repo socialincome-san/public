@@ -97,8 +97,8 @@ export type PayoutPayload = {
 		id: string;
 		firstName: string;
 		lastName: string;
-		programId: string;
-		programName: string;
+		programId: string | null;
+		programName: string | null;
 	};
 	amount: number;
 	currency: string;

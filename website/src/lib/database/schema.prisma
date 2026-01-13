@@ -249,8 +249,8 @@ model Recipient {
   termsAccepted        Boolean             @default(false) @map("terms_accepted")
   paymentInformationId String?             @map("payment_information_id")
   paymentInformation   PaymentInformation? @relation(fields: [paymentInformationId], references: [id])
-  programId            String              @map("program_id")
-  program              Program             @relation(fields: [programId], references: [id])
+  programId            String?             @map("program_id")
+  program              Program?            @relation(fields: [programId], references: [id])
   localPartnerId       String              @map("local_partner_id")
   localPartner         LocalPartner        @relation(fields: [localPartnerId], references: [id])
 

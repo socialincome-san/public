@@ -4,35 +4,33 @@ import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import {
-	createRecipientAction,
-	getRecipientAction,
-	getRecipientOptions,
-	updateRecipientAction,
-} from '@/lib/server-actions/recipient-actions';
+	createCandidateAction,
+	getCandidateAction,
+	getCandidateOptions,
+	updateCandidateAction,
+} from '@/lib/server-actions/candidate-actions';
+import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
-import { ProgramOption } from '@/lib/services/program/program.types';
-import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { PaymentProvider, RecipientStatus } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
-import { buildCreateRecipientInput, buildUpdateRecipientInput } from './recipient-form-helpers';
+import { buildCreateCandidateInput, buildUpdateCandidateInput } from './candidate-form-helpers';
 
-type RecipientFormProps = {
+type CandidateFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	readOnly?: boolean;
-	recipientId?: string;
-	programId?: string;
+	candidateId?: string;
 };
 
-export type RecipientFormSchema = {
+export type CandidateFormSchema = {
 	label: string;
 	fields: {
-		startDate: FormField;
 		status: FormField;
 		successorName: FormField;
 		termsAccepted: FormField;
+		localPartner: FormField;
 		paymentInformation: {
 			label: string;
 			fields: {
@@ -41,19 +39,13 @@ export type RecipientFormSchema = {
 				phone: FormField;
 			};
 		};
-		program: FormField;
-		localPartner: FormField;
 		contact: FormSchema;
 	};
 };
 
-const initialFormSchema: RecipientFormSchema = {
-	label: 'Recipients',
+const initialFormSchema: CandidateFormSchema = {
+	label: 'Candidates',
 	fields: {
-		startDate: {
-			label: 'Start Date',
-			zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
-		},
 		status: {
 			placeholder: 'Status',
 			label: 'Status',
@@ -67,10 +59,6 @@ const initialFormSchema: RecipientFormSchema = {
 		termsAccepted: {
 			label: 'Terms Accepted',
 			zodSchema: z.boolean().optional(),
-		},
-		program: {
-			placeholder: 'Program',
-			label: 'Program',
 		},
 		localPartner: {
 			placeholder: 'Local Partner',
@@ -104,23 +92,21 @@ const initialFormSchema: RecipientFormSchema = {
 	},
 };
 
-export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly, programId }: RecipientFormProps) {
+export function CandidateForm({ onSuccess, onError, onCancel, candidateId, readOnly }: CandidateFormProps) {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
-	const [recipient, setRecipient] = useState<RecipientPayload>();
+	const [candidate, setCandidate] = useState<CandidatePayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	const loadRecipient = async (recipientId: string) => {
+	const loadCandidate = async (candidateId: string) => {
 		try {
-			const result = await getRecipientAction(recipientId);
+			const result = await getCandidateAction(candidateId);
 			if (result.success) {
-				setRecipient(result.data);
+				setCandidate(result.data);
 				const newSchema = { ...formSchema };
 				const contactValues = getContactValuesFromPayload(result.data.contact, newSchema.fields.contact.fields);
-				newSchema.fields.startDate.value = result.data.startDate ?? undefined;
 				newSchema.fields.status.value = result.data.status;
 				newSchema.fields.successorName.value = result.data.successorName;
 				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
-				newSchema.fields.program.value = result.data.program?.id;
 				newSchema.fields.localPartner.value = result.data.localPartner.id;
 				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
@@ -135,47 +121,34 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 		}
 	};
 
-	const setOptions = (localPartner: LocalPartnerOption[], programs: ProgramOption[]) => {
-		const optionsToZodEnum = (options: LocalPartnerOption[] | ProgramOption[]) =>
-			getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
+	const setOptions = (localPartner: LocalPartnerOption[]) => {
+		const partnersObj = getZodEnum(localPartner.map(({ id, name }) => ({ id, label: name })));
 
-		const partnersObj = optionsToZodEnum(localPartner);
-
-		const programsToFilter = programs
-			// filter by program id if in program scope
-			.filter((p) => !programId || p.id === programId);
-
-		const programsObj = optionsToZodEnum(programsToFilter);
-
-		setFormSchema((prevSchema) => ({
-			...prevSchema,
+		setFormSchema((prev) => ({
+			...prev,
 			fields: {
-				...prevSchema.fields,
+				...prev.fields,
 				localPartner: {
-					...prevSchema.fields.localPartner,
+					...prev.fields.localPartner,
 					zodSchema: z.nativeEnum(partnersObj),
-				},
-				program: {
-					...prevSchema.fields.program,
-					zodSchema: z.nativeEnum(programsObj),
 				},
 			},
 		}));
 	};
 
-	const onSubmit = (schema: RecipientFormSchema) => {
+	const onSubmit = (schema: CandidateFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res: { success: boolean; error?: string };
 				const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
 
-				if (recipientId && recipient) {
-					const data: RecipientUpdateInput = buildUpdateRecipientInput(schema, recipient, contactFields);
+				if (candidateId && candidate) {
+					const data: CandidateUpdateInput = buildUpdateCandidateInput(schema, candidate, contactFields);
 					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
-					res = await updateRecipientAction(data, nextPaymentPhoneNumber);
+					res = await updateCandidateAction(data, nextPaymentPhoneNumber);
 				} else {
-					const data: RecipientCreateInput = buildCreateRecipientInput(schema, contactFields);
-					res = await createRecipientAction(data);
+					const data: CandidateCreateInput = buildCreateCandidateInput(schema, contactFields);
+					res = await createCandidateAction(data);
 				}
 
 				res.success ? onSuccess?.() : onError?.(res.error);
@@ -186,27 +159,26 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 	};
 
 	useEffect(() => {
-		if (recipientId) {
-			// Load recipient in edit mode
-			startTransition(async () => await loadRecipient(recipientId));
+		if (candidateId) {
+			startTransition(async () => await loadCandidate(candidateId));
 		}
-	}, [recipientId]);
+	}, [candidateId]);
 
 	useEffect(() => {
-		// load options for program and local partners
 		startTransition(async () => {
-			const { programs, localPartner } = await getRecipientOptions();
-			if (!programs.success || !localPartner.success) return;
-			setOptions(localPartner.data, programs.data);
+			const { localPartners } = await getCandidateOptions();
+			if (!localPartners.success) return;
+			setOptions(localPartners.data);
 		});
 	}, []);
+
 	return (
 		<DynamicForm
 			formSchema={formSchema}
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : recipientId ? 'edit' : 'add'}
+			mode={readOnly ? 'readonly' : candidateId ? 'edit' : 'add'}
 		/>
 	);
 }

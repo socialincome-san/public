@@ -10,10 +10,14 @@ import { CreateProgramWizard } from './wizard/create-program-wizard';
 
 type Props = {
 	trigger: ReactNode;
+	isAuthenticated?: boolean;
 };
 
-export function CreateProgramModal({ trigger }: Props) {
-	const [state, send] = useMachine(createProgramWizardMachine);
+export function CreateProgramModal({ trigger, isAuthenticated = false }: Props) {
+	const [state, send] = useMachine(createProgramWizardMachine, {
+		input: { isAuthenticated },
+	});
+
 	const router = useRouter();
 
 	const isOpen = !state.matches('closed');
