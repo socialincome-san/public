@@ -1,9 +1,8 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { CandidateService } from '@/lib/services/candidate/candidate.service';
 import type { CandidatesTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { Suspense } from 'react';
 import { CandidatesTableClient } from './candidates-table-client';
-import { CandidateService } from '@/lib/services/candidate/candidate.service';
 
 export default function CandidatesPage() {
 	return (
