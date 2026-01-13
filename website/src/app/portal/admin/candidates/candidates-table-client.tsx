@@ -5,10 +5,10 @@ import { Button } from '@/components/button';
 import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { RecipientForm } from '@/components/recipient/recipient-form';
-import type { CandidatesTableViewRow } from '@/lib/services/recipient/recipient.types';
+import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
+import { CandidateForm } from './candidates-form';
 
 export function CandidatesTableClient({
 	rows,
@@ -20,18 +20,18 @@ export function CandidatesTableClient({
 	readOnly?: boolean;
 }) {
 	const [open, setOpen] = useState(false);
-	const [recipientId, setRecipientId] = useState<string | undefined>();
+	const [candidateId, setCandidateId] = useState<string | undefined>();
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const rowReadOnly = readOnly ?? false;
 
 	const openEmptyForm = () => {
-		setRecipientId(undefined);
+		setCandidateId(undefined);
 		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: CandidatesTableViewRow) => {
-		setRecipientId(row.id);
+		setCandidateId(row.id);
 		setErrorMessage(null);
 		setOpen(true);
 	};
@@ -61,7 +61,7 @@ export function CandidatesTableClient({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>{recipientId ? 'Edit Candidate' : 'New Candidate'}</DialogTitle>
+						<DialogTitle>{candidateId ? 'Edit Candidate' : 'New Candidate'}</DialogTitle>
 					</DialogHeader>
 
 					{errorMessage && (
@@ -71,13 +71,12 @@ export function CandidatesTableClient({
 						</Alert>
 					)}
 
-					<RecipientForm
-						recipientId={recipientId}
+					<CandidateForm
+						candidateId={candidateId}
 						readOnly={rowReadOnly}
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
-						variant="candidate"
 					/>
 				</DialogContent>
 			</Dialog>

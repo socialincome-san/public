@@ -1,0 +1,267 @@
+import { BaseService } from '../core/base.service';
+import { ServiceResult } from '../core/base.types';
+import { FirebaseService } from '../firebase/firebase.service';
+import { UserService } from '../user/user.service';
+import {
+	CandidateCreateInput,
+	CandidatePayload,
+	CandidatePrismaUpdateInput,
+	CandidatesTableView,
+	CandidatesTableViewRow,
+} from './candidate.types';
+
+export class CandidateService extends BaseService {
+	private userService = new UserService();
+	private firebaseService = new FirebaseService();
+
+	private async assertAdmin(userId: string): Promise<ServiceResult<true>> {
+		const isAdmin = await this.userService.isAdmin(userId);
+		if (!isAdmin.success) {
+			return this.resultFail(isAdmin.error);
+		}
+		if (!isAdmin.data) {
+			return this.resultFail('Permission denied');
+		}
+		return this.resultOk(true);
+	}
+
+	async create(userId: string, data: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
+		const admin = await this.assertAdmin(userId);
+		if (!admin.success) {
+			return this.resultFail(admin.error);
+		}
+
+		const phone = data.paymentInformation?.create?.phone?.create?.number;
+		if (!phone) {
+			return this.resultFail('No phone number provided for candidate creation');
+		}
+
+		try {
+			return await this.db.$transaction(async (tx) => {
+				const created = await tx.recipient.create({
+					data: {
+						...data,
+						program: undefined,
+					},
+					select: {
+						id: true,
+						status: true,
+						successorName: true,
+						termsAccepted: true,
+						localPartner: { select: { id: true, name: true } },
+						contact: {
+							select: {
+								id: true,
+								firstName: true,
+								lastName: true,
+								callingName: true,
+								email: true,
+								gender: true,
+								language: true,
+								dateOfBirth: true,
+								profession: true,
+								phone: true,
+								address: true,
+							},
+						},
+						paymentInformation: {
+							select: {
+								id: true,
+								code: true,
+								provider: true,
+								phone: true,
+							},
+						},
+					},
+				});
+
+				const firebaseResult = await this.firebaseService.createByPhoneNumber(phone);
+				if (!firebaseResult.success) {
+					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
+				}
+
+				return this.resultOk(created);
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not create candidate: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async update(
+		userId: string,
+		updateInput: CandidatePrismaUpdateInput,
+		nextPaymentPhoneNumber: string | null,
+	): Promise<ServiceResult<CandidatePayload>> {
+		const admin = await this.assertAdmin(userId);
+		if (!admin.success) {
+			return this.resultFail(admin.error);
+		}
+
+		const existing = await this.db.recipient.findUnique({
+			where: { id: updateInput.id as string },
+			select: {
+				paymentInformation: {
+					select: {
+						phone: { select: { number: true } },
+					},
+				},
+			},
+		});
+
+		if (!existing) {
+			return this.resultFail('Candidate not found');
+		}
+
+		const previous = existing.paymentInformation?.phone?.number ?? null;
+		const paymentPhoneHasChanged =
+			previous !== null && nextPaymentPhoneNumber !== null && previous !== nextPaymentPhoneNumber;
+
+		try {
+			if (paymentPhoneHasChanged) {
+				const firebaseResult = await this.firebaseService.updateByPhoneNumber(previous!, nextPaymentPhoneNumber!);
+
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
+				}
+			}
+
+			const updated = await this.db.recipient.update({
+				where: { id: updateInput.id as string },
+				data: {
+					...updateInput,
+					program: undefined,
+				},
+				select: {
+					id: true,
+					status: true,
+					successorName: true,
+					termsAccepted: true,
+					localPartner: { select: { id: true, name: true } },
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							callingName: true,
+							email: true,
+							gender: true,
+							language: true,
+							dateOfBirth: true,
+							profession: true,
+							phone: true,
+							address: true,
+						},
+					},
+					paymentInformation: {
+						select: {
+							id: true,
+							code: true,
+							provider: true,
+							phone: true,
+						},
+					},
+				},
+			});
+
+			return this.resultOk(updated);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async get(userId: string, id: string): Promise<ServiceResult<CandidatePayload>> {
+		const admin = await this.assertAdmin(userId);
+		if (!admin.success) {
+			return this.resultFail(admin.error);
+		}
+
+		const candidate = await this.db.recipient.findUnique({
+			where: { id },
+			select: {
+				id: true,
+				status: true,
+				successorName: true,
+				termsAccepted: true,
+				localPartner: { select: { id: true, name: true } },
+				contact: {
+					select: {
+						id: true,
+						firstName: true,
+						lastName: true,
+						callingName: true,
+						email: true,
+						gender: true,
+						language: true,
+						dateOfBirth: true,
+						profession: true,
+						phone: true,
+						address: true,
+					},
+				},
+				paymentInformation: {
+					select: {
+						id: true,
+						code: true,
+						provider: true,
+						phone: true,
+					},
+				},
+				programId: true,
+			},
+		});
+
+		if (!candidate) {
+			return this.resultFail('Candidate not found');
+		}
+
+		if (candidate.programId !== null) {
+			return this.resultFail('Not a candidate');
+		}
+
+		return this.resultOk(candidate);
+	}
+
+	async getTableView(userId: string): Promise<ServiceResult<CandidatesTableView>> {
+		const admin = await this.assertAdmin(userId);
+		if (!admin.success) {
+			return this.resultFail(admin.error);
+		}
+
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where: { programId: null },
+				select: {
+					id: true,
+					status: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							dateOfBirth: true,
+						},
+					},
+					localPartner: { select: { name: true } },
+					createdAt: true,
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
+				id: r.id,
+				firstName: r.contact?.firstName ?? '',
+				lastName: r.contact?.lastName ?? '',
+				dateOfBirth: r.contact?.dateOfBirth ?? null,
+				localPartnerName: r.localPartner?.name ?? null,
+				status: r.status,
+				createdAt: r.createdAt,
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch candidates: ${JSON.stringify(error)}`);
+		}
+	}
+}

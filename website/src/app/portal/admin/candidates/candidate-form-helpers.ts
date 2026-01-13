@@ -14,15 +14,15 @@
 
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
-import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
 import { Prisma } from '@prisma/client';
-import { RecipientFormSchema } from './recipient-form';
+import { CandidateFormSchema } from './candidates-form';
 
-export function buildUpdateRecipientInput(
-	schema: RecipientFormSchema,
-	recipient: RecipientPayload,
+export function buildUpdateCandidateInput(
+	schema: CandidateFormSchema,
+	candidate: CandidatePayload,
 	contactFields: { [key: string]: FormField },
-): RecipientUpdateInput {
+): CandidateUpdateInput {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
 	const basePaymentInformation = {
@@ -33,8 +33,8 @@ export function buildUpdateRecipientInput(
 	const nextPaymentPhoneNumber = paymentInfoFields.phone.value ?? null;
 	const nextContactPhoneNumber = contactFields.phone.value ?? null;
 
-	const previousPaymentPhone = recipient.paymentInformation?.phone;
-	const previousContactPhone = recipient.contact.phone;
+	const previousPaymentPhone = candidate.paymentInformation?.phone;
+	const previousContactPhone = candidate.contact.phone;
 
 	const previousPaymentPhoneNumber = previousPaymentPhone?.number ?? null;
 	const previousContactPhoneNumber = previousContactPhone?.number ?? null;
@@ -47,7 +47,6 @@ export function buildUpdateRecipientInput(
 
 	let paymentPhoneWriteOperation: Prisma.PhoneUpdateOneRequiredWithoutPaymentInformationsNestedInput | undefined =
 		undefined;
-
 	let contactPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutContactsNestedInput | undefined = undefined;
 
 	const willConvergeToSamePhone =
@@ -128,14 +127,11 @@ export function buildUpdateRecipientInput(
 	const addressUpdateOperation = buildAddressInput(contactFields);
 
 	return {
-		id: recipient.id,
-		startDate: schema.fields.startDate.value,
+		id: candidate.id,
 		status: schema.fields.status.value,
 		successorName: schema.fields.successorName.value || null,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner.value } },
-		program: { connect: { id: schema.fields.program.value } },
-
 		paymentInformation: {
 			upsert: {
 				create: {
@@ -150,10 +146,9 @@ export function buildUpdateRecipientInput(
 					...basePaymentInformation,
 					phone: paymentPhoneWriteOperation,
 				},
-				where: { id: recipient.paymentInformation?.id },
+				where: { id: candidate.paymentInformation?.id },
 			},
 		},
-
 		contact: {
 			update: {
 				data: {
@@ -163,29 +158,27 @@ export function buildUpdateRecipientInput(
 						upsert: {
 							update: addressUpdateOperation,
 							create: addressUpdateOperation,
-							where: { id: recipient.contact.address?.id },
+							where: { id: candidate.contact.address?.id },
 						},
 					},
 				},
-				where: { id: recipient.contact.id },
+				where: { id: candidate.contact.id },
 			},
 		},
 	};
 }
 
-export function buildCreateRecipientInput(
-	schema: RecipientFormSchema,
+export function buildCreateCandidateInput(
+	schema: CandidateFormSchema,
 	contactFields: { [key: string]: FormField },
-): RecipientCreateInput {
+): CandidateCreateInput {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
 	return {
-		startDate: schema.fields.startDate.value,
 		status: schema.fields.status.value,
 		successorName: schema.fields.successorName.value,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner.value } },
-		program: { connect: { id: schema.fields.program.value } },
 		paymentInformation: {
 			create: {
 				provider: paymentInfoFields.provider.value,

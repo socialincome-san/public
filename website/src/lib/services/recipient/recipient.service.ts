@@ -4,8 +4,6 @@ import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import {
-	CandidatesTableView,
-	CandidatesTableViewRow,
 	PayoutRecipient,
 	RecipientCreateInput,
 	RecipientOption,
@@ -29,14 +27,16 @@ export class RecipientService extends BaseService {
 
 		const programId = recipient.program?.connect?.id;
 
-		if (programId) {
-			const hasOperatorAccess = accessResult.data.some(
-				(a) => a.programId === programId && a.permission === ProgramPermission.operator,
-			);
+		if (!programId) {
+			return this.resultFail('No program specified for recipient creation');
+		}
 
-			if (!hasOperatorAccess) {
-				return this.resultFail('Permission denied');
-			}
+		const hasOperatorAccess = accessResult.data.some(
+			(a) => a.programId === programId && a.permission === ProgramPermission.operator,
+		);
+
+		if (!hasOperatorAccess) {
+			return this.resultFail('Permission denied');
 		}
 
 		try {
@@ -235,11 +235,10 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		if (recipient.program) {
-			const hasAccess = accessResult.data.some((a) => a.programId === recipient.program!.id);
-			if (!hasAccess) {
-				return this.resultFail('Permission denied');
-			}
+		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program?.id);
+
+		if (!hasAccess) {
+			return this.resultFail('Permission denied');
 		}
 
 		return this.resultOk(recipient);
@@ -355,45 +354,6 @@ export class RecipientService extends BaseService {
 			tableRows: filteredRows,
 			permission,
 		});
-	}
-
-	async getCandidatesTableView(): Promise<ServiceResult<CandidatesTableView>> {
-		try {
-			const recipients = await this.db.recipient.findMany({
-				where: { programId: null },
-				select: {
-					id: true,
-					status: true,
-					contact: {
-						select: {
-							firstName: true,
-							lastName: true,
-							dateOfBirth: true,
-						},
-					},
-					localPartner: {
-						select: { name: true },
-					},
-					createdAt: true,
-				},
-				orderBy: { createdAt: 'desc' },
-			});
-
-			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
-				id: r.id,
-				firstName: r.contact?.firstName ?? '',
-				lastName: r.contact?.lastName ?? '',
-				dateOfBirth: r.contact?.dateOfBirth ?? null,
-				localPartnerName: r.localPartner?.name ?? null,
-				status: r.status,
-				createdAt: r.createdAt,
-			}));
-
-			return this.resultOk({ tableRows });
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch candidates: ${JSON.stringify(error)}`);
-		}
 	}
 
 	async getActivePayoutRecipients(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
