@@ -19,6 +19,7 @@ export type CountryFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
+		isActive: FormField;
 		microfinanceIndex: FormField;
 		microfinanceSourceText: FormField;
 		microfinanceSourceHref: FormField;
@@ -39,6 +40,11 @@ const initialFormSchema: CountryFormSchema = {
 			placeholder: 'Sierra Leone',
 			label: 'Country name',
 			zodSchema: z.string().min(1),
+		},
+		isActive: {
+			placeholder: 'Active',
+			label: 'Is Active',
+			zodSchema: z.boolean(),
 		},
 		microfinanceIndex: {
 			placeholder: '4.92',
@@ -127,6 +133,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 					setFormSchema((prev) => {
 						const next = { ...prev };
 						next.fields.name.value = result.data.name;
+						next.fields.isActive.value = result.data.isActive;
 						next.fields.microfinanceIndex.value = result.data.microfinanceIndex ?? undefined;
 						next.fields.microfinanceSourceText.value = result.data.microfinanceSourceLink?.text ?? undefined;
 						next.fields.microfinanceSourceHref.value = result.data.microfinanceSourceLink?.href ?? undefined;

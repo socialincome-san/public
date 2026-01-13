@@ -7,6 +7,7 @@ import { SortableHeader } from '@/components/data-table/elements/sortable-header
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
 import type { ColumnDef } from '@tanstack/react-table';
+import { StatusCell } from '../elements/status-cell';
 
 export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 	return [
@@ -20,6 +21,12 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 			accessorKey: 'name',
 			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			id: 'isActive',
+			header: (ctx) => <SortableHeader ctx={ctx}>Active</SortableHeader>,
+			accessorFn: (row) => row.isActive,
+			cell: (ctx) => <StatusCell ctx={ctx} variant="boolean" />,
 		},
 		{
 			id: 'microfinanceIndex',
@@ -48,8 +55,6 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
-
-		// --- Actions ---
 		{
 			id: 'actions',
 			header: '',
