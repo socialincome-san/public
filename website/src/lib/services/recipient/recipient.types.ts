@@ -82,20 +82,6 @@ export type RecipientTableView = {
 	permission: ProgramPermission;
 };
 
-export type CandidatesTableViewRow = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	dateOfBirth: Date | null;
-	localPartnerName: string | null;
-	status: RecipientStatus;
-	createdAt: Date;
-};
-
-export type CandidatesTableView = {
-	tableRows: CandidatesTableViewRow[];
-};
-
 export type PayoutRecipient = {
 	id: string;
 	contact: { firstName: string; lastName: string };
