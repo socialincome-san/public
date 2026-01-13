@@ -39,7 +39,7 @@ export type RecipientPayload = {
 	program: {
 		id: string;
 		name: string;
-	};
+	} | null;
 	contact: {
 		id: string;
 		firstName: string;

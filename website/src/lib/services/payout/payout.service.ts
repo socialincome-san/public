@@ -60,27 +60,29 @@ export class PayoutService extends BaseService {
 				orderBy: { paymentAt: 'desc' },
 			});
 
-			const tableRows: PayoutTableViewRow[] = payouts.map((payout) => {
-				const programPermissions = accessiblePrograms
-					.filter((x) => x.programId === payout.recipient.program.id)
-					.map((x) => x.permission);
+			const tableRows: PayoutTableViewRow[] = payouts
+				.filter((p) => p.recipient.program !== null)
+				.map((payout) => {
+					const programPermissions = accessiblePrograms
+						.filter((x) => x.programId === payout.recipient.program!.id)
+						.map((x) => x.permission);
 
-				const permission = programPermissions.includes(ProgramPermission.operator)
-					? ProgramPermission.operator
-					: ProgramPermission.owner;
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
 
-				return {
-					id: payout.id,
-					recipientFirstName: payout.recipient.contact.firstName,
-					recipientLastName: payout.recipient.contact.lastName,
-					programName: payout.recipient.program.name,
-					amount: Number(payout.amount),
-					currency: payout.currency,
-					status: payout.status,
-					paymentAt: payout.paymentAt,
-					permission,
-				};
-			});
+					return {
+						id: payout.id,
+						recipientFirstName: payout.recipient.contact.firstName,
+						recipientLastName: payout.recipient.contact.lastName,
+						programName: payout.recipient.program!.name,
+						amount: Number(payout.amount),
+						currency: payout.currency,
+						status: payout.status,
+						paymentAt: payout.paymentAt,
+						permission,
+					};
+				});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
@@ -115,40 +117,42 @@ export class PayoutService extends BaseService {
 				},
 			});
 
-			const tableRows: OngoingPayoutTableViewRow[] = recipients.map((recipient) => {
-				const programPermissions = accessiblePrograms
-					.filter((p) => p.programId === recipient.program.id)
-					.map((p) => p.permission);
+			const tableRows: OngoingPayoutTableViewRow[] = recipients
+				.filter((r) => r.program !== null)
+				.map((recipient) => {
+					const programPermissions = accessiblePrograms
+						.filter((p) => p.programId === recipient.program!.id)
+						.map((p) => p.permission);
 
-				const permission = programPermissions.includes(ProgramPermission.operator)
-					? ProgramPermission.operator
-					: ProgramPermission.owner;
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
 
-				const payoutsReceived = recipient.payouts.length;
-				const payoutsTotal = recipient.program.programDurationInMonths ?? 0;
-				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
+					const payoutsReceived = recipient.payouts.length;
+					const payoutsTotal = recipient.program!.programDurationInMonths ?? 0;
+					const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
-				const last3Months: PayoutMonth[] = [months.current, months.last, months.twoAgo].map(({ start, end }) => {
-					const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt <= end);
+					const last3Months: PayoutMonth[] = [months.current, months.last, months.twoAgo].map(({ start, end }) => {
+						const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt <= end);
+						return {
+							monthLabel: format(start, 'yyyy-MM'),
+							status: payout?.status ?? null,
+						};
+					});
+
 					return {
-						monthLabel: format(start, 'yyyy-MM'),
-						status: payout?.status ?? null,
+						id: recipient.id,
+						firstName: recipient.contact.firstName,
+						lastName: recipient.contact.lastName,
+						programName: recipient.program!.name,
+						payoutsReceived,
+						payoutsTotal,
+						payoutsProgressPercent,
+						last3Months,
+						createdAt: recipient.createdAt,
+						permission,
 					};
 				});
-
-				return {
-					id: recipient.id,
-					firstName: recipient.contact.firstName,
-					lastName: recipient.contact.lastName,
-					programName: recipient.program.name,
-					payoutsReceived,
-					payoutsTotal,
-					payoutsProgressPercent,
-					last3Months,
-					createdAt: recipient.createdAt,
-					permission,
-				};
-			});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
@@ -282,28 +286,30 @@ export class PayoutService extends BaseService {
 				orderBy: { paymentAt: 'desc' },
 			});
 
-			const tableRows: PayoutConfirmationTableViewRow[] = payouts.map((payout) => {
-				const programPermissions = accessiblePrograms
-					.filter((p) => p.programId === payout.recipient.program.id)
-					.map((p) => p.permission);
+			const tableRows: PayoutConfirmationTableViewRow[] = payouts
+				.filter((p) => p.recipient.program !== null)
+				.map((payout) => {
+					const programPermissions = accessiblePrograms
+						.filter((p) => p.programId === payout.recipient.program!.id)
+						.map((p) => p.permission);
 
-				const permission = programPermissions.includes(ProgramPermission.operator)
-					? ProgramPermission.operator
-					: ProgramPermission.owner;
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
 
-				return {
-					id: payout.id,
-					recipientFirstName: payout.recipient.contact.firstName,
-					recipientLastName: payout.recipient.contact.lastName,
-					programName: payout.recipient.program.name,
-					amount: Number(payout.amount),
-					currency: payout.currency,
-					status: payout.status,
-					paymentAt: payout.paymentAt,
-					phoneNumber: payout.phoneNumber,
-					permission,
-				};
-			});
+					return {
+						id: payout.id,
+						recipientFirstName: payout.recipient.contact.firstName,
+						recipientLastName: payout.recipient.contact.lastName,
+						programName: payout.recipient.program!.name,
+						amount: Number(payout.amount),
+						currency: payout.currency,
+						status: payout.status,
+						paymentAt: payout.paymentAt,
+						phoneNumber: payout.phoneNumber,
+						permission,
+					};
+				});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
@@ -593,16 +599,18 @@ export class PayoutService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		const access = await this.programAccessService.getAccessiblePrograms(userId);
-		if (!access.success) {
-			return this.resultFail(access.error);
-		}
+		if (recipient.programId) {
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
 
-		const allowed = access.data.find(
-			(p) => p.programId === recipient.programId && p.permission === ProgramPermission.operator,
-		);
-		if (!allowed) {
-			return this.resultFail('No edit access for this program');
+			const allowed = access.data.find(
+				(p) => p.programId === recipient.programId && p.permission === ProgramPermission.operator,
+			);
+			if (!allowed) {
+				return this.resultFail('No edit access for this program');
+			}
 		}
 
 		try {
@@ -631,8 +639,8 @@ export class PayoutService extends BaseService {
 					id: created.recipient.id,
 					firstName: created.recipient.contact.firstName,
 					lastName: created.recipient.contact.lastName,
-					programId: created.recipient.program.id,
-					programName: created.recipient.program.name,
+					programId: created.recipient.program && created.recipient.program.id,
+					programName: created.recipient.program && created.recipient.program.name,
 				},
 			});
 		} catch (error) {
@@ -651,16 +659,18 @@ export class PayoutService extends BaseService {
 			return this.resultFail('Payout not found');
 		}
 
-		const access = await this.programAccessService.getAccessiblePrograms(userId);
-		if (!access.success) {
-			return this.resultFail(access.error);
-		}
+		if (existing.recipient.programId) {
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
 
-		const allowed = access.data.some(
-			(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.operator,
-		);
-		if (!allowed) {
-			return this.resultFail('No edit permission for this payout');
+			const allowed = access.data.some(
+				(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.operator,
+			);
+			if (!allowed) {
+				return this.resultFail('No edit permission for this payout');
+			}
 		}
 
 		try {
@@ -690,8 +700,8 @@ export class PayoutService extends BaseService {
 					id: updated.recipient.id,
 					firstName: updated.recipient.contact.firstName,
 					lastName: updated.recipient.contact.lastName,
-					programId: updated.recipient.program.id,
-					programName: updated.recipient.program.name,
+					programId: updated.recipient.program && updated.recipient.program.id,
+					programName: updated.recipient.program && updated.recipient.program.name,
 				},
 			});
 		} catch (error) {
@@ -725,16 +735,17 @@ export class PayoutService extends BaseService {
 			return this.resultFail('Payout not found');
 		}
 
-		const access = await this.programAccessService.getAccessiblePrograms(userId);
+		if (payout.recipient.program) {
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
 
-		if (!access.success) {
-			return this.resultFail(access.error);
-		}
+			const allowed = access.data.some((p) => p.programId === payout.recipient.program!.id && p.permission != null);
 
-		const allowed = access.data.some((p) => p.programId === payout.recipient.program.id && p.permission != null);
-
-		if (!allowed) {
-			return this.resultFail('Access denied to this payout');
+			if (!allowed) {
+				return this.resultFail('Access denied to this payout');
+			}
 		}
 
 		return this.resultOk({
@@ -749,12 +760,11 @@ export class PayoutService extends BaseService {
 				id: payout.recipient.id,
 				firstName: payout.recipient.contact.firstName,
 				lastName: payout.recipient.contact.lastName,
-				programId: payout.recipient.program.id,
-				programName: payout.recipient.program.name,
+				programId: payout.recipient.program && payout.recipient.program.id,
+				programName: payout.recipient.program && payout.recipient.program.name,
 			},
 		});
 	}
-
 	async getByRecipientId(recipientId: string): Promise<ServiceResult<PayoutEntity[]>> {
 		try {
 			const payouts = await this.db.payout.findMany({

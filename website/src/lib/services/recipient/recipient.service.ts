@@ -25,8 +25,14 @@ export class RecipientService extends BaseService {
 			return this.resultFail(accessResult.error);
 		}
 
+		const programId = recipient.program?.connect?.id;
+
+		if (!programId) {
+			return this.resultFail('No program specified for recipient creation');
+		}
+
 		const hasOperatorAccess = accessResult.data.some(
-			(a) => a.programId === recipient.program.connect?.id && a.permission === ProgramPermission.operator,
+			(a) => a.programId === programId && a.permission === ProgramPermission.operator,
 		);
 
 		if (!hasOperatorAccess) {
@@ -229,7 +235,7 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program.id);
+		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program?.id);
 
 		if (!hasAccess) {
 			return this.resultFail('Permission denied');
@@ -303,7 +309,7 @@ export class RecipientService extends BaseService {
 					lastName: recipient.contact?.lastName ?? '',
 					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
 					localPartnerName: recipient.localPartner?.name ?? null,
-					status: recipient.status ?? RecipientStatus.active,
+					status: recipient.status,
 					programId: recipient.program?.id ?? null,
 					programName: recipient.program?.name ?? null,
 					payoutsReceived,
@@ -403,17 +409,19 @@ export class RecipientService extends BaseService {
 				},
 			});
 
-			const mapped: PayoutRecipient[] = recipients.map((r) => ({
-				id: r.id,
-				contact: r.contact,
-				paymentInformation: r.paymentInformation,
-				program: {
-					payoutPerInterval: Number(r.program.payoutPerInterval),
-					payoutCurrency: r.program.payoutCurrency,
-					programDurationInMonths: r.program.programDurationInMonths,
-				},
-				payouts: r.payouts,
-			}));
+			const mapped: PayoutRecipient[] = recipients
+				.filter((r) => r.program !== null)
+				.map((r) => ({
+					id: r.id,
+					contact: r.contact,
+					paymentInformation: r.paymentInformation,
+					program: {
+						payoutPerInterval: Number(r.program!.payoutPerInterval),
+						payoutCurrency: r.program!.payoutCurrency,
+						programDurationInMonths: r.program!.programDurationInMonths,
+					},
+					payouts: r.payouts,
+				}));
 
 			return this.resultOk(mapped);
 		} catch (error) {
