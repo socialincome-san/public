@@ -4,6 +4,8 @@ import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import {
+	CandidatesTableView,
+	CandidatesTableViewRow,
 	PayoutRecipient,
 	RecipientCreateInput,
 	RecipientOption,
@@ -308,7 +310,7 @@ export class RecipientService extends BaseService {
 					lastName: recipient.contact?.lastName ?? '',
 					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
 					localPartnerName: recipient.localPartner?.name ?? null,
-					status: recipient.status ?? RecipientStatus.active,
+					status: recipient.status,
 					programId: recipient.program?.id ?? null,
 					programName: recipient.program?.name ?? null,
 					payoutsReceived,
@@ -353,6 +355,45 @@ export class RecipientService extends BaseService {
 			tableRows: filteredRows,
 			permission,
 		});
+	}
+
+	async getCandidatesTableView(): Promise<ServiceResult<CandidatesTableView>> {
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where: { programId: null },
+				select: {
+					id: true,
+					status: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							dateOfBirth: true,
+						},
+					},
+					localPartner: {
+						select: { name: true },
+					},
+					createdAt: true,
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
+				id: r.id,
+				firstName: r.contact?.firstName ?? '',
+				lastName: r.contact?.lastName ?? '',
+				dateOfBirth: r.contact?.dateOfBirth ?? null,
+				localPartnerName: r.localPartner?.name ?? null,
+				status: r.status,
+				createdAt: r.createdAt,
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch candidates: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getActivePayoutRecipients(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {

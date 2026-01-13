@@ -24,6 +24,7 @@ type RecipientFormProps = {
 	readOnly?: boolean;
 	recipientId?: string;
 	programId?: string;
+	variant?: 'recipient' | 'candidate';
 };
 
 export type RecipientFormSchema = {
@@ -41,71 +42,87 @@ export type RecipientFormSchema = {
 				phone: FormField;
 			};
 		};
-		program: FormField;
+		program?: FormField;
 		localPartner: FormField;
 		contact: FormSchema;
 	};
 };
 
-const initialFormSchema: RecipientFormSchema = {
-	label: 'Recipients',
-	fields: {
-		startDate: {
-			label: 'Start Date',
-			zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
-		},
-		status: {
-			placeholder: 'Status',
-			label: 'Status',
-			zodSchema: z.nativeEnum(RecipientStatus),
-		},
-		successorName: {
-			placeholder: 'Successor',
-			label: 'Successor',
-			zodSchema: z.string().nullable(),
-		},
-		termsAccepted: {
-			label: 'Terms Accepted',
-			zodSchema: z.boolean().optional(),
-		},
-		program: {
-			placeholder: 'Program',
-			label: 'Program',
-		},
-		localPartner: {
-			placeholder: 'Local Partner',
-			label: 'Local Partner',
-		},
-		paymentInformation: {
-			label: 'Payment Information',
-			fields: {
-				provider: {
-					placeholder: 'Provider',
-					label: 'Provider',
-					zodSchema: z.nativeEnum(PaymentProvider),
-				},
-				code: {
-					placeholder: 'Code',
-					label: 'Code',
-					zodSchema: z.string().nullable(),
-				},
-				phone: {
-					placeholder: 'Phone Number',
-					label: 'Phone Number',
-					zodSchema: z
-						.string()
-						.regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in valid E.164 format (e.g., +12345678901)'),
+function getInitialFormSchema(variant: 'recipient' | 'candidate'): RecipientFormSchema {
+	const base: RecipientFormSchema = {
+		label: 'Recipients',
+		fields: {
+			startDate: {
+				label: 'Start Date',
+				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
+			},
+			status: {
+				placeholder: 'Status',
+				label: 'Status',
+				zodSchema: z.nativeEnum(RecipientStatus),
+			},
+			successorName: {
+				placeholder: 'Successor',
+				label: 'Successor',
+				zodSchema: z.string().nullable(),
+			},
+			termsAccepted: {
+				label: 'Terms Accepted',
+				zodSchema: z.boolean().optional(),
+			},
+			localPartner: {
+				placeholder: 'Local Partner',
+				label: 'Local Partner',
+			},
+			paymentInformation: {
+				label: 'Payment Information',
+				fields: {
+					provider: {
+						placeholder: 'Provider',
+						label: 'Provider',
+						zodSchema: z.nativeEnum(PaymentProvider),
+					},
+					code: {
+						placeholder: 'Code',
+						label: 'Code',
+						zodSchema: z.string().nullable(),
+					},
+					phone: {
+						placeholder: 'Phone Number',
+						label: 'Phone Number',
+						zodSchema: z
+							.string()
+							.regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in valid E.164 format (e.g., +12345678901)'),
+					},
 				},
 			},
+			contact: {
+				...getContactFormSchema(),
+			},
 		},
-		contact: {
-			...getContactFormSchema(),
-		},
-	},
-};
+	};
 
-export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly, programId }: RecipientFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	// only recipients have program
+	if (variant === 'recipient') {
+		base.fields.program = {
+			placeholder: 'Program',
+			label: 'Program',
+		};
+	}
+
+	return base;
+}
+
+export function RecipientForm({
+	onSuccess,
+	onError,
+	onCancel,
+	recipientId,
+	readOnly,
+	programId,
+	variant = 'recipient',
+}: RecipientFormProps) {
+	const [formSchema, setFormSchema] = useState<RecipientFormSchema>(() => getInitialFormSchema(variant));
 	const [recipient, setRecipient] = useState<RecipientPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -120,7 +137,9 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 				newSchema.fields.status.value = result.data.status;
 				newSchema.fields.successorName.value = result.data.successorName;
 				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
-				newSchema.fields.program.value = result.data.program?.id;
+				if (variant === 'recipient' && newSchema.fields.program) {
+					newSchema.fields.program.value = result.data.program?.id;
+				}
 				newSchema.fields.localPartner.value = result.data.localPartner.id;
 				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
@@ -141,32 +160,32 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 
 		const partnersObj = optionsToZodEnum(localPartner);
 
-		const programsToFilter = programs
-			// filter by program id if in program scope
-			.filter((p) => !programId || p.id === programId);
-
+		const programsToFilter = programs.filter((p) => !programId || p.id === programId);
 		const programsObj = optionsToZodEnum(programsToFilter);
 
-		setFormSchema((prevSchema) => ({
-			...prevSchema,
-			fields: {
-				...prevSchema.fields,
-				localPartner: {
-					...prevSchema.fields.localPartner,
-					zodSchema: z.nativeEnum(partnersObj),
-				},
-				program: {
-					...prevSchema.fields.program,
+		setFormSchema((prev) => {
+			const next = { ...prev };
+			next.fields.localPartner = {
+				...next.fields.localPartner,
+				zodSchema: z.nativeEnum(partnersObj),
+			};
+
+			if (next.fields.program) {
+				next.fields.program = {
+					...next.fields.program,
 					zodSchema: z.nativeEnum(programsObj),
-				},
-			},
-		}));
+				};
+			}
+
+			return next;
+		});
 	};
 
 	const onSubmit = (schema: RecipientFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res: { success: boolean; error?: string };
+
 				const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
 
 				if (recipientId && recipient) {
@@ -187,19 +206,18 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 
 	useEffect(() => {
 		if (recipientId) {
-			// Load recipient in edit mode
 			startTransition(async () => await loadRecipient(recipientId));
 		}
 	}, [recipientId]);
 
 	useEffect(() => {
-		// load options for program and local partners
 		startTransition(async () => {
 			const { programs, localPartner } = await getRecipientOptions();
 			if (!programs.success || !localPartner.success) return;
 			setOptions(localPartner.data, programs.data);
 		});
 	}, []);
+
 	return (
 		<DynamicForm
 			formSchema={formSchema}

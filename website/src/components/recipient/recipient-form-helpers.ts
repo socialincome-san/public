@@ -127,15 +127,13 @@ export function buildUpdateRecipientInput(
 
 	const addressUpdateOperation = buildAddressInput(contactFields);
 
-	return {
+	const updateObject: RecipientUpdateInput = {
 		id: recipient.id,
 		startDate: schema.fields.startDate.value,
 		status: schema.fields.status.value,
 		successorName: schema.fields.successorName.value || null,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner.value } },
-		program: { connect: { id: schema.fields.program.value } },
-
 		paymentInformation: {
 			upsert: {
 				create: {
@@ -153,7 +151,6 @@ export function buildUpdateRecipientInput(
 				where: { id: recipient.paymentInformation?.id },
 			},
 		},
-
 		contact: {
 			update: {
 				data: {
@@ -171,6 +168,12 @@ export function buildUpdateRecipientInput(
 			},
 		},
 	};
+
+	if (schema.fields.program) {
+		updateObject.program = { connect: { id: schema.fields.program.value } };
+	}
+
+	return updateObject;
 }
 
 export function buildCreateRecipientInput(
@@ -179,13 +182,12 @@ export function buildCreateRecipientInput(
 ): RecipientCreateInput {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
-	return {
+	const createObject: RecipientCreateInput = {
 		startDate: schema.fields.startDate.value,
 		status: schema.fields.status.value,
 		successorName: schema.fields.successorName.value,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner.value } },
-		program: { connect: { id: schema.fields.program.value } },
 		paymentInformation: {
 			create: {
 				provider: paymentInfoFields.provider.value,
@@ -201,4 +203,10 @@ export function buildCreateRecipientInput(
 			},
 		},
 	};
+
+	if (schema.fields.program) {
+		createObject.program = { connect: { id: schema.fields.program.value } };
+	}
+
+	return createObject;
 }
