@@ -1,4 +1,4 @@
-import { getAuthenticatedUserOrRedirect, requireAdmin, requireAdmin } from '@/lib/firebase/current-user';
+import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { Suspense } from 'react';
