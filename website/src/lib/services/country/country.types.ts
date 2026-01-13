@@ -80,7 +80,6 @@ export type ProgramCountryFeasibilityRow = {
 
 	country: {
 		name: string;
-		// TODO: add countryFlag later (ISO code or image src)
 	};
 
 	cash: CountryFeasibility;

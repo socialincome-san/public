@@ -1,5 +1,6 @@
 'use client';
 
+import { CountryFlag } from '@/components/country-flag'; // adjust path to where you placed it
 import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
@@ -9,6 +10,12 @@ import type { ColumnDef } from '@tanstack/react-table';
 
 export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 	return [
+		{
+			id: 'flag',
+			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
+			accessorFn: (row) => row.name,
+			cell: ({ row }) => <CountryFlag country={row.original.name} />,
+		},
 		{
 			accessorKey: 'name',
 			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
@@ -41,6 +48,8 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
+
+		// --- Actions ---
 		{
 			id: 'actions',
 			header: '',
