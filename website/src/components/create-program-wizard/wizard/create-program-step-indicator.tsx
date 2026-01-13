@@ -3,8 +3,6 @@
 import { cn } from '@/lib/utils/cn';
 import { CreateProgramWizardState } from './types';
 
-const STEP_COUNT = 3;
-
 function getCurrentStepIndex(state: CreateProgramWizardState): number {
 	if (state.matches('countrySelection')) {
 		return 0;
@@ -18,6 +16,9 @@ function getCurrentStepIndex(state: CreateProgramWizardState): number {
 		return 2;
 	}
 
+	if (state.matches('auth')) {
+		return 3;
+	}
 	return 0;
 }
 
@@ -42,9 +43,12 @@ type Props = {
 export function CreateProgramStepIndicator({ state }: Props) {
 	const activeIndex = getCurrentStepIndex(state);
 
+	const showLoginStep = state.context.isAuthenticated === false;
+	const stepCount = showLoginStep ? 4 : 3;
+
 	return (
 		<div className="flex items-center gap-3">
-			{Array.from({ length: STEP_COUNT }).map((_, index) => {
+			{Array.from({ length: stepCount }).map((_, index) => {
 				const isActive = index === activeIndex;
 				const isCompleted = index < activeIndex;
 
@@ -61,7 +65,7 @@ export function CreateProgramStepIndicator({ state }: Props) {
 							{index + 1}
 						</div>
 
-						{index < STEP_COUNT - 1 && <div className="bg-muted h-px w-6" />}
+						{index < stepCount - 1 && <div className="bg-muted h-px w-6" />}
 					</div>
 				);
 			})}

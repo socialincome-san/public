@@ -43,7 +43,7 @@ export async function UserPrograms({ userId }: Props) {
 						/>
 					))}
 
-					<CreateProgramModal trigger={<Wallet variant="empty" title="Create new program" />} />
+					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
 				</div>
 			</div>
 

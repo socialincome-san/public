@@ -3,6 +3,7 @@
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
+import { LoginStep } from '../step-4/login-step';
 import { WizardError } from './create-program-wizard-error';
 import { WizardLoading } from './create-program-wizard-loading';
 import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
@@ -65,6 +66,10 @@ export function CreateProgramSteps({ state, send }: Props) {
 				onToggleCustomizePayouts={() => send({ type: 'TOGGLE_CUSTOMIZE_PAYOUTS' })}
 			/>
 		);
+	}
+
+	if (state.matches('auth')) {
+		return <LoginStep onSuccess={() => send({ type: 'AUTH_SUCCESS' })} />;
 	}
 
 	return null;

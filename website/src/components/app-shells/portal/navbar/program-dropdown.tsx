@@ -52,6 +52,7 @@ export const ProgramDropdown: FC<ProgramDropdownProps> = ({ user, active = false
 
 			<DropdownMenuItem asChild>
 				<CreateProgramModal
+					isAuthenticated
 					trigger={
 						<p className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md p-2 text-sm font-medium transition-colors duration-200">
 							<Wallet className="h-4 w-4" />

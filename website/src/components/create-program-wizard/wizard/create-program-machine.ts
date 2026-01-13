@@ -27,6 +27,9 @@ export const createProgramWizardMachine = setup({
 			currency: string;
 			customizePayouts: boolean;
 
+			// step 4
+			isAuthenticated: boolean;
+
 			// meta
 			createdProgramId?: string;
 			error?: string;
@@ -51,10 +54,17 @@ export const createProgramWizardMachine = setup({
 			| { type: 'NEXT' }
 			| { type: 'BACK' }
 
+			// step 4
+			| { type: 'AUTH_SUCCESS' }
+
 			// meta
 			| { type: 'OPEN' }
 			| { type: 'CLOSE' }
 			| { type: 'RETRY' };
+
+		input: {
+			isAuthenticated: boolean;
+		};
 	},
 
 	actors: {
@@ -88,12 +98,19 @@ export const createProgramWizardMachine = setup({
 		// step 3
 		budgetConfigValid: ({ context }) =>
 			context.amountOfRecipients > 0 && context.programDuration > 0 && context.payoutPerInterval > 0,
+
+		// step 3 → 4
+		budgetConfigValidAndUnauthenticated: ({ context }) =>
+			context.amountOfRecipients > 0 &&
+			context.programDuration > 0 &&
+			context.payoutPerInterval > 0 &&
+			!context.isAuthenticated,
 	},
 }).createMachine({
 	id: 'createProgramWizard',
 	initial: 'closed',
 
-	context: {
+	context: ({ input }) => ({
 		// step 1
 		countries: [],
 		selectedCountryId: null,
@@ -112,10 +129,13 @@ export const createProgramWizardMachine = setup({
 		currency: 'USD',
 		customizePayouts: false,
 
+		// step 4
+		isAuthenticated: input?.isAuthenticated ?? false,
+
 		// meta
 		createdProgramId: undefined,
 		error: undefined,
-	},
+	}),
 
 	states: {
 		//step 1
@@ -202,7 +222,24 @@ export const createProgramWizardMachine = setup({
 				},
 
 				BACK: 'programSetup',
-				NEXT: { guard: 'budgetConfigValid', target: 'saving' },
+				NEXT: [
+					{ guard: 'budgetConfigValidAndUnauthenticated', target: 'auth' },
+					{ guard: 'budgetConfigValid', target: 'saving' },
+				],
+				CLOSE: 'closed',
+			},
+		},
+
+		// Step 4
+		auth: {
+			on: {
+				AUTH_SUCCESS: {
+					actions: assign({
+						isAuthenticated: () => true,
+					}),
+					target: 'saving',
+				},
+				BACK: 'budget',
 				CLOSE: 'closed',
 			},
 		},
