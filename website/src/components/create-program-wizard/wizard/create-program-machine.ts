@@ -247,6 +247,7 @@ export const createProgramWizardMachine = setup({
 					actions: assign({
 						createdProgramId: ({ event }) => event.output,
 					}),
+					target: 'closed',
 				},
 				onError: {
 					target: 'error',
