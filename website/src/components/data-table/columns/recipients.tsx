@@ -10,7 +10,10 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeRecipientColumns(hideProgramName = false): ColumnDef<RecipientTableViewRow>[] {
+export function makeRecipientColumns(
+	hideProgramName = false,
+	hideLocalPartner = false,
+): ColumnDef<RecipientTableViewRow>[] {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{
 			accessorKey: 'firstName',
@@ -27,12 +30,15 @@ export function makeRecipientColumns(hideProgramName = false): ColumnDef<Recipie
 			header: (ctx) => <SortableHeader ctx={ctx}>Age</SortableHeader>,
 			cell: (ctx) => <AgeCell ctx={ctx} />,
 		},
-		{
+	];
+
+	if (!hideLocalPartner) {
+		columns.push({
 			accessorKey: 'localPartnerName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Local Partner</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-	];
+		});
+	}
 
 	if (!hideProgramName) {
 		columns.push({

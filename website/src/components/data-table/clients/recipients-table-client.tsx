@@ -58,6 +58,7 @@ export function RecipientsTableClient({
 				emptyMessage="No recipients found"
 				data={rows}
 				makeColumns={makeRecipientColumns}
+				hideLocalPartner={actorKind === 'local-partner'}
 				actions={
 					<Button disabled={readOnly} onClick={openEmptyForm}>
 						Add new recipient

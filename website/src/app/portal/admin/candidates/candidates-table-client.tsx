@@ -52,6 +52,7 @@ export function CandidatesTableClient({
 				emptyMessage="No candidates found"
 				data={rows}
 				makeColumns={makeCandidateColumns}
+				hideLocalPartner={actorKind === 'local-partner'}
 				actions={
 					<Button disabled={readOnly} onClick={openEmptyForm}>
 						Add candidate
