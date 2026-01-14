@@ -14,6 +14,7 @@
     "male": "Male",
     "female": "Female",
     "other": "Other",
+    "private": "Private",
     "genderError": "Please select a gender",
     "dateOfBirth": "Date of Birth",
     "dateOfBirthError": "Please select a date of birth",

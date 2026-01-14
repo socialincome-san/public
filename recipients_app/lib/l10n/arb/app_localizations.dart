@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get other;
 
+  /// No description provided for @private.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get private;
+
   /// No description provided for @genderError.
   ///
   /// In en, this message translates to:

@@ -1,38 +1,30 @@
-import "package:app/data/datasource/remote/user_remote_data_source.dart";
+import "dart:convert";
+
 import "package:app/data/datasource/survey_data_source.dart";
 import "package:app/data/models/survey/survey.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
-
-const String surveyCollection = "surveys";
+import "package:app/data/services/authenticated_client.dart";
 
 class SurveyRemoteDataSource implements SurveyDataSource {
-  final FirebaseFirestore firestore;
+  final Uri baseUri;
+  final AuthenticatedClient authenticatedClient;
 
   const SurveyRemoteDataSource({
-    required this.firestore,
+    required this.baseUri,
+    required this.authenticatedClient,
   });
 
+  /// curl http://localhost:3001/api/v1/recipients/me/surveys
   @override
-  Future<List<Survey>> fetchSurveys({
-    required String recipientId,
-  }) async {
-    final surveys = <Survey>[];
+  Future<List<Survey>> fetchSurveys({required String recipientId}) async {
+    final uri = baseUri.resolve("api/v1/recipients/me/surveys");
+    final response = await authenticatedClient.get(uri);
 
-    final surveysDocs = await firestore
-        .collection(recipientCollection)
-        .doc(recipientId)
-        .collection(surveyCollection)
-        .get();
-
-    for (final surveyDoc in surveysDocs.docs) {
-      final survey = Survey.fromJson(surveyDoc.data());
-
-      surveys.add(
-        survey.copyWith(id: surveyDoc.id),
-      );
+    if (response.statusCode != 200) {
+      throw Exception("Failed to fetch surveys: ${response.statusCode}");
     }
 
-    surveys.sort((a, b) => a.id.compareTo(b.id));
+    final responseBody = jsonDecode(response.body) as List<dynamic>;
+    final surveys = responseBody.map((e) => SurveyMapper.fromJson(e.toString())).toList();
 
     return surveys;
   }
