@@ -2,8 +2,8 @@
 
 import { CountryFlag } from '@/components/country-flag';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
-import { RadioCard } from '../step-2/radio-card';
-import { RadioCardGroup } from '../step-2/radio-card-group';
+import { RadioCard } from '../radio-card';
+import { RadioCardGroup } from '../radio-card-group';
 
 function formatCountryStats(programCount: number, recipientCount: number) {
 	if (programCount === 0 && recipientCount === 0) {
