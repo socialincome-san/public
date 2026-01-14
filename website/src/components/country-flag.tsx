@@ -44,7 +44,7 @@ export function CountryFlag({ country, size = 'lg' }: CountryFlagProps) {
 				alt={country}
 				width={36}
 				height={36}
-				className="h-full w-full rounded-full object-cover"
+				className="size-full rounded-full object-cover"
 				onError={() => setHasError(true)}
 			/>
 		</div>
