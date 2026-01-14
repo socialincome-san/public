@@ -1,5 +1,5 @@
+import { Text } from '@/generated/storyblok/types/109655/storyblok-components';
 import { MarkTypes, StoryblokRichText, type StoryblokRichTextNode } from '@storyblok/react';
-import type { Text } from '@storyblok/types/109655/storyblok-components';
 import NextLink from 'next/link';
 import { ReactElement } from 'react';
 

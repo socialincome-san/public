@@ -33,8 +33,8 @@
 		"db:down": "docker compose down",
 		"check:unused": "knip --config knip.config.ts",
 		"storyblok:login": "dotenv -e .env.local -- sh -c 'storyblok login --token $STORYBLOK_PERSONAL_ACCESS_TOKEN --region eu'",
-		"storyblok:pull": "dotenv -e .env.local -- sh -c 'storyblok components pull --space $STORYBLOK_SPACE_ID'",
-		"storyblok:types": "dotenv -e .env.local -- sh -c 'storyblok types generate --space $STORYBLOK_SPACE_ID'",
+		"storyblok:pull": "dotenv -e .env.local -- sh -c 'storyblok components pull --space $STORYBLOK_SPACE_ID --path src/generated/storyblok'",
+		"storyblok:types": "dotenv -e .env.local -- sh -c 'storyblok types generate --space $STORYBLOK_SPACE_ID --path src/generated/storyblok'",
 		"storyblok:generate": "npm run storyblok:login && npm run storyblok:pull && npm run storyblok:types"
 	},
 	"dependencies": {
@@ -52,6 +52,7 @@
 		"@scalar/api-reference-react": "^0.7.55",
 		"@sendgrid/mail": "^8.1.3",
 		"@sentry/nextjs": "^10.25.0",
+		"@storyblok/js": "^4.4.4",
 		"@storyblok/react": "^5.4.21",
 		"@tanstack/react-table": "^8.21.3",
 		"@types/js-cookie": "^3.0.6",

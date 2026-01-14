@@ -1,8 +1,8 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getStoryblokApi } from '@/lib/storyblok';
 import type { ISbStoryData } from '@storyblok/js';
 import { StoryblokStory } from '@storyblok/react/rsc';
-import type { Page } from '@storyblok/types/109655/storyblok-components';
 
 export default async function HomePage({ params }: DefaultPageProps) {
 	const { lang } = await params;

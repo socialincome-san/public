@@ -13,6 +13,7 @@ const config: KnipConfig = {
 		'prisma',
 		'next-openapi-gen',
 		'tsx',
+		'storyblok',
 		'storyblok-js-client',
 		'@radix-ui/react-accordion',
 		'@radix-ui/react-popover',

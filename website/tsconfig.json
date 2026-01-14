@@ -19,8 +19,7 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/*"],
-			"@storyblok/*": ["./.storyblok/*"]
+			"@/*": ["./src/*"]
 		},
 		"allowJs": true
 	},

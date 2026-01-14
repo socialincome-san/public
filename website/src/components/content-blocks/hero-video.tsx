@@ -1,4 +1,4 @@
-import type { HeroVideo } from '@storyblok/types/109655/storyblok-components';
+import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 
 type HeroVideoBlockProps = {
 	blok: HeroVideo;

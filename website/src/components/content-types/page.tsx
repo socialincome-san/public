@@ -1,5 +1,5 @@
+import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { StoryblokComponent } from '@storyblok/react';
-import type { Page } from '@storyblok/types/109655/storyblok-components';
 
 interface PageContentTypeProps {
 	blok: Page;
