@@ -244,6 +244,16 @@ export class CountryService extends BaseService {
 				include: {
 					microfinanceSourceLink: true,
 					networkSourceLink: true,
+					programs: {
+						include: {
+							_count: {
+								select: { recipients: true },
+							},
+						},
+					},
+					_count: {
+						select: { programs: true },
+					},
 				},
 				orderBy: { name: 'asc' },
 			});
@@ -252,12 +262,24 @@ export class CountryService extends BaseService {
 				const microfinanceIndex = this.toNumber(country.microfinanceIndex);
 				const populationCoverage = this.toNumber(country.populationCoverage);
 
+				const programCount = country._count.programs;
+
+				let recipientCount = 0;
+				for (const program of country.programs) {
+					recipientCount += program._count.recipients;
+				}
+
 				return {
 					id: country.id,
 
 					country: {
 						name: country.name,
 						isActive: country.isActive,
+					},
+
+					stats: {
+						programCount,
+						recipientCount,
 					},
 
 					cash: {

@@ -87,6 +87,11 @@ export type ProgramCountryFeasibilityRow = {
 		isActive: boolean;
 	};
 
+	stats: {
+		programCount: number;
+		recipientCount: number;
+	};
+
 	cash: CountryFeasibility;
 	mobileMoney: CountryFeasibility;
 	mobileNetwork: CountryFeasibility;
