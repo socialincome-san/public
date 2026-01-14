@@ -8,7 +8,7 @@ type Props = {
 	value: string;
 	checked?: boolean;
 	disabled?: boolean;
-	label: string;
+	label: ReactNode;
 	description?: string;
 	badge?: ReactNode;
 	children?: ReactNode;
@@ -18,17 +18,17 @@ export function RadioCard({ value, checked, disabled, label, description, badge,
 	return (
 		<label
 			className={cn(
-				'flex items-start gap-3 rounded-lg border p-4 transition-colors',
+				'relative flex items-start gap-3 rounded-lg border p-4 transition-colors',
 				!disabled && 'hover:bg-muted/40 cursor-pointer',
 				checked && !disabled && 'bg-muted/30',
 				disabled && 'cursor-not-allowed opacity-60',
 			)}
 		>
-			<RadioGroupItem value={value} disabled={disabled} />
+			<RadioGroupItem value={value} disabled={disabled} className="absolute right-3 top-3" />
 
-			<div className="flex-1 space-y-1">
+			<div className="flex-1 space-y-1 pr-6">
 				<div className="flex items-center gap-2">
-					<p className="font-medium">{label}</p>
+					{label}
 					{badge}
 				</div>
 

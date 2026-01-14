@@ -3,8 +3,8 @@
 import { Badge } from '@/components/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { Cause } from '@prisma/client';
-import { RadioCard } from './radio-card';
-import { RadioCardGroup } from './radio-card-group';
+import { RadioCard } from '../radio-card';
+import { RadioCardGroup } from '../radio-card-group';
 import { TargetCauseSelector } from './target-cause-selection';
 
 type Props = {

@@ -1,9 +1,9 @@
 'use client';
 
 import { Badge } from '@/components/badge';
+import { RadioCard } from '../radio-card';
+import { RadioCardGroup } from '../radio-card-group';
 import type { ProgramManagementType } from '../wizard/types';
-import { RadioCard } from './radio-card';
-import { RadioCardGroup } from './radio-card-group';
 
 type Props = {
 	value: ProgramManagementType | null;
