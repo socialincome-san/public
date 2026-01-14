@@ -1,7 +1,6 @@
 import { AnalyticsInitializer } from '@/components/legacy/analytics/analytics-initializer';
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
 import { getMetadata } from '@/lib/utils/metadata';
-import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
 import type { Viewport } from 'next';
 import { PropsWithChildren } from 'react';
 import './globals.css';
@@ -12,7 +11,7 @@ export const viewport: Viewport = {
 	themeColor: '#3373BB',
 };
 
-storyblokInitializationWorkaround();
+// storyblokInitializationWorkaround();
 
 const appVersion = process.env.NEXT_PUBLIC_APP_VERSION || 'unknown';
 const appEnv = process.env.NEXT_PUBLIC_APP_ENVIRONMENT || 'unknown';

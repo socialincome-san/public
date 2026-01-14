@@ -141,6 +141,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
           value = var.github_pat
         }
 
+        env {
+          name  = "NEXT_PUBLIC_FEATURE_ENABLE_NEW_WEBSITE"
+          value = var.env == "prod" ? "false" : "true"
+        }
+
         ports {
           container_port = 3000
         }
