@@ -25,9 +25,17 @@ export class RecipientService extends BaseService {
 			return this.resultFail(accessResult.error);
 		}
 
-		const program = accessResult.data.find((a) => a.programId === recipient.program.connect?.id);
+		const programId = recipient.program?.connect?.id;
 
-		if (!program || program.permission !== ProgramPermission.operator) {
+		if (!programId) {
+			return this.resultFail('No program specified for recipient creation');
+		}
+
+		const hasOperatorAccess = accessResult.data.some(
+			(a) => a.programId === programId && a.permission === ProgramPermission.operator,
+		);
+
+		if (!hasOperatorAccess) {
 			return this.resultFail('Permission denied');
 		}
 
@@ -36,75 +44,96 @@ export class RecipientService extends BaseService {
 			if (!phoneNumber) {
 				return this.resultFail('No phone number provided for recipient creation');
 			}
+
 			return await this.db.$transaction(async (tx) => {
 				const newRecipient = await tx.recipient.create({ data: recipient });
 				const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
+
 				if (!firebaseResult.success) {
 					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
 				}
+
 				return this.resultOk(newRecipient);
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create recipient ${typeof error === 'string' ? error : ''}`);
+			return this.resultFail(`Could not create recipient: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async update(userId: string, recipient: RecipientPrismaUpdateInput): Promise<ServiceResult<Recipient>> {
+	async update(
+		userId: string,
+		updateInput: RecipientPrismaUpdateInput,
+		nextPaymentPhoneNumber: string | null,
+	): Promise<ServiceResult<Recipient>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
 		if (!accessResult.success) {
 			return this.resultFail(accessResult.error);
 		}
 
-		const program = accessResult.data.find((a) => a.programId === recipient.program?.connect?.id);
+		const requestedProgramId = updateInput.program?.connect?.id;
 
-		if (!program || program.permission !== ProgramPermission.operator) {
+		const operatorForRequestedProgram = accessResult.data.find(
+			(a) => a.programId === requestedProgramId && a.permission === ProgramPermission.operator,
+		);
+
+		if (!operatorForRequestedProgram) {
 			return this.resultFail('Permission denied');
 		}
 
 		const existing = await this.db.recipient.findUnique({
-			where: { id: recipient.id?.toString() },
-			select: { programId: true, paymentInformation: { select: { phone: { select: { number: true } } } } },
+			where: { id: updateInput.id as string },
+			select: {
+				programId: true,
+				paymentInformation: {
+					select: {
+						phone: { select: { number: true } },
+					},
+				},
+			},
 		});
 
 		if (!existing) {
 			return this.resultFail('Recipient not found');
 		}
 
-		const hasAccess = accessResult.data.some((a) => a.programId === existing.programId);
+		const hasAccessToExistingProgram = accessResult.data.some(
+			(a) => a.programId === existing.programId && a.permission === ProgramPermission.operator,
+		);
 
-		if (!hasAccess) {
+		if (!hasAccessToExistingProgram) {
 			return this.resultFail('Permission denied');
 		}
 
+		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
+
+		const paymentPhoneHasChanged =
+			previousPaymentPhoneNumber !== null &&
+			nextPaymentPhoneNumber !== null &&
+			previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+
 		try {
-			const phoneNumber =
-				recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update.number?.toString() ||
-				recipient.paymentInformation?.upsert?.create?.phone?.create?.number?.toString();
-
-			if (!phoneNumber || !existing.paymentInformation?.phone?.number) {
-				return this.resultFail('No phone number available for recipient update');
-			}
-
-			if (existing.paymentInformation?.phone.number !== phoneNumber) {
+			if (paymentPhoneHasChanged) {
 				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
-					existing.paymentInformation?.phone.number,
-					phoneNumber,
+					previousPaymentPhoneNumber!,
+					nextPaymentPhoneNumber!,
 				);
+
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
 				}
 			}
 
 			const updatedRecipient = await this.db.recipient.update({
-				where: { id: recipient.id?.toString() },
-				data: recipient,
+				where: { id: updateInput.id as string },
+				data: updateInput,
 			});
+
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update recipient: ' + error);
+			return this.resultFail(`Could not update recipient: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -145,7 +174,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to update recipient');
+			return this.resultFail(`Failed to update recipient: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -206,7 +235,7 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program.id);
+		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program?.id);
 
 		if (!hasAccess) {
 			return this.resultFail('Permission denied');
@@ -247,7 +276,7 @@ export class RecipientService extends BaseService {
 						select: {
 							id: true,
 							name: true,
-							totalPayments: true,
+							programDurationInMonths: true,
 						},
 					},
 					localPartner: {
@@ -262,9 +291,16 @@ export class RecipientService extends BaseService {
 			});
 
 			const tableRows: RecipientTableViewRow[] = recipients.map((recipient) => {
-				const access = accessiblePrograms.find((p) => p.programId === recipient.program?.id);
+				const programPermissions = accessiblePrograms
+					.filter((p) => p.programId === recipient.program?.id)
+					.map((p) => p.permission);
+
+				const permission = programPermissions.includes(ProgramPermission.operator)
+					? ProgramPermission.operator
+					: ProgramPermission.owner;
+
 				const payoutsReceived = recipient.payouts.length;
-				const payoutsTotal = recipient.program?.totalPayments ?? 0;
+				const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
 				return {
@@ -273,14 +309,14 @@ export class RecipientService extends BaseService {
 					lastName: recipient.contact?.lastName ?? '',
 					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
 					localPartnerName: recipient.localPartner?.name ?? null,
-					status: recipient.status ?? RecipientStatus.active,
+					status: recipient.status,
 					programId: recipient.program?.id ?? null,
 					programName: recipient.program?.name ?? null,
 					payoutsReceived,
 					payoutsTotal,
 					payoutsProgressPercent,
 					createdAt: recipient.createdAt,
-					permission: access?.permission ?? ProgramPermission.owner,
+					permission,
 				};
 			});
 
@@ -291,7 +327,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch recipients');
+			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -300,7 +336,12 @@ export class RecipientService extends BaseService {
 		if (!accessResult.success) {
 			return this.resultFail(accessResult.error);
 		}
-		const programAccess = accessResult.data.find((a) => a.programId === programId);
+
+		const permission = accessResult.data.some(
+			(a) => a.programId === programId && a.permission === ProgramPermission.operator,
+		)
+			? ProgramPermission.operator
+			: ProgramPermission.owner;
 
 		const base = await this.getTableView(userId);
 		if (!base.success) {
@@ -308,9 +349,10 @@ export class RecipientService extends BaseService {
 		}
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+
 		return this.resultOk({
 			tableRows: filteredRows,
-			permission: programAccess?.permission ?? ProgramPermission.owner,
+			permission,
 		});
 	}
 
@@ -350,9 +392,9 @@ export class RecipientService extends BaseService {
 					},
 					program: {
 						select: {
-							payoutAmount: true,
+							payoutPerInterval: true,
 							payoutCurrency: true,
-							totalPayments: true,
+							programDurationInMonths: true,
 						},
 					},
 					payouts: {
@@ -367,22 +409,24 @@ export class RecipientService extends BaseService {
 				},
 			});
 
-			const mapped: PayoutRecipient[] = recipients.map((r) => ({
-				id: r.id,
-				contact: r.contact,
-				paymentInformation: r.paymentInformation,
-				program: {
-					payoutAmount: Number(r.program.payoutAmount),
-					payoutCurrency: r.program.payoutCurrency,
-					totalPayments: r.program.totalPayments,
-				},
-				payouts: r.payouts,
-			}));
+			const mapped: PayoutRecipient[] = recipients
+				.filter((r) => r.program !== null)
+				.map((r) => ({
+					id: r.id,
+					contact: r.contact,
+					paymentInformation: r.paymentInformation,
+					program: {
+						payoutPerInterval: Number(r.program!.payoutPerInterval),
+						payoutCurrency: r.program!.payoutCurrency,
+						programDurationInMonths: r.program!.programDurationInMonths,
+					},
+					payouts: r.payouts,
+				}));
 
 			return this.resultOk(mapped);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch payout recipients');
+			return this.resultFail(`Could not fetch payout recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -447,7 +491,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk(recipients);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get survey recipients');
+			return this.resultFail(`Could not get survey recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -488,7 +532,7 @@ export class RecipientService extends BaseService {
 			return this.resultOk(recipient);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not find recipient by phone number');
+			return this.resultFail(`Could not find recipient by phone number: ${JSON.stringify(error)}`);
 		}
 	}
 

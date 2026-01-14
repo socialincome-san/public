@@ -40,7 +40,7 @@ export class TwilioService extends BaseService {
 			return this.resultOk(true);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to request OTP');
+			return this.resultFail(`Failed to request OTP: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -91,7 +91,7 @@ export class TwilioService extends BaseService {
 			}
 
 			this.logger.error(error);
-			return this.resultFail('Failed to verify OTP');
+			return this.resultFail(`Failed to verify OTP: ${JSON.stringify(error)}`);
 		}
 
 		// OTP is valid, create or get Firebase user
@@ -121,7 +121,7 @@ export class TwilioService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to generate custom token');
+			return this.resultFail(`Failed to generate custom token: ${JSON.stringify(error)}`);
 		}
 	}
 

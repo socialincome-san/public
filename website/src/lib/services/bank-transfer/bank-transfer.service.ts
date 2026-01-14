@@ -36,7 +36,7 @@ export class BankTransferService extends BaseService {
 			return this.resultOk('Contribution created');
 		} catch (error) {
 			console.error('Failed to store charge', error);
-			return this.resultFail('');
+			return this.resultFail(`Failed to store contribution: ${JSON.stringify(error)}`);
 		}
 	}
 

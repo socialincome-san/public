@@ -4,6 +4,7 @@ import { CountryFormSchema } from './countries-form';
 export function buildCreateCountryInput(schema: CountryFormSchema): CountryCreateInput {
 	return {
 		name: schema.fields.name.value,
+		isActive: schema.fields.isActive.value,
 		microfinanceIndex: schema.fields.microfinanceIndex.value ?? null,
 		populationCoverage: schema.fields.populationCoverage.value ?? null,
 		latestSurveyDate: schema.fields.latestSurveyDate.value ?? null,
@@ -31,6 +32,7 @@ export function buildUpdateCountryInput(schema: CountryFormSchema, existing: Cou
 	return {
 		id: existing.id,
 		name: schema.fields.name.value,
+		isActive: schema.fields.isActive.value,
 		microfinanceIndex: schema.fields.microfinanceIndex.value ?? null,
 		populationCoverage: schema.fields.populationCoverage.value ?? null,
 		latestSurveyDate: schema.fields.latestSurveyDate.value ?? null,

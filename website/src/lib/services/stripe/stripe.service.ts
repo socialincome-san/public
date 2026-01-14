@@ -66,7 +66,7 @@ export class StripeService extends BaseService {
 			}
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to handle webhook event');
+			return this.resultFail(`Failed to handle webhook event: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -183,7 +183,7 @@ export class StripeService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to process charge');
+			return this.resultFail(`Failed to process charge: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -290,7 +290,7 @@ export class StripeService extends BaseService {
 			return this.resultOk({ rows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch subscriptions');
+			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -331,7 +331,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(session.url);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create billing portal session');
+			return this.resultFail(`Could not create billing portal session: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -383,7 +383,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(session.url ?? '');
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create Stripe checkout session');
+			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -398,7 +398,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(checkoutSession);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not load Stripe checkout session');
+			return this.resultFail(`Could not load Stripe checkout session: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -420,7 +420,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(contributorResult.data ?? null);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not load contributor from checkout session');
+			return this.resultFail(`Could not load contributor from checkout session: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -505,7 +505,7 @@ export class StripeService extends BaseService {
 			return this.contributorService.updateSelf(contributor.id, updateInput);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor after checkout');
+			return this.resultFail(`Could not update contributor after checkout: ${JSON.stringify(error)}`);
 		}
 	}
 }

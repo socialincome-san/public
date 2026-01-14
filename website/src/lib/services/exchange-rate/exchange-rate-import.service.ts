@@ -28,7 +28,7 @@ export class ExchangeRateImportService extends BaseService {
 			return this.resultOk(result);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch latest exchange rates');
+			return this.resultFail(`Could not fetch exchange rates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -66,7 +66,7 @@ export class ExchangeRateImportService extends BaseService {
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not store exchange rates: ${error}`);
+			return this.resultFail(`Could not store exchange rates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -81,7 +81,7 @@ export class ExchangeRateImportService extends BaseService {
 			return this.resultOk(rates);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Import failed: ${error}`);
+			return this.resultFail(`Could not ingest exchange rates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -128,7 +128,7 @@ export class ExchangeRateImportService extends BaseService {
 					}
 				} catch (error) {
 					this.logger.error(error);
-					return this.resultFail(`Could not ingest exchange rate: ${error}`);
+					return this.resultFail(`Could not fetch and store exchange rates: ${JSON.stringify(error)}`);
 				}
 			}
 		}

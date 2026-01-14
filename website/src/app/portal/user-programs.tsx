@@ -1,3 +1,4 @@
+import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet';
 import { ProgramService } from '@/lib/services/program/program.service';
 import { ProgramPermission } from '@prisma/client';
@@ -42,7 +43,7 @@ export async function UserPrograms({ userId }: Props) {
 						/>
 					))}
 
-					<Wallet variant="empty" title="Create new program" href="/portal/programs/create" />
+					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
 				</div>
 			</div>
 

@@ -120,7 +120,7 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 				newSchema.fields.status.value = result.data.status;
 				newSchema.fields.successorName.value = result.data.successorName;
 				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
-				newSchema.fields.program.value = result.data.program.id;
+				newSchema.fields.program.value = result.data.program?.id;
 				newSchema.fields.localPartner.value = result.data.localPartner.id;
 				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
@@ -171,7 +171,8 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 
 				if (recipientId && recipient) {
 					const data: RecipientUpdateInput = buildUpdateRecipientInput(schema, recipient, contactFields);
-					res = await updateRecipientAction(data);
+					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
+					res = await updateRecipientAction(data, nextPaymentPhoneNumber);
 				} else {
 					const data: RecipientCreateInput = buildCreateRecipientInput(schema, contactFields);
 					res = await createRecipientAction(data);

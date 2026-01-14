@@ -77,7 +77,7 @@ export class CampaignService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch campaign');
+			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -105,7 +105,7 @@ export class CampaignService extends BaseService {
 			return this.resultOk(newCampaign);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create campaign');
+			return this.resultFail(`Could not create campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -129,7 +129,7 @@ export class CampaignService extends BaseService {
 			return this.resultOk(updatedCampaign);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update campaign');
+			return this.resultFail(`Could not update campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -194,7 +194,7 @@ export class CampaignService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch campaign');
+			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -219,7 +219,7 @@ export class CampaignService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch campaign options');
+			return this.resultFail(`Could not fetch campaign options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -264,7 +264,7 @@ export class CampaignService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch campaigns');
+			return this.resultFail(`Could not fetch campaigns: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -284,7 +284,7 @@ export class CampaignService extends BaseService {
 			return this.resultOk(campaign);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch default campaign');
+			return this.resultFail(`Could not fetch default campaign: ${JSON.stringify(error)}`);
 		}
 	}
 

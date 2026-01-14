@@ -159,7 +159,7 @@ const DynamicForm: FC<{
 	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
 
 	const onValidationErrors = (e: Object) => {
-		console.error('dynamic form validation errors: ', e);
+		console.warn('dynamic form validation errors: ', e);
 		setOpenAccordion('all');
 	};
 
@@ -213,7 +213,7 @@ const DynamicForm: FC<{
 						</Button>
 					)}
 					{onCancel && (
-						<Button variant="outline" onClick={onCancel}>
+						<Button type="button" variant="outline" onClick={onCancel}>
 							{mode === 'readonly' ? 'Close' : 'Cancel'}
 						</Button>
 					)}

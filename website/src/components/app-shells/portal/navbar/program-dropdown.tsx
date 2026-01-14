@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
+import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -50,10 +51,15 @@ export const ProgramDropdown: FC<ProgramDropdownProps> = ({ user, active = false
 			<DropdownMenuSeparator />
 
 			<DropdownMenuItem asChild>
-				<Link href="/portal/programs/create" className="text-primary flex items-center gap-2 font-medium">
-					<Wallet className="h-4 w-4" />
-					Create new program
-				</Link>
+				<CreateProgramModal
+					isAuthenticated
+					trigger={
+						<p className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md p-2 text-sm font-medium transition-colors duration-200">
+							<Wallet className="h-4 w-4" />
+							Create new program
+						</p>
+					}
+				/>
 			</DropdownMenuItem>
 		</DropdownMenuContent>
 	</DropdownMenu>

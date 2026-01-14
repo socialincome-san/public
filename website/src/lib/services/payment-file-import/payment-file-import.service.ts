@@ -82,7 +82,7 @@ export class PaymentFileImportService extends BaseService {
 			return this.resultOk(result.data);
 		} catch (error) {
 			this.logger.error(`Error importing payment files: ${error}`);
-			return this.resultFail(`Error importing payment files: ${error}`);
+			return this.resultFail(`Error importing payment files: ${JSON.stringify(error)}`);
 		} finally {
 			sftp.end();
 		}
@@ -206,8 +206,8 @@ export class PaymentFileImportService extends BaseService {
 
 			return this.resultOk(created);
 		} catch (error) {
-			this.logger.error(`Error creating contributions from payment file: ${error}`);
-			return this.resultFail(`Error creating contributions from payment file: ${error}`);
+			this.logger.error(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
+			return this.resultFail(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
 		}
 	}
 	private getReferenceIds = (

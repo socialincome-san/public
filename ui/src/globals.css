@@ -87,7 +87,6 @@
 }
 
 @layer base {
-	body,
 	.theme-default,
 	.theme-light {
 		@apply bg-background text-foreground;
