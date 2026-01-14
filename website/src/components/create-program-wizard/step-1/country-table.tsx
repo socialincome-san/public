@@ -9,6 +9,7 @@ import { Button } from '../../button';
 import { RadioGroup, RadioGroupItem } from '../../radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../table';
 
+import { CountryFlag } from '@/components/country-flag';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CountryConditionBadge } from './country-condition-badge';
 
@@ -77,7 +78,7 @@ export function CountryTable({ rows, value, openIds, onValueChange, onToggleRow 
 										</TableCell>
 
 										<TableCell className="flex items-center gap-3">
-											<div className="bg-muted h-6 w-6 rounded-full" />
+											<CountryFlag country={row.country.name} />
 											{row.country.name}
 										</TableCell>
 
