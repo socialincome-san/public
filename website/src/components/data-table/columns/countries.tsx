@@ -55,6 +55,8 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
+
+		// --- Actions ---
 		{
 			id: 'actions',
 			header: '',
