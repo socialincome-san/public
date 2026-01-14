@@ -20,7 +20,7 @@ type CountryFlagProps = {
 export function CountryFlag({ country, size = 'lg' }: CountryFlagProps) {
 	const [hasError, setHasError] = useState(false);
 
-	const containerSize = size === 'sm' ? 'h-4 w-4 text-[10px]' : 'h-9 w-9 text-[12px]';
+	const containerSize = size === 'sm' ? 'size-4 text-[10px]' : 'size-9 text-[12px]';
 
 	const slug = slugifyCountry(country);
 
