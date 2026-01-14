@@ -48,8 +48,8 @@ async function main() {
 		await tx.phone.deleteMany();
 		await tx.address.deleteMany();
 		await tx.account.deleteMany();
-		await tx.country.deleteMany();
 		await tx.sourceLink.deleteMany();
+		await tx.country.deleteMany();
 
 		await tx.sourceLink.createMany({ data: sourceLinksData, skipDuplicates: true });
 		await tx.country.createMany({ data: countriesData, skipDuplicates: true });

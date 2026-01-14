@@ -1,4 +1,4 @@
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { Suspense } from 'react';
@@ -14,6 +14,7 @@ export default function CandidatesPage() {
 
 async function CandidatesDataLoader() {
 	const user = await getAuthenticatedUserOrRedirect();
+	await requireAdmin(user);
 
 	const candidateService = new CandidateService();
 	const result = await candidateService.getTableView(user.id);

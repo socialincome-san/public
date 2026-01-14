@@ -555,8 +555,9 @@ model ExchangeRate {
 }
 
 model Country {
-  id   String @id @default(cuid()) @map("id")
-  name String @unique @map("name")
+  id       String  @id @default(cuid()) @map("id")
+  name     String  @unique @map("name")
+  isActive Boolean @default(false) @map("is_active")
 
   //
   // PRECONDITION 1: Suitability of cash
