@@ -1,9 +1,22 @@
 import { cache } from 'react';
 import { ContributorService } from '../services/contributor/contributor.service';
+import { ContributorSession } from '../services/contributor/contributor.types';
 import { FirebaseService } from '../services/firebase/firebase.service';
+import { LocalPartnerService } from '../services/local-partner/local-partner.service';
+import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
 import { UserService } from '../services/user/user.service';
+import { UserSession } from '../services/user/user.types';
+import { getAuthenticatedContributorOrThrow } from './current-contributor';
+import { getAuthenticatedLocalPartnerOrThrow } from './current-local-partner';
+import { getAuthenticatedUserOrThrow } from './current-user';
 
-type CurrentAccountType = 'user' | 'contributor' | null;
+type CurrentAccountType = 'user' | 'contributor' | 'local-partner' | null;
+
+export type Actor =
+	| { kind: 'user'; session: UserSession }
+	| { kind: 'contributor'; session: ContributorSession }
+	| { kind: 'local-partner'; session: LocalPartnerSession }
+	| never;
 
 const firebaseService = new FirebaseService();
 
@@ -26,6 +39,12 @@ async function detectCurrentAccountType(): Promise<CurrentAccountType> {
 		return 'contributor';
 	}
 
+	const partnerService = new LocalPartnerService();
+	const partnerResult = await partnerService.getCurrentLocalPartnerSession(authUserId);
+	if (partnerResult.success && partnerResult.data) {
+		return 'local-partner';
+	}
+
 	const userService = new UserService();
 	const userResult = await userService.getCurrentUserSession(authUserId);
 	if (userResult.success && userResult.data) {
@@ -36,3 +55,21 @@ async function detectCurrentAccountType(): Promise<CurrentAccountType> {
 }
 
 export const getCurrentAccountType = cache(detectCurrentAccountType);
+
+export async function getActorOrThrow(): Promise<Actor> {
+	const type = await getCurrentAccountType();
+
+	switch (type) {
+		case 'user':
+			return { kind: 'user', session: await getAuthenticatedUserOrThrow() };
+
+		case 'contributor':
+			return { kind: 'contributor', session: await getAuthenticatedContributorOrThrow() };
+
+		case 'local-partner':
+			return { kind: 'local-partner', session: await getAuthenticatedLocalPartnerOrThrow() };
+
+		default:
+			throw new Error('Not authenticated');
+	}
+}

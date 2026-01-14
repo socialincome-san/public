@@ -1,3 +1,4 @@
+import { Actor } from '@/lib/firebase/current-account';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -25,11 +26,23 @@ export class CandidateService extends BaseService {
 		return this.resultOk(true);
 	}
 
-	async create(userId: string, data: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
-		const admin = await this.assertAdmin(userId);
-		if (!admin.success) {
-			return this.resultFail(admin.error);
+	async create(actor: Actor, data: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
+		if (actor.kind === 'contributor') {
+			return this.resultFail('Permission denied');
 		}
+
+		if (actor.kind === 'user') {
+			const admin = await this.assertAdmin(actor.session.id);
+			if (!admin.success) {
+				return this.resultFail(admin.error);
+			}
+		}
+
+		if (actor.kind === 'local-partner') {
+			data.localPartner = { connect: { id: actor.session.id } };
+		}
+
+		data.program = undefined;
 
 		const phone = data.paymentInformation?.create?.phone?.create?.number;
 		if (!phone) {
@@ -39,10 +52,7 @@ export class CandidateService extends BaseService {
 		try {
 			return await this.db.$transaction(async (tx) => {
 				const created = await tx.recipient.create({
-					data: {
-						...data,
-						program: undefined,
-					},
+					data,
 					select: {
 						id: true,
 						status: true,
@@ -89,18 +99,21 @@ export class CandidateService extends BaseService {
 	}
 
 	async update(
-		userId: string,
+		actor: Actor,
 		updateInput: CandidatePrismaUpdateInput,
 		nextPaymentPhoneNumber: string | null,
 	): Promise<ServiceResult<CandidatePayload>> {
-		const admin = await this.assertAdmin(userId);
-		if (!admin.success) {
-			return this.resultFail(admin.error);
+		if (actor.kind === 'contributor') {
+			return this.resultFail('Permission denied');
 		}
 
+		const candidateId = updateInput.id as string;
+
 		const existing = await this.db.recipient.findUnique({
-			where: { id: updateInput.id as string },
+			where: { id: candidateId },
 			select: {
+				localPartnerId: true,
+				programId: true,
 				paymentInformation: {
 					select: {
 						phone: { select: { number: true } },
@@ -113,6 +126,26 @@ export class CandidateService extends BaseService {
 			return this.resultFail('Candidate not found');
 		}
 
+		if (existing.programId !== null) {
+			return this.resultFail('Not a candidate');
+		}
+
+		if (actor.kind === 'user') {
+			const admin = await this.assertAdmin(actor.session.id);
+			if (!admin.success) {
+				return this.resultFail(admin.error);
+			}
+		}
+
+		if (actor.kind === 'local-partner') {
+			if (existing.localPartnerId !== actor.session.id) {
+				return this.resultFail('Permission denied');
+			}
+			delete updateInput.localPartner;
+		}
+
+		updateInput.program = undefined;
+
 		const previous = existing.paymentInformation?.phone?.number ?? null;
 		const paymentPhoneHasChanged =
 			previous !== null && nextPaymentPhoneNumber !== null && previous !== nextPaymentPhoneNumber;
@@ -120,18 +153,14 @@ export class CandidateService extends BaseService {
 		try {
 			if (paymentPhoneHasChanged) {
 				const firebaseResult = await this.firebaseService.updateByPhoneNumber(previous!, nextPaymentPhoneNumber!);
-
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
 				}
 			}
 
 			const updated = await this.db.recipient.update({
-				where: { id: updateInput.id as string },
-				data: {
-					...updateInput,
-					program: undefined,
-				},
+				where: { id: candidateId },
+				data: updateInput,
 				select: {
 					id: true,
 					status: true,
@@ -171,10 +200,9 @@ export class CandidateService extends BaseService {
 		}
 	}
 
-	async get(userId: string, id: string): Promise<ServiceResult<CandidatePayload>> {
-		const admin = await this.assertAdmin(userId);
-		if (!admin.success) {
-			return this.resultFail(admin.error);
+	async get(actor: Actor, id: string): Promise<ServiceResult<CandidatePayload>> {
+		if (actor.kind === 'contributor') {
+			return this.resultFail('Permission denied');
 		}
 
 		const candidate = await this.db.recipient.findUnique({
@@ -209,6 +237,7 @@ export class CandidateService extends BaseService {
 					},
 				},
 				programId: true,
+				localPartnerId: true,
 			},
 		});
 
@@ -218,6 +247,19 @@ export class CandidateService extends BaseService {
 
 		if (candidate.programId !== null) {
 			return this.resultFail('Not a candidate');
+		}
+
+		if (actor.kind === 'user') {
+			const admin = await this.assertAdmin(actor.session.id);
+			if (!admin.success) {
+				return this.resultFail(admin.error);
+			}
+		}
+
+		if (actor.kind === 'local-partner') {
+			if (candidate.localPartnerId !== actor.session.id) {
+				return this.resultFail('Permission denied');
+			}
 		}
 
 		return this.resultOk(candidate);
@@ -262,6 +304,45 @@ export class CandidateService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch candidates: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getTableViewByLocalPartner(localPartnerId: string): Promise<ServiceResult<CandidatesTableView>> {
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					programId: null,
+					localPartnerId,
+				},
+				select: {
+					id: true,
+					status: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							dateOfBirth: true,
+						},
+					},
+					createdAt: true,
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
+				id: r.id,
+				firstName: r.contact?.firstName ?? '',
+				lastName: r.contact?.lastName ?? '',
+				dateOfBirth: r.contact?.dateOfBirth ?? null,
+				localPartnerName: null,
+				status: r.status,
+				createdAt: r.createdAt,
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch candidates for local partner: ${JSON.stringify(error)}`);
 		}
 	}
 }

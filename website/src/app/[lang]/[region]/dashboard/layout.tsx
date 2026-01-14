@@ -9,7 +9,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
 	return (
-		<WebsiteAppShell contributor={contributor} lang={lang as WebsiteLanguage}>
+		<WebsiteAppShell session={contributor} lang={lang as WebsiteLanguage}>
 			{children}
 		</WebsiteAppShell>
 	);

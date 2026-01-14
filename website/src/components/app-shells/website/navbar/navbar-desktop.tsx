@@ -5,13 +5,19 @@ import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 import { useLogout } from '../../use-logout';
 import { Logo } from './logo';
 
-export const NavbarDesktop = ({ contributor, lang }: { contributor?: ContributorSession; lang: WebsiteLanguage }) => {
+type Props = {
+	session?: ContributorSession | LocalPartnerSession;
+	lang: WebsiteLanguage;
+};
+
+export const NavbarDesktop = ({ session, lang }: Props) => {
 	const { logout } = useLogout();
 	const translator = useTranslator(lang, 'website-me');
 
@@ -53,15 +59,15 @@ export const NavbarDesktop = ({ contributor, lang }: { contributor?: Contributor
 					<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3">
 						<Avatar>
 							<AvatarFallback className="bg-primary text-background">
-								{contributor?.firstName?.[0]}
-								{contributor?.lastName?.[0]}
+								{session?.firstName?.[0]}
+								{session?.lastName?.[0]}
 							</AvatarFallback>
 						</Avatar>
 						<div className="text-left">
 							<p className="text-sm font-medium">
-								{contributor?.firstName} {contributor?.lastName}
+								{session?.firstName} {session?.lastName}
 							</p>
-							<p className="text-muted-foreground text-xs">Contributor</p>
+							<p className="text-muted-foreground text-xs">session</p>
 						</div>
 					</Button>
 				</DropdownMenuTrigger>

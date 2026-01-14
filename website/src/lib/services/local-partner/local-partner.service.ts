@@ -6,6 +6,7 @@ import {
 	LocalPartnerCreateInput,
 	LocalPartnerOption,
 	LocalPartnerPayload,
+	LocalPartnerSession,
 	LocalPartnerTableView,
 	LocalPartnerTableViewRow,
 	LocalPartnerUpdateInput,
@@ -147,6 +148,56 @@ export class LocalPartnerService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch local partners: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getCurrentLocalPartnerSession(firebaseAuthUserId: string): Promise<ServiceResult<LocalPartnerSession>> {
+		try {
+			const partner = await this.db.localPartner.findFirst({
+				where: { account: { firebaseAuthUserId } },
+				select: {
+					id: true,
+					name: true,
+					causes: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							language: true,
+							email: true,
+							phone: {
+								select: { number: true },
+							},
+							address: {
+								select: {
+									country: true,
+								},
+							},
+						},
+					},
+				},
+			});
+
+			if (!partner) {
+				return this.resultFail('Local partner not found');
+			}
+
+			const session: LocalPartnerSession = {
+				id: partner.id,
+				name: partner.name,
+				causes: partner.causes,
+				email: partner.contact?.email ?? null,
+				firstName: partner.contact?.firstName ?? null,
+				lastName: partner.contact?.lastName ?? null,
+				language: partner.contact?.language ?? null,
+				phone: partner.contact?.phone?.number ?? null,
+				country: partner.contact?.address?.country ?? null,
+			};
+
+			return this.resultOk(session);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch local partner session: ${JSON.stringify(error)}`);
 		}
 	}
 }
