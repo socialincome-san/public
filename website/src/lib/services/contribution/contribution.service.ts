@@ -296,18 +296,33 @@ export class ContributionService extends BaseService {
 
 	async upsertFromBankTransfer(paymentEvent: PaymentEventCreateInput): Promise<ServiceResult<PaymentEvent>> {
 		try {
-			const result = await this.db.paymentEvent.upsert({
+			const existing = await this.db.paymentEvent.findUnique({
 				where: { transactionId: paymentEvent.transactionId },
-				create: paymentEvent,
-				update: {
-					...paymentEvent,
-					contribution: {
-						update: {
-							...paymentEvent.contribution.create,
+				select: { metadata: true, id: true },
+			});
+			let result;
+
+			if (existing && !existing.metadata) {
+				// if no metadata exists, we assume this is the initial placeholder payment created during bank transfer flow
+				// which should be updated from payment file import
+				result = await this.db.paymentEvent.update({
+					where: { id: existing.id },
+					data: {
+						...paymentEvent,
+						contribution: {
+							update: {
+								...paymentEvent.contribution.create,
+							},
 						},
 					},
-				},
-			});
+				});
+			} else {
+				// payment with same transaction ID or non-existing,
+				// we assume its a (non-initial) standing order payment or the initial placeholder payment from bank transfer flow
+				result = await this.db.paymentEvent.create({
+					data: paymentEvent,
+				});
+			}
 
 			return this.resultOk(result);
 		} catch (error) {
