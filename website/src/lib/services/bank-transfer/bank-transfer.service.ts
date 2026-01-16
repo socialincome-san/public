@@ -52,9 +52,7 @@ export class BankTransferService extends BaseService {
 		const paymentEvent: PaymentEventCreateInput = {
 			type: PaymentEventType.bank_transfer,
 			transactionId: payment.referenceId, // this will be used as ID to find contribution in paymen file import
-			metadata: {
-				raw_content: '',
-			},
+			metadata: undefined,
 			contribution: {
 				create: {
 					amount: payment.amount,
