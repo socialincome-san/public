@@ -4,6 +4,7 @@ import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.t
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
+import { withAuthBypassRecipient } from './with-auth-bypass-recipient';
 
 /**
  * Get recipient
@@ -11,24 +12,25 @@ import { RecipientSelfUpdate } from '../../models';
  * @response Recipient
  * @openapi
  */
-export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+export const GET = withAppCheck(
+	withAuthBypassRecipient(async (request: NextRequest) => {
+		const recipientService = new RecipientService();
+		const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	if (!recipientResult.success) {
-		logger.warn('[GET /recipients/me] Failed', {
-			error: recipientResult.error,
-			status: recipientResult.status,
-		});
+		if (!recipientResult.success) {
+			logger.warn('[GET /recipients/me] Failed', {
+				error: recipientResult.error,
+				status: recipientResult.status,
+			});
 
-		return new Response(recipientResult.error, {
-			status: recipientResult.status ?? 500,
-		});
-	}
+			return new Response(recipientResult.error, {
+				status: recipientResult.status ?? 500,
+			});
+		}
 
-	return NextResponse.json(recipientResult.data, { status: 200 });
-});
-
+		return NextResponse.json(recipientResult.data, { status: 200 });
+	}),
+);
 /**
  * Update recipient
  * @description Updates the authenticated recipient’s personal information, contact details, and mobile money payment information. Requires a valid Firebase App Check token.

@@ -1,5 +1,6 @@
 import { UserRecord } from 'firebase-admin/auth';
 import { Twilio } from 'twilio';
+import { AuthBypassService } from '../auth-bypass/auth-bypass.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -7,6 +8,7 @@ import { VerifyOtpRequest, VerifyOtpResult } from './twilio.types';
 
 export class TwilioService extends BaseService {
 	private readonly firebaseService = new FirebaseService();
+	private readonly authBypass = new AuthBypassService();
 
 	private readonly twilioClient = new Twilio(process.env.TWILIO_API_KEY_SID, process.env.TWILIO_API_KEY_SECRET, {
 		accountSid: process.env.TWILIO_ACCOUNT_SID,
@@ -15,6 +17,11 @@ export class TwilioService extends BaseService {
 	private readonly TWILIO_VERIFY_SERVICE_SID = process.env.TWILIO_VERIFY_SERVICE_SID;
 
 	async requestOtp(phoneNumber: string): Promise<ServiceResult<boolean>> {
+		if (this.authBypass.matchesPhoneNumber(phoneNumber)) {
+			this.logger.info('[AUTH_BYPASS] requestOtp skipped');
+			return this.resultOk(true);
+		}
+
 		const envCheck = this.requireTwilioEnvVars();
 		if (!envCheck.success) {
 			return envCheck;
@@ -45,6 +52,11 @@ export class TwilioService extends BaseService {
 	}
 
 	async verifyOtp(request: VerifyOtpRequest): Promise<ServiceResult<VerifyOtpResult>> {
+		if (this.authBypass.matchesOtpCredentials(request.phoneNumber, request.otp)) {
+			this.logger.info('[AUTH_BYPASS] verifyOtp skipped');
+			return this.authBypass.createTestLoginResult();
+		}
+
 		const envCheck = this.requireTwilioEnvVars();
 		if (!envCheck.success) {
 			return envCheck;
