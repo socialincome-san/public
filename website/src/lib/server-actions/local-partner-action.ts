@@ -1,33 +1,41 @@
 'use server';
 
+import { getOptionalLocalPartner } from '@/lib/firebase/current-local-partner';
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
 import { LocalPartnerCreateInput, LocalPartnerUpdateInput } from '@/lib/services/local-partner/local-partner.types';
 import { revalidatePath } from 'next/cache';
+import { getActorOrThrow } from '../firebase/current-account';
+
+const localPartnerService = new LocalPartnerService();
 
 export async function createLocalPartnerAction(localPartner: LocalPartnerCreateInput) {
 	const user = await getAuthenticatedUserOrThrow();
-
-	const localPartnerService = new LocalPartnerService();
-	const res = await localPartnerService.create(user.id, localPartner);
+	const result = await localPartnerService.create(user.id, localPartner);
 
 	revalidatePath('/portal/admin/local-partners');
-	return res;
+	return result;
 }
 
-export async function updateLocalPartnerAction(localPartner: LocalPartnerUpdateInput) {
-	const user = await getAuthenticatedUserOrThrow();
+export async function updateLocalPartnerAction(updateInput: LocalPartnerUpdateInput) {
+	const actor = await getActorOrThrow();
 
-	const localPartnerService = new LocalPartnerService();
-	const res = await localPartnerService.update(user.id, localPartner);
+	const result = await localPartnerService.update(actor, updateInput);
 
-	revalidatePath('/portal/admin/local-partners');
-	return res;
+	if (actor.kind === 'user') {
+		revalidatePath('/portal/admin/local-partners');
+	} else if (actor.kind === 'local-partner') {
+		revalidatePath('/partner-space/profile');
+	}
+
+	return result;
 }
 
 export async function getLocalPartnerAction(localPartnerId: string) {
 	const user = await getAuthenticatedUserOrThrow();
+	return localPartnerService.get(user.id, localPartnerId);
+}
 
-	const localPartnerService = new LocalPartnerService();
-	return await localPartnerService.get(user.id, localPartnerId);
+export async function getOptionalLocalPartnerAction() {
+	return getOptionalLocalPartner();
 }

@@ -37,6 +37,10 @@ export async function getAuthenticatedLocalPartnerOrRedirect(): Promise<LocalPar
 	return partner;
 }
 
+export async function getOptionalLocalPartner(): Promise<LocalPartnerSession | null> {
+	return await getCurrentLocalPartner();
+}
+
 export async function getAuthenticatedLocalPartnerOrThrow(): Promise<LocalPartnerSession> {
 	const partner = await getCurrentLocalPartner();
 	if (!partner) {

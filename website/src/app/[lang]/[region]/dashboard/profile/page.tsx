@@ -5,7 +5,8 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getActiveSubscriptionAction } from '@/lib/server-actions/newsletter-actions';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { DefaultPageProps } from '../..';
-import { ProfileForm, ProfileFormTranslations } from './profile-form';
+import { ProfileFormTranslations } from '@/components/profile-form/types';
+import { ProfileForm } from '@/components/profile-form/form';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
@@ -57,6 +58,8 @@ export default async function Page({ params }: DefaultPageProps) {
 		countries: translatedCountries,
 		newsletterLabel: translator.t('personal-info.newsletter-switch'),
 		language: translator.t('profile.form.language'),
+		name: translator.t('profile.form.name'),
+		causes: translator.t('profile.form.causes'),
 	};
 
 	return (

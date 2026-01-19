@@ -46,7 +46,9 @@
 			"street": "Street",
 			"street-number": "Number",
 			"city": "City",
-			"zip": "Zip"
+			"zip": "Zip",
+			"name": "Name",
+			"causes": "Causes"
 		}
 	},
 	"sections": {
