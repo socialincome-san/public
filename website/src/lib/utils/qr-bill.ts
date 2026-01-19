@@ -7,8 +7,8 @@
  */
 
 import {
-  CONTRIBUTION_REFERENCE_ID_LENGTH,
-  CONTRIBUTOR_REFERENCE_ID_LENGTH,
+	CONTRIBUTION_REFERENCE_ID_LENGTH,
+	CONTRIBUTOR_REFERENCE_ID_LENGTH,
 } from '@/lib/services/bank-transfer/bank-transfer-config';
 import { SwissQRBill, SwissQRCode } from 'swissqrbill/svg';
 import { Data } from 'swissqrbill/types';
