@@ -1,7 +1,7 @@
 import {
-	formatStoryblokDateToIso,
-	formatStoryblokUrl,
-	getDimensionsFromStoryblokImageUrl,
+  formatStoryblokDateToIso,
+  formatStoryblokUrl,
+  getDimensionsFromStoryblokImageUrl,
 } from '@/components/legacy/storyblok/StoryblokUtils';
 import type { Article, ArticleType, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -319,21 +319,26 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Resolved
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;
 	const authorsFullName = `${storyblokArticle.author.content.firstName} ${storyblokArticle.author.content.lastName}`;
-	const imageFilename = storyblokArticle.image.filename ?? '';
-	const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
-	const imageUrl = formatStoryblokUrl(
-		imageFilename,
-		dimensions.width!,
-		dimensions.height!,
-		storyblokArticle.image.focus ?? undefined,
-	);
-
+	const imageFilename = storyblokArticle.image?.filename;
 	const tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
-	let imageMetaData = {
-		url: imageUrl,
-		width: dimensions.width,
-		height: dimensions.height,
-	};
+
+	let imageMetaData: { url: string; width?: number; height?: number } | undefined;
+	if (imageFilename) {
+		const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
+		if (dimensions.width && dimensions.height) {
+			const imageUrl = formatStoryblokUrl(
+				imageFilename,
+				dimensions.width,
+				dimensions.height,
+				storyblokArticle.image.focus ?? undefined,
+			);
+			imageMetaData = {
+				url: imageUrl,
+				width: dimensions.width,
+				height: dimensions.height,
+			};
+		}
+	}
 
 	return {
 		title: title,
