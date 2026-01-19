@@ -247,7 +247,7 @@ export const contactsData: Contact[] = [
 		callingName: 'Nadine',
 		addressId: 'address-16',
 		phoneId: 'phone-1',
-		email: 'test@contributor.org',
+		email: 'test@dashboard.org',
 		gender: Gender.female,
 		language: 'de',
 		dateOfBirth: new Date('1989-05-19'),
