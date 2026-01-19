@@ -1,20 +1,18 @@
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
-	getArticleCountByAuthorForDefaultLang,
-	getArticlesByAuthor,
-	getAuthor,
+  getArticleCountByAuthorForDefaultLang,
+  getArticlesByAuthor,
+  getAuthor,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
 import { LanguageCode } from '@/lib/types/language';
-import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
 import { BaseContainer, linkCn, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export const revalidate = 900;
-storyblokInitializationWorkaround();
 
 function getLinkedInUrl(handle: string) {
 	return `https://www.linkedin.com/in/${encodeURIComponent(handle)}`;
@@ -102,7 +100,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{articles.map((article) => (
-					<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} author={author} />
+					<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
 				))}
 			</div>
 

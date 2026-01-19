@@ -11,8 +11,6 @@ export const viewport: Viewport = {
 	themeColor: '#3373BB',
 };
 
-// storyblokInitializationWorkaround();
-
 const appVersion = process.env.NEXT_PUBLIC_APP_VERSION || 'unknown';
 const appEnv = process.env.NEXT_PUBLIC_APP_ENVIRONMENT || 'unknown';
 const buildTime = process.env.APP_BUILD_TIMESTAMP || 'unknown';

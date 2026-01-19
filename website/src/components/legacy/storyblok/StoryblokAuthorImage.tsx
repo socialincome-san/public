@@ -1,6 +1,6 @@
 import { formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
-import { StoryblokAuthor } from '@/lib/types/journal';
-import { ISbStoryData } from '@storyblok/react';
+import type { Author } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 
 const sizeClasses = {
@@ -16,20 +16,25 @@ const AUTHOR_IMAGE_TARGET_HEIGHT = 300;
 const AUTHOR_IMAGE_TARGET_WIDTH = 300;
 
 function StoryblokAuthorImage(props: {
-	author: ISbStoryData<StoryblokAuthor>;
+	author: ISbStoryData<Author>;
 	size?: Size;
 	className?: string;
 	lang: string;
 	region: string;
 }) {
 	const { author, size = 'medium', className = '' } = props;
+
+  if (!author.content.avatar.filename) {
+    return null;
+  }
+
 	return (
 		<Image
 			src={formatStoryblokUrl(
 				author.content.avatar.filename,
 				AUTHOR_IMAGE_TARGET_WIDTH,
 				AUTHOR_IMAGE_TARGET_HEIGHT,
-				author.content.avatar.focus,
+				author.content.avatar.focus ?? undefined,
 			)}
 			alt={`${author.content.firstName} ${author.content.lastName} avatar`}
 			className={`${sizeClasses[size]} flex-none rounded-full object-cover object-top ${className}`}

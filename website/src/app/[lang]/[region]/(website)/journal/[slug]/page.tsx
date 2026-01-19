@@ -1,26 +1,29 @@
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
 import {
-	generateMetaDataForArticle,
-	getArticle,
-	getRelativeArticles,
+  generateMetaDataForArticle,
+  getArticle,
+  getRelativeArticles,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
+import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { StoryblokAuthor, StoryblokTag } from '@/lib/types/journal';
 import { LanguageCode } from '@/lib/types/language';
-import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
 import { Badge, Separator, Typography } from '@socialincome/ui';
-import { ISbStoryData } from '@storyblok/react';
+import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cache } from 'react';
+import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
+
+const NUMBER_OF_RELATIVE_ARTICLES = 3;
+const ARTICLE_IMAGE_WIDTH = 960;
+const ARTICLE_IMAGE_HEIGHT = 960;
 
 export const revalidate = 900;
-storyblokInitializationWorkaround();
 
 export async function generateMetadata(props: {
 	params: Promise<{ slug: string; lang: LanguageCode; region: WebsiteRegion }>;
@@ -38,7 +41,7 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 function badgeWithLink(
 	lang: string,
 	region: string,
-	tag: ISbStoryData<StoryblokTag>,
+	tag: ISbStoryData<Topic>,
 	variant: 'outline' | 'foreground',
 ) {
 	return (
@@ -50,9 +53,6 @@ function badgeWithLink(
 	);
 }
 
-const NUMBER_OF_RELATIVE_ARTICLES = 3;
-const ARTICLE_IMAGE_WIDTH = 960;
-const ARTICLE_IMAGE_HEIGHT = 960;
 export default async function Page(props: {
 	params: Promise<{ slug: string; lang: LanguageCode; region: WebsiteRegion }>;
 }) {
@@ -60,12 +60,12 @@ export default async function Page(props: {
 
 	const articleResponse = await getArticleMemoized(lang, slug);
 	const articleData = articleResponse.data.story.content;
-	const author: ISbStoryData<StoryblokAuthor> = articleData.author;
+	const author = articleData.author;
 
 	const articles = await getRelativeArticles(
 		author.uuid,
 		articleResponse.data.story.id,
-		articleData.tags?.map((it) => it.uuid),
+		articleData.tags?.map((tag) => tag.uuid) ?? [],
 		lang,
 		NUMBER_OF_RELATIVE_ARTICLES,
 	);
@@ -79,16 +79,16 @@ export default async function Page(props: {
 		<div>
 			<div className="blog w-full justify-center">
 				<div className={articleWithImageStyling ? 'bg-primary flex flex-col lg:min-h-screen lg:flex-row' : ''}>
-					{articleWithImageStyling && (
+					{articleWithImageStyling && articleData.image.filename && (
 						<div className="lg:order-2 lg:w-1/2">
 							<Image
 								src={formatStoryblokUrl(
 									articleData.image.filename,
 									ARTICLE_IMAGE_WIDTH,
 									ARTICLE_IMAGE_HEIGHT,
-									articleData.image.focus,
+									articleData.image.focus ?? undefined,
 								)}
-								alt={articleData.image?.alt}
+								alt={articleData.image?.alt ?? ''}
 								className="w-full object-cover lg:h-screen"
 								width={ARTICLE_IMAGE_WIDTH}
 								height={ARTICLE_IMAGE_HEIGHT}
@@ -103,15 +103,17 @@ export default async function Page(props: {
 						}
 					>
 						<div className="flex flex-wrap justify-start gap-2">
-							<Typography
-								weight="medium"
-								color={articleWithImageStyling ? 'popover' : 'foreground'}
-								size="lg"
-								key={articleData.type?.content.id}
-								className="uppercase"
-							>
-								{articleData.type?.content.value}
-							</Typography>
+							{articleData.type && (
+								<Typography
+									weight="medium"
+									color={articleWithImageStyling ? 'popover' : 'foreground'}
+									size="lg"
+									key={articleData.type.id}
+									className="uppercase"
+								>
+									{articleData.type.content.value}
+								</Typography>
+							)}
 							<Typography
 								size="lg"
 								weight="normal"
@@ -153,11 +155,11 @@ export default async function Page(props: {
 							</div>
 						</Link>
 
-						<div className="mt-4 flex flex-wrap justify-start gap-2">
-							{articleData.tags?.map((tag) =>
-								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
-							)}
-						</div>
+					<div className="mt-4 flex flex-wrap justify-start gap-2">
+						{articleData.tags?.map((tag) =>
+							badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
+						)}
+					</div>
 					</div>
 				</div>
 
@@ -175,7 +177,7 @@ export default async function Page(props: {
 					</Typography>
 					<Typography as="div" size="lg" className="text-black">
 						<RichTextRenderer
-							richTextDocument={articleData.content}
+							richTextDocument={articleData.content as StoryblokRichtext}
 							translator={translator}
 							lang={lang}
 							region={region}
@@ -185,7 +187,7 @@ export default async function Page(props: {
 					{articleData.footnotes && (
 						<Typography as="div" className="mt-5 text-black" size="md">
 							<RichTextRenderer
-								richTextDocument={articleData.footnotes}
+								richTextDocument={articleData.footnotes as StoryblokRichtext}
 								translator={translator}
 								lang={lang}
 								region={region}
@@ -212,13 +214,7 @@ export default async function Page(props: {
 						</Typography>
 						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-5 md:pl-20 md:pr-20 lg:grid-cols-3">
 							{articles.map((article) => (
-								<StoryblokArticleCard
-									key={article.uuid}
-									lang={lang}
-									region={region}
-									article={article}
-									author={article.content.author}
-								/>
+								<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
 							))}
 						</div>
 					</div>

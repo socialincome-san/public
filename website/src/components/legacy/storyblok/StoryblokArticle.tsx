@@ -1,36 +1,34 @@
+import { ResolvedArticle } from '@/components/legacy/storyblok/StoryblokApi';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
-import { StoryblokArticle, StoryblokAuthor } from '@/lib/types/journal';
 import { Typography } from '@socialincome/ui';
-import { ISbStoryData } from '@storyblok/react';
+import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 import Link from 'next/link';
 
 const ARTICLE_IMAGE_TARGET_WIDTH = 1920;
 const ARTICLE_IMAGE_TARGET_HEIGHT = 1080;
 
-export function StoryblokArticleCard(props: {
-	lang: string;
-	region: string;
-	article: ISbStoryData<StoryblokArticle>;
-	author: ISbStoryData<StoryblokAuthor>;
-}) {
-	const { region, lang, article, author } = props;
+export function StoryblokArticleCard(props: { lang: string; region: string; article: ISbStoryData<ResolvedArticle> }) {
+	const { region, lang, article } = props;
+	const author = article.content.author;
 	return (
 		<Link href={`/${props.lang}/${props.region}/journal/${article.slug!}`}>
 			<div className="mb-4 overflow-hidden transition-transform duration-200 hover:scale-[101%]">
-				<Image
-					src={formatStoryblokUrl(
-						article.content.image.filename,
-						ARTICLE_IMAGE_TARGET_WIDTH,
-						ARTICLE_IMAGE_TARGET_HEIGHT,
-						article.content.image.focus,
-					)}
-					alt={article.content.title}
-					width={ARTICLE_IMAGE_TARGET_WIDTH}
-					height={ARTICLE_IMAGE_TARGET_HEIGHT}
-					className="h-60 w-full object-cover"
-				/>
+				{article.content.image.filename && (
+					<Image
+						src={formatStoryblokUrl(
+							article.content.image.filename,
+							ARTICLE_IMAGE_TARGET_WIDTH,
+							ARTICLE_IMAGE_TARGET_HEIGHT,
+							article.content.image.focus ?? undefined,
+						)}
+						alt={article.content.title}
+						width={ARTICLE_IMAGE_TARGET_WIDTH}
+						height={ARTICLE_IMAGE_TARGET_HEIGHT}
+						className="h-60 w-full object-cover"
+					/>
+				)}
 				<div className="mt-2 flex items-center justify-between">
 					<div className="flex items-center space-x-2">
 						<Typography weight="bold" size="sm" className="uppercase">
@@ -55,7 +53,7 @@ export function StoryblokArticleCard(props: {
 						<div className="flex items-center space-x-2">
 							<StoryblokAuthorImage size="large" author={author} region={region} lang={lang} />
 							<Typography className="ml-1" size="lg">
-								{`${article.content.author.content.firstName} ${article.content.author.content.lastName}`}
+								{`${author.content.firstName} ${author.content.lastName}`}
 							</Typography>
 						</div>
 					</div>

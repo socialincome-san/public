@@ -1,15 +1,33 @@
 import {
-	formatStoryblokDateToIso,
-	formatStoryblokUrl,
-	getDimensionsFromStoryblokImageUrl,
+  formatStoryblokDateToIso,
+  formatStoryblokUrl,
+  getDimensionsFromStoryblokImageUrl,
 } from '@/components/legacy/storyblok/StoryblokUtils';
+import type { Article, ArticleType, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/lib/types/journal';
-import { getStoryblokApi, ISbStory } from '@storyblok/react';
+import { getStoryblokApi } from '@/lib/storyblok';
+import type { ISbStories, ISbStoriesParams, ISbStory, ISbStoryData } from '@storyblok/js';
 import { Metadata } from 'next';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
+
+// Helper type to remove index signature from a type
+type RemoveIndexSignature<T> = {
+	[K in keyof T as string extends K ? never : K]: T[K];
+};
+
+// Type for articles with resolved relations (used when resolve_relations is applied, line 32)
+export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'type' | 'tags'> & {
+	author: ISbStoryData<Author>;
+	type: ISbStoryData<ArticleType>;
+	tags?: ISbStoryData<Topic>[];
+};
+
+enum StoryblokContentType {
+	Article = 'article',
+	Author = 'author',
+	Tag = 'topic',
+}
 
 const STANDARD_ARTICLE_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
 const DEFAULT_PAGE_SIZE = 50;
@@ -86,7 +104,7 @@ export async function getArticleCountByAuthorForDefaultLang(authorId: string): P
 	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
 }
 
-export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<StoryblokAuthor>[]> {
+export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<Author>[]> {
 	const params: ISbStoriesParams = {
 		language: lang as WebsiteLanguage,
 		content_type: StoryblokContentType.Author,
@@ -99,7 +117,7 @@ export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<Sto
 	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
 
-export async function getOverviewTags(lang: string): Promise<ISbStoryData<StoryblokTag>[]> {
+export async function getOverviewTags(lang: string): Promise<ISbStoryData<Topic>[]> {
 	const params: ISbStoriesParams = {
 		language: lang as WebsiteLanguage,
 		content_type: StoryblokContentType.Tag,
@@ -112,7 +130,7 @@ export async function getOverviewTags(lang: string): Promise<ISbStoryData<Storyb
 	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
 
-export async function getArticlesByTag(tagId: string, lang: string): Promise<ISbStoryData<StoryblokArticle>[]> {
+export async function getArticlesByTag(tagId: string, lang: string): Promise<ISbStoryData<ResolvedArticle>[]> {
 	const params: ISbStoriesParams = {
 		per_page: DEFAULT_PAGE_SIZE,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
@@ -125,7 +143,7 @@ export async function getArticlesByTag(tagId: string, lang: string): Promise<ISb
 	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
 }
 
-export async function getArticlesByAuthor(authorId: string, lang: string): Promise<ISbStoryData<StoryblokArticle>[]> {
+export async function getArticlesByAuthor(authorId: string, lang: string): Promise<ISbStoryData<ResolvedArticle>[]> {
 	const params: ISbStoriesParams = {
 		per_page: DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT,
@@ -142,7 +160,7 @@ export async function getOverviewArticles(
 	lang: string,
 	idsToIgnore: string | undefined = undefined,
 	limit: number | undefined = undefined,
-): Promise<ISbStoryData<StoryblokArticle>[]> {
+): Promise<ISbStoryData<ResolvedArticle>[]> {
 	const params: ISbStoriesParams = {
 		per_page: limit || DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT,
@@ -165,9 +183,9 @@ export async function getOverviewArticles(
 	}
 }
 
-export async function getTag(slug: string, lang: string): Promise<ISbStory<StoryblokTag>> {
+export async function getTag(slug: string, lang: string): Promise<ISbStory<Topic>> {
 	return getWithFallback(
-		async (lang: string, slug: string): Promise<ISbStory<StoryblokTag>> => {
+		async (lang: string, slug: string): Promise<ISbStory<Topic>> => {
 			const params: ISbStoriesParams = {
 				language: lang as WebsiteLanguage,
 			};
@@ -178,9 +196,9 @@ export async function getTag(slug: string, lang: string): Promise<ISbStory<Story
 	);
 }
 
-export async function getAuthor(slug: string, lang: string): Promise<ISbStory<StoryblokAuthor>> {
+export async function getAuthor(slug: string, lang: string): Promise<ISbStory<Author>> {
 	return getWithFallback(
-		async (lang: string, slug: string): Promise<ISbStory<StoryblokAuthor>> => {
+		async (lang: string, slug: string): Promise<ISbStory<Author>> => {
 			const params: ISbStoriesParams = {
 				language: lang as WebsiteLanguage,
 			};
@@ -238,7 +256,7 @@ async function getRelativeArticlesByAuthorAndTags(
 	lang: string,
 	articleId: number,
 	numberOfArticles: number,
-): Promise<ISbStories<StoryblokArticle>> {
+): Promise<ISbStories<ResolvedArticle>> {
 	let filter = createRelativeArticlesFilter(tags, authorId);
 	const params: ISbStoriesParams = {
 		per_page: numberOfArticles,
@@ -263,7 +281,7 @@ export async function getRelativeArticles(
 	tags: string[],
 	lang: string,
 	numberOfArticles: number,
-): Promise<ISbStoryData<StoryblokArticle>[]> {
+): Promise<ISbStoryData<ResolvedArticle>[]> {
 	const relatedArticlesResponse = await getRelativeArticlesByAuthorAndTags(
 		authorId,
 		tags,
@@ -282,9 +300,9 @@ export async function getRelativeArticles(
 	return result;
 }
 
-export async function getArticle(lang: string, slug: string): Promise<ISbStory<StoryblokArticle>> {
+export async function getArticle(lang: string, slug: string): Promise<ISbStory<ResolvedArticle>> {
 	return getWithFallback(
-		async (lang: string, slug: string): Promise<ISbStory<StoryblokArticle>> => {
+		async (lang: string, slug: string): Promise<ISbStory<ResolvedArticle>> => {
 			const params: ISbStoriesParams = {
 				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 				language: lang as WebsiteLanguage,
@@ -296,20 +314,21 @@ export async function getArticle(lang: string, slug: string): Promise<ISbStory<S
 	);
 }
 
-export function generateMetaDataForArticle(storyblokStory: ISbStoryData<StoryblokArticle>, url: string): Metadata {
+export function generateMetaDataForArticle(storyblokStory: ISbStoryData<ResolvedArticle>, url: string): Metadata {
 	const storyblokArticle = storyblokStory.content;
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;
 	const authorsFullName = `${storyblokArticle.author.content.firstName} ${storyblokArticle.author.content.lastName}`;
-	const dimensions = getDimensionsFromStoryblokImageUrl(storyblokArticle.image.filename);
+	const imageFilename = storyblokArticle.image.filename ?? '';
+	const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
 	const imageUrl = formatStoryblokUrl(
-		storyblokArticle.image.filename,
+		imageFilename,
 		dimensions.width!,
 		dimensions.height!,
-		storyblokArticle.image.focus,
+		storyblokArticle.image.focus ?? undefined,
 	);
 
-	let tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
+	const tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
 	let imageMetaData = {
 		url: imageUrl,
 		width: dimensions.width,
@@ -341,7 +360,7 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Storyblo
 			'article:modified_time': formatStoryblokDateToIso(storyblokStory.updated_at),
 			'article:author': authorsFullName,
 			'article:section': 'News',
-			'article:tag': tags,
+			...(tags && { 'article:tag': tags }),
 		},
 	};
 }

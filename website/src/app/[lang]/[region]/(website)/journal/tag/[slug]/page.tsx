@@ -1,18 +1,16 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
-	getArticleCountByTagForDefaultLang,
-	getArticlesByTag,
-	getTag,
+  getArticleCountByTagForDefaultLang,
+  getArticlesByTag,
+  getTag,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
-storyblokInitializationWorkaround();
 
 interface PageParams extends DefaultParams {
 	slug: string;
@@ -50,13 +48,7 @@ export default async function Page({ params }: PageProps) {
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{articles.map((article) => (
-					<StoryblokArticleCard
-						key={article.uuid}
-						lang={lang}
-						region={region}
-						article={article}
-						author={article.content.author}
-					/>
+					<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
 				))}
 			</div>
 
