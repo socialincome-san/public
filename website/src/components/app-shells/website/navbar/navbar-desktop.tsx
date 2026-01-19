@@ -67,7 +67,9 @@ export const NavbarDesktop = ({ session, lang }: Props) => {
 							<p className="text-sm font-medium">
 								{session?.firstName} {session?.lastName}
 							</p>
-							<p className="text-muted-foreground text-xs">session</p>
+							<p className="text-muted-foreground text-xs">
+								{session?.type === 'local-partner' ? 'Partner' : 'Contributor'}
+							</p>
 						</div>
 					</Button>
 				</DropdownMenuTrigger>

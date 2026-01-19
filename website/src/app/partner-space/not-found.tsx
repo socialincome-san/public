@@ -6,7 +6,7 @@ export default function NotFound() {
 	return (
 		<NotFoundComponent>
 			<Button asChild>
-				<Link href="/portal">Return to portal</Link>
+				<Link href="/partner-space/recipients">Return to partner space</Link>
 			</Button>
 		</NotFoundComponent>
 	);
