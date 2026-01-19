@@ -146,6 +146,16 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
           value = var.env == "prod" ? "false" : "true"
         }
 
+        env {
+          name  = "APP_REVIEW_MODE_ENABLED"
+          value = var.app_review_mode_enabled
+        }
+
+        env {
+          name  = "APP_REVIEW_PHONE_NUMBER"
+          value = var.app_review_phone_number
+        }
+
         ports {
           container_port = 3000
         }

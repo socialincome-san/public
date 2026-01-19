@@ -1,6 +1,7 @@
 export type CountryTableViewRow = {
 	id: string;
 	name: string;
+	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
@@ -21,6 +22,7 @@ export type CountryTableView = {
 export type CountryPayload = {
 	id: string;
 	name: string;
+	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
@@ -33,6 +35,7 @@ export type CountryPayload = {
 
 export type CountryCreateInput = {
 	name: string;
+	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
@@ -46,6 +49,7 @@ export type CountryCreateInput = {
 export type CountryUpdateInput = {
 	id: string;
 	name?: string;
+	isActive?: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
@@ -80,6 +84,12 @@ export type ProgramCountryFeasibilityRow = {
 
 	country: {
 		name: string;
+		isActive: boolean;
+	};
+
+	stats: {
+		programCount: number;
+		recipientCount: number;
 	};
 
 	cash: CountryFeasibility;

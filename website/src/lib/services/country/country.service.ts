@@ -28,6 +28,7 @@ export class CountryService extends BaseService {
 			const created = await this.db.country.create({
 				data: {
 					name: input.name,
+					isActive: input.isActive,
 					microfinanceIndex: input.microfinanceIndex ?? undefined,
 					populationCoverage: input.populationCoverage ?? undefined,
 					latestSurveyDate: input.latestSurveyDate ?? undefined,
@@ -47,6 +48,7 @@ export class CountryService extends BaseService {
 			return this.resultOk({
 				id: created.id,
 				name: created.name,
+				isActive: created.isActive,
 				microfinanceIndex: created.microfinanceIndex ? Number(created.microfinanceIndex) : null,
 				populationCoverage: created.populationCoverage ? Number(created.populationCoverage) : null,
 				latestSurveyDate: created.latestSurveyDate ?? null,
@@ -86,6 +88,7 @@ export class CountryService extends BaseService {
 				where: { id: input.id },
 				data: {
 					name: input.name,
+					isActive: input.isActive,
 					microfinanceIndex: input.microfinanceIndex,
 					populationCoverage: input.populationCoverage,
 					latestSurveyDate: input.latestSurveyDate,
@@ -115,6 +118,7 @@ export class CountryService extends BaseService {
 			return this.resultOk({
 				id: updated.id,
 				name: updated.name,
+				isActive: updated.isActive,
 				microfinanceIndex: updated.microfinanceIndex ? Number(updated.microfinanceIndex) : null,
 				populationCoverage: updated.populationCoverage ? Number(updated.populationCoverage) : null,
 				latestSurveyDate: updated.latestSurveyDate ?? null,
@@ -162,6 +166,7 @@ export class CountryService extends BaseService {
 			return this.resultOk({
 				id: country.id,
 				name: country.name,
+				isActive: country.isActive,
 				microfinanceIndex: country.microfinanceIndex ? Number(country.microfinanceIndex) : null,
 				populationCoverage: country.populationCoverage ? Number(country.populationCoverage) : null,
 				latestSurveyDate: country.latestSurveyDate ?? null,
@@ -201,6 +206,7 @@ export class CountryService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					isActive: true,
 					microfinanceIndex: true,
 					populationCoverage: true,
 					networkTechnology: true,
@@ -215,6 +221,7 @@ export class CountryService extends BaseService {
 			const tableRows: CountryTableViewRow[] = countries.map((c) => ({
 				id: c.id,
 				name: c.name,
+				isActive: c.isActive,
 				microfinanceIndex: c.microfinanceIndex ? Number(c.microfinanceIndex) : null,
 				populationCoverage: c.populationCoverage ? Number(c.populationCoverage) : null,
 				networkTechnology: c.networkTechnology ?? null,
@@ -237,6 +244,16 @@ export class CountryService extends BaseService {
 				include: {
 					microfinanceSourceLink: true,
 					networkSourceLink: true,
+					programs: {
+						include: {
+							_count: {
+								select: { recipients: true },
+							},
+						},
+					},
+					_count: {
+						select: { programs: true },
+					},
 				},
 				orderBy: { name: 'asc' },
 			});
@@ -245,11 +262,24 @@ export class CountryService extends BaseService {
 				const microfinanceIndex = this.toNumber(country.microfinanceIndex);
 				const populationCoverage = this.toNumber(country.populationCoverage);
 
+				const programCount = country._count.programs;
+
+				let recipientCount = 0;
+				for (const program of country.programs) {
+					recipientCount += program._count.recipients;
+				}
+
 				return {
 					id: country.id,
 
 					country: {
 						name: country.name,
+						isActive: country.isActive,
+					},
+
+					stats: {
+						programCount,
+						recipientCount,
 					},
 
 					cash: {

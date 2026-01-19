@@ -213,7 +213,7 @@ const DynamicForm: FC<{
 						</Button>
 					)}
 					{onCancel && (
-						<Button variant="outline" onClick={onCancel}>
+						<Button type="button" variant="outline" onClick={onCancel}>
 							{mode === 'readonly' ? 'Close' : 'Cancel'}
 						</Button>
 					)}
