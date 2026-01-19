@@ -183,6 +183,7 @@ export class LocalPartnerService extends BaseService {
 			}
 
 			const session: LocalPartnerSession = {
+				type: 'local-partner',
 				id: partner.id,
 				name: partner.name,
 				causes: partner.causes,

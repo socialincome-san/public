@@ -40,6 +40,7 @@ export type LocalPartnerCreateInput = Prisma.LocalPartnerCreateInput;
 export type LocalPartnerUpdateInput = Prisma.LocalPartnerUpdateInput;
 
 export type LocalPartnerSession = {
+	type: 'local-partner';
 	id: string;
 	name: string;
 	causes: Cause[];

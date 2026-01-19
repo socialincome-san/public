@@ -114,7 +114,16 @@ Contributor self‑service area:
 
 ---
 
-### **4. Infrastructure (`/infra`)**
+### **4. Partner Space**
+
+Local Partner self‑service area:
+
+- View own recipients / candidates
+- Update personal details
+
+---
+
+### **5. Infrastructure (`/infra`)**
 
 Infrastructure-as-code via **Terraform**:
 
@@ -126,7 +135,7 @@ Docs: https://developer.hashicorp.com/terraform/docs
 
 ---
 
-### **5. Backend Services (`website/lib/`)**
+### **6. Backend Services (`website/lib/`)**
 
 Shared backend modules using:
 

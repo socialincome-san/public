@@ -1753,23 +1753,23 @@
       "localId": "w43IydQbr8lgeGeevbSBoP9ui3WQ",
       "createdAt": "1705658753126",
       "lastLoginAt": "1705659058321",
-      "displayName": "test@test.org",
+      "displayName": "test@contributor.org",
       "photoUrl": "",
-      "passwordHash": "fakeHash:salt=fakeSaltoHkVdpSGWcDDs4uXPpRL:password=test@test.org",
+      "passwordHash": "fakeHash:salt=fakeSaltoHkVdpSGWcDDs4uXPpRL:password=test@contributor.org",
       "salt": "fakeSaltoHkVdpSGWcDDs4uXPpRL",
       "passwordUpdatedAt": 1747558956326,
       "providerUserInfo": [
         {
           "providerId": "password",
-          "email": "test@test.org",
-          "federatedId": "test@test.org",
-          "rawId": "test@test.org",
-          "displayName": "test@test.org",
+          "email": "test@contributor.org",
+          "federatedId": "test@contributor.org",
+          "rawId": "test@contributor.org",
+          "displayName": "test@contributor.org",
           "photoUrl": ""
         }
       ],
       "validSince": "1747558956",
-      "email": "test@test.org",
+      "email": "test@contributor.org",
       "emailVerified": true,
       "disabled": false
     },

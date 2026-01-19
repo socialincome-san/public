@@ -9,7 +9,8 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { CurrencyCell } from '../elements/currency-cell';
 
 export function makeYourContributionsColumns(
-	_?: boolean,
+	hideProgramName: boolean = false,
+	hideLocalPartner: boolean = false,
 	translator?: Translator,
 ): ColumnDef<YourContributionsTableViewRow>[] {
 	return [

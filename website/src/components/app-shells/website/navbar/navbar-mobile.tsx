@@ -19,14 +19,13 @@ type Props = {
 export const NavbarMobile = ({ session, lang }: Props) => {
 	const { logout } = useLogout();
 	const translator = useTranslator(lang, 'website-me');
-
 	const menuLinks = [
 		{
 			href: '/',
 			label: translator?.t('metadata.home-link'),
 		},
 		{
-			href: '/dashboard/profile',
+			href: session?.type === 'local-partner' ? '/partner-space/profile' : '/dashboard/profile',
 			label: translator?.t('profile.link') ?? 'Profile',
 		},
 	];

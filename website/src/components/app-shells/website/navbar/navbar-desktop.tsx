@@ -25,7 +25,7 @@ export const NavbarDesktop = ({ session, lang }: Props) => {
 
 	const userMenuLinks = [
 		{
-			href: '/dashboard/profile',
+			href: session?.type === 'local-partner' ? '/partner-space/profile' : '/dashboard/profile',
 			label: translator?.t('profile.link') ?? 'Profile',
 		},
 	];
