@@ -141,7 +141,7 @@ export function CandidateForm({
 	};
 
 	const setOptions = (localPartner: LocalPartnerOption[]) => {
-		if (!formSchema.fields.localPartner) {
+		if (actorKind === 'local-partner') {
 			return;
 		}
 

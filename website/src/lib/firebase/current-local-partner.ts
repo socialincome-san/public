@@ -5,9 +5,9 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const firebaseService = new FirebaseService();
+const service = new LocalPartnerService();
 
 async function findLocalPartnerByAuthId(authUserId: string): Promise<LocalPartnerSession | null> {
-	const service = new LocalPartnerService();
 	const result = await service.getCurrentLocalPartnerSession(authUserId);
 	return result.success ? result.data : null;
 }

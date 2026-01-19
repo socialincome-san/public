@@ -2,7 +2,6 @@ import { RecipientsTableClient } from '@/components/data-table/clients/recipient
 import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { ProgramPermission } from '@prisma/client';
 import { Suspense } from 'react';
 
 export default function RecipientsPage() {
@@ -21,7 +20,6 @@ async function RecipientsDataLoader() {
 
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
-	const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
 
-	return <RecipientsTableClient rows={rows} error={error} readOnly={readOnly} actorKind="local-partner" />;
+	return <RecipientsTableClient rows={rows} error={error} readOnly={false} actorKind="local-partner" />;
 }

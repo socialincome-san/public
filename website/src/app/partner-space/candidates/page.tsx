@@ -17,6 +17,7 @@ async function CandidatesDataLoader() {
 
 	const candidateService = new CandidateService();
 	const result = await candidateService.getTableViewByLocalPartner(partner.id);
+
 	const error = result.success ? null : result.error;
 	const rows: CandidatesTableViewRow[] = result.success ? result.data.tableRows : [];
 

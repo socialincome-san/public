@@ -10,7 +10,7 @@ import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types
 import type { ColumnDef } from '@tanstack/react-table';
 
 export function makeCandidateColumns(
-	hideProgramName?: boolean,
+	hideProgramName = false,
 	hideLocalPartner = false,
 ): ColumnDef<CandidatesTableViewRow>[] {
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
