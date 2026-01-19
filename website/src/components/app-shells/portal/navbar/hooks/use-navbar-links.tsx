@@ -1,5 +1,5 @@
 import { UserSession } from '@/lib/services/user/user.types';
-import { LucideIcon, Settings, Settings2 } from 'lucide-react';
+import { LucideIcon, Settings, User } from 'lucide-react';
 
 type NavLink = {
 	href: string;
@@ -35,22 +35,22 @@ export const useNavbarLinks = (user: UserSession) => {
 	];
 
 	const userMenuNavLinks: NavLink[] = [
+		{
+			href: '/portal/profile',
+			activeBase: '/portal/profile',
+			label: 'Profile',
+			icon: User,
+		},
 		...(user.role === 'admin'
 			? [
 					{
 						href: '/portal/admin/organizations',
 						activeBase: '/portal/admin',
 						label: 'Admin',
-						icon: Settings2,
+						icon: Settings,
 					},
 				]
 			: []),
-		{
-			href: '/portal/profile',
-			activeBase: '/portal/profile',
-			label: 'Profile',
-			icon: Settings,
-		},
 	];
 
 	const isActiveLink = (path: string, href: string, activeBase?: string) => path.startsWith(activeBase ?? href);

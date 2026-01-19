@@ -19,9 +19,7 @@ export default async function ProfileLayout({ children }: ProfileLayoutProps) {
 			<Breadcrumb links={breadcrumbLinks} />
 			<h1 className="py-8 text-5xl">Profile</h1>
 
-			<Card>
-				<div>{children}</div>
-			</Card>
+			<Card>{children}</Card>
 		</>
 	);
 }
