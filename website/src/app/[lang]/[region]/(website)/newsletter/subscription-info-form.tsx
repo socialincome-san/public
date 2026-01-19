@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { subscribeToNewsletter } from '@/lib/server-actions/newsletter-actions';
+import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { NewsletterSubscriptionData } from '@/lib/services/sendgrid/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -56,7 +56,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 		};
 
 		try {
-			await subscribeToNewsletter(data);
+			await subscribeToNewsletterAction(data);
 			toast.success(translations.toastMessage);
 			form.reset();
 		} catch (error) {

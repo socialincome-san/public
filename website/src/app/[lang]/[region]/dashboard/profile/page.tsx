@@ -2,7 +2,7 @@ import { Card } from '@/components/card';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getActiveSubscription } from '@/lib/server-actions/newsletter-actions';
+import { getActiveSubscriptionAction } from '@/lib/server-actions/newsletter-actions';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { DefaultPageProps } from '../..';
 import { ProfileForm, ProfileFormTranslations } from './profile-form';
@@ -11,7 +11,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
-	const newsletterSubscription = await getActiveSubscription();
+	const newsletterSubscription = await getActiveSubscriptionAction();
 	const newsletterSubscribed =
 		newsletterSubscription.success &&
 		newsletterSubscription.data !== null &&
@@ -61,11 +61,7 @@ export default async function Page({ params }: DefaultPageProps) {
 
 	return (
 		<Card>
-			<ProfileForm
-				contributor={contributor}
-				translations={translations}
-				isNewsletterSubscribed={newsletterSubscribed}
-			/>
+			<ProfileForm session={contributor} translations={translations} isNewsletterSubscribed={newsletterSubscribed} />
 		</Card>
 	);
 }
