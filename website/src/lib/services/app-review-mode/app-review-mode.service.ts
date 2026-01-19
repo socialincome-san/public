@@ -17,6 +17,11 @@ export class AppReviewModeService extends BaseService {
 	}
 
 	shouldBypass(phone: string): boolean {
+		// TODO: Remove logging after debugging
+		this.logger.info('Checking if app review mode should bypass...');
+		this.logger.info(`App Review Mode Enabled: ${this.isEnabled()}`);
+		this.logger.info(`Is Review Phone: ${this.isReviewPhone(phone)}`);
+		this.logger.info(`Phone ${phone}`);
 		return this.isEnabled() && this.isReviewPhone(phone);
 	}
 
