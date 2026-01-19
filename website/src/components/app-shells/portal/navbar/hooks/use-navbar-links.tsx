@@ -46,9 +46,9 @@ export const useNavbarLinks = (user: UserSession) => {
 				]
 			: []),
 		{
-			href: '/portal/account-settings',
-			activeBase: '/portal/account-settings',
-			label: 'Account settings',
+			href: '/portal/profile',
+			activeBase: '/portal/profile',
+			label: 'Profile',
 			icon: Settings,
 		},
 	];

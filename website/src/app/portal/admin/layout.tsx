@@ -14,7 +14,8 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 	await requireAdmin(user);
 
 	const breadcrumbLinks = [
-		{ href: '/portal', label: 'Home' },
+		{ href: '/', label: 'Website' },
+		{ href: '/portal', label: 'Portal' },
 		{ href: '/portal/admin', label: 'Admin' },
 	];
 
