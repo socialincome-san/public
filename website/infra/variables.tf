@@ -157,3 +157,14 @@ variable "storyblok_preview_secret" {
   type        = string
   sensitive   = true
 }
+
+variable "app_review_mode_enabled" {
+  description = "Flag to enable or disable app review mode"
+  type        = string
+}
+
+variable "app_review_phone_number" {
+  description = "Phone number to use in app review mode"
+  type        = string
+  sensitive   = true
+}
