@@ -1,9 +1,9 @@
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
 import {
-  generateMetaDataForArticle,
-  getArticle,
-  getRelativeArticles,
+	generateMetaDataForArticle,
+	getArticle,
+	getRelativeArticles,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
@@ -38,12 +38,7 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 	return await getArticle(lang, slug);
 });
 
-function badgeWithLink(
-	lang: string,
-	region: string,
-	tag: ISbStoryData<Topic>,
-	variant: 'outline' | 'foreground',
-) {
+function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge variant={variant} className="mt-6">
@@ -155,11 +150,11 @@ export default async function Page(props: {
 							</div>
 						</Link>
 
-					<div className="mt-4 flex flex-wrap justify-start gap-2">
-						{articleData.tags?.map((tag) =>
-							badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
-						)}
-					</div>
+						<div className="mt-4 flex flex-wrap justify-start gap-2">
+							{articleData.tags?.map((tag) =>
+								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
+							)}
+						</div>
 					</div>
 				</div>
 

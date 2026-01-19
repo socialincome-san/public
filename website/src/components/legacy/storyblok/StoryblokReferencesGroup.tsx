@@ -11,9 +11,7 @@ import Link from 'next/link';
 const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };
 
 function getThumbnailOrDefault(referenceArticle: ReferenceArticle): StoryblokAsset {
-	return referenceArticle.thumbnail?.filename
-		? referenceArticle.thumbnail
-		: (defaultThumbnail as StoryblokAsset);
+	return referenceArticle.thumbnail?.filename ? referenceArticle.thumbnail : (defaultThumbnail as StoryblokAsset);
 }
 
 export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: Translator; lang: LanguageCode }) {

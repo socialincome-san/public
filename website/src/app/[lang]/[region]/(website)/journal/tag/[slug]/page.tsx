@@ -1,9 +1,9 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
-  getArticleCountByTagForDefaultLang,
-  getArticlesByTag,
-  getTag,
+	getArticleCountByTagForDefaultLang,
+	getArticlesByTag,
+	getTag,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import { Translator } from '@/lib/i18n/translator';

@@ -24,9 +24,9 @@ function StoryblokAuthorImage(props: {
 }) {
 	const { author, size = 'medium', className = '' } = props;
 
-  if (!author.content.avatar.filename) {
-    return null;
-  }
+	if (!author.content.avatar.filename) {
+		return null;
+	}
 
 	return (
 		<Image
