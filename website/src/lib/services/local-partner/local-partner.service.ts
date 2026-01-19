@@ -224,15 +224,17 @@ export class LocalPartnerService extends BaseService {
 					causes: true,
 					contact: {
 						select: {
+							gender: true,
+							email: true,
 							firstName: true,
 							lastName: true,
 							language: true,
-							email: true,
-							phone: {
-								select: { number: true },
-							},
 							address: {
 								select: {
+									street: true,
+									number: true,
+									city: true,
+									zip: true,
 									country: true,
 								},
 							},
@@ -250,11 +252,15 @@ export class LocalPartnerService extends BaseService {
 				id: partner.id,
 				name: partner.name,
 				causes: partner.causes,
+				gender: partner.contact?.gender ?? null,
 				email: partner.contact?.email ?? null,
 				firstName: partner.contact?.firstName ?? null,
 				lastName: partner.contact?.lastName ?? null,
 				language: partner.contact?.language ?? null,
-				phone: partner.contact?.phone?.number ?? null,
+				street: partner.contact?.address?.street ?? null,
+				number: partner.contact?.address?.number ?? null,
+				city: partner.contact?.address?.city ?? null,
+				zip: partner.contact?.address?.zip ?? null,
 				country: partner.contact?.address?.country ?? null,
 			};
 

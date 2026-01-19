@@ -44,10 +44,14 @@ export type LocalPartnerSession = {
 	id: string;
 	name: string;
 	causes: Cause[];
+	gender: Gender | null;
 	email: string | null;
 	firstName: string | null;
 	lastName: string | null;
 	language: string | null;
-	phone: string | null;
+	street: string | null;
+	number: string | null;
+	city: string | null;
+	zip: string | null;
 	country: string | null;
 };
