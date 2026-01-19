@@ -1,5 +1,6 @@
 import { Actor } from '@/lib/firebase/current-account';
 import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
+import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -18,6 +19,7 @@ import {
 export class RecipientService extends BaseService {
 	private programAccessService = new ProgramAccessService();
 	private firebaseService = new FirebaseService();
+	private appReviewModeService = new AppReviewModeService();
 
 	async create(actor: Actor, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const programId = recipient.program?.connect?.id;
@@ -649,6 +651,14 @@ export class RecipientService extends BaseService {
 		const phone = this.firebaseService.getPhoneFromToken(tokenResult.data);
 		if (!phone) {
 			return this.resultFail('Phone number not present in token', 400);
+		}
+
+		if (this.appReviewModeService.shouldBypass(phone)) {
+			const mockResult = this.appReviewModeService.getMockRecipient(phone);
+			if (mockResult.success) {
+				return mockResult;
+			}
+			return this.resultFail(mockResult.error ?? 'Could not create mock recipient');
 		}
 
 		const recipientResult = await this.getByPaymentPhoneNumber(phone);

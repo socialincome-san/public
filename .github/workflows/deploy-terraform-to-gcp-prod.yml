@@ -103,6 +103,8 @@ jobs:
           TF_VAR_twilio_verify_service_sid: ${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}
           TF_VAR_exchange_rates_api: ${{ secrets.TF_PROD_EXCHANGE_RATES_API }}
           TF_VAR_github_pat: ${{ secrets.TF_PROD_GITHUB_PAT }}
+          TF_VAR_app_review_mode_enabled: ${{ vars.TF_PROD_APP_REVIEW_MODE_ENABLED }}
+          TF_VAR_app_review_phone_number: ${{ secrets.TF_PROD_APP_REVIEW_PHONE_NUMBER }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."
