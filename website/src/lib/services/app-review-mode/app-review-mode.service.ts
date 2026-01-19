@@ -22,6 +22,10 @@ export class AppReviewModeService extends BaseService {
 		this.logger.info(`App Review Mode Enabled: ${this.isEnabled()}`);
 		this.logger.info(`Is Review Phone: ${this.isReviewPhone(phone)}`);
 		this.logger.info(`Phone ${phone}`);
+		this.logger.info(`APP_REVIEW_PHONE_NUMBER: ${process.env.APP_REVIEW_PHONE_NUMBER}`);
+		this.logger.info(`APP_REVIEW_MODE_ENABLED: ${process.env.APP_REVIEW_MODE_ENABLED}`);
+		this.logger.info(`Bypass result: ${this.isEnabled() && this.isReviewPhone(phone)}`);
+		this.logger.info('Finished checking app review mode bypass.');
 		return this.isEnabled() && this.isReviewPhone(phone);
 	}
 
