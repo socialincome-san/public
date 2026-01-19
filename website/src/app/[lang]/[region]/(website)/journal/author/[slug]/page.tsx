@@ -1,8 +1,8 @@
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
-  getArticleCountByAuthorForDefaultLang,
-  getArticlesByAuthor,
-  getAuthor,
+	getArticleCountByAuthorForDefaultLang,
+	getArticlesByAuthor,
+	getAuthor,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
