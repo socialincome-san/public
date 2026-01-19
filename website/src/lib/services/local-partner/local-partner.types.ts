@@ -36,8 +36,8 @@ export type LocalPartnerOption = {
 	name: string;
 };
 
-export type LocalPartnerCreateInput = Prisma.LocalPartnerCreateInput;
-export type LocalPartnerUpdateInput = Prisma.LocalPartnerUpdateInput;
+export type LocalPartnerCreateInput = Omit<Prisma.LocalPartnerCreateInput, 'account' | 'accountId'>;
+export type LocalPartnerUpdateInput = Omit<Prisma.LocalPartnerUpdateInput, 'account' | 'accountId'>;
 
 export type LocalPartnerSession = {
 	type: 'local-partner';
