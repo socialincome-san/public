@@ -142,7 +142,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
-          name  = "NEXT_PUBLIC_FEATURE_ENABLE_NEW_WEBSITE"
+          name  = "FEATURE_ENABLE_NEW_WEBSITE"
           value = var.env == "prod" ? "false" : "true"
         }
 

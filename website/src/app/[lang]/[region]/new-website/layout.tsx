@@ -4,7 +4,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { notFound } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
 
-const ENABLE_NEW_WEBSITE = process.env.NEXT_PUBLIC_FEATURE_ENABLE_NEW_WEBSITE === 'true';
+const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang } = await params;
