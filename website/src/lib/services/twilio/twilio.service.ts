@@ -1,6 +1,6 @@
 import { UserRecord } from 'firebase-admin/auth';
 import { Twilio } from 'twilio';
-import { AppReviewModeService } from '../app-review/app-review-mode.service';
+import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';

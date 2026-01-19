@@ -550,11 +550,11 @@ export class RecipientService extends BaseService {
 		}
 
 		if (this.appReviewModeService.shouldBypass(phone)) {
-			const mock = this.appReviewModeService.getMockRecipient(phone);
-			if (mock.success) {
-				return mock;
+			const mockResult = this.appReviewModeService.getMockRecipient(phone);
+			if (mockResult.success) {
+				return mockResult;
 			}
-			return this.resultFail(mock.error ?? 'Could not create mock recipient');
+			return this.resultFail(mockResult.error ?? 'Could not create mock recipient');
 		}
 
 		const recipientResult = await this.getByPaymentPhoneNumber(phone);
