@@ -18,7 +18,7 @@
 		"test:e2e:update:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e:update'",
 		"lint": "eslint . && npm run check:unused",
 		"openapi:generate": "next-openapi-gen generate",
-		"typecheck": "npm run storyblok:generate && tsc --noEmit",
+		"typecheck": "tsc --noEmit",
 		"prisma:env-local": "dotenv -e .env.local -- prisma",
 		"db:generate": "npm run prisma:env-local -- generate --schema=src/lib/database/schema.prisma",
 		"db:migrate:deploy": "npm run prisma:env-local -- migrate deploy --schema=src/lib/database/schema.prisma",
