@@ -1,8 +1,8 @@
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
-	getArticleCountByAuthorForDefaultLang,
-	getArticlesByAuthor,
-	getAuthor,
+  getArticleCountByAuthorForDefaultLang,
+  getArticlesByAuthor,
+  getAuthor,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
@@ -44,7 +44,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		authorId,
 	);
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage as WebsiteLanguage,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common'],
 	});
 	return (
