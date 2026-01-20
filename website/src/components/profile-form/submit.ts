@@ -101,6 +101,7 @@ export async function submitProfileForm(
 		lastName: values.lastName,
 		gender: values.gender ?? null,
 		language: values.language,
+		organizationId: values.organizationId,
 		address: {
 			street: values.street ?? '',
 			number: values.number ?? '',

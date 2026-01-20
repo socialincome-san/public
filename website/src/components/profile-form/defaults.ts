@@ -46,6 +46,7 @@ export function buildDefaultValues(
 
 	return {
 		type: 'user',
+		organizationId: session.activeOrganization?.id ?? '',
 		firstName: session.firstName ?? '',
 		lastName: session.lastName ?? '',
 		email: session.email ?? '',

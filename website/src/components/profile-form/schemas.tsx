@@ -35,6 +35,7 @@ export const localPartnerSchema = z.object({
 
 export const userSchema = z.object({
 	type: z.literal('user'),
+	organizationId: z.string().optional(),
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
 	email: z.string().email(),

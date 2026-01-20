@@ -113,7 +113,6 @@ export class UserService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
-			// email change -> update Firebase
 			if (input.email !== existingUser.contact.email) {
 				const firebaseUpdateResult = await this.firebaseService.updateByUid(existingUser.account.firebaseAuthUserId, {
 					email: input.email,
@@ -175,10 +174,9 @@ export class UserService extends BaseService {
 			const existingUser = await this.db.user.findUnique({
 				where: { id: userId },
 				include: {
-					contact: {
-						include: { address: true },
-					},
+					contact: { include: { address: true } },
 					activeOrganization: true,
+					organizationAccesses: { select: { organizationId: true } },
 				},
 			});
 
@@ -190,9 +188,15 @@ export class UserService extends BaseService {
 				return this.resultFail('You cannot change your email yourself.');
 			}
 
+			const allowedOrgIds = existingUser.organizationAccesses.map((o) => o.organizationId);
+
 			const updatedUser = await this.db.user.update({
 				where: { id: userId },
 				data: {
+					activeOrganization:
+						input.organizationId && allowedOrgIds.includes(input.organizationId)
+							? { connect: { id: input.organizationId } }
+							: undefined,
 					contact: {
 						update: {
 							firstName: input.firstName ?? existingUser.contact.firstName,
@@ -223,9 +227,7 @@ export class UserService extends BaseService {
 					},
 				},
 				include: {
-					contact: {
-						include: { address: true },
-					},
+					contact: { include: { address: true } },
 					activeOrganization: true,
 				},
 			});
@@ -390,9 +392,9 @@ export class UserService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
-			const organizations = user.organizationAccesses.map((a) => ({
-				id: a.organization.id,
-				name: a.organization.name,
+			const organizations = user.organizationAccesses.map((access) => ({
+				id: access.organization.id,
+				name: access.organization.name,
 			}));
 
 			const activeOrganization = user.activeOrganization

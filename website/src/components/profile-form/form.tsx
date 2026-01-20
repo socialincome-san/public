@@ -102,6 +102,41 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 					</>
 				)}
 
+				{isUser && (
+					<>
+						<h3 className="text-lg font-semibold md:col-span-2">Account</h3>
+
+						<div className="flex md:col-span-2 md:justify-start">
+							<div className="w-full md:w-1/2">
+								<FormField
+									control={form.control}
+									name="organizationId"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Active organization</FormLabel>
+											<Select value={field.value} onValueChange={field.onChange} disabled={loading}>
+												<FormControl>
+													<SelectTrigger>
+														<SelectValue placeholder="Select organization" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{session.organizations.map((org) => (
+														<SelectItem key={org.id} value={org.id}>
+															{org.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+						</div>
+					</>
+				)}
+
 				<h3 className="text-lg font-semibold md:col-span-2">{translations.personalInfoTitle}</h3>
 
 				<FormField

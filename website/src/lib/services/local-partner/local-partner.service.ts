@@ -109,7 +109,6 @@ export class LocalPartnerService extends BaseService {
 		const firebaseUid = existing.account.firebaseAuthUserId;
 
 		if (actor.kind === 'user' && newEmail && newEmail !== oldEmail) {
-			// only admin can update email + Firebase
 			const firebaseResult = await this.firebaseService.updateByUid(firebaseUid, { email: newEmail });
 			if (!firebaseResult.success) {
 				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
