@@ -1,9 +1,9 @@
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
 import {
-	generateMetaDataForArticle,
-	getArticle,
-	getRelativeArticles,
+  generateMetaDataForArticle,
+  getArticle,
+  getRelativeArticles,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
@@ -81,7 +81,7 @@ export default async function Page(props: {
 									articleData.image.filename,
 									ARTICLE_IMAGE_WIDTH,
 									ARTICLE_IMAGE_HEIGHT,
-									articleData.image.focus ?? undefined,
+									articleData.image.focus,
 								)}
 								alt={articleData.image?.alt ?? ''}
 								className="w-full object-cover lg:h-screen"

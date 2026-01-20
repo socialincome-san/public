@@ -21,7 +21,7 @@ export function StoryblokArticleCard(props: { lang: string; region: string; arti
 							article.content.image.filename,
 							ARTICLE_IMAGE_TARGET_WIDTH,
 							ARTICLE_IMAGE_TARGET_HEIGHT,
-							article.content.image.focus ?? undefined,
+							article.content.image.focus,
 						)}
 						alt={article.content.title}
 						width={ARTICLE_IMAGE_TARGET_WIDTH}

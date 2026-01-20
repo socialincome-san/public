@@ -11,9 +11,5 @@ export default async function HomePage({ params }: DefaultPageProps) {
 	const response = await storyblokApi.getStory('new-website/home');
 	const story = response.data.story as ISbStoryData<Page>;
 
-	return (
-		<div>
-			<StoryblokStory story={story} />
-		</div>
-	);
+	return <StoryblokStory story={story} />;
 }

@@ -4,25 +4,17 @@ import NextLink from 'next/link';
 import { ReactElement } from 'react';
 
 type TextBlockProps = {
-	blok: Text;
+	block: Text;
 };
 
 const resolvers = {
-	[MarkTypes.LINK]: (node: StoryblokRichTextNode<ReactElement>) => {
-		return node.attrs?.linktype === 'story' ? (
+	[MarkTypes.LINK]: (node: StoryblokRichTextNode<ReactElement>) => (
 			<NextLink href={node.attrs?.href} target={node.attrs?.target}>
-				{node.text}
-			</NextLink>
-		) : (
-			<a href={node.attrs?.href} target={node.attrs?.target}>
-				{node.text}
-			</a>
-		);
-	},
+			{node.text}
+		</NextLink>
+	),
 };
 
-export default function TextBlock({ blok }: TextBlockProps) {
-	return blok.content ? (
-		<StoryblokRichText doc={blok.content as StoryblokRichTextNode<ReactElement>} resolvers={resolvers} />
-	) : null;
+export default function TextBlock({ block }: TextBlockProps) {
+	return block.content && <StoryblokRichText doc={block.content as StoryblokRichTextNode<ReactElement>} resolvers={resolvers} />;
 }

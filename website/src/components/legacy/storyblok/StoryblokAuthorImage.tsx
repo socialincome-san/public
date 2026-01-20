@@ -34,7 +34,7 @@ function StoryblokAuthorImage(props: {
 				author.content.avatar.filename,
 				AUTHOR_IMAGE_TARGET_WIDTH,
 				AUTHOR_IMAGE_TARGET_HEIGHT,
-				author.content.avatar.focus ?? undefined,
+				author.content.avatar.focus,
 			)}
 			alt={`${author.content.firstName} ${author.content.lastName} avatar`}
 			className={`${sizeClasses[size]} flex-none rounded-full object-cover object-top ${className}`}
