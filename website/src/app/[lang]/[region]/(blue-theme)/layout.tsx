@@ -1,6 +1,6 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import Navbar from '@/components/legacy/navbar/navbar';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import { PropsWithChildren } from 'react';
 
@@ -9,12 +9,10 @@ export async function generateMetadata(props: DefaultLayoutProps) {
 	return getMetadata(params.lang as WebsiteLanguage, 'website-donate');
 }
 
-export default async function Layout(props: PropsWithChildren<DefaultLayoutProps>) {
-	const params = await props.params;
-
-	const { lang, region } = params;
-
-	const { children } = props;
+export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
+	const resolvedParams = await params;
+	const lang = resolvedParams.lang as WebsiteLanguage;
+	const region = resolvedParams.region as WebsiteRegion;
 
 	return (
 		<div className="theme-blue min-h-screen">

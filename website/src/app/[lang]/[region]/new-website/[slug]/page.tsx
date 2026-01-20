@@ -1,7 +1,6 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
 import { getStoryWithFallback } from '@/lib/storyblok';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
@@ -17,7 +16,6 @@ export default async function ContentPage({ params }: DefaultLayoutPropsWithSlug
 		return notFound();
 	}
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common', 'website-donate'] });
 
-	return <PageContentType blok={story.content} translator={translator} />;
+	return <PageContentType blok={story.content} />;
 }
