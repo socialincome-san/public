@@ -50,7 +50,7 @@ draw**:
 - Results written to `/draws`
 - Draws are reproducible using **dchoose** →
   https://github.com/drand/dchoose
-- Full transparency explanation:  
+- Full transparency explanation:
   https://socialincome.org/transparency/recipient-selection
 
 ---
@@ -88,8 +88,7 @@ A Next.js project containing:
 
 - Currently partly hardcoded
 - Migration underway → **Storyblok CMS**
-- Journal already uses Storyblok  
-  Docs: https://www.storyblok.com/docs
+- Journal already uses Storyblok Docs: https://www.storyblok.com/docs
 
 ---
 
@@ -219,6 +218,37 @@ pg_restore   --clean --if-exists   --no-owner   -d "postgresql://staging-website
 
 ```
 npm run dev:ssl-proxy
+```
+
+---
+
+### Storyblok Type Generation
+
+We use the **Storyblok CLI** to generate TypeScript types from the CMS
+schema.
+
+If you have made changes to the Storyblok schema, you can regenerate the
+types:
+
+1. Set these env vars in `website/.env.local`:
+   - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
+   - `STORYBLOK_SPACE_ID`
+2. Run:
+
+```
+npm run storyblok:generate
+```
+
+This command:
+
+1. Logs into Storyblok using your personal access token
+2. Pulls component schemas from the space
+3. Generates TypeScript types to `src/generated/storyblok/types/`
+
+Usage in components:
+
+```typescript
+import type { Page } from '@storyblok/types/{SPACE_ID}/storyblok-components';
 ```
 
 ---
