@@ -33,6 +33,20 @@ export const localPartnerSchema = z.object({
 	zip: z.string().optional(),
 });
 
-export const profileFormSchema = z.discriminatedUnion('type', [contributorSchema, localPartnerSchema]);
+export const userSchema = z.object({
+	type: z.literal('user'),
+	firstName: z.string().min(1),
+	lastName: z.string().min(1),
+	email: z.string().email(),
+	country: z.string().optional(),
+	language: z.string().optional(),
+	gender: z.nativeEnum(Gender).optional(),
+	street: z.string().optional(),
+	number: z.string().optional(),
+	city: z.string().optional(),
+	zip: z.string().optional(),
+});
+
+export const profileFormSchema = z.discriminatedUnion('type', [contributorSchema, localPartnerSchema, userSchema]);
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;

@@ -15,6 +15,7 @@ import { Switch } from '@/components/switch';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
+import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { Cause, ContributorReferralSource, Gender } from '@prisma/client';
 import { MultiSelect, MultiSelectOption } from '../multi-select';
@@ -24,7 +25,7 @@ import { submitProfileForm } from './submit';
 import { ProfileFormTranslations } from './translated-form';
 
 type Props = {
-	session: ContributorSession | LocalPartnerSession;
+	session: ContributorSession | LocalPartnerSession | UserSession;
 	translations: ProfileFormTranslations;
 	isNewsletterSubscribed?: boolean;
 };
@@ -40,6 +41,7 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 	const loading = form.formState.isSubmitting;
 	const isContributor = session.type === 'contributor';
 	const isLocalPartner = session.type === 'local-partner';
+	const isUser = session.type === 'user';
 
 	const onSubmit = async (values: ProfileFormValues) => {
 		setErrorMessage('');

@@ -7,7 +7,7 @@ import {
 	getUserAction,
 	getUserOptionsAction,
 	updateUserAction,
-} from '@/lib/server-actions/user.actions';
+} from '@/lib/server-actions/user-actions';
 import type { UserPayload } from '@/lib/services/user/user.types';
 import { UserRole } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
