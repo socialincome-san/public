@@ -47,7 +47,7 @@ function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Topic>, v
 }
 
 export default async function Page(props: DefaultLayoutPropsWithSlug) {
-	const { slug, lang, region } = await props.params as { slug: string; lang: WebsiteLanguage; region: WebsiteRegion };
+	const { slug, lang, region } = (await props.params) as { slug: string; lang: WebsiteLanguage; region: WebsiteRegion };
 
 	const articleResponse = await getArticleMemoized(lang, slug);
 	const articleData = articleResponse.data.story.content;
