@@ -1,6 +1,5 @@
 'use server';
 
-import { getOptionalLocalPartner } from '@/lib/firebase/current-local-partner';
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
 import { LocalPartnerCreateInput, LocalPartnerUpdateInput } from '@/lib/services/local-partner/local-partner.types';
@@ -34,8 +33,4 @@ export async function updateLocalPartnerAction(updateInput: LocalPartnerUpdateIn
 export async function getLocalPartnerAction(localPartnerId: string) {
 	const user = await getAuthenticatedUserOrThrow();
 	return localPartnerService.get(user.id, localPartnerId);
-}
-
-export async function getOptionalLocalPartnerAction() {
-	return getOptionalLocalPartner();
 }

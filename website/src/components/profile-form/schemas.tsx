@@ -1,7 +1,7 @@
 import { Cause, ContributorReferralSource, Gender } from '@prisma/client';
 import { z } from 'zod';
 
-export const contributorSchema = z.object({
+const contributorSchema = z.object({
 	type: z.literal('contributor'),
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
@@ -17,7 +17,7 @@ export const contributorSchema = z.object({
 	newsletter: z.boolean().optional(),
 });
 
-export const localPartnerSchema = z.object({
+const localPartnerSchema = z.object({
 	type: z.literal('local-partner'),
 	name: z.string().min(1),
 	causes: z.array(z.nativeEnum(Cause)).optional(),
@@ -33,7 +33,7 @@ export const localPartnerSchema = z.object({
 	zip: z.string().optional(),
 });
 
-export const userSchema = z.object({
+const userSchema = z.object({
 	type: z.literal('user'),
 	organizationId: z.string().optional(),
 	firstName: z.string().min(1),
