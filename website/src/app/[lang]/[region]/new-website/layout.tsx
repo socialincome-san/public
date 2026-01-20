@@ -10,7 +10,6 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const { lang } = await params;
 
 	if (!ENABLE_NEW_WEBSITE) {
-		console.warn('New Website feature is disabled - returning 404');
 		notFound();
 	}
 
