@@ -9,7 +9,9 @@ const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang } = await params;
 
-	if (!ENABLE_NEW_WEBSITE) notFound();
+	if (!ENABLE_NEW_WEBSITE) {
+		notFound();
+	}
 
 	return <WebsiteAppShell lang={lang as WebsiteLanguage}>{children}</WebsiteAppShell>;
 }
