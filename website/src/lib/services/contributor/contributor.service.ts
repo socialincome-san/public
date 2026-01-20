@@ -591,6 +591,7 @@ export class ContributorService extends BaseService {
 			}
 
 			const session: ContributorSession = {
+				type: 'contributor',
 				id: contributor.id,
 				gender: contributor.contact?.gender ?? null,
 				referral: contributor.referral ?? null,

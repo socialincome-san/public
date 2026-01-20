@@ -131,7 +131,7 @@ export function buildUpdateCandidateInput(
 		status: schema.fields.status.value,
 		successorName: schema.fields.successorName.value || null,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
-		localPartner: { connect: { id: schema.fields.localPartner.value } },
+		localPartner: { connect: { id: schema.fields.localPartner?.value } },
 		paymentInformation: {
 			upsert: {
 				create: {
@@ -178,7 +178,7 @@ export function buildCreateCandidateInput(
 		status: schema.fields.status.value,
 		successorName: schema.fields.successorName.value,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
-		localPartner: { connect: { id: schema.fields.localPartner.value } },
+		localPartner: { connect: { id: schema.fields.localPartner?.value } },
 		paymentInformation: {
 			create: {
 				provider: paymentInfoFields.provider.value,

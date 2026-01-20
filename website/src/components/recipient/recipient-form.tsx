@@ -3,6 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
+import { Actor } from '@/lib/firebase/current-account';
 import {
 	createRecipientAction,
 	getRecipientAction,
@@ -24,6 +25,7 @@ type RecipientFormProps = {
 	readOnly?: boolean;
 	recipientId?: string;
 	programId?: string;
+	actorKind?: Actor['kind'];
 };
 
 export type RecipientFormSchema = {
@@ -41,71 +43,88 @@ export type RecipientFormSchema = {
 				phone: FormField;
 			};
 		};
-		program: FormField;
-		localPartner: FormField;
+		program?: FormField;
+		localPartner?: FormField;
 		contact: FormSchema;
 	};
 };
 
-const initialFormSchema: RecipientFormSchema = {
-	label: 'Recipients',
-	fields: {
-		startDate: {
-			label: 'Start Date',
-			zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
-		},
-		status: {
-			placeholder: 'Status',
-			label: 'Status',
-			zodSchema: z.nativeEnum(RecipientStatus),
-		},
-		successorName: {
-			placeholder: 'Successor',
-			label: 'Successor',
-			zodSchema: z.string().nullable(),
-		},
-		termsAccepted: {
-			label: 'Terms Accepted',
-			zodSchema: z.boolean().optional(),
-		},
-		program: {
-			placeholder: 'Program',
-			label: 'Program',
-		},
-		localPartner: {
-			placeholder: 'Local Partner',
-			label: 'Local Partner',
-		},
-		paymentInformation: {
-			label: 'Payment Information',
-			fields: {
-				provider: {
-					placeholder: 'Provider',
-					label: 'Provider',
-					zodSchema: z.nativeEnum(PaymentProvider),
-				},
-				code: {
-					placeholder: 'Code',
-					label: 'Code',
-					zodSchema: z.string().nullable(),
-				},
-				phone: {
-					placeholder: 'Phone Number',
-					label: 'Phone Number',
-					zodSchema: z
-						.string()
-						.regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in valid E.164 format (e.g., +12345678901)'),
+function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormSchema {
+	const base: RecipientFormSchema = {
+		label: 'Recipients',
+		fields: {
+			startDate: {
+				label: 'Start Date',
+				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
+			},
+			status: {
+				placeholder: 'Status',
+				label: 'Status',
+				zodSchema: z.nativeEnum(RecipientStatus),
+			},
+			successorName: {
+				placeholder: 'Successor',
+				label: 'Successor',
+				zodSchema: z.string().nullable(),
+			},
+			termsAccepted: {
+				label: 'Terms Accepted',
+				zodSchema: z.boolean().optional(),
+			},
+			program: {
+				placeholder: 'Program',
+				label: 'Program',
+			},
+			localPartner: {
+				placeholder: 'Local Partner',
+				label: 'Local Partner',
+			},
+			paymentInformation: {
+				label: 'Payment Information',
+				fields: {
+					provider: {
+						placeholder: 'Provider',
+						label: 'Provider',
+						zodSchema: z.nativeEnum(PaymentProvider),
+					},
+					code: {
+						placeholder: 'Code',
+						label: 'Code',
+						zodSchema: z.string().nullable(),
+					},
+					phone: {
+						placeholder: 'Phone Number',
+						label: 'Phone Number',
+						zodSchema: z
+							.string()
+							.regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in valid E.164 format (e.g., +12345678901)'),
+					},
 				},
 			},
+			contact: {
+				...getContactFormSchema(),
+			},
 		},
-		contact: {
-			...getContactFormSchema(),
-		},
-	},
-};
+	};
 
-export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly, programId }: RecipientFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	if (actorKind === 'local-partner') {
+		delete base.fields.program;
+		delete base.fields.localPartner;
+	}
+
+	return base;
+}
+
+export function RecipientForm({
+	onSuccess,
+	onError,
+	onCancel,
+	recipientId,
+	readOnly,
+	programId,
+	actorKind = 'user',
+}: RecipientFormProps) {
+	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(actorKind));
 	const [recipient, setRecipient] = useState<RecipientPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -120,8 +139,14 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 				newSchema.fields.status.value = result.data.status;
 				newSchema.fields.successorName.value = result.data.successorName;
 				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
-				newSchema.fields.program.value = result.data.program?.id;
-				newSchema.fields.localPartner.value = result.data.localPartner.id;
+
+				if (newSchema.fields.program) {
+					newSchema.fields.program.value = result.data.program?.id;
+				}
+				if (newSchema.fields.localPartner) {
+					newSchema.fields.localPartner.value = result.data.localPartner.id;
+				}
+
 				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
 				newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
@@ -136,6 +161,10 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 	};
 
 	const setOptions = (localPartner: LocalPartnerOption[], programs: ProgramOption[]) => {
+		if (actorKind === 'local-partner') {
+			return;
+		}
+
 		const optionsToZodEnum = (options: LocalPartnerOption[] | ProgramOption[]) =>
 			getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
 
@@ -147,20 +176,25 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 
 		const programsObj = optionsToZodEnum(programsToFilter);
 
-		setFormSchema((prevSchema) => ({
-			...prevSchema,
-			fields: {
-				...prevSchema.fields,
-				localPartner: {
-					...prevSchema.fields.localPartner,
+		setFormSchema((prevSchema) => {
+			const updated = { ...prevSchema, fields: { ...prevSchema.fields } };
+
+			if (updated.fields.localPartner) {
+				updated.fields.localPartner = {
+					...updated.fields.localPartner,
 					zodSchema: z.nativeEnum(partnersObj),
-				},
-				program: {
-					...prevSchema.fields.program,
+				};
+			}
+
+			if (updated.fields.program) {
+				updated.fields.program = {
+					...updated.fields.program,
 					zodSchema: z.nativeEnum(programsObj),
-				},
-			},
-		}));
+				};
+			}
+
+			return updated;
+		});
 	};
 
 	const onSubmit = (schema: RecipientFormSchema) => {

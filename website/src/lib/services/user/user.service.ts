@@ -310,6 +310,7 @@ export class UserService extends BaseService {
 				: [];
 
 			const userInfo: UserSession = {
+				type: 'user',
 				id: user.id,
 				firstName: user.contact?.firstName ?? null,
 				lastName: user.contact?.lastName ?? null,

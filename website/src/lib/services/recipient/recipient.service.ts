@@ -1,3 +1,4 @@
+import { Actor } from '@/lib/firebase/current-account';
 import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
@@ -20,24 +21,36 @@ export class RecipientService extends BaseService {
 	private firebaseService = new FirebaseService();
 	private appReviewModeService = new AppReviewModeService();
 
-	async create(userId: string, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
-		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-
-		if (!accessResult.success) {
-			return this.resultFail(accessResult.error);
-		}
-
+	async create(actor: Actor, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const programId = recipient.program?.connect?.id;
-
 		if (!programId) {
 			return this.resultFail('No program specified for recipient creation');
 		}
 
-		const hasOperatorAccess = accessResult.data.some(
-			(a) => a.programId === programId && a.permission === ProgramPermission.operator,
-		);
+		if (actor.kind === 'user') {
+			const userId = actor.session.id;
 
-		if (!hasOperatorAccess) {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const hasOperatorAccess = accessResult.data.some(
+				(a) => a.programId === programId && a.permission === ProgramPermission.operator,
+			);
+
+			if (!hasOperatorAccess) {
+				return this.resultFail('Permission denied');
+			}
+		}
+
+		if (actor.kind === 'local-partner') {
+			const partnerId = actor.session.id;
+
+			recipient.localPartner = { connect: { id: partnerId } };
+		}
+
+		if (actor.kind === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -49,8 +62,8 @@ export class RecipientService extends BaseService {
 
 			return await this.db.$transaction(async (tx) => {
 				const newRecipient = await tx.recipient.create({ data: recipient });
-				const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
 
+				const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
 				if (!firebaseResult.success) {
 					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
 				}
@@ -64,30 +77,17 @@ export class RecipientService extends BaseService {
 	}
 
 	async update(
-		userId: string,
+		actor: Actor,
 		updateInput: RecipientPrismaUpdateInput,
 		nextPaymentPhoneNumber: string | null,
 	): Promise<ServiceResult<Recipient>> {
-		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-
-		if (!accessResult.success) {
-			return this.resultFail(accessResult.error);
-		}
-
-		const requestedProgramId = updateInput.program?.connect?.id;
-
-		const operatorForRequestedProgram = accessResult.data.find(
-			(a) => a.programId === requestedProgramId && a.permission === ProgramPermission.operator,
-		);
-
-		if (!operatorForRequestedProgram) {
-			return this.resultFail('Permission denied');
-		}
+		const recipientId = updateInput.id as string;
 
 		const existing = await this.db.recipient.findUnique({
-			where: { id: updateInput.id as string },
+			where: { id: recipientId },
 			select: {
 				programId: true,
+				localPartnerId: true,
 				paymentInformation: {
 					select: {
 						phone: { select: { number: true } },
@@ -100,16 +100,45 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		const hasAccessToExistingProgram = accessResult.data.some(
-			(a) => a.programId === existing.programId && a.permission === ProgramPermission.operator,
-		);
+		if (actor.kind === 'user') {
+			const userId = actor.session.id;
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
 
-		if (!hasAccessToExistingProgram) {
+			const existingProgramAllowed = accessResult.data.some(
+				(a) => a.programId === existing.programId && a.permission === ProgramPermission.operator,
+			);
+			if (!existingProgramAllowed) {
+				return this.resultFail('Permission denied');
+			}
+
+			const requestedProgramId = updateInput.program?.connect?.id;
+			if (requestedProgramId) {
+				const requestedProgramAllowed = accessResult.data.some(
+					(a) => a.programId === requestedProgramId && a.permission === ProgramPermission.operator,
+				);
+				if (!requestedProgramAllowed) {
+					return this.resultFail('Permission denied');
+				}
+			}
+		}
+
+		if (actor.kind === 'local-partner') {
+			const partnerId = actor.session.id;
+			if (existing.localPartnerId !== partnerId) {
+				return this.resultFail('Permission denied');
+			}
+			delete updateInput.localPartner;
+			delete updateInput.program;
+		}
+
+		if (actor.kind === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
 		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
-
 		const paymentPhoneHasChanged =
 			previousPaymentPhoneNumber !== null &&
 			nextPaymentPhoneNumber !== null &&
@@ -128,7 +157,7 @@ export class RecipientService extends BaseService {
 			}
 
 			const updatedRecipient = await this.db.recipient.update({
-				where: { id: updateInput.id as string },
+				where: { id: recipientId },
 				data: updateInput,
 			});
 
@@ -180,13 +209,7 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async get(userId: string, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
-		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-
-		if (!accessResult.success) {
-			return this.resultFail(accessResult.error);
-		}
-
+	async get(actor: Actor, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
 		const recipient = await this.db.recipient.findUnique({
 			where: { id: recipientId },
 			select: {
@@ -237,9 +260,26 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program?.id);
+		if (actor.kind === 'user') {
+			const userId = actor.session.id;
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+			const hasAccess = accessResult.data.some((a) => a.programId === recipient.program?.id);
+			if (!hasAccess) {
+				return this.resultFail('Permission denied');
+			}
+		}
 
-		if (!hasAccess) {
+		if (actor.kind === 'local-partner') {
+			const partnerId = actor.session.id;
+			if (recipient.localPartner?.id !== partnerId) {
+				return this.resultFail('Permission denied');
+			}
+		}
+
+		if (actor.kind === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -356,6 +396,70 @@ export class RecipientService extends BaseService {
 			tableRows: filteredRows,
 			permission,
 		});
+	}
+
+	async getTableViewByLocalPartnerId(localPartnerId: string): Promise<ServiceResult<RecipientTableView>> {
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					localPartnerId,
+					programId: { not: null },
+				},
+				select: {
+					id: true,
+					status: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							dateOfBirth: true,
+						},
+					},
+					program: {
+						select: {
+							id: true,
+							name: true,
+							programDurationInMonths: true,
+						},
+					},
+					payouts: {
+						select: { id: true },
+					},
+					createdAt: true,
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			const tableRows: RecipientTableViewRow[] = recipients.map((r) => {
+				const payoutsReceived = r.payouts.length;
+				const payoutsTotal = r.program?.programDurationInMonths ?? 0;
+				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
+
+				return {
+					id: r.id,
+					firstName: r.contact?.firstName ?? '',
+					lastName: r.contact?.lastName ?? '',
+					dateOfBirth: r.contact?.dateOfBirth ?? null,
+					localPartnerName: null,
+					status: r.status,
+					programId: r.program?.id ?? null,
+					programName: r.program?.name ?? null,
+					payoutsReceived,
+					payoutsTotal,
+					payoutsProgressPercent,
+					createdAt: r.createdAt,
+					permission: ProgramPermission.operator,
+				};
+			});
+
+			return this.resultOk({
+				tableRows,
+				permission: ProgramPermission.operator,
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch recipients for local partner: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getActivePayoutRecipients(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {

@@ -139,8 +139,9 @@ model Account {
 
   firebaseAuthUserId String @unique @map("firebase_auth_user_id")
 
-  contributor Contributor?
-  user        User?
+  contributor  Contributor?
+  user         User?
+  localPartner LocalPartner?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -330,6 +331,8 @@ model LocalPartner {
   causes            Cause[] @map("causes")
   contactId         String  @unique @map("contact_id")
   contact           Contact @relation(fields: [contactId], references: [id])
+  accountId         String  @unique @map("account_id")
+  account           Account @relation(fields: [accountId], references: [id])
 
   recipients Recipient[]
 

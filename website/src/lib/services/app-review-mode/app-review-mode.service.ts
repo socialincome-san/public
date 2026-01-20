@@ -41,6 +41,7 @@ export class AppReviewModeService extends BaseService {
 
 			localPartner: {
 				id: 'stark-industries-partner',
+				accountId: 'stark-industries-account',
 				legacyFirestoreId: null,
 				name: 'Stark Industries',
 				causes: [],

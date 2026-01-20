@@ -8,13 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/switch';
 import { mainWebsiteLanguages, WebsiteLanguage } from '@/lib/i18n/utils';
 import { updateSelfAction } from '@/lib/server-actions/contributor-actions';
-import { subscribeToNewsletter, unsubscribeFromNewsletter } from '@/lib/server-actions/newsletter-actions';
+import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ContributorReferralSource, Gender } from '@prisma/client';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
@@ -72,37 +72,34 @@ export type ProfileFormTranslations = {
 	language: string;
 };
 
-export function ProfileForm({
-	contributor,
-	translations,
-	isNewsletterSubscribed,
-}: {
-	contributor: ContributorSession;
+type Props = {
+	session: ContributorSession;
 	translations: ProfileFormTranslations;
 	isNewsletterSubscribed: boolean;
-}) {
+};
+
+export function ProfileForm({ session, translations, isNewsletterSubscribed }: Props) {
 	const [errorMessage, setErrorMessage] = useState('');
-	const [isPending, startTransition] = useTransition();
 
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			firstName: contributor.firstName ?? '',
-			lastName: contributor.lastName ?? '',
-			email: contributor.email ?? '',
-			country: contributor.country ?? '',
-			language: contributor.language ?? 'en',
-			gender: contributor.gender ?? undefined,
-			referral: contributor.referral ?? undefined,
-			street: contributor.street ?? '',
-			number: contributor.number ?? '',
-			city: contributor.city ?? '',
-			zip: contributor.zip ?? '',
+			firstName: session.firstName ?? '',
+			lastName: session.lastName ?? '',
+			email: session.email ?? '',
+			country: session.country ?? '',
+			language: session.language ?? 'en',
+			gender: session.gender ?? undefined,
+			referral: session.referral ?? undefined,
+			street: session.street ?? '',
+			number: session.number ?? '',
+			city: session.city ?? '',
+			zip: session.zip ?? '',
 			newsletter: isNewsletterSubscribed,
 		},
 	});
 
-	const loading = form.formState.isSubmitting || isPending;
+	const loading = form.formState.isSubmitting;
 
 	const getNewsletterLanguage = (lang: string | null): SupportedLanguage => {
 		return lang && mainWebsiteLanguages.includes(lang as WebsiteLanguage) ? (lang as SupportedLanguage) : 'en';
@@ -115,78 +112,70 @@ export function ProfileForm({
 		language: string,
 		newsletter: boolean | undefined,
 	) => {
-		let result;
 		if (newsletter === isNewsletterSubscribed || !email) return;
+
 		if (newsletter) {
-			result = await subscribeToNewsletter({
-				email: email,
+			return subscribeToNewsletterAction({
+				email,
 				firstname: firstName || undefined,
 				lastname: lastName || undefined,
 				language: getNewsletterLanguage(language),
-				country: contributor.country as CountryCode,
+				country: session.country as CountryCode,
 				isContributor: true,
 			});
-		} else {
-			result = await unsubscribeFromNewsletter();
 		}
-		return result;
+
+		return unsubscribeFromNewsletterAction();
 	};
 
-	const onSubmit = (values: FormSchema) => {
+	const onSubmit = async (values: FormSchema) => {
 		setErrorMessage('');
 
-		startTransition(async () => {
-			const { firstName, lastName, email, country, gender, referral, street, number, city, zip, language, newsletter } =
-				values;
+		const { firstName, lastName, email, country, gender, referral, street, number, city, zip, language, newsletter } =
+			values;
 
-			const updateInput: ContributorUpdateInput = {
-				referral: referral ?? contributor.referral ?? ContributorReferralSource.other,
-				contact: {
-					update: {
-						data: {
-							firstName,
-							lastName,
-							email,
-							gender: gender ?? null,
-							language,
-							address: {
-								upsert: {
-									update: {
-										street,
-										number,
-										city,
-										zip,
-										country,
-									},
-									create: {
-										street: street ?? '',
-										number: number ?? '',
-										city: city ?? '',
-										zip: zip ?? '',
-										country,
-									},
+		const updateInput: ContributorUpdateInput = {
+			referral: referral ?? session.referral ?? ContributorReferralSource.other,
+			contact: {
+				update: {
+					data: {
+						firstName,
+						lastName,
+						email,
+						gender: gender ?? null,
+						language,
+						address: {
+							upsert: {
+								update: { street, number, city, zip, country },
+								create: {
+									street: street ?? '',
+									number: number ?? '',
+									city: city ?? '',
+									zip: zip ?? '',
+									country,
 								},
 							},
 						},
 					},
 				},
-			};
+			},
+		};
 
-			const newsletterResult = await toggleNewsletterSubscription(email, firstName, lastName, language, newsletter);
-			if (newsletterResult && !newsletterResult.success) {
-				setErrorMessage(translations.updateError);
-				return;
-			}
+		const newsletterResult = await toggleNewsletterSubscription(email, firstName, lastName, language, newsletter);
 
-			const result = await updateSelfAction(updateInput);
+		if (newsletterResult && !newsletterResult.success) {
+			setErrorMessage(translations.updateError);
+			return;
+		}
 
-			if (!result.success) {
-				setErrorMessage(result.error || translations.updateError);
-			} else {
-				toast.success(translations.userUpdatedToast);
-				form.reset(values);
-			}
-		});
+		const result = await updateSelfAction(updateInput);
+
+		if (!result.success) {
+			setErrorMessage(result.error || translations.updateError);
+		} else {
+			toast.success(translations.userUpdatedToast);
+			form.reset(values);
+		}
 	};
 
 	return (
@@ -421,7 +410,7 @@ export function ProfileForm({
 					)}
 				/>
 
-				{errorMessage ? <div className="text-destructive md:col-span-2">{errorMessage}</div> : null}
+				{errorMessage && <div className="text-destructive md:col-span-2">{errorMessage}</div>}
 
 				<div className="flex justify-start pt-4 md:col-span-2">
 					<Button type="submit" disabled={loading}>

@@ -15,6 +15,9 @@ export async function AccountRedirect({ lang }: { lang: WebsiteLanguage }) {
 	if (accountType === 'user') {
 		redirect('/portal');
 	}
+	if (accountType === 'local-partner') {
+		redirect('/partner-space/recipients');
+	}
 
 	return (
 		<>

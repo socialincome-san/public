@@ -72,6 +72,7 @@ export type BankContributorData = {
 };
 
 export type ContributorSession = {
+	type: 'contributor';
 	id: string;
 	gender: Gender | null;
 	referral: ContributorReferralSource;
