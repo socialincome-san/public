@@ -18,11 +18,8 @@ export type Actor =
 	| { kind: 'local-partner'; session: LocalPartnerSession }
 	| never;
 
-const firebaseService = new FirebaseService();
-const contributorService = new ContributorService();
-const partnerService = new LocalPartnerService();
-
 async function detectCurrentAccountType(): Promise<CurrentAccountType> {
+	const firebaseService = new FirebaseService();
 	const cookie = await firebaseService.readSessionCookie();
 	if (!cookie) {
 		return null;
@@ -35,11 +32,13 @@ async function detectCurrentAccountType(): Promise<CurrentAccountType> {
 
 	const authUserId = decodedTokenResult.data.uid;
 
+	const contributorService = new ContributorService();
 	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
 		return 'contributor';
 	}
 
+	const partnerService = new LocalPartnerService();
 	const partnerResult = await partnerService.getCurrentLocalPartnerSession(authUserId);
 	if (partnerResult.success && partnerResult.data) {
 		return 'local-partner';
