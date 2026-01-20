@@ -1,15 +1,13 @@
 import { getOverviewArticles, getOverviewAuthors, getOverviewTags } from '@/components/legacy/storyblok/StoryblokApi';
 import { toDateObject } from '@/components/legacy/storyblok/StoryblokUtils';
+import type { Article, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
-import { type StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@/lib/types/journal';
-import { storyblokInitializationWorkaround } from '@/lib/utils/storyblok-init';
+import type { ISbStoryData } from '@storyblok/js';
 import type { MetadataRoute } from 'next';
-import { ISbStoryData } from 'storyblok-js-client/src/interfaces';
 import staticRoutes from './static-pages.json';
 
 export const revalidate = 86400; // per day
 const url = 'https://socialincome.org';
-storyblokInitializationWorkaround();
 
 const SUPPORTED_LANGUAGES: WebsiteLanguage[] = ['de', 'fr', 'it'];
 
@@ -35,8 +33,8 @@ function generateAlternativeLanguages(alternativeArticles: Record<string, string
 }
 
 function generateStoryblokArticlesSitemap(
-	articles: ISbStoryData<StoryblokArticle>[],
-	articlesAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStoryData<StoryblokArticle>[] }[],
+	articles: ISbStoryData<Article>[],
+	articlesAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStoryData<Article>[] }[],
 ): MetadataRoute.Sitemap {
 	const alternativeArticles = Object.fromEntries(
 		articlesAlternativeLanguages.map(({ lang, stories }) => [lang, stories.map((it) => it.slug)]),
@@ -51,7 +49,7 @@ function generateStoryblokArticlesSitemap(
 	}));
 }
 
-function generateStoryblokAuthorsSitemap(authors: ISbStoryData<StoryblokAuthor>[]): MetadataRoute.Sitemap {
+function generateStoryblokAuthorsSitemap(authors: ISbStoryData<Author>[]): MetadataRoute.Sitemap {
 	return authors.map((author) => ({
 		url: authorUrl(author.slug, defaultLanguage),
 		alternates: {
@@ -61,7 +59,7 @@ function generateStoryblokAuthorsSitemap(authors: ISbStoryData<StoryblokAuthor>[
 	}));
 }
 
-function generateStoryblokTagSitemap(tags: ISbStoryData<StoryblokTag>[]): MetadataRoute.Sitemap {
+function generateStoryblokTagSitemap(tags: ISbStoryData<Topic>[]): MetadataRoute.Sitemap {
 	return tags.map((tag) => ({
 		url: tagUrl(tag.slug, defaultLanguage),
 		alternates: {
