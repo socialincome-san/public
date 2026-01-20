@@ -4,6 +4,8 @@ import { getStoryblokApi } from '@/lib/storyblok';
 import type { ISbStoryData } from '@storyblok/js';
 import { StoryblokStory } from '@storyblok/react/rsc';
 
+export const revalidate = 900;
+
 export default async function HomePage({ params }: DefaultPageProps) {
 	const { lang } = await params;
 
