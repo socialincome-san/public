@@ -4,7 +4,7 @@ import NextLink from 'next/link';
 import { ReactElement } from 'react';
 
 type TextBlockProps = {
-	block: Text;
+	blok: Text;
 };
 
 const resolvers = {
@@ -15,10 +15,10 @@ const resolvers = {
 	),
 };
 
-export default function TextBlock({ block }: TextBlockProps) {
+export default function TextBlock({ blok }: TextBlockProps) {
 	return (
-		block.content && (
-			<StoryblokRichText doc={block.content as StoryblokRichTextNode<ReactElement>} resolvers={resolvers} />
+		blok.content && (
+			<StoryblokRichText doc={blok.content as StoryblokRichTextNode<ReactElement>} resolvers={resolvers} />
 		)
 	);
 }

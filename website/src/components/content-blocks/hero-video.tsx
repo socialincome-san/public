@@ -1,9 +1,9 @@
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 
 type HeroVideoBlockProps = {
-	block: HeroVideo;
+	blok: HeroVideo;
 };
 
-export default function HeroVideoBlock({ block }: HeroVideoBlockProps) {
-	return <div>{block.heading}</div>;
+export default function HeroVideoBlock({ blok }: HeroVideoBlockProps) {
+	return <div>{blok.heading}</div>;
 }
