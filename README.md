@@ -227,7 +227,8 @@ npm run dev:ssl-proxy
 We use the **Storyblok CLI** to generate TypeScript types from the CMS
 schema.
 
-If you have made changes to the Storyblok schema, you can regenerate the types:
+If you have made changes to the Storyblok schema, you can regenerate the
+types:
 
 1. Set these env vars in `website/.env.local`:
    - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
