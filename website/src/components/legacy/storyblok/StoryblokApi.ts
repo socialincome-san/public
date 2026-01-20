@@ -1,15 +1,13 @@
 import {
-	formatStoryblokDateToIso,
-	formatStoryblokUrl,
-	getDimensionsFromStoryblokImageUrl,
+  formatStoryblokDateToIso,
+  formatStoryblokUrl,
+  getDimensionsFromStoryblokImageUrl,
 } from '@/components/legacy/storyblok/StoryblokUtils';
 import type { Article, ArticleType, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
-import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getStoryblokApi } from '@/lib/storyblok';
+import { defaultLanguage } from '@/lib/i18n/utils';
+import { getStoryblokApi, getStoryParams, withLanguageFallback } from '@/lib/storyblok';
 import type { ISbStories, ISbStoriesParams, ISbStory, ISbStoryData } from '@storyblok/js';
 import { Metadata } from 'next';
-import { draftMode } from 'next/headers';
-import { notFound } from 'next/navigation';
 
 // Helper type to remove index signature from a type
 type RemoveIndexSignature<T> = {
@@ -30,27 +28,18 @@ enum StoryblokContentType {
 
 const STANDARD_ARTICLE_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
 const DEFAULT_PAGE_SIZE = 50;
-const NOT_FOUND = 404;
 const CONTENT = 'content';
 const LEAD_TEXT = 'leadText';
 const STORIES_PATH = 'cdn/stories';
 const EXCLUDED_FIELDS_FOR_COUNTING = [CONTENT, LEAD_TEXT].join(',');
 
-// During the development of Storyblok features or writing of new content, it is useful to use the draft version of the content.
-async function addVersionParameter(properties: ISbStoriesParams): Promise<ISbStoriesParams> {
-	return {
-		...properties,
-		version: (await draftMode()).isEnabled ? 'draft' : 'published',
-	};
-}
-
 // To the best of my knowledge Storyblok doesn't support any aggregation functions API, therefore we are querying all of them
 // with a limit of 1 article per page. Therefore, the response doesn't transfer much not needed data but still contains the count
 export async function getOverviewArticlesCountForDefaultLang(): Promise<number> {
 	const params: ISbStoriesParams = {
+		...(await getStoryParams(defaultLanguage)),
 		per_page: 1,
 		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
-		language: defaultLanguage,
 		content_type: StoryblokContentType.Article,
 		filter_query: {
 			displayInOverviewPage: {
@@ -58,7 +47,7 @@ export async function getOverviewArticlesCountForDefaultLang(): Promise<number> 
 			},
 		},
 	};
-	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
+	return (await getStoryblokApi().get(STORIES_PATH, params)).total;
 }
 
 function articleByTagsFilter(tagId: string) {
@@ -73,13 +62,13 @@ function articleByTagsFilter(tagId: string) {
 // with a limit of 1 article per page. Therefore, the response doesn't transfer much not needed data but still contains the count
 export async function getArticleCountByTagForDefaultLang(tagId: string): Promise<number> {
 	const params: ISbStoriesParams = {
+		...(await getStoryParams(defaultLanguage)),
 		per_page: 1,
-		language: defaultLanguage,
 		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
 		content_type: StoryblokContentType.Article,
 		filter_query: articleByTagsFilter(tagId),
 	};
-	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
+	return (await getStoryblokApi().get(STORIES_PATH, params)).total;
 }
 
 function articlesByAuthorFilter(authorId: string) {
@@ -94,18 +83,18 @@ function articlesByAuthorFilter(authorId: string) {
 // with a limit of 1 article per page. Therefore, the response doesn't transfer much not needed data but still contains the count
 export async function getArticleCountByAuthorForDefaultLang(authorId: string): Promise<number> {
 	const params: ISbStoriesParams = {
+		...(await getStoryParams(defaultLanguage)),
 		per_page: 1,
 		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
-		language: defaultLanguage,
 		content_type: StoryblokContentType.Article,
 		filter_query: articlesByAuthorFilter(authorId),
 	};
-	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
+	return (await getStoryblokApi().get(STORIES_PATH, params)).total;
 }
 
 export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<Author>[]> {
 	const params: ISbStoriesParams = {
-		language: lang as WebsiteLanguage,
+		...(await getStoryParams(lang)),
 		content_type: StoryblokContentType.Author,
 		filter_query: {
 			displayInOverviewPage: {
@@ -113,12 +102,12 @@ export async function getOverviewAuthors(lang: string): Promise<ISbStoryData<Aut
 			},
 		},
 	};
-	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().getAll(STORIES_PATH, params);
 }
 
 export async function getOverviewTags(lang: string): Promise<ISbStoryData<Topic>[]> {
 	const params: ISbStoriesParams = {
-		language: lang as WebsiteLanguage,
+		...(await getStoryParams(lang)),
 		content_type: StoryblokContentType.Tag,
 		filter_query: {
 			displayInOverviewPage: {
@@ -126,33 +115,33 @@ export async function getOverviewTags(lang: string): Promise<ISbStoryData<Topic>
 			},
 		},
 	};
-	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().getAll(STORIES_PATH, params);
 }
 
 export async function getArticlesByTag(tagId: string, lang: string): Promise<ISbStoryData<ResolvedArticle>[]> {
 	const params: ISbStoriesParams = {
+		...(await getStoryParams(lang)),
 		per_page: DEFAULT_PAGE_SIZE,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-		language: lang as WebsiteLanguage,
 		excluding_fields: CONTENT,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
 		filter_query: articleByTagsFilter(tagId),
 	};
-	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().getAll(STORIES_PATH, params);
 }
 
 export async function getArticlesByAuthor(authorId: string, lang: string): Promise<ISbStoryData<ResolvedArticle>[]> {
 	const params: ISbStoriesParams = {
+		...(await getStoryParams(lang)),
 		per_page: DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-		language: lang as WebsiteLanguage,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
 		filter_query: articlesByAuthorFilter(authorId),
 	};
-	return getStoryblokApi().getAll(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().getAll(STORIES_PATH, params);
 }
 
 export async function getOverviewArticles(
@@ -161,10 +150,10 @@ export async function getOverviewArticles(
 	limit: number | undefined = undefined,
 ): Promise<ISbStoryData<ResolvedArticle>[]> {
 	const params: ISbStoriesParams = {
+		...(await getStoryParams(lang)),
 		per_page: limit || DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-		language: lang as WebsiteLanguage,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
 		filter_query: {
@@ -174,21 +163,17 @@ export async function getOverviewArticles(
 		},
 		...(idsToIgnore ? { excluding_ids: idsToIgnore } : {}),
 	};
-	const parameters = await addVersionParameter(params);
 	if (limit) {
-		return (await getStoryblokApi().get(STORIES_PATH, parameters)).data.stories;
+		return (await getStoryblokApi().get(STORIES_PATH, params)).data.stories;
 	} else {
-		return getStoryblokApi().getAll(STORIES_PATH, parameters);
+		return getStoryblokApi().getAll(STORIES_PATH, params);
 	}
 }
 
 export async function getTag(slug: string, lang: string): Promise<ISbStory<Topic>> {
-	return getWithFallback(
+	return withLanguageFallback(
 		async (lang: string, slug: string): Promise<ISbStory<Topic>> => {
-			const params: ISbStoriesParams = {
-				language: lang as WebsiteLanguage,
-			};
-			return getStoryblokApi().get(`cdn/stories/tag/${slug}`, await addVersionParameter(params));
+			return getStoryblokApi().get(`cdn/stories/tag/${slug}`, await getStoryParams(lang));
 		},
 		lang,
 		slug,
@@ -196,34 +181,13 @@ export async function getTag(slug: string, lang: string): Promise<ISbStory<Topic
 }
 
 export async function getAuthor(slug: string, lang: string): Promise<ISbStory<Author>> {
-	return getWithFallback(
+	return withLanguageFallback(
 		async (lang: string, slug: string): Promise<ISbStory<Author>> => {
-			const params: ISbStoriesParams = {
-				language: lang as WebsiteLanguage,
-			};
-			return getStoryblokApi().get(`cdn/stories/author/${slug}`, await addVersionParameter(params));
+			return getStoryblokApi().get(`cdn/stories/author/${slug}`, await getStoryParams(lang));
 		},
 		lang,
 		slug,
 	);
-}
-
-async function getWithFallback<T>(
-	loader: (lang: string, slug: string) => Promise<T>,
-	lang: string,
-	slug: string,
-): Promise<T> {
-	try {
-		return await loader(lang, slug);
-	} catch (error: any) {
-		if (error?.status === NOT_FOUND) {
-			if (lang === defaultLanguage) {
-				return notFound();
-			}
-			return await getWithFallback(loader, defaultLanguage, slug);
-		}
-		throw error;
-	}
 }
 
 function createRelativeArticlesFilter(tags: string[], authorId: string) {
@@ -256,18 +220,18 @@ async function getRelativeArticlesByAuthorAndTags(
 	articleId: number,
 	numberOfArticles: number,
 ): Promise<ISbStories<ResolvedArticle>> {
-	let filter = createRelativeArticlesFilter(tags, authorId);
+	const filter = createRelativeArticlesFilter(tags, authorId);
 	const params: ISbStoriesParams = {
+		...(await getStoryParams(lang)),
 		per_page: numberOfArticles,
 		excluding_fields: CONTENT,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-		language: lang as WebsiteLanguage,
 		sort_by: 'first_published_at:desc',
 		excluding_ids: articleId.toString(),
 		content_type: StoryblokContentType.Article,
 		filter_query: filter,
 	};
-	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
+	return getStoryblokApi().get(STORIES_PATH, params);
 }
 
 /*
@@ -300,13 +264,13 @@ export async function getRelativeArticles(
 }
 
 export async function getArticle(lang: string, slug: string): Promise<ISbStory<ResolvedArticle>> {
-	return getWithFallback(
+	return withLanguageFallback(
 		async (lang: string, slug: string): Promise<ISbStory<ResolvedArticle>> => {
 			const params: ISbStoriesParams = {
+				...(await getStoryParams(lang)),
 				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-				language: lang as WebsiteLanguage,
 			};
-			return getStoryblokApi().get(`cdn/stories/journal/${slug}`, await addVersionParameter(params));
+			return getStoryblokApi().get(`cdn/stories/journal/${slug}`, params);
 		},
 		lang,
 		slug,

@@ -1,24 +1,19 @@
 import { Text } from '@/generated/storyblok/types/109655/storyblok-components';
-import { MarkTypes, StoryblokRichText, type StoryblokRichTextNode } from '@storyblok/react';
-import NextLink from 'next/link';
-import { ReactElement } from 'react';
+import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
+import { RichTextRenderer } from '../storyblok/rich-text-renderer';
 
 type TextBlockProps = {
 	blok: Text;
 };
 
-const resolvers = {
-	[MarkTypes.LINK]: (node: StoryblokRichTextNode<ReactElement>) => (
-		<NextLink href={node.attrs?.href} target={node.attrs?.target}>
-			{node.text}
-		</NextLink>
-	),
-};
-
 export default function TextBlock({ blok }: TextBlockProps) {
+	if (!blok.content) {
+		return null;
+	}
+
 	return (
-		blok.content && (
-			<StoryblokRichText doc={blok.content as StoryblokRichTextNode<ReactElement>} resolvers={resolvers} />
-		)
+		<div className="text-black text-lg">
+			<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />
+		</div>
 	);
 }
