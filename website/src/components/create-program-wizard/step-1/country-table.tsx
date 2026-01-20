@@ -12,7 +12,7 @@ function matchesSearch(row: ProgramCountryFeasibilityRow, search: string) {
 	}
 
 	const q = search.toLowerCase();
-	return row.country.name.toLowerCase().includes(q);
+	return row.country.isoCode.toLowerCase().includes(q);
 }
 
 function meetsAllConditions(row: ProgramCountryFeasibilityRow) {

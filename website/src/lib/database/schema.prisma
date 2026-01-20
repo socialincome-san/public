@@ -559,7 +559,7 @@ model ExchangeRate {
 
 model Country {
   id       String  @id @default(cuid()) @map("id")
-  name     String  @unique @map("name")
+  isoCode  String  @unique @map("iso_code")
   isActive Boolean @default(false) @map("is_active")
 
   //

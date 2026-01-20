@@ -36,8 +36,8 @@ export function ActiveCountryCards({ rows, selectedCountryId, onSelectCountry }:
 							checked={selectedCountryId === row.id}
 							label={
 								<div className="flex items-center gap-2">
-									<CountryFlag country={row.country.name} size="lg" />
-									<span className="font-medium">{row.country.name}</span>
+									<CountryFlag country={row.country.isoCode} size="lg" />
+									<span className="font-medium">{row.country.isoCode}</span>
 								</div>
 							}
 							description={formatCountryStats(row.stats.programCount, row.stats.recipientCount)}

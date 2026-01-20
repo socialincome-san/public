@@ -27,7 +27,7 @@ export class CountryService extends BaseService {
 		try {
 			const created = await this.db.country.create({
 				data: {
-					name: input.name,
+					isoCode: input.isoCode,
 					isActive: input.isActive,
 					microfinanceIndex: input.microfinanceIndex ?? undefined,
 					populationCoverage: input.populationCoverage ?? undefined,
@@ -47,7 +47,7 @@ export class CountryService extends BaseService {
 
 			return this.resultOk({
 				id: created.id,
-				name: created.name,
+				isoCode: created.isoCode,
 				isActive: created.isActive,
 				microfinanceIndex: created.microfinanceIndex ? Number(created.microfinanceIndex) : null,
 				populationCoverage: created.populationCoverage ? Number(created.populationCoverage) : null,
@@ -87,7 +87,7 @@ export class CountryService extends BaseService {
 			const updated = await this.db.country.update({
 				where: { id: input.id },
 				data: {
-					name: input.name,
+					isoCode: input.isoCode,
 					isActive: input.isActive,
 					microfinanceIndex: input.microfinanceIndex,
 					populationCoverage: input.populationCoverage,
@@ -117,7 +117,7 @@ export class CountryService extends BaseService {
 
 			return this.resultOk({
 				id: updated.id,
-				name: updated.name,
+				isoCode: updated.isoCode,
 				isActive: updated.isActive,
 				microfinanceIndex: updated.microfinanceIndex ? Number(updated.microfinanceIndex) : null,
 				populationCoverage: updated.populationCoverage ? Number(updated.populationCoverage) : null,
@@ -165,7 +165,7 @@ export class CountryService extends BaseService {
 
 			return this.resultOk({
 				id: country.id,
-				name: country.name,
+				isoCode: country.isoCode,
 				isActive: country.isActive,
 				microfinanceIndex: country.microfinanceIndex ? Number(country.microfinanceIndex) : null,
 				populationCoverage: country.populationCoverage ? Number(country.populationCoverage) : null,
@@ -205,7 +205,7 @@ export class CountryService extends BaseService {
 			const countries = await this.db.country.findMany({
 				select: {
 					id: true,
-					name: true,
+					isoCode: true,
 					isActive: true,
 					microfinanceIndex: true,
 					populationCoverage: true,
@@ -215,12 +215,12 @@ export class CountryService extends BaseService {
 					sanctions: true,
 					createdAt: true,
 				},
-				orderBy: [{ name: 'asc' }],
+				orderBy: [{ isoCode: 'asc' }],
 			});
 
 			const tableRows: CountryTableViewRow[] = countries.map((c) => ({
 				id: c.id,
-				name: c.name,
+				isoCode: c.isoCode,
 				isActive: c.isActive,
 				microfinanceIndex: c.microfinanceIndex ? Number(c.microfinanceIndex) : null,
 				populationCoverage: c.populationCoverage ? Number(c.populationCoverage) : null,
@@ -255,7 +255,7 @@ export class CountryService extends BaseService {
 						select: { programs: true },
 					},
 				},
-				orderBy: { name: 'asc' },
+				orderBy: { isoCode: 'asc' },
 			});
 
 			const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => {
@@ -273,7 +273,7 @@ export class CountryService extends BaseService {
 					id: country.id,
 
 					country: {
-						name: country.name,
+						isoCode: country.isoCode,
 						isActive: country.isActive,
 					},
 
@@ -285,7 +285,7 @@ export class CountryService extends BaseService {
 					cash: {
 						condition: this.getCashCondition(microfinanceIndex),
 						details: {
-							text: this.getCashDetailsText(country.name, microfinanceIndex),
+							text: this.getCashDetailsText(country.isoCode, microfinanceIndex),
 							source: country.microfinanceSourceLink
 								? {
 										text: country.microfinanceSourceLink.text,
@@ -298,7 +298,7 @@ export class CountryService extends BaseService {
 					mobileMoney: {
 						condition: this.getMobileMoneyCondition(country.paymentProviders),
 						details: {
-							text: this.getMobileMoneyDetailsText(country.name, country.paymentProviders),
+							text: this.getMobileMoneyDetailsText(country.isoCode, country.paymentProviders),
 							source: {
 								text: 'Source: SI Research',
 							},
@@ -308,7 +308,7 @@ export class CountryService extends BaseService {
 					mobileNetwork: {
 						condition: this.getMobileNetworkCondition(populationCoverage),
 						details: {
-							text: this.getMobileNetworkDetailsText(country.name, populationCoverage),
+							text: this.getMobileNetworkDetailsText(country.isoCode, populationCoverage),
 							source: country.networkSourceLink
 								? {
 										text: country.networkSourceLink.text,
@@ -321,7 +321,7 @@ export class CountryService extends BaseService {
 					sanctions: {
 						condition: this.getSanctionsCondition(country.sanctions),
 						details: {
-							text: this.getSanctionsDetailsText(country.name, country.sanctions),
+							text: this.getSanctionsDetailsText(country.isoCode, country.sanctions),
 							source:
 								country.sanctions && country.sanctions.length > 0
 									? { text: 'Source: EU Sanctions Map & US Sanctions List' }
@@ -356,42 +356,42 @@ export class CountryService extends BaseService {
 		return sanctions && sanctions.length > 0 ? CountryCondition.RESTRICTIONS_APPLY : CountryCondition.MET;
 	}
 
-	private getCashDetailsText(countryName: string, microfinanceIndex: number | null): string {
+	private getCashDetailsText(countryIsoCode: string, microfinanceIndex: number | null): string {
 		if (microfinanceIndex === null) {
-			return `Market functionality in ${countryName} may be impaired.`;
+			return `Market functionality in ${countryIsoCode} may be impaired.`;
 		}
 
 		return microfinanceIndex < 3
-			? `Market functionality in ${countryName} is considered sufficient.`
-			: `Market functionality in ${countryName} may be impaired.`;
+			? `Market functionality in ${countryIsoCode} is considered sufficient.`
+			: `Market functionality in ${countryIsoCode} may be impaired.`;
 	}
 
-	private getMobileMoneyDetailsText(countryName: string, paymentProviders: PaymentProvider[] | null): string {
+	private getMobileMoneyDetailsText(countryIsoCode: string, paymentProviders: PaymentProvider[] | null): string {
 		if (!paymentProviders || paymentProviders.length === 0) {
-			return `Mobile money infrastructure in ${countryName} is not sufficient.`;
+			return `Mobile money infrastructure in ${countryIsoCode} is not sufficient.`;
 		}
 
 		const providers = paymentProviders.map(this.formatEnum).join(', ');
 
-		return `Mobile money infrastructure in ${countryName} is considered sufficient. Following ${
+		return `Mobile money infrastructure in ${countryIsoCode} is considered sufficient. Following ${
 			paymentProviders.length
 		} provider${paymentProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
 	}
 
-	private getMobileNetworkDetailsText(countryName: string, populationCoverage: number | null): string {
+	private getMobileNetworkDetailsText(countryIsoCode: string, populationCoverage: number | null): string {
 		if (populationCoverage === null) {
-			return `No reliable mobile network coverage data available for ${countryName}.`;
+			return `No reliable mobile network coverage data available for ${countryIsoCode}.`;
 		}
 
 		return populationCoverage >= 50
-			? `Mobile network coverage of ${countryName} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
-			: `Mobile network coverage of ${countryName} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
+			? `Mobile network coverage of ${countryIsoCode} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
+			: `Mobile network coverage of ${countryIsoCode} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
 	}
 
-	private getSanctionsDetailsText(countryName: string, sanctions: SanctionRegime[] | null): string {
+	private getSanctionsDetailsText(countryIsoCode: string, sanctions: SanctionRegime[] | null): string {
 		return sanctions && sanctions.length > 0
-			? `${countryName} is subject to international sanctions or restrictions.`
-			: `${countryName} is not on the UN, US or EU sanctioned list.`;
+			? `${countryIsoCode} is subject to international sanctions or restrictions.`
+			: `${countryIsoCode} is not on the UN, US or EU sanctioned list.`;
 	}
 
 	private toNumber(value: Decimal | null): number | null {

@@ -18,7 +18,7 @@ type CountryFormProps = {
 export type CountryFormSchema = {
 	label: string;
 	fields: {
-		name: FormField;
+		isoCode: FormField;
 		isActive: FormField;
 		microfinanceIndex: FormField;
 		microfinanceSourceText: FormField;
@@ -36,9 +36,9 @@ export type CountryFormSchema = {
 const initialFormSchema: CountryFormSchema = {
 	label: 'Country',
 	fields: {
-		name: {
-			placeholder: 'Sierra Leone',
-			label: 'Country name',
+		isoCode: {
+			placeholder: 'SLE',
+			label: 'Country ISO Code',
 			zodSchema: z.string().min(1),
 		},
 		isActive: {
@@ -140,7 +140,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 					setCountry(result.data);
 					setFormSchema((prev) => {
 						const next = { ...prev };
-						next.fields.name.value = result.data.name;
+						next.fields.isoCode.value = result.data.isoCode;
 						next.fields.isActive.value = result.data.isActive;
 						next.fields.microfinanceIndex.value = result.data.microfinanceIndex ?? undefined;
 						next.fields.microfinanceSourceText.value = result.data.microfinanceSourceLink?.text ?? undefined;

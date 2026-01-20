@@ -14,12 +14,12 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 		{
 			id: 'flag',
 			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
-			accessorFn: (row) => row.name,
-			cell: ({ row }) => <CountryFlag country={row.original.name} />,
+			accessorFn: (row) => row.isoCode,
+			cell: ({ row }) => <CountryFlag country={row.original.isoCode} />,
 		},
 		{
-			accessorKey: 'name',
-			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
+			accessorKey: 'isoCode',
+			header: (ctx) => <SortableHeader ctx={ctx}>ISO Code</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -56,7 +56,6 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 
-		// --- Actions ---
 		{
 			id: 'actions',
 			header: '',

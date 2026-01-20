@@ -2,7 +2,7 @@ import { NetworkTechnology, PaymentProvider } from '@prisma/client';
 
 export type CountryTableViewRow = {
 	id: string;
-	name: string;
+	isoCode: string;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -23,7 +23,7 @@ export type CountryTableView = {
 
 export type CountryPayload = {
 	id: string;
-	name: string;
+	isoCode: string;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -36,7 +36,7 @@ export type CountryPayload = {
 };
 
 export type CountryCreateInput = {
-	name: string;
+	isoCode: string;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -50,7 +50,7 @@ export type CountryCreateInput = {
 
 export type CountryUpdateInput = {
 	id: string;
-	name?: string;
+	isoCode?: string;
 	isActive?: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -85,7 +85,7 @@ export type ProgramCountryFeasibilityRow = {
 	id: string;
 
 	country: {
-		name: string;
+		isoCode: string;
 		isActive: boolean;
 	};
 
