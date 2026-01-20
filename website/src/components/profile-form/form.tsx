@@ -62,7 +62,6 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-y-6 md:grid-cols-2 md:gap-x-8">
-				{/* NEW SECTION */}
 				{isLocalPartner && (
 					<>
 						<h3 className="text-lg font-semibold md:col-span-2">Organization Details</h3>
@@ -101,7 +100,6 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 					</>
 				)}
 
-				{/* EXISTING SECTION */}
 				<h3 className="text-lg font-semibold md:col-span-2">{translations.personalInfoTitle}</h3>
 
 				<FormField

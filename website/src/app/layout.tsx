@@ -3,6 +3,7 @@ import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
 import { getMetadata } from '@/lib/utils/metadata';
 import type { Viewport } from 'next';
 import { PropsWithChildren } from 'react';
+import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 export const generateMetadata = () => getMetadata('en', 'website-common');
@@ -25,7 +26,10 @@ export default function RootLayout({ children }: PropsWithChildren) {
 				<meta name="app-build-timestamp" content={buildTime} />
 			</head>
 			<FirebaseAppProvider>
-				<body>{children}</body>
+				<body>
+					<Toaster />
+					{children}
+				</body>
 				<AnalyticsInitializer />
 			</FirebaseAppProvider>
 		</html>

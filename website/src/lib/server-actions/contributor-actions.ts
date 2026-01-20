@@ -6,24 +6,25 @@ import { ContributorFormCreateInput, ContributorUpdateInput } from '@/lib/servic
 import { revalidatePath } from 'next/cache';
 import { getAuthenticatedContributorOrThrow, getOptionalContributor } from '../firebase/current-contributor';
 
-const contributorService = new ContributorService();
-
 export async function createContributorAction(data: ContributorFormCreateInput) {
 	const user = await getAuthenticatedUserOrThrow();
-	const result = await contributorService.create(user.id, data);
+	const contributorService = new ContributorService();
+	const res = await contributorService.create(user.id, data);
 	revalidatePath('/portal/management/contributors');
-	return result;
+	return res;
 }
 
 export async function updateContributorAction(contributor: ContributorUpdateInput) {
 	const user = await getAuthenticatedUserOrThrow();
-	const result = await contributorService.update(user.id, contributor);
+	const contributorService = new ContributorService();
+	const res = await contributorService.update(user.id, contributor);
 	revalidatePath('/portal/management/contributors');
-	return result;
+	return res;
 }
 
 export async function getContributorAction(contributorId: string) {
 	const user = await getAuthenticatedUserOrThrow();
+	const contributorService = new ContributorService();
 	return contributorService.get(user.id, contributorId);
 }
 
@@ -33,7 +34,8 @@ export async function getOptionalContributorAction() {
 
 export async function updateSelfAction(data: ContributorUpdateInput) {
 	const contributor = await getAuthenticatedContributorOrThrow();
-	const result = await contributorService.updateSelf(contributor.id, data);
+	const contributorService = new ContributorService();
+	const res = await contributorService.updateSelf(contributor.id, data);
 	revalidatePath('/dashboard/profile');
-	return result;
+	return res;
 }
