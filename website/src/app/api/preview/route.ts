@@ -74,6 +74,8 @@ export async function GET(request: Request) {
 		return new Response('Invalid token', { status: 401 });
 	}
 	await enableDraftModeAndAdaptCookie();
-	const path = ALLOWED_SLUGS_PREFIXES.some((prefix) => slug!.toLowerCase().startsWith(prefix)) ? slug : `${JOURNAL}/${slug}`;
+	const path = ALLOWED_SLUGS_PREFIXES.some((prefix) => slug!.toLowerCase().startsWith(prefix))
+		? slug
+		: `${JOURNAL}/${slug}`;
 	redirect(`/${lang}/${DEFAULT_REGION}/${path}`, RedirectType.push);
 }
