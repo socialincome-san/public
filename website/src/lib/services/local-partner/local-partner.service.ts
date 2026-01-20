@@ -116,6 +116,11 @@ export class LocalPartnerService extends BaseService {
 			}
 		}
 
+		const partnerId = input.id?.toString();
+		if (!partnerId) {
+			return this.resultFail('Local partner ID is required');
+		}
+
 		try {
 			const updated = await this.db.localPartner.update({
 				where: { id: partnerId },

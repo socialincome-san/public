@@ -142,6 +142,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "FEATURE_ENABLE_NEW_WEBSITE"
+          value = var.env == "prod" ? "false" : "true"
+        }
+
+        env {
           name  = "APP_REVIEW_MODE_ENABLED"
           value = var.app_review_mode_enabled
         }
