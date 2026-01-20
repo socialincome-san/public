@@ -48,11 +48,10 @@ const Program = z.object({
 	id: z.string(),
 	name: z.string(),
 	country: z.string(),
-	payoutAmount: z.number(),
+	payoutPerInterval: z.number(),
 	payoutCurrency: z.string(),
-	payoutInterval: z.number(),
-	totalPayments: z.number(),
-	ownerOrganizationId: z.string(),
+	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
+	programDurationInMonths: z.number(),
 	createdAt: z.string(),
 	updatedAt: z.string().nullable(),
 });
@@ -65,10 +64,10 @@ const Recipient = z.object({
 	successorName: z.string().nullable(),
 	termsAccepted: z.boolean(),
 	paymentInformationId: z.string().nullable(),
-	programId: z.string(),
+	programId: z.string().nullable(),
 	localPartnerId: z.string(),
 	contact: Contact,
-	program: Program,
+	program: Program.nullable(),
 	localPartner: LocalPartner,
 	paymentInformation: PaymentInformation.nullable(),
 	createdAt: z.string(),
@@ -89,6 +88,8 @@ const Payout = z.object({
 	updatedAt: z.string().nullable(),
 });
 
+const PayoutListResponse = z.array(Payout);
+
 const Survey = z.object({
 	id: z.string(),
 	name: z.string(),
@@ -107,6 +108,8 @@ const Survey = z.object({
 	updatedAt: z.string().nullable(),
 });
 
+const SurveyListResponse = z.array(Survey);
+
 export const RecipientSelfUpdate = z.object({
 	firstName: z.string().min(1).optional(),
 	lastName: z.string().min(1).optional(),
@@ -115,7 +118,7 @@ export const RecipientSelfUpdate = z.object({
 	dateOfBirth: z.string().optional(),
 	language: z.string().optional(),
 	email: z.string().email().optional(),
-	contactPhone: z.string().optional(),
+	contactPhone: z.string().nullable().optional(),
 	paymentPhone: z.string().optional(),
 	paymentProvider: z.enum(['orange_money']).optional(),
 	successorName: z.string().optional(),
@@ -125,9 +128,21 @@ const PayoutParams = z.object({
 	payoutId: z.string().describe('Payout ID'),
 });
 
+export const ContestPayoutBody = z.object({
+	comments: z.string().optional().nullable(),
+});
+
+export const ConfirmPayoutBody = z.object({
+	comments: z.string().optional().nullable(),
+});
+
 export const VerifyOtpRequest = z.object({
 	phoneNumber: z.string(),
 	otp: z.string(),
+});
+
+export const RequestOtpRequest = z.object({
+	phoneNumber: z.string(),
 });
 
 const VerifyOtpResponse = z.object({

@@ -69,8 +69,6 @@ export type PayoutForecastTableView = {
 	tableRows: PayoutForecastTableViewRow[];
 };
 
-export type YearMonth = { year: number; month: number }; // month = 1..12
-
 export type PreviewPayout = {
 	recipientId: string;
 	firstName: string;
@@ -88,7 +86,7 @@ export type RecipientCompletionPreview = {
 	firstName: string;
 	lastName: string;
 	paidCount: number;
-	totalPayments: number;
+	programDurationInMonths: number;
 	remaining: number;
 	isCompleted: boolean;
 };
@@ -99,8 +97,8 @@ export type PayoutPayload = {
 		id: string;
 		firstName: string;
 		lastName: string;
-		programId: string;
-		programName: string;
+		programId: string | null;
+		programName: string | null;
 	};
 	amount: number;
 	currency: string;

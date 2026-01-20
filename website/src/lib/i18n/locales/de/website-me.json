@@ -41,6 +41,7 @@
 			"lastname": "Nachname",
 			"email": "E-Mail",
 			"country": "Land",
+			"language": "Kommunikationssprache",
 			"gender": "Geschlecht",
 			"street": "Strasse",
 			"street-number": "Nummer",
@@ -91,8 +92,8 @@
 	"subscriptions": {
 		"amount": "Betrag",
 		"date": "Datum",
-		"from": "Von",
-		"to": "Bis",
+		"created": "Erstellt",
+		"payment-method": "Zahlungsart",
 		"source": "Quelle",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
@@ -119,7 +120,20 @@
 		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Erstelle welche mit \"Spendebescheinigung erstellen\". <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>.",
 		"no-contributions": "Keine Beiträge gefunden, daher kein Zertifikat. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
 		"already-exists": "Zertifikat für ausgewähltes Jahr und Sprache existiert bereits. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
-		"technical-error": "Es ist ein technischer Fehler aufgetreten, bitte probiere es noch einmal. Wenn dies weiterhin passiert, melde dich bei contributors@socialincome.org."
+		"technical-error": "Es ist ein technischer Fehler aufgetreten, bitte probiere es noch einmal. Wenn dies weiterhin passiert, melde dich bei contributors@socialincome.org.",
+		"generate-dialog": {
+			"dialog_title": "Spendenbescheinigung erstellen",
+			"label_year": "Jahr",
+			"description_year": "Geben Sie an, für welches Jahr die Bescheinigung erstellt werden soll:",
+			"placeholder_year": "Jahr auswählen",
+			"label_language": "Sprache",
+			"description_language": "Geben Sie an, in welcher Sprache die Bescheinigung erstellt werden soll:",
+			"placeholder_language": "Sprache auswählen",
+			"button_generate": "Bescheinigungen erstellen",
+			"state_generating": "Wird erstellt...",
+			"status_success": "Erfolgreich erstellt",
+			"button_close": "Schließen"
+		}
 	},
 	"personal-info": {
 		"alert-title": "Spendebescheinigung",

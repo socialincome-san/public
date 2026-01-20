@@ -79,7 +79,7 @@ export class UserService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create user');
+			return this.resultFail(`Could not create user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -152,7 +152,7 @@ export class UserService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update user');
+			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -185,7 +185,7 @@ export class UserService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch user');
+			return this.resultFail(`Could not fetch user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -204,7 +204,7 @@ export class UserService extends BaseService {
 			return this.resultOk(organizations);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not load user options');
+			return this.resultFail(`Could not load user options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -250,7 +250,7 @@ export class UserService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch users');
+			return this.resultFail(`Could not fetch users: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -299,13 +299,18 @@ export class UserService extends BaseService {
 				: null;
 
 			const programs = user.activeOrganization
-				? user.activeOrganization.programAccesses.map((access) => ({
-						id: access.program.id,
-						name: access.program.name,
-					}))
+				? Array.from(
+						new Map(
+							user.activeOrganization.programAccesses.map((a) => [
+								a.program.id,
+								{ id: a.program.id, name: a.program.name },
+							]),
+						).values(),
+					)
 				: [];
 
 			const userInfo: UserSession = {
+				type: 'user',
 				id: user.id,
 				firstName: user.contact?.firstName ?? null,
 				lastName: user.contact?.lastName ?? null,
@@ -318,7 +323,7 @@ export class UserService extends BaseService {
 			return this.resultOk(userInfo);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Error fetching user information');
+			return this.resultFail(`Error fetching user information: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -340,7 +345,7 @@ export class UserService extends BaseService {
 			return this.resultOk(true);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not check admin status');
+			return this.resultFail(`Could not check admin status: ${JSON.stringify(error)}`);
 		}
 	}
 }

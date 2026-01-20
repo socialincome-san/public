@@ -21,6 +21,7 @@ import { ServiceResult } from '../core/base.types';
 import {
 	CheckoutMetadata,
 	StripeCustomerData,
+	StripePaymentMethod,
 	StripeSubscriptionRow,
 	StripeSubscriptionTableView,
 	UpdateContributorAfterCheckoutInput,
@@ -65,7 +66,7 @@ export class StripeService extends BaseService {
 			}
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to handle webhook event');
+			return this.resultFail(`Failed to handle webhook event: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -182,7 +183,7 @@ export class StripeService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to process charge');
+			return this.resultFail(`Failed to process charge: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -263,30 +264,49 @@ export class StripeService extends BaseService {
 				status: 'all',
 			});
 
-			const rows: StripeSubscriptionRow[] = subscriptions.data.map((sub) => {
-				const item = sub.items.data[0];
-				const price = item?.price;
+			const rows: StripeSubscriptionRow[] = await Promise.all(
+				subscriptions.data.map(async (sub) => {
+					const item = sub.items.data[0];
+					const price = item?.price;
 
-				const amount = price?.unit_amount ? price.unit_amount / 100 : 0;
-				const currency = price?.currency?.toUpperCase() ?? '';
-				const interval = price?.recurring?.interval_count?.toString() ?? '';
+					const amount = price?.unit_amount ? price.unit_amount / 100 : 0;
+					const currency = price?.currency?.toUpperCase() ?? '';
+					const interval = price?.recurring?.interval_count?.toString() ?? '';
 
-				return {
-					id: sub.id,
-					from: new Date(sub.start_date * 1000),
-					until: sub.ended_at ? new Date(sub.ended_at * 1000) : new Date(sub.current_period_end * 1000),
-					status: sub.status,
-					amount,
-					interval,
-					currency,
-				};
-			});
+					const method = await this.stripe.paymentMethods.retrieve(sub.default_payment_method?.toString() ?? '');
+
+					return {
+						id: sub.id,
+						created: new Date(sub.start_date * 1000),
+						status: sub.status,
+						amount,
+						interval,
+						currency,
+						paymentMethod: this.getPaymentMethod(method),
+					};
+				}),
+			);
 
 			return this.resultOk({ rows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch subscriptions');
+			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private getPaymentMethod(paymentMethod: Stripe.PaymentMethod): StripePaymentMethod {
+		const titleCase = (s: string) =>
+			s.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ' ' + d.toUpperCase()));
+		if (paymentMethod.type === 'card' && paymentMethod.card) {
+			return {
+				type: 'card',
+				label: titleCase(paymentMethod.card.brand),
+			};
+		}
+		return {
+			type: 'other',
+			label: titleCase(paymentMethod.type),
+		};
 	}
 
 	async createManageSubscriptionsSession(
@@ -311,7 +331,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(session.url);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create billing portal session');
+			return this.resultFail(`Could not create billing portal session: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -363,7 +383,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(session.url ?? '');
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create Stripe checkout session');
+			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -378,7 +398,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(checkoutSession);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not load Stripe checkout session');
+			return this.resultFail(`Could not load Stripe checkout session: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -400,7 +420,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(contributorResult.data ?? null);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not load contributor from checkout session');
+			return this.resultFail(`Could not load contributor from checkout session: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -485,7 +505,7 @@ export class StripeService extends BaseService {
 			return this.contributorService.updateSelf(contributor.id, updateInput);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor after checkout');
+			return this.resultFail(`Could not update contributor after checkout: ${JSON.stringify(error)}`);
 		}
 	}
 }

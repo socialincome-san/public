@@ -2,6 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
+import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import {
 	createSurveyAction,
 	getSurveyAction,
@@ -59,7 +60,7 @@ const initialFormSchema: SurveyFormSchema = {
 		language: {
 			placeholder: 'Language',
 			label: 'Language',
-			zodSchema: z.string().min(1),
+			zodSchema: z.nativeEnum(getZodEnum(allWebsiteLanguages.map((l) => ({ id: l, label: l })))),
 		},
 		dueAt: {
 			placeholder: 'Due date',

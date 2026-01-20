@@ -32,7 +32,7 @@ export class OrganizationAccessService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch active organization');
+			return this.resultFail(`Could not get active organization access: ${JSON.stringify(error)}`);
 		}
 	}
 }

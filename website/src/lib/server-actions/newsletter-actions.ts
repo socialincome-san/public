@@ -1,14 +1,23 @@
 'use server';
 
+import { getAuthenticatedContributorOrThrow } from '../firebase/current-contributor';
+import { ServiceResult } from '../services/core/base.types';
 import { SendgridSubscriptionService } from '../services/sendgrid/sendgrid-subscription.service';
-import { CreateNewsletterSubscription } from '../services/sendgrid/types';
+import { CreateNewsletterSubscription, SendgridContactType } from '../services/sendgrid/types';
 
-export async function subscribeToNewsletter(subscription: CreateNewsletterSubscription) {
+export async function subscribeToNewsletterAction(subscription: CreateNewsletterSubscription) {
 	const sendGridService = new SendgridSubscriptionService();
-	try {
-		await sendGridService.subscribeToNewsletter(subscription);
-		throw new Error('Cannot subscribe to Newsletter');
-	} catch (error: any) {
-		throw new Error(error);
-	}
+	return sendGridService.subscribeToNewsletter(subscription);
+}
+
+export async function getActiveSubscriptionAction(): Promise<ServiceResult<SendgridContactType | null>> {
+	const contributor = await getAuthenticatedContributorOrThrow();
+	const sendGridService = new SendgridSubscriptionService();
+	return sendGridService.getActiveSubscription(contributor);
+}
+
+export async function unsubscribeFromNewsletterAction() {
+	const contributor = await getAuthenticatedContributorOrThrow();
+	const sendGridService = new SendgridSubscriptionService();
+	return sendGridService.unsubscribeFromNewsletter(contributor);
 }

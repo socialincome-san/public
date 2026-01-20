@@ -1,3 +1,4 @@
+import "package:app/data/services/auth_service.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:cloud_functions/cloud_functions.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -121,6 +122,17 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
       "missing-recaptcha-version" => localizations.missingRecaptchaVersion,
       "invalid-recaptcha-version" => localizations.invalidRecaptchaVersion,
       "invalid-req-type" => localizations.invalidReqType,
+      _ => ex.toString(),
+    };
+  }
+
+  if (ex is AuthException) {
+    return switch (ex.code) {
+      "failed-sent-verification-code" => localizations.failedSentVerificationCodeError,
+      "failed-code-verification" => localizations.failedCodeVerificationCodeError,
+      "invalid-verification-code" => localizations.invalidVerificationCodeError,
+      "invalid-app-check-token" => localizations.invalidAppCheckTokenError,
+      "invalid-phone-number" => localizations.invalidPhoneNumberError,
       _ => ex.toString(),
     };
   }

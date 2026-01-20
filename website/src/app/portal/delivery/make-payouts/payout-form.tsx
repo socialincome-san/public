@@ -2,6 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
+import { websiteCurrencies } from '@/lib/i18n/utils';
 import {
 	createPayoutAction,
 	getPayoutAction,
@@ -49,9 +50,9 @@ const initialFormSchema: PayoutFormSchema = {
 			zodSchema: z.coerce.number().nonnegative(),
 		},
 		currency: {
-			placeholder: 'e.g., USD, EUR, CHF',
+			placeholder: 'USD, EUR, CHF',
 			label: 'Currency Code',
-			zodSchema: z.string().length(3, 'Currency code must be 3 letters.'),
+			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		phoneNumber: {
 			placeholder: '+223...',

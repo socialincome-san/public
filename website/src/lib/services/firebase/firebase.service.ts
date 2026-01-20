@@ -1,4 +1,5 @@
 import { authAdmin } from '@/lib/firebase/firebase-admin';
+import { appCheck } from 'firebase-admin';
 import { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
 import { cookies } from 'next/headers';
 import { BaseService } from '../core/base.service';
@@ -80,7 +81,7 @@ export class FirebaseService extends BaseService {
 
 			if (existingUserResult.data) {
 				console.log('User already exists for phone number:', phoneNumber);
-				return this.resultOk(existingUserResult.data);
+				return this.resultFail('User already exists for phone number');
 			}
 
 			const userRecord = await authAdmin.auth.createUser({
@@ -89,7 +90,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(userRecord);
 		} catch (error) {
 			this.logger.error('Error creating user by phone number:', { error });
-			return this.resultFail('Could not create auth user by phone number');
+			return this.resultFail(`Could not create auth user by phone number: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -101,7 +102,15 @@ export class FirebaseService extends BaseService {
 			}
 
 			if (!existingUserResult.data) {
-				return this.resultFail('Auth user not found');
+				this.logger.warn('Old Firebase user missing, recreating with new phone', {
+					oldPhoneNumber,
+					newPhoneNumber,
+				});
+
+				const created = await authAdmin.auth.createUser({
+					phoneNumber: newPhoneNumber,
+				});
+				return this.resultOk(created);
 			}
 
 			const updatedUser = await authAdmin.auth.updateUser(existingUserResult.data.uid, {
@@ -110,7 +119,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(updatedUser);
 		} catch (error) {
 			this.logger.error('Error updating user by phone number:', { oldPhoneNumber, newPhoneNumber, error });
-			return this.resultFail('Could not update auth user by phone number');
+			return this.resultFail(`Could not update auth user by phone number: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -137,7 +146,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(updatedUser);
 		} catch (error) {
 			this.logger.error(`Error updating user by UID ${uid}:`, { uid, updates, error });
-			return this.resultFail('Could not update auth user by UID');
+			return this.resultFail(`Could not update auth user by UID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -151,7 +160,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(userRecord);
 		} catch (error) {
 			this.logger.error('Error creating survey user:', { email, error });
-			return this.resultFail('Could not create survey auth user');
+			return this.resultFail(`Could not create survey auth user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -161,7 +170,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(token);
 		} catch (error) {
 			this.logger.error('Error creating custom token:', { uid, error });
-			return this.resultFail('Could not create custom token');
+			return this.resultFail(`Could not create custom token: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -177,7 +186,7 @@ export class FirebaseService extends BaseService {
 			return this.resultOk(decodedToken);
 		} catch (error) {
 			this.logger.error('Error verifying ID token:', { error });
-			return this.resultFail('Invalid or expired token');
+			return this.resultFail(`Invalid or expired token: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -214,7 +223,7 @@ export class FirebaseService extends BaseService {
 			});
 			return this.resultOk(userRecord);
 		} catch (error) {
-			return this.resultFail('Could not get or create Firebase Auth user');
+			return this.resultFail(`Could not get or create Firebase Auth user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -223,7 +232,7 @@ export class FirebaseService extends BaseService {
 			const decoded = await authAdmin.auth.verifySessionCookie(cookie, true);
 			return this.resultOk(decoded);
 		} catch (error) {
-			return this.resultFail('Invalid or expired session cookie');
+			return this.resultFail(`Invalid or expired session cookie: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -240,5 +249,37 @@ export class FirebaseService extends BaseService {
 
 		const cookie = match[1];
 		return this.verifySessionCookie(cookie);
+	}
+
+	async verifyAppCheckFromRequest(request: Request): Promise<ServiceResult<boolean>> {
+		const token = request.headers.get('X-Firebase-AppCheck');
+
+		if (!token) {
+			this.logger.warn('App Check failed: missing token', {
+				path: request.url,
+				userAgent: request.headers.get('user-agent'),
+			});
+
+			return this.resultFail('missing-app-check-token', 401);
+		}
+
+		try {
+			const decoded = await appCheck().verifyToken(token);
+
+			this.logger.info('App Check passed', {
+				appId: decoded.appId,
+				path: request.url,
+			});
+
+			return this.resultOk(true);
+		} catch (error) {
+			this.logger.warn('App Check failed: invalid token', {
+				path: request.url,
+				userAgent: request.headers.get('user-agent'),
+				errorMessage: (error as Error)?.message,
+			});
+
+			return this.resultFail(`invalid-app-check-token: ${JSON.stringify(error)}`, 401);
+		}
 	}
 }

@@ -21,7 +21,6 @@ import {
 	PayoutUpdateInput,
 	PreviewPayout,
 	RecipientCompletionPreview,
-	YearMonth,
 } from './payout.types';
 
 export class PayoutService extends BaseService {
@@ -61,27 +60,34 @@ export class PayoutService extends BaseService {
 				orderBy: { paymentAt: 'desc' },
 			});
 
-			const tableRows: PayoutTableViewRow[] = payouts.map((payout) => {
-				const program = accessiblePrograms.find((x) => x.programId === payout.recipient.program.id);
-				const permission = program?.permission ?? ProgramPermission.owner;
+			const tableRows: PayoutTableViewRow[] = payouts
+				.filter((p) => p.recipient.program !== null)
+				.map((payout) => {
+					const programPermissions = accessiblePrograms
+						.filter((x) => x.programId === payout.recipient.program!.id)
+						.map((x) => x.permission);
 
-				return {
-					id: payout.id,
-					recipientFirstName: payout.recipient.contact.firstName,
-					recipientLastName: payout.recipient.contact.lastName,
-					programName: payout.recipient.program.name,
-					amount: Number(payout.amount),
-					currency: payout.currency,
-					status: payout.status,
-					paymentAt: payout.paymentAt,
-					permission,
-				};
-			});
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
+
+					return {
+						id: payout.id,
+						recipientFirstName: payout.recipient.contact.firstName,
+						recipientLastName: payout.recipient.contact.lastName,
+						programName: payout.recipient.program!.name,
+						amount: Number(payout.amount),
+						currency: payout.currency,
+						status: payout.status,
+						paymentAt: payout.paymentAt,
+						permission,
+					};
+				});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch payouts');
+			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -105,46 +111,53 @@ export class PayoutService extends BaseService {
 				select: {
 					id: true,
 					contact: { select: { firstName: true, lastName: true } },
-					program: { select: { id: true, name: true, totalPayments: true } },
+					program: { select: { id: true, name: true, programDurationInMonths: true } },
 					payouts: { select: { status: true, paymentAt: true } },
 					createdAt: true,
 				},
 			});
 
-			const tableRows: OngoingPayoutTableViewRow[] = recipients.map((recipient) => {
-				const access = accessiblePrograms.find((p) => p.programId === recipient.program.id);
-				const permission = access?.permission ?? ProgramPermission.owner;
+			const tableRows: OngoingPayoutTableViewRow[] = recipients
+				.filter((r) => r.program !== null)
+				.map((recipient) => {
+					const programPermissions = accessiblePrograms
+						.filter((p) => p.programId === recipient.program!.id)
+						.map((p) => p.permission);
 
-				const payoutsReceived = recipient.payouts.length;
-				const payoutsTotal = recipient.program.totalPayments ?? 0;
-				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
 
-				const last3Months: PayoutMonth[] = [months.current, months.last, months.twoAgo].map(({ start, end }) => {
-					const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt <= end);
+					const payoutsReceived = recipient.payouts.length;
+					const payoutsTotal = recipient.program!.programDurationInMonths ?? 0;
+					const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
+
+					const last3Months: PayoutMonth[] = [months.current, months.last, months.twoAgo].map(({ start, end }) => {
+						const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt <= end);
+						return {
+							monthLabel: format(start, 'yyyy-MM'),
+							status: payout?.status ?? null,
+						};
+					});
+
 					return {
-						monthLabel: format(start, 'yyyy-MM'),
-						status: payout?.status ?? null,
+						id: recipient.id,
+						firstName: recipient.contact.firstName,
+						lastName: recipient.contact.lastName,
+						programName: recipient.program!.name,
+						payoutsReceived,
+						payoutsTotal,
+						payoutsProgressPercent,
+						last3Months,
+						createdAt: recipient.createdAt,
+						permission,
 					};
 				});
-
-				return {
-					id: recipient.id,
-					firstName: recipient.contact.firstName,
-					lastName: recipient.contact.lastName,
-					programName: recipient.program.name,
-					payoutsReceived,
-					payoutsTotal,
-					payoutsProgressPercent,
-					last3Months,
-					createdAt: recipient.createdAt,
-					permission,
-				};
-			});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch ongoing payouts');
+			return this.resultFail(`Could not fetch ongoing payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -167,8 +180,8 @@ export class PayoutService extends BaseService {
 			const program = await this.db.program.findUnique({
 				where: { id: programId },
 				select: {
-					totalPayments: true,
-					payoutAmount: true,
+					programDurationInMonths: true,
+					payoutPerInterval: true,
 					payoutCurrency: true,
 					recipients: {
 						select: {
@@ -185,8 +198,8 @@ export class PayoutService extends BaseService {
 				return this.resultFail('Program not found');
 			}
 
-			const forecastMonths = Array.from({ length: monthsAhead }, (_, i) => {
-				const start = startOfMonth(addMonths(new Date(), i + 1));
+			const forecastMonths = Array.from({ length: monthsAhead + 1 }, (_, i) => {
+				const start = startOfMonth(addMonths(new Date(), i));
 				return format(start, 'yyyy-MM');
 			});
 
@@ -197,8 +210,8 @@ export class PayoutService extends BaseService {
 
 			for (const recipient of program.recipients) {
 				const paid = recipient.payouts.length;
-				const remaining = Math.max(0, program.totalPayments - paid);
-				for (let i = 0; i < remaining && i < monthsAhead; i++) {
+				const remaining = Math.max(0, program.programDurationInMonths - paid);
+				for (let i = 0; i < remaining && i < forecastMonths.length; i++) {
 					const monthLabel = forecastMonths[i];
 					recipientCountByMonth.set(monthLabel, (recipientCountByMonth.get(monthLabel) ?? 0) + 1);
 				}
@@ -216,7 +229,7 @@ export class PayoutService extends BaseService {
 				return this.resultFail('Missing exchange rate');
 			}
 
-			const payoutAmountUsd = (Number(program.payoutAmount) / baseRate) * usdRate;
+			const payoutPerIntervalUsd = (Number(program.payoutPerInterval) / baseRate) * usdRate;
 
 			const tableRows: PayoutForecastTableViewRow[] = forecastMonths.map((label) => {
 				const count = recipientCountByMonth.get(label) ?? 0;
@@ -224,8 +237,8 @@ export class PayoutService extends BaseService {
 				return {
 					period: label,
 					numberOfRecipients: count,
-					amountInProgramCurrency: Number(program.payoutAmount) * count,
-					amountUsd: payoutAmountUsd * count,
+					amountInProgramCurrency: Number(program.payoutPerInterval) * count,
+					amountUsd: payoutPerIntervalUsd * count,
 					programCurrency: program.payoutCurrency,
 				};
 			});
@@ -233,7 +246,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not generate payout forecast');
+			return this.resultFail(`Could not generate payout forecast: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -273,28 +286,35 @@ export class PayoutService extends BaseService {
 				orderBy: { paymentAt: 'desc' },
 			});
 
-			const tableRows: PayoutConfirmationTableViewRow[] = payouts.map((payout) => {
-				const access = accessiblePrograms.find((x) => x.programId === payout.recipient.program.id);
-				const permission = access?.permission ?? ProgramPermission.operator;
+			const tableRows: PayoutConfirmationTableViewRow[] = payouts
+				.filter((p) => p.recipient.program !== null)
+				.map((payout) => {
+					const programPermissions = accessiblePrograms
+						.filter((p) => p.programId === payout.recipient.program!.id)
+						.map((p) => p.permission);
 
-				return {
-					id: payout.id,
-					recipientFirstName: payout.recipient.contact.firstName,
-					recipientLastName: payout.recipient.contact.lastName,
-					programName: payout.recipient.program.name,
-					amount: Number(payout.amount),
-					currency: payout.currency,
-					status: payout.status,
-					paymentAt: payout.paymentAt,
-					phoneNumber: payout.phoneNumber,
-					permission,
-				};
-			});
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
+
+					return {
+						id: payout.id,
+						recipientFirstName: payout.recipient.contact.firstName,
+						recipientLastName: payout.recipient.contact.lastName,
+						programName: payout.recipient.program!.name,
+						amount: Number(payout.amount),
+						currency: payout.currency,
+						status: payout.status,
+						paymentAt: payout.paymentAt,
+						phoneNumber: payout.phoneNumber,
+						permission,
+					};
+				});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch payout confirmation inbox');
+			return this.resultFail(`Could not fetch payout confirmation inbox: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -339,7 +359,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(`Payout updated to "${newStatus}"`);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update payout');
+			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -365,11 +385,11 @@ export class PayoutService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not generate registration CSV');
+			return this.resultFail(`Could not generate registration CSV: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async generatePayoutCSV(userId: string, target: YearMonth): Promise<ServiceResult<string>> {
+	async generatePayoutCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
 		try {
 			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
 			if (!recipientsResult.success) {
@@ -377,8 +397,7 @@ export class PayoutService extends BaseService {
 			}
 
 			const recipients = recipientsResult.data;
-			const targetDate = new Date(target.year, target.month - 1);
-			const monthLabel = format(targetDate, 'MMMM yyyy');
+			const monthLabel = format(selectedDate, 'MMMM yyyy');
 
 			const csvRows: string[][] = [
 				['Mobile Number*', 'Amount*', 'First Name', 'Last Name', 'Id Number', 'Remarks*', 'User Type*'],
@@ -389,7 +408,7 @@ export class PayoutService extends BaseService {
 				const phone = recipient.paymentInformation?.phone?.number;
 				const firstName = recipient.contact?.firstName ?? '';
 				const lastName = recipient.contact?.lastName ?? '';
-				const amount = Number(recipient.program?.payoutAmount ?? 0);
+				const amount = Number(recipient.program?.payoutPerInterval ?? 0);
 
 				if (!code || !phone) {
 					return this.resultFail(`Orange Money Id or phone number missing for recipient: ${recipient.id}`);
@@ -409,11 +428,11 @@ export class PayoutService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not generate payout CSV');
+			return this.resultFail(`Could not generate payout CSV: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async previewCurrentMonthPayouts(userId: string, target: YearMonth): Promise<ServiceResult<PreviewPayout[]>> {
+	async previewCurrentMonthPayouts(userId: string, selectedDate: Date): Promise<ServiceResult<PreviewPayout[]>> {
 		try {
 			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
 			if (!recipientsResult.success) {
@@ -431,16 +450,15 @@ export class PayoutService extends BaseService {
 			}
 
 			const rates = exchangeRateResult.data;
-			const currentMonth = startOfMonth(new Date(target.year, target.month - 1));
 
 			const toCreate: PreviewPayout[] = recipients
-				.filter((r) => !r.payouts.some((p) => isSameMonth(p.paymentAt, currentMonth)))
+				.filter((r) => !r.payouts.some((p) => isSameMonth(p.paymentAt, startOfMonth(selectedDate))))
 				.map((r) => {
-					const payoutAmount = r.program.payoutAmount;
+					const payoutPerInterval = r.program.payoutPerInterval;
 					const currency = r.program.payoutCurrency;
 					const rateCurrency = rates[currency];
 					const rateChf = rates['CHF'];
-					const amountChf = rateCurrency && rateChf ? (payoutAmount / rateCurrency) * rateChf : null;
+					const amountChf = rateCurrency && rateChf ? (payoutPerInterval / rateCurrency) * rateChf : null;
 					const phoneNumber = r.paymentInformation?.phone?.number ?? null;
 
 					return {
@@ -449,9 +467,9 @@ export class PayoutService extends BaseService {
 						lastName: r.contact.lastName,
 						phoneNumber,
 						currency,
-						amount: payoutAmount,
+						amount: payoutPerInterval,
 						amountChf,
-						paymentAt: currentMonth,
+						paymentAt: selectedDate,
 						status: PayoutStatus.paid,
 					};
 				});
@@ -459,13 +477,13 @@ export class PayoutService extends BaseService {
 			return this.resultOk(toCreate);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not preview payouts');
+			return this.resultFail(`Could not preview payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async generateCurrentMonthPayouts(userId: string, target: YearMonth): Promise<ServiceResult<string>> {
+	async generateCurrentMonthPayouts(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
 		try {
-			const previewResult = await this.previewCurrentMonthPayouts(userId, target);
+			const previewResult = await this.previewCurrentMonthPayouts(userId, selectedDate);
 			if (!previewResult.success) {
 				return this.resultFail(previewResult.error);
 			}
@@ -488,12 +506,10 @@ export class PayoutService extends BaseService {
 
 			await this.db.payout.createMany({ data: dbPayload });
 
-			return this.resultOk(
-				`Created ${dbPayload.length} payouts for ${target.year}-${String(target.month).padStart(2, '0')}.`,
-			);
+			return this.resultOk(`Created ${dbPayload.length} payouts for ${format(selectedDate, 'yyyy-MM')}.`);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not generate payouts');
+			return this.resultFail(`Could not generate payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -525,14 +541,14 @@ export class PayoutService extends BaseService {
 					const paidCount = r.payouts.filter((p) =>
 						([PayoutStatus.paid, PayoutStatus.confirmed] as PayoutStatus[]).includes(p.status),
 					).length;
-					const remaining = r.program.totalPayments - paidCount;
+					const remaining = r.program.programDurationInMonths - paidCount;
 
 					return {
 						id: r.id,
 						firstName: r.contact.firstName,
 						lastName: r.contact.lastName,
 						paidCount,
-						totalPayments: r.program.totalPayments,
+						programDurationInMonths: r.program.programDurationInMonths,
 						remaining,
 						isCompleted: remaining <= 0,
 					};
@@ -542,7 +558,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(completed);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not preview completed recipients');
+			return this.resultFail(`Could not preview completed recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -569,7 +585,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(`Updated ${completed.length} recipients to status "former".`);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update recipients');
+			return this.resultFail(`Could not update recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -583,16 +599,18 @@ export class PayoutService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		const access = await this.programAccessService.getAccessiblePrograms(userId);
-		if (!access.success) {
-			return this.resultFail(access.error);
-		}
+		if (recipient.programId) {
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
 
-		const allowed = access.data.find(
-			(p) => p.programId === recipient.programId && p.permission === ProgramPermission.operator,
-		);
-		if (!allowed) {
-			return this.resultFail('No edit access for this program');
+			const allowed = access.data.find(
+				(p) => p.programId === recipient.programId && p.permission === ProgramPermission.operator,
+			);
+			if (!allowed) {
+				return this.resultFail('No edit access for this program');
+			}
 		}
 
 		try {
@@ -621,13 +639,13 @@ export class PayoutService extends BaseService {
 					id: created.recipient.id,
 					firstName: created.recipient.contact.firstName,
 					lastName: created.recipient.contact.lastName,
-					programId: created.recipient.program.id,
-					programName: created.recipient.program.name,
+					programId: created.recipient.program && created.recipient.program.id,
+					programName: created.recipient.program && created.recipient.program.name,
 				},
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create payout');
+			return this.resultFail(`Could not create payout: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -641,16 +659,18 @@ export class PayoutService extends BaseService {
 			return this.resultFail('Payout not found');
 		}
 
-		const access = await this.programAccessService.getAccessiblePrograms(userId);
-		if (!access.success) {
-			return this.resultFail(access.error);
-		}
+		if (existing.recipient.programId) {
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
 
-		const allowed = access.data.some(
-			(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.operator,
-		);
-		if (!allowed) {
-			return this.resultFail('No edit permission for this payout');
+			const allowed = access.data.some(
+				(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.operator,
+			);
+			if (!allowed) {
+				return this.resultFail('No edit permission for this payout');
+			}
 		}
 
 		try {
@@ -680,13 +700,13 @@ export class PayoutService extends BaseService {
 					id: updated.recipient.id,
 					firstName: updated.recipient.contact.firstName,
 					lastName: updated.recipient.contact.lastName,
-					programId: updated.recipient.program.id,
-					programName: updated.recipient.program.name,
+					programId: updated.recipient.program && updated.recipient.program.id,
+					programName: updated.recipient.program && updated.recipient.program.name,
 				},
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update payout');
+			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -715,16 +735,17 @@ export class PayoutService extends BaseService {
 			return this.resultFail('Payout not found');
 		}
 
-		const access = await this.programAccessService.getAccessiblePrograms(userId);
+		if (payout.recipient.program) {
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
 
-		if (!access.success) {
-			return this.resultFail(access.error);
-		}
+			const allowed = access.data.some((p) => p.programId === payout.recipient.program!.id && p.permission != null);
 
-		const allowed = access.data.some((p) => p.programId === payout.recipient.program.id && p.permission != null);
-
-		if (!allowed) {
-			return this.resultFail('Access denied to this payout');
+			if (!allowed) {
+				return this.resultFail('Access denied to this payout');
+			}
 		}
 
 		return this.resultOk({
@@ -739,12 +760,11 @@ export class PayoutService extends BaseService {
 				id: payout.recipient.id,
 				firstName: payout.recipient.contact.firstName,
 				lastName: payout.recipient.contact.lastName,
-				programId: payout.recipient.program.id,
-				programName: payout.recipient.program.name,
+				programId: payout.recipient.program && payout.recipient.program.id,
+				programName: payout.recipient.program && payout.recipient.program.name,
 			},
 		});
 	}
-
 	async getByRecipientId(recipientId: string): Promise<ServiceResult<PayoutEntity[]>> {
 		try {
 			const payouts = await this.db.payout.findMany({
@@ -754,7 +774,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(payouts);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch payouts');
+			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -771,7 +791,7 @@ export class PayoutService extends BaseService {
 			return this.resultOk(payout);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not fetch payout "${payoutId}"`);
+			return this.resultFail(`Could not fetch payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -779,6 +799,7 @@ export class PayoutService extends BaseService {
 		recipientId: string,
 		payoutId: string,
 		status: PayoutStatus,
+		comments?: string | null,
 	): Promise<ServiceResult<PayoutEntity>> {
 		try {
 			const payout = await this.db.payout.findFirst({ where: { id: payoutId, recipientId } });
@@ -787,12 +808,16 @@ export class PayoutService extends BaseService {
 			}
 			const updated = await this.db.payout.update({
 				where: { id: payout.id },
-				data: { status },
+				data: {
+					status,
+					comments,
+				},
 			});
+
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update payout "${payoutId}"`);
+			return this.resultFail(`Failed to update payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}
 }

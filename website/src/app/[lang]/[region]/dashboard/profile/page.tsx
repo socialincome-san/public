@@ -2,6 +2,7 @@ import { Card } from '@/components/card';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getActiveSubscriptionAction } from '@/lib/server-actions/newsletter-actions';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { DefaultPageProps } from '../..';
 import { ProfileForm, ProfileFormTranslations } from './profile-form';
@@ -9,6 +10,12 @@ import { ProfileForm, ProfileFormTranslations } from './profile-form';
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
 	const contributor = await getAuthenticatedContributorOrRedirect();
+
+	const newsletterSubscription = await getActiveSubscriptionAction();
+	const newsletterSubscribed =
+		newsletterSubscription.success &&
+		newsletterSubscription.data !== null &&
+		newsletterSubscription.data.status === 'subscribed';
 
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
@@ -48,11 +55,13 @@ export default async function Page({ params }: DefaultPageProps) {
 		updateError: translator.t('profile.form.update-error'),
 		userUpdatedToast: translator.t('profile.form.user-updated-toast'),
 		countries: translatedCountries,
+		newsletterLabel: translator.t('personal-info.newsletter-switch'),
+		language: translator.t('profile.form.language'),
 	};
 
 	return (
 		<Card>
-			<ProfileForm contributor={contributor} translations={translations} />
+			<ProfileForm session={contributor} translations={translations} isNewsletterSubscribed={newsletterSubscribed} />
 		</Card>
 	);
 }

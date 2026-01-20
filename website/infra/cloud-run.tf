@@ -112,8 +112,13 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
-          name  = "TWILIO_AUTH_TOKEN"
-          value = var.twilio_auth_token
+          name  = "TWILIO_API_KEY_SID"
+          value = var.twilio_api_key_sid
+        }
+
+        env {
+          name  = "TWILIO_API_KEY_SECRET"
+          value = var.twilio_api_key_secret
         }
 
         env {
@@ -134,6 +139,21 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "GITHUB_PAT"
           value = var.github_pat
+        }
+
+        env {
+          name  = "FEATURE_ENABLE_NEW_WEBSITE"
+          value = var.env == "prod" ? "false" : "true"
+        }
+
+        env {
+          name  = "APP_REVIEW_MODE_ENABLED"
+          value = var.app_review_mode_enabled
+        }
+
+        env {
+          name  = "APP_REVIEW_PHONE_NUMBER"
+          value = var.app_review_phone_number
         }
 
         ports {

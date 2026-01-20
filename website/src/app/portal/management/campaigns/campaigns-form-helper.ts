@@ -1,4 +1,6 @@
 import { FormField } from '@/components/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/dynamic-form/helper';
+import { websiteCurrencies } from '@/lib/i18n/utils';
 import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
 import z from 'zod';
 
@@ -96,9 +98,9 @@ export const initialFormSchema: CampaignsFormSchema = {
 			zodSchema: z.number().positive('Goal must be positive').nullable(),
 		},
 		currency: {
-			placeholder: 'e.g., USD, EUR, CHF',
+			placeholder: 'USD, EUR, CHF',
 			label: 'Currency Code',
-			zodSchema: z.string().length(3, 'Currency code must be 3 letters.'),
+			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		additionalAmountChf: {
 			placeholder: 'Additional Amount in CHF',
@@ -111,7 +113,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		},
 		isActive: {
 			label: 'Active',
-			zodSchema: z.boolean(),
+			zodSchema: z.boolean().optional(),
 		},
 		public: {
 			placeholder: 'Is the item publicly visible?',

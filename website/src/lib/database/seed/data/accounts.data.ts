@@ -54,5 +54,11 @@ export const accountsData: Account[] = [
 		firebaseAuthUserId: 'firebase-auth-user-9',
 		createdAt: new Date(),
 		updatedAt: null
+	},
+	{
+		id: 'account-10',
+		firebaseAuthUserId: 'a80doqpnw1lgeFoepbSBdl2sj2AP',
+		createdAt: new Date(),
+		updatedAt: null
 	}
 ];

@@ -68,7 +68,7 @@ export class ContributionService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contribution');
+			return this.resultFail(`Could not fetch contribution: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -118,7 +118,7 @@ export class ContributionService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contribution');
+			return this.resultFail(`Could not update contribution: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -156,7 +156,7 @@ export class ContributionService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create contribution');
+			return this.resultFail(`Could not create contribution: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -216,11 +216,11 @@ export class ContributionService extends BaseService {
 			return this.resultOk({ tableRows, permission: permission });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributions');
+			return this.resultFail(`Could not fetch contributions: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getForContributorAndYear(
+	async getSucceededForContributorAndYear(
 		contributorId: string,
 		year: number,
 	): Promise<ServiceResult<ContributionDonationEntry[]>> {
@@ -231,7 +231,7 @@ export class ContributionService extends BaseService {
 			const result = await this.db.contribution.findMany({
 				where: {
 					contributorId: contributorId,
-					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }],
+					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }, { status: 'succeeded' }],
 				},
 				select: {
 					contributorId: true,
@@ -290,7 +290,7 @@ export class ContributionService extends BaseService {
 			return this.resultOk(paymentEvent.contribution);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create or update contribution from Stripe event');
+			return this.resultFail(`Could not create or update contribution from Stripe event: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -312,7 +312,7 @@ export class ContributionService extends BaseService {
 			return this.resultOk(result);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create payment events with contributions');
+			return this.resultFail(`Could not create payment events with contributions: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -341,7 +341,7 @@ export class ContributionService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributions for contributor');
+			return this.resultFail(`Could not fetch contributions for contributor: ${JSON.stringify(error)}`);
 		}
 	}
 }

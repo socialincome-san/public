@@ -41,6 +41,7 @@ export type UserTableView = {
 };
 
 export type UserSession = {
+	type: 'user';
 	id: string;
 	firstName: string | null;
 	lastName: string | null;

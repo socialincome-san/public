@@ -12,6 +12,7 @@ import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
+import { MultiSelect } from '../multi-select';
 
 export type FormField = {
 	label: string;
@@ -19,6 +20,7 @@ export type FormField = {
 	zodSchema?: ZodTypeAny;
 	value?: any;
 	useCombobox?: boolean;
+	disabled?: boolean;
 };
 
 export type FormSchema = {
@@ -71,6 +73,28 @@ const isOptional = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject
 	const def = getDef(key, zodSchema, parentOption);
 	const type = def.typeName;
 	return ['ZodOptional', 'ZodNullable'].includes(type);
+};
+
+const unwrapOptional = (def: any) => {
+	if (def?.typeName === 'ZodOptional' || def?.typeName === 'ZodNullable') {
+		return def.innerType?._def;
+	}
+	return def;
+};
+
+const getEnumArrayValues = (
+	key: keyof z.infer<typeof zodSchema>,
+	zodSchema: z.ZodObject<any>,
+	parentOption?: string,
+): Record<string, string> => {
+	let def: any = getDef(key, zodSchema, parentOption);
+	def = unwrapOptional(def);
+
+	if (def?.typeName !== 'ZodArray') {
+		return {};
+	}
+
+	return (def.type?._def?.values ?? {}) as Record<string, string>;
 };
 
 const DynamicForm: FC<{
@@ -135,7 +159,7 @@ const DynamicForm: FC<{
 	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
 
 	const onValidationErrors = (e: Object) => {
-		console.error('dynamic form validation errors: ', e);
+		console.warn('dynamic form validation errors: ', e);
 		setOpenAccordion('all');
 	};
 
@@ -189,7 +213,7 @@ const DynamicForm: FC<{
 						</Button>
 					)}
 					{onCancel && (
-						<Button variant="outline" onClick={onCancel}>
+						<Button type="button" variant="outline" onClick={onCancel}>
 							{mode === 'readonly' ? 'Close' : 'Cancel'}
 						</Button>
 					)}
@@ -266,6 +290,34 @@ const GenericFormField = ({
 
 	if (isFormField(formFieldSchema)) {
 		switch (getType(option, zodSchema, parentOption)) {
+			case 'ZodArray': {
+				const values = getEnumArrayValues(option, zodSchema, parentOption);
+				const options = Object.entries(values).map(([label, value]) => ({ label, value }));
+
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<FormControl>
+									<MultiSelect
+										modalPopover
+										options={options}
+										defaultValue={field.value ?? []}
+										onValueChange={field.onChange}
+										placeholder={formFieldSchema.placeholder}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
 			case 'ZodString':
 				return (
 					<FormField
@@ -279,7 +331,7 @@ const GenericFormField = ({
 									<Input
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey)}
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -298,7 +350,7 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<FormControl>
 									<DatePicker
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 										{...form.register(optionKey)}
 										onSelect={field.onChange}
 										selected={field.value}
@@ -331,7 +383,7 @@ const GenericFormField = ({
 											value={field.value ?? ''}
 											onChange={field.onChange}
 											placeholder={formFieldSchema.placeholder}
-											disabled={isLoading || readOnly}
+											disabled={formFieldSchema.disabled || isLoading || readOnly}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -349,7 +401,11 @@ const GenericFormField = ({
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
-								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
+								<Select
+									value={field.value}
+									onValueChange={field.onChange}
+									disabled={formFieldSchema.disabled || isLoading || readOnly}
+								>
 									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
@@ -380,7 +436,7 @@ const GenericFormField = ({
 								<Label htmlFor={optionKey}>{label}</Label>
 								<Switch
 									id={optionKey}
-									disabled={isLoading || readOnly}
+									disabled={formFieldSchema.disabled || isLoading || readOnly}
 									onCheckedChange={field.onChange}
 									checked={field.value}
 								/>
@@ -407,7 +463,7 @@ const GenericFormField = ({
 											// avoid NaN when input is empty, see https://github.com/orgs/react-hook-form/discussions/6980#discussioncomment-1785009
 											setValueAs: (v) => (v === '' ? null : parseInt(v, 10)),
 										})}
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
 								</FormControl>
 								<FormMessage />

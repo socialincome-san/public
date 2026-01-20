@@ -6,6 +6,7 @@ import { makeRecipientColumns } from '@/components/data-table/columns/recipients
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { RecipientForm } from '@/components/recipient/recipient-form';
+import { Actor } from '@/lib/firebase/current-account';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { logger } from '@/lib/utils/logger';
 import { ProgramPermission } from '@prisma/client';
@@ -16,11 +17,13 @@ export function RecipientsTableClient({
 	error,
 	programId,
 	readOnly,
+	actorKind = 'user',
 }: {
 	rows: RecipientTableViewRow[];
 	error: string | null;
 	programId?: string;
 	readOnly?: boolean;
+	actorKind?: Actor['kind'];
 }) {
 	const [open, setOpen] = useState(false);
 
@@ -55,12 +58,14 @@ export function RecipientsTableClient({
 				emptyMessage="No recipients found"
 				data={rows}
 				makeColumns={makeRecipientColumns}
+				hideLocalPartner={actorKind === 'local-partner'}
 				actions={
 					<Button disabled={readOnly} onClick={openEmptyForm}>
 						Add new recipient
 					</Button>
 				}
 				onRowClick={openEditForm}
+				searchKeys={['firstName', 'lastName', 'localPartnerName', 'programName']}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
@@ -83,6 +88,7 @@ export function RecipientsTableClient({
 						onCancel={() => setOpen(false)}
 						onError={onError}
 						programId={programId}
+						actorKind={actorKind}
 					/>
 				</DialogContent>
 			</Dialog>

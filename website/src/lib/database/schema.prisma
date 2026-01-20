@@ -106,13 +106,42 @@ enum DonationInterval {
   yearly
 }
 
+enum PayoutInterval {
+  monthly
+  quarterly
+  yearly
+}
+
+enum Cause {
+  poverty
+  health
+  gender_based_violence
+  climate
+}
+
+enum NetworkTechnology {
+  g3
+  g4
+  g5
+  satellite
+  unknown
+}
+
+enum SanctionRegime {
+  eu
+  us
+  un
+  other
+}
+
 model Account {
   id String @id @default(cuid()) @map("id")
 
   firebaseAuthUserId String @unique @map("firebase_auth_user_id")
 
-  contributor Contributor?
-  user        User?
+  contributor  Contributor?
+  user         User?
+  localPartner LocalPartner?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -221,8 +250,8 @@ model Recipient {
   termsAccepted        Boolean             @default(false) @map("terms_accepted")
   paymentInformationId String?             @map("payment_information_id")
   paymentInformation   PaymentInformation? @relation(fields: [paymentInformationId], references: [id])
-  programId            String              @map("program_id")
-  program              Program             @relation(fields: [programId], references: [id])
+  programId            String?             @map("program_id")
+  program              Program?            @relation(fields: [programId], references: [id])
   localPartnerId       String              @map("local_partner_id")
   localPartner         LocalPartner        @relation(fields: [localPartnerId], references: [id])
 
@@ -299,8 +328,11 @@ model LocalPartner {
   id                String  @id @default(cuid()) @map("id")
   legacyFirestoreId String? @unique @map("legacy_firestore_id")
   name              String  @unique @map("name")
+  causes            Cause[] @map("causes")
   contactId         String  @unique @map("contact_id")
   contact           Contact @relation(fields: [contactId], references: [id])
+  accountId         String  @unique @map("account_id")
+  account           Account @relation(fields: [accountId], references: [id])
 
   recipients Recipient[]
 
@@ -338,13 +370,14 @@ model ProgramAccess {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@unique([organizationId, programId])
+  @@unique([organizationId, programId, permission])
   @@map("program_access")
 }
 
 model Organization {
-  id   String @id @default(cuid()) @map("id")
-  name String @unique @map("name")
+  id                 String  @id @default(cuid()) @map("id")
+  name               String  @unique @map("name")
+  isOperatorFallback Boolean @default(false) @map("is_operator_fallback")
 
   campaigns            Campaign[]           @relation("OrganizationCampaigns")
   expenses             Expense[]
@@ -359,13 +392,18 @@ model Organization {
 }
 
 model Program {
-  id             String  @id @default(cuid()) @map("id")
-  name           String  @unique @map("name")
-  totalPayments  Int     @map("total_payments")
-  payoutAmount   Decimal @map("payout_amount") @db.Decimal(12, 4)
-  payoutCurrency String  @map("payout_currency")
-  payoutInterval Int     @map("payout_interval")
-  country        String  @default("Sierra Leone") @map("country")
+  id   String @id @default(cuid()) @map("id")
+  name String @unique @map("name")
+
+  amountOfRecipientsForStart Int?           @map("amount_of_recipients_for_start")
+  programDurationInMonths    Int            @map("program_duration_in_months")
+  payoutPerInterval          Decimal        @map("payout_per_interval") @db.Decimal(12, 4)
+  payoutCurrency             String         @map("payout_currency")
+  payoutInterval             PayoutInterval @default(monthly) @map("payout_interval")
+  targetCauses               Cause[]        @map("target_causes")
+
+  countryId String  @map("country_id")
+  country   Country @relation(fields: [countryId], references: [id])
 
   campaigns       Campaign[]
   recipients      Recipient[]
@@ -453,7 +491,7 @@ model Address {
 model PaymentInformation {
   id       String          @id @default(cuid()) @map("id")
   provider PaymentProvider @map("provider")
-  code     String          @unique @map("code")
+  code     String?         @unique @map("code")
   phoneId  String          @map("phone_id")
   phone    Phone           @relation(fields: [phoneId], references: [id])
 
@@ -517,4 +555,62 @@ model ExchangeRate {
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("exchange_rate")
+}
+
+model Country {
+  id       String  @id @default(cuid()) @map("id")
+  name     String  @unique @map("name")
+  isActive Boolean @default(false) @map("is_active")
+
+  //
+  // PRECONDITION 1: Suitability of cash
+  // Condition met when microfinanceIndex < 3
+  //
+  microfinanceIndex Decimal?  @map("microfinance_index") @db.Decimal(4, 2)
+  latestSurveyDate  DateTime? @map("latest_survey_date") @db.Date
+
+  microfinanceSourceLinkId String?     @map("microfinance_source_link_id")
+  microfinanceSourceLink   SourceLink? @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
+
+  //
+  // PRECONDITION 2: Mobile Money
+  // Condition met when paymentProviders.length >= 1
+  //
+  paymentProviders PaymentProvider[] @map("payment_providers")
+
+  //
+  // PRECONDITION 3: Mobile Network
+  // Condition met when populationCoverage >= 50
+  //
+  populationCoverage Decimal?           @map("population_coverage") @db.Decimal(5, 2)
+  networkTechnology  NetworkTechnology? @map("network_technology")
+
+  networkSourceLinkId String?     @map("network_source_link_id")
+  networkSourceLink   SourceLink? @relation("networkSource", fields: [networkSourceLinkId], references: [id])
+
+  //
+  // PRECONDITION 4: No sanctions
+  // Condition NOT met → "Restrictions apply" when sanctions.length >= 1
+  //
+  sanctions SanctionRegime[] @map("sanctions")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  programs  Program[]
+
+  @@map("country")
+}
+
+model SourceLink {
+  id   String @id @default(cuid()) @map("id")
+  href String @map("href")
+  text String @map("text")
+
+  microfinanceCountries Country[] @relation("microfinanceSource")
+  networkCountries      Country[] @relation("networkSource")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("source_link")
 }

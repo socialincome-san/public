@@ -1,9 +1,9 @@
 'use client';
 
-import Cookies, { CookieAttributes } from 'js-cookie';
+import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 
-export const useCookieState = <T extends string>(key: string, initialValue?: T, options?: CookieAttributes) => {
+export const useCookieState = <T extends string>(key: string, initialValue?: T, options?: Cookies.CookieAttributes) => {
 	const [value, setValue] = useState<T | undefined>(undefined);
 
 	useEffect(() => {
@@ -19,7 +19,7 @@ export const useCookieState = <T extends string>(key: string, initialValue?: T, 
 		}
 	}, [key, initialValue, options]);
 
-	const setCookie = (val: T, options?: CookieAttributes) => {
+	const setCookie = (val: T, options?: Cookies.CookieAttributes) => {
 		Cookies.set(key, val, options);
 		setValue(val);
 	};

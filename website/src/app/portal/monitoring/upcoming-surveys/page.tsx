@@ -28,6 +28,7 @@ async function UpcomingSurveysDataLoader() {
 			emptyMessage="No upcoming surveys found"
 			data={rows}
 			makeColumns={makeSurveyColumns}
+			searchKeys={['name', 'recipientName']}
 		/>
 	);
 }

@@ -76,7 +76,7 @@ export class DonationCertificateService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch donation certificates');
+			return this.resultFail(`Could not fetch donation certificates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -105,7 +105,7 @@ export class DonationCertificateService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch donation certificates');
+			return this.resultFail(`Could not fetch donation certificates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -124,7 +124,7 @@ export class DonationCertificateService extends BaseService {
 			return this.resultOk(existingCertificates);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch existing donation certificates');
+			return this.resultFail(`Could not fetch existing donation certificates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -145,7 +145,7 @@ export class DonationCertificateService extends BaseService {
 			return this.resultOk(existingCertificate);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch existing donation certificates');
+			return this.resultFail(`Could not fetch existing donation certificates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -177,7 +177,7 @@ export class DonationCertificateService extends BaseService {
 		}
 
 		// check if there are contributions to generate a certificate for
-		let contributions = await this.contributionService.getForContributorAndYear(contributorsId, year);
+		let contributions = await this.contributionService.getSucceededForContributorAndYear(contributorsId, year);
 		if (!contributions.success) {
 			this.logger.info(`Could not load contributions for contributor ${contributorsId}`);
 			return this.resultFail(DonationCertificateError.technicalError);

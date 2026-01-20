@@ -8,9 +8,8 @@ import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
+import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
-//import "package:app/data/services/firebase_otp_service.dart";
-import "package:app/data/services/twilio_otp_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -47,8 +46,8 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   await Firebase.initializeApp(options: firebaseOptions);
   await FirebaseAppCheck.instance.activate(
-    androidProvider: kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
-    appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
+    providerAndroid: kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),
+    providerApple: kDebugMode ? const AppleDebugProvider() : const AppleAppAttestProvider(),
   );
 
   final firestore = FirebaseFirestore.instance;
@@ -56,14 +55,9 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final messaging = FirebaseMessaging.instance;
   final demoManager = DemoManager();
 
-  //final authService = FirebaseOtpService(firebaseAuth: firebaseAuth, demoManager: demoManager,);
-  final authService = TwilioOtpService(
+  final authService = AuthService(
     firebaseAuth: firebaseAuth,
     demoManager: demoManager,
-    accountSid: const String.fromEnvironment("TWILIO_ACCOUNT_SID"),
-    authToken: const String.fromEnvironment("TWILIO_AUTH_TOKEN"),
-    twilioNumber: const String.fromEnvironment("TWILIO_NUMBER"),
-    serviceId: const String.fromEnvironment("TWILIO_SERVICE_SID"),
   );
 
   final userRemoteDataSource = UserRemoteDataSource(

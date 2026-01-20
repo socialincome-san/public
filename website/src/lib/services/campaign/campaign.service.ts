@@ -1,3 +1,4 @@
+import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { Campaign } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -76,7 +77,7 @@ export class CampaignService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch campaign');
+			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -104,7 +105,7 @@ export class CampaignService extends BaseService {
 			return this.resultOk(newCampaign);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create campaign');
+			return this.resultFail(`Could not create campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -128,14 +129,14 @@ export class CampaignService extends BaseService {
 			return this.resultOk(updatedCampaign);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update campaign');
+			return this.resultFail(`Could not update campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getByLegacyId(campaignLegacyId: string): Promise<ServiceResult<CampaignPage>> {
+	async getById(campaignId: string): Promise<ServiceResult<CampaignPage>> {
 		try {
 			const campaign = await this.db.campaign.findFirst({
-				where: { legacyFirestoreId: campaignLegacyId },
+				where: { OR: [{ legacyFirestoreId: campaignId }, { id: campaignId }] },
 				select: {
 					id: true,
 					title: true,
@@ -193,7 +194,7 @@ export class CampaignService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch campaign');
+			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -218,7 +219,7 @@ export class CampaignService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch campaign options');
+			return this.resultFail(`Could not fetch campaign options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -235,6 +236,7 @@ export class CampaignService extends BaseService {
 				where: { organizationId },
 				select: {
 					id: true,
+					legacyFirestoreId: true,
 					title: true,
 					description: true,
 					currency: true,
@@ -248,6 +250,7 @@ export class CampaignService extends BaseService {
 
 			const tableRows: CampaignTableViewRow[] = campaigns.map((campaign) => ({
 				id: campaign.id,
+				link: this.getCampaignLink(campaign.id, campaign.legacyFirestoreId),
 				title: campaign.title,
 				description: campaign.description,
 				currency: campaign.currency,
@@ -261,7 +264,7 @@ export class CampaignService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch campaigns');
+			return this.resultFail(`Could not fetch campaigns: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -281,7 +284,12 @@ export class CampaignService extends BaseService {
 			return this.resultOk(campaign);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch default campaign');
+			return this.resultFail(`Could not fetch default campaign: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private getCampaignLink(id: string, legacyFirestoreId: string | null): string {
+		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${legacyFirestoreId || id}`;
 	}
 }

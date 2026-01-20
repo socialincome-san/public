@@ -1,16 +1,18 @@
 import { VerifyOtpRequest } from '@/app/api/v1/models';
+import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { TwilioService } from '@/lib/services/twilio/twilio.service';
 import { NextResponse } from 'next/server';
 
 /**
  * Verify OTP
- * @description Verifies an OTP sent via Twilio and returns a Firebase custom token for authentication.
+ * @description Verifies an OTP sent via Twilio and returns a Firebase custom token for authentication. Requires a valid Firebase App Check token.
  * @body VerifyOtpRequest
  * @response 200:VerifyOtpResponse
  * @response 400:ErrorResponse
+ * @response 401:Unauthorized
  * @openapi
  */
-export async function POST(request: Request) {
+export const POST = withAppCheck(async (request: Request) => {
 	let body: unknown;
 
 	try {
@@ -33,4 +35,4 @@ export async function POST(request: Request) {
 	}
 
 	return NextResponse.json(result.data, { status: 200 });
-}
+});

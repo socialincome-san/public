@@ -37,6 +37,7 @@ export class SurveyService extends BaseService {
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
+
 			const surveys = await this.db.survey.findMany({
 				where: { recipient: { programId: { in: programIds } } },
 				select: {
@@ -61,38 +62,46 @@ export class SurveyService extends BaseService {
 				orderBy: { dueAt: 'desc' },
 			});
 
-			const tableRows: SurveyTableViewRow[] = surveys.map((survey) => {
-				const programId = survey.recipient.program.id;
-				const access = accessiblePrograms.find((p) => p.programId === programId);
-				const permission = access?.permission ?? ProgramPermission.owner;
+			const tableRows: SurveyTableViewRow[] = surveys
+				.filter((s) => s.recipient.program !== null)
+				.map((survey) => {
+					const programId = survey.recipient.program!.id;
 
-				return {
-					id: survey.id,
-					name: survey.name,
-					recipientName:
-						`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
-					programId,
-					programName: survey.recipient.program.name,
-					questionnaire: survey.questionnaire,
-					status: survey.status,
-					language: survey.language,
-					dueAt: survey.dueAt,
-					completedAt: survey.completedAt,
-					createdAt: survey.createdAt,
-					surveyUrl: this.buildSurveyUrl({
-						surveyId: survey.id,
-						recipientId: survey.recipient.id,
-						accessEmail: survey.accessEmail,
-						accessPw: survey.accessPw,
-					}),
-					permission,
-				};
-			});
+					const programPermissions = accessiblePrograms
+						.filter((p) => p.programId === programId)
+						.map((p) => p.permission);
+
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
+
+					return {
+						id: survey.id,
+						name: survey.name,
+						recipientName:
+							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+						programId,
+						programName: survey.recipient.program!.name,
+						questionnaire: survey.questionnaire,
+						status: survey.status,
+						language: survey.language,
+						dueAt: survey.dueAt,
+						completedAt: survey.completedAt,
+						createdAt: survey.createdAt,
+						surveyUrl: this.buildSurveyUrl({
+							surveyId: survey.id,
+							recipientId: survey.recipient.id,
+							accessEmail: survey.accessEmail,
+							accessPw: survey.accessPw,
+						}),
+						permission,
+					};
+				});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -108,7 +117,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk({ tableRows: upcoming });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch upcoming surveys');
+			return this.resultFail(`Could not fetch upcoming surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -159,7 +168,7 @@ export class SurveyService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program.id);
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program?.id);
 			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
 				return this.resultFail('Access denied');
 			}
@@ -188,7 +197,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to create survey: ${error}`);
+			return this.resultFail(`Failed to create survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -212,7 +221,7 @@ export class SurveyService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
 			if (!programAccess) {
 				return this.resultFail('Access denied');
 			}
@@ -237,7 +246,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to get survey: ${error}`);
+			return this.resultFail(`Failed to get survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -257,7 +266,7 @@ export class SurveyService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
 			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
 				return this.resultFail('Access denied');
 			}
@@ -287,7 +296,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${error}`);
+			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -377,7 +386,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk({ surveys });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to preview survey generation: ${error}`);
+			return this.resultFail(`Failed to preview survey generation: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -416,7 +425,7 @@ export class SurveyService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to generate surveys: ${error}`);
+			return this.resultFail(`Failed to generate surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -429,7 +438,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(surveys);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -444,7 +453,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(surveys);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -483,7 +492,7 @@ export class SurveyService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -522,7 +531,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${error}`);
+			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
 		}
 	}
 

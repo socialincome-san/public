@@ -1,110 +1,124 @@
 import { UserRecord } from 'firebase-admin/auth';
 import { Twilio } from 'twilio';
+import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
 import { VerifyOtpRequest, VerifyOtpResult } from './twilio.types';
+
 export class TwilioService extends BaseService {
 	private readonly firebaseService = new FirebaseService();
-	private readonly twilioClient = new Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+	private readonly appReviewModeService = new AppReviewModeService();
+
+	private readonly twilioClient = new Twilio(process.env.TWILIO_API_KEY_SID, process.env.TWILIO_API_KEY_SECRET, {
+		accountSid: process.env.TWILIO_ACCOUNT_SID,
+	});
+
 	private readonly TWILIO_VERIFY_SERVICE_SID = process.env.TWILIO_VERIFY_SERVICE_SID;
 
-	async verifyOtp(request: VerifyOtpRequest): Promise<ServiceResult<VerifyOtpResult>> {
-		let { phoneNumber, otp } = request;
-
-		// Validate environment variables
-		if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !this.TWILIO_VERIFY_SERVICE_SID) {
-			return this.resultFail('Missing Twilio environment variables');
+	async requestOtp(phoneNumber: string): Promise<ServiceResult<boolean>> {
+		const envCheck = this.requireTwilioEnvVars();
+		if (!envCheck.success) {
+			return envCheck;
 		}
 
-		// Validate inputs
-		if (!phoneNumber || !otp) {
+		const phoneResult = this.requireValidPhoneNumber(phoneNumber);
+		if (!phoneResult.success) {
+			return phoneResult;
+		}
+
+		if (this.appReviewModeService.shouldBypass(phoneResult.data)) {
+			this.logger.info('APP REVIEW MODE: Skipping Twilio OTP send for app review phone');
+			return this.resultOk(true);
+		}
+
+		try {
+			this.logger.info('Twilio: Requesting OTP for phone');
+			await this.twilioClient.verify.v2.services(this.TWILIO_VERIFY_SERVICE_SID ?? '').verifications.create({
+				to: phoneResult.data,
+				channel: 'sms',
+			});
+
+			return this.resultOk(true);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Failed to request OTP: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async verifyOtp(request: VerifyOtpRequest): Promise<ServiceResult<VerifyOtpResult>> {
+		const envCheck = this.requireTwilioEnvVars();
+		if (!envCheck.success) {
+			return envCheck;
+		}
+
+		if (!request.phoneNumber || !request.otp) {
 			this.logger.info('Missing phone number or OTP');
 			return this.resultFail('Phone number and OTP are required');
 		}
 
-		// Format phone number to E.164 format if not already
-		if (!phoneNumber.startsWith('+')) {
-			phoneNumber = `+${phoneNumber}`;
+		const phoneResult = this.requireValidPhoneNumber(request.phoneNumber);
+		if (!phoneResult.success) {
+			return phoneResult;
 		}
 
-		// Basic E.164 validation (should start with + followed by digits only)
-		const phoneRegex = /^\+[1-9]\d{1,14}$/;
-		if (!phoneRegex.test(phoneNumber)) {
-			this.logger.info('Invalid phone number format');
-			return this.resultFail('Phone number must be in valid E.164 format (e.g., +12345678901)');
+		if (this.appReviewModeService.shouldBypass(phoneResult.data)) {
+			this.logger.info('APP REVIEW MODE: Skipping Twilio verify for app review phone');
+			return await this.finalizeOtpVerification(phoneResult.data);
 		}
 
-		// Verify OTP with Twilio
 		try {
-			if (process.env.TWILIO_DEV_MODE === 'true') {
-				this.logger.info('🚧 DEVELOPMENT MODE: Skipping Twilio verification');
-			} else {
-				this.logger.info('Attempting to verify OTP for phone');
-				const verification = await this.twilioClient.verify.v2
-					.services(this.TWILIO_VERIFY_SERVICE_SID)
-					.verificationChecks.create({
-						to: phoneNumber,
-						code: otp,
-					});
+			this.logger.info('Twilio: Attempting to verify OTP for phone');
+			const verification = await this.twilioClient.verify.v2
+				.services(this.TWILIO_VERIFY_SERVICE_SID ?? '')
+				.verificationChecks.create({
+					to: phoneResult.data,
+					code: request.otp,
+				});
 
-				this.logger.info(
-					`Twilio verification response has status: '${verification.status}' and sid '${verification.sid}'`,
-				);
+			this.logger.info(
+				`Twilio verification response has status: '${verification.status}' and sid '${verification.sid}'`,
+			);
 
-				// Check if verification was successful
-				if (verification.status !== 'approved') {
-					this.logger.info('OTP verification failed', { status: verification.status });
-					return this.resultFail('Invalid OTP provided');
-				}
+			if (verification.status !== 'approved') {
+				this.logger.info('OTP verification failed', { status: verification.status });
+				throw new Error('invalid-otp');
 			}
-		} catch (error: unknown) {
-			// Check for Twilio's error code directly from the error object
-			if ((error as any)?.code === 20404) {
-				// Specific error code for "Verification not found". See https://www.twilio.com/docs/errors/20404
+		} catch (error: any) {
+			if (error?.code === 20404) {
 				return this.resultFail('Verification resource not found for the provided phone number and OTP');
+			}
+			if (error?.message === 'invalid-otp') {
+				return this.resultFail('Invalid OTP provided');
 			}
 
 			this.logger.error(error);
-			return this.resultFail('Failed to verify OTP');
+			return this.resultFail(`Failed to verify OTP: ${JSON.stringify(error)}`);
 		}
 
-		// OTP is valid, create or get Firebase user
+		return await this.finalizeOtpVerification(phoneResult.data);
+	}
+
+	private async finalizeOtpVerification(phoneNumber: string): Promise<ServiceResult<VerifyOtpResult>> {
 		try {
 			this.logger.info('OTP verified successfully, checking if user exists');
 			let isNewUser = false;
 
-			// Check if user with given phoneNumber exists
-			let userRecord: UserRecord | null = null;
-			try {
-				userRecord = await this.getUserByPhoneNumber(phoneNumber);
-			} catch (error: unknown) {
-				if ((error as any)?.code === 'auth/user-not-found') {
-					this.logger.info('User not found with given phone number');
-				} else {
-					this.logger.error(error);
-					return this.resultFail('Failed to check existing user');
-				}
-			}
-
-			// If user does not exist, create a new Firebase Auth user
-			if (userRecord == null) {
+			let userRecord = await this.getUserByPhoneNumber(phoneNumber);
+			if (!userRecord) {
 				this.logger.info('Creating new user with given phone number');
 				isNewUser = true;
-				const createResult = await this.createUserWithPhoneNumber(phoneNumber);
-				if (!createResult) {
+				userRecord = await this.createUserWithPhoneNumber(phoneNumber);
+				if (!userRecord) {
 					return this.resultFail('Could not create user with given phone number');
 				}
-				userRecord = createResult;
 			}
 
-			// If user exists, generate custom auth token
 			const customToken = await this.generateCustomToken(userRecord);
 			if (!customToken) {
 				return this.resultFail('Could not create auth token for user');
 			}
 
-			// Return the custom token and user information
 			return this.resultOk({
 				customToken,
 				isNewUser,
@@ -112,8 +126,40 @@ export class TwilioService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Failed to generate custom token');
+			return this.resultFail(`Failed to generate custom token: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private requireTwilioEnvVars(): ServiceResult<void> {
+		if (
+			!process.env.TWILIO_ACCOUNT_SID ||
+			!process.env.TWILIO_API_KEY_SID ||
+			!process.env.TWILIO_API_KEY_SECRET ||
+			!this.TWILIO_VERIFY_SERVICE_SID
+		) {
+			return this.resultFail('Missing Twilio environment variables');
+		}
+		return this.resultOk(undefined);
+	}
+
+	private requireValidPhoneNumber(phoneNumber?: string): ServiceResult<string> {
+		if (!phoneNumber) {
+			this.logger.info('Missing phone number');
+			return this.resultFail('Phone number is required');
+		}
+
+		let normalized = phoneNumber;
+		if (!normalized.startsWith('+')) {
+			normalized = `+${normalized}`;
+		}
+
+		const phoneRegex = /^\+[1-9]\d{1,14}$/;
+		if (!phoneRegex.test(normalized)) {
+			this.logger.info('Invalid phone number format');
+			return this.resultFail('Phone number must be in valid E.164 format (e.g., +12345678901)');
+		}
+
+		return this.resultOk(normalized);
 	}
 
 	private async getUserByPhoneNumber(phoneNumber: string): Promise<UserRecord | null> {

@@ -103,8 +103,12 @@ variable "twilio_account_sid" {
   type      = string
   sensitive = true
 }
+variable "twilio_api_key_sid" {
+  type      = string
+  sensitive = true
+}
 
-variable "twilio_auth_token" {
+variable "twilio_api_key_secret" {
   type      = string
   sensitive = true
 }
@@ -150,6 +154,17 @@ variable "firebase_service_account_json" {
 
 variable "storyblok_preview_secret" {
   description = "Storyblok Preview Secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "app_review_mode_enabled" {
+  description = "Flag to enable or disable app review mode"
+  type        = string
+}
+
+variable "app_review_phone_number" {
+  description = "Phone number to use in app review mode"
   type        = string
   sensitive   = true
 }

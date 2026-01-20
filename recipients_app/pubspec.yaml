@@ -2,7 +2,7 @@ name: app
 description: Social Income App
 
 publish_to: "none"
-version: 1.1.17+1 # The build number is set in Codemagic automatically.
+version: 1.1.19+1 # The build number is set in Codemagic automatically.
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
@@ -11,16 +11,17 @@ environment:
 dependencies:
   animations: ^2.0.11
   another_flushbar: ^1.12.31
-  cloud_firestore: ^6.0.1
-  cloud_functions: ^6.0.1
+  cloud_firestore: ^6.1.1
+  cloud_functions: ^6.0.5
   collection: ^1.19.1
-  equatable: ^2.0.7
-  firebase_analytics: ^12.0.2 # Is required to use Firebase Remote Config.
-  firebase_app_check: ^0.4.0+1
-  firebase_auth: ^6.0.2
-  firebase_core: ^4.1.0
-  firebase_messaging: ^16.0.1
-  firebase_remote_config: ^6.0.2
+  dart_mappable: ^4.6.1
+  equatable: ^2.0.8
+  firebase_analytics: ^12.1.0 # Is required to use Firebase Remote Config.
+  firebase_app_check: ^0.4.1+3
+  firebase_auth: ^6.1.3
+  firebase_core: ^4.3.0
+  firebase_messaging: ^16.1.0
+  firebase_remote_config: ^6.1.3
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
@@ -28,6 +29,7 @@ dependencies:
     sdk: flutter
   flutter_native_splash: ^2.4.6
   force_update_helper: ^0.2.1
+  http: ^1.6.0
   intl: ^0.20.2
   # v0.8.0 is not publish on pub.dev but it is released on Github. This version fixes the build error on iOS with the message "Cannot find type 'PhoneNumberKit' in scope".
   intl_phone_number_input:
@@ -42,7 +44,6 @@ dependencies:
       url: https://github.com/ShamilPP/flutter_rounded_loading_button.git
       ref: master
   sentry_flutter: ^9.6.0
-  twilio_flutter: ^0.9.0
   url_launcher: ^6.3.2
   webview_flutter: ^4.13.0
 
@@ -50,6 +51,7 @@ dev_dependencies:
   alchemist: ^0.12.1
   bloc_test: ^10.0.0
   build_runner: ^2.6.0
+  dart_mappable_builder: ^4.6.0
 
   flutter_test:
     sdk: flutter
