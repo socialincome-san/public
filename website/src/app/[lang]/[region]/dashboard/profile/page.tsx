@@ -1,12 +1,12 @@
 import { Card } from '@/components/card';
+import { ProfileForm } from '@/components/profile-form/form';
+import { ProfileFormTranslations } from '@/components/profile-form/types';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getActiveSubscriptionAction } from '@/lib/server-actions/newsletter-actions';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { DefaultPageProps } from '../..';
-import { ProfileFormTranslations } from '@/components/profile-form/types';
-import { ProfileForm } from '@/components/profile-form/form';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
