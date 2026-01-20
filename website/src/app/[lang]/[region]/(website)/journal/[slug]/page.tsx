@@ -1,14 +1,14 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
+import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
 import {
-	generateMetaDataForArticle,
-	getArticle,
-	getRelativeArticles,
+  generateMetaDataForArticle,
+  getArticle,
+  getRelativeArticles,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
-import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';

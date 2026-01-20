@@ -1,6 +1,6 @@
+import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { Text } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
-import { RichTextRenderer } from '../storyblok/rich-text-renderer';
 
 type TextBlockProps = {
 	blok: Text;

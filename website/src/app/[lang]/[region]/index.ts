@@ -19,7 +19,7 @@ export interface DefaultPageProps extends DefaultLayoutProps {
 	searchParams: Promise<Record<string, string>>;
 }
 
-export interface DefaultParamsWithSlug extends DefaultParams {
+interface DefaultParamsWithSlug extends DefaultParams {
 	slug: string;
 }
 
