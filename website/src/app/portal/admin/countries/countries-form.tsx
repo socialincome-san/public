@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
-import { CountryPayload } from '@/lib/services/country/country.types';
+import { CountryPayload, NETWORK_TECH_LABELS, PAYMENT_PROVIDER_LABELS } from '@/lib/services/country/country.types';
 import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -44,7 +44,7 @@ const initialFormSchema: CountryFormSchema = {
 		isActive: {
 			placeholder: 'Active',
 			label: 'Is Active',
-			zodSchema: z.boolean(),
+			zodSchema: z.boolean().optional(),
 		},
 		microfinanceIndex: {
 			placeholder: '4.92',
@@ -74,6 +74,10 @@ const initialFormSchema: CountryFormSchema = {
 			placeholder: '3G',
 			label: 'Technology',
 			zodSchema: z.nativeEnum(NetworkTechnology).optional(),
+			options: Object.entries(NETWORK_TECH_LABELS).map(([value, label]) => ({
+				id: value,
+				label,
+			})),
 		},
 		networkSourceText: {
 			placeholder: 'ITU',
@@ -89,6 +93,10 @@ const initialFormSchema: CountryFormSchema = {
 			label: 'Payment providers',
 			placeholder: 'Select payment providers',
 			zodSchema: z.array(z.nativeEnum(PaymentProvider)).optional(),
+			options: Object.entries(PAYMENT_PROVIDER_LABELS).map(([value, label]) => ({
+				id: value,
+				label,
+			})),
 		},
 		sanctions: {
 			label: 'Sanctions',
