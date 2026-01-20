@@ -6,7 +6,5 @@ type PageContentTypeProps = {
 };
 
 export default function PageContentType({ blok }: PageContentTypeProps) {
-	return blok.content?.map((currentBlock) => (
-		<StoryblokComponent blok={currentBlock} key={currentBlock._uid} />
-	));
+	return blok.content?.map((currentBlock) => <StoryblokComponent blok={currentBlock} key={currentBlock._uid} />);
 }
