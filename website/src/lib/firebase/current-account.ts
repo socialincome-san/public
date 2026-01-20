@@ -24,20 +24,20 @@ async function detectCurrentAccountType(): Promise<CurrentAccountType> {
 	if (!cookie) {
 		return null;
 	}
-	
+
 	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
-	
+
 	const authUserId = decodedTokenResult.data.uid;
-	
+
 	const contributorService = new ContributorService();
 	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
 		return 'contributor';
 	}
-	
+
 	const partnerService = new LocalPartnerService();
 	const partnerResult = await partnerService.getCurrentLocalPartnerSession(authUserId);
 	if (partnerResult.success && partnerResult.data) {
