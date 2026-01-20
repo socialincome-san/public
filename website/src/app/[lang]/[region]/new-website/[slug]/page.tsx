@@ -16,6 +16,5 @@ export default async function ContentPage({ params }: DefaultLayoutPropsWithSlug
 		return notFound();
 	}
 
-
 	return <PageContentType blok={story.content} />;
 }
