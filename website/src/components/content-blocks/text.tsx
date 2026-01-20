@@ -12,7 +12,7 @@ export default function TextBlock({ blok }: TextBlockProps) {
 	}
 
 	return (
-		<div className="text-black text-lg">
+		<div className="text-lg text-black">
 			<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />
 		</div>
 	);

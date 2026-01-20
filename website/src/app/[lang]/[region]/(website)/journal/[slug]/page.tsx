@@ -1,9 +1,9 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
 import {
-  generateMetaDataForArticle,
-  getArticle,
-  getRelativeArticles,
+	generateMetaDataForArticle,
+	getArticle,
+	getRelativeArticles,
 } from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';

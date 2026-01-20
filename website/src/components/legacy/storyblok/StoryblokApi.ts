@@ -1,7 +1,7 @@
 import {
-  formatStoryblokDateToIso,
-  formatStoryblokUrl,
-  getDimensionsFromStoryblokImageUrl,
+	formatStoryblokDateToIso,
+	formatStoryblokUrl,
+	getDimensionsFromStoryblokImageUrl,
 } from '@/components/legacy/storyblok/StoryblokUtils';
 import type { Article, ArticleType, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';

@@ -1,11 +1,5 @@
 import NextLink from 'next/link';
-import {
-  MARK_LINK,
-  NODE_HEADING,
-  NODE_LI,
-  render,
-  StoryblokRichtext
-} from 'storyblok-rich-text-react-renderer';
+import { MARK_LINK, NODE_HEADING, NODE_LI, render, StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 type RichTextRendererProps = {
 	richTextDocument: StoryblokRichtext;
@@ -22,7 +16,7 @@ export function RichTextRenderer({ richTextDocument }: RichTextRendererProps) {
 		},
 		nodeResolvers: {
 			[NODE_HEADING]: (children, { level }) => {
-        // Todo: Probably move those to separate heading components
+				// Todo: Probably move those to separate heading components
 				const Tag = `h${level}` as const;
 				const styles: Record<number, string> = {
 					1: 'text-4xl font-bold',
@@ -34,14 +28,10 @@ export function RichTextRenderer({ richTextDocument }: RichTextRendererProps) {
 				};
 				return <Tag className={styles[level]}>{children}</Tag>;
 			},
-			[NODE_LI]: (children) => (
-				<li className="m-0.5 p-0.5 [&::marker]:text-black [&>*]:m-0 [&>*]:p-0">
-					{children}
-				</li>
-			),
+			[NODE_LI]: (children) => <li className="m-0.5 p-0.5 [&::marker]:text-black [&>*]:m-0 [&>*]:p-0">{children}</li>,
 		},
 		blokResolvers: {
-// Todo: Add blocks as soon as we have them ready in the Storyblok schema
+			// Todo: Add blocks as soon as we have them ready in the Storyblok schema
 		},
 	});
 }

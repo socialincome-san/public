@@ -1,5 +1,5 @@
-import { WebsiteRegion } from "@/lib/i18n/utils";
-import { LanguageCode } from "@/lib/types/language";
+import { WebsiteRegion } from '@/lib/i18n/utils';
+import { LanguageCode } from '@/lib/types/language';
 
 export const LANGUAGE_COOKIE = 'si_lang';
 export const REGION_COOKIE = 'si_region';

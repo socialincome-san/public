@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function ContentPage({params}: DefaultLayoutPropsWithSlug) {
+export default async function ContentPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang } = await params;
 
 	const story = await getStoryWithFallback<ISbStoryData<Page>>(`new-website/${slug}`, lang);
