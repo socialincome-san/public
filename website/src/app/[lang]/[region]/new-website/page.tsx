@@ -3,15 +3,22 @@ import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getStoryblokApi } from '@/lib/storyblok';
 import type { ISbStoryData } from '@storyblok/js';
 import { StoryblokStory } from '@storyblok/react/rsc';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
 export default async function HomePage({ params }: DefaultPageProps) {
 	const { lang } = await params;
 
+	console.log('Storyblok token available:', !!process.env.STORYBLOK_PREVIEW_TOKEN);
+
 	const storyblokApi = getStoryblokApi();
 	const response = await storyblokApi.getStory('new-website/home');
 	const story = response.data.story as ISbStoryData<Page>;
+
+	if (!story) {
+		return notFound();
+	}
 
 	return <StoryblokStory story={story} />;
 }
