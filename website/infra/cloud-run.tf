@@ -97,16 +97,6 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
-          name  = "SENDGRID_LIST_ID"
-          value = var.sendgrid_list_id
-        }
-
-        env {
-          name  = "SENDGRID_SUPPRESSION_LIST_ID"
-          value = var.sendgrid_suppression_list_id
-        }
-
-        env {
           name  = "TWILIO_ACCOUNT_SID"
           value = var.twilio_account_sid
         }

@@ -89,16 +89,6 @@ variable "sendgrid_api_key" {
   sensitive = true
 }
 
-variable "sendgrid_list_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "sendgrid_suppression_list_id" {
-  type      = string
-  sensitive = true
-}
-
 variable "twilio_account_sid" {
   type      = string
   sensitive = true

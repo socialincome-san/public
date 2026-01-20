@@ -55,6 +55,8 @@ jobs:
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_LINKEDIN_TRACKING_ID}}" > secrets/NEXT_PUBLIC_LINKEDIN_TRACKING_ID
           echo "${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
+          echo "${{ secrets.TF_PROD_SENDGRID_SUPPRESSION_LIST_ID }}" > secrets/SENDGRID_SUPPRESSION_LIST_ID
+          echo "${{ secrets.TF_PROD_SENDGRID_LIST_ID }}" > secrets/SENDGRID_LIST_ID
 
       - name: 📤 Build and Push Docker Image
         env:

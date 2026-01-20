@@ -55,6 +55,7 @@ jobs:
         env:
           STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
           STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
+          SENDGRID_API_KEY: ${{ secrets.TF_STAGING_SENDGRID_API_KEY }}
         run: |
           mv website/.env.development website/.env.production
           npm run website:build:emulator
