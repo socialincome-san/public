@@ -52,8 +52,6 @@ jobs:
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
           echo "${{ secrets.TF_STAGING_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
-          echo "${{ secrets.TF_STAGING_SENDGRID_SUPPRESSION_LIST_ID }}" > secrets/SENDGRID_SUPPRESSION_LIST_ID
-          echo "${{ secrets.TF_STAGING_SENDGRID_LIST_ID }}" > secrets/SENDGRID_LIST_ID
 
       - name: 📤 Build and Push Docker Image
         env:
