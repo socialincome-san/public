@@ -11,8 +11,8 @@ export async function submitProfileForm(
 	session: ContributorSession | LocalPartnerSession,
 	isNewsletterSubscribed: boolean,
 ) {
-	if (session.type === 'contributor') {
-		const resultNewsletter = await toggleNewsletter(values, session, isNewsletterSubscribed);
+	if (values.type === 'contributor') {
+		const resultNewsletter = await toggleNewsletter(values, session as ContributorSession, isNewsletterSubscribed);
 		if (!resultNewsletter.success) {
 			return {
 				success: false,
@@ -21,7 +21,7 @@ export async function submitProfileForm(
 		}
 
 		const update: ContributorUpdateInput = {
-			referral: values.referral ?? session.referral ?? ContributorReferralSource.other,
+			referral: values.referral ?? (session as ContributorSession).referral ?? ContributorReferralSource.other,
 			contact: {
 				update: {
 					data: {

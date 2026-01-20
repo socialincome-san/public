@@ -4,7 +4,41 @@ import { ContributorSession } from '@/lib/services/contributor/contributor.types
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
 import { ProfileForm } from './form';
-import { ProfileFormTranslations } from './types';
+
+export type ProfileFormTranslations = {
+	personalInfoTitle: string;
+	addressTitle: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	country: string;
+	gender: string;
+	howDidYouHear: string;
+	selectGenderPlaceholder: string;
+	selectOptionPlaceholder: string;
+	genderMale: string;
+	genderFemale: string;
+	genderOther: string;
+	genderPrivate: string;
+	referralFamily: string;
+	referralWork: string;
+	referralSocial: string;
+	referralMedia: string;
+	referralPresentation: string;
+	referralOther: string;
+	street: string;
+	number: string;
+	city: string;
+	zip: string;
+	saveButton: string;
+	updateError: string;
+	userUpdatedToast: string;
+	countries: Record<CountryCode, string>;
+	newsletterLabel: string;
+	language: string;
+	name: string;
+	causes: string;
+};
 
 type Props = {
 	session: ContributorSession | LocalPartnerSession;

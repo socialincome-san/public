@@ -21,7 +21,7 @@ import { MultiSelect, MultiSelectOption } from '../multi-select';
 import { buildDefaultValues } from './defaults';
 import { ProfileFormValues, profileFormSchema } from './schemas';
 import { submitProfileForm } from './submit';
-import { ProfileFormTranslations } from './types';
+import { ProfileFormTranslations } from './translated-form';
 
 type Props = {
 	session: ContributorSession | LocalPartnerSession;
