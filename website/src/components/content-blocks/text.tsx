@@ -9,12 +9,16 @@ type TextBlockProps = {
 
 const resolvers = {
 	[MarkTypes.LINK]: (node: StoryblokRichTextNode<ReactElement>) => (
-			<NextLink href={node.attrs?.href} target={node.attrs?.target}>
+		<NextLink href={node.attrs?.href} target={node.attrs?.target}>
 			{node.text}
 		</NextLink>
 	),
 };
 
 export default function TextBlock({ block }: TextBlockProps) {
-	return block.content && <StoryblokRichText doc={block.content as StoryblokRichTextNode<ReactElement>} resolvers={resolvers} />;
+	return (
+		block.content && (
+			<StoryblokRichText doc={block.content as StoryblokRichTextNode<ReactElement>} resolvers={resolvers} />
+		)
+	);
 }
