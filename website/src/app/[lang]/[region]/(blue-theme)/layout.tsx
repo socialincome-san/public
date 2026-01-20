@@ -10,9 +10,7 @@ export async function generateMetadata(props: DefaultLayoutProps) {
 }
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	const resolvedParams = await params;
-	const lang = resolvedParams.lang as WebsiteLanguage;
-	const region = resolvedParams.region as WebsiteRegion;
+	const { lang, region } = await params as { lang: WebsiteLanguage; region: WebsiteRegion };
 
 	return (
 		<div className="theme-blue min-h-screen">

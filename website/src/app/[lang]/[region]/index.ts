@@ -3,23 +3,17 @@ export const REGION_COOKIE = 'si_region';
 export const COUNTRY_COOKIE = 'si_country';
 export const CURRENCY_COOKIE = 'si_currency';
 
-export interface DefaultParams {
+export type DefaultParams = {
 	lang: string;
 	region: string;
-}
+};
 
-export interface DefaultLayoutProps {
-	params: Promise<DefaultParams>;
-}
+export type DefaultLayoutProps<P extends DefaultParams = DefaultParams> = {
+	params: Promise<P>;
+};
 
-export interface DefaultPageProps extends DefaultLayoutProps {
+export type DefaultPageProps = DefaultLayoutProps & {
 	searchParams: Promise<Record<string, string>>;
-}
+};
 
-interface DefaultParamsWithSlug extends DefaultParams {
-	slug: string;
-}
-
-export interface DefaultLayoutPropsWithSlug {
-	params: Promise<DefaultParamsWithSlug>;
-}
+export type DefaultLayoutPropsWithSlug = DefaultLayoutProps<DefaultParams & { slug: string }>;

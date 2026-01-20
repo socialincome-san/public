@@ -12,7 +12,6 @@ import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/sto
 import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { LanguageCode } from '@/lib/types/language';
 import { Badge, Separator, Typography } from '@socialincome/ui';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
@@ -48,7 +47,7 @@ function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Topic>, v
 }
 
 export default async function Page(props: DefaultLayoutPropsWithSlug) {
-	const { slug, lang, region } = await props.params;
+	const { slug, lang, region } = await props.params as { slug: string; lang: WebsiteLanguage; region: WebsiteRegion };
 
 	const articleResponse = await getArticleMemoized(lang, slug);
 	const articleData = articleResponse.data.story.content;
@@ -171,8 +170,8 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						<RichTextRenderer
 							richTextDocument={articleData.content as StoryblokRichtext}
 							translator={translator}
-							lang={lang as LanguageCode}
-							region={region as WebsiteRegion}
+							lang={lang}
+							region={region}
 						/>
 					</Typography>
 					<Separator className="my-2" />
@@ -181,8 +180,8 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							<RichTextRenderer
 								richTextDocument={articleData.footnotes as StoryblokRichtext}
 								translator={translator}
-								lang={lang as LanguageCode}
-								region={region as WebsiteRegion}
+								lang={lang}
+								region={region}
 							/>
 						</Typography>
 					)}
