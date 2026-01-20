@@ -214,8 +214,6 @@ pg_restore   --clean --if-exists   --no-owner   -d "postgresql://staging-website
 2. Set env vars in `website/.env.local`:
    - `STORYBLOK_PREVIEW_TOKEN`
    - `STORYBLOK_PREVIEW_SECRET`
-   - `STORYBLOK_PERSONAL_ACCESS_TOKEN` (for CLI)
-   - `STORYBLOK_SPACE_ID` (for CLI)
 3. Optional: run SSL proxy for live preview
 
 ```
@@ -227,7 +225,14 @@ npm run dev:ssl-proxy
 ### Storyblok Type Generation
 
 We use the **Storyblok CLI** to generate TypeScript types from the CMS
-schema:
+schema.
+
+If you have made changes to the Storyblok schema, you can regenerate the types:
+
+1. Set these env vars in `website/.env.local`:
+   - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
+   - `STORYBLOK_SPACE_ID`
+2. Run:
 
 ```
 npm run storyblok:generate
@@ -237,10 +242,7 @@ This command:
 
 1. Logs into Storyblok using your personal access token
 2. Pulls component schemas from the space
-3. Generates TypeScript types to `.storyblok/types/`
-
-**Types are generated automatically** when running `npm run serve` or
-`npm run build`.
+3. Generates TypeScript types to `src/generated/storyblok/types/`
 
 Usage in components:
 
