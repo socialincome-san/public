@@ -49,7 +49,7 @@ const initialFormSchema: CountryFormSchema = {
 		isActive: {
 			placeholder: 'Active',
 			label: 'Is Active',
-			zodSchema: z.boolean().optional(),
+			zodSchema: z.boolean().optional().default(false),
 		},
 		microfinanceIndex: {
 			placeholder: '4.92',
