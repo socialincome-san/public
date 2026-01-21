@@ -78,13 +78,17 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://testuser:testpass@postgres:5432/testdb
+      STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
+      STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
       HOME: /root
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install deps
-        run: npm ci --no-audit --no-fund
+      - name: Start emulators
+        run: |
+          mv website/.env.development website/.env.production
+          npm run website:build:emulator
 
       - name: Install browsers
         run: npx playwright install --with-deps
