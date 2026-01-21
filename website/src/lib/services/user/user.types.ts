@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { Gender, UserRole } from '@prisma/client';
 
 export type UserPayload = {
 	id: string;
@@ -18,12 +18,21 @@ export type UserCreateInput = {
 };
 
 export type UserUpdateInput = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	role: UserRole;
-	organizationId: string;
+	id?: string;
+	firstName?: string;
+	lastName?: string;
+	email?: string;
+	role?: UserRole;
+	organizationId?: string;
+	gender?: Gender | null;
+	language?: string | null;
+	address?: {
+		street: string;
+		number: string;
+		city: string;
+		zip: string;
+		country: string;
+	} | null;
 };
 
 export type UserTableViewRow = {
@@ -43,8 +52,17 @@ export type UserTableView = {
 export type UserSession = {
 	type: 'user';
 	id: string;
+	gender: Gender | null;
+	email: string | null;
 	firstName: string | null;
 	lastName: string | null;
+	language: string | null;
+	street: string | null;
+	number: string | null;
+	city: string | null;
+	zip: string | null;
+	country: string | null;
+
 	role: UserRole;
 	activeOrganization: {
 		id: string;

@@ -1,3 +1,4 @@
+import { Actor } from '@/lib/firebase/current-account';
 import { LocalPartner } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -60,54 +61,61 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
-	async update(userId: string, input: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
+	async update(actor: Actor, input: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+		if (actor.kind === 'local-partner') {
+			input.id = actor.session.id;
 		}
-
 		const partnerId = input.id?.toString();
 		if (!partnerId) {
 			return this.resultFail('Local partner ID is required');
 		}
 
-		try {
-			const existing = await this.db.localPartner.findUnique({
-				where: { id: partnerId },
-				select: {
-					account: true,
-					contact: {
-						select: {
-							email: true,
-						},
+		const existing = await this.db.localPartner.findUnique({
+			where: { id: partnerId },
+			select: {
+				id: true,
+				account: true,
+				contact: {
+					select: {
+						email: true,
 					},
 				},
-			});
+			},
+		});
 
-			if (!existing) {
-				return this.resultFail('Local partner not found');
+		if (!existing) {
+			return this.resultFail('Local partner not found');
+		}
+
+		if (actor.kind === 'contributor') {
+			return this.resultFail('Permission denied');
+		}
+
+		if (actor.kind === 'user') {
+			const isAdmin = await this.userService.isAdmin(actor.session.id);
+			if (!isAdmin.success) {
+				return this.resultFail(isAdmin.error);
 			}
+		}
 
-			const newEmail = input.contact?.update?.data?.email?.toString() ?? null;
-			const oldEmail = existing.contact?.email ?? null;
+		const newEmail = input.contact?.update?.data?.email?.toString() ?? null;
+		const oldEmail = existing.contact?.email ?? null;
+		const firebaseUid = existing.account.firebaseAuthUserId;
 
-			if (newEmail && newEmail !== oldEmail) {
-				const firebaseResult = await this.firebaseService.updateByUid(existing.account.firebaseAuthUserId, {
-					email: newEmail,
-				});
-
-				if (!firebaseResult.success) {
-					this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
-				}
+		if (actor.kind === 'user' && newEmail && newEmail !== oldEmail) {
+			const firebaseResult = await this.firebaseService.updateByUid(firebaseUid, { email: newEmail });
+			if (!firebaseResult.success) {
+				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
 			}
+		}
 
-			const partner = await this.db.localPartner.update({
+		try {
+			const updated = await this.db.localPartner.update({
 				where: { id: partnerId },
 				data: input,
 			});
 
-			return this.resultOk(partner);
+			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not update local partner: ${JSON.stringify(error)}`);

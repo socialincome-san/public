@@ -46,7 +46,9 @@
 			"street": "Strasse",
 			"street-number": "Nummer",
 			"city": "Ort",
-			"zip": "PLZ"
+			"zip": "PLZ",
+			"name": "Name",
+			"causes": "Kriterien"
 		}
 	},
 	"sections": {

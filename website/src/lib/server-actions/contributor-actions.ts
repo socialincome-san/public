@@ -9,7 +9,6 @@ import { getAuthenticatedContributorOrThrow, getOptionalContributor } from '../f
 export async function createContributorAction(data: ContributorFormCreateInput) {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributorService = new ContributorService();
-
 	const res = await contributorService.create(user.id, data);
 	revalidatePath('/portal/management/contributors');
 	return res;
@@ -18,7 +17,6 @@ export async function createContributorAction(data: ContributorFormCreateInput) 
 export async function updateContributorAction(contributor: ContributorUpdateInput) {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributorService = new ContributorService();
-
 	const res = await contributorService.update(user.id, contributor);
 	revalidatePath('/portal/management/contributors');
 	return res;
@@ -27,12 +25,11 @@ export async function updateContributorAction(contributor: ContributorUpdateInpu
 export async function getContributorAction(contributorId: string) {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributorService = new ContributorService();
-
-	return await contributorService.get(user.id, contributorId);
+	return contributorService.get(user.id, contributorId);
 }
 
 export async function getOptionalContributorAction() {
-	return await getOptionalContributor();
+	return getOptionalContributor();
 }
 
 export async function updateSelfAction(data: ContributorUpdateInput) {
