@@ -1,4 +1,4 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getStoryWithFallback } from '@/lib/storyblok';
@@ -7,10 +7,10 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function HomePage({ params }: DefaultPageProps) {
-	const { lang } = await params;
+export default async function ContentPage({ params }: DefaultLayoutPropsWithSlug) {
+	const { slug, lang } = await params;
 
-	const story = await getStoryWithFallback<ISbStoryData<Page>>('new-website', lang);
+	const story = await getStoryWithFallback<ISbStoryData<Page>>(`new-website/${slug}`, lang);
 
 	if (!story) {
 		return notFound();
