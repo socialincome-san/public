@@ -8,10 +8,6 @@ function slugifyCountry(name: string): string {
 	return name.toLowerCase().replace(/\s+/g, '_');
 }
 
-function getInitials(name: string): string {
-	return name.trim().slice(0, 2).toUpperCase();
-}
-
 type CountryFlagProps = {
 	country: string;
 	size?: 'sm' | 'lg';
@@ -32,7 +28,7 @@ export function CountryFlag({ country, size = 'lg' }: CountryFlagProps) {
 					containerSize,
 				)}
 			>
-				{getInitials(country)}
+				{country}
 			</div>
 		);
 	}
