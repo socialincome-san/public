@@ -3,6 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
 import { CountryPayload, NETWORK_TECH_LABELS, PAYMENT_PROVIDER_LABELS } from '@/lib/services/country/country.types';
+import { isoCountries } from '@/lib/services/country/iso-countries';
 import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -37,9 +38,13 @@ const initialFormSchema: CountryFormSchema = {
 	label: 'Country',
 	fields: {
 		isoCode: {
-			placeholder: 'SLE',
-			label: 'Country ISO Code',
-			zodSchema: z.string().min(1),
+			label: 'Country',
+			zodSchema: z.enum(isoCountries.map((c) => c.isoCode) as [string, ...string[]]),
+			useCombobox: true,
+			options: isoCountries.map((c) => ({
+				id: c.isoCode,
+				label: c.name,
+			})),
 		},
 		isActive: {
 			placeholder: 'Active',
