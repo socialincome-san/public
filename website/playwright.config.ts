@@ -16,7 +16,7 @@ export default defineConfig({
 	reporter: [['html', { open: 'never' }]],
 
 	use: {
-		baseURL: 'http://localhost:3001',
+		baseURL: 'http://localhost:3000',
 		trace: 'on-first-retry',
 	},
 
@@ -46,9 +46,10 @@ export default defineConfig({
 	],
 
 	webServer: {
-		command: 'echo "🔧 Building…" && npm run build && echo "🚀 Starting server…" && npm run start',
-		url: 'http://localhost:3001',
-		timeout: 60_000,
+		command:
+			'echo "🔧 Building…" && npm run build:test && echo "🚀 Starting server…" && node .next/standalone/website/server.js',
+		url: 'http://localhost:3000',
+		timeout: 120_000,
 		reuseExistingServer: !process.env.CI,
 	},
 });
