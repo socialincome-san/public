@@ -1,6 +1,7 @@
 import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { getCountryNameByIsoCode } from '../country/iso-countries';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import { CreateProgramInput, ProgramOption, ProgramWallet, ProgramWallets } from './program.types';
 
@@ -28,7 +29,7 @@ export class ProgramService extends BaseService {
 					id: true,
 					name: true,
 					country: {
-						select: { name: true },
+						select: { isoCode: true },
 					},
 					payoutCurrency: true,
 					recipients: {
@@ -62,7 +63,7 @@ export class ProgramService extends BaseService {
 				return {
 					id: program.id,
 					programName: program.name,
-					country: program.country.name,
+					country: program.country.isoCode,
 					payoutCurrency: program.payoutCurrency,
 					recipientsCount,
 					totalPayoutsSum,
@@ -135,7 +136,7 @@ export class ProgramService extends BaseService {
 
 			const country = await this.db.country.findUnique({
 				where: { id: input.countryId },
-				select: { name: true },
+				select: { isoCode: true },
 			});
 
 			if (!country) {
@@ -144,7 +145,7 @@ export class ProgramService extends BaseService {
 
 			const program = await this.db.program.create({
 				data: {
-					name: `${country.name} Program ${Math.floor(10000 + Math.random() * 90000)}`,
+					name: `${getCountryNameByIsoCode(country.isoCode)} Program ${Math.floor(10000 + Math.random() * 90000)}`,
 					countryId: input.countryId,
 					amountOfRecipientsForStart: input.amountOfRecipientsForStart ?? null,
 					programDurationInMonths: input.programDurationInMonths,
