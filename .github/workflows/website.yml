@@ -5,53 +5,38 @@ on:
     paths-ignore:
       - "recipients_app/**"
   push:
-    branches:
-      - main
+    branches: [main]
     paths-ignore:
       - "recipients_app/**"
 
 jobs:
-  check_applicability:
-    name: Check applicability
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          paths: '["website/**", ".github/workflows/website.yml"]'
-          skip_after_successful_duplicate: "false"
-          do_not_skip: '["push"]'
-
-  test:
-    name: Test website
-    needs: check_applicability
-    if: needs.check_applicability.outputs.should_skip != 'true'
+  lint:
+    name: "✨ Lint"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Use Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run website:lint
 
-      - name: Initialize repository
-        uses: ./.github/workflows/actions/init
+  test:
+    name: "🧪 Unit Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run website:build-paths
+      - run: npm run typecheck
+      - run: npm run website:test
 
-      - name: Run linters
-        run: npm run website:lint
-
-      - name: Run typecheck
-        run: npm run website:build-paths && npm run typecheck
-
-      - name: Run unit tests
-        run: npm run website:test
-
-      - name: Test build
+      - name: Build (for e2e)
         env:
           STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
           STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
@@ -59,16 +44,70 @@ jobs:
           mv website/.env.development website/.env.production
           npm run website:build:emulator
 
-      - name: Set up Terraform CLI
-        uses: hashicorp/setup-terraform@v2
+      - name: Upload build
+        uses: actions/upload-artifact@v5
         with:
-          terraform_version: 1.6.6
+          name: website-build
+          path: website/.next
+          if-no-files-found: error
 
-      - name: Terraform Init (no backend)
-        run: terraform -chdir=website/infra init -backend=false
+  e2e:
+    name: "📸 E2E Tests"
+    needs: test
+    runs-on: ubuntu-latest
 
-      - name: Terraform Format Check
-        run: terraform -chdir=website/infra fmt -check
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium]
 
-      - name: Terraform Validate
-        run: terraform -chdir=website/infra validate
+    container:
+      image: mcr.microsoft.com/playwright:v1.57.0-jammy
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U testuser"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://testuser:testpass@postgres:5432/testdb
+      HOME: /root
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download build
+        uses: actions/download-artifact@v5
+        with:
+          name: website-build
+          path: website/.next
+
+      - name: Install deps
+        working-directory: website
+        run: npm ci --no-audit --no-fund
+
+      - name: Install browsers
+        working-directory: website
+        run: npx playwright install --with-deps
+
+      - name: Run E2E Tests
+        working-directory: website
+        run: npx playwright test --project=${{ matrix.browser }}
+
+      - name: Upload Test Report (only if failure)
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-report-${{ matrix.browser }}-${{ github.sha }}
+          path: playwright-report/
