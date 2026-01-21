@@ -14,6 +14,7 @@ const config: KnipConfig = {
 		'next-openapi-gen',
 		'tsx',
 		'storyblok',
+		'npm-run-all',
 		'@radix-ui/react-accordion',
 		'@radix-ui/react-popover',
 		'@radix-ui/react-progress',
