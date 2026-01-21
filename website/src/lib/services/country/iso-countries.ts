@@ -1,4 +1,4 @@
-export type IsoCountry = {
+type IsoCountry = {
 	name: string;
 	isoCode: string;
 };
