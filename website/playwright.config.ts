@@ -46,10 +46,9 @@ export default defineConfig({
 	],
 
 	webServer: {
-		command:
-			'echo "🔧 Building…" && npm run build:test && echo "🚀 Starting server…" && node .next/standalone/website/server.js',
+		command: 'npm run build:test && PORT=3000 HOSTNAME=localhost node .next/standalone/website/server.js',
 		url: 'http://localhost:3000',
-		timeout: 180 * 1000,
 		reuseExistingServer: !process.env.CI,
+		timeout: 180 * 1000,
 	},
 });
