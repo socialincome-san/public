@@ -90,6 +90,19 @@ export class UserService extends BaseService {
 			return this.resultFail(isAdminResult.error);
 		}
 
+		if (!input.id) {
+			return this.resultFail('User ID is required');
+		}
+		if (!input.email) {
+			return this.resultFail('User email is required');
+		}
+		if (!input.role) {
+			return this.resultFail('User role is required');
+		}
+		if (!input.organizationId) {
+			return this.resultFail('Organization ID is required');
+		}
+
 		try {
 			const existingUser = await this.db.user.findUnique({
 				where: { id: input.id },
@@ -138,6 +151,83 @@ export class UserService extends BaseService {
 				},
 				include: {
 					contact: true,
+					activeOrganization: true,
+				},
+			});
+
+			return this.resultOk({
+				id: updatedUser.id,
+				firstName: updatedUser.contact.firstName,
+				lastName: updatedUser.contact.lastName,
+				email: updatedUser.contact.email,
+				role: updatedUser.role,
+				organizationId: updatedUser.activeOrganization?.id ?? null,
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async updateSelf(userId: string, input: UserUpdateInput): Promise<ServiceResult<UserPayload>> {
+		try {
+			const existingUser = await this.db.user.findUnique({
+				where: { id: userId },
+				include: {
+					contact: { include: { address: true } },
+					activeOrganization: true,
+					organizationAccesses: { select: { organizationId: true } },
+				},
+			});
+
+			if (!existingUser) {
+				return this.resultFail('User not found');
+			}
+
+			if (input.email && input.email !== existingUser.contact.email) {
+				return this.resultFail('You cannot change your email yourself.');
+			}
+
+			const allowedOrgIds = existingUser.organizationAccesses.map((o) => o.organizationId);
+
+			const updatedUser = await this.db.user.update({
+				where: { id: userId },
+				data: {
+					activeOrganization:
+						input.organizationId && allowedOrgIds.includes(input.organizationId)
+							? { connect: { id: input.organizationId } }
+							: undefined,
+					contact: {
+						update: {
+							firstName: input.firstName ?? existingUser.contact.firstName,
+							lastName: input.lastName ?? existingUser.contact.lastName,
+							gender: input.gender ?? existingUser.contact.gender,
+							language: input.language ?? existingUser.contact.language,
+							address: input.address
+								? {
+										upsert: {
+											update: {
+												street: input.address.street,
+												number: input.address.number,
+												city: input.address.city,
+												zip: input.address.zip,
+												country: input.address.country,
+											},
+											create: {
+												street: input.address.street,
+												number: input.address.number,
+												city: input.address.city,
+												zip: input.address.zip,
+												country: input.address.country,
+											},
+										},
+									}
+								: undefined,
+						},
+					},
+				},
+				include: {
+					contact: { include: { address: true } },
 					activeOrganization: true,
 				},
 			});
@@ -261,8 +351,24 @@ export class UserService extends BaseService {
 				select: {
 					id: true,
 					role: true,
-					accountId: true,
-					contact: { select: { firstName: true, lastName: true } },
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							email: true,
+							gender: true,
+							language: true,
+							address: {
+								select: {
+									street: true,
+									number: true,
+									city: true,
+									zip: true,
+									country: true,
+								},
+							},
+						},
+					},
 					activeOrganization: {
 						select: {
 							id: true,
@@ -309,18 +415,28 @@ export class UserService extends BaseService {
 					)
 				: [];
 
-			const userInfo: UserSession = {
+			const contact = user.contact;
+
+			const session: UserSession = {
 				type: 'user',
 				id: user.id,
-				firstName: user.contact?.firstName ?? null,
-				lastName: user.contact?.lastName ?? null,
 				role: user.role,
+				firstName: contact?.firstName ?? null,
+				lastName: contact?.lastName ?? null,
+				email: contact?.email ?? null,
+				gender: contact?.gender ?? null,
+				language: contact?.language ?? null,
+				street: contact?.address?.street ?? null,
+				number: contact?.address?.number ?? null,
+				city: contact?.address?.city ?? null,
+				zip: contact?.address?.zip ?? null,
+				country: contact?.address?.country ?? null,
 				activeOrganization,
 				organizations,
 				programs,
 			};
 
-			return this.resultOk(userInfo);
+			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Error fetching user information: ${JSON.stringify(error)}`);

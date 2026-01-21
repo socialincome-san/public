@@ -46,7 +46,9 @@
 			"street": "Via",
 			"street-number": "Numero",
 			"city": "Città",
-			"zip": "CAP"
+			"zip": "CAP",
+			"name": "Nome",
+			"causes": "Criteri"
 		}
 	},
 	"sections": {

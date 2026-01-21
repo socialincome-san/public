@@ -1,3 +1,4 @@
+import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
 import {
@@ -11,7 +12,6 @@ import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/sto
 import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { LanguageCode } from '@/lib/types/language';
 import { Badge, Separator, Typography } from '@socialincome/ui';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
@@ -25,9 +25,7 @@ const ARTICLE_IMAGE_HEIGHT = 960;
 
 export const revalidate = 900;
 
-export async function generateMetadata(props: {
-	params: Promise<{ slug: string; lang: LanguageCode; region: WebsiteRegion }>;
-}) {
+export async function generateMetadata(props: DefaultLayoutPropsWithSlug) {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
 	const url = `https://socialincome.org/${lang}/journal/${articleResponse.data.story.slug}`;
@@ -48,10 +46,8 @@ function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Topic>, v
 	);
 }
 
-export default async function Page(props: {
-	params: Promise<{ slug: string; lang: LanguageCode; region: WebsiteRegion }>;
-}) {
-	const { slug, lang, region } = await props.params;
+export default async function Page(props: DefaultLayoutPropsWithSlug) {
+	const { slug, lang, region } = (await props.params) as { slug: string; lang: WebsiteLanguage; region: WebsiteRegion };
 
 	const articleResponse = await getArticleMemoized(lang, slug);
 	const articleData = articleResponse.data.story.content;
