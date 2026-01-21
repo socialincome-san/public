@@ -1,7 +1,7 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-	ignoreFiles: ['src/lib/database/schema.prisma'],
+	ignoreFiles: ['src/lib/database/schema.prisma', 'test/e2e/setup/auth-setup.ts'],
 	ignoreDependencies: [
 		'react',
 		'react-hook-form',
