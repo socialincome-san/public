@@ -46,9 +46,9 @@ export default defineConfig({
 	],
 
 	webServer: {
-	command: 'npm run build:test && npm run dev:test',
-	url: 'http://localhost:3000',
-	reuseExistingServer: !process.env.CI,
-	timeout: 180_000,
-},
+		command: 'npm run build:test && npm run dev:test',
+		url: 'http://localhost:3000',
+		reuseExistingServer: !process.env.CI,
+		timeout: 180_000,
+	},
 });
