@@ -13,6 +13,7 @@ import {
 	ProgramCountryFeasibilityRow,
 	ProgramCountryFeasibilityView,
 } from './country.types';
+import { getCountryNameByIsoCode } from './iso-countries';
 
 export class CountryService extends BaseService {
 	private userService = new UserService();
@@ -358,40 +359,40 @@ export class CountryService extends BaseService {
 
 	private getCashDetailsText(countryIsoCode: string, microfinanceIndex: number | null): string {
 		if (microfinanceIndex === null) {
-			return `Market functionality in ${countryIsoCode} may be impaired.`;
+			return `Market functionality in ${getCountryNameByIsoCode(countryIsoCode)} may be impaired.`;
 		}
 
 		return microfinanceIndex < 3
-			? `Market functionality in ${countryIsoCode} is considered sufficient.`
-			: `Market functionality in ${countryIsoCode} may be impaired.`;
+			? `Market functionality in ${getCountryNameByIsoCode(countryIsoCode)} is considered sufficient.`
+			: `Market functionality in ${getCountryNameByIsoCode(countryIsoCode)} may be impaired.`;
 	}
 
 	private getMobileMoneyDetailsText(countryIsoCode: string, paymentProviders: PaymentProvider[] | null): string {
 		if (!paymentProviders || paymentProviders.length === 0) {
-			return `Mobile money infrastructure in ${countryIsoCode} is not sufficient.`;
+			return `Mobile money infrastructure in ${getCountryNameByIsoCode(countryIsoCode)} is not sufficient.`;
 		}
 
 		const providers = paymentProviders.map(this.formatEnum).join(', ');
 
-		return `Mobile money infrastructure in ${countryIsoCode} is considered sufficient. Following ${
+		return `Mobile money infrastructure in ${getCountryNameByIsoCode(countryIsoCode)} is considered sufficient. Following ${
 			paymentProviders.length
 		} provider${paymentProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
 	}
 
 	private getMobileNetworkDetailsText(countryIsoCode: string, populationCoverage: number | null): string {
 		if (populationCoverage === null) {
-			return `No reliable mobile network coverage data available for ${countryIsoCode}.`;
+			return `No reliable mobile network coverage data available for ${getCountryNameByIsoCode(countryIsoCode)}.`;
 		}
 
 		return populationCoverage >= 50
-			? `Mobile network coverage of ${countryIsoCode} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
-			: `Mobile network coverage of ${countryIsoCode} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
+			? `Mobile network coverage of ${getCountryNameByIsoCode(countryIsoCode)} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
+			: `Mobile network coverage of ${getCountryNameByIsoCode(countryIsoCode)} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
 	}
 
 	private getSanctionsDetailsText(countryIsoCode: string, sanctions: SanctionRegime[] | null): string {
 		return sanctions && sanctions.length > 0
-			? `${countryIsoCode} is subject to international sanctions or restrictions.`
-			: `${countryIsoCode} is not on the UN, US or EU sanctioned list.`;
+			? `${getCountryNameByIsoCode(countryIsoCode)} is subject to international sanctions or restrictions.`
+			: `${getCountryNameByIsoCode(countryIsoCode)} is not on the UN, US or EU sanctioned list.`;
 	}
 
 	private toNumber(value: Decimal | null): number | null {
