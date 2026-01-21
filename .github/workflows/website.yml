@@ -85,6 +85,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
+
       - name: Start emulators
         run: |
           mv website/.env.development website/.env.production
