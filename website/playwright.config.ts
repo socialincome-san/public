@@ -49,7 +49,7 @@ export default defineConfig({
 		command:
 			'echo "🔧 Building…" && npm run build:test && echo "🚀 Starting server…" && node .next/standalone/website/server.js',
 		url: 'http://localhost:3000',
-		timeout: 120_000,
+		timeout: 180 * 1000,
 		reuseExistingServer: !process.env.CI,
 	},
 });

@@ -49,13 +49,8 @@ jobs:
       - run: terraform -chdir=website/infra validate
 
   e2e:
-    name: "📸 E2E — ${{ matrix.browser }}"
+    name: "📸 E2E Tests"
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium]
 
     container:
       image: mcr.microsoft.com/playwright:v1.57.0-jammy
@@ -98,11 +93,11 @@ jobs:
 
       - name: Run E2E Tests
         working-directory: website
-        run: npx playwright test --project=${{ matrix.browser }}
+        run: npm run test:e2e:verbose
 
       - name: Upload Test Report (only if failure)
         if: failure()
         uses: actions/upload-artifact@v5
         with:
-          name: playwright-report-${{ matrix.browser }}-${{ github.sha }}
+          name: playwright-report-${{ github.sha }}
           path: playwright-report/
