@@ -25,7 +25,6 @@ jobs:
   test:
     name: "🧪 Unit Tests"
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
@@ -40,7 +39,6 @@ jobs:
   build:
     name: "🏗️ Build Website"
     runs-on: ubuntu-latest
-    needs: test
     outputs:
       build_uploaded: ${{ steps.upload.outputs.ok }}
     steps:
@@ -54,19 +52,20 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Build with emulator environment
+        working-directory: ./website
         env:
           STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
           STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
         run: |
-          mv website/.env.development website/.env.production
-          npm run website:build:emulator
+          mv .env.development .env.production
+          npm run build:emulator
 
       - name: Upload built artifacts
         id: upload
         uses: actions/upload-artifact@v4
         with:
           name: website-build
-          path: website/.next
+          path: ./website/.next
           if-no-files-found: error
 
   terraform:
