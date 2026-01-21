@@ -91,12 +91,6 @@ export class LocalPartnerService extends BaseService {
 			return this.resultFail('Permission denied');
 		}
 
-		if (actor.kind === 'local-partner') {
-			if (actor.session.id !== partnerId) {
-				return this.resultFail('Permission denied');
-			}
-		}
-
 		if (actor.kind === 'user') {
 			const isAdmin = await this.userService.isAdmin(actor.session.id);
 			if (!isAdmin.success) {
