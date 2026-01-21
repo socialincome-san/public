@@ -40,7 +40,7 @@ const config: KnipConfig = {
 		'dotenv',
 		'prisma',
 		'knip',
-		'npm-run-all'
+		'npm-run-all',
 	],
 	ignoreUnresolved: ['dotenv/config'],
 };
