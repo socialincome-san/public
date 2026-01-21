@@ -93,7 +93,7 @@ jobs:
 
       - name: Run E2E Tests
         working-directory: website
-        run: npm run test:e2e:verbose
+        run: npm run test:e2e
 
       - name: Upload Test Report (only if failure)
         if: failure()
