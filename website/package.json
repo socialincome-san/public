@@ -12,9 +12,12 @@
 		"build:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run build'",
 		"copy-static-files": "cp -r public .next/standalone/website && cp -r .next/static .next/standalone/website/.next/",
 		"start": "next start -p 3001",
-		"start:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run start'",
+		"start:emulator": "firebase emulators:start --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed",
+		"serve:test": "PORT=3000 HOSTNAME=localhost node .next/standalone/website/server.js",
+		"dev:test": "npm-run-all -p start:emulator serve:test",
 		"test": "firebase emulators:exec --only firestore,storage,functions --project demo-social-income-local --config ../firebase.json --import ../seed 'jest --forceExit --roots src/'",
 		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui",
 		"test:e2e:verbose": "DEBUG=pw:webserver npm run test:e2e",
 		"test:e2e:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e'",
 		"test:e2e:update": "npx playwright install --with-deps && playwright test --update-snapshots",
@@ -38,7 +41,8 @@
 		"storyblok:login": "dotenv -e .env.local -- sh -c 'storyblok login --token $STORYBLOK_PERSONAL_ACCESS_TOKEN --region eu'",
 		"storyblok:pull": "dotenv -e .env.local -- sh -c 'storyblok components pull --space $STORYBLOK_SPACE_ID --path src/generated/storyblok'",
 		"storyblok:types": "dotenv -e .env.local -- sh -c 'storyblok types generate --space $STORYBLOK_SPACE_ID --path src/generated/storyblok'",
-		"storyblok:generate": "npm run storyblok:login && npm run storyblok:pull && npm run storyblok:types"
+		"storyblok:generate": "npm run storyblok:login && npm run storyblok:pull && npm run storyblok:types",
+		
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.1.5",
@@ -96,6 +100,7 @@
 		"xpath": "^0.0.34"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.57.0",
 		"@types/accept-language-parser": "^1.5.6",
 		"@types/jest": "^30.0.0",
 		"@types/lodash": "^4.17.21",
@@ -110,8 +115,8 @@
 		"jest": "^29.7.0",
 		"knip": "^5.72.0",
 		"next-openapi-gen": "^0.8.9",
+		"npm-run-all": "^4.1.5",
 		"postcss": "^8.4.47",
-		"@playwright/test": "^1.57.0",
 		"storyblok": "^4.12.1",
 		"tailwindcss": "^3.4.13",
 		"ts-jest": "^29.2.5",

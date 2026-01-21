@@ -83,10 +83,8 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
-      - name: Start emulators
-        run: |
-          mv website/.env.development website/.env.production
-          npm run website:build:emulator
+      - name: Prepare environment for E2E tests
+        run: mv website/.env.development website/.env.production
 
       - name: Install browsers
         run: npx playwright install --with-deps
