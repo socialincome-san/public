@@ -5,7 +5,8 @@ on:
     paths-ignore:
       - "recipients_app/**"
   push:
-    branches: [main]
+    branches:
+      - main
     paths-ignore:
       - "recipients_app/**"
 
