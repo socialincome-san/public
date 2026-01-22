@@ -49,7 +49,7 @@ export default defineConfig({
 	],
 
 	webServer: {
-		command: 'npm run build:test && npm-run-all -p e2e:emulator:start start',
+		command: 'npm run build && npm-run-all -p emulator:start start',
 
 		url: 'http://localhost:3000',
 		reuseExistingServer: !process.env.CI,
