@@ -59,7 +59,7 @@ test('email login via emulator', async ({ page }) => {
 
 	await page.goto(latest!.oobLink);
 
-	// needs DB to work
-	// await expect(page.getByText(/welcome/i)).toBeVisible();
+	await expect(page.getByText(/welcome/i)).toBeVisible();
+	// await expect(page).toHaveScreenshot({ fullPage: true });
 	await page.context().storageState({ path: 'playwright/.auth/user.json' });
 });
