@@ -82,20 +82,19 @@ jobs:
       postgres:
         image: postgres:17-alpine
         env:
-          POSTGRES_USER: test-user
-          POSTGRES_PASSWORD: test-password
+          POSTGRES_USER: social-income
+          POSTGRES_PASSWORD: social-income
           POSTGRES_DB: social-income
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U test-user"
+          --health-cmd="pg_isready -U social-income"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
 
     env:
-      DATABASE_URL: postgresql://test-user:test-password@postgres:5432/social-income
       STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
       STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
       HOME: /root
