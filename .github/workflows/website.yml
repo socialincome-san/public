@@ -22,8 +22,20 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run website:lint
 
-  test:
-    name: "🧪 Unit Tests"
+  knip:
+    name: "✂️ Knip"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run website:knip
+
+  typecheck:
+    name: "🔍 Type Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -34,7 +46,18 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run website:build-paths
       - run: npm run typecheck
-      - run: npm run website:test
+
+  test:
+    name: "🧪 Unit Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run website:test:unit
 
   terraform:
     name: "📐 Terraform Validation"
@@ -82,9 +105,6 @@ jobs:
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
-
-      - name: Prepare environment for E2E tests
-        run: mv website/.env.development website/.env.production
 
       - name: Install browsers
         run: npx playwright install --with-deps
