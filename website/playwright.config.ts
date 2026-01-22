@@ -1,4 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.development', quiet: true });
 
 export default defineConfig({
 	testDir: './test',
@@ -46,7 +49,8 @@ export default defineConfig({
 	],
 
 	webServer: {
-		command: 'npm run build:test && npm run dev:test',
+		command: 'npm run build:test && npm run e2e:run',
+
 		url: 'http://localhost:3000',
 		reuseExistingServer: !process.env.CI,
 		timeout: 180_000,
