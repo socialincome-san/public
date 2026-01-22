@@ -116,6 +116,9 @@ jobs:
         working-directory: website
         run: npm run test:e2e:update
 
+      - name: Mark repo as safe
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Commit and Push updated snapshots
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
