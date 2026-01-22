@@ -1,5 +1,7 @@
 import 'dotenv/config';
 
+import { prisma } from '@/lib/database/prisma';
+import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 
 type FirebaseOobCode = {
@@ -12,6 +14,13 @@ type FirebaseOobCode = {
 type FirebaseOobCodesResponse = {
 	oobCodes: FirebaseOobCode[];
 };
+
+test('seed database', async () => {
+	await seedDatabase();
+	await prisma.contact.findUniqueOrThrow({
+		where: { email: 'test@portal.org' },
+	});
+});
 
 test('wait for emulators to be ready', async ({ page }) => {
 	for (let i = 0; i < 30; i++) {

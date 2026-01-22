@@ -13,6 +13,7 @@ const config: KnipConfig = {
 		'prisma',
 		'next-openapi-gen',
 		'tsx',
+		'dotenv',
 		'storyblok',
 		'npm-run-all',
 		'@radix-ui/react-accordion',
@@ -42,7 +43,6 @@ const config: KnipConfig = {
 		'knip',
 		'npm-run-all',
 	],
-	ignoreUnresolved: ['dotenv/config'],
 };
 
 export default config;
