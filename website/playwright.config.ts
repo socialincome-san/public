@@ -1,11 +1,11 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.development', quiet: true });
 
 export default defineConfig({
 	testDir: './test',
-	testMatch: ['**/*.e2e.test.ts'],
+	testMatch: ['**/*.e2e.ts'],
 
 	fullyParallel: false,
 	workers: 1,
@@ -33,13 +33,29 @@ export default defineConfig({
 	projects: [
 		{
 			name: 'setup',
-			testMatch: /auth-setup\.ts/,
+			testMatch: /test-setup\.ts/,
 		},
 		{
-			name: 'chromium',
+			name: 'portal',
+			testMatch: /portal\/.*\.e2e\.ts/,
 			use: {
-				...devices['Desktop Chrome'],
 				storageState: 'playwright/.auth/user.json',
+			},
+			dependencies: ['setup'],
+		},
+		{
+			name: 'dashboard',
+			testMatch: /dashboard\/.*\.e2e\.ts/,
+			use: {
+				storageState: 'playwright/.auth/contributor.json',
+			},
+			dependencies: ['setup'],
+		},
+		{
+			name: 'partner-space',
+			testMatch: /partner-space\/.*\.e2e\.ts/,
+			use: {
+				storageState: 'playwright/.auth/partner.json',
 			},
 			dependencies: ['setup'],
 		},

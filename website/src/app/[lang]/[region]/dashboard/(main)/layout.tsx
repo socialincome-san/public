@@ -28,7 +28,9 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<h1 className="py-8 text-5xl">{translator.t('title.dashboard')}</h1>
+			<h1 data-testid="welcome-message-dashboard" className="py-8 text-5xl">
+				{translator.t('title.dashboard')}
+			</h1>
 			<TabNavigation sections={sections} />
 			<Card>{children}</Card>
 		</>
