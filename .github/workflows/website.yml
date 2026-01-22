@@ -109,9 +109,6 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
-      - name: Install browsers
-        run: npx playwright install --with-deps
-
       - name: Run E2E snapshot update
         working-directory: website
         run: npm run test:e2e:update
@@ -126,7 +123,6 @@ jobs:
           branch: ${{ github.head_ref }}
           commit_user_name: github-actions
           commit_user_email: actions@github.com
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           file_pattern: |
             **/__screenshots__/**
             **/snapshots/**
