@@ -95,6 +95,7 @@ jobs:
           --health-retries=5
 
     env:
+            DATABASE_URL: postgresql://social-income:social-income@postgres:5432/social-income
       STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
       STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
       HOME: /root
