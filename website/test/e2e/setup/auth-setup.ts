@@ -13,6 +13,19 @@ type FirebaseOobCodesResponse = {
 	oobCodes: FirebaseOobCode[];
 };
 
+test('wait for emulators to be ready', async ({ page }) => {
+	for (let i = 0; i < 30; i++) {
+		try {
+			await page.goto('http://127.0.0.1:4000/logs');
+			await expect(page.getByText('All emulators ready')).toBeVisible();
+			return;
+		} catch {}
+		await page.waitForTimeout(1000);
+	}
+
+	throw new Error('Emulators did not become ready in time');
+});
+
 test('Portal redirects to login when not authenticated', async ({ page }) => {
 	await page.goto('/portal');
 	await expect(page).toHaveURL(/\/en\/int\/login/);

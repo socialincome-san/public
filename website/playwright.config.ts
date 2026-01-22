@@ -30,9 +30,6 @@ export default defineConfig({
 		},
 	},
 
-	globalSetup: './test/e2e/setup/global-setup.ts',
-	globalTeardown: './test/e2e/setup/global-teardown.ts',
-
 	projects: [
 		{
 			name: 'setup',
@@ -49,8 +46,7 @@ export default defineConfig({
 	],
 
 	webServer: {
-		command: 'npm run build && npm-run-all -p emulator:start start',
-
+		command: 'npm run build && npm run start',
 		url: 'http://localhost:3000',
 		reuseExistingServer: !process.env.CI,
 		timeout: 180_000,
