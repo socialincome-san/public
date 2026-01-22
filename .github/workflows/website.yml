@@ -104,7 +104,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.head_ref }}
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
