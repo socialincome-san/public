@@ -72,7 +72,7 @@ jobs:
       - run: terraform -chdir=website/infra validate
 
   e2e:
-    name: "📸 E2E Tests"
+    name: "🏗️ Build & 📸 E2E Tests"
     runs-on: ubuntu-latest
 
     container:
