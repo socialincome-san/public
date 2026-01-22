@@ -102,6 +102,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: false
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
@@ -109,13 +112,26 @@ jobs:
       - name: Install browsers
         run: npx playwright install --with-deps
 
-      - name: Run E2E Tests
+      - name: Run E2E snapshot update
         working-directory: website
-        run: npm run test:e2e
+        run: npm run test:e2e:update
+
+      - name: Commit and Push updated snapshots
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update e2e snapshots"
+          branch: ${{ github.head_ref }}
+          commit_user_name: github-actions
+          commit_user_email: actions@github.com
+          file_pattern: |
+            **/__screenshots__/**
+            **/snapshots/**
 
       - name: Upload Test Report (only if failure)
         if: failure()
         uses: actions/upload-artifact@v5
         with:
           name: playwright-report-${{ github.sha }}
-          path: website/playwright-report/
+          path: |
+            website/playwright-report/
+            website/test-results/

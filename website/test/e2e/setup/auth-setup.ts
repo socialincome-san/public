@@ -60,6 +60,6 @@ test('email login via emulator', async ({ page }) => {
 	await page.goto(latest!.oobLink);
 
 	await expect(page.getByText(/welcome/i)).toBeVisible();
-	// await expect(page).toHaveScreenshot({ fullPage: true });
+	await expect(page).toHaveScreenshot({ fullPage: true });
 	await page.context().storageState({ path: 'playwright/.auth/user.json' });
 });
