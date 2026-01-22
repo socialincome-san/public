@@ -2,8 +2,6 @@
 	"name": "@socialincome/website",
 	"version": "1.0.0",
 	"private": true,
-
-	//ufrume, build wieder ine, lsof scheiss, db starte, seed
 	"scripts": {
 		"build-paths": "tsx scripts/generate-paths.ts",
 		"serve": "npm run build-paths && npm run openapi:generate && next dev -p 3000",
@@ -13,16 +11,14 @@
 		"postbuild": "npm run openapi:generate",
 		"build:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run build'",
 		"copy-static-files": "cp -r public .next/standalone/website && cp -r .next/static .next/standalone/website/.next/",
-		"start": "next start -p 3000",
+		"start": "PORT=3000 HOSTNAME=localhost node .next/standalone/website/server.js",
 		"start:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore,auth --config ../firebase.json --import ../seed",
 		"serve:test": "PORT=3000 HOSTNAME=localhost node .next/standalone/website/server.js",
 		"dev:test": "npm-run-all -p start:emulator serve:test",
 		"test": "firebase emulators:exec --only firestore,storage,functions --project demo-social-income-local --config ../firebase.json --import ../seed 'jest --forceExit --roots src/'",
-		"test:e2e": "playwright test",
 		"e2e:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore,auth --config ../firebase.json --import ../seed -- npm run e2e:ui",
 		"e2e:emulator:start": "firebase emulators:start --project demo-social-income-local --only firestore,auth --config ../firebase.json --import ../seed",
-		"e2e:ui": "PORT=3000 HOSTNAME=localhost node .next/standalone/website/server.js",
-		"e2e:run": "npm-run-all -p e2e:emulator:start e2e:ui",
+		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
 		"test:e2e:verbose": "DEBUG=pw:webserver npm run test:e2e",
 		"test:e2e:ui:verbose": "DEBUG=pw:webserver npm run test:e2e:ui",
