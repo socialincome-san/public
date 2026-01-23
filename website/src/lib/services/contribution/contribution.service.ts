@@ -1,5 +1,6 @@
-import { Contribution, PaymentEvent } from '@prisma/client';
+import { Contribution, ContributionStatus, PaymentEvent } from '@prisma/client';
 import { endOfYear, startOfYear } from 'date-fns';
+import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -296,14 +297,14 @@ export class ContributionService extends BaseService {
 
 	async upsertFromBankTransfer(paymentEvent: PaymentEventCreateInput): Promise<ServiceResult<PaymentEvent>> {
 		try {
-			const existing = await this.db.paymentEvent.findUnique({
+			const existing = await this.db.paymentEvent.findFirst({
 				where: { transactionId: paymentEvent.transactionId },
-				select: { metadata: true, id: true },
+				select: { id: true, contribution: { select: { status: true } } },
 			});
 			let result;
 
-			if (existing && !existing.metadata) {
-				// if no metadata exists, we assume this is the initial placeholder payment created during bank transfer flow
+			if (existing?.contribution?.status === ContributionStatus.pending) {
+				// if exists and pending, we assume this is the initial placeholder payment created during bank transfer flow
 				// which should be updated from payment file import
 				result = await this.db.paymentEvent.update({
 					where: { id: existing.id },
@@ -316,9 +317,18 @@ export class ContributionService extends BaseService {
 						},
 					},
 				});
+			} else if (existing) {
+				// non-pending payment with same transaction ID already exists,
+				// we assume its a (non-initial) standing order payment and append current timestamp to already existimg transaction ID
+				result = await this.db.paymentEvent.create({
+					data: {
+						...paymentEvent,
+						transactionId: paymentEvent.transactionId + `-${DateTime.now().toMillis().toString()}`,
+					},
+				});
 			} else {
-				// payment with same transaction ID or non-existing,
-				// we assume its a (non-initial) standing order payment or the initial placeholder payment from bank transfer flow
+				// non-existing payment,
+				// we assume its the initial placeholder payment from bank transfer flow
 				result = await this.db.paymentEvent.create({
 					data: paymentEvent,
 				});
