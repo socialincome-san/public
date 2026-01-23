@@ -7,6 +7,7 @@ export const localPartnersData: LocalPartner[] = [
 		name: 'Makeni Development Initiative',
 		causes: ['poverty'],
 		contactId: 'contact-13',
+		accountId: 'account-10',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -16,6 +17,7 @@ export const localPartnersData: LocalPartner[] = [
 		name: 'Bo Women Empowerment Group',
 		causes: ['health'],
 		contactId: 'contact-14',
+		accountId: 'account-5',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -25,6 +27,7 @@ export const localPartnersData: LocalPartner[] = [
 		name: 'Kenema Youth Foundation',
 		causes: ['gender_based_violence'],
 		contactId: 'contact-15',
+		accountId: 'account-6',
 		createdAt: new Date(),
 		updatedAt: null
 	}

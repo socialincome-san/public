@@ -5,3 +5,4 @@ dist/
 .next/
 *.hbs
 ui/README.md
+website/src/generated/

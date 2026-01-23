@@ -10,8 +10,8 @@ import {
 	CONTRIBUTION_REFERENCE_ID_LENGTH,
 	CONTRIBUTOR_REFERENCE_ID_LENGTH,
 } from '@/lib/services/bank-transfer/bank-transfer-config';
-import { Data } from 'swissqrbill/lib/cjs/shared/types';
 import { SwissQRBill, SwissQRCode } from 'swissqrbill/svg';
+import { Data } from 'swissqrbill/types';
 
 /**
  * Calculates the modulo 10 recursive check digit for the QR bill reference

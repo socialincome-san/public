@@ -113,29 +113,6 @@ export class OrganizationService extends BaseService {
 		}
 	}
 
-	async setActiveOrganization(userId: string, organizationId: string): Promise<ServiceResult<null>> {
-		try {
-			const hasAccess = await this.db.organizationAccess.findFirst({
-				where: { userId, organizationId },
-				select: { id: true },
-			});
-
-			if (!hasAccess) {
-				return this.resultFail('User does not have access to this organization');
-			}
-
-			await this.db.user.update({
-				where: { id: userId },
-				data: { activeOrganizationId: organizationId },
-			});
-
-			return this.resultOk(null);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not set active organization: ${JSON.stringify(error)}`);
-		}
-	}
-
 	async getOptions(userId: string): Promise<ServiceResult<OrganizationOption[]>> {
 		const isAdminResult = await this.userService.isAdmin(userId);
 

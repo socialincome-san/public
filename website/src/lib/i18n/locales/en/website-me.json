@@ -1,7 +1,7 @@
 {
 	"metadata": {
 		"title": "My Profile | Social Income",
-		"home-link": "Back to Home"
+		"home-link": "Back to Website"
 	},
 	"breadcrumb": {
 		"website": "Website",
@@ -46,7 +46,9 @@
 			"street": "Street",
 			"street-number": "Number",
 			"city": "City",
-			"zip": "Zip"
+			"zip": "Zip",
+			"name": "Name",
+			"causes": "Causes"
 		}
 	},
 	"sections": {

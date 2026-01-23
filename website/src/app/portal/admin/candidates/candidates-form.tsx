@@ -3,6 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
+import { Actor } from '@/lib/firebase/current-account';
 import {
 	createCandidateAction,
 	getCandidateAction,
@@ -22,6 +23,7 @@ type CandidateFormProps = {
 	onCancel?: () => void;
 	readOnly?: boolean;
 	candidateId?: string;
+	actorKind?: Actor['kind'];
 };
 
 export type CandidateFormSchema = {
@@ -30,7 +32,7 @@ export type CandidateFormSchema = {
 		status: FormField;
 		successorName: FormField;
 		termsAccepted: FormField;
-		localPartner: FormField;
+		localPartner?: FormField;
 		paymentInformation: {
 			label: string;
 			fields: {
@@ -43,57 +45,72 @@ export type CandidateFormSchema = {
 	};
 };
 
-const initialFormSchema: CandidateFormSchema = {
-	label: 'Candidates',
-	fields: {
-		status: {
-			placeholder: 'Status',
-			label: 'Status',
-			zodSchema: z.nativeEnum(RecipientStatus),
-		},
-		successorName: {
-			placeholder: 'Successor',
-			label: 'Successor',
-			zodSchema: z.string().nullable(),
-		},
-		termsAccepted: {
-			label: 'Terms Accepted',
-			zodSchema: z.boolean().optional(),
-		},
-		localPartner: {
-			placeholder: 'Local Partner',
-			label: 'Local Partner',
-		},
-		paymentInformation: {
-			label: 'Payment Information',
-			fields: {
-				provider: {
-					placeholder: 'Provider',
-					label: 'Provider',
-					zodSchema: z.nativeEnum(PaymentProvider),
-				},
-				code: {
-					placeholder: 'Code',
-					label: 'Code',
-					zodSchema: z.string().nullable(),
-				},
-				phone: {
-					placeholder: 'Phone Number',
-					label: 'Phone Number',
-					zodSchema: z
-						.string()
-						.regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in valid E.164 format (e.g., +12345678901)'),
+function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): CandidateFormSchema {
+	const base: CandidateFormSchema = {
+		label: 'Candidates',
+		fields: {
+			status: {
+				placeholder: 'Status',
+				label: 'Status',
+				zodSchema: z.nativeEnum(RecipientStatus),
+			},
+			successorName: {
+				placeholder: 'Successor',
+				label: 'Successor',
+				zodSchema: z.string().nullable(),
+			},
+			termsAccepted: {
+				label: 'Terms Accepted',
+				zodSchema: z.boolean().optional(),
+			},
+			localPartner: {
+				placeholder: 'Local Partner',
+				label: 'Local Partner',
+			},
+			paymentInformation: {
+				label: 'Payment Information',
+				fields: {
+					provider: {
+						placeholder: 'Provider',
+						label: 'Provider',
+						zodSchema: z.nativeEnum(PaymentProvider),
+					},
+					code: {
+						placeholder: 'Code',
+						label: 'Code',
+						zodSchema: z.string().nullable(),
+					},
+					phone: {
+						placeholder: 'Phone Number',
+						label: 'Phone Number',
+						zodSchema: z
+							.string()
+							.regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in valid E.164 format (e.g., +12345678901)'),
+					},
 				},
 			},
+			contact: {
+				...getContactFormSchema(),
+			},
 		},
-		contact: {
-			...getContactFormSchema(),
-		},
-	},
-};
+	};
 
-export function CandidateForm({ onSuccess, onError, onCancel, candidateId, readOnly }: CandidateFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	if (actorKind === 'local-partner') {
+		delete base.fields.localPartner;
+	}
+
+	return base;
+}
+
+export function CandidateForm({
+	onSuccess,
+	onError,
+	onCancel,
+	candidateId,
+	readOnly,
+	actorKind = 'user',
+}: CandidateFormProps) {
+	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(actorKind));
 	const [candidate, setCandidate] = useState<CandidatePayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -107,7 +124,9 @@ export function CandidateForm({ onSuccess, onError, onCancel, candidateId, readO
 				newSchema.fields.status.value = result.data.status;
 				newSchema.fields.successorName.value = result.data.successorName;
 				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
-				newSchema.fields.localPartner.value = result.data.localPartner.id;
+				if (newSchema.fields.localPartner) {
+					newSchema.fields.localPartner.value = result.data.localPartner.id;
+				}
 				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
 				newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
@@ -122,6 +141,10 @@ export function CandidateForm({ onSuccess, onError, onCancel, candidateId, readO
 	};
 
 	const setOptions = (localPartner: LocalPartnerOption[]) => {
+		if (actorKind === 'local-partner') {
+			return;
+		}
+
 		const partnersObj = getZodEnum(localPartner.map(({ id, name }) => ({ id, label: name })));
 
 		setFormSchema((prev) => ({
@@ -129,7 +152,7 @@ export function CandidateForm({ onSuccess, onError, onCancel, candidateId, readO
 			fields: {
 				...prev.fields,
 				localPartner: {
-					...prev.fields.localPartner,
+					...prev.fields.localPartner!,
 					zodSchema: z.nativeEnum(partnersObj),
 				},
 			},
@@ -139,19 +162,19 @@ export function CandidateForm({ onSuccess, onError, onCancel, candidateId, readO
 	const onSubmit = (schema: CandidateFormSchema) => {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: string };
+				let result: { success: boolean; error?: string };
 				const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
 
 				if (candidateId && candidate) {
 					const data: CandidateUpdateInput = buildUpdateCandidateInput(schema, candidate, contactFields);
 					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
-					res = await updateCandidateAction(data, nextPaymentPhoneNumber);
+					result = await updateCandidateAction(data, nextPaymentPhoneNumber);
 				} else {
 					const data: CandidateCreateInput = buildCreateCandidateInput(schema, contactFields);
-					res = await createCandidateAction(data);
+					result = await createCandidateAction(data);
 				}
 
-				res.success ? onSuccess?.() : onError?.(res.error);
+				result.success ? onSuccess?.() : onError?.(result.error);
 			} catch (error: unknown) {
 				onError?.(error);
 			}

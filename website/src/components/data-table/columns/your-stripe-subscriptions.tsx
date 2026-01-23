@@ -11,7 +11,8 @@ import { PaymentMethodCell } from '../elements/payment-method-cell';
 import { StatusCell } from '../elements/status-cell';
 
 export function makeYourStripeSubscriptionsColumns(
-	_?: boolean,
+	hideProgramName: boolean = false,
+	hideLocalPartner: boolean = false,
 	translator?: Translator,
 ): ColumnDef<StripeSubscriptionRow>[] {
 	return [

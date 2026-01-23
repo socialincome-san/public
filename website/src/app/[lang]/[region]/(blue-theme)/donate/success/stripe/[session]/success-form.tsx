@@ -1,7 +1,7 @@
 'use client';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { subscribeToNewsletter } from '@/lib/server-actions/newsletter-actions';
+import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
@@ -123,7 +123,7 @@ export function SuccessForm({
 
 			const result = await updateContributorAfterCheckoutAction(payload);
 
-			await subscribeToNewsletter({
+			await subscribeToNewsletterAction({
 				firstname: values.firstname,
 				lastname: values.lastname,
 				email: values.email,

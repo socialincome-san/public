@@ -15,8 +15,9 @@ type DataTableProps<Row> = {
 	emptyMessage: string;
 	actions?: ReactNode;
 	data: Row[];
-	makeColumns: (hideProgramName?: boolean, translator?: Translator) => ColumnDef<Row>[];
+	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
+	hideLocalPartner?: boolean;
 	onRowClick?: (row: Row) => void;
 	initialSorting?: SortingState;
 	lang?: WebsiteLanguage;
@@ -31,13 +32,14 @@ export default function DataTable<Row>({
 	data,
 	makeColumns,
 	hideProgramName = false,
+	hideLocalPartner = false,
 	onRowClick,
 	initialSorting,
 	lang,
 	searchKeys,
 }: DataTableProps<Row>) {
 	const translator = useTranslator(lang || 'en', 'website-me');
-	const columns = makeColumns(hideProgramName, translator);
+	const columns = makeColumns(hideProgramName, hideLocalPartner, translator);
 	const [filteredData, setFilteredData] = useState(data);
 	const [searchFilter, setSearchFilter] = useState('');
 	const isEmpty = filteredData.length === 0;

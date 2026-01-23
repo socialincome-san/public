@@ -53,8 +53,8 @@ jobs:
 
       - name: Test build
         env:
-          STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_PROD_STORYBLOK_PREVIEW_SECRET }}
-          STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}
+          STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
+          STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
         run: |
           mv website/.env.development website/.env.production
           npm run website:build:emulator

@@ -54,3 +54,7 @@ terraform.tfvars
 terraform.tfvars.json
 
 /public/openapi.json
+
+# Storyblok CLI
+src/generated/storyblok/components
+src/generated/storyblok/logs
