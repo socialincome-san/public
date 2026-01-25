@@ -74,14 +74,15 @@ class UserDemoDataSource implements UserDataSource {
     createdAt: DateTime.now().toIso8601String(),
     program: Program(
       // ownerOrganizationId: "demo",
-      createdAt: DateTime.now().toIso8601String(),
       id: "demo",
       name: "Demo",
-      totalPayments: 0,
-      payoutAmount: 0,
-      payoutCurrency: Currency.usd,
+      countryId: "SL",
+      payoutPerInterval: 50,
+      payoutCurrency: Currency.sle,
       payoutInterval: PayoutInterval.monthly,
-      country: "US",
+      programDurationInMonths: 12,
+      createdAt: DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
     ),
   );
   final _user = DemoUser();

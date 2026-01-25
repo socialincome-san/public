@@ -7,7 +7,6 @@ class Phone with PhoneMappable {
   final String id;
   final String number;
   final bool hasWhatsApp;
-
   final String createdAt;
   final String? updatedAt;
 

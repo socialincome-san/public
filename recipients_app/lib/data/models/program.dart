@@ -8,24 +8,22 @@ part "program.mapper.dart";
 class Program with ProgramMappable {
   final String id;
   final String name;
-  final String country;
-  final double payoutAmount;
+  final String countryId;
+  final int payoutPerInterval;
   final Currency payoutCurrency;
-
   final PayoutInterval payoutInterval;
-  final int totalPayments;
-
+  final int programDurationInMonths;
   final String createdAt;
   final String? updatedAt;
 
   const Program({
     required this.id,
     required this.name,
-    required this.country,
-    required this.payoutAmount,
+    required this.countryId,
+    required this.payoutPerInterval,
     required this.payoutCurrency,
     required this.payoutInterval,
-    required this.totalPayments,
+    required this.programDurationInMonths,
     required this.createdAt,
     this.updatedAt,
   });

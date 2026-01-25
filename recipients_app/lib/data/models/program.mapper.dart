@@ -27,12 +27,15 @@ class ProgramMapper extends ClassMapperBase<Program> {
   static const Field<Program, String> _f$id = Field('id', _$id);
   static String _$name(Program v) => v.name;
   static const Field<Program, String> _f$name = Field('name', _$name);
-  static String _$country(Program v) => v.country;
-  static const Field<Program, String> _f$country = Field('country', _$country);
-  static double _$payoutAmount(Program v) => v.payoutAmount;
-  static const Field<Program, double> _f$payoutAmount = Field(
-    'payoutAmount',
-    _$payoutAmount,
+  static String _$countryId(Program v) => v.countryId;
+  static const Field<Program, String> _f$countryId = Field(
+    'countryId',
+    _$countryId,
+  );
+  static int _$payoutPerInterval(Program v) => v.payoutPerInterval;
+  static const Field<Program, int> _f$payoutPerInterval = Field(
+    'payoutPerInterval',
+    _$payoutPerInterval,
   );
   static Currency _$payoutCurrency(Program v) => v.payoutCurrency;
   static const Field<Program, Currency> _f$payoutCurrency = Field(
@@ -44,10 +47,10 @@ class ProgramMapper extends ClassMapperBase<Program> {
     'payoutInterval',
     _$payoutInterval,
   );
-  static int _$totalPayments(Program v) => v.totalPayments;
-  static const Field<Program, int> _f$totalPayments = Field(
-    'totalPayments',
-    _$totalPayments,
+  static int _$programDurationInMonths(Program v) => v.programDurationInMonths;
+  static const Field<Program, int> _f$programDurationInMonths = Field(
+    'programDurationInMonths',
+    _$programDurationInMonths,
   );
   static String _$createdAt(Program v) => v.createdAt;
   static const Field<Program, String> _f$createdAt = Field(
@@ -65,11 +68,11 @@ class ProgramMapper extends ClassMapperBase<Program> {
   final MappableFields<Program> fields = const {
     #id: _f$id,
     #name: _f$name,
-    #country: _f$country,
-    #payoutAmount: _f$payoutAmount,
+    #countryId: _f$countryId,
+    #payoutPerInterval: _f$payoutPerInterval,
     #payoutCurrency: _f$payoutCurrency,
     #payoutInterval: _f$payoutInterval,
-    #totalPayments: _f$totalPayments,
+    #programDurationInMonths: _f$programDurationInMonths,
     #createdAt: _f$createdAt,
     #updatedAt: _f$updatedAt,
   };
@@ -78,11 +81,11 @@ class ProgramMapper extends ClassMapperBase<Program> {
     return Program(
       id: data.dec(_f$id),
       name: data.dec(_f$name),
-      country: data.dec(_f$country),
-      payoutAmount: data.dec(_f$payoutAmount),
+      countryId: data.dec(_f$countryId),
+      payoutPerInterval: data.dec(_f$payoutPerInterval),
       payoutCurrency: data.dec(_f$payoutCurrency),
       payoutInterval: data.dec(_f$payoutInterval),
-      totalPayments: data.dec(_f$totalPayments),
+      programDurationInMonths: data.dec(_f$programDurationInMonths),
       createdAt: data.dec(_f$createdAt),
       updatedAt: data.dec(_f$updatedAt),
     );
@@ -148,11 +151,11 @@ abstract class ProgramCopyWith<$R, $In extends Program, $Out>
   $R call({
     String? id,
     String? name,
-    String? country,
-    double? payoutAmount,
+    String? countryId,
+    int? payoutPerInterval,
     Currency? payoutCurrency,
     PayoutInterval? payoutInterval,
-    int? totalPayments,
+    int? programDurationInMonths,
     String? createdAt,
     String? updatedAt,
   });
@@ -171,22 +174,23 @@ class _ProgramCopyWithImpl<$R, $Out>
   $R call({
     String? id,
     String? name,
-    String? country,
-    double? payoutAmount,
+    String? countryId,
+    int? payoutPerInterval,
     Currency? payoutCurrency,
     PayoutInterval? payoutInterval,
-    int? totalPayments,
+    int? programDurationInMonths,
     String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
       if (name != null) #name: name,
-      if (country != null) #country: country,
-      if (payoutAmount != null) #payoutAmount: payoutAmount,
+      if (countryId != null) #countryId: countryId,
+      if (payoutPerInterval != null) #payoutPerInterval: payoutPerInterval,
       if (payoutCurrency != null) #payoutCurrency: payoutCurrency,
       if (payoutInterval != null) #payoutInterval: payoutInterval,
-      if (totalPayments != null) #totalPayments: totalPayments,
+      if (programDurationInMonths != null)
+        #programDurationInMonths: programDurationInMonths,
       if (createdAt != null) #createdAt: createdAt,
       if (updatedAt != $none) #updatedAt: updatedAt,
     }),
@@ -195,11 +199,17 @@ class _ProgramCopyWithImpl<$R, $Out>
   Program $make(CopyWithData data) => Program(
     id: data.get(#id, or: $value.id),
     name: data.get(#name, or: $value.name),
-    country: data.get(#country, or: $value.country),
-    payoutAmount: data.get(#payoutAmount, or: $value.payoutAmount),
+    countryId: data.get(#countryId, or: $value.countryId),
+    payoutPerInterval: data.get(
+      #payoutPerInterval,
+      or: $value.payoutPerInterval,
+    ),
     payoutCurrency: data.get(#payoutCurrency, or: $value.payoutCurrency),
     payoutInterval: data.get(#payoutInterval, or: $value.payoutInterval),
-    totalPayments: data.get(#totalPayments, or: $value.totalPayments),
+    programDurationInMonths: data.get(
+      #programDurationInMonths,
+      or: $value.programDurationInMonths,
+    ),
     createdAt: data.get(#createdAt, or: $value.createdAt),
     updatedAt: data.get(#updatedAt, or: $value.updatedAt),
   );

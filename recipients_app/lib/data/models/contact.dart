@@ -20,7 +20,6 @@ class Contact with ContactMappable {
   final String? dateOfBirth;
   final String? profession;
   final bool isInstitution;
-
   final String createdAt;
   final String? updatedAt;
 
