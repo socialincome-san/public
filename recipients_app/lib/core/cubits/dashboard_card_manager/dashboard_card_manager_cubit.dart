@@ -30,21 +30,22 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     try {
       // TODO(dev): currently payment phone number is used for login, we need to switch that
       // TODO(migration): unclear what the comment above means :D
-
       final contactPhoneNumber = recipient.contact.phone?.number;
       final paymentPhoneNumber = recipient.paymentInformation?.phone.number;
 
-      // if (paymentPhoneNumber == null && contactPhoneNumber != null) {
-      final paymentPhoneCard = DashboardCard(
-        title: "My Profile",
-        message: "Is your contact phone number ($contactPhoneNumber) also your payment phone number?",
-        primaryButtonText: "Yes",
-        secondaryButtonText: "No",
-        type: DashboardCardType.paymentNumberEqualsContactNumber,
-      );
+      // TODO(migration): clarify logic here. If we want to set the contact phone number as payment phone number we 
+      // also need to set the payment provider (API enforces that). How do we get that info from the user?
+      if (paymentPhoneNumber == null && contactPhoneNumber != null) {
+        final paymentPhoneCard = DashboardCard(
+          title: "My Profile",
+          message: "Is your contact phone number ($contactPhoneNumber) also your payment phone number?",
+          primaryButtonText: "Yes",
+          secondaryButtonText: "No",
+          type: DashboardCardType.paymentNumberEqualsContactNumber,
+        );
 
-      cards.add(paymentPhoneCard);
-      // }
+        cards.add(paymentPhoneCard);
+      }
 
       if (contactPhoneNumber == null && paymentPhoneNumber != null) {
         final contactPhoneCard = DashboardCard(
@@ -81,7 +82,11 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       if (recipient == null) throw Exception("Recipient not found");
 
       await userRepository.updateRecipient(
-        RecipientSelfUpdate(paymentPhone: recipient.contact.phone?.number),
+        RecipientSelfUpdate(
+          paymentPhone: recipient.contact.phone?.number,
+          // TODO: We need to handle a missing provider info in the UI before this can work properly
+          paymentProvider: recipient.paymentInformation?.provider,
+        ),
       );
 
       emit(state.copyWith(status: DashboardCardManagerStatus.updated));
