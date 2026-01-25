@@ -2,6 +2,7 @@
 
 import { RadioGroup } from '@/components/radio-group';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
 import { useState } from 'react';
 import { CountryTableBody } from './country-table-body';
 import { CountryTableHeader } from './country-table-header';
@@ -12,7 +13,8 @@ function matchesSearch(row: ProgramCountryFeasibilityRow, search: string) {
 	}
 
 	const q = search.toLowerCase();
-	return row.country.name.toLowerCase().includes(q);
+	const countryName = getCountryNameByIsoCode(row.country.isoCode)?.toLowerCase() ?? '';
+	return row.country.isoCode.toLowerCase().includes(q) || countryName.includes(q);
 }
 
 function meetsAllConditions(row: ProgramCountryFeasibilityRow) {

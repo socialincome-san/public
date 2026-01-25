@@ -50,7 +50,7 @@ draw**:
 - Results written to `/draws`
 - Draws are reproducible using **dchoose** →
   https://github.com/drand/dchoose
-- Full transparency explanation:  
+- Full transparency explanation:
   https://socialincome.org/transparency/recipient-selection
 
 ---
@@ -59,10 +59,24 @@ draw**:
 
 Contains seed data for the local development environment:
 
-- Firebase Authentication Emulator
-- Firebase Storage Emulator
+### **Firebase authentication seeds**
 
-Automatically imported when running `mise dev`.
+Automatically imported when running:
+
+```
+mise dev
+```
+
+### **PostgreSQL database seeds**
+
+Local development DB can be filled with sample data via:
+
+```
+npm run db:seed
+```
+
+This populates the local PostgreSQL instance with representative example
+data.
 
 ---
 
@@ -88,8 +102,7 @@ A Next.js project containing:
 
 - Currently partly hardcoded
 - Migration underway → **Storyblok CMS**
-- Journal already uses Storyblok  
-  Docs: https://www.storyblok.com/docs
+- Journal already uses Storyblok Docs: https://www.storyblok.com/docs
 
 ---
 
@@ -114,7 +127,41 @@ Contributor self‑service area:
 
 ---
 
-### **4. Infrastructure (`/infra`)**
+### **4. Partner Space**
+
+Local Partner self‑service area:
+
+- View own recipients / candidates
+- Update personal details
+
+---
+
+### **5. Authentication Roles & Test Accounts (Local Dev)**
+
+During development, three login roles can be tested directly from the
+login page:
+
+| Role          | Login Email          | Route            |
+| ------------- | -------------------- | ---------------- |
+| Contributor   | `test@dashboard.org` | `/dashboard`     |
+| User          | `test@portal.org`    | `/portal`        |
+| Local Partner | `test@partner.org`   | `/partner-space` |
+
+These are created automatically via seed data.
+
+---
+
+### **6. Mobile API Used by Recipients App**
+
+The `recipients_app` communicates with Next.js API routes via
+OpenAPI‑documented endpoints:
+
+📘 API docs:  
+https://socialincome.org/v1/api-docs
+
+---
+
+### **7. Infrastructure (`/infra`)**
 
 Infrastructure-as-code via **Terraform**:
 
@@ -126,7 +173,7 @@ Docs: https://developer.hashicorp.com/terraform/docs
 
 ---
 
-### **5. Backend Services (`website/lib/`)**
+### **8. Backend Services (`website/lib/`)**
 
 Shared backend modules using:
 
@@ -219,6 +266,37 @@ pg_restore   --clean --if-exists   --no-owner   -d "postgresql://staging-website
 
 ```
 npm run dev:ssl-proxy
+```
+
+---
+
+### Storyblok Type Generation
+
+We use the **Storyblok CLI** to generate TypeScript types from the CMS
+schema.
+
+If you have made changes to the Storyblok schema, you can regenerate the
+types:
+
+1. Set these env vars in `website/.env.local`:
+   - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
+   - `STORYBLOK_SPACE_ID`
+2. Run:
+
+```
+npm run storyblok:generate
+```
+
+This command:
+
+1. Logs into Storyblok using your personal access token
+2. Pulls component schemas from the space
+3. Generates TypeScript types to `src/generated/storyblok/types/`
+
+Usage in components:
+
+```typescript
+import type { Page } from '@storyblok/types/{SPACE_ID}/storyblok-components';
 ```
 
 ---

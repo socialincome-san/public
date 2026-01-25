@@ -2,7 +2,8 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
-import { CountryPayload } from '@/lib/services/country/country.types';
+import { CountryPayload, NETWORK_TECH_LABELS, PAYMENT_PROVIDER_LABELS } from '@/lib/services/country/country.types';
+import { isoCountries } from '@/lib/services/country/iso-countries';
 import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -18,7 +19,7 @@ type CountryFormProps = {
 export type CountryFormSchema = {
 	label: string;
 	fields: {
-		name: FormField;
+		isoCode: FormField;
 		isActive: FormField;
 		microfinanceIndex: FormField;
 		microfinanceSourceText: FormField;
@@ -36,15 +37,19 @@ export type CountryFormSchema = {
 const initialFormSchema: CountryFormSchema = {
 	label: 'Country',
 	fields: {
-		name: {
-			placeholder: 'Sierra Leone',
-			label: 'Country name',
-			zodSchema: z.string().min(1),
+		isoCode: {
+			label: 'Country',
+			zodSchema: z.enum(isoCountries.map((c) => c.isoCode) as [string, ...string[]]),
+			useCombobox: true,
+			options: isoCountries.map((c) => ({
+				id: c.isoCode,
+				label: c.name,
+			})),
 		},
 		isActive: {
 			placeholder: 'Active',
 			label: 'Is Active',
-			zodSchema: z.boolean(),
+			zodSchema: z.boolean().optional().default(false),
 		},
 		microfinanceIndex: {
 			placeholder: '4.92',
@@ -74,6 +79,10 @@ const initialFormSchema: CountryFormSchema = {
 			placeholder: '3G',
 			label: 'Technology',
 			zodSchema: z.nativeEnum(NetworkTechnology).optional(),
+			options: Object.entries(NETWORK_TECH_LABELS).map(([value, label]) => ({
+				id: value,
+				label,
+			})),
 		},
 		networkSourceText: {
 			placeholder: 'ITU',
@@ -89,6 +98,10 @@ const initialFormSchema: CountryFormSchema = {
 			label: 'Payment providers',
 			placeholder: 'Select payment providers',
 			zodSchema: z.array(z.nativeEnum(PaymentProvider)).optional(),
+			options: Object.entries(PAYMENT_PROVIDER_LABELS).map(([value, label]) => ({
+				id: value,
+				label,
+			})),
 		},
 		sanctions: {
 			label: 'Sanctions',
@@ -132,7 +145,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 					setCountry(result.data);
 					setFormSchema((prev) => {
 						const next = { ...prev };
-						next.fields.name.value = result.data.name;
+						next.fields.isoCode.value = result.data.isoCode;
 						next.fields.isActive.value = result.data.isActive;
 						next.fields.microfinanceIndex.value = result.data.microfinanceIndex ?? undefined;
 						next.fields.microfinanceSourceText.value = result.data.microfinanceSourceLink?.text ?? undefined;

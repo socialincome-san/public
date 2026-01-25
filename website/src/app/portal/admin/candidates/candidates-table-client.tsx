@@ -5,6 +5,7 @@ import { Button } from '@/components/button';
 import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Actor } from '@/lib/firebase/current-account';
 import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
@@ -14,10 +15,12 @@ export function CandidatesTableClient({
 	rows,
 	error,
 	readOnly,
+	actorKind = 'user',
 }: {
 	rows: CandidatesTableViewRow[];
 	error: string | null;
 	readOnly?: boolean;
+	actorKind?: Actor['kind'];
 }) {
 	const [open, setOpen] = useState(false);
 	const [candidateId, setCandidateId] = useState<string | undefined>();
@@ -49,6 +52,7 @@ export function CandidatesTableClient({
 				emptyMessage="No candidates found"
 				data={rows}
 				makeColumns={makeCandidateColumns}
+				hideLocalPartner={actorKind === 'local-partner'}
 				actions={
 					<Button disabled={readOnly} onClick={openEmptyForm}>
 						Add candidate
@@ -77,6 +81,7 @@ export function CandidatesTableClient({
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
+						actorKind={actorKind}
 					/>
 				</DialogContent>
 			</Dialog>

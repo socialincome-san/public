@@ -4,11 +4,12 @@ import { DateTime } from 'luxon';
 // Storyblok provides out of the box image resizing/cropping, which can be combined with a custom focal point.
 // If that's not defined, we are using the smart feature, which recognizes faces and may resize accordingly.
 // Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
-export function formatStoryblokUrl(url: string, width: number, height: number, focus?: string) {
+export function formatStoryblokUrl(url: string, width: number, height: number, focus?: string | null) {
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 	return imageSource;
 }
+
 // Storyblok returns date fields in the following format "yyyy-MM-dd HH:mm" without timezone.
 // Nevertheless, the fields `first_published_at` and 'published_at' are returned in proper ISO8601 format.
 export function formatStoryblokDate(date: string | null | undefined, lang: string) {

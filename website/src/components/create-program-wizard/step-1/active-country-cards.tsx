@@ -2,6 +2,7 @@
 
 import { CountryFlag } from '@/components/country-flag';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';
 
@@ -36,8 +37,8 @@ export function ActiveCountryCards({ rows, selectedCountryId, onSelectCountry }:
 							checked={selectedCountryId === row.id}
 							label={
 								<div className="flex items-center gap-2">
-									<CountryFlag country={row.country.name} size="lg" />
-									<span className="font-medium">{row.country.name}</span>
+									<CountryFlag country={row.country.isoCode} size="lg" />
+									<span className="font-medium">{getCountryNameByIsoCode(row.country.isoCode)}</span>
 								</div>
 							}
 							description={formatCountryStats(row.stats.programCount, row.stats.recipientCount)}

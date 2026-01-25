@@ -133,8 +133,8 @@ export function buildUpdateRecipientInput(
 		status: schema.fields.status.value,
 		successorName: schema.fields.successorName.value || null,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
-		localPartner: { connect: { id: schema.fields.localPartner.value } },
-		program: { connect: { id: schema.fields.program.value } },
+		localPartner: { connect: { id: schema.fields.localPartner?.value } },
+		program: { connect: { id: schema.fields.program?.value } },
 
 		paymentInformation: {
 			upsert: {
@@ -184,8 +184,8 @@ export function buildCreateRecipientInput(
 		status: schema.fields.status.value,
 		successorName: schema.fields.successorName.value,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
-		localPartner: { connect: { id: schema.fields.localPartner.value } },
-		program: { connect: { id: schema.fields.program.value } },
+		localPartner: { connect: { id: schema.fields.localPartner?.value } },
+		program: { connect: { id: schema.fields.program?.value } },
 		paymentInformation: {
 			create: {
 				provider: paymentInfoFields.provider.value,

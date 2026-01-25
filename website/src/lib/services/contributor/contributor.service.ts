@@ -91,23 +91,33 @@ export class ContributorService extends BaseService {
 		try {
 			const existing = await this.db.contributor.findUnique({
 				where: { id: contributorId },
-				select: { account: true },
+				select: {
+					account: true,
+					contact: { select: { email: true } },
+				},
 			});
 
 			if (!existing) {
 				return this.resultFail('Contributor not found');
 			}
 
-			if (!data.contact?.update?.data?.email) {
+			const newEmail = data.contact?.update?.data?.email?.toString();
+			const oldEmail = existing.contact?.email ?? null;
+
+			if (!newEmail) {
 				return this.resultFail('Contributor email is required');
 			}
 
-			const firebaseResult = await this.firebaseService.updateByUid(existing.account.firebaseAuthUserId, {
-				email: data.contact?.update?.data?.email?.toString() ?? undefined,
-			});
+			if (newEmail !== oldEmail) {
+				const firebaseResult = await this.firebaseService.updateByUid(existing.account.firebaseAuthUserId, {
+					email: newEmail,
+				});
 
-			if (!firebaseResult.success) {
-				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
+				if (!firebaseResult.success) {
+					this.logger.warn('Could not update Firebase Auth user', {
+						error: firebaseResult.error,
+					});
+				}
 			}
 
 			const updatedContributor = await this.db.contributor.update({
@@ -591,6 +601,7 @@ export class ContributorService extends BaseService {
 			}
 
 			const session: ContributorSession = {
+				type: 'contributor',
 				id: contributor.id,
 				gender: contributor.contact?.gender ?? null,
 				referral: contributor.referral ?? null,

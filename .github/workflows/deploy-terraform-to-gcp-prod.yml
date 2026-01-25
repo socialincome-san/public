@@ -55,6 +55,7 @@ jobs:
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_LINKEDIN_TRACKING_ID}}" > secrets/NEXT_PUBLIC_LINKEDIN_TRACKING_ID
           echo "${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
+          echo "false" > secrets/FEATURE_ENABLE_NEW_WEBSITE
 
       - name: 📤 Build and Push Docker Image
         env:
@@ -103,6 +104,8 @@ jobs:
           TF_VAR_twilio_verify_service_sid: ${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}
           TF_VAR_exchange_rates_api: ${{ secrets.TF_PROD_EXCHANGE_RATES_API }}
           TF_VAR_github_pat: ${{ secrets.TF_PROD_GITHUB_PAT }}
+          TF_VAR_app_review_mode_enabled: ${{ vars.TF_PROD_APP_REVIEW_MODE_ENABLED }}
+          TF_VAR_app_review_phone_number: ${{ secrets.TF_PROD_APP_REVIEW_PHONE_NUMBER }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."

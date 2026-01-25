@@ -10,7 +10,8 @@ type ManagementLayoutProps = {
 
 export default async function ManagementLayout({ children }: ManagementLayoutProps) {
 	const breadcrumbLinks = [
-		{ href: '/portal', label: 'Home' },
+		{ href: '/', label: 'Website' },
+		{ href: '/portal', label: 'Portal' },
 		{ href: '/portal/management', label: 'Management' },
 	];
 

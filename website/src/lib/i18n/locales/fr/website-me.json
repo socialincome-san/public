@@ -46,7 +46,9 @@
 			"street": "Rue",
 			"street-number": "Numéro",
 			"city": "Localité",
-			"zip": "Code postal"
+			"zip": "Code postal",
+			"name": "Nom",
+			"causes": "Critères"
 		}
 	},
 	"sections": {

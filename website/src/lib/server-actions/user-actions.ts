@@ -29,6 +29,17 @@ export async function updateUserAction(input: UserUpdateInput) {
 	return result;
 }
 
+export async function updateUserSelfAction(input: UserUpdateInput) {
+	const session = await getAuthenticatedUserOrRedirect();
+	const result = await service.updateSelf(session.id, input);
+
+	if (result.success) {
+		revalidatePath('/portal/profile');
+	}
+
+	return result;
+}
+
 export async function getUserAction(userId: string) {
 	const session = await getAuthenticatedUserOrRedirect();
 	return service.get(session.id, userId);

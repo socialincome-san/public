@@ -1,8 +1,7 @@
 import { Bucket } from '@google-cloud/storage';
 import { credential } from 'firebase-admin';
-import { App, getApps, initializeApp } from 'firebase-admin/app';
+import { App, AppOptions, getApps, initializeApp } from 'firebase-admin/app';
 import { Auth, getAuth } from 'firebase-admin/auth';
-import { AppOptions } from 'firebase-admin/lib/app/core';
 import { getStorage, Storage } from 'firebase-admin/storage';
 
 const getOrInitializeFirebaseAdmin = (options?: AppOptions, name?: string): App => {

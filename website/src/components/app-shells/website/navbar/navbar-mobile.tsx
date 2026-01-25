@@ -6,21 +6,26 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import Link from 'next/link';
 import { useLogout } from '../../use-logout';
 import { Logo } from './logo';
 
-export const NavbarMobile = ({ contributor, lang }: { contributor?: ContributorSession; lang: WebsiteLanguage }) => {
+type Props = {
+	session?: ContributorSession | LocalPartnerSession;
+	lang: WebsiteLanguage;
+};
+
+export const NavbarMobile = ({ session, lang }: Props) => {
 	const { logout } = useLogout();
 	const translator = useTranslator(lang, 'website-me');
-
 	const menuLinks = [
 		{
 			href: '/',
 			label: translator?.t('metadata.home-link'),
 		},
 		{
-			href: '/dashboard/profile',
+			href: session?.type === 'local-partner' ? '/partner-space/profile' : '/dashboard/profile',
 			label: translator?.t('profile.link') ?? 'Profile',
 		},
 	];
@@ -36,8 +41,8 @@ export const NavbarMobile = ({ contributor, lang }: { contributor?: ContributorS
 					<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3">
 						<Avatar>
 							<AvatarFallback className="bg-primary text-background">
-								{contributor?.firstName?.[0]}
-								{contributor?.lastName?.[0]}
+								{session?.firstName?.[0]}
+								{session?.lastName?.[0]}
 							</AvatarFallback>
 						</Avatar>
 					</Button>

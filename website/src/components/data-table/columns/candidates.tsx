@@ -9,7 +9,10 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeCandidateColumns(): ColumnDef<CandidatesTableViewRow>[] {
+export function makeCandidateColumns(
+	hideProgramName = false,
+	hideLocalPartner = false,
+): ColumnDef<CandidatesTableViewRow>[] {
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
 		{
 			accessorKey: 'firstName',
@@ -26,11 +29,17 @@ export function makeCandidateColumns(): ColumnDef<CandidatesTableViewRow>[] {
 			header: (ctx) => <SortableHeader ctx={ctx}>Age</SortableHeader>,
 			cell: (ctx) => <AgeCell ctx={ctx} />,
 		},
-		{
+	];
+
+	if (!hideLocalPartner) {
+		columns.push({
 			accessorKey: 'localPartnerName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Local Partner</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		});
+	}
+
+	columns.push(
 		{
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
@@ -47,7 +56,7 @@ export function makeCandidateColumns(): ColumnDef<CandidatesTableViewRow>[] {
 			enableSorting: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
-	];
+	);
 
 	return columns;
 }

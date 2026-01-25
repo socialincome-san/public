@@ -1,6 +1,8 @@
+import { NetworkTechnology, PaymentProvider } from '@prisma/client';
+
 export type CountryTableViewRow = {
 	id: string;
-	name: string;
+	isoCode: string;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -21,7 +23,7 @@ export type CountryTableView = {
 
 export type CountryPayload = {
 	id: string;
-	name: string;
+	isoCode: string;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -34,7 +36,7 @@ export type CountryPayload = {
 };
 
 export type CountryCreateInput = {
-	name: string;
+	isoCode: string;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -48,7 +50,7 @@ export type CountryCreateInput = {
 
 export type CountryUpdateInput = {
 	id: string;
-	name?: string;
+	isoCode?: string;
 	isActive?: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -83,7 +85,7 @@ export type ProgramCountryFeasibilityRow = {
 	id: string;
 
 	country: {
-		name: string;
+		isoCode: string;
 		isActive: boolean;
 	};
 
@@ -100,4 +102,16 @@ export type ProgramCountryFeasibilityRow = {
 
 export type ProgramCountryFeasibilityView = {
 	rows: ProgramCountryFeasibilityRow[];
+};
+
+export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
+	[NetworkTechnology.g3]: '3G',
+	[NetworkTechnology.g4]: '4G',
+	[NetworkTechnology.g5]: '5G',
+	[NetworkTechnology.satellite]: 'Satellite',
+	[NetworkTechnology.unknown]: 'Unknown',
+};
+
+export const PAYMENT_PROVIDER_LABELS: Record<PaymentProvider, string> = {
+	[PaymentProvider.orange_money]: 'Orange Money',
 };

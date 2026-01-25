@@ -21,6 +21,7 @@ export type FormField = {
 	value?: any;
 	useCombobox?: boolean;
 	disabled?: boolean;
+	options?: { id: string; label: string }[];
 };
 
 export type FormSchema = {
@@ -292,7 +293,13 @@ const GenericFormField = ({
 		switch (getType(option, zodSchema, parentOption)) {
 			case 'ZodArray': {
 				const values = getEnumArrayValues(option, zodSchema, parentOption);
-				const options = Object.entries(values).map(([label, value]) => ({ label, value }));
+
+				const options =
+					formFieldSchema.options?.map((o) => ({ value: o.id, label: o.label })) ??
+					Object.entries(values).map(([value]) => ({
+						value,
+						label: value,
+					}));
 
 				return (
 					<FormField
@@ -366,7 +373,12 @@ const GenericFormField = ({
 				);
 			case 'ZodEnum': {
 				const enumValues = Object.entries(getEnumValues(option, parentOption));
-				const items = enumValues.map(([label, value]) => ({ id: value, label }));
+				const items =
+					formFieldSchema.options ??
+					enumValues.map(([value]) => ({
+						id: value,
+						label: value,
+					}));
 
 				if (formFieldSchema.useCombobox) {
 					return (
@@ -458,10 +470,10 @@ const GenericFormField = ({
 								<FormControl>
 									<Input
 										type="number"
+										step="any"
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey, {
-											// avoid NaN when input is empty, see https://github.com/orgs/react-hook-form/discussions/6980#discussioncomment-1785009
-											setValueAs: (v) => (v === '' ? null : parseInt(v, 10)),
+											setValueAs: (v) => (v === '' ? null : parseFloat(v)),
 										})}
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
