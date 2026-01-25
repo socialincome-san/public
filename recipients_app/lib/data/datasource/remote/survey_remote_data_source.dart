@@ -13,7 +13,6 @@ class SurveyRemoteDataSource implements SurveyDataSource {
     required this.authenticatedClient,
   });
 
-  /// curl http://localhost:3001/api/v1/recipients/me/surveys
   @override
   Future<List<Survey>> fetchSurveys({required String recipientId}) async {
     final uri = baseUri.resolve("api/v1/recipients/me/surveys");
@@ -24,8 +23,7 @@ class SurveyRemoteDataSource implements SurveyDataSource {
     }
 
     final responseBody = jsonDecode(response.body) as List<dynamic>;
-    final surveys = responseBody.map((e) => SurveyMapper.fromJson(e.toString())).toList();
-
+    final surveys = responseBody.map((e) => SurveyMapper.fromMap(e as Map<String, dynamic>)).toList();
     return surveys;
   }
 }

@@ -25,7 +25,6 @@ class UserRemoteDataSource implements UserDataSource {
   @override
   Recipient? get currentRecipient => _currentRecipient;
 
-  /// curl http://localhost:3001/api/v1/recipients/me
   @override
   Future<Recipient?> fetchRecipient(User firebaseUser) async {
     final uri = baseUri.resolve("api/v1/recipients/me");

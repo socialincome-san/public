@@ -14,8 +14,6 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     required this.authenticatedClient,
   });
 
-  /// curl http://localhost:3001/api/v1/recipients/me/payouts/123/confirm \
-  /// --request POST \
   @override
   Future<Payout> confirmPayout({required String payoutId}) async {
     final uri = baseUri.resolve("api/v1/recipients/me/payouts/$payoutId/confirm");
@@ -58,7 +56,6 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     return PayoutMapper.fromJson(response.body);
   }
 
-  /// curl http://localhost:3001/api/v1/recipients/me/payouts
   @override
   Future<List<Payout>> fetchPayouts() async {
     final uri = baseUri.resolve("api/v1/recipients/me/payouts");
@@ -70,7 +67,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     }
 
     final responseBody = jsonDecode(response.body) as List<dynamic>;
-    final payouts = responseBody.map((e) => PayoutMapper.fromJson(e.toString())).toList();
+    final payouts = responseBody.map((e) => PayoutMapper.fromMap(e as Map<String, dynamic>)).toList();
 
     return payouts;
   }
