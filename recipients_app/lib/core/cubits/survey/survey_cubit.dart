@@ -63,7 +63,7 @@ class SurveyCubit extends Cubit<SurveyState> {
     final mappedSurveys = surveys
         .map(
           (survey) => MappedSurvey(
-            name: _getReadableName(survey.id),
+            name: _getReadableName(survey.name),
             survey: survey,
             surveyUrl: _getSurveyUrl(
               survey,
