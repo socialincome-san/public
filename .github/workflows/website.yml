@@ -115,20 +115,28 @@ jobs:
         working-directory: website
         run: npm run test:e2e:update
 
-      - name: Mark repo as safe
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Commit and push updated snapshots
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: update snapshots (CI auto-commit)"
-          branch: ${{ github.head_ref }}
-          commit_user_name: github-actions
-          commit_user_email: actions@github.com
-          token: ${{ secrets.WORKFLOW_WRITE_TOKEN }}
-          file_pattern: |
-            **/__screenshots__/**
-            **/snapshots/**
+      - name: Add snapshot files
+        run: git add **/__screenshots__/** **/snapshots/** || true
+
+      - name: Commit snapshots if changed
+        run: |
+          git diff --cached --quiet || git commit -m "chore: update snapshots (CI auto-commit)"
+
+      - name: Prepare remote for PAT push
+        if: |
+          github.actor == 'github-actions'
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.WORKFLOW_WRITE_TOKEN }}@github.com/${{ github.repository }}.git
+
+      - name: Push updated snapshots
+        run: |
+          git push origin HEAD:${{ github.head_ref }} || echo "Nothing to push"
 
       - name: Upload Test Report (only if failure)
         if: failure()
