@@ -28,7 +28,7 @@
 		"website:check-translations": "npm --workspace=@socialincome/website run check-translations",
 		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
 		"ui:build": "npm --workspace=@socialincome/ui run build-storybook",
-		"dev:ssl-proxy": "ssl-proxy --source 3000 --target 3000",
+		"dev:ssl-proxy": "ssl-proxy --source 3001 --target 3000",
 		"db:generate": "npm --workspace=@socialincome/website run db:generate",
 		"db:migrate:deploy": "npm --workspace=@socialincome/website run db:migrate:deploy",
 		"db:migrate:dev": "npm --workspace=@socialincome/website run db:migrate:dev",
