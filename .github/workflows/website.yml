@@ -33,7 +33,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --no-audit --no-fund
-      - run: npm run website:check-unused
+      - run: npm run website:check:unused
 
   typecheck:
     name: "🔍 Type Check"
