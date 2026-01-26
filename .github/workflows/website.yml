@@ -125,6 +125,7 @@ jobs:
           branch: ${{ github.head_ref }}
           commit_user_name: github-actions
           commit_user_email: actions@github.com
+          token: ${{ secrets.WORKFLOW_WRITE_TOKEN }}
           file_pattern: |
             **/__screenshots__/**
             **/snapshots/**
