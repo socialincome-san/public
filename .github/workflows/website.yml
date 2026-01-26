@@ -4,9 +4,8 @@ on:
   pull_request:
     paths-ignore:
       - "recipients_app/**"
-
   push:
-    branches-ignore:
+    branches:
       - main
     paths-ignore:
       - "recipients_app/**"
