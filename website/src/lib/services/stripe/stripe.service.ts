@@ -3,7 +3,7 @@
  * 1. Install Stripe CLI: `brew install stripe/stripe-cli/stripe`
  * 2. Login to Stripe: `stripe login`
  * 3. Forward webhooks to local endpoint:
- *    `stripe listen --forward-to localhost:3001/api/v1/stripe/webhook`
+ *    `stripe listen --forward-to localhost:3000/api/v1/stripe/webhook`
  * 4. Copy the webhook signing secret from CLI output and set in your env.local:
  *    STRIPE_WEBHOOK_SECRET=whsec_xxx...
  * 5. Make a test contribution - webhooks will be forwarded to your local server.

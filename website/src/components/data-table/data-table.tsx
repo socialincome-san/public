@@ -67,7 +67,7 @@ export default function DataTable<Row>({
 	}, [searchFilter]);
 
 	return (
-		<div>
+		<div data-testid="data-table">
 			<div className="mb-4 flex flex-wrap items-center justify-between">
 				<h2 className="pb-4 text-3xl">
 					{title} <span className="text-lg text-gray-500">({filteredData.length})</span>

@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { createSessionAction } from '@/lib/server-actions/session-actions';
+import { logger } from '@/lib/utils/logger';
 import { FirebaseError } from 'firebase/app';
 import { isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
@@ -109,7 +110,8 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		try {
 			await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 			setEmailSent(true);
-		} catch {
+		} catch (error) {
+			logger.error('Error sending sign-in email', { error });
 			translator && toast.error(translator.t('error.unknown'));
 		} finally {
 			setSendingEmail(false);
