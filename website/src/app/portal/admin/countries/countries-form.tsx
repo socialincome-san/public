@@ -41,6 +41,7 @@ const initialFormSchema: CountryFormSchema = {
 			label: 'Country',
 			zodSchema: z.enum(isoCountries.map((c) => c.isoCode) as [string, ...string[]]),
 			useCombobox: true,
+			placeholder: 'Select country',
 			options: isoCountries.map((c) => ({
 				id: c.isoCode,
 				label: c.name,

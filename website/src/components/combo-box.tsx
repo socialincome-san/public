@@ -31,7 +31,19 @@ export function Combobox({
 	return (
 		<Popover open={open} onOpenChange={setOpen} modal>
 			<PopoverTrigger asChild>
-				<Button variant="outline" role="combobox" className="w-full justify-between font-normal" disabled={disabled}>
+				<Button
+					variant="outline"
+					role="combobox"
+					className="w-full justify-between font-normal"
+					disabled={disabled}
+					tabIndex={0}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							e.preventDefault();
+							setOpen((prev) => !prev);
+						}
+					}}
+				>
 					{selected ? selected.label : <span className="text-muted-foreground">{placeholder}</span>}
 					<ChevronsUpDown className="h-4 w-4 opacity-50" />
 				</Button>

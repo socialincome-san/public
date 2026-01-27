@@ -414,7 +414,7 @@ const GenericFormField = ({
 									disabled={formFieldSchema.disabled || isLoading || readOnly}
 								>
 									<FormControl>
-										<SelectTrigger>
+										<SelectTrigger aria-placeholder={formFieldSchema.placeholder}>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
 										</SelectTrigger>
 									</FormControl>
