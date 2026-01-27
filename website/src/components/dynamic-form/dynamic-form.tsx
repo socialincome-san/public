@@ -373,12 +373,7 @@ const GenericFormField = ({
 				);
 			case 'ZodEnum': {
 				const enumValues = Object.entries(getEnumValues(option, parentOption));
-				const items =
-					formFieldSchema.options ??
-					enumValues.map(([value]) => ({
-						id: value,
-						label: value,
-					}));
+				const items = formFieldSchema.options ?? enumValues.map(([label, value]) => ({ id: value, label }));
 
 				if (formFieldSchema.useCombobox) {
 					return (
