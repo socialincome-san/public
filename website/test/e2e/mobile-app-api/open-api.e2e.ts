@@ -9,5 +9,5 @@ test('OpenAPI JSON should match snapshot', async ({ page }) => {
 
 	const serialized = JSON.stringify(json, null, 2);
 
-	expect(serialized).toMatchSnapshot('openapi.json');
+	expect(serialized).toMatchSnapshot();
 });
