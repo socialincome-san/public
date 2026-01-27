@@ -59,6 +59,10 @@ export default defineConfig({
 			},
 			dependencies: ['setup'],
 		},
+		{
+			name: 'mobile-app-api',
+			testMatch: /mobile-app-api\/.*\.e2e\.ts/,
+		},
 	],
 
 	webServer: {
