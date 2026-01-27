@@ -38,7 +38,7 @@ export function Combobox({
 					disabled={disabled}
 					tabIndex={0}
 					onKeyDown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
+						if (e.key === 'Enter') {
 							e.preventDefault();
 							setOpen((prev) => !prev);
 						}

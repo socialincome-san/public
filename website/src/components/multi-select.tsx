@@ -736,7 +736,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 							{...props}
 							onClick={handleTogglePopover}
 							onKeyDown={(e) => {
-								if (e.key === 'Enter' || e.key === ' ') {
+								if (e.key === 'Enter') {
 									e.preventDefault();
 									handleTogglePopover();
 								}
