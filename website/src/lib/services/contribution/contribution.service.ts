@@ -297,7 +297,7 @@ export class ContributionService extends BaseService {
 
 	async upsertFromBankTransfer(paymentEvent: PaymentEventCreateInput): Promise<ServiceResult<PaymentEvent>> {
 		try {
-			const existing = await this.db.paymentEvent.findFirst({
+			const existing = await this.db.paymentEvent.findUnique({
 				where: { transactionId: paymentEvent.transactionId },
 				select: { id: true, contribution: { select: { status: true } } },
 			});
