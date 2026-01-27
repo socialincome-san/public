@@ -17,7 +17,9 @@ export default async function Layout({ children }: { children: ReactNode }) {
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<h1 className="py-8 text-5xl">Partner Space</h1>
+			<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
+				Partner Space
+			</h1>
 			<TabNavigation sections={sections} />
 			<Card>{children}</Card>
 		</>
