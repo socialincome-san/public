@@ -14,7 +14,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1990-03-12'),
 		profession: 'Teacher',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -30,7 +30,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1985-07-08'),
 		profession: 'Software Engineer',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -46,7 +46,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1993-11-25'),
 		profession: 'Nurse',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -62,7 +62,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1988-02-15'),
 		profession: 'Community Organizer',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -77,7 +77,7 @@ export const contactsData: Contact[] = [
 		language: 'en',
 		dateOfBirth: new Date('1982-09-10'),
 		profession: 'Local Coordinator',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		isInstitution: false,
 		updatedAt: null
 	},
@@ -93,7 +93,7 @@ export const contactsData: Contact[] = [
 		language: 'kr',
 		dateOfBirth: new Date('1991-06-22'),
 		profession: 'Field Officer',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		isInstitution: false,
 		updatedAt: null
 	},
@@ -110,7 +110,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1987-09-18'),
 		profession: 'Aid Worker',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -126,7 +126,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1995-04-30'),
 		profession: 'Social Worker',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -142,7 +142,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1992-05-14'),
 		profession: 'Logistics Coordinator',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -158,7 +158,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1994-09-23'),
 		profession: 'Health Assistant',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -174,7 +174,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1989-03-07'),
 		profession: 'Field Technician',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -190,7 +190,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1996-12-01'),
 		profession: 'Project Assistant',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -206,7 +206,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1980-11-22'),
 		profession: 'Country Coordinator',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -222,7 +222,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1986-08-16'),
 		profession: 'Regional Director',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -238,7 +238,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1984-02-03'),
 		profession: 'Operations Manager',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}, {
 		id: 'contact-16',
@@ -253,7 +253,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1989-05-19'),
 		profession: 'Portal Administrator',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -269,7 +269,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1991-08-02'),
 		profession: 'Program Manager',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -285,7 +285,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1987-11-13'),
 		profession: 'Communications Officer',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];
