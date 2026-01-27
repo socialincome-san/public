@@ -197,7 +197,15 @@ export class RecipientService extends BaseService {
 				include: {
 					contact: { include: { phone: true } },
 					paymentInformation: { include: { phone: true } },
-					program: true,
+					program: {
+						include: {
+							country: {
+								select: {
+									isoCode: true,
+								},
+							},
+						},
+					},
 					localPartner: true,
 				},
 			});
@@ -622,7 +630,15 @@ export class RecipientService extends BaseService {
 							phone: true,
 						},
 					},
-					program: true,
+					program: {
+						include: {
+							country: {
+								select: {
+									isoCode: true,
+								},
+							},
+						},
+					},
 					localPartner: {
 						include: {
 							contact: {

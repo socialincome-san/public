@@ -114,6 +114,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		},
 
 		successorName: data.successorName,
+		termsAccepted: data.termsAccepted,
 
 		paymentInformation:
 			data.paymentPhone || data.paymentProvider

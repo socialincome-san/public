@@ -21,7 +21,15 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 				phone: true;
 			};
 		};
-		program: true;
+		program: {
+			include: {
+				country: {
+					select: {
+						isoCode: true;
+					};
+				};
+			};
+		};
 		localPartner: true;
 	};
 }>;
