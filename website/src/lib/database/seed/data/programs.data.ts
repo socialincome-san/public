@@ -11,7 +11,7 @@ export const programsData: Program[] = [
 		payoutInterval: 'monthly',
 		targetCauses: [],
 		countryId: 'country-algeria',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -24,7 +24,7 @@ export const programsData: Program[] = [
 		payoutInterval: 'monthly',
 		targetCauses: [],
 		countryId: 'country-algeria',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -37,7 +37,7 @@ export const programsData: Program[] = [
 		payoutInterval: 'monthly',
 		targetCauses: [],
 		countryId: 'country-algeria',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -50,7 +50,7 @@ export const programsData: Program[] = [
 		payoutInterval: 'monthly',
 		targetCauses: [],
 		countryId: 'country-algeria',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -63,7 +63,7 @@ export const programsData: Program[] = [
 		payoutInterval: 'monthly',
 		targetCauses: [],
 		countryId: 'country-angola',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

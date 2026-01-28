@@ -7,7 +7,7 @@ export const paymentEventsData: Prisma.PaymentEventCreateManyInput[] = [
 		type: PaymentEventType.stripe,
 		transactionId: 'txn-001',
 		metadata: { method: 'credit_card', status: 'succeeded' } as Prisma.InputJsonValue,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -16,7 +16,7 @@ export const paymentEventsData: Prisma.PaymentEventCreateManyInput[] = [
 		type: PaymentEventType.stripe,
 		transactionId: 'txn-002',
 		metadata: { method: 'apple_pay', status: 'succeeded' } as Prisma.InputJsonValue,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -25,7 +25,7 @@ export const paymentEventsData: Prisma.PaymentEventCreateManyInput[] = [
 		type: PaymentEventType.stripe,
 		transactionId: 'txn-003',
 		metadata: { method: 'bank_transfer', status: 'succeeded' } as Prisma.InputJsonValue,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

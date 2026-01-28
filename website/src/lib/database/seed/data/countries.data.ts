@@ -20,7 +20,7 @@ export const countriesData: Country[] = [
     networkTechnology: NetworkTechnology.g3,
     networkSourceLinkId: "source-link-3",
     sanctions: [],
-    createdAt: new Date(),
+    createdAt: new Date('2024-03-12T12:00:00.000Z'),
     updatedAt: null
   },
   {
@@ -35,7 +35,7 @@ export const countriesData: Country[] = [
     networkTechnology: NetworkTechnology.g3,
     networkSourceLinkId: 'source-link-3',
     sanctions: [SanctionRegime.eu, SanctionRegime.us],
-    createdAt: new Date(),
+    createdAt: new Date('2024-03-12T12:00:00.000Z'),
     updatedAt: null
   },
   {
@@ -50,7 +50,7 @@ export const countriesData: Country[] = [
     networkTechnology: NetworkTechnology.g3,
     networkSourceLinkId: 'source-link-3',
     sanctions: [],
-    createdAt: new Date(),
+    createdAt: new Date('2024-03-12T12:00:00.000Z'),
     updatedAt: null
   },
   {
@@ -65,7 +65,7 @@ export const countriesData: Country[] = [
     networkTechnology: NetworkTechnology.g4,
     networkSourceLinkId: 'source-link-3',
     sanctions: [],
-    createdAt: new Date(),
+    createdAt: new Date('2024-03-12T12:00:00.000Z'),
     updatedAt: null
   },
   {
@@ -80,7 +80,7 @@ export const countriesData: Country[] = [
     networkTechnology: NetworkTechnology.g3,
     networkSourceLinkId: 'source-link-3',
     sanctions: [SanctionRegime.us],
-    createdAt: new Date(),
+    createdAt: new Date('2024-03-12T12:00:00.000Z'),
     updatedAt: null
   },
   

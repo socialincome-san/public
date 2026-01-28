@@ -12,7 +12,7 @@ export const payoutsData: Payout[] = [
 		phoneNumber: '+23276123456',
 		comments: 'First payout completed successfully.',
 		recipientId: 'recipient-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -26,7 +26,7 @@ export const payoutsData: Payout[] = [
 		phoneNumber: '+23277111222',
 		comments: 'Second payout confirmed.',
 		recipientId: 'recipient-2',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -40,7 +40,7 @@ export const payoutsData: Payout[] = [
 		phoneNumber: '+23288765432',
 		comments: 'Pending confirmation from partner.',
 		recipientId: 'recipient-3',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

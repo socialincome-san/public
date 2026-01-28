@@ -8,7 +8,7 @@ export const addressesData: Address[] = [
 		city: 'Zürich',
 		zip: '8001',
 		country: 'Switzerland',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -18,7 +18,7 @@ export const addressesData: Address[] = [
 		city: 'Genève',
 		zip: '1204',
 		country: 'Switzerland',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -28,7 +28,7 @@ export const addressesData: Address[] = [
 		city: 'Bern',
 		zip: '3011',
 		country: 'Switzerland',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -38,7 +38,7 @@ export const addressesData: Address[] = [
 		city: 'Freetown',
 		zip: '1000',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -48,7 +48,7 @@ export const addressesData: Address[] = [
 		city: 'Bo',
 		zip: '2002',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -58,7 +58,7 @@ export const addressesData: Address[] = [
 		city: 'Kenema',
 		zip: '3003',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -68,7 +68,7 @@ export const addressesData: Address[] = [
 		city: 'Monrovia',
 		zip: '4004',
 		country: 'Liberia',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -78,7 +78,7 @@ export const addressesData: Address[] = [
 		city: 'Makeni',
 		zip: '5005',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -88,7 +88,7 @@ export const addressesData: Address[] = [
 		city: 'Freetown',
 		zip: '1001',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -98,7 +98,7 @@ export const addressesData: Address[] = [
 		city: 'Freetown',
 		zip: '1002',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -108,7 +108,7 @@ export const addressesData: Address[] = [
 		city: 'Freetown',
 		zip: '1003',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -118,7 +118,7 @@ export const addressesData: Address[] = [
 		city: 'Freetown',
 		zip: '1004',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -128,7 +128,7 @@ export const addressesData: Address[] = [
 		city: 'Freetown',
 		zip: '1005',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -138,7 +138,7 @@ export const addressesData: Address[] = [
 		city: 'Monrovia',
 		zip: '4005',
 		country: 'Liberia',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -148,7 +148,7 @@ export const addressesData: Address[] = [
 		city: 'Kenema',
 		zip: '3004',
 		country: 'Sierra Leone',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -158,7 +158,7 @@ export const addressesData: Address[] = [
 		city: 'Zürich',
 		zip: '8001',
 		country: 'Switzerland',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -168,7 +168,7 @@ export const addressesData: Address[] = [
 		city: 'Zürich',
 		zip: '8008',
 		country: 'Switzerland',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -178,7 +178,7 @@ export const addressesData: Address[] = [
 		city: 'Bern',
 		zip: '3012',
 		country: 'Switzerland',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];
