@@ -1,7 +1,7 @@
-// BaseTable.tsx
 'use client';
 
 import { Button } from '@/components/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { cn } from '@socialincome/ui/src/lib/utils';
 import {
@@ -38,6 +38,11 @@ export function BaseTable<TData, TValue>({
 		onSortingChange: setSorting,
 		getSortedRowModel: getSortedRowModel(),
 		state: { sorting },
+		initialState: {
+			pagination: {
+				pageSize: 10,
+			},
+		},
 	});
 
 	const pageSize = table.getState().pagination.pageSize;
@@ -62,7 +67,6 @@ export function BaseTable<TData, TValue>({
 							</TableRow>
 						))}
 					</TableHeader>
-
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
@@ -92,16 +96,39 @@ export function BaseTable<TData, TValue>({
 				</Table>
 			</div>
 
-			<div className="flex items-center justify-end space-x-4 py-4">
-				<Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-					Previous
-				</Button>
-				<span className="text-muted-foreground text-sm">
-					{startRow}-{endRow} of {totalRows}
-				</span>
-				<Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-					Next
-				</Button>
+			<div className="flex items-center justify-between gap-4 py-4">
+				<div className="flex items-center gap-2">
+					<span className="text-muted-foreground text-sm">Rows per page</span>
+					<Select value={`${pageSize}`} onValueChange={(v) => table.setPageSize(Number(v))}>
+						<SelectTrigger className="h-8 w-[80px]">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							{[10, 50, 100, 1000].map((size) => (
+								<SelectItem key={size} value={`${size}`}>
+									{size}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+
+				<div className="flex items-center gap-4">
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={() => table.previousPage()}
+						disabled={!table.getCanPreviousPage()}
+					>
+						Previous
+					</Button>
+					<span className="text-muted-foreground text-sm">
+						{startRow}-{endRow} of {totalRows}
+					</span>
+					<Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+						Next
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
