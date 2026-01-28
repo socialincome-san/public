@@ -12,7 +12,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-1',
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -26,7 +26,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-2',
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -40,7 +40,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-3',
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -54,7 +54,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-1',
 		programId: 'program-2',
 		localPartnerId: 'local-partner-2',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -68,7 +68,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-2',
 		programId: 'program-3',
 		localPartnerId: 'local-partner-3',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -82,7 +82,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-3',
 		programId: 'program-3',
 		localPartnerId: 'local-partner-3',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -96,7 +96,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-1',
 		programId: 'program-4',
 		localPartnerId: 'local-partner-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -110,7 +110,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-2',
 		programId: 'program-4',
 		localPartnerId: 'local-partner-2',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -123,8 +123,36 @@ export const recipientsData: Recipient[] = [
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-3',
 		programId: 'program-4',
+		localPartnerId: 'local-partner-2',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-1',
+		legacyFirestoreId: null,
+		contactId: 'contact-18',
+		startDate: new Date('2024-09-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-3',
+		programId: null,
+		localPartnerId: 'local-partner-1',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+		{
+		id: 'candidate-2',
+		legacyFirestoreId: null,
+		contactId: 'contact-17',
+		startDate: new Date('2024-09-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-3',
+		programId: null,
 		localPartnerId: 'local-partner-3',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

@@ -373,12 +373,7 @@ const GenericFormField = ({
 				);
 			case 'ZodEnum': {
 				const enumValues = Object.entries(getEnumValues(option, parentOption));
-				const items =
-					formFieldSchema.options ??
-					enumValues.map(([value]) => ({
-						id: value,
-						label: value,
-					}));
+				const items = formFieldSchema.options ?? enumValues.map(([label, value]) => ({ id: value, label }));
 
 				if (formFieldSchema.useCombobox) {
 					return (
@@ -419,7 +414,7 @@ const GenericFormField = ({
 									disabled={formFieldSchema.disabled || isLoading || readOnly}
 								>
 									<FormControl>
-										<SelectTrigger>
+										<SelectTrigger aria-placeholder={formFieldSchema.placeholder}>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
 										</SelectTrigger>
 									</FormControl>

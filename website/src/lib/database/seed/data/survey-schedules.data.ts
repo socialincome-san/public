@@ -7,7 +7,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		questionnaire: SurveyQuestionnaire.onboarding,
 		dueInMonthsAfterStart: 0,
 		programId: 'program-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -16,7 +16,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		questionnaire: SurveyQuestionnaire.checkin,
 		dueInMonthsAfterStart: 6,
 		programId: 'program-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -25,7 +25,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		questionnaire: SurveyQuestionnaire.checkin,
 		dueInMonthsAfterStart: 12,
 		programId: 'program-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -34,7 +34,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		questionnaire: SurveyQuestionnaire.checkin,
 		dueInMonthsAfterStart: 18,
 		programId: 'program-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -43,7 +43,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		questionnaire: SurveyQuestionnaire.checkin,
 		dueInMonthsAfterStart: 24,
 		programId: 'program-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 ];
