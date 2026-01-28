@@ -118,14 +118,14 @@ export const NavbarDesktop = ({ session, lang }: Props) => {
 					<Logo />
 				</Link>
 
-				<NavLinks nav={NAV} open={open} onClick={handleNavClick} />
+				<NavLinks nav={[]} open={open} onClick={handleNavClick} />
 
 				<div className="flex items-center gap-5">
 					{!session && <LoginFlyout />}
 
 					{session && <AccountMenu session={session} />}
 
-					<Button className="rounded-full px-5 py-2 text-base font-medium">Donate now</Button>
+					{!session && <Button className="rounded-full px-5 py-2 text-base font-medium">Donate now</Button>}
 				</div>
 			</nav>
 

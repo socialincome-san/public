@@ -6,12 +6,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import Link from 'next/link';
+import { useLogout } from '../../use-logout';
 
 type Props = {
 	session: ContributorSession | LocalPartnerSession;
 };
 
 export const AccountMenu = ({ session }: Props) => {
+	const profileUrl = session.type === 'local-partner' ? '/partner-space/profile' : '/dashboard/profile';
+	const { logout } = useLogout();
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -29,9 +33,9 @@ export const AccountMenu = ({ session }: Props) => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-64">
 				<DropdownMenuItem asChild>
-					<Link href="/profile">Profile</Link>
+					<Link href={profileUrl}>Profile</Link>
 				</DropdownMenuItem>
-				<DropdownMenuItem onSelect={() => {}}>Logout</DropdownMenuItem>
+				<DropdownMenuItem onSelect={() => logout()}>Logout</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

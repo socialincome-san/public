@@ -1,4 +1,5 @@
 import { ChevronDown } from 'lucide-react';
+import { NavItem } from './navbar-desktop';
 
 type Props = {
 	nav: NavItem[];
