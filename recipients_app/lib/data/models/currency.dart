@@ -15,3 +15,9 @@ enum Currency {
   @MappableValue("GBP")
   gbp,
 }
+
+extension CurrencyExtension on Currency {
+  String toDisplayString() {
+    return name.toUpperCase();
+  }
+}

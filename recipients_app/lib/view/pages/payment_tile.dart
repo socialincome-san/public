@@ -1,4 +1,5 @@
 import "package:app/data/enums/payout_ui_status.dart";
+import "package:app/data/models/currency.dart";
 import "package:app/data/models/payment/mapped_payout.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
@@ -82,7 +83,7 @@ class PaymentTile extends StatelessWidget {
   }
 
   Widget _buildStatusIcon(MappedPayout mappedPayment) {
-    final text = "${mappedPayment.payout.currency} ${mappedPayment.payout.amount}";
+    final text = "${mappedPayment.payout.currency.toDisplayString()} ${mappedPayment.payout.amount}";
 
     return PaymentStatusIconWithText(
       status: mappedPayment.uiStatus,
