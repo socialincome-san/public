@@ -1,4 +1,6 @@
-import "package:app/data/models/models.dart";
+import "package:app/data/enums/payout_ui_status.dart";
+import "package:app/data/models/currency.dart";
+import "package:app/data/models/payment/mapped_payout.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/icons/payment_status_icon_with_text.dart";
@@ -7,15 +9,15 @@ import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
 const _reviewUiStatuses = [
-  PaymentUiStatus.contested,
-  PaymentUiStatus.onHoldContested,
-  PaymentUiStatus.onHoldToReview,
-  PaymentUiStatus.toReview,
-  PaymentUiStatus.recentToReview,
+  PayoutUiStatus.contested,
+  PayoutUiStatus.onHoldContested,
+  PayoutUiStatus.onHoldToReview,
+  PayoutUiStatus.toReview,
+  PayoutUiStatus.recentToReview,
 ];
 
 class PaymentTile extends StatelessWidget {
-  final MappedPayment mappedPayment;
+  final MappedPayout mappedPayment;
 
   const PaymentTile({super.key, required this.mappedPayment});
 
@@ -37,7 +39,7 @@ class PaymentTile extends StatelessWidget {
               children: [
                 Text(
                   _formatDate(
-                    mappedPayment.payment.paymentAt?.toDate(),
+                    DateTime.parse(mappedPayment.payout.paymentAt),
                     context.l10n,
                     locale,
                   ),
@@ -67,7 +69,7 @@ class PaymentTile extends StatelessWidget {
 
     String dateFormat;
     String formattedDate = "";
-    if (mappedPayment.uiStatus == PaymentUiStatus.toBePaid) {
+    if (mappedPayment.uiStatus == PayoutUiStatus.toBePaid) {
       dateFormat = DateFormat.YEAR_MONTH_DAY;
       formattedDate = "${localizations.nextPayment} ";
     } else {
@@ -80,8 +82,8 @@ class PaymentTile extends StatelessWidget {
     return formattedDate += DateFormat(dateFormat, locale).format(dateTime);
   }
 
-  Widget _buildStatusIcon(MappedPayment mappedPayment) {
-    final text = "${mappedPayment.payment.currency} ${mappedPayment.payment.amount}";
+  Widget _buildStatusIcon(MappedPayout mappedPayment) {
+    final text = "${mappedPayment.payout.currency.toDisplayString()} ${mappedPayment.payout.amount}";
 
     return PaymentStatusIconWithText(
       status: mappedPayment.uiStatus,
