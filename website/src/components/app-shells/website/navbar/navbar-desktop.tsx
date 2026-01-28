@@ -1,18 +1,17 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
-import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useClickOutside } from '../../use-click-outside';
+import { AccountMenu } from './account-menu';
 import { FlyoutPanel } from './flyout-panel';
-import { LoginButton } from './login-button';
+import { LoginFlyout } from './login-flyout';
 import { Logo } from './logo';
 import { NavLinks } from './nav-links';
-import { AccountMenu } from './account-menu';
 
 export type NavItem = {
 	label: string;
@@ -100,18 +99,9 @@ export const NavbarDesktop = ({ session, lang }: Props) => {
 	const [open, setOpen] = useState<string | null>(null);
 	const navRef = useRef<HTMLDivElement | null>(null);
 
-	const activeItem = NAV.find((item) => item.label === open && item.sections);
+	useClickOutside(navRef, () => setOpen(null));
 
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (!navRef.current) return;
-			if (!navRef.current.contains(event.target as Node)) {
-				setOpen(null);
-			}
-		};
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, []);
+	const activeItem = NAV.find((item) => item.label === open && item.sections);
 
 	const handleNavClick = (item: NavItem) => {
 		if (!item.sections) {
@@ -131,11 +121,9 @@ export const NavbarDesktop = ({ session, lang }: Props) => {
 				<NavLinks nav={NAV} open={open} onClick={handleNavClick} />
 
 				<div className="flex items-center gap-5">
-					{!session && <LoginButton />}
+					{!session && <LoginFlyout />}
 
-					{session && (
-						<AccountMenu session={session} />
-					)}
+					{session && <AccountMenu session={session} />}
 
 					<Button className="rounded-full px-5 py-2 text-base font-medium">Donate now</Button>
 				</div>
