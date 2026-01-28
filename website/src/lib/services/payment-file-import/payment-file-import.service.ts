@@ -2,6 +2,7 @@ import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { Currency } from '@/lib/types/currency';
 import { ContributionStatus, PaymentEvent, PaymentEventType } from '@prisma/client';
 import xmldom from '@xmldom/xmldom';
+import { DateTime } from 'luxon';
 import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
@@ -164,7 +165,7 @@ export class PaymentFileImportService extends BaseService {
 
 				const paymentEvent: PaymentEventCreateInput = {
 					type: PaymentEventType.bank_transfer,
-					transactionId: contributionReferenceId || '',
+					transactionId: contributionReferenceId || DateTime.now().toMillis().toString() + '-legacy',
 					metadata: {
 						raw_content: c.rawContent,
 					},
