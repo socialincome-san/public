@@ -1,99 +1,147 @@
 'use client';
 
-import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
-import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
+import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
 import Link from 'next/link';
-import { twMerge } from 'tailwind-merge';
-import { useLogout } from '../../use-logout';
+import { useEffect, useRef, useState } from 'react';
+import { FlyoutPanel } from './flyout-panel';
+import { LoginButton } from './login-button';
 import { Logo } from './logo';
+import { NavLinks } from './nav-links';
+import { AccountMenu } from './account-menu';
+
+export type NavItem = {
+	label: string;
+	href: string;
+	sections?: {
+		title: string;
+		items: { label: string; href: string }[];
+	}[];
+};
 
 type Props = {
 	session?: ContributorSession | LocalPartnerSession;
 	lang: WebsiteLanguage;
 };
 
+// todo: replace with data from storyblok
+const NAV: NavItem[] = [
+	{
+		label: 'Link 1',
+		href: '#',
+		sections: [
+			{
+				title: 'Section 1',
+				items: [
+					{ label: 'Link 1.1', href: '#' },
+					{ label: 'Link 1.2', href: '#' },
+					{ label: 'Link 1.3', href: '#' },
+				],
+			},
+			{
+				title: 'Section 2',
+				items: [
+					{ label: 'Link 1.4', href: '#' },
+					{ label: 'Link 1.5', href: '#' },
+					{ label: 'Link 1.6', href: '#' },
+				],
+			},
+			{
+				title: 'Section 3',
+				items: [
+					{ label: 'Link 1.7', href: '#' },
+					{ label: 'Link 1.8', href: '#' },
+					{ label: 'Link 1.9', href: '#' },
+				],
+			},
+		],
+	},
+	{
+		label: 'Link 2',
+		href: '#',
+		sections: [
+			{
+				title: 'Section 1',
+				items: [
+					{ label: 'Link 2.1', href: '#' },
+					{ label: 'Link 2.2', href: '#' },
+					{ label: 'Link 2.3', href: '#' },
+				],
+			},
+			{
+				title: 'Section 2',
+				items: [
+					{ label: 'Link 2.1', href: '#' },
+					{ label: 'Link 2.2', href: '#' },
+					{ label: 'Link 2.3', href: '#' },
+				],
+			},
+			{
+				title: 'Section 3',
+				items: [
+					{ label: 'Link 2.7', href: '#' },
+					{ label: 'Link 2.8', href: '#' },
+					{ label: 'Link 2.9', href: '#' },
+				],
+			},
+		],
+	},
+	{
+		label: 'Link 3',
+		href: '#',
+	},
+];
+
 export const NavbarDesktop = ({ session, lang }: Props) => {
-	const { logout } = useLogout();
-	const translator = useTranslator(lang, 'website-me');
+	const [open, setOpen] = useState<string | null>(null);
+	const navRef = useRef<HTMLDivElement | null>(null);
 
-	const mainLinks = [{ href: '/', label: translator?.t('metadata.home-link') }];
+	const activeItem = NAV.find((item) => item.label === open && item.sections);
 
-	const userMenuLinks = [
-		{
-			href: session?.type === 'local-partner' ? '/partner-space/profile' : '/dashboard/profile',
-			label: translator?.t('profile.link') ?? 'Profile',
-		},
-	];
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (!navRef.current) return;
+			if (!navRef.current.contains(event.target as Node)) {
+				setOpen(null);
+			}
+		};
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, []);
+
+	const handleNavClick = (item: NavItem) => {
+		if (!item.sections) {
+			setOpen(null);
+			return;
+		}
+		setOpen((prev) => (prev === item.label ? null : item.label));
+	};
 
 	return (
-		<nav className="container mt-6 flex h-20 items-center justify-between rounded-full bg-white">
-			<Link href="/">
-				<Logo />
-			</Link>
+		<div ref={navRef} className="relative z-50 w-full">
+			<nav className="container mt-6 flex items-center justify-between rounded-full bg-white px-8 py-3 shadow-sm">
+				<Link href="/">
+					<Logo />
+				</Link>
 
-			{/* MAIN NAV LINKS */}
-			<div className="flex items-center gap-x-4">
-				<nav className="flex items-center gap-4">
-					{mainLinks.map(({ href, label }) => (
-						<Link
-							key={href}
-							href={href}
-							className={twMerge(
-								'text-primary hover:bg-accent relative rounded-md px-3 py-2 text-lg font-medium transition-colors duration-200',
-							)}
-						>
-							{label}
-						</Link>
-					))}
-				</nav>
-			</div>
+				<NavLinks nav={NAV} open={open} onClick={handleNavClick} />
 
-			{/* USER MENU */}
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3">
-						<Avatar>
-							<AvatarFallback className="bg-primary text-background">
-								{session?.firstName?.[0]}
-								{session?.lastName?.[0]}
-							</AvatarFallback>
-						</Avatar>
-						<div className="text-left">
-							<p className="text-sm font-medium">
-								{session?.firstName} {session?.lastName}
-							</p>
-							<p className="text-muted-foreground text-xs">
-								{session?.type === 'local-partner' ? 'Partner' : 'Contributor'}
-							</p>
-						</div>
-					</Button>
-				</DropdownMenuTrigger>
+				<div className="flex items-center gap-5">
+					{!session && <LoginButton />}
 
-				<DropdownMenuContent align="end" className="w-64">
-					{userMenuLinks.map(({ href, label }) => (
-						<DropdownMenuItem key={href} asChild>
-							<Link href={href} className="cursor-pointer">
-								{label}
-							</Link>
-						</DropdownMenuItem>
-					))}
+					{session && (
+						<AccountMenu session={session} />
+					)}
 
-					<DropdownMenuItem
-						onSelect={(e: Event) => {
-							e.preventDefault();
-							logout();
-						}}
-						className="text-destructive focus:text-destructive"
-					>
-						<span>{translator?.t('security.sign-out.button')}</span>
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-		</nav>
+					<Button className="rounded-full px-5 py-2 text-base font-medium">Donate now</Button>
+				</div>
+			</nav>
+
+			<FlyoutPanel item={activeItem} onClose={() => setOpen(null)} />
+		</div>
 	);
 };
