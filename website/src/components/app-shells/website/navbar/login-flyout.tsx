@@ -4,6 +4,8 @@ import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { Input } from '@/components/input';
 import { Label } from '@/components/label';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { sendSignInLinkToEmail } from 'firebase/auth';
 import { UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { useReducer, useState } from 'react';
@@ -39,6 +41,8 @@ function reducer(state: State, action: Action): State {
 }
 
 export const LoginFlyout = () => {
+	const { auth } = useAuth();
+
 	const [open, setOpen] = useState(false);
 	const [state, dispatch] = useReducer(reducer, {
 		email: '',
@@ -46,7 +50,7 @@ export const LoginFlyout = () => {
 		status: 'idle',
 	});
 
-	const handleSend = () => {
+	const handleSend = async () => {
 		const result = emailSchema.safeParse(state.email);
 
 		if (!result.success) {
@@ -60,11 +64,22 @@ export const LoginFlyout = () => {
 		dispatch({ type: 'SET_ERROR', error: null });
 		dispatch({ type: 'SET_STATUS', status: 'sending' });
 
-		console.log('TODO: send magic link to:', result.data);
+		try {
+			const email = result.data;
 
-		setTimeout(() => {
+			localStorage.setItem('loginEmail', email);
+
+			const actionCodeSettings = {
+				url: `${window.location.origin}/new-website/auth/finish-login`,
+				handleCodeInApp: true,
+			};
+
+			await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+
 			dispatch({ type: 'SET_STATUS', status: 'sent' });
-		}, 800);
+		} catch {
+			dispatch({ type: 'SET_STATUS', status: 'error' });
+		}
 	};
 
 	const retry = () => {
