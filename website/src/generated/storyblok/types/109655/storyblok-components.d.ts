@@ -26,6 +26,7 @@ export interface Article {
   tags?: (ISbStoryData<Topic> | string)[];
   showRelativeArticles?: boolean;
   footnotes?: StoryblokRichtext;
+  reading_notes?: string;
   component: "article";
   _uid: string;
   [k: string]: unknown;
@@ -96,6 +97,15 @@ export interface HeroVideo {
   [k: string]: unknown;
 }
 
+export interface ImageText {
+  content?: StoryblokRichtext;
+  image: StoryblokAsset;
+  layout: "" | "imageLeft" | "imageRight";
+  component: "imageText";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface ImageWithCaption {
   image: StoryblokAsset;
   caption?: string;
@@ -111,7 +121,7 @@ export interface NewsletterSignup {
 }
 
 export interface Page {
-  content: (HeroVideo | Text)[];
+  content: (HeroVideo | ImageText | Text)[];
   component: "page";
   _uid: string;
   [k: string]: unknown;
