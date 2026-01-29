@@ -88,7 +88,9 @@ export const createProgramWizardMachine = setup({
 
 		loadCandidateCount: fromPromise(async ({ input }: { input: { causes?: Cause[] } }) => {
 			const result = await getCandidateCountAction(input?.causes);
-			if (!result.success) throw new Error(result.error);
+			if (!result.success) {
+				throw new Error(result.error);
+			}
 			return result.data.count;
 		}),
 	},

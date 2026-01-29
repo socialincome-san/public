@@ -1,5 +1,6 @@
 'use client';
 
+import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
 import { cn } from '@/lib/utils/cn';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -31,7 +32,7 @@ export function CountryFlag({ isoCode, size = 'lg' }: CountryFlagProps) {
 		<div className={cn('overflow-hidden rounded-full', containerSize)}>
 			<Image
 				src={`/assets/flags/${isoCode}.svg`}
-				alt={isoCode}
+				alt={`Flag of ${getCountryNameByIsoCode(isoCode)}`}
 				width={36}
 				height={36}
 				className="size-full rounded-full object-cover"

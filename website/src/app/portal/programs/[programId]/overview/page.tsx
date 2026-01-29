@@ -1,12 +1,11 @@
-import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
-import Link from 'next/link';
-import { Suspense } from 'react';
-
 import { Button } from '@/components/button';
 import { Card } from '@/components/card';
 import { MessageBanner } from '@/components/message-banner';
 import { ProgramService } from '@/lib/services/program/program.service';
 import { slugify } from '@/lib/utils/slugify';
+import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
 
@@ -35,7 +34,6 @@ async function OverviewProgramScopedDataLoader({ params }: { params: Promise<{ p
 		<div className="grid grid-cols-12 gap-6">
 			<Card className="col-span-9">
 				<div className="space-y-8">
-					{/* Title + intro */}
 					<div className="space-y-2">
 						<h1 className="text-2xl font-semibold">Great! You initiated a new program</h1>
 						<p className="text-muted-foreground">
@@ -44,7 +42,6 @@ async function OverviewProgramScopedDataLoader({ params }: { params: Promise<{ p
 						</p>
 					</div>
 
-					{/* Status banners */}
 					<div className="space-y-6">
 						<MessageBanner
 							variant="success"
@@ -88,7 +85,6 @@ async function OverviewProgramScopedDataLoader({ params }: { params: Promise<{ p
 				</div>
 			</Card>
 
-			{/* Public preview */}
 			<div className="col-span-3 space-y-3">
 				<p className="text-xl font-medium">Your public page</p>
 

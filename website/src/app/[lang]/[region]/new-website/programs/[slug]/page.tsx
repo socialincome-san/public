@@ -1,8 +1,7 @@
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { ProgramService } from '@/lib/services/program/program.service';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
 export default function ProgramsPage({ params }: DefaultLayoutPropsWithSlug) {
 	return (
