@@ -1,4 +1,4 @@
-import { getDimensionsFromStoryblokImageUrl } from '@/components/legacy/storyblok/StoryblokUtils';
+import { getDimensionsFromStoryblokImageUrl } from '@/lib/services/storyblok/storyblok.utils';
 import { Typography } from '@socialincome/ui';
 import Image from 'next/image';
 

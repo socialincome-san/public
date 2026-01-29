@@ -1,6 +1,5 @@
-import { ResolvedArticle } from '@/components/legacy/storyblok/StoryblokApi';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
-import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
+import { formatStoryblokDate, formatStoryblokUrl, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import { Typography } from '@socialincome/ui';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';

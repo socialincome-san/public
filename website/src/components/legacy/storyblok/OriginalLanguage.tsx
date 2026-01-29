@@ -1,4 +1,4 @@
-import { createLinkForArticle } from '@/components/legacy/storyblok/StoryblokUtils';
+import { createLinkForArticle } from '@/lib/services/storyblok/storyblok.utils';
 import { linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 

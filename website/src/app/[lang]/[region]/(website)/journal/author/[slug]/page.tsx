@@ -1,13 +1,9 @@
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
-import {
-	getArticleCountByAuthorForDefaultLang,
-	getArticlesByAuthor,
-	getAuthor,
-} from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
+import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { LanguageCode } from '@/lib/types/language';
 import { BaseContainer, linkCn, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
@@ -21,6 +17,8 @@ function getGitHubUrl(username: string) {
 	return `https://github.com/${encodeURIComponent(username)}`;
 }
 
+const storyblokService = new StoryblokService();
+
 async function getTotalArticlesInDefaultLanguage(
 	lang: string,
 	totalArticlesInSelectedLanguage: number,
@@ -28,15 +26,15 @@ async function getTotalArticlesInDefaultLanguage(
 ) {
 	return lang == defaultLanguage
 		? totalArticlesInSelectedLanguage
-		: await getArticleCountByAuthorForDefaultLang(authorId);
+		: await storyblokService.getArticleCountByAuthorForDefaultLang(authorId);
 }
 
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
-	const author = (await getAuthor(slug, lang)).data.story;
+	const author = (await storyblokService.getAuthor(slug, lang)).data.story;
 
 	const authorId = author.uuid;
-	const articles = await getArticlesByAuthor(authorId, lang);
+	const articles = await storyblokService.getArticlesByAuthor(authorId, lang);
 	const totalArticlesInSelectedLanguage = articles.length;
 	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(
 		lang,

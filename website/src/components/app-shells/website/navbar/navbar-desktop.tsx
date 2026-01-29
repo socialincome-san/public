@@ -1,26 +1,26 @@
 'use client';
 
 import { Button } from '@/components/button';
+import { Session } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { NavItem } from '@/lib/services/storyblok/storyblok.types';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useClickOutside } from '../../use-click-outside';
-import { AccountMenu } from './account-menu';
+import { AccountMenu, Scope } from './account-menu';
 import { FlyoutPanel } from './flyout-panel';
 import { LoginFlyout } from './login-flyout';
 import { Logo } from './logo';
 import { NavLinks } from './nav-links';
 
 type Props = {
-	session?: ContributorSession | LocalPartnerSession;
+	session: Session | null;
 	lang: WebsiteLanguage;
 	navItems: NavItem[];
+	scope: Scope;
 };
 
-export const NavbarDesktop = ({ session, lang, navItems }: Props) => {
+export const NavbarDesktop = ({ session, lang, navItems, scope }: Props) => {
 	const [open, setOpen] = useState<string | null>(null);
 	const navRef = useRef<HTMLDivElement | null>(null);
 
@@ -48,7 +48,7 @@ export const NavbarDesktop = ({ session, lang, navItems }: Props) => {
 				<div className="flex items-center gap-5">
 					{!session && <LoginFlyout />}
 
-					{session && <AccountMenu session={session} />}
+					{session && <AccountMenu session={session} scope={scope} />}
 
 					{!session && <Button className="rounded-full px-5 py-2 text-base font-medium">Donate now</Button>}
 				</div>

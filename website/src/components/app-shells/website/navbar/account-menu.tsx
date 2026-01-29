@@ -2,19 +2,53 @@
 
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/dropdown-menu';
+import { Session } from '@/lib/firebase/current-account';
+import { LogOut, User } from 'lucide-react';
 import Link from 'next/link';
 import { useLogout } from '../../use-logout';
 
+export type Scope = 'website' | 'dashboard' | 'partner-space';
+
 type Props = {
-	session: ContributorSession | LocalPartnerSession;
+	session: Session;
+	scope: Scope;
 };
 
-export const AccountMenu = ({ session }: Props) => {
-	const profileUrl = session.type === 'local-partner' ? '/partner-space/profile' : '/dashboard/profile';
+export const AccountMenu = ({ session, scope }: Props) => {
 	const { logout } = useLogout();
+
+	let linkInDropdown: { href: string; label: string };
+
+	switch (scope) {
+		case 'website':
+			linkInDropdown = {
+				href: '/new-website/auth/my-account',
+				label: 'My Account',
+			};
+			break;
+
+		case 'partner-space':
+			linkInDropdown = {
+				href: '/partner-space/profile',
+				label: 'Profile',
+			};
+			break;
+
+		case 'dashboard':
+		default:
+			linkInDropdown = {
+				href: '/dashboard/profile',
+				label: 'Profile',
+			};
+			break;
+	}
 
 	return (
 		<DropdownMenu>
@@ -26,16 +60,33 @@ export const AccountMenu = ({ session }: Props) => {
 							{session.lastName?.[0]}
 						</AvatarFallback>
 					</Avatar>
+
 					<span className="text-sm font-medium">
 						{session.firstName} {session.lastName}
 					</span>
 				</Button>
 			</DropdownMenuTrigger>
+
 			<DropdownMenuContent align="end" className="w-64">
 				<DropdownMenuItem asChild>
-					<Link href={profileUrl}>Profile</Link>
+					<Link href={linkInDropdown.href} className="flex items-center gap-2">
+						<User className="h-4 w-4" />
+						<span>{linkInDropdown.label}</span>
+					</Link>
 				</DropdownMenuItem>
-				<DropdownMenuItem onSelect={() => logout()}>Logout</DropdownMenuItem>
+
+				<DropdownMenuSeparator />
+
+				<DropdownMenuItem
+					onSelect={(e: Event) => {
+						e.preventDefault();
+						logout();
+					}}
+					className="text-destructive focus:text-destructive"
+				>
+					<LogOut className="mr-2 h-4 w-4" />
+					<span>Logout</span>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
