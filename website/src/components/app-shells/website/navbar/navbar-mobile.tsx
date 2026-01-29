@@ -3,16 +3,15 @@
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
+import { Session } from '@/lib/firebase/current-account';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import Link from 'next/link';
 import { useLogout } from '../../use-logout';
 import { Logo } from './logo';
 
 type Props = {
-	session?: ContributorSession | LocalPartnerSession;
+	session: Session | null;
 	lang: WebsiteLanguage;
 };
 

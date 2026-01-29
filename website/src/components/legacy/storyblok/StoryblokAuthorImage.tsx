@@ -1,5 +1,5 @@
-import { formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
 import type { Author } from '@/generated/storyblok/types/109655/storyblok-components';
+import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 

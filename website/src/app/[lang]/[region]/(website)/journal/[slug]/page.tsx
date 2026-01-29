@@ -1,17 +1,17 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
-import {
-	generateMetaDataForArticle,
-	getArticle,
-	getRelativeArticles,
-} from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
-import { formatStoryblokDate, formatStoryblokUrl } from '@/components/legacy/storyblok/StoryblokUtils';
 import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import {
+	formatStoryblokDate,
+	formatStoryblokUrl,
+	generateMetaDataForArticle,
+} from '@/lib/services/storyblok/storyblok.utils';
 import { Badge, Separator, Typography } from '@socialincome/ui';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
@@ -25,6 +25,8 @@ const ARTICLE_IMAGE_HEIGHT = 960;
 
 export const revalidate = 900;
 
+const storyblokService = new StoryblokService();
+
 export async function generateMetadata(props: DefaultLayoutPropsWithSlug) {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
@@ -33,7 +35,7 @@ export async function generateMetadata(props: DefaultLayoutPropsWithSlug) {
 }
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
-	return await getArticle(lang, slug);
+	return await storyblokService.getArticle(lang, slug);
 });
 
 function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') {
@@ -53,7 +55,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 	const articleData = articleResponse.data.story.content;
 	const author = articleData.author;
 
-	const articles = await getRelativeArticles(
+	const articles = await storyblokService.getRelativeArticles(
 		author.uuid,
 		articleResponse.data.story.id,
 		articleData.tags?.map((tag) => tag.uuid) ?? [],
