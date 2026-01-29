@@ -14,11 +14,7 @@ export async function Navbar({ session, lang }: Props) {
 	const storyblokService = new StoryblokService();
 	const result = await storyblokService.getNavItems();
 
-	if (!result.success) {
-		return null;
-	}
-
-	const navItems = result.data;
+	const navItems = result.success && result.data ? result.data : [];
 
 	return (
 		<>

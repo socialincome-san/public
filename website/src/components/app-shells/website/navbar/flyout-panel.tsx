@@ -1,6 +1,7 @@
 import { NavItem } from '@/lib/services/storyblok/storyblok.types';
 import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
+import { MakeDonationForm } from './make-donation-form';
 
 type Props = {
 	item?: NavItem;
@@ -31,9 +32,7 @@ export const FlyoutPanel = ({ item, onClose }: Props) => (
 							</div>
 						))}
 					</div>
-					<div className="min-w-[320px] max-w-[400px] flex-[0_0_30%] flex-shrink-0">
-						<div className="rounded-2xl border bg-slate-50 p-6 text-center text-sm font-medium">Coming soon…</div>
-					</div>
+					<MakeDonationForm />
 				</div>
 			)}
 		</div>

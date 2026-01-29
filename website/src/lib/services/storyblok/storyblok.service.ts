@@ -19,25 +19,25 @@ export class StoryblokService extends BaseService {
 						{
 							title: 'Section 1',
 							items: [
-								{ label: 'Link 1.1', href: '#' },
-								{ label: 'Link 1.2', href: '#' },
-								{ label: 'Link 1.3', href: '#' },
+								{ label: 'Link 1.1', href: '/link-1.1' },
+								{ label: 'Link 1.2', href: '/link-1.2' },
+								{ label: 'Link 1.3', href: '/link-1.3' },
 							],
 						},
 						{
 							title: 'Section 2',
 							items: [
-								{ label: 'Link 1.4', href: '#' },
-								{ label: 'Link 1.5', href: '#' },
-								{ label: 'Link 1.6', href: '#' },
+								{ label: 'Link 1.4', href: '/link-1.4' },
+								{ label: 'Link 1.5', href: '/link-1.5' },
+								{ label: 'Link 1.6', href: '/link-1.6' },
 							],
 						},
 						{
 							title: 'Section 3',
 							items: [
-								{ label: 'Link 1.7', href: '#' },
-								{ label: 'Link 1.8', href: '#' },
-								{ label: 'Link 1.9', href: '#' },
+								{ label: 'Link 1.7', href: '/link-1.7' },
+								{ label: 'Link 1.8', href: '/link-1.8' },
+								{ label: 'Link 1.9', href: '/link-1.9' },
 							],
 						},
 					],
@@ -49,32 +49,32 @@ export class StoryblokService extends BaseService {
 						{
 							title: 'Section 1',
 							items: [
-								{ label: 'Link 2.1', href: '#' },
-								{ label: 'Link 2.2', href: '#' },
-								{ label: 'Link 2.3', href: '#' },
+								{ label: 'Link 2.1', href: '/link-2.1' },
+								{ label: 'Link 2.2', href: '/link-2.2' },
+								{ label: 'Link 2.3', href: '/link-2.3' },
 							],
 						},
 						{
 							title: 'Section 2',
 							items: [
-								{ label: 'Link 2.1', href: '#' },
-								{ label: 'Link 2.2', href: '#' },
-								{ label: 'Link 2.3', href: '#' },
+								{ label: 'Link 2.1', href: '/link-2.1' },
+								{ label: 'Link 2.2', href: '/link-2.2' },
+								{ label: 'Link 2.3', href: '/link-2.3' },
 							],
 						},
 						{
 							title: 'Section 3',
 							items: [
-								{ label: 'Link 2.7', href: '#' },
-								{ label: 'Link 2.8', href: '#' },
-								{ label: 'Link 2.9', href: '#' },
+								{ label: 'Link 2.7', href: '/link-2.7' },
+								{ label: 'Link 2.8', href: '/link-2.8' },
+								{ label: 'Link 2.9', href: '/link-2.9' },
 							],
 						},
 					],
 				},
 				{
 					label: 'Link 3',
-					href: '#',
+					href: '/link-3',
 				},
 			];
 
