@@ -41,7 +41,7 @@ export const ProgramDropdown: FC<ProgramDropdownProps> = ({ user, active = false
 			{user.programs?.length ? (
 				user.programs.map((program) => (
 					<DropdownMenuItem asChild key={program.id}>
-						<Link href={`/portal/programs/${program.id}/recipients`}>{program.name}</Link>
+						<Link href={`/portal/programs/${program.id}/overview`}>{program.name}</Link>
 					</DropdownMenuItem>
 				))
 			) : (

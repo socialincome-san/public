@@ -8,6 +8,7 @@ import { calculateMonthlyCost, calculateTotalBudget } from './utils';
 
 type Props = {
 	amountOfRecipients: number;
+	maxRecipients: number;
 	programDuration: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
@@ -24,6 +25,7 @@ type Props = {
 
 export function BudgetStep({
 	amountOfRecipients,
+	maxRecipients,
 	programDuration,
 	payoutPerInterval,
 	payoutInterval,
@@ -49,7 +51,11 @@ export function BudgetStep({
 			/>
 
 			<div className="grid gap-6 md:grid-cols-2">
-				<RecipientsBox value={amountOfRecipients} onChange={onRecipientsChange} />
+				<RecipientsBox
+					amountOfRecipients={amountOfRecipients}
+					maxRecipients={maxRecipients}
+					onChange={onRecipientsChange}
+				/>
 
 				<PayoutBox
 					programDuration={programDuration}

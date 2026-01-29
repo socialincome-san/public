@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function CreateProgramSteps({ state, send }: Props) {
-	if (state.matches('loading') || state.matches('saving')) {
+	if (state.matches('loading') || state.matches('saving') || state.matches('loadingCandidates')) {
 		return <WizardLoading />;
 	}
 
@@ -53,6 +53,7 @@ export function CreateProgramSteps({ state, send }: Props) {
 		return (
 			<BudgetStep
 				amountOfRecipients={state.context.amountOfRecipients}
+				maxRecipients={state.context.maxRecipients}
 				programDuration={state.context.programDuration}
 				payoutPerInterval={state.context.payoutPerInterval}
 				payoutInterval={state.context.payoutInterval}

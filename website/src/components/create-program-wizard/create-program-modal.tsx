@@ -28,7 +28,7 @@ export function CreateProgramModal({ trigger, isAuthenticated = false }: Props) 
 			return;
 		}
 
-		router.replace(`/portal/programs/${createdProgramId}/recipients`);
+		router.replace(`/portal/programs/${createdProgramId}/overview`);
 	}, [createdProgramId, router]);
 
 	return (

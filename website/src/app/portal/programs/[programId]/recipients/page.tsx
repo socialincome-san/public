@@ -1,3 +1,4 @@
+import { Card } from '@/components/card';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
@@ -9,9 +10,11 @@ type Props = { params: Promise<{ programId: string }> };
 
 export default function RecipientsPageProgramScoped({ params }: Props) {
 	return (
-		<Suspense>
-			<RecipientsProgramScopedDataLoader params={params} />
-		</Suspense>
+		<Card>
+			<Suspense>
+				<RecipientsProgramScopedDataLoader params={params} />
+			</Suspense>
+		</Card>
 	);
 }
 

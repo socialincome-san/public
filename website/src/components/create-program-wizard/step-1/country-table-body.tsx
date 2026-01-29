@@ -52,7 +52,7 @@ export function CountryTableBody({ rows, value, openIds, onToggleRow }: Props) {
 									</TableCell>
 
 									<TableCell className="flex items-center gap-3 truncate">
-										<CountryFlag country={row.country.isoCode} />
+										<CountryFlag isoCode={row.country.isoCode} />
 										<span className="truncate">{getCountryNameByIsoCode(row.country.isoCode)}</span>
 									</TableCell>
 

@@ -16,7 +16,7 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 			id: 'flag',
 			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
 			accessorFn: (row) => row.isoCode,
-			cell: ({ row }) => <CountryFlag country={row.original.isoCode} />,
+			cell: ({ row }) => <CountryFlag isoCode={row.original.isoCode} />,
 		},
 		{
 			accessorKey: 'name',
