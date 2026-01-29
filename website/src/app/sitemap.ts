@@ -1,7 +1,7 @@
-import { getOverviewArticles, getOverviewAuthors, getOverviewTags } from '@/components/legacy/storyblok/StoryblokApi';
-import { toDateObject } from '@/components/legacy/storyblok/StoryblokUtils';
 import type { Article, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
+import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { toDateObject } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
 import type { MetadataRoute } from 'next';
 import staticRoutes from './static-pages.json';
@@ -84,11 +84,13 @@ function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
 	);
 }
 
+const storyblokService = new StoryblokService();
+
 function getArticlesInAlternativeLanguages() {
 	return Promise.all(
 		SUPPORTED_LANGUAGES.map(async (lang) => ({
 			lang,
-			stories: await getOverviewArticles(lang),
+			stories: await storyblokService.getOverviewArticles(lang),
 		})),
 	);
 }
@@ -97,10 +99,10 @@ const STATIC_SITEMAP = generateStaticPagesSitemap();
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	try {
 		const [articles, articlesAlternativeLanguages, authors, tags] = await Promise.all([
-			getOverviewArticles(defaultLanguage),
+			storyblokService.getOverviewArticles(defaultLanguage),
 			getArticlesInAlternativeLanguages(),
-			getOverviewAuthors(defaultLanguage),
-			getOverviewTags(defaultLanguage),
+			storyblokService.getOverviewAuthors(defaultLanguage),
+			storyblokService.getOverviewTags(defaultLanguage),
 		]);
 		return STATIC_SITEMAP.concat(
 			generateStoryblokArticlesSitemap(articles, articlesAlternativeLanguages),
