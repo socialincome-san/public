@@ -21,7 +21,7 @@ export type ProgramOption = {
 
 export type CreateProgramInput = {
 	countryId: string;
-	amountOfRecipientsForStart?: number | null;
+	amountOfRecipientsForStart: number;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
 	payoutCurrency: string;

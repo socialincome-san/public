@@ -299,7 +299,7 @@ export const createProgramWizardMachine = setup({
 				src: 'saveProgram',
 				input: ({ context }): CreateProgramInput => ({
 					countryId: context.selectedCountryId!,
-					amountOfRecipientsForStart: context.amountOfRecipients ?? null,
+					amountOfRecipientsForStart: context.amountOfRecipients,
 					programDurationInMonths: context.programDuration,
 					payoutPerInterval: context.payoutPerInterval,
 					payoutCurrency: context.currency,

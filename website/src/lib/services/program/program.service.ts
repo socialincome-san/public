@@ -1,4 +1,5 @@
 import { PayoutStatus, ProgramPermission } from '@prisma/client';
+import { CandidateService } from '../candidate/candidate.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { getCountryNameByIsoCode } from '../country/iso-countries';
@@ -7,6 +8,7 @@ import { CreateProgramInput, ProgramOption, ProgramWallet, ProgramWallets } from
 
 export class ProgramService extends BaseService {
 	private programAccessService = new ProgramAccessService();
+	private candidateService = new CandidateService();
 
 	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {
@@ -164,6 +166,18 @@ export class ProgramService extends BaseService {
 
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
+			}
+
+			if (input.amountOfRecipientsForStart > 0) {
+				const assignResult = await this.candidateService.assignRandomCandidatesToProgram(
+					program.id,
+					input.amountOfRecipientsForStart,
+					input.targetCauses,
+				);
+
+				if (!assignResult.success) {
+					return this.resultFail(assignResult.error);
+				}
 			}
 
 			return this.resultOk({ programId: program.id });

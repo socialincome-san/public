@@ -369,4 +369,49 @@ export class CandidateService extends BaseService {
 			return this.resultFail(`Could not count candidates: ${JSON.stringify(error)}`);
 		}
 	}
+
+	async assignRandomCandidatesToProgram(
+		programId: string,
+		amountOfRecipientsForStart: number,
+		causes?: Cause[],
+	): Promise<ServiceResult<{ assigned: number }>> {
+		try {
+			const where: Prisma.RecipientWhereInput = {
+				programId: null,
+			};
+
+			if (causes && causes.length > 0) {
+				where.localPartner = {
+					causes: { hasSome: causes },
+				};
+			}
+
+			const allAvailableCandidates = await this.db.recipient.findMany({
+				where,
+				select: { id: true },
+			});
+
+			if (allAvailableCandidates.length < amountOfRecipientsForStart) {
+				return this.resultFail(
+					`Not enough candidates available. Requested ${amountOfRecipientsForStart}, but only ${allAvailableCandidates.length} available.`,
+				);
+			}
+
+			// simple random shuffle:
+			// sort randomly so each run produces a different order
+			const shuffled = [...allAvailableCandidates].sort(() => Math.random() - 0.5);
+
+			const selectedIds = shuffled.slice(0, amountOfRecipientsForStart).map((c) => c.id);
+
+			await this.db.recipient.updateMany({
+				where: { id: { in: selectedIds } },
+				data: { programId },
+			});
+
+			return this.resultOk({ assigned: selectedIds.length });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not assign candidates: ${JSON.stringify(error)}`);
+		}
+	}
 }
