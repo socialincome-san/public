@@ -7,8 +7,14 @@ export default function storyblokImageLoader({
 	width: number;
 	quality?: number;
 }) {
-	// Only transform Storyblok URLs
-	if (!src.includes('storyblok.com')) {
+	let hostname: string;
+	try {
+		hostname = new URL(src).hostname;
+	} catch {
+		return src;
+	}
+	const isStoryblok = hostname === 'storyblok.com' || hostname.endsWith('.storyblok.com');
+	if (!isStoryblok) {
 		return src;
 	}
 

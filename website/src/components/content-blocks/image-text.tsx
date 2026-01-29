@@ -21,7 +21,7 @@ export default function ImageTextBlock({ blok }: Props) {
 		<BlockWrapper
 			className={cn(
 				'flex flex-row items-center gap-14 text-lg text-black',
-				blok.layout === 'imageLeft' && 'flex-row-reverse',
+				blok.layout === 'imageRight' && 'flex-row-reverse',
 			)}
 		>
 			{blok.image.filename && dimensions && (
