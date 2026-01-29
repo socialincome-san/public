@@ -1,6 +1,7 @@
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
+import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { NavbarDesktop } from './navbar-desktop';
 import { NavbarMobile } from './navbar-mobile';
 
@@ -9,13 +10,24 @@ type Props = {
 	lang: WebsiteLanguage;
 };
 
-export const Navbar = ({ session, lang }: Props) => (
-	<>
-		<div className="hidden lg:block">
-			<NavbarDesktop session={session} lang={lang} />
-		</div>
-		<div className="lg:hidden">
-			<NavbarMobile session={session} lang={lang} />
-		</div>
-	</>
-);
+export async function Navbar({ session, lang }: Props) {
+	const storyblokService = new StoryblokService();
+	const result = await storyblokService.getNavItems();
+
+	if (!result.success) {
+		return null;
+	}
+
+	const navItems = result.data;
+
+	return (
+		<>
+			<div className="hidden lg:block">
+				<NavbarDesktop session={session} lang={lang} navItems={navItems} />
+			</div>
+			<div className="lg:hidden">
+				<NavbarMobile session={session} lang={lang} />
+			</div>
+		</>
+	);
+}

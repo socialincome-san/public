@@ -7,6 +7,9 @@ import { Label } from '@/components/label';
 import { UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { useReducer, useState } from 'react';
+import { z } from 'zod';
+
+const emailSchema = z.string().trim().email('Please enter a valid email address.');
 
 type State = {
 	email: string;
@@ -43,18 +46,21 @@ export const LoginFlyout = () => {
 		status: 'idle',
 	});
 
-	const validateEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
-
 	const handleSend = () => {
-		if (!validateEmail(state.email)) {
-			dispatch({ type: 'SET_ERROR', error: 'Please enter a valid email address.' });
+		const result = emailSchema.safeParse(state.email);
+
+		if (!result.success) {
+			dispatch({
+				type: 'SET_ERROR',
+				error: result.error.issues[0]?.message ?? 'Invalid email',
+			});
 			return;
 		}
 
 		dispatch({ type: 'SET_ERROR', error: null });
 		dispatch({ type: 'SET_STATUS', status: 'sending' });
 
-		console.log('TODO: send magic link to:', state.email);
+		console.log('TODO: send magic link to:', result.data);
 
 		setTimeout(() => {
 			dispatch({ type: 'SET_STATUS', status: 'sent' });
@@ -85,7 +91,12 @@ export const LoginFlyout = () => {
 								<Input
 									type="email"
 									value={state.email}
-									onChange={(e) => dispatch({ type: 'SET_EMAIL', email: e.target.value })}
+									onChange={(e) =>
+										dispatch({
+											type: 'SET_EMAIL',
+											email: e.target.value,
+										})
+									}
 									placeholder="you@example.org"
 								/>
 								{state.error && <p className="text-destructive text-xs">{state.error}</p>}

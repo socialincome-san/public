@@ -1,5 +1,6 @@
+import { NavItem } from '@/lib/services/storyblok/storyblok.types';
+import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
-import { NavItem } from './navbar-desktop';
 
 type Props = {
 	item?: NavItem;
@@ -9,9 +10,10 @@ type Props = {
 export const FlyoutPanel = ({ item, onClose }: Props) => (
 	<div className="absolute left-0 right-0 mt-2 flex justify-center">
 		<div
-			className={`container rounded-3xl bg-white px-10 py-8 shadow-xl transition-all duration-200 ease-out ${
-				item ? 'pointer-events-auto translate-y-1 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
-			}`}
+			className={cn(
+				'container rounded-3xl bg-white px-10 py-8 shadow-xl transition-all duration-200 ease-out',
+				item ? 'pointer-events-auto translate-y-1 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0',
+			)}
 		>
 			{item && (
 				<div className="flex gap-12">
