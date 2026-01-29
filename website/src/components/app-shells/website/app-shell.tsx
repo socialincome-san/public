@@ -13,9 +13,8 @@ type WebsiteAppShellProps = {
 export function WebsiteAppShell({ children, session, lang }: WebsiteAppShellProps) {
 	return (
 		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-gradient-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed">
-			{session && <Navbar session={session} lang={lang} />}
-
-			<div className="container pb-8">{children}</div>
+			<Navbar session={session} lang={lang} />
+			<div className="container my-8">{children}</div>
 		</div>
 	);
 }
