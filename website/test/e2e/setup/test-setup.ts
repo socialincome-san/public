@@ -25,8 +25,6 @@ test('wait for emulators to be ready', async ({ page }) => {
 	throw new Error('Emulators did not become ready in time');
 });
 
-test('login all actors', async ({ page }) => {
-	await loginAs(page, 'user');
-	await loginAs(page, 'contributor');
-	await loginAs(page, 'partner');
+test('login all actors', async ({ browser }) => {
+	await Promise.all([loginAs(browser, 'user'), loginAs(browser, 'contributor'), loginAs(browser, 'partner')]);
 });

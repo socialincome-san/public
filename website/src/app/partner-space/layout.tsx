@@ -6,7 +6,7 @@ export default async function PartnerSpaceLayout({ children }: { children: React
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
 	return (
-		<WebsiteAppShell session={partner} lang="en">
+		<WebsiteAppShell session={partner} lang="en" scope="partner-space">
 			{children}
 		</WebsiteAppShell>
 	);
