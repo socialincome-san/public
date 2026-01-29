@@ -1,4 +1,5 @@
 import { Actor } from '@/lib/firebase/current-account';
+import { Cause, Prisma } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -343,6 +344,29 @@ export class CandidateService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch candidates for local partner: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getCandidateCount(causes?: Cause[]): Promise<ServiceResult<{ count: number }>> {
+		try {
+			const where: Prisma.RecipientWhereInput = {
+				programId: null,
+			};
+
+			if (causes && causes.length > 0) {
+				where.localPartner = {
+					causes: {
+						hasSome: causes,
+					},
+				};
+			}
+
+			const count = await this.db.recipient.count({ where });
+
+			return this.resultOk({ count });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not count candidates: ${JSON.stringify(error)}`);
 		}
 	}
 }

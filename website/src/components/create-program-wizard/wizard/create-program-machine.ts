@@ -1,3 +1,4 @@
+import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
@@ -21,6 +22,7 @@ export const createProgramWizardMachine = setup({
 
 			// step 3
 			amountOfRecipients: number;
+			maxRecipients: number;
 			programDuration: number;
 			payoutPerInterval: number;
 			payoutInterval: PayoutInterval;
@@ -83,6 +85,12 @@ export const createProgramWizardMachine = setup({
 			}
 			return result.data.programId;
 		}),
+
+		loadCandidateCount: fromPromise(async ({ input }: { input: { causes?: Cause[] } }) => {
+			const result = await getCandidateCountAction(input?.causes);
+			if (!result.success) throw new Error(result.error);
+			return result.data.count;
+		}),
 	},
 
 	guards: {
@@ -123,6 +131,7 @@ export const createProgramWizardMachine = setup({
 
 		// step 3
 		amountOfRecipients: 20,
+		maxRecipients: 0,
 		programDuration: 36,
 		payoutPerInterval: 32,
 		payoutInterval: 'monthly',
@@ -182,11 +191,28 @@ export const createProgramWizardMachine = setup({
 					}),
 				},
 				BACK: 'countrySelection',
-				NEXT: { guard: 'programSetupValid', target: 'budget' },
+				NEXT: { guard: 'programSetupValid', target: 'loadingCandidates' },
 				CLOSE: 'closed',
 			},
 		},
 
+		loadingCandidates: {
+			invoke: {
+				src: 'loadCandidateCount',
+				input: ({ context }) => ({ causes: context.targetCauses }),
+				onDone: {
+					target: 'budget',
+					actions: assign({
+						maxRecipients: ({ event }) => event.output,
+						amountOfRecipients: ({ context, event }) =>
+							Math.min(context.amountOfRecipients, event.output || context.amountOfRecipients),
+					}),
+				},
+				onError: {
+					target: 'error',
+				},
+			},
+		},
 		// Step 3
 		budget: {
 			on: {
