@@ -55,7 +55,7 @@ export async function getCurrentSession(): Promise<Session | null> {
 export async function getActorOrThrow(): Promise<Actor> {
 	const session = await getCurrentSession();
 
-	switch (session.type) {
+	switch (session?.type) {
 		case 'user':
 			return { kind: 'user', session: await getAuthenticatedUserOrThrow() };
 
