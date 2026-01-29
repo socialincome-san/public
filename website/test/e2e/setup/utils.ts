@@ -1,4 +1,4 @@
-import { APIResponse, expect, Page } from '@playwright/test';
+import { APIResponse, Browser, expect } from '@playwright/test';
 
 const ACTORS = {
 	user: {
@@ -33,12 +33,18 @@ type FirebaseOobCodesResponse = {
 
 const EMULATOR_API = 'http://127.0.0.1:9099/emulator/v1/projects/demo-social-income-local/oobCodes';
 
-export async function loginAs(page: Page, actor: Actor): Promise<void> {
+export async function loginAs(browser: Browser, actor: Actor): Promise<void> {
+	const context = await browser.newContext();
+	const page = await context.newPage();
+
 	const { email, testId, state } = ACTORS[actor];
 
-	await page.goto('/en/int/login');
+	await page.goto('/en/int/new-website');
+	await page.getByTestId('login-button').click();
 	await page.fill('input[type="email"]', email);
 	await page.click('button[type="submit"]');
+
+	await expect(page.getByText(`If an account exists for ${email}`)).toBeVisible();
 
 	const response: APIResponse = await page.request.get(EMULATOR_API);
 	const json: FirebaseOobCodesResponse = await response.json();
@@ -51,5 +57,7 @@ export async function loginAs(page: Page, actor: Actor): Promise<void> {
 
 	await expect(page.getByTestId(testId)).toBeVisible();
 
-	await page.context().storageState({ path: state });
+	await context.storageState({ path: state });
+
+	await context.close();
 }
