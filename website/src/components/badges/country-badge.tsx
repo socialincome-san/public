@@ -9,7 +9,7 @@ type Props = {
 export function CountryBadge({ country }: Props) {
 	return (
 		<Badge variant="country" className="inline-flex items-center gap-2">
-			<CountryFlag country={country} size="sm" />
+			<CountryFlag isoCode={country} size="sm" />
 			<span className="font-medium">{getCountryNameByIsoCode(country)}</span>
 		</Badge>
 	);

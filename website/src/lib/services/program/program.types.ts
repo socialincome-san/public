@@ -28,3 +28,22 @@ export type CreateProgramInput = {
 	payoutInterval: PayoutInterval;
 	targetCauses: Cause[];
 };
+
+export type PublicProgramDetails = {
+	programId: string;
+	programName: string;
+	countryIsoCode: string;
+	ownerOrganizationName: string | null;
+	operatorOrganizationName: string | null;
+	targetCauses: Cause[];
+	amountOfRecipientsForStart: number | null;
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutCurrency: string;
+	payoutInterval: PayoutInterval;
+	recipientsCount: number;
+	totalPayoutsCount: number;
+	totalPayoutsSum: number;
+	completedSurveysCount: number;
+	startedAt: Date | null;
+};

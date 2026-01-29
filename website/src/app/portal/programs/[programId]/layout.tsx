@@ -1,4 +1,3 @@
-import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@/lib/services/program/program.service';
@@ -26,6 +25,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const { programName, country } = result.data;
 
 	const sections = [
+		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
 		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
 		{ href: `/portal/programs/${programId}/payout-forecast`, label: 'Payout Forecast' },
 		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
@@ -48,9 +48,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 
 			<TabNavigation sections={sections} />
 
-			<Card>
-				<div>{children}</div>
-			</Card>
+			{children}
 		</>
 	);
 }
