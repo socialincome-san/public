@@ -26,7 +26,5 @@ test('wait for emulators to be ready', async ({ page }) => {
 });
 
 test('login all actors', async ({ browser }) => {
-	await loginAs(browser, 'user');
-	await loginAs(browser, 'contributor');
-	await loginAs(browser, 'partner');
+	await Promise.all([loginAs(browser, 'user'), loginAs(browser, 'contributor'), loginAs(browser, 'partner')]);
 });

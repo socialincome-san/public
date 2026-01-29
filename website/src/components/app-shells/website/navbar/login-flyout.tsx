@@ -36,6 +36,7 @@ export const LoginFlyout = () => {
 
 	const handleSend = async ({ email }: FormValues) => {
 		setStatus('sending');
+		setSubmittedEmail(email);
 
 		try {
 			localStorage.setItem('loginEmail', email);
@@ -46,13 +47,11 @@ export const LoginFlyout = () => {
 			};
 
 			await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-
-			setSubmittedEmail(email);
 		} catch {
-			// intentionally ignore errors to avoid enumeration
+			// intentionally ignore errors to avoid attacking information disclosure
 		}
 
-		// fixed delay prevents timing attacks
+		// prevent timing attacks
 		await delay(1200);
 
 		setStatus('sent');

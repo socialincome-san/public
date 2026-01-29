@@ -49,9 +49,12 @@ export async function loginAs(browser: Browser, actor: Actor): Promise<void> {
 	const response: APIResponse = await page.request.get(EMULATOR_API);
 	const json: FirebaseOobCodesResponse = await response.json();
 
-	const latest = [...json.oobCodes].reverse().find((x) => x.email === email && x.requestType === 'EMAIL_SIGNIN');
+	const latest = json.oobCodes.filter((x) => x.email === email && x.requestType === 'EMAIL_SIGNIN').pop();
 
-	if (!latest) throw new Error(`No EMAIL_SIGNIN oobCode found for ${email}`);
+	if (!latest) {
+		await context.close();
+		throw new Error(`No EMAIL_SIGNIN oobCode found for ${email}`);
+	}
 
 	await page.goto(latest.oobLink);
 

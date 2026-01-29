@@ -24,12 +24,8 @@ export default function FinishLoginPage() {
 
 			setStatus('signing-in');
 
-			let email = localStorage.getItem('loginEmail');
-
-			// fallback if user switched device
-			if (!email) {
-				email = window.prompt('Please confirm your email') ?? '';
-			}
+			// only allow login from same device
+			const email = localStorage.getItem('loginEmail');
 
 			if (!email) {
 				setStatus('error');
@@ -39,7 +35,6 @@ export default function FinishLoginPage() {
 			try {
 				await signInWithEmailLink(auth, email, url);
 
-				// email no longer needed
 				localStorage.removeItem('loginEmail');
 
 				const user = auth.currentUser;
@@ -54,7 +49,6 @@ export default function FinishLoginPage() {
 					return;
 				}
 
-				// redirect to account routing
 				router.replace('/new-website/auth/my-account');
 			} catch {
 				setStatus('error');
