@@ -1,4 +1,3 @@
-import { cache } from 'react';
 import { ContributorService } from '../services/contributor/contributor.service';
 import { ContributorSession } from '../services/contributor/contributor.types';
 import { FirebaseService } from '../services/firebase/firebase.service';
@@ -10,7 +9,7 @@ import { getAuthenticatedContributorOrThrow } from './current-contributor';
 import { getAuthenticatedLocalPartnerOrThrow } from './current-local-partner';
 import { getAuthenticatedUserOrThrow } from './current-user';
 
-type CurrentAccountType = 'user' | 'contributor' | 'local-partner' | null;
+export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
 export type Actor =
 	| { kind: 'user'; session: UserSession }
@@ -18,7 +17,7 @@ export type Actor =
 	| { kind: 'local-partner'; session: LocalPartnerSession }
 	| never;
 
-async function detectCurrentAccountType(): Promise<CurrentAccountType> {
+export async function getCurrentSession(): Promise<Session | null> {
 	const firebaseService = new FirebaseService();
 	const cookie = await firebaseService.readSessionCookie();
 	if (!cookie) {
@@ -35,30 +34,28 @@ async function detectCurrentAccountType(): Promise<CurrentAccountType> {
 	const contributorService = new ContributorService();
 	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
-		return 'contributor';
+		return contributorResult.data;
 	}
 
 	const partnerService = new LocalPartnerService();
 	const partnerResult = await partnerService.getCurrentLocalPartnerSession(authUserId);
 	if (partnerResult.success && partnerResult.data) {
-		return 'local-partner';
+		return partnerResult.data;
 	}
 
 	const userService = new UserService();
 	const userResult = await userService.getCurrentUserSession(authUserId);
 	if (userResult.success && userResult.data) {
-		return 'user';
+		return userResult.data;
 	}
 
 	return null;
 }
 
-export const getCurrentAccountType = cache(detectCurrentAccountType);
-
 export async function getActorOrThrow(): Promise<Actor> {
-	const type = await getCurrentAccountType();
+	const session = await getCurrentSession();
 
-	switch (type) {
+	switch (session.type) {
 		case 'user':
 			return { kind: 'user', session: await getAuthenticatedUserOrThrow() };
 

@@ -1,19 +1,21 @@
-import { getCurrentAccountType } from '@/lib/firebase/current-account';
+import { getCurrentSession } from '@/lib/firebase/current-account';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function MyAccountPage() {
-	const accountType = await getCurrentAccountType();
+	const session = await getCurrentSession();
 
-	if (accountType === 'contributor') {
+	const sessionType = session?.type;
+
+	if (sessionType === 'contributor') {
 		redirect('/dashboard/contributions');
 	}
 
-	if (accountType === 'user') {
+	if (sessionType === 'user') {
 		redirect('/portal');
 	}
 
-	if (accountType === 'local-partner') {
+	if (sessionType === 'local-partner') {
 		redirect('/partner-space/recipients');
 	}
 
