@@ -17,7 +17,7 @@ let nextConfig: NextConfig = {
 			},
 		],
 		loader: 'custom',
-		loaderFile: './src/lib/services/storyblok/storyblok.utils.ts',
+		loaderFile: './src/lib/utils/storyblock-image-loader.ts',
 	},
 	output: 'standalone',
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],

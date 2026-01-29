@@ -18,21 +18,6 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
 // ==================== Image Utilities ====================
 
 /**
- * Next.js image loader for Storyblok images.
- * Use this in next.config.ts or with the Image component's loader prop.
- */
-export default function storyblokLoader({ src, width, quality }: { src: string; width: number; quality?: number }) {
-	// Only transform Storyblok URLs
-	if (!src.includes('storyblok.com')) {
-		return src;
-	}
-
-	// Build Image Service URL: /m/WIDTHx0 preserves aspect ratio
-	const qualityParam = quality ? `:quality(${quality})` : '';
-	return `${src}/m/${width}x0/filters:format(webp)${qualityParam}`;
-}
-
-/**
  * Extract dimensions from a Storyblok image URL.
  * Based on official documentation: https://www.storyblok.com/faq/image-dimensions-assets-js
  * Format example: https://a.storyblok.com/f/51376/664x488/f4f9d1769c/visual-editor-features.jpg
@@ -107,7 +92,7 @@ export function formatStoryblokDate(date: string | null | undefined, lang: strin
 /**
  * Format a Storyblok date to ISO format.
  */
-export function formatStoryblokDateToIso(date: string | null | undefined) {
+function formatStoryblokDateToIso(date: string | null | undefined) {
 	if (!date) {
 		return '';
 	}

@@ -7,7 +7,7 @@ import { apiPlugin, storyblokInit } from '@storyblok/react';
 /**
  * Storyblok component registry mapping component names to React components.
  */
-export const storyblokComponents = {
+const storyblokComponents = {
 	page: PageContentType,
 	heroVideo: HeroVideoBlock,
 	text: TextBlock,
