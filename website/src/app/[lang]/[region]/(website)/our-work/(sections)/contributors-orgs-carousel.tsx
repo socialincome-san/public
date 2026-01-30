@@ -12,6 +12,8 @@ import microsoftSVG from '../(assets)/microsoft.svg';
 import milkSVG from '../(assets)/milk.svg';
 import srgSVG from '../(assets)/srg.svg';
 import unSVG from '../(assets)/un.svg';
+import rkkPNG from '../(assets)/rkk.png';
+
 
 export function ContributorsOrgsCarousel() {
 	const screenSize = useScreenSize();
@@ -21,6 +23,7 @@ export function ContributorsOrgsCarousel() {
 		{ logo: microsoftSVG, name: 'Microsoft', url: 'https://www.microsoft.com' },
 		{ logo: mckinseySVG, name: 'McKinsey', url: 'https://www.mckinsey.com' },
 		{ logo: unSVG, name: 'UN', url: 'https://www.un.org' },
+		{ logo: rkkPNG, name: 'RKK', url: 'https://rkk-bs.ch' },
 		{ logo: srgSVG, name: 'SRG', url: 'https://srf.ch' },
 		{ logo: epflSVG, name: 'EPFL', url: 'https://www.epfl.ch' },
 		{ logo: githubSVG, name: 'GITHUB', url: 'https://github.com' },
