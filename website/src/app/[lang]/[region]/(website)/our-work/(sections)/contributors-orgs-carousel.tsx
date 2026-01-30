@@ -10,10 +10,9 @@ import govSVG from '../(assets)/gov.svg';
 import mckinseySVG from '../(assets)/mckinsey.svg';
 import microsoftSVG from '../(assets)/microsoft.svg';
 import milkSVG from '../(assets)/milk.svg';
+import rkkPNG from '../(assets)/rkk.png';
 import srgSVG from '../(assets)/srg.svg';
 import unSVG from '../(assets)/un.svg';
-import rkkPNG from '../(assets)/rkk.png';
-
 
 export function ContributorsOrgsCarousel() {
 	const screenSize = useScreenSize();
