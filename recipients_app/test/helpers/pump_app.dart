@@ -1,4 +1,4 @@
-import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/ui/configs/app_theme.dart";
 import "package:bloc_test/bloc_test.dart";
@@ -7,19 +7,19 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:flutter_test/flutter_test.dart";
 
-class MockPaymentsCubit extends MockCubit<PaymentsState> implements PaymentsCubit {}
+class MockPayoutsCubit extends MockCubit<PayoutsState> implements PayoutsCubit {}
 
 extension PumpApp on WidgetTester {
   Future<void> pumpApp(
     Widget widget, {
-    PaymentsCubit? paymentsCubit,
+    PayoutsCubit? paymentsCubit,
   }) {
-    final mockPaymentsCubit = paymentsCubit ?? MockPaymentsCubit();
+    final mockPayoutsCubit = paymentsCubit ?? MockPayoutsCubit();
 
     return pumpWidget(
       MultiBlocProvider(
         providers: [
-          BlocProvider.value(value: mockPaymentsCubit),
+          BlocProvider.value(value: mockPayoutsCubit),
         ],
         child: MaterialApp(
           supportedLocales: const [

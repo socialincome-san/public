@@ -1,15 +1,14 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
-import "package:app/data/datasource/demo/organization_demo_data_source.dart";
-import "package:app/data/datasource/demo/payment_demo_data_source.dart";
+import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/remote/organization_remote_data_source.dart";
-import "package:app/data/datasource/remote/payment_remote_data_source.dart";
+import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/models/app_version_info.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/api_client.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
@@ -36,19 +35,18 @@ class MyApp extends StatelessWidget {
   final UserRemoteDataSource userRemoteDataSource;
   final UserDemoDataSource userDemoDataSource;
 
-  final PaymentRemoteDataSource paymentRemoteDataSource;
-  final PaymentDemoDataSource paymentDemoDataSource;
+  final PayoutRemoteDataSource paymentRemoteDataSource;
+  final PayoutDemoDataSource paymentDemoDataSource;
 
   final SurveyRemoteDataSource surveyRemoteDataSource;
   final SurveyDemoDataSource surveyDemoDataSource;
-
-  final OrganizationRemoteDataSource organizationRemoteDataSource;
-  final OrganizationDemoDataSource organizationDemoDataSource;
 
   final AuthService authService;
   final FirebaseRemoteConfigService firebaseRemoteConfigService;
 
   final AppVersionInfo? appVersionInfo;
+
+  final ApiClient apiClient;
 
   const MyApp({
     super.key,
@@ -60,12 +58,13 @@ class MyApp extends StatelessWidget {
     required this.paymentDemoDataSource,
     required this.surveyRemoteDataSource,
     required this.surveyDemoDataSource,
-    required this.organizationRemoteDataSource,
-    required this.organizationDemoDataSource,
+    // required this.organizationRemoteDataSource,
+    // required this.organizationDemoDataSource,
     required this.authService,
     required this.firebaseRemoteConfigService,
     required this.crashReportingRepository,
     required this.appVersionInfo,
+    required this.apiClient,
   });
 
   // This widget is the root of your application.
@@ -97,24 +96,17 @@ class MyApp extends StatelessWidget {
             demoManager: demoManager,
           ),
         ),
-        RepositoryProvider(
-          create: (context) => OrganizationRepository(
-            remoteDataSource: organizationRemoteDataSource,
-            demoDataSource: organizationDemoDataSource,
-            demoManager: demoManager,
-          ),
-        ),
         RepositoryProvider<AuthService>.value(value: authService),
         RepositoryProvider<FirebaseRemoteConfigService>.value(
           value: firebaseRemoteConfigService,
         ),
+        RepositoryProvider<ApiClient>.value(value: apiClient),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
             create: (context) => AuthCubit(
               crashReportingRepository: context.read<CrashReportingRepository>(),
-              organizationRepository: context.read<OrganizationRepository>(),
               userRepository: context.read<UserRepository>(),
               authService: context.read<AuthService>(),
             )..init(),
@@ -164,7 +156,7 @@ class _App extends StatelessWidget {
           listener: (context, state) {
             if (state.status == AuthStatus.authenticated) {
               // change language to the user's preferred language
-              final selectedLanguage = state.recipient?.selectedLanguage;
+              final selectedLanguage = state.recipient?.contact.language;
 
               if (selectedLanguage != null) {
                 context.read<SettingsCubit>().changeLanguage(selectedLanguage);
