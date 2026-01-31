@@ -1,7 +1,7 @@
-import { CountryCode, PayoutStatus, ProgramPermission } from '@prisma/client';
+import { getCountryNameByCode } from '@/lib/types/country';
+import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { getCountryNameByCode } from '@/lib/types/country';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import { CreateProgramInput, ProgramOption, ProgramWallet, ProgramWallets } from './program.types';
 

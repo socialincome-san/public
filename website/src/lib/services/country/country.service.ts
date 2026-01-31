@@ -1,3 +1,4 @@
+import { getCountryNameByCode } from '@/lib/types/country';
 import { CountryCode, NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { BaseService } from '../core/base.service';
@@ -13,7 +14,6 @@ import {
 	ProgramCountryFeasibilityRow,
 	ProgramCountryFeasibilityView,
 } from './country.types';
-import { getCountryNameByCode } from '@/lib/types/country';
 
 export class CountryService extends BaseService {
 	private userService = new UserService();
