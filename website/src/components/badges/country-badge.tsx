@@ -1,6 +1,6 @@
 import { Badge } from '@/components/badge';
-import { CountryCode } from '@prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { CountryCode } from '@prisma/client';
 import { CountryFlag } from '../country-flag';
 
 type Props = {

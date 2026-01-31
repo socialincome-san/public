@@ -1,6 +1,6 @@
 import { Card } from '@/components/card';
-import { TransparencyTotals } from '@/lib/services/transparency/transparency.types';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { TransparencyTotals } from '@/lib/services/transparency/transparency.types';
 
 type TotalsSectionProps = {
 	totals: TransparencyTotals;

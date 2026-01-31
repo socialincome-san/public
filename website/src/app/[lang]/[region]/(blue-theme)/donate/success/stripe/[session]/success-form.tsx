@@ -5,11 +5,10 @@ import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-act
 import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
-import { CountryCode } from '@prisma/client';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ContributorReferralSource } from '@prisma/client';
+import { ContributorReferralSource, CountryCode } from '@prisma/client';
 import {
 	Button,
 	Checkbox,

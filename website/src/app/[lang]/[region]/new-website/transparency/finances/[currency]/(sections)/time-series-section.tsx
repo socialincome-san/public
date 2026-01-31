@@ -66,10 +66,7 @@ export function TimeSeriesSection({ timeRanges, exchangeRate, currency, lang }: 
 								)}
 								<div className="relative flex h-48 w-full items-end justify-center">
 									<div
-										className={cn(
-											'bg-primary w-full max-w-8 rounded-t transition-all',
-											isHovered && 'bg-primary/80',
-										)}
+										className={cn('bg-primary w-full max-w-8 rounded-t transition-all', isHovered && 'bg-primary/80')}
 										style={{ height: `${Math.max(heightPercent, 2)}%` }}
 									/>
 								</div>

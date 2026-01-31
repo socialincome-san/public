@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon';
 import { CountryCode } from '@prisma/client';
+import { DateTime } from 'luxon';
 
 export type TimeRange = {
 	start: DateTime;
