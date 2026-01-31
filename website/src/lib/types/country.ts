@@ -1,6 +1,6 @@
 import { CountryCode } from '@prisma/client';
 
-export const COUNTRY_NAMES: Record<CountryCode, string> = {
+const COUNTRY_NAMES: Record<CountryCode, string> = {
 	AF: 'Afghanistan',
 	AX: 'Åland Islands',
 	AL: 'Albania',
