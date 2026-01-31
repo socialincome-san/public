@@ -10,7 +10,7 @@ import {
 export const countriesData: Country[] = [
   {
     id: 'country-algeria',
-    isoCode: 'DZA',
+    isoCode: 'DZ',
     isActive: true,
     microfinanceIndex: new Prisma.Decimal('6.05'),
     latestSurveyDate: new Date('2025-02-06'),
@@ -25,7 +25,7 @@ export const countriesData: Country[] = [
   },
   {
     id: 'country-angola',
-    isoCode: 'AGO',
+    isoCode: 'AO',
     isActive: true,
     microfinanceIndex: null,
     latestSurveyDate: null,
@@ -40,7 +40,7 @@ export const countriesData: Country[] = [
   },
   {
     id: 'country-burkina-faso',
-    isoCode: 'BFA',
+    isoCode: 'BF',
     isActive: false,
     microfinanceIndex: new Prisma.Decimal('5.10'),
     latestSurveyDate: new Date('2024-09-15'),
@@ -55,7 +55,7 @@ export const countriesData: Country[] = [
   },
   {
     id: 'country-tanzania',
-    isoCode: 'TZA',
+    isoCode: 'TZ',
     isActive: false,
     microfinanceIndex: new Prisma.Decimal('6.80'),
     latestSurveyDate: new Date('2023-11-02'),
@@ -70,7 +70,7 @@ export const countriesData: Country[] = [
   },
   {
     id: 'country-ethiopia',
-    isoCode: 'ETH',
+    isoCode: 'ET',
     isActive: false,
     microfinanceIndex: new Prisma.Decimal('4.50'),
     latestSurveyDate: new Date('2023-06-30'),

@@ -32,24 +32,26 @@ export async function submitProfileForm(
 						email: values.email,
 						gender: values.gender ?? null,
 						language: values.language,
-						address: {
-							upsert: {
-								update: {
-									street: values.street,
-									number: values.number,
-									city: values.city,
-									zip: values.zip,
-									country: values.country ?? '',
-								},
-								create: {
-									street: values.street ?? '',
-									number: values.number ?? '',
-									city: values.city ?? '',
-									zip: values.zip ?? '',
-									country: values.country ?? '',
-								},
-							},
-						},
+						address: values.country
+							? {
+									upsert: {
+										update: {
+											street: values.street,
+											number: values.number,
+											city: values.city,
+											zip: values.zip,
+											country: values.country,
+										},
+										create: {
+											street: values.street ?? '',
+											number: values.number ?? '',
+											city: values.city ?? '',
+											zip: values.zip ?? '',
+											country: values.country,
+										},
+									},
+								}
+							: undefined,
 					},
 				},
 			},
@@ -70,24 +72,26 @@ export async function submitProfileForm(
 						email: values.email,
 						gender: values.gender ?? null,
 						language: values.language,
-						address: {
-							upsert: {
-								update: {
-									street: values.street,
-									number: values.number,
-									city: values.city,
-									zip: values.zip,
-									country: values.country ?? '',
-								},
-								create: {
-									street: values.street ?? '',
-									number: values.number ?? '',
-									city: values.city ?? '',
-									zip: values.zip ?? '',
-									country: values.country ?? '',
-								},
-							},
-						},
+						address: values.country
+							? {
+									upsert: {
+										update: {
+											street: values.street,
+											number: values.number,
+											city: values.city,
+											zip: values.zip,
+											country: values.country,
+										},
+										create: {
+											street: values.street ?? '',
+											number: values.number ?? '',
+											city: values.city ?? '',
+											zip: values.zip ?? '',
+											country: values.country,
+										},
+									},
+								}
+							: undefined,
 					},
 				},
 			},
@@ -102,12 +106,14 @@ export async function submitProfileForm(
 		gender: values.gender ?? null,
 		language: values.language,
 		organizationId: values.organizationId,
-		address: {
-			street: values.street ?? '',
-			number: values.number ?? '',
-			city: values.city ?? '',
-			zip: values.zip ?? '',
-			country: values.country ?? '',
-		},
+		address: values.country
+			? {
+					street: values.street ?? '',
+					number: values.number ?? '',
+					city: values.city ?? '',
+					zip: values.zip ?? '',
+					country: values.country,
+				}
+			: undefined,
 	});
 }

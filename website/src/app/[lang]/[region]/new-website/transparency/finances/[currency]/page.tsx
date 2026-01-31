@@ -1,0 +1,70 @@
+import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
+import { websiteCurrencies, WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.service';
+import { TransparencyService } from '@/lib/services/transparency/transparency.service';
+import { Currency } from '@/lib/types/currency';
+import { DateTime } from 'luxon';
+import { CountriesSection } from './(sections)/countries-section';
+import { TimeSeriesSection } from './(sections)/time-series-section';
+import { TotalsSection } from './(sections)/totals-section';
+
+export const revalidate = 3600;
+export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
+
+interface TransparencyFinancesParams extends DefaultParams {
+	currency: Currency;
+}
+
+type TransparencyFinancesProps = DefaultLayoutProps<TransparencyFinancesParams>;
+
+export default async function Page({ params }: TransparencyFinancesProps) {
+	const { lang, currency } = await params;
+
+	const transparencyService = new TransparencyService();
+	const exchangeRateService = new ExchangeRateService();
+
+	const timeRanges = Array.from({ length: 12 }, (_, i) => {
+		const start = DateTime.now()
+			.minus({ months: 11 - i })
+			.startOf('month');
+		const end = start.endOf('month');
+		return { start, end };
+	});
+
+	const [dataResult, rateResult] = await Promise.all([
+		transparencyService.getTransparencyData(timeRanges),
+		exchangeRateService.getLatestRateForCurrency(currency.toUpperCase()),
+	]);
+
+	if (!dataResult.success) {
+		return <div>Error loading transparency data</div>;
+	}
+
+	const exchangeRate = rateResult.success ? rateResult.data.rate : 1;
+	const data = dataResult.data;
+	const currencyCode = currency.toUpperCase() as WebsiteCurrency;
+	const language = lang as WebsiteLanguage;
+
+	const serializedTimeRanges = data.timeRanges.map((range) => ({
+		startIso: range.start.toISO()!,
+		totalChf: range.totalChf,
+	}));
+
+	return (
+		<div className="container mx-auto space-y-12 py-12">
+			<TotalsSection totals={data.totals} exchangeRate={exchangeRate} currency={currencyCode} lang={language} />
+			<TimeSeriesSection
+				timeRanges={serializedTimeRanges}
+				exchangeRate={exchangeRate}
+				currency={currencyCode}
+				lang={language}
+			/>
+			<CountriesSection
+				countries={data.topCountries}
+				exchangeRate={exchangeRate}
+				currency={currencyCode}
+				lang={language}
+			/>
+		</div>
+	);
+}

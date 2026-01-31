@@ -24,15 +24,15 @@
 		"openapi:generate": "next-openapi-gen generate",
 		"typecheck": "tsc --noEmit",
 		"prisma:env-local": "dotenv -e .env.local -- prisma",
-		"db:generate": "npm run prisma:env-local -- generate --schema=src/lib/database/schema.prisma",
-		"db:migrate:deploy": "npm run prisma:env-local -- migrate deploy --schema=src/lib/database/schema.prisma",
-		"db:migrate:dev": "npm run prisma:env-local -- migrate dev --schema=src/lib/database/schema.prisma",
-		"db:migrate:reset": "npm run prisma:env-local -- migrate reset --schema=src/lib/database/schema.prisma --force --skip-seed",
-		"db:migrate:status": "npm run prisma:env-local -- migrate status --schema=src/lib/database/schema.prisma",
-		"db:migrate:create": "npm run prisma:env-local -- migrate dev --create-only --schema=src/lib/database/schema.prisma",
-		"db:introspect": "npm run prisma:env-local -- db pull --schema=src/lib/database/schema.prisma",
-		"db:seed": "npm run prisma:env-local -- db seed --schema=src/lib/database/schema.prisma",
-		"db:studio": "npm run prisma:env-local -- studio --schema=src/lib/database/schema.prisma",
+		"db:generate": "npm run prisma:env-local -- generate",
+		"db:migrate:deploy": "npm run prisma:env-local -- migrate deploy",
+		"db:migrate:dev": "npm run prisma:env-local -- migrate dev",
+		"db:migrate:reset": "npm run prisma:env-local -- migrate reset --force --skip-seed",
+		"db:migrate:status": "npm run prisma:env-local -- migrate status",
+		"db:migrate:create": "npm run prisma:env-local -- migrate dev --create-only",
+		"db:introspect": "npm run prisma:env-local -- db pull",
+		"db:seed": "npm run prisma:env-local -- db seed",
+		"db:studio": "npm run prisma:env-local -- studio",
 		"db:up": "docker compose up -d postgres",
 		"db:down": "docker compose down",
 		"check:unused": "knip --config knip.config.ts",
@@ -121,6 +121,7 @@
 		"typescript": "^5.6.2"
 	},
 	"prisma": {
+		"schema": "./src/lib/database",
 		"seed": "tsx src/lib/database/seed/seed.ts"
 	}
 }

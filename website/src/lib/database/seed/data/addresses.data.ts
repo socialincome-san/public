@@ -7,7 +7,7 @@ export const addressesData: Address[] = [
 		number: '10',
 		city: 'Zürich',
 		zip: '8001',
-		country: 'Switzerland',
+		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -17,7 +17,7 @@ export const addressesData: Address[] = [
 		number: '45',
 		city: 'Genève',
 		zip: '1204',
-		country: 'Switzerland',
+		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -27,7 +27,7 @@ export const addressesData: Address[] = [
 		number: '7',
 		city: 'Bern',
 		zip: '3011',
-		country: 'Switzerland',
+		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -37,7 +37,7 @@ export const addressesData: Address[] = [
 		number: '12',
 		city: 'Freetown',
 		zip: '1000',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -47,7 +47,7 @@ export const addressesData: Address[] = [
 		number: '22',
 		city: 'Bo',
 		zip: '2002',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -57,7 +57,7 @@ export const addressesData: Address[] = [
 		number: '5',
 		city: 'Kenema',
 		zip: '3003',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -67,7 +67,7 @@ export const addressesData: Address[] = [
 		number: '8',
 		city: 'Monrovia',
 		zip: '4004',
-		country: 'Liberia',
+		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -77,7 +77,7 @@ export const addressesData: Address[] = [
 		number: '19',
 		city: 'Makeni',
 		zip: '5005',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -87,7 +87,7 @@ export const addressesData: Address[] = [
 		number: '14',
 		city: 'Freetown',
 		zip: '1001',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -97,7 +97,7 @@ export const addressesData: Address[] = [
 		number: '33',
 		city: 'Freetown',
 		zip: '1002',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -107,7 +107,7 @@ export const addressesData: Address[] = [
 		number: '27',
 		city: 'Freetown',
 		zip: '1003',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -117,7 +117,7 @@ export const addressesData: Address[] = [
 		number: '5A',
 		city: 'Freetown',
 		zip: '1004',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -127,7 +127,7 @@ export const addressesData: Address[] = [
 		number: '9',
 		city: 'Freetown',
 		zip: '1005',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -137,7 +137,7 @@ export const addressesData: Address[] = [
 		number: '17',
 		city: 'Monrovia',
 		zip: '4005',
-		country: 'Liberia',
+		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -147,7 +147,7 @@ export const addressesData: Address[] = [
 		number: '23',
 		city: 'Kenema',
 		zip: '3004',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -157,7 +157,7 @@ export const addressesData: Address[] = [
 		number: '2',
 		city: 'Zürich',
 		zip: '8001',
-		country: 'Switzerland',
+		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -167,7 +167,7 @@ export const addressesData: Address[] = [
 		number: '88',
 		city: 'Zürich',
 		zip: '8008',
-		country: 'Switzerland',
+		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -177,7 +177,7 @@ export const addressesData: Address[] = [
 		number: '12',
 		city: 'Bern',
 		zip: '3012',
-		country: 'Switzerland',
+		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
