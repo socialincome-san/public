@@ -31,13 +31,14 @@ export function TimeSeriesSection({ timeRanges, exchangeRate, currency, lang }: 
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
 	const convertedRanges = timeRanges.map((range) => {
-		const start = DateTime.fromISO(range.startIso);
+		const start = DateTime.fromISO(range.startIso, { setZone: true });
 		return {
 			startIso: range.startIso,
 			total: range.totalChf * exchangeRate,
 			label: start.toFormat('MMM'),
 			fullLabel: start.toFormat('MMMM yyyy'),
 		};
+	});
 	});
 
 	const maxValue = Math.max(...convertedRanges.map((r) => r.total), 1);

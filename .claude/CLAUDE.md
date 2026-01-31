@@ -99,6 +99,6 @@ npm run format-code           # Prettier
 
 ## Resources
 
-- API Docs: https://socialincome.org/v1/api-docs
-- Storybook: http://design.socialincome.org
+- API Docs: <https://socialincome.org/v1/api-docs>
+- Storybook: <http://design.socialincome.org>
 - Project README: `/README.md`
