@@ -1,5 +1,6 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
+import { getCurrentSession } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { notFound } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
@@ -13,5 +14,11 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 		notFound();
 	}
 
-	return <WebsiteAppShell lang={lang as WebsiteLanguage}>{children}</WebsiteAppShell>;
+	const session = await getCurrentSession();
+
+	return (
+		<WebsiteAppShell session={session} lang={lang as WebsiteLanguage} scope="website">
+			{children}
+		</WebsiteAppShell>
+	);
 }

@@ -1,4 +1,4 @@
-import { getCurrentAccountType } from '@/lib/firebase/current-account';
+import { getCurrentSession } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/ui';
@@ -7,15 +7,16 @@ import { redirect } from 'next/navigation';
 
 export async function AccountRedirect({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-login'] });
-	const accountType = await getCurrentAccountType();
+	const session = await getCurrentSession();
+	const sessionType = session?.type;
 
-	if (accountType === 'contributor') {
+	if (sessionType === 'contributor') {
 		redirect('/dashboard/contributions');
 	}
-	if (accountType === 'user') {
+	if (sessionType === 'user') {
 		redirect('/portal');
 	}
-	if (accountType === 'local-partner') {
+	if (sessionType === 'local-partner') {
 		redirect('/partner-space/recipients');
 	}
 
