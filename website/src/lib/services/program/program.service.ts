@@ -1,7 +1,7 @@
-import { PayoutStatus, ProgramPermission } from '@prisma/client';
+import { CountryCode, PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { getCountryNameByIsoCode } from '../country/iso-countries';
+import { getCountryNameByCode } from '@/lib/types/country';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import { CreateProgramInput, ProgramOption, ProgramWallet, ProgramWallets } from './program.types';
 
@@ -145,7 +145,7 @@ export class ProgramService extends BaseService {
 
 			const program = await this.db.program.create({
 				data: {
-					name: `${getCountryNameByIsoCode(country.isoCode)} Program ${Math.floor(10000 + Math.random() * 90000)}`,
+					name: `${getCountryNameByCode(country.isoCode)} Program ${Math.floor(10000 + Math.random() * 90000)}`,
 					countryId: input.countryId,
 					amountOfRecipientsForStart: input.amountOfRecipientsForStart ?? null,
 					programDurationInMonths: input.programDurationInMonths,

@@ -1,4 +1,4 @@
-import { Cause, ContributorReferralSource, Gender } from '@prisma/client';
+import { Cause, ContributorReferralSource, CountryCode, Gender } from '@prisma/client';
 import { z } from 'zod';
 
 const contributorSchema = z.object({
@@ -6,7 +6,7 @@ const contributorSchema = z.object({
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
 	email: z.string().email(),
-	country: z.string().optional(),
+	country: z.nativeEnum(CountryCode).optional(),
 	language: z.string().optional(),
 	gender: z.nativeEnum(Gender).optional(),
 	referral: z.nativeEnum(ContributorReferralSource).optional(),
@@ -24,7 +24,7 @@ const localPartnerSchema = z.object({
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
 	email: z.string().email(),
-	country: z.string().optional(),
+	country: z.nativeEnum(CountryCode).optional(),
 	language: z.string().optional(),
 	gender: z.nativeEnum(Gender).optional(),
 	street: z.string().optional(),
@@ -39,7 +39,7 @@ const userSchema = z.object({
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
 	email: z.string().email(),
-	country: z.string().optional(),
+	country: z.nativeEnum(CountryCode).optional(),
 	language: z.string().optional(),
 	gender: z.nativeEnum(Gender).optional(),
 	street: z.string().optional(),

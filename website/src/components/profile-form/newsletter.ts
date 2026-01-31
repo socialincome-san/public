@@ -2,7 +2,7 @@ import { WebsiteLanguage, mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
-import { CountryCode } from '@/lib/types/country';
+import { CountryCode } from '@prisma/client';
 import { ProfileFormValues } from './schemas';
 
 export async function toggleNewsletter(values: ProfileFormValues, session: ContributorSession, isSubscribed: boolean) {

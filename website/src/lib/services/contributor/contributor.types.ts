@@ -1,4 +1,4 @@
-import { Address, ContributorReferralSource, Gender, OrganizationPermission, Phone, Prisma } from '@prisma/client';
+import { Address, ContributorReferralSource, CountryCode, Gender, OrganizationPermission, Phone, Prisma } from '@prisma/client';
 
 export type ContributorTableViewRow = {
 	id: string;
@@ -84,7 +84,7 @@ export type ContributorSession = {
 	number: string | null;
 	city: string | null;
 	zip: string | null;
-	country: string | null;
+	country: CountryCode | null;
 	stripeCustomerId: string | null;
 };
 
@@ -103,6 +103,6 @@ export type ContributorFormCreateInput = {
 		number: string;
 		city: string;
 		zip: string;
-		country: string;
+		country: CountryCode;
 	} | null;
 };

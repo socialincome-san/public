@@ -1,4 +1,4 @@
-import { CountryCode } from './country';
+import { CountryCode } from '@prisma/client';
 
 // ISO 4217 currency codes
 const CURRENCIES = [

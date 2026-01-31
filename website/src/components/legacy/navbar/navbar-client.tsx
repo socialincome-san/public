@@ -6,7 +6,7 @@ import { SILogo } from '@/components/legacy/logos/si-logo';
 import { useNavbarBackground } from '@/components/legacy/navbar/useNavbarBackground';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { CountryCode } from '@/lib/types/country';
+import { CountryCode } from '@prisma/client';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { DonateIcon, SIIcon, Typography } from '@socialincome/ui';
 import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';

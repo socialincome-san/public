@@ -1,4 +1,4 @@
-import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
+import { CountryCode, NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -13,7 +13,7 @@ import {
 	ProgramCountryFeasibilityRow,
 	ProgramCountryFeasibilityView,
 } from './country.types';
-import { getCountryNameByIsoCode } from './iso-countries';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 export class CountryService extends BaseService {
 	private userService = new UserService();
@@ -357,42 +357,42 @@ export class CountryService extends BaseService {
 		return sanctions && sanctions.length > 0 ? CountryCondition.RESTRICTIONS_APPLY : CountryCondition.MET;
 	}
 
-	private getCashDetailsText(countryIsoCode: string, microfinanceIndex: number | null): string {
+	private getCashDetailsText(countryIsoCode: CountryCode, microfinanceIndex: number | null): string {
 		if (microfinanceIndex === null) {
-			return `Market functionality in ${getCountryNameByIsoCode(countryIsoCode)} may be impaired.`;
+			return `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired.`;
 		}
 
 		return microfinanceIndex < 3
-			? `Market functionality in ${getCountryNameByIsoCode(countryIsoCode)} is considered sufficient.`
-			: `Market functionality in ${getCountryNameByIsoCode(countryIsoCode)} may be impaired.`;
+			? `Market functionality in ${getCountryNameByCode(countryIsoCode)} is considered sufficient.`
+			: `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired.`;
 	}
 
-	private getMobileMoneyDetailsText(countryIsoCode: string, paymentProviders: PaymentProvider[] | null): string {
+	private getMobileMoneyDetailsText(countryIsoCode: CountryCode, paymentProviders: PaymentProvider[] | null): string {
 		if (!paymentProviders || paymentProviders.length === 0) {
-			return `Mobile money infrastructure in ${getCountryNameByIsoCode(countryIsoCode)} is not sufficient.`;
+			return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is not sufficient.`;
 		}
 
 		const providers = paymentProviders.map(this.formatEnum).join(', ');
 
-		return `Mobile money infrastructure in ${getCountryNameByIsoCode(countryIsoCode)} is considered sufficient. Following ${
+		return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is considered sufficient. Following ${
 			paymentProviders.length
 		} provider${paymentProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
 	}
 
-	private getMobileNetworkDetailsText(countryIsoCode: string, populationCoverage: number | null): string {
+	private getMobileNetworkDetailsText(countryIsoCode: CountryCode, populationCoverage: number | null): string {
 		if (populationCoverage === null) {
-			return `No reliable mobile network coverage data available for ${getCountryNameByIsoCode(countryIsoCode)}.`;
+			return `No reliable mobile network coverage data available for ${getCountryNameByCode(countryIsoCode)}.`;
 		}
 
 		return populationCoverage >= 50
-			? `Mobile network coverage of ${getCountryNameByIsoCode(countryIsoCode)} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
-			: `Mobile network coverage of ${getCountryNameByIsoCode(countryIsoCode)} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
+			? `Mobile network coverage of ${getCountryNameByCode(countryIsoCode)} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
+			: `Mobile network coverage of ${getCountryNameByCode(countryIsoCode)} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
 	}
 
-	private getSanctionsDetailsText(countryIsoCode: string, sanctions: SanctionRegime[] | null): string {
+	private getSanctionsDetailsText(countryIsoCode: CountryCode, sanctions: SanctionRegime[] | null): string {
 		return sanctions && sanctions.length > 0
-			? `${getCountryNameByIsoCode(countryIsoCode)} is subject to international sanctions or restrictions.`
-			: `${getCountryNameByIsoCode(countryIsoCode)} is not on the UN, US or EU sanctioned list.`;
+			? `${getCountryNameByCode(countryIsoCode)} is subject to international sanctions or restrictions.`
+			: `${getCountryNameByCode(countryIsoCode)} is not on the UN, US or EU sanctioned list.`;
 	}
 
 	private toNumber(value: Decimal | null): number | null {

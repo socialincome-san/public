@@ -7,7 +7,7 @@ import { SortableHeader } from '@/components/data-table/elements/sortable-header
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
-import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
+import { getCountryNameByCode } from '@/lib/types/country';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
@@ -21,7 +21,7 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 		{
 			accessorKey: 'name',
 			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
-			accessorFn: (row) => getCountryNameByIsoCode(row.isoCode),
+			accessorFn: (row) => getCountryNameByCode(row.isoCode),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

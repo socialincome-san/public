@@ -1,4 +1,4 @@
-import { CountryCode } from '@/lib/types/country';
+import { CountryCode } from '@prisma/client';
 import { Client } from '@sendgrid/client';
 import { ContributorSession } from '../contributor/contributor.types';
 import { ServiceResult } from '../core/base.types';

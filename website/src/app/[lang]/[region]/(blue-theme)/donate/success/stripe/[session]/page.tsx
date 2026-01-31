@@ -3,7 +3,7 @@ import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/s
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { StripeService } from '@/lib/services/stripe/stripe.service';
-import { CountryCode } from '@/lib/types/country';
+import { CountryCode } from '@prisma/client';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
 

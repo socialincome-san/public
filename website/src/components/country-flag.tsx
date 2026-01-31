@@ -1,5 +1,6 @@
 'use client';
 
+import { CountryCode } from '@prisma/client';
 import { cn } from '@/lib/utils/cn';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -9,7 +10,7 @@ function slugifyCountry(name: string): string {
 }
 
 type CountryFlagProps = {
-	country: string;
+	country: CountryCode;
 	size?: 'sm' | 'lg';
 };
 

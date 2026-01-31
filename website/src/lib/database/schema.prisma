@@ -473,12 +473,12 @@ model Expense {
 }
 
 model Address {
-  id      String @id @default(cuid()) @map("id")
-  street  String @map("street")
-  number  String @map("number")
-  city    String @map("city")
-  zip     String @map("zip")
-  country String @map("country")
+  id      String      @id @default(cuid()) @map("id")
+  street  String      @map("street")
+  number  String      @map("number")
+  city    String      @map("city")
+  zip     String      @map("zip")
+  country CountryCode @map("country")
 
   contacts Contact[]
 
@@ -558,9 +558,9 @@ model ExchangeRate {
 }
 
 model Country {
-  id       String  @id @default(cuid()) @map("id")
-  isoCode  String  @unique @map("iso_code")
-  isActive Boolean @default(false) @map("is_active")
+  id       String      @id @default(cuid()) @map("id")
+  isoCode  CountryCode @unique @map("iso_code")
+  isActive Boolean     @default(false) @map("is_active")
 
   //
   // PRECONDITION 1: Suitability of cash
