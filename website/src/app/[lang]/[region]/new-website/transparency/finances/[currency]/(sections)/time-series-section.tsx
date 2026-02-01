@@ -39,7 +39,6 @@ export function TimeSeriesSection({ timeRanges, exchangeRate, currency, lang }: 
 			fullLabel: start.toFormat('MMMM yyyy'),
 		};
 	});
-	});
 
 	const maxValue = Math.max(...convertedRanges.map((r) => r.total), 1);
 
