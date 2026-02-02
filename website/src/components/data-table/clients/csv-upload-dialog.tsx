@@ -3,7 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { MessageBanner } from '@/components/message-banner';
+import { SuccessBanner } from '@/components/success-banner';
 import { importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
 import { CsvRow, parseCsvFile } from '@/lib/utils/csv';
 import { useState } from 'react';
@@ -101,8 +101,7 @@ export function CsvUploadDialog({ open, onOpenChange }: Props) {
 				)}
 
 				{result?.type === 'success' && (
-					<MessageBanner
-						variant="success"
+					<SuccessBanner
 						title="Import completed"
 						description={`Successfully imported ${result.created} recipient${result.created === 1 ? '' : 's'}.`}
 					/>
