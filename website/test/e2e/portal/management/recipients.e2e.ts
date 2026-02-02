@@ -48,7 +48,7 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByRole('option', { name: 'orange_money' }).click();
 
 	await page.getByTestId('form-item-paymentInformation.code').locator('input').fill('OM123456');
-	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill('+794772830');
+	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill('+666666666');
 
 	await page.getByTestId('form-accordion-trigger-contact').click();
 
@@ -85,8 +85,8 @@ test('Edit existing recipient', async ({ page }) => {
 
 test('Check if firebase auth user is created', async ({ page }) => {
 	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+794772830');
-	await expect(page.getByRole('cell', { name: '+12345678901' })).toBeVisible();
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+666666');
+	await expect(page.getByRole('cell', { name: '+666666666' })).toBeVisible();
 });
 
 test('CSV Upload', async ({ page }) => {
