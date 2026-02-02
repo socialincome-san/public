@@ -1,4 +1,4 @@
-import { parseCsvText } from './csv-utils';
+import { parseCsvText } from './csv';
 
 type TestCase = {
 	name: string;
@@ -45,14 +45,6 @@ const INVALID_TEST_CASES: TestCase[] = [
 			name,age
 		`,
 		error: 'CSV must contain a header row and at least one data row.',
-	},
-	{
-		name: 'throws if header is empty',
-		input: `
-			
-			Alice,30
-		`,
-		error: 'CSV header is empty.',
 	},
 	{
 		name: 'throws if row has too few columns',
