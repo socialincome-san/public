@@ -28,7 +28,6 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.goto('http://localhost:3000/portal/management/recipients');
 	await page.getByRole('cell', { name: 'Tony' }).click();
 
-	// --- Recipient fields ---
 	await page.getByTestId('form-item-startDate').locator('button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
 	await page.getByLabel('Choose the Year').selectOption('2020');
@@ -43,7 +42,6 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByTestId('form-item-localPartner').click();
 	await page.getByRole('option', { name: 'Bo Women Empowerment Group' }).click();
 
-	// --- Payment Information ---
 	await page.getByTestId('form-accordion-trigger-paymentInformation').click();
 
 	await page.getByTestId('form-item-paymentInformation.provider').click();
@@ -52,7 +50,6 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByTestId('form-item-paymentInformation.code').locator('input').fill('OM123456');
 	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill('+12345678901');
 
-	// --- Contact ---
 	await page.getByTestId('form-accordion-trigger-contact').click();
 
 	await page.getByTestId('form-item-contact.callingName').locator('input').fill('Ironman');
@@ -74,14 +71,12 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByTestId('form-item-contact.phone').locator('input').fill('+19876543210');
 	await page.getByTestId('form-item-contact.hasWhatsApp').locator('button').click();
 
-	// --- Address ---
 	await page.getByTestId('form-item-contact.street').locator('input').fill('Main Street');
 	await page.getByTestId('form-item-contact.number').locator('input').fill('42');
 	await page.getByTestId('form-item-contact.city').locator('input').fill('Freetown');
 	await page.getByTestId('form-item-contact.zip').locator('input').fill('1000');
 	await page.getByTestId('form-item-contact.country').locator('input').fill('SL');
 
-	// --- Save ---
 	await page.getByRole('button', { name: 'Save' }).click();
 
 	await page.waitForTimeout(2000);
