@@ -16,14 +16,7 @@ type Props = {
 	actorKind: Actor['kind'];
 };
 
-export function RecipientDialog({
-	open,
-	onOpenChange,
-	recipientId,
-	readOnly,
-	programId,
-	actorKind,
-}: Props) {
+export function RecipientDialog({ open, onOpenChange, recipientId, readOnly, programId, actorKind }: Props) {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error: unknown) => {
@@ -35,9 +28,7 @@ export function RecipientDialog({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>
-						{readOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}
-					</DialogTitle>
+					<DialogTitle>{readOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}</DialogTitle>
 				</DialogHeader>
 
 				{errorMessage && (
