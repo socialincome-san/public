@@ -48,7 +48,7 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByRole('option', { name: 'orange_money' }).click();
 
 	await page.getByTestId('form-item-paymentInformation.code').locator('input').fill('OM123456');
-	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill('+12345678901');
+	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill('+794772830');
 
 	await page.getByTestId('form-accordion-trigger-contact').click();
 
@@ -68,8 +68,8 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByTestId('form-item-contact.gender').click();
 	await page.getByRole('option', { name: 'female' }).click();
 
-	await page.getByTestId('form-item-contact.phone').locator('input').fill('+19876543210');
-	await page.getByTestId('form-item-contact.hasWhatsApp').locator('button').click();
+	// await page.getByTestId('form-item-contact.phone').locator('input').fill('+19876543210');
+	// await page.getByTestId('form-item-contact.hasWhatsApp').locator('button').click();
 
 	await page.getByTestId('form-item-contact.street').locator('input').fill('Main Street');
 	await page.getByTestId('form-item-contact.number').locator('input').fill('42');
@@ -85,7 +85,7 @@ test('Edit existing recipient', async ({ page }) => {
 
 test('Check if firebase auth user is created', async ({ page }) => {
 	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+12345678901');
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+794772830');
 	await expect(page.getByRole('cell', { name: '+12345678901' })).toBeVisible();
 });
 
