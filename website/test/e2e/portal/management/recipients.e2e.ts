@@ -26,7 +26,7 @@ test('Add new recipient', async ({ page }) => {
 
 test('Edit existing recipient', async ({ page }) => {
 	await page.goto('http://localhost:3000/portal/management/recipients');
-	await page.getByRole('cell', { name: 'Tony' }).click();
+	await page.getByRole('cell', { name: 'Mohamed' }).click();
 
 	await page.getByTestId('form-item-startDate').locator('button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
