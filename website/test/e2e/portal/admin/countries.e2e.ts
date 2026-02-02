@@ -15,6 +15,7 @@ test('Add new country', async ({ page }) => {
 	await page.getByTestId('form-item-microfinanceSourceHref').locator('input').fill('https://source-url.ch');
 
 	await page.getByTestId('form-item-populationCoverage').locator('input').fill('82.3');
+
 	await page.getByTestId('form-item-latestSurveyDate').locator('button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
 	await page.getByLabel('Choose the Year').selectOption('2025');

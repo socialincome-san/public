@@ -54,18 +54,44 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Permission denied');
 		}
 
+		const paymentInfoCreate = recipient.paymentInformation?.create;
+		const paymentPhoneNumber = paymentInfoCreate?.phone?.create?.number;
+
 		try {
-			const phoneNumber = recipient.paymentInformation?.create?.phone?.create?.number;
-			if (!phoneNumber) {
-				return this.resultFail('No phone number provided for recipient creation');
-			}
-
 			return await this.db.$transaction(async (tx) => {
-				const newRecipient = await tx.recipient.create({ data: recipient });
+				const data: RecipientCreateInput = {
+					startDate: recipient.startDate ?? null,
+					status: recipient.status,
+					successorName: recipient.successorName ?? null,
+					termsAccepted: recipient.termsAccepted ?? false,
 
-				const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
-				if (!firebaseResult.success) {
-					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
+					program: recipient.program,
+					localPartner: recipient.localPartner,
+					contact: recipient.contact,
+
+					paymentInformation:
+						paymentInfoCreate && paymentPhoneNumber
+							? {
+									create: {
+										provider: paymentInfoCreate.provider,
+										code: paymentInfoCreate.code ?? null,
+										phone: {
+											create: {
+												number: paymentPhoneNumber,
+											},
+										},
+									},
+								}
+							: undefined,
+				};
+
+				const newRecipient = await tx.recipient.create({ data });
+
+				if (paymentPhoneNumber) {
+					const firebaseResult = await this.firebaseService.createByPhoneNumber(paymentPhoneNumber);
+					if (!firebaseResult.success) {
+						throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
+					}
 				}
 
 				return this.resultOk(newRecipient);
@@ -139,13 +165,22 @@ export class RecipientService extends BaseService {
 		}
 
 		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
-		const paymentPhoneHasChanged =
+
+		const phoneAdded = previousPaymentPhoneNumber === null && nextPaymentPhoneNumber !== null;
+		const phoneChanged =
 			previousPaymentPhoneNumber !== null &&
 			nextPaymentPhoneNumber !== null &&
 			previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
 		try {
-			if (paymentPhoneHasChanged) {
+			if (phoneAdded) {
+				const firebaseResult = await this.firebaseService.createByPhoneNumber(nextPaymentPhoneNumber!);
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+				}
+			}
+
+			if (phoneChanged) {
 				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
 					previousPaymentPhoneNumber!,
 					nextPaymentPhoneNumber!,
