@@ -93,3 +93,15 @@ test('Check if firebase auth user is created', async ({ page }) => {
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+12345678901');
 	await expect(page.getByRole('cell', { name: '+12345678901' })).toBeVisible();
 });
+
+test('CSV Upload', async ({ page }) => {
+	await page.goto('http://localhost:3000/portal/management/recipients');
+
+	await page.getByRole('button', { name: 'Upload CSV' }).click();
+	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/portal/management/upload-example.csv');
+	await page.getByTestId('import-recipients-button').click();
+	await page.getByRole('button', { name: 'Close' }).first().click();
+
+	await page.waitForTimeout(2000);
+	await expect(page).toHaveScreenshot({ fullPage: true });
+});

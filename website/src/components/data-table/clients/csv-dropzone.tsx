@@ -33,7 +33,7 @@ export function CsvDropzone({ onFileSelected }: Props) {
 				isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/30',
 			)}
 		>
-			<input {...getInputProps()} />
+			<input data-testid="csv-dropzone-input" {...getInputProps()} />
 
 			<UploadIcon className="text-muted-foreground mb-3 h-7 w-7" />
 

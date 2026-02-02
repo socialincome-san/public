@@ -116,7 +116,7 @@ export function CsvUploadDialog({ open, onOpenChange }: Props) {
 					</Button>
 
 					{hasPreview && !isSuccess && (
-						<Button onClick={handleImport} disabled={isImporting}>
+						<Button data-testid="import-recipients-button" onClick={handleImport} disabled={isImporting}>
 							{isImporting ? 'Importing…' : 'Import recipients'}
 						</Button>
 					)}
