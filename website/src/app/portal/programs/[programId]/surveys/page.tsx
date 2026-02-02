@@ -1,4 +1,5 @@
 import { Button } from '@/components/button';
+import { Card } from '@/components/card';
 import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -10,9 +11,11 @@ type Props = { params: Promise<{ programId: string }> };
 
 export default function SurveysPageProgramScoped({ params }: Props) {
 	return (
-		<Suspense>
-			<SurveysProgramScopedDataLoader params={params} />
-		</Suspense>
+		<Card>
+			<Suspense>
+				<SurveysProgramScopedDataLoader params={params} />
+			</Suspense>
+		</Card>
 	);
 }
 

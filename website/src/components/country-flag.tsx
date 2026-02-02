@@ -1,24 +1,19 @@
 'use client';
 
+import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
 import { cn } from '@/lib/utils/cn';
 import Image from 'next/image';
 import { useState } from 'react';
 
-function slugifyCountry(name: string): string {
-	return name.toLowerCase().replace(/\s+/g, '_');
-}
-
 type CountryFlagProps = {
-	country: string;
+	isoCode: string;
 	size?: 'sm' | 'lg';
 };
 
-export function CountryFlag({ country, size = 'lg' }: CountryFlagProps) {
+export function CountryFlag({ isoCode, size = 'lg' }: CountryFlagProps) {
 	const [hasError, setHasError] = useState(false);
 
 	const containerSize = size === 'sm' ? 'size-4 text-[10px]' : 'size-9 text-[12px]';
-
-	const slug = slugifyCountry(country);
 
 	if (hasError) {
 		return (
@@ -28,7 +23,7 @@ export function CountryFlag({ country, size = 'lg' }: CountryFlagProps) {
 					containerSize,
 				)}
 			>
-				{country}
+				{isoCode}
 			</div>
 		);
 	}
@@ -36,8 +31,8 @@ export function CountryFlag({ country, size = 'lg' }: CountryFlagProps) {
 	return (
 		<div className={cn('overflow-hidden rounded-full', containerSize)}>
 			<Image
-				src={`/assets/flags/${slug}.svg`}
-				alt={country}
+				src={`/assets/flags/${isoCode}.svg`}
+				alt={`Flag of ${getCountryNameByIsoCode(isoCode)}`}
 				width={36}
 				height={36}
 				className="size-full rounded-full object-cover"
