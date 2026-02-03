@@ -5,7 +5,7 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { loginAs } from './utils';
 
-test.beforeEach('seed database', async () => {
+test('seed database', async () => {
 	await seedDatabase();
 	await prisma.contact.findUniqueOrThrow({
 		where: { email: 'test@portal.org' },
