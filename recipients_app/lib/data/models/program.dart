@@ -1,4 +1,5 @@
 import "package:app/data/enums/payout_interval.dart";
+import "package:app/data/models/country.dart";
 import "package:app/data/models/currency.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
@@ -9,6 +10,7 @@ class Program with ProgramMappable {
   final String id;
   final String name;
   final String countryId;
+  final Country country;
   final int payoutPerInterval;
   final Currency payoutCurrency;
   final PayoutInterval payoutInterval;
@@ -20,6 +22,7 @@ class Program with ProgramMappable {
     required this.id,
     required this.name,
     required this.countryId,
+    required this.country,
     required this.payoutPerInterval,
     required this.payoutCurrency,
     required this.payoutInterval,

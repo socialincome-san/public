@@ -14,6 +14,7 @@ import "package:app/ui/configs/app_spacings.dart";
 import "package:app/ui/inputs/input_dropdown.dart";
 import "package:app/ui/inputs/input_text.dart";
 import "package:app/view/widgets/account/local_partner_info.dart";
+import "package:app/view/widgets/account/program_info.dart";
 import "package:app/view/widgets/dialogs/social_income_contact_dialog.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -467,10 +468,15 @@ class AccountPageState extends State<AccountPage> {
                     );
                   },
                 ),
+                const SizedBox(height: 16),
 
                 /// RECOMMENDING ORGA
                 LocalPartnerInfo(localPartner: widget.recipient.localPartner),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
+
+                /// PROGRAMM INFO
+                ProgramInfo(program: widget.recipient.program),
+                const SizedBox(height: 16),
 
                 /// SUPPORT
                 Text(

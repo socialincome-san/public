@@ -63,6 +63,7 @@
     "privacyPolicyError": "Can't open privacy policy right now. Copied website address to the clipboard.",
     "createAccount": "Create Account",
     "recommendingOrganization": "Recommending Organization",
+    "programInformation": "Program Information",
     "call": "Call",
     "supportTeam": "Support Team",
     "phone": "Phone",
@@ -83,6 +84,8 @@
     "paymentsOverview": "Payments Overview",
     "paymentsSuspendedTwoUnreviewed": "2 unreviewed payments in a row. Suspended payments.",
     "amount": "Amount",
+    "interval": "Interval",
+    "duration": "Duration",
     "nextMonth": "Next month",
     "today": "Today",
     "oneDay": "1 day",
@@ -104,6 +107,8 @@
     },
     "day": "day",
     "days": "days",
+    "month": "month",
+    "months": "months",
     "myPayments": "My Payments",
     "contestPayment": "Contest Payment",
     "contestPaymentInfo": "A payment has not reached you. What happened?",
@@ -291,5 +296,6 @@
     "appUpdateButtonTitleUpdateNow": "Update Now",
     "appUpdateWidgetTitle": "App Update Required",
     "appUpdateWidgetMessage": "Please update to continue using the app.",
-    "appUpdateWidgetErrorLaunchingStore": "We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income."
+    "appUpdateWidgetErrorLaunchingStore": "We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income.",
+    "country": "Country"
 }

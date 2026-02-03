@@ -200,6 +200,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get recommendingOrganization => 'Ɔganizeshɔn we go tɔk fɔ yu';
 
   @override
+  String get programInformation => 'Program Infɔmeshɔn';
+
+  @override
   String get call => 'Kɔl';
 
   @override
@@ -241,6 +244,12 @@ class AppLocalizationsKri extends AppLocalizations {
   String get amount => 'Ɔmɔs';
 
   @override
+  String get interval => 'Intaval';
+
+  @override
+  String get duration => 'Ɔmɔs tɛm';
+
+  @override
   String get nextMonth => 'Nɛks mɔnt';
 
   @override
@@ -264,6 +273,12 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get days => 'de dɛm';
+
+  @override
+  String get month => 'mɔnt';
+
+  @override
+  String get months => 'mɔnt dɛn';
 
   @override
   String get myPayments => 'Mi Pemɛnt Dɛm';
@@ -727,4 +742,7 @@ class AppLocalizationsKri extends AppLocalizations {
   @override
   String get appUpdateWidgetErrorLaunchingStore =>
       'Wi nɔ bin ebul fɔ gayd yu fɔ go na di Stɔ fɔ ɔpdet di ap. Duya opin di Ple Stɔ ap na Andrɔyd ɔ Ap Stɔ ap na iOS ɛn ɔpdet Sɔshial Inkam.';
+
+  @override
+  String get country => 'Kɔntri';
 }

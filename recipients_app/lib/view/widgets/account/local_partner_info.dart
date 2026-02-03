@@ -25,7 +25,6 @@ class LocalPartnerInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 24),
         Text(
           context.l10n.recommendingOrganization,
           style: Theme.of(context).textTheme.bodyLarge,

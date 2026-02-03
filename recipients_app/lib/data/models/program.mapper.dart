@@ -14,6 +14,7 @@ class ProgramMapper extends ClassMapperBase<Program> {
   static ProgramMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProgramMapper._());
+      CountryMapper.ensureInitialized();
       CurrencyMapper.ensureInitialized();
       PayoutIntervalMapper.ensureInitialized();
     }
@@ -32,6 +33,8 @@ class ProgramMapper extends ClassMapperBase<Program> {
     'countryId',
     _$countryId,
   );
+  static Country _$country(Program v) => v.country;
+  static const Field<Program, Country> _f$country = Field('country', _$country);
   static int _$payoutPerInterval(Program v) => v.payoutPerInterval;
   static const Field<Program, int> _f$payoutPerInterval = Field(
     'payoutPerInterval',
@@ -69,6 +72,7 @@ class ProgramMapper extends ClassMapperBase<Program> {
     #id: _f$id,
     #name: _f$name,
     #countryId: _f$countryId,
+    #country: _f$country,
     #payoutPerInterval: _f$payoutPerInterval,
     #payoutCurrency: _f$payoutCurrency,
     #payoutInterval: _f$payoutInterval,
@@ -82,6 +86,7 @@ class ProgramMapper extends ClassMapperBase<Program> {
       id: data.dec(_f$id),
       name: data.dec(_f$name),
       countryId: data.dec(_f$countryId),
+      country: data.dec(_f$country),
       payoutPerInterval: data.dec(_f$payoutPerInterval),
       payoutCurrency: data.dec(_f$payoutCurrency),
       payoutInterval: data.dec(_f$payoutInterval),
@@ -148,10 +153,12 @@ extension ProgramValueCopy<$R, $Out> on ObjectCopyWith<$R, Program, $Out> {
 
 abstract class ProgramCopyWith<$R, $In extends Program, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  CountryCopyWith<$R, Country, Country> get country;
   $R call({
     String? id,
     String? name,
     String? countryId,
+    Country? country,
     int? payoutPerInterval,
     Currency? payoutCurrency,
     PayoutInterval? payoutInterval,
@@ -171,10 +178,14 @@ class _ProgramCopyWithImpl<$R, $Out>
   late final ClassMapperBase<Program> $mapper =
       ProgramMapper.ensureInitialized();
   @override
+  CountryCopyWith<$R, Country, Country> get country =>
+      $value.country.copyWith.$chain((v) => call(country: v));
+  @override
   $R call({
     String? id,
     String? name,
     String? countryId,
+    Country? country,
     int? payoutPerInterval,
     Currency? payoutCurrency,
     PayoutInterval? payoutInterval,
@@ -186,6 +197,7 @@ class _ProgramCopyWithImpl<$R, $Out>
       if (id != null) #id: id,
       if (name != null) #name: name,
       if (countryId != null) #countryId: countryId,
+      if (country != null) #country: country,
       if (payoutPerInterval != null) #payoutPerInterval: payoutPerInterval,
       if (payoutCurrency != null) #payoutCurrency: payoutCurrency,
       if (payoutInterval != null) #payoutInterval: payoutInterval,
@@ -200,6 +212,7 @@ class _ProgramCopyWithImpl<$R, $Out>
     id: data.get(#id, or: $value.id),
     name: data.get(#name, or: $value.name),
     countryId: data.get(#countryId, or: $value.countryId),
+    country: data.get(#country, or: $value.country),
     payoutPerInterval: data.get(
       #payoutPerInterval,
       or: $value.payoutPerInterval,

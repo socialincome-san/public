@@ -63,6 +63,7 @@
     "privacyPolicyError": "Nɔ ebul opin usay wi de kip sikrit rayt naw. Kɔpi di wɛbsayt adrɛs put am na di klipbod.",
     "createAccount": "Mek akawnt",
     "recommendingOrganization": "Ɔganizeshɔn we go tɔk fɔ yu",
+    "programInformation": "Program Infɔmeshɔn",
     "call": "Kɔl",
     "supportTeam": "Sɔpɔt Tim",
     "phone": "Fon",
@@ -83,6 +84,8 @@
     "paymentsOverview": "Ɔltin Bɔt Pemɛnt Dɛm",
     "paymentsSuspendedTwoUnreviewed": "2 pemɛnt dɛm we nɔ ɔke yet. Dɛn ol am.",
     "amount": "Ɔmɔs",
+    "interval": "Intaval",
+    "duration": "Ɔmɔs tɛm",
     "nextMonth": "Nɛks mɔnt",
     "today": "Tide",
     "oneDay": "1 de",
@@ -104,6 +107,8 @@
     },
     "day": "de",
     "days": "de dɛm",
+    "month": "mɔnt",
+    "months": "mɔnt dɛn",
     "myPayments": "Mi Pemɛnt Dɛm",
     "contestPayment": "Pemɛnt we yu nɔ gri wit",
     "contestPaymentInfo": "Di pemɛnt nɔ rich yu. Wetin apin?",
@@ -297,5 +302,6 @@
     "appUpdateButtonTitleUpdateNow": "Update naw",
     "appUpdateWidgetTitle": "App Update Rikway",
     "appUpdateWidgetMessage": "Duya ɔpdet fɔ kɔntinyu fɔ yuz di ap.",
-    "appUpdateWidgetErrorLaunchingStore": "Wi nɔ bin ebul fɔ gayd yu fɔ go na di Stɔ fɔ ɔpdet di ap. Duya opin di Ple Stɔ ap na Andrɔyd ɔ Ap Stɔ ap na iOS ɛn ɔpdet Sɔshial Inkam."
+    "appUpdateWidgetErrorLaunchingStore": "Wi nɔ bin ebul fɔ gayd yu fɔ go na di Stɔ fɔ ɔpdet di ap. Duya opin di Ple Stɔ ap na Andrɔyd ɔ Ap Stɔ ap na iOS ɛn ɔpdet Sɔshial Inkam.",
+    "country": "Kɔntri"
 }

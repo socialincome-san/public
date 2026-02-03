@@ -199,6 +199,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recommendingOrganization => 'Recommending Organization';
 
   @override
+  String get programInformation => 'Program Information';
+
+  @override
   String get call => 'Call';
 
   @override
@@ -240,6 +243,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get amount => 'Amount';
 
   @override
+  String get interval => 'Interval';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
   String get nextMonth => 'Next month';
 
   @override
@@ -263,6 +272,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get days => 'days';
+
+  @override
+  String get month => 'month';
+
+  @override
+  String get months => 'months';
 
   @override
   String get myPayments => 'My Payments';
@@ -727,4 +742,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appUpdateWidgetErrorLaunchingStore =>
       'We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income.';
+
+  @override
+  String get country => 'Country';
 }
