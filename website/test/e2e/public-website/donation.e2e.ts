@@ -19,7 +19,7 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	await page.waitForURL(/https:\/\/checkout\.stripe\.com\/c\/pay\/.*/);
 
 	await page.getByRole('textbox', { name: 'Email' }).fill(TEST_EMAIL);
-	await page.getByRole('textbox', { name: 'Card number' }).fill('4242 4242 4242 42424');
+	await page.getByRole('textbox', { name: 'Card number' }).fill('4242 4242 4242 4242');
 	await page.getByRole('textbox', { name: 'Expiration' }).fill('12 / 66');
 	await page.getByRole('textbox', { name: 'CVC' }).fill('424');
 	await page.getByRole('textbox', { name: 'Cardholder name' }).fill('Dean Winchester');
@@ -28,6 +28,10 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	await page.waitForURL(/\/en\/int\/donate\/success\/stripe\/.*/);
 	await page.getByTestId('terms-and-conditions').click();
 	await page.getByRole('button', { name: 'Confirm' }).click();
+
+	await page.waitForTimeout(10000);
+
+	await expect(page).toHaveScreenshot({ fullPage: true });
 
 	await page.waitForURL(/\/en\/int\/login.*/);
 
