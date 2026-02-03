@@ -82,8 +82,6 @@ export class StripeService extends BaseService {
 			// Extract campaign ID from checkout session metadata
 			const checkoutMetadata = await this.getCheckoutMetadata(fullCharge);
 
-			console.log('Webhook charge metadata:', checkoutMetadata);
-
 			let contributor;
 			let isNewContributor = false;
 
@@ -365,8 +363,6 @@ export class StripeService extends BaseService {
 				recurring: recurring ? { interval: 'month', interval_count: intervalCount } : undefined,
 			});
 
-			const metadata = campaignId ? { campaignId } : undefined;
-
 			const session = await this.stripe.checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
 				customer: stripeCustomerId || undefined,
@@ -379,14 +375,17 @@ export class StripeService extends BaseService {
 				],
 				success_url: successUrl,
 				locale: 'auto',
-				subscription_data: {
-					metadata: {
-						campaignId,
-					},
-				},
-				metadata: {
-					campaignId,
-				},
+
+				...(campaignId && {
+					metadata: { campaignId },
+				}),
+
+				...(recurring &&
+					campaignId && {
+						subscription_data: {
+							metadata: { campaignId },
+						},
+					}),
 			});
 
 			console.log('Created Stripe checkout session with metadata:', session.metadata);
