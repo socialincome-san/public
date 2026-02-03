@@ -82,6 +82,8 @@ export class StripeService extends BaseService {
 			// Extract campaign ID from checkout session metadata
 			const checkoutMetadata = await this.getCheckoutMetadata(fullCharge);
 
+			console.log('Webhook charge metadata:', checkoutMetadata);
+
 			let contributor;
 			let isNewContributor = false;
 
@@ -377,8 +379,17 @@ export class StripeService extends BaseService {
 				],
 				success_url: successUrl,
 				locale: 'auto',
-				metadata,
+				subscription_data: {
+					metadata: {
+						campaignId,
+					},
+				},
+				metadata: {
+					campaignId,
+				},
 			});
+
+			console.log('Created Stripe checkout session with metadata:', session.metadata);
 
 			return this.resultOk(session.url ?? '');
 		} catch (error) {
