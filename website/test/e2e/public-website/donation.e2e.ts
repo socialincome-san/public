@@ -25,13 +25,13 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	await page.getByRole('textbox', { name: 'Cardholder name' }).fill('Dean Winchester');
 	await page.getByTestId('hosted-payment-submit-button').click();
 
-	await page.waitForURL(/\/en\/int\/donate\/success\/stripe\/.*/);
-	await page.getByTestId('terms-and-conditions').click();
-	await page.getByRole('button', { name: 'Confirm' }).click();
-
 	await page.waitForTimeout(10000);
 
 	await expect(page).toHaveScreenshot({ fullPage: true });
+
+	await page.waitForURL(/\/en\/int\/donate\/success\/stripe\/.*/);
+	await page.getByTestId('terms-and-conditions').click();
+	await page.getByRole('button', { name: 'Confirm' }).click();
 
 	await page.waitForURL(/\/en\/int\/login.*/);
 
