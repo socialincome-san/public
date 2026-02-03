@@ -40,8 +40,8 @@ export class SendgridSubscriptionService extends Client {
 			}
 			const subscriber = await this.getContact(contributor.email);
 			return this.resultOk(subscriber);
-		} catch (error: any) {
-			return this.resultFail(error);
+		} catch (error) {
+			return this.resultFail(`Unable to get active subscription: ${JSON.stringify(error)}`);
 		}
 	};
 
@@ -49,8 +49,8 @@ export class SendgridSubscriptionService extends Client {
 		try {
 			await this.upsertSubscription({ ...subscription, status: 'subscribed' });
 			return this.resultOk(undefined);
-		} catch (error: any) {
-			return this.resultFail(error);
+		} catch (error) {
+			return this.resultFail(`Unable to subscribe to newsletter: ${JSON.stringify(error)}`);
 		}
 	};
 
@@ -68,8 +68,8 @@ export class SendgridSubscriptionService extends Client {
 				country: (contributor.country || 'CH') as CountryCode,
 			});
 			return this.resultOk(undefined);
-		} catch (error: any) {
-			return this.resultFail(error);
+		} catch (error) {
+			return this.resultFail(`Unable to unsubscribe from newsletter: ${JSON.stringify(error)}`);
 		}
 	};
 

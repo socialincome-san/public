@@ -305,4 +305,27 @@ export class FirebaseService extends BaseService {
 			return this.resultFail(`Could not delete auth user by phone number: ${JSON.stringify(error)}`);
 		}
 	}
+
+	async deleteByEmailIfExists(email: string): Promise<ServiceResult<boolean>> {
+		try {
+			const existingUserResult = await this.getByEmail(email);
+
+			if (!existingUserResult.success) {
+				return this.resultFail(existingUserResult.error);
+			}
+
+			if (!existingUserResult.data) {
+				return this.resultOk(true);
+			}
+
+			await authAdmin.auth.deleteUser(existingUserResult.data.uid);
+			return this.resultOk(true);
+		} catch (error) {
+			this.logger.error('Error deleting auth user by email:', {
+				email,
+				error,
+			});
+			return this.resultFail(`Could not delete auth user by email: ${JSON.stringify(error)}`);
+		}
+	}
 }
