@@ -47,6 +47,15 @@ class LocalPartnerInfo extends StatelessWidget {
                       localPartner.name,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Text(
+                      contactNumber,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                     const Spacer(),
                     ButtonSmall(
                       label: context.l10n.call,
@@ -57,15 +66,6 @@ class LocalPartnerInfo extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  localPartner.name,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                Text(
-                  contactNumber,
-                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
