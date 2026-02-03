@@ -20,7 +20,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
 
     final response = await authenticatedClient.post(uri);
 
-    if (response.statusCode != 201) {
+    if (response.statusCode != 200) {
       throw Exception("Failed to confirm payout: ${response.statusCode}");
     }
 
@@ -49,7 +49,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
       response = await authenticatedClient.post(uri);
     }
 
-    if (response.statusCode != 201) {
+    if (response.statusCode != 200) {
       throw Exception("Failed to contest payout: ${response.statusCode}");
     }
 
