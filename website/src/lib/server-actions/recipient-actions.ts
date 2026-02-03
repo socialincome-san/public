@@ -68,3 +68,14 @@ export async function getRecipientOptions() {
 		localPartner: { success: true, data: [] },
 	};
 }
+
+export async function importRecipientsCsvAction(file: File) {
+	const actor = await getActorOrThrow();
+
+	const result = await recipientService.importCsv(actor, file);
+
+	revalidatePath(PORTAL_RECIPIENTS_PATH);
+	revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
+
+	return result;
+}

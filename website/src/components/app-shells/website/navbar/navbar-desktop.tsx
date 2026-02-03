@@ -1,99 +1,60 @@
 'use client';
 
-import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
-import { useTranslator } from '@/lib/hooks/useTranslator';
+import { Session } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
+import { NavItem } from '@/lib/services/storyblok/storyblok.types';
 import Link from 'next/link';
-import { twMerge } from 'tailwind-merge';
-import { useLogout } from '../../use-logout';
+import { useRef, useState } from 'react';
+import { useClickOutside } from '../../use-click-outside';
+import { AccountMenu, Scope } from './account-menu';
+import { FlyoutPanel } from './flyout-panel';
+import { LoginFlyout } from './login-flyout';
 import { Logo } from './logo';
+import { NavLinks } from './nav-links';
 
 type Props = {
-	session?: ContributorSession | LocalPartnerSession;
+	session: Session | null;
 	lang: WebsiteLanguage;
+	navItems: NavItem[];
+	scope: Scope;
 };
 
-export const NavbarDesktop = ({ session, lang }: Props) => {
-	const { logout } = useLogout();
-	const translator = useTranslator(lang, 'website-me');
+export const NavbarDesktop = ({ session, lang, navItems, scope }: Props) => {
+	const [open, setOpen] = useState<string | null>(null);
+	const navRef = useRef<HTMLDivElement | null>(null);
 
-	const mainLinks = [{ href: '/', label: translator?.t('metadata.home-link') }];
+	useClickOutside(navRef, () => setOpen(null));
 
-	const userMenuLinks = [
-		{
-			href: session?.type === 'local-partner' ? '/partner-space/profile' : '/dashboard/profile',
-			label: translator?.t('profile.link') ?? 'Profile',
-		},
-	];
+	const activeItem = navItems.find((item) => item.label === open && item.sections);
+
+	const handleNavClick = (item: NavItem) => {
+		if (!item.sections) {
+			setOpen(null);
+			return;
+		}
+		setOpen((prev) => (prev === item.label ? null : item.label));
+	};
 
 	return (
-		<nav className="container mt-6 flex h-20 items-center justify-between rounded-full bg-white">
-			<Link href="/">
-				<Logo />
-			</Link>
+		<div ref={navRef} className="relative z-50 w-full">
+			<nav className="container mt-6 flex items-center justify-between rounded-full bg-white px-8 py-3 shadow-sm">
+				<Link href="/">
+					<Logo />
+				</Link>
 
-			{/* MAIN NAV LINKS */}
-			<div className="flex items-center gap-x-4">
-				<nav className="flex items-center gap-4">
-					{mainLinks.map(({ href, label }) => (
-						<Link
-							key={href}
-							href={href}
-							className={twMerge(
-								'text-primary hover:bg-accent relative rounded-md px-3 py-2 text-lg font-medium transition-colors duration-200',
-							)}
-						>
-							{label}
-						</Link>
-					))}
-				</nav>
-			</div>
+				<NavLinks nav={navItems} open={open} onClick={handleNavClick} />
 
-			{/* USER MENU */}
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3">
-						<Avatar>
-							<AvatarFallback className="bg-primary text-background">
-								{session?.firstName?.[0]}
-								{session?.lastName?.[0]}
-							</AvatarFallback>
-						</Avatar>
-						<div className="text-left">
-							<p className="text-sm font-medium">
-								{session?.firstName} {session?.lastName}
-							</p>
-							<p className="text-muted-foreground text-xs">
-								{session?.type === 'local-partner' ? 'Partner' : 'Contributor'}
-							</p>
-						</div>
-					</Button>
-				</DropdownMenuTrigger>
+				<div className="flex items-center gap-5">
+					{!session && <LoginFlyout />}
 
-				<DropdownMenuContent align="end" className="w-64">
-					{userMenuLinks.map(({ href, label }) => (
-						<DropdownMenuItem key={href} asChild>
-							<Link href={href} className="cursor-pointer">
-								{label}
-							</Link>
-						</DropdownMenuItem>
-					))}
+					{session && <AccountMenu session={session} scope={scope} />}
 
-					<DropdownMenuItem
-						onSelect={(e: Event) => {
-							e.preventDefault();
-							logout();
-						}}
-						className="text-destructive focus:text-destructive"
-					>
-						<span>{translator?.t('security.sign-out.button')}</span>
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-		</nav>
+					{!session && <Button className="rounded-full px-5 py-2 text-base font-medium">Donate now</Button>}
+				</div>
+			</nav>
+
+			<FlyoutPanel item={activeItem} onClose={() => setOpen(null)} />
+		</div>
 	);
 };

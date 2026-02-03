@@ -60,6 +60,9 @@ export class AppReviewModeService extends BaseService {
 				payoutInterval: PayoutInterval.monthly,
 				targetCauses: [],
 				countryId: 'usa',
+				country: {
+					isoCode: 'US',
+				},
 				createdAt: new Date(),
 				updatedAt: new Date(),
 			},

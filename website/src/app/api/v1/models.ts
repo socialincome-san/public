@@ -44,10 +44,15 @@ const LocalPartner = z.object({
 	updatedAt: z.string().nullable(),
 });
 
+const Country = z.object({
+	isoCode: z.string(),
+});
+
 const Program = z.object({
 	id: z.string(),
 	name: z.string(),
-	country: z.string(),
+	countryId: z.string(),
+	country: Country,
 	payoutPerInterval: z.number(),
 	payoutCurrency: z.string(),
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
@@ -118,6 +123,7 @@ export const RecipientSelfUpdate = z.object({
 	dateOfBirth: z.string().optional(),
 	language: z.string().optional(),
 	email: z.string().email().optional(),
+	termsAccepted: z.boolean().optional(),
 	contactPhone: z.string().nullable().optional(),
 	paymentPhone: z.string().optional(),
 	paymentProvider: z.enum(['orange_money']).optional(),

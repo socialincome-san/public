@@ -1,5 +1,6 @@
-import { Contribution, PaymentEvent } from '@prisma/client';
+import { Contribution, ContributionStatus, PaymentEvent } from '@prisma/client';
 import { endOfYear, startOfYear } from 'date-fns';
+import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -296,18 +297,42 @@ export class ContributionService extends BaseService {
 
 	async upsertFromBankTransfer(paymentEvent: PaymentEventCreateInput): Promise<ServiceResult<PaymentEvent>> {
 		try {
-			const result = await this.db.paymentEvent.upsert({
+			const existing = await this.db.paymentEvent.findUnique({
 				where: { transactionId: paymentEvent.transactionId },
-				create: paymentEvent,
-				update: {
-					...paymentEvent,
-					contribution: {
-						update: {
-							...paymentEvent.contribution.create,
+				select: { id: true, contribution: { select: { status: true } } },
+			});
+			let result;
+
+			if (existing?.contribution?.status === ContributionStatus.pending) {
+				// if exists and pending, we assume this is the initial placeholder payment created during bank transfer flow
+				// which should be updated from payment file import
+				result = await this.db.paymentEvent.update({
+					where: { id: existing.id },
+					data: {
+						...paymentEvent,
+						contribution: {
+							update: {
+								...paymentEvent.contribution.create,
+							},
 						},
 					},
-				},
-			});
+				});
+			} else if (existing) {
+				// non-pending payment with same transaction ID already exists,
+				// we assume its a (non-initial) standing order payment and append current timestamp to already existimg transaction ID
+				result = await this.db.paymentEvent.create({
+					data: {
+						...paymentEvent,
+						transactionId: paymentEvent.transactionId + `-${DateTime.now().toMillis().toString()}`,
+					},
+				});
+			} else {
+				// non-existing payment,
+				// we assume its the initial placeholder payment from bank transfer flow
+				result = await this.db.paymentEvent.create({
+					data: paymentEvent,
+				});
+			}
 
 			return this.resultOk(result);
 		} catch (error) {

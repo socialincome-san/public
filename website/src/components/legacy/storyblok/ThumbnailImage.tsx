@@ -1,5 +1,5 @@
-import { getDimensionsFromStoryblokImageUrl } from '@/components/legacy/storyblok/StoryblokUtils';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
+import { getDimensionsFromStoryblokImageUrl } from '@/lib/services/storyblok/storyblok.utils';
 import Image from 'next/image';
 
 const DEFAULT_HEIGHT = 15;

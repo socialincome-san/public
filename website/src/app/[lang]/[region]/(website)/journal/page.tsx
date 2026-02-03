@@ -1,19 +1,16 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
-import {
-	getOverviewArticles,
-	getOverviewArticlesCountForDefaultLang,
-	getOverviewAuthors,
-	getOverviewTags,
-} from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
+import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { Badge, BaseContainer, Carousel, CarouselContent, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export const revalidate = 900;
+
+const storyblokService = new StoryblokService();
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
@@ -23,13 +20,13 @@ export default async function Page({ params }: DefaultPageProps) {
 	});
 
 	const [articles, authors, tags] = await Promise.all([
-		getOverviewArticles(lang),
-		getOverviewAuthors(lang),
-		getOverviewTags(lang),
+		storyblokService.getOverviewArticles(lang),
+		storyblokService.getOverviewAuthors(lang),
+		storyblokService.getOverviewTags(lang),
 	]);
 
 	const totalArticlesInDefaultLang =
-		lang == defaultLanguage ? articles.length : await getOverviewArticlesCountForDefaultLang();
+		lang == defaultLanguage ? articles.length : await storyblokService.getOverviewArticlesCountForDefaultLang();
 
 	return (
 		<BaseContainer>

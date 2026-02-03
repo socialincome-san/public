@@ -12,7 +12,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-1',
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -26,7 +26,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-2',
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -40,7 +40,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-3',
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -54,7 +54,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-1',
 		programId: 'program-2',
 		localPartnerId: 'local-partner-2',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -68,7 +68,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-2',
 		programId: 'program-3',
 		localPartnerId: 'local-partner-3',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -82,7 +82,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-3',
 		programId: 'program-3',
 		localPartnerId: 'local-partner-3',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -96,7 +96,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-1',
 		programId: 'program-4',
 		localPartnerId: 'local-partner-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -110,7 +110,7 @@ export const recipientsData: Recipient[] = [
 		paymentInformationId: 'payment-information-2',
 		programId: 'program-4',
 		localPartnerId: 'local-partner-2',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -123,8 +123,175 @@ export const recipientsData: Recipient[] = [
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-3',
 		programId: 'program-4',
+		localPartnerId: 'local-partner-2',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-1',
+		legacyFirestoreId: null,
+		contactId: 'contact-19',
+		startDate: new Date('2024-09-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-3',
+		programId: null,
+		localPartnerId: 'local-partner-1',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+		{
+		id: 'candidate-2',
+		legacyFirestoreId: null,
+		contactId: 'contact-20',
+		startDate: new Date('2024-09-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-3',
+		programId: null,
 		localPartnerId: 'local-partner-3',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},	{
+		id: 'candidate-3',
+		legacyFirestoreId: null,
+		contactId: 'contact-21',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-1',
+		programId: null,
+		localPartnerId: 'local-partner-1',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-4',
+		legacyFirestoreId: null,
+		contactId: 'contact-22',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-2',
+		programId: null,
+		localPartnerId: 'local-partner-2',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-5',
+		legacyFirestoreId: null,
+		contactId: 'contact-23',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-3',
+		programId: null,
+		localPartnerId: 'local-partner-3',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-6',
+		legacyFirestoreId: null,
+		contactId: 'contact-24',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-1',
+		programId: null,
+		localPartnerId: 'local-partner-1',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-7',
+		legacyFirestoreId: null,
+		contactId: 'contact-25',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-2',
+		programId: null,
+		localPartnerId: 'local-partner-2',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-8',
+		legacyFirestoreId: null,
+		contactId: 'contact-26',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-3',
+		programId: null,
+		localPartnerId: 'local-partner-3',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-9',
+		legacyFirestoreId: null,
+		contactId: 'contact-27',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-1',
+		programId: null,
+		localPartnerId: 'local-partner-1',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-10',
+		legacyFirestoreId: null,
+		contactId: 'contact-28',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-2',
+		programId: null,
+		localPartnerId: 'local-partner-2',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-11',
+		legacyFirestoreId: null,
+		contactId: 'contact-29',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-3',
+		programId: null,
+		localPartnerId: 'local-partner-3',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'candidate-12',
+		legacyFirestoreId: null,
+		contactId: 'contact-30',
+		startDate: new Date('2024-10-01'),
+		status: RecipientStatus.waitlisted,
+		successorName: null,
+		termsAccepted: false,
+		paymentInformationId: 'payment-information-1',
+		programId: null,
+		localPartnerId: 'local-partner-1',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

@@ -32,7 +32,7 @@ export function RecipientSelectionSection({ value, targetCauses, onChangeApproac
 					value="targeted"
 					checked={value === 'targeted'}
 					label="Targeted approach"
-					description="Support is provided to a specific subgroup."
+					description="Support is provided to candidates who belong to at least one selected group."
 				>
 					<TargetCauseSelector selected={targetCauses} onToggle={onToggleCause} />
 				</RadioCard>

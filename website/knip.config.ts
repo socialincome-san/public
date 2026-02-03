@@ -1,7 +1,12 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-	ignoreFiles: ['src/lib/database/schema.prisma'],
+	ignoreFiles: [
+		'src/lib/database/schema.prisma',
+		'test/e2e/setup/test-setup.ts',
+		'test/e2e/setup/utils.ts',
+		'src/lib/utils/storyblock-image-loader.ts',
+	],
 	ignoreDependencies: [
 		'react',
 		'react-hook-form',
@@ -13,7 +18,9 @@ const config: KnipConfig = {
 		'prisma',
 		'next-openapi-gen',
 		'tsx',
+		'dotenv',
 		'storyblok',
+		'npm-run-all',
 		'@radix-ui/react-accordion',
 		'@radix-ui/react-popover',
 		'@radix-ui/react-progress',
@@ -39,8 +46,9 @@ const config: KnipConfig = {
 		'dotenv',
 		'prisma',
 		'knip',
+		'npm-run-all',
+		'jest',
 	],
-	ignoreUnresolved: ['dotenv/config'],
 };
 
 export default config;

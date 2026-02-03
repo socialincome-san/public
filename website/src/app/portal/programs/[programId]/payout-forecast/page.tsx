@@ -1,3 +1,4 @@
+import { Card } from '@/components/card';
 import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -9,9 +10,11 @@ const MONTHS_AHEAD = 6;
 
 export default function FinancesPageProgramScoped({ params }: Props) {
 	return (
-		<Suspense>
-			<FinancesProgramScopedDataLoader params={params} />
-		</Suspense>
+		<Card>
+			<Suspense>
+				<FinancesProgramScopedDataLoader params={params} />
+			</Suspense>
+		</Card>
 	);
 }
 
