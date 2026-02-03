@@ -166,7 +166,11 @@ const DynamicForm: FC<{
 
 	return (
 		<Form {...form}>
-			<form data-testid="dynamic-form" onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)} className="space-y-8">
+			<form
+				data-testid="dynamic-form"
+				onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)}
+				className="space-y-8"
+			>
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						<Accordion
