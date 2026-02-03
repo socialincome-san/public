@@ -16,6 +16,8 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 
 	await page.getByRole('button', { name: 'Donate Now' }).click();
 
+	await page.waitForURL(/https:\/\/checkout\.stripe\.com\/c\/pay\/.*/);
+
 	await page.getByRole('textbox', { name: 'Email' }).fill(TEST_EMAIL);
 	await page.getByRole('textbox', { name: 'Card number' }).fill('4242 4242 4242 42424');
 	await page.getByRole('textbox', { name: 'Expiration' }).fill('12 / 66');
@@ -33,4 +35,6 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	await page.goto('http://localhost:4000/auth');
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(TEST_EMAIL);
 	await expect(page.getByRole('cell', { name: 'Dean Winchester' })).toBeVisible();
+
+	//Unfortunately we cannot test if the contribution was created in our DB as we are not able to send the webhook-call to the test environment
 });

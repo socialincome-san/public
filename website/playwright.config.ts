@@ -64,8 +64,8 @@ export default defineConfig({
 			testMatch: /mobile-app-api\/.*\.e2e\.ts/,
 		},
 		{
-			name: 'website',
-			testMatch: /website\/.*\.e2e\.ts/,
+			name: 'public-website',
+			testMatch: /public-website\/.*\.e2e\.ts/,
 		},
 	],
 
