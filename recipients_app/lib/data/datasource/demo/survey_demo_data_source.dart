@@ -18,7 +18,6 @@ class SurveyDemoDataSource implements SurveyDataSource {
         data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
-        accessToken: "demo",
         // new fields
         name: "Demo Recipient",
         dueAt: now.subtract(const Duration(days: 10)).toIso8601String(),
@@ -34,7 +33,6 @@ class SurveyDemoDataSource implements SurveyDataSource {
         data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
-        accessToken: "demo",
         // new fields
         name: "Demo Recipient",
         createdAt: now.toIso8601String(),
@@ -49,7 +47,6 @@ class SurveyDemoDataSource implements SurveyDataSource {
         data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
-        accessToken: "demo",
         // new fields
         name: "Demo Recipient",
         createdAt: now.toIso8601String(),
@@ -64,7 +61,6 @@ class SurveyDemoDataSource implements SurveyDataSource {
         data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
-        accessToken: "demo",
         // new fields
         name: "Demo Recipient",
         createdAt: now.toIso8601String(),

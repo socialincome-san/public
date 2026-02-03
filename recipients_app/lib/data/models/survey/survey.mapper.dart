@@ -32,11 +32,6 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     'recipientId',
     _$recipientId,
   );
-  static SurveyQuestionnaire _$questionnaire(Survey v) => v.questionnaire;
-  static const Field<Survey, SurveyQuestionnaire> _f$questionnaire = Field(
-    'questionnaire',
-    _$questionnaire,
-  );
   static String _$language(Survey v) => v.language;
   static const Field<Survey, String> _f$language = Field(
     'language',
@@ -50,10 +45,21 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     _$completedAt,
     opt: true,
   );
+  static SurveyQuestionnaire _$questionnaire(Survey v) => v.questionnaire;
+  static const Field<Survey, SurveyQuestionnaire> _f$questionnaire = Field(
+    'questionnaire',
+    _$questionnaire,
+  );
   static SurveyStatus _$status(Survey v) => v.status;
   static const Field<Survey, SurveyStatus> _f$status = Field(
     'status',
     _$status,
+  );
+  static String? _$surveyScheduleId(Survey v) => v.surveyScheduleId;
+  static const Field<Survey, String> _f$surveyScheduleId = Field(
+    'surveyScheduleId',
+    _$surveyScheduleId,
+    opt: true,
   );
   static Object? _$data(Survey v) => v.data;
   static const Field<Survey, Object> _f$data = Field('data', _$data);
@@ -66,17 +72,6 @@ class SurveyMapper extends ClassMapperBase<Survey> {
   static const Field<Survey, String> _f$accessPw = Field(
     'accessPw',
     _$accessPw,
-  );
-  static String _$accessToken(Survey v) => v.accessToken;
-  static const Field<Survey, String> _f$accessToken = Field(
-    'accessToken',
-    _$accessToken,
-  );
-  static String? _$surveyScheduleId(Survey v) => v.surveyScheduleId;
-  static const Field<Survey, String> _f$surveyScheduleId = Field(
-    'surveyScheduleId',
-    _$surveyScheduleId,
-    opt: true,
   );
   static String _$createdAt(Survey v) => v.createdAt;
   static const Field<Survey, String> _f$createdAt = Field(
@@ -95,16 +90,15 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     #id: _f$id,
     #name: _f$name,
     #recipientId: _f$recipientId,
-    #questionnaire: _f$questionnaire,
     #language: _f$language,
     #dueAt: _f$dueAt,
     #completedAt: _f$completedAt,
+    #questionnaire: _f$questionnaire,
     #status: _f$status,
+    #surveyScheduleId: _f$surveyScheduleId,
     #data: _f$data,
     #accessEmail: _f$accessEmail,
     #accessPw: _f$accessPw,
-    #accessToken: _f$accessToken,
-    #surveyScheduleId: _f$surveyScheduleId,
     #createdAt: _f$createdAt,
     #updatedAt: _f$updatedAt,
   };
@@ -114,16 +108,15 @@ class SurveyMapper extends ClassMapperBase<Survey> {
       id: data.dec(_f$id),
       name: data.dec(_f$name),
       recipientId: data.dec(_f$recipientId),
-      questionnaire: data.dec(_f$questionnaire),
       language: data.dec(_f$language),
       dueAt: data.dec(_f$dueAt),
       completedAt: data.dec(_f$completedAt),
+      questionnaire: data.dec(_f$questionnaire),
       status: data.dec(_f$status),
+      surveyScheduleId: data.dec(_f$surveyScheduleId),
       data: data.dec(_f$data),
       accessEmail: data.dec(_f$accessEmail),
       accessPw: data.dec(_f$accessPw),
-      accessToken: data.dec(_f$accessToken),
-      surveyScheduleId: data.dec(_f$surveyScheduleId),
       createdAt: data.dec(_f$createdAt),
       updatedAt: data.dec(_f$updatedAt),
     );
@@ -179,16 +172,15 @@ abstract class SurveyCopyWith<$R, $In extends Survey, $Out>
     String? id,
     String? name,
     String? recipientId,
-    SurveyQuestionnaire? questionnaire,
     String? language,
     String? dueAt,
     String? completedAt,
+    SurveyQuestionnaire? questionnaire,
     SurveyStatus? status,
+    String? surveyScheduleId,
     Object? data,
     String? accessEmail,
     String? accessPw,
-    String? accessToken,
-    String? surveyScheduleId,
     String? createdAt,
     String? updatedAt,
   });
@@ -206,16 +198,15 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
     String? id,
     String? name,
     String? recipientId,
-    SurveyQuestionnaire? questionnaire,
     String? language,
     String? dueAt,
     Object? completedAt = $none,
+    SurveyQuestionnaire? questionnaire,
     SurveyStatus? status,
+    Object? surveyScheduleId = $none,
     Object? data = $none,
     String? accessEmail,
     String? accessPw,
-    String? accessToken,
-    Object? surveyScheduleId = $none,
     String? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
@@ -223,16 +214,15 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
       if (id != null) #id: id,
       if (name != null) #name: name,
       if (recipientId != null) #recipientId: recipientId,
-      if (questionnaire != null) #questionnaire: questionnaire,
       if (language != null) #language: language,
       if (dueAt != null) #dueAt: dueAt,
       if (completedAt != $none) #completedAt: completedAt,
+      if (questionnaire != null) #questionnaire: questionnaire,
       if (status != null) #status: status,
+      if (surveyScheduleId != $none) #surveyScheduleId: surveyScheduleId,
       if (data != $none) #data: data,
       if (accessEmail != null) #accessEmail: accessEmail,
       if (accessPw != null) #accessPw: accessPw,
-      if (accessToken != null) #accessToken: accessToken,
-      if (surveyScheduleId != $none) #surveyScheduleId: surveyScheduleId,
       if (createdAt != null) #createdAt: createdAt,
       if (updatedAt != $none) #updatedAt: updatedAt,
     }),
@@ -242,16 +232,15 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
     id: data.get(#id, or: $value.id),
     name: data.get(#name, or: $value.name),
     recipientId: data.get(#recipientId, or: $value.recipientId),
-    questionnaire: data.get(#questionnaire, or: $value.questionnaire),
     language: data.get(#language, or: $value.language),
     dueAt: data.get(#dueAt, or: $value.dueAt),
     completedAt: data.get(#completedAt, or: $value.completedAt),
+    questionnaire: data.get(#questionnaire, or: $value.questionnaire),
     status: data.get(#status, or: $value.status),
+    surveyScheduleId: data.get(#surveyScheduleId, or: $value.surveyScheduleId),
     data: data.get(#data, or: $value.data),
     accessEmail: data.get(#accessEmail, or: $value.accessEmail),
     accessPw: data.get(#accessPw, or: $value.accessPw),
-    accessToken: data.get(#accessToken, or: $value.accessToken),
-    surveyScheduleId: data.get(#surveyScheduleId, or: $value.surveyScheduleId),
     createdAt: data.get(#createdAt, or: $value.createdAt),
     updatedAt: data.get(#updatedAt, or: $value.updatedAt),
   );

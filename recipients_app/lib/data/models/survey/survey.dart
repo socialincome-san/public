@@ -12,18 +12,13 @@ class Survey with SurveyMappable {
   final String language;
   final String dueAt;
   final String? completedAt;
-
   final SurveyQuestionnaire questionnaire;
   final SurveyStatus status;
-
+  final String? surveyScheduleId;
   // TODO(migration): what is this?
   final Object? data;
-
   final String accessEmail;
   final String accessPw;
-  final String accessToken;
-  final String? surveyScheduleId;
-
   final String createdAt;
   final String? updatedAt;
 
@@ -31,16 +26,15 @@ class Survey with SurveyMappable {
     required this.id,
     required this.name,
     required this.recipientId,
-    required this.questionnaire,
     required this.language,
     required this.dueAt,
     this.completedAt,
+    required this.questionnaire,
     required this.status,
+    this.surveyScheduleId,
     required this.data,
     required this.accessEmail,
     required this.accessPw,
-    required this.accessToken,
-    this.surveyScheduleId,
     required this.createdAt,
     this.updatedAt,
   });
