@@ -10,19 +10,18 @@ part "recipient.mapper.dart";
 @MappableClass()
 class Recipient with RecipientMappable {
   final String id;
-  final String contactId;
   final RecipientStatus status;
   final String? startDate;
   final String? successorName;
   final bool termsAccepted;
+  final String contactId;
+  final Contact contact;
   final String? paymentInformationId;
   final String programId;
   final String localPartnerId;
-  final Contact contact;
-  final Program program;
   final LocalPartner localPartner;
+  final Program program;
   final PaymentInformation? paymentInformation;
-
   final String createdAt;
   final String? updatedAt;
 
