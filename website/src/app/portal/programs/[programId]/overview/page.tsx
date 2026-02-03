@@ -1,6 +1,6 @@
 import { Button } from '@/components/button';
 import { Card } from '@/components/card';
-import { MessageBanner } from '@/components/message-banner';
+import { SuccessBanner } from '@/components/success-banner';
 import { ProgramService } from '@/lib/services/program/program.service';
 import { slugify } from '@/lib/utils/slugify';
 import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
@@ -43,8 +43,7 @@ async function OverviewProgramScopedDataLoader({ params }: { params: Promise<{ p
 					</div>
 
 					<div className="space-y-6">
-						<MessageBanner
-							variant="success"
+						<SuccessBanner
 							title="Recipient selection complete"
 							description="We identified and selected all recipients for this program. You can now proceed to fund the program and start payouts."
 							action={
@@ -56,8 +55,7 @@ async function OverviewProgramScopedDataLoader({ params }: { params: Promise<{ p
 							}
 						/>
 
-						<MessageBanner
-							variant="success"
+						<SuccessBanner
 							title="Impact surveys configured"
 							description="We added a set of surveys to measure changes in financial health of the recipients."
 							action={
@@ -69,8 +67,7 @@ async function OverviewProgramScopedDataLoader({ params }: { params: Promise<{ p
 							}
 						/>
 
-						<MessageBanner
-							variant="success"
+						<SuccessBanner
 							title="Your public page is ready"
 							description="Your page is fully set up and online. Add funds to switch the status to live."
 							action={

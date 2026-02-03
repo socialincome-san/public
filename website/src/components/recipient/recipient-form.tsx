@@ -85,7 +85,7 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormS
 					provider: {
 						placeholder: 'Provider',
 						label: 'Provider',
-						zodSchema: z.nativeEnum(PaymentProvider),
+						zodSchema: z.nativeEnum(PaymentProvider).optional(),
 					},
 					code: {
 						placeholder: 'Code',
@@ -97,7 +97,8 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormS
 						label: 'Phone Number',
 						zodSchema: z
 							.string()
-							.regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in valid E.164 format (e.g., +12345678901)'),
+							.regex(/^$|^\+[1-9]\d{1,14}$/, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
+							.optional(),
 					},
 				},
 			},

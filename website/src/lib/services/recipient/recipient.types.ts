@@ -64,7 +64,7 @@ export type RecipientPayload = {
 	paymentInformation: {
 		id: string;
 		code: string | null;
-		provider: PaymentProvider;
+		provider: PaymentProvider | null;
 		phone: Phone | null;
 	} | null;
 };

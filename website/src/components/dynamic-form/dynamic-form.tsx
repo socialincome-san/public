@@ -166,7 +166,11 @@ const DynamicForm: FC<{
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)} className="space-y-8">
+			<form
+				data-testid="dynamic-form"
+				onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)}
+				className="space-y-8"
+			>
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						<Accordion
@@ -178,7 +182,9 @@ const DynamicForm: FC<{
 						>
 							{/* TODO: find better solution to hide collapsed content */}
 							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">
-								<AccordionTrigger>{formSchema.fields[option].label}</AccordionTrigger>
+								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
+									{formSchema.fields[option].label}
+								</AccordionTrigger>
 								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:!h-0" forceMount>
 									{getOptions(option).map((nestedOption) => (
 										<GenericFormField
