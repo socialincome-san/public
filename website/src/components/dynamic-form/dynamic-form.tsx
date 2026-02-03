@@ -1,5 +1,4 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion';
-import { Button } from '@/components/button';
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
@@ -13,6 +12,7 @@ import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
 import { MultiSelect } from '../multi-select';
+import { FormActions } from './form-actions';
 
 export type FormField = {
 	label: string;
@@ -98,13 +98,16 @@ const getEnumArrayValues = (
 	return (def.type?._def?.values ?? {}) as Record<string, string>;
 };
 
-const DynamicForm: FC<{
+type Props = {
 	formSchema: FormSchema;
 	isLoading: boolean;
 	onSubmit: (values: any) => void;
-	onCancel?: (values: any) => void;
+	onCancel?: () => void;
+	onDelete?: () => void;
 	mode: 'add' | 'edit' | 'readonly';
-}> = ({ formSchema, isLoading, onSubmit, onCancel, mode }) => {
+};
+
+const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -213,18 +216,7 @@ const DynamicForm: FC<{
 						/>
 					);
 				})}
-				<div className="flex gap-2">
-					{mode !== 'readonly' && (
-						<Button disabled={isLoading} type="submit">
-							Save
-						</Button>
-					)}
-					{onCancel && (
-						<Button type="button" variant="outline" onClick={onCancel}>
-							{mode === 'readonly' ? 'Close' : 'Cancel'}
-						</Button>
-					)}
-				</div>
+				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} />
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (

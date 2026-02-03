@@ -72,7 +72,7 @@ export default function ContributorsTableClient({
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
+							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 
