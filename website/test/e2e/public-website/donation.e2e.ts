@@ -23,6 +23,12 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	await page.getByRole('textbox', { name: 'Expiration' }).fill('12 / 66');
 	await page.getByRole('textbox', { name: 'CVC' }).fill('424');
 	await page.getByRole('textbox', { name: 'Cardholder name' }).fill('Dean Winchester');
+
+	await page.getByRole('combobox', { name: 'Address' }).fill('home');
+	await page.getByRole('textbox', { name: 'Address line' }).fill('line 2');
+	await page.getByRole('textbox', { name: 'Postal code' }).fill('9000');
+	await page.getByRole('textbox', { name: 'City' }).fill('St.Gallen');
+
 	await page.getByTestId('hosted-payment-submit-button').click();
 
 	await page.waitForTimeout(10000);
