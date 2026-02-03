@@ -30,11 +30,7 @@ class ApiClient {
   */
   Future<VerifyOtpResponse> verifyOtp(String phoneNumber, String otp) async {
     final uri = baseUri.resolve("api/v1/auth/verify-otp");
-
-    final body = VerifyOtpRequest(
-      phoneNumber: phoneNumber,
-      otp: otp,
-    );
+    final body = VerifyOtpRequest(phoneNumber: phoneNumber, otp: otp);
 
     final response = await httpClient.post(
       uri,
@@ -48,12 +44,9 @@ class ApiClient {
     return VerifyOtpResponseMapper.fromJson(response.body);
   }
 
-  Future<VerifyOtpResponse> requestOtp(String phoneNumber) async {
+  Future<void> requestOtp(String phoneNumber) async {
     final uri = baseUri.resolve("api/v1/auth/request-otp");
-
-    final body = RequestOtpRequest(
-      phoneNumber: phoneNumber,
-    );
+    final body = RequestOtpRequest(phoneNumber: phoneNumber);
 
     final response = await httpClient.post(
       uri,
@@ -63,7 +56,5 @@ class ApiClient {
     if (response.statusCode != 204) {
       throw Exception("Failed to request OTP: ${response.statusCode} - ${response.reasonPhrase}");
     }
-
-    return VerifyOtpResponseMapper.fromJson(response.body);
   }
 }
