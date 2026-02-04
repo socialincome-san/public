@@ -45,6 +45,21 @@ export async function updateRecipientAction(updateInput: RecipientUpdateInput, n
 	return result;
 }
 
+export async function deleteRecipientAction(recipientId: string) {
+	const actor = await getActorOrThrow();
+
+	const result = await recipientService.delete(actor, recipientId);
+
+	if (actor.kind === 'user') {
+		revalidatePath(PORTAL_RECIPIENTS_PATH);
+		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
+	} else if (actor.kind === 'local-partner') {
+		revalidatePath(PARTNER_RECIPIENTS_PATH);
+	}
+
+	return result;
+}
+
 export async function getRecipientAction(recipientId: string) {
 	const actor = await getActorOrThrow();
 	return await recipientService.get(actor, recipientId);

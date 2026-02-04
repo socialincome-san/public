@@ -53,7 +53,7 @@ export default function UsersTable({ rows, error }: { rows: UserTableViewRow[]; 
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
+							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 

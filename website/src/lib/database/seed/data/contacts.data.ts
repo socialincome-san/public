@@ -100,11 +100,11 @@ export const contactsData: Contact[] = [
 	{
 		id: 'contact-7',
 		firstName: 'John',
-		lastName: 'Koroma',
+		lastName: 'Badingu',
 		callingName: 'John',
 		addressId: 'address-7',
 		phoneId: 'phone-7',
-		email: 'john.koroma@caritas.org',
+		email: 'john.badingu@caritas.org',
 		gender: Gender.male,
 		language: 'en',
 		dateOfBirth: new Date('1987-09-18'),

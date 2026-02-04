@@ -38,7 +38,7 @@ export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = fals
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
+						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 
