@@ -42,9 +42,11 @@ export function CreateProgramSteps({ state, send }: Props) {
 				programManagement={state.context.programManagement}
 				recipientApproach={state.context.recipientApproach}
 				targetCauses={state.context.targetCauses}
+				targetProfiles={state.context.targetProfiles}
 				onSelectProgramManagement={(value) => send({ type: 'SELECT_PROGRAM_MANAGEMENT', value })}
 				onSelectRecipientApproach={(value) => send({ type: 'SELECT_RECIPIENT_APPROACH', value })}
 				onToggleCause={(cause) => send({ type: 'TOGGLE_TARGET_CAUSE', cause })}
+				onToggleProfile={(profile) => send({ type: 'TOGGLE_TARGET_PROFILE', profile })}
 			/>
 		);
 	}

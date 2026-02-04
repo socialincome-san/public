@@ -1,6 +1,7 @@
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
+import { Profile } from '@/lib/services/candidate/candidate.types';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput } from '@/lib/services/program/program.types';
 import { Cause, PayoutInterval } from '@prisma/client';
@@ -19,6 +20,7 @@ export const createProgramWizardMachine = setup({
 			programManagement: ProgramManagementType | null;
 			recipientApproach: RecipientApproachType | null;
 			targetCauses: Cause[];
+			targetProfiles: Profile[];
 
 			// step 3
 			amountOfRecipients: number;
@@ -45,6 +47,7 @@ export const createProgramWizardMachine = setup({
 			| { type: 'SELECT_PROGRAM_MANAGEMENT'; value: ProgramManagementType }
 			| { type: 'SELECT_RECIPIENT_APPROACH'; value: RecipientApproachType }
 			| { type: 'TOGGLE_TARGET_CAUSE'; cause: Cause }
+			| { type: 'TOGGLE_TARGET_PROFILE'; profile: Profile }
 
 			// step 3
 			| { type: 'SET_AMOUNT_OF_RECIPIENTS'; value: number }
@@ -86,8 +89,8 @@ export const createProgramWizardMachine = setup({
 			return result.data.programId;
 		}),
 
-		loadCandidateCount: fromPromise(async ({ input }: { input: { causes?: Cause[] } }) => {
-			const result = await getCandidateCountAction(input?.causes);
+		loadCandidateCount: fromPromise(async ({ input }: { input: { causes?: Cause[]; profiles?: Profile[] } }) => {
+			const result = await getCandidateCountAction(input.causes, input.profiles);
 			if (!result.success) {
 				throw new Error(result.error);
 			}
@@ -103,7 +106,9 @@ export const createProgramWizardMachine = setup({
 		programSetupValid: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
-			(context.recipientApproach === 'universal' || context.targetCauses.length > 0),
+			(context.recipientApproach === 'universal' ||
+				context.targetCauses.length > 0 ||
+				context.targetProfiles.length > 0),
 
 		// step 3
 		budgetConfigValid: ({ context }) =>
@@ -130,6 +135,7 @@ export const createProgramWizardMachine = setup({
 		programManagement: 'social_income',
 		recipientApproach: null,
 		targetCauses: [],
+		targetProfiles: [],
 
 		// step 3
 		amountOfRecipients: 20,
@@ -192,6 +198,14 @@ export const createProgramWizardMachine = setup({
 								: [...context.targetCauses, event.cause],
 					}),
 				},
+				TOGGLE_TARGET_PROFILE: {
+					actions: assign({
+						targetProfiles: ({ context, event }) =>
+							context.targetProfiles.includes(event.profile)
+								? context.targetProfiles.filter((p) => p !== event.profile)
+								: [...context.targetProfiles, event.profile],
+					}),
+				},
 				BACK: 'countrySelection',
 				NEXT: { guard: 'programSetupValid', target: 'loadingCandidates' },
 				CLOSE: 'closed',
@@ -201,7 +215,7 @@ export const createProgramWizardMachine = setup({
 		loadingCandidates: {
 			invoke: {
 				src: 'loadCandidateCount',
-				input: ({ context }) => ({ causes: context.targetCauses }),
+				input: ({ context }) => ({ causes: context.targetCauses, profiles: context.targetProfiles }),
 				onDone: {
 					target: 'budget',
 					actions: assign({
@@ -307,6 +321,7 @@ export const createProgramWizardMachine = setup({
 					payoutCurrency: context.currency,
 					payoutInterval: context.payoutInterval,
 					targetCauses: context.targetCauses,
+					targetProfiles: context.targetProfiles,
 				}),
 				onDone: {
 					actions: assign({

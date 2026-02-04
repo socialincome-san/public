@@ -2,7 +2,7 @@
 
 import { getActorOrThrow } from '@/lib/firebase/current-account';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
-import { CandidateCreateInput, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
+import { CandidateCreateInput, CandidateUpdateInput, Profile } from '@/lib/services/candidate/candidate.types';
 import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
 import { Cause } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
@@ -57,6 +57,6 @@ export async function getCandidateOptions() {
 	return { localPartners: { success: true, data: [] } };
 }
 
-export async function getCandidateCountAction(causes?: Cause[]) {
-	return candidateService.getCandidateCount(causes);
+export async function getCandidateCountAction(causes?: Cause[], profiles?: Profile[]) {
+	return candidateService.getCandidateCount(causes, profiles);
 }
