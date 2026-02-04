@@ -30,7 +30,7 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 		// stripe form is rendered IP-dependently
 		// in CI there are some more required fields (like ZIP and Phone number) than in local dev
 		await zipField.fill('12345');
-		await page.getByRole('textbox', { name: 'Phone number' }).fill('123-456-7890');
+		await page.getByRole('textbox', { name: 'Phone number' }).fill('2015550123');
 	}
 
 	await page.getByTestId('hosted-payment-submit-button').click();
