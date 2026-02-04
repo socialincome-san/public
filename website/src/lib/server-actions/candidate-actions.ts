@@ -57,6 +57,7 @@ export async function getCandidateOptions() {
 	return { localPartners: { success: true, data: [] } };
 }
 
-export async function getCandidateCountAction(causes?: Cause[], profiles?: Profile[]) {
+export async function getCandidateCountAction(causes: Cause[], profiles: Profile[], countryId: string | null) {
+	// Todo: filter by countryId as soon as this one is merged: https://github.com/socialincome-san/public/pull/1684
 	return candidateService.getCandidateCount(causes, profiles);
 }

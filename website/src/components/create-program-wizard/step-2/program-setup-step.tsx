@@ -11,6 +11,9 @@ type Props = {
 	recipientApproach: RecipientApproachType | null;
 	targetCauses: Cause[];
 	targetProfiles: Profile[];
+	totalRecipients: number;
+	filteredRecipients: number;
+	isCountingRecipients: boolean;
 	onSelectProgramManagement: (value: ProgramManagementType) => void;
 	onSelectRecipientApproach: (value: RecipientApproachType) => void;
 	onToggleCause: (cause: Cause) => void;
@@ -22,6 +25,9 @@ export function ProgramSetupStep({
 	recipientApproach,
 	targetCauses,
 	targetProfiles,
+	totalRecipients,
+	filteredRecipients,
+	isCountingRecipients,
 	onSelectProgramManagement,
 	onSelectRecipientApproach,
 	onToggleCause,
@@ -35,6 +41,9 @@ export function ProgramSetupStep({
 				value={recipientApproach}
 				targetCauses={targetCauses}
 				targetProfiles={targetProfiles}
+				totalRecipients={totalRecipients}
+				filteredRecipients={filteredRecipients}
+				isCountingRecipients={isCountingRecipients}
 				onChangeApproach={onSelectRecipientApproach}
 				onToggleCause={onToggleCause}
 				onToggleProfile={onToggleProfile}

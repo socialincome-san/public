@@ -4,6 +4,7 @@ import { Badge } from '@/components/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { Profile } from '@/lib/services/candidate/candidate.types';
 import { Cause } from '@prisma/client';
+import { SpinnerIcon } from '@socialincome/ui';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';
 import { PillMultiSelect } from './pill-multi-select';
@@ -12,6 +13,9 @@ type Props = {
 	value: RecipientApproachType | null;
 	targetCauses: Cause[];
 	targetProfiles: Profile[];
+	totalRecipients: number;
+	filteredRecipients: number;
+	isCountingRecipients: boolean;
 	onChangeApproach: (value: RecipientApproachType) => void;
 	onToggleCause: (cause: Cause) => void;
 	onToggleProfile: (profile: Profile) => void;
@@ -21,6 +25,9 @@ export function RecipientSelectionSection({
 	value,
 	targetCauses,
 	targetProfiles,
+	totalRecipients,
+	filteredRecipients,
+	isCountingRecipients,
 	onChangeApproach,
 	onToggleCause,
 	onToggleProfile,
@@ -51,12 +58,24 @@ export function RecipientSelectionSection({
 							selected={targetCauses}
 							onToggle={(value) => onToggleCause(value as Cause)}
 						/>
+
 						<PillMultiSelect
 							label="Profiles"
 							values={Object.values(Profile)}
 							selected={targetProfiles}
 							onToggle={(value) => onToggleProfile(value as Profile)}
 						/>
+
+						<div className="text-muted-foreground text-sm">
+							{isCountingRecipients ? (
+								<SpinnerIcon />
+							) : (
+								<span>
+									Total pre-assessed recipients: <strong>{filteredRecipients.toLocaleString()}</strong> of{' '}
+									<strong>{totalRecipients.toLocaleString()}</strong>
+								</span>
+							)}
+						</div>
 					</div>
 				</RadioCard>
 
