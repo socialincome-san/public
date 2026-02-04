@@ -3,6 +3,7 @@
 import { Badge } from '@/components/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { Profile } from '@/lib/services/candidate/candidate.types';
+import { cn } from '@/lib/utils/cn';
 import { Cause } from '@prisma/client';
 import { SpinnerIcon } from '@socialincome/ui';
 import { RadioCard } from '../radio-card';
@@ -32,6 +33,9 @@ export function RecipientSelectionSection({
 	onToggleCause,
 	onToggleProfile,
 }: Props) {
+	const noUniversalRecipients = value === 'universal' && totalRecipients === 0;
+	const noTargetedRecipients = value === 'targeted' && filteredRecipients === 0;
+
 	return (
 		<div className="space-y-4">
 			<div className="text-lg font-medium">Recipient selection</div>
@@ -41,15 +45,31 @@ export function RecipientSelectionSection({
 					value="universal"
 					checked={value === 'universal'}
 					label="Universal approach"
-					description="All eligible recipients receive support."
+					description="All eligible recipients in the selected country receive support."
 					badge={<Badge variant="verified">Recommended</Badge>}
-				/>
+				>
+					<div className={cn('text-sm', noUniversalRecipients ? 'text-destructive' : 'text-muted-foreground')}>
+						{isCountingRecipients ? (
+							<SpinnerIcon />
+						) : (
+							<>
+								<span>
+									<strong>{totalRecipients.toLocaleString()}</strong> pre-assessed recipients available in this country
+								</span>
+
+								{noUniversalRecipients && (
+									<div className="mt-1 text-xs">At least one recipient is required to continue.</div>
+								)}
+							</>
+						)}
+					</div>
+				</RadioCard>
 
 				<RadioCard
 					value="targeted"
 					checked={value === 'targeted'}
 					label="Targeted approach"
-					description="Support is provided to candidates who belong to at least one selected group"
+					description="Support is provided to recipients who match selected causes and profiles."
 				>
 					<div className="space-y-4">
 						<PillMultiSelect
@@ -66,14 +86,21 @@ export function RecipientSelectionSection({
 							onToggle={(value) => onToggleProfile(value as Profile)}
 						/>
 
-						<div className="text-muted-foreground text-sm">
+						<div className={cn('text-sm', noTargetedRecipients ? 'text-destructive' : 'text-muted-foreground')}>
 							{isCountingRecipients ? (
 								<SpinnerIcon />
 							) : (
-								<span>
-									Total pre-assessed recipients: <strong>{filteredRecipients.toLocaleString()}</strong> of{' '}
-									<strong>{totalRecipients.toLocaleString()}</strong>
-								</span>
+								<>
+									<span>
+										<strong>{filteredRecipients.toLocaleString()}</strong> of{' '}
+										<strong>{totalRecipients.toLocaleString()}</strong> recipients match the selected country and
+										filters
+									</span>
+
+									{noTargetedRecipients && (
+										<div className="mt-1 text-xs">Please adjust the filters so at least one recipient matches.</div>
+									)}
+								</>
 							)}
 						</div>
 					</div>
