@@ -7,7 +7,7 @@ test.beforeEach(async () => {
 });
 
 test('Stripe One Time Donation flow', async ({ page }) => {
-	const TEST_EMAIL = 'dean.winchester@supernatural.com';
+	const TEST_EMAIL = 'sam.winchester@supernatural.com';
 
 	const firebaseService = new FirebaseService();
 	await firebaseService.deleteByEmailIfExists(TEST_EMAIL);
@@ -22,7 +22,7 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	await page.getByRole('textbox', { name: 'Card number' }).fill('4242 4242 4242 4242');
 	await page.getByRole('textbox', { name: 'Expiration' }).fill('12 / 66');
 	await page.getByRole('textbox', { name: 'CVC' }).fill('424');
-	await page.getByRole('textbox', { name: 'Cardholder name' }).fill('Dean Winchester');
+	await page.getByRole('textbox', { name: 'Cardholder name' }).fill('Sam Winchester');
 
 	const zipField = page.getByRole('textbox', { name: 'ZIP' });
 
@@ -30,7 +30,7 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 		// stripe form is rendered IP-dependently
 		// in CI there are some more required fields (like ZIP and Phone number) than in local dev
 		await zipField.fill('12345');
-		await page.getByRole('textbox', { name: 'Phone number' }).fill('2015550123');
+		await page.getByRole('checkbox', { name: 'Save my information for' }).uncheck();
 	}
 
 	await page.getByTestId('hosted-payment-submit-button').click();
@@ -44,7 +44,7 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	// Check if the auth user was created
 	await page.goto('http://localhost:4000/auth');
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(TEST_EMAIL);
-	await expect(page.getByRole('cell', { name: 'Dean Winchester' })).toBeVisible();
+	await expect(page.getByRole('cell', { name: 'Sam Winchester' })).toBeVisible();
 
 	//Unfortunately we cannot test if the contribution was created in our DB as we are not able to send the webhook-call to the test environment
 });
