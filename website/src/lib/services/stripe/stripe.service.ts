@@ -363,8 +363,6 @@ export class StripeService extends BaseService {
 				recurring: recurring ? { interval: 'month', interval_count: intervalCount } : undefined,
 			});
 
-			const metadata = campaignId ? { campaignId } : undefined;
-
 			const session = await this.stripe.checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
 				customer: stripeCustomerId || undefined,
@@ -377,8 +375,20 @@ export class StripeService extends BaseService {
 				],
 				success_url: successUrl,
 				locale: 'auto',
-				metadata,
+
+				...(campaignId && {
+					metadata: { campaignId },
+				}),
+
+				...(recurring &&
+					campaignId && {
+						subscription_data: {
+							metadata: { campaignId },
+						},
+					}),
 			});
+
+			console.log('Created Stripe checkout session with metadata:', session.metadata);
 
 			return this.resultOk(session.url ?? '');
 		} catch (error) {
