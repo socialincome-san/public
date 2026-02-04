@@ -34,7 +34,7 @@ export function RecipientDialog({ open, onOpenChange, recipientId, readOnly, pro
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
+						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 

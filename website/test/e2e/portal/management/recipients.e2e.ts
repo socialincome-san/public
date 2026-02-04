@@ -155,6 +155,40 @@ test('Edit existing recipient', async ({ page }) => {
 	await expect(page.getByRole('cell', { name: '+666666666' })).toBeVisible();
 });
 
+test('Delete recipient', async ({ page }) => {
+	const firebaseService = new FirebaseService();
+	await firebaseService.createByPhoneNumber('+41791234567');
+
+	await page.goto('http://localhost:4000/auth');
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+41791234567');
+	await expect(page.getByRole('cell', { name: '+41791234567' })).toBeVisible();
+
+	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.getByRole('cell', { name: 'Badingu' }).click();
+
+	await page.getByRole('button', { name: 'Delete' }).click();
+	await page.getByRole('button', { name: 'Delete permanently' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const recipientService = new RecipientService();
+	const tableResult = await recipientService.getTableView('user-2');
+
+	if (!tableResult.success) {
+		throw new Error(tableResult.error);
+	}
+
+	expect(tableResult.data.tableRows.length).toBe(6);
+
+	const row = tableResult.data.tableRows.find((r) => r.firstName === 'John' && r.lastName === 'Badingu');
+
+	expect(row).toBeUndefined();
+
+	// Check if the auth user was deleted
+	await page.goto('http://localhost:4000/auth');
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+41791234567');
+	await expect(page.getByRole('cell', { name: '+41791234567' })).toHaveCount(0);
+});
+
 test('CSV Upload', async ({ page }) => {
 	const expectedRecipients = [
 		{

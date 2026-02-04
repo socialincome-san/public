@@ -6,6 +6,7 @@ import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-fo
 import { Actor } from '@/lib/firebase/current-account';
 import {
 	createRecipientAction,
+	deleteRecipientAction,
 	getRecipientAction,
 	getRecipientOptions,
 	updateRecipientAction,
@@ -220,6 +221,21 @@ export function RecipientForm({
 		});
 	};
 
+	const onDelete = () => {
+		if (!recipientId) {
+			return;
+		}
+
+		startTransition(async () => {
+			try {
+				const result = await deleteRecipientAction(recipientId);
+				result.success ? onSuccess?.() : onError?.(result.error);
+			} catch (error) {
+				onError?.(error);
+			}
+		});
+	};
+
 	useEffect(() => {
 		if (recipientId) {
 			// Load recipient in edit mode
@@ -235,12 +251,14 @@ export function RecipientForm({
 			setOptions(localPartner.data, programs.data);
 		});
 	}, []);
+
 	return (
 		<DynamicForm
 			formSchema={formSchema}
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={readOnly ? 'readonly' : recipientId ? 'edit' : 'add'}
 		/>
 	);

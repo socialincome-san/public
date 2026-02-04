@@ -52,7 +52,7 @@ export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewR
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
+							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<ExpensesForm
