@@ -1,6 +1,5 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.beforeEach(async () => {
 	await seedDatabase();
