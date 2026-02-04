@@ -24,18 +24,13 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	await page.getByRole('textbox', { name: 'CVC' }).fill('424');
 	await page.getByRole('textbox', { name: 'Cardholder name' }).fill('Dean Winchester');
 
-	const manualAddress = page.getByRole('textbox', { name: /Address line 1/i });
-	const addressSearch = page.getByRole('combobox', { name: /Address/i });
+	const zipField = page.getByRole('textbox', { name: 'ZIP' });
 
-	if (await manualAddress.count()) {
-		// Manual entry flow
-		await manualAddress.fill('Winchester Mansion');
-		await page.getByRole('textbox', { name: /Postal/i }).fill('12345');
-		await page.getByRole('textbox', { name: /City/i }).fill('Unknown');
-	} else if (await addressSearch.count()) {
-		// Autocomplete flow
-		await addressSearch.fill('Winchester Mansion');
-		await addressSearch.press('Enter');
+	if (await zipField.count()) {
+		// stripe form is rendered IP-dependently
+		// in CI there are some more required fields (like ZIP and Phone number) than in local dev
+		await zipField.fill('12345');
+		await page.getByRole('textbox', { name: 'Phone number' }).fill('123-456-7890');
 	}
 
 	await page.getByTestId('hosted-payment-submit-button').click();
