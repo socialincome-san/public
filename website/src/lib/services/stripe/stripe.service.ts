@@ -365,7 +365,6 @@ export class StripeService extends BaseService {
 
 			const session = await this.stripe.checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
-				// billing_address_collection: 'required', // Enable to force address section
 
 				customer: stripeCustomerId || undefined,
 				customer_creation: stripeCustomerId ? undefined : recurring ? undefined : 'always',
