@@ -167,11 +167,23 @@ export class RecipientService extends BaseService {
 
 		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
 
-		const phoneAdded = previousPaymentPhoneNumber === null && nextPaymentPhoneNumber !== null;
+		if (!previousPaymentPhoneNumber && !nextPaymentPhoneNumber) {
+			try {
+				const updatedRecipient = await this.db.recipient.update({
+					where: { id: recipientId },
+					data: updateInput,
+				});
+				return this.resultOk(updatedRecipient);
+			} catch (error) {
+				this.logger.error(error);
+				return this.resultFail(`Could not update recipient: ${JSON.stringify(error)}`);
+			}
+		}
+
+		const phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
+
 		const phoneChanged =
-			previousPaymentPhoneNumber !== null &&
-			nextPaymentPhoneNumber !== null &&
-			previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+			!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
 		try {
 			if (phoneAdded) {
@@ -183,7 +195,7 @@ export class RecipientService extends BaseService {
 
 			if (phoneChanged) {
 				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
-					previousPaymentPhoneNumber!,
+					previousPaymentPhoneNumber,
 					nextPaymentPhoneNumber!,
 				);
 
