@@ -2,7 +2,7 @@
 
 import { Slider } from '@/components/slider';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
-import { PayoutInterval } from '@prisma/client';
+import { PayoutInterval } from '@/generated/prisma/client';
 
 type Props = {
 	programDuration: number;

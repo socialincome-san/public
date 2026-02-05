@@ -12,12 +12,12 @@ import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
 
+import { Cause, ContributorReferralSource, Gender } from '@/generated/prisma/client';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
-import { Cause, ContributorReferralSource, Gender } from '@prisma/client';
 import { MultiSelect, MultiSelectOption } from '../multi-select';
 import { buildDefaultValues } from './defaults';
 import { ProfileFormValues, profileFormSchema } from './schemas';

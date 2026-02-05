@@ -1,5 +1,5 @@
+import { LocalPartner } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
-import { LocalPartner } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';

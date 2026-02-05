@@ -1,5 +1,5 @@
+import { Gender } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
-import { Gender } from '@prisma/client';
 import z from 'zod';
 import { FormSchema } from './dynamic-form';
 import { getZodEnum } from './helper';

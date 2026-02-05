@@ -1,4 +1,4 @@
-import { Contributor, ContributorReferralSource, OrganizationPermission } from '@prisma/client';
+import { Contributor, ContributorReferralSource, OrganizationPermission } from '@/generated/prisma/client';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';

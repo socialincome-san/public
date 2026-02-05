@@ -1,6 +1,6 @@
+import { ProgramPermission, Recipient, RecipientStatus } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
-import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';

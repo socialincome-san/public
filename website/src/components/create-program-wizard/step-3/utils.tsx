@@ -1,4 +1,4 @@
-import type { PayoutInterval } from '@prisma/client';
+import type { PayoutInterval } from '@/generated/prisma/client';
 
 export function calculateTotalBudget(
 	recipients: number,

@@ -1,5 +1,5 @@
+import { Cause, Prisma } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
-import { Cause, Prisma } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';

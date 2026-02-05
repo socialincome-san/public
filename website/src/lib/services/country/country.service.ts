@@ -1,4 +1,4 @@
-import { NetworkTechnology, PaymentProvider, Prisma, SanctionRegime } from '@prisma/client';
+import { NetworkTechnology, PaymentProvider, Prisma, SanctionRegime } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';

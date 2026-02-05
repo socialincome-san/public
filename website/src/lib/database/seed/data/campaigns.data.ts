@@ -1,4 +1,4 @@
-import { Campaign, Prisma } from '@prisma/client';
+import { Campaign, Prisma } from '@/generated/prisma/client';
 
 export const campaignsData: Campaign[] = [
 	{

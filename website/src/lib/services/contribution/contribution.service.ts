@@ -1,4 +1,4 @@
-import { Contribution, ContributionStatus, PaymentEvent } from '@prisma/client';
+import { Contribution, ContributionStatus, PaymentEvent } from '@/generated/prisma/client';
 import { endOfYear, startOfYear } from 'date-fns';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';

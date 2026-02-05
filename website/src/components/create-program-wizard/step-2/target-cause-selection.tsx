@@ -1,7 +1,7 @@
 'use client';
 
+import { Cause } from '@/generated/prisma/client';
 import { cn } from '@/lib/utils/cn';
-import { Cause } from '@prisma/client';
 import { X } from 'lucide-react';
 
 function humanizeCause(cause: Cause) {

@@ -1,4 +1,4 @@
-import { ProgramPermission, SurveyStatus } from '@prisma/client';
+import { ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import crypto from 'crypto';
 import { addMonths, isFuture } from 'date-fns';
 import { BaseService } from '../core/base.service';

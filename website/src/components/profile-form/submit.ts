@@ -1,10 +1,10 @@
+import { ContributorReferralSource } from '@/generated/prisma/client';
 import { updateSelfAction as updateContributorSelfAction } from '@/lib/server-actions/contributor-actions';
 import { updateLocalPartnerAction } from '@/lib/server-actions/local-partner-action';
 import { updateUserSelfAction } from '@/lib/server-actions/user-actions';
 import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession, LocalPartnerUpdateInput } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
-import { ContributorReferralSource } from '@prisma/client';
 import { toggleNewsletter } from './newsletter';
 import { ProfileFormValues } from './schemas';
 

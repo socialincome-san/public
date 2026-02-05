@@ -1,4 +1,4 @@
-import { OrganizationPermission, Prisma } from '@prisma/client';
+import { OrganizationPermission, Prisma } from '@/generated/prisma/client';
 
 export type CampaignTableViewRow = {
 	id: string;

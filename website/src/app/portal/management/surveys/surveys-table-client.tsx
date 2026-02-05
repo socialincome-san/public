@@ -3,8 +3,8 @@
 import { Button } from '@/components/button';
 import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import DataTable from '@/components/data-table/data-table';
+import { ProgramPermission } from '@/generated/prisma/client';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
-import { ProgramPermission } from '@prisma/client';
 import { useState } from 'react';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';
 import { SurveyFormDialog } from './survey-form-dialog';

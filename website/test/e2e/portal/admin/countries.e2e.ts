@@ -1,7 +1,7 @@
+import { Country, Prisma } from '@/generated/prisma/client';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { CountryService } from '@/lib/services/country/country.service';
 import { expect, test } from '@playwright/test';
-import { Country, Prisma } from '@prisma/client';
 
 test.beforeEach(async () => {
 	await seedDatabase();

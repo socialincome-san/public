@@ -1,6 +1,6 @@
 'use client';
 
-import { PayoutInterval } from '@prisma/client';
+import { PayoutInterval } from '@/generated/prisma/client';
 
 type Props = {
 	programDuration: number;

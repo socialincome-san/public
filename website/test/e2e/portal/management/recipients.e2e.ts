@@ -1,8 +1,8 @@
+import { RecipientStatus } from '@/generated/prisma/client';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { FirebaseService } from '@/lib/services/firebase/firebase.service';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { expect, test } from '@playwright/test';
-import { RecipientStatus } from '@prisma/client';
 
 test.beforeEach(async () => {
 	await seedDatabase();

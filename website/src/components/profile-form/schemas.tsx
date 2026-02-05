@@ -1,4 +1,4 @@
-import { Cause, ContributorReferralSource, Gender } from '@prisma/client';
+import { Cause, ContributorReferralSource, Gender } from '@/generated/prisma/client';
 import { z } from 'zod';
 
 const contributorSchema = z.object({

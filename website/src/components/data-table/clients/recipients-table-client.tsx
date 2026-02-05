@@ -3,9 +3,9 @@
 import { Button } from '@/components/button';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import DataTable from '@/components/data-table/data-table';
+import { ProgramPermission } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { ProgramPermission } from '@prisma/client';
 import { UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CsvUploadDialog } from './csv-upload-dialog';
