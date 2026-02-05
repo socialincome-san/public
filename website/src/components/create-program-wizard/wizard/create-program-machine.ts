@@ -1,4 +1,4 @@
-import { Cause, PayoutInterval } from '@/generated/prisma/client';
+import { Cause, PayoutInterval } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';

@@ -1,4 +1,4 @@
-import { ContributorReferralSource } from '@/generated/prisma/client';
+import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { updateSelfAction as updateContributorSelfAction } from '@/lib/server-actions/contributor-actions';
 import { updateLocalPartnerAction } from '@/lib/server-actions/local-partner-action';
 import { updateUserSelfAction } from '@/lib/server-actions/user-actions';

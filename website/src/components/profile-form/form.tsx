@@ -12,7 +12,7 @@ import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
 
-import { Cause, ContributorReferralSource, Gender } from '@/generated/prisma/client';
+import { Cause, ContributorReferralSource, Gender } from '@/generated/prisma/enums';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/badge';
-import { PayoutStatus } from '@/generated/prisma/client';
+import { PayoutStatus } from '@/generated/prisma/enums';
 import { AlertTriangleIcon, CheckIcon, ClockIcon, HelpCircleIcon, MinusIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 

@@ -3,7 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
-import { PaymentProvider, RecipientStatus } from '@/generated/prisma/client';
+import { PaymentProvider, RecipientStatus } from '@/generated/prisma/enums';
 import { Actor } from '@/lib/firebase/current-account';
 import {
 	createRecipientAction,

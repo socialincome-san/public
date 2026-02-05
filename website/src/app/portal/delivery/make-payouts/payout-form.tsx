@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import { PayoutStatus } from '@/generated/prisma/client';
+import { PayoutStatus } from '@/generated/prisma/enums';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import {
 	createPayoutAction,

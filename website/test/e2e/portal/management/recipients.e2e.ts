@@ -1,4 +1,4 @@
-import { RecipientStatus } from '@/generated/prisma/client';
+import { RecipientStatus } from '@/generated/prisma/enums';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { FirebaseService } from '@/lib/services/firebase/firebase.service';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';

@@ -1,7 +1,7 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { ContributionStatus, PayoutStatus, RecipientStatus, SurveyStatus } from '@/generated/prisma/client';
+import { ContributionStatus, PayoutStatus, RecipientStatus, SurveyStatus } from '@/generated/prisma/enums';
 
 import { BooleanBadge } from '@/components/badges/boolean-badge';
 import { CampaignStatusBadge } from '@/components/badges/campaign-status-badge';

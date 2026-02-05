@@ -1,5 +1,5 @@
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
-import { ProgramPermission } from '@/generated/prisma/client';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';

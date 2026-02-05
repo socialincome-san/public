@@ -1,6 +1,6 @@
 'use server';
 
-import { Cause } from '@/generated/prisma/client';
+import { Cause } from '@/generated/prisma/enums';
 import { getActorOrThrow } from '@/lib/firebase/current-account';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
 import { CandidateCreateInput, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';

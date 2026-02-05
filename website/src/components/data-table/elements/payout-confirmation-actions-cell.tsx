@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { ProgramPermission } from '@/generated/prisma/client';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { confirmPayoutAction, contestPayoutAction } from '@/lib/server-actions/payout-confirmation-actions';
 import type { PayoutConfirmationTableViewRow } from '@/lib/services/payout/payout.types';
 import { CheckIcon, XIcon } from 'lucide-react';

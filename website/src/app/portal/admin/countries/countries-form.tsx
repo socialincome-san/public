@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@/generated/prisma/client';
+import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@/generated/prisma/enums';
 import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
 import { CountryPayload, NETWORK_TECH_LABELS, PAYMENT_PROVIDER_LABELS } from '@/lib/services/country/country.types';
 import { isoCountries } from '@/lib/services/country/iso-countries';

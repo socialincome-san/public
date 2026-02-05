@@ -1,6 +1,6 @@
 'use client';
 
-import { PayoutInterval } from '@/generated/prisma/client';
+import { PayoutInterval } from '@/generated/prisma/enums';
 
 type Props = {
 	programDuration: number;

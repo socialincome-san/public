@@ -1,7 +1,7 @@
 'use client';
 
 import { Switch } from '@/components/switch';
-import { PayoutInterval } from '@/generated/prisma/client';
+import { PayoutInterval } from '@/generated/prisma/enums';
 import { PayoutControls } from './payout-controls';
 import { PayoutSummary } from './payout-summary';
 

@@ -1,6 +1,6 @@
 'use server';
 
-import { PayoutStatus } from '@/generated/prisma/client';
+import { PayoutStatus } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { PayoutService } from '@/lib/services/payout/payout.service';
 import { revalidatePath } from 'next/cache';

@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
+import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import {
 	createSurveyAction,

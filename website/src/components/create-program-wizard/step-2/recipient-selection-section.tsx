@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
-import { Cause } from '@/generated/prisma/client';
+import { Cause } from '@/generated/prisma/enums';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';
 import { TargetCauseSelector } from './target-cause-selection';

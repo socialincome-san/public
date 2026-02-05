@@ -1,6 +1,6 @@
 'use client';
 
-import { SurveyStatus } from '@/generated/prisma/client';
+import { SurveyStatus } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { useEffect } from 'react';

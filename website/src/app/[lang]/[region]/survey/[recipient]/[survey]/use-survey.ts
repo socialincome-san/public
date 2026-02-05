@@ -1,4 +1,4 @@
-import { SurveyStatus } from '@/generated/prisma/client';
+import { SurveyStatus } from '@/generated/prisma/enums';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { createSessionAction, logoutAction } from '@/lib/server-actions/session-actions';
 import { getByIdAndRecipient, saveChanges } from '@/lib/server-actions/survey-actions';

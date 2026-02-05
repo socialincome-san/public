@@ -3,7 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
-import { ContributorReferralSource } from '@/generated/prisma/client';
+import { ContributorReferralSource } from '@/generated/prisma/enums';
 import {
 	createContributorAction,
 	getContributorAction,

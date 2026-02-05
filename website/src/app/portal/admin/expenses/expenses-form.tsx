@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import { ExpenseType } from '@/generated/prisma/client';
+import { ExpenseType } from '@/generated/prisma/enums';
 import {
 	createExpenseAction,
 	getExpenseAction,
