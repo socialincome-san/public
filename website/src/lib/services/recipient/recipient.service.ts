@@ -4,7 +4,7 @@ import { parseCsvText } from '@/lib/utils/csv';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import {
 	PayoutRecipient,
@@ -19,7 +19,7 @@ import {
 
 export class RecipientService extends BaseService {
 	private programAccessService = new ProgramAccessService();
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
 	private appReviewModeService = new AppReviewModeService();
 
 	async create(actor: Actor, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
@@ -89,7 +89,7 @@ export class RecipientService extends BaseService {
 				const newRecipient = await tx.recipient.create({ data });
 
 				if (paymentPhoneNumber) {
-					const firebaseResult = await this.firebaseService.createByPhoneNumber(paymentPhoneNumber);
+					const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(paymentPhoneNumber);
 					if (!firebaseResult.success) {
 						throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
 					}
@@ -187,14 +187,14 @@ export class RecipientService extends BaseService {
 
 		try {
 			if (phoneAdded) {
-				const firebaseResult = await this.firebaseService.createByPhoneNumber(nextPaymentPhoneNumber!);
+				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
 				}
 			}
 
 			if (phoneChanged) {
-				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
+				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(
 					previousPaymentPhoneNumber,
 					nextPaymentPhoneNumber!,
 				);
@@ -229,7 +229,7 @@ export class RecipientService extends BaseService {
 				options.oldPaymentPhone && options.newPaymentPhone && options.oldPaymentPhone !== options.newPaymentPhone;
 
 			if (phoneChanged) {
-				const firebaseResult = await this.firebaseService.updateByPhoneNumber(
+				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(
 					options.oldPaymentPhone!,
 					options.newPaymentPhone!,
 				);
@@ -315,7 +315,7 @@ export class RecipientService extends BaseService {
 			await this.db.$transaction(async (tx) => {
 				const phone = existing.paymentInformation?.phone?.number;
 				if (phone) {
-					await this.firebaseService.deleteByPhoneNumberIfExists(phone);
+					await this.firebaseAdminService.deleteByPhoneNumberIfExists(phone);
 				}
 
 				await tx.recipient.delete({
@@ -772,12 +772,12 @@ export class RecipientService extends BaseService {
 	}
 
 	async getRecipientFromRequest(request: Request): Promise<ServiceResult<RecipientWithPaymentInfo>> {
-		const tokenResult = await this.firebaseService.getDecodedTokenFromRequest(request);
+		const tokenResult = await this.firebaseAdminService.getDecodedTokenFromRequest(request);
 		if (!tokenResult.success) {
 			return this.resultFail(tokenResult.error, 401);
 		}
 
-		const phone = this.firebaseService.getPhoneFromToken(tokenResult.data);
+		const phone = this.firebaseAdminService.getPhoneFromToken(tokenResult.data);
 		if (!phone) {
 			return this.resultFail('Phone number not present in token', 400);
 		}

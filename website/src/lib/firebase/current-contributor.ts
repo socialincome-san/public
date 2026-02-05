@@ -1,10 +1,10 @@
 import { ContributorService } from '@/lib/services/contributor/contributor.service';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
-const firebaseService = new FirebaseService();
+const firebaseSessionService = new FirebaseSessionService();
 
 async function findContributorByAuthId(authUserId: string): Promise<ContributorSession | null> {
 	const service = new ContributorService();
@@ -13,11 +13,11 @@ async function findContributorByAuthId(authUserId: string): Promise<ContributorS
 }
 
 async function loadCurrentContributor(): Promise<ContributorSession | null> {
-	const cookie = await firebaseService.readSessionCookie();
+	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
+	const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}

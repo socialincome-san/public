@@ -2,7 +2,7 @@ import { Contributor, ContributorReferralSource, OrganizationPermission } from '
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
 import { SupportedLanguage } from '../sendgrid/types';
@@ -22,7 +22,7 @@ import {
 
 export class ContributorService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
 	private sendGridService = new SendgridSubscriptionService();
 
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
@@ -109,7 +109,7 @@ export class ContributorService extends BaseService {
 			}
 
 			if (newEmail !== oldEmail) {
-				const firebaseResult = await this.firebaseService.updateByUid(existing.account.firebaseAuthUserId, {
+				const firebaseResult = await this.firebaseAdminService.updateByUid(existing.account.firebaseAuthUserId, {
 					email: newEmail,
 				});
 
@@ -400,7 +400,7 @@ export class ContributorService extends BaseService {
 			});
 			if (existingContributor) return this.resultOk(existingContributor);
 
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: contributorData.email,
 				displayName: `${contributorData.firstName} ${contributorData.lastName}`,
 			});
@@ -466,7 +466,7 @@ export class ContributorService extends BaseService {
 		contributorData: StripeContributorData,
 	): Promise<ServiceResult<ContributorWithContact>> {
 		try {
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: contributorData.email,
 				displayName: `${contributorData.firstName} ${contributorData.lastName}`,
 			});
@@ -513,7 +513,7 @@ export class ContributorService extends BaseService {
 				return this.resultFail('No permission to create contributor');
 			}
 
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: input.email,
 				displayName: `${input.firstName} ${input.lastName}`,
 			});

@@ -1,7 +1,7 @@
 import { RecipientStatus } from '@/generated/prisma/enums';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { getFirebaseService, getRecipientService } from '../../utils';
+import { getFirebaseAdminService, getRecipientService } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -74,7 +74,7 @@ test('Edit existing recipient', async ({ page }) => {
 		paymentCode: 'OM123456',
 	};
 
-	const firebaseService = await getFirebaseService();
+	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists('+666666666');
 
 	await page.goto('http://localhost:3000/portal/management/recipients');
@@ -155,7 +155,7 @@ test('Edit existing recipient', async ({ page }) => {
 });
 
 test('Delete recipient', async ({ page }) => {
-	const firebaseService = await getFirebaseService();
+	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.createByPhoneNumber('+41791234567');
 
 	await page.goto('http://localhost:4000/auth');

@@ -2,7 +2,7 @@ import { LocalPartner } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { UserService } from '../user/user.service';
 import {
 	LocalPartnerCreateInput,
@@ -16,7 +16,7 @@ import {
 
 export class LocalPartnerService extends BaseService {
 	private userService = new UserService();
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
 
 	async create(userId: string, input: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
 		const isAdminResult = await this.userService.isAdmin(userId);
@@ -33,7 +33,7 @@ export class LocalPartnerService extends BaseService {
 
 			const displayName = `${input.contact?.create?.firstName ?? ''} ${input.contact?.create?.lastName ?? ''}`.trim();
 
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email,
 				displayName,
 			});
@@ -103,7 +103,7 @@ export class LocalPartnerService extends BaseService {
 		const firebaseUid = existing.account.firebaseAuthUserId;
 
 		if (actor.kind === 'user' && newEmail && newEmail !== oldEmail) {
-			const firebaseResult = await this.firebaseService.updateByUid(firebaseUid, { email: newEmail });
+			const firebaseResult = await this.firebaseAdminService.updateByUid(firebaseUid, { email: newEmail });
 			if (!firebaseResult.success) {
 				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
 			}

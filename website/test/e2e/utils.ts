@@ -3,9 +3,9 @@ export async function getRecipientService() {
 	return new RecipientService();
 }
 
-export async function getFirebaseService() {
-	const { FirebaseService } = await import('@/lib/services/firebase/firebase.service');
-	return new FirebaseService();
+export async function getFirebaseAdminService() {
+	const { FirebaseAdminService } = await import('@/lib/services/firebase/firebase-admin.service');
+	return new FirebaseAdminService();
 }
 
 export async function getCountryService() {

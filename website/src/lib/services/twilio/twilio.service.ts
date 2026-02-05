@@ -3,11 +3,11 @@ import { Twilio } from 'twilio';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { VerifyOtpRequest, VerifyOtpResult } from './twilio.types';
 
 export class TwilioService extends BaseService {
-	private readonly firebaseService = new FirebaseService();
+	private readonly firebaseAdminService = new FirebaseAdminService();
 	private readonly appReviewModeService = new AppReviewModeService();
 
 	private readonly twilioClient = new Twilio(process.env.TWILIO_API_KEY_SID, process.env.TWILIO_API_KEY_SECRET, {
@@ -163,7 +163,7 @@ export class TwilioService extends BaseService {
 	}
 
 	private async getUserByPhoneNumber(phoneNumber: string): Promise<UserRecord | null> {
-		const result = await this.firebaseService.getByPhoneNumber(phoneNumber);
+		const result = await this.firebaseAdminService.getByPhoneNumber(phoneNumber);
 		if (!result.success) {
 			this.logger.info('User not found with given phone number', { phoneNumber, error: result.error });
 			return null;
@@ -172,7 +172,7 @@ export class TwilioService extends BaseService {
 	}
 
 	private async createUserWithPhoneNumber(phoneNumber: string): Promise<UserRecord | null> {
-		const result = await this.firebaseService.createByPhoneNumber(phoneNumber);
+		const result = await this.firebaseAdminService.createByPhoneNumber(phoneNumber);
 		if (!result.success) {
 			this.logger.error(result.error);
 			return null;
@@ -182,7 +182,7 @@ export class TwilioService extends BaseService {
 	}
 
 	private async generateCustomToken(userRecord: UserRecord): Promise<string | null> {
-		const result = await this.firebaseService.createCustomToken(userRecord.uid);
+		const result = await this.firebaseAdminService.createCustomToken(userRecord.uid);
 		if (!result.success) {
 			this.logger.error(result.error);
 			return null;
