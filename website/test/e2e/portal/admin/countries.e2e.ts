@@ -1,8 +1,7 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { CountryService } from '@/lib/services/country/country.service';
 import { expect, test } from '@playwright/test';
-import { Country } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+import { Country, Prisma } from '@prisma/client';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -12,8 +11,8 @@ test('Add new country', async ({ page }) => {
 	const expectedCountry: Country = {
 		id: '',
 		isoCode: 'CHE',
-		microfinanceIndex: new Decimal(1.11),
-		populationCoverage: new Decimal(82.3),
+		microfinanceIndex: new Prisma.Decimal(1.11),
+		populationCoverage: new Prisma.Decimal(82.3),
 		networkTechnology: 'g5',
 		paymentProviders: ['orange_money'],
 		sanctions: ['us'],

@@ -19,7 +19,8 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"@prisma/client": ["./src/generated/prisma/client"]
 		},
 		"allowJs": true
 	},

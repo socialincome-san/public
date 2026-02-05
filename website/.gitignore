@@ -59,6 +59,9 @@ terraform.tfvars.json
 src/generated/storyblok/components
 src/generated/storyblok/logs
 
+# Prisma Client (generated)
+src/generated/prisma
+
 # Playwright
 /test-results/
 /playwright-report/
