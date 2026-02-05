@@ -1,7 +1,7 @@
 import { Country, Prisma } from '@/generated/prisma/client';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { CountryService } from '@/lib/services/country/country.service';
 import { expect, test } from '@playwright/test';
+import { getCountryService } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -66,7 +66,7 @@ test('Add new country', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const countryService = new CountryService();
+	const countryService = await getCountryService();
 	const result = await countryService.getTableView('user-2');
 
 	if (!result.success) {
