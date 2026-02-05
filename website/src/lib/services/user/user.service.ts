@@ -114,10 +114,13 @@ export class UserService extends BaseService {
 			}
 
 			if (input.email !== existingUser.contact.email) {
-				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(existingUser.account.firebaseAuthUserId, {
-					email: input.email,
-					emailVerified: true,
-				});
+				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
+					existingUser.account.firebaseAuthUserId,
+					{
+						email: input.email,
+						emailVerified: true,
+					},
+				);
 
 				if (!firebaseUpdateResult.success) {
 					return this.resultFail(firebaseUpdateResult.error);
