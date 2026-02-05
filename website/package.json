@@ -2,6 +2,7 @@
 	"name": "@socialincome/website",
 	"version": "1.0.0",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"serve": "npm run build-paths && npm run openapi:generate && next dev -p 3000",
 		"build-paths": "tsx scripts/generate-paths.ts",
