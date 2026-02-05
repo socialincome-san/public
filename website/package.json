@@ -27,7 +27,7 @@
 		"db:generate": "npm run prisma:env-local -- generate",
 		"db:migrate:deploy": "npm run prisma:env-local -- migrate deploy",
 		"db:migrate:dev": "npm run prisma:env-local -- migrate dev",
-		"db:migrate:reset": "npm run prisma:env-local -- migrate reset --force --skip-seed",
+		"db:migrate:reset": "npm run prisma:env-local -- migrate reset --force",
 		"db:migrate:status": "npm run prisma:env-local -- migrate status",
 		"db:migrate:create": "npm run prisma:env-local -- migrate dev --create-only",
 		"db:introspect": "npm run prisma:env-local -- db pull",
