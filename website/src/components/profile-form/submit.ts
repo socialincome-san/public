@@ -6,10 +6,10 @@ import { LocalPartnerSession, LocalPartnerUpdateInput } from '@/lib/services/loc
 import { UserSession } from '@/lib/services/user/user.types';
 import { ContributorReferralSource } from '@prisma/client';
 import { toggleNewsletter } from './newsletter';
-import { ProfileFormValues } from './schemas';
+import { ProfileFormOutput } from './schemas';
 
 export async function submitProfileForm(
-	values: ProfileFormValues,
+	values: ProfileFormOutput,
 	session: ContributorSession | LocalPartnerSession | UserSession,
 	isNewsletterSubscribed: boolean,
 ) {
@@ -32,24 +32,14 @@ export async function submitProfileForm(
 						email: values.email,
 						gender: values.gender ?? null,
 						language: values.language,
-						address: {
-							upsert: {
-								update: {
-									street: values.street,
-									number: values.number,
-									city: values.city,
-									zip: values.zip,
-									country: values.country ?? '',
-								},
-								create: {
-									street: values.street ?? '',
-									number: values.number ?? '',
-									city: values.city ?? '',
-									zip: values.zip ?? '',
-									country: values.country ?? '',
-								},
-							},
-						},
+						address: values.address
+							? {
+									upsert: {
+										update: values.address,
+										create: values.address,
+									},
+								}
+							: undefined,
 					},
 				},
 			},
@@ -70,24 +60,14 @@ export async function submitProfileForm(
 						email: values.email,
 						gender: values.gender ?? null,
 						language: values.language,
-						address: {
-							upsert: {
-								update: {
-									street: values.street,
-									number: values.number,
-									city: values.city,
-									zip: values.zip,
-									country: values.country ?? '',
-								},
-								create: {
-									street: values.street ?? '',
-									number: values.number ?? '',
-									city: values.city ?? '',
-									zip: values.zip ?? '',
-									country: values.country ?? '',
-								},
-							},
-						},
+						address: values.address
+							? {
+									upsert: {
+										update: values.address,
+										create: values.address,
+									},
+								}
+							: undefined,
 					},
 				},
 			},
@@ -102,12 +82,6 @@ export async function submitProfileForm(
 		gender: values.gender ?? null,
 		language: values.language,
 		organizationId: values.organizationId,
-		address: {
-			street: values.street ?? '',
-			number: values.number ?? '',
-			city: values.city ?? '',
-			zip: values.zip ?? '',
-			country: values.country ?? '',
-		},
+		address: values.address ?? undefined,
 	});
 }
