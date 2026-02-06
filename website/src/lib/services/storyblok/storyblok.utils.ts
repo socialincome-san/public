@@ -56,10 +56,20 @@ export function getScaledDimensions(url: string, maxWidth: number): { width: num
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
 export function formatStoryblokUrl(url: string, width: number, height: number, focus?: string | null) {
-	if (!focus) {
-		return `${url}?storyblok_smart=1`;
-	}
-	return `${url}?storyblok_focal=${encodeURIComponent(focus)}`;
+	const crop = focus || 'smart';
+	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
+	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
+}
+
+/**
+ * Builds a complete Storyblok Image Service URL for direct usage (e.g., OG metadata).
+ * Unlike formatStoryblokUrl, this returns a URL that can be fetched directly without
+ * going through the Next.js image loader.
+ */
+export function formatStoryblokUrlDirect(url: string, width: number, height: number, focus?: string | null) {
+	let imageSource = url + `/m/${width}x${height}`;
+	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
+	return imageSource;
 }
 
 // ==================== Date Utilities ====================
@@ -127,7 +137,8 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Resolved
 	if (imageFilename) {
 		const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
 		if (dimensions.width && dimensions.height) {
-			const imageUrl = formatStoryblokUrl(
+			// Use direct URL for OG metadata since it doesn't go through the Next.js image loader
+			const imageUrl = formatStoryblokUrlDirect(
 				imageFilename,
 				dimensions.width,
 				dimensions.height,
