@@ -1,6 +1,30 @@
+import { seedDatabase } from '@/lib/database/seed/run-seed';
+import { CountryService } from '@/lib/services/country/country.service';
 import { expect, test } from '@playwright/test';
+import { Country } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
+
+test.beforeEach(async () => {
+	await seedDatabase();
+});
 
 test('Add new country', async ({ page }) => {
+	const expectedCountry: Country = {
+		id: '',
+		isoCode: 'CHE',
+		microfinanceIndex: new Decimal(1.11),
+		populationCoverage: new Decimal(82.3),
+		networkTechnology: 'g5',
+		paymentProviders: ['orange_money'],
+		sanctions: ['us'],
+		isActive: false,
+		latestSurveyDate: null,
+		microfinanceSourceLinkId: null,
+		networkSourceLinkId: null,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null,
+	};
+
 	await page.goto('http://localhost:3000/portal/admin/countries');
 	await page.getByRole('button', { name: 'Add country' }).click();
 
@@ -8,13 +32,20 @@ test('Add new country', async ({ page }) => {
 	await page.getByPlaceholder('Search').fill('switzer');
 	await page.getByRole('option', { name: 'Switzerland' }).click();
 
-	await page.getByTestId('form-item-microfinanceIndex').locator('input').fill('1.11');
+	await page
+		.getByTestId('form-item-microfinanceIndex')
+		.locator('input')
+		.fill(String(expectedCountry.microfinanceIndex));
 
 	await page.getByTestId('form-item-microfinanceSourceText').locator('input').fill('source text');
 
 	await page.getByTestId('form-item-microfinanceSourceHref').locator('input').fill('https://source-url.ch');
 
-	await page.getByTestId('form-item-populationCoverage').locator('input').fill('82.3');
+	await page
+		.getByTestId('form-item-populationCoverage')
+		.locator('input')
+		.fill(String(expectedCountry.populationCoverage));
+
 	await page.getByTestId('form-item-latestSurveyDate').locator('button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
 	await page.getByLabel('Choose the Year').selectOption('2025');
@@ -26,15 +57,33 @@ test('Add new country', async ({ page }) => {
 	await page.getByTestId('form-item-paymentProviders').click();
 	await page.getByPlaceholder('Search').fill('Orange Mon');
 	await page.getByRole('option', { name: 'Orange Money' }).click();
-	await page.getByRole('option', { name: 'Orange Money' }).press('Escape');
+	await page.keyboard.press('Escape');
 
 	await page.getByTestId('form-item-sanctions').click();
-	await page.getByPlaceholder('Search').fill('us');
-	await page.getByRole('option', { name: 'us' }).click();
-	await page.getByRole('option', { name: 'us' }).press('Escape');
+	await page.getByPlaceholder('Search').fill(expectedCountry.sanctions[0]);
+	await page.getByRole('option', { name: expectedCountry.sanctions[0] }).click();
+	await page.keyboard.press('Escape');
 
 	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	await page.waitForTimeout(1000);
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	const countryService = new CountryService();
+	const result = await countryService.getTableView('user-2');
+
+	if (!result.success) {
+		throw new Error(result.error);
+	}
+
+	expect(result.data.tableRows.length).toBe(6);
+
+	const country = result.data.tableRows.find((c) => c.isoCode === expectedCountry.isoCode);
+
+	expect(country).toBeDefined();
+
+	expect(country?.isoCode).toBe(expectedCountry.isoCode);
+	expect(country?.microfinanceIndex).toBe(Number(expectedCountry.microfinanceIndex));
+	expect(country?.populationCoverage).toBe(Number(expectedCountry.populationCoverage));
+	expect(country?.networkTechnology).toBe(expectedCountry.networkTechnology);
+	expect(country?.paymentProviders).toContain(expectedCountry.paymentProviders[0]);
+	expect(country?.sanctions).toContain(expectedCountry.sanctions[0]);
 });

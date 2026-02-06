@@ -47,6 +47,7 @@ const config: KnipConfig = {
 		'prisma',
 		'knip',
 		'npm-run-all',
+		'jest',
 	],
 };
 

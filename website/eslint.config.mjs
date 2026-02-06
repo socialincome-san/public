@@ -9,5 +9,6 @@ export default defineConfig([
 			'react-hooks/refs': 'off',
 			'react-hooks/static-components': 'off',
 		},
+		ignores: ['**playwright-report/**'],
 	},
 ]);

@@ -83,8 +83,9 @@ export function buildUpdateCandidateInput(
 
 		if (contactPhoneHasChanged) {
 			contactPhoneWriteOperation = {
-				update: {
-					data: { number: nextContactPhoneNumber! },
+				upsert: {
+					update: { number: nextContactPhoneNumber! },
+					create: { number: nextContactPhoneNumber! },
 					where: { id: previousContactPhone?.id },
 				},
 			};

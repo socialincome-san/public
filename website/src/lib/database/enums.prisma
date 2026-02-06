@@ -1,3 +1,128 @@
+enum Gender {
+  male
+  female
+  other
+  private
+}
+
+enum PaymentEventType {
+  stripe
+  bank_transfer
+  benevity
+  cash
+  raisenow
+}
+
+enum ContributionStatus {
+  failed
+  pending
+  succeeded
+}
+
+enum RecipientStatus {
+  active
+  suspended
+  waitlisted
+  former
+}
+
+enum PayoutStatus {
+  created
+  paid
+  confirmed
+  contested
+  failed
+  other
+}
+
+enum SurveyStatus {
+  new
+  sent
+  scheduled
+  in_progress
+  completed
+  missed
+}
+
+enum SurveyQuestionnaire {
+  onboarding
+  checkin
+  offboarding
+  offboarded_checkin
+}
+
+enum ProgramPermission {
+  owner
+  operator
+}
+
+enum OrganizationPermission {
+  readonly
+  edit
+}
+
+enum ContributorReferralSource {
+  family_and_friends
+  work
+  social_media
+  media
+  presentation
+  other
+}
+
+enum ExpenseType {
+  account_fees
+  administrative
+  delivery_fees
+  donation_fees
+  exchange_rate_loss
+  fundraising_advertising
+  staff
+}
+
+enum UserRole {
+  admin
+  user
+}
+
+enum PaymentProvider {
+  orange_money
+}
+
+enum DonationInterval {
+  monthly
+  quarterly
+  yearly
+}
+
+enum PayoutInterval {
+  monthly
+  quarterly
+  yearly
+}
+
+enum Cause {
+  poverty
+  health
+  gender_based_violence
+  climate
+}
+
+enum NetworkTechnology {
+  g3
+  g4
+  g5
+  satellite
+  unknown
+}
+
+enum SanctionRegime {
+  eu
+  us
+  un
+  other
+}
+
 /// ISO 3166-1 alpha-2 country codes
 enum CountryCode {
   AF
