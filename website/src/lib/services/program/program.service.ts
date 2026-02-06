@@ -1,5 +1,5 @@
+import { PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { slugify } from '@/lib/utils/slugify';
-import { PayoutStatus, ProgramPermission, SurveyStatus } from '@prisma/client';
 import { CandidateService } from '../candidate/candidate.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';

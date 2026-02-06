@@ -1,5 +1,5 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
-import { PrismaClient } from '@prisma/client';
 import { prisma } from '../../database/prisma';
 import { ServiceResult } from './base.types';
 

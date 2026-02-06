@@ -14,8 +14,8 @@
 
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
+import { Prisma } from '@/generated/prisma/client';
 import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
-import { Prisma } from '@prisma/client';
 import { CandidateFormSchema } from './candidates-form';
 
 export function buildUpdateCandidateInput(

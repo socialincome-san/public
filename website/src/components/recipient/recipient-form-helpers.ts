@@ -14,8 +14,8 @@
 
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
+import { Prisma } from '@/generated/prisma/client';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
-import { Prisma } from '@prisma/client';
 import { RecipientFormSchema } from './recipient-form';
 
 export function buildUpdateRecipientInput(

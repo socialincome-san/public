@@ -1,4 +1,4 @@
-import { Address, Gender, PaymentProvider, Phone, Prisma, RecipientStatus } from '@prisma/client';
+import { Address, Gender, PaymentProvider, Phone, Prisma, RecipientStatus } from '@/generated/prisma/client';
 
 export type CandidatePayload = {
 	id: string;

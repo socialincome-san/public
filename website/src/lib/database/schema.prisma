@@ -1,12 +1,11 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider        = "prisma-client"
+  output          = "../../generated/prisma"
   previewFeatures = ["views"]
-  binaryTargets   = ["native", "linux-musl"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum Gender {

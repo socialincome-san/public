@@ -1,4 +1,4 @@
-import { NetworkTechnology, PaymentProvider } from '@prisma/client';
+import { NetworkTechnology, PaymentProvider } from '@/generated/prisma/enums';
 
 export type CountryTableViewRow = {
 	id: string;

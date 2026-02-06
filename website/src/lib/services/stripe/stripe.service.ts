@@ -9,7 +9,7 @@
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
-import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@prisma/client';
+import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@/generated/prisma/client';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';

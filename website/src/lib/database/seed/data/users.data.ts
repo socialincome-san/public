@@ -1,4 +1,4 @@
-import { User, UserRole } from '@prisma/client';
+import { User, UserRole } from '@/generated/prisma/client';
 
 export const usersData: User[] = [
 	{

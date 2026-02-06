@@ -1,10 +1,10 @@
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
 import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
-const firebaseService = new FirebaseService();
+const firebaseSessionService = new FirebaseSessionService();
 const service = new LocalPartnerService();
 
 async function findLocalPartnerByAuthId(authUserId: string): Promise<LocalPartnerSession | null> {
@@ -13,12 +13,12 @@ async function findLocalPartnerByAuthId(authUserId: string): Promise<LocalPartne
 }
 
 async function loadCurrentLocalPartner(): Promise<LocalPartnerSession | null> {
-	const cookie = await firebaseService.readSessionCookie();
+	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
 
-	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
+	const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}

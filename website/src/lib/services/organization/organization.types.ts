@@ -1,4 +1,4 @@
-import { OrganizationPermission, UserRole } from '@prisma/client';
+import { OrganizationPermission, UserRole } from '@/generated/prisma/client';
 
 export type OrganizationMemberTableViewRow = {
 	id: string;

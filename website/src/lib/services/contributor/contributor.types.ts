@@ -1,4 +1,11 @@
-import { Address, ContributorReferralSource, Gender, OrganizationPermission, Phone, Prisma } from '@prisma/client';
+import {
+	Address,
+	ContributorReferralSource,
+	Gender,
+	OrganizationPermission,
+	Phone,
+	Prisma,
+} from '@/generated/prisma/client';
 
 export type ContributorTableViewRow = {
 	id: string;

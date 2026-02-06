@@ -7,7 +7,7 @@ import {
 	Prisma,
 	ProgramPermission,
 	RecipientStatus,
-} from '@prisma/client';
+} from '@/generated/prisma/client';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {

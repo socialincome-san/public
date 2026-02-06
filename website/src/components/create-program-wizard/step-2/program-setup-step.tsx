@@ -1,6 +1,6 @@
 'use client';
 
-import { Cause } from '@prisma/client';
+import { Cause } from '@/generated/prisma/enums';
 import { ProgramManagementType, RecipientApproachType } from '../wizard/types';
 import { ProgramManagementSection } from './program-management-section';
 import { RecipientSelectionSection } from './recipient-selection-section';

@@ -1,4 +1,4 @@
-import { Expense, ExpenseType, Prisma } from '@prisma/client';
+import { Expense, ExpenseType, Prisma } from '@/generated/prisma/client';
 
 export const expensesData: Expense[] = [
 	{

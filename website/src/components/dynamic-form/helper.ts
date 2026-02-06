@@ -1,4 +1,4 @@
-import { Address, Gender, Phone } from '@prisma/client';
+import { Address, Gender, Phone } from '@/generated/prisma/client';
 import { FormField } from './dynamic-form';
 
 type Contact = {

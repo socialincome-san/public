@@ -1,4 +1,4 @@
-import { Gender, PaymentProvider, PayoutInterval, Prisma, RecipientStatus } from '@prisma/client';
+import { Gender, PaymentProvider, PayoutInterval, Prisma, RecipientStatus } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';

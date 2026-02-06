@@ -1,4 +1,4 @@
-import { Recipient, RecipientStatus } from '@prisma/client';
+import { Recipient, RecipientStatus } from '@/generated/prisma/client';
 
 export const recipientsData: Recipient[] = [
 	{

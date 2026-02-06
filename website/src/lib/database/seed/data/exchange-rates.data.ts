@@ -1,4 +1,4 @@
-import { ExchangeRate, Prisma } from '@prisma/client';
+import { ExchangeRate, Prisma } from '@/generated/prisma/client';
 
 export const exchangeRatesData: ExchangeRate[] = [
 	{

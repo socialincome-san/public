@@ -1,4 +1,4 @@
-import { Address, Cause, Gender, Phone, Prisma } from '@prisma/client';
+import { Address, Cause, Gender, Phone, Prisma } from '@/generated/prisma/client';
 
 export type LocalPartnerTableViewRow = {
 	id: string;

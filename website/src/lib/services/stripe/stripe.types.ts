@@ -1,4 +1,4 @@
-import { ContributorReferralSource, Gender } from '@prisma/client';
+import { ContributorReferralSource, Gender } from '@/generated/prisma/client';
 
 export type StripeCustomerData = {
 	id: string;

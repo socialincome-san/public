@@ -1,4 +1,4 @@
-import { OrganizationAccess, OrganizationPermission } from '@prisma/client';
+import { OrganizationAccess, OrganizationPermission } from '@/generated/prisma/client';
 
 export const organizationAccessesData: OrganizationAccess[] = [
 	{

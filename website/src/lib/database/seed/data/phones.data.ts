@@ -1,4 +1,4 @@
-import { Phone } from '@prisma/client';
+import { Phone } from '@/generated/prisma/client';
 
 export const phonesData: Phone[] = [
 	{

@@ -3,6 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
+import { ContributorReferralSource } from '@/generated/prisma/enums';
 import {
 	createContributorAction,
 	getContributorAction,
@@ -13,7 +14,6 @@ import {
 	ContributorPayload,
 	ContributorUpdateInput,
 } from '@/lib/services/contributor/contributor.types';
-import { ContributorReferralSource } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateContributorInput, buildUpdateContributorsInput } from './contributors-form-helper';

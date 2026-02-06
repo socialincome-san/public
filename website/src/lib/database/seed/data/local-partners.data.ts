@@ -1,4 +1,4 @@
-import { LocalPartner } from '@prisma/client';
+import { LocalPartner } from '@/generated/prisma/client';
 
 export const localPartnersData: LocalPartner[] = [
 	{

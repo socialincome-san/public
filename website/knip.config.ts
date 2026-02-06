@@ -15,7 +15,7 @@ const config: KnipConfig = {
 		'jest',
 		'@sendgrid/mail',
 		'dotenv-cli',
-		'prisma',
+		'@prisma/client',
 		'next-openapi-gen',
 		'tsx',
 		'dotenv',

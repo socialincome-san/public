@@ -1,4 +1,4 @@
-import { Account } from '@prisma/client';
+import { Account } from '@/generated/prisma/client';
 
 export const accountsData: Account[] = [
 	{

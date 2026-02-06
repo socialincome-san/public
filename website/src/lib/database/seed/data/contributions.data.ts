@@ -1,4 +1,4 @@
-import { Contribution, ContributionStatus, DonationInterval, Prisma } from '@prisma/client';
+import { Contribution, ContributionStatus, DonationInterval, Prisma } from '@/generated/prisma/client';
 
 export const contributionsData: Contribution[] = [
 	{

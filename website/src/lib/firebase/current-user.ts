@@ -1,10 +1,10 @@
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
 import { UserService } from '@/lib/services/user/user.service';
 import { UserSession } from '@/lib/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 
-const firebaseService = new FirebaseService();
+const firebaseSessionService = new FirebaseSessionService();
 
 async function findUserByAuthId(authUserId: string): Promise<UserSession | null> {
 	const service = new UserService();
@@ -13,11 +13,11 @@ async function findUserByAuthId(authUserId: string): Promise<UserSession | null>
 }
 
 async function loadCurrentUser(): Promise<UserSession | null> {
-	const cookie = await firebaseService.readSessionCookie();
+	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
+	const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}

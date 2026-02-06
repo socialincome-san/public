@@ -1,4 +1,4 @@
-import { Contributor, ContributorReferralSource } from '@prisma/client';
+import { Contributor, ContributorReferralSource } from '@/generated/prisma/client';
 
 export const contributorsData: Contributor[] = [
 	{

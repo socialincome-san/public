@@ -1,4 +1,4 @@
-import { PaymentInformation, PaymentProvider } from '@prisma/client';
+import { PaymentInformation, PaymentProvider } from '@/generated/prisma/client';
 
 export const paymentInformationsData: PaymentInformation[] = [
 	{

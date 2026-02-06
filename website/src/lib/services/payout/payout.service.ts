@@ -1,4 +1,4 @@
-import { PayoutStatus, Prisma, ProgramPermission, RecipientStatus } from '@prisma/client';
+import { PayoutStatus, Prisma, ProgramPermission, RecipientStatus } from '@/generated/prisma/client';
 import { addMonths, endOfMonth, format, isSameMonth, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';

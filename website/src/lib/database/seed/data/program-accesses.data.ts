@@ -1,4 +1,4 @@
-import { ProgramAccess, ProgramPermission } from '@prisma/client';
+import { ProgramAccess, ProgramPermission } from '@/generated/prisma/client';
 
 export const programAccessesData: ProgramAccess[] = [
 	{

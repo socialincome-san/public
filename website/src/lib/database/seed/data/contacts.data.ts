@@ -1,4 +1,4 @@
-import { Contact, Gender } from '@prisma/client';
+import { Contact, Gender } from '@/generated/prisma/client';
 
 export const contactsData: Contact[] = [
 	{

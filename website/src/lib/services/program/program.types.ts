@@ -1,4 +1,4 @@
-import { Cause, PayoutInterval, ProgramPermission } from '@prisma/client';
+import { Cause, PayoutInterval, ProgramPermission } from '@/generated/prisma/client';
 
 export type ProgramWallet = {
 	id: string;

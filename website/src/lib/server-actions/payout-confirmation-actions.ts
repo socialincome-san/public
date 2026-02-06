@@ -1,8 +1,8 @@
 'use server';
 
+import { PayoutStatus } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { PayoutService } from '@/lib/services/payout/payout.service';
-import { PayoutStatus } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 export async function confirmPayoutAction(payoutId: string) {

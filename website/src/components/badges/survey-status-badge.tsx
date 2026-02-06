@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/badge';
-import type { SurveyStatus } from '@prisma/client';
+import type { SurveyStatus } from '@/generated/prisma/enums';
 import { CalendarClockIcon, CheckIcon, CirclePlusIcon, CircleSlashIcon, HourglassIcon, SendIcon } from 'lucide-react';
 import type { ComponentType } from 'react';
 
