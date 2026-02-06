@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function CreateProgramSteps({ state, send }: Props) {
-	if (state.matches('loading') || state.matches('saving') || state.matches('loadingCandidates')) {
+	if (state.matches('loading') || state.matches('saving')) {
 		return <WizardLoading />;
 	}
 
@@ -42,9 +42,14 @@ export function CreateProgramSteps({ state, send }: Props) {
 				programManagement={state.context.programManagement}
 				recipientApproach={state.context.recipientApproach}
 				targetCauses={state.context.targetCauses}
+				targetProfiles={state.context.targetProfiles}
+				totalRecipients={state.context.totalRecipients}
+				filteredRecipients={state.context.filteredRecipients}
+				isCountingRecipients={state.context.isCountingRecipients}
 				onSelectProgramManagement={(value) => send({ type: 'SELECT_PROGRAM_MANAGEMENT', value })}
 				onSelectRecipientApproach={(value) => send({ type: 'SELECT_RECIPIENT_APPROACH', value })}
 				onToggleCause={(cause) => send({ type: 'TOGGLE_TARGET_CAUSE', cause })}
+				onToggleProfile={(profile) => send({ type: 'TOGGLE_TARGET_PROFILE', profile })}
 			/>
 		);
 	}
@@ -53,7 +58,7 @@ export function CreateProgramSteps({ state, send }: Props) {
 		return (
 			<BudgetStep
 				amountOfRecipients={state.context.amountOfRecipients}
-				maxRecipients={state.context.maxRecipients}
+				filteredRecipients={state.context.filteredRecipients}
 				programDuration={state.context.programDuration}
 				payoutPerInterval={state.context.payoutPerInterval}
 				payoutInterval={state.context.payoutInterval}
