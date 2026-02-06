@@ -5,7 +5,6 @@ const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag', 'new-website'];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
-const JOURNAL = 'journal';
 const NEW_WEBSITE = 'new-website';
 const DEFAULT_REGION = 'int';
 
@@ -76,15 +75,7 @@ export async function GET(request: Request) {
 	}
 	await enableDraftModeAndAdaptCookie();
 
-	let path: string;
-	if (slug!.toLowerCase().startsWith(NEW_WEBSITE)) {
-		// Redirect new-website pages to the preview route for live editing
-		path = `${slug}/preview`;
-	} else if (ALLOWED_SLUGS_PREFIXES.some((prefix) => slug!.toLowerCase().startsWith(prefix))) {
-		path = slug!;
-	} else {
-		path = `${JOURNAL}/${slug}`;
-	}
+	const path = slug!.toLowerCase().startsWith(NEW_WEBSITE) ? `${slug}/preview` : slug!;
 
 	const storyblokParams = new URLSearchParams();
 	for (const [key, value] of searchParams.entries()) {
