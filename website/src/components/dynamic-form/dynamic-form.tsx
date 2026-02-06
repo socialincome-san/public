@@ -1,5 +1,4 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion';
-import { Button } from '@/components/button';
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
@@ -13,6 +12,7 @@ import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
 import { MultiSelect } from '../multi-select';
+import { FormActions } from './form-actions';
 
 export type FormField = {
 	label: string;
@@ -98,13 +98,16 @@ const getEnumArrayValues = (
 	return (def.type?._def?.values ?? {}) as Record<string, string>;
 };
 
-const DynamicForm: FC<{
+type Props = {
 	formSchema: FormSchema;
 	isLoading: boolean;
 	onSubmit: (values: any) => void;
-	onCancel?: (values: any) => void;
+	onCancel?: () => void;
+	onDelete?: () => void;
 	mode: 'add' | 'edit' | 'readonly';
-}> = ({ formSchema, isLoading, onSubmit, onCancel, mode }) => {
+};
+
+const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -166,7 +169,11 @@ const DynamicForm: FC<{
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)} className="space-y-8">
+			<form
+				data-testid="dynamic-form"
+				onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)}
+				className="space-y-8"
+			>
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						<Accordion
@@ -178,7 +185,9 @@ const DynamicForm: FC<{
 						>
 							{/* TODO: find better solution to hide collapsed content */}
 							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">
-								<AccordionTrigger>{formSchema.fields[option].label}</AccordionTrigger>
+								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
+									{formSchema.fields[option].label}
+								</AccordionTrigger>
 								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:!h-0" forceMount>
 									{getOptions(option).map((nestedOption) => (
 										<GenericFormField
@@ -207,18 +216,7 @@ const DynamicForm: FC<{
 						/>
 					);
 				})}
-				<div className="flex gap-2">
-					{mode !== 'readonly' && (
-						<Button disabled={isLoading} type="submit">
-							Save
-						</Button>
-					)}
-					{onCancel && (
-						<Button type="button" variant="outline" onClick={onCancel}>
-							{mode === 'readonly' ? 'Close' : 'Cancel'}
-						</Button>
-					)}
-				</div>
+				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} />
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (

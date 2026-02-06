@@ -274,7 +274,7 @@ export function SuccessForm({
 					render={({ field }) => (
 						<FormItem className="col-span-2 flex flex-row items-start space-x-3 space-y-0 px-2 py-4">
 							<FormControl>
-								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+								<Checkbox data-testid="terms-and-conditions" checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>
 							<div className="space-y-1 leading-none">
 								<FormLabel dangerouslySetInnerHTML={{ __html: translations.acceptTermsAndConditions }} />

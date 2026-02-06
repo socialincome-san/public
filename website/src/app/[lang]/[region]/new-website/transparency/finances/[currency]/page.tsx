@@ -11,13 +11,9 @@ import { TotalsSection } from './(sections)/totals-section';
 export const revalidate = 3600;
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
-interface TransparencyFinancesParams extends DefaultParams {
-	currency: Currency;
-}
+type TransparencyFinancesParams = DefaultParams & { currency: Currency };
 
-type TransparencyFinancesProps = DefaultLayoutProps<TransparencyFinancesParams>;
-
-export default async function Page({ params }: TransparencyFinancesProps) {
+export default async function Page({ params }: DefaultLayoutProps<TransparencyFinancesParams>) {
 	const { lang, currency } = await params;
 
 	const transparencyService = new TransparencyService();

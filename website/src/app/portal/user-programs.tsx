@@ -29,7 +29,7 @@ export async function UserPrograms({ userId }: Props) {
 					{operatedPrograms.map((program) => (
 						<Wallet
 							key={program.id}
-							href={`/portal/programs/${program.id}/recipients`}
+							href={`/portal/programs/${program.id}/overview`}
 							title={program.programName}
 							subtitle={getCountryNameByCode(program.country)}
 							footerLeft={{
@@ -55,7 +55,7 @@ export async function UserPrograms({ userId }: Props) {
 						{ownedPrograms.map((program) => (
 							<Wallet
 								key={program.id}
-								href={`/portal/programs/${program.id}/recipients`}
+								href={`/portal/programs/${program.id}/overview`}
 								title={program.programName}
 								subtitle={getCountryNameByCode(program.country)}
 								footerLeft={{

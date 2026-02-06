@@ -57,7 +57,7 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
+							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<CampaignsForm

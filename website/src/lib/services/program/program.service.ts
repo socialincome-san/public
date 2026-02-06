@@ -1,12 +1,21 @@
 import { getCountryNameByCode } from '@/lib/types/country';
-import { PayoutStatus, ProgramPermission } from '@prisma/client';
+import { slugify } from '@/lib/utils/slugify';
+import { PayoutStatus, ProgramPermission, SurveyStatus } from '@prisma/client';
+import { CandidateService } from '../candidate/candidate.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
-import { CreateProgramInput, ProgramOption, ProgramWallet, ProgramWallets } from './program.types';
+import {
+	CreateProgramInput,
+	ProgramOption,
+	ProgramWallet,
+	ProgramWallets,
+	PublicProgramDetails,
+} from './program.types';
 
 export class ProgramService extends BaseService {
 	private programAccessService = new ProgramAccessService();
+	private candidateService = new CandidateService();
 
 	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {
@@ -166,10 +175,139 @@ export class ProgramService extends BaseService {
 				return this.resultFail(accessResult.error);
 			}
 
+			if (input.amountOfRecipientsForStart > 0) {
+				const assignResult = await this.candidateService.assignRandomCandidatesToProgram(
+					program.id,
+					input.amountOfRecipientsForStart,
+					input.targetCauses,
+				);
+
+				if (!assignResult.success) {
+					return this.resultFail(assignResult.error);
+				}
+			}
+
 			return this.resultOk({ programId: program.id });
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not create program: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicProgramBySlug(slug: string): Promise<ServiceResult<PublicProgramDetails>> {
+		try {
+			const programs = await this.db.program.findMany({
+				select: {
+					id: true,
+					name: true,
+					targetCauses: true,
+					amountOfRecipientsForStart: true,
+					programDurationInMonths: true,
+					payoutPerInterval: true,
+					payoutCurrency: true,
+					payoutInterval: true,
+					country: {
+						select: { isoCode: true },
+					},
+					programAccesses: {
+						select: {
+							permission: true,
+							organization: { select: { name: true } },
+						},
+					},
+					recipients: {
+						select: {
+							startDate: true,
+							payouts: {
+								where: {
+									status: {
+										in: [PayoutStatus.paid, PayoutStatus.confirmed],
+									},
+								},
+								select: { amount: true },
+							},
+							surveys: {
+								where: { status: SurveyStatus.completed },
+								select: { id: true },
+							},
+						},
+					},
+				},
+			});
+
+			const program = programs.find((p) => slugify(p.name) === slug);
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			const ownerAccess = program.programAccesses.find((a) => a.permission === ProgramPermission.owner);
+
+			const operatorAccess = program.programAccesses.find((a) => a.permission === ProgramPermission.operator);
+
+			let totalPayoutsSum = 0;
+			let totalPayoutsCount = 0;
+			let completedSurveysCount = 0;
+			let earliestStart: Date | null = null;
+
+			for (const r of program.recipients) {
+				if (r.startDate && (!earliestStart || r.startDate < earliestStart)) {
+					earliestStart = r.startDate;
+				}
+
+				for (const payout of r.payouts) {
+					totalPayoutsSum += Number(payout.amount ?? 0);
+					totalPayoutsCount++;
+				}
+
+				completedSurveysCount += r.surveys.length;
+			}
+
+			return this.resultOk({
+				programId: program.id,
+				programName: program.name,
+
+				countryIsoCode: program.country.isoCode,
+
+				ownerOrganizationName: ownerAccess?.organization.name ?? null,
+				operatorOrganizationName: operatorAccess?.organization.name ?? null,
+
+				targetCauses: program.targetCauses,
+
+				amountOfRecipientsForStart: program.amountOfRecipientsForStart,
+				programDurationInMonths: program.programDurationInMonths,
+				payoutPerInterval: Number(program.payoutPerInterval),
+				payoutCurrency: program.payoutCurrency,
+				payoutInterval: program.payoutInterval,
+
+				recipientsCount: program.recipients.length,
+				totalPayoutsCount,
+				totalPayoutsSum,
+
+				completedSurveysCount,
+				startedAt: earliestStart,
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not load public program: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getProgramNameById(programId: string): Promise<ServiceResult<string>> {
+		try {
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: { name: true },
+			});
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			return this.resultOk(program.name);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch program name: ${JSON.stringify(error)}`);
 		}
 	}
 }
