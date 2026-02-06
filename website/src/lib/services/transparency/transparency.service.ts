@@ -110,18 +110,17 @@ export class TransparencyService extends BaseService {
 			entry.contributors.add(c.contributorId);
 		}
 
-		const sorted = [...countryMap.entries()]
+		const allCountries = [...countryMap.entries()]
 			.map(([countryCode, data]) => ({
 				countryCode,
 				totalChf: data.totalChf,
 				contributorCount: data.contributors.size,
 			}))
-			.sort((a, b) => b.totalChf - a.totalChf)
-			.slice(0, limit);
+			.sort((a, b) => b.totalChf - a.totalChf);
 
-		const grandTotal = sorted.reduce((sum, r) => sum + r.totalChf, 0);
+		const grandTotal = allCountries.reduce((sum, r) => sum + r.totalChf, 0);
 
-		return sorted.map((r) => ({
+		return allCountries.slice(0, limit).map((r) => ({
 			country: getCountryNameByCode(r.countryCode),
 			countryCode: r.countryCode,
 			totalChf: r.totalChf,
