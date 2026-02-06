@@ -87,5 +87,14 @@ export async function GET(request: Request) {
 		path = `${JOURNAL}/${slug}`;
 	}
 
-	redirect(`/${lang}/${DEFAULT_REGION}/${path}`, RedirectType.push);
+	const storyblokParams = new URLSearchParams();
+	for (const [key, value] of searchParams.entries()) {
+		if (key.startsWith('_storyblok')) {
+			storyblokParams.set(key, value);
+		}
+	}
+	const queryString = storyblokParams.toString();
+	const redirectUrl = `/${lang}/${DEFAULT_REGION}/${path}${queryString ? `?${queryString}` : ''}`;
+
+	redirect(redirectUrl, RedirectType.push);
 }

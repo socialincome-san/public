@@ -1,5 +1,3 @@
-'use client';
-
 import { BlockWrapper } from '@/components/block-wrapper';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ImageText } from '@/generated/storyblok/types/109655/storyblok-components';
