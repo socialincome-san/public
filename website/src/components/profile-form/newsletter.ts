@@ -3,9 +3,9 @@ import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { CountryCode } from '@prisma/client';
-import { ProfileFormValues } from './schemas';
+import { ProfileFormOutput } from './schemas';
 
-export async function toggleNewsletter(values: ProfileFormValues, session: ContributorSession, isSubscribed: boolean) {
+export async function toggleNewsletter(values: ProfileFormOutput, session: ContributorSession, isSubscribed: boolean) {
 	if (values.type !== 'contributor') {
 		return { success: true };
 	}

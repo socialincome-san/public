@@ -187,7 +187,7 @@ export const addressesData: Address[] = [
 		number: '6',
 		city: 'Freetown',
 		zip: '1006',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -197,7 +197,7 @@ export const addressesData: Address[] = [
 		number: '14',
 		city: 'Bo',
 		zip: '2003',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -207,7 +207,7 @@ export const addressesData: Address[] = [
 		number: '3',
 		city: 'Bo',
 		zip: '2004',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -217,7 +217,7 @@ export const addressesData: Address[] = [
 		number: '11',
 		city: 'Makeni',
 		zip: '5006',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -227,7 +227,7 @@ export const addressesData: Address[] = [
 		number: '25',
 		city: 'Magburaka',
 		zip: '5007',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -237,7 +237,7 @@ export const addressesData: Address[] = [
 		number: '7',
 		city: 'Kenema',
 		zip: '3005',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -247,7 +247,7 @@ export const addressesData: Address[] = [
 		number: '18',
 		city: 'Koidu',
 		zip: '3006',
-		country: 'Sierra Leone',
+		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -257,7 +257,7 @@ export const addressesData: Address[] = [
 		number: '21',
 		city: 'Gbarnga',
 		zip: '4010',
-		country: 'Liberia',
+		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -267,7 +267,7 @@ export const addressesData: Address[] = [
 		number: '9',
 		city: 'Monrovia',
 		zip: '4011',
-		country: 'Liberia',
+		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -277,7 +277,7 @@ export const addressesData: Address[] = [
 		number: '30',
 		city: 'Monrovia',
 		zip: '4012',
-		country: 'Liberia',
+		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -287,7 +287,7 @@ export const addressesData: Address[] = [
 		number: '54',
 		city: 'Monrovia',
 		zip: '4013',
-		country: 'Liberia',
+		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -297,7 +297,7 @@ export const addressesData: Address[] = [
 		number: '16',
 		city: 'Monrovia',
 		zip: '4014',
-		country: 'Liberia',
+		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},

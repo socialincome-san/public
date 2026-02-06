@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Resolver, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import { Button } from '@/components/button';
@@ -20,7 +20,7 @@ import { COUNTRY_CODES } from '@/lib/types/country';
 import { Cause, ContributorReferralSource, CountryCode, Gender } from '@prisma/client';
 import { MultiSelect, MultiSelectOption } from '../multi-select';
 import { buildDefaultValues } from './defaults';
-import { ProfileFormValues, profileFormSchema } from './schemas';
+import { ProfileFormInput, ProfileFormOutput, profileFormSchema } from './schemas';
 import { submitProfileForm } from './submit';
 import { ProfileFormTranslations } from './translated-form';
 
@@ -33,8 +33,8 @@ type Props = {
 export function ProfileForm({ session, translations, isNewsletterSubscribed = false }: Props) {
 	const [errorMessage, setErrorMessage] = useState('');
 
-	const form = useForm<ProfileFormValues>({
-		resolver: zodResolver(profileFormSchema),
+	const form = useForm<ProfileFormInput, unknown, ProfileFormOutput>({
+		resolver: zodResolver(profileFormSchema) as unknown as Resolver<ProfileFormInput, unknown, ProfileFormOutput>,
 		defaultValues: buildDefaultValues(session, isNewsletterSubscribed),
 	});
 
@@ -43,7 +43,7 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 	const isLocalPartner = session.type === 'local-partner';
 	const isUser = session.type === 'user';
 
-	const onSubmit = async (values: ProfileFormValues) => {
+	const onSubmit = async (values: ProfileFormOutput) => {
 		setErrorMessage('');
 		const result = await submitProfileForm(values, session, isNewsletterSubscribed);
 
@@ -183,11 +183,11 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 
 				<FormField
 					control={form.control}
-					name="country"
+					name="address.country"
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>{translations.country}</FormLabel>
-							<Select defaultValue={field.value} onValueChange={field.onChange} disabled={loading}>
+							<Select defaultValue={field.value ?? undefined} onValueChange={field.onChange} disabled={loading}>
 								<FormControl>
 									<SelectTrigger>
 										<SelectValue placeholder={translations.selectOptionPlaceholder} />
@@ -297,7 +297,7 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 					<FormField
 						key={f}
 						control={form.control}
-						name={f}
+						name={`address.${f}`}
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>{translations[f]}</FormLabel>

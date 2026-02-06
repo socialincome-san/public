@@ -27,68 +27,106 @@ export class TransparencyService extends BaseService {
 	}
 
 	private async getTotals(): Promise<TransparencyTotals> {
-		const result = await this.db.$queryRaw<
-			{ total_chf: number; contributor_count: number; contribution_count: number }[]
-		>`
-			SELECT
-				COALESCE(SUM(amount_chf), 0)::float as total_chf,
-				COUNT(DISTINCT contributor_id)::int as contributor_count,
-				COUNT(*)::int as contribution_count
-			FROM contribution
-			WHERE status = 'succeeded'
-		`;
+		const [aggregate, distinctContributors] = await Promise.all([
+			this.db.contribution.aggregate({
+				where: { status: 'succeeded' },
+				_sum: { amountChf: true },
+				_count: { _all: true },
+			}),
+			this.db.contribution.findMany({
+				where: { status: 'succeeded' },
+				distinct: ['contributorId'],
+				select: { contributorId: true },
+			}),
+		]);
 
 		return {
-			totalContributionsChf: result[0]?.total_chf ?? 0,
-			totalContributors: result[0]?.contributor_count ?? 0,
-			totalContributionsCount: result[0]?.contribution_count ?? 0,
+			totalContributionsChf: Number(aggregate._sum.amountChf ?? 0),
+			totalContributors: distinctContributors.length,
+			totalContributionsCount: aggregate._count._all,
 		};
 	}
 
 	private async getContributionsByTimeRanges(ranges: TimeRange[]): Promise<ContributionTimeRange[]> {
 		return await Promise.all(
 			ranges.map(async (range) => {
-				const result = await this.db.$queryRaw<{ total_chf: number }[]>`
-					SELECT COALESCE(SUM(amount_chf), 0)::float as total_chf
-					FROM contribution
-					WHERE status = 'succeeded'
-						AND created_at >= ${range.start.toJSDate()}
-						AND created_at < ${range.end.toJSDate()}
-				`;
+				const aggregate = await this.db.contribution.aggregate({
+					where: {
+						status: 'succeeded',
+						createdAt: {
+							gte: range.start.toJSDate(),
+							lt: range.end.toJSDate(),
+						},
+					},
+					_sum: { amountChf: true },
+				});
 				return {
 					start: range.start,
 					end: range.end,
-					totalChf: result[0]?.total_chf ?? 0,
+					totalChf: Number(aggregate._sum.amountChf ?? 0),
 				};
 			}),
 		);
 	}
 
 	private async getContributionsByCountry(limit: number): Promise<ContributionsByCountry[]> {
-		const result = await this.db.$queryRaw<{ country: CountryCode; total_chf: number; contributor_count: number }[]>`
-			SELECT
-				a.country,
-				COALESCE(SUM(c.amount_chf), 0)::float as total_chf,
-				COUNT(DISTINCT c.contributor_id)::int as contributor_count
-			FROM contribution c
-			JOIN contributor cr ON c.contributor_id = cr.id
-			JOIN contact ct ON cr.contact_id = ct.id
-			JOIN address a ON ct.address_id = a.id
-			WHERE c.status = 'succeeded'
-				AND a.country IS NOT NULL
-			GROUP BY a.country
-			ORDER BY total_chf DESC
-			LIMIT ${limit}
-		`;
+		const contributions = await this.db.contribution.findMany({
+			where: {
+				status: 'succeeded',
+				contributor: {
+					contact: {
+						address: { isNot: null },
+					},
+				},
+			},
+			select: {
+				amountChf: true,
+				contributorId: true,
+				contributor: {
+					select: {
+						contact: {
+							select: {
+								address: {
+									select: { country: true },
+								},
+							},
+						},
+					},
+				},
+			},
+		});
 
-		const grandTotal = result.reduce((sum, r) => sum + r.total_chf, 0);
+		const countryMap = new Map<CountryCode, { totalChf: number; contributors: Set<string> }>();
+		for (const c of contributions) {
+			const country = c.contributor.contact.address?.country;
+			if (!country) continue;
 
-		return result.map((r) => ({
-			country: getCountryNameByCode(r.country),
-			countryCode: r.country,
-			totalChf: r.total_chf,
-			contributorCount: r.contributor_count,
-			percentageOfTotal: grandTotal > 0 ? (r.total_chf / grandTotal) * 100 : 0,
+			let entry = countryMap.get(country);
+			if (!entry) {
+				entry = { totalChf: 0, contributors: new Set() };
+				countryMap.set(country, entry);
+			}
+			entry.totalChf += Number(c.amountChf);
+			entry.contributors.add(c.contributorId);
+		}
+
+		const sorted = [...countryMap.entries()]
+			.map(([countryCode, data]) => ({
+				countryCode,
+				totalChf: data.totalChf,
+				contributorCount: data.contributors.size,
+			}))
+			.sort((a, b) => b.totalChf - a.totalChf)
+			.slice(0, limit);
+
+		const grandTotal = sorted.reduce((sum, r) => sum + r.totalChf, 0);
+
+		return sorted.map((r) => ({
+			country: getCountryNameByCode(r.countryCode),
+			countryCode: r.countryCode,
+			totalChf: r.totalChf,
+			contributorCount: r.contributorCount,
+			percentageOfTotal: grandTotal > 0 ? (r.totalChf / grandTotal) * 100 : 0,
 		}));
 	}
 }

@@ -2,26 +2,30 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
-import { ProfileFormValues } from './schemas';
+import { ProfileFormInput } from './schemas';
 
 export function buildDefaultValues(
 	session: ContributorSession | LocalPartnerSession | UserSession,
 	isNewsletterSubscribed?: boolean,
-): ProfileFormValues {
+): ProfileFormInput {
+	const address = {
+		country: session.country ?? null,
+		street: session.street ?? '',
+		number: session.number ?? '',
+		city: session.city ?? '',
+		zip: session.zip ?? '',
+	};
+
 	if (session.type === 'contributor') {
 		return {
 			type: 'contributor',
 			firstName: session.firstName ?? '',
 			lastName: session.lastName ?? '',
 			email: session.email ?? '',
-			country: session.country ?? undefined,
 			language: (session.language ?? 'en') as WebsiteLanguage,
 			gender: session.gender ?? undefined,
 			referral: session.referral ?? undefined,
-			street: session.street ?? '',
-			number: session.number ?? '',
-			city: session.city ?? '',
-			zip: session.zip ?? '',
+			address: address,
 			newsletter: isNewsletterSubscribed ?? false,
 		};
 	}
@@ -34,13 +38,9 @@ export function buildDefaultValues(
 			firstName: session.firstName ?? '',
 			lastName: session.lastName ?? '',
 			email: session.email ?? '',
-			country: session.country ?? undefined,
 			language: (session.language ?? 'en') as WebsiteLanguage,
 			gender: session.gender ?? undefined,
-			street: session.street ?? '',
-			number: session.number ?? '',
-			city: session.city ?? '',
-			zip: session.zip ?? '',
+			address,
 		};
 	}
 
@@ -50,12 +50,8 @@ export function buildDefaultValues(
 		firstName: session.firstName ?? '',
 		lastName: session.lastName ?? '',
 		email: session.email ?? '',
-		country: session.country ?? undefined,
 		language: (session.language ?? 'en') as WebsiteLanguage,
 		gender: session.gender ?? undefined,
-		street: session.street ?? '',
-		number: session.number ?? '',
-		city: session.city ?? '',
-		zip: session.zip ?? '',
+		address,
 	};
 }

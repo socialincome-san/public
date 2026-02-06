@@ -1,19 +1,26 @@
 import { Cause, ContributorReferralSource, CountryCode, Gender } from '@prisma/client';
 import { z } from 'zod';
 
+const addressSchema = z.object({
+	country: z
+		.nativeEnum(CountryCode)
+		.nullable()
+		.refine((country) => !!country, { message: 'Required' }),
+	street: z.string(),
+	number: z.string(),
+	city: z.string(),
+	zip: z.string(),
+});
+
 const contributorSchema = z.object({
 	type: z.literal('contributor'),
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
 	email: z.string().email(),
-	country: z.nativeEnum(CountryCode).optional(),
 	language: z.string().optional(),
 	gender: z.nativeEnum(Gender).optional(),
 	referral: z.nativeEnum(ContributorReferralSource).optional(),
-	street: z.string().optional(),
-	number: z.string().optional(),
-	city: z.string().optional(),
-	zip: z.string().optional(),
+	address: addressSchema,
 	newsletter: z.boolean().optional(),
 });
 
@@ -24,13 +31,9 @@ const localPartnerSchema = z.object({
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
 	email: z.string().email(),
-	country: z.nativeEnum(CountryCode).optional(),
 	language: z.string().optional(),
 	gender: z.nativeEnum(Gender).optional(),
-	street: z.string().optional(),
-	number: z.string().optional(),
-	city: z.string().optional(),
-	zip: z.string().optional(),
+	address: addressSchema,
 });
 
 const userSchema = z.object({
@@ -39,15 +42,12 @@ const userSchema = z.object({
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
 	email: z.string().email(),
-	country: z.nativeEnum(CountryCode).optional(),
 	language: z.string().optional(),
 	gender: z.nativeEnum(Gender).optional(),
-	street: z.string().optional(),
-	number: z.string().optional(),
-	city: z.string().optional(),
-	zip: z.string().optional(),
+	address: addressSchema,
 });
 
 export const profileFormSchema = z.discriminatedUnion('type', [contributorSchema, localPartnerSchema, userSchema]);
 
-export type ProfileFormValues = z.infer<typeof profileFormSchema>;
+export type ProfileFormOutput = z.infer<typeof profileFormSchema>;
+export type ProfileFormInput = z.input<typeof profileFormSchema>;
