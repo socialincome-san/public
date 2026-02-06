@@ -1,8 +1,10 @@
+import "package:app/data/models/language_code.dart";
 import "package:app/data/repositories/repositories.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "settings_cubit.mapper.dart";
 part "settings_state.dart";
 
 class SettingsCubit extends Cubit<SettingsState> {
@@ -25,8 +27,8 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   /// Currently english = en and krio = kri are supported
-  void changeLanguage(String languageString) {
-    final locale = languageString == "kri" ? const Locale("kri") : const Locale("en", "US");
+  void changeLanguage(LanguageCode language) {
+    final locale = language == LanguageCode.kri ? const Locale("kri") : const Locale("en", "US");
 
     // check whats the current language
     // if its the same as the new language, do nothing
