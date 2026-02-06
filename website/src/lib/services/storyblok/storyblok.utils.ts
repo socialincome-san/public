@@ -66,7 +66,7 @@ export function formatStoryblokUrl(url: string, width: number, height: number, f
  * Unlike formatStoryblokUrl, this returns a URL that can be fetched directly without
  * going through the Next.js image loader.
  */
-export function formatStoryblokUrlDirect(url: string, width: number, height: number, focus?: string | null) {
+function formatStoryblokUrlDirect(url: string, width: number, height: number, focus?: string | null) {
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 	return imageSource;
