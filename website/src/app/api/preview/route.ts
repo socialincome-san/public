@@ -5,7 +5,7 @@ const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag', 'new-website'];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
-const JOURNAL = 'journal';
+const NEW_WEBSITE = 'new-website';
 const DEFAULT_REGION = 'int';
 
 function getLanguage(slug: string | null) {
@@ -74,8 +74,17 @@ export async function GET(request: Request) {
 		return new Response('Invalid token', { status: 401 });
 	}
 	await enableDraftModeAndAdaptCookie();
-	const path = ALLOWED_SLUGS_PREFIXES.some((prefix) => slug!.toLowerCase().startsWith(prefix))
-		? slug
-		: `${JOURNAL}/${slug}`;
-	redirect(`/${lang}/${DEFAULT_REGION}/${path}`, RedirectType.push);
+
+	const path = slug!.toLowerCase().startsWith(NEW_WEBSITE) ? `${slug}/preview` : slug!;
+
+	const storyblokParams = new URLSearchParams();
+	for (const [key, value] of searchParams.entries()) {
+		if (key.startsWith('_storyblok')) {
+			storyblokParams.set(key, value);
+		}
+	}
+	const queryString = storyblokParams.toString();
+	const redirectUrl = `/${lang}/${DEFAULT_REGION}/${path}${queryString ? `?${queryString}` : ''}`;
+
+	redirect(redirectUrl, RedirectType.push);
 }

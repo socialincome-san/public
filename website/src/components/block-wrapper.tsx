@@ -1,6 +1,10 @@
 import { cn } from '@/lib/utils/cn';
-import { PropsWithChildren } from 'react';
+import { HTMLAttributes, PropsWithChildren } from 'react';
 
-export const BlockWrapper = ({ children, className }: PropsWithChildren<{ className?: string }>) => {
-	return <div className={cn('my-8 lg:my-16', className)}>{children}</div>;
+export const BlockWrapper = ({ children, className, ...rest }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => {
+	return (
+		<div className={cn('storyblok__outline my-8 lg:my-16', className)} {...rest}>
+			{children}
+		</div>
+	);
 };
