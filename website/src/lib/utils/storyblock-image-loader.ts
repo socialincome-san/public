@@ -24,15 +24,15 @@ export default function storyblokImageLoader({
 	url.searchParams.delete('_ratio');
 	const baseUrl = url.toString();
 
-	const h = ratio > 0 ? Math.round(width * ratio) : 0;
-	const dims = `${width}x${h}`;
-	const q = quality ? `:quality(${quality})` : '';
+	const height = ratio > 0 ? Math.round(width * ratio) : 0;
+	const dimensions = `${width}x${height}`;
+	const qualityParam = quality ? `:quality(${quality})` : '';
 
 	if (crop && crop !== 'smart') {
-		return `${baseUrl}/m/${dims}/filters:focal(${crop}):format(webp)${q}`;
+		return `${baseUrl}/m/${dimensions}/filters:focal(${crop}):format(webp)${qualityParam}`;
 	}
 	if (crop === 'smart') {
-		return `${baseUrl}/m/${dims}/smart/filters:format(webp)${q}`;
+		return `${baseUrl}/m/${dimensions}/smart/filters:format(webp)${qualityParam}`;
 	}
-	return `${baseUrl}/m/${width}x0/filters:format(webp)${q}`;
+	return `${baseUrl}/m/${dimensions}/filters:format(webp)${qualityParam}`;
 }
