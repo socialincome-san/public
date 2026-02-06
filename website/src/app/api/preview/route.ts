@@ -79,8 +79,7 @@ export async function GET(request: Request) {
 	let path: string;
 	if (slug!.toLowerCase().startsWith(NEW_WEBSITE)) {
 		// Redirect new-website pages to the preview route for live editing
-		const pageSlug = slug!.slice(NEW_WEBSITE.length + 1); // Remove "new-website/" prefix
-		path = `${NEW_WEBSITE}/preview/${pageSlug}`;
+		path = `${slug}/preview`;
 	} else if (ALLOWED_SLUGS_PREFIXES.some((prefix) => slug!.toLowerCase().startsWith(prefix))) {
 		path = slug!;
 	} else {
