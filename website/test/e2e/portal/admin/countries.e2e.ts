@@ -11,7 +11,7 @@ test.beforeEach(async () => {
 test('Add new country', async ({ page }) => {
 	const expectedCountry: Country = {
 		id: '',
-		isoCode: 'CHE',
+		isoCode: 'CH',
 		microfinanceIndex: new Decimal(1.11),
 		populationCoverage: new Decimal(82.3),
 		networkTechnology: 'g5',
