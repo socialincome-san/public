@@ -1,8 +1,10 @@
 import { authAdmin } from '@/lib/firebase/firebase-admin';
-import { appCheck } from 'firebase-admin';
+import admin from 'firebase-admin';
 import { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+
+const { appCheck } = admin;
 
 export class FirebaseAdminService extends BaseService {
 	async createByPhoneNumber(phoneNumber: string): Promise<ServiceResult<UserRecord>> {
