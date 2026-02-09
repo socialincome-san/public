@@ -1,4 +1,4 @@
-import { CountryCode } from '@/generated/prisma/enums';
+import { CountryCode } from '../../generated/prisma/enums';
 
 // ISO 4217 currency codes
 const CURRENCIES = [
