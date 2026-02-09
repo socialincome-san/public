@@ -1,5 +1,5 @@
 'use client';
-import { ContributorReferralSource } from '@/generated/prisma/enums';
+import { ContributorReferralSource, CountryCode } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
