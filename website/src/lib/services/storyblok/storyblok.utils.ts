@@ -51,15 +51,15 @@ export function getScaledDimensions(url: string, maxWidth: number): { width: num
 }
 
 /**
- * Format a Storyblok image URL with optional focal point.
- * Storyblok provides out of the box image resizing/cropping, which can be combined with a custom focal point.
- * If that's not defined, we use the smart feature, which recognizes faces and may resize accordingly.
+ * Annotates a Storyblok image URL with focal point or smart cropping metadata.
+ * The actual image transformation is handled by the custom image loader.
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
 export function formatStoryblokUrl(url: string, width: number, height: number, focus?: string | null) {
-	let imageSource = url + `/m/${width}x${height}`;
-	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
-	return imageSource;
+	if (!focus) {
+		return `${url}?storyblok_smart=1`;
+	}
+	return `${url}?storyblok_focal=${encodeURIComponent(focus)}`;
 }
 
 // ==================== Date Utilities ====================
