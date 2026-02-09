@@ -1,9 +1,10 @@
+import { CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
-import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
+import { COUNTRY_CODES } from '@/lib/types/country';
 import { ProfileForm } from './form';
 
 export type ProfileFormTranslations = {

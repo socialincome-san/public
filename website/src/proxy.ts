@@ -1,7 +1,8 @@
 import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
 import { allWebsiteLanguages, findBestLocale, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
-import { CountryCode, isValidCountryCode } from '@/lib/types/country';
+import { isValidCountryCode } from '@/lib/types/country';
 import { NextRequest, NextResponse } from 'next/server';
+import { CountryCode } from './generated/prisma/enums';
 import { bestGuessCurrency, isValidCurrency } from './lib/types/currency';
 
 // https://developers.cloudflare.com/fundamentals/reference/http-headers/#cf-ipcountry

@@ -14,8 +14,8 @@
 
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
+import { Prisma } from '@/generated/prisma/client';
 import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
-import { Prisma } from '@prisma/client';
 import { CandidateFormSchema } from './candidates-form';
 
 export function buildUpdateCandidateInput(
@@ -155,13 +155,15 @@ export function buildUpdateCandidateInput(
 				data: {
 					...buildCommonContactData(contactFields),
 					phone: contactPhoneWriteOperation,
-					address: {
-						upsert: {
-							update: addressUpdateOperation,
-							create: addressUpdateOperation,
-							where: { id: candidate.contact.address?.id },
+					...(addressUpdateOperation && {
+						address: {
+							upsert: {
+								update: addressUpdateOperation,
+								create: addressUpdateOperation,
+								where: { id: candidate.contact.address?.id },
+							},
 						},
-					},
+					}),
 				},
 				where: { id: candidate.contact.id },
 			},
@@ -174,6 +176,7 @@ export function buildCreateCandidateInput(
 	contactFields: { [key: string]: FormField },
 ): CandidateCreateInput {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
+	const addressInput = buildAddressInput(contactFields);
 
 	return {
 		status: schema.fields.status.value,
@@ -191,7 +194,9 @@ export function buildCreateCandidateInput(
 			create: {
 				...buildCommonContactData(contactFields),
 				phone: contactFields.phone.value ? { create: { number: contactFields.phone.value } } : undefined,
-				address: { create: buildAddressInput(contactFields) },
+				...(addressInput && {
+					address: { create: addressInput },
+				}),
 			},
 		},
 	};

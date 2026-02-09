@@ -1,5 +1,5 @@
+import { SurveyQuestionnaire } from '@/generated/prisma/enums';
 import { TranslateFunction } from '@/lib/i18n/translator';
-import { SurveyQuestionnaire } from '@prisma/client';
 import {
 	achievementsAchievedPage,
 	debtHouseholdPage,

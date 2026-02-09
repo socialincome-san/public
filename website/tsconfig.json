@@ -29,7 +29,8 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		".next/dev/types/**/*.ts",
-		"../knip.config.ts"
+		"playwright.config.ts",
+		"test/**/*.ts"
 	],
 	"exclude": ["node_modules"]
 }

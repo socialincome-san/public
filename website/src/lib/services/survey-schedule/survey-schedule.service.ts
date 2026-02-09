@@ -1,4 +1,4 @@
-import { SurveySchedule } from '@prisma/client';
+import { SurveySchedule } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 export class SurveyScheduleService extends BaseService {

@@ -1,4 +1,4 @@
-import { Gender, UserRole } from '@prisma/client';
+import { CountryCode, Gender, UserRole } from '@/generated/prisma/client';
 
 export type UserPayload = {
 	id: string;
@@ -31,7 +31,7 @@ export type UserUpdateInput = {
 		number: string;
 		city: string;
 		zip: string;
-		country: string;
+		country: CountryCode;
 	} | null;
 };
 
@@ -61,7 +61,7 @@ export type UserSession = {
 	number: string | null;
 	city: string | null;
 	zip: string | null;
-	country: string | null;
+	country: CountryCode | null;
 
 	role: UserRole;
 	activeOrganization: {

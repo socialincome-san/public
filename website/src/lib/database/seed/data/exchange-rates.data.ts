@@ -1,4 +1,4 @@
-import { ExchangeRate, Prisma } from '@prisma/client';
+import { ExchangeRate, Prisma } from '@/generated/prisma/client';
 
 export const exchangeRatesData: ExchangeRate[] = [
 	{
@@ -14,7 +14,7 @@ export const exchangeRatesData: ExchangeRate[] = [
 		id: 'exchange-rate-2',
 		legacyFirestoreId: null,
 		currency: 'USD',
-		rate: new Prisma.Decimal(1.08),
+		rate: new Prisma.Decimal(0.85),
 		timestamp: new Date('2025-01-01T00:00:00Z'),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null

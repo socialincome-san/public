@@ -51,12 +51,22 @@ export function getScaledDimensions(url: string, maxWidth: number): { width: num
 }
 
 /**
- * Format a Storyblok image URL with optional focal point.
- * Storyblok provides out of the box image resizing/cropping, which can be combined with a custom focal point.
- * If that's not defined, we use the smart feature, which recognizes faces and may resize accordingly.
+ * Annotates a Storyblok image URL with focal point or smart cropping metadata.
+ * The actual image transformation is handled by the custom image loader.
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
 export function formatStoryblokUrl(url: string, width: number, height: number, focus?: string | null) {
+	const crop = focus || 'smart';
+	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
+	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
+}
+
+/**
+ * Builds a complete Storyblok Image Service URL for direct usage (e.g., OG metadata).
+ * Unlike formatStoryblokUrl, this returns a URL that can be fetched directly without
+ * going through the Next.js image loader.
+ */
+function formatStoryblokUrlDirect(url: string, width: number, height: number, focus?: string | null) {
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 	return imageSource;
@@ -127,7 +137,8 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Resolved
 	if (imageFilename) {
 		const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
 		if (dimensions.width && dimensions.height) {
-			const imageUrl = formatStoryblokUrl(
+			// Use direct URL for OG metadata since it doesn't go through the Next.js image loader
+			const imageUrl = formatStoryblokUrlDirect(
 				imageFilename,
 				dimensions.width,
 				dimensions.height,

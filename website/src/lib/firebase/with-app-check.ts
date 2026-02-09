@@ -1,4 +1,4 @@
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { FirebaseAdminService } from '@/lib/services/firebase/firebase-admin.service';
 import { NextRequest } from 'next/server';
 import { logger } from '../utils/logger';
 
@@ -8,7 +8,7 @@ type Handler<T> = (request: NextRequest, context: { params: T }) => Promise<Resp
 // https://firebase.google.com/docs/app-check
 export function withAppCheck<T>(handler: Handler<T>) {
 	return async (request: NextRequest, context: { params: T }): Promise<Response> => {
-		const firebaseService = new FirebaseService();
+		const firebaseService = new FirebaseAdminService();
 
 		const appCheckResult = await firebaseService.verifyAppCheckFromRequest(request);
 		if (!appCheckResult.success) {

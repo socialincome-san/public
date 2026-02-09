@@ -1,4 +1,4 @@
-import { Prisma, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
+import { Prisma, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
 
 export const surveysData: Prisma.SurveyCreateManyInput[] = [
 	{

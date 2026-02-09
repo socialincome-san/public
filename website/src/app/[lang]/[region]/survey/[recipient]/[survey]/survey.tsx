@@ -1,8 +1,8 @@
 'use client';
 
+import { SurveyStatus } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { SurveyStatus } from '@prisma/client';
 import { useEffect } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/defaultV2.min.css';

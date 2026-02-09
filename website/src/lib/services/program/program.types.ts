@@ -1,10 +1,10 @@
-import { Cause, PayoutInterval, ProgramPermission } from '@prisma/client';
+import { Cause, CountryCode, PayoutInterval, ProgramPermission } from '@/generated/prisma/client';
 import { Profile } from '../candidate/candidate.types';
 
 export type ProgramWallet = {
 	id: string;
 	programName: string;
-	country: string;
+	country: CountryCode;
 	payoutCurrency: string;
 	recipientsCount: number;
 	totalPayoutsSum: number;

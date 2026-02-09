@@ -14,8 +14,8 @@
 
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
+import { Prisma } from '@/generated/prisma/client';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
-import { Prisma } from '@prisma/client';
 import { RecipientFormSchema } from './recipient-form';
 
 export function buildUpdateRecipientInput(
@@ -160,13 +160,15 @@ export function buildUpdateRecipientInput(
 				data: {
 					...buildCommonContactData(contactFields),
 					phone: contactPhoneWriteOperation,
-					address: {
-						upsert: {
-							update: addressUpdateOperation,
-							create: addressUpdateOperation,
-							where: { id: recipient.contact.address?.id },
+					...(addressUpdateOperation && {
+						address: {
+							upsert: {
+								update: addressUpdateOperation,
+								create: addressUpdateOperation,
+								where: { id: recipient.contact.address?.id },
+							},
 						},
-					},
+					}),
 				},
 				where: { id: recipient.contact.id },
 			},

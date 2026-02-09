@@ -1,8 +1,8 @@
-import { NetworkTechnology, PaymentProvider } from '@prisma/client';
+import { CountryCode, NetworkTechnology, PaymentProvider } from '@/generated/prisma/enums';
 
 export type CountryTableViewRow = {
 	id: string;
-	isoCode: string;
+	isoCode: CountryCode;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -23,7 +23,7 @@ export type CountryTableView = {
 
 export type CountryPayload = {
 	id: string;
-	isoCode: string;
+	isoCode: CountryCode;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -36,7 +36,7 @@ export type CountryPayload = {
 };
 
 export type CountryCreateInput = {
-	isoCode: string;
+	isoCode: CountryCode;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -50,7 +50,7 @@ export type CountryCreateInput = {
 
 export type CountryUpdateInput = {
 	id: string;
-	isoCode?: string;
+	isoCode?: CountryCode;
 	isActive?: boolean;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
@@ -85,7 +85,7 @@ export type ProgramCountryFeasibilityRow = {
 	id: string;
 
 	country: {
-		isoCode: string;
+		isoCode: CountryCode;
 		isActive: boolean;
 	};
 

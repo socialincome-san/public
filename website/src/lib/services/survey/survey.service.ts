@@ -1,9 +1,9 @@
-import { ProgramPermission, SurveyStatus } from '@prisma/client';
+import { ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import crypto from 'crypto';
 import { addMonths, isFuture } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import { RecipientService } from '../recipient/recipient.service';
 import { SurveyScheduleService } from '../survey-schedule/survey-schedule.service';
@@ -22,7 +22,7 @@ export class SurveyService extends BaseService {
 	private programAccessService = new ProgramAccessService();
 	private recipientService = new RecipientService();
 	private surveyScheduleService = new SurveyScheduleService();
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
 
 	async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
@@ -408,7 +408,7 @@ export class SurveyService extends BaseService {
 			let surveysCreated = 0;
 
 			for (const surveyInput of surveysToCreate) {
-				const firebaseResult = await this.firebaseService.createSurveyUser(
+				const firebaseResult = await this.firebaseAdminService.createSurveyUser(
 					surveyInput.accessEmail,
 					surveyInput.accessPw,
 				);

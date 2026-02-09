@@ -1,11 +1,11 @@
-import { ContributorReferralSource, Gender } from '@prisma/client';
+import { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/client';
 
 export type StripeCustomerData = {
 	id: string;
 	email: string;
 	name?: string;
 	address?: {
-		country?: string;
+		country?: CountryCode;
 	};
 };
 
@@ -47,7 +47,7 @@ export type UpdateContributorAfterCheckoutInput = {
 			referral?: ContributorReferralSource;
 		};
 		address: {
-			country: string;
+			country: CountryCode;
 		};
 	};
 };

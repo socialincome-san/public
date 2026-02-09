@@ -1,4 +1,4 @@
-import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
+import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
 
 export type SurveyTableViewRow = {
 	id: string;

@@ -7,18 +7,32 @@ export default function storyblokImageLoader({
 	width: number;
 	quality?: number;
 }) {
-	let hostname: string;
+	let url: URL;
 	try {
-		hostname = new URL(src).hostname;
+		url = new URL(src);
 	} catch {
 		return src;
 	}
-	const isStoryblok = hostname === 'storyblok.com' || hostname.endsWith('.storyblok.com');
-	if (!isStoryblok) {
+
+	if (!url.hostname.endsWith('.storyblok.com')) {
 		return src;
 	}
 
-	// Build Image Service URL: /m/WIDTHx0 preserves aspect ratio
+	const crop = url.searchParams.get('_crop');
+	const ratio = Number(url.searchParams.get('_ratio') || '0');
+	url.searchParams.delete('_crop');
+	url.searchParams.delete('_ratio');
+	const baseUrl = url.toString();
+
+	const height = ratio > 0 ? Math.round(width * ratio) : 0;
+	const dimensions = `${width}x${height}`;
 	const qualityParam = quality ? `:quality(${quality})` : '';
-	return `${src}/m/${width}x0/filters:format(webp)${qualityParam}`;
+
+	if (crop && crop !== 'smart') {
+		return `${baseUrl}/m/${dimensions}/filters:focal(${crop}):format(webp)${qualityParam}`;
+	}
+	if (crop === 'smart') {
+		return `${baseUrl}/m/${dimensions}/smart/filters:format(webp)${qualityParam}`;
+	}
+	return `${baseUrl}/m/${dimensions}/filters:format(webp)${qualityParam}`;
 }

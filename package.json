@@ -9,6 +9,7 @@
 		"ui",
 		"website"
 	],
+	"type": "module",
 	"scripts": {
 		"postinstall": "npm run db:generate",
 		"firebase:export": "firebase emulators:export --project demo-social-income-local --force ./seed",

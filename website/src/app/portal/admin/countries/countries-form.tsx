@@ -1,10 +1,10 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
+import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@/generated/prisma/enums';
 import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
 import { CountryPayload, NETWORK_TECH_LABELS, PAYMENT_PROVIDER_LABELS } from '@/lib/services/country/country.types';
-import { isoCountries } from '@/lib/services/country/iso-countries';
-import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
+import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCountryInput, buildUpdateCountryInput } from './countries-form-helper';
@@ -39,10 +39,10 @@ const initialFormSchema: CountryFormSchema = {
 	fields: {
 		isoCode: {
 			label: 'Country',
-			zodSchema: z.enum(isoCountries.map((c) => c.isoCode) as [string, ...string[]]),
+			zodSchema: z.enum(COUNTRY_OPTIONS.map((c) => c.code) as [string, ...string[]]),
 			useCombobox: true,
-			options: isoCountries.map((c) => ({
-				id: c.isoCode,
+			options: COUNTRY_OPTIONS.map((c) => ({
+				id: c.code,
 				label: c.name,
 			})),
 		},

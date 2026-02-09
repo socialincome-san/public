@@ -2,9 +2,9 @@
 
 import { Badge } from '@/components/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
+import { Cause } from '@/generated/prisma/enums';
 import { Profile } from '@/lib/services/candidate/candidate.types';
 import { cn } from '@/lib/utils/cn';
-import { Cause } from '@prisma/client';
 import { SpinnerIcon } from '@socialincome/ui';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';

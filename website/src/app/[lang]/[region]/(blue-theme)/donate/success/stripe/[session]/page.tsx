@@ -1,9 +1,9 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
+import { CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { StripeService } from '@/lib/services/stripe/stripe.service';
-import { CountryCode } from '@/lib/types/country';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
 

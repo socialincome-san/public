@@ -1,4 +1,4 @@
-import { SurveySchedule, SurveyQuestionnaire } from '@prisma/client';
+import { SurveySchedule, SurveyQuestionnaire } from '@/generated/prisma/client';
 
 export const surveySchedulesData: SurveySchedule[] = [
 	{

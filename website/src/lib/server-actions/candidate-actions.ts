@@ -1,10 +1,10 @@
 'use server';
 
+import { Cause } from '@/generated/prisma/enums';
 import { getActorOrThrow } from '@/lib/firebase/current-account';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
 import { CandidateCreateInput, CandidateUpdateInput, Profile } from '@/lib/services/candidate/candidate.types';
 import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
-import { Cause } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 const ADMIN_CANDIDATES_PATH = '/admin/candidates';

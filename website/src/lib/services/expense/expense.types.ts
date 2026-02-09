@@ -1,4 +1,4 @@
-import { ExpenseType } from '@prisma/client';
+import { ExpenseType } from '@/generated/prisma/client';
 
 export type ExpenseTableViewRow = {
 	id: string;

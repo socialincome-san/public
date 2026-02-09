@@ -1,4 +1,4 @@
-import { PaymentEventType, Prisma } from '@prisma/client';
+import { PaymentEventType, Prisma } from '@/generated/prisma/client';
 
 export const paymentEventsData: Prisma.PaymentEventCreateManyInput[] = [
 	{

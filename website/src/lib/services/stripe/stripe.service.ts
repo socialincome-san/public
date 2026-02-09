@@ -9,7 +9,7 @@
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
-import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@prisma/client';
+import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@/generated/prisma/client';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
@@ -365,6 +365,7 @@ export class StripeService extends BaseService {
 
 			const session = await this.stripe.checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
+
 				customer: stripeCustomerId || undefined,
 				customer_creation: stripeCustomerId ? undefined : recurring ? undefined : 'always',
 				line_items: [
@@ -387,8 +388,6 @@ export class StripeService extends BaseService {
 						},
 					}),
 			});
-
-			console.log('Created Stripe checkout session with metadata:', session.metadata);
 
 			return this.resultOk(session.url ?? '');
 		} catch (error) {

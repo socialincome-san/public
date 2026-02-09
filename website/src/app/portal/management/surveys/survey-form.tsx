@@ -2,6 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
+import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import {
 	createSurveyAction,
@@ -11,7 +12,6 @@ import {
 } from '@/lib/server-actions/survey-actions';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
-import { SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';

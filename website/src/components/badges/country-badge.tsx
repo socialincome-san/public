@@ -1,16 +1,17 @@
 import { Badge } from '@/components/badge';
-import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
+import { CountryCode } from '@/generated/prisma/enums';
+import { getCountryNameByCode } from '@/lib/types/country';
 import { CountryFlag } from '../country-flag';
 
 type Props = {
-	isoCode: string;
+	country: CountryCode;
 };
 
-export function CountryBadge({ isoCode }: Props) {
+export function CountryBadge({ country }: Props) {
 	return (
 		<Badge variant="country" className="inline-flex items-center gap-2">
-			<CountryFlag isoCode={isoCode} size="sm" />
-			<span className="font-medium">{getCountryNameByIsoCode(isoCode)}</span>
+			<CountryFlag country={country} size="sm" />
+			<span className="font-medium">{getCountryNameByCode(country)}</span>
 		</Badge>
 	);
 }

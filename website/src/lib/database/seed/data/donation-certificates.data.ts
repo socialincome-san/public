@@ -1,4 +1,4 @@
-import { DonationCertificate } from '@prisma/client';
+import { DonationCertificate } from '@/generated/prisma/client';
 
 export const donationCertificatesData: DonationCertificate[] = [
 	{
