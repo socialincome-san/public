@@ -39,9 +39,10 @@ COPY --from=deps /app/recipients_selection ../recipients_selection
 COPY --from=base /app/.env /app/.env
 
 RUN set -a && . /app/.env && set +a && \
-    npx prisma generate --schema=./src/lib/database/schema.prisma && \
-    npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
-
+    npx prisma generate \
+      --schema=./src/lib/database/schema.prisma \
+      --config=./prisma.config.ts && \
+    npm run build
 # -------- Runtime Layer --------
 FROM node:22-alpine AS runner
 WORKDIR /app
@@ -61,9 +62,9 @@ COPY --from=base /app/.env .env
 USER nextjs
 
 CMD ["sh", "-c", "\
-  set -a && \
-  . .env && \
-  set +a && \
-  npx prisma migrate deploy --schema=./src/lib/database/schema.prisma && \
+  set -a && . .env && set +a && \
+  npx prisma migrate deploy \
+    --schema=./src/lib/database/schema.prisma \
+    --config=./prisma.config.ts && \
   node website/server.js \
 "]
