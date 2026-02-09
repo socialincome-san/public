@@ -32,7 +32,7 @@
 		"db:migrate:create": "prisma migrate dev --create-only",
 		"db:introspect": "prisma db pull",
 		"db:seed": "prisma db seed",
-		"db:studio": "npm run prisma:env-local -- studio",
+		"db:studio": "prisma studio",
 		"db:up": "docker compose up -d postgres",
 		"db:down": "docker compose down",
 		"check:unused": "knip --config knip.config.ts",
