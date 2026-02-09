@@ -1,4 +1,4 @@
-import { CountryCode, Gender, UserRole } from '@prisma/client';
+import { CountryCode, Gender, UserRole } from '@/generated/prisma/client';
 
 export type UserPayload = {
 	id: string;

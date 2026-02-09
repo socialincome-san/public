@@ -1,4 +1,4 @@
-import { PayoutStatus, Prisma, ProgramPermission } from '@prisma/client';
+import { PayoutStatus, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
 export type PayoutEntity = Prisma.PayoutGetPayload<{}>;
 

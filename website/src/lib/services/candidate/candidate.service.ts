@@ -1,8 +1,8 @@
+import { Cause, Prisma } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
-import { Cause, Prisma } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { UserService } from '../user/user.service';
 import {
 	CandidateCreateInput,
@@ -14,7 +14,7 @@ import {
 
 export class CandidateService extends BaseService {
 	private userService = new UserService();
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
 
 	private async assertAdmin(userId: string): Promise<ServiceResult<true>> {
 		const isAdmin = await this.userService.isAdmin(userId);
@@ -86,7 +86,7 @@ export class CandidateService extends BaseService {
 					},
 				});
 
-				const firebaseResult = await this.firebaseService.createByPhoneNumber(phone);
+				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(phone);
 				if (!firebaseResult.success) {
 					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
 				}
@@ -153,7 +153,7 @@ export class CandidateService extends BaseService {
 
 		try {
 			if (paymentPhoneHasChanged) {
-				const firebaseResult = await this.firebaseService.updateByPhoneNumber(previous!, nextPaymentPhoneNumber!);
+				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(previous!, nextPaymentPhoneNumber!);
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
 				}

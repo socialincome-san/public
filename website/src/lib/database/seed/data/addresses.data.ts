@@ -1,4 +1,4 @@
-import { Address } from '@prisma/client';
+import { Address } from '@/generated/prisma/client';
 
 export const addressesData: Address[] = [
 	{

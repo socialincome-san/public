@@ -1,4 +1,4 @@
-import { Prisma, Program, PayoutInterval, Cause } from '@prisma/client';
+import { Prisma, Program, PayoutInterval, Cause } from '@/generated/prisma/client';
 
 export const programsData: Program[] = [
 	{

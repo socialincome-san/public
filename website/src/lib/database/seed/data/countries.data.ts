@@ -4,7 +4,7 @@ import {
   NetworkTechnology,
   SanctionRegime,
   Prisma
-} from '@prisma/client';
+} from '@/generated/prisma/client';
 
 
 export const countriesData: Country[] = [

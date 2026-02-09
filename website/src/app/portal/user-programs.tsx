@@ -1,8 +1,8 @@
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { ProgramService } from '@/lib/services/program/program.service';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { ProgramPermission } from '@prisma/client';
 
 type Props = {
 	userId: string;

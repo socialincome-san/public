@@ -3,6 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
+import { PaymentProvider, RecipientStatus } from '@/generated/prisma/enums';
 import { Actor } from '@/lib/firebase/current-account';
 import {
 	createCandidateAction,
@@ -12,7 +13,6 @@ import {
 } from '@/lib/server-actions/candidate-actions';
 import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
-import { PaymentProvider, RecipientStatus } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCandidateInput, buildUpdateCandidateInput } from './candidate-form-helpers';

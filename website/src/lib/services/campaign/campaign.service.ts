@@ -1,5 +1,5 @@
+import { Campaign } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
-import { Campaign } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';

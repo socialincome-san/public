@@ -1,4 +1,4 @@
-import { Cause, ContributorReferralSource, CountryCode, Gender } from '@prisma/client';
+import { Cause, ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/enums';
 import { z } from 'zod';
 
 const addressSchema = z.object({

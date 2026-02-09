@@ -1,4 +1,5 @@
 'use client';
+import { ContributorReferralSource, CountryCode } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
@@ -8,7 +9,6 @@ import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/strip
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ContributorReferralSource, CountryCode } from '@prisma/client';
 import {
 	Button,
 	Checkbox,

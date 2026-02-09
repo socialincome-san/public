@@ -1,8 +1,7 @@
+import { RecipientStatus } from '@/generated/prisma/enums';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { expect, test } from '@playwright/test';
-import { RecipientStatus } from '@prisma/client';
+import { getFirebaseAdminService, getRecipientService } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -36,7 +35,7 @@ test('Add new recipient', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const recipientService = new RecipientService();
+	const recipientService = await getRecipientService();
 	const result = await recipientService.getTableView('user-2');
 
 	if (!result.success) {
@@ -76,7 +75,7 @@ test('Edit existing recipient', async ({ page }) => {
 		country: 'Sierra Leone',
 	};
 
-	const firebaseService = new FirebaseService();
+	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists('+666666666');
 
 	await page.goto('http://localhost:3000/portal/management/recipients');
@@ -134,7 +133,7 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const recipientService = new RecipientService();
+	const recipientService = await getRecipientService();
 	const tableResult = await recipientService.getTableView('user-2');
 
 	if (!tableResult.success) {
@@ -158,7 +157,7 @@ test('Edit existing recipient', async ({ page }) => {
 });
 
 test('Delete recipient', async ({ page }) => {
-	const firebaseService = new FirebaseService();
+	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.createByPhoneNumber('+41791234567');
 
 	await page.goto('http://localhost:4000/auth');
@@ -172,7 +171,7 @@ test('Delete recipient', async ({ page }) => {
 	await page.getByRole('button', { name: 'Delete permanently' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const recipientService = new RecipientService();
+	const recipientService = await getRecipientService();
 	const tableResult = await recipientService.getTableView('user-2');
 
 	if (!tableResult.success) {
@@ -225,7 +224,7 @@ test('CSV Upload', async ({ page }) => {
 
 	await expect(page.getByText('Successfully imported 3 recipients.')).toBeVisible();
 
-	const recipientService = new RecipientService();
+	const recipientService = await getRecipientService();
 	const result = await recipientService.getTableView('user-2');
 
 	if (!result.success) {

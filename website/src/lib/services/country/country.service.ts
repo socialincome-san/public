@@ -1,6 +1,5 @@
+import { CountryCode, NetworkTechnology, PaymentProvider, Prisma, SanctionRegime } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { CountryCode, NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
@@ -395,7 +394,7 @@ export class CountryService extends BaseService {
 			: `${getCountryNameByCode(countryIsoCode)} is not on the UN, US or EU sanctioned list.`;
 	}
 
-	private toNumber(value: Decimal | null): number | null {
+	private toNumber(value: Prisma.Decimal | null): number | null {
 		return value === null ? null : Number(value);
 	}
 

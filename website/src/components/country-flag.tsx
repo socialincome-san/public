@@ -1,7 +1,7 @@
 'use client';
 
+import { CountryCode } from '@/generated/prisma/enums';
 import { cn } from '@/lib/utils/cn';
-import { CountryCode } from '@prisma/client';
 import Image from 'next/image';
 import { useState } from 'react';
 

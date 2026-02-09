@@ -1,9 +1,9 @@
+import { Cause, PayoutInterval } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput } from '@/lib/services/program/program.types';
-import { Cause, PayoutInterval } from '@prisma/client';
 import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 

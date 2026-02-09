@@ -1,4 +1,4 @@
-import { CountryCode } from '@prisma/client';
+import { CountryCode } from '@/generated/prisma/enums';
 import { DateTime } from 'luxon';
 
 export type TimeRange = {

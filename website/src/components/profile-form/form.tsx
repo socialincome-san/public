@@ -1,23 +1,21 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { Resolver, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
 import { Button } from '@/components/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
-
+import { Cause, ContributorReferralSource, Gender } from '@/generated/prisma/enums';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
-import { COUNTRY_CODES } from '@/lib/types/country';
-import { Cause, ContributorReferralSource, CountryCode, Gender } from '@prisma/client';
+import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { Resolver, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { MultiSelect, MultiSelectOption } from '../multi-select';
 import { buildDefaultValues } from './defaults';
 import { ProfileFormInput, ProfileFormOutput, profileFormSchema } from './schemas';
@@ -194,9 +192,9 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent className="max-h-[16rem] overflow-y-auto">
-									{COUNTRY_CODES.map((c: CountryCode) => (
-										<SelectItem key={c} value={c}>
-											{translations.countries[c]}
+									{COUNTRY_OPTIONS.map((c) => (
+										<SelectItem key={c.code} value={c.code}>
+											{c.name}
 										</SelectItem>
 									))}
 								</SelectContent>

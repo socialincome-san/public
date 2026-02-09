@@ -1,6 +1,6 @@
 'use client';
 
-import { PayoutInterval } from '@prisma/client';
+import { PayoutInterval } from '@/generated/prisma/enums';
 import { PayoutBox } from './payout-box';
 import { ProgramCostsHeader } from './program-costs-header';
 import { RecipientsBox } from './recipients-box';

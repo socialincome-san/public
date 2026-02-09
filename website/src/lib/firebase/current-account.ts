@@ -1,6 +1,6 @@
 import { ContributorService } from '../services/contributor/contributor.service';
 import { ContributorSession } from '../services/contributor/contributor.types';
-import { FirebaseService } from '../services/firebase/firebase.service';
+import { FirebaseSessionService } from '../services/firebase/firebase-session.service';
 import { LocalPartnerService } from '../services/local-partner/local-partner.service';
 import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
 import { UserService } from '../services/user/user.service';
@@ -18,13 +18,13 @@ export type Actor =
 	| never;
 
 export async function getCurrentSession(): Promise<Session | null> {
-	const firebaseService = new FirebaseService();
-	const cookie = await firebaseService.readSessionCookie();
+	const firebaseSessionService = new FirebaseSessionService();
+	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
 
-	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
+	const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}

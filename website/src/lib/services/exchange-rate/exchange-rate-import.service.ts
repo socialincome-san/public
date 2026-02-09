@@ -1,4 +1,4 @@
-import { ExchangeRate } from '@prisma/client';
+import { ExchangeRate } from '@/generated/prisma/client';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';

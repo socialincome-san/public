@@ -1,13 +1,13 @@
 'use server';
 
-import { FirebaseService } from '../services/firebase/firebase.service';
+import { FirebaseSessionService } from '../services/firebase/firebase-session.service';
 
-const firebaseService = new FirebaseService();
+const firebaseSessionService = new FirebaseSessionService();
 
 export async function createSessionAction(idToken: string) {
-	return firebaseService.createSessionAndSetCookie(idToken);
+	return firebaseSessionService.createSessionAndSetCookie(idToken);
 }
 
 export async function logoutAction() {
-	return firebaseService.clearSessionCookie();
+	return firebaseSessionService.clearSessionCookie();
 }

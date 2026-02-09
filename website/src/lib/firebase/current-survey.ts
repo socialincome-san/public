@@ -1,9 +1,9 @@
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
 import { cache } from 'react';
 import { SurveyService } from '../services/survey/survey.service';
 import { SurveyPayload } from '../services/survey/survey.types';
 
-const firebaseService = new FirebaseService();
+const firebaseSessionService = new FirebaseSessionService();
 
 async function findSurveyByEmail(email: string): Promise<SurveyPayload | null> {
 	const service = new SurveyService();
@@ -12,11 +12,11 @@ async function findSurveyByEmail(email: string): Promise<SurveyPayload | null> {
 }
 
 async function loadCurrentSurvey(): Promise<SurveyPayload | null> {
-	const cookie = await firebaseService.readSessionCookie();
+	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
+	const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}

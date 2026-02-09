@@ -6,7 +6,7 @@ import {
 	OrganizationPermission,
 	Phone,
 	Prisma,
-} from '@prisma/client';
+} from '@/generated/prisma/client';
 
 export type ContributorTableViewRow = {
 	id: string;

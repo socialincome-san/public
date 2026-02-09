@@ -1,4 +1,4 @@
-import { Payout, PayoutStatus, Prisma } from '@prisma/client';
+import { Payout, PayoutStatus, Prisma } from '@/generated/prisma/client';
 
 export const payoutsData: Payout[] = [
 	{

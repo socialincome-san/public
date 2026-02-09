@@ -1,7 +1,7 @@
-import { UserRole } from '@prisma/client';
+import { UserRole } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import {
 	UserCreateInput,
 	UserPayload,
@@ -12,7 +12,7 @@ import {
 } from './user.types';
 
 export class UserService extends BaseService {
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
 
 	async create(actorUserId: string, input: UserCreateInput): Promise<ServiceResult<UserPayload>> {
 		const isAdminResult = await this.isAdmin(actorUserId);
@@ -22,7 +22,7 @@ export class UserService extends BaseService {
 		}
 
 		try {
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: input.email,
 				displayName: `${input.firstName} ${input.lastName}`,
 			});
@@ -114,10 +114,13 @@ export class UserService extends BaseService {
 			}
 
 			if (input.email !== existingUser.contact.email) {
-				const firebaseUpdateResult = await this.firebaseService.updateByUid(existingUser.account.firebaseAuthUserId, {
-					email: input.email,
-					emailVerified: true,
-				});
+				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
+					existingUser.account.firebaseAuthUserId,
+					{
+						email: input.email,
+						emailVerified: true,
+					},
+				);
 
 				if (!firebaseUpdateResult.success) {
 					return this.resultFail(firebaseUpdateResult.error);
