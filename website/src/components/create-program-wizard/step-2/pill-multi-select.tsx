@@ -1,6 +1,5 @@
 'use client';
 
-import { Cause } from '@/generated/prisma/enums';
 import { cn } from '@/lib/utils/cn';
 import { X } from 'lucide-react';
 
