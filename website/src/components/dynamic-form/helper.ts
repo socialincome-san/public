@@ -42,14 +42,27 @@ export const getContactValuesFromPayload = (
 	return contactFields;
 };
 
-// Helper to structure contact address for Prisma upsert/create
 export function buildAddressInput(contactFields: { [key: string]: FormField }) {
+	const country =
+		contactFields.country.value && contactFields.country.value !== '' ? contactFields.country.value : undefined;
+
+	const hasAnyValue =
+		contactFields.street.value ||
+		contactFields.number.value ||
+		contactFields.city.value ||
+		contactFields.zip.value ||
+		country;
+
+	if (!hasAnyValue) {
+		return undefined;
+	}
+
 	return {
-		street: contactFields.street.value || '',
-		number: contactFields.number.value || '',
-		city: contactFields.city.value || '',
-		zip: contactFields.zip.value || '',
-		country: contactFields.country.value || '',
+		street: contactFields.street.value ?? '',
+		number: contactFields.number.value ?? '',
+		city: contactFields.city.value ?? '',
+		zip: contactFields.zip.value ?? '',
+		country,
 	};
 }
 

@@ -348,12 +348,12 @@ model Expense {
 }
 
 model Address {
-  id      String      @id @default(cuid()) @map("id")
-  street  String      @map("street")
-  number  String      @map("number")
-  city    String      @map("city")
-  zip     String      @map("zip")
-  country CountryCode @map("country")
+  id      String       @id @default(cuid()) @map("id")
+  street  String       @map("street")
+  number  String       @map("number")
+  city    String       @map("city")
+  zip     String       @map("zip")
+  country CountryCode? @map("country")
 
   contacts Contact[]
 
