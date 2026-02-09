@@ -14,28 +14,25 @@ export default function storyblokImageLoader({
 		return src;
 	}
 
-	const isStoryblok = url.hostname === 'storyblok.com' || url.hostname.endsWith('.storyblok.com');
-	if (!isStoryblok) {
+	if (!url.hostname.endsWith('.storyblok.com')) {
 		return src;
 	}
 
-	// Extract focal point or smart flag from query params (set by formatStoryblokUrl)
-	const focal = url.searchParams.get('storyblok_focal');
-	const smart = url.searchParams.get('storyblok_smart');
-
-	// Remove custom params from URL
-	url.searchParams.delete('storyblok_focal');
-	url.searchParams.delete('storyblok_smart');
+	const crop = url.searchParams.get('_crop');
+	const ratio = Number(url.searchParams.get('_ratio') || '0');
+	url.searchParams.delete('_crop');
+	url.searchParams.delete('_ratio');
 	const baseUrl = url.toString();
 
-	// Build Image Service URL: /m/WIDTHx0 preserves aspect ratio
+	const height = ratio > 0 ? Math.round(width * ratio) : 0;
+	const dimensions = `${width}x${height}`;
 	const qualityParam = quality ? `:quality(${quality})` : '';
 
-	if (focal) {
-		return `${baseUrl}/m/${width}x0/filters:focal(${focal}):format(webp)${qualityParam}`;
+	if (crop && crop !== 'smart') {
+		return `${baseUrl}/m/${dimensions}/filters:focal(${crop}):format(webp)${qualityParam}`;
 	}
-	if (smart) {
-		return `${baseUrl}/m/${width}x0/smart/filters:format(webp)${qualityParam}`;
+	if (crop === 'smart') {
+		return `${baseUrl}/m/${dimensions}/smart/filters:format(webp)${qualityParam}`;
 	}
-	return `${baseUrl}/m/${width}x0/filters:format(webp)${qualityParam}`;
+	return `${baseUrl}/m/${dimensions}/filters:format(webp)${qualityParam}`;
 }

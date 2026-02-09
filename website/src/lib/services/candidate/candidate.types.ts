@@ -1,5 +1,11 @@
 import { Address, Gender, PaymentProvider, Phone, Prisma, RecipientStatus } from '@/generated/prisma/client';
 
+export enum Profile {
+	male = 'male',
+	female = 'female',
+	youth = 'youth',
+}
+
 export type CandidatePayload = {
 	id: string;
 	status: RecipientStatus;

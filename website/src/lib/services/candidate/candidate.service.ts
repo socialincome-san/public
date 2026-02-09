@@ -10,6 +10,7 @@ import {
 	CandidatePrismaUpdateInput,
 	CandidatesTableView,
 	CandidatesTableViewRow,
+	Profile,
 } from './candidate.types';
 
 export class CandidateService extends BaseService {
@@ -25,6 +26,53 @@ export class CandidateService extends BaseService {
 			return this.resultFail('Permission denied');
 		}
 		return this.resultOk(true);
+	}
+
+	private buildCandidateWhere(causes?: Cause[], profiles?: Profile[]): Prisma.RecipientWhereInput {
+		const where: Prisma.RecipientWhereInput = {
+			programId: null,
+		};
+
+		if (causes && causes.length > 0) {
+			where.localPartner = {
+				causes: {
+					hasSome: causes,
+				},
+			};
+		}
+
+		if (profiles && profiles.length > 0) {
+			const contactFilters: Prisma.ContactWhereInput[] = [];
+
+			const genderProfiles = profiles.filter((p) => p === Profile.male || p === Profile.female);
+
+			if (genderProfiles.length > 0) {
+				contactFilters.push({
+					gender: {
+						in: genderProfiles,
+					},
+				});
+			}
+
+			if (profiles.includes(Profile.youth)) {
+				const now = new Date();
+				const youthCutoffDate = new Date(now.getFullYear() - 25, now.getMonth(), now.getDate());
+
+				contactFilters.push({
+					dateOfBirth: {
+						gte: youthCutoffDate,
+					},
+				});
+			}
+
+			if (contactFilters.length > 0) {
+				where.contact = {
+					OR: contactFilters,
+				};
+			}
+		}
+
+		return where;
 	}
 
 	async create(actor: Actor, data: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
@@ -347,19 +395,9 @@ export class CandidateService extends BaseService {
 		}
 	}
 
-	async getCandidateCount(causes?: Cause[]): Promise<ServiceResult<{ count: number }>> {
+	async getCandidateCount(causes?: Cause[], profiles?: Profile[]): Promise<ServiceResult<{ count: number }>> {
 		try {
-			const where: Prisma.RecipientWhereInput = {
-				programId: null,
-			};
-
-			if (causes && causes.length > 0) {
-				where.localPartner = {
-					causes: {
-						hasSome: causes,
-					},
-				};
-			}
+			const where = this.buildCandidateWhere(causes, profiles);
 
 			const count = await this.db.recipient.count({ where });
 
@@ -374,17 +412,10 @@ export class CandidateService extends BaseService {
 		programId: string,
 		amountOfRecipientsForStart: number,
 		causes?: Cause[],
+		profiles?: Profile[],
 	): Promise<ServiceResult<{ assigned: number }>> {
 		try {
-			const where: Prisma.RecipientWhereInput = {
-				programId: null,
-			};
-
-			if (causes && causes.length > 0) {
-				where.localPartner = {
-					causes: { hasSome: causes },
-				};
-			}
+			const where = this.buildCandidateWhere(causes, profiles);
 
 			const allAvailableCandidates = await this.db.recipient.findMany({
 				where,

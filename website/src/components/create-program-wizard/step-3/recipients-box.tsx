@@ -5,13 +5,13 @@ import { IndirectImpactNotice } from './indirect-impact-notice';
 
 type Props = {
 	amountOfRecipients: number;
-	maxRecipients: number;
+	filteredRecipients: number;
 	onChange: (value: number) => void;
 };
 
-export function RecipientsBox({ amountOfRecipients, maxRecipients, onChange }: Props) {
-	const noCandidates = maxRecipients === 0;
-	const atMax = !noCandidates && amountOfRecipients === maxRecipients;
+export function RecipientsBox({ amountOfRecipients, filteredRecipients, onChange }: Props) {
+	const noCandidates = filteredRecipients === 0;
+	const atMax = !noCandidates && amountOfRecipients === filteredRecipients;
 
 	return (
 		<div className="flex h-full flex-col overflow-hidden rounded-xl border">
@@ -31,7 +31,7 @@ export function RecipientsBox({ amountOfRecipients, maxRecipients, onChange }: P
 					<>
 						<Slider
 							min={1}
-							max={maxRecipients}
+							max={filteredRecipients}
 							step={1}
 							value={[amountOfRecipients]}
 							onValueChange={([v]) => onChange(v)}
@@ -39,7 +39,7 @@ export function RecipientsBox({ amountOfRecipients, maxRecipients, onChange }: P
 
 						<div className="text-muted-foreground flex justify-between text-xs">
 							<span>1</span>
-							<span>{maxRecipients}</span>
+							<span>{filteredRecipients}</span>
 						</div>
 
 						{atMax && (
