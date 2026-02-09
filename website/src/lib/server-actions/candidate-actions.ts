@@ -3,7 +3,7 @@
 import { Cause } from '@/generated/prisma/enums';
 import { getActorOrThrow } from '@/lib/firebase/current-account';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
-import { CandidateCreateInput, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
+import { CandidateCreateInput, CandidateUpdateInput, Profile } from '@/lib/services/candidate/candidate.types';
 import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
 import { revalidatePath } from 'next/cache';
 
@@ -57,6 +57,7 @@ export async function getCandidateOptions() {
 	return { localPartners: { success: true, data: [] } };
 }
 
-export async function getCandidateCountAction(causes?: Cause[]) {
-	return candidateService.getCandidateCount(causes);
+export async function getCandidateCountAction(causes: Cause[], profiles: Profile[], countryId: string | null) {
+	// Todo: filter by countryId as soon as this one is merged: https://github.com/socialincome-san/public/pull/1684
+	return candidateService.getCandidateCount(causes, profiles);
 }

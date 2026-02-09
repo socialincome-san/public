@@ -1,14 +1,20 @@
 'use client';
 
-import { Cause } from '@/generated/prisma/enums';
 import { cn } from '@/lib/utils/cn';
 import { X } from 'lucide-react';
 
-function humanizeCause(cause: Cause) {
-	return cause.replace(/_/g, ' ');
+type PillMultiSelectProps = {
+	label: string;
+	values: string[];
+	selected?: string[];
+	onToggle: (value: string) => void;
+};
+
+function humanize(value: string) {
+	return value.replace(/_/g, ' ');
 }
 
-const causeClasses = {
+const pillClasses = {
 	base: 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-sm relative z-10 transition-colors',
 	active: [
 		'text-primary-foreground bg-primary/90 shadow',
@@ -22,29 +28,24 @@ const causeClasses = {
 	inactive: 'bg-background hover:bg-muted border',
 };
 
-type Props = {
-	selected?: Cause[];
-	onToggle: (cause: Cause) => void;
-};
-
-export function TargetCauseSelector({ selected = [], onToggle }: Props) {
+export function PillMultiSelect({ label, values, selected = [], onToggle }: PillMultiSelectProps) {
 	return (
 		<div className="space-y-2">
-			<p className="text-sm font-medium">Select target causes</p>
+			<p className="text-sm font-medium">{label}</p>
 
-			<div className="flex flex-wrap gap-2">
-				{Object.values(Cause).map((cause) => {
-					const isActive = selected.includes(cause);
+			<div className="flex flex-wrap gap-2" role="group" aria-label={label}>
+				{values.map((value) => {
+					const isActive = selected.includes(value);
 
 					return (
 						<button
-							key={cause}
+							key={value}
 							type="button"
-							onClick={() => onToggle(cause)}
+							onClick={() => onToggle(value)}
 							aria-pressed={isActive}
-							className={cn(causeClasses.base, isActive ? causeClasses.active : causeClasses.inactive)}
+							className={cn(pillClasses.base, isActive ? pillClasses.active : pillClasses.inactive)}
 						>
-							<span>{humanizeCause(cause)}</span>
+							<span>{humanize(value)}</span>
 							{isActive && <X className="h-3.5 w-3.5" aria-hidden />}
 						</button>
 					);
