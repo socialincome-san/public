@@ -1,4 +1,4 @@
-import { CountryCode } from '@prisma/client';
+import { CountryCode } from '@/generated/prisma/enums';
 import { Client } from '@sendgrid/client';
 import { ContributorSession } from '../contributor/contributor.types';
 import { ServiceResult } from '../core/base.types';

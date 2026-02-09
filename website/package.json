@@ -22,6 +22,7 @@
 		"copy-static-files": "cp -r public .next/standalone/website && cp -r .next/static .next/standalone/website/.next/",
 		"emulator:start": "firebase emulators:start --project demo-social-income-local --only firestore,auth --config ../firebase.json --import ../seed",
 		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
 		"openapi:generate": "next-openapi-gen generate",
 		"typecheck": "tsc --noEmit",
 		"db:generate": "prisma generate",

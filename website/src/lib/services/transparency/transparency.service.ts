@@ -1,5 +1,5 @@
+import { CountryCode } from '@/generated/prisma/enums';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { CountryCode } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
