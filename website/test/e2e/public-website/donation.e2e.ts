@@ -1,6 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
 import { expect, test } from '@playwright/test';
+import { getFirebaseAdminService } from '../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -9,8 +9,8 @@ test.beforeEach(async () => {
 test('Stripe One Time Donation flow', async ({ page }) => {
 	const TEST_EMAIL = 'sam.winchester@supernatural.com';
 
-	const firebaseService = new FirebaseService();
-	await firebaseService.deleteByEmailIfExists(TEST_EMAIL);
+	const firebaseAdminService = await getFirebaseAdminService();
+	await firebaseAdminService.deleteByEmailIfExists(TEST_EMAIL);
 
 	await page.goto('/en/int/donate/one-time');
 
