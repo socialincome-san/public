@@ -57,6 +57,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder /app/website/.next/standalone ./
 COPY --from=builder /app/website/src ./src
+COPY --from=builder /app/website/prisma.config.ts ./prisma.config.ts
 COPY --from=base /app/.env .env
 
 USER nextjs
