@@ -365,6 +365,7 @@ export class StripeService extends BaseService {
 
 			const session = await this.stripe.checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
+
 				customer: stripeCustomerId || undefined,
 				customer_creation: stripeCustomerId ? undefined : recurring ? undefined : 'always',
 				line_items: [
@@ -387,8 +388,6 @@ export class StripeService extends BaseService {
 						},
 					}),
 			});
-
-			console.log('Created Stripe checkout session with metadata:', session.metadata);
 
 			return this.resultOk(session.url ?? '');
 		} catch (error) {
