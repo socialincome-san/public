@@ -72,6 +72,7 @@ test('Edit existing recipient', async ({ page }) => {
 		phone: '+666666666',
 		paymentProvider: 'orange_money',
 		paymentCode: 'OM123456',
+		country: 'Sierra Leone',
 	};
 
 	const firebaseService = await getFirebaseAdminService();
@@ -126,7 +127,8 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByTestId('form-item-contact.number').locator('input').fill('42');
 	await page.getByTestId('form-item-contact.city').locator('input').fill('Freetown');
 	await page.getByTestId('form-item-contact.zip').locator('input').fill('1000');
-	await page.getByTestId('form-item-contact.country').locator('input').fill('SL');
+	await page.getByTestId('form-item-contact.country').click();
+	await page.getByRole('option', { name: expected.country }).click();
 
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });

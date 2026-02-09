@@ -39,7 +39,7 @@ COPY --from=deps /app/recipients_selection ../recipients_selection
 COPY --from=base /app/.env /app/.env
 
 RUN set -a && . /app/.env && set +a && \
-    npx prisma generate --schema=./src/lib/database/schema.prisma && \
+    npx prisma generate && \
     npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
 
 # -------- Runtime Layer --------
@@ -64,6 +64,6 @@ CMD ["sh", "-c", "\
   set -a && \
   . .env && \
   set +a && \
-  npx prisma migrate deploy --schema=./src/lib/database/schema.prisma && \
+  npx prisma migrate deploy && \
   node website/server.js \
 "]

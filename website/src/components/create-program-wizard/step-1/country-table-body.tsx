@@ -5,7 +5,7 @@ import { CountryFlag } from '@/components/country-flag';
 import { RadioGroupItem } from '@/components/radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
-import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
+import { getCountryNameByCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
 import { Fragment } from 'react';
@@ -52,8 +52,8 @@ export function CountryTableBody({ rows, value, openIds, onToggleRow }: Props) {
 									</TableCell>
 
 									<TableCell className="flex items-center gap-3 truncate">
-										<CountryFlag isoCode={row.country.isoCode} />
-										<span className="truncate">{getCountryNameByIsoCode(row.country.isoCode)}</span>
+										<CountryFlag country={row.country.isoCode} />
+										<span className="truncate">{getCountryNameByCode(row.country.isoCode)}</span>
 									</TableCell>
 
 									<TableCell>

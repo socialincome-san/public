@@ -121,8 +121,5 @@
 		"tsx": "^4.20.3",
 		"typescript": "^5.6.2",
 		"prisma": "7.3.0"
-	},
-	"prisma": {
-		"seed": "tsx src/lib/database/seed/seed.ts"
 	}
 }

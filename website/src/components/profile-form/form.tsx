@@ -1,26 +1,24 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
 import { Button } from '@/components/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
-
 import { Cause, ContributorReferralSource, Gender } from '@/generated/prisma/enums';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
-import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
+import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { Resolver, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { MultiSelect, MultiSelectOption } from '../multi-select';
 import { buildDefaultValues } from './defaults';
-import { ProfileFormValues, profileFormSchema } from './schemas';
+import { ProfileFormInput, ProfileFormOutput, profileFormSchema } from './schemas';
 import { submitProfileForm } from './submit';
 import { ProfileFormTranslations } from './translated-form';
 
@@ -33,8 +31,8 @@ type Props = {
 export function ProfileForm({ session, translations, isNewsletterSubscribed = false }: Props) {
 	const [errorMessage, setErrorMessage] = useState('');
 
-	const form = useForm<ProfileFormValues>({
-		resolver: zodResolver(profileFormSchema),
+	const form = useForm<ProfileFormInput, unknown, ProfileFormOutput>({
+		resolver: zodResolver(profileFormSchema) as unknown as Resolver<ProfileFormInput, unknown, ProfileFormOutput>,
 		defaultValues: buildDefaultValues(session, isNewsletterSubscribed),
 	});
 
@@ -43,7 +41,7 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 	const isLocalPartner = session.type === 'local-partner';
 	const isUser = session.type === 'user';
 
-	const onSubmit = async (values: ProfileFormValues) => {
+	const onSubmit = async (values: ProfileFormOutput) => {
 		setErrorMessage('');
 		const result = await submitProfileForm(values, session, isNewsletterSubscribed);
 
@@ -183,20 +181,20 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 
 				<FormField
 					control={form.control}
-					name="country"
+					name="address.country"
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>{translations.country}</FormLabel>
-							<Select defaultValue={field.value} onValueChange={field.onChange} disabled={loading}>
+							<Select defaultValue={field.value ?? undefined} onValueChange={field.onChange} disabled={loading}>
 								<FormControl>
 									<SelectTrigger>
 										<SelectValue placeholder={translations.selectOptionPlaceholder} />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent className="max-h-[16rem] overflow-y-auto">
-									{COUNTRY_CODES.map((c: CountryCode) => (
-										<SelectItem key={c} value={c}>
-											{translations.countries[c]}
+									{COUNTRY_OPTIONS.map((c) => (
+										<SelectItem key={c.code} value={c.code}>
+											{c.name}
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -297,7 +295,7 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 					<FormField
 						key={f}
 						control={form.control}
-						name={f}
+						name={`address.${f}`}
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>{translations[f]}</FormLabel>

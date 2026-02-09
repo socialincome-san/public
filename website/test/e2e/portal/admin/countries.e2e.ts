@@ -10,7 +10,7 @@ test.beforeEach(async () => {
 test('Add new country', async ({ page }) => {
 	const expectedCountry: Country = {
 		id: '',
-		isoCode: 'CHE',
+		isoCode: 'CH',
 		microfinanceIndex: new Prisma.Decimal(1.11),
 		populationCoverage: new Prisma.Decimal(82.3),
 		networkTechnology: 'g5',

@@ -1,6 +1,7 @@
 import {
 	Address,
 	ContributorReferralSource,
+	CountryCode,
 	Gender,
 	OrganizationPermission,
 	Phone,
@@ -91,7 +92,7 @@ export type ContributorSession = {
 	number: string | null;
 	city: string | null;
 	zip: string | null;
-	country: string | null;
+	country: CountryCode | null;
 	stripeCustomerId: string | null;
 };
 
@@ -110,6 +111,6 @@ export type ContributorFormCreateInput = {
 		number: string;
 		city: string;
 		zip: string;
-		country: string;
+		country: CountryCode;
 	} | null;
 };

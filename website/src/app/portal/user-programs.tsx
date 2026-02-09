@@ -1,8 +1,8 @@
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
 import { ProgramService } from '@/lib/services/program/program.service';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
 	userId: string;
@@ -31,7 +31,7 @@ export async function UserPrograms({ userId }: Props) {
 							key={program.id}
 							href={`/portal/programs/${program.id}/overview`}
 							title={program.programName}
-							subtitle={getCountryNameByIsoCode(program.country)}
+							subtitle={getCountryNameByCode(program.country)}
 							footerLeft={{
 								label: 'Paid out',
 								currency: program.payoutCurrency,
@@ -57,7 +57,7 @@ export async function UserPrograms({ userId }: Props) {
 								key={program.id}
 								href={`/portal/programs/${program.id}/overview`}
 								title={program.programName}
-								subtitle={getCountryNameByIsoCode(program.country)}
+								subtitle={getCountryNameByCode(program.country)}
 								footerLeft={{
 									label: 'Paid out',
 									currency: program.payoutCurrency,
