@@ -5,7 +5,7 @@ import { COUNTRY_COOKIE, CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from 
 import { useCookieState } from '@/lib/hooks/useCookieState';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { CountryCode } from '@/lib/types/country';
+import { CountryCode } from '@prisma/client';
 import _ from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createContext, PropsWithChildren, Suspense, useEffect } from 'react';

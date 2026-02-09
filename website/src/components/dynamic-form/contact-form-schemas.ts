@@ -1,4 +1,5 @@
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
+import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { Gender } from '@prisma/client';
 import z from 'zod';
 import { FormSchema } from './dynamic-form';
@@ -85,7 +86,21 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 				label: 'Address ZIP Code',
 				zodSchema: z.string().nullable(),
 			},
-			country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().nullable() },
+			country: {
+				placeholder: 'Country',
+				label: 'Address Country',
+				useCombobox: true,
+				zodSchema: z
+					.nativeEnum(
+						getZodEnum(
+							COUNTRY_OPTIONS.map((c) => ({
+								id: c.code,
+								label: c.name,
+							})),
+						),
+					)
+					.optional(),
+			},
 		},
 	};
 };
