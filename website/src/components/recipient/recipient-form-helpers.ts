@@ -160,13 +160,15 @@ export function buildUpdateRecipientInput(
 				data: {
 					...buildCommonContactData(contactFields),
 					phone: contactPhoneWriteOperation,
-					address: {
-						upsert: {
-							update: addressUpdateOperation,
-							create: addressUpdateOperation,
-							where: { id: recipient.contact.address?.id },
+					...(addressUpdateOperation && {
+						address: {
+							upsert: {
+								update: addressUpdateOperation,
+								create: addressUpdateOperation,
+								where: { id: recipient.contact.address?.id },
+							},
 						},
-					},
+					}),
 				},
 				where: { id: recipient.contact.id },
 			},

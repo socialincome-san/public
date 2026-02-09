@@ -12,6 +12,8 @@ export function buildCreateContributorInput(schema: ContributorFormSchema): Cont
 		[key: string]: FormField;
 	} = schema.fields.contact.fields;
 
+	const addressInput = buildAddressInput(contactFields);
+
 	return {
 		firstName: contactFields.firstName.value ?? '',
 		lastName: contactFields.lastName.value ?? '',
@@ -25,7 +27,7 @@ export function buildCreateContributorInput(schema: ContributorFormSchema): Cont
 		dateOfBirth: contactFields.dateOfBirth.value,
 		profession: contactFields.profession.value,
 
-		address: buildAddressInput(contactFields),
+		...(addressInput && { address: addressInput }),
 	};
 }
 
@@ -36,6 +38,7 @@ export function buildUpdateContributorsInput(
 	const contactFields: {
 		[key: string]: FormField;
 	} = schema.fields.contact.fields;
+
 	// Contact Phone Update Logic
 	const contactPhoneUpdate = contactFields.phone.value
 		? {
@@ -45,8 +48,10 @@ export function buildUpdateContributorsInput(
 				},
 			}
 		: undefined;
+
 	// Contact Address Upsert Logic
 	const addressUpdate = buildAddressInput(contactFields);
+
 	return {
 		referral: schema.fields.referral.value,
 		paymentReferenceId: schema.fields.paymentReferenceId.value,
@@ -56,13 +61,15 @@ export function buildUpdateContributorsInput(
 				data: {
 					...buildCommonContactData(contactFields),
 					phone: contactPhoneUpdate,
-					address: {
-						upsert: {
-							update: addressUpdate,
-							create: addressUpdate,
-							where: { id: contributor.contact.address?.id },
+					...(addressUpdate && {
+						address: {
+							upsert: {
+								update: addressUpdate,
+								create: addressUpdate,
+								where: { id: contributor.contact.address?.id },
+							},
 						},
-					},
+					}),
 				},
 				where: { id: contributor.contact.id },
 			},
