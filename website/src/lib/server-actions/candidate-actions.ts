@@ -41,6 +41,20 @@ export async function updateCandidateAction(updateInput: CandidateUpdateInput, n
 	return result;
 }
 
+export async function deleteCandidateAction(candidateId: string) {
+	const actor = await getActorOrThrow();
+
+	const result = await candidateService.delete(actor, candidateId);
+
+	if (actor.kind === 'user') {
+		revalidatePath(ADMIN_CANDIDATES_PATH);
+	} else if (actor.kind === 'local-partner') {
+		revalidatePath(PARTNER_CANDIDATES_PATH);
+	}
+
+	return result;
+}
+
 export async function getCandidateAction(candidateId: string) {
 	const actor = await getActorOrThrow();
 	return await candidateService.get(actor, candidateId);

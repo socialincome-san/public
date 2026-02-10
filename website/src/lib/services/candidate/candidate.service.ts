@@ -301,6 +301,62 @@ export class CandidateService extends BaseService {
 		}
 	}
 
+	async delete(actor: Actor, candidateId: string): Promise<ServiceResult<{ id: string }>> {
+		const existing = await this.db.recipient.findUnique({
+			where: { id: candidateId },
+			select: {
+				id: true,
+				programId: true,
+				localPartnerId: true,
+				paymentInformation: {
+					select: {
+						phone: { select: { number: true } },
+					},
+				},
+			},
+		});
+
+		if (!existing) {
+			return this.resultFail('Candidate not found');
+		}
+
+		if (actor.kind === 'user') {
+			const admin = await this.assertAdmin(actor.session.id);
+			if (!admin.success) {
+				return this.resultFail(admin.error);
+			}
+		}
+
+		if (actor.kind === 'local-partner') {
+			const partnerId = actor.session.id;
+			if (existing.localPartnerId !== partnerId) {
+				return this.resultFail('Permission denied');
+			}
+		}
+
+		if (actor.kind === 'contributor') {
+			return this.resultFail('Permission denied');
+		}
+
+		try {
+			await this.db.$transaction(async (tx) => {
+				const phone = existing.paymentInformation?.phone?.number;
+				if (phone) {
+					await this.firebaseAdminService.deleteByPhoneNumberIfExists(phone);
+				}
+
+				await tx.recipient.delete({
+					where: { id: candidateId },
+				});
+			});
+
+			return this.resultOk({ id: candidateId });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not delete candidate: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async get(actor: Actor, id: string): Promise<ServiceResult<CandidatePayload>> {
 		if (actor.kind === 'contributor') {
 			return this.resultFail('Permission denied');
