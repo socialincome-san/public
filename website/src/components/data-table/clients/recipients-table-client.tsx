@@ -5,6 +5,7 @@ import { makeRecipientColumns } from '@/components/data-table/columns/recipients
 import DataTable from '@/components/data-table/data-table';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { Actor } from '@/lib/firebase/current-account';
+import { importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { UploadIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -72,7 +73,23 @@ export function RecipientsTableClient({ rows, error, programId, readOnly, actorK
 				actorKind={actorKind}
 			/>
 
-			<CsvUploadDialog open={isCsvUploadDialogOpen} onOpenChange={setIsCsvUploadDialogOpen} />
+			<CsvUploadDialog
+				open={isCsvUploadDialogOpen}
+				onOpenChange={setIsCsvUploadDialogOpen}
+				title="Upload recipients CSV"
+				template={{
+					headers: ['firstName', 'lastName', 'status', 'programId', 'localPartnerId'],
+					exampleRow: ['John', 'Doe', 'active', 'program_id_here', 'local_partner_id_here'],
+					filename: 'recipients-import-template.csv',
+				}}
+				onImport={async (file) => {
+					const response = await importRecipientsCsvAction(file);
+					if (!response.success) {
+						return { type: 'error', message: response.error ?? 'Import failed' };
+					}
+					return { type: 'success', created: response.data.created };
+				}}
+			/>
 		</>
 	);
 }

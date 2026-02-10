@@ -1,5 +1,6 @@
-import { Cause, Prisma } from '@/generated/prisma/client';
+import { Cause, Prisma, RecipientStatus } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
+import { parseCsvText } from '@/lib/utils/csv';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -444,5 +445,58 @@ export class CandidateService extends BaseService {
 			this.logger.error(error);
 			return this.resultFail(`Could not assign candidates: ${JSON.stringify(error)}`);
 		}
+	}
+
+	async importCsv(actor: Actor, file: File): Promise<ServiceResult<{ created: number }>> {
+		let created = 0;
+
+		let rows;
+		try {
+			const text = await file.text();
+			rows = parseCsvText(text);
+		} catch (error) {
+			return this.resultFail(error instanceof Error ? error.message : 'Failed to parse CSV file');
+		}
+
+		for (let i = 0; i < rows.length; i++) {
+			const row = rows[i];
+			const rowNumber = i + 1;
+
+			if (!row.firstName || !row.lastName) {
+				return this.resultFail(`Row ${rowNumber}: firstName and lastName are required`);
+			}
+
+			if (!row.localPartnerId) {
+				return this.resultFail(`Row ${rowNumber}: localPartnerId is required`);
+			}
+
+			if (!row.status) {
+				return this.resultFail(`Row ${rowNumber}: status is required`);
+			}
+
+			const candidate: CandidateCreateInput = {
+				status: row.status as RecipientStatus,
+				contact: {
+					create: {
+						firstName: row.firstName,
+						lastName: row.lastName,
+					},
+				},
+
+				localPartner: {
+					connect: { id: row.localPartnerId },
+				},
+			};
+
+			const result = await this.create(actor, candidate);
+
+			if (!result.success) {
+				return this.resultFail(`Row ${rowNumber}: ${result.error}`);
+			}
+
+			created++;
+		}
+
+		return this.resultOk({ created });
 	}
 }
