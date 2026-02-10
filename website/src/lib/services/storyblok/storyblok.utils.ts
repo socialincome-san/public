@@ -1,5 +1,7 @@
 import type { Article, ArticleType, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import { Metadata } from 'next';
@@ -118,6 +120,27 @@ function formatStoryblokDateToIso(date: string | null | undefined) {
  */
 export function createLinkForArticle(slug: string, lang: string, region: string) {
 	return `/${lang}/${region}/journal/${slug}`;
+}
+
+/**
+ * Resolve a StoryblokMultilink to a URL string.
+ * Handles both external URLs (linktype 'url') and internal story links (linktype 'story').
+ */
+export function resolveStoryblokLink(link: StoryblokMultilink | undefined, lang: string, region: string): string {
+	if (!link) return '#';
+
+	if (link.linktype === 'url') {
+		return link.url || '#';
+	}
+
+	if (link.linktype === 'story') {
+		// cached_url contains the full Storyblok slug, e.g. "new-website/about"
+		// Strip the "new-website/" prefix to get the page slug
+		const slug = link.cached_url?.replace(new RegExp(`^${NEW_WEBSITE_SLUG}/`), '') || '';
+		return `/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}`;
+	}
+
+	return '#';
 }
 
 // ==================== Metadata Utilities ====================

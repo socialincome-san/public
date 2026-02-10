@@ -1,5 +1,6 @@
 'use client';
 
+import { useLogout } from '@/components/app-shells/use-logout';
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import {
@@ -10,10 +11,9 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
 import { Session } from '@/lib/firebase/current-account';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { LogOut, User } from 'lucide-react';
 import Link from 'next/link';
-import { useLogout } from '../../use-logout';
-
 export type Scope = 'website' | 'dashboard' | 'partner-space';
 
 type Props = {
@@ -29,7 +29,7 @@ export const AccountMenu = ({ session, scope }: Props) => {
 	switch (scope) {
 		case 'website':
 			linkInDropdown = {
-				href: '/new-website/auth/my-account',
+				href: `/${NEW_WEBSITE_SLUG}/auth/my-account`,
 				label: 'My Account',
 			};
 			break;

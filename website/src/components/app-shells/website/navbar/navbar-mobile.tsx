@@ -1,14 +1,14 @@
 'use client';
 
+import { useLogout } from '@/components/app-shells/use-logout';
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
+import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Session } from '@/lib/firebase/current-account';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import Link from 'next/link';
-import { useLogout } from '../../use-logout';
-import { Logo } from './logo';
 
 type Props = {
 	session: Session | null;
@@ -32,7 +32,7 @@ export const NavbarMobile = ({ session, lang }: Props) => {
 	return (
 		<nav className="container flex h-20 items-center justify-between">
 			<Link href="/">
-				<Logo />
+				<SocialIncomeLogo />
 			</Link>
 
 			{session && (

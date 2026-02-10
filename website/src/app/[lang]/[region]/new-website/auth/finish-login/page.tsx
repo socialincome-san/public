@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { createSessionAction } from '@/lib/server-actions/session-actions';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -49,7 +50,7 @@ export default function FinishLoginPage() {
 					return;
 				}
 
-				router.replace('/new-website/auth/my-account');
+				router.replace(`/${NEW_WEBSITE_SLUG}/auth/my-account`);
 			} catch {
 				setStatus('error');
 			}

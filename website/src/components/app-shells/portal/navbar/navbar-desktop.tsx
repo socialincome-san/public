@@ -1,5 +1,8 @@
 'use client';
 
+import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
+import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
+import { useLogout } from '@/components/app-shells/use-logout';
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import {
@@ -9,15 +12,12 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
+import { SILogo } from '@/components/svg/si-logo';
 import type { UserSession } from '@/lib/services/user/user.types';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
-import { useLogout } from '../../use-logout';
-import { useNavbarLinks } from './hooks/use-navbar-links';
-import { Logo } from './logo';
-import { ProgramDropdown } from './program-dropdown';
 
 export const NavbarDesktop = ({ user }: { user: UserSession }) => {
 	const pathname = usePathname();
@@ -27,7 +27,7 @@ export const NavbarDesktop = ({ user }: { user: UserSession }) => {
 	return (
 		<nav className="container flex h-20 items-center justify-between">
 			<Link href="/portal">
-				<Logo />
+				<SILogo />
 			</Link>
 
 			{/* MAIN NAV LINKS */}
