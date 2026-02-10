@@ -124,7 +124,39 @@ export class CandidateService extends BaseService {
 							: undefined,
 				};
 
-				const newCandidate = await tx.recipient.create({ data });
+				const newCandidate = await tx.recipient.create({
+					data,
+					select: {
+						id: true,
+						status: true,
+						successorName: true,
+						termsAccepted: true,
+						localPartner: { select: { id: true, name: true } },
+						contact: {
+							select: {
+								id: true,
+								firstName: true,
+								lastName: true,
+								callingName: true,
+								email: true,
+								gender: true,
+								language: true,
+								dateOfBirth: true,
+								profession: true,
+								phone: true,
+								address: true,
+							},
+						},
+						paymentInformation: {
+							select: {
+								id: true,
+								code: true,
+								provider: true,
+								phone: true,
+							},
+						},
+					},
+				});
 
 				if (paymentPhoneNumber) {
 					const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(paymentPhoneNumber);
