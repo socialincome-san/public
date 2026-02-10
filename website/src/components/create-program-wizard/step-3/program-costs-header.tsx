@@ -18,11 +18,17 @@ export function ProgramCostsHeader({ totalBudget, monthlyCost, currency, onCurre
 				<div className="flex items-end gap-4">
 					<div className="flex items-baseline gap-2">
 						<span className="text-sm font-semibold">{currency}</span>
-						<span className="text-6xl">{totalBudget.toLocaleString('de-CH')}</span>
+						<span data-testid={`total-budget-${totalBudget}`} className="text-6xl">
+							{totalBudget.toLocaleString('de-CH')}
+						</span>
 					</div>
 
 					<span className="pb-1 text-sm">
-						{currency} {Math.round(monthlyCost).toLocaleString('de-CH')} / month
+						{currency}{' '}
+						<span data-testid={`monthly-cost-${Math.round(monthlyCost)}`}>
+							{Math.round(monthlyCost).toLocaleString('de-CH')}
+						</span>{' '}
+						/ month
 					</span>
 				</div>
 			</div>

@@ -16,7 +16,7 @@ test('Add new recipient', async ({ page }) => {
 		localPartnerName: 'Kenema Youth Foundation',
 	};
 
-	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('/portal/management/recipients');
 	await page.getByRole('button', { name: 'Add new recipient' }).click();
 
 	await page.getByTestId('form-item-status').click();
@@ -78,7 +78,7 @@ test('Edit existing recipient', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists('+666666666');
 
-	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('/portal/management/recipients');
 	await page.getByRole('cell', { name: 'Mohamed' }).click();
 
 	await page.getByTestId('form-item-startDate').locator('button').click();
@@ -164,7 +164,7 @@ test('Delete recipient', async ({ page }) => {
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+41791234567');
 	await expect(page.getByRole('cell', { name: '+41791234567' })).toBeVisible();
 
-	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('/portal/management/recipients');
 	await page.getByRole('cell', { name: 'Badingu' }).click();
 
 	await page.getByRole('button', { name: 'Delete' }).click();
@@ -215,7 +215,7 @@ test('CSV Upload', async ({ page }) => {
 		},
 	];
 
-	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('/portal/management/recipients');
 
 	await page.getByRole('button', { name: 'Upload CSV' }).click();
 	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/portal/management/upload-example.csv');

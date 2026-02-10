@@ -24,7 +24,7 @@ test('Add new country', async ({ page }) => {
 		updatedAt: null,
 	};
 
-	await page.goto('http://localhost:3000/portal/admin/countries');
+	await page.goto('/portal/admin/countries');
 	await page.getByRole('button', { name: 'Add country' }).click();
 
 	await page.getByTestId('form-item-isoCode').click();
