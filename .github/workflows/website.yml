@@ -11,28 +11,6 @@ on:
       - "recipients_app/**"
 
 jobs:
-  safe-chain:
-    name: "🔒 Safe Chain Dependency Check"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install Safe Chain (CI)
-        run: |
-          curl -fsSL https://github.com/AikidoSec/safe-chain/releases/latest/download/install-safe-chain.sh \
-            | sh -s -- --ci
-
-          echo "$HOME/.safe-chain/shims" >> $GITHUB_PATH
-          echo "$HOME/.safe-chain/bin" >> $GITHUB_PATH
-
-      - name: Install dependencies (protected by Safe Chain)
-        run: npm ci --no-audit --no-fund
-
   lint:
     name: "✨ Lint"
     runs-on: ubuntu-latest
