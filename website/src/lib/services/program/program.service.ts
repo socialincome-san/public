@@ -179,6 +179,7 @@ export class ProgramService extends BaseService {
 				const assignResult = await this.candidateService.assignRandomCandidatesToProgram(
 					program.id,
 					input.amountOfRecipientsForStart,
+					country.isoCode,
 					input.targetCauses,
 				);
 

@@ -1,4 +1,4 @@
-import { Cause, Prisma } from '@/generated/prisma/client';
+import { Cause, CountryCode, Prisma } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -28,10 +28,50 @@ export class CandidateService extends BaseService {
 		return this.resultOk(true);
 	}
 
-	private buildCandidateWhere(causes?: Cause[], profiles?: Profile[]): Prisma.RecipientWhereInput {
+	private buildCandidateWhere(
+		causes?: Cause[],
+		profiles?: Profile[],
+		countryCode?: CountryCode | null,
+	): Prisma.RecipientWhereInput {
 		const where: Prisma.RecipientWhereInput = {
 			programId: null,
 		};
+
+		if (countryCode) {
+			where.AND = [
+				{
+					OR: [
+						{
+							contact: {
+								address: {
+									country: countryCode,
+								},
+							},
+						},
+						{
+							AND: [
+								{
+									contact: {
+										address: {
+											country: null,
+										},
+									},
+								},
+								{
+									localPartner: {
+										contact: {
+											address: {
+												country: countryCode,
+											},
+										},
+									},
+								},
+							],
+						},
+					],
+				},
+			];
+		}
 
 		if (causes && causes.length > 0) {
 			where.localPartner = {
@@ -395,9 +435,28 @@ export class CandidateService extends BaseService {
 		}
 	}
 
-	async getCandidateCount(causes?: Cause[], profiles?: Profile[]): Promise<ServiceResult<{ count: number }>> {
+	async getCandidateCount(
+		causes?: Cause[],
+		profiles?: Profile[],
+		countryId?: string | null,
+	): Promise<ServiceResult<{ count: number }>> {
 		try {
-			const where = this.buildCandidateWhere(causes, profiles);
+			let countryCode: CountryCode | null = null;
+
+			if (countryId) {
+				const country = await this.db.country.findUnique({
+					where: { id: countryId },
+					select: { isoCode: true },
+				});
+
+				if (!country) {
+					return this.resultFail('Country not found');
+				}
+
+				countryCode = country.isoCode;
+			}
+
+			const where = this.buildCandidateWhere(causes, profiles, countryCode);
 
 			const count = await this.db.recipient.count({ where });
 
@@ -411,11 +470,12 @@ export class CandidateService extends BaseService {
 	async assignRandomCandidatesToProgram(
 		programId: string,
 		amountOfRecipientsForStart: number,
+		countryCode: CountryCode,
 		causes?: Cause[],
 		profiles?: Profile[],
 	): Promise<ServiceResult<{ assigned: number }>> {
 		try {
-			const where = this.buildCandidateWhere(causes, profiles);
+			const where = this.buildCandidateWhere(causes, profiles, countryCode);
 
 			const allAvailableCandidates = await this.db.recipient.findMany({
 				where,
