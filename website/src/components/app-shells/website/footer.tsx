@@ -44,12 +44,12 @@ export const Footer = async ({ lang, region }: Props) => {
 						<div key={menuGroup._uid}>
 							<h5 className="text-lg font-bold text-white">{menuGroup.label}</h5>
 							<ul className="mt-4 space-y-3">
-							{menuGroup.items?.map((item) => {
-								const Icon = item.icon ? IconMap[item.icon] : null;
-								return (
-									<li key={item._uid}>
-										<NextLink
-											href={resolveStoryblokLink(item.link, lang, region)}
+								{menuGroup.items?.map((item) => {
+									const Icon = item.icon ? IconMap[item.icon] : null;
+									return (
+										<li key={item._uid}>
+											<NextLink
+												href={resolveStoryblokLink(item.link, lang, region)}
 												target={item.newTab ? '_blank' : '_self'}
 												rel={item.newTab ? 'noopener noreferrer' : undefined}
 												className="flex items-center gap-3 font-medium text-white/50 transition-colors hover:text-white"
