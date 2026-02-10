@@ -4,7 +4,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { Actor } from '@/lib/firebase/current-account';
 import { logger } from '@/lib/utils/logger';
-import { useState } from 'react';
 import { CandidateForm } from './candidates-form';
 
 type Props = {
@@ -13,13 +12,21 @@ type Props = {
 	candidateId?: string;
 	readOnly: boolean;
 	actorKind: Actor['kind'];
+	errorMessage: string | null;
+	onError: (error: string) => void;
 };
 
-export function CandidateDialog({ open, onOpenChange, candidateId, readOnly, actorKind }: Props) {
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving candidate: ${error}`);
+export function CandidateDialog({
+	open,
+	onOpenChange,
+	candidateId,
+	readOnly,
+	actorKind,
+	errorMessage,
+	onError,
+}: Props) {
+	const handleError = (error: unknown) => {
+		onError(`Error saving candidate: ${error}`);
 		logger.error('Candidate Form Error', { error });
 	};
 
@@ -42,7 +49,7 @@ export function CandidateDialog({ open, onOpenChange, candidateId, readOnly, act
 					readOnly={readOnly}
 					onSuccess={() => onOpenChange(false)}
 					onCancel={() => onOpenChange(false)}
-					onError={onError}
+					onError={handleError}
 					actorKind={actorKind}
 				/>
 			</DialogContent>

@@ -24,19 +24,26 @@ export function RecipientsTableClient({ rows, error, programId, readOnly, actorK
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
 	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
-
+	const [recipientError, setRecipientError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 
 	const openCreateRecipientDialog = () => {
+		setRecipientError(null);
 		setSelectedRecipientId(undefined);
 		setIsRecipientReadOnly(readOnly ?? false);
 		setIsRecipientDialogOpen(true);
 	};
 
 	const openEditRecipientDialog = (row: RecipientTableViewRow) => {
+		setRecipientError(null);
 		setSelectedRecipientId(row.id);
 		setIsRecipientReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
 		setIsRecipientDialogOpen(true);
+	};
+
+	const closeRecipientDialog = () => {
+		setIsRecipientDialogOpen(false);
+		setRecipientError(null);
 	};
 
 	return (
@@ -66,11 +73,13 @@ export function RecipientsTableClient({ rows, error, programId, readOnly, actorK
 
 			<RecipientDialog
 				open={isRecipientDialogOpen}
-				onOpenChange={setIsRecipientDialogOpen}
+				onOpenChange={closeRecipientDialog}
 				recipientId={selectedRecipientId}
 				readOnly={isRecipientReadOnly}
 				programId={programId}
 				actorKind={actorKind}
+				errorMessage={recipientError}
+				onError={setRecipientError}
 			/>
 
 			<CsvUploadDialog

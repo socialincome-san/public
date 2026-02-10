@@ -22,18 +22,26 @@ export function CandidatesTableClient({ rows, error, readOnly, actorKind = 'user
 	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
 	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
 	const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
-
+	const [candidateError, setCandidateError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 
 	const openCreateDialog = () => {
+		setCandidateError(null);
 		setSelectedCandidateId(undefined);
 		setIsReadOnly(readOnly ?? false);
 		setIsCandidateDialogOpen(true);
 	};
 
-	const openEditDialog = (row: CandidatesTableViewRow) => {
-		setSelectedCandidateId(row.id);
+	const openEditDialog = (_row: CandidatesTableViewRow) => {
+		setCandidateError(null);
+		setSelectedCandidateId(_row.id);
+		setIsReadOnly(readOnly ?? false);
 		setIsCandidateDialogOpen(true);
+	};
+
+	const closeCandidateDialog = () => {
+		setIsCandidateDialogOpen(false);
+		setCandidateError(null);
 	};
 
 	return (
@@ -60,13 +68,17 @@ export function CandidatesTableClient({ rows, error, readOnly, actorKind = 'user
 				onRowClick={openEditDialog}
 				searchKeys={['firstName', 'lastName', 'localPartnerName']}
 			/>
+
 			<CandidateDialog
 				open={isCandidateDialogOpen}
-				onOpenChange={setIsCandidateDialogOpen}
+				onOpenChange={closeCandidateDialog}
 				candidateId={selectedCandidateId}
 				readOnly={isReadOnly}
 				actorKind={actorKind}
+				errorMessage={candidateError}
+				onError={setCandidateError}
 			/>
+
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
