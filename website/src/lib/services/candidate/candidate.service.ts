@@ -76,7 +76,7 @@ export class CandidateService extends BaseService {
 		return where;
 	}
 
-	async create(actor: Actor, data: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
+	async create(actor: Actor, candidate: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
 		if (actor.kind === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
@@ -89,58 +89,51 @@ export class CandidateService extends BaseService {
 		}
 
 		if (actor.kind === 'local-partner') {
-			data.localPartner = { connect: { id: actor.session.id } };
+			candidate.localPartner = { connect: { id: actor.session.id } };
 		}
 
-		data.program = undefined;
+		candidate.program = undefined;
 
-		const phone = data.paymentInformation?.create?.phone?.create?.number;
-		if (!phone) {
-			return this.resultFail('No phone number provided for candidate creation');
-		}
+		const paymentInfoCreate = candidate.paymentInformation?.create;
+		const paymentPhoneNumber = paymentInfoCreate?.phone?.create?.number;
 
 		try {
 			return await this.db.$transaction(async (tx) => {
-				const created = await tx.recipient.create({
-					data,
-					select: {
-						id: true,
-						status: true,
-						successorName: true,
-						termsAccepted: true,
-						localPartner: { select: { id: true, name: true } },
-						contact: {
-							select: {
-								id: true,
-								firstName: true,
-								lastName: true,
-								callingName: true,
-								email: true,
-								gender: true,
-								language: true,
-								dateOfBirth: true,
-								profession: true,
-								phone: true,
-								address: true,
-							},
-						},
-						paymentInformation: {
-							select: {
-								id: true,
-								code: true,
-								provider: true,
-								phone: true,
-							},
-						},
-					},
-				});
+				const data: CandidateCreateInput = {
+					startDate: candidate.startDate ?? null,
+					status: candidate.status,
+					successorName: candidate.successorName ?? null,
+					termsAccepted: candidate.termsAccepted ?? false,
 
-				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(phone);
-				if (!firebaseResult.success) {
-					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
+					localPartner: candidate.localPartner,
+					contact: candidate.contact,
+
+					paymentInformation:
+						paymentInfoCreate && paymentPhoneNumber
+							? {
+									create: {
+										provider: paymentInfoCreate.provider,
+										code: paymentInfoCreate.code ?? null,
+										phone: {
+											create: {
+												number: paymentPhoneNumber,
+											},
+										},
+									},
+								}
+							: undefined,
+				};
+
+				const newCandidate = await tx.recipient.create({ data });
+
+				if (paymentPhoneNumber) {
+					const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(paymentPhoneNumber);
+					if (!firebaseResult.success) {
+						throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
+					}
 				}
 
-				return this.resultOk(created);
+				return this.resultOk(newCandidate);
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -188,7 +181,8 @@ export class CandidateService extends BaseService {
 		}
 
 		if (actor.kind === 'local-partner') {
-			if (existing.localPartnerId !== actor.session.id) {
+			const partnerId = actor.session.id;
+			if (existing.localPartnerId !== partnerId) {
 				return this.resultFail('Permission denied');
 			}
 			delete updateInput.localPartner;
@@ -196,19 +190,76 @@ export class CandidateService extends BaseService {
 
 		updateInput.program = undefined;
 
-		const previous = existing.paymentInformation?.phone?.number ?? null;
-		const paymentPhoneHasChanged =
-			previous !== null && nextPaymentPhoneNumber !== null && previous !== nextPaymentPhoneNumber;
+		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
+
+		if (!previousPaymentPhoneNumber && !nextPaymentPhoneNumber) {
+			try {
+				const updatedCandidate = await this.db.recipient.update({
+					where: { id: candidateId },
+					data: updateInput,
+					select: {
+						id: true,
+						status: true,
+						successorName: true,
+						termsAccepted: true,
+						localPartner: { select: { id: true, name: true } },
+						contact: {
+							select: {
+								id: true,
+								firstName: true,
+								lastName: true,
+								callingName: true,
+								email: true,
+								gender: true,
+								language: true,
+								dateOfBirth: true,
+								profession: true,
+								phone: true,
+								address: true,
+							},
+						},
+						paymentInformation: {
+							select: {
+								id: true,
+								code: true,
+								provider: true,
+								phone: true,
+							},
+						},
+					},
+				});
+				return this.resultOk(updatedCandidate);
+			} catch (error) {
+				this.logger.error(error);
+				return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
+			}
+		}
+
+		const phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
+
+		const phoneChanged =
+			!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
 		try {
-			if (paymentPhoneHasChanged) {
-				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(previous!, nextPaymentPhoneNumber!);
+			if (phoneAdded) {
+				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+				}
+			}
+
+			if (phoneChanged) {
+				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(
+					previousPaymentPhoneNumber,
+					nextPaymentPhoneNumber!,
+				);
+
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
 				}
 			}
 
-			const updated = await this.db.recipient.update({
+			const updatedCandidate = await this.db.recipient.update({
 				where: { id: candidateId },
 				data: updateInput,
 				select: {
@@ -243,7 +294,7 @@ export class CandidateService extends BaseService {
 				},
 			});
 
-			return this.resultOk(updated);
+			return this.resultOk(updatedCandidate);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
