@@ -1,0 +1,4 @@
+firstName,lastName,status,localPartnerId
+Bruce,Banner,active,local-partner-1
+Scott,Lang,suspended,local-partner-1
+Clint,Barton,active,local-partner-2

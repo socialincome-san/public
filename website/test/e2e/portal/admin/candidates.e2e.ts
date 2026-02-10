@@ -143,7 +143,7 @@ test('Edit existing candidate', async ({ page }) => {
 	await expect(page.getByRole('cell', { name: '+444444444' })).toBeVisible();
 });
 
-test('Delete recipient', async ({ page }) => {
+test('Delete candidate', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.createByPhoneNumber('+23288765432');
 
@@ -177,57 +177,53 @@ test('Delete recipient', async ({ page }) => {
 	await expect(page.getByRole('cell', { name: '+23288765432' })).toHaveCount(0);
 });
 
-// test('CSV Upload', async ({ page }) => {
-// 	const expectedRecipients = [
-// 		{
-// 			firstName: 'Bruce',
-// 			lastName: 'Banner',
-// 			status: RecipientStatus.active,
-// 			programName: 'Migros Relief SL',
-// 			localPartnerName: 'Makeni Development Initiative',
-// 		},
-// 		{
-// 			firstName: 'Natasha',
-// 			lastName: 'Romanoff',
-// 			status: RecipientStatus.suspended,
-// 			programName: 'Migros Relief SL',
-// 			localPartnerName: 'Makeni Development Initiative',
-// 		},
-// 		{
-// 			firstName: 'Clint',
-// 			lastName: 'Barton',
-// 			status: RecipientStatus.active,
-// 			programName: 'Migros Education SL',
-// 			localPartnerName: 'Bo Women Empowerment Group',
-// 		},
-// 	];
+test('CSV Upload', async ({ page }) => {
+	const expectedCandidates = [
+		{
+			firstName: 'Bruce',
+			lastName: 'Banner',
+			status: RecipientStatus.active,
+			localPartnerName: 'Makeni Development Initiative',
+		},
+		{
+			firstName: 'Scott',
+			lastName: 'Lang',
+			status: RecipientStatus.suspended,
+			localPartnerName: 'Makeni Development Initiative',
+		},
+		{
+			firstName: 'Clint',
+			lastName: 'Barton',
+			status: RecipientStatus.active,
+			localPartnerName: 'Bo Women Empowerment Group',
+		},
+	];
 
-// 	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('http://localhost:3000/portal/admin/candidates');
 
-// 	await page.getByRole('button', { name: 'Upload CSV' }).click();
-// 	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/portal/management/upload-example.csv');
+	await page.getByRole('button', { name: 'Upload CSV' }).click();
+	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/portal/admin/upload-example.csv');
 
-// 	await page.getByTestId('import-button').click();
+	await page.getByTestId('import-button').click();
 
-// 	await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
+	await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
 
-// 	const recipientService = await getRecipientService();
-// 	const result = await recipientService.getTableView('user-2');
+	const candidateService = await getCandidateService();
+	const result = await candidateService.getTableView('user-2');
 
-// 	if (!result.success) {
-// 		throw new Error(result.error);
-// 	}
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
-// 	for (const expected of expectedRecipients) {
-// 		const row = result.data.tableRows.find(
-// 			(r) => r.firstName === expected.firstName && r.lastName === expected.lastName,
-// 		);
+	for (const expected of expectedCandidates) {
+		const row = result.data.tableRows.find(
+			(r) => r.firstName === expected.firstName && r.lastName === expected.lastName,
+		);
 
-// 		expect(row).toBeDefined();
-// 		expect(row?.firstName).toBe(expected.firstName);
-// 		expect(row?.lastName).toBe(expected.lastName);
-// 		expect(row?.status).toBe(expected.status);
-// 		expect(row?.programName).toBe(expected.programName);
-// 		expect(row?.localPartnerName).toBe(expected.localPartnerName);
-// 	}
-// });
+		expect(row).toBeDefined();
+		expect(row?.firstName).toBe(expected.firstName);
+		expect(row?.lastName).toBe(expected.lastName);
+		expect(row?.status).toBe(expected.status);
+		expect(row?.localPartnerName).toBe(expected.localPartnerName);
+	}
+});
