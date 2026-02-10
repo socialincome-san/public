@@ -4,6 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { SuccessBanner } from '@/components/success-banner';
+import type { ServiceResult } from '@/lib/services/core/base.types';
 import { CsvRow, parseCsvFile } from '@/lib/utils/csv';
 import { useState } from 'react';
 import { CsvDropzone } from './csv-dropzone';
@@ -16,21 +17,19 @@ type CsvTemplate = {
 	filename: string;
 };
 
-type ImportResult = { type: 'success'; created: number } | { type: 'error'; message: string } | null;
-
 type Props = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	title: string;
 	template: CsvTemplate;
-	onImport: (file: File) => Promise<Exclude<ImportResult, null>>;
+	onImport: (file: File) => Promise<ServiceResult<{ created: number }>>;
 };
 
 export function CsvUploadDialog({ open, onOpenChange, title, template, onImport }: Props) {
 	const [file, setFile] = useState<File | null>(null);
 	const [previewRows, setPreviewRows] = useState<CsvRow[] | null>(null);
 	const [isImporting, setIsImporting] = useState(false);
-	const [result, setResult] = useState<ImportResult>(null);
+	const [result, setResult] = useState<ServiceResult<{ created: number }> | null>(null);
 
 	const resetState = () => {
 		setFile(null);
@@ -52,8 +51,8 @@ export function CsvUploadDialog({ open, onOpenChange, title, template, onImport 
 			setResult(null);
 		} catch (error) {
 			setResult({
-				type: 'error',
-				message: error instanceof Error ? error.message : 'Failed to parse CSV file.',
+				success: false,
+				error: error instanceof Error ? error.message : 'Failed to parse CSV file.',
 			});
 		}
 	};
@@ -64,14 +63,14 @@ export function CsvUploadDialog({ open, onOpenChange, title, template, onImport 
 		setIsImporting(true);
 		setResult(null);
 
-		const importResult = await onImport(file);
+		const serviceResult = await onImport(file);
 
 		setIsImporting(false);
-		setResult(importResult);
+		setResult(serviceResult);
 	};
 
 	const hasPreview = previewRows && previewRows.length > 0;
-	const isSuccess = result?.type === 'success';
+	const isSuccess = result?.success === true;
 
 	return (
 		<Dialog open={open} onOpenChange={(next) => !next && handleDialogClose()}>
@@ -84,17 +83,17 @@ export function CsvUploadDialog({ open, onOpenChange, title, template, onImport 
 
 				{!isSuccess && <CsvDropzone onFileSelected={handleFileSelected} />}
 
-				{result?.type === 'error' && (
+				{result && !result.success && (
 					<Alert variant="destructive">
 						<AlertTitle>Import failed</AlertTitle>
-						<AlertDescription>{result.message}</AlertDescription>
+						<AlertDescription>{result.error}</AlertDescription>
 					</Alert>
 				)}
 
-				{result?.type === 'success' && (
+				{isSuccess && (
 					<SuccessBanner
 						title="Import completed"
-						description={`Successfully imported ${result.created} item${result.created === 1 ? '' : 's'}.`}
+						description={`Successfully imported ${result.data.created} item${result.data.created === 1 ? '' : 's'}.`}
 					/>
 				)}
 

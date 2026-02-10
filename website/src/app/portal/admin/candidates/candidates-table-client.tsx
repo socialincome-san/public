@@ -76,13 +76,7 @@ export function CandidatesTableClient({ rows, error, readOnly, actorKind = 'user
 					exampleRow: ['John', 'Doe', 'active', 'local_partner_id_here'],
 					filename: 'candidates-import-template.csv',
 				}}
-				onImport={async (file) => {
-					const response = await importCandidatesCsvAction(file);
-					if (!response.success) {
-						return { type: 'error', message: response.error ?? 'Import failed' };
-					}
-					return { type: 'success', created: response.data.created };
-				}}
+				onImport={(file) => importCandidatesCsvAction(file)}
 			/>
 		</>
 	);

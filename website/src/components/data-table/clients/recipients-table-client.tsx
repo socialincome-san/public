@@ -82,13 +82,7 @@ export function RecipientsTableClient({ rows, error, programId, readOnly, actorK
 					exampleRow: ['John', 'Doe', 'active', 'program_id_here', 'local_partner_id_here'],
 					filename: 'recipients-import-template.csv',
 				}}
-				onImport={async (file) => {
-					const response = await importRecipientsCsvAction(file);
-					if (!response.success) {
-						return { type: 'error', message: response.error ?? 'Import failed' };
-					}
-					return { type: 'success', created: response.data.created };
-				}}
+				onImport={(file) => importRecipientsCsvAction(file)}
 			/>
 		</>
 	);
