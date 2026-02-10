@@ -115,6 +115,7 @@ jobs:
     name: "🏗️ Build & 📸 E2E Tests"
     runs-on: ubuntu-latest
     needs:
+      - aikido-scan
       - safe-chain
       - lint
       - check-unused
