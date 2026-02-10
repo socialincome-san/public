@@ -222,7 +222,7 @@ test('CSV Upload', async ({ page }) => {
 
 	await page.getByTestId('import-button').click();
 
-	await expect(page.getByText('Successfully imported 3 recipients.')).toBeVisible();
+	await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
 
 	const recipientService = await getRecipientService();
 	const result = await recipientService.getTableView('user-2');
