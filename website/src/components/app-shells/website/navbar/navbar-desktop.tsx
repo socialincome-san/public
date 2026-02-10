@@ -1,17 +1,17 @@
 'use client';
 
+import { useClickOutside } from '@/components/app-shells/use-click-outside';
+import { AccountMenu, Scope } from '@/components/app-shells/website/navbar/account-menu';
+import { FlyoutPanel } from '@/components/app-shells/website/navbar/flyout-panel';
+import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
+import { NavLinks } from '@/components/app-shells/website/navbar/nav-links';
 import { Button } from '@/components/button';
+import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Session } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { NavItem } from '@/lib/services/storyblok/storyblok.types';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { useClickOutside } from '../../use-click-outside';
-import { AccountMenu, Scope } from './account-menu';
-import { FlyoutPanel } from './flyout-panel';
-import { LoginFlyout } from './login-flyout';
-import { Logo } from './logo';
-import { NavLinks } from './nav-links';
 
 type Props = {
 	session: Session | null;
@@ -40,7 +40,7 @@ export const NavbarDesktop = ({ session, lang, navItems, scope }: Props) => {
 		<div ref={navRef} className="relative z-50 w-full">
 			<nav className="container mt-6 flex items-center justify-between rounded-full bg-white px-8 py-3 shadow-sm">
 				<Link href="/">
-					<Logo />
+					<SocialIncomeLogo />
 				</Link>
 
 				<NavLinks nav={navItems} open={open} onClick={handleNavClick} />
