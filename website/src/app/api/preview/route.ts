@@ -1,11 +1,11 @@
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { cookies, draftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
-const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag', 'new-website'];
+const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag', NEW_WEBSITE_SLUG];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
-const NEW_WEBSITE = 'new-website';
 const DEFAULT_REGION = 'int';
 
 function getLanguage(slug: string | null) {
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
 	}
 	await enableDraftModeAndAdaptCookie();
 
-	const path = slug!.toLowerCase().startsWith(NEW_WEBSITE) ? `${slug}/preview` : slug!;
+	const path = slug!.toLowerCase().startsWith(NEW_WEBSITE_SLUG) ? `${slug}/preview` : slug!;
 
 	const storyblokParams = new URLSearchParams();
 	for (const [key, value] of searchParams.entries()) {

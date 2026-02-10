@@ -78,6 +78,14 @@ export interface CampaignDonate {
   [k: string]: unknown;
 }
 
+export interface DropdownItem {
+  label?: string;
+  menuItemGroups: MenuItemGroup[];
+  component: "dropdownItem";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface EmbeddedVideo {
   url?: string;
   muxPlaybackId?: string;
@@ -110,6 +118,32 @@ export interface ImageWithCaption {
   image: StoryblokAsset;
   caption?: string;
   component: "imageWithCaption";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Layout {
+  menu: (MenuItem | DropdownItem)[];
+  footerMenu: MenuItemGroup[];
+  copyrightNotice?: string;
+  component: "layout";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface MenuItem {
+  label?: string;
+  link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter";
+  component: "menuItem";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface MenuItemGroup {
+  label: string;
+  items?: MenuItem[];
+  component: "menuItemGroup";
   _uid: string;
   [k: string]: unknown;
 }
@@ -172,4 +206,4 @@ export interface Topic {
   [k: string]: unknown;
 }
 
-export type ContentType = ActionButton | Article | ArticleType | Author | Page | ReferenceArticle | Topic;
+export type ContentType = ActionButton | Article | ArticleType | Author | Layout | Page | ReferenceArticle | Topic;

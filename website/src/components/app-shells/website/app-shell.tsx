@@ -14,10 +14,10 @@ type WebsiteAppShellProps = {
 
 export function WebsiteAppShell({ children, session, lang, scope }: WebsiteAppShellProps) {
 	return (
-		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-gradient-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed">
+		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-gradient-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed antialiased">
 			<Navbar session={session} lang={lang} scope={scope} />
 			<div className="container my-8">{children}</div>
-			<Footer />
+			<Footer lang={lang} />
 		</div>
 	);
 }
