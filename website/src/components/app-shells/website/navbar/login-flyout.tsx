@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { UserRound } from 'lucide-react';
@@ -42,7 +43,7 @@ export const LoginFlyout = () => {
 			localStorage.setItem('loginEmail', email);
 
 			const actionCodeSettings = {
-				url: `${window.location.origin}/new-website/auth/finish-login`,
+				url: `${window.location.origin}/${NEW_WEBSITE_SLUG}/auth/finish-login`,
 				handleCodeInApp: true,
 			};
 

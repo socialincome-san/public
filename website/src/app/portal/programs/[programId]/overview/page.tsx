@@ -2,6 +2,7 @@ import { Button } from '@/components/button';
 import { Card } from '@/components/card';
 import { SuccessBanner } from '@/components/success-banner';
 import { ProgramService } from '@/lib/services/program/program.service';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { slugify } from '@/lib/utils/slugify';
 import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -28,7 +29,7 @@ async function OverviewProgramScopedDataLoader({ params }: { params: Promise<{ p
 	}
 
 	const programSlug = slugify(programNameResult.data);
-	const publicUrl = `/new-website/programs/${programSlug}`;
+	const publicUrl = `/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
 
 	return (
 		<div className="grid grid-cols-12 gap-6">

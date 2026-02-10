@@ -1,3 +1,4 @@
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { APIResponse, Browser, expect } from '@playwright/test';
 
 const ACTORS = {
@@ -39,7 +40,7 @@ export async function loginAs(browser: Browser, actor: Actor): Promise<void> {
 
 	const { email, testId, state } = ACTORS[actor];
 
-	await page.goto('/en/int/new-website');
+	await page.goto(`/en/int/${NEW_WEBSITE_SLUG}`);
 	await page.getByTestId('login-button').click();
 	await page.fill('input[type="email"]', email);
 	await page.click('button[type="submit"]');
