@@ -338,10 +338,15 @@ export class CandidateService extends BaseService {
 			return this.resultFail('Permission denied');
 		}
 
+		console.log('Deleting candidate with ID:', candidateId);
+
 		try {
 			await this.db.$transaction(async (tx) => {
+				console.log('Transaction started for deleting candidate with ID:', candidateId);
 				const phone = existing.paymentInformation?.phone?.number;
+				console.log('Candidate payment phone number:', phone);
 				if (phone) {
+					console.log('Deleting Firebase user with phone number:', phone);
 					await this.firebaseAdminService.deleteByPhoneNumberIfExists(phone);
 				}
 

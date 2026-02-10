@@ -143,39 +143,39 @@ test('Edit existing candidate', async ({ page }) => {
 	await expect(page.getByRole('cell', { name: '+444444444' })).toBeVisible();
 });
 
-// test('Delete recipient', async ({ page }) => {
-// 	const firebaseService = await getFirebaseAdminService();
-// 	await firebaseService.createByPhoneNumber('+41791234567');
+test('Delete recipient', async ({ page }) => {
+	const firebaseService = await getFirebaseAdminService();
+	await firebaseService.createByPhoneNumber('+23288765432');
 
-// 	await page.goto('http://localhost:4000/auth');
-// 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+41791234567');
-// 	await expect(page.getByRole('cell', { name: '+41791234567' })).toBeVisible();
+	await page.goto('http://localhost:4000/auth');
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+23288765432');
+	await expect(page.getByRole('cell', { name: '+23288765432' })).toBeVisible();
 
-// 	await page.goto('http://localhost:3000/portal/management/recipients');
-// 	await page.getByRole('cell', { name: 'Badingu' }).click();
+	await page.goto('http://localhost:3000/portal/admin/candidates');
+	await page.getByRole('cell', { name: 'Hawa' }).click();
 
-// 	await page.getByRole('button', { name: 'Delete' }).click();
-// 	await page.getByRole('button', { name: 'Delete permanently' }).click();
-// 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+	await page.getByRole('button', { name: 'Delete' }).click();
+	await page.getByRole('button', { name: 'Delete permanently' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-// 	const recipientService = await getRecipientService();
-// 	const tableResult = await recipientService.getTableView('user-2');
+	const candidateService = await getCandidateService();
+	const tableResult = await candidateService.getTableView('user-2');
 
-// 	if (!tableResult.success) {
-// 		throw new Error(tableResult.error);
-// 	}
+	if (!tableResult.success) {
+		throw new Error(tableResult.error);
+	}
 
-// 	expect(tableResult.data.tableRows.length).toBe(6);
+	expect(tableResult.data.tableRows.length).toBe(11);
 
-// 	const row = tableResult.data.tableRows.find((r) => r.firstName === 'John' && r.lastName === 'Badingu');
+	const row = tableResult.data.tableRows.find((r) => r.firstName === 'Hawa' && r.lastName === 'Kamara');
 
-// 	expect(row).toBeUndefined();
+	expect(row).toBeUndefined();
 
-// 	// Check if the auth user was deleted
-// 	await page.goto('http://localhost:4000/auth');
-// 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+41791234567');
-// 	await expect(page.getByRole('cell', { name: '+41791234567' })).toHaveCount(0);
-// });
+	// Check if the auth user was deleted
+	await page.goto('http://localhost:4000/auth');
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('+23288765432');
+	await expect(page.getByRole('cell', { name: '+23288765432' })).toHaveCount(0);
+});
 
 // test('CSV Upload', async ({ page }) => {
 // 	const expectedRecipients = [
