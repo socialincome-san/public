@@ -32,6 +32,8 @@ const config: KnipConfig = {
 		'@firebase/analytics',
 		'@sendgrid/client',
 		'@google-cloud/storage',
+		'@tailwindcss/typography',
+		'tailwindcss-animate',
 		'xstate',
 		'@xstate/react',
 	],
