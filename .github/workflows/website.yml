@@ -33,6 +33,23 @@ jobs:
       - name: Install dependencies (protected by Safe Chain)
         run: npm ci --no-audit --no-fund
 
+  aikido-scan:
+    name: "🛡️ Aikido Security Scan"
+    runs-on: ubuntu-latest
+
+    container:
+      image: aikidosecurity/local-scanner:latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run Aikido scan
+        run: |
+          aikido-local-scanner scan ./ \
+            --apikey ${{ secrets.AIKIDO_API_KEY }} \
+            --repositoryname socialincome-public \
+            --branchname ${{ github.head_ref || github.ref_name }}
+
   lint:
     name: "✨ Lint"
     runs-on: ubuntu-latest
