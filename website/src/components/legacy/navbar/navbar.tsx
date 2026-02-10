@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { NavbarClient } from '@/components/legacy/navbar/navbar-client';
+import { Translator } from '@/lib/i18n/translator';
 import { mainWebsiteLanguages, websiteCurrencies, WebsiteLanguage, websiteRegions } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 
 async function Navbar({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({

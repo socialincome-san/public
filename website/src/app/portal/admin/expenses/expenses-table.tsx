@@ -6,7 +6,7 @@ import { makeExpenseColumns } from '@/components/data-table/columns/expenses';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';
 
@@ -52,7 +52,7 @@ export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewR
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
+							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<ExpensesForm

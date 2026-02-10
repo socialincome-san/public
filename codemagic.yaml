@@ -5,7 +5,7 @@ definitions:
 
   env_versions: &env_versions
     flutter: 3.35.5
-    xcode: 16.4
+    xcode: 26.2
     cocoapods: 1.16.2
     java: 21
 
@@ -105,12 +105,8 @@ workflows:
           flutter build appbundle --release \
             --flavor stage \
             -t lib/main_stage.dart \
-            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
-            --dart-define=SENTRY_URL=$SENTRY_URL \
-            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
-            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
-            --dart-define=TWILIO_NUMBER=$TWILIO_NUMBER \
-            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID \
+            --dart-define=BASE_URL=$BASE_URL \
+            --dart-define=SENTRY_URL=$SENTRY_URL
         working_directory: recipients_app
       - name: Generate universal APK from AAB
         script: |
@@ -226,12 +222,8 @@ workflows:
           flutter build appbundle --release \
             --flavor prod \
             -t lib/main_prod.dart \
-            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
-            --dart-define=SENTRY_URL=$SENTRY_URL \
-            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
-            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
-            --dart-define=TWILIO_NUMBER=$TWILIO_NUMBER \
-            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID
+            --dart-define=BASE_URL=$BASE_URL \
+            --dart-define=SENTRY_URL=$SENTRY_URL
         working_directory: recipients_app
 
     artifacts:
@@ -357,12 +349,8 @@ workflows:
           flutter build ipa --release \
             --flavor stage \
             -t lib/main_stage.dart \
-            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
+            --dart-define=BASE_URL=$BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
-            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
-            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
-            --dart-define=TWILIO_NUMBER=$TWILIO_NUMBER \
-            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID \
             --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
         working_directory: recipients_app
 
@@ -500,12 +488,8 @@ workflows:
           flutter build ipa --release \
             --flavor stage \
             -t lib/main_stage.dart \
-            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
+            --dart-define=BASE_URL=$BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
-            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
-            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
-            --dart-define=TWILIO_NUMBER=$TWILIO_NUMBER \
-            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID \
             --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
         working_directory: recipients_app
 
@@ -634,12 +618,8 @@ workflows:
           flutter build ipa --release \
             --flavor prod \
             -t lib/main_prod.dart \
-            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
+            --dart-define=BASE_URL=$BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
-            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
-            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
-            --dart-define=TWILIO_NUMBER=$TWILIO_NUMBER \
-            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID \
             --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
         working_directory: recipients_app
 

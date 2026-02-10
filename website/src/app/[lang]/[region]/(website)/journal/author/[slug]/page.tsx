@@ -1,20 +1,14 @@
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
-import {
-	getArticleCountByAuthorForDefaultLang,
-	getArticlesByAuthor,
-	getAuthor,
-} from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
+import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { storyblokInitializationWorkaround } from '@/storyblok-init';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { LanguageCode } from '@/lib/types/language';
 import { BaseContainer, linkCn, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export const revalidate = 900;
-storyblokInitializationWorkaround();
 
 function getLinkedInUrl(handle: string) {
 	return `https://www.linkedin.com/in/${encodeURIComponent(handle)}`;
@@ -23,6 +17,8 @@ function getGitHubUrl(username: string) {
 	return `https://github.com/${encodeURIComponent(username)}`;
 }
 
+const storyblokService = new StoryblokService();
+
 async function getTotalArticlesInDefaultLanguage(
 	lang: string,
 	totalArticlesInSelectedLanguage: number,
@@ -30,15 +26,15 @@ async function getTotalArticlesInDefaultLanguage(
 ) {
 	return lang == defaultLanguage
 		? totalArticlesInSelectedLanguage
-		: await getArticleCountByAuthorForDefaultLang(authorId);
+		: await storyblokService.getArticleCountByAuthorForDefaultLang(authorId);
 }
 
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
-	const author = (await getAuthor(slug, lang)).data.story;
+	const author = (await storyblokService.getAuthor(slug, lang)).data.story;
 
 	const authorId = author.uuid;
-	const articles = await getArticlesByAuthor(authorId, lang);
+	const articles = await storyblokService.getArticlesByAuthor(authorId, lang);
 	const totalArticlesInSelectedLanguage = articles.length;
 	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(
 		lang,
@@ -46,7 +42,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		authorId,
 	);
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage as WebsiteLanguage,
+		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common'],
 	});
 	return (
@@ -102,7 +98,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{articles.map((article) => (
-					<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} author={author} />
+					<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
 				))}
 			</div>
 

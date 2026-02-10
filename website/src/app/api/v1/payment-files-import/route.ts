@@ -1,5 +1,5 @@
 import { PaymentFileImportService } from '@/lib/services/payment-file-import/payment-file-import.service';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**

@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { CardTranslation, SectionCard } from '@/app/[lang]/[region]/(website)/transparency/evidence/section-card';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 

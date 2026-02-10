@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
+import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer } from '@socialincome/ui';
 import Section1 from './section-1';
 import Section2 from './section-2';

@@ -1,4 +1,4 @@
-import { User, UserRole } from '@prisma/client';
+import { User, UserRole } from '@/generated/prisma/client';
 
 export const usersData: User[] = [
 	{
@@ -7,7 +7,7 @@ export const usersData: User[] = [
 		contactId: 'contact-16',
 		role: UserRole.admin,
 		activeOrganizationId: 'organization-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -16,7 +16,7 @@ export const usersData: User[] = [
 		contactId: 'contact-17',
 		role: UserRole.admin,
 		activeOrganizationId: 'organization-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -25,7 +25,7 @@ export const usersData: User[] = [
 		contactId: 'contact-18',
 		role: UserRole.user,
 		activeOrganizationId: 'organization-3',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

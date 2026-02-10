@@ -3,8 +3,8 @@
 import { Button } from '@/components/button';
 import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import DataTable from '@/components/data-table/data-table';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
-import { ProgramPermission } from '@prisma/client';
 import { useState } from 'react';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';
 import { SurveyFormDialog } from './survey-form-dialog';
@@ -50,6 +50,7 @@ export function SurveysTableClient({ rows, error }: { rows: SurveyTableViewRow[]
 						<Button onClick={() => setIsGenerationDialogOpen(true)}>Generate surveys</Button>
 					</div>
 				}
+				searchKeys={['name', 'recipientName', 'programName']}
 			/>
 
 			<SurveyFormDialog

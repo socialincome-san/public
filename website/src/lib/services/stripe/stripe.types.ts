@@ -1,26 +1,11 @@
-import { ContributorReferralSource, Gender } from '@prisma/client';
-import Stripe from 'stripe';
-
-export type StripeWebhookEvent = Stripe.Event;
-
-export type StripeChargeData = {
-	id: string;
-	amount: number;
-	currency: string;
-	status: Stripe.Charge.Status;
-	created: number;
-	customer: string;
-	payment_intent?: string;
-	balance_transaction?: Stripe.BalanceTransaction;
-	invoice?: Stripe.Invoice;
-};
+import { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/client';
 
 export type StripeCustomerData = {
 	id: string;
 	email: string;
 	name?: string;
 	address?: {
-		country?: string;
+		country?: CountryCode;
 	};
 };
 
@@ -38,12 +23,12 @@ export type WebhookResult = {
 
 export type StripeSubscriptionRow = {
 	id: string;
-	from: Date;
-	until: Date;
+	created: Date;
 	status: string;
 	amount: number;
 	interval: string;
 	currency: string;
+	paymentMethod: StripePaymentMethod;
 };
 
 export type StripeSubscriptionTableView = {
@@ -62,7 +47,12 @@ export type UpdateContributorAfterCheckoutInput = {
 			referral?: ContributorReferralSource;
 		};
 		address: {
-			country: string;
+			country: CountryCode;
 		};
 	};
+};
+
+export type StripePaymentMethod = {
+	type: 'card' | 'other';
+	label: string;
 };

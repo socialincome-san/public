@@ -1,6 +1,6 @@
 'use client';
 
-import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { LanguageCode } from '@/lib/types/language';
 import { GlowHoverContainer, Typography } from '@socialincome/ui';
 
 import NewsletterForm from '@/components/legacy/newsletter/form/newsletter-form';

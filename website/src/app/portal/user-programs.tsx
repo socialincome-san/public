@@ -1,6 +1,8 @@
+import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { ProgramService } from '@/lib/services/program/program.service';
-import { ProgramPermission } from '@prisma/client';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
 	userId: string;
@@ -27,9 +29,9 @@ export async function UserPrograms({ userId }: Props) {
 					{operatedPrograms.map((program) => (
 						<Wallet
 							key={program.id}
-							href={`/portal/programs/${program.id}/recipients`}
+							href={`/portal/programs/${program.id}/overview`}
 							title={program.programName}
-							subtitle={program.country}
+							subtitle={getCountryNameByCode(program.country)}
 							footerLeft={{
 								label: 'Paid out',
 								currency: program.payoutCurrency,
@@ -42,7 +44,7 @@ export async function UserPrograms({ userId }: Props) {
 						/>
 					))}
 
-					<Wallet variant="empty" title="Create new program" href="/portal/programs/create" />
+					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
 				</div>
 			</div>
 
@@ -53,9 +55,9 @@ export async function UserPrograms({ userId }: Props) {
 						{ownedPrograms.map((program) => (
 							<Wallet
 								key={program.id}
-								href={`/portal/programs/${program.id}/recipients`}
+								href={`/portal/programs/${program.id}/overview`}
 								title={program.programName}
-								subtitle={program.country}
+								subtitle={getCountryNameByCode(program.country)}
 								footerLeft={{
 									label: 'Paid out',
 									currency: program.payoutCurrency,

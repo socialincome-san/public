@@ -1,9 +1,9 @@
-import { ProgramPermission, SurveyStatus } from '@prisma/client';
-import { rndString } from '@socialincome/shared/src/utils/crypto';
-import { addMonths, isFuture } from 'date-fns';
+import { ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import crypto from 'crypto';
+import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import { RecipientService } from '../recipient/recipient.service';
 import { SurveyScheduleService } from '../survey-schedule/survey-schedule.service';
@@ -22,7 +22,7 @@ export class SurveyService extends BaseService {
 	private programAccessService = new ProgramAccessService();
 	private recipientService = new RecipientService();
 	private surveyScheduleService = new SurveyScheduleService();
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
 
 	async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
@@ -37,6 +37,7 @@ export class SurveyService extends BaseService {
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
+
 			const surveys = await this.db.survey.findMany({
 				where: { recipient: { programId: { in: programIds } } },
 				select: {
@@ -61,54 +62,138 @@ export class SurveyService extends BaseService {
 				orderBy: { dueAt: 'desc' },
 			});
 
-			const tableRows: SurveyTableViewRow[] = surveys.map((survey) => {
-				const programId = survey.recipient.program.id;
-				const access = accessiblePrograms.find((p) => p.programId === programId);
-				const permission = access?.permission ?? ProgramPermission.owner;
+			const tableRows: SurveyTableViewRow[] = surveys
+				.filter((s) => s.recipient.program !== null)
+				.map((survey) => {
+					const programId = survey.recipient.program!.id;
 
-				return {
-					id: survey.id,
-					name: survey.name,
-					recipientName:
-						`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
-					programId,
-					programName: survey.recipient.program.name,
-					questionnaire: survey.questionnaire,
-					status: survey.status,
-					language: survey.language,
-					dueAt: survey.dueAt,
-					completedAt: survey.completedAt,
-					createdAt: survey.createdAt,
-					surveyUrl: this.buildSurveyUrl({
-						surveyId: survey.id,
-						recipientId: survey.recipient.id,
-						accessEmail: survey.accessEmail,
-						accessPw: survey.accessPw,
-					}),
-					permission,
-				};
-			});
+					const programPermissions = accessiblePrograms
+						.filter((p) => p.programId === programId)
+						.map((p) => p.permission);
+
+					const permission = programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
+
+					return {
+						id: survey.id,
+						name: survey.name,
+						recipientName:
+							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+						programId,
+						programName: survey.recipient.program!.name,
+						questionnaire: survey.questionnaire,
+						status: survey.status,
+						language: survey.language,
+						dueAt: survey.dueAt,
+						completedAt: survey.completedAt,
+						createdAt: survey.createdAt,
+						surveyUrl: this.buildSurveyUrl({
+							surveyId: survey.id,
+							recipientId: survey.recipient.id,
+							accessEmail: survey.accessEmail,
+							accessPw: survey.accessPw,
+						}),
+						permission,
+					};
+				});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getUpcomingSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
-			const allSurveysResult = await this.getTableView(userId);
-			if (!allSurveysResult.success) {
-				return allSurveysResult;
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const upcoming = allSurveysResult.data.tableRows.filter((row) => isFuture(row.dueAt));
+			const accessiblePrograms = accessibleProgramsResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ tableRows: [] });
+			}
 
-			return this.resultOk({ tableRows: upcoming });
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
+			const now = new Date();
+			const from = startOfMonth(subMonths(now, 1));
+			const to = endOfMonth(now);
+
+			const surveys = await this.db.survey.findMany({
+				where: {
+					status: { not: SurveyStatus.completed },
+					dueAt: {
+						gte: from,
+						lte: to,
+					},
+					recipient: {
+						programId: { in: programIds },
+					},
+				},
+				select: {
+					id: true,
+					name: true,
+					questionnaire: true,
+					status: true,
+					language: true,
+					dueAt: true,
+					completedAt: true,
+					createdAt: true,
+					accessEmail: true,
+					accessPw: true,
+					recipient: {
+						select: {
+							id: true,
+							contact: { select: { firstName: true, lastName: true } },
+							program: { select: { id: true, name: true } },
+						},
+					},
+				},
+				orderBy: { dueAt: 'desc' },
+			});
+
+			const tableRows: SurveyTableViewRow[] = surveys
+				.filter((s) => s.recipient.program !== null)
+				.map((survey) => {
+					const programId = survey.recipient.program!.id;
+
+					const permissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
+
+					const permission = permissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
+
+					return {
+						id: survey.id,
+						name: survey.name,
+						recipientName:
+							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+						programId,
+						programName: survey.recipient.program!.name,
+						questionnaire: survey.questionnaire,
+						status: survey.status,
+						language: survey.language,
+						dueAt: survey.dueAt,
+						completedAt: survey.completedAt,
+						createdAt: survey.createdAt,
+						surveyUrl: this.buildSurveyUrl({
+							surveyId: survey.id,
+							recipientId: survey.recipient.id,
+							accessEmail: survey.accessEmail,
+							accessPw: survey.accessPw,
+						}),
+						permission,
+					};
+				});
+
+			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch upcoming surveys');
+			return this.resultFail(`Could not fetch upcoming surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -159,7 +244,7 @@ export class SurveyService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program.id);
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program?.id);
 			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
 				return this.resultFail('Access denied');
 			}
@@ -188,7 +273,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to create survey: ${error}`);
+			return this.resultFail(`Failed to create survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -212,7 +297,7 @@ export class SurveyService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
 			if (!programAccess) {
 				return this.resultFail('Access denied');
 			}
@@ -237,7 +322,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to get survey: ${error}`);
+			return this.resultFail(`Failed to get survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -257,7 +342,7 @@ export class SurveyService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
 			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
 				return this.resultFail('Access denied');
 			}
@@ -287,7 +372,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${error}`);
+			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -353,12 +438,11 @@ export class SurveyService extends BaseService {
 					let email: string;
 					do {
 						// ensure uniqueness in preview list
-						email = (await rndString(16)).toLowerCase() + '@si.org';
+						email = this.rndString(16).toLowerCase() + '@si.org';
 					} while (existingSurveys.some((s) => s.accessEmail === email));
 
-					const password = await rndString(16);
-					const token = await rndString(3, 'hex');
-
+					const password = this.rndString(16);
+					const token = this.rndString(3);
 					surveys.push({
 						name: schedule.name,
 						recipient: { connect: { id: recipient.id } },
@@ -378,7 +462,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk({ surveys });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to preview survey generation: ${error}`);
+			return this.resultFail(`Failed to preview survey generation: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -400,7 +484,7 @@ export class SurveyService extends BaseService {
 			let surveysCreated = 0;
 
 			for (const surveyInput of surveysToCreate) {
-				const firebaseResult = await this.firebaseService.createSurveyUser(
+				const firebaseResult = await this.firebaseAdminService.createSurveyUser(
 					surveyInput.accessEmail,
 					surveyInput.accessPw,
 				);
@@ -417,7 +501,7 @@ export class SurveyService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to generate surveys: ${error}`);
+			return this.resultFail(`Failed to generate surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -430,7 +514,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(surveys);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -445,7 +529,7 @@ export class SurveyService extends BaseService {
 			return this.resultOk(surveys);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -484,7 +568,7 @@ export class SurveyService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch surveys');
+			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -523,7 +607,11 @@ export class SurveyService extends BaseService {
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${error}`);
+			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private rndString(bytes: number): string {
+		return crypto.randomBytes(bytes).toString('base64url');
 	}
 }

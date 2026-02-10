@@ -1,13 +1,13 @@
-import { getDimensionsFromStoryblokImageUrl } from '@/components/legacy/storyblok/StoryblokUtils';
-import { StoryblokImage } from '@/types/journal';
+import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
+import { getDimensionsFromStoryblokImageUrl } from '@/lib/services/storyblok/storyblok.utils';
 import Image from 'next/image';
 
 const DEFAULT_HEIGHT = 15;
 
 const DEFAULT_WIDTH = 25;
 
-export function ThumbnailImage({ thumbnail }: { thumbnail?: StoryblokImage }) {
-	if (!thumbnail) return null;
+export function ThumbnailImage({ thumbnail }: { thumbnail?: StoryblokAsset }) {
+	if (!thumbnail || !thumbnail.filename) return null;
 
 	const imageDimensions = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
 	return (

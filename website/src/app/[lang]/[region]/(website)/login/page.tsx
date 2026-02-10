@@ -1,8 +1,8 @@
 import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[region]';
 import LoginForm from '@/app/[lang]/[region]/(website)/login/login-form';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer } from '@socialincome/ui';
 
 export async function generateMetadata(props: DefaultLayoutProps) {
@@ -22,7 +22,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				translations={{
 					title: translator.t('title'),
 					email: translator.t('email'),
-					invalidEmail: translator.t('invalid-email'),
+					invalidEmail: translator.t('error.invalid-email'),
 					submitButton: translator.t('submit-button'),
 					checkEmail: translator.t('check-email'),
 					confirmEmail: translator.t('confirm-email'),

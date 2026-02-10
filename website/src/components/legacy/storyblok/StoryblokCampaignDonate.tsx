@@ -1,7 +1,7 @@
 import { DonationInterval } from '@/components/legacy/donation/donation-interval';
 import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 
 export function StoryblokCampaignDonate(props: {

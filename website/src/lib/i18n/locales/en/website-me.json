@@ -1,0 +1,173 @@
+{
+	"metadata": {
+		"title": "My Profile | Social Income",
+		"home-link": "Back to Website"
+	},
+	"breadcrumb": {
+		"website": "Website",
+		"dashboard": "Dashboard",
+		"profile": "Profile"
+	},
+	"title": {
+		"dashboard": "Dashboard",
+		"profile": "Profile"
+	},
+	"profile": {
+		"link": "Profile",
+		"form": {
+			"personal-info-title": "Personal Information",
+			"address-title": "Address",
+			"how-did-you-hear": "How did you hear about us?",
+			"select-gender-placeholder": "Select gender",
+			"select-option-placeholder": "Select option",
+			"genders": {
+				"male": "Male",
+				"female": "Female",
+				"other": "Other",
+				"private": "Prefer not to say"
+			},
+			"referrals": {
+				"familyfriends": "Family & Friends",
+				"work": "Work",
+				"socialmedia": "Social Media",
+				"media": "Media",
+				"presentation": "Presentation",
+				"other": "Other"
+			},
+			"save-button": "Save",
+			"update-error": "Could not update profile",
+			"user-updated-toast": "Your personal info has been updated",
+			"firstname": "First Name",
+			"lastname": "Last Name",
+			"email": "Email",
+			"country": "Country",
+			"language": "Language",
+			"gender": "Gender",
+			"street": "Street",
+			"street-number": "Number",
+			"city": "City",
+			"zip": "Zip",
+			"name": "Name",
+			"causes": "Causes"
+		}
+	},
+	"sections": {
+		"account": {
+			"title": "My Account",
+			"personal-info": "Personal Info",
+			"security": "Security"
+		},
+		"contributions": {
+			"title": "My Contributions",
+			"payments": "Payments",
+			"subscriptions": "Subscriptions",
+			"donation-certificates-short": "Certificates",
+			"donation-certificates-long": "Donation certificates"
+		}
+	},
+	"contributions": {
+		"amount": "Amount",
+		"date": "Date",
+		"source": "Source",
+		"total": "Total",
+		"one-time-payment": "New one-time donation",
+		"amount-currency": "{{ amount, currency }}",
+		"currency": "Currency",
+		"campaign": "Campaign",
+		"sources": {
+			"benevity": "Benevity",
+			"cash": "Cash",
+			"raisenow": "Twint",
+			"stripe": "Credit Card",
+			"wire-transfer": "Wire Transfer"
+		},
+		"status": {
+			"succeeded": "Succeeded",
+			"pending": "Pending",
+			"failed": "Failed",
+			"unknown": "Unknown"
+		},
+		"status-title": "Status",
+		"no-contributions": "No contributions found",
+		"new-contribution": "Make a contribution"
+	},
+	"subscriptions": {
+		"amount": "Amount",
+		"date": "Date",
+		"created": "Created",
+		"payment-method": "Payment Method",
+		"source": "Source",
+		"total": "Total",
+		"amount-currency": "{{ amount, currency }}",
+		"new-subscription": "New subscription",
+		"interval": "Interval",
+		"interval-1": "Monthly",
+		"interval-3": "Quarterly",
+		"interval-12": "Annually",
+		"status": {
+			"active": "Active",
+			"canceled": "Canceled",
+			"paused": "Paused"
+		},
+		"status-title": "Status",
+		"manage-subscriptions": "Manage Subscriptions",
+		"no-subscriptions": "No subscriptions found"
+	},
+	"donation-certificates": {
+		"created": "Created",
+		"language": "Language",
+		"year": "Year",
+		"download-pdf": "Download PDF",
+		"generate-certificate": "Generate Donation Certificate",
+		"no-certificates-yet": "You have no donation certificates yet. Create some by clicking \"Generate Donation Certificate\". <br></br> If you have any questions, feel free to <a href='mailto:hello@socialincome.org' class='underline'>contact</a>. us.",
+		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org.",
+		"already-exists": "Certificate for selected year and language already exists. If this seems wrong, please contact contributors@socialincome.org.",
+		"technical-error": "A technical error has occurred, please try again. If this continues to happen, please contact contributors@socialincome.org.",
+		"generate-dialog": {
+			"dialog_title": "Generate Donation Certificate",
+			"label_year": "Year",
+			"description_year": "Specify for which year the certificate should be generated:",
+			"placeholder_year": "Select Year",
+			"label_language": "Language",
+			"description_language": "Specify for which language the certificate should be generated in:",
+			"placeholder_language": "Select language",
+			"button_generate": "Generate Certificates",
+			"state_generating": "Generating...",
+			"status_success": "Generated successfully",
+			"button_close": "Close"
+		}
+	},
+	"personal-info": {
+		"alert-title": "Donation certificates",
+		"alert-description": "If you pay taxes in Switzerland, please provide us with your address so that we can issue you a donation certificate.",
+		"firstname": "First Name",
+		"lastname": "Last Name",
+		"gender": "Gender",
+		"email": "Email",
+		"street": "Street",
+		"street-number": "Number",
+		"city": "City",
+		"zip": "Zip",
+		"country": "Country",
+		"language": "Communication language",
+		"submit-button": "Update Personal Info",
+		"user-updated-toast": "Your personal info has been updated",
+		"newsletter-switch": "I would like to receive the newsletter"
+	},
+	"security": {
+		"sign-out": {
+			"title": "Sign out of your account?",
+			"button": "Sign Out"
+		}
+	},
+	"work-info": {
+		"work": "Work",
+		"add-employer": "Add new employer",
+		"submit-button": "Add",
+		"current-employer": "Current Employer",
+		"empty-state": "You didn't specify any employer",
+		"delete-employer": "Delete",
+		"past-employers": "Past Employers",
+		"no-longer-work-here": "I no longer work here"
+	}
+}

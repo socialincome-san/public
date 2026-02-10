@@ -52,6 +52,7 @@ jobs:
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
           echo "${{ secrets.TF_STAGING_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
+          echo "true" > secrets/FEATURE_ENABLE_NEW_WEBSITE
 
       - name: 📤 Build and Push Docker Image
         env:
@@ -95,10 +96,13 @@ jobs:
           TF_VAR_sendgrid_list_id: ${{ secrets.TF_STAGING_SENDGRID_LIST_ID }}
           TF_VAR_sendgrid_suppression_list_id: ${{ secrets.TF_STAGING_SENDGRID_SUPPRESSION_LIST_ID }}
           TF_VAR_twilio_account_sid: ${{ secrets.TF_STAGING_TWILIO_ACCOUNT_SID }}
-          TF_VAR_twilio_auth_token: ${{ secrets.TF_STAGING_TWILIO_AUTH_TOKEN }}
+          TF_VAR_twilio_api_key_sid: ${{ secrets.TF_STAGING_TWILIO_API_KEY_SID }}
+          TF_VAR_twilio_api_key_secret: ${{ secrets.TF_STAGING_TWILIO_API_KEY_SECRET }}
           TF_VAR_twilio_verify_service_sid: ${{ secrets.TF_STAGING_TWILIO_VERIFY_SERVICE_SID }}
           TF_VAR_exchange_rates_api: ${{ secrets.TF_STAGING_EXCHANGE_RATES_API }}
           TF_VAR_github_pat: ${{ secrets.TF_STAGING_GITHUB_PAT }}
+          TF_VAR_app_review_mode_enabled: ${{ vars.TF_STAGING_APP_REVIEW_MODE_ENABLED }}
+          TF_VAR_app_review_phone_number: ${{ secrets.TF_STAGING_APP_REVIEW_PHONE_NUMBER }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."

@@ -1,19 +1,30 @@
-import { cache } from 'react';
 import { ContributorService } from '../services/contributor/contributor.service';
-import { FirebaseService } from '../services/firebase/firebase.service';
+import { ContributorSession } from '../services/contributor/contributor.types';
+import { FirebaseSessionService } from '../services/firebase/firebase-session.service';
+import { LocalPartnerService } from '../services/local-partner/local-partner.service';
+import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
 import { UserService } from '../services/user/user.service';
+import { UserSession } from '../services/user/user.types';
+import { getAuthenticatedContributorOrThrow } from './current-contributor';
+import { getAuthenticatedLocalPartnerOrThrow } from './current-local-partner';
+import { getAuthenticatedUserOrThrow } from './current-user';
 
-export type CurrentAccountType = 'user' | 'contributor' | null;
+export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
-const firebaseService = new FirebaseService();
+export type Actor =
+	| { kind: 'user'; session: UserSession }
+	| { kind: 'contributor'; session: ContributorSession }
+	| { kind: 'local-partner'; session: LocalPartnerSession }
+	| never;
 
-async function detectCurrentAccountType(): Promise<CurrentAccountType> {
-	const cookie = await firebaseService.readSessionCookie();
+export async function getCurrentSession(): Promise<Session | null> {
+	const firebaseSessionService = new FirebaseSessionService();
+	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
 
-	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
+	const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
@@ -23,16 +34,38 @@ async function detectCurrentAccountType(): Promise<CurrentAccountType> {
 	const contributorService = new ContributorService();
 	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
-		return 'contributor';
+		return contributorResult.data;
+	}
+
+	const partnerService = new LocalPartnerService();
+	const partnerResult = await partnerService.getCurrentLocalPartnerSession(authUserId);
+	if (partnerResult.success && partnerResult.data) {
+		return partnerResult.data;
 	}
 
 	const userService = new UserService();
 	const userResult = await userService.getCurrentUserSession(authUserId);
 	if (userResult.success && userResult.data) {
-		return 'user';
+		return userResult.data;
 	}
 
 	return null;
 }
 
-export const getCurrentAccountType = cache(detectCurrentAccountType);
+export async function getActorOrThrow(): Promise<Actor> {
+	const session = await getCurrentSession();
+
+	switch (session?.type) {
+		case 'user':
+			return { kind: 'user', session: await getAuthenticatedUserOrThrow() };
+
+		case 'contributor':
+			return { kind: 'contributor', session: await getAuthenticatedContributorOrThrow() };
+
+		case 'local-partner':
+			return { kind: 'local-partner', session: await getAuthenticatedLocalPartnerOrThrow() };
+
+		default:
+			throw new Error('Not authenticated');
+	}
+}

@@ -11,79 +11,161 @@ on:
       - "recipients_app/**"
 
 jobs:
-  check_applicability:
-    name: Check applicability
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          paths: '["website/**", "shared/**", ".github/workflows/website.yml"]'
-          skip_after_successful_duplicate: "false"
-          do_not_skip: '["push"]'
-
-  test:
-    name: Test website
-    needs: check_applicability
-    if: needs.check_applicability.outputs.should_skip != 'true'
+  safe-chain:
+    name: "🔒 Safe Chain Dependency Check"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - name: Use Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
 
+      - name: Install Safe Chain (CI)
+        run: |
+          curl -fsSL https://github.com/AikidoSec/safe-chain/releases/latest/download/install-safe-chain.sh \
+            | sh -s -- --ci
+
+          echo "$HOME/.safe-chain/shims" >> $GITHUB_PATH
+          echo "$HOME/.safe-chain/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies (protected by Safe Chain)
+        run: npm ci --no-audit --no-fund
+
+  lint:
+    name: "✨ Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run website:lint
+
+  check-unused:
+    name: "✂️ Check unused Code"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run website:check:unused
+
+  typecheck:
+    name: "🔍 Type Check"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run website:build-paths
+      - run: npm run typecheck
+
+  unit-test:
+    name: "🧪 Unit Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run website:test:unit
+
+  terraform:
+    name: "📐 Terraform Validation"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+      - run: terraform -chdir=website/infra init -backend=false
+      - run: terraform -chdir=website/infra fmt -check
+      - run: terraform -chdir=website/infra validate
+
+  e2e:
+    name: "🏗️ Build & 📸 E2E Tests"
+    runs-on: ubuntu-latest
+    needs:
+      - safe-chain
+      - lint
+      - check-unused
+      - typecheck
+      - unit-test
+      - terraform
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.57.0-jammy
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: social-income
+          POSTGRES_PASSWORD: social-income
+          POSTGRES_DB: social-income
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U social-income"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://social-income:social-income@postgres:5432/social-income
+      STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
+      STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.TF_STAGING_STRIPE_WEBHOOK_SECRET }}
+      STRIPE_SECRET_KEY: ${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}
+      STRIPE_PRODUCT_RECURRING: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}
+      STRIPE_PRODUCT_ONETIME: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}
+      HOME: /root
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
-      - name: Run linters
-        run: npm run website:lint
+      - name: Run E2E snapshot update
+        working-directory: website
+        run: npm run test:e2e:update
 
-      - name: Run typecheck
-        run: npm run website:build-paths && npm run typecheck
+      - name: Mark repo as safe
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Run unit tests
-        run: npm run website:test:emulator
-
-      # TODO: re-enable
-      #      - name: Run e2e tests
-      #        run: npm run website:test:e2e:emulator
-      #
-      #      - name: Deploy Playwright report to GitHub Pages
-      #        uses: rossjrw/pr-preview-action@v1
-      #        if: always()
-      #        with:
-      #          source-dir: website/playwright-report/
-      #          preview-branch: gh-pages
-      #          umbrella-dir: website-playwright-report
-      #          action: auto
-
-      - name: Test build
-        # To use the emulator during the build, we need to rename the .env.development file to .env.production.
-        # Next.js doesn't now allow to use NODE_ENV=development in the build process.
-        env:
-          STORYBLOK_PREVIEW_SECRET: ${{ secrets.STORYBLOK_PREVIEW_SECRET }}
-          STORYBLOK_PREVIEW_TOKEN: ${{ secrets.STORYBLOK_PREVIEW_TOKEN }}
-        run: |
-          mv website/.env.development website/.env.production
-          npm run website:build:emulator
-
-      - name: Set up Terraform CLI
-        uses: hashicorp/setup-terraform@v2
+      - name: Commit and push updated snapshots
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          terraform_version: 1.6.6
+          commit_message: "chore: update snapshots (CI auto-commit)"
+          branch: ${{ github.head_ref }}
+          commit_user_name: github-actions
+          commit_user_email: actions@github.com
+          file_pattern: |
+            **/__screenshots__/**
+            **/snapshots/**
 
-      - name: Terraform Init (no backend)
-        run: terraform -chdir=website/infra init -backend=false
-
-      - name: Terraform Format Check
-        run: terraform -chdir=website/infra fmt -check
-
-      - name: Terraform Validate
-        run: terraform -chdir=website/infra validate
+      - name: Upload Test Report (only if failure)
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-report-${{ github.sha }}
+          path: |
+            website/playwright-report/
+            website/test-results/

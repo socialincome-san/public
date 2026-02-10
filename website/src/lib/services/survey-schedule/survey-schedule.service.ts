@@ -1,4 +1,4 @@
-import { SurveySchedule } from '@prisma/client';
+import { SurveySchedule } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 export class SurveyScheduleService extends BaseService {
@@ -12,7 +12,7 @@ export class SurveyScheduleService extends BaseService {
 			return this.resultOk(schedules);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to get survey schedules for programs: ${error}`);
+			return this.resultFail(`Failed to get survey schedules for programs: ${JSON.stringify(error)}`);
 		}
 	}
 }

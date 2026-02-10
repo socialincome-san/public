@@ -1,12 +1,14 @@
 'use client';
+import { ContributorReferralSource, CountryCode } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
+import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
+import { COUNTRY_CODES } from '@/lib/types/country';
+import { GENDER_OPTIONS } from '@/lib/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ContributorReferralSource } from '@prisma/client';
-import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
-import { GENDER_OPTIONS } from '@socialincome/shared/src/types/user';
 import {
 	Button,
 	Checkbox,
@@ -120,6 +122,13 @@ export function SuccessForm({
 			};
 
 			const result = await updateContributorAfterCheckoutAction(payload);
+
+			await subscribeToNewsletterAction({
+				firstname: values.firstname,
+				lastname: values.lastname,
+				email: values.email,
+				language: lang as SupportedLanguage,
+			});
 
 			if (!result.success) {
 				toast.error(translations.updateUserError);
@@ -265,7 +274,7 @@ export function SuccessForm({
 					render={({ field }) => (
 						<FormItem className="col-span-2 flex flex-row items-start space-x-3 space-y-0 px-2 py-4">
 							<FormControl>
-								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+								<Checkbox data-testid="terms-and-conditions" checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>
 							<div className="space-y-1 leading-none">
 								<FormLabel dangerouslySetInnerHTML={{ __html: translations.acceptTermsAndConditions }} />

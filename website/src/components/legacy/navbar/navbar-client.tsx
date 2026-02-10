@@ -4,10 +4,10 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { SIAnimatedLogo } from '@/components/legacy/logos/si-animated-logo';
 import { SILogo } from '@/components/legacy/logos/si-logo';
 import { useNavbarBackground } from '@/components/legacy/navbar/useNavbarBackground';
+import { CountryCode } from '@/generated/prisma/enums';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { CountryCode } from '@socialincome/shared/src/types/country';
 import { DonateIcon, SIIcon, Typography } from '@socialincome/ui';
 import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
 import classNames from 'classnames';
@@ -208,7 +208,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 						</Typography>
 					</div>
 					<div className="flex flex-col items-start space-y-4">
-						<NavbarLink href={`/${lang}/${region}/dashboard/contributions`} className="ml-12 text-2xl">
+						<NavbarLink href="/me" className="ml-12 text-2xl">
 							{translations.myProfile}
 						</NavbarLink>
 						<div className="flex-inline flex items-center">
@@ -291,7 +291,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					<SIIcon className="-mb-2.5 block h-9 pr-20 lg:hidden" />
 				</Link>
 				<div className="absolute left-0 mt-[50px] hidden flex-col justify-start overflow-visible whitespace-nowrap group-hover/navbar:flex group-active/navbar:flex">
-					<NavbarLink href={`/${lang}/${region}/dashboard/contributions`}>{translations.myProfile}</NavbarLink>
+					<NavbarLink href="/me">{translations.myProfile}</NavbarLink>
 					<div className="flex-inline mt-auto flex items-center space-x-2">
 						<DonateIcon className="h-4 w-4" />
 						<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent">

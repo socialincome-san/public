@@ -1,0 +1,1836 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<title>Monthly Update | Social Income</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style type="text/css">
+			@media screen {
+				@font-face {
+					font-family: 'Unica77';
+					font-style: normal;
+					font-weight: 400;
+					src: url('https://storage.googleapis.com/si-fonts-public/Unica77LLSub-Regular.woff2') format('woff2');
+				}
+				@font-face {
+					font-family: 'Unica77';
+					font-style: normal;
+					font-weight: 500;
+					src: url(https://storage.googleapis.com/si-fonts-public/Unica77LLSub-Medium.woff2) format('woff2');
+				}
+			}
+			.feature {
+				-webkit-font-feature-settings: 'ss04' on;
+				font-feature-settings: 'ss04' on;
+			}
+			/**
+						 * Bulletpoints for Gmail fix
+						 */
+			u + .body .glist {
+				margin-left: 0 !important;
+			}
+
+			@media only screen and (max-width: 640px) {
+				u + .body .glist {
+					margin-left: 25px !important;
+				}
+			}
+
+			/**
+			 * Avoid browser level font resizing.
+			 * 1. Windows Mobile
+			 * 2. iOS / OSX
+			 */
+			body,
+			table,
+			td,
+			a {
+				-ms-text-size-adjust: 100%; /* 1 */
+				-webkit-text-size-adjust: 100%; /* 2 */
+			}
+
+			/**
+			 * Remove extra space added to tables and cells in Outlook.
+			 */
+			table,
+			td {
+				mso-table-rspace: 0pt;
+				mso-table-lspace: 0pt;
+			}
+
+			/**
+			 * Better fluid images in Internet Explorer.
+			 */
+			img {
+				-ms-interpolation-mode: bicubic;
+			}
+
+			/**
+			 * Remove blue links for iOS devices.
+			 */
+			a[x-apple-data-detectors] {
+				font-family: inherit !important;
+				font-size: inherit !important;
+				font-weight: inherit !important;
+				line-height: inherit !important;
+				color: inherit !important;
+				text-decoration: none !important;
+			}
+
+			/**
+			 * Fix centering issues in Android 4.4.
+			 */
+			div[style*='margin: 16px 0;'] {
+				margin: 0 !important;
+			}
+
+			body {
+				width: 100% !important;
+				height: 100% !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			/**
+			 * Collapse table borders to avoid space between cells.
+			 */
+			table {
+				border-collapse: collapse !important;
+			}
+
+			a {
+				color: #111111;
+			}
+
+			img {
+				height: auto;
+				line-height: 100%;
+				text-decoration: none;
+				border: 0;
+				outline: none;
+			}
+
+			/* For Gmail, Apple Mail, Yahoo (Not Outlook) */
+			.bg-rollover:hover {
+				background-color: #edebe3 !important;
+				color: #7d8082 !important;
+			}
+			.bg-hint:hover {
+				background-color: #f9f8f3 !important;
+				color: #7d8082 !important;
+			}
+		</style>
+	</head>
+	<body style="background-color: #f9f8f3">
+		<!-- start preheader -->
+		<div
+			class="preheader"
+			style="
+				display: none;
+				max-width: 0;
+				max-height: 0;
+				overflow: hidden;
+				font-size: 1px;
+				line-height: 1px;
+				color: #f9f8f3;
+				opacity: 0;
+			"
+		>
+			Hey {{ insert first_name 'default=you' }}, here are a few things that have been on my mind this last month:
+			Unicorns, Coins and Remixes.&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&nbsp;
+		</div>
+		<!-- end preheader -->
+
+		<!-- start body -->
+		<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<!-- start logo -->
+			<tr>
+				<td align="center" bgcolor="#f9f8f3">
+					<!--[if (gte mso 9)|(IE)]>
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+				<tr>
+					<td align="center" valign="top" width="600">
+			<![endif]-->
+					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+						<tr>
+							<td align="left" valign="top" style="padding: 36px 10px">
+								<a
+									href="https://socialincome.org"
+									target="_blank"
+									rel="noopener noreferrer"
+									style="display: inline-block"
+								>
+									<img
+										src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/b641e150-9ec7-4220-b6a3-2616e65915ac/935x101.png"
+										alt="Logo"
+										border="0"
+										width="250"
+										style="display: block; width: 250px; max-width: 250px; min-width: 250px"
+									/>
+								</a>
+							</td>
+						</tr>
+					</table>
+					<!--[if (gte mso 9)|(IE)]>
+			</td>
+			</tr>
+			</table>
+			<![endif]-->
+				</td>
+			</tr>
+			<!-- end logo -->
+
+			<!-- start copy block -->
+			<tr>
+				<td align="center" bgcolor="#f9f8f3">
+					<!--[if (gte mso 9)|(IE)]>
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="600px">
+				<tr>
+					<td align="center" valign="top" width="600px">
+			<![endif]-->
+					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+						<!-- start hero -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 40px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 42px;
+									line-height: 52px;
+								"
+							>
+								<h1
+									class="feature"
+									style="margin: 0 0 12px; font-size: 50px; font-weight: 500; line-height: 60px; color: #191a19"
+								>
+									Unicorns, Coins and Remixes.
+									<span style="color: #01579b">Hi {{ insert first_name 'default=there' }}.</span>
+								</h1>
+							</td>
+						</tr>
+						<!-- end hero -->
+
+						<!-- start copy -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 20px 10px 20px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 15px 0px 0px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									The other day I dove into the
+									<a
+										href="https://www.youtube.com/watch?v=tdIUMkXxtHg"
+										target="_blank"
+										rel="noopener noreferrer"
+										style="
+											color: #191a19;
+											text-decoration: underline !important;
+											font-weight: 400;
+											font-size: 22px;
+											line-height: 30px;
+										"
+										>science of doomscrolling</a
+									>, and since then, I can practically feel short-form videos eating my brain cells.
+									<span style="color: #01579b">Apparently, mindful watching is way healthier.</span> So why not end the
+									day instead with
+									<a
+										href="https://www.calpnetwork.org/publication/leading-from-the-ground-up-stories-of-locally-led-cash/"
+										target="_blank"
+										rel="noopener noreferrer"
+										style="
+											color: #191a19;
+											text-decoration: underline !important;
+											font-weight: 400;
+											font-size: 22px;
+											line-height: 30px;
+										"
+										>three short videos</a
+									>
+									showing how cash transfers deliver
+									<span style="color: #01579b">more effective and dignified humanitarian responses</span>?
+								</p>
+								<p
+									class="feature"
+									style="
+										margin: 15px 0px 0px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									Now onto other news.
+								</p>
+							</td>
+						</tr>
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 40px 12px 20px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+						<!-- title and paragraph -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 30px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<h2
+									class="feature"
+									style="
+										margin: 10px 0px 12px 0px;
+										font-size: 30px;
+										font-weight: 500;
+										line-height: 45px;
+										color: #01579b;
+									"
+								>
+									Field Notes
+								</h2>
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									<span style="color: #01579b">To keep you in the loop</span>, this is how our programs are running:
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="padding: 0px 0px 10px 0px">
+								<ul
+									class="glist"
+									style="
+										margin: 0px 5px 0px 30px;
+										padding: 0;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										color: #191a19;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+									"
+									align="left"
+									type="disc"
+								>
+									<li>
+										<span style="color: #01579b">In Sierra Leone 🇸🇱, we’ve launched a new program</span> that gives
+										young people in poverty a three-year Social Income while they complete professional training,
+										helping them start businesses or simply afford food and transport to work.<br /><br />
+									</li>
+									<li>
+										<span style="color: #01579b">In Liberia 🇱🇷, we’ve submitted the paperwork</span> to establish our
+										non-profit, selected a partner bank and mobile money provider, and laid the foundation for
+										scaling.<br />
+										→
+										<a
+											href="https://socialincome.org/en/ch/journal/country-offices"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>Learn how a country office is run</a
+										>
+										<br /><br />
+									</li>
+									<li>
+										<span style="color: #01579b">In Ghana 🇬🇭, we’ve compiled an initial list of NGOs</span> to assess
+										and meet, with the aim of selecting one or two partners. If you have additional NGO recommendations,
+										please send them my way.
+										<br />
+										→
+										<a
+											href="https://socialincome.org/en/ch/journal/where-do-we-expand-next"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>Learn how we scale</a
+										>
+										<br />
+									</li>
+								</ul>
+								<!-- start outlook fix to prevent additional bullet point -->
+								<div style="display: none">&nbsp;</div>
+								<!-- end outlook fix to prevent additional bullet point -->
+							</td>
+						</tr>
+
+						<!-- end title and paragraph -->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 40px 12px 30px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+						<!-- title and paragraph -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 10px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<h2
+									class="feature"
+									style="
+										margin: 10px 0px 12px 0px;
+										font-size: 30px;
+										font-weight: 500;
+										line-height: 45px;
+										color: #01579b;
+									"
+								>
+									WEF Things
+								</h2>
+
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									Apart from the now famous 🕶️, 🇬🇱🥶 back and forth, 🇨🇦 straight talk and 🇨🇭 insults …
+								</p>
+							</td>
+						</tr>
+						<!-- end title and paragraph -->
+						<tr>
+							<td style="padding: 0px 0px 10px 0px">
+								<ul
+									class="glist"
+									style="
+										margin: 0px 5px 0px 30px;
+										padding: 0;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										color: #191a19;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+									"
+									align="left"
+									type="disc"
+								>
+									<li>
+										<span style="color: #01579b">Humanitarian stablecoins</span> had a real moment in Davos this year,
+										with the WEF publishing an
+										<a
+											href="https://www.weforum.org/stories/2026/01/how-stablecoins-can-expand-financial-access/"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>interesting opinion piece</a
+										>
+										on the topic. <span style="color: #01579b">Do we use stablecoins? No.</span> For now, they offer no
+										clear benefit to us, mainly because banks in our payout countries cannot yet convert them into cash.
+										That said, this is already happening in
+										<a
+											href="https://www.nytimes.com/2026/01/24/world/asia/crypto-innovation-afghanistan.html?unlocked_article_code=1.G1A.Gy-B.7Vxnc0rtJTgr&smid=nytcore-ios-share"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>places like Afghanistan</a
+										>, so it may only be <span style="color: #01579b">a matter of time.</span> <br /><br />
+									</li>
+									<li>
+										In an
+										<a
+											href="https://www.weforum.org/stories/2026/01/how-to-reclaim-our-future-from-extreme-wealth/"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>opinion piece for WEF</a
+										>, Oxfam’s executive director says <span style="color: #01579b">he remains an optimist</span>. Why?
+										Gen Z is
+										<a
+											href="https://www.aljazeera.com/opinions/2025/11/4/gen-z-are-demanding-schools-and-hospitals-not-superyachts-and-helicopters"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>filling the streets worldwide</a
+										>, inequality is finally reaching the
+										<a
+											href="https://www.cesr.org/a-new-mandate-for-equality-g20s-landmark-report-opens-space-for-rights-based-global-cooperation/"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>G20 agenda</a
+										>, and — for the first time — talk of a
+										<a
+											href="https://wid.world/news-article/500-economists-and-inequality-experts-from-seventy-countries-support-call-for-new-ipcc-for-inequality/"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>global panel on inequality</a
+										>. <br /><br />
+									</li>
+									<li>
+										Past WEF highlights for me were Bregman’s “<a
+											href="https://www.youtube.com/shorts/p1JOR8YeZfw"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>Taxes, taxes, taxes</a
+										>” and Greta’s “<a
+											href="https://www.youtube.com/watch?v=TMrtLsQbaok"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>How dare you?</a
+										>”. This year, it’s Macron’s “<a
+											href="https://www.instagram.com/reels/DT2nL8NAadk/"
+											target="_blank"
+											rel="noopener noreferrer"
+											style="
+												color: #191a19;
+												text-decoration: underline !important;
+												font-weight: 400;
+												font-size: 22px;
+												line-height: 30px;
+											"
+											>for sure</a
+										>,” albeit more meme than politics.
+										<br />
+									</li>
+								</ul>
+								<!-- start outlook fix to prevent additional bullet point -->
+								<div style="display: none">&nbsp;</div>
+								<!-- end outlook fix to prevent additional bullet point -->
+							</td>
+						</tr>
+						<!-- end title and paragraph -->
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 20px 12px 20px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+						<!-- data header -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 10px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<h2
+									class="feature"
+									style="
+										margin: 10px 0px 12px 0px;
+										font-size: 30px;
+										font-weight: 500;
+										line-height: 45px;
+										color: #01579b;
+									"
+								>
+									My World in Data
+								</h2>
+							</td>
+						</tr>
+						<!-- end data header -->
+
+						<!-- title and paragraph -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 10px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 5px 0px;
+										padding: 10px 0px 5px 0px;
+										font-size: 70px;
+										font-weight: 500;
+										line-height: 80px;
+										color: #fbc700;
+										text-align: left;
+									"
+								>
+									2.5 trillion
+								</p>
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									In 2025, the combined wealth of the world’s billionaires increased by an estimated
+									<a
+										href="https://www.oxfam.org/en/research/resisting-rule-rich"
+										target="_blank"
+										rel="noopener noreferrer"
+										style="
+											color: #191a19;
+											text-decoration: underline !important;
+											font-weight: 400;
+											font-size: 22px;
+											line-height: 30px;
+										"
+										>$2.5 trillion</a
+									>, bringing their total net worth to $18.3 trillion. This means that the
+									<span style="color: #01579b"
+										>12 richest individuals now hold more wealth than the poorest half of the global population</span
+									>
+									combined.
+								</p>
+								<p
+									class="feature"
+									style="
+										margin: 20px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									<a
+										href="https://www.reddit.com/r/AskEconomics/comments/133464x/where_the_does_money_go_in_trickle_down_economics/"
+										target="_blank"
+										rel="noopener noreferrer"
+										style="
+											color: #191a19;
+											text-decoration: underline !important;
+											font-weight: 400;
+											font-size: 22px;
+											line-height: 30px;
+										"
+										>Money does trickle</a
+									>
+									— <span style="color: #01579b">it just forgot</span> which direction it’s supposed to go.
+								</p>
+							</td>
+						</tr>
+						<!-- end title and paragraph -->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 20px 12px 20px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+
+						<!-- title and  paragraph -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 10px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 5px 0px;
+										padding: 10px 0px 5px 0px;
+										font-size: 70px;
+										font-weight: 500;
+										line-height: 80px;
+										color: #fbc700;
+										text-align: left;
+									"
+								>
+									4 seconds
+								</p>
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									Elon Musk tops Forbes’ list as the <span style="color: #01579b">world’s richest individual</span>,
+									with a fortune of
+									<a
+										href="https://www.forbes.com/profile/elon-musk/"
+										target="_blank"
+										rel="noopener noreferrer"
+										style="
+											color: #191a19;
+											text-decoration: underline !important;
+											font-weight: 400;
+											font-size: 22px;
+											line-height: 30px;
+										"
+										>$775 billion</a
+									>. His wealth is growing so fast that he earns in
+									<a
+										href="https://www.oxfam.org/en/resisting-rule-rich"
+										target="_blank"
+										rel="noopener noreferrer"
+										style="
+											color: #191a19;
+											text-decoration: underline !important;
+											font-weight: 400;
+											font-size: 22px;
+											line-height: 30px;
+										"
+										>four seconds</a
+									>
+									what the average person worldwide makes in an entire year.
+								</p>
+
+								<p
+									class="feature"
+									style="
+										margin: 20px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									By the time he bends down to pick up a $100 bill, he has
+									<span style="color: #01579b">already made nearly $9,000</span>.
+								</p>
+							</td>
+						</tr>
+						<!-- end title and paragraph -->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 20px 12px 20px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+						<!-- title and  paragraph -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 10px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 5px 0px;
+										padding: 10px 0px 5px 0px;
+										font-size: 70px;
+										font-weight: 500;
+										line-height: 80px;
+										color: #fbc700;
+										text-align: left;
+									"
+								>
+									1,569
+								</p>
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									In
+									<a
+										href="https://www.imdb.com/title/tt1285016/"
+										target="_blank"
+										rel="noopener noreferrer"
+										style="
+											color: #191a19;
+											text-decoration: underline !important;
+											font-weight: 400;
+											font-size: 22px;
+											line-height: 30px;
+										"
+										>The Social Network</a
+									>, a <span style="color: #01579b">company’s billion-dollar valuation was the punchline</span>. Fifteen
+									years later, ultra-low interest rates, pandemic-era deals and a growth-at-all-costs mindset have
+									helped create
+									<a
+										href="https://restofworld.org/2026/unicorn-billion-dollar-startups/"
+										target="_blank"
+										rel="noopener noreferrer"
+										style="
+											color: #191a19;
+											text-decoration: underline !important;
+											font-weight: 400;
+											font-size: 22px;
+											line-height: 30px;
+										"
+										>1,569 active “unicorn”</a
+									>
+									startups worth $1 billion or more.
+								</p>
+
+								<p
+									class="feature"
+									style="
+										margin: 20px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									<span style="color: #01579b">What was once extreme</span> is now the baseline for startups.
+								</p>
+							</td>
+						</tr>
+						<!-- end title and paragraph -->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 20px 12px 20px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+
+						<!-- africa quiz start -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 20px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<h2
+									class="feature"
+									style="margin: 30px 0px 1px 0px; font-size: 30px; font-weight: 500; line-height: 45px; color: #01579b"
+								>
+									Monthly African Trivia
+								</h2>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" bgcolor="#f9f8f3" valign="middle">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<tr>
+										<td
+											valign="middle"
+											align="left"
+											width="37"
+											style="padding: 0px 5px 0px 10px; font-family: 'Unica77', Helvetica, Arial, sans-serif"
+										>
+											<a href="https://socialincome.org/about-us#team" target="_blank"
+												><img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/3e460637-c965-41a6-bd62-a13d3be5a4ad/684x684.png"
+													alt="Portrait Matthew"
+													width="35"
+											/></a>
+										</td>
+										<td width="3"></td>
+										<td>
+											<table>
+												<tr>
+													<td valign="middle" align="left" width="420">
+														<p
+															class="feature"
+															style="
+																margin: 0;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-weight: 400;
+																font-size: 18px;
+																line-height: 28px;
+																color: #191a19;
+															"
+														>
+															Created by
+															<a
+																href="https://socialincome.org/about-us#team"
+																target="_blank"
+																rel="noopener noreferrer"
+																style="
+																	color: #191a19;
+																	text-decoration: underline !important;
+																	font-weight: 400;
+																	font-size: 18px;
+																	line-height: 28px;
+																"
+																>Matthew
+															</a>
+														</p>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 0px 10px 10px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 20px 0px 0px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									Which country leads in mobile banking, significantly enhancing financial inclusion for its rural
+									population?
+								</p>
+							</td>
+						</tr>
+						<!-- start hint -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 0px 10px 2px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 15px 0px 0px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 18px;
+										line-height: 24px;
+										color: #7d8082;
+									"
+								></p>
+								<p
+									class="bg-hint"
+									style="
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 18px;
+										line-height: 24px;
+										color: #f9f8f3;
+										text-decoration: none;
+									"
+								>
+									<span style="color: #7d8082; text-decoration: underline">Reveal Hint</span>: It is known for its
+									annual wildebeest migration.
+								</p>
+							</td>
+						</tr>
+						<!-- end hint -->
+						<!-- quiz buttons start-->
+						<tr>
+							<td align="left" bgcolor="#f9f8f3">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<!--  button -->
+									<tr>
+										<td align="center" bgcolor="#f9f8f3" style="padding: 2px 10px 10px 10px">
+											<!--[if mso
+												]><v:roundrect
+													xmlns:v="urn:schemas-microsoft-com:vml"
+													href="https://socialincome.org/right"
+													style="height: 66px; v-text-anchor: middle; width: 520px"
+													arcsize="50%"
+													strokecolor="#01579b"
+													strokeweight="2px"
+													fillcolor="#f9f8f3"
+												>
+													<w:anchorlock />
+													<center
+														style="
+															color: #01579b;
+															font-family: 'Unica77', Helvetica, Arial, sans-serif;
+															font-size: 22px;
+														"
+													>
+														Kenya
+													</center>
+												</v:roundrect>
+											<![endif]-->
+											<!--[if !mso]><!-->
+											<a
+												class="feature"
+												href="https://socialincome.org/right"
+												target="_blank"
+												rel="noopener noreferrer"
+												style="
+													display: block;
+													width: 100%;
+													max-width: 600px;
+													padding: 16px;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-size: 22px;
+													color: #01579b;
+													text-decoration: none;
+													border: 2px solid #01579b;
+													background-color: transparent;
+													border-radius: 999px;
+													text-align: center;
+													box-sizing: border-box;
+												"
+											>
+												Kenya 🇰🇪
+											</a>
+											<!--<![endif]-->
+										</td>
+									</tr>
+									<!--  button -->
+									<tr>
+										<td align="center" bgcolor="#f9f8f3" style="padding: 2px 10px 10px 10px">
+											<!--[if mso
+												]><v:roundrect
+													xmlns:v="urn:schemas-microsoft-com:vml"
+													href="https://socialincome.org/wrong"
+													style="height: 66px; v-text-anchor: middle; width: 520px"
+													arcsize="50%"
+													strokecolor="#01579b"
+													strokeweight="2px"
+													fillcolor="#f9f8f3"
+												>
+													<w:anchorlock />
+													<center
+														style="
+															color: #01579b;
+															font-family: 'Unica77', Helvetica, Arial, sans-serif;
+															font-size: 22px;
+														"
+													>
+														Zambia
+													</center>
+												</v:roundrect>
+											<![endif]-->
+											<!--[if !mso]><!-->
+											<a
+												class="feature"
+												href="https://socialincome.org/wrong"
+												target="_blank"
+												rel="noopener noreferrer"
+												style="
+													display: block;
+													width: 100%;
+													max-width: 600px;
+													padding: 16px;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-size: 22px;
+													color: #01579b;
+													text-decoration: none;
+													border: 2px solid #01579b;
+													background-color: transparent;
+													border-radius: 999px;
+													text-align: center;
+													box-sizing: border-box;
+												"
+											>
+												Zambia 🇿🇲
+											</a>
+											<!--<![endif]-->
+										</td>
+									</tr>
+									<!--  button -->
+									<tr>
+										<td align="center" bgcolor="#f9f8f3" style="padding: 2px 10px 10px 10px">
+											<!--[if mso
+												]><v:roundrect
+													xmlns:v="urn:schemas-microsoft-com:vml"
+													href="https://socialincome.org/wrong"
+													style="height: 66px; v-text-anchor: middle; width: 520px"
+													arcsize="50%"
+													strokecolor="#01579b"
+													strokeweight="2px"
+													fillcolor="#f9f8f3"
+												>
+													<w:anchorlock />
+													<center
+														style="
+															color: #01579b;
+															font-family: 'Unica77', Helvetica, Arial, sans-serif;
+															font-size: 22px;
+														"
+													>
+														Namibia
+													</center>
+												</v:roundrect>
+											<![endif]-->
+											<!--[if !mso]><!-->
+											<a
+												class="feature"
+												href="https://socialincome.org/wrong"
+												target="_blank"
+												rel="noopener noreferrer"
+												style="
+													display: block;
+													width: 100%;
+													max-width: 600px;
+													padding: 16px;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-size: 22px;
+													color: #01579b;
+													text-decoration: none;
+													border: 2px solid #01579b;
+													background-color: transparent;
+													border-radius: 999px;
+													text-align: center;
+													box-sizing: border-box;
+												"
+											>
+												Namibia 🇳🇦
+											</a>
+											<!--<![endif]-->
+										</td>
+									</tr>
+									<!-- Instruction text -->
+									<tr>
+										<td
+											bgcolor="#f9f8f3"
+											align="center"
+											style="
+												padding: 20px 10px 10px 10px;
+												font-family: 'Unica77', Helvetica, Arial, sans-serif;
+												font-size: 18px;
+												line-height: 30px;
+												color: #7d8082;
+											"
+										>
+											<p class="feature" style="margin: 0">👆🏼 Think you know the answer? Prove it.</p>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- quiz buttons end -->
+						<!-- africa quiz end -->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 20px 12px 20px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+
+						<!-- news header -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 10px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<h2
+									class="feature"
+									style="
+										margin: 30px 0px 10px 0px;
+										font-size: 30px;
+										font-weight: 500;
+										line-height: 45px;
+										color: #01579b;
+									"
+								>
+									My World in News
+								</h2>
+							</td>
+						</tr>
+						<!-- end news header -->
+						<tr>
+							<td align="left" bgcolor="#f9f8f3" valign="middle">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<tr>
+										<td
+											valign="middle"
+											align="left"
+											width="37"
+											style="padding: 0px 5px 0px 10px; font-family: 'Unica77', Helvetica, Arial, sans-serif"
+										>
+											<a href="https://socialincome.org/about-us#team" target="_blank"
+												><img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/6ca61542-0577-4d81-ac9e-6bff08030b5c/80x80.png"
+													alt="Portrait Aurélie Schmiedlin"
+													width="35"
+											/></a>
+										</td>
+										<td width="3"></td>
+										<td>
+											<table>
+												<tr>
+													<td valign="middle" align="left" width="420">
+														<p
+															class="feature"
+															style="
+																margin: 0;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-weight: 400;
+																font-size: 18px;
+																line-height: 28px;
+																color: #191a19;
+															"
+														>
+															A mix of UBI, Africa and some rabbit holes.
+														</p>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- start news articles -->
+						<tr>
+							<td style="padding: 30px 0px 20px 10px">
+								<table
+									class="glist"
+									style="
+										margin: 0;
+										padding: 0;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										color: #191a19;
+										font-size: 22px;
+										line-height: 34px;
+										border-collapse: collapse;
+										width: 100%;
+										max-width: 100%;
+										table-layout: fixed;
+									"
+									align="left"
+								>
+									<!-- Row 1 -->
+									<tr>
+										<td style="width: 25px; text-align: center; vertical-align: top; padding-top: 1px">
+											<span style="color: #191a19; font-size: 36px; line-height: 36px">•</span>
+										</td>
+										<td style="vertical-align: top; padding-left: 5px; overflow-wrap: break-word">
+											The future is humanitarian cash.
+											<a
+												style="color: #01579b; text-decoration: none; white-space: nowrap"
+												href="https://www.givedirectly.org/emergency-cash-moonshot/"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<span style="color: #7d8082; font-size: 16px; text-decoration: none">GiveDirectly</span>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/6e838a29-1ed9-47a7-acd0-7301e55d55fc/10x10.png"
+													alt="↗"
+													style="height: 10px; vertical-align: middle; margin-left: 1px"
+												/>
+											</a>
+										</td>
+									</tr>
+									<!-- Spacer Row -->
+									<tr>
+										<td colspan="2" style="height: 8px"></td>
+									</tr>
+
+									<!-- Row 2 -->
+									<tr>
+										<td style="width: 25px; text-align: center; vertical-align: top; padding-top: 1px">
+											<span style="color: #191a19; font-size: 36px; line-height: 36px">•</span>
+										</td>
+										<td style="vertical-align: top; padding-left: 5px; overflow-wrap: break-word">
+											What is development?
+											<a
+												style="color: #01579b; text-decoration: none; white-space: nowrap"
+												href="https://www.facebook.com/DrFredMmembe/videos/992315287938571/"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<span style="color: #7d8082; font-size: 16px; text-decoration: none">Nyerere on FB</span>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/6e838a29-1ed9-47a7-acd0-7301e55d55fc/10x10.png"
+													alt="↗"
+													style="height: 10px; vertical-align: middle; margin-left: 1px"
+												/>
+											</a>
+										</td>
+									</tr>
+									<!-- Spacer Row -->
+									<tr>
+										<td colspan="2" style="height: 8px"></td>
+									</tr>
+
+									<!-- Row 3 -->
+									<tr>
+										<td style="width: 25px; text-align: center; vertical-align: top; padding-top: 1px">
+											<span style="color: #191a19; font-size: 36px; line-height: 36px">•</span>
+										</td>
+										<td style="vertical-align: top; padding-left: 5px; overflow-wrap: break-word">
+											Marshall Islands launch a universal cash transfer.
+											<a
+												style="color: #01579b; text-decoration: none; white-space: nowrap"
+												href="https://eastasiaforum.org/2026/01/07/the-price-of-the-marshall-islands-universal-basic-income/"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<span style="color: #7d8082; font-size: 16px; text-decoration: none">East Asia Forum</span>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/6e838a29-1ed9-47a7-acd0-7301e55d55fc/10x10.png"
+													alt="↗"
+													style="height: 10px; vertical-align: middle; margin-left: 1px"
+												/>
+											</a>
+										</td>
+									</tr>
+									<!-- Spacer Row -->
+									<tr>
+										<td colspan="2" style="height: 8px"></td>
+									</tr>
+									<!-- Row 3 -->
+									<tr>
+										<td style="width: 25px; text-align: center; vertical-align: top; padding-top: 1px">
+											<span style="color: #191a19; font-size: 36px; line-height: 36px">•</span>
+										</td>
+										<td style="vertical-align: top; padding-left: 5px; overflow-wrap: break-word">
+											Martin Luther King was an advocate for UBI.
+											<a
+												style="color: #01579b; text-decoration: none; white-space: nowrap"
+												href="https://theconversation.com/martin-luther-king-jr-was-ahead-of-his-time-in-pushing-for-universal-basic-income-272963"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<span style="color: #7d8082; font-size: 16px; text-decoration: none">The Conversation</span>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/6e838a29-1ed9-47a7-acd0-7301e55d55fc/10x10.png"
+													alt="↗"
+													style="height: 10px; vertical-align: middle; margin-left: 1px"
+												/>
+											</a>
+										</td>
+									</tr>
+									<!-- Spacer Row -->
+									<tr>
+										<td colspan="2" style="height: 8px"></td>
+									</tr>
+									<!-- Row 5 -->
+									<tr>
+										<td style="width: 25px; text-align: center; vertical-align: top; padding-top: 1px">
+											<span style="color: #191a19; font-size: 36px; line-height: 36px">•</span>
+										</td>
+										<td style="vertical-align: top; padding-left: 5px; overflow-wrap: break-word">
+											AI leaders on UBI.
+											<a
+												style="color: #01579b; text-decoration: none; white-space: nowrap"
+												href="https://www.businessinsider.com/universal-basic-income-ai"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<span style="color: #7d8082; font-size: 16px; text-decoration: none">Business Insider</span>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/6e838a29-1ed9-47a7-acd0-7301e55d55fc/10x10.png"
+													alt="↗"
+													style="height: 10px; vertical-align: middle; margin-left: 1px"
+												/>
+											</a>
+										</td>
+									</tr>
+									<!-- Spacer Row -->
+									<tr>
+										<td colspan="2" style="height: 8px"></td>
+									</tr>
+									<!-- Row 6 -->
+									<tr>
+										<td style="width: 25px; text-align: center; vertical-align: top; padding-top: 1px">
+											<span style="color: #191a19; font-size: 36px; line-height: 36px">•</span>
+										</td>
+										<td style="vertical-align: top; padding-left: 5px; overflow-wrap: break-word">
+											Economic inequality does not mean poor well-being.
+											<a
+												style="color: #01579b; text-decoration: none; white-space: nowrap"
+												href="https://drive.google.com/file/d/1EjD9eTy7wCzVnMYbIdwluKGDZbY-f76v/view?usp=sharing"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<span style="color: #7d8082; font-size: 16px; text-decoration: none">Nature</span>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/6e838a29-1ed9-47a7-acd0-7301e55d55fc/10x10.png"
+													alt="↗"
+													style="height: 10px; vertical-align: middle; margin-left: 1px"
+												/>
+											</a>
+										</td>
+									</tr>
+									<!-- Spacer Row -->
+									<tr>
+										<td colspan="2" style="height: 8px"></td>
+									</tr>
+									<!-- Row 7 -->
+									<tr>
+										<td style="width: 25px; text-align: center; vertical-align: top; padding-top: 1px">
+											<span style="color: #191a19; font-size: 36px; line-height: 36px">•</span>
+										</td>
+										<td style="vertical-align: top; padding-left: 5px; overflow-wrap: break-word">
+											UBI for saving rainforest
+											<a
+												style="color: #01579b; text-decoration: none; white-space: nowrap"
+												href="https://www.bath.ac.uk/announcements/can-a-basic-income-keep-rainforests-standing-university-of-bath-researchers-are-finding-out/"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<span style="color: #7d8082; font-size: 16px; text-decoration: none">Bath University</span>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/6e838a29-1ed9-47a7-acd0-7301e55d55fc/10x10.png"
+													alt="↗"
+													style="height: 10px; vertical-align: middle; margin-left: 1px"
+												/>
+											</a>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+
+						<!-- end news articles -->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 10px 12px 40px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+
+						<!-- start signature -->
+						<tr>
+							<td align="left" bgcolor="#f9f8f3" valign="bottom">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<tr>
+										<td
+											valign="middle"
+											align="center"
+											width="130"
+											style="
+												padding: 30px 10px;
+												font-family: 'Unica77', Helvetica, Arial, sans-serif;
+												font-size: 22px;
+												line-height: 30px;
+											"
+										>
+											<a
+												href="https://www.linkedin.com/in/aurélie-schmiedlin/"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<!--[if mso
+													]><v:shape
+														xmlns:v="urn:schemas-microsoft-com:vml"
+														type="#_x0000_t75"
+														style="width: 120px; height: 120px; v-text-anchor: middle"
+														stroked="f"
+														fillcolor="none"
+													>
+														<v:imagedata
+															src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/51bee39c-3189-40cd-a45a-e20cb83504b5/240x240.png"
+														/>
+													</v:shape>
+												<![endif]-->
+												<!--[if !mso]><!-->
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/51bee39c-3189-40cd-a45a-e20cb83504b5/240x240.png"
+													alt="Portrait Aurélie"
+													width="120"
+													height="120"
+													style="width: 120px !important; height: 120px !important; display: block; border: 0"
+												/>
+												<!--<![endif]-->
+											</a>
+										</td>
+										<td width="10"></td>
+										<td>
+											<table>
+												<tr>
+													<td valign="middle" align="left" width="420">
+														<p
+															style="
+																margin: 0;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-weight: 400;
+																font-size: 22px;
+																line-height: 30px;
+																color: #191a19;
+															"
+														>
+															From Zaria with 💙
+														</p>
+													</td>
+												</tr>
+												<tr>
+													<td valign="middle" align="left" width="420">
+														<p
+															style="
+																margin: 12px 0px 8px 0px;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-weight: 400;
+																font-size: 22px;
+																line-height: 30px;
+																color: #191a19;
+															"
+														>
+															<img
+																src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/f69f222f-8763-4f26-acaf-2b6e43dc2584/600x124.png"
+																alt="Signature"
+																width="200"
+															/>
+														</p>
+													</td>
+												</tr>
+												<tr>
+													<td valign="middle" align="left" width="420">
+														<p
+															class="feature"
+															style="
+																margin: 0;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-weight: 400;
+																font-size: 22px;
+																line-height: 30px;
+																color: #191a19;
+															"
+														>
+															<a
+																href="https://www.linkedin.com/in/aurélie-schmiedlin/"
+																target="_blank"
+																rel="noopener noreferrer"
+																style="
+																	color: #191a19;
+																	text-decoration: underline !important;
+																	font-weight: 400;
+																	font-size: 22px;
+																	line-height: 30px;
+																"
+																>Aurélie Schmiedlin
+															</a>
+														</p>
+														<p
+															class="feature"
+															style="
+																margin: 0;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-weight: 400;
+																font-size: 22px;
+																line-height: 30px;
+																color: #191a19;
+															"
+														>
+															Communication
+														</p>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- end signature -->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 60px 12px 40px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+					</table>
+					<!--[if (gte mso 9)|(IE)]>
+			</td>
+			</tr>
+			</table>
+			<![endif]-->
+				</td>
+			</tr>
+			<!-- end copy block -->
+
+			<!-- start footer -->
+			<tr>
+				<td align="center" bgcolor="#f9f8f3" style="padding: 30px 10px 24px 10px">
+					<!--[if (gte mso 9)|(IE)]>
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+				<tr>
+					<td align="center" valign="top" width="600">
+			<![endif]-->
+					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+						<tr>
+							<td>
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+									<tr>
+										<td align="left" valign="top" style="padding: 6px 10px 5px 10px">
+											<a
+												href="https://socialincome.org"
+												target="_blank"
+												rel="noopener noreferrer"
+												style="display: inline-block"
+											>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/00efcc42-51b2-4724-b566-c29b53cae2d5/100x66.png"
+													alt="Logo"
+													border="0"
+													width="80"
+													style="display: block; width: 80px; max-width: 80px; min-width: 80px"
+												/>
+											</a>
+										</td>
+										<td
+											align="right"
+											bgcolor="#f9f8f3"
+											style="
+												padding: 1px 10px 40px 10px;
+												font-family: 'Unica77', Helvetica, Arial, sans-serif;
+												font-size: 16px;
+												line-height: 20px;
+												color: #191a19;
+											"
+										>
+											<p class="feature" style="margin: 0">
+												Social Income <br />
+												Zurich, Switzerland
+											</p>
+											<p class="feature" style="margin: 0">
+												<a
+													href="{{{unsubscribe_preferences}}}"
+													target="_blank"
+													rel="noopener noreferrer"
+													style="
+														color: #191a19;
+														text-decoration: none !important;
+														font-weight: 400;
+														font-size: 16px;
+														line-height: 20px;
+													"
+													>Preferences</a
+												>
+												/
+												<a
+													href="{{{unsubscribe}}}"
+													target="_blank"
+													rel="noopener noreferrer"
+													style="
+														color: #191a19;
+														text-decoration: none !important;
+														font-weight: 400;
+														font-size: 16px;
+														line-height: 20px;
+													"
+													>Unsubscribe</a
+												>
+											</p>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					<!--[if (gte mso 9)|(IE)]>
+			</td>
+			</tr>
+			</table>
+			<![endif]-->
+				</td>
+			</tr>
+			<!-- end footer -->
+		</table>
+		<!-- end body -->
+	</body>
+</html>

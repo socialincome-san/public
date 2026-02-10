@@ -1,9 +1,10 @@
 'use client';
 
-import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { createContext, PropsWithChildren, useRef } from 'react';
+
+const DEFAULT_REGION = 'europe-west6';
 
 export const FirebaseAppContext = createContext<FirebaseApp | undefined>(undefined);
 const functionsEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_HOST;

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils/cn';
 import * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
@@ -63,10 +63,12 @@ const FormItemContext = React.createContext<FormItemContextValue>({} as FormItem
 const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
 	({ className, ...props }, ref) => {
 		const id = React.useId();
+		const { name } = useFormField();
+		const testId = `form-item-${name}`;
 
 		return (
 			<FormItemContext.Provider value={{ id }}>
-				<div ref={ref} className={cn('space-y-1', className)} {...props} />
+				<div data-testid={testId} ref={ref} className={cn('space-y-1', className)} {...props} />
 			</FormItemContext.Provider>
 		);
 	},
@@ -135,4 +137,4 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
 );
 FormMessage.displayName = 'FormMessage';
 
-export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField };
+export { Form, FormControl, FormField, FormItem, FormLabel, FormMessage };

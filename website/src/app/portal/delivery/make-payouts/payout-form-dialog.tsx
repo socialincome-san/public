@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { logger } from '@/utils/logger';
+import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 
@@ -38,7 +38,7 @@ export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = fals
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
+						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 

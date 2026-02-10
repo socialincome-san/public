@@ -1,6 +1,6 @@
-import { ProgramPermission } from '@prisma/client';
+import { ProgramPermission } from '@/generated/prisma/client';
 
-export type ProgramAccess = {
+type ProgramAccess = {
 	programId: string;
 	programName: string;
 	permission: ProgramPermission;

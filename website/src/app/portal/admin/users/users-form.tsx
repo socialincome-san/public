@@ -2,19 +2,19 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
+import { UserRole } from '@/generated/prisma/enums';
 import {
 	createUserAction,
 	getUserAction,
 	getUserOptionsAction,
 	updateUserAction,
-} from '@/lib/server-actions/user.actions';
+} from '@/lib/server-actions/user-actions';
 import type { UserPayload } from '@/lib/services/user/user.types';
-import { UserRole } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateUserInput, buildUpdateUserInput } from './users-form-helper';
 
-export type UserFormProps = {
+type UserFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;

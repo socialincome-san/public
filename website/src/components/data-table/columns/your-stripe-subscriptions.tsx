@@ -4,34 +4,48 @@ import { CurrencyCell } from '@/components/data-table/elements/currency-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import { Translator } from '@/lib/i18n/translator';
 import type { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import type { ColumnDef } from '@tanstack/react-table';
+import { PaymentMethodCell } from '../elements/payment-method-cell';
+import { StatusCell } from '../elements/status-cell';
 
 export function makeYourStripeSubscriptionsColumns(
-	_?: boolean,
+	hideProgramName: boolean = false,
+	hideLocalPartner: boolean = false,
 	translator?: Translator,
 ): ColumnDef<StripeSubscriptionRow>[] {
 	return [
 		{
-			accessorKey: 'from',
-			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.from')}</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'until',
-			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.to')}</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
+			accessorKey: 'created',
+			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.created')}</SortableHeader>,
+			cell: (ctx) => <DateCell ctx={ctx} options={{ year: 'numeric', month: '2-digit', day: '2-digit' }} />,
 		},
 		{
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.status-title')}</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			cell: (ctx) => {
+				const translateKey = `subscriptions.status.${ctx.row.original.status}`;
+				const label = translator?.t(translateKey);
+				return (
+					<StatusCell
+						ctx={ctx}
+						variant="subscription"
+						label={label === translateKey ? ctx.row.original.status : label}
+					/>
+				);
+			},
 		},
 		{
 			accessorKey: 'interval',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.interval')}</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			cell: (ctx) => <TextCell ctx={ctx} translatedValue={translator?.t(`subscriptions.interval-${ctx.getValue()}`)} />,
+		},
+		{
+			id: 'paymentMethod',
+			accessorFn: (row) => row.paymentMethod.label,
+			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.payment-method')}</SortableHeader>,
+			cell: (ctx) => <PaymentMethodCell ctx={ctx} variant={ctx.row.original.paymentMethod.type} />,
 		},
 		{
 			accessorKey: 'amount',

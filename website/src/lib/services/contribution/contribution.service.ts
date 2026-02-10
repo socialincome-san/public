@@ -1,5 +1,6 @@
-import { Contribution, PaymentEvent } from '@prisma/client';
+import { Contribution, ContributionStatus, PaymentEvent } from '@/generated/prisma/client';
 import { endOfYear, startOfYear } from 'date-fns';
+import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -68,7 +69,7 @@ export class ContributionService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contribution');
+			return this.resultFail(`Could not fetch contribution: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -118,7 +119,7 @@ export class ContributionService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contribution');
+			return this.resultFail(`Could not update contribution: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -156,7 +157,7 @@ export class ContributionService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create contribution');
+			return this.resultFail(`Could not create contribution: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -216,11 +217,11 @@ export class ContributionService extends BaseService {
 			return this.resultOk({ tableRows, permission: permission });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributions');
+			return this.resultFail(`Could not fetch contributions: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getForContributorAndYear(
+	async getSucceededForContributorAndYear(
 		contributorId: string,
 		year: number,
 	): Promise<ServiceResult<ContributionDonationEntry[]>> {
@@ -231,7 +232,7 @@ export class ContributionService extends BaseService {
 			const result = await this.db.contribution.findMany({
 				where: {
 					contributorId: contributorId,
-					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }],
+					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }, { status: 'succeeded' }],
 				},
 				select: {
 					contributorId: true,
@@ -290,29 +291,53 @@ export class ContributionService extends BaseService {
 			return this.resultOk(paymentEvent.contribution);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create or update contribution from Stripe event');
+			return this.resultFail(`Could not create or update contribution from Stripe event: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async upsertFromBankTransfer(paymentEvent: PaymentEventCreateInput): Promise<ServiceResult<PaymentEvent>> {
 		try {
-			const result = await this.db.paymentEvent.upsert({
+			const existing = await this.db.paymentEvent.findUnique({
 				where: { transactionId: paymentEvent.transactionId },
-				create: paymentEvent,
-				update: {
-					...paymentEvent,
-					contribution: {
-						update: {
-							...paymentEvent.contribution.create,
+				select: { id: true, contribution: { select: { status: true } } },
+			});
+			let result;
+
+			if (existing?.contribution?.status === ContributionStatus.pending) {
+				// if exists and pending, we assume this is the initial placeholder payment created during bank transfer flow
+				// which should be updated from payment file import
+				result = await this.db.paymentEvent.update({
+					where: { id: existing.id },
+					data: {
+						...paymentEvent,
+						contribution: {
+							update: {
+								...paymentEvent.contribution.create,
+							},
 						},
 					},
-				},
-			});
+				});
+			} else if (existing) {
+				// non-pending payment with same transaction ID already exists,
+				// we assume its a (non-initial) standing order payment and append current timestamp to already existimg transaction ID
+				result = await this.db.paymentEvent.create({
+					data: {
+						...paymentEvent,
+						transactionId: paymentEvent.transactionId + `-${DateTime.now().toMillis().toString()}`,
+					},
+				});
+			} else {
+				// non-existing payment,
+				// we assume its the initial placeholder payment from bank transfer flow
+				result = await this.db.paymentEvent.create({
+					data: paymentEvent,
+				});
+			}
 
 			return this.resultOk(result);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create payment events with contributions');
+			return this.resultFail(`Could not create payment events with contributions: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -341,7 +366,7 @@ export class ContributionService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributions for contributor');
+			return this.resultFail(`Could not fetch contributions for contributor: ${JSON.stringify(error)}`);
 		}
 	}
 }

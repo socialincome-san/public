@@ -21,8 +21,10 @@ export function buildUpdateLocalPartnerInput(
 				},
 			}
 		: undefined;
+
 	// Contact Address Upsert Logic
 	const addressUpdate = buildAddressInput(contactFields);
+
 	return {
 		id: localPartner.id,
 		name: schema.fields.name.value,
@@ -31,13 +33,15 @@ export function buildUpdateLocalPartnerInput(
 				data: {
 					...buildCommonContactData(contactFields),
 					phone: contactPhoneUpdate,
-					address: {
-						upsert: {
-							update: addressUpdate,
-							create: addressUpdate,
-							where: { id: localPartner.contact.address?.id },
+					...(addressUpdate && {
+						address: {
+							upsert: {
+								update: addressUpdate,
+								create: addressUpdate,
+								where: { id: localPartner.contact.address?.id },
+							},
 						},
-					},
+					}),
 				},
 				where: { id: localPartner.contact.id },
 			},
@@ -49,13 +53,17 @@ export function buildCreateLocalPartnerInput(
 	schema: LocalPartnerFormSchema,
 	contactFields: { [key: string]: FormField },
 ): LocalPartnerCreateInput {
+	const addressInput = buildAddressInput(contactFields);
+
 	return {
 		name: schema.fields.name.value,
 		contact: {
 			create: {
 				...buildCommonContactData(contactFields),
 				phone: contactFields.phone.value ? { create: { number: contactFields.phone.value } } : undefined,
-				address: { create: buildAddressInput(contactFields) },
+				...(addressInput && {
+					address: { create: addressInput },
+				}),
 			},
 		},
 	};

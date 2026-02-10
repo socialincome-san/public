@@ -1,4 +1,4 @@
-import { Address, Gender, Phone } from '@prisma/client';
+import { Address, Gender, Phone } from '@/generated/prisma/client';
 import { FormField } from './dynamic-form';
 
 type Contact = {
@@ -27,7 +27,7 @@ export const getContactValuesFromPayload = (
 	contactFields.lastName.value = contact.lastName;
 	contactFields.callingName.value = contact.callingName;
 	contactFields.email.value = contact.email;
-	contactFields.language.value = contact.language;
+	contactFields.language.value = contact.language || null;
 	contactFields.profession.value = contact.profession;
 	contactFields.dateOfBirth.value = contact.dateOfBirth ?? undefined;
 	contactFields.phone.value = contact.phone?.number;
@@ -42,14 +42,27 @@ export const getContactValuesFromPayload = (
 	return contactFields;
 };
 
-// Helper to structure contact address for Prisma upsert/create
 export function buildAddressInput(contactFields: { [key: string]: FormField }) {
+	const country =
+		contactFields.country.value && contactFields.country.value !== '' ? contactFields.country.value : undefined;
+
+	const hasAnyValue =
+		contactFields.street.value ||
+		contactFields.number.value ||
+		contactFields.city.value ||
+		contactFields.zip.value ||
+		country;
+
+	if (!hasAnyValue) {
+		return undefined;
+	}
+
 	return {
-		street: contactFields.street.value || '',
-		number: contactFields.number.value || '',
-		city: contactFields.city.value || '',
-		zip: contactFields.zip.value || '',
-		country: contactFields.country.value || '',
+		street: contactFields.street.value ?? '',
+		number: contactFields.number.value ?? '',
+		city: contactFields.city.value ?? '',
+		zip: contactFields.zip.value ?? '',
+		country,
 	};
 }
 
@@ -67,7 +80,7 @@ export function buildCommonContactData(contactFields: { [key: string]: FormField
 	};
 }
 
-export type DropdownItem = {
+type DropdownItem = {
 	id: string;
 	label: string;
 };
@@ -80,5 +93,3 @@ export function getZodEnum(items: DropdownItem[]) {
 
 	return object;
 }
-
-type ExtractTypeFromObj<T> = T[keyof T];

@@ -1,8 +1,9 @@
 import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
 import { allWebsiteLanguages, findBestLocale, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
-import { CountryCode, isValidCountryCode } from '@socialincome/shared/src/types/country';
+import { isValidCountryCode } from '@/lib/types/country';
 import { NextRequest, NextResponse } from 'next/server';
-import { bestGuessCurrency, isValidCurrency } from '../../shared/src/types/currency';
+import { CountryCode } from './generated/prisma/enums';
+import { bestGuessCurrency, isValidCurrency } from './lib/types/currency';
 
 // https://developers.cloudflare.com/fundamentals/reference/http-headers/#cf-ipcountry
 const CLOUDFLARE_IP_COUNTRY_HEADER = 'cf-ipcountry';
@@ -10,7 +11,7 @@ const CLOUDFLARE_IP_COUNTRY_HEADER = 'cf-ipcountry';
 export const config = {
 	matcher: [
 		// Skip internal paths (_next)
-		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|portal|v1/api-docs|openapi.json|sitemap.xml).*)',
+		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|portal|partner-space|v1/api-docs|openapi.json|sitemap.xml).*)',
 	],
 };
 

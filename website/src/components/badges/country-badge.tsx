@@ -1,22 +1,17 @@
 import { Badge } from '@/components/badge';
-import { FlagSierraLeone } from '@/components/badges/flags/flag-sierra-leone';
-import { ReactNode } from 'react';
+import { CountryCode } from '@/generated/prisma/enums';
+import { getCountryNameByCode } from '@/lib/types/country';
+import { CountryFlag } from '../country-flag';
 
-export function CountryBadge({ country }: { country: String | null }) {
-	let flag: ReactNode;
-	switch (country) {
-		case 'Sierra Leone':
-			flag = <FlagSierraLeone />;
-			break;
-		default:
-			flag = null;
-			break;
-	}
+type Props = {
+	country: CountryCode;
+};
 
+export function CountryBadge({ country }: Props) {
 	return (
-		<Badge variant="country">
-			{flag && <span className="mr-1">{flag}</span>}
-			{country}
+		<Badge variant="country" className="inline-flex items-center gap-2">
+			<CountryFlag country={country} size="sm" />
+			<span className="font-medium">{getCountryNameByCode(country)}</span>
 		</Badge>
 	);
 }

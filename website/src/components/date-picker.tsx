@@ -31,8 +31,15 @@ export function DatePicker({
 		day: '2-digit',
 	});
 
+	// avoid time zone issues by normalizing date to noon
+	function normalizeToNoon(date: Date) {
+		return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0);
+	}
+
 	useEffect(() => {
-		setDate(selected);
+		if (selected) {
+			setDate(normalizeToNoon(selected));
+		}
 	}, [selected]);
 
 	return (
@@ -54,8 +61,12 @@ export function DatePicker({
 						endMonth={endMonth}
 						disabled={disabled}
 						onSelect={(date) => {
-							date && onSelect(date);
-							setDate(date);
+							if (!date) {
+								return;
+							}
+							const normalized = normalizeToNoon(date);
+							onSelect(normalized);
+							setDate(normalized);
 							setOpen(false);
 						}}
 					/>

@@ -3,7 +3,7 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 
-    // This is our example launch config. Set the prefered flavor, SURVEY_BASE_URL and SENTRY_URL
+    // This is our example launch config. Set the prefered flavor, BASE_URL and SENTRY_URL
     "version": "0.2.0",
     "configurations": [
         {
@@ -16,17 +16,9 @@
                 "--flavor",
                 "stage",
                 "--dart-define",
-                "SURVEY_BASE_URL=staging.socialincome.org",
+                "BASE_URL=staging.socialincome.org",
                 "--dart-define",
                 "SENTRY_URL=FILL IN SENTRY URL",
-                "--dart-define",
-                "TWILIO_ACCOUNT_SID=FILL IN TWILIO ACCOUNT SID",
-                "--dart-define",
-                "TWILIO_AUTH_TOKEN=FILL IN TWILIO AUTH TOKEN",
-                "--dart-define",
-                "TWILIO_NUMBER=FILL IN TWILIO NUMBER",
-                "--dart-define",
-                "TWILIO_SERVICE_SID=FILL IN TWILIO SERVICE SID",
             ],
         },
         {
@@ -39,17 +31,9 @@
                 "--flavor",
                 "stage",
                 "--dart-define",
-                "SURVEY_BASE_URL=staging.socialincome.org",
+                "BASE_URL=staging.socialincome.org",
                 "--dart-define",
                 "SENTRY_URL=FILL IN SENTRY URL",
-                "--dart-define",
-                "TWILIO_ACCOUNT_SID=FILL IN TWILIO ACCOUNT SID",
-                "--dart-define",
-                "TWILIO_AUTH_TOKEN=FILL IN TWILIO AUTH TOKEN",
-                "--dart-define",
-                "TWILIO_NUMBER=FILL IN TWILIO NUMBER",
-                "--dart-define",
-                "TWILIO_SERVICE_SID=FILL IN TWILIO SERVICE SID",
             ],
         },
         {
@@ -62,17 +46,9 @@
                 "--flavor",
                 "stage",
                 "--dart-define",
-                "SURVEY_BASE_URL=staging.socialincome.org",
+                "BASE_URL=staging.socialincome.org",
                 "--dart-define",
                 "SENTRY_URL=FILL IN SENTRY URL",
-                "--dart-define",
-                "TWILIO_ACCOUNT_SID=FILL IN TWILIO ACCOUNT SID",
-                "--dart-define",
-                "TWILIO_AUTH_TOKEN=FILL IN TWILIO AUTH TOKEN",
-                "--dart-define",
-                "TWILIO_NUMBER=FILL IN TWILIO NUMBER",
-                "--dart-define",
-                "TWILIO_SERVICE_SID=FILL IN TWILIO SERVICE SID",
             ],
         }
     ]

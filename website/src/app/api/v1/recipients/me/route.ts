@@ -1,60 +1,93 @@
+import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
-import { NextResponse } from 'next/server';
+import { logger } from '@/lib/utils/logger';
+import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
 
 /**
  * Get recipient
- * @description Returns the authenticated recipient with all related data.
+ * @description Returns the authenticated recipient with all related data. Requires a valid Firebase App Check token.
  * @response Recipient
  * @openapi
  */
-export async function GET(request: Request) {
+export const GET = withAppCheck(async (request: NextRequest) => {
 	const recipientService = new RecipientService();
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
-		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
+		logger.warn('[GET /recipients/me] Failed', {
+			error: recipientResult.error,
+			status: recipientResult.status,
+		});
+
+		return new Response(recipientResult.error, {
+			status: recipientResult.status ?? 500,
+		});
 	}
 
 	return NextResponse.json(recipientResult.data, { status: 200 });
-}
+});
 
 /**
  * Update recipient
- * @description Updates the authenticated recipient’s personal information, contact details, and mobile money payment information.
+ * @description Updates the authenticated recipient’s personal information, contact details, and mobile money payment information. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @body RecipientSelfUpdate
  * @response Recipient
  * @openapi
  */
-export async function PATCH(request: Request) {
+export const PATCH = withAppCheck(async (request: NextRequest) => {
 	const recipientService = new RecipientService();
+
+	logger.info('[PATCH /recipients/me] Incoming request', {
+		contentType: request.headers.get('content-type'),
+	});
+
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
-		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
+		logger.warn('[PATCH /recipients/me] Recipient resolution failed', {
+			error: recipientResult.error,
+			status: recipientResult.status,
+		});
+
+		return new Response(recipientResult.error, {
+			status: recipientResult.status ?? 500,
+		});
 	}
+
+	const recipient = recipientResult.data;
 
 	let body: unknown;
 
 	try {
 		body = await request.json();
 	} catch {
+		logger.warn('[PATCH /recipients/me] Invalid JSON body');
 		return new Response('Invalid JSON body', { status: 400 });
 	}
 
 	const parsed = RecipientSelfUpdate.safeParse(body);
 
 	if (!parsed.success) {
+		logger.warn('[PATCH /recipients/me] Validation failed', {
+			zodErrors: parsed.error.format(),
+		});
+
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const recipient = recipientResult.data;
 	const data = parsed.data;
 
 	const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
 	const newPaymentPhone = data.paymentPhone ?? null;
+
+	logger.info('[PATCH /recipients/me] Phone update intent', {
+		oldPaymentPhone,
+		newPaymentPhone,
+		contactPhone: data.contactPhone === null ? null : typeof data.contactPhone === 'string' ? 'provided' : 'unchanged',
+	});
 
 	const updateData: RecipientPrismaUpdateInput = {
 		contact: {
@@ -66,18 +99,22 @@ export async function PATCH(request: Request) {
 				dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
 				language: data.language,
 				email: data.email,
-				phone: data.contactPhone
-					? {
-							upsert: {
-								update: { number: data.contactPhone },
-								create: { number: data.contactPhone },
-							},
-						}
-					: undefined,
+				phone:
+					data.contactPhone === null
+						? { disconnect: true }
+						: typeof data.contactPhone === 'string'
+							? {
+									connectOrCreate: {
+										where: { number: data.contactPhone },
+										create: { number: data.contactPhone },
+									},
+								}
+							: undefined,
 			},
 		},
 
 		successorName: data.successorName,
+		termsAccepted: data.termsAccepted,
 
 		paymentInformation:
 			data.paymentPhone || data.paymentProvider
@@ -87,8 +124,8 @@ export async function PATCH(request: Request) {
 								provider: data.paymentProvider,
 								phone: data.paymentPhone
 									? {
-											upsert: {
-												update: { number: data.paymentPhone },
+											connectOrCreate: {
+												where: { number: data.paymentPhone },
 												create: { number: data.paymentPhone },
 											},
 										}
@@ -98,7 +135,10 @@ export async function PATCH(request: Request) {
 								provider: data.paymentProvider!,
 								code: recipient.paymentInformation?.code ?? '',
 								phone: {
-									create: { number: data.paymentPhone! },
+									connectOrCreate: {
+										where: { number: data.paymentPhone! },
+										create: { number: data.paymentPhone! },
+									},
 								},
 							},
 						},
@@ -112,8 +152,16 @@ export async function PATCH(request: Request) {
 	});
 
 	if (!updateResult.success) {
+		logger.error('[PATCH /recipients/me] Update failed', {
+			error: updateResult.error,
+		});
+
 		return new Response(updateResult.error, { status: 500 });
 	}
 
+	logger.info('[PATCH /recipients/me] Update successful', {
+		recipientId: recipient.id,
+	});
+
 	return NextResponse.json(updateResult.data, { status: 200 });
-}
+});

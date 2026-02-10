@@ -1,4 +1,4 @@
-import { OrganizationPermission } from '@prisma/client';
+import { OrganizationPermission } from '@/generated/prisma/client';
 
 export type ActiveOrganizationAccess = {
 	id: string;

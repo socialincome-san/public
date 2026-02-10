@@ -1,4 +1,4 @@
-import { OrganizationAccess, OrganizationPermission } from '@prisma/client';
+import { OrganizationAccess, OrganizationPermission } from '@/generated/prisma/client';
 
 export const organizationAccessesData: OrganizationAccess[] = [
 	{
@@ -6,7 +6,7 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		userId: 'user-1',
 		organizationId: 'organization-1',
 		permission: OrganizationPermission.edit,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -14,7 +14,7 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		userId: 'user-2',
 		organizationId: 'organization-1',
 		permission: OrganizationPermission.edit,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -22,7 +22,7 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		userId: 'user-2',
 		organizationId: 'organization-3',
 		permission: OrganizationPermission.edit,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -30,7 +30,7 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		userId: 'user-1',
 		organizationId: 'organization-5',
 		permission: OrganizationPermission.readonly,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

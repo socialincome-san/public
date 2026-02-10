@@ -1,9 +1,11 @@
-import { Contributor, ContributorReferralSource, OrganizationPermission } from '@prisma/client';
+import { Contributor, ContributorReferralSource, OrganizationPermission } from '@/generated/prisma/client';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
+import { SupportedLanguage } from '../sendgrid/types';
 import {
 	BankContributorData,
 	ContributorDonationCertificate,
@@ -20,7 +22,8 @@ import {
 
 export class ContributorService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
+	private sendGridService = new SendgridSubscriptionService();
 
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
 		try {
@@ -77,7 +80,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get contributor');
+			return this.resultFail(`Could not get contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -88,23 +91,33 @@ export class ContributorService extends BaseService {
 		try {
 			const existing = await this.db.contributor.findUnique({
 				where: { id: contributorId },
-				select: { account: true },
+				select: {
+					account: true,
+					contact: { select: { email: true } },
+				},
 			});
 
 			if (!existing) {
 				return this.resultFail('Contributor not found');
 			}
 
-			if (!data.contact?.update?.data?.email) {
+			const newEmail = data.contact?.update?.data?.email?.toString();
+			const oldEmail = existing.contact?.email ?? null;
+
+			if (!newEmail) {
 				return this.resultFail('Contributor email is required');
 			}
 
-			const firebaseResult = await this.firebaseService.updateByUid(existing.account.firebaseAuthUserId, {
-				email: data.contact?.update?.data?.email?.toString() ?? undefined,
-			});
+			if (newEmail !== oldEmail) {
+				const firebaseResult = await this.firebaseAdminService.updateByUid(existing.account.firebaseAuthUserId, {
+					email: newEmail,
+				});
 
-			if (!firebaseResult.success) {
-				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
+				if (!firebaseResult.success) {
+					this.logger.warn('Could not update Firebase Auth user', {
+						error: firebaseResult.error,
+					});
+				}
 			}
 
 			const updatedContributor = await this.db.contributor.update({
@@ -115,7 +128,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(updatedContributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor');
+			return this.resultFail(`Could not update contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -138,7 +151,7 @@ export class ContributorService extends BaseService {
 			return this.applyContributorUpdate(contributorId, contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor');
+			return this.resultFail(`Could not update contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -147,7 +160,7 @@ export class ContributorService extends BaseService {
 			return this.applyContributorUpdate(contributorId, data);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor (self)');
+			return this.resultFail(`Could not update contributor (self): ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -195,7 +208,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributor options');
+			return this.resultFail(`Could not fetch contributor options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -251,7 +264,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributors');
+			return this.resultFail(`Could not fetch contributors: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -288,7 +301,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributor IDs for certificates');
+			return this.resultFail(`Could not fetch contributor IDs for certificates: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -312,7 +325,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not find contributor');
+			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -344,7 +357,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get or create contributor from Stripe customer');
+			return this.resultFail(`Could not get or create contributor from Stripe customer: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -376,7 +389,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(referenceId);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get or generate contributor reference ID');
+			return this.resultFail(`Could not get or generate contributor reference ID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -387,7 +400,7 @@ export class ContributorService extends BaseService {
 			});
 			if (existingContributor) return this.resultOk(existingContributor);
 
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: contributorData.email,
 				displayName: `${contributorData.firstName} ${contributorData.lastName}`,
 			});
@@ -410,15 +423,24 @@ export class ContributorService extends BaseService {
 							firstName: contributorData.firstName,
 							lastName: contributorData.lastName,
 							email: contributorData.email,
+							language: contributorData.language,
 						},
 					},
 				},
 				include: { contact: true },
 			});
+
+			await this.sendGridService.subscribeToNewsletter({
+				firstname: contributorData.firstName,
+				lastname: contributorData.lastName,
+				email: contributorData.email,
+				language: contributorData.language as SupportedLanguage,
+			});
+
 			return this.resultOk(newContributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not get or create contributor by reference ID');
+			return this.resultFail(`Could not get or create contributor by reference ID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -436,7 +458,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not find contributor by Payment Reference ID');
+			return this.resultFail(`Could not find contributor by Payment Reference ID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -444,7 +466,7 @@ export class ContributorService extends BaseService {
 		contributorData: StripeContributorData,
 	): Promise<ServiceResult<ContributorWithContact>> {
 		try {
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: contributorData.email,
 				displayName: `${contributorData.firstName} ${contributorData.lastName}`,
 			});
@@ -476,7 +498,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create contributor with Firebase Auth user');
+			return this.resultFail(`Could not create contributor with Firebase Auth user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -491,7 +513,7 @@ export class ContributorService extends BaseService {
 				return this.resultFail('No permission to create contributor');
 			}
 
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: input.email,
 				displayName: `${input.firstName} ${input.lastName}`,
 			});
@@ -527,7 +549,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create contributor');
+			return this.resultFail(`Could not create contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -541,7 +563,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(undefined);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update contributor Stripe customer ID');
+			return this.resultFail(`Could not update contributor Stripe customer ID: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -552,14 +574,20 @@ export class ContributorService extends BaseService {
 				select: {
 					id: true,
 					stripeCustomerId: true,
+					referral: true,
 					contact: {
 						select: {
+							gender: true,
 							email: true,
 							firstName: true,
 							lastName: true,
 							language: true,
 							address: {
 								select: {
+									street: true,
+									number: true,
+									city: true,
+									zip: true,
 									country: true,
 								},
 							},
@@ -573,19 +601,26 @@ export class ContributorService extends BaseService {
 			}
 
 			const session: ContributorSession = {
+				type: 'contributor',
 				id: contributor.id,
+				gender: contributor.contact?.gender ?? null,
+				referral: contributor.referral ?? null,
 				email: contributor.contact?.email ?? null,
 				firstName: contributor.contact?.firstName ?? null,
 				lastName: contributor.contact?.lastName ?? null,
 				stripeCustomerId: contributor.stripeCustomerId ?? null,
 				language: contributor.contact?.language ?? null,
+				street: contributor.contact?.address?.street ?? null,
+				number: contributor.contact?.address?.number ?? null,
+				city: contributor.contact?.address?.city ?? null,
+				zip: contributor.contact?.address?.zip ?? null,
 				country: contributor.contact?.address?.country ?? null,
 			};
 
 			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch contributor session');
+			return this.resultFail(`Could not fetch contributor session: ${JSON.stringify(error)}`);
 		}
 	}
 }

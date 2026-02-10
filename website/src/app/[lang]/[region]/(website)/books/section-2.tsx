@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import Book from '@/components/legacy/ui/book';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 import book6cover from './(assets)/better.jpg';
 import book5cover from './(assets)/coming.jpg';

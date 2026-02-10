@@ -29,8 +29,8 @@
    - Login to [Google Play Console](https://play.google.com/console)
    - Select the production app
    - Go to "Release"->"Testing"->"Internal testing"
-   - Click on the button "Create new release"
-   - Upload the aab file from the CodeMagic Build "Android Production"
+   - A new release should be already published in the Internal Test
+     Track
    - Add release notes for all supported languages
    - Save and publish the release in the Internal Testing track
    - Do a quick smoke test of this app release

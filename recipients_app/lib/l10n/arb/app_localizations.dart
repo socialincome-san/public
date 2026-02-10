@@ -776,6 +776,24 @@ abstract class AppLocalizations {
   /// **'Invalid phone number. Please check your phone number and try again.'**
   String get invalidPhoneNumberError;
 
+  /// No description provided for @failedSentVerificationCodeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send verification code. Please check your Internet and try again.'**
+  String get failedSentVerificationCodeError;
+
+  /// No description provided for @failedCodeVerificationCodeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to verify the code. Please check your Internet and try again.'**
+  String get failedCodeVerificationCodeError;
+
+  /// No description provided for @invalidAppCheckTokenError.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid App Check token. Can\'t use backend service. Please update the app.'**
+  String get invalidAppCheckTokenError;
+
   /// No description provided for @invalidVerificationCodeError.
   ///
   /// In en, this message translates to:

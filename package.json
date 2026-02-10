@@ -6,36 +6,30 @@
 		"node": "22"
 	},
 	"workspaces": [
-		"shared",
 		"ui",
-		"website",
-		"firestore_to_postgres"
+		"website"
 	],
+	"type": "module",
 	"scripts": {
 		"postinstall": "npm run db:generate",
 		"firebase:export": "firebase emulators:export --project demo-social-income-local --force ./seed",
 		"firebase:serve": "firebase emulators:start --project demo-social-income-local --config firebase.json --import ./seed",
 		"format-code": "prettier --write .",
-		"shared:test": "npm --workspace=@socialincome/shared run test",
 		"website:build-paths": "npm --workspace=@socialincome/website run build-paths",
 		"website:build": "npm --workspace=@socialincome/website run build",
 		"website:build:emulator": "npm --workspace=@socialincome/website run build:emulator",
 		"website:lint": "npm --workspace=@socialincome/website run lint",
+		"website:check:unused": "npm --workspace=@socialincome/website run check:unused",
 		"website:serve": "npm run db:generate && npm run db:migrate:deploy && npm --workspace=@socialincome/website run serve",
 		"website:serve:emulator": "npm --workspace=@socialincome/website run serve:emulator",
 		"website:start": "npm --workspace=@socialincome/website run start",
 		"website:start:emulator": "npm --workspace=@socialincome/website run start:emulator",
-		"website:test": "npm --workspace=@socialincome/website run test",
-		"website:test:emulator": "npm --workspace=@socialincome/website run test:emulator",
-		"website:test:e2e": "npm --workspace=@socialincome/website run test:e2e",
-		"website:test:e2e:emulator": "npm --workspace=@socialincome/website run test:e2e:emulator",
-		"website:test:e2e:update": "npm --workspace=@socialincome/website run test:e2e:update",
-		"website:test:e2e:update:emulator": "npm --workspace=@socialincome/website run test:e2e:update:emulator",
+		"website:test:unit": "npm --workspace=@socialincome/website run test:unit",
 		"website:extract-translations": "npm --workspace=@socialincome/website run extract-translations",
 		"website:check-translations": "npm --workspace=@socialincome/website run check-translations",
 		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
 		"ui:build": "npm --workspace=@socialincome/ui run build-storybook",
-		"dev:ssl-proxy": "ssl-proxy --source 3000 --target 3001",
+		"dev:ssl-proxy": "ssl-proxy --source 3001 --target 3000",
 		"db:generate": "npm --workspace=@socialincome/website run db:generate",
 		"db:migrate:deploy": "npm --workspace=@socialincome/website run db:migrate:deploy",
 		"db:migrate:dev": "npm --workspace=@socialincome/website run db:migrate:dev",
@@ -52,7 +46,7 @@
 	},
 	"devDependencies": {
 		"@types/react": "19.2.1",
-		"firebase-tools": "14.4.0",
+		"firebase-tools": "^15.5.1",
 		"prettier": "3.4.2",
 		"prettier-plugin-organize-imports": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.6.9",
@@ -60,9 +54,12 @@
 		"typescript": "^5.7.2"
 	},
 	"dependencies": {
+		"@radix-ui/react-slider": "^1.3.6",
+		"@xstate/react": "^6.0.0",
 		"glob": "^11.0.3",
-		"react": "19.2.1",
-		"react-dom": "19.2.1",
+		"react": "19.2.3",
+		"react-dom": "19.2.3",
+		"xstate": "^5.25.0",
 		"zod": "^3.23.8"
 	}
 }

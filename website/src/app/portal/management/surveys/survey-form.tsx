@@ -2,6 +2,8 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
+import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
+import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import {
 	createSurveyAction,
 	getSurveyAction,
@@ -10,12 +12,11 @@ import {
 } from '@/lib/server-actions/survey-actions';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
-import { SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';
 
-export type SurveyFormProps = {
+type SurveyFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
@@ -59,7 +60,7 @@ const initialFormSchema: SurveyFormSchema = {
 		language: {
 			placeholder: 'Language',
 			label: 'Language',
-			zodSchema: z.string().min(1),
+			zodSchema: z.nativeEnum(getZodEnum(allWebsiteLanguages.map((l) => ({ id: l, label: l })))),
 		},
 		dueAt: {
 			placeholder: 'Due date',

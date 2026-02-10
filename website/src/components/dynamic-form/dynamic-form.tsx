@@ -1,5 +1,4 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion';
-import { Button } from '@/components/button';
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
@@ -12,6 +11,8 @@ import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
+import { MultiSelect } from '../multi-select';
+import { FormActions } from './form-actions';
 
 export type FormField = {
 	label: string;
@@ -19,6 +20,8 @@ export type FormField = {
 	zodSchema?: ZodTypeAny;
 	value?: any;
 	useCombobox?: boolean;
+	disabled?: boolean;
+	options?: { id: string; label: string }[];
 };
 
 export type FormSchema = {
@@ -73,13 +76,38 @@ const isOptional = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject
 	return ['ZodOptional', 'ZodNullable'].includes(type);
 };
 
-const DynamicForm: FC<{
+const unwrapOptional = (def: any) => {
+	if (def?.typeName === 'ZodOptional' || def?.typeName === 'ZodNullable') {
+		return def.innerType?._def;
+	}
+	return def;
+};
+
+const getEnumArrayValues = (
+	key: keyof z.infer<typeof zodSchema>,
+	zodSchema: z.ZodObject<any>,
+	parentOption?: string,
+): Record<string, string> => {
+	let def: any = getDef(key, zodSchema, parentOption);
+	def = unwrapOptional(def);
+
+	if (def?.typeName !== 'ZodArray') {
+		return {};
+	}
+
+	return (def.type?._def?.values ?? {}) as Record<string, string>;
+};
+
+type Props = {
 	formSchema: FormSchema;
 	isLoading: boolean;
 	onSubmit: (values: any) => void;
-	onCancel?: (values: any) => void;
+	onCancel?: () => void;
+	onDelete?: () => void;
 	mode: 'add' | 'edit' | 'readonly';
-}> = ({ formSchema, isLoading, onSubmit, onCancel, mode }) => {
+};
+
+const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -135,13 +163,17 @@ const DynamicForm: FC<{
 	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
 
 	const onValidationErrors = (e: Object) => {
-		console.error('dynamic form validation errors: ', e);
+		console.warn('dynamic form validation errors: ', e);
 		setOpenAccordion('all');
 	};
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)} className="space-y-8">
+			<form
+				data-testid="dynamic-form"
+				onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)}
+				className="space-y-8"
+			>
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						<Accordion
@@ -153,7 +185,9 @@ const DynamicForm: FC<{
 						>
 							{/* TODO: find better solution to hide collapsed content */}
 							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">
-								<AccordionTrigger>{formSchema.fields[option].label}</AccordionTrigger>
+								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
+									{formSchema.fields[option].label}
+								</AccordionTrigger>
 								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:!h-0" forceMount>
 									{getOptions(option).map((nestedOption) => (
 										<GenericFormField
@@ -182,18 +216,7 @@ const DynamicForm: FC<{
 						/>
 					);
 				})}
-				<div className="flex gap-2">
-					{mode !== 'readonly' && (
-						<Button disabled={isLoading} type="submit">
-							Save
-						</Button>
-					)}
-					{onCancel && (
-						<Button variant="outline" onClick={onCancel}>
-							{mode === 'readonly' ? 'Close' : 'Cancel'}
-						</Button>
-					)}
-				</div>
+				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} />
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (
@@ -266,6 +289,40 @@ const GenericFormField = ({
 
 	if (isFormField(formFieldSchema)) {
 		switch (getType(option, zodSchema, parentOption)) {
+			case 'ZodArray': {
+				const values = getEnumArrayValues(option, zodSchema, parentOption);
+
+				const options =
+					formFieldSchema.options?.map((o) => ({ value: o.id, label: o.label })) ??
+					Object.entries(values).map(([value]) => ({
+						value,
+						label: value,
+					}));
+
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<FormControl>
+									<MultiSelect
+										modalPopover
+										options={options}
+										defaultValue={field.value ?? []}
+										onValueChange={field.onChange}
+										placeholder={formFieldSchema.placeholder}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
 			case 'ZodString':
 				return (
 					<FormField
@@ -279,7 +336,7 @@ const GenericFormField = ({
 									<Input
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey)}
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -298,7 +355,7 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<FormControl>
 									<DatePicker
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 										{...form.register(optionKey)}
 										onSelect={field.onChange}
 										selected={field.value}
@@ -314,7 +371,7 @@ const GenericFormField = ({
 				);
 			case 'ZodEnum': {
 				const enumValues = Object.entries(getEnumValues(option, parentOption));
-				const items = enumValues.map(([label, value]) => ({ id: value, label }));
+				const items = formFieldSchema.options ?? enumValues.map(([label, value]) => ({ id: value, label }));
 
 				if (formFieldSchema.useCombobox) {
 					return (
@@ -331,7 +388,7 @@ const GenericFormField = ({
 											value={field.value ?? ''}
 											onChange={field.onChange}
 											placeholder={formFieldSchema.placeholder}
-											disabled={isLoading || readOnly}
+											disabled={formFieldSchema.disabled || isLoading || readOnly}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -349,9 +406,13 @@ const GenericFormField = ({
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
-								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
+								<Select
+									value={field.value}
+									onValueChange={field.onChange}
+									disabled={formFieldSchema.disabled || isLoading || readOnly}
+								>
 									<FormControl>
-										<SelectTrigger>
+										<SelectTrigger aria-placeholder={formFieldSchema.placeholder}>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
 										</SelectTrigger>
 									</FormControl>
@@ -380,7 +441,7 @@ const GenericFormField = ({
 								<Label htmlFor={optionKey}>{label}</Label>
 								<Switch
 									id={optionKey}
-									disabled={isLoading || readOnly}
+									disabled={formFieldSchema.disabled || isLoading || readOnly}
 									onCheckedChange={field.onChange}
 									checked={field.value}
 								/>
@@ -402,12 +463,12 @@ const GenericFormField = ({
 								<FormControl>
 									<Input
 										type="number"
+										step="any"
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey, {
-											// avoid NaN when input is empty, see https://github.com/orgs/react-hook-form/discussions/6980#discussioncomment-1785009
-											setValueAs: (v) => (v === '' ? null : parseInt(v, 10)),
+											setValueAs: (v) => (v === '' ? null : parseFloat(v)),
 										})}
-										disabled={isLoading || readOnly}
+										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
 								</FormControl>
 								<FormMessage />

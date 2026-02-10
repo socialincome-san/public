@@ -1,6 +1,9 @@
-import { Gender } from '@prisma/client';
+import { Gender } from '@/generated/prisma/enums';
+import { allWebsiteLanguages } from '@/lib/i18n/utils';
+import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import z from 'zod';
 import { FormSchema } from './dynamic-form';
+import { getZodEnum } from './helper';
 
 export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchema => {
 	return {
@@ -33,7 +36,7 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 			language: {
 				placeholder: 'Language',
 				label: 'Language',
-				zodSchema: z.string().nullable(),
+				zodSchema: z.nativeEnum(getZodEnum(allWebsiteLanguages.map((l) => ({ id: l, label: l })))).optional(),
 			},
 			dateOfBirth: {
 				label: 'Date of birth',
@@ -83,7 +86,21 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 				label: 'Address ZIP Code',
 				zodSchema: z.string().nullable(),
 			},
-			country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().nullable() },
+			country: {
+				placeholder: 'Country',
+				label: 'Address Country',
+				useCombobox: true,
+				zodSchema: z
+					.nativeEnum(
+						getZodEnum(
+							COUNTRY_OPTIONS.map((c) => ({
+								id: c.code,
+								label: c.name,
+							})),
+						),
+					)
+					.optional(),
+			},
 		},
 	};
 };

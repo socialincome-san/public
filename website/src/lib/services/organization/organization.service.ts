@@ -1,4 +1,4 @@
-import { OrganizationPermission, ProgramPermission } from '@prisma/client';
+import { OrganizationPermission, ProgramPermission } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -57,7 +57,7 @@ export class OrganizationService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch organization members');
+			return this.resultFail(`Could not fetch organization members: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -109,30 +109,7 @@ export class OrganizationService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch organizations');
-		}
-	}
-
-	async setActiveOrganization(userId: string, organizationId: string): Promise<ServiceResult<null>> {
-		try {
-			const hasAccess = await this.db.organizationAccess.findFirst({
-				where: { userId, organizationId },
-				select: { id: true },
-			});
-
-			if (!hasAccess) {
-				return this.resultFail('User does not have access to this organization');
-			}
-
-			await this.db.user.update({
-				where: { id: userId },
-				data: { activeOrganizationId: organizationId },
-			});
-
-			return this.resultOk(null);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not set active organization');
+			return this.resultFail(`Could not fetch organizations: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -151,7 +128,7 @@ export class OrganizationService extends BaseService {
 			return this.resultOk(organizations);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch organizations');
+			return this.resultFail(`Could not fetch organizations: ${JSON.stringify(error)}`);
 		}
 	}
 }

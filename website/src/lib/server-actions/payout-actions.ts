@@ -2,13 +2,9 @@
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { PayoutService } from '@/lib/services/payout/payout.service';
-import { type PayoutCreateInput, type PayoutUpdateInput, YearMonth } from '@/lib/services/payout/payout.types';
+import { type PayoutCreateInput, type PayoutUpdateInput } from '@/lib/services/payout/payout.types';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { revalidatePath } from 'next/cache';
-
-function toYearMonth(date: Date): YearMonth {
-	return { year: date.getFullYear(), month: date.getMonth() + 1 };
-}
 
 export async function generateRegistrationCsvAction() {
 	const user = await getAuthenticatedUserOrThrow();
@@ -26,9 +22,8 @@ export async function generateRegistrationCsvAction() {
 export async function generatePayoutCsvAction(selectedDate: Date) {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
-	const target = toYearMonth(selectedDate);
 
-	const result = await service.generatePayoutCSV(user.id, target);
+	const result = await service.generatePayoutCSV(user.id, selectedDate);
 
 	if (!result.success) {
 		throw new Error(result.error);
@@ -40,9 +35,8 @@ export async function generatePayoutCsvAction(selectedDate: Date) {
 export async function previewCurrentMonthPayoutsAction(selectedDate: Date) {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
-	const target = toYearMonth(selectedDate);
 
-	const result = await service.previewCurrentMonthPayouts(user.id, target);
+	const result = await service.previewCurrentMonthPayouts(user.id, selectedDate);
 
 	if (!result.success) {
 		throw new Error(result.error);
@@ -54,9 +48,8 @@ export async function previewCurrentMonthPayoutsAction(selectedDate: Date) {
 export async function generateCurrentMonthPayoutsAction(selectedDate: Date) {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
-	const target = toYearMonth(selectedDate);
 
-	const result = await service.generateCurrentMonthPayouts(user.id, target);
+	const result = await service.generateCurrentMonthPayouts(user.id, selectedDate);
 
 	if (!result.success) {
 		throw new Error(result.error);

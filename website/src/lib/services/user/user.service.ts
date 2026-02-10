@@ -1,7 +1,7 @@
-import { UserRole } from '@prisma/client';
+import { UserRole } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FirebaseService } from '../firebase/firebase.service';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import {
 	UserCreateInput,
 	UserPayload,
@@ -12,7 +12,7 @@ import {
 } from './user.types';
 
 export class UserService extends BaseService {
-	private firebaseService = new FirebaseService();
+	private firebaseAdminService = new FirebaseAdminService();
 
 	async create(actorUserId: string, input: UserCreateInput): Promise<ServiceResult<UserPayload>> {
 		const isAdminResult = await this.isAdmin(actorUserId);
@@ -22,7 +22,7 @@ export class UserService extends BaseService {
 		}
 
 		try {
-			const firebaseResult = await this.firebaseService.getOrCreateUser({
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: input.email,
 				displayName: `${input.firstName} ${input.lastName}`,
 			});
@@ -79,7 +79,7 @@ export class UserService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not create user');
+			return this.resultFail(`Could not create user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -88,6 +88,19 @@ export class UserService extends BaseService {
 
 		if (!isAdminResult.success) {
 			return this.resultFail(isAdminResult.error);
+		}
+
+		if (!input.id) {
+			return this.resultFail('User ID is required');
+		}
+		if (!input.email) {
+			return this.resultFail('User email is required');
+		}
+		if (!input.role) {
+			return this.resultFail('User role is required');
+		}
+		if (!input.organizationId) {
+			return this.resultFail('Organization ID is required');
 		}
 
 		try {
@@ -101,10 +114,13 @@ export class UserService extends BaseService {
 			}
 
 			if (input.email !== existingUser.contact.email) {
-				const firebaseUpdateResult = await this.firebaseService.updateByUid(existingUser.account.firebaseAuthUserId, {
-					email: input.email,
-					emailVerified: true,
-				});
+				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
+					existingUser.account.firebaseAuthUserId,
+					{
+						email: input.email,
+						emailVerified: true,
+					},
+				);
 
 				if (!firebaseUpdateResult.success) {
 					return this.resultFail(firebaseUpdateResult.error);
@@ -152,7 +168,84 @@ export class UserService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not update user');
+			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async updateSelf(userId: string, input: UserUpdateInput): Promise<ServiceResult<UserPayload>> {
+		try {
+			const existingUser = await this.db.user.findUnique({
+				where: { id: userId },
+				include: {
+					contact: { include: { address: true } },
+					activeOrganization: true,
+					organizationAccesses: { select: { organizationId: true } },
+				},
+			});
+
+			if (!existingUser) {
+				return this.resultFail('User not found');
+			}
+
+			if (input.email && input.email !== existingUser.contact.email) {
+				return this.resultFail('You cannot change your email yourself.');
+			}
+
+			const allowedOrgIds = existingUser.organizationAccesses.map((o) => o.organizationId);
+
+			const updatedUser = await this.db.user.update({
+				where: { id: userId },
+				data: {
+					activeOrganization:
+						input.organizationId && allowedOrgIds.includes(input.organizationId)
+							? { connect: { id: input.organizationId } }
+							: undefined,
+					contact: {
+						update: {
+							firstName: input.firstName ?? existingUser.contact.firstName,
+							lastName: input.lastName ?? existingUser.contact.lastName,
+							gender: input.gender ?? existingUser.contact.gender,
+							language: input.language ?? existingUser.contact.language,
+							address: input.address
+								? {
+										upsert: {
+											update: {
+												street: input.address.street,
+												number: input.address.number,
+												city: input.address.city,
+												zip: input.address.zip,
+												country: input.address.country,
+											},
+											create: {
+												street: input.address.street,
+												number: input.address.number,
+												city: input.address.city,
+												zip: input.address.zip,
+												country: input.address.country,
+											},
+										},
+									}
+								: undefined,
+						},
+					},
+				},
+				include: {
+					contact: { include: { address: true } },
+					activeOrganization: true,
+				},
+			});
+
+			return this.resultOk({
+				id: updatedUser.id,
+				firstName: updatedUser.contact.firstName,
+				lastName: updatedUser.contact.lastName,
+				email: updatedUser.contact.email,
+				role: updatedUser.role,
+				organizationId: updatedUser.activeOrganization?.id ?? null,
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -185,7 +278,7 @@ export class UserService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch user');
+			return this.resultFail(`Could not fetch user: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -204,7 +297,7 @@ export class UserService extends BaseService {
 			return this.resultOk(organizations);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not load user options');
+			return this.resultFail(`Could not load user options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -250,7 +343,7 @@ export class UserService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch users');
+			return this.resultFail(`Could not fetch users: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -261,8 +354,24 @@ export class UserService extends BaseService {
 				select: {
 					id: true,
 					role: true,
-					accountId: true,
-					contact: { select: { firstName: true, lastName: true } },
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							email: true,
+							gender: true,
+							language: true,
+							address: {
+								select: {
+									street: true,
+									number: true,
+									city: true,
+									zip: true,
+									country: true,
+								},
+							},
+						},
+					},
 					activeOrganization: {
 						select: {
 							id: true,
@@ -299,26 +408,41 @@ export class UserService extends BaseService {
 				: null;
 
 			const programs = user.activeOrganization
-				? user.activeOrganization.programAccesses.map((access) => ({
-						id: access.program.id,
-						name: access.program.name,
-					}))
+				? Array.from(
+						new Map(
+							user.activeOrganization.programAccesses.map((a) => [
+								a.program.id,
+								{ id: a.program.id, name: a.program.name },
+							]),
+						).values(),
+					)
 				: [];
 
-			const userInfo: UserSession = {
+			const contact = user.contact;
+
+			const session: UserSession = {
+				type: 'user',
 				id: user.id,
-				firstName: user.contact?.firstName ?? null,
-				lastName: user.contact?.lastName ?? null,
 				role: user.role,
+				firstName: contact?.firstName ?? null,
+				lastName: contact?.lastName ?? null,
+				email: contact?.email ?? null,
+				gender: contact?.gender ?? null,
+				language: contact?.language ?? null,
+				street: contact?.address?.street ?? null,
+				number: contact?.address?.number ?? null,
+				city: contact?.address?.city ?? null,
+				zip: contact?.address?.zip ?? null,
+				country: contact?.address?.country ?? null,
 				activeOrganization,
 				organizations,
 				programs,
 			};
 
-			return this.resultOk(userInfo);
+			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Error fetching user information');
+			return this.resultFail(`Error fetching user information: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -340,7 +464,7 @@ export class UserService extends BaseService {
 			return this.resultOk(true);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not check admin status');
+			return this.resultFail(`Could not check admin status: ${JSON.stringify(error)}`);
 		}
 	}
 }

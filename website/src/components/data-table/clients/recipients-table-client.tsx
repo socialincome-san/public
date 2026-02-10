@@ -1,50 +1,41 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import DataTable from '@/components/data-table/data-table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { RecipientForm } from '@/components/recipient/recipient-form';
+import { ProgramPermission } from '@/generated/prisma/enums';
+import { Actor } from '@/lib/firebase/current-account';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { logger } from '@/utils/logger';
-import { ProgramPermission } from '@prisma/client';
+import { UploadIcon } from 'lucide-react';
 import { useState } from 'react';
+import { CsvUploadDialog } from './csv-upload-dialog';
+import { RecipientDialog } from './recipient-dialog';
 
-export function RecipientsTableClient({
-	rows,
-	error,
-	programId,
-	readOnly,
-}: {
+type Props = {
 	rows: RecipientTableViewRow[];
 	error: string | null;
 	programId?: string;
 	readOnly?: boolean;
-}) {
-	const [open, setOpen] = useState(false);
+	actorKind?: Actor['kind'];
+};
 
-	const [recipientId, setRecipientId] = useState<string | undefined>();
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [rowReadOnly, setRowReadOnly] = useState(readOnly ?? false);
+export function RecipientsTableClient({ rows, error, programId, readOnly, actorKind = 'user' }: Props) {
+	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
+	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
+	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
 
-	const openEmptyForm = () => {
-		setRecipientId(undefined);
-		setRowReadOnly(readOnly ?? false);
-		setErrorMessage(null);
-		setOpen(true);
+	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
+
+	const openCreateRecipientDialog = () => {
+		setSelectedRecipientId(undefined);
+		setIsRecipientReadOnly(readOnly ?? false);
+		setIsRecipientDialogOpen(true);
 	};
 
-	const openEditForm = (row: RecipientTableViewRow) => {
-		setRecipientId(row.id);
-		setRowReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
-		setErrorMessage(null);
-		setOpen(true);
-	};
-
-	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving recipient: ${error}`);
-		logger.error('Recipient Form Error', { error });
+	const openEditRecipientDialog = (row: RecipientTableViewRow) => {
+		setSelectedRecipientId(row.id);
+		setIsRecipientReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
+		setIsRecipientDialogOpen(true);
 	};
 
 	return (
@@ -55,37 +46,33 @@ export function RecipientsTableClient({
 				emptyMessage="No recipients found"
 				data={rows}
 				makeColumns={makeRecipientColumns}
+				hideLocalPartner={actorKind === 'local-partner'}
 				actions={
-					<Button disabled={readOnly} onClick={openEmptyForm}>
-						Add new recipient
-					</Button>
+					<div className="flex gap-2">
+						<Button disabled={readOnly} onClick={openCreateRecipientDialog}>
+							Add new recipient
+						</Button>
+
+						<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
+							Upload CSV
+							<UploadIcon />
+						</Button>
+					</div>
 				}
-				onRowClick={openEditForm}
+				onRowClick={openEditRecipientDialog}
+				searchKeys={['firstName', 'lastName', 'localPartnerName', 'programName']}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>
-							{rowReadOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}
-						</DialogTitle>
-					</DialogHeader>
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-					<RecipientForm
-						recipientId={recipientId}
-						readOnly={rowReadOnly}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-						programId={programId}
-					/>
-				</DialogContent>
-			</Dialog>
+			<RecipientDialog
+				open={isRecipientDialogOpen}
+				onOpenChange={setIsRecipientDialogOpen}
+				recipientId={selectedRecipientId}
+				readOnly={isRecipientReadOnly}
+				programId={programId}
+				actorKind={actorKind}
+			/>
+
+			<CsvUploadDialog open={isCsvUploadDialogOpen} onOpenChange={setIsCsvUploadDialogOpen} />
 		</>
 	);
 }

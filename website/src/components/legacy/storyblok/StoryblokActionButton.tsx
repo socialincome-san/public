@@ -1,5 +1,6 @@
 'use client';
-import { ActionButton } from '@/types/journal';
+
+import type { ActionButton } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Button, useGlowHover } from '@socialincome/ui';
 import Link from 'next/link';
 

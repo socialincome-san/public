@@ -1,7 +1,8 @@
-import { ContributionStatus, PaymentEvent, PaymentEventType } from '@prisma/client';
-import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
-import { Currency } from '@socialincome/shared/src/types/currency';
+import { ContributionStatus, PaymentEvent, PaymentEventType } from '@/generated/prisma/client';
+import { storageAdmin } from '@/lib/firebase/firebase-admin';
+import { Currency } from '@/lib/types/currency';
 import xmldom from '@xmldom/xmldom';
+import { DateTime } from 'luxon';
 import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
@@ -24,7 +25,6 @@ const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
 
 export class PaymentFileImportService extends BaseService {
-	private storageAdmin = new StorageAdmin();
 	private contributorService = new ContributorService();
 	private contributionService = new ContributionService();
 	private readonly campaignService = new CampaignService();
@@ -41,7 +41,7 @@ export class PaymentFileImportService extends BaseService {
 	 */
 	async importPaymentFiles(): Promise<ServiceResult<PaymentEvent[]>> {
 		const sftp = new SFTPClient();
-		const bucket = this.storageAdmin.storage.bucket(this.bucketName);
+		const bucket = storageAdmin.storage.bucket(this.bucketName);
 		const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
 		const allContributions: BankContribution[] = [];
 		try {
@@ -70,7 +70,7 @@ export class PaymentFileImportService extends BaseService {
 						const contributions = this.getContributionsFromPaymentFile(tmpPath);
 						allContributions.push(...contributions);
 					}
-					await this.storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
+					await storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
 				});
 			}
 			const result = await this.createOrUpdateContributions(allContributions);
@@ -83,7 +83,7 @@ export class PaymentFileImportService extends BaseService {
 			return this.resultOk(result.data);
 		} catch (error) {
 			this.logger.error(`Error importing payment files: ${error}`);
-			return this.resultFail(`Error importing payment files: ${error}`);
+			return this.resultFail(`Error importing payment files: ${JSON.stringify(error)}`);
 		} finally {
 			sftp.end();
 		}
@@ -165,7 +165,7 @@ export class PaymentFileImportService extends BaseService {
 
 				const paymentEvent: PaymentEventCreateInput = {
 					type: PaymentEventType.bank_transfer,
-					transactionId: contributionReferenceId || '',
+					transactionId: contributionReferenceId || DateTime.now().toMillis().toString() + '-legacy',
 					metadata: {
 						raw_content: c.rawContent,
 					},
@@ -207,8 +207,8 @@ export class PaymentFileImportService extends BaseService {
 
 			return this.resultOk(created);
 		} catch (error) {
-			this.logger.error(`Error creating contributions from payment file: ${error}`);
-			return this.resultFail(`Error creating contributions from payment file: ${error}`);
+			this.logger.error(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
+			return this.resultFail(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
 		}
 	}
 	private getReferenceIds = (

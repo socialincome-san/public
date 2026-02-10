@@ -1,4 +1,4 @@
-import { Contact, Gender } from '@prisma/client';
+import { Contact, Gender } from '@/generated/prisma/client';
 
 export const contactsData: Contact[] = [
 	{
@@ -8,13 +8,13 @@ export const contactsData: Contact[] = [
 		callingName: 'Lina',
 		addressId: 'address-1',
 		phoneId: 'phone-1',
-		email: 'lina.meyer@example.ch',
+		email: 'test@dashboard.org',
 		gender: Gender.female,
 		language: 'de',
 		dateOfBirth: new Date('1990-03-12'),
 		profession: 'Teacher',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -30,7 +30,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1985-07-08'),
 		profession: 'Software Engineer',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -46,7 +46,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1993-11-25'),
 		profession: 'Nurse',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -62,7 +62,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1988-02-15'),
 		profession: 'Community Organizer',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -77,7 +77,7 @@ export const contactsData: Contact[] = [
 		language: 'en',
 		dateOfBirth: new Date('1982-09-10'),
 		profession: 'Local Coordinator',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		isInstitution: false,
 		updatedAt: null
 	},
@@ -93,24 +93,24 @@ export const contactsData: Contact[] = [
 		language: 'kr',
 		dateOfBirth: new Date('1991-06-22'),
 		profession: 'Field Officer',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		isInstitution: false,
 		updatedAt: null
 	},
 	{
 		id: 'contact-7',
 		firstName: 'John',
-		lastName: 'Koroma',
+		lastName: 'Badingu',
 		callingName: 'John',
 		addressId: 'address-7',
 		phoneId: 'phone-7',
-		email: 'john.koroma@caritas.org',
+		email: 'john.badingu@caritas.org',
 		gender: Gender.male,
 		language: 'en',
 		dateOfBirth: new Date('1987-09-18'),
 		profession: 'Aid Worker',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -126,7 +126,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1995-04-30'),
 		profession: 'Social Worker',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -142,7 +142,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1992-05-14'),
 		profession: 'Logistics Coordinator',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -158,7 +158,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1994-09-23'),
 		profession: 'Health Assistant',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -174,7 +174,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1989-03-07'),
 		profession: 'Field Technician',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -190,7 +190,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1996-12-01'),
 		profession: 'Project Assistant',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -200,13 +200,13 @@ export const contactsData: Contact[] = [
 		callingName: 'Samuel',
 		addressId: 'address-13',
 		phoneId: 'phone-4',
-		email: 'samuel.kabba@localpartner.org',
+		email: 'test@partner.org',
 		gender: Gender.male,
 		language: 'en',
 		dateOfBirth: new Date('1980-11-22'),
 		profession: 'Country Coordinator',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -222,7 +222,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1986-08-16'),
 		profession: 'Regional Director',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -238,7 +238,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1984-02-03'),
 		profession: 'Operations Manager',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}, {
 		id: 'contact-16',
@@ -247,13 +247,13 @@ export const contactsData: Contact[] = [
 		callingName: 'Nadine',
 		addressId: 'address-16',
 		phoneId: 'phone-1',
-		email: 'test@test.org',
+		email: 'nadine.schmid@portal.org',
 		gender: Gender.female,
 		language: 'de',
 		dateOfBirth: new Date('1989-05-19'),
 		profession: 'Portal Administrator',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -269,7 +269,7 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1991-08-02'),
 		profession: 'Program Manager',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -285,7 +285,199 @@ export const contactsData: Contact[] = [
 		dateOfBirth: new Date('1987-11-13'),
 		profession: 'Communications Officer',
 		isInstitution: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
-	}
+	},
+		{
+		id: 'contact-19',
+		firstName: 'Ibrahim',
+		lastName: 'Sesay',
+		callingName: 'Ibrahim',
+		addressId: 'address-19',
+		phoneId: 'phone-4',
+		email: 'ibrahim.sesay@example.org',
+		gender: Gender.male,
+		language: 'en',
+		dateOfBirth: new Date('1993-01-17'),
+		profession: 'Farmer',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-20',
+		firstName: 'Hawa',
+		lastName: 'Kamara',
+		callingName: 'Hawa',
+		addressId: 'address-20',
+		phoneId: 'phone-5',
+		email: 'hawa.kamara@example.org',
+		gender: Gender.female,
+		language: 'kr',
+		dateOfBirth: new Date('1998-06-05'),
+		profession: 'Tailor',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-21',
+		firstName: 'Musa',
+		lastName: 'Bangura',
+		callingName: 'Musa',
+		addressId: 'address-21',
+		phoneId: 'phone-6',
+		email: 'musa.bangura@example.org',
+		gender: Gender.male,
+		language: 'en',
+		dateOfBirth: new Date('1986-12-11'),
+		profession: 'Driver',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-22',
+		firstName: 'Kadiatu',
+		lastName: 'Jalloh',
+		callingName: 'Kadiatu',
+		addressId: 'address-22',
+		phoneId: 'phone-7',
+		email: 'kadiatu.jalloh@example.org',
+		gender: Gender.female,
+		language: 'kr',
+		dateOfBirth: new Date('1995-03-28'),
+		profession: 'Market Vendor',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-23',
+		firstName: 'Abubakar',
+		lastName: 'Koroma',
+		callingName: 'Abubakar',
+		addressId: 'address-23',
+		phoneId: 'phone-8',
+		email: 'abubakar.koroma@example.org',
+		gender: Gender.male,
+		language: 'en',
+		dateOfBirth: new Date('1990-09-02'),
+		profession: 'Carpenter',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-24',
+		firstName: 'Fanta',
+		lastName: 'Conteh',
+		callingName: 'Fanta',
+		addressId: 'address-24',
+		phoneId: 'phone-4',
+		email: 'fanta.conteh@example.org',
+		gender: Gender.female,
+		language: 'kr',
+		dateOfBirth: new Date('2000-07-14'),
+		profession: 'Student',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-25',
+		firstName: 'Sorie',
+		lastName: 'Kabba',
+		callingName: 'Sorie',
+		addressId: 'address-25',
+		phoneId: 'phone-5',
+		email: 'sorie.kabba@example.org',
+		gender: Gender.male,
+		language: 'en',
+		dateOfBirth: new Date('1983-10-19'),
+		profession: 'Mechanic',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-26',
+		firstName: 'Mariama',
+		lastName: 'Turay',
+		callingName: 'Mariama',
+		addressId: 'address-26',
+		phoneId: 'phone-6',
+		email: 'mariama.turay@example.org',
+		gender: Gender.female,
+		language: 'kr',
+		dateOfBirth: new Date('1997-04-09'),
+		profession: 'Shop Assistant',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-27',
+		firstName: 'Alhaji',
+		lastName: 'Sesay',
+		callingName: 'Alhaji',
+		addressId: 'address-27',
+		phoneId: 'phone-7',
+		email: 'alhaji.sesay@example.org',
+		gender: Gender.male,
+		language: 'en',
+		dateOfBirth: new Date('1979-01-26'),
+		profession: 'Trader',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-28',
+		firstName: 'Zainab',
+		lastName: 'Bangura',
+		callingName: 'Zainab',
+		addressId: 'address-28',
+		phoneId: 'phone-8',
+		email: 'zainab.bangura@example.org',
+		gender: Gender.female,
+		language: 'kr',
+		dateOfBirth: new Date('1994-08-21'),
+		profession: 'Hairdresser',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+		{
+		id: 'contact-29',
+		firstName: 'Musa',
+		lastName: 'Kamara',
+		callingName: 'Musa',
+		addressId: 'address-29',
+		phoneId: 'phone-7',
+		email: 'musa.kamara@example.org',
+		gender: Gender.male,
+		language: 'en',
+		dateOfBirth: new Date('1988-05-11'),
+		profession: 'Farmer',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contact-30',
+		firstName: 'Hawa',
+		lastName: 'Conteh',
+		callingName: 'Hawa',
+		addressId: 'address-30',
+		phoneId: 'phone-8',
+		email: 'hawa.conteh@example.org',
+		gender: Gender.female,
+		language: 'kr',
+		dateOfBirth: new Date('1997-03-03'),
+		profession: 'Tailor',
+		isInstitution: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
 ];

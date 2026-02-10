@@ -54,3 +54,17 @@ terraform.tfvars
 terraform.tfvars.json
 
 /public/openapi.json
+
+# Storyblok CLI
+src/generated/storyblok/components
+src/generated/storyblok/logs
+
+# Prisma Client (generated)
+src/generated/prisma
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

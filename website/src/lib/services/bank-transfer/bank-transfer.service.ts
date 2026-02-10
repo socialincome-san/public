@@ -1,5 +1,5 @@
-import { ContributionStatus, DonationInterval, PaymentEventType } from '@prisma/client';
-import { Currency } from '@socialincome/shared/src/types/currency';
+import { ContributionStatus, DonationInterval, PaymentEventType } from '@/generated/prisma/client';
+import { Currency } from '@/lib/types/currency';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
@@ -36,7 +36,7 @@ export class BankTransferService extends BaseService {
 			return this.resultOk('Contribution created');
 		} catch (error) {
 			console.error('Failed to store charge', error);
-			return this.resultFail('');
+			return this.resultFail(`Failed to store contribution: ${JSON.stringify(error)}`);
 		}
 	}
 

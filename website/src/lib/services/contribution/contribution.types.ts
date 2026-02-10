@@ -1,4 +1,4 @@
-import { ContributionStatus, OrganizationPermission, PaymentEventType, Prisma } from '@prisma/client';
+import { ContributionStatus, OrganizationPermission, PaymentEventType, Prisma } from '@/generated/prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;
@@ -44,10 +44,6 @@ export type ContributionDonationEntry = {
 	status: ContributionStatus;
 	createdAt: Date;
 };
-
-export type ContributionWithRelations = Prisma.ContributionGetPayload<{
-	include: { contributor: true; campaign: true };
-}>;
 
 export type StripeContributionCreateData = {
 	contributorId: string;

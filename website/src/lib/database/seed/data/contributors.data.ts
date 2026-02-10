@@ -1,4 +1,4 @@
-import { Contributor, ContributorReferralSource } from '@prisma/client';
+import { Contributor, ContributorReferralSource } from '@/generated/prisma/client';
 
 export const contributorsData: Contributor[] = [
 	{
@@ -10,7 +10,7 @@ export const contributorsData: Contributor[] = [
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-001',
 		needsOnboarding: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -22,7 +22,7 @@ export const contributorsData: Contributor[] = [
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-002',
 		needsOnboarding: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -34,7 +34,7 @@ export const contributorsData: Contributor[] = [
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-003',
 		needsOnboarding: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -46,7 +46,7 @@ export const contributorsData: Contributor[] = [
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-004',
 		needsOnboarding: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -58,7 +58,7 @@ export const contributorsData: Contributor[] = [
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-005',
 		needsOnboarding: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -70,7 +70,7 @@ export const contributorsData: Contributor[] = [
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-006',
 		needsOnboarding: false,
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

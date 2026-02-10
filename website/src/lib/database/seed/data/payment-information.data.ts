@@ -1,4 +1,4 @@
-import { PaymentInformation, PaymentProvider } from '@prisma/client';
+import { PaymentInformation, PaymentProvider } from '@/generated/prisma/client';
 
 export const paymentInformationsData: PaymentInformation[] = [
 	{
@@ -6,7 +6,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 		provider: PaymentProvider.orange_money,
 		code: 'OM-SL-001',
 		phoneId: 'phone-1',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -14,7 +14,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 		provider: PaymentProvider.orange_money,
 		code: 'OM-SL-002',
 		phoneId: 'phone-5',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
@@ -22,7 +22,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 		provider: PaymentProvider.orange_money,
 		code: 'OM-SL-003',
 		phoneId: 'phone-6',
-		createdAt: new Date(),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

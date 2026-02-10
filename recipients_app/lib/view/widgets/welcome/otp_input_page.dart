@@ -46,7 +46,8 @@ class _OtpInputPageState extends State<OtpInputPage> {
             ),
             const SizedBox(height: 24),
             OtpInput(
-              onCodeReady: (verificationCode) => context.read<SignupCubit>().submitVerificationCode(verificationCode),
+              onCodeReady: (verificationCode) =>
+                  context.read<SignupCubit>().submit(verificationCode: verificationCode, phoneNumber: phoneNumber),
             ),
             const SizedBox(height: 24),
             if (isLoadingVerificationCode) ...[

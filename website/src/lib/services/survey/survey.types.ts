@@ -1,4 +1,4 @@
-import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
+import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
 
 export type SurveyTableViewRow = {
 	id: string;
@@ -75,18 +75,6 @@ export type SurveyWithRecipient = {
 	status: SurveyStatus;
 	data: Prisma.JsonValue;
 	nameOfRecipient: string;
-};
-
-export type SurveyPreview = {
-	questionnaire: SurveyQuestionnaire;
-	language: string;
-	dueAt: Date;
-	status: SurveyStatus;
-	recipientId: string;
-	recipientName: string;
-	surveyScheduleId: string;
-	programId: string;
-	programName: string;
 };
 
 export type SurveyGenerationPreviewResult = {

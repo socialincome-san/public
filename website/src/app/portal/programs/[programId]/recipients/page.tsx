@@ -1,17 +1,20 @@
+import { Card } from '@/components/card';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { ProgramPermission } from '@prisma/client';
 import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
 
 export default function RecipientsPageProgramScoped({ params }: Props) {
 	return (
-		<Suspense>
-			<RecipientsProgramScopedDataLoader params={params} />
-		</Suspense>
+		<Card>
+			<Suspense>
+				<RecipientsProgramScopedDataLoader params={params} />
+			</Suspense>
+		</Card>
 	);
 }
 

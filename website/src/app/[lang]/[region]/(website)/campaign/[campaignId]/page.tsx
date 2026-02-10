@@ -3,10 +3,10 @@ import { DonationInterval } from '@/components/legacy/donation/donation-interval
 import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
 import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getCampaignByLegacyIdAction } from '@/lib/server-actions/campaigns-actions';
-import { getMetadata } from '@/metadata';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { getCampaignByIdAction } from '@/lib/server-actions/campaigns-actions';
+import { getMetadata } from '@/lib/utils/metadata';
 import {
 	Accordion,
 	AccordionContent,
@@ -36,7 +36,7 @@ export type CampaignPageProps = {
 
 export async function generateMetadata({ params }: CampaignPageProps) {
 	const { campaignId, lang } = await params;
-	const result = await getCampaignByLegacyIdAction(campaignId);
+	const result = await getCampaignByIdAction(campaignId);
 	if (!result.success) {
 		return getMetadata(lang as WebsiteLanguage, 'website-campaign');
 	}
@@ -70,7 +70,7 @@ export default async function Page({ params }: CampaignPageProps) {
 		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq', 'website-newsletter'],
 	});
 
-	const result = await getCampaignByLegacyIdAction(campaignId);
+	const result = await getCampaignByIdAction(campaignId);
 
 	if (!result.success || !result.data || !result.data.isActive) {
 		return (

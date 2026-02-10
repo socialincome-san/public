@@ -1,0 +1,162 @@
+{
+	"metadata": {
+		"title": "Il Mio Profilo | Social Income",
+		"home-link": "Torna alla Home"
+	},
+	"breadcrumb": {
+		"website": "Sito",
+		"dashboard": "Dashboard",
+		"profile": "Profilo"
+	},
+	"title": {
+		"dashboard": "Dashboard",
+		"profile": "Profilo"
+	},
+	"profile": {
+		"link": "Profilo",
+		"form": {
+			"personal-info-title": "Informazioni personali",
+			"address-title": "Indirizzo",
+			"how-did-you-hear": "Come hai saputo di noi?",
+			"select-gender-placeholder": "Seleziona il genere",
+			"select-option-placeholder": "Seleziona un'opzione",
+			"genders": {
+				"male": "Maschio",
+				"female": "Femmina",
+				"other": "Altro",
+				"private": "Preferisco non dirlo"
+			},
+			"referrals": {
+				"familyfriends": "Famiglia e amici",
+				"work": "Lavoro",
+				"socialmedia": "Social Media",
+				"media": "Media",
+				"presentation": "Presentazione",
+				"other": "Altro"
+			},
+			"save-button": "Salva",
+			"update-error": "Impossibile aggiornare il profilo",
+			"user-updated-toast": "Le tue informazioni personali sono state aggiornate",
+			"firstname": "Nome",
+			"lastname": "Cognome",
+			"email": "Email",
+			"country": "Paese",
+			"language": "Lingua",
+			"gender": "Genere",
+			"street": "Via",
+			"street-number": "Numero",
+			"city": "Città",
+			"zip": "CAP",
+			"name": "Nome",
+			"causes": "Criteri"
+		}
+	},
+	"sections": {
+		"account": {
+			"title": "Il mio account",
+			"personal-info": "Informazioni personali",
+			"security": "Sicurezza"
+		},
+		"contributions": {
+			"title": "Le mie donazioni",
+			"payments": "Pagamenti",
+			"subscriptions": "Sottoscrizioni",
+			"donation-certificates-short": "Certificati",
+			"donation-certificates-long": "Certificati di donazione"
+		}
+	},
+	"contributions": {
+		"amount": "Importo",
+		"date": "Data",
+		"source": "Fonte",
+		"total": "Totale",
+		"one-time-payment": "Nuova donazione una tantum",
+		"amount-currency": "{{ amount, currency }}",
+		"currency": "Valuta",
+		"campaign": "Campagna",
+		"sources": {
+			"benevity": "Benevity",
+			"cash": "Contanti",
+			"raisenow": "Twint",
+			"stripe": "Carta di credito",
+			"wire-transfer": "Wire Transfer"
+		},
+		"status": {
+			"succeeded": "Pagato",
+			"pending": "In attesa",
+			"failed": "Fallito",
+			"unknown": "Sconosciuto"
+		},
+		"status-title": "Stato",
+		"no-contributions": "Nessuna contribuzione trovata",
+		"new-contribution": "Effettua una contribuzione"
+	},
+	"subscriptions": {
+		"amount": "Importo",
+		"date": "Data",
+		"created": "Creato",
+		"payment-method": "Método di pagamento",
+		"source": "Fonte",
+		"total": "Totale",
+		"amount-currency": "{{ amount, currency }}",
+		"new-subscription": "Nuova sottoscrizione",
+		"interval": "Intervallo",
+		"interval-1": "Mensile",
+		"interval-3": "Trimestrale",
+		"interval-12": "Annuale",
+		"status": {
+			"active": "Attivo",
+			"canceled": "Cancellato",
+			"paused": "In pausa"
+		},
+		"status-title": "Stato",
+		"manage-subscriptions": "Gestisci le sottoscrizioni",
+		"no-subscriptions": "Nessuna sottoscrizione trovata"
+	},
+	"donation-certificates": {
+		"created": "Creato",
+		"language": "Lingua",
+		"year": "Anno",
+		"download-pdf": "Scarica il PDF",
+		"generate-certificate": "Genera certificato di donazione",
+		"no-certificates-yet": "Non hai ancora certificati di donazione. Creane uno cliccando su \"Genera certificato di donazione\". <br></br> Se avete domande, non esitate a <a href='mailto:hello@socialincome.org' class='underline'>contattarci</a>.",
+		"no-contributions": "Nessuna contribuzione trovata, quindi niente certificato. Se pensi che sia un errore, contatta contributors@socialincome.org.",
+		"already-exists": "Il certificato per l'anno e la lingua selezionati esiste già. Se pensi che sia un errore, contatta contributors@socialincome.org.",
+		"technical-error": "Si è verificato un errore tecnico, riprova. Se questo continua ad accadere, contatta contributors@socialincome.org.",
+		"generate-dialog": {
+			"dialog_title": "Genera certificato di donazione",
+			"label_year": "Anno",
+			"description_year": "Specificare l'anno per il quale generare il certificato:",
+			"placeholder_year": "Seleziona anno",
+			"label_language": "Lingua",
+			"description_language": "Specificare la lingua in cui generare il certificato:",
+			"placeholder_language": "Seleziona lingua",
+			"button_generate": "Genera certificati",
+			"state_generating": "Generazione in corso...",
+			"status_success": "Generato con successo",
+			"button_close": "Chiudi"
+		}
+	},
+	"personal-info": {
+		"alert-title": "Certificati di donazione",
+		"alert-description": "Se paghi le tasse in Svizzera, ti preghiamo di fornirci il tuo indirizzo in modo che possiamo emetterti un certificato di donazione.",
+		"firstname": "Nome",
+		"lastname": "Cognome",
+		"gender": "Gendere",
+		"email": "Email",
+		"street": "Via",
+		"street-number": "Numero",
+		"city": "Città",
+		"zip": "CAP",
+		"country": "Paese",
+		"language": "Lingua",
+		"submit-button": "Aggiorna le tue informazioni personali",
+		"user-updated-toast": "Le tue informazioni personali sono state aggiornate"
+	},
+	"security": {
+		"sign-out": {
+			"title": "Vuoi uscire dal tuo account?",
+			"button": "Effettua il log out"
+		}
+	}
+}

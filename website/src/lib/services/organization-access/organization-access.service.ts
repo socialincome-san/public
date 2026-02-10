@@ -1,4 +1,4 @@
-import { OrganizationPermission } from '@prisma/client';
+import { OrganizationPermission } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ActiveOrganizationAccess } from './organization-access.types';
@@ -32,7 +32,7 @@ export class OrganizationAccessService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail('Could not fetch active organization');
+			return this.resultFail(`Could not get active organization access: ${JSON.stringify(error)}`);
 		}
 	}
 }

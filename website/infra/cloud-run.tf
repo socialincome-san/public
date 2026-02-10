@@ -38,7 +38,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
 
         env {
           name  = "DATABASE_URL"
-          value = "postgresql://${google_sql_user.google_sql_user.name}:${random_password.psql_admin_password.result}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}?sslmode=require"
+          value = "postgresql://${google_sql_user.google_sql_user.name}:${random_password.psql_admin_password.result}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}?sslmode=disable"
         }
 
         env {
@@ -112,8 +112,13 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
-          name  = "TWILIO_AUTH_TOKEN"
-          value = var.twilio_auth_token
+          name  = "TWILIO_API_KEY_SID"
+          value = var.twilio_api_key_sid
+        }
+
+        env {
+          name  = "TWILIO_API_KEY_SECRET"
+          value = var.twilio_api_key_secret
         }
 
         env {
@@ -134,6 +139,16 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "GITHUB_PAT"
           value = var.github_pat
+        }
+
+        env {
+          name  = "APP_REVIEW_MODE_ENABLED"
+          value = var.app_review_mode_enabled
+        }
+
+        env {
+          name  = "APP_REVIEW_PHONE_NUMBER"
+          value = var.app_review_phone_number
         }
 
         ports {

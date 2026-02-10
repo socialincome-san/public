@@ -1,11 +1,10 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]/index';
 import { CookieConsentBanner } from '@/components/legacy/analytics/cookie-consent-banner';
 import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
+import { Translator } from '@/lib/i18n/translator';
 import { mainWebsiteLanguages, WebsiteLanguage, websiteRegions } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { getMetadata } from '@/lib/utils/metadata';
 import { PropsWithChildren } from 'react';
-import { Toaster } from 'react-hot-toast';
 
 export const generateStaticParams = () =>
 	websiteRegions.flatMap((region) => mainWebsiteLanguages.map((lang) => ({ lang, region })));
@@ -24,7 +23,6 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 
 	return (
 		<I18nContextProvider>
-			<Toaster />
 			{children}
 			<CookieConsentBanner
 				translations={{

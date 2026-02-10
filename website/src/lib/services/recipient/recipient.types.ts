@@ -7,7 +7,7 @@ import {
 	Prisma,
 	ProgramPermission,
 	RecipientStatus,
-} from '@prisma/client';
+} from '@/generated/prisma/client';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {
@@ -21,7 +21,15 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 				phone: true;
 			};
 		};
-		program: true;
+		program: {
+			include: {
+				country: {
+					select: {
+						isoCode: true;
+					};
+				};
+			};
+		};
 		localPartner: true;
 	};
 }>;
@@ -39,7 +47,7 @@ export type RecipientPayload = {
 	program: {
 		id: string;
 		name: string;
-	};
+	} | null;
 	contact: {
 		id: string;
 		firstName: string;
@@ -55,8 +63,8 @@ export type RecipientPayload = {
 	};
 	paymentInformation: {
 		id: string;
-		code: string;
-		provider: PaymentProvider;
+		code: string | null;
+		provider: PaymentProvider | null;
 		phone: Phone | null;
 	} | null;
 };
@@ -86,13 +94,13 @@ export type PayoutRecipient = {
 	id: string;
 	contact: { firstName: string; lastName: string };
 	paymentInformation: {
-		code: string;
+		code: string | null;
 		phone: { number: string } | null;
 	} | null;
 	program: {
-		payoutAmount: number;
+		payoutPerInterval: number;
 		payoutCurrency: string;
-		totalPayments: number;
+		programDurationInMonths: number;
 	};
 	payouts: {
 		paymentAt: Date;

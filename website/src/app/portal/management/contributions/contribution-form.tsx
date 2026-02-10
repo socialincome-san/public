@@ -3,10 +3,11 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 
-import { ContributionStatus } from '@prisma/client';
+import { ContributionStatus } from '@/generated/prisma/enums';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
+import { websiteCurrencies } from '@/lib/i18n/utils';
 import {
 	createContributionAction,
 	getContributionAction,
@@ -18,7 +19,7 @@ import { ContributionPayload } from '@/lib/services/contribution/contribution.ty
 import { ContributorOption } from '@/lib/services/contributor/contributor.types';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 
-export type ContributionFormProps = {
+type ContributionFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
@@ -48,9 +49,9 @@ const initialFormSchema: ContributionFormSchema = {
 			zodSchema: z.number().positive('Amount must be positive'),
 		},
 		currency: {
-			placeholder: 'e.g., USD, EUR, CHF',
+			placeholder: 'USD, EUR, CHF',
 			label: 'Currency Code',
-			zodSchema: z.string().length(3, 'Currency code must be 3 letters.'),
+			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		amountChf: {
 			placeholder: 'Contribution Amount in CHF',

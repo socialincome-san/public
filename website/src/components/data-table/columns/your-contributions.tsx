@@ -3,12 +3,14 @@
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import { Translator } from '@/lib/i18n/translator';
 import type { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import type { ColumnDef } from '@tanstack/react-table';
+import { CurrencyCell } from '../elements/currency-cell';
 
 export function makeYourContributionsColumns(
-	_?: boolean,
+	hideProgramName: boolean = false,
+	hideLocalPartner: boolean = false,
 	translator?: Translator,
 ): ColumnDef<YourContributionsTableViewRow>[] {
 	return [
@@ -20,7 +22,10 @@ export function makeYourContributionsColumns(
 		{
 			accessorKey: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.amount')}</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			cell: (ctx) => {
+				const currency = ctx.row.original.currency;
+				return <CurrencyCell ctx={ctx} currency={currency} />;
+			},
 		},
 		{
 			accessorKey: 'currency',

@@ -1,0 +1,24 @@
+import { DefaultLayoutProps } from '@/app/[lang]/[region]';
+import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
+import { getCurrentSession } from '@/lib/firebase/current-account';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { notFound } from 'next/navigation';
+import type { PropsWithChildren } from 'react';
+
+const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
+
+export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
+	const { lang } = await params;
+
+	if (!ENABLE_NEW_WEBSITE) {
+		notFound();
+	}
+
+	const session = await getCurrentSession();
+
+	return (
+		<WebsiteAppShell session={session} lang={lang as WebsiteLanguage} scope="website">
+			{children}
+		</WebsiteAppShell>
+	);
+}

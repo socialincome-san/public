@@ -1,18 +1,12 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
-import {
-	getArticleCountByTagForDefaultLang,
-	getArticlesByTag,
-	getTag,
-} from '@/components/legacy/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
+import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { storyblokInitializationWorkaround } from '@/storyblok-init';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
-storyblokInitializationWorkaround();
 
 interface PageParams extends DefaultParams {
 	slug: string;
@@ -22,15 +16,19 @@ interface PageProps {
 	params: Promise<PageParams>;
 }
 
+const storyblokService = new StoryblokService();
+
 async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
-	return lang == defaultLanguage ? totalArticlesInSelectedLanguage : await getArticleCountByTagForDefaultLang(tagId);
+	return lang == defaultLanguage
+		? totalArticlesInSelectedLanguage
+		: await storyblokService.getArticleCountByTagForDefaultLang(tagId);
 }
 
 export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;
 
-	const tag = (await getTag(slug, lang)).data.story;
-	const articles = await getArticlesByTag(tag.uuid, lang);
+	const tag = (await storyblokService.getTag(slug, lang)).data.story;
+	const articles = await storyblokService.getArticlesByTag(tag.uuid, lang);
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common'],
@@ -50,13 +48,7 @@ export default async function Page({ params }: PageProps) {
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{articles.map((article) => (
-					<StoryblokArticleCard
-						key={article.uuid}
-						lang={lang}
-						region={region}
-						article={article}
-						author={article.content.author}
-					/>
+					<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
 				))}
 			</div>
 

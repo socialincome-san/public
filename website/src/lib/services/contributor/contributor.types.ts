@@ -1,4 +1,12 @@
-import { Address, ContributorReferralSource, Gender, OrganizationPermission, Phone, Prisma } from '@prisma/client';
+import {
+	Address,
+	ContributorReferralSource,
+	CountryCode,
+	Gender,
+	OrganizationPermission,
+	Phone,
+	Prisma,
+} from '@/generated/prisma/client';
 
 export type ContributorTableViewRow = {
 	id: string;
@@ -35,7 +43,6 @@ export type ContributorPayload = {
 };
 
 export type ContributorUpdateInput = Prisma.ContributorUpdateInput;
-export type ContributorCreateInput = Prisma.ContributorCreateInput;
 
 export type ContributorOption = {
 	id: string;
@@ -69,15 +76,23 @@ export type BankContributorData = {
 	email: string;
 	firstName: string;
 	lastName: string;
+	language: string;
 };
 
 export type ContributorSession = {
+	type: 'contributor';
 	id: string;
+	gender: Gender | null;
+	referral: ContributorReferralSource;
 	email: string | null;
 	firstName: string | null;
 	lastName: string | null;
 	language: string | null;
-	country: string | null;
+	street: string | null;
+	number: string | null;
+	city: string | null;
+	zip: string | null;
+	country: CountryCode | null;
 	stripeCustomerId: string | null;
 };
 
@@ -96,6 +111,6 @@ export type ContributorFormCreateInput = {
 		number: string;
 		city: string;
 		zip: string;
-		country: string;
+		country: CountryCode;
 	} | null;
 };

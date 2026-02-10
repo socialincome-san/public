@@ -1,4 +1,5 @@
 // Generic set of question pages and choices
+import { TranslateFunction } from '@/lib/i18n/translator';
 import {
 	ACHIEVEMENTS_ACHIEVED,
 	ACHIEVEMENTS_NOT_ACHIEVED,
@@ -31,8 +32,7 @@ import {
 	SKIPPING_MEALS_LAST_WEEK_3_MEALS,
 	SPENDING,
 	UNEXPECTED_EXPENSES_COVERED,
-} from '@socialincome/shared/src/types/question';
-import { TranslateFunction } from '@socialincome/shared/src/utils/i18n';
+} from '@/lib/types/question';
 
 // Final question pages
 export const welcomePage = (t: TranslateFunction, name: string) => {
@@ -347,7 +347,7 @@ export const longEnoughPage = (t: TranslateFunction) => {
 	};
 };
 
-export const translateChoices = (t: TranslateFunction, choices: any[], choicesTranslationKey: String) =>
+const translateChoices = (t: TranslateFunction, choices: any[], choicesTranslationKey: String) =>
 	choices.map((key) => {
 		return {
 			value: key,

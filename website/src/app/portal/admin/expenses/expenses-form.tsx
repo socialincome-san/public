@@ -2,6 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
+import { ExpenseType } from '@/generated/prisma/enums';
 import {
 	createExpenseAction,
 	getExpenseAction,
@@ -9,12 +10,11 @@ import {
 	updateExpenseAction,
 } from '@/lib/server-actions/expense-action';
 import { ExpensePayload } from '@/lib/services/expense/expense.types';
-import { ExpenseType } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateExpenseInput, buildUpdateExpenseInput } from './expenses-form-helper';
 
-export type ExpenseFormProps = {
+type ExpenseFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;

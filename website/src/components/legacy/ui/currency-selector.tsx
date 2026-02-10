@@ -2,7 +2,7 @@
 
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency } from '@/lib/i18n/utils';
-import { isValidCurrency } from '@socialincome/shared/src/types/currency';
+import { isValidCurrency } from '@/lib/types/currency';
 import {
 	FontSize,
 	Select,

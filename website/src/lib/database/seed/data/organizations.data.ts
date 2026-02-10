@@ -1,34 +1,39 @@
-import { Organization } from '@prisma/client';
+import { Organization } from '@/generated/prisma/client';
 
 export const organizationsData: Organization[] = [
 	{
 		id: 'organization-1',
 		name: 'Migros',
-		createdAt: new Date(),
+		isOperatorFallback: true,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
 		id: 'organization-2',
 		name: 'Coop',
-		createdAt: new Date(),
+		isOperatorFallback: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
 		id: 'organization-3',
 		name: 'Swiss Red Cross',
-		createdAt: new Date(),
+		isOperatorFallback: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
 		id: 'organization-4',
 		name: 'Caritas',
-		createdAt: new Date(),
+		isOperatorFallback: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
 	{
 		id: 'organization-5',
 		name: 'Famigros',
-		createdAt: new Date(),
+		isOperatorFallback: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}
 ];

@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { CheckIcon, ChevronDown, WandSparkles, XCircle, XIcon } from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils/cn';
 import { Badge } from './badge';
 import { Button } from './button';
 import {
@@ -22,7 +22,7 @@ import { Separator } from './separator';
 /**
  * Animation types and configurations
  */
-export interface AnimationConfig {
+interface AnimationConfig {
 	/** Badge animation type */
 	badgeAnimation?: 'bounce' | 'pulse' | 'wiggle' | 'fade' | 'slide' | 'none';
 	/** Popover animation type */
@@ -268,7 +268,7 @@ interface MultiSelectProps
 /**
  * Imperative methods exposed through ref
  */
-export interface MultiSelectRef {
+interface MultiSelectRef {
 	/**
 	 * Programmatically reset the component to its default value
 	 */
@@ -745,7 +745,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 								getAllOptions().length
 							} options selected. ${placeholder}`}
 							className={cn(
-								'flex h-auto min-h-10 items-center justify-between rounded-md border bg-inherit p-1 hover:bg-inherit [&_svg]:pointer-events-auto',
+								'flex h-auto min-h-10 items-center justify-between rounded-full border bg-inherit p-1 hover:bg-inherit [&_svg]:pointer-events-auto',
 								autoSize ? 'w-auto' : 'w-full',
 								responsiveSettings.compactMode && 'min-h-8 text-sm',
 								screenSize === 'mobile' && 'min-h-12 text-base',
@@ -1091,4 +1091,5 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 );
 
 MultiSelect.displayName = 'MultiSelect';
-export type { MultiSelectGroup, MultiSelectOption, MultiSelectProps };
+
+export type { MultiSelectOption };
