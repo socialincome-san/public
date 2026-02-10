@@ -5,11 +5,11 @@ import type { PropsWithChildren } from 'react';
 import { DefaultLayoutProps } from '..';
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	const { lang } = await params;
+	const { lang, region } = await params;
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
 	return (
-		<WebsiteAppShell session={contributor} lang={lang as WebsiteLanguage} scope="dashboard">
+		<WebsiteAppShell session={contributor} lang={lang as WebsiteLanguage} region={region} scope="dashboard">
 			{children}
 		</WebsiteAppShell>
 	);

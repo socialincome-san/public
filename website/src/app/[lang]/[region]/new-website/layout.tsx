@@ -8,7 +8,7 @@ import type { PropsWithChildren } from 'react';
 const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	const { lang } = await params;
+	const { lang, region } = await params;
 
 	if (!ENABLE_NEW_WEBSITE) {
 		notFound();
@@ -17,7 +17,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const session = await getCurrentSession();
 
 	return (
-		<WebsiteAppShell session={session} lang={lang as WebsiteLanguage} scope="website">
+		<WebsiteAppShell session={session} lang={lang as WebsiteLanguage} region={region} scope="website">
 			{children}
 		</WebsiteAppShell>
 	);
