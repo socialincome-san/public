@@ -8,6 +8,8 @@ import { notFound } from 'next/navigation';
 
 // export const revalidate = 900;
 
+export const dynamic = 'force-dynamic';
+
 const storyblokService = new StoryblokService();
 
 export default async function HomePage({ params }: DefaultPageProps) {
