@@ -1,5 +1,5 @@
 const MOCKSERVER_BASE_URL = 'http://localhost:1080';
-const STORYBLOK_ORIGIN = 'https://api.storyblok.com';
+const STORYBLOK_HOST = 'api.storyblok.com';
 
 let fetchPatched = false;
 
@@ -11,17 +11,17 @@ export function patchStoryblokFetch() {
 	const originalFetch: typeof global.fetch = global.fetch;
 
 	global.fetch = (async (input: string | URL | Request, init?: RequestInit): Promise<Response> => {
-		const originalUrl = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
+		const url = typeof input === 'string' ? new URL(input) : input instanceof URL ? input : new URL(input.url);
 
-		if (originalUrl.startsWith(STORYBLOK_ORIGIN)) {
-			const finalUrl = MOCKSERVER_BASE_URL + originalUrl.replace('https://', '/');
+		if (url.protocol === 'https:' && url.hostname === STORYBLOK_HOST) {
+			const proxiedUrl = `${MOCKSERVER_BASE_URL}/${url.hostname}${url.pathname}${url.search}`;
 
 			console.log('[Storyblok Mock][FETCH]', {
-				originalUrl,
-				finalUrl,
+				originalUrl: url.toString(),
+				finalUrl: proxiedUrl,
 			});
 
-			return originalFetch(finalUrl, init);
+			return originalFetch(proxiedUrl, init);
 		}
 
 		return originalFetch(input, init);

@@ -13,10 +13,7 @@ import { patchStoryblokFetch } from './storyblok.mock';
 if (process.env.STORYBLOK_MOCK_MODE === 'record' || process.env.STORYBLOK_MOCK_MODE === 'replay') {
 	console.log('[Storyblok Mock] Enabled via STORYBLOK_MOCK_MODE');
 	patchStoryblokFetch();
-} else {
-	console.log('[Storyblok Mock] Disabled');
 }
-
 /**
  * Storyblok component registry mapping component names to React components.
  */

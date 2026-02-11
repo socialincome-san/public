@@ -150,8 +150,6 @@ jobs:
 
       - name: Run E2E snapshot update
         working-directory: website
-        env:
-          STORYBLOK_MOCK_MODE: "replay"
         run: npm run test:e2e:update
 
       - name: Mark repo as safe

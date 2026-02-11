@@ -5,8 +5,8 @@ test.beforeEach(async ({}, testInfo) => {
 	await setupStoryblokMock(testInfo);
 });
 
-test.afterEach(async ({ page }, testInfo) => {
-	await saveStoryblokMock(testInfo, page);
+test.afterEach(async ({}, testInfo) => {
+	await saveStoryblokMock(testInfo);
 });
 
 test('footer contains linkedin and instagram', async ({ page }) => {

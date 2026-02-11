@@ -1,4 +1,4 @@
-import type { Page, TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 
@@ -9,12 +9,21 @@ function normalizeTestFileName(file: string) {
 	return path.basename(file).replace(/\.e2e\.ts$/, '');
 }
 
+function slugify(value: string) {
+	return value
+		.toLowerCase()
+		.trim()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
+}
+
 function recordingsPath(testInfo: TestInfo) {
 	const [file, testName] = testInfo.titlePath;
 
 	const folder = normalizeTestFileName(file);
+	const slug = slugify(testName);
 
-	return path.resolve(process.cwd(), 'test/e2e/recordings', folder, `${testName}.json`);
+	return path.resolve(process.cwd(), 'test/e2e/recordings', folder, `${slug}.json`);
 }
 
 function sortJsonByKey(obj: Record<string, any>): Record<string, any> {
@@ -71,14 +80,12 @@ export async function setupStoryblokMock(testInfo: TestInfo) {
 	}
 }
 
-export async function saveStoryblokMock(testInfo: TestInfo, page?: Page) {
+export async function saveStoryblokMock(testInfo: TestInfo) {
 	if (process.env.STORYBLOK_MOCK_MODE !== 'record') {
 		return;
 	}
 
 	console.log('[storyblok-mock] Saving recordings');
-
-	await page?.waitForTimeout(1500);
 
 	const res = await fetch(`${MOCKSERVER}/recordings`);
 	const recordings = await res.json();
