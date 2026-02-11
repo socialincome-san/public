@@ -4,7 +4,41 @@ import path from 'path';
 const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 
+/**
+ * Wait until mockserver has registered its routes.
+ * In CI the container can be up while Express is still booting.
+ */
+async function waitForMockserver(timeoutMs = 30_000) {
+	console.log('[storyblok-mock] waiting for mockserver…', MOCKSERVER);
+
+	const start = Date.now();
+
+	while (Date.now() - start < timeoutMs) {
+		try {
+			const res = await fetch(`${MOCKSERVER}/recordings`, { method: 'GET' });
+
+			// 200 or 204 both mean the route exists
+			if (res.ok || res.status === 204) {
+				console.log('[storyblok-mock] mockserver is ready');
+				return;
+			}
+		} catch {
+			// ignore until ready
+		}
+
+		await new Promise((r) => setTimeout(r, 500));
+	}
+
+	throw new Error('[storyblok-mock] mockserver not reachable (timeout)');
+}
+
 async function run() {
+	console.log('[storyblok-mock] before-build starting');
+	console.log('[storyblok-mock] MOCKSERVER_URL =', MOCKSERVER_BASE);
+
+	// 🔑 IMPORTANT: wait until routes are registered
+	await waitForMockserver();
+
 	const recordingsDir = path.resolve('test/e2e/recordings');
 
 	if (!fs.existsSync(recordingsDir)) {
@@ -32,6 +66,8 @@ async function run() {
 	if (Object.keys(recordings).length === 0) {
 		throw new Error('[storyblok-mock] No recordings found to upload');
 	}
+
+	console.log(`[storyblok-mock] uploading ${Object.keys(recordings).length} hashes`);
 
 	const uploadRes = await fetch(`${MOCKSERVER}/recordings`, {
 		method: 'POST',
@@ -63,10 +99,11 @@ async function run() {
 		throw new Error('[storyblok-mock] Upload succeeded but recordings are empty');
 	}
 
-	console.log(`[storyblok-mock] recordings uploaded (${count} hashes)`);
+	console.log(`[storyblok-mock] ✅ recordings uploaded (${count} hashes)`);
 }
 
 run().catch((e) => {
+	console.error('[storyblok-mock] ❌ FAILED');
 	console.error(e);
 	process.exit(1);
 });
