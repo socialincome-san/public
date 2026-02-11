@@ -5,6 +5,8 @@ import path from 'path';
 const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 function normalizeTestFileName(file: string) {
 	return path.basename(file).replace(/\.e2e\.ts$/, '');
 }
@@ -42,7 +44,9 @@ export async function setupStoryblokMock(testInfo: TestInfo) {
 		return;
 	}
 
+	console.log('[storyblok-mock] Resetting mockserver');
 	await fetch(`${MOCKSERVER}/reset`, { method: 'POST' });
+	await sleep(500);
 
 	if (mode === 'record') {
 		console.log('[storyblok-mock] Enabling recording');
@@ -53,20 +57,20 @@ export async function setupStoryblokMock(testInfo: TestInfo) {
 			body: JSON.stringify({
 				active: true,
 				deleteHeadersForHash: ['authorization', 'cookie', 'set-cookie', 'x-middleware-set-cookie', 'content-length'],
-				failedRequestsResponse: {
-					error: 'Unexpected external Storyblok call in replay mode',
-				},
 			}),
 		});
+
+		await sleep(300);
 	}
 
 	if (mode === 'replay') {
-		console.log('[storyblok-mock] Loading recordings');
-
 		const filePath = recordingsPath(testInfo);
+
+		console.log('[storyblok-mock] Loading recordings from', filePath);
+
 		const recordings = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
-		await fetch(`${MOCKSERVER}/recordings`, {
+		const uploadRes = await fetch(`${MOCKSERVER}/recordings`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -77,6 +81,29 @@ export async function setupStoryblokMock(testInfo: TestInfo) {
 				},
 			}),
 		});
+
+		console.log('[storyblok-mock] Upload status', uploadRes.status);
+		await sleep(300);
+
+		console.log('[storyblok-mock] Rehashing recordings');
+		const rehashRes = await fetch(`${MOCKSERVER}/recordings/rehash`, {
+			method: 'POST',
+		});
+
+		if (!rehashRes.ok) {
+			throw new Error(`[storyblok-mock] Rehash failed (${rehashRes.status})`);
+		}
+
+		await sleep(300);
+
+		const verifyRes = await fetch(`${MOCKSERVER}/recordings`);
+		const verifyData = await verifyRes.json();
+
+		if (!verifyData || Object.keys(verifyData).length === 0) {
+			throw new Error('[storyblok-mock] Recordings not loaded (empty state)');
+		}
+
+		console.log('[storyblok-mock] Recordings ready');
 	}
 }
 
@@ -86,6 +113,7 @@ export async function saveStoryblokMock(testInfo: TestInfo) {
 	}
 
 	console.log('[storyblok-mock] Saving recordings');
+	await sleep(1000);
 
 	const res = await fetch(`${MOCKSERVER}/recordings`);
 	const recordings = await res.json();

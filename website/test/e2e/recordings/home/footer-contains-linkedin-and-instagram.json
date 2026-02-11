@@ -551,7 +551,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 47
+      "durationMs": 38
     }
   ],
   "b8b5ea83e8860d4dc019d899a3a8c9116183c45d4655448ebae76058ab9a2cc3af061ef6c998e39fde745866ec5775cc17ba18d91e4b41a0fff70409f841c42a": [
@@ -791,7 +791,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 59
+      "durationMs": 44
     }
   ]
 }

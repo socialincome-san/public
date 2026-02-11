@@ -28,10 +28,13 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 };
 
 export const Footer = async ({ lang, region }: Props) => {
-	const { content } = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(
-		`${NEW_WEBSITE_SLUG}/layout`,
-		lang,
-	);
+	const story = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+
+	if (!story) {
+		return null;
+	}
+
+	const content = story.content;
 
 	return (
 		<div className="bg-primary container grid grid-cols-1 gap-4 rounded-3xl px-8 pb-8 pt-10 text-white sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto]">
