@@ -44,8 +44,6 @@ export async function setupStoryblokMock(testInfo: TestInfo) {
 		return;
 	}
 
-	console.log('[storyblok-mock] Resetting mockserver');
-	await fetch(`${MOCKSERVER}/reset`, { method: 'POST' });
 	await sleep(500);
 
 	if (mode === 'record') {
