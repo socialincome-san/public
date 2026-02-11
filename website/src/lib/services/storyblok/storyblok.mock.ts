@@ -1,4 +1,4 @@
-const MOCKSERVER_BASE_URL = 'http://localhost:1080';
+const MOCKSERVER_BASE_URL = process.env.MOCKSERVER_URL || 'http://localhost:1080';
 const STORYBLOK_HOST = 'api.storyblok.com';
 
 let fetchPatched = false;

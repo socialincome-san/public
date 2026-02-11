@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { saveStoryblokMock, setupStoryblokMock } from '../mock-server';
 
-test.beforeEach(async ({}, testInfo) => {
+test.beforeEach(async (_, testInfo) => {
 	await setupStoryblokMock(testInfo);
 });
 
-test.afterEach(async ({}, testInfo) => {
+test.afterEach(async (_, testInfo) => {
 	await saveStoryblokMock(testInfo);
 });
 
