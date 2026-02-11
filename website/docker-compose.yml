@@ -12,6 +12,6 @@ services:
       PGTZ: "Europe/Zurich"
 
   mockserver:
-    image: smartive/mockserver
+    image: smartive/mockserver:v2.18.2
     ports:
       - "1080:1080"
