@@ -97,6 +97,10 @@ function getArticlesInAlternativeLanguages() {
 
 const STATIC_SITEMAP = generateStaticPagesSitemap();
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+	if (process.env.CI === 'true') {
+		return STATIC_SITEMAP;
+	}
+
 	try {
 		const [articles, articlesAlternativeLanguages, authors, tags] = await Promise.all([
 			storyblokService.getOverviewArticles(defaultLanguage),
@@ -104,6 +108,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			storyblokService.getOverviewAuthors(defaultLanguage),
 			storyblokService.getOverviewTags(defaultLanguage),
 		]);
+
 		return STATIC_SITEMAP.concat(
 			generateStoryblokArticlesSitemap(articles, articlesAlternativeLanguages),
 			generateStoryblokAuthorsSitemap(authors),
