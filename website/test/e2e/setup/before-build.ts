@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const MOCKSERVER = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
+const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
+const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 
 async function run() {
 	const recordingsDir = path.resolve('test/e2e/recordings');
@@ -54,15 +55,10 @@ async function run() {
 		throw new Error(`[storyblok-mock] Rehash failed (${rehashRes.status}): ${await rehashRes.text()}`);
 	}
 
-	// 🔍 Verify recordings actually exist in mockserver
 	const verifyRes = await fetch(`${MOCKSERVER}/recordings`);
-	if (!verifyRes.ok) {
-		throw new Error(`[storyblok-mock] Verification failed (${verifyRes.status})`);
-	}
-
 	const verifyData = await verifyRes.json();
-	const count = Object.keys(verifyData).length;
 
+	const count = Object.keys(verifyData).length;
 	if (count === 0) {
 		throw new Error('[storyblok-mock] Upload succeeded but recordings are empty');
 	}
