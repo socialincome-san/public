@@ -6,3 +6,4 @@ dist/
 *.hbs
 ui/README.md
 website/src/generated/
+/test/e2e/recordings/
