@@ -1,5 +1,5 @@
 {
-  "94bdd6cfb4bce3371ea7cdcf381b02fb845ab9ab2c243dd026a3d40fd3e41244c04783f6bb28569c917eb12f2b6a1e78014ab38dbbea77a7054b51deb6986ae6": [
+  "64caa874a64602b45058afa375305f70e67b30aa33e4196ee479da367aa152ee48029ba357cb1545715d678864ca9e7aa8cbed551e039b4969a0c90ee8b5abde": [
     {
       "body": {
         "story": {
@@ -541,20 +541,18 @@
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "content-type": "application/json",
-          "accept": "application/json",
-          "sb-agent": "SB-JS-CLIENT",
-          "sb-agent-version": "7.0.0",
+          "x-mock-hash": "64caa874a64602b45058afa375305f70e67b30aa33e4196ee479da367aa152ee48029ba357cb1545715d678864ca9e7aa8cbed551e039b4969a0c90ee8b5abde",
+          "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
           "user-agent": "node",
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 46
+      "durationMs": 43
     }
   ],
-  "b8b5ea83e8860d4dc019d899a3a8c9116183c45d4655448ebae76058ab9a2cc3af061ef6c998e39fde745866ec5775cc17ba18d91e4b41a0fff70409f841c42a": [
+  "a1a0cbb5cae99c335f99cc8289d06b81c0790686242011e0213f15e2fe67e0f898e9e0e308931287f0501f73a144206dbc682d7eaff67aaed57a127a956f4f1d": [
     {
       "body": {
         "story": {
@@ -781,17 +779,15 @@
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "content-type": "application/json",
-          "accept": "application/json",
-          "sb-agent": "SB-JS-CLIENT",
-          "sb-agent-version": "7.0.0",
+          "x-mock-hash": "a1a0cbb5cae99c335f99cc8289d06b81c0790686242011e0213f15e2fe67e0f898e9e0e308931287f0501f73a144206dbc682d7eaff67aaed57a127a956f4f1d",
+          "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
           "user-agent": "node",
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 47
+      "durationMs": 50
     }
   ]
 }
