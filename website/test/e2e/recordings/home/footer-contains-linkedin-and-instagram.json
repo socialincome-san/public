@@ -220,7 +220,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=AxTiwxLPlWxLFQtTmSmrywtt&cv=1770795842",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=AxTiwxLPlWxLFQtTmSmrywtt",
         "body": {},
         "method": "GET",
         "headers": {
@@ -234,7 +234,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 41
+      "durationMs": 320
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -773,7 +773,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=AxTiwxLPlWxLFQtTmSmrywtt&cv=1770795842",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=AxTiwxLPlWxLFQtTmSmrywtt",
         "body": {},
         "method": "GET",
         "headers": {
@@ -787,7 +787,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 34
+      "durationMs": 228
     }
   ]
 }

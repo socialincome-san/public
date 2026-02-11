@@ -1,17 +1,20 @@
-import crypto from 'crypto';
-
 const MOCKSERVER_BASE_URL = process.env.MOCKSERVER_URL || 'http://localhost:1080';
 const STORYBLOK_HOST = 'api.storyblok.com';
 
 let fetchPatched = false;
 
-function stableHash(url: URL, method: string) {
-	// IMPORTANT: ignore token + cv completely
+async function stableHash(url: URL, method: string): Promise<string> {
 	const cleanUrl = new URL(url.toString());
 	cleanUrl.searchParams.delete('token');
 	cleanUrl.searchParams.delete('cv');
 
-	return crypto.createHash('sha256').update(`${method}:${cleanUrl.pathname}?${cleanUrl.search}`).digest('hex');
+	const encoder = new TextEncoder();
+	const data = encoder.encode(`${method}:${cleanUrl.pathname}?${cleanUrl.search}`);
+
+	const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+	const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+	return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 export function patchStoryblokFetch() {
@@ -24,7 +27,7 @@ export function patchStoryblokFetch() {
 
 		if (url.protocol === 'https:' && url.hostname === STORYBLOK_HOST) {
 			const method = init?.method ?? 'GET';
-			const hash = stableHash(url, method);
+			const hash = await stableHash(url, method);
 
 			const proxiedUrl = `${MOCKSERVER_BASE_URL}/${url.hostname}${url.pathname}${url.search}`;
 
