@@ -4,40 +4,31 @@ import path from 'path';
 const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 
-/**
- * Wait until mockserver has registered its routes.
- * In CI the container can be up while Express is still booting.
- */
-async function waitForMockserver(timeoutMs = 30_000) {
-	console.log('[storyblok-mock] waiting for mockserver…', MOCKSERVER);
+async function waitForPort(timeoutMs = 60_000) {
+	console.log('[storyblok-mock] waiting for mockserver TCP…', MOCKSERVER_BASE);
 
 	const start = Date.now();
 
 	while (Date.now() - start < timeoutMs) {
 		try {
-			const res = await fetch(`${MOCKSERVER}/recordings`, { method: 'GET' });
-
-			// 200 or 204 both mean the route exists
-			if (res.ok || res.status === 204) {
-				console.log('[storyblok-mock] mockserver is ready');
-				return;
-			}
+			// Root request — succeeds as soon as Express is listening
+			await fetch(MOCKSERVER_BASE, { method: 'GET' });
+			console.log('[storyblok-mock] mockserver TCP ready');
+			return;
 		} catch {
-			// ignore until ready
+			await new Promise((r) => setTimeout(r, 500));
 		}
-
-		await new Promise((r) => setTimeout(r, 500));
 	}
 
-	throw new Error('[storyblok-mock] mockserver not reachable (timeout)');
+	throw new Error('[storyblok-mock] mockserver TCP not reachable (timeout)');
 }
 
 async function run() {
-	console.log('[storyblok-mock] before-build starting');
+	console.log('[storyblok-mock] before-build start');
 	console.log('[storyblok-mock] MOCKSERVER_URL =', MOCKSERVER_BASE);
 
-	// 🔑 IMPORTANT: wait until routes are registered
-	await waitForMockserver();
+	// 🔑 only wait for port, NOT routes
+	await waitForPort();
 
 	const recordingsDir = path.resolve('test/e2e/recordings');
 
