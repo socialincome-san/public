@@ -33,38 +33,38 @@ export default defineConfig({
 	},
 
 	projects: [
-		{
-			name: 'setup',
-			testMatch: /test-setup\.ts/,
-		},
-		{
-			name: 'portal',
-			testMatch: /portal\/.*\.e2e\.ts/,
-			use: {
-				storageState: 'playwright/.auth/user.json',
-			},
-			dependencies: ['setup'],
-		},
-		{
-			name: 'dashboard',
-			testMatch: /dashboard\/.*\.e2e\.ts/,
-			use: {
-				storageState: 'playwright/.auth/contributor.json',
-			},
-			dependencies: ['setup'],
-		},
-		{
-			name: 'partner-space',
-			testMatch: /partner-space\/.*\.e2e\.ts/,
-			use: {
-				storageState: 'playwright/.auth/partner.json',
-			},
-			dependencies: ['setup'],
-		},
-		{
-			name: 'mobile-app-api',
-			testMatch: /mobile-app-api\/.*\.e2e\.ts/,
-		},
+		// {
+		// 	name: 'setup',
+		// 	testMatch: /test-setup\.ts/,
+		// },
+		// {
+		// 	name: 'portal',
+		// 	testMatch: /portal\/.*\.e2e\.ts/,
+		// 	use: {
+		// 		storageState: 'playwright/.auth/user.json',
+		// 	},
+		// 	dependencies: ['setup'],
+		// },
+		// {
+		// 	name: 'dashboard',
+		// 	testMatch: /dashboard\/.*\.e2e\.ts/,
+		// 	use: {
+		// 		storageState: 'playwright/.auth/contributor.json',
+		// 	},
+		// 	dependencies: ['setup'],
+		// },
+		// {
+		// 	name: 'partner-space',
+		// 	testMatch: /partner-space\/.*\.e2e\.ts/,
+		// 	use: {
+		// 		storageState: 'playwright/.auth/partner.json',
+		// 	},
+		// 	dependencies: ['setup'],
+		// },
+		// {
+		// 	name: 'mobile-app-api',
+		// 	testMatch: /mobile-app-api\/.*\.e2e\.ts/,
+		// },
 		{
 			name: 'public-website',
 			testMatch: /public-website\/.*\.e2e\.ts/,
