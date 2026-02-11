@@ -1,5 +1,243 @@
 {
-  "64caa874a64602b45058afa375305f70e67b30aa33e4196ee479da367aa152ee48029ba357cb1545715d678864ca9e7aa8cbed551e039b4969a0c90ee8b5abde": [
+  "6275b103dd714306666780488c44f4c1674c3d70638c6d169d0d965f7e210083": [
+    {
+      "body": {
+        "story": {
+          "name": "Home",
+          "created_at": "2026-01-14T09:36:30.190Z",
+          "published_at": "2026-01-27T08:26:10.200Z",
+          "updated_at": "2026-01-27T08:26:10.212Z",
+          "id": 133913764645632,
+          "uuid": "06cda40c-171b-4ff8-8b9b-c39230b57595",
+          "content": {
+            "_uid": "922092d5-fc86-40e7-821f-3c69c4339f28",
+            "content": [
+              {
+                "_uid": "4fecfd0a-d835-477b-a6a9-b5be4c87dfc3",
+                "Button": {
+                  "id": "",
+                  "url": "",
+                  "linktype": "story",
+                  "fieldtype": "multilink",
+                  "cached_url": ""
+                },
+                "button": [
+                  {
+                    "_uid": "8e8b8aae-e531-46d2-a367-874d495f56ad",
+                    "label": "Donate Now",
+                    "component": "button"
+                  }
+                ],
+                "heading": "Give 1 % of your income and **change lives**.",
+                "component": "heroVideo",
+                "description": "We send a basic income directly to people in extreme poverty. Transparent, simple and effective.",
+                "backgroundVideo": {
+                  "id": 133921723421589,
+                  "alt": "",
+                  "name": "",
+                  "focus": "",
+                  "title": "",
+                  "source": "",
+                  "filename": "https://a.storyblok.com/f/109655/x/a5f5b58d61/hero-video-test.mov",
+                  "copyright": "",
+                  "fieldtype": "asset",
+                  "meta_data": {},
+                  "is_external_url": false
+                }
+              },
+              {
+                "_uid": "091450da-6902-4a24-b1c0-03b1d06811e2",
+                "content": {
+                  "type": "doc",
+                  "content": [
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 1,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Überschrift 1",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo ",
+                          "type": "text"
+                        },
+                        {
+                          "text": "dolores",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "italic"
+                            }
+                          ]
+                        },
+                        {
+                          "text": " et ea ",
+                          "type": "text"
+                        },
+                        {
+                          "text": "rebum",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "bold"
+                            }
+                          ]
+                        },
+                        {
+                          "text": ". Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr. asdf",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 2,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Überschrift 2",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Consetetur sadipscing elitr, sed diam nonumy eirmod ",
+                          "type": "text"
+                        },
+                        {
+                          "text": "tempor",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "link",
+                              "attrs": {
+                                "href": "https://smartive.ch",
+                                "uuid": null,
+                                "anchor": null,
+                                "target": "_self",
+                                "linktype": "url"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "text": " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 3,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Überschrift 3",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "component": "text"
+              }
+            ],
+            "component": "page"
+          },
+          "slug": "new-website",
+          "full_slug": "new-website/",
+          "sort_by_date": null,
+          "position": -100,
+          "tag_list": [],
+          "is_startpage": true,
+          "parent_id": 133906872082434,
+          "meta_data": null,
+          "group_id": "653556a9-1007-41a6-b32e-9a0f0e791426",
+          "first_published_at": "2026-01-14T09:56:06.962Z",
+          "release_id": null,
+          "lang": "default",
+          "path": null,
+          "alternates": [],
+          "default_full_slug": "new-website/",
+          "translated_slugs": [
+            {
+              "path": "new-website/",
+              "name": null,
+              "lang": "fr",
+              "published": true
+            },
+            {
+              "path": "new-website/",
+              "name": null,
+              "lang": "it",
+              "published": true
+            },
+            {
+              "path": "new-website/",
+              "name": null,
+              "lang": "de",
+              "published": true
+            }
+          ]
+        },
+        "cv": 1770795842,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=AxTiwxLPlWxLFQtTmSmrywtt&cv=1770795842",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "6275b103dd714306666780488c44f4c1674c3d70638c6d169d0d965f7e210083",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 55
+    }
+  ],
+  "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
     {
       "body": {
         "story": {
@@ -541,7 +779,7 @@
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "64caa874a64602b45058afa375305f70e67b30aa33e4196ee479da367aa152ee48029ba357cb1545715d678864ca9e7aa8cbed551e039b4969a0c90ee8b5abde",
+          "x-mock-hash": "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -549,245 +787,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 43
-    }
-  ],
-  "a1a0cbb5cae99c335f99cc8289d06b81c0790686242011e0213f15e2fe67e0f898e9e0e308931287f0501f73a144206dbc682d7eaff67aaed57a127a956f4f1d": [
-    {
-      "body": {
-        "story": {
-          "name": "Home",
-          "created_at": "2026-01-14T09:36:30.190Z",
-          "published_at": "2026-01-27T08:26:10.200Z",
-          "updated_at": "2026-01-27T08:26:10.212Z",
-          "id": 133913764645632,
-          "uuid": "06cda40c-171b-4ff8-8b9b-c39230b57595",
-          "content": {
-            "_uid": "922092d5-fc86-40e7-821f-3c69c4339f28",
-            "content": [
-              {
-                "_uid": "4fecfd0a-d835-477b-a6a9-b5be4c87dfc3",
-                "Button": {
-                  "id": "",
-                  "url": "",
-                  "linktype": "story",
-                  "fieldtype": "multilink",
-                  "cached_url": ""
-                },
-                "button": [
-                  {
-                    "_uid": "8e8b8aae-e531-46d2-a367-874d495f56ad",
-                    "label": "Donate Now",
-                    "component": "button"
-                  }
-                ],
-                "heading": "Give 1 % of your income and **change lives**.",
-                "component": "heroVideo",
-                "description": "We send a basic income directly to people in extreme poverty. Transparent, simple and effective.",
-                "backgroundVideo": {
-                  "id": 133921723421589,
-                  "alt": "",
-                  "name": "",
-                  "focus": "",
-                  "title": "",
-                  "source": "",
-                  "filename": "https://a.storyblok.com/f/109655/x/a5f5b58d61/hero-video-test.mov",
-                  "copyright": "",
-                  "fieldtype": "asset",
-                  "meta_data": {},
-                  "is_external_url": false
-                }
-              },
-              {
-                "_uid": "091450da-6902-4a24-b1c0-03b1d06811e2",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 1,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Überschrift 1",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo ",
-                          "type": "text"
-                        },
-                        {
-                          "text": "dolores",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "italic"
-                            }
-                          ]
-                        },
-                        {
-                          "text": " et ea ",
-                          "type": "text"
-                        },
-                        {
-                          "text": "rebum",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "bold"
-                            }
-                          ]
-                        },
-                        {
-                          "text": ". Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr. asdf",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 2,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Überschrift 2",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Consetetur sadipscing elitr, sed diam nonumy eirmod ",
-                          "type": "text"
-                        },
-                        {
-                          "text": "tempor",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "link",
-                              "attrs": {
-                                "href": "https://smartive.ch",
-                                "uuid": null,
-                                "anchor": null,
-                                "target": "_self",
-                                "linktype": "url"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "text": " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 3,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Überschrift 3",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                          "type": "text"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "component": "text"
-              }
-            ],
-            "component": "page"
-          },
-          "slug": "new-website",
-          "full_slug": "new-website/",
-          "sort_by_date": null,
-          "position": -100,
-          "tag_list": [],
-          "is_startpage": true,
-          "parent_id": 133906872082434,
-          "meta_data": null,
-          "group_id": "653556a9-1007-41a6-b32e-9a0f0e791426",
-          "first_published_at": "2026-01-14T09:56:06.962Z",
-          "release_id": null,
-          "lang": "default",
-          "path": null,
-          "alternates": [],
-          "default_full_slug": "new-website/",
-          "translated_slugs": [
-            {
-              "path": "new-website/",
-              "name": null,
-              "lang": "fr",
-              "published": true
-            },
-            {
-              "path": "new-website/",
-              "name": null,
-              "lang": "it",
-              "published": true
-            },
-            {
-              "path": "new-website/",
-              "name": null,
-              "lang": "de",
-              "published": true
-            }
-          ]
-        },
-        "cv": 1770795842,
-        "rels": [],
-        "links": []
-      },
-      "status": 200,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=AxTiwxLPlWxLFQtTmSmrywtt&cv=1770795842",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "a1a0cbb5cae99c335f99cc8289d06b81c0790686242011e0213f15e2fe67e0f898e9e0e308931287f0501f73a144206dbc682d7eaff67aaed57a127a956f4f1d",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 50
+      "durationMs": 41
     }
   ]
 }
