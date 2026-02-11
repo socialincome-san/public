@@ -8,7 +8,10 @@ const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 function normalizeTestFileName(file: string) {
-	return path.basename(file).replace(/\.e2e\.ts$/, '');
+	return path
+		.basename(file)
+		.replace(/\.e2e\.ts$/, '')
+		.replace(/\.ts$/, '');
 }
 
 function slugify(value: string) {
