@@ -6,7 +6,7 @@ import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
-// export const revalidate = 900;
+export const revalidate = 900;
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +18,6 @@ export default async function HomePage({ params }: DefaultPageProps) {
 	const story = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(NEW_WEBSITE_SLUG, lang);
 
 	if (!story) {
-		console.log(`Story with slug ${NEW_WEBSITE_SLUG} not found for language ${lang}`);
 		return notFound();
 	}
 
