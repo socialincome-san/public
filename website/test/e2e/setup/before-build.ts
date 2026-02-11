@@ -5,33 +5,74 @@ const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 
 async function run() {
+	console.log('[storyblok-mock] Starting before-build upload');
+	console.log('[storyblok-mock] MOCKSERVER:', MOCKSERVER);
+	console.log('[storyblok-mock] CWD:', process.cwd());
+
 	const recordingsDir = path.resolve('test/e2e/recordings');
+	console.log('[storyblok-mock] Looking for recordings in:', recordingsDir);
 
 	if (!fs.existsSync(recordingsDir)) {
 		throw new Error(`[storyblok-mock] recordings directory not found: ${recordingsDir}`);
 	}
 
+	const dirEntries = fs.readdirSync(recordingsDir);
+	console.log('[storyblok-mock] Top-level entries:', dirEntries);
+
 	const recordings: Record<string, any[]> = {};
+	let fileCount = 0;
 
-	for (const folder of fs.readdirSync(recordingsDir)) {
+	for (const folder of dirEntries) {
 		const folderPath = path.join(recordingsDir, folder);
-		if (!fs.statSync(folderPath).isDirectory()) continue;
+		const stat = fs.statSync(folderPath);
 
-		for (const file of fs.readdirSync(folderPath)) {
-			if (!file.endsWith('.json')) continue;
+		if (!stat.isDirectory()) {
+			console.log(`[storyblok-mock] Skipping non-directory: ${folder}`);
+			continue;
+		}
 
-			const data = JSON.parse(fs.readFileSync(path.join(folderPath, file), 'utf-8'));
+		console.log(`[storyblok-mock] Reading folder: ${folder}`);
+
+		const files = fs.readdirSync(folderPath);
+		console.log(`[storyblok-mock] Files in ${folder}:`, files);
+
+		for (const file of files) {
+			if (!file.endsWith('.json')) {
+				console.log(`[storyblok-mock] Skipping non-json file: ${file}`);
+				continue;
+			}
+
+			fileCount++;
+			const filePath = path.join(folderPath, file);
+			console.log(`[storyblok-mock] Parsing ${filePath}`);
+
+			const raw = fs.readFileSync(filePath, 'utf-8');
+			const data = JSON.parse(raw);
+
+			const hashes = Object.keys(data);
+			console.log(`[storyblok-mock] → ${hashes.length} hashes in ${file}`);
 
 			for (const [hash, entries] of Object.entries(data)) {
+				if (!Array.isArray(entries)) {
+					throw new Error(`[storyblok-mock] Invalid recording format in ${file} for hash ${hash}`);
+				}
+
 				recordings[hash] ??= [];
-				recordings[hash].push(...(entries as any[]));
+				recordings[hash].push(...entries);
 			}
 		}
 	}
 
-	if (Object.keys(recordings).length === 0) {
-		throw new Error('[storyblok-mock] No recordings found to upload');
+	const hashCount = Object.keys(recordings).length;
+
+	console.log('[storyblok-mock] Files processed:', fileCount);
+	console.log('[storyblok-mock] Total hashes collected:', hashCount);
+
+	if (hashCount === 0) {
+		throw new Error('[storyblok-mock] No recordings found to upload (0 hashes)');
 	}
+
+	console.log('[storyblok-mock] Uploading recordings to mockserver…');
 
 	const uploadRes = await fetch(`${MOCKSERVER}/recordings`, {
 		method: 'POST',
@@ -43,35 +84,40 @@ async function run() {
 		}),
 	});
 
+	const uploadText = await uploadRes.text();
+	console.log('[storyblok-mock] Upload response:', uploadRes.status, uploadText);
+
 	if (!uploadRes.ok) {
-		throw new Error(`[storyblok-mock] Upload failed (${uploadRes.status}): ${await uploadRes.text()}`);
+		throw new Error(`[storyblok-mock] Upload failed (${uploadRes.status})`);
 	}
 
-	const rehashRes = await fetch(`${MOCKSERVER}/recordings/rehash`, {
-		method: 'POST',
-	});
+	console.log('[storyblok-mock] Rehashing recordings…');
+
+	const rehashRes = await fetch(`${MOCKSERVER}/recordings/rehash`, { method: 'POST' });
+	const rehashText = await rehashRes.text();
+	console.log('[storyblok-mock] Rehash response:', rehashRes.status, rehashText);
 
 	if (!rehashRes.ok) {
-		throw new Error(`[storyblok-mock] Rehash failed (${rehashRes.status}): ${await rehashRes.text()}`);
+		throw new Error(`[storyblok-mock] Rehash failed (${rehashRes.status})`);
 	}
 
-	// 🔍 Verify recordings actually exist in mockserver
+	console.log('[storyblok-mock] Verifying mockserver state…');
+
 	const verifyRes = await fetch(`${MOCKSERVER}/recordings`);
-	if (!verifyRes.ok) {
-		throw new Error(`[storyblok-mock] Verification failed (${verifyRes.status})`);
-	}
-
 	const verifyData = await verifyRes.json();
-	const count = Object.keys(verifyData).length;
 
-	if (count === 0) {
-		throw new Error('[storyblok-mock] Upload succeeded but recordings are empty');
+	const verifyCount = Object.keys(verifyData).length;
+	console.log('[storyblok-mock] Mockserver hash count:', verifyCount);
+
+	if (verifyCount === 0) {
+		throw new Error('[storyblok-mock] Upload succeeded but mockserver recordings are empty');
 	}
 
-	console.log(`[storyblok-mock] recordings uploaded (${count} hashes)`);
+	console.log(`[storyblok-mock] ✅ recordings uploaded successfully (${verifyCount} hashes)`);
 }
 
 run().catch((e) => {
+	console.error('[storyblok-mock] ❌ FAILED');
 	console.error(e);
 	process.exit(1);
 });
