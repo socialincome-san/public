@@ -70,9 +70,9 @@ export default defineConfig({
 			testMatch: /public-website\/.*\.e2e\.ts/,
 		},
 	],
-
+	globalSetup: './test/e2e/setup/global-setup.ts',
 	webServer: {
-		command: 'npm run build && STORYBLOK_MOCK_MODE=replay npm run start',
+		command: 'npm run build && npm run start',
 		url: 'http://localhost:3000',
 		reuseExistingServer: !process.env.CI,
 		timeout: 180_000,
