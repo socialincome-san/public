@@ -60,49 +60,6 @@ export async function setupStoryblokMock(testInfo: TestInfo) {
 
 		await sleep(300);
 	}
-
-	if (mode === 'replay') {
-		const filePath = recordingsPath(testInfo);
-
-		console.log('[storyblok-mock] Loading recordings from', filePath);
-
-		const recordings = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-		const uploadRes = await fetch(`${MOCKSERVER}/recordings`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				active: false,
-				recordings,
-				failedRequestsResponse: {
-					error: 'Missing Storyblok recording in replay mode',
-				},
-			}),
-		});
-
-		console.log('[storyblok-mock] Upload status', uploadRes.status);
-		await sleep(300);
-
-		console.log('[storyblok-mock] Rehashing recordings');
-		const rehashRes = await fetch(`${MOCKSERVER}/recordings/rehash`, {
-			method: 'POST',
-		});
-
-		if (!rehashRes.ok) {
-			throw new Error(`[storyblok-mock] Rehash failed (${rehashRes.status})`);
-		}
-
-		await sleep(300);
-
-		const verifyRes = await fetch(`${MOCKSERVER}/recordings`);
-		const verifyData = await verifyRes.json();
-
-		if (!verifyData || Object.keys(verifyData).length === 0) {
-			throw new Error('[storyblok-mock] Recordings not loaded (empty state)');
-		}
-
-		console.log('[storyblok-mock] Recordings ready');
-	}
 }
 
 export async function saveStoryblokMock(testInfo: TestInfo) {
