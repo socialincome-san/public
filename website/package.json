@@ -73,7 +73,6 @@
 		"clsx": "^2.1.1",
 		"cmdk": "^1.1.1",
 		"country-flag-icons": "^1.6.4",
-		"crypto": "^1.0.1",
 		"date-fns": "^4.1.0",
 		"dotenv-cli": "^11.0.0",
 		"firebase": "^11.9.1",
