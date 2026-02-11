@@ -4,32 +4,7 @@ import path from 'path';
 const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 
-async function waitForPort(timeoutMs = 60_000) {
-	console.log('[storyblok-mock] waiting for mockserver TCP…', MOCKSERVER_BASE);
-
-	const start = Date.now();
-
-	while (Date.now() - start < timeoutMs) {
-		try {
-			// Root request — succeeds as soon as Express is listening
-			await fetch(MOCKSERVER_BASE, { method: 'GET' });
-			console.log('[storyblok-mock] mockserver TCP ready');
-			return;
-		} catch {
-			await new Promise((r) => setTimeout(r, 500));
-		}
-	}
-
-	throw new Error('[storyblok-mock] mockserver TCP not reachable (timeout)');
-}
-
 async function run() {
-	console.log('[storyblok-mock] before-build start');
-	console.log('[storyblok-mock] MOCKSERVER_URL =', MOCKSERVER_BASE);
-
-	// 🔑 only wait for port, NOT routes
-	await waitForPort();
-
 	const recordingsDir = path.resolve('test/e2e/recordings');
 
 	if (!fs.existsSync(recordingsDir)) {
@@ -57,8 +32,6 @@ async function run() {
 	if (Object.keys(recordings).length === 0) {
 		throw new Error('[storyblok-mock] No recordings found to upload');
 	}
-
-	console.log(`[storyblok-mock] uploading ${Object.keys(recordings).length} hashes`);
 
 	const uploadRes = await fetch(`${MOCKSERVER}/recordings`, {
 		method: 'POST',
