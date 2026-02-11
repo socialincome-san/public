@@ -6,8 +6,9 @@
 	"scripts": {
 		"serve": "npm run build-paths && npm run openapi:generate && next dev -p 3000",
 		"build-paths": "tsx scripts/generate-paths.ts",
-		"prebuild": "npm run build-paths",
 		"build": "next build",
+		"prebuild:e2e": "tsx test/e2e/setup/before-build.ts",
+		"build:e2e": "npm run prebuild:e2e && npm run build",
 		"postbuild": "npm run openapi:generate && npm run copy-static-files",
 		"prestart": "npm run db:migrate:deploy",
 		"start": "npm-run-all -p start:emulators start:web",
