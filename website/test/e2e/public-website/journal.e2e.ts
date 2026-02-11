@@ -9,9 +9,7 @@ test.afterEach(async ({ page }, testInfo) => {
 	await saveStoryblokMock(testInfo, page);
 });
 
-test('footer contains linkedin and instagram', async ({ page }) => {
-	await page.goto('/en/int/new-website');
-
-	await expect(page.getByText('LinkedIn')).toBeVisible();
-	await expect(page.getByText('Instagram')).toBeVisible();
+test('Journal page', async ({ page }) => {
+	await page.goto('/en/int/journal');
+	await expect(page).toHaveScreenshot({ fullPage: true });
 });

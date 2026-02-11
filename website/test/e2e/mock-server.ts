@@ -1,11 +1,21 @@
-import type { Page } from '@playwright/test';
+import type { Page, TestInfo } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 
 const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 
-const RECORDINGS_PATH = path.resolve(process.cwd(), 'test/e2e/recordings/storyblok.json');
+function normalizeTestFileName(file: string) {
+	return path.basename(file).replace(/\.e2e\.ts$/, '');
+}
+
+function recordingsPath(testInfo: TestInfo) {
+	const [file, testName] = testInfo.titlePath;
+
+	const folder = normalizeTestFileName(file);
+
+	return path.resolve(process.cwd(), 'test/e2e/recordings', folder, `${testName}.json`);
+}
 
 function sortJsonByKey(obj: Record<string, any>): Record<string, any> {
 	return Object.keys(obj)
@@ -16,7 +26,7 @@ function sortJsonByKey(obj: Record<string, any>): Record<string, any> {
 		}, {});
 }
 
-export async function setupStoryblokMock() {
+export async function setupStoryblokMock(testInfo: TestInfo) {
 	const mode = process.env.STORYBLOK_MOCK_MODE;
 
 	if (!mode) {
@@ -44,7 +54,8 @@ export async function setupStoryblokMock() {
 	if (mode === 'replay') {
 		console.log('[storyblok-mock] Loading recordings');
 
-		const recordings = JSON.parse(fs.readFileSync(RECORDINGS_PATH, 'utf-8'));
+		const filePath = recordingsPath(testInfo);
+		const recordings = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
 		await fetch(`${MOCKSERVER}/recordings`, {
 			method: 'POST',
@@ -60,10 +71,11 @@ export async function setupStoryblokMock() {
 	}
 }
 
-export async function saveStoryblokMock(page?: Page) {
+export async function saveStoryblokMock(testInfo: TestInfo, page?: Page) {
 	if (process.env.STORYBLOK_MOCK_MODE !== 'record') {
 		return;
 	}
+
 	console.log('[storyblok-mock] Saving recordings');
 
 	await page?.waitForTimeout(1500);
@@ -72,11 +84,10 @@ export async function saveStoryblokMock(page?: Page) {
 	const recordings = await res.json();
 
 	const sorted = sortJsonByKey(recordings);
+	const filePath = recordingsPath(testInfo);
 
-	fs.mkdirSync(path.dirname(RECORDINGS_PATH), {
-		recursive: true,
-	});
+	fs.mkdirSync(path.dirname(filePath), { recursive: true });
+	fs.writeFileSync(filePath, JSON.stringify(sorted, null, 2));
 
-	fs.writeFileSync(RECORDINGS_PATH, JSON.stringify(sorted, null, 2));
-	console.log('[storyblok-mock] Recordings written to', RECORDINGS_PATH);
+	console.log('[storyblok-mock] Recordings written to', filePath);
 }
