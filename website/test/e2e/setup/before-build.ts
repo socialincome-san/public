@@ -7,6 +7,10 @@ const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 async function run() {
 	const recordingsDir = path.resolve('test/e2e/recordings');
 
+	if (!fs.existsSync(recordingsDir)) {
+		throw new Error(`[storyblok-mock] recordings directory not found: ${recordingsDir}`);
+	}
+
 	const recordings: Record<string, any[]> = {};
 
 	for (const folder of fs.readdirSync(recordingsDir)) {
@@ -25,7 +29,11 @@ async function run() {
 		}
 	}
 
-	await fetch(`${MOCKSERVER}/recordings`, {
+	if (Object.keys(recordings).length === 0) {
+		throw new Error('[storyblok-mock] No recordings found to upload');
+	}
+
+	const uploadRes = await fetch(`${MOCKSERVER}/recordings`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
@@ -35,9 +43,32 @@ async function run() {
 		}),
 	});
 
-	await fetch(`${MOCKSERVER}/recordings/rehash`, { method: 'POST' });
+	if (!uploadRes.ok) {
+		throw new Error(`[storyblok-mock] Upload failed (${uploadRes.status}): ${await uploadRes.text()}`);
+	}
 
-	console.log('[storyblok-mock] recordings uploaded');
+	const rehashRes = await fetch(`${MOCKSERVER}/recordings/rehash`, {
+		method: 'POST',
+	});
+
+	if (!rehashRes.ok) {
+		throw new Error(`[storyblok-mock] Rehash failed (${rehashRes.status}): ${await rehashRes.text()}`);
+	}
+
+	// 🔍 Verify recordings actually exist in mockserver
+	const verifyRes = await fetch(`${MOCKSERVER}/recordings`);
+	if (!verifyRes.ok) {
+		throw new Error(`[storyblok-mock] Verification failed (${verifyRes.status})`);
+	}
+
+	const verifyData = await verifyRes.json();
+	const count = Object.keys(verifyData).length;
+
+	if (count === 0) {
+		throw new Error('[storyblok-mock] Upload succeeded but recordings are empty');
+	}
+
+	console.log(`[storyblok-mock] recordings uploaded (${count} hashes)`);
 }
 
 run().catch((e) => {

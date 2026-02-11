@@ -71,7 +71,7 @@ export default defineConfig({
 		},
 	],
 	webServer: {
-		command: 'npm run build:e2e && npm run start',
+		command: 'bash -lc "set -x; npm run build:e2e && npm run start"',
 		url: 'http://localhost:3000',
 		reuseExistingServer: !process.env.CI,
 		timeout: 180_000,
