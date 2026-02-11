@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
-const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
+const MOCKSERVER = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 
 async function run() {
 	const recordingsDir = path.resolve('test/e2e/recordings');
