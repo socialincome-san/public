@@ -9,7 +9,7 @@ test.afterEach(async () => {
 	await saveStoryblokMock();
 });
 
-test.only('footer contains linkedin and instagram', async ({ page }) => {
+test('footer contains linkedin and instagram', async ({ page }) => {
 	await page.goto('/en/int/new-website');
 
 	await expect(page.getByText('LinkedIn')).toBeVisible();

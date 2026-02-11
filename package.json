@@ -41,6 +41,8 @@
 		"db:studio": "npm --workspace=@socialincome/website run db:studio",
 		"db:up": "npm --workspace=@socialincome/website run db:up",
 		"db:down": "npm --workspace=@socialincome/website run db:down",
+		"mockserver:up": "npm --workspace=@socialincome/website run mockserver:up",
+		"mockserver:down": "npm --workspace=@socialincome/website run mockserver:down",
 		"typecheck": "npm run typecheck:all",
 		"typecheck:all": "npm run typecheck --workspaces --if-present"
 	},
