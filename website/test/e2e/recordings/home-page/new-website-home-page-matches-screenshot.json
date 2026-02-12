@@ -234,7 +234,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 81
+      "durationMs": 46
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -526,7 +526,7 @@
                       "fieldtype": "multilink",
                       "cached_url": "https://www.linkedin.com/company/socialincome"
                     },
-                    "label": "FROM RECORDING: LinkedIn",
+                    "label": "LinkedIn",
                     "newTab": true,
                     "component": "menuItem"
                   },
@@ -787,7 +787,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 53
+      "durationMs": 40
     }
   ]
 }

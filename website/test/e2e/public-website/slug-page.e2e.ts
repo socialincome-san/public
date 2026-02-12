@@ -9,9 +9,8 @@ test.afterEach(async ({}, testInfo) => {
 	await saveStoryblokMock(testInfo);
 });
 
-test('Journal Page matches Screenshot', async ({ page }) => {
-	await page.goto('/en/int/journal');
-	await page.waitForTimeout(10000);
+test('new website slug page matches screenshot', async ({ page }) => {
+	await page.goto('/en/int/new-website/example');
 
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

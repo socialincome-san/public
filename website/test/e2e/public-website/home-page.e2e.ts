@@ -9,9 +9,8 @@ test.afterEach(async ({}, testInfo) => {
 	await saveStoryblokMock(testInfo);
 });
 
-test('footer contains linkedin and instagram', async ({ page }) => {
+test('new website home page matches screenshot', async ({ page }) => {
 	await page.goto('/en/int/new-website');
 
-	await expect(page.getByText('FROM RECORDING: LinkedIn')).toBeVisible();
-	await expect(page.getByText('Instagram')).toBeVisible();
+	await expect(page).toHaveScreenshot({ fullPage: true });
 });

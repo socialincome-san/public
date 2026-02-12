@@ -30,7 +30,6 @@ test('wait for emulators to be ready', async ({ page }) => {
 
 test('login all actors', async ({ browser }, testInfo) => {
 	await setupStoryblokMock(testInfo);
-
 	await Promise.all([loginAs(browser, 'user'), loginAs(browser, 'contributor'), loginAs(browser, 'partner')]);
 	await saveStoryblokMock(testInfo);
 });
