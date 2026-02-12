@@ -356,7 +356,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&content_type=author&filter_query%5BdisplayInOverviewPage%5D%5Bis%5D=true&per_page=25&page=1&token=AxTiwxLPlWxLFQtTmSmrywtt&cv=1770795842",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&content_type=author&filter_query%5BdisplayInOverviewPage%5D%5Bis%5D=true&per_page=25&page=1&token=AxTiwxLPlWxLFQtTmSmrywtt",
         "body": {},
         "method": "GET",
         "headers": {
@@ -370,7 +370,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 15
+      "durationMs": 202
     }
   ],
   "3c0fdf41d2e16c581eb3995b97bd7399d6b9b70aed4afa216b1edfff2ff15c18": [
@@ -4732,7 +4732,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&per_page=50&excluding_fields=content&resolve_relations=article.author%2Carticle.tags%2Carticle.type&sort_by=first_published_at%3Adesc&content_type=article&filter_query%5BdisplayInOverviewPage%5D%5Bis%5D=true&page=1&token=AxTiwxLPlWxLFQtTmSmrywtt&cv=1770795842&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&per_page=50&excluding_fields=content&resolve_relations=article.author%2Carticle.tags%2Carticle.type&sort_by=first_published_at%3Adesc&content_type=article&filter_query%5BdisplayInOverviewPage%5D%5Bis%5D=true&page=1&token=AxTiwxLPlWxLFQtTmSmrywtt&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -4746,7 +4746,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 20
+      "durationMs": 202
     }
   ],
   "e2439fcd84040c29e7931e988d2d531ebd142569fa6e979d8e814fd2b66451ab": [
@@ -5010,7 +5010,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&content_type=topic&filter_query%5BdisplayInOverviewPage%5D%5Bis%5D=true&per_page=25&page=1&token=AxTiwxLPlWxLFQtTmSmrywtt&cv=1770795842",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&content_type=topic&filter_query%5BdisplayInOverviewPage%5D%5Bis%5D=true&per_page=25&page=1&token=AxTiwxLPlWxLFQtTmSmrywtt",
         "body": {},
         "method": "GET",
         "headers": {
@@ -5024,7 +5024,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 32
+      "durationMs": 157
     }
   ]
 }

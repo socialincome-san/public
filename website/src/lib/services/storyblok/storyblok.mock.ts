@@ -1,64 +1,42 @@
+let patched = false;
+
 export async function mockStoryblokIfTestMode() {
-	if (process.env.STORYBLOK_MOCK_MODE !== 'record' && process.env.STORYBLOK_MOCK_MODE !== 'replay') {
-		console.log('[Storyblok Mock] disabled (STORYBLOK_MOCK_MODE not set)');
-		return;
-	}
+	const mode = process.env.STORYBLOK_MOCK_MODE;
+	if (!['record', 'replay'].includes(mode ?? '')) return; // only run in mock modes
+	if (patched) return; // patch once
 
-	console.log('[Storyblok Mock] enabled via instrumentation', {
-		mode: process.env.STORYBLOK_MOCK_MODE,
-	});
+	patched = true;
 
-	const MOCKSERVER_BASE_URL = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
-	const STORYBLOK_HOST = 'api.storyblok.com';
+	const MOCK = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
+	const HOST = 'api.storyblok.com';
+	const original = globalThis.fetch;
 
-	let fetchPatched = false;
+	const hash = async (url: URL, method: string) => {
+		url.searchParams.delete('token'); // remove unstable params
+		url.searchParams.delete('cv');
 
-	async function stableHash(url: URL, method: string): Promise<string> {
-		// remove unstable params
-		const cleanUrl = new URL(url.toString());
-		cleanUrl.searchParams.delete('token');
-		cleanUrl.searchParams.delete('cv');
+		const buf = await crypto.subtle.digest(
+			'SHA-256',
+			new TextEncoder().encode(`${method}:${url.pathname}?${url.search}`),
+		);
 
-		const encoder = new TextEncoder();
-		const data = encoder.encode(`${method}:${cleanUrl.pathname}?${cleanUrl.search}`);
+		return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+	};
 
-		const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-		const hashArray = Array.from(new Uint8Array(hashBuffer));
+	globalThis.fetch = (async (input: any, init?: RequestInit) => {
+		const url = new URL(typeof input === 'string' ? input : input.url);
 
-		return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-	}
-
-	function patchStoryblokFetch() {
-		if (fetchPatched) return;
-		fetchPatched = true;
-
-		const originalFetch = globalThis.fetch;
-
-		globalThis.fetch = (async (input: any, init?: RequestInit) => {
-			const url = typeof input === 'string' ? new URL(input) : input instanceof URL ? input : new URL(input.url);
-
-			if (url.protocol === 'https:' && url.hostname === STORYBLOK_HOST) {
-				const method = init?.method ?? 'GET';
-				const hash = await stableHash(url, method);
-
-				const proxiedUrl = `${MOCKSERVER_BASE_URL}/${url.hostname}${url.pathname}${url.search}`;
-
-				return originalFetch(proxiedUrl, {
-					...init,
-					headers: {
-						...(init?.headers ?? {}),
-						'x-mock-hash': hash,
+		return url.protocol === 'https:' && url.hostname === HOST
+			? original(
+					`${MOCK}/${url.hostname}${url.pathname}${url.search}`, // proxy to mockserver
+					{
+						...init,
+						headers: {
+							...(init?.headers ?? {}),
+							'x-mock-hash': await hash(new URL(url.toString()), init?.method ?? 'GET'),
+						},
 					},
-				});
-			}
-
-			return originalFetch(input, init);
-		}) as typeof fetch;
-
-		console.log('[Storyblok Mock] fetch patched (Edge)', {
-			mockserver: MOCKSERVER_BASE_URL,
-		});
-	}
-
-	patchStoryblokFetch();
+				)
+			: original(input, init); // normal fetch
+	}) as typeof fetch;
 }

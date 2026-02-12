@@ -2,122 +2,65 @@ import type { TestInfo } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 
-const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
-const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
+const BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
+const MOCK = `${BASE}/mock`;
 
-function normalizeTestFileName(file: string) {
-	return path
-		.basename(file)
-		.replace(/\.e2e\.ts$/, '')
-		.replace(/\.ts$/, '');
-}
+const normalize = (f: string) => path.basename(f).replace(/\.e2e\.ts$|\.ts$/, '');
 
-function slugify(value: string) {
-	return value
+const slug = (s: string) =>
+	s
 		.toLowerCase()
 		.trim()
 		.replace(/[^a-z0-9]+/g, '-')
 		.replace(/^-+|-+$/g, '');
-}
 
-function recordingsPath(testInfo: TestInfo) {
-	const [file, testName] = testInfo.titlePath;
+const filePath = (t: TestInfo) => {
+	const [file, name] = t.titlePath;
+	return path.resolve(process.cwd(), 'test/e2e/recordings', normalize(file), `${slug(name)}.json`);
+};
 
-	const folder = normalizeTestFileName(file);
-	const slug = slugify(testName);
+const sortKeys = (o: Record<string, any>) =>
+	Object.fromEntries(
+		Object.keys(o)
+			.sort()
+			.map((k) => [k, o[k]]),
+	);
 
-	return path.resolve(process.cwd(), 'test/e2e/recordings', folder, `${slug}.json`);
-}
-
-function sortJsonByKey(obj: Record<string, any>): Record<string, any> {
-	return Object.keys(obj)
-		.sort()
-		.reduce<Record<string, any>>((acc, key) => {
-			acc[key] = obj[key];
-			return acc;
-		}, {});
-}
-
-async function assertOk(res: Response, label: string) {
-	if (res.ok) return;
-
-	let body: string;
-	try {
-		body = await res.text();
-	} catch {
-		body = '<failed to read body>';
-	}
-
-	throw new Error(`[storyblok-mock] ${label} failed (${res.status} ${res.statusText})\n${body}`);
-}
+const post = (url: string, body?: any) =>
+	fetch(url, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: body ? JSON.stringify(body) : undefined,
+	});
 
 export async function setupStoryblokMock(testInfo: TestInfo) {
 	const mode = process.env.STORYBLOK_MOCK_MODE;
+	if (!mode) return;
 
-	if (!mode) {
-		return;
-	}
+	await post(`${MOCK}/reset`);
 
-	const resetRes = await fetch(`${MOCKSERVER}/reset`, { method: 'POST' });
-	await assertOk(resetRes, 'reset');
+	mode === 'record' &&
+		(await post(`${MOCK}/recordings`, {
+			active: true,
+			deleteHeadersForHash: ['authorization', 'cookie', 'set-cookie', 'x-middleware-set-cookie', 'content-length'],
+			failedRequestsResponse: { error: 'Unexpected external Storyblok call in replay mode' },
+		}));
 
-	if (mode === 'record') {
-		console.log('[storyblok-mock] Enabling recording');
-
-		const res = await fetch(`${MOCKSERVER}/recordings`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				active: true,
-				deleteHeadersForHash: ['authorization', 'cookie', 'set-cookie', 'x-middleware-set-cookie', 'content-length'],
-				failedRequestsResponse: {
-					error: 'Unexpected external Storyblok call in replay mode',
-				},
-			}),
-		});
-
-		await assertOk(res, 'enable recording');
-	}
-
-	if (mode === 'replay') {
-		console.log('[storyblok-mock] Loading recordings');
-
-		const filePath = recordingsPath(testInfo);
-		const recordings = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-		const res = await fetch(`${MOCKSERVER}/recordings`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				active: false,
-				recordings,
-				failedRequestsResponse: {
-					error: 'Missing Storyblok recording in replay mode',
-				},
-			}),
-		});
-
-		await assertOk(res, 'load recordings');
-	}
+	mode === 'replay' &&
+		(await post(`${MOCK}/recordings`, {
+			active: false,
+			recordings: JSON.parse(fs.readFileSync(filePath(testInfo), 'utf-8')),
+			failedRequestsResponse: { error: 'Missing Storyblok recording in replay mode' },
+		}));
 }
 
 export async function saveStoryblokMock(testInfo: TestInfo) {
-	if (process.env.STORYBLOK_MOCK_MODE !== 'record') {
-		return;
-	}
+	if (process.env.STORYBLOK_MOCK_MODE !== 'record') return;
 
-	console.log('[storyblok-mock] Saving recordings');
+	const res = await fetch(`${MOCK}/recordings`);
+	const data = sortKeys(await res.json());
+	const fp = filePath(testInfo);
 
-	const res = await fetch(`${MOCKSERVER}/recordings`);
-	await assertOk(res, 'fetch recordings');
-
-	const recordings = await res.json();
-
-	const sorted = sortJsonByKey(recordings);
-	const filePath = recordingsPath(testInfo);
-
-	fs.mkdirSync(path.dirname(filePath), { recursive: true });
-	fs.writeFileSync(filePath, JSON.stringify(sorted, null, 2));
-
-	console.log('[storyblok-mock] Recordings written to', filePath);
+	fs.mkdirSync(path.dirname(fp), { recursive: true });
+	fs.writeFileSync(fp, JSON.stringify(data, null, 2));
 }
