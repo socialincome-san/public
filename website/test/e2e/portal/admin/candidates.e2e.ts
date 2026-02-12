@@ -53,7 +53,7 @@ test.beforeEach(async () => {
 });
 
 test('Add new candidate', async ({ page }) => {
-	await page.goto('http://localhost:3000/portal/admin/candidates');
+	await page.goto('/portal/admin/candidates');
 	await page.getByRole('button', { name: 'Add new candidate' }).click();
 
 	await page.getByTestId('form-item-status').click();
@@ -87,7 +87,7 @@ test('Edit existing candidate', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists(EDIT_CANDIDATE.phone);
 
-	await page.goto('http://localhost:3000/portal/admin/candidates');
+	await page.goto('/portal/admin/candidates');
 	await page.getByRole('cell', { name: 'Hawa' }).click();
 
 	await page.getByTestId('form-item-successorName').locator('input').fill(EDIT_CANDIDATE.successorName);
@@ -157,7 +157,7 @@ test('Delete candidate', async ({ page }) => {
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(phone);
 	await expect(page.getByRole('cell', { name: phone })).toBeVisible();
 
-	await page.goto('http://localhost:3000/portal/admin/candidates');
+	await page.goto('/portal/admin/candidates');
 	await page.getByRole('cell', { name: 'Hawa' }).click();
 
 	await page.getByRole('button', { name: 'Delete' }).click();
@@ -179,7 +179,7 @@ test('Delete candidate', async ({ page }) => {
 });
 
 test('CSV Upload', async ({ page }) => {
-	await page.goto('http://localhost:3000/portal/admin/candidates');
+	await page.goto('/portal/admin/candidates');
 
 	await page.getByRole('button', { name: 'Upload CSV' }).click();
 	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/portal/admin/upload-example.csv');

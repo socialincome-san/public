@@ -57,7 +57,7 @@ test.beforeEach(async () => {
 });
 
 test('Add new recipient', async ({ page }) => {
-	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('/portal/management/recipients');
 	await page.getByRole('button', { name: 'Add new recipient' }).click();
 
 	await page.getByTestId('form-item-status').click();
@@ -95,7 +95,7 @@ test('Edit existing recipient', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
 
-	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('/portal/management/recipients');
 	await page.getByRole('cell', { name: 'Mohamed' }).click();
 
 	await page.getByTestId('form-item-startDate').locator('button').click();
@@ -173,7 +173,7 @@ test('Delete recipient', async ({ page }) => {
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(phone);
 	await expect(page.getByRole('cell', { name: phone })).toBeVisible();
 
-	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('/portal/management/recipients');
 	await page.getByRole('cell', { name: 'Badingu' }).click();
 
 	await page.getByRole('button', { name: 'Delete' }).click();
@@ -195,7 +195,7 @@ test('Delete recipient', async ({ page }) => {
 });
 
 test('CSV Upload', async ({ page }) => {
-	await page.goto('http://localhost:3000/portal/management/recipients');
+	await page.goto('/portal/management/recipients');
 
 	await page.getByRole('button', { name: 'Upload CSV' }).click();
 	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/portal/management/upload-example.csv');

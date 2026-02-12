@@ -52,7 +52,11 @@ export function PayoutBox({
 			</div>
 
 			<div className="flex items-center gap-3 pt-6">
-				<Switch checked={customizePayouts} onCheckedChange={onToggleCustomizePayouts} />
+				<Switch
+					data-testid="customize-payouts-switch"
+					checked={customizePayouts}
+					onCheckedChange={onToggleCustomizePayouts}
+				/>
 				<span className="text-sm font-medium">Customize</span>
 			</div>
 		</div>
