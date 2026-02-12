@@ -1,4 +1,4 @@
-export async function register() {
+export async function mockStoryblokIfTestMode() {
 	if (process.env.STORYBLOK_MOCK_MODE !== 'record' && process.env.STORYBLOK_MOCK_MODE !== 'replay') {
 		console.log('[Storyblok Mock] disabled (STORYBLOK_MOCK_MODE not set)');
 		return;

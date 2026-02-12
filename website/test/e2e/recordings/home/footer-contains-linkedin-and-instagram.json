@@ -234,7 +234,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 43
+      "durationMs": 51
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -518,7 +518,7 @@
                   },
                   {
                     "_uid": "6fb1f5a9-7353-4049-81f0-da96389f8d2f",
-                    "icon": "ASDF",
+                    "icon": "linkedin",
                     "link": {
                       "id": "",
                       "url": "https://www.linkedin.com/company/socialincome",
@@ -526,7 +526,7 @@
                       "fieldtype": "multilink",
                       "cached_url": "https://www.linkedin.com/company/socialincome"
                     },
-                    "label": "ASDF",
+                    "label": "LinkedIn",
                     "newTab": true,
                     "component": "menuItem"
                   },
@@ -787,7 +787,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 39
+      "durationMs": 64
     }
   ]
 }
