@@ -90,7 +90,7 @@ export function ProfileForm({ session, translations, isNewsletterSubscribed = fa
 										options={causeOptions}
 										defaultValue={field.value ?? []}
 										onValueChange={(v) => field.onChange(v as Cause[])}
-										disabled={loading}
+										disabled
 										placeholder={translations.selectOptionPlaceholder}
 									/>
 									<FormMessage />
