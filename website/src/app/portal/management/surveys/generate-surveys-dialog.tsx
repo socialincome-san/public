@@ -77,6 +77,7 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 							<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
 
 							<Button
+								data-testid={`survey-step-${step.id}-button`}
 								className="flex w-full items-center justify-center gap-2"
 								variant={step.variant ?? 'default'}
 								onClick={() => run(step)}
@@ -86,6 +87,7 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 							</Button>
 
 							<StepResultBox
+								id={step.id}
 								value={results[step.id]}
 								filename={step.filename()}
 								onClear={() => setResult(step.id, null)}

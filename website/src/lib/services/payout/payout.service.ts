@@ -374,11 +374,8 @@ export class PayoutService extends BaseService {
 			const csvRows: string[][] = [['Mobile Number*', 'Unique Code*', 'User Type*']];
 
 			for (const recipient of recipients) {
-				const code = recipient.paymentInformation?.code;
-				const phone = recipient.paymentInformation?.phone?.number;
-				if (!code || !phone) {
-					return this.resultFail(`Orange Money Id or phone number missing for recipient: ${recipient.id}`);
-				}
+				const code = recipient.paymentInformation?.code ?? 'NO_CODE';
+				const phone = recipient.paymentInformation?.phone?.number ?? 'NO_PHONE';
 				csvRows.push([phone.toString().slice(-8), code.toString(), 'subscriber']);
 			}
 
@@ -404,15 +401,11 @@ export class PayoutService extends BaseService {
 			];
 
 			for (const recipient of recipients) {
-				const code = recipient.paymentInformation?.code;
-				const phone = recipient.paymentInformation?.phone?.number;
+				const code = recipient.paymentInformation?.code ?? 'MISSING_CODE';
+				const phone = recipient.paymentInformation?.phone?.number ?? 'MISSING_PHONE';
 				const firstName = recipient.contact?.firstName ?? '';
 				const lastName = recipient.contact?.lastName ?? '';
 				const amount = Number(recipient.program?.payoutPerInterval ?? 0);
-
-				if (!code || !phone) {
-					return this.resultFail(`Orange Money Id or phone number missing for recipient: ${recipient.id}`);
-				}
 
 				csvRows.push([
 					phone.toString().slice(-8),
@@ -459,7 +452,7 @@ export class PayoutService extends BaseService {
 					const rateCurrency = rates[currency];
 					const rateChf = rates['CHF'];
 					const amountChf = rateCurrency && rateChf ? (payoutPerInterval / rateCurrency) * rateChf : null;
-					const phoneNumber = r.paymentInformation?.phone?.number ?? null;
+					const phoneNumber = r.paymentInformation?.phone?.number ?? 'NO_PHONE';
 
 					return {
 						recipientId: r.id,
@@ -500,7 +493,7 @@ export class PayoutService extends BaseService {
 				currency: p.currency,
 				paymentAt: p.paymentAt,
 				status: p.status,
-				phoneNumber: p.phoneNumber ?? null,
+				phoneNumber: p.phoneNumber ?? 'NO_PHONE',
 				comments: null,
 			}));
 
