@@ -369,6 +369,15 @@ export class CandidateService extends BaseService {
 			return this.resultOk(updatedCandidate);
 		} catch (error) {
 			this.logger.error(error);
+
+			if (phoneAdded && nextPaymentPhoneNumber) {
+				await this.firebaseAdminService.deleteByPhoneNumberIfExists(nextPaymentPhoneNumber);
+			}
+
+			if (phoneChanged && previousPaymentPhoneNumber && nextPaymentPhoneNumber) {
+				await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber);
+			}
+
 			return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
 		}
 	}

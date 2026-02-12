@@ -123,6 +123,7 @@ export function StartPayoutProcessDialog({ open, setOpen }: { open: boolean; set
 							<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
 
 							<Button
+								data-testid={`payout-step-${step.id}-button`}
 								className="flex w-full items-center justify-center gap-2"
 								variant={step.variant ?? 'default'}
 								onClick={() => run(step)}
@@ -132,6 +133,7 @@ export function StartPayoutProcessDialog({ open, setOpen }: { open: boolean; set
 							</Button>
 
 							<StepResultBox
+								id={step.id}
 								value={results[step.id]}
 								filename={step.filename()}
 								onClear={() => setResult(step.id, null)}
