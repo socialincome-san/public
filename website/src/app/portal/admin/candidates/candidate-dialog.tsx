@@ -2,41 +2,39 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { RecipientForm } from '@/components/recipient/recipient-form';
 import { Actor } from '@/lib/firebase/current-account';
 import { logger } from '@/lib/utils/logger';
+import { CandidateForm } from './candidates-form';
 
 type Props = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	recipientId?: string;
+	candidateId?: string;
 	readOnly: boolean;
-	programId?: string;
 	actorKind: Actor['kind'];
 	errorMessage: string | null;
 	onError: (error: string) => void;
 };
 
-export function RecipientDialog({
+export function CandidateDialog({
 	open,
 	onOpenChange,
-	recipientId,
+	candidateId,
 	readOnly,
-	programId,
 	actorKind,
 	errorMessage,
 	onError,
 }: Props) {
 	const handleError = (error: unknown) => {
-		onError(`Error saving recipient: ${error}`);
-		logger.error('Recipient Form Error', { error });
+		onError(`Error saving candidate: ${error}`);
+		logger.error('Candidate Form Error', { error });
 	};
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>{readOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}</DialogTitle>
+					<DialogTitle>{readOnly ? 'View Candidate' : candidateId ? 'Edit Candidate' : 'New Candidate'}</DialogTitle>
 				</DialogHeader>
 
 				{errorMessage && (
@@ -46,13 +44,12 @@ export function RecipientDialog({
 					</Alert>
 				)}
 
-				<RecipientForm
-					recipientId={recipientId}
+				<CandidateForm
+					candidateId={candidateId}
 					readOnly={readOnly}
 					onSuccess={() => onOpenChange(false)}
 					onCancel={() => onOpenChange(false)}
 					onError={handleError}
-					programId={programId}
 					actorKind={actorKind}
 				/>
 			</DialogContent>

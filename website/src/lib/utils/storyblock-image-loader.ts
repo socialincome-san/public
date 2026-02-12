@@ -11,11 +11,11 @@ export default function storyblokImageLoader({
 	try {
 		url = new URL(src);
 	} catch {
-		return src;
+		return `${src}?w=${width}${quality ? `&q=${quality}` : ''}`;
 	}
 
 	if (!url.hostname.endsWith('.storyblok.com')) {
-		return src;
+		return `${src}?w=${width}${quality ? `&q=${quality}` : ''}`;
 	}
 
 	const crop = url.searchParams.get('_crop');

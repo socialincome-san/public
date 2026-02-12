@@ -1,17 +1,17 @@
 'use client';
 
+import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
+import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
+import { useLogout } from '@/components/app-shells/use-logout';
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Separator } from '@/components/breadcrumb/separator';
 import { Button } from '@/components/button';
+import { SILogo } from '@/components/svg/si-logo';
 import { UserSession } from '@/lib/services/user/user.types';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { useLogout } from '../../use-logout';
-import { useNavbarLinks } from './hooks/use-navbar-links';
-import { Logo } from './logo';
-import { ProgramDropdown } from './program-dropdown';
 
 export const NavbarMobile = ({ user }: { user: UserSession }) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -62,7 +62,7 @@ export const NavbarMobile = ({ user }: { user: UserSession }) => {
 					</span>
 				</Button>
 
-				<Logo className="absolute left-1/2 -translate-x-1/2 transform" />
+				<SILogo className="absolute left-1/2 -translate-x-1/2 transform" />
 			</div>
 
 			{isMenuOpen && (

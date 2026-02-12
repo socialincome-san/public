@@ -2,20 +2,24 @@
 
 import { Button } from '@/components/button';
 
-const CSV_TEMPLATE_HEADERS = ['firstName', 'lastName', 'status', 'programId', 'localPartnerId'];
+type Props = {
+	template: {
+		headers: string[];
+		exampleRow: string[];
+		filename: string;
+	};
+};
 
-export function CsvTemplateDownload() {
+export function CsvTemplateDownload({ template }: Props) {
 	const handleDownload = () => {
-		const exampleRow = ['John', 'Doe', 'active', 'program_id_here', 'local_partner_id_here'];
-
-		const csvContent = [CSV_TEMPLATE_HEADERS.join(','), exampleRow.join(',')].join('\n');
+		const csvContent = [template.headers.join(','), template.exampleRow.join(',')].join('\n');
 
 		const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 		const url = URL.createObjectURL(blob);
 
 		const link = document.createElement('a');
 		link.href = url;
-		link.download = 'recipients-import-template.csv';
+		link.download = template.filename;
 		link.click();
 
 		URL.revokeObjectURL(url);
@@ -24,7 +28,6 @@ export function CsvTemplateDownload() {
 	return (
 		<div className="bg-muted/30 flex items-center justify-between rounded-md border px-3 py-2">
 			<p className="text-muted-foreground text-sm">Need help formatting your CSV?</p>
-
 			<Button variant="ghost" size="sm" onClick={handleDownload}>
 				Download CSV template
 			</Button>

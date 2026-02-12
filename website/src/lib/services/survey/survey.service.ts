@@ -1,6 +1,6 @@
 import { ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import crypto from 'crypto';
-import { addMonths, isFuture } from 'date-fns';
+import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -107,14 +107,90 @@ export class SurveyService extends BaseService {
 
 	async getUpcomingSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
-			const allSurveysResult = await this.getTableView(userId);
-			if (!allSurveysResult.success) {
-				return allSurveysResult;
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const upcoming = allSurveysResult.data.tableRows.filter((row) => isFuture(row.dueAt));
+			const accessiblePrograms = accessibleProgramsResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ tableRows: [] });
+			}
 
-			return this.resultOk({ tableRows: upcoming });
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
+			const now = new Date();
+			const from = startOfMonth(subMonths(now, 1));
+			const to = endOfMonth(now);
+
+			const surveys = await this.db.survey.findMany({
+				where: {
+					status: { not: SurveyStatus.completed },
+					dueAt: {
+						gte: from,
+						lte: to,
+					},
+					recipient: {
+						programId: { in: programIds },
+					},
+				},
+				select: {
+					id: true,
+					name: true,
+					questionnaire: true,
+					status: true,
+					language: true,
+					dueAt: true,
+					completedAt: true,
+					createdAt: true,
+					accessEmail: true,
+					accessPw: true,
+					recipient: {
+						select: {
+							id: true,
+							contact: { select: { firstName: true, lastName: true } },
+							program: { select: { id: true, name: true } },
+						},
+					},
+				},
+				orderBy: { dueAt: 'desc' },
+			});
+
+			const tableRows: SurveyTableViewRow[] = surveys
+				.filter((s) => s.recipient.program !== null)
+				.map((survey) => {
+					const programId = survey.recipient.program!.id;
+
+					const permissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
+
+					const permission = permissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
+
+					return {
+						id: survey.id,
+						name: survey.name,
+						recipientName:
+							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+						programId,
+						programName: survey.recipient.program!.name,
+						questionnaire: survey.questionnaire,
+						status: survey.status,
+						language: survey.language,
+						dueAt: survey.dueAt,
+						completedAt: survey.completedAt,
+						createdAt: survey.createdAt,
+						surveyUrl: this.buildSurveyUrl({
+							surveyId: survey.id,
+							recipientId: survey.recipient.id,
+							accessEmail: survey.accessEmail,
+							accessPw: survey.accessPw,
+						}),
+						permission,
+					};
+				});
+
+			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch upcoming surveys: ${JSON.stringify(error)}`);
