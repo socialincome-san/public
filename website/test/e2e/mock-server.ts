@@ -5,8 +5,6 @@ import path from 'path';
 const MOCKSERVER_BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCKSERVER = `${MOCKSERVER_BASE}/mock`;
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 function normalizeTestFileName(file: string) {
 	return path
 		.basename(file)
@@ -40,6 +38,19 @@ function sortJsonByKey(obj: Record<string, any>): Record<string, any> {
 		}, {});
 }
 
+async function assertOk(res: Response, label: string) {
+	if (res.ok) return;
+
+	let body: string;
+	try {
+		body = await res.text();
+	} catch {
+		body = '<failed to read body>';
+	}
+
+	throw new Error(`[storyblok-mock] ${label} failed (${res.status} ${res.statusText})\n${body}`);
+}
+
 export async function setupStoryblokMock(testInfo: TestInfo) {
 	const mode = process.env.STORYBLOK_MOCK_MODE;
 
@@ -47,21 +58,46 @@ export async function setupStoryblokMock(testInfo: TestInfo) {
 		return;
 	}
 
-	await sleep(500);
+	const resetRes = await fetch(`${MOCKSERVER}/reset`, { method: 'POST' });
+	await assertOk(resetRes, 'reset');
 
 	if (mode === 'record') {
 		console.log('[storyblok-mock] Enabling recording');
 
-		await fetch(`${MOCKSERVER}/recordings`, {
+		const res = await fetch(`${MOCKSERVER}/recordings`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				active: true,
 				deleteHeadersForHash: ['authorization', 'cookie', 'set-cookie', 'x-middleware-set-cookie', 'content-length'],
+				failedRequestsResponse: {
+					error: 'Unexpected external Storyblok call in replay mode',
+				},
 			}),
 		});
 
-		await sleep(300);
+		await assertOk(res, 'enable recording');
+	}
+
+	if (mode === 'replay') {
+		console.log('[storyblok-mock] Loading recordings');
+
+		const filePath = recordingsPath(testInfo);
+		const recordings = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+		const res = await fetch(`${MOCKSERVER}/recordings`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				active: false,
+				recordings,
+				failedRequestsResponse: {
+					error: 'Missing Storyblok recording in replay mode',
+				},
+			}),
+		});
+
+		await assertOk(res, 'load recordings');
 	}
 }
 
@@ -71,9 +107,10 @@ export async function saveStoryblokMock(testInfo: TestInfo) {
 	}
 
 	console.log('[storyblok-mock] Saving recordings');
-	await sleep(1000);
 
 	const res = await fetch(`${MOCKSERVER}/recordings`);
+	await assertOk(res, 'fetch recordings');
+
 	const recordings = await res.json();
 
 	const sorted = sortJsonByKey(recordings);

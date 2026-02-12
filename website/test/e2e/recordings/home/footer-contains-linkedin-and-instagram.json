@@ -526,7 +526,7 @@
                       "fieldtype": "multilink",
                       "cached_url": "https://www.linkedin.com/company/socialincome"
                     },
-                    "label": "LinkedIn",
+                    "label": "FROM RECORDING: LinkedIn",
                     "newTab": true,
                     "component": "menuItem"
                   },
