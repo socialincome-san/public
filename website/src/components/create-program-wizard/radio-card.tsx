@@ -17,6 +17,7 @@ type Props = {
 export function RadioCard({ value, checked, disabled, label, description, badge, children }: Props) {
 	return (
 		<label
+			data-testid={`radio-card-${value}`}
 			className={cn(
 				'relative flex items-start gap-3 rounded-lg border p-4 transition-colors',
 				!disabled && 'hover:bg-muted/40 cursor-pointer',

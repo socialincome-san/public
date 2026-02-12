@@ -30,6 +30,7 @@ export function RecipientsBox({ amountOfRecipients, filteredRecipients, onChange
 				) : (
 					<>
 						<Slider
+							data-testid="recipients-slider"
 							min={1}
 							max={filteredRecipients}
 							step={1}

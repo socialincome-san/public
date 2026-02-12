@@ -1,5 +1,6 @@
-import { Cause, Prisma } from '@/generated/prisma/client';
+import { Cause, CountryCode, Prisma, RecipientStatus } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
+import { parseCsvText } from '@/lib/utils/csv';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -28,10 +29,50 @@ export class CandidateService extends BaseService {
 		return this.resultOk(true);
 	}
 
-	private buildCandidateWhere(causes?: Cause[], profiles?: Profile[]): Prisma.RecipientWhereInput {
+	private buildCandidateWhere(
+		causes?: Cause[],
+		profiles?: Profile[],
+		countryCode?: CountryCode | null,
+	): Prisma.RecipientWhereInput {
 		const where: Prisma.RecipientWhereInput = {
 			programId: null,
 		};
+
+		if (countryCode) {
+			where.AND = [
+				{
+					OR: [
+						{
+							contact: {
+								address: {
+									country: countryCode,
+								},
+							},
+						},
+						{
+							AND: [
+								{
+									contact: {
+										address: {
+											country: null,
+										},
+									},
+								},
+								{
+									localPartner: {
+										contact: {
+											address: {
+												country: countryCode,
+											},
+										},
+									},
+								},
+							],
+						},
+					],
+				},
+			];
+		}
 
 		if (causes && causes.length > 0) {
 			where.localPartner = {
@@ -75,7 +116,7 @@ export class CandidateService extends BaseService {
 		return where;
 	}
 
-	async create(actor: Actor, data: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
+	async create(actor: Actor, candidate: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
 		if (actor.kind === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
@@ -88,19 +129,42 @@ export class CandidateService extends BaseService {
 		}
 
 		if (actor.kind === 'local-partner') {
-			data.localPartner = { connect: { id: actor.session.id } };
+			candidate.localPartner = { connect: { id: actor.session.id } };
 		}
 
-		data.program = undefined;
+		candidate.program = undefined;
 
-		const phone = data.paymentInformation?.create?.phone?.create?.number;
-		if (!phone) {
-			return this.resultFail('No phone number provided for candidate creation');
-		}
+		const paymentInfoCreate = candidate.paymentInformation?.create;
+		const paymentPhoneNumber = paymentInfoCreate?.phone?.create?.number;
 
 		try {
 			return await this.db.$transaction(async (tx) => {
-				const created = await tx.recipient.create({
+				const data: CandidateCreateInput = {
+					startDate: candidate.startDate ?? null,
+					status: candidate.status,
+					successorName: candidate.successorName ?? null,
+					termsAccepted: candidate.termsAccepted ?? false,
+
+					localPartner: candidate.localPartner,
+					contact: candidate.contact,
+
+					paymentInformation:
+						paymentInfoCreate && paymentPhoneNumber
+							? {
+									create: {
+										provider: paymentInfoCreate.provider,
+										code: paymentInfoCreate.code ?? null,
+										phone: {
+											create: {
+												number: paymentPhoneNumber,
+											},
+										},
+									},
+								}
+							: undefined,
+				};
+
+				const newCandidate = await tx.recipient.create({
 					data,
 					select: {
 						id: true,
@@ -134,12 +198,14 @@ export class CandidateService extends BaseService {
 					},
 				});
 
-				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(phone);
-				if (!firebaseResult.success) {
-					throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
+				if (paymentPhoneNumber) {
+					const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(paymentPhoneNumber);
+					if (!firebaseResult.success) {
+						throw new Error(`Failed to create Firebase user: ${firebaseResult.error}`);
+					}
 				}
 
-				return this.resultOk(created);
+				return this.resultOk(newCandidate);
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -187,7 +253,8 @@ export class CandidateService extends BaseService {
 		}
 
 		if (actor.kind === 'local-partner') {
-			if (existing.localPartnerId !== actor.session.id) {
+			const partnerId = actor.session.id;
+			if (existing.localPartnerId !== partnerId) {
 				return this.resultFail('Permission denied');
 			}
 			delete updateInput.localPartner;
@@ -195,19 +262,76 @@ export class CandidateService extends BaseService {
 
 		updateInput.program = undefined;
 
-		const previous = existing.paymentInformation?.phone?.number ?? null;
-		const paymentPhoneHasChanged =
-			previous !== null && nextPaymentPhoneNumber !== null && previous !== nextPaymentPhoneNumber;
+		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
+
+		if (!previousPaymentPhoneNumber && !nextPaymentPhoneNumber) {
+			try {
+				const updatedCandidate = await this.db.recipient.update({
+					where: { id: candidateId },
+					data: updateInput,
+					select: {
+						id: true,
+						status: true,
+						successorName: true,
+						termsAccepted: true,
+						localPartner: { select: { id: true, name: true } },
+						contact: {
+							select: {
+								id: true,
+								firstName: true,
+								lastName: true,
+								callingName: true,
+								email: true,
+								gender: true,
+								language: true,
+								dateOfBirth: true,
+								profession: true,
+								phone: true,
+								address: true,
+							},
+						},
+						paymentInformation: {
+							select: {
+								id: true,
+								code: true,
+								provider: true,
+								phone: true,
+							},
+						},
+					},
+				});
+				return this.resultOk(updatedCandidate);
+			} catch (error) {
+				this.logger.error(error);
+				return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
+			}
+		}
+
+		const phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
+
+		const phoneChanged =
+			!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
 		try {
-			if (paymentPhoneHasChanged) {
-				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(previous!, nextPaymentPhoneNumber!);
+			if (phoneAdded) {
+				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+				}
+			}
+
+			if (phoneChanged) {
+				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(
+					previousPaymentPhoneNumber,
+					nextPaymentPhoneNumber!,
+				);
+
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
 				}
 			}
 
-			const updated = await this.db.recipient.update({
+			const updatedCandidate = await this.db.recipient.update({
 				where: { id: candidateId },
 				data: updateInput,
 				select: {
@@ -242,10 +366,71 @@ export class CandidateService extends BaseService {
 				},
 			});
 
-			return this.resultOk(updated);
+			return this.resultOk(updatedCandidate);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async delete(actor: Actor, candidateId: string): Promise<ServiceResult<{ id: string }>> {
+		const existing = await this.db.recipient.findUnique({
+			where: { id: candidateId },
+			select: {
+				id: true,
+				programId: true,
+				localPartnerId: true,
+				paymentInformation: {
+					select: {
+						phone: { select: { number: true } },
+					},
+				},
+			},
+		});
+
+		if (!existing) {
+			return this.resultFail('Candidate not found');
+		}
+
+		if (actor.kind === 'user') {
+			const admin = await this.assertAdmin(actor.session.id);
+			if (!admin.success) {
+				return this.resultFail(admin.error);
+			}
+		}
+
+		if (actor.kind === 'local-partner') {
+			const partnerId = actor.session.id;
+			if (existing.localPartnerId !== partnerId) {
+				return this.resultFail('Permission denied');
+			}
+		}
+
+		if (actor.kind === 'contributor') {
+			return this.resultFail('Permission denied');
+		}
+
+		console.log('Deleting candidate with ID:', candidateId);
+
+		try {
+			await this.db.$transaction(async (tx) => {
+				console.log('Transaction started for deleting candidate with ID:', candidateId);
+				const phone = existing.paymentInformation?.phone?.number;
+				console.log('Candidate payment phone number:', phone);
+				if (phone) {
+					console.log('Deleting Firebase user with phone number:', phone);
+					await this.firebaseAdminService.deleteByPhoneNumberIfExists(phone);
+				}
+
+				await tx.recipient.delete({
+					where: { id: candidateId },
+				});
+			});
+
+			return this.resultOk({ id: candidateId });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not delete candidate: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -395,9 +580,28 @@ export class CandidateService extends BaseService {
 		}
 	}
 
-	async getCandidateCount(causes?: Cause[], profiles?: Profile[]): Promise<ServiceResult<{ count: number }>> {
+	async getCandidateCount(
+		causes?: Cause[],
+		profiles?: Profile[],
+		countryId?: string | null,
+	): Promise<ServiceResult<{ count: number }>> {
 		try {
-			const where = this.buildCandidateWhere(causes, profiles);
+			let countryCode: CountryCode | null = null;
+
+			if (countryId) {
+				const country = await this.db.country.findUnique({
+					where: { id: countryId },
+					select: { isoCode: true },
+				});
+
+				if (!country) {
+					return this.resultFail('Country not found');
+				}
+
+				countryCode = country.isoCode;
+			}
+
+			const where = this.buildCandidateWhere(causes, profiles, countryCode);
 
 			const count = await this.db.recipient.count({ where });
 
@@ -411,11 +615,12 @@ export class CandidateService extends BaseService {
 	async assignRandomCandidatesToProgram(
 		programId: string,
 		amountOfRecipientsForStart: number,
+		countryCode: CountryCode,
 		causes?: Cause[],
 		profiles?: Profile[],
 	): Promise<ServiceResult<{ assigned: number }>> {
 		try {
-			const where = this.buildCandidateWhere(causes, profiles);
+			const where = this.buildCandidateWhere(causes, profiles, countryCode);
 
 			const allAvailableCandidates = await this.db.recipient.findMany({
 				where,
@@ -444,5 +649,58 @@ export class CandidateService extends BaseService {
 			this.logger.error(error);
 			return this.resultFail(`Could not assign candidates: ${JSON.stringify(error)}`);
 		}
+	}
+
+	async importCsv(actor: Actor, file: File): Promise<ServiceResult<{ created: number }>> {
+		let created = 0;
+
+		let rows;
+		try {
+			const text = await file.text();
+			rows = parseCsvText(text);
+		} catch (error) {
+			return this.resultFail(error instanceof Error ? error.message : 'Failed to parse CSV file');
+		}
+
+		for (let i = 0; i < rows.length; i++) {
+			const row = rows[i];
+			const rowNumber = i + 1;
+
+			if (!row.firstName || !row.lastName) {
+				return this.resultFail(`Row ${rowNumber}: firstName and lastName are required`);
+			}
+
+			if (!row.localPartnerId) {
+				return this.resultFail(`Row ${rowNumber}: localPartnerId is required`);
+			}
+
+			if (!row.status) {
+				return this.resultFail(`Row ${rowNumber}: status is required`);
+			}
+
+			const candidate: CandidateCreateInput = {
+				status: row.status as RecipientStatus,
+				contact: {
+					create: {
+						firstName: row.firstName,
+						lastName: row.lastName,
+					},
+				},
+
+				localPartner: {
+					connect: { id: row.localPartnerId },
+				},
+			};
+
+			const result = await this.create(actor, candidate);
+
+			if (!result.success) {
+				return this.resultFail(`Row ${rowNumber}: ${result.error}`);
+			}
+
+			created++;
+		}
+
+		return this.resultOk({ created });
 	}
 }

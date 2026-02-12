@@ -108,6 +108,10 @@ export class RecipientService extends BaseService {
 		updateInput: RecipientPrismaUpdateInput,
 		nextPaymentPhoneNumber: string | null,
 	): Promise<ServiceResult<Recipient>> {
+		if (actor.kind === 'contributor') {
+			return this.resultFail('Permission denied');
+		}
+
 		const recipientId = updateInput.id as string;
 
 		const existing = await this.db.recipient.findUnique({
@@ -159,10 +163,6 @@ export class RecipientService extends BaseService {
 			}
 			delete updateInput.localPartner;
 			delete updateInput.program;
-		}
-
-		if (actor.kind === 'contributor') {
-			return this.resultFail('Permission denied');
 		}
 
 		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
