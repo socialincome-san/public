@@ -1,47 +1,47 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
+import { CsvUploadDialog } from '@/components/data-table/clients/csv-upload-dialog';
 import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
 import DataTable from '@/components/data-table/data-table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { Actor } from '@/lib/firebase/current-account';
+import { importCandidatesCsvAction } from '@/lib/server-actions/candidate-actions';
 import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
-import { logger } from '@/lib/utils/logger';
+import { UploadIcon } from 'lucide-react';
 import { useState } from 'react';
-import { CandidateForm } from './candidates-form';
+import { CandidateDialog } from './candidate-dialog';
 
-export function CandidatesTableClient({
-	rows,
-	error,
-	readOnly,
-	actorKind = 'user',
-}: {
+type Props = {
 	rows: CandidatesTableViewRow[];
 	error: string | null;
 	readOnly?: boolean;
 	actorKind?: Actor['kind'];
-}) {
-	const [open, setOpen] = useState(false);
-	const [candidateId, setCandidateId] = useState<string | undefined>();
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const rowReadOnly = readOnly ?? false;
+};
 
-	const openEmptyForm = () => {
-		setCandidateId(undefined);
-		setErrorMessage(null);
-		setOpen(true);
+export function CandidatesTableClient({ rows, error, readOnly, actorKind = 'user' }: Props) {
+	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
+	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
+	const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
+	const [candidateError, setCandidateError] = useState<string | null>(null);
+	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
+
+	const openCreateDialog = () => {
+		setCandidateError(null);
+		setSelectedCandidateId(undefined);
+		setIsReadOnly(readOnly ?? false);
+		setIsCandidateDialogOpen(true);
 	};
 
-	const openEditForm = (row: CandidatesTableViewRow) => {
-		setCandidateId(row.id);
-		setErrorMessage(null);
-		setOpen(true);
+	const openEditDialog = (_row: CandidatesTableViewRow) => {
+		setCandidateError(null);
+		setSelectedCandidateId(_row.id);
+		setIsReadOnly(readOnly ?? false);
+		setIsCandidateDialogOpen(true);
 	};
 
-	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving candidate: ${error}`);
-		logger.error('Candidate Form Error', { error });
+	const closeCandidateDialog = () => {
+		setIsCandidateDialogOpen(false);
+		setCandidateError(null);
 	};
 
 	return (
@@ -54,37 +54,42 @@ export function CandidatesTableClient({
 				makeColumns={makeCandidateColumns}
 				hideLocalPartner={actorKind === 'local-partner'}
 				actions={
-					<Button disabled={readOnly} onClick={openEmptyForm}>
-						Add candidate
-					</Button>
+					<div className="flex gap-2">
+						<Button disabled={readOnly} onClick={openCreateDialog}>
+							Add new candidate
+						</Button>
+
+						<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
+							Upload CSV
+							<UploadIcon />
+						</Button>
+					</div>
 				}
-				onRowClick={openEditForm}
+				onRowClick={openEditDialog}
 				searchKeys={['firstName', 'lastName', 'localPartnerName']}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>{candidateId ? 'Edit Candidate' : 'New Candidate'}</DialogTitle>
-					</DialogHeader>
+			<CandidateDialog
+				open={isCandidateDialogOpen}
+				onOpenChange={closeCandidateDialog}
+				candidateId={selectedCandidateId}
+				readOnly={isReadOnly}
+				actorKind={actorKind}
+				errorMessage={candidateError}
+				onError={setCandidateError}
+			/>
 
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-
-					<CandidateForm
-						candidateId={candidateId}
-						readOnly={rowReadOnly}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-						actorKind={actorKind}
-					/>
-				</DialogContent>
-			</Dialog>
+			<CsvUploadDialog
+				open={isCsvUploadDialogOpen}
+				onOpenChange={setIsCsvUploadDialogOpen}
+				title="Upload candidates CSV"
+				template={{
+					headers: ['firstName', 'lastName', 'status', 'localPartnerId'],
+					exampleRow: ['John', 'Doe', 'active', 'local_partner_id_here'],
+					filename: 'candidates-import-template.csv',
+				}}
+				onImport={(file) => importCandidatesCsvAction(file)}
+			/>
 		</>
 	);
 }
