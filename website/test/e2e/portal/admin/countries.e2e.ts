@@ -73,7 +73,7 @@ test('Add new country', async ({ page }) => {
 		throw new Error(result.error);
 	}
 
-	expect(result.data.tableRows.length).toBe(6);
+	expect(result.data.tableRows.length).toBe(7);
 
 	const country = result.data.tableRows.find((c) => c.isoCode === expectedCountry.isoCode);
 
