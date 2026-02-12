@@ -13,7 +13,13 @@ const storyblokService = new StoryblokService();
 export default async function HomePage({ params }: DefaultPageProps) {
 	const { lang } = await params;
 
-	const story = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(NEW_WEBSITE_SLUG, lang);
+	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(NEW_WEBSITE_SLUG, lang);
+
+	if (!storyResult.success) {
+		return notFound();
+	}
+
+	const story = storyResult.data;
 
 	if (!story) {
 		return notFound();

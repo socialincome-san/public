@@ -19,22 +19,31 @@ interface PageProps {
 const storyblokService = new StoryblokService();
 
 async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
-	return lang == defaultLanguage
-		? totalArticlesInSelectedLanguage
-		: await storyblokService.getArticleCountByTagForDefaultLang(tagId);
+	if (lang == defaultLanguage) return totalArticlesInSelectedLanguage;
+
+	const res = await storyblokService.getArticleCountByTagForDefaultLang(tagId);
+	return res.success ? res.data : totalArticlesInSelectedLanguage;
 }
 
 export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;
 
-	const tag = (await storyblokService.getTag(slug, lang)).data.story;
-	const articles = await storyblokService.getArticlesByTag(tag.uuid, lang);
+	const tagResult = await storyblokService.getTag(slug, lang);
+	if (!tagResult.success) return null;
+	const tag = tagResult.data;
+
+	const articlesResult = await storyblokService.getArticlesByTag(tag.uuid, lang);
+	const articles = articlesResult.success ? articlesResult.data : [];
+
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common'],
 	});
+
 	const totalArticlesInSelectedLanguage = articles.length;
+
 	const totalArticlesInDefault = await getTotalArticlesInDefault(lang, tag.uuid, totalArticlesInSelectedLanguage);
+
 	return (
 		<BaseContainer>
 			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">

@@ -24,27 +24,39 @@ async function getTotalArticlesInDefaultLanguage(
 	totalArticlesInSelectedLanguage: number,
 	authorId: string,
 ) {
-	return lang == defaultLanguage
-		? totalArticlesInSelectedLanguage
-		: await storyblokService.getArticleCountByAuthorForDefaultLang(authorId);
+	if (lang == defaultLanguage) {
+		return totalArticlesInSelectedLanguage;
+	}
+
+	const res = await storyblokService.getArticleCountByAuthorForDefaultLang(authorId);
+	return res.success ? res.data : totalArticlesInSelectedLanguage;
 }
 
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
-	const author = (await storyblokService.getAuthor(slug, lang)).data.story;
+
+	const authorResult = await storyblokService.getAuthor(slug, lang);
+	if (!authorResult.success) return null;
+	const author = authorResult.data;
 
 	const authorId = author.uuid;
-	const articles = await storyblokService.getArticlesByAuthor(authorId, lang);
+
+	const articlesResult = await storyblokService.getArticlesByAuthor(authorId, lang);
+	const articles = articlesResult.success ? articlesResult.data : [];
+
 	const totalArticlesInSelectedLanguage = articles.length;
+
 	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(
 		lang,
 		totalArticlesInSelectedLanguage,
 		authorId,
 	);
+
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common'],
 	});
+
 	return (
 		<BaseContainer>
 			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">
