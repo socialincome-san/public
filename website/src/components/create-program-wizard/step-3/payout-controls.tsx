@@ -31,7 +31,14 @@ export function PayoutControls({
 					<span className="font-medium">{programDuration} months</span>
 				</div>
 
-				<Slider min={6} max={60} step={1} value={[programDuration]} onValueChange={([v]) => onDurationChange(v)} />
+				<Slider
+					data-testid="program-duration-slider"
+					min={6}
+					max={60}
+					step={1}
+					value={[programDuration]}
+					onValueChange={([v]) => onDurationChange(v)}
+				/>
 			</div>
 
 			<div className="space-y-2">
@@ -42,7 +49,14 @@ export function PayoutControls({
 					</span>
 				</div>
 
-				<Slider min={5} max={100} step={1} value={[payoutPerInterval]} onValueChange={([v]) => onPayoutChange(v)} />
+				<Slider
+					data-testid="payout-per-interval-slider"
+					min={5}
+					max={100}
+					step={1}
+					value={[payoutPerInterval]}
+					onValueChange={([v]) => onPayoutChange(v)}
+				/>
 			</div>
 
 			<div className="space-y-2">

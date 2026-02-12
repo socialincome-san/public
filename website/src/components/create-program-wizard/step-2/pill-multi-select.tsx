@@ -39,6 +39,7 @@ export function PillMultiSelect({ label, values, selected = [], onToggle }: Pill
 
 					return (
 						<button
+							data-testid={`pill-multi-select-${value}`}
 							key={value}
 							type="button"
 							onClick={() => onToggle(value)}

@@ -24,7 +24,7 @@ test('Add new country', async ({ page }) => {
 		updatedAt: null,
 	};
 
-	await page.goto('http://localhost:3000/portal/admin/countries');
+	await page.goto('/portal/admin/countries');
 	await page.getByRole('button', { name: 'Add country' }).click();
 
 	await page.getByTestId('form-item-isoCode').click();
@@ -73,7 +73,7 @@ test('Add new country', async ({ page }) => {
 		throw new Error(result.error);
 	}
 
-	expect(result.data.tableRows.length).toBe(6);
+	expect(result.data.tableRows.length).toBe(7);
 
 	const country = result.data.tableRows.find((c) => c.isoCode === expectedCountry.isoCode);
 
