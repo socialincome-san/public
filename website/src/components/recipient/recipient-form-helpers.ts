@@ -27,7 +27,7 @@ export function buildUpdateRecipientInput(
 
 	const basePaymentInformation = {
 		provider: paymentInfoFields.provider.value,
-		code: paymentInfoFields.code.value,
+		code: paymentInfoFields.code.value?.trim() || null,
 	};
 
 	const nextPaymentPhoneNumber = paymentInfoFields.phone.value ?? null;
@@ -192,7 +192,7 @@ export function buildCreateRecipientInput(
 		paymentInformation: {
 			create: {
 				provider: paymentInfoFields.provider.value,
-				code: paymentInfoFields.code.value,
+				code: paymentInfoFields.code.value?.trim() || null,
 				phone: { create: { number: paymentInfoFields.phone.value } },
 			},
 		},

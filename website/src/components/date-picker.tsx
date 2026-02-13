@@ -46,7 +46,13 @@ export function DatePicker({
 		<div className="flex w-full flex-col gap-3">
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
-					<Button disabled={disabled} variant="outline" id="date" className="w-full justify-between font-normal">
+					<Button
+						data-testid="date-picker-button"
+						disabled={disabled}
+						variant="outline"
+						id="date"
+						className="w-full justify-between font-normal"
+					>
 						{date ? formatter.format(date) : placeholder}
 						<ChevronDownIcon className="h-4 w-4 opacity-50" />
 					</Button>
