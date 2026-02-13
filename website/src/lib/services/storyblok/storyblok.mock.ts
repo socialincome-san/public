@@ -1,6 +1,6 @@
 let patched = false;
 
-export async function mockStoryblokIfTestMode() {
+export function mockStoryblokIfTestMode() {
 	const mode = process.env.STORYBLOK_MOCK_MODE;
 	if (!['record', 'replay'].includes(mode ?? '')) return; // only run in mock modes
 	if (patched) return; // patch once
