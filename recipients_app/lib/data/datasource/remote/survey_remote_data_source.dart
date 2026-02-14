@@ -5,17 +5,15 @@ import "package:app/data/models/survey/survey.dart";
 import "package:app/data/services/authenticated_client.dart";
 
 class SurveyRemoteDataSource implements SurveyDataSource {
-  final Uri baseUri;
   final AuthenticatedClient authenticatedClient;
 
   const SurveyRemoteDataSource({
-    required this.baseUri,
     required this.authenticatedClient,
   });
 
   @override
   Future<List<Survey>> fetchSurveys({required String recipientId}) async {
-    final uri = baseUri.resolve("api/v1/recipients/me/surveys");
+    final uri = authenticatedClient.resolveUri("recipients/me/surveys");
     final response = await authenticatedClient.get(uri);
 
     if (response.statusCode != 200) {

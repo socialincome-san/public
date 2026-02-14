@@ -1,7 +1,10 @@
 import "dart:async";
 
 import "package:app/data/datasource/demo/demo_user.dart";
-import "package:app/data/services/api_client.dart";
+import "package:app/data/models/api/request_otp_request.dart";
+import "package:app/data/models/api/verify_otp_request.dart";
+import "package:app/data/models/api/verify_otp_response.dart";
+import "package:app/data/services/authenticated_client.dart";
 import "package:app/demo_manager.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/foundation.dart";
@@ -9,17 +12,17 @@ import "package:flutter/foundation.dart";
 class AuthService {
   final FirebaseAuth firebaseAuth;
   final DemoManager demoManager;
-  final ApiClient apiClient;
+  final AuthenticatedClient authenticatedClient;
 
   AuthService({
     required this.firebaseAuth,
     required this.demoManager,
-    required this.apiClient,
+    required this.authenticatedClient,
   });
 
   Future<void> verifyPhoneNumber(String phoneNumber) async {
     try {
-      await apiClient.requestOtp(phoneNumber);
+      await _requestOtp(phoneNumber);
     } catch (e) {
       throw AuthException(code: "failed-sent-verification-code", message: "Exception when calling api->requestOtp: $e");
     }
@@ -28,12 +31,42 @@ class AuthService {
   Future<void> signInWith({required String verificationCode, required String phoneNumber}) async {
     try {
       // Call the API to verify OTP and get a custom auth token
-      final result = await apiClient.verifyOtp(phoneNumber, verificationCode);
+      final result = await _verifyOtp(phoneNumber, verificationCode);
       final customToken = result.customToken;
       // Sign in with the custom token
       await firebaseAuth.signInWithCustomToken(customToken);
     } catch (e) {
       throw AuthException(code: "failed-code-verification", message: "Exception when calling api->verifyOtp: $e");
+    }
+  }
+
+  Future<VerifyOtpResponse> _verifyOtp(String phoneNumber, String otp) async {
+    final uri = authenticatedClient.resolveUri("auth/verify-otp");
+    final body = VerifyOtpRequest(phoneNumber: phoneNumber, otp: otp);
+
+    final response = await authenticatedClient.post(
+      uri,
+      body: body.toJson(),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to verify OTP: ${response.statusCode} - ${response.reasonPhrase}");
+    }
+
+    return VerifyOtpResponseMapper.fromJson(response.body);
+  }
+
+  Future<void> _requestOtp(String phoneNumber) async {
+    final uri = authenticatedClient.resolveUri("auth/request-otp");
+    final body = RequestOtpRequest(phoneNumber: phoneNumber);
+
+    final response = await authenticatedClient.post(
+      uri,
+      body: body.toJson(),
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception("Failed to request OTP: ${response.statusCode} - ${response.reasonPhrase}");
     }
   }
 

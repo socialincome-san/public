@@ -6,7 +6,6 @@ import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
-import "package:app/data/services/api_client.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/authenticated_client.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
@@ -58,35 +57,31 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   // Initialize Social Income api client
   const baseUrl = String.fromEnvironment(_kBaseUrlKey);
-  final uri = Uri.https(baseUrl, "api");
+  final uri = Uri.https(baseUrl, "api/v1/");
 
   // Base client without auth (for endpoints that don't need it)
   final baseHttpClient = http.Client();
   // Wrap with authentication for protected endpoints
-  final authenticatedClient = AuthenticatedClient(firebaseAuth, baseHttpClient);
-  final apiClient = ApiClient(httpClient: authenticatedClient, baseUri: uri);
+  final authenticatedClient = AuthenticatedClient(firebaseAuth, baseHttpClient, uri);
 
   final authService = AuthService(
     firebaseAuth: firebaseAuth,
     demoManager: demoManager,
-    apiClient: apiClient,
+    authenticatedClient: authenticatedClient,
   );
 
   final userRemoteDataSource = UserRemoteDataSource(
     firebaseAuth: firebaseAuth,
-    baseUri: uri,
     authenticatedClient: authenticatedClient,
   );
   final userDemoDataSource = UserDemoDataSource();
 
   final paymentRemoteDataSource = PayoutRemoteDataSource(
-    baseUri: uri,
     authenticatedClient: authenticatedClient,
   );
   final paymentDemoDataSource = PayoutDemoDataSource();
 
   final surveyRemoteDataSource = SurveyRemoteDataSource(
-    baseUri: uri,
     authenticatedClient: authenticatedClient,
   );
   final surveyDemoDataSource = SurveyDemoDataSource();
@@ -133,7 +128,6 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
         firebaseRemoteConfigService: firebaseRemoteConfigService,
         crashReportingRepository: crashReportingRepository,
         appVersionInfo: appVersionInfo,
-        apiClient: apiClient,
       ),
     ),
   );

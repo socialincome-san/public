@@ -8,7 +8,6 @@ import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/models/app_version_info.dart";
 import "package:app/data/repositories/repositories.dart";
-import "package:app/data/services/api_client.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
@@ -46,8 +45,6 @@ class MyApp extends StatelessWidget {
 
   final AppVersionInfo? appVersionInfo;
 
-  final ApiClient apiClient;
-
   const MyApp({
     super.key,
     required this.messaging,
@@ -64,7 +61,6 @@ class MyApp extends StatelessWidget {
     required this.firebaseRemoteConfigService,
     required this.crashReportingRepository,
     required this.appVersionInfo,
-    required this.apiClient,
   });
 
   // This widget is the root of your application.
@@ -100,7 +96,6 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<FirebaseRemoteConfigService>.value(
           value: firebaseRemoteConfigService,
         ),
-        RepositoryProvider<ApiClient>.value(value: apiClient),
       ],
       child: MultiBlocProvider(
         providers: [

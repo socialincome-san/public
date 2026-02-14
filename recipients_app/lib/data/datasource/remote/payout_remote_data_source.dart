@@ -6,17 +6,15 @@ import "package:app/data/services/authenticated_client.dart";
 import "package:http/http.dart";
 
 class PayoutRemoteDataSource implements PayoutDataSource {
-  final Uri baseUri;
   final AuthenticatedClient authenticatedClient;
 
   const PayoutRemoteDataSource({
-    required this.baseUri,
     required this.authenticatedClient,
   });
 
   @override
   Future<Payout> confirmPayout({required String payoutId}) async {
-    final uri = baseUri.resolve("api/v1/recipients/me/payouts/$payoutId/confirm");
+    final uri = authenticatedClient.resolveUri("recipients/me/payouts/$payoutId/confirm");
 
     final response = await authenticatedClient.post(uri);
 
@@ -35,7 +33,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     required String payoutId,
     required String? contestReason,
   }) async {
-    final uri = baseUri.resolve("api/v1/recipients/me/payouts/$payoutId/contest");
+    final uri = authenticatedClient.resolveUri("recipients/me/payouts/$payoutId/contest");
 
     // if contest reason is not null, add it to the comment in payout
     Response? response;
@@ -58,7 +56,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
 
   @override
   Future<List<Payout>> fetchPayouts() async {
-    final uri = baseUri.resolve("api/v1/recipients/me/payouts");
+    final uri = authenticatedClient.resolveUri("recipients/me/payouts");
 
     final response = await authenticatedClient.get(uri);
 

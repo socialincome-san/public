@@ -6,15 +6,16 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:http/http.dart" as http;
 
 /// A HTTP client that automatically adds the Firebase ID token as
-/// `Authorization: Bearer <token>` header and sets `Content-Type: application/json`.
+/// `Authorization: Bearer <token>` header, appCheckToken as X-Firebase-AppCheck header and sets `Content-Type: application/json`.
 ///
 /// Wrap a real `http.Client` and pass this wrapper wherever authenticated
 /// requests are required.
 class AuthenticatedClient extends http.BaseClient {
   final FirebaseAuth _firebaseAuth;
-  final http.Client _inner;
+  final http.Client _baseHttpClient;
+  final Uri _baseUri;
 
-  AuthenticatedClient(this._firebaseAuth, this._inner);
+  AuthenticatedClient(this._firebaseAuth, this._baseHttpClient, this._baseUri);
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -32,12 +33,16 @@ class AuthenticatedClient extends http.BaseClient {
       request.headers["Authorization"] = "Bearer $idToken";
     }
 
-    return _inner
+    return _baseHttpClient
         .send(request)
         .timeout(
           const Duration(seconds: 30),
           onTimeout: () => throw TimeoutException("Request to '${request.url}' timed out. Please try again."),
         );
+  }
+
+  Uri resolveUri(String path) {
+    return _baseUri.resolve(path);
   }
 
   Future<String> _getAppCheckToken() async {
@@ -51,10 +56,10 @@ class AuthenticatedClient extends http.BaseClient {
     return appCheckToken;
   }
 
-  /// Close both this wrapper and the inner client.
+  /// Close both this wrapper and the inner http client.
   @override
   void close() {
-    _inner.close();
+    _baseHttpClient.close();
     super.close();
   }
 }
