@@ -443,7 +443,7 @@ abstract class AppLocalizations {
   /// No description provided for @createAccountInfo.
   ///
   /// In en, this message translates to:
-  /// **'By creating an account, you agree with our '**
+  /// **'Before proceeding, you must accept our '**
   String get createAccountInfo;
 
   /// No description provided for @privacyPolicy.
@@ -461,7 +461,7 @@ abstract class AppLocalizations {
   /// No description provided for @createAccount.
   ///
   /// In en, this message translates to:
-  /// **'Create Account'**
+  /// **'Accept and Continue'**
   String get createAccount;
 
   /// No description provided for @recommendingOrganization.

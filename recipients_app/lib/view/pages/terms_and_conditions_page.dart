@@ -22,6 +22,11 @@ class TermsAndConditionsPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: Text(context.l10n.account),
+        leading: BackButton(
+          onPressed: () {
+            context.read<AuthCubit>().logout();
+          },
+        ),
         centerTitle: true,
       ),
       body: Padding(

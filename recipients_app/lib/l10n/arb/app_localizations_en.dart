@@ -184,7 +184,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get survey => 'Survey';
 
   @override
-  String get createAccountInfo => 'By creating an account, you agree with our ';
+  String get createAccountInfo => 'Before proceeding, you must accept our ';
 
   @override
   String get privacyPolicy => 'Privacy Policy';
@@ -193,7 +193,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyPolicyError => 'Can\'t open privacy policy right now. Copied website address to the clipboard.';
 
   @override
-  String get createAccount => 'Create Account';
+  String get createAccount => 'Accept and Continue';
 
   @override
   String get recommendingOrganization => 'Recommending Organization';

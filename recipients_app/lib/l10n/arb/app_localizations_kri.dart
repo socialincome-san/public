@@ -184,7 +184,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get survey => 'Sɔve';
 
   @override
-  String get createAccountInfo => 'We yu mek di akawnt, yu dɔn gri wit wi ';
+  String get createAccountInfo => 'Bifo yu go bifo, yu fɔ aksept wi ';
 
   @override
   String get privacyPolicy => 'Wi de kip sikrit';
@@ -194,7 +194,7 @@ class AppLocalizationsKri extends AppLocalizations {
       'Nɔ ebul opin usay wi de kip sikrit rayt naw. Kɔpi di wɛbsayt adrɛs put am na di klipbod.';
 
   @override
-  String get createAccount => 'Mek akawnt';
+  String get createAccount => 'Aksept ɛn Kɔntinyu';
 
   @override
   String get recommendingOrganization => 'Ɔganizeshɔn we go tɔk fɔ yu';
