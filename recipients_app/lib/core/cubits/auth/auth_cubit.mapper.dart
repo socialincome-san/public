@@ -33,6 +33,8 @@ class AuthStatusMapper extends EnumMapper<AuthStatus> {
         return AuthStatus.unauthenticated;
       case r'authenticated':
         return AuthStatus.authenticated;
+      case r'authenticatedWithoutRecipient':
+        return AuthStatus.authenticatedWithoutRecipient;
       case r'updatingRecipient':
         return AuthStatus.updatingRecipient;
       case r'updateRecipientSuccess':
@@ -55,6 +57,8 @@ class AuthStatusMapper extends EnumMapper<AuthStatus> {
         return r'unauthenticated';
       case AuthStatus.authenticated:
         return r'authenticated';
+      case AuthStatus.authenticatedWithoutRecipient:
+        return r'authenticatedWithoutRecipient';
       case AuthStatus.updatingRecipient:
         return r'updatingRecipient';
       case AuthStatus.updateRecipientSuccess:

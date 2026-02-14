@@ -28,7 +28,12 @@ class UserRemoteDataSource implements UserDataSource {
     final uri = authenticatedClient.resolveUri("recipients/me");
     final response = await authenticatedClient.get(uri);
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 404) { // no user found
+      _currentRecipient = null;
+      return null;
+    }
+
+    if (response.statusCode != 200) { // any other error
       _currentRecipient = null;
       throw Exception("Failed to fetch recipient: ${response.statusCode}");
     }

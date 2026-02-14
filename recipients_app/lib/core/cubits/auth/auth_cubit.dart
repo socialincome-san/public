@@ -29,6 +29,10 @@ class AuthCubit extends Cubit<AuthState> {
       if (user != null) {
         try {
           final recipient = await userRepository.fetchRecipient(user);
+          if (recipient == null) {
+            emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
+            return;
+          }
 
           emit(
             AuthState(
@@ -47,7 +51,7 @@ class AuthCubit extends Cubit<AuthState> {
           );
         }
       } else {
-        const AuthState();
+        emit(const AuthState());
       }
     });
   }
@@ -62,6 +66,10 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (user != null) {
       final recipient = await userRepository.fetchRecipient(user);
+      if (recipient == null) {
+        emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
+        return;
+      }
 
       emit(
         AuthState(

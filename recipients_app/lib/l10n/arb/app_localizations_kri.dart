@@ -745,4 +745,8 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get country => 'Kɔntri';
+
+  @override
+  String get recipientNotFound =>
+      'No risipiɛnt akɔn nɔ fɛn fɔ dis fon nɔmba. Duya chɛk yu fon nɔmba ɔ kɔntak yu lokal patna.';
 }

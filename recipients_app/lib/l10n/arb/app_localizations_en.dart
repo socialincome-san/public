@@ -745,4 +745,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get country => 'Country';
+
+  @override
+  String get recipientNotFound =>
+      'No recipient account found for this phone number. Please check your phone number or contact your local partner.';
 }

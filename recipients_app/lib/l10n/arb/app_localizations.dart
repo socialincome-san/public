@@ -1531,6 +1531,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Country'**
   String get country;
+
+  /// No description provided for @recipientNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipient account found for this phone number. Please check your phone number or contact your local partner.'**
+  String get recipientNotFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

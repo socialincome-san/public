@@ -5,6 +5,7 @@ enum AuthStatus {
   loading,
   unauthenticated,
   authenticated,
+  authenticatedWithoutRecipient,
   updatingRecipient,
   updateRecipientSuccess,
   updateRecipientFailure,
