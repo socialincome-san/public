@@ -31,42 +31,47 @@ class _WelcomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<SignupCubit, SignupState>(
-            listener: (context, state) {
-              if (state.status == SignupStatus.verificationFailure || state.status == SignupStatus.phoneNumberFailure) {
-                FlushbarHelper.showFlushbar(
-                  context,
-                  message: localizeExceptionMessage(state.exception, context.l10n),
-                  type: FlushbarType.error,
-                );
+      body: SafeArea(
+        bottom: false,
+        left: false,
+        right: false,
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<SignupCubit, SignupState>(
+              listener: (context, state) {
+                if (state.status == SignupStatus.verificationFailure || state.status == SignupStatus.phoneNumberFailure) {
+                  FlushbarHelper.showFlushbar(
+                    context,
+                    message: localizeExceptionMessage(state.exception, context.l10n),
+                    type: FlushbarType.error,
+                  );
+                }
+              },
+            ),
+            BlocListener<AuthCubit, AuthState>(
+              listener: (context, authState) {
+                if (authState.status == AuthStatus.authenticatedWithoutRecipient) {
+                  // Navigate back to phone input page
+                  context.read<SignupCubit>().changeToPhoneInput();
+                }
+              },
+            ),
+          ],
+          child: BlocBuilder<SignupCubit, SignupState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case SignupStatus.loadingPhoneNumber:
+                case SignupStatus.enterPhoneNumber:
+                case SignupStatus.phoneNumberFailure:
+                  return const PhoneInputPage();
+                case SignupStatus.loadingVerificationCode:
+                case SignupStatus.enterVerificationCode:
+                case SignupStatus.verificationSuccess:
+                case SignupStatus.verificationFailure:
+                  return const OtpInputPage();
               }
             },
           ),
-          BlocListener<AuthCubit, AuthState>(
-            listener: (context, authState) {
-              if (authState.status == AuthStatus.authenticatedWithoutRecipient) {
-                // Navigate back to phone input page
-                context.read<SignupCubit>().changeToPhoneInput();
-              }
-            },
-          ),
-        ],
-        child: BlocBuilder<SignupCubit, SignupState>(
-          builder: (context, state) {
-            switch (state.status) {
-              case SignupStatus.loadingPhoneNumber:
-              case SignupStatus.enterPhoneNumber:
-              case SignupStatus.phoneNumberFailure:
-                return const PhoneInputPage();
-              case SignupStatus.loadingVerificationCode:
-              case SignupStatus.enterVerificationCode:
-              case SignupStatus.verificationSuccess:
-              case SignupStatus.verificationFailure:
-                return const OtpInputPage();
-            }
-          },
         ),
       ),
     );

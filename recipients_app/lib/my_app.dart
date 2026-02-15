@@ -173,63 +173,57 @@ class _App extends StatelessWidget {
         KriCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale("en", "US"), Locale("kri")],
+      builder: (context, child) {
+        return OfflineBanner(child: child ?? const SizedBox.shrink());
+      },
       home: AppUpdateCheckWidget(
         appVersionInfo: appVersionInfo,
-        child: Scaffold(
-          body: SafeArea(
-            bottom: false,
-            left: false,
-            right: false,
-            child: OfflineBanner(
-              child: BlocConsumer<AuthCubit, AuthState>(
-                listener: (context, state) {
-                  if (state.status == AuthStatus.authenticatedWithoutRecipient) {
-                    // Sign out the user to clean up auth state
-                    context.read<AuthService>().signOut();
-                    // Show error message to user
-                    FlushbarHelper.showFlushbar(
-                      context,
-                      message: context.l10n.recipientNotFound,
-                      type: FlushbarType.error,
-                    );
-                  }
-                  if (state.status == AuthStatus.authenticated) {
-                    // change language to the user's preferred language
-                    final selectedLanguage = state.recipient?.contact.language;
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state.status == AuthStatus.authenticatedWithoutRecipient) {
+              // Sign out the user to clean up auth state
+              context.read<AuthService>().signOut();
+              // Show error message to user
+              FlushbarHelper.showFlushbar(
+                context,
+                message: context.l10n.recipientNotFound,
+                type: FlushbarType.error,
+              );
+            }
+            if (state.status == AuthStatus.authenticated) {
+              // change language to the user's preferred language
+              final selectedLanguage = state.recipient?.contact.language;
 
-                    if (selectedLanguage != null) {
-                      context.read<SettingsCubit>().changeLanguage(selectedLanguage);
+              if (selectedLanguage != null) {
+                context.read<SettingsCubit>().changeLanguage(selectedLanguage);
+              }
+            }
+          },
+          builder: (context, state) {
+            return BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) {
+                switch (state.status) {
+                  case AuthStatus.loading:
+                    return const SizedBox.shrink();
+                  case AuthStatus.unauthenticated:
+                  case AuthStatus.authenticatedWithoutRecipient:
+                  case AuthStatus.failure:
+                    FlutterNativeSplash.remove();
+                    return const WelcomePage();
+                  case AuthStatus.authenticated:
+                  case AuthStatus.updateRecipientFailure:
+                  case AuthStatus.updateRecipientSuccess:
+                  case AuthStatus.updatingRecipient:
+                    FlutterNativeSplash.remove();
+                    if (state.recipient?.termsAccepted == true) {
+                      return const MainAppPage();
+                    } else {
+                      return const TermsAndConditionsPage();
                     }
-                  }
-                },
-                builder: (context, state) {
-                  return BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
-                      switch (state.status) {
-                        case AuthStatus.loading:
-                          return const SizedBox.shrink();
-                        case AuthStatus.unauthenticated:
-                        case AuthStatus.authenticatedWithoutRecipient:
-                        case AuthStatus.failure:
-                          FlutterNativeSplash.remove();
-                          return const WelcomePage();
-                        case AuthStatus.authenticated:
-                        case AuthStatus.updateRecipientFailure:
-                        case AuthStatus.updateRecipientSuccess:
-                        case AuthStatus.updatingRecipient:
-                          FlutterNativeSplash.remove();
-                          if (state.recipient?.termsAccepted == true) {
-                            return const MainAppPage();
-                          } else {
-                            return const TermsAndConditionsPage();
-                          }
-                      }
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
+                }
+              },
+            );
+          },
         ),
       ),
       debugShowCheckedModeBanner: false,
