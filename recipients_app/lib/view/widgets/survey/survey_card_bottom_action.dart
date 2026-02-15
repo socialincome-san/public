@@ -1,3 +1,4 @@
+import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
@@ -65,6 +66,12 @@ class SurveyCardBottomAction extends StatelessWidget {
 
   void _navigateToSurvey(BuildContext context) {
     final surveyCubit = context.read<SurveyCubit>();
+    final connectivityCubit = context.read<ConnectivityCubit>();
+
+    if(connectivityCubit.state.isOnline == false) {
+      showNoNetworkConnectionDialog(context);
+      return;
+    }
 
     Navigator.push(
       context,
@@ -73,6 +80,22 @@ class SurveyCardBottomAction extends StatelessWidget {
           value: surveyCubit,
           child: SurveyPage(mappedSurvey: mappedSurvey),
         ),
+      ),
+    );
+  }
+
+  void showNoNetworkConnectionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.noInternetConnection),
+        content: Text(context.l10n.noInternetConnectionSolution),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(context.l10n.ok),
+          ),
+        ],
       ),
     );
   }

@@ -749,4 +749,10 @@ class AppLocalizationsKri extends AppLocalizations {
   @override
   String get recipientNotFound =>
       'No risipiɛnt akɔn nɔ fɛn fɔ dis fon nɔmba. Duya chɛk yu fon nɔmba ɔ kɔntak yu lokal patna.';
+
+  @override
+  String get noInternetConnection => 'Nɔ intanɛt kɔnɛkshɔn nɔ de';
+
+  @override
+  String get noInternetConnectionSolution => 'Mek yu intanɛt kɔnɛkshɔn kam bak ɔ tray bak leta.';
 }

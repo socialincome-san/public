@@ -749,4 +749,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get recipientNotFound =>
       'No recipient account found for this phone number. Please check your phone number or contact your local partner.';
+
+  @override
+  String get noInternetConnection => 'No internet connection';
+
+  @override
+  String get noInternetConnectionSolution => 'Restore your Internet connection or try again later.';
 }

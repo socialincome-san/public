@@ -1537,6 +1537,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No recipient account found for this phone number. Please check your phone number or contact your local partner.'**
   String get recipientNotFound;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @noInternetConnectionSolution.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore your Internet connection or try again later.'**
+  String get noInternetConnectionSolution;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
