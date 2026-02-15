@@ -38,7 +38,17 @@ class PayoutsCubit extends Cubit<PayoutsState> {
     emit(state.copyWith(status: PayoutsStatus.loading));
 
     try {
-      final payouts = await paymentRepository.fetchPayouts();
+      final payouts = await paymentRepository.fetchPayouts(
+        onFreshData: (freshPayouts) async {
+          // Update UI when fresh data arrives in background
+          emit(
+            state.copyWith(
+              status: PayoutsStatus.success,
+              payoutsUiState: await _mapPayoutsUiState(freshPayouts),
+            ),
+          );
+        },
+      );
 
       emit(
         state.copyWith(

@@ -1,7 +1,11 @@
 import "package:app/core/helpers/custom_bloc_observer.dart";
+import "package:app/data/database/app_database.dart";
 import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
+import "package:app/data/datasource/local/payout_local_data_source.dart";
+import "package:app/data/datasource/local/survey_local_data_source.dart";
+import "package:app/data/datasource/local/user_local_data_source.dart";
 import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
@@ -11,6 +15,7 @@ import "package:app/data/services/authenticated_client.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
+import "package:connectivity_plus/connectivity_plus.dart";
 import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
@@ -55,6 +60,12 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final messaging = FirebaseMessaging.instance;
   final demoManager = DemoManager();
 
+  // Initialize Drift database for offline caching
+  final appDatabase = AppDatabase();
+
+  // Initialize connectivity tracking
+  final connectivity = Connectivity();
+
   // Initialize Social Income api client
   const baseUrl = String.fromEnvironment(_kBaseUrlKey);
   final uri = Uri.https(baseUrl, "api/v1/");
@@ -75,16 +86,19 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
     authenticatedClient: authenticatedClient,
   );
   final userDemoDataSource = UserDemoDataSource();
+  final userLocalDataSource = UserLocalDataSource(database: appDatabase);
 
   final paymentRemoteDataSource = PayoutRemoteDataSource(
     authenticatedClient: authenticatedClient,
   );
   final paymentDemoDataSource = PayoutDemoDataSource();
+  final paymentLocalDataSource = PayoutLocalDataSource(database: appDatabase);
 
   final surveyRemoteDataSource = SurveyRemoteDataSource(
     authenticatedClient: authenticatedClient,
   );
   final surveyDemoDataSource = SurveyDemoDataSource();
+  final surveyLocalDataSource = SurveyLocalDataSource(database: appDatabase);
 
   // final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
   // final organizationDemoDataSource = OrganizationDemoDataSource();
@@ -116,12 +130,17 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
       MyApp(
         messaging: messaging,
         demoManager: demoManager,
+        appDatabase: appDatabase,
+        connectivity: connectivity,
         userRemoteDataSource: userRemoteDataSource,
         userDemoDataSource: userDemoDataSource,
+        userLocalDataSource: userLocalDataSource,
         paymentRemoteDataSource: paymentRemoteDataSource,
         paymentDemoDataSource: paymentDemoDataSource,
+        paymentLocalDataSource: paymentLocalDataSource,
         surveyRemoteDataSource: surveyRemoteDataSource,
         surveyDemoDataSource: surveyDemoDataSource,
+        surveyLocalDataSource: surveyLocalDataSource,
         // organizationRemoteDataSource: organizationRemoteDataSource,
         // organizationDemoDataSource: organizationDemoDataSource,
         authService: authService,

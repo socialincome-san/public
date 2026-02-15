@@ -34,7 +34,21 @@ class SurveyCubit extends Cubit<SurveyState> {
 
   Future<void> getSurveys() async {
     try {
-      final mappedSurveys = await _getSurveys();
+      final mappedSurveys = await _getSurveys(
+        onFreshData: (freshMappedSurveys) {
+          // Update UI when fresh data arrives in background
+          final dashboardSurveys =
+              freshMappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
+
+          emit(
+            SurveyState(
+              status: SurveyStateStatus.updatedSuccess,
+              mappedSurveys: freshMappedSurveys,
+              dashboardMappedSurveys: dashboardSurveys,
+            ),
+          );
+        },
+      );
 
       final dashboardSurveys = mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
 
@@ -55,12 +69,22 @@ class SurveyCubit extends Cubit<SurveyState> {
     }
   }
 
-  Future<List<MappedSurvey>> _getSurveys() async {
+  Future<List<MappedSurvey>> _getSurveys({Function(List<MappedSurvey>)? onFreshData}) async {
     final surveys = await surveyRepository.fetchSurveys(
       recipientId: recipient.id,
+      onFreshData: onFreshData != null
+          ? (freshSurveys) {
+              final mapped = _mapSurveys(freshSurveys);
+              onFreshData(mapped);
+            }
+          : null,
     );
 
-    final mappedSurveys = surveys
+    return _mapSurveys(surveys);
+  }
+
+  List<MappedSurvey> _mapSurveys(List<Survey> surveys) {
+    return surveys
         .map(
           (survey) => MappedSurvey(
             name: _getReadableName(survey.name),
@@ -76,8 +100,6 @@ class SurveyCubit extends Cubit<SurveyState> {
         )
         .sortedBy((element) => DateTime.tryParse(element.survey.dueAt) ?? DateTime.now())
         .toList();
-
-    return mappedSurveys;
   }
 
   String _getSurveyUrl(Survey survey, String recipientId) {

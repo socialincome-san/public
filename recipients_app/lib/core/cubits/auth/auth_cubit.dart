@@ -28,7 +28,21 @@ class AuthCubit extends Cubit<AuthState> {
     _authSubscription = authService.authStateChanges().listen((user) async {
       if (user != null) {
         try {
-          final recipient = await userRepository.fetchRecipient(user);
+          final recipient = await userRepository.fetchRecipient(
+            user,
+            onFreshData: (freshRecipient) {
+              // Update UI when fresh data arrives in background
+              if (freshRecipient != null) {
+                emit(
+                  AuthState(
+                    status: AuthStatus.authenticated,
+                    firebaseUser: user,
+                    recipient: freshRecipient,
+                  ),
+                );
+              }
+            },
+          );
           if (recipient == null) {
             emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
             return;
@@ -65,7 +79,21 @@ class AuthCubit extends Cubit<AuthState> {
     final user = userRepository.currentUser;
 
     if (user != null) {
-      final recipient = await userRepository.fetchRecipient(user);
+      final recipient = await userRepository.fetchRecipient(
+        user,
+        onFreshData: (freshRecipient) {
+          // Update UI when fresh data arrives in background
+          if (freshRecipient != null) {
+            emit(
+              AuthState(
+                status: AuthStatus.authenticated,
+                firebaseUser: user,
+                recipient: freshRecipient,
+              ),
+            );
+          }
+        },
+      );
       if (recipient == null) {
         emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
         return;
@@ -111,6 +139,8 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     emit(const AuthState(status: AuthStatus.loading));
     try {
+      // Clear cache before signing out
+      await userRepository.clearCache();
       await authService.signOut();
       emit(const AuthState());
     } on Exception catch (ex, stackTrace) {

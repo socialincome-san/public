@@ -44,7 +44,6 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
           children: <Widget>[
             Align(
               alignment: Alignment.topRight,
-              child: SafeArea(
                 child: ButtonSmall(
                   onPressed: () {
                     demoManager.isDemoEnabled = true;
@@ -52,7 +51,6 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                   label: context.l10n.demoCta,
                   buttonType: ButtonSmallType.outlined,
                 ),
-              ),
             ),
             Expanded(
               child: Column(

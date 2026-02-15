@@ -31,8 +31,7 @@ class _WelcomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-      MultiBlocListener(
+      body: MultiBlocListener(
         listeners: [
           BlocListener<SignupCubit, SignupState>(
             listener: (context, state) {

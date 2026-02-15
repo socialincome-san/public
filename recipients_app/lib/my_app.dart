@@ -1,9 +1,14 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
+import "package:app/data/database/app_database.dart";
 import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
+import "package:app/data/datasource/local/payout_local_data_source.dart";
+import "package:app/data/datasource/local/survey_local_data_source.dart";
+import "package:app/data/datasource/local/user_local_data_source.dart";
 import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
@@ -21,6 +26,8 @@ import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/terms_and_conditions_page.dart";
 import "package:app/view/pages/welcome_page.dart";
 import "package:app/view/widgets/app_update_check_widget.dart";
+import "package:app/view/widgets/offline_banner.dart";
+import "package:connectivity_plus/connectivity_plus.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -30,17 +37,22 @@ import "package:flutter_native_splash/flutter_native_splash.dart";
 class MyApp extends StatelessWidget {
   final FirebaseMessaging messaging;
   final DemoManager demoManager;
+  final AppDatabase appDatabase;
+  final Connectivity connectivity;
 
   final CrashReportingRepository crashReportingRepository;
 
   final UserRemoteDataSource userRemoteDataSource;
   final UserDemoDataSource userDemoDataSource;
+  final UserLocalDataSource userLocalDataSource;
 
   final PayoutRemoteDataSource paymentRemoteDataSource;
   final PayoutDemoDataSource paymentDemoDataSource;
+  final PayoutLocalDataSource paymentLocalDataSource;
 
   final SurveyRemoteDataSource surveyRemoteDataSource;
   final SurveyDemoDataSource surveyDemoDataSource;
+  final SurveyLocalDataSource surveyLocalDataSource;
 
   final AuthService authService;
   final FirebaseRemoteConfigService firebaseRemoteConfigService;
@@ -51,12 +63,17 @@ class MyApp extends StatelessWidget {
     super.key,
     required this.messaging,
     required this.demoManager,
+    required this.appDatabase,
+    required this.connectivity,
     required this.userRemoteDataSource,
     required this.userDemoDataSource,
+    required this.userLocalDataSource,
     required this.paymentRemoteDataSource,
     required this.paymentDemoDataSource,
+    required this.paymentLocalDataSource,
     required this.surveyRemoteDataSource,
     required this.surveyDemoDataSource,
+    required this.surveyLocalDataSource,
     // required this.organizationRemoteDataSource,
     // required this.organizationDemoDataSource,
     required this.authService,
@@ -71,11 +88,13 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<DemoManager>(create: (context) => demoManager),
+        RepositoryProvider<AppDatabase>.value(value: appDatabase),
         RepositoryProvider(create: (context) => MessagingRepository(messaging: messaging)),
         RepositoryProvider(
           create: (context) => UserRepository(
             remoteDataSource: userRemoteDataSource,
             demoDataSource: userDemoDataSource,
+            localDataSource: userLocalDataSource,
             demoManager: demoManager,
           ),
         ),
@@ -84,6 +103,7 @@ class MyApp extends StatelessWidget {
           create: (context) => PaymentRepository(
             remoteDataSource: paymentRemoteDataSource,
             demoDataSource: paymentDemoDataSource,
+            localDataSource: paymentLocalDataSource,
             demoManager: demoManager,
           ),
         ),
@@ -91,6 +111,7 @@ class MyApp extends StatelessWidget {
           create: (context) => SurveyRepository(
             remoteDataSource: surveyRemoteDataSource,
             demoDataSource: surveyDemoDataSource,
+            localDataSource: surveyLocalDataSource,
             demoManager: demoManager,
           ),
         ),
@@ -114,6 +135,11 @@ class MyApp extends StatelessWidget {
               messagingRepository: context.read<MessagingRepository>(),
               crashReportingRepository: context.read<CrashReportingRepository>(),
             )..initMessaging(),
+          ),
+          BlocProvider(
+            create: (context) => ConnectivityCubit(
+              connectivity: connectivity,
+            )..initialize(),
           ),
         ],
         child: _App(
@@ -149,52 +175,61 @@ class _App extends StatelessWidget {
       supportedLocales: const [Locale("en", "US"), Locale("kri")],
       home: AppUpdateCheckWidget(
         appVersionInfo: appVersionInfo,
-        child: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
-            if (state.status == AuthStatus.authenticatedWithoutRecipient) {
-              // Sign out the user to clean up auth state
-              context.read<AuthService>().signOut();
-              // Show error message to user
-              FlushbarHelper.showFlushbar(
-                context,
-                message: context.l10n.recipientNotFound,
-                type: FlushbarType.error,
-              );
-            }
-            if (state.status == AuthStatus.authenticated) {
-              // change language to the user's preferred language
-              final selectedLanguage = state.recipient?.contact.language;
+        child: Scaffold(
+          body: SafeArea(
+            bottom: false,
+            left: false,
+            right: false,
+            child: OfflineBanner(
+              child: BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state.status == AuthStatus.authenticatedWithoutRecipient) {
+                    // Sign out the user to clean up auth state
+                    context.read<AuthService>().signOut();
+                    // Show error message to user
+                    FlushbarHelper.showFlushbar(
+                      context,
+                      message: context.l10n.recipientNotFound,
+                      type: FlushbarType.error,
+                    );
+                  }
+                  if (state.status == AuthStatus.authenticated) {
+                    // change language to the user's preferred language
+                    final selectedLanguage = state.recipient?.contact.language;
 
-              if (selectedLanguage != null) {
-                context.read<SettingsCubit>().changeLanguage(selectedLanguage);
-              }
-            }
-          },
-          builder: (context, state) {
-            return BlocBuilder<AuthCubit, AuthState>(
-              builder: (context, state) {
-                switch (state.status) {
-                  case AuthStatus.loading:
-                    return const SizedBox.shrink();
-                  case AuthStatus.unauthenticated:
-                  case AuthStatus.authenticatedWithoutRecipient:
-                  case AuthStatus.failure:
-                    FlutterNativeSplash.remove();
-                    return const WelcomePage();
-                  case AuthStatus.authenticated:
-                  case AuthStatus.updateRecipientFailure:
-                  case AuthStatus.updateRecipientSuccess:
-                  case AuthStatus.updatingRecipient:
-                    FlutterNativeSplash.remove();
-                    if (state.recipient?.termsAccepted == true) {
-                      return const MainAppPage();
-                    } else {
-                      return const TermsAndConditionsPage();
+                    if (selectedLanguage != null) {
+                      context.read<SettingsCubit>().changeLanguage(selectedLanguage);
                     }
-                }
-              },
-            );
-          },
+                  }
+                },
+                builder: (context, state) {
+                  return BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      switch (state.status) {
+                        case AuthStatus.loading:
+                          return const SizedBox.shrink();
+                        case AuthStatus.unauthenticated:
+                        case AuthStatus.authenticatedWithoutRecipient:
+                        case AuthStatus.failure:
+                          FlutterNativeSplash.remove();
+                          return const WelcomePage();
+                        case AuthStatus.authenticated:
+                        case AuthStatus.updateRecipientFailure:
+                        case AuthStatus.updateRecipientSuccess:
+                        case AuthStatus.updatingRecipient:
+                          FlutterNativeSplash.remove();
+                          if (state.recipient?.termsAccepted == true) {
+                            return const MainAppPage();
+                          } else {
+                            return const TermsAndConditionsPage();
+                          }
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
         ),
       ),
       debugShowCheckedModeBanner: false,
