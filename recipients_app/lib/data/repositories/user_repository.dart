@@ -51,7 +51,7 @@ class UserRepository {
 
       // 3. Update cache with fresh data (only in non-demo mode)
       if (!demoManager.isDemoEnabled && freshRecipient != null) {
-        await localDataSource.saveRecipient(freshRecipient);
+        await localDataSource.saveRecipient(firebaseUser, freshRecipient);
       }
 
       // 4. Notify caller of fresh data if callback provided
@@ -73,8 +73,8 @@ class UserRepository {
     final updatedRecipient = await _activeDataSource.updateRecipient(selfUpdate);
 
     // Update cache after successful update
-    if (!demoManager.isDemoEnabled) {
-      await localDataSource.saveRecipient(updatedRecipient);
+    if (!demoManager.isDemoEnabled && currentUser != null) {
+      await localDataSource.saveRecipient(currentUser!, updatedRecipient);
     }
 
     return updatedRecipient;

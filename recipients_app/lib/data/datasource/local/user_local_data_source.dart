@@ -29,10 +29,10 @@ class UserLocalDataSource implements UserDataSource {
     return _cachedRecipient = RecipientMapper.fromJson(recipientData.recipientJson);
   }
 
-  Future<void> saveRecipient(Recipient recipient) async {
+  Future<void> saveRecipient(User firebaseUser, Recipient recipient) async {
     await database.into(database.recipients).insertOnConflictUpdate(
           db.RecipientsCompanion.insert(
-            id: recipient.id,
+            id: firebaseUser.uid,
             recipientJson: recipient.toJson(),
             cachedAt: DateTime.now(),
           ),
@@ -47,6 +47,7 @@ class UserLocalDataSource implements UserDataSource {
 
   @override
   Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) {
+    // TODO: Add queueing mechanism to sync updates to remote when back online
     throw UnimplementedError("Local source cannot update remote recipient");
   }
 }
