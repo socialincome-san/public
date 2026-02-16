@@ -264,7 +264,6 @@ export class SurveyService extends BaseService {
 				data: survey.data,
 				accessEmail: survey.accessEmail,
 				accessPw: survey.accessPw,
-				accessToken: survey.accessToken,
 				recipientId: survey.recipientId,
 				surveyScheduleId: survey.surveyScheduleId,
 				createdAt: survey.createdAt,
@@ -313,7 +312,6 @@ export class SurveyService extends BaseService {
 				data: survey.data,
 				accessEmail: survey.accessEmail,
 				accessPw: survey.accessPw,
-				accessToken: survey.accessToken,
 				recipientId: survey.recipientId,
 				surveyScheduleId: survey.surveyScheduleId,
 				createdAt: survey.createdAt,
@@ -363,7 +361,6 @@ export class SurveyService extends BaseService {
 				data: updatedSurvey.data,
 				accessEmail: updatedSurvey.accessEmail,
 				accessPw: updatedSurvey.accessPw,
-				accessToken: updatedSurvey.accessToken,
 				recipientId: updatedSurvey.recipientId,
 				surveyScheduleId: updatedSurvey.surveyScheduleId,
 				createdAt: updatedSurvey.createdAt,
@@ -442,7 +439,6 @@ export class SurveyService extends BaseService {
 					} while (existingSurveys.some((s) => s.accessEmail === email));
 
 					const password = this.rndString(16);
-					const token = this.rndString(3);
 					surveys.push({
 						name: schedule.name,
 						recipient: { connect: { id: recipient.id } },
@@ -453,7 +449,6 @@ export class SurveyService extends BaseService {
 						data: {},
 						accessEmail: email,
 						accessPw: password,
-						accessToken: token,
 						surveySchedule: { connect: { id: schedule.id } },
 					});
 				}
@@ -598,7 +593,6 @@ export class SurveyService extends BaseService {
 				data: updatedSurvey.data,
 				accessEmail: updatedSurvey.accessEmail,
 				accessPw: updatedSurvey.accessPw,
-				accessToken: updatedSurvey.accessToken,
 				recipientId: updatedSurvey.recipientId,
 				surveyScheduleId: updatedSurvey.surveyScheduleId,
 				createdAt: updatedSurvey.createdAt,

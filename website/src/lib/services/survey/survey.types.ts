@@ -30,7 +30,6 @@ export type SurveyCreateInput = {
 	data: Prisma.InputJsonValue;
 	accessEmail: string;
 	accessPw: string;
-	accessToken: string;
 	surveySchedule?: { connect: { id: string } };
 };
 
@@ -43,7 +42,6 @@ export type SurveyUpdateInput = {
 	data?: Prisma.InputJsonValue;
 	accessEmail?: string;
 	accessPw?: string;
-	accessToken?: string;
 	completedAt?: Date | null;
 	recipient?: { connect: { id: string } };
 	surveySchedule?: { connect: { id: string } };
@@ -60,7 +58,6 @@ export type SurveyPayload = {
 	data: Prisma.JsonValue;
 	accessEmail: string;
 	accessPw: string;
-	accessToken: string;
 	recipientId: string;
 	surveyScheduleId: string | null;
 	createdAt: Date;

@@ -107,7 +107,6 @@ const Survey = z.object({
 	data: z.any(),
 	accessEmail: z.string(),
 	accessPw: z.string(),
-	accessToken: z.string(),
 	surveyScheduleId: z.string().nullable(),
 	createdAt: z.string(),
 	updatedAt: z.string().nullable(),
