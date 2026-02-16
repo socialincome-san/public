@@ -78,7 +78,7 @@ module.exports = {
 				},
 				enterFromTop: {
 					from: { opacity: '0', transform: 'translateY(-25px) scale(0.9)' },
-					to: { opacity: '1', transform: 'translateX(0) scale(1)' },
+					to: { opacity: '1', transform: 'translateY(0) scale(1)' },
 				},
 				fadeOut: {
 					from: { opacity: '1', transform: 'scale(1)' },

@@ -18,15 +18,13 @@ type Props = {
 };
 
 export async function Navbar({ session, lang, region, scope }: Props) {
-	const { content } = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(
-		`${NEW_WEBSITE_SLUG}/layout`,
-		lang,
-	);
+	const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+	const menu = result.success ? result.data.content.menu : [];
 
 	return (
 		<>
 			<div className="relative hidden lg:block">
-				<NavbarDesktop session={session} menu={content.menu} lang={lang} region={region} scope={scope} />
+				<NavbarDesktop session={session} menu={menu} lang={lang} region={region} scope={scope} />
 			</div>
 			<div className="lg:hidden">
 				<NavbarMobile session={session} lang={lang} />

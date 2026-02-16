@@ -33,8 +33,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	let totalArticlesInDefaultLang = articles.length;
 
 	if (lang !== defaultLanguage) {
-		const countRes = await storyblokService.getOverviewArticlesCountForDefaultLang();
-		if (countRes.success) totalArticlesInDefaultLang = countRes.data;
+		totalArticlesInDefaultLang = await storyblokService.getOverviewArticlesCountForDefaultLang();
 	}
 
 	return (
