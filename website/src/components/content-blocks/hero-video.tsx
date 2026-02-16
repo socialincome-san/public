@@ -51,7 +51,7 @@ export default function HeroVideoBlock({ blok, lang, region }: Props) {
 				<div className="flex max-w-2xl flex-col gap-6">
 					{heading && (
 						<h1 className="text-6xl font-light [&_strong]:font-bold">
-							<Markdown>{heading}</Markdown>
+							<Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown>
 						</h1>
 					)}
 					{description && <p className="text-xl">{description}</p>}
