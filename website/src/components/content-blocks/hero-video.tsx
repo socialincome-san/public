@@ -68,7 +68,7 @@ export default function HeroVideoBlock({ blok, lang, region }: Props) {
 						</div>
 					)}
 				</div>
-				<MakeDonationForm />
+				<MakeDonationForm lang={lang} />
 			</div>
 		</div>
 	);

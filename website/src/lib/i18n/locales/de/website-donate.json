@@ -73,6 +73,17 @@
 		"title": "Einmalige Spende",
 		"subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag"
 	},
+	"donation-form": {
+		"title": "Spende machen",
+		"monthly-income-label": "Dein monatliches Einkommen (CHF)",
+		"your-one-percent": "Dein 1%",
+		"currency-prefix": "CHF",
+		"other": "Andere",
+		"choose-own-amount": "Oder eigenen Betrag wählen",
+		"monthly": "Monatlich",
+		"one-time": "Einmalig",
+		"donate-now": "Jetzt spenden"
+	},
 	"success": {
 		"title": "Herzlichen Dank für deine Spende",
 		"user-form": {

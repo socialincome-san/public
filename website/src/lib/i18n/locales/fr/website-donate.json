@@ -73,6 +73,17 @@
 		"title": "Don unique",
 		"subtitle": "Soutien Social Income par un don unique"
 	},
+	"donation-form": {
+		"title": "Faire un don",
+		"monthly-income-label": "Ton revenu mensuel (CHF)",
+		"your-one-percent": "Ton 1%",
+		"currency-prefix": "CHF",
+		"other": "Autre",
+		"choose-own-amount": "Ou choisis ton propre montant",
+		"monthly": "Mensuel",
+		"one-time": "Don unique",
+		"donate-now": "Faire un don"
+	},
 	"success": {
 		"title": "Merci de tout coeur pour ton don",
 		"user-form": {

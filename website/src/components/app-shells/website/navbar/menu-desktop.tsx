@@ -85,7 +85,7 @@ export const MenuDesktop = ({ nav, lang, region }: Props) => (
 										</div>
 									))}
 								</div>
-								<MakeDonationForm />
+								<MakeDonationForm lang={lang} />
 							</div>
 						</NavigationMenu.Content>
 					</NavigationMenu.Item>
