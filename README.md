@@ -184,6 +184,46 @@ Shared backend modules using:
 
 ---
 
+### **9. E2E Testing**
+
+We use **Playwright** for end‑to‑end testing of the website.
+
+**Key principles**
+
+- Tests run against the real app in CI
+- Visual regression screenshots are automatically updated in the
+  pipeline and committed into the PR
+- External Storyblok requests are mocked using a
+  [mockserver](https://github.com/smartive/mockserver/tree/master)
+
+**Mock recording system**
+
+We use a record/replay mechanism for deterministic tests.
+
+**Record mode**
+
+```
+STORYBLOK_MOCK_MODE=record npm run test:e2e
+```
+
+This:
+
+- starts the mockserver as proxy
+- records all outgoing Storyblok API requests
+- stores them as JSON fixtures inside the repo
+
+These recordings should be committed.
+
+**Replay mode (CI default)**
+
+In CI the environment runs in replay mode:
+
+- mockserver serves recorded responses
+- no external API calls are made
+- tests are fully deterministic and fast
+
+---
+
 # 🛠 Local Development Setup (Simple & Minimal)
 
 We use:

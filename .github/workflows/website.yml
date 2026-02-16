@@ -124,6 +124,11 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
+      mockserver:
+        image: smartive/mockserver:v2.18.2
+        ports:
+          - 1080:1080
+
     env:
       DATABASE_URL: postgresql://social-income:social-income@postgres:5432/social-income
       STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
@@ -132,6 +137,8 @@ jobs:
       STRIPE_SECRET_KEY: ${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}
       STRIPE_PRODUCT_RECURRING: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}
       STRIPE_PRODUCT_ONETIME: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}
+      MOCKSERVER_URL: http://mockserver:1080
+      STORYBLOK_MOCK_MODE: replay
       HOME: /root
 
     steps:
