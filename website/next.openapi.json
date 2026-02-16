@@ -35,7 +35,7 @@
 	},
 	"defaultResponseSet": "common",
 	"responseSets": {
-		"common": ["401", "403", "404", "500"]
+		"common": ["400", "401", "403", "404", "500"]
 	},
 	"errorConfig": {
 		"template": {
