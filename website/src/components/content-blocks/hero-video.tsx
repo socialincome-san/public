@@ -57,10 +57,10 @@ export default function HeroVideoBlock({ blok, lang, region }: Props) {
 					{description && <p className="text-xl">{description}</p>}
 					{button && (
 						<div>
-							{button.map(({ label, link }) => {
+							{button.map(({ _uid, label, link }) => {
 								const href = resolveStoryblokLink(link, lang, region);
 								return (
-									<Button key={href} variant="outline" size="lg" asChild>
+									<Button key={_uid} variant="outline" size="lg" asChild>
 										<NextLink href={href}>{label}</NextLink>
 									</Button>
 								);
