@@ -29,7 +29,10 @@ export const MakeDonationForm = () => {
 					<input
 						type="number"
 						value={monthlyIncome}
-						onChange={(e) => setMonthlyIncome(Number(e.target.value))}
+						onChange={(e) => {
+							const parsed = parseFloat(e.target.value);
+							setMonthlyIncome(isNaN(parsed) ? 0 : parsed);
+						}}
 						className="w-full text-lg font-medium leading-none outline-none"
 					/>
 				</div>
