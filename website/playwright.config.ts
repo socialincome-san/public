@@ -70,7 +70,6 @@ export default defineConfig({
 			testMatch: /public-website\/.*\.e2e\.ts/,
 		},
 	],
-
 	webServer: {
 		command: 'npm run build && npm run start',
 		url: 'http://localhost:3000',

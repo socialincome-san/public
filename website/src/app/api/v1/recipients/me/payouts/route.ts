@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * List payouts
  * @description Returns all payouts belonging to the authenticated recipient. Requires a valid Firebase App Check token.
  * @auth BearerAuth
- * @response PayoutListResponse
+ * @response 200:PayoutListResponse
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {

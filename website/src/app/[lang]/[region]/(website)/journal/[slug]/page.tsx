@@ -30,8 +30,10 @@ const storyblokService = new StoryblokService();
 export async function generateMetadata(props: DefaultLayoutPropsWithSlug) {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
-	const url = `https://socialincome.org/${lang}/journal/${articleResponse.data.story.slug}`;
-	return generateMetaDataForArticle(articleResponse.data.story, url);
+	if (!articleResponse.success) return {};
+	const story = articleResponse.data;
+	const url = `https://socialincome.org/${lang}/journal/${story.slug}`;
+	return generateMetaDataForArticle(story, url);
 }
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
@@ -52,18 +54,24 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = (await props.params) as { slug: string; lang: WebsiteLanguage; region: WebsiteRegion };
 
 	const articleResponse = await getArticleMemoized(lang, slug);
-	const articleData = articleResponse.data.story.content;
-	const author = articleData.author;
+	if (!articleResponse.success) return null;
 
-	const articles = await storyblokService.getRelativeArticles(
+	const story = articleResponse.data;
+	const articleData = story.content;
+	const author = articleData.author as ISbStoryData<any>;
+
+	const relativeResult = await storyblokService.getRelativeArticles(
 		author.uuid,
-		articleResponse.data.story.id,
-		articleData.tags?.map((tag) => tag.uuid) ?? [],
+		story.id,
+		(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) => tag.uuid) ?? [],
 		lang,
 		NUMBER_OF_RELATIVE_ARTICLES,
 	);
+
+	const articles = relativeResult.success ? relativeResult.data : [];
 	const articleWithImageStyling = !articleData.useImageOnlyForPreview;
-	let translator = await Translator.getInstance({
+
+	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
 	});
@@ -88,6 +96,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							/>
 						</div>
 					)}
+
 					<div
 						className={
 							articleWithImageStyling
@@ -107,15 +116,17 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 									{articleData.type.content.value}
 								</Typography>
 							)}
+
 							<Typography
 								size="lg"
 								weight="normal"
 								color={articleWithImageStyling ? 'popover' : 'foreground'}
 								className="ml-5"
 							>
-								{formatStoryblokDate(articleResponse.data.story.first_published_at, lang)}
+								{formatStoryblokDate(story.first_published_at, lang)}
 							</Typography>
 						</div>
+
 						<Typography
 							weight="medium"
 							className="mb-3 mt-8 hyphens-auto break-words"
@@ -124,6 +135,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						>
 							{articleData.title}
 						</Typography>
+
 						<Typography
 							weight="normal"
 							className="hyphens-auto break-words"
@@ -149,7 +161,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						</Link>
 
 						<div className="mt-4 flex flex-wrap justify-start gap-2">
-							{articleData.tags?.map((tag) =>
+							{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
 								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
 							)}
 						</div>
@@ -165,9 +177,11 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						text={translator.t('article.from-original-language')}
 						languageName={translator.t('language-name.' + articleData.originalLanguage)}
 					/>
+
 					<Typography weight="bold" size="2xl">
 						{articleData.leadText}
 					</Typography>
+
 					<Typography as="div" size="lg" className="text-black">
 						<RichTextRenderer
 							richTextDocument={articleData.content as StoryblokRichtext}
@@ -176,7 +190,9 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							region={region}
 						/>
 					</Typography>
+
 					<Separator className="my-2" />
+
 					{articleData.footnotes && (
 						<Typography as="div" className="mt-5 text-black" size="md">
 							<RichTextRenderer
@@ -187,9 +203,13 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							/>
 						</Typography>
 					)}
+
 					<div className="mt-4 flex flex-wrap justify-start gap-2">
-						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'foreground'))}
+						{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
+							badgeWithLink(lang, region, tag, 'foreground'),
+						)}
 					</div>
+
 					<Link href={`/${lang}/${region}/journal/author/${author.slug}`} className="no-underline">
 						<div className="mt-5 flex items-center space-x-4">
 							<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />
@@ -205,6 +225,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						<Typography size="4xl" className="text-center" weight="semibold">
 							{translator.t('article.keep-reading')}
 						</Typography>
+
 						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-5 md:pl-20 md:pr-20 lg:grid-cols-3">
 							{articles.map((article) => (
 								<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />

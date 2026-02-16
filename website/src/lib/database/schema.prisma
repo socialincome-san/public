@@ -547,7 +547,6 @@ model Survey {
   data              Json                @map("data")
   accessEmail       String              @unique @map("access_email")
   accessPw          String              @map("access_pw")
-  accessToken       String              @map("access_token")
 
   recipientId      String          @map("recipient_id")
   recipient        Recipient       @relation(fields: [recipientId], references: [id])

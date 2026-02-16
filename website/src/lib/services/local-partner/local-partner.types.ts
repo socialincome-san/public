@@ -16,6 +16,7 @@ export type LocalPartnerTableView = {
 export type LocalPartnerPayload = {
 	id: string;
 	name: string;
+	causes: Cause[];
 	contact: {
 		id: string;
 		firstName: string;
