@@ -2,17 +2,6 @@ import { PaymentFileImportService } from '@/lib/services/payment-file-import/pay
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
-/**
- * Import payment files
- * @description Imports payment files from post finance.
- * @auth apikey
- *   type: apiKey
- *   in: header
- *   name: x-api-key
- * @response PaymentFilesImportResult
- * @response ErrorResponse
- * @openapi
- */
 export async function POST(request: NextRequest) {
 	const apiKey = request.headers.get('x-api-key');
 

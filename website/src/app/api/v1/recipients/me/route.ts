@@ -8,7 +8,7 @@ import { RecipientSelfUpdate } from '../../models';
 /**
  * Get recipient
  * @description Returns the authenticated recipient with all related data. Requires a valid Firebase App Check token.
- * @response Recipient
+ * @response 200:Recipient
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
@@ -34,7 +34,7 @@ export const GET = withAppCheck(async (request: NextRequest) => {
  * @description Updates the authenticated recipient’s personal information, contact details, and mobile money payment information. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @body RecipientSelfUpdate
- * @response Recipient
+ * @response 200:Recipient
  * @openapi
  */
 export const PATCH = withAppCheck(async (request: NextRequest) => {

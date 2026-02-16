@@ -13,7 +13,7 @@ type Params = Promise<{ payoutId: string }>;
  * @auth BearerAuth
  * @pathParams PayoutParams
  * @body ConfirmPayoutBody
- * @response Payout
+ * @response 200:Payout
  * @openapi
  */
 export const POST = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {

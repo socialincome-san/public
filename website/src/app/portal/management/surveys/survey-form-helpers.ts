@@ -12,7 +12,6 @@ export function buildCreateSurveyInput(schema: SurveyFormSchema): SurveyCreateIn
 		data: {},
 		accessEmail: schema.fields.accessEmail.value,
 		accessPw: schema.fields.accessPw.value,
-		accessToken: schema.fields.accessToken.value,
 	};
 }
 
@@ -26,7 +25,6 @@ export function buildUpdateSurveyInput(schema: SurveyFormSchema, existing: Surve
 		data: {},
 		accessEmail: schema.fields.accessEmail.value,
 		accessPw: schema.fields.accessPw.value,
-		accessToken: schema.fields.accessToken.value,
 	};
 
 	if (schema.fields.recipientId.value !== existing.recipientId) {

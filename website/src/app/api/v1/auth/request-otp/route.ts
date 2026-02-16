@@ -6,9 +6,7 @@ import { RequestOtpRequest } from '../../models';
  * Request OTP
  * @description Requests an OTP via Twilio SMS for the given phone number. Requires a valid Firebase App Check token.
  * @body RequestOtpRequest
- * @response 204: No Content
- * @response 400: ErrorResponse
- * @response 401: Unauthorized
+ * @response 204:No Content
  * @openapi
  */
 export const POST = withAppCheck(async (request: Request) => {

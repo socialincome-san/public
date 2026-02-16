@@ -8,8 +8,6 @@ import { NextResponse } from 'next/server';
  * @description Verifies an OTP sent via Twilio and returns a Firebase custom token for authentication. Requires a valid Firebase App Check token.
  * @body VerifyOtpRequest
  * @response 200:VerifyOtpResponse
- * @response 400:ErrorResponse
- * @response 401:Unauthorized
  * @openapi
  */
 export const POST = withAppCheck(async (request: Request) => {
