@@ -2,16 +2,6 @@ import { ExchangeRateImportService } from '@/lib/services/exchange-rate/exchange
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
-/**
- * Import exchange rates
- * @description Imports exchange rates from external API into the database.
- * @auth apikey
- *   type: apiKey
- *   in: header
- *   name: x-api-key
- * @response ExchangeRatesImportSuccess
- * @openapi
- */
 export async function POST(request: NextRequest) {
 	const apiKey = request.headers.get('x-api-key');
 

@@ -157,31 +157,6 @@ const VerifyOtpResponse = z.object({
 	uid: z.string(),
 });
 
-const StripeWebhookResponse = z.object({
-	received: z.literal(true),
-	data: z
-		.object({
-			contributionId: z.string().optional(),
-			contributorId: z.string().optional(),
-			isNewContributor: z.boolean().optional(),
-		})
-		.optional(),
-});
-
 const ErrorResponse = z.object({
 	error: z.string(),
-});
-
-const PaymentFilesImportResult = z.object({
-	id: z.string(),
-	contributionId: z.string(),
-	type: z.string(),
-	transactionId: z.string(),
-	metadata: z.string().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date().nullable(),
-});
-
-const ExchangeRatesImportSuccess = z.object({
-	success: z.literal(true),
 });

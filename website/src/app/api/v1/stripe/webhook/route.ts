@@ -2,13 +2,6 @@ import { StripeService } from '@/lib/services/stripe/stripe.service';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
-/**
- * Process Stripe webhook events
- * @description Handles multiple Stripe webhook events including charge.succeeded, charge.updated, and charge.failed to create/update contributions and contributors.
- * @response StripeWebhookResponse
- * @response ErrorResponse
- * @openapi
- */
 export async function POST(request: NextRequest) {
 	try {
 		const signature = request.headers.get('stripe-signature');
