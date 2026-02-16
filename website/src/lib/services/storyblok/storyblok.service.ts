@@ -1,10 +1,10 @@
 import type { Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { ServiceResult } from '@/lib/services/core/base.types';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { BaseService } from '../core/base.service';
+import { ServiceResult } from '../core/base.types';
 import { getStoryblokApi } from './storyblok.config';
 import type { ResolvedArticle } from './storyblok.utils';
 
@@ -64,25 +64,21 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	// ==================== Article Counts ====================
-
-	/**
-	 * Get count of overview articles for the default language.
-	 * Storyblok doesn't support aggregation functions, so we query with limit 1 to get the total count.
-	 */
-	async getOverviewArticlesCountForDefaultLang(): Promise<number> {
-		const params: ISbStoriesParams = {
-			...(await this.getStoryParams(defaultLanguage)),
-			per_page: 1,
-			excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
-			content_type: StoryblokContentType.Article,
-			filter_query: {
-				displayInOverviewPage: {
-					is: true,
-				},
-			},
-		};
-		return (await getStoryblokApi().get(STORIES_PATH, params)).total;
+	async getOverviewArticlesCountForDefaultLang(): Promise<ServiceResult<number>> {
+		try {
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(defaultLanguage)),
+				per_page: 1,
+				excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
+				content_type: StoryblokContentType.Article,
+				filter_query: { displayInOverviewPage: { is: true } },
+			};
+			const res = await getStoryblokApi().get(STORIES_PATH, params);
+			return this.resultOk(res.total);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Failed to count overview articles: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getArticleCountByTagForDefaultLang(tagId: string): Promise<ServiceResult<number>> {
