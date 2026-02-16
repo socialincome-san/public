@@ -86,24 +86,30 @@ function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
 
 const storyblokService = new StoryblokService();
 
-function getArticlesInAlternativeLanguages() {
+async function getArticlesInAlternativeLanguages() {
 	return Promise.all(
-		SUPPORTED_LANGUAGES.map(async (lang) => ({
-			lang,
-			stories: await storyblokService.getOverviewArticles(lang),
-		})),
+		SUPPORTED_LANGUAGES.map(async (lang) => {
+			const res = await storyblokService.getOverviewArticles(lang);
+			return { lang, stories: res.success ? res.data : [] };
+		}),
 	);
 }
 
 const STATIC_SITEMAP = generateStaticPagesSitemap();
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	try {
-		const [articles, articlesAlternativeLanguages, authors, tags] = await Promise.all([
+		const [articlesRes, articlesAlternativeLanguages, authorsRes, tagsRes] = await Promise.all([
 			storyblokService.getOverviewArticles(defaultLanguage),
 			getArticlesInAlternativeLanguages(),
 			storyblokService.getOverviewAuthors(defaultLanguage),
 			storyblokService.getOverviewTags(defaultLanguage),
 		]);
+
+		const articles = articlesRes.success ? articlesRes.data : [];
+		const authors = authorsRes.success ? authorsRes.data : [];
+		const tags = tagsRes.success ? tagsRes.data : [];
+
 		return STATIC_SITEMAP.concat(
 			generateStoryblokArticlesSitemap(articles, articlesAlternativeLanguages),
 			generateStoryblokAuthorsSitemap(authors),

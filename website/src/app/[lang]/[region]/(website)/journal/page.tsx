@@ -14,31 +14,43 @@ const storyblokService = new StoryblokService();
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
+
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-journal', 'common'],
 	});
 
-	const [articles, authors, tags] = await Promise.all([
+	const [articlesResult, authorsResult, tagsResult] = await Promise.all([
 		storyblokService.getOverviewArticles(lang),
 		storyblokService.getOverviewAuthors(lang),
 		storyblokService.getOverviewTags(lang),
 	]);
 
-	const totalArticlesInDefaultLang =
-		lang == defaultLanguage ? articles.length : await storyblokService.getOverviewArticlesCountForDefaultLang();
+	const articles = articlesResult.success ? articlesResult.data : [];
+	const authors = authorsResult.success ? authorsResult.data : [];
+	const tags = tagsResult.success ? tagsResult.data : [];
+
+	let totalArticlesInDefaultLang = articles.length;
+
+	if (lang !== defaultLanguage) {
+		const countRes = await storyblokService.getOverviewArticlesCountForDefaultLang();
+		if (countRes.success) totalArticlesInDefaultLang = countRes.data;
+	}
 
 	return (
 		<BaseContainer>
 			<Typography weight="bold" className="text-center" size="5xl">
 				{translator.t('overview.title')}
 			</Typography>
+
 			<Typography className="mt-8 text-center text-black" size="xl">
 				{translator.t('overview.description')}
 			</Typography>
+
 			<Typography className="mb-4 mt-12 text-center" size="3xl" weight="medium">
 				{translator.t('overview.editors')}
 			</Typography>
+
 			<Carousel
 				className="mx-auto mb-10 max-w-lg"
 				options={{
@@ -75,6 +87,7 @@ export default async function Page({ params }: DefaultPageProps) {
 						{translator.t('overview.all')}
 					</Badge>
 				</div>
+
 				{tags.map((tag) => (
 					<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 						<Badge size="md" variant="outline" className="whitespace-nowrap">
