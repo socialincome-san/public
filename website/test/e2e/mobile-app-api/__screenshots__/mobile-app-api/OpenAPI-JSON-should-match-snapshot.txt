@@ -78,57 +78,6 @@
           "uid"
         ]
       },
-      "ExchangeRatesImportSuccess": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "enum": [
-              true
-            ]
-          }
-        },
-        "required": [
-          "success"
-        ]
-      },
-      "PaymentFilesImportResult": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "contributionId": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "transactionId": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "required": [
-          "id",
-          "contributionId",
-          "type",
-          "transactionId",
-          "createdAt"
-        ]
-      },
       "PayoutParams": {
         "type": "object",
         "properties": {
@@ -360,38 +309,6 @@
           "$ref": "#/components/schemas/Survey"
         }
       },
-      "StripeWebhookResponse": {
-        "type": "object",
-        "properties": {
-          "received": {
-            "type": "boolean",
-            "enum": [
-              true
-            ]
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "contributionId": {
-                "type": "string",
-                "nullable": true
-              },
-              "contributorId": {
-                "type": "string",
-                "nullable": true
-              },
-              "isNewContributor": {
-                "type": "boolean",
-                "nullable": true
-              }
-            },
-            "nullable": true
-          }
-        },
-        "required": [
-          "received"
-        ]
-      },
       "PaymentInformation": {
         "type": "object",
         "properties": {
@@ -618,9 +535,6 @@
           "accessPw": {
             "type": "string"
           },
-          "accessToken": {
-            "type": "string"
-          },
           "surveyScheduleId": {
             "type": "string",
             "nullable": true
@@ -644,7 +558,6 @@
           "data",
           "accessEmail",
           "accessPw",
-          "accessToken",
           "createdAt"
         ]
       },
@@ -811,86 +724,6 @@
     }
   },
   "paths": {
-    "/v1/exchange-rate": {
-      "post": {
-        "operationId": "post-v1-exchange-rate",
-        "summary": "Import exchange rates",
-        "description": "Imports exchange rates from external API into the database.",
-        "tags": [
-          "V1"
-        ],
-        "parameters": [],
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExchangeRatesImportSuccess"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/v1/payment-files-import": {
-      "post": {
-        "operationId": "post-v1-payment-files-import",
-        "summary": "Import payment files",
-        "description": "Imports payment files from post finance.",
-        "tags": [
-          "V1"
-        ],
-        "parameters": [],
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaymentFilesImportResult"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
     "/v1/auth/request-otp": {
       "post": {
         "operationId": "post-v1-auth-request-otp",
@@ -1037,41 +870,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Recipient"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/v1/stripe/webhook": {
-      "post": {
-        "operationId": "post-v1-stripe-webhook",
-        "summary": "Process Stripe webhook events",
-        "description": "Handles multiple Stripe webhook events including charge.succeeded, charge.updated, and charge.failed to create/update contributions and contributors.",
-        "tags": [
-          "V1"
-        ],
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StripeWebhookResponse"
                 }
               }
             }
@@ -1239,7 +1037,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful response",
             "content": {
               "application/json": {
@@ -1295,7 +1093,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful response",
             "content": {
               "application/json": {
