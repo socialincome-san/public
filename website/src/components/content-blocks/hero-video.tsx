@@ -47,7 +47,7 @@ export default function HeroVideoBlock({ blok, lang, region }: Props) {
           }
         `}</style>
 			</MuxVideo>
-			<div className="z-11 container absolute inset-x-0 bottom-[20%] flex flex-row items-center justify-between gap-4 text-white">
+			<div className="container absolute inset-x-0 bottom-[20%] z-20 flex flex-row items-center justify-between gap-4 text-white">
 				<div className="flex max-w-2xl flex-col gap-6">
 					{heading && (
 						<h1 className="text-6xl font-light [&_strong]:font-bold">
