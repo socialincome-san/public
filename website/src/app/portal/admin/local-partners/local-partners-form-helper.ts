@@ -28,6 +28,7 @@ export function buildUpdateLocalPartnerInput(
 	return {
 		id: localPartner.id,
 		name: schema.fields.name.value,
+		causes: schema.fields.causes.value,
 		contact: {
 			update: {
 				data: {
@@ -57,6 +58,7 @@ export function buildCreateLocalPartnerInput(
 
 	return {
 		name: schema.fields.name.value,
+		causes: schema.fields.causes.value,
 		contact: {
 			create: {
 				...buildCommonContactData(contactFields),

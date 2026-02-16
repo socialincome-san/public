@@ -401,8 +401,8 @@ export class PayoutService extends BaseService {
 			];
 
 			for (const recipient of recipients) {
-				const code = recipient.paymentInformation?.code ?? 'MISSING_CODE';
-				const phone = recipient.paymentInformation?.phone?.number ?? 'MISSING_PHONE';
+				const code = recipient.paymentInformation?.code ?? 'NO_CODE';
+				const phone = recipient.paymentInformation?.phone?.number ?? 'NO_PHONE';
 				const firstName = recipient.contact?.firstName ?? '';
 				const lastName = recipient.contact?.lastName ?? '';
 				const amount = Number(recipient.program?.payoutPerInterval ?? 0);

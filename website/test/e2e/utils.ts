@@ -17,3 +17,8 @@ export async function getCountryService() {
 	const { CountryService } = await import('@/lib/services/country/country.service');
 	return new CountryService();
 }
+
+export async function getLocalPartnerService() {
+	const { LocalPartnerService } = await import('@/lib/services/local-partner/local-partner.service');
+	return new LocalPartnerService();
+}
