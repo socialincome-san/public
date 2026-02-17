@@ -1,4 +1,5 @@
 import { ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { now } from '@/lib/utils/now';
 import crypto from 'crypto';
 import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -119,9 +120,9 @@ export class SurveyService extends BaseService {
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
 
-			const now = new Date();
-			const from = startOfMonth(subMonths(now, 1));
-			const to = endOfMonth(now);
+			const nowDate = now();
+			const from = startOfMonth(subMonths(nowDate, 1));
+			const to = endOfMonth(nowDate);
 
 			const surveys = await this.db.survey.findMany({
 				where: {
@@ -430,7 +431,7 @@ export class SurveyService extends BaseService {
 					}
 
 					const dueDate = addMonths(recipient.startDate, schedule.dueInMonthsAfterStart);
-					const surveyStatus = dueDate < new Date() ? SurveyStatus.missed : SurveyStatus.new;
+					const surveyStatus = dueDate < now() ? SurveyStatus.missed : SurveyStatus.new;
 
 					let email: string;
 					do {

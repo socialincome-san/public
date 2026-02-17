@@ -1,6 +1,7 @@
 import { ProgramPermission, Recipient } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
+import { now } from '@/lib/utils/now';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -639,7 +640,7 @@ export class RecipientService extends BaseService {
 				where: {
 					programId: { in: programIds },
 					suspendedAt: null,
-					startDate: { lte: new Date() },
+					startDate: { lte: now() },
 				},
 				select: {
 					id: true,

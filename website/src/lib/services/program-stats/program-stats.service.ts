@@ -1,4 +1,5 @@
 import { ContributionStatus, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
+import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
 import { addMonths, differenceInMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -13,7 +14,7 @@ export class ProgramStatsService extends BaseService {
 				return this.resultFail('Program not found');
 			}
 
-			const now = new Date();
+			const nowDate = now();
 			const recipientsCount = program.recipients.length;
 			const payoutPerInterval = Number(program.payoutPerInterval);
 			const intervalInMonths = this.getIntervalInMonths(program.payoutInterval);
@@ -31,7 +32,7 @@ export class ProgramStatsService extends BaseService {
 				expectedPayoutsPerRecipient,
 			);
 			const surveys = this.computeSurveys(program);
-			const lifecycle = this.computeLifecycle(payouts.firstPayoutDate, program.programDurationInMonths, now);
+			const lifecycle = this.computeLifecycle(payouts.firstPayoutDate, program.programDurationInMonths, nowDate);
 
 			return this.resultOk({
 				contributedToProgramSoFarChf: contributions.contributedToProgramSoFarChf,

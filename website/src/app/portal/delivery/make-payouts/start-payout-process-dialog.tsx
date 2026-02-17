@@ -10,6 +10,7 @@ import {
 	generateRegistrationCsvAction,
 	previewCurrentMonthPayoutsAction,
 } from '@/lib/server-actions/payout-process-actions';
+import { now } from '@/lib/utils/now';
 import { format } from 'date-fns';
 import { CalendarIcon, EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -17,7 +18,7 @@ import { useState } from 'react';
 type StepResult = string | object | string[] | null;
 
 export function StartPayoutProcessDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
-	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+	const [selectedDate, setSelectedDate] = useState<Date>(now());
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 
 	const iconClass = 'h-4 w-4';

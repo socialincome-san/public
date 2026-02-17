@@ -1,6 +1,7 @@
 import { Cause, CountryCode, Prisma } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
+import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -96,8 +97,8 @@ export class CandidateService extends BaseService {
 			}
 
 			if (profiles.includes(Profile.youth)) {
-				const now = new Date();
-				const youthCutoffDate = new Date(now.getFullYear() - 25, now.getMonth(), now.getDate());
+				const nowDate = now();
+				const youthCutoffDate = new Date(nowDate.getFullYear() - 25, nowDate.getMonth(), nowDate.getDate());
 
 				contactFilters.push({
 					dateOfBirth: {

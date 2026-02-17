@@ -8,10 +8,11 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { generateDonationCertificateForCurrentUser } from '@/lib/server-actions/donation-certificates-actions';
 import { DonationCertificateError } from '@/lib/services/donation-certificate/types';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
+import { now } from '@/lib/utils/now';
 import _ from 'lodash';
 import { useState, useTransition } from 'react';
 
-const CURRENT_YEAR = new Date().getFullYear();
+const CURRENT_YEAR = now().getFullYear();
 const LANGUAGES: LanguageCode[] = ['en', 'de', 'fr', 'it'];
 export default function GenerateDonationCertificateDialog({
 	open,

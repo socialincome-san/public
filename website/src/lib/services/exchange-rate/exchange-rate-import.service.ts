@@ -1,4 +1,5 @@
 import { ExchangeRate } from '@/generated/prisma/client';
+import { now, nowMs } from '@/lib/utils/now';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -86,7 +87,7 @@ export class ExchangeRateImportService extends BaseService {
 	}
 
 	async import(): Promise<ServiceResult<void>> {
-		const oneMonthAgo = new Date();
+		const oneMonthAgo = now();
 		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
 		const existingExchangeRates = await this.getAllRatesSince(oneMonthAgo);
@@ -98,12 +99,12 @@ export class ExchangeRateImportService extends BaseService {
 
 		this.logger.info('Starting exchange rate import', {
 			fromDate: oneMonthAgo.toISOString(),
-			toDate: new Date().toISOString(),
+			toDate: now().toISOString(),
 		});
 
 		for (
 			let timestamp = oneMonthAgo.getTime();
-			timestamp <= Date.now();
+			timestamp <= nowMs();
 			timestamp += ExchangeRateImportService.DAY_IN_MILLISECONDS
 		) {
 			const ratesForTimestamp = existingExchangeRates.data.filter((rate) => {

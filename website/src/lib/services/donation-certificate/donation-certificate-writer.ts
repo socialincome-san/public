@@ -1,5 +1,6 @@
 import { Translator } from '@/lib/i18n/translator';
 import { LanguageCode } from '@/lib/types/language';
+import { now } from '@/lib/utils/now';
 import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
@@ -40,7 +41,7 @@ export class DonationCertificateWriter {
 		});
 
 		const header = translator.t('header');
-		const location = translator.t('location', { context: { date: new Date() } });
+		const location = translator.t('location', { context: { date: now() } });
 		const country = translator.t(this.donator.address?.country as string, { namespace: 'countries' });
 		const title = translator.t('title', { context: { year: this.year } });
 		const text1 = translator.t('text-1', {

@@ -1,5 +1,6 @@
 import { Campaign } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
+import { nowMs } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
@@ -19,7 +20,7 @@ export class CampaignService extends BaseService {
 	private exchangeRateService = new ExchangeRateService();
 
 	private daysUntilTs(ts: Date): number {
-		const diffInMs = ts.getTime() - new Date().getTime();
+		const diffInMs = ts.getTime() - nowMs();
 		return Math.ceil(diffInMs / (24 * 60 * 60 * 1000));
 	}
 

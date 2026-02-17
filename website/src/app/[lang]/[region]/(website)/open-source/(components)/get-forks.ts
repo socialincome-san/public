@@ -1,3 +1,4 @@
+import { now } from '@/lib/utils/now';
 import { fetchData } from './fetch-data';
 
 const owner = 'socialincome-san';
@@ -15,7 +16,7 @@ export async function getForkCount(): Promise<{ totalForks: number; newForks: nu
 	const totalForks = repoData.forks_count;
 
 	// Calculate the date 30 days ago from today
-	const startDate = new Date();
+	const startDate = now();
 	startDate.setDate(startDate.getDate() - 30);
 	const startDateISO = startDate.toISOString();
 

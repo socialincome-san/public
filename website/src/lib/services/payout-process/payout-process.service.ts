@@ -1,4 +1,5 @@
 import { PayoutStatus, Prisma } from '@/generated/prisma/client';
+import { now } from '@/lib/utils/now';
 import { format, isSameMonth, startOfMonth } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -35,13 +36,13 @@ export class PayoutProcessService extends BaseService {
 				}
 			}
 
-			const now = new Date();
+			const nowDate = now();
 
 			const recipients = await this.db.recipient.findMany({
 				where: {
 					programId: { in: programIdsReadyForPayouts },
-					startDate: { lte: now },
-					OR: [{ suspendedAt: null }, { suspendedAt: { gt: now } }],
+					startDate: { lte: nowDate },
+					OR: [{ suspendedAt: null }, { suspendedAt: { gt: nowDate } }],
 				},
 				select: {
 					id: true,

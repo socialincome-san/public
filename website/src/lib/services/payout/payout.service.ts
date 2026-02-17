@@ -1,4 +1,5 @@
 import { PayoutStatus, ProgramPermission } from '@/generated/prisma/client';
+import { now } from '@/lib/utils/now';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -195,7 +196,7 @@ export class PayoutService extends BaseService {
 			}
 
 			const forecastMonths = Array.from({ length: monthsAhead + 1 }, (_, i) => {
-				const start = startOfMonth(addMonths(new Date(), i));
+				const start = startOfMonth(addMonths(now(), i));
 				return format(start, 'yyyy-MM');
 			});
 
@@ -360,12 +361,12 @@ export class PayoutService extends BaseService {
 	}
 
 	private getMonthIntervals() {
-		const now = new Date();
+		const nowDate = now();
 
 		return {
-			current: { start: startOfMonth(now), end: endOfMonth(now) },
-			last: { start: startOfMonth(subMonths(now, 1)), end: endOfMonth(subMonths(now, 1)) },
-			twoAgo: { start: startOfMonth(subMonths(now, 2)), end: endOfMonth(subMonths(now, 2)) },
+			current: { start: startOfMonth(nowDate), end: endOfMonth(nowDate) },
+			last: { start: startOfMonth(subMonths(nowDate, 1)), end: endOfMonth(subMonths(nowDate, 1)) },
+			twoAgo: { start: startOfMonth(subMonths(nowDate, 2)), end: endOfMonth(subMonths(nowDate, 2)) },
 		};
 	}
 
