@@ -1,4 +1,4 @@
-import HeroVideoBlock from '@/components/content-blocks/hero-video';
+import HeroVideoBlockServer from '@/components/content-blocks/hero-video-server';
 import ImageTextBlock from '@/components/content-blocks/image-text';
 import TextBlock from '@/components/content-blocks/text';
 import PageContentType from '@/components/content-types/page';
@@ -12,7 +12,7 @@ mockStoryblokIfTestMode();
  */
 export const storyblokComponents = {
 	page: PageContentType,
-	heroVideo: HeroVideoBlock,
+	heroVideo: HeroVideoBlockServer,
 	text: TextBlock,
 	imageText: ImageTextBlock,
 };

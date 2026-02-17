@@ -14,11 +14,13 @@ type Props = {
 	blok: HeroVideo;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	subtitleUrl?: string;
 };
 
-export default function HeroVideoBlock({ blok, lang, region }: Props) {
+export default function HeroVideoBlock({ blok, lang, region, subtitleUrl }: Props) {
 	const { heading, description, muxPlaybackId, button } = blok;
 
+	// TODO: Find a way to let the user enable/disable captions
 	const showCaptions = false;
 
 	return (
@@ -36,7 +38,9 @@ export default function HeroVideoBlock({ blok, lang, region }: Props) {
 				autoPlay
 				playsInline
 			>
-				{/* <track kind="captions" src={blok.subtitles} srcLang={blok.lang} label={blok.lang.toUpperCase()} default /> */}
+				{subtitleUrl && (
+					<track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />
+				)}
 				<style>{`
           video::cue {
             background-color: rgba(0, 0, 0, 0.8);
