@@ -38,9 +38,7 @@ export default function HeroVideoBlock({ blok, lang, region, subtitleUrl }: Prop
 				autoPlay
 				playsInline
 			>
-				{subtitleUrl && (
-					<track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />
-				)}
+				{subtitleUrl && <track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />}
 				<style>{`
           video::cue {
             background-color: rgba(0, 0, 0, 0.8);
