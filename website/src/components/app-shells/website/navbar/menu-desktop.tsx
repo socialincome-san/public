@@ -21,13 +21,17 @@ export const MenuDesktop = ({ nav, lang, region }: Props) => (
 	<NavigationMenu.Root>
 		<NavigationMenu.List className="flex items-center gap-1">
 			{nav.map((item) => {
-				if (!item.label) return null;
+				if (!item.label) {
+					return null;
+				}
 
 				const isDropdown = item.component === 'dropdownItem';
 				const hasChildren = isDropdown && item.menuItemGroups.some((group) => (group.items?.length ?? 0) > 0);
 
 				if (!hasChildren) {
-					if (isDropdown) return null;
+					if (isDropdown) {
+						return null;
+					}
 
 					const href = resolveStoryblokLink(item.link, lang, region);
 
