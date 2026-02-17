@@ -10,8 +10,8 @@ const Phone = z.object({
 
 const PaymentInformation = z.object({
 	id: z.string(),
-	provider: z.string(),
-	code: z.string(),
+	provider: z.enum(['orange_money']).nullable(),
+	code: z.string().nullable(),
 	phoneId: z.string(),
 	phone: Phone,
 	createdAt: z.string(),
@@ -27,7 +27,7 @@ const Contact = z.object({
 	phoneId: z.string().nullable(),
 	phone: Phone.nullable(),
 	email: z.string().nullable(),
-	gender: z.string().nullable(),
+	gender: z.enum(['male', 'female', 'other', 'private']).nullable(),
 	language: z.string().nullable(),
 	dateOfBirth: z.string().nullable(),
 	profession: z.string().nullable(),
@@ -53,7 +53,7 @@ const Program = z.object({
 	name: z.string(),
 	countryId: z.string(),
 	country: Country,
-	payoutPerInterval: z.number(),
+	payoutPerInterval: z.union([z.number(), z.string()]),
 	payoutCurrency: z.string(),
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
 	programDurationInMonths: z.number(),
@@ -82,11 +82,11 @@ const Recipient = z.object({
 
 const Payout = z.object({
 	id: z.string(),
-	amount: z.number(),
-	amountChf: z.number().nullable(),
+	amount: z.union([z.number(), z.string()]),
+	amountChf: z.union([z.number(), z.string()]).nullable(),
 	currency: z.string(),
 	paymentAt: z.string(),
-	status: z.string(),
+	status: z.enum(['paid', 'confirmed', 'contested', 'failed']),
 	phoneNumber: z.string().nullable(),
 	comments: z.string().nullable(),
 	recipientId: z.string(),
@@ -100,11 +100,11 @@ const Survey = z.object({
 	id: z.string(),
 	name: z.string(),
 	recipientId: z.string(),
-	questionnaire: z.string(),
+	questionnaire: z.enum(['onboarding', 'checkin', 'offboarding', 'offboarded_checkin']),
 	language: z.string(),
 	dueAt: z.string(),
 	completedAt: z.string().nullable(),
-	status: z.string(),
+	status: z.enum(['new', 'sent', 'scheduled', 'in_progress', 'completed', 'missed']),
 	data: z.any(),
 	accessEmail: z.string(),
 	accessPw: z.string(),
@@ -155,8 +155,4 @@ const VerifyOtpResponse = z.object({
 	customToken: z.string(),
 	isNewUser: z.boolean(),
 	uid: z.string(),
-});
-
-const ErrorResponse = z.object({
-	error: z.string(),
 });
