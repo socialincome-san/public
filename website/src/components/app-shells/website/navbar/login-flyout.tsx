@@ -65,14 +65,10 @@ export const LoginFlyout = () => {
 
 	return (
 		<>
-			<button
-				data-testid="login-button"
-				onClick={() => setOpen(true)}
-				className="flex items-center gap-2 text-base font-medium"
-			>
-				<UserRound className="h-4 w-4" />
+			<Button data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
+				<UserRound />
 				Login
-			</button>
+			</Button>
 
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent>

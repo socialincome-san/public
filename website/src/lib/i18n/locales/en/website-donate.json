@@ -73,6 +73,17 @@
 		"title": "One-time Donation",
 		"subtitle": "Make a one-time donation to Social Income"
 	},
+	"donation-form": {
+		"title": "Make a donation",
+		"monthly-income-label": "Your monthly income (CHF)",
+		"your-one-percent": "Your 1%",
+		"currency-prefix": "CHF",
+		"other": "Other",
+		"choose-own-amount": "Or choose own amount",
+		"monthly": "Monthly",
+		"one-time": "One-time",
+		"donate-now": "Donate now"
+	},
 	"success": {
 		"title": "Thank you for your contribution",
 		"user-form": {

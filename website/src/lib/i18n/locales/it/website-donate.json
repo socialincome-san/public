@@ -76,6 +76,17 @@
 		"title": "Donazione Una Tantum",
 		"subtitle": "Fai una semplice donazione una tantum a Social Income"
 	},
+	"donation-form": {
+		"title": "Fai una donazione",
+		"monthly-income-label": "Il tuo reddito mensile (CHF)",
+		"your-one-percent": "Il tuo 1%",
+		"currency-prefix": "CHF",
+		"other": "Altro",
+		"choose-own-amount": "Oppure scegli un importo personalizzato",
+		"monthly": "Mensile",
+		"one-time": "Una tantum",
+		"donate-now": "Dona ora"
+	},
 	"success": {
 		"title": "Grazie per il tuo contributo",
 		"user-form": {

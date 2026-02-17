@@ -4,6 +4,12 @@
 
 @font-face {
 	font-family: 'Unica77';
+	src: url('../../../ui/assets/fonts/Unica77LLWeb-Light.woff2') format('woff2');
+	font-weight: 300;
+}
+
+@font-face {
+	font-family: 'Unica77';
 	src: url('../../../ui/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
 	font-weight: normal;
 }
