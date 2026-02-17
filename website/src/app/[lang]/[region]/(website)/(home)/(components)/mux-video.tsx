@@ -26,7 +26,9 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
 	const { setBackgroundColor } = useNavbarBackground();
 	useEffect(() => {
-		if (!entry) return;
+		if (!entry) {
+			return;
+		}
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
 			setPlaying(false);
 			setBackgroundColor('!bg-background');
@@ -70,7 +72,9 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		if (showControls) {
 			id = setTimeout(() => setShowControls(false), OVERLAY_FADE_OUT_DELAY);
 		}
-		if (id) return () => clearTimeout(id);
+		if (id) {
+			return () => clearTimeout(id);
+		}
 	}, [showControls, setShowControls]);
 
 	useEffect(() => {
@@ -78,7 +82,9 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		if (!showCaptions) {
 			id = setTimeout(() => setShowCaptions(true), OVERLAY_FADE_OUT_DELAY);
 		}
-		if (id) return () => clearTimeout(id);
+		if (id) {
+			return () => clearTimeout(id);
+		}
 	}, [showCaptions, setShowCaptions]);
 
 	return (

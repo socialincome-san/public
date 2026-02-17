@@ -1,4 +1,3 @@
-import { RecipientStatus } from '@/generated/prisma/enums';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { getFirebaseAdminService, getRecipientService } from '../../utils';
@@ -6,7 +5,6 @@ import { getFirebaseAdminService, getRecipientService } from '../../utils';
 const ADD_RECIPIENT = {
 	firstName: 'Tony',
 	lastName: 'Stark',
-	status: RecipientStatus.waitlisted,
 	programName: 'Migros Relief SL',
 	localPartnerName: 'Kenema Youth Foundation',
 };
@@ -32,21 +30,18 @@ const CSV_RECIPIENTS = [
 	{
 		firstName: 'Bruce',
 		lastName: 'Banner',
-		status: RecipientStatus.active,
 		programName: 'Migros Relief SL',
 		localPartnerName: 'Makeni Development Initiative',
 	},
 	{
 		firstName: 'Natasha',
 		lastName: 'Romanoff',
-		status: RecipientStatus.suspended,
 		programName: 'Migros Relief SL',
 		localPartnerName: 'Makeni Development Initiative',
 	},
 	{
 		firstName: 'Clint',
 		lastName: 'Barton',
-		status: RecipientStatus.active,
 		programName: 'Migros Education SL',
 		localPartnerName: 'Bo Women Empowerment Group',
 	},
@@ -59,9 +54,6 @@ test.beforeEach(async () => {
 test('Add new recipient', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 	await page.getByRole('button', { name: 'Add new recipient' }).click();
-
-	await page.getByTestId('form-item-status').click();
-	await page.getByRole('option', { name: 'waitlisted' }).click();
 
 	await page.getByTestId('form-item-program').click();
 	await page.getByRole('option', { name: ADD_RECIPIENT.programName }).click();
@@ -79,14 +71,15 @@ test('Add new recipient', async ({ page }) => {
 	const service = await getRecipientService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	const row = result.data.tableRows.find(
 		(r) => r.firstName === ADD_RECIPIENT.firstName && r.lastName === ADD_RECIPIENT.lastName,
 	);
 
 	expect(row).toBeDefined();
-	expect(row?.status).toBe(ADD_RECIPIENT.status);
 	expect(row?.programName).toBe(ADD_RECIPIENT.programName);
 	expect(row?.localPartnerName).toBe(ADD_RECIPIENT.localPartnerName);
 });
@@ -149,7 +142,9 @@ test('Edit existing recipient', async ({ page }) => {
 	const service = await getRecipientService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	const row = result.data.tableRows.find(
 		(r) => r.firstName === EDIT_RECIPIENT.firstName && r.lastName === EDIT_RECIPIENT.lastName,
@@ -183,7 +178,9 @@ test('Delete recipient', async ({ page }) => {
 	const service = await getRecipientService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	const deleted = result.data.tableRows.find((r) => r.firstName === 'John' && r.lastName === 'Badingu');
 
@@ -206,7 +203,9 @@ test('CSV Upload', async ({ page }) => {
 	const service = await getRecipientService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	for (const expected of CSV_RECIPIENTS) {
 		const row = result.data.tableRows.find(
@@ -214,7 +213,6 @@ test('CSV Upload', async ({ page }) => {
 		);
 
 		expect(row).toBeDefined();
-		expect(row?.status).toBe(expected.status);
 		expect(row?.programName).toBe(expected.programName);
 		expect(row?.localPartnerName).toBe(expected.localPartnerName);
 	}

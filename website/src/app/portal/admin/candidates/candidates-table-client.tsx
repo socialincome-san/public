@@ -84,8 +84,8 @@ export function CandidatesTableClient({ rows, error, readOnly, actorKind = 'user
 				onOpenChange={setIsCsvUploadDialogOpen}
 				title="Upload candidates CSV"
 				template={{
-					headers: ['firstName', 'lastName', 'status', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'active', 'local_partner_id_here'],
+					headers: ['firstName', 'lastName', 'localPartnerId'],
+					exampleRow: ['John', 'Doe', 'local_partner_id_here'],
 					filename: 'candidates-import-template.csv',
 				}}
 				onImport={(file) => importCandidatesCsvAction(file)}

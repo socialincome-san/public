@@ -29,20 +29,11 @@ enum ContributionStatus {
   succeeded
 }
 
-enum RecipientStatus {
-  active
-  suspended
-  waitlisted
-  former
-}
-
 enum PayoutStatus {
-  created
   paid
   confirmed
   contested
   failed
-  other
 }
 
 enum SurveyStatus {
@@ -496,8 +487,9 @@ model Recipient {
   legacyFirestoreId    String?             @unique @map("legacy_firestore_id")
   contactId            String              @unique @map("contact_id")
   contact              Contact             @relation(fields: [contactId], references: [id])
+  suspendedAt          DateTime?           @map("suspended_at") @db.Timestamptz(3)
+  suspensionReason     String?             @map("suspension_reason")
   startDate            DateTime?           @map("start_date") @db.Timestamptz(3)
-  status               RecipientStatus     @map("status")
   successorName        String?             @map("successor_name")
   termsAccepted        Boolean             @default(false) @map("terms_accepted")
   paymentInformationId String?             @map("payment_information_id")

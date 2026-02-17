@@ -32,7 +32,9 @@ test('Add new local partner', async ({ page }) => {
 	const service = await getLocalPartnerService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	expect(result.data.tableRows.length).toBe(4);
 

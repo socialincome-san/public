@@ -21,7 +21,9 @@ export default function ExchangeRatesTable({
 		setErrorMessage(undefined);
 		startTransition(async () => {
 			const result = await importExchangeRatesAction();
-			if (!result.success) setErrorMessage(result.error);
+			if (!result.success) {
+				setErrorMessage(result.error);
+			}
 		});
 	};
 

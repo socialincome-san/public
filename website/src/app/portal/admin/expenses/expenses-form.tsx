@@ -126,7 +126,9 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 	useEffect(() => {
 		startTransition(async () => {
 			const res = await getExpenseOptionsAction();
-			if (!res.success) return;
+			if (!res.success) {
+				return;
+			}
 			setOptions(res.data);
 		});
 	}, []);

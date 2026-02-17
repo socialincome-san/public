@@ -88,11 +88,18 @@ export class DonationCertificateWriter {
 			pdfDocument.moveDown(6);
 			pdfDocument.fontSize(12);
 			pdfDocument.text(`${this.donator.firstName} ${this.donator.lastName}`);
-			if (this.donator.email) pdfDocument.text(this.donator.email);
-			if (this.donator.address?.street)
+			if (this.donator.email) {
+				pdfDocument.text(this.donator.email);
+			}
+			if (this.donator.address?.street) {
 				pdfDocument.text(`${this.donator.address?.street} ${this.donator.address?.number}`);
-			if (this.donator.address?.city) pdfDocument.text(`${this.donator.address?.zip} ${this.donator.address?.city}`);
-			if (this.donator.address?.country) pdfDocument.text(country);
+			}
+			if (this.donator.address?.city) {
+				pdfDocument.text(`${this.donator.address?.zip} ${this.donator.address?.city}`);
+			}
+			if (this.donator.address?.country) {
+				pdfDocument.text(country);
+			}
 
 			pdfDocument.moveDown(6);
 			pdfDocument.text(location);

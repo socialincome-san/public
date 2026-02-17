@@ -34,8 +34,11 @@ export default function GenerateDonationCertificateDialog({
 		setError(undefined);
 		startTransition(async () => {
 			const result = await generateDonationCertificateForCurrentUser(year, language);
-			if (!result.success) setError(result.error);
-			else setSuccess(true);
+			if (!result.success) {
+				setError(result.error);
+			} else {
+				setSuccess(true);
+			}
 		});
 	};
 

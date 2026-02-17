@@ -19,7 +19,9 @@ interface PageProps {
 const storyblokService = new StoryblokService();
 
 async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
-	if (lang == defaultLanguage) return totalArticlesInSelectedLanguage;
+	if (lang == defaultLanguage) {
+		return totalArticlesInSelectedLanguage;
+	}
 
 	const res = await storyblokService.getArticleCountByTagForDefaultLang(tagId);
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
@@ -29,7 +31,9 @@ export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;
 
 	const tagResult = await storyblokService.getTag(slug, lang);
-	if (!tagResult.success) return null;
+	if (!tagResult.success) {
+		return null;
+	}
 	const tag = tagResult.data;
 
 	const articlesResult = await storyblokService.getArticlesByTag(tag.uuid, lang);

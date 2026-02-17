@@ -26,7 +26,9 @@ export function CookieConsentBanner({ translations }: CookieConsentBannerClientP
 		localStorage.setItem('cookie_consent', mode);
 		location.reload();
 	};
-	if (hideBanner) return null;
+	if (hideBanner) {
+		return null;
+	}
 
 	return (
 		<Card className="bg-background border-border fixed bottom-2 right-2 mx-auto w-fit max-w-6xl rounded-full px-4 md:right-4">

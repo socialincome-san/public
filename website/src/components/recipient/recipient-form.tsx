@@ -3,7 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
-import { PaymentProvider, RecipientStatus } from '@/generated/prisma/enums';
+import { PaymentProvider } from '@/generated/prisma/enums';
 import { Actor } from '@/lib/firebase/current-account';
 import {
 	createRecipientAction,
@@ -33,7 +33,8 @@ export type RecipientFormSchema = {
 	label: string;
 	fields: {
 		startDate: FormField;
-		status: FormField;
+		suspendedAt: FormField;
+		suspensionReason: FormField;
 		successorName: FormField;
 		termsAccepted: FormField;
 		paymentInformation: {
@@ -58,10 +59,13 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormS
 				label: 'Start Date',
 				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
 			},
-			status: {
-				placeholder: 'Status',
-				label: 'Status',
-				zodSchema: z.nativeEnum(RecipientStatus),
+			suspendedAt: {
+				label: 'Suspended At',
+				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
+			},
+			suspensionReason: {
+				label: 'Suspension Reason',
+				zodSchema: z.string().optional(),
 			},
 			successorName: {
 				placeholder: 'Successor',
@@ -138,7 +142,8 @@ export function RecipientForm({
 				const newSchema = { ...formSchema };
 				const contactValues = getContactValuesFromPayload(result.data.contact, newSchema.fields.contact.fields);
 				newSchema.fields.startDate.value = result.data.startDate ?? undefined;
-				newSchema.fields.status.value = result.data.status;
+				newSchema.fields.suspendedAt.value = result.data.suspendedAt;
+				newSchema.fields.suspensionReason.value = result.data.suspensionReason;
 				newSchema.fields.successorName.value = result.data.successorName;
 				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
 
@@ -247,7 +252,9 @@ export function RecipientForm({
 		// load options for program and local partners
 		startTransition(async () => {
 			const { programs, localPartner } = await getRecipientOptions();
-			if (!programs.success || !localPartner.success) return;
+			if (!programs.success || !localPartner.success) {
+				return;
+			}
 			setOptions(localPartner.data, programs.data);
 		});
 	}, []);

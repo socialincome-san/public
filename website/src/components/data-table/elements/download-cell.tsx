@@ -12,7 +12,9 @@ export function DownloadCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
 	const storage = useStorage();
 	const { data, loading } = useStorageDownloadURL(ref(storage, storagePath));
 
-	if (!storagePath || !data || loading) return null;
+	if (!storagePath || !data || loading) {
+		return null;
+	}
 
 	return (
 		<Link className={linkCn()} href={data} target="_blank" rel="noopener noreferrer">

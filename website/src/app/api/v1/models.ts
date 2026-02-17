@@ -64,7 +64,8 @@ const Program = z.object({
 const Recipient = z.object({
 	id: z.string(),
 	contactId: z.string(),
-	status: z.string(),
+	suspendedAt: z.string().nullable(),
+	suspensionReason: z.string().nullable(),
 	startDate: z.string().nullable(),
 	successorName: z.string().nullable(),
 	termsAccepted: z.boolean(),

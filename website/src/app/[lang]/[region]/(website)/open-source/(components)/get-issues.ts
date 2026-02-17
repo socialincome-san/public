@@ -27,7 +27,9 @@ export async function getIssuesData(): Promise<IssuesResponse> {
 		const data = await res.json();
 
 		// Break if no more issues
-		if (data.length === 0) break;
+		if (data.length === 0) {
+			break;
+		}
 
 		// Exclude pull requests and map response to Issue interface
 		const filteredIssues = data

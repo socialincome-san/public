@@ -86,7 +86,9 @@ export class SendgridSubscriptionService extends Client {
 		};
 
 		Object.entries(sendgridClientProps).forEach(([key, value]) => {
-			if (!value) throw new Error(`Missing required environment variable: ${key}`);
+			if (!value) {
+				throw new Error(`Missing required environment variable: ${key}`);
+			}
 		});
 		return sendgridClientProps;
 	};
@@ -102,7 +104,9 @@ export class SendgridSubscriptionService extends Client {
 			const isSuppressed = await this.isSuppressed(email);
 			return { ...contact, status: isSuppressed ? 'unsubscribed' : 'subscribed' } as SendgridContactType;
 		} catch (e: any) {
-			if (e.code !== 404) console.error('Unable to get contact', e);
+			if (e.code !== 404) {
+				console.error('Unable to get contact', e);
+			}
 			return null;
 		}
 	};

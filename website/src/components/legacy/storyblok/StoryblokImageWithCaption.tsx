@@ -9,7 +9,9 @@ export function StoryblokImageWithCaption({
 	image: { filename: string; alt?: string; focus?: string };
 	caption: string;
 }) {
-	if (!image?.filename) return null;
+	if (!image?.filename) {
+		return null;
+	}
 	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(image.filename);
 	return (
 		<div className="w-full px-0 py-8">

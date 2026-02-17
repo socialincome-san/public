@@ -19,17 +19,19 @@ export const config = {
  * Checks if a valid country is set as a cookie and set it based on the request header if available.
  */
 const countryMiddleware = (request: NextRequest, response: NextResponse) => {
-	if (request.cookies.has(COUNTRY_COOKIE) && isValidCountryCode(request.cookies.get(COUNTRY_COOKIE)?.value!))
+	if (request.cookies.has(COUNTRY_COOKIE) && isValidCountryCode(request.cookies.get(COUNTRY_COOKIE)?.value!)) {
 		return response;
+	}
 
 	const country = request.headers.get(CLOUDFLARE_IP_COUNTRY_HEADER)?.toUpperCase();
-	if (country)
+	if (country) {
 		response.cookies.set({
 			name: COUNTRY_COOKIE,
 			value: country as CountryCode,
 			path: '/',
 			maxAge: 60 * 60 * 24 * 7,
-		}); // 1 week
+		});
+	} // 1 week
 	return response;
 };
 
@@ -37,8 +39,9 @@ const countryMiddleware = (request: NextRequest, response: NextResponse) => {
  * Checks if a valid currency is set as a cookie, and sets one based on the country cookie if available.
  */
 const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
-	if (request.cookies.has(CURRENCY_COOKIE) && isValidCurrency(request.cookies.get(CURRENCY_COOKIE)?.value))
+	if (request.cookies.has(CURRENCY_COOKIE) && isValidCurrency(request.cookies.get(CURRENCY_COOKIE)?.value)) {
 		return response;
+	}
 	// We use the country code from the request header if available. If not, we use the region/country from the url path.
 	const country =
 		(response.cookies.get(COUNTRY_COOKIE)?.value as CountryCode | undefined) ??
@@ -116,7 +119,9 @@ const i18nRedirectMiddleware = (request: NextRequest) => {
 
 export function proxy(request: NextRequest) {
 	let response = redirectMiddleware(request) || i18nRedirectMiddleware(request);
-	if (response) return response;
+	if (response) {
+		return response;
+	}
 
 	// If no redirect was triggered, we continue with the country and currency middleware.
 	response = NextResponse.next();

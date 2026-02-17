@@ -131,7 +131,8 @@ export function buildUpdateRecipientInput(
 	return {
 		id: recipient.id,
 		startDate: schema.fields.startDate.value,
-		status: schema.fields.status.value,
+		suspendedAt: schema.fields.suspendedAt.value,
+		suspensionReason: schema.fields.suspensionReason.value,
 		successorName: schema.fields.successorName.value || null,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner?.value } },
@@ -184,7 +185,8 @@ export function buildCreateRecipientInput(
 
 	return {
 		startDate: schema.fields.startDate.value,
-		status: schema.fields.status.value,
+		suspendedAt: schema.fields.suspendedAt.value,
+		suspensionReason: schema.fields.suspensionReason.value,
 		successorName: schema.fields.successorName.value,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner?.value } },

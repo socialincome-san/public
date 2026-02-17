@@ -1,4 +1,4 @@
-import { ProgramPermission, Recipient, RecipientStatus } from '@/generated/prisma/client';
+import { ProgramPermission, Recipient } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
@@ -7,7 +7,6 @@ import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import {
-	PayoutRecipient,
 	RecipientCreateInput,
 	RecipientOption,
 	RecipientPayload,
@@ -62,7 +61,8 @@ export class RecipientService extends BaseService {
 			return await this.db.$transaction(async (tx) => {
 				const data: RecipientCreateInput = {
 					startDate: recipient.startDate ?? null,
-					status: recipient.status,
+					suspendedAt: recipient.suspendedAt ?? null,
+					suspensionReason: recipient.suspensionReason ?? null,
 					successorName: recipient.successorName ?? null,
 					termsAccepted: recipient.termsAccepted ?? false,
 
@@ -345,7 +345,8 @@ export class RecipientService extends BaseService {
 			select: {
 				id: true,
 				startDate: true,
-				status: true,
+				suspendedAt: true,
+				suspensionReason: true,
 				successorName: true,
 				termsAccepted: true,
 				localPartner: {
@@ -436,7 +437,9 @@ export class RecipientService extends BaseService {
 				},
 				select: {
 					id: true,
-					status: true,
+					startDate: true,
+					suspendedAt: true,
+					suspensionReason: true,
 					contact: {
 						select: {
 							firstName: true,
@@ -480,8 +483,10 @@ export class RecipientService extends BaseService {
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
 					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
+					startDate: recipient.startDate ?? null,
 					localPartnerName: recipient.localPartner?.name ?? null,
-					status: recipient.status,
+					suspendedAt: recipient.suspendedAt,
+					suspensionReason: recipient.suspensionReason,
 					programId: recipient.program?.id ?? null,
 					programName: recipient.program?.name ?? null,
 					payoutsReceived,
@@ -537,7 +542,9 @@ export class RecipientService extends BaseService {
 				},
 				select: {
 					id: true,
-					status: true,
+					startDate: true,
+					suspendedAt: true,
+					suspensionReason: true,
 					contact: {
 						select: {
 							firstName: true,
@@ -570,8 +577,10 @@ export class RecipientService extends BaseService {
 					firstName: r.contact?.firstName ?? '',
 					lastName: r.contact?.lastName ?? '',
 					dateOfBirth: r.contact?.dateOfBirth ?? null,
+					startDate: r.startDate ?? null,
 					localPartnerName: null,
-					status: r.status,
+					suspendedAt: r.suspendedAt,
+					suspensionReason: r.suspensionReason,
 					programId: r.program?.id ?? null,
 					programName: r.program?.name ?? null,
 					payoutsReceived,
@@ -589,80 +598,6 @@ export class RecipientService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch recipients for local partner: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async getActivePayoutRecipients(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
-		try {
-			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-
-			if (!accessResult.success) {
-				return this.resultFail(accessResult.error);
-			}
-
-			const accessiblePrograms = accessResult.data;
-			if (accessiblePrograms.length === 0) {
-				return this.resultFail('No accessible programs found');
-			}
-
-			const programIds = accessiblePrograms.map((p) => p.programId);
-
-			const recipients = await this.db.recipient.findMany({
-				where: {
-					programId: { in: programIds },
-					status: RecipientStatus.active,
-				},
-				select: {
-					id: true,
-					contact: {
-						select: {
-							firstName: true,
-							lastName: true,
-						},
-					},
-					paymentInformation: {
-						select: {
-							code: true,
-							phone: { select: { number: true } },
-						},
-					},
-					program: {
-						select: {
-							payoutPerInterval: true,
-							payoutCurrency: true,
-							programDurationInMonths: true,
-						},
-					},
-					payouts: {
-						select: {
-							paymentAt: true,
-							status: true,
-						},
-					},
-				},
-				orderBy: {
-					paymentInformation: { code: 'asc' },
-				},
-			});
-
-			const mapped: PayoutRecipient[] = recipients
-				.filter((r) => r.program !== null)
-				.map((r) => ({
-					id: r.id,
-					contact: r.contact,
-					paymentInformation: r.paymentInformation,
-					program: {
-						payoutPerInterval: Number(r.program!.payoutPerInterval),
-						payoutCurrency: r.program!.payoutCurrency,
-						programDurationInMonths: r.program!.programDurationInMonths,
-					},
-					payouts: r.payouts,
-				}));
-
-			return this.resultOk(mapped);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch payout recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -703,8 +638,8 @@ export class RecipientService extends BaseService {
 			const recipients = await this.db.recipient.findMany({
 				where: {
 					programId: { in: programIds },
-					status: { not: RecipientStatus.waitlisted },
-					startDate: { not: null },
+					suspendedAt: null,
+					startDate: { lte: new Date() },
 				},
 				select: {
 					id: true,
@@ -838,12 +773,7 @@ export class RecipientService extends BaseService {
 				return this.resultFail(`Row ${rowNumber}: localPartnerId is required`);
 			}
 
-			if (!row.status) {
-				return this.resultFail(`Row ${rowNumber}: status is required`);
-			}
-
 			const recipient: RecipientCreateInput = {
-				status: row.status as RecipientStatus,
 				contact: {
 					create: {
 						firstName: row.firstName,

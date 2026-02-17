@@ -4,25 +4,29 @@ import { Button } from '@/components/button';
 import { Card } from '@/components/card';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 type WalletProps = {
 	variant?: 'default' | 'empty';
 	title: string;
 	subtitle?: string | null;
+	badge?: ReactNode;
 	footerLeft?: { label: string; currency: string | null; amount: number };
 	footerRight?: { label: string; amount: number };
 	href?: string;
 };
 
 function formatAmount(amount?: number): string {
-	if (amount == null || isNaN(amount)) return '';
+	if (amount == null || isNaN(amount)) {
+		return '';
+	}
 	return new Intl.NumberFormat('de-CH', {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
 	}).format(amount);
 }
 
-export function Wallet({ variant = 'default', title, subtitle, footerLeft, footerRight, href }: WalletProps) {
+export function Wallet({ variant = 'default', title, subtitle, badge, footerLeft, footerRight, href }: WalletProps) {
 	const content = (
 		<Card
 			variant="noPadding"
@@ -75,7 +79,8 @@ export function Wallet({ variant = 'default', title, subtitle, footerLeft, foote
 							<div className="flex h-full w-full flex-col items-start justify-between gap-2">
 								<div>
 									<h3 className="text-4xl font-normal leading-[1.3]">{title}</h3>
-									<p className="pb-2 text-sm font-medium tracking-wide">{subtitle}</p>
+									<p className="pb-1 text-sm font-medium tracking-wide">{subtitle}</p>
+									{badge && <div className="mt-1">{badge}</div>}
 								</div>
 								<div className="flex w-full items-start justify-between">
 									<div className="flex flex-col items-start">

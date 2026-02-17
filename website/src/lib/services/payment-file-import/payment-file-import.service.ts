@@ -189,8 +189,11 @@ export class PaymentFileImportService extends BaseService {
 				};
 				try {
 					const result = await this.contributionService.upsertFromBankTransfer(paymentEvent);
-					if (!result.success) failedPaymentEvents.push(contributionReferenceId);
-					else created.push(result.data);
+					if (!result.success) {
+						failedPaymentEvents.push(contributionReferenceId);
+					} else {
+						created.push(result.data);
+					}
 				} catch (error) {
 					failedPaymentEvents.push(contributionReferenceId);
 				}

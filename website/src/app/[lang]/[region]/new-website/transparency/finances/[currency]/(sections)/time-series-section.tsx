@@ -3,6 +3,7 @@
 import { Card } from '@/components/card';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
+import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 
@@ -17,15 +18,6 @@ type TimeSeriesSectionProps = {
 	currency: WebsiteCurrency;
 	lang: WebsiteLanguage;
 };
-
-function formatCurrency(amount: number, currency: string, lang: WebsiteLanguage): string {
-	return new Intl.NumberFormat(lang, {
-		style: 'currency',
-		currency,
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 0,
-	}).format(amount);
-}
 
 export function TimeSeriesSection({ timeRanges, exchangeRate, currency, lang }: TimeSeriesSectionProps) {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -61,7 +53,7 @@ export function TimeSeriesSection({ timeRanges, exchangeRate, currency, lang }: 
 								{isHovered && (
 									<div className="bg-popover text-popover-foreground absolute -top-16 z-10 rounded-md border px-3 py-2 text-sm shadow-md">
 										<div className="font-medium">{range.fullLabel}</div>
-										<div>{formatCurrency(range.total, currency, lang)}</div>
+										<div>{formatCurrencyLocale(range.total, currency, lang)}</div>
 									</div>
 								)}
 								<div className="relative flex h-48 w-full items-end justify-center">

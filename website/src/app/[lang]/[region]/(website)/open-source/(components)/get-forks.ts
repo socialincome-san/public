@@ -37,7 +37,9 @@ export async function getForkCount(): Promise<{ totalForks: number; newForks: nu
 		}
 
 		// No more pages if we got fewer than 100 forks
-		if (forks.length < 100) hasMore = false;
+		if (forks.length < 100) {
+			hasMore = false;
+		}
 		page++;
 	}
 

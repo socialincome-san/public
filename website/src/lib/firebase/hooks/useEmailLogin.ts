@@ -29,12 +29,16 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		setSigningIn(continueUrl !== null || url.searchParams.get('email') !== null);
 
-		if (authListenerRegistered) return;
+		if (authListenerRegistered) {
+			return;
+		}
 
 		const unsubscribe = auth.onAuthStateChanged(() => {
 			setAuthListenerRegistered(true);
 
-			if (!isSignInWithEmailLink(auth, url.toString())) return;
+			if (!isSignInWithEmailLink(auth, url.toString())) {
+				return;
+			}
 
 			const email = new URL(continueUrl ?? window.location.href).searchParams.get('email');
 
@@ -50,7 +54,9 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 	const setServerSession = async (): Promise<boolean> => {
 		const user = auth.currentUser;
-		if (!user) return false;
+		if (!user) {
+			return false;
+		}
 
 		try {
 			const idToken = await user.getIdToken(true);

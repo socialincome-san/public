@@ -42,7 +42,9 @@ export async function getStarCount(): Promise<{ totalStars: number; newStars: nu
 		}
 
 		// No more pages if we got fewer than 100 stars
-		if (stars.length < 100) hasMore = false;
+		if (stars.length < 100) {
+			hasMore = false;
+		}
 		page++;
 	}
 

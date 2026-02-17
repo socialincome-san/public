@@ -30,7 +30,9 @@ const storyblokService = new StoryblokService();
 export async function generateMetadata(props: DefaultLayoutPropsWithSlug) {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
-	if (!articleResponse.success) return {};
+	if (!articleResponse.success) {
+		return {};
+	}
 	const story = articleResponse.data;
 	const url = `https://socialincome.org/${lang}/journal/${story.slug}`;
 	return generateMetaDataForArticle(story, url);
@@ -54,7 +56,9 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = (await props.params) as { slug: string; lang: WebsiteLanguage; region: WebsiteRegion };
 
 	const articleResponse = await getArticleMemoized(lang, slug);
-	if (!articleResponse.success) return null;
+	if (!articleResponse.success) {
+		return null;
+	}
 
 	const story = articleResponse.data;
 	const articleData = story.content;

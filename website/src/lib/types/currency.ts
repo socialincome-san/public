@@ -222,7 +222,9 @@ const countryToCurrency = new Map<CountryCode, Currency>([
 
 export const bestGuessCurrency = (country: CountryCode | undefined): Currency => {
 	// best guess mapping from two-letter country code to a supported currency
-	if (!country) return FALLBACK_CURRENCY;
+	if (!country) {
+		return FALLBACK_CURRENCY;
+	}
 	const currency = countryToCurrency.get(country);
 	return currency || FALLBACK_CURRENCY;
 };

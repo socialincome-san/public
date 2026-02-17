@@ -1,4 +1,4 @@
-import { Cause, CountryCode, Prisma, RecipientStatus } from '@/generated/prisma/client';
+import { Cause, CountryCode, Prisma } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { BaseService } from '../core/base.service';
@@ -141,7 +141,8 @@ export class CandidateService extends BaseService {
 			return await this.db.$transaction(async (tx) => {
 				const data: CandidateCreateInput = {
 					startDate: candidate.startDate ?? null,
-					status: candidate.status,
+					suspendedAt: candidate.suspendedAt ?? null,
+					suspensionReason: candidate.suspensionReason ?? null,
 					successorName: candidate.successorName ?? null,
 					termsAccepted: candidate.termsAccepted ?? false,
 
@@ -168,7 +169,8 @@ export class CandidateService extends BaseService {
 					data,
 					select: {
 						id: true,
-						status: true,
+						suspendedAt: true,
+						suspensionReason: true,
 						successorName: true,
 						termsAccepted: true,
 						localPartner: { select: { id: true, name: true } },
@@ -271,7 +273,8 @@ export class CandidateService extends BaseService {
 					data: updateInput,
 					select: {
 						id: true,
-						status: true,
+						suspendedAt: true,
+						suspensionReason: true,
 						successorName: true,
 						termsAccepted: true,
 						localPartner: { select: { id: true, name: true } },
@@ -336,7 +339,8 @@ export class CandidateService extends BaseService {
 				data: updateInput,
 				select: {
 					id: true,
-					status: true,
+					suspendedAt: true,
+					suspensionReason: true,
 					successorName: true,
 					termsAccepted: true,
 					localPartner: { select: { id: true, name: true } },
@@ -452,7 +456,8 @@ export class CandidateService extends BaseService {
 			where: { id },
 			select: {
 				id: true,
-				status: true,
+				suspendedAt: true,
+				suspensionReason: true,
 				successorName: true,
 				termsAccepted: true,
 				localPartner: { select: { id: true, name: true } },
@@ -519,7 +524,8 @@ export class CandidateService extends BaseService {
 				where: { programId: null },
 				select: {
 					id: true,
-					status: true,
+					suspendedAt: true,
+					suspensionReason: true,
 					contact: {
 						select: {
 							firstName: true,
@@ -539,7 +545,8 @@ export class CandidateService extends BaseService {
 				lastName: r.contact?.lastName ?? '',
 				dateOfBirth: r.contact?.dateOfBirth ?? null,
 				localPartnerName: r.localPartner?.name ?? null,
-				status: r.status,
+				suspendedAt: r.suspendedAt,
+				suspensionReason: r.suspensionReason,
 				createdAt: r.createdAt,
 			}));
 
@@ -559,7 +566,8 @@ export class CandidateService extends BaseService {
 				},
 				select: {
 					id: true,
-					status: true,
+					suspendedAt: true,
+					suspensionReason: true,
 					contact: {
 						select: {
 							firstName: true,
@@ -578,7 +586,8 @@ export class CandidateService extends BaseService {
 				lastName: r.contact?.lastName ?? '',
 				dateOfBirth: r.contact?.dateOfBirth ?? null,
 				localPartnerName: null,
-				status: r.status,
+				suspendedAt: r.suspendedAt,
+				suspensionReason: r.suspensionReason,
 				createdAt: r.createdAt,
 			}));
 
@@ -683,12 +692,7 @@ export class CandidateService extends BaseService {
 				return this.resultFail(`Row ${rowNumber}: localPartnerId is required`);
 			}
 
-			if (!row.status) {
-				return this.resultFail(`Row ${rowNumber}: status is required`);
-			}
-
 			const candidate: CandidateCreateInput = {
-				status: row.status as RecipientStatus,
 				contact: {
 					create: {
 						firstName: row.firstName,

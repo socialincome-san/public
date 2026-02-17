@@ -1,4 +1,4 @@
-import { Gender, PaymentProvider, PayoutInterval, Prisma, RecipientStatus } from '@/generated/prisma/client';
+import { Gender, PaymentProvider, PayoutInterval, Prisma } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
@@ -30,7 +30,8 @@ export class AppReviewModeService extends BaseService {
 			legacyFirestoreId: null,
 			contactId: 'tony-stark-contact',
 			startDate: new Date('1970-05-29T00:00:00.000Z'),
-			status: RecipientStatus.active,
+			suspendedAt: null,
+			suspensionReason: null,
 			successorName: 'Pepper Potts',
 			termsAccepted: true,
 			paymentInformationId: 'stark-payment-info',

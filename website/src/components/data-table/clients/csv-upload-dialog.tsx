@@ -58,7 +58,9 @@ export function CsvUploadDialog({ open, onOpenChange, title, template, onImport 
 	};
 
 	const handleImport = async () => {
-		if (!file) return;
+		if (!file) {
+			return;
+		}
 
 		setIsImporting(true);
 		setResult(null);
