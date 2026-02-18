@@ -98,7 +98,9 @@ test('Payout Process', async ({ page }) => {
 							currency: r.currency,
 							firstName: r.firstName,
 							lastName: r.lastName,
-							paymentAt: r.paymentAt,
+							paymentAt: expect.stringMatching(
+								new RegExp(`^${r.paymentAt.slice(0, 10)}`), // Only assert the YYYY-MM-DD part to avoid failures due to timezone differences.
+							),
 							phoneNumber: r.phoneNumber,
 							recipientId: r.recipientId,
 							status: r.status,
