@@ -70,7 +70,7 @@ export class ProgramService extends BaseService {
 						}
 					}
 
-					const ready = await this.isReadyForFirstPayoutInterval(program.id);
+					const isReadyForFirstPayoutsResult = await this.isReadyForFirstPayoutInterval(program.id);
 
 					return {
 						id: program.id,
@@ -80,7 +80,7 @@ export class ProgramService extends BaseService {
 						recipientsCount,
 						totalPayoutsSum,
 						permission,
-						isReadyForPayouts: ready.success ? ready.data : false,
+						isReadyForFirstPayouts: isReadyForFirstPayoutsResult.success ? isReadyForFirstPayoutsResult.data : false,
 					};
 				}),
 			);

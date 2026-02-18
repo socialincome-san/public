@@ -33,7 +33,7 @@ export async function UserPrograms({ userId }: Props) {
 							href={`/portal/programs/${program.id}/overview`}
 							title={program.programName}
 							subtitle={getCountryNameByCode(program.country)}
-							badge={!program.isReadyForPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
+							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 							footerLeft={{
 								label: 'Paid out',
 								currency: program.payoutCurrency,
@@ -60,7 +60,7 @@ export async function UserPrograms({ userId }: Props) {
 								href={`/portal/programs/${program.id}/overview`}
 								title={program.programName}
 								subtitle={getCountryNameByCode(program.country)}
-								badge={!program.isReadyForPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
+								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 								footerLeft={{
 									label: 'Paid out',
 									currency: program.payoutCurrency,

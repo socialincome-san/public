@@ -9,7 +9,7 @@ export type ProgramWallet = {
 	recipientsCount: number;
 	totalPayoutsSum: number;
 	permission: ProgramPermission;
-	isReadyForPayouts: boolean;
+	isReadyForFirstPayouts: boolean;
 };
 
 export type ProgramWallets = {
