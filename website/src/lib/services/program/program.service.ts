@@ -70,7 +70,7 @@ export class ProgramService extends BaseService {
 						}
 					}
 
-					const ready = await this.isReadyForPayouts(program.id);
+					const ready = await this.isReadyForFirstPayoutInterval(program.id);
 
 					return {
 						id: program.id,
@@ -331,7 +331,7 @@ export class ProgramService extends BaseService {
 		}
 	}
 
-	async isReadyForPayouts(programId: string): Promise<ServiceResult<boolean>> {
+	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
 		try {
 			const program = await this.db.program.findUnique({
 				where: { id: programId },

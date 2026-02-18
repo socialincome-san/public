@@ -32,7 +32,7 @@ async function ProgramsPageDataLoader({ params, searchParams }: DefaultLayoutPro
 		if (!idResult.success) {
 			return notFound();
 		}
-		const readyResult = await programService.isReadyForPayouts(idResult.data);
+		const readyResult = await programService.isReadyForFirstPayoutInterval(idResult.data);
 		if (!readyResult.success || !readyResult.data) {
 			return notFound();
 		}

@@ -31,9 +31,8 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 	const stats = statsResult.data;
 
-	// Centralize readiness via ProgramService to avoid duplication
-	const readyForPayoutsResult = await programService.isReadyForPayouts(programId);
-	const readyForPayouts = readyForPayoutsResult.success ? readyForPayoutsResult.data : false;
+	const readyForFirstPayoutResult = await programService.isReadyForFirstPayoutInterval(programId);
+	const readyForFirstPayout = readyForFirstPayoutResult.success ? readyForFirstPayoutResult.data : false;
 
 	const programSlug = slugify(programNameResult.data);
 	const publicUrl = `/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
@@ -42,7 +41,7 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 	return (
 		<div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
 			<div className="space-y-6 lg:col-span-9">
-				{!readyForPayouts && (
+				{!readyForFirstPayout && (
 					<>
 						<ProgramSetupSection programId={programId} publicUrl={publicUrl} />
 						<FirstIntervalFundingSection programId={programId} stats={stats} />
@@ -54,9 +53,9 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 			<div className="space-y-4 lg:col-span-3">
 				<div className="flex items-center gap-2">
-					<SectionTitle>{readyForPayouts ? 'Your public page' : 'Your preview page'}</SectionTitle>
+					<SectionTitle>{readyForFirstPayout ? 'Your public page' : 'Your preview page'}</SectionTitle>
 					<Link
-						href={readyForPayouts ? publicUrl : publicPreviewUrl}
+						href={readyForFirstPayout ? publicUrl : publicPreviewUrl}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="text-muted-foreground hover:text-foreground transition-colors"
@@ -71,7 +70,7 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 					title="Program Overview"
 					width="100%"
 					height="418px"
-					src={readyForPayouts ? publicUrl : publicPreviewUrl}
+					src={readyForFirstPayout ? publicUrl : publicPreviewUrl}
 				/>
 			</div>
 		</div>

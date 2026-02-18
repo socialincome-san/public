@@ -13,7 +13,7 @@ export class PayoutProcessService extends BaseService {
 	private programService = new ProgramService();
 	private exchangeRateService = new ExchangeRateService();
 
-	async getRecipientsReadyForPayout(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
+	async getRecipientsReadyForFirstPayout(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
 		try {
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
@@ -26,13 +26,13 @@ export class PayoutProcessService extends BaseService {
 				return this.resultFail('No accessible programs found');
 			}
 
-			const programIdsReadyForPayouts: string[] = [];
+			const programIdsReadyForFirstPayoutInterval: string[] = [];
 
 			for (const program of accessiblePrograms) {
-				const result = await this.programService.isReadyForPayouts(program.programId);
+				const result = await this.programService.isReadyForFirstPayoutInterval(program.programId);
 
 				if (result.success && result.data === true) {
-					programIdsReadyForPayouts.push(program.programId);
+					programIdsReadyForFirstPayoutInterval.push(program.programId);
 				}
 			}
 
@@ -40,7 +40,7 @@ export class PayoutProcessService extends BaseService {
 
 			const recipients = await this.db.recipient.findMany({
 				where: {
-					programId: { in: programIdsReadyForPayouts },
+					programId: { in: programIdsReadyForFirstPayoutInterval },
 					startDate: { lte: nowDate },
 					OR: [{ suspendedAt: null }, { suspendedAt: { gt: nowDate } }],
 				},
@@ -122,7 +122,7 @@ export class PayoutProcessService extends BaseService {
 
 	async generateRegistrationCSV(userId: string): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.getRecipientsReadyForPayout(userId);
+			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -145,7 +145,7 @@ export class PayoutProcessService extends BaseService {
 
 	async generatePayoutCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.getRecipientsReadyForPayout(userId);
+			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -184,7 +184,7 @@ export class PayoutProcessService extends BaseService {
 
 	async previewCurrentMonthPayouts(userId: string, selectedDate: Date): Promise<ServiceResult<PreviewPayout[]>> {
 		try {
-			const recipientsResult = await this.getRecipientsReadyForPayout(userId);
+			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -250,7 +250,7 @@ export class PayoutProcessService extends BaseService {
 				currency: p.currency,
 				paymentAt: p.paymentAt,
 				status: p.status,
-				phoneNumber: p.phoneNumber ?? 'NO_PHONE',
+				phoneNumber: p.phoneNumber ?? null,
 				comments: null,
 			}));
 
