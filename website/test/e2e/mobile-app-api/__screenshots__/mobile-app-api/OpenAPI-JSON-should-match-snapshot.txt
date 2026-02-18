@@ -106,10 +106,24 @@
             "type": "string"
           },
           "amount": {
-            "type": "number"
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "amountChf": {
-            "type": "number",
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
             "nullable": true
           },
           "currency": {
@@ -119,7 +133,13 @@
             "type": "string"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "paid",
+              "confirmed",
+              "contested",
+              "failed"
+            ]
           },
           "phoneNumber": {
             "type": "string",
@@ -174,8 +194,13 @@
           "contactId": {
             "type": "string"
           },
-          "status": {
-            "type": "string"
+          "suspendedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "suspensionReason": {
+            "type": "string",
+            "nullable": true
           },
           "startDate": {
             "type": "string",
@@ -230,7 +255,6 @@
         "required": [
           "id",
           "contactId",
-          "status",
           "termsAccepted",
           "localPartnerId",
           "contact",
@@ -316,10 +340,15 @@
             "type": "string"
           },
           "provider": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "orange_money"
+            ],
+            "nullable": true
           },
           "code": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "phoneId": {
             "type": "string"
@@ -337,8 +366,6 @@
         },
         "required": [
           "id",
-          "provider",
-          "code",
           "phoneId",
           "phone",
           "createdAt"
@@ -377,6 +404,12 @@
           },
           "gender": {
             "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "other",
+              "private"
+            ],
             "nullable": true
           },
           "language": {
@@ -464,7 +497,14 @@
             "$ref": "#/components/schemas/Country"
           },
           "payoutPerInterval": {
-            "type": "number"
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "payoutCurrency": {
             "type": "string"
@@ -513,7 +553,13 @@
             "type": "string"
           },
           "questionnaire": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "onboarding",
+              "checkin",
+              "offboarding",
+              "offboarded_checkin"
+            ]
           },
           "language": {
             "type": "string"
@@ -526,7 +572,15 @@
             "nullable": true
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "new",
+              "sent",
+              "scheduled",
+              "in_progress",
+              "completed",
+              "missed"
+            ]
           },
           "data": {},
           "accessEmail": {
@@ -559,17 +613,6 @@
           "accessEmail",
           "accessPw",
           "createdAt"
-        ]
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "error"
         ]
       },
       "Phone": {
