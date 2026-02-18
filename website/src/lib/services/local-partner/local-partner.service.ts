@@ -45,6 +45,7 @@ export class LocalPartnerService extends BaseService {
 			const partner = await this.db.localPartner.create({
 				data: {
 					name: input.name,
+					causes: input.causes,
 					account: {
 						create: {
 							firebaseAuthUserId: firebaseResult.data.uid,
@@ -135,6 +136,7 @@ export class LocalPartnerService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					causes: true,
 					contact: {
 						select: {
 							id: true,

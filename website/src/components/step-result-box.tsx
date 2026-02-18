@@ -5,12 +5,13 @@ import { CheckIcon, CopyIcon, DownloadIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';
 
 type Props = {
+	id: number;
 	value: string | object | string[] | null;
 	filename: string;
 	onClear: () => void;
 };
 
-export function StepResultBox({ value, filename, onClear }: Props) {
+export function StepResultBox({ id, value, filename, onClear }: Props) {
 	const [copied, setCopied] = useState(false);
 
 	if (!value) {
@@ -52,7 +53,9 @@ export function StepResultBox({ value, filename, onClear }: Props) {
 				</Button>
 			</div>
 
-			<pre className="max-h-[240px] overflow-auto whitespace-pre">{text}</pre>
+			<pre data-testid={`step-result-box-${id}`} className="max-h-[240px] overflow-auto whitespace-pre">
+				{text}
+			</pre>
 		</div>
 	);
 }

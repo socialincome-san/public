@@ -1,6 +1,7 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStoryData } from '@storyblok/js';
@@ -11,13 +12,18 @@ export const revalidate = 900;
 const storyblokService = new StoryblokService();
 
 export default async function ContentPage({ params }: DefaultLayoutPropsWithSlug) {
-	const { slug, lang } = await params;
+	const { slug, lang, region } = await params;
 
-	const story = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(`${NEW_WEBSITE_SLUG}/${slug}`, lang);
+	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(
+		`${NEW_WEBSITE_SLUG}/${slug}`,
+		lang,
+	);
 
-	if (!story) {
+	if (!storyResult.success) {
 		return notFound();
 	}
 
-	return <PageContentType blok={story.content} />;
+	const story = storyResult.data;
+
+	return <PageContentType blok={story.content} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />;
 }

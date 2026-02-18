@@ -10,7 +10,7 @@ type Params = Promise<{ payoutId: string }>;
  * @description Returns a specific payout belonging to the authenticated recipient. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @pathParams PayoutParams
- * @response Payout
+ * @response 200:Payout
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {

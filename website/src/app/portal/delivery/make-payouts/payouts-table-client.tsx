@@ -5,6 +5,7 @@ import { makePayoutColumns } from '@/components/data-table/columns/payouts';
 import DataTable from '@/components/data-table/data-table';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
+import { CircleDollarSignIcon } from 'lucide-react';
 import { useState } from 'react';
 import { PayoutFormDialog } from './payout-form-dialog';
 import { StartPayoutProcessDialog } from './start-payout-process-dialog';
@@ -45,8 +46,12 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 				makeColumns={makePayoutColumns}
 				actions={
 					<div className="flex gap-2">
-						<Button onClick={openEmptyForm}>Add payout</Button>
-						<Button onClick={() => setIsPayoutProcessDialogOpen(true)}>Start payout process</Button>
+						<Button onClick={openEmptyForm}>Add manually</Button>
+
+						<Button variant="outline" onClick={() => setIsPayoutProcessDialogOpen(true)}>
+							Start payout process
+							<CircleDollarSignIcon />
+						</Button>
 					</div>
 				}
 				onRowClick={openEditForm}

@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * Get surveys
  * @description Returns all surveys belonging to the authenticated recipient. Requires a valid Firebase App Check token.
  * @auth BearerAuth
- * @response SurveyListResponse
+ * @response 200:SurveyListResponse
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {

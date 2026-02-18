@@ -35,7 +35,6 @@ export type SurveyFormSchema = {
 		status: FormField;
 		accessEmail: FormField;
 		accessPw: FormField;
-		accessToken: FormField;
 	};
 };
 
@@ -80,11 +79,6 @@ const initialFormSchema: SurveyFormSchema = {
 		accessPw: {
 			placeholder: 'Access password',
 			label: 'Access password',
-			zodSchema: z.string().min(1),
-		},
-		accessToken: {
-			placeholder: 'Access token',
-			label: 'Access token',
 			zodSchema: z.string().min(1),
 		},
 	},
@@ -145,10 +139,6 @@ export function SurveyForm({ onSuccess, onError, onCancel, surveyId, readOnly }:
 						accessPw: {
 							...prev.fields.accessPw,
 							value: surveyResult.data.accessPw,
-						},
-						accessToken: {
-							...prev.fields.accessToken,
-							value: surveyResult.data.accessToken,
 						},
 					},
 				}));

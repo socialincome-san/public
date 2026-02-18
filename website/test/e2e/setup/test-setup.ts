@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { saveStoryblokMock, setupStoryblokMock } from '../mock-server';
 import { loginAs } from './utils';
 
 test('seed database', async () => {
@@ -27,6 +28,8 @@ test('wait for emulators to be ready', async ({ page }) => {
 	throw new Error('Emulators did not become ready in time');
 });
 
-test('login all actors', async ({ browser }) => {
+test('login all actors', async ({ browser }, testInfo) => {
+	await setupStoryblokMock(testInfo);
 	await Promise.all([loginAs(browser, 'user'), loginAs(browser, 'contributor'), loginAs(browser, 'partner')]);
+	await saveStoryblokMock(testInfo);
 });

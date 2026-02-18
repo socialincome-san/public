@@ -3,6 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
+import { Cause } from '@/generated/prisma/enums';
 import {
 	createLocalPartnerAction,
 	getLocalPartnerAction,
@@ -17,6 +18,7 @@ export type LocalPartnerFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
+		causes: FormField;
 		contact: FormSchema;
 	};
 };
@@ -28,6 +30,11 @@ const initialFormSchema: LocalPartnerFormSchema = {
 			placeholder: 'Name',
 			label: 'Name',
 			zodSchema: z.string(),
+		},
+		causes: {
+			placeholder: 'Causes',
+			label: 'Causes',
+			zodSchema: z.array(z.nativeEnum(Cause)).optional(),
 		},
 		contact: {
 			...getContactFormSchema(),
@@ -59,6 +66,7 @@ export default function LocalPartnersForm({
 				const contactValues = getContactValuesFromPayload(partner.data.contact, newSchema.fields.contact.fields);
 				newSchema.fields.name.value = partner.data.name;
 				newSchema.fields.contact.fields = contactValues;
+				newSchema.fields.causes.value = partner.data.causes ?? [];
 				setFormSchema(newSchema);
 			} else {
 				onError?.(partner.error);

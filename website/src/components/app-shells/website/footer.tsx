@@ -28,19 +28,18 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 };
 
 export const Footer = async ({ lang, region }: Props) => {
-	const { content } = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(
-		`${NEW_WEBSITE_SLUG}/layout`,
-		lang,
-	);
+	const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+	const footerMenu = result.success ? result.data.content.footerMenu : [];
+	const copyrightNotice = result.success ? result.data.content.copyrightNotice : undefined;
 
 	return (
-		<div className="bg-primary container grid grid-cols-1 gap-4 rounded-3xl px-8 pb-8 pt-10 text-white sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto]">
+		<div className="bg-primary container mb-10 grid grid-cols-1 gap-4 rounded-3xl px-8 pb-8 pt-10 text-white sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto]">
 			<div>
 				<SocialIncomeLogo width={222} height={22} />
 			</div>
 			<div className="mt-8 lg:mt-16">
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-					{content.footerMenu.map((menuGroup) => (
+					{footerMenu.map((menuGroup) => (
 						<div key={menuGroup._uid}>
 							<h5 className="text-lg font-bold text-white">{menuGroup.label}</h5>
 							<ul className="mt-4 space-y-3">
@@ -64,10 +63,10 @@ export const Footer = async ({ lang, region }: Props) => {
 						</div>
 					))}
 				</div>
-				{content.copyrightNotice && (
+				{copyrightNotice && (
 					<div className="mt-16">
 						<p className="text-xs font-medium text-white/50">
-							{content.copyrightNotice.replace('%YEAR%', new Date().getFullYear().toString())}
+							{copyrightNotice.replace('%YEAR%', new Date().getFullYear().toString())}
 						</p>
 					</div>
 				)}
