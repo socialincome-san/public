@@ -93,9 +93,10 @@ npm run format-code           # Prettier
 
 | Role          | Email              | Route          |
 | ------------- | ------------------ | -------------- |
-| Contributor   | test@dashboard.org | /dashboard     |
-| User          | test@portal.org    | /portal        |
-| Local Partner | test@partner.org   | /partner-space |
+| Contributor        | test@dashboard.org | /dashboard     |
+| User               | test@portal.org    | /portal        |
+| Local Partner      | test@partner.org   | /partner-space |
+| User + Contributor | combined@test.com  | /portal, /dashboard |
 
 ## Resources
 

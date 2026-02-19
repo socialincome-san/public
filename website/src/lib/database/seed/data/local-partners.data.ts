@@ -17,7 +17,7 @@ export const localPartnersData: LocalPartner[] = [
 		name: 'Bo Women Empowerment Group',
 		causes: ['health'],
 		contactId: 'contact-14',
-		accountId: 'account-5',
+		accountId: 'account-11',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -27,7 +27,7 @@ export const localPartnersData: LocalPartner[] = [
 		name: 'Kenema Youth Foundation',
 		causes: ['gender_based_violence'],
 		contactId: 'contact-15',
-		accountId: 'account-6',
+		accountId: 'account-12',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}

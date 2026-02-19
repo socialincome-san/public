@@ -141,11 +141,12 @@ Local Partner self‑service area:
 During development, three login roles can be tested directly from the
 login page:
 
-| Role          | Login Email          | Route            |
-| ------------- | -------------------- | ---------------- |
-| Contributor   | `test@dashboard.org` | `/dashboard`     |
-| User          | `test@portal.org`    | `/portal`        |
-| Local Partner | `test@partner.org`   | `/partner-space` |
+| Role                    | Login Email          | Route                      |
+| ----------------------- | -------------------- | -------------------------- |
+| Contributor             | `test@dashboard.org` | `/dashboard`               |
+| User                    | `test@portal.org`    | `/portal`                  |
+| Local Partner           | `test@partner.org`   | `/partner-space`           |
+| User + Contributor      | `combined@test.com`  | `/portal` and `/dashboard` |
 
 These are created automatically via seed data.
 
