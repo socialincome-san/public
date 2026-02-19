@@ -97,7 +97,7 @@
 		"survey-core": "^1.12.59",
 		"survey-react-ui": "^1.12.59",
 		"swissqrbill": "^4.3.0",
-		"tailwind-merge": "^2.6.1",
+		"tailwind-merge": "^3.0.0",
 		"tmp-promise": "^3.0.3",
 		"twilio": "^5.12.2",
 		"usehooks-ts": "^3.1.0",
