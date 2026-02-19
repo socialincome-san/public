@@ -1,5 +1,5 @@
 # -------- Base Layer --------
-FROM node:22-alpine AS base
+FROM node:22-alpine@sha256:e4bf2a82ad0a4037d28035ae71529873c069b13eb0455466ae0bc13363826e34 AS base
 WORKDIR /app
 
 # This secrets are used during build time. All others are provided at runtime.
@@ -44,7 +44,7 @@ RUN set -a && . /app/.env && set +a && \
       --config=./prisma.config.ts && \
     npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
 # -------- Runtime Layer --------
-FROM node:22-alpine AS runner
+FROM node:22-alpine@sha256:e4bf2a82ad0a4037d28035ae71529873c069b13eb0455466ae0bc13363826e34 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

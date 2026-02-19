@@ -15,9 +15,9 @@ jobs:
     name: "🔒 Safe Chain Dependency Check"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
           node-version: 22
           cache: npm
@@ -37,8 +37,8 @@ jobs:
     name: "✨ Lint"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
           node-version: 22
           cache: npm
@@ -49,8 +49,8 @@ jobs:
     name: "✂️ Check unused Code"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
           node-version: 22
           cache: npm
@@ -61,8 +61,8 @@ jobs:
     name: "🔍 Type Check"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
           node-version: 22
           cache: npm
@@ -74,8 +74,8 @@ jobs:
     name: "🧪 Unit Tests"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
           node-version: 22
           cache: npm
@@ -86,8 +86,8 @@ jobs:
     name: "📐 Terraform Validation"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2
         with:
           terraform_version: 1.6.6
       - run: terraform -chdir=website/infra init -backend=false
@@ -106,11 +106,11 @@ jobs:
       - terraform
 
     container:
-      image: mcr.microsoft.com/playwright:v1.58.2-jammy
+      image: mcr.microsoft.com/playwright:v1.58.2-jammy@sha256:4698a73749c5848d3f5fcd42a2174d172fcad2b2283e087843b115424303a565
 
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:17-alpine@sha256:3430fe182f5065a6ea505c3d432d2c7fff18fbab954df8f277c1dbf4c70124af
         env:
           POSTGRES_USER: social-income
           POSTGRES_PASSWORD: social-income
@@ -125,7 +125,7 @@ jobs:
           --health-retries=5
 
       mockserver:
-        image: smartive/mockserver:v2.18.2
+        image: smartive/mockserver:v2.18.2@sha256:072af1580dc44bf28730702f813eef0e142d595de9e48ccba4245343b0fd191c
         ports:
           - 1080:1080
 
@@ -142,7 +142,7 @@ jobs:
       HOME: /root
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           ref: ${{ github.head_ref }}
           persist-credentials: true
@@ -158,7 +158,7 @@ jobs:
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Commit and push updated snapshots
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5
         with:
           commit_message: "chore: update snapshots (CI auto-commit)"
           branch: ${{ github.head_ref }}
@@ -170,7 +170,7 @@ jobs:
 
       - name: Upload Test Report (only if failure)
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: playwright-report-${{ github.sha }}
           path: |
