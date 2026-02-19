@@ -5,10 +5,10 @@ import { formatCurrency } from '@/lib/utils/string-utils';
 import { format } from 'date-fns';
 import { AlertCircle, CheckCircle, TriangleAlert } from 'lucide-react';
 import { AdditionalNumbers } from './additional-numbers';
-import { StatProgressCard } from './stat-progress-card';
 import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';
 import { Stat } from './stat';
+import { StatProgressCard } from './stat-progress-card';
 
 type StatsSectionProps = { programId: string; stats: ProgramDashboardStats };
 

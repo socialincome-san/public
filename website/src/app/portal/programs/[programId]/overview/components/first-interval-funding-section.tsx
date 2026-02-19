@@ -1,10 +1,10 @@
 import { Card } from '@/components/card';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { formatCurrency } from '@/lib/utils/string-utils';
-import { StatProgressCard } from './stat-progress-card';
 import { DonationForm } from './donation-form';
 import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';
+import { StatProgressCard } from './stat-progress-card';
 
 type FirstIntervalFundingSectionProps = { programId: string; stats: ProgramDashboardStats };
 
