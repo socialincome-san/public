@@ -487,7 +487,7 @@ export const contactsData: Contact[] = [
 		callingName: 'Combined',
 		addressId: 'address-31',
 		phoneId: 'phone-1',
-		email: 'combined@test.com',
+		email: 'test@combined.org',
 		gender: Gender.female,
 		language: 'en',
 		dateOfBirth: new Date('1992-01-15'),

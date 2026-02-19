@@ -1825,23 +1825,23 @@
       "localId": "c43IydQbr8lgeGeevbSBoP9ui3WX",
       "createdAt": "1705658753128",
       "lastLoginAt": "1705659058323",
-      "displayName": "combined@test.com",
+      "displayName": "test@combined.org",
       "photoUrl": "",
-      "passwordHash": "fakeHash:salt=fakeSaltCombinedTester01:password=combined@test.com",
+      "passwordHash": "fakeHash:salt=fakeSaltCombinedTester01:password=test@combined.org",
       "salt": "fakeSaltCombinedTester01",
       "passwordUpdatedAt": 1747558956328,
       "providerUserInfo": [
         {
           "providerId": "password",
-          "email": "combined@test.com",
-          "federatedId": "combined@test.com",
-          "rawId": "combined@test.com",
-          "displayName": "combined@test.com",
+          "email": "test@combined.org",
+          "federatedId": "test@combined.org",
+          "rawId": "test@combined.org",
+          "displayName": "test@combined.org",
           "photoUrl": ""
         }
       ],
       "validSince": "1747558956",
-      "email": "combined@test.com",
+      "email": "test@combined.org",
       "emailVerified": true,
       "disabled": false
     },
