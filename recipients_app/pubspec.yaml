@@ -28,7 +28,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.6
-  force_update_helper: ^0.2.1
+  force_update_helper: 0.3.0
   http: ^1.6.0
   intl: ^0.20.2
   # v0.8.0 is not publish on pub.dev but it is released on Github. This version fixes the build error on iOS with the message "Cannot find type 'PhoneNumberKit' in scope".
