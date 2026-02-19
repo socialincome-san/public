@@ -1,6 +1,6 @@
 import { Progress } from '@/components/progress';
 
-type CardContentProps = {
+type StatProgressCardProps = {
 	title: string;
 	leftLabel: string;
 	rightLabel: string;
@@ -9,7 +9,14 @@ type CardContentProps = {
 	percent: number;
 };
 
-export function CardContent({ title, leftLabel, rightLabel, leftValue, rightValue, percent }: CardContentProps) {
+export function StatProgressCard({
+	title,
+	leftLabel,
+	rightLabel,
+	leftValue,
+	rightValue,
+	percent,
+}: StatProgressCardProps) {
 	return (
 		<div className="space-y-4">
 			<h2 className="text-lg font-semibold">{title}</h2>

@@ -1,7 +1,7 @@
 import { Card } from '@/components/card';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { formatCurrency } from '@/lib/utils/string-utils';
-import { CardContent } from './card-content';
+import { StatProgressCard } from './stat-progress-card';
 import { DonationForm } from './donation-form';
 import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';
@@ -20,7 +20,7 @@ export function FirstIntervalFundingSection({ programId, stats }: FirstIntervalF
 			<Card>
 				<div className="space-y-6">
 					<SectionBox>
-						<CardContent
+						<StatProgressCard
 							title="You need to cover the first interval to start the program"
 							leftLabel="Current Contributions"
 							rightLabel="Minimum Required"

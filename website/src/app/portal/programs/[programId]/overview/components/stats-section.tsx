@@ -5,7 +5,7 @@ import { formatCurrency } from '@/lib/utils/string-utils';
 import { format } from 'date-fns';
 import { AlertCircle, CheckCircle, TriangleAlert } from 'lucide-react';
 import { AdditionalNumbers } from './additional-numbers';
-import { CardContent } from './card-content';
+import { StatProgressCard } from './stat-progress-card';
 import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';
 import { Stat } from './stat';
@@ -75,7 +75,7 @@ export function StatsSection({ programId, stats }: StatsSectionProps) {
 						<SectionBox href="/portal/management/contributions" className="h-full">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
-									<CardContent
+									<StatProgressCard
 										title="Contributions Progress"
 										leftLabel="Total Contributions"
 										rightLabel="Total Program Cost"
@@ -95,7 +95,7 @@ export function StatsSection({ programId, stats }: StatsSectionProps) {
 						<SectionBox href="/portal/delivery/make-payouts" className="h-full">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
-									<CardContent
+									<StatProgressCard
 										title="Payout Progress"
 										leftLabel="Paid out so far"
 										rightLabel="Total Program Cost"
@@ -147,7 +147,7 @@ export function StatsSection({ programId, stats }: StatsSectionProps) {
 
 					<div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
 						<SectionBox href={`/portal/programs/${programId}/surveys`}>
-							<CardContent
+							<StatProgressCard
 								title="Survey Progress"
 								leftLabel="Completed Surveys"
 								rightLabel="Total Surveys"
@@ -158,7 +158,7 @@ export function StatsSection({ programId, stats }: StatsSectionProps) {
 						</SectionBox>
 
 						<SectionBox>
-							<CardContent
+							<StatProgressCard
 								title="Lifecycle Progress"
 								leftLabel="Start Date"
 								rightLabel="End Date"

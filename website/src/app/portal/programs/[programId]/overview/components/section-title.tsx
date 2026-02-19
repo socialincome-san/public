@@ -1,9 +1,5 @@
-import * as React from 'react';
+import { PropsWithChildren } from 'react';
 
-type SectionTitleProps = {
-	children: React.ReactNode;
-};
-
-export function SectionTitle({ children }: SectionTitleProps) {
+export function SectionTitle({ children }: PropsWithChildren) {
 	return <h2 className="text-xl font-medium">{children}</h2>;
 }
