@@ -10,7 +10,7 @@ const Switch = ({ className, ...props }: React.ComponentProps<typeof SwitchPrimi
 			data-slot="switch"
 			className={cn(
 				'relative inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full',
-				'shadow-xs border border-transparent outline-none transition-all',
+				'border border-transparent shadow-xs transition-all outline-none',
 				'focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 				'disabled:cursor-not-allowed disabled:opacity-50',
 				'bg-input dark:bg-input/80',

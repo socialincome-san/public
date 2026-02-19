@@ -30,7 +30,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer baseClassNames="theme-blue" className="pb-8 pt-10">
+		<BaseContainer baseClassNames="theme-blue" className="pt-10 pb-8">
 			<div className="space-y-4">
 				<div className="grid grid-cols-2 gap-8 md:grid-cols-4">
 					<div className="flex flex-col space-y-1">

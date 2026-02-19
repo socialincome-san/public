@@ -26,7 +26,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 
 	return (
 		<div>
-			<div className="mx-auto mb-8 mt-20 flex w-4/5 flex-col items-center justify-center md:mb-20 lg:w-3/5">
+			<div className="mx-auto mt-20 mb-8 flex w-4/5 flex-col items-center justify-center md:mb-20 lg:w-3/5">
 				<Typography weight="medium" className="mb-12 text-center text-3xl sm:text-4xl md:text-4xl">
 					{translator.t('partnership-models.title')}
 				</Typography>
@@ -35,7 +35,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 				{/* Card 1 */}
 				<Dialog>
 					<DialogTrigger className="text-left">
-						<Card className="hover:bg-primary max-w-lg rounded-lg p-6 shadow-none hover:bg-opacity-10">
+						<Card className="hover:bg-primary hover:bg-opacity-10 max-w-lg rounded-lg p-6 shadow-none">
 							<CardHeader className="p-0">
 								<CardTitle className="flex items-center justify-between">
 									<Typography size="2xl" weight="medium">
@@ -46,7 +46,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 									</Badge>
 								</CardTitle>
 							</CardHeader>
-							<Separator className="bg-primary mt-4 bg-opacity-30" />
+							<Separator className="bg-primary bg-opacity-30 mt-4" />
 							<CardContent className="my-4 p-0">
 								<Typography size="lg">{translator.t('partnership-models.card-4-description')}</Typography>
 							</CardContent>
@@ -63,7 +63,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 						</DialogHeader>
 
 						<div className="mt-4 overflow-x-auto">
-							<table className="text-md w-full min-w-[1000px] max-w-none table-auto border-collapse text-left">
+							<table className="text-md w-full max-w-none min-w-[1000px] table-auto border-collapse text-left">
 								<thead>
 									<tr className="border-b">
 										<th className="px-4 py-2 font-semibold">
@@ -114,7 +114,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 				{/* Card 2 */}
 				<Dialog>
 					<DialogTrigger className="text-left">
-						<Card className="hover:bg-primary max-w-lg rounded-lg p-6 shadow-none hover:bg-opacity-10">
+						<Card className="hover:bg-primary hover:bg-opacity-10 max-w-lg rounded-lg p-6 shadow-none">
 							<CardHeader className="p-0">
 								<CardTitle className="flex items-center justify-between">
 									<Typography size="2xl" weight="medium">
@@ -122,7 +122,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 									</Typography>
 								</CardTitle>
 							</CardHeader>
-							<Separator className="bg-primary mt-4 bg-opacity-30" />
+							<Separator className="bg-primary bg-opacity-30 mt-4" />
 							<CardContent className="my-4 p-0">
 								<Typography size="lg">{translator.t('partnership-models.card-2-description')}</Typography>
 							</CardContent>
@@ -164,7 +164,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 				{/* Card 3 */}
 				<Dialog>
 					<DialogTrigger className="text-left">
-						<Card className="hover:bg-primary max-w-lg rounded-lg p-6 shadow-none hover:bg-opacity-10">
+						<Card className="hover:bg-primary hover:bg-opacity-10 max-w-lg rounded-lg p-6 shadow-none">
 							<CardHeader className="p-0">
 								<CardTitle className="flex items-center justify-between">
 									<Typography size="2xl" weight="medium">
@@ -172,7 +172,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 									</Typography>
 								</CardTitle>
 							</CardHeader>
-							<Separator className="bg-primary mt-4 bg-opacity-30" />
+							<Separator className="bg-primary bg-opacity-30 mt-4" />
 							<CardContent className="my-4 p-0">
 								<Typography size="lg">{translator.t('partnership-models.card-3-description')}</Typography>
 							</CardContent>

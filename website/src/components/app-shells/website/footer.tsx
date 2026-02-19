@@ -34,7 +34,7 @@ export const Footer = async ({ lang, region }: Props) => {
 	const copyrightNotice = result.success ? result.data.content.copyrightNotice : undefined;
 
 	return (
-		<div className="bg-primary container mb-10 grid grid-cols-1 gap-4 rounded-3xl px-8 pb-8 pt-10 text-white sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto]">
+		<div className="bg-primary container mb-10 grid grid-cols-1 gap-4 rounded-3xl px-8 pt-10 pb-8 text-white sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto]">
 			<div>
 				<SocialIncomeLogo width={222} height={22} />
 			</div>

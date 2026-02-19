@@ -25,7 +25,7 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 				disabled && 'cursor-not-allowed opacity-60',
 			)}
 		>
-			<RadioGroupItem value={value} disabled={disabled} className="absolute right-3 top-3" />
+			<RadioGroupItem value={value} disabled={disabled} className="absolute top-3 right-3" />
 
 			<div className="flex-1 space-y-1 pr-6">
 				<div className="flex items-center gap-2">

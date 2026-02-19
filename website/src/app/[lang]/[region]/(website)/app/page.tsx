@@ -21,7 +21,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					{translator.t('subtitle')}
 				</Typography>
 			</div>
-			<div className="container mx-auto pb-24 pt-1 md:pt-6">
+			<div className="container mx-auto pt-1 pb-24 md:pt-6">
 				<div className="flex flex-col md:flex-row">
 					<div className="m-2 flex flex-col items-center justify-center p-4 md:w-1/2">
 						<Typography as="h2" size="xl" className="pb-4">

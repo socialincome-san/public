@@ -20,7 +20,7 @@ type Props = {
 };
 
 export const NavbarDesktop = ({ session, menu, lang, region, scope }: Props) => (
-	<nav className="container absolute inset-x-0 top-5 z-50 mx-auto flex h-14 items-center justify-between rounded-full bg-white p-2 shadow-[0_0_28px_rgba(0,0,0,0.05)]">
+	<nav className="absolute inset-x-0 top-5 z-50 container mx-auto flex h-14 items-center justify-between rounded-full bg-white p-2 shadow-[0_0_28px_rgba(0,0,0,0.05)]">
 		<Link href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}`} className="text-accent-foreground ml-4">
 			<SocialIncomeLogo />
 		</Link>

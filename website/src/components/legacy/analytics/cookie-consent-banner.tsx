@@ -31,7 +31,7 @@ export const CookieConsentBanner = ({ translations }: CookieConsentBannerClientP
 	}
 
 	return (
-		<Card className="bg-background border-border fixed bottom-2 right-2 mx-auto w-fit max-w-6xl rounded-full px-4 md:right-4">
+		<Card className="bg-background border-border fixed right-2 bottom-2 mx-auto w-fit max-w-6xl rounded-full px-4 md:right-4">
 			<CardContent className="flex flex-col space-y-2 p-4 md:h-full md:flex-row md:items-center md:justify-between">
 				<Typography className="md:col-span-3 md:mr-4 md:flex-1 md:self-center">
 					<Typography as="span" dangerouslySetInnerHTML={{ __html: translations.text }} />

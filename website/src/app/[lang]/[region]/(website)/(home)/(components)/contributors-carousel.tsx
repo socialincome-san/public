@@ -15,7 +15,7 @@ type PortraitProps = {
 const Portrait = ({ name, text, country, image }: PortraitProps) => {
 	return (
 		<div className="mb-16 px-1">
-			<div className="flex h-64 flex-col justify-between border-b-2 border-t-2 py-4 md:h-72">
+			<div className="flex h-64 flex-col justify-between border-t-2 border-b-2 py-4 md:h-72">
 				<Typography size="2xl" weight="normal" color="foreground">
 					{text}
 				</Typography>

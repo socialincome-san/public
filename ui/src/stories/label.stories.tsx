@@ -95,7 +95,7 @@ export const CustomStyled: Story = {
 				<Input id="custom1" className="border-primary" />
 			</div>
 			<div className="grid w-full max-w-sm items-center gap-1.5">
-				<Label htmlFor="custom2" className="text-secondary uppercase tracking-wide">
+				<Label htmlFor="custom2" className="text-secondary tracking-wide uppercase">
 					Styled Label
 				</Label>
 				<Input id="custom2" className="border-secondary" />

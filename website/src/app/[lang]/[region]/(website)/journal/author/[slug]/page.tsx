@@ -61,7 +61,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 	return (
 		<BaseContainer>
-			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">
+			<div className="mx-auto mt-8 mb-20 flex max-w-6xl justify-center gap-4">
 				<StoryblokAuthorImage
 					author={author}
 					size="extra-large"

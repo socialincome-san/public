@@ -25,7 +25,7 @@ interface Overview {
 
 const OverviewCard = ({ title, total, time }: OverviewProp) => {
 	return (
-		<Card className="bg-background hover:bg-primary rounded-lg border-2 border-opacity-80 px-2 py-5 shadow-none hover:bg-opacity-10 md:px-5 md:py-5">
+		<Card className="bg-background hover:bg-primary border-opacity-80 hover:bg-opacity-10 rounded-lg border-2 px-2 py-5 shadow-none md:px-5 md:py-5">
 			{/* Large screens layout */}
 			<div className="hidden h-full items-center justify-between gap-4 md:flex">
 				{/* Number on the left */}

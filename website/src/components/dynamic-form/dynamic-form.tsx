@@ -229,7 +229,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (
-				<div className="space-0 absolute right-0 top-0 flex h-full w-full items-center justify-center bg-white opacity-80">
+				<div className="space-0 absolute top-0 right-0 flex h-full w-full items-center justify-center bg-white opacity-80">
 					<SpinnerIcon />
 				</div>
 			)}

@@ -36,10 +36,10 @@ export const Vertical: Story = {
 export const WithContent: Story = {
 	render: () => (
 		<div className="space-y-4">
-			<h4 className="text-sm font-medium leading-none">Section 1</h4>
+			<h4 className="text-sm leading-none font-medium">Section 1</h4>
 			<p className="text-muted-foreground text-sm">This is the first section of the content.</p>
 			<Separator className="my-4" />
-			<h4 className="text-sm font-medium leading-none">Section 2</h4>
+			<h4 className="text-sm leading-none font-medium">Section 2</h4>
 			<p className="text-muted-foreground text-sm">This is the second section of the content.</p>
 		</div>
 	),
