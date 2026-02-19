@@ -37,7 +37,7 @@ export const QuotesCarousel = (cardsObj: CarouselCardProps) => {
 							</Typography>
 						))}
 					</Typography>
-					<Image src={card.logo} alt={card.author} width="48" height="48" className="mb-3 mt-5 h-auto w-12" />
+					<Image src={card.logo} alt={card.author} width="48" height="48" className="mt-5 mb-3 h-auto w-12" />
 					<Typography size="sm" className="mb-12">
 						{card.author}
 					</Typography>

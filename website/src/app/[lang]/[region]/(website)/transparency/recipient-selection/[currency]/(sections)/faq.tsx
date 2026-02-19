@@ -14,7 +14,7 @@ export const SelectionFaq = async ({ lang }: DefaultParams) => {
 
 	return (
 		<BaseContainer className="my-10 flex flex-col space-y-8">
-			<div className="mx-auto mb-4 mt-20 max-w-2xl">
+			<div className="mx-auto mt-20 mb-4 max-w-2xl">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-5.title').map((title, index) => (
 					<Typography
 						key={index}

@@ -133,7 +133,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<Typography
 							weight="medium"
-							className="mb-3 mt-8 hyphens-auto break-words"
+							className="mt-8 mb-3 break-words hyphens-auto"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="5xl"
 						>
@@ -142,7 +142,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<Typography
 							weight="normal"
-							className="hyphens-auto break-words"
+							className="break-words hyphens-auto"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="3xl"
 						>
@@ -230,7 +230,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							{translator.t('article.keep-reading')}
 						</Typography>
 
-						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-5 md:pl-20 md:pr-20 lg:grid-cols-3">
+						<div className="mt-3 mb-10 grid grid-cols-1 content-center justify-center gap-4 p-5 md:pr-20 md:pl-20 lg:grid-cols-3">
 							{articles.map((article) => (
 								<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
 							))}

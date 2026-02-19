@@ -39,7 +39,7 @@ export const HeroSection = async ({ lang }: DefaultParams) => {
 			<div className="flex flex-grow items-start justify-center">
 				<div className="flex flex-col items-center sm:flex-row sm:space-x-4">
 					<Image className="h-12 w-12 md:h-20 md:w-20" src={globeRotating} alt="Globe Icon" />
-					<div className="mx-auto my-4 max-w-4xl whitespace-pre text-center sm:text-left">
+					<div className="mx-auto my-4 max-w-4xl text-center whitespace-pre sm:text-left">
 						<Typography as="span" color="accent" className="inline-block text-xl sm:text-2xl">
 							{translator.t('section-1.population')} {translator.t('section-1.potential')}
 						</Typography>

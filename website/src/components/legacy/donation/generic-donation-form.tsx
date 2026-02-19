@@ -160,7 +160,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 													interval === DonationInterval.Monthly ? [10, 30, 100, 150, 200] : [25, 50, 100, 500, 1000],
 												)}
 											</ToggleGroup>
-											<div className="flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">
+											<div className="flex flex-col sm:flex-row sm:space-y-0 sm:space-x-2 md:items-center">
 												<Input className="mb-4 h-12 text-lg sm:mb-0" {...field} />
 												<CurrencySelector
 													className="h-12 sm:basis-1/3 md:max-w-[12rem]"

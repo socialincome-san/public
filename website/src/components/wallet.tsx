@@ -74,11 +74,11 @@ export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft
 							'polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%, var(--slant-shift) 0%, var(--slant-position) var(--slant-height), calc(100% - var(--slant-position)) var(--slant-height), calc(100% - var(--slant-shift)) 0%)',
 					}}
 				>
-					<div className="h-full p-8 pb-6 pt-0">
+					<div className="h-full p-8 pt-0 pb-6">
 						{variant === 'default' ? (
 							<div className="flex h-full w-full flex-col items-start justify-between gap-2">
 								<div>
-									<h3 className="text-4xl font-normal leading-[1.3]">{title}</h3>
+									<h3 className="text-4xl leading-[1.3] font-normal">{title}</h3>
 									<p className="pb-1 text-sm font-medium tracking-wide">{subtitle}</p>
 									{badge && <div className="mt-1">{badge}</div>}
 								</div>

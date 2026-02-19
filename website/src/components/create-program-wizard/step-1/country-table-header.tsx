@@ -19,7 +19,7 @@ export const CountryTableHeader = ({ search, onSearchChange, onlyAllMet, onOnlyA
 			<div className="flex items-center gap-3">
 				<div className="flex items-center gap-2">
 					<Switch checked={onlyAllMet} onCheckedChange={onOnlyAllMetChange} id="filter-all-met" />
-					<Label htmlFor="filter-all-met" className="whitespace-nowrap text-sm">
+					<Label htmlFor="filter-all-met" className="text-sm whitespace-nowrap">
 						All conditions met
 					</Label>
 				</div>

@@ -209,7 +209,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 									<Typography
 										color="muted-foreground"
 										size={{ sm: 'xs', md: 'sm', lg: 'md' }[group.size] as FontSize}
-										className="hyphens-auto break-words"
+										className="break-words hyphens-auto"
 									>
 										{translator.t(`team.roles.${person.role}`)}
 									</Typography>
