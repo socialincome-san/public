@@ -15,7 +15,7 @@ export type Actor =
 	| { kind: 'local-partner'; session: LocalPartnerSession }
 	| never;
 
-async function getAuthUserIdFromCookie(): Promise<string | null> {
+const getAuthUserIdFromCookie = async (): Promise<string | null> => {
 	const firebaseSessionService = new FirebaseSessionService();
 	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
@@ -23,9 +23,9 @@ async function getAuthUserIdFromCookie(): Promise<string | null> {
 	}
 	const result = await firebaseSessionService.verifySessionCookie(cookie);
 	return result.success ? result.data.uid : null;
-}
+};
 
-export async function getCurrentSessions(): Promise<Session[]> {
+export const getCurrentSessions = async (): Promise<Session[]> => {
 	const authUserId = await getAuthUserIdFromCookie();
 	if (!authUserId) {
 		return [];
@@ -49,17 +49,17 @@ export async function getCurrentSessions(): Promise<Session[]> {
 		out.push(partnerResult.data);
 	}
 	return out;
-}
+};
 
-export async function getCurrentSessionsOrRedirect(): Promise<Session[]> {
+export const getCurrentSessionsOrRedirect = async (): Promise<Session[]> => {
 	const sessions = await getCurrentSessions();
 	if (sessions.length === 0) {
 		redirect('/login');
 	}
 	return sessions;
-}
+};
 
-export async function getActorOrThrow(): Promise<Actor> {
+export const getActorOrThrow = async (): Promise<Actor> => {
 	const sessions = await getCurrentSessions();
 	const session = sessions[0];
 	if (!session) {
@@ -75,4 +75,4 @@ export async function getActorOrThrow(): Promise<Actor> {
 		return { kind: 'local-partner', session };
 	}
 	throw new Error('Not authenticated');
-}
+};
