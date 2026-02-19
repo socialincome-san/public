@@ -15,8 +15,6 @@ import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { displaySession, type Scope } from './display-session';
 
-export type { Scope };
-
 type Props = {
 	sessions: Session[];
 	scope: Scope;
