@@ -71,22 +71,21 @@ export class RecipientService extends BaseService {
 					localPartner: recipient.localPartner,
 					contact: recipient.contact,
 
-					paymentInformation:
-						paymentInfoCreate
-							? {
-									create: {
-										provider: paymentInfoCreate.provider,
-										code: paymentInfoCreate.code ?? null,
-										...(paymentPhoneNumber && {
-											phone: {
-												create: {
-													number: paymentPhoneNumber,
-												},
+					paymentInformation: paymentInfoCreate
+						? {
+								create: {
+									provider: paymentInfoCreate.provider,
+									code: paymentInfoCreate.code ?? null,
+									...(paymentPhoneNumber && {
+										phone: {
+											create: {
+												number: paymentPhoneNumber,
 											},
-										}),
-									},
-								}
-							: undefined,
+										},
+									}),
+								},
+							}
+						: undefined,
 				};
 
 				const newRecipient = await tx.recipient.create({ data });

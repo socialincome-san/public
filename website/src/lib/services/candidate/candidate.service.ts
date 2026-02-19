@@ -150,22 +150,21 @@ export class CandidateService extends BaseService {
 					localPartner: candidate.localPartner,
 					contact: candidate.contact,
 
-					paymentInformation:
-						paymentInfoCreate
-							? {
-									create: {
-										provider: paymentInfoCreate.provider,
-										code: paymentInfoCreate.code ?? null,
-										...(paymentPhoneNumber && {
-											phone: {
-												create: {
-													number: paymentPhoneNumber,
-												},
+					paymentInformation: paymentInfoCreate
+						? {
+								create: {
+									provider: paymentInfoCreate.provider,
+									code: paymentInfoCreate.code ?? null,
+									...(paymentPhoneNumber && {
+										phone: {
+											create: {
+												number: paymentPhoneNumber,
 											},
-										}),
-									},
-								}
-							: undefined,
+										},
+									}),
+								},
+							}
+						: undefined,
 				};
 
 				const newCandidate = await tx.recipient.create({

@@ -149,13 +149,13 @@ export function buildUpdateRecipientInput(
 			upsert: {
 				create: {
 					...basePaymentInformation,
-					...(nextPaymentPhoneNumber ?? previousPaymentPhoneNumber) && {
+					...((nextPaymentPhoneNumber ?? previousPaymentPhoneNumber) && {
 						phone: {
 							create: {
 								number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
 							},
 						},
-					},
+					}),
 				},
 				update: {
 					...basePaymentInformation,

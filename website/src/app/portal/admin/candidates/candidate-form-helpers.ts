@@ -145,13 +145,13 @@ export function buildUpdateCandidateInput(
 			upsert: {
 				create: {
 					...basePaymentInformation,
-					...(nextPaymentPhoneNumber ?? previousPaymentPhoneNumber) && {
+					...((nextPaymentPhoneNumber ?? previousPaymentPhoneNumber) && {
 						phone: {
 							create: {
 								number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
 							},
 						},
-					},
+					}),
 				},
 				update: {
 					...basePaymentInformation,
