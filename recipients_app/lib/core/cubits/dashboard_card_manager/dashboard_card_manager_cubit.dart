@@ -89,7 +89,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
         ),
       );
 
-      emit(state.copyWith(status: DashboardCardManagerStatus.updated));
+      emit(state.copyWith(status: DashboardCardManagerStatus.updated, cards: []));
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
@@ -113,7 +113,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
         RecipientSelfUpdate(contactPhone: recipient.paymentInformation?.phone.number),
       );
 
-      emit(state.copyWith(status: DashboardCardManagerStatus.updated));
+      emit(state.copyWith(status: DashboardCardManagerStatus.updated, cards: []));
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
