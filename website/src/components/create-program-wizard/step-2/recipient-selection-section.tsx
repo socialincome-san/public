@@ -116,4 +116,4 @@ export const RecipientSelectionSection = ({
 			</RadioCardGroup>
 		</div>
 	);
-}
+};

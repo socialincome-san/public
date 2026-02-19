@@ -33,4 +33,4 @@ export const ProgramManagementSection = ({ value, onChange }: Props) => {
 			</RadioCardGroup>
 		</div>
 	);
-}
+};

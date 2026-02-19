@@ -14,4 +14,4 @@ export const WizardError = ({ message, onRetry }: Props) => {
 			<Button onClick={onRetry}>Retry</Button>
 		</div>
 	);
-}
+};

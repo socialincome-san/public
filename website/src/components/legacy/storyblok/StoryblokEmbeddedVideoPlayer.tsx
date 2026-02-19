@@ -32,4 +32,4 @@ export const StoryblokEmbeddedVideoPlayer = ({ caption, muxPlaybackId, url, _uid
 			</div>
 		)
 	);
-}
+};

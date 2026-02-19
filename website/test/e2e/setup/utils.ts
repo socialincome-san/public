@@ -64,4 +64,4 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 	await context.storageState({ path: state });
 
 	await context.close();
-}
+};

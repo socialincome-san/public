@@ -38,4 +38,4 @@ export const makeYourContributionsColumns = (
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 	];
-}
+};

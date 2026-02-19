@@ -207,4 +207,4 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 			mode={readOnly ? 'readonly' : surveyId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

@@ -8,7 +8,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-faq');
-}
+};
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;

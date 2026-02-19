@@ -18,7 +18,13 @@ type UseBankTransferProps = {
 	};
 };
 
-export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, translations }: UseBankTransferProps) => {
+export const useBankTransfer = ({
+	amount,
+	intervalCount,
+	currency,
+	qrBillType,
+	translations,
+}: UseBankTransferProps) => {
 	const [userData, setUserData] = useState<BankContributorData | null>(null);
 	const [contributionReference, setContributionReference] = useState<string | null>(null);
 	const [qrBillSvg, setQrBillSvg] = useState<string | null>(null);
@@ -93,4 +99,4 @@ export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, t
 		generateQRCode,
 		confirmPayment,
 	};
-}
+};

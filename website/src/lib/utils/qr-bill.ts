@@ -28,7 +28,7 @@ const calculateCheckDigit = (reference: string): number => {
 	}
 
 	return (10 - carry) % 10;
-}
+};
 
 /**
  * Generates a QR bill reference
@@ -51,7 +51,7 @@ const generateQrBillReference = (contributorCreatedAt: string, contributionCreat
 	const checkDigit = calculateCheckDigit(baseReference);
 
 	return `${baseReference}${checkDigit}`;
-}
+};
 
 type GenerateQrBillSvgProps = {
 	amount: number;
@@ -84,4 +84,4 @@ export const generateQrBillSvg = ({
 	};
 
 	return type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();
-}
+};

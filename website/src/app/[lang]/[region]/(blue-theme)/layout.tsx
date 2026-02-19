@@ -7,7 +7,7 @@ import { PropsWithChildren } from 'react';
 export const generateMetadata = async (props: DefaultLayoutProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-donate');
-}
+};
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang, region } = (await params) as { lang: WebsiteLanguage; region: WebsiteRegion };

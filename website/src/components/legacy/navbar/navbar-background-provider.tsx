@@ -18,4 +18,4 @@ export const NavbarBackgroundProvider = ({ children }: PropsWithChildren) => {
 			{children}
 		</NavbarBackgroundContext.Provider>
 	);
-}
+};

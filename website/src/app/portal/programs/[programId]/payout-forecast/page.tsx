@@ -37,4 +37,4 @@ const FinancesProgramScopedDataLoader = async ({ params }: { params: Promise<{ p
 			makeColumns={makePayoutForecastColumns}
 		/>
 	);
-}
+};

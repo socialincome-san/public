@@ -91,4 +91,4 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 			</Dialog>
 		</>
 	);
-}
+};

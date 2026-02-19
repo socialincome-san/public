@@ -9,4 +9,4 @@ export const ActionCell = <TData, TValue>({}: CellType<TData, TValue>) => {
 			<ChevronRightIcon className="h-5 w-5 transition-transform duration-200 ease-out group-hover:translate-x-1" />
 		</div>
 	);
-}
+};

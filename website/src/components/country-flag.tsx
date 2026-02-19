@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 const slugifyCountry = (name: string): string => {
 	return name.toLowerCase().replace(/\s+/g, '_');
-}
+};
 
 type CountryFlagProps = {
 	country: CountryCode;
@@ -46,4 +46,4 @@ export const CountryFlag = ({ country, size = 'lg' }: CountryFlagProps) => {
 			/>
 		</div>
 	);
-}
+};

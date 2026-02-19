@@ -23,4 +23,4 @@ export const ThumbnailImage = ({ thumbnail }: { thumbnail?: StoryblokAsset }) =>
 			/>
 		</div>
 	);
-}
+};

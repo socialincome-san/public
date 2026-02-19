@@ -14,4 +14,4 @@ export const LoginStep = ({}: Props) => {
 			</Typography>
 		</div>
 	);
-}
+};

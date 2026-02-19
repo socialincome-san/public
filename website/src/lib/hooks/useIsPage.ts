@@ -11,4 +11,4 @@ export const useIsPage = (page: string) => {
 	}
 
 	return segments.length >= 4 ? segments[3] === page : false;
-}
+};

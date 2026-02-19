@@ -23,4 +23,4 @@ export const POST = async (request: NextRequest) => {
 		logger.alert(`Exchange rate import failed: ${error}`, { error }, { component: 'exchange-rate-import' });
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
-}
+};

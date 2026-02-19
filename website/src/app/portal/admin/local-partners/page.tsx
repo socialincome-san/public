@@ -23,4 +23,4 @@ const LocalPartnersDataLoader = async () => {
 	const rows: LocalPartnerTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <LocalPartnersTable rows={rows} error={error} />;
-}
+};

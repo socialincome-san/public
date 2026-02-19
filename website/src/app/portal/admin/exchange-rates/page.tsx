@@ -23,4 +23,4 @@ const ExchangeRatesDataLoader = async () => {
 	const rows: ExchangeRatesTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <ExchangeRatesTable rows={rows} error={error} />;
-}
+};

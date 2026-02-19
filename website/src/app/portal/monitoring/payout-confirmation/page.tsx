@@ -32,4 +32,4 @@ const ConfirmPayoutsDataLoader = async () => {
 			searchKeys={['recipientFirstName', 'recipientLastName', 'programName', 'phoneNumber']}
 		/>
 	);
-}
+};

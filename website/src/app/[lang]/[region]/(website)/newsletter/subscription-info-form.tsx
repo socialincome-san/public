@@ -107,4 +107,4 @@ export const SubscriptionInfoForm = ({ lang, translations }: PersonalInfoFormPro
 			</form>
 		</Form>
 	);
-}
+};

@@ -32,4 +32,4 @@ export const FirebaseAppProvider = ({ children }: PropsWithChildren) => {
 	}
 
 	return <FirebaseAppContext.Provider value={app}>{children}</FirebaseAppContext.Provider>;
-}
+};

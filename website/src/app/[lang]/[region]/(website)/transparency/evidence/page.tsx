@@ -9,7 +9,7 @@ import Section3 from './section-3';
 export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-evidence');
-}
+};
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;

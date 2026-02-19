@@ -45,4 +45,4 @@ export const getForkCount = async (): Promise<{ totalForks: number; newForks: nu
 	}
 
 	return { totalForks, newForks };
-}
+};

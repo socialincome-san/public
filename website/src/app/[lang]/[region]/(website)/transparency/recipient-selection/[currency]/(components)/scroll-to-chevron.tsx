@@ -27,6 +27,6 @@ const ScrollToChevron = ({ elementId, bounce }: ScrollToChevronProps) => {
 			/>
 		</Button>
 	);
-}
+};
 
 export default ScrollToChevron;

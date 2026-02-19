@@ -30,4 +30,4 @@ export const PayoutSummary = ({ programDuration, payoutPerInterval, payoutInterv
 			</div>
 		</div>
 	);
-}
+};

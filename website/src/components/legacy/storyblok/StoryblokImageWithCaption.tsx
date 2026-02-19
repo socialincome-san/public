@@ -29,4 +29,4 @@ export const StoryblokImageWithCaption = ({
 			)}
 		</div>
 	);
-}
+};

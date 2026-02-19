@@ -25,4 +25,4 @@ export const fetchData = async (owner: string, repo: string, url: string) => {
 	}
 
 	return res;
-}
+};

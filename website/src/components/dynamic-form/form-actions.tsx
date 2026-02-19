@@ -72,4 +72,4 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete }: For
 			)}
 		</>
 	);
-}
+};

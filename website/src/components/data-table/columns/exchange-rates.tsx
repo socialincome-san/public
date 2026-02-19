@@ -29,4 +29,4 @@ export const makeExchangeRatesColumns = (): ColumnDef<ExchangeRatesTableViewRow>
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 	];
-}
+};

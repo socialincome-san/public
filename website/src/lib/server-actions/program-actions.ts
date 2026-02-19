@@ -10,4 +10,4 @@ export const createProgramAction = async (input: CreateProgramInput) => {
 	const user = await getAuthenticatedUserOrThrow();
 
 	return service.create(user.id, input);
-}
+};

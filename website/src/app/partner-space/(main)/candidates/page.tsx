@@ -22,4 +22,4 @@ const CandidatesDataLoader = async () => {
 	const rows: CandidatesTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <CandidatesTableClient rows={rows} error={error} readOnly={false} actorKind="local-partner" />;
-}
+};

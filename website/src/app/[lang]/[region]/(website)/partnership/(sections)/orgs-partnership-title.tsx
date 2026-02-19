@@ -19,4 +19,4 @@ export const OrgsPartnershipTitle = async ({ lang }: DefaultParams) => {
 			</Typography>
 		</div>
 	);
-}
+};

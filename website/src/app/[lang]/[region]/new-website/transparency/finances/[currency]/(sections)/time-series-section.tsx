@@ -70,4 +70,4 @@ export const TimeSeriesSection = ({ timeRanges, exchangeRate, currency, lang }: 
 			</Card>
 		</section>
 	);
-}
+};

@@ -28,4 +28,4 @@ export const AccountRedirect = async ({ lang }: { lang: WebsiteLanguage }) => {
 			</Link>
 		</>
 	);
-}
+};

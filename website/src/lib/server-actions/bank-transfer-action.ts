@@ -16,9 +16,9 @@ export const getReferenceIds = async (
 	}
 	const contributionReferenceId = Math.round(DateTime.now().toMillis() / 1000).toString();
 	return { contributorReferenceId: contributorReferenceId.data, contributionReferenceId };
-}
+};
 
 export const createContributionForContributor = async (payment: BankTransferPayment, userData: BankContributorData) => {
 	const bankTransferService = new BankTransferService();
 	return await bankTransferService.createContributionForNewOrExistingContributor(payment, userData);
-}
+};

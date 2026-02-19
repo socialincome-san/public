@@ -132,4 +132,4 @@ export const BaseTable = <TData, TValue>({
 			</div>
 		</div>
 	);
-}
+};

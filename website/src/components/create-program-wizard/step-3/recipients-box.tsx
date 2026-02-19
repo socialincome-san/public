@@ -57,4 +57,4 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 			</div>
 		</div>
 	);
-}
+};

@@ -26,9 +26,9 @@ export const parseCsvText = (text: string): CsvRow[] => {
 
 		return Object.fromEntries(headers.map((header, i) => [header, values[i]?.trim() ?? '']));
 	});
-}
+};
 
 export const parseCsvFile = async (file: File): Promise<CsvRow[]> => {
 	const text = await file.text();
 	return parseCsvText(text);
-}
+};

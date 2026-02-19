@@ -227,7 +227,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 			</Form>
 		</div>
 	);
-}
+};
 
 const createToggleGroupItems = (values: number[]) => {
 	return values.map((value) => (

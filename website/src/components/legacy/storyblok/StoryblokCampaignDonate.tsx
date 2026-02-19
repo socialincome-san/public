@@ -60,4 +60,4 @@ export const StoryblokCampaignDonate = (props: {
 			/>
 		</div>
 	);
-}
+};

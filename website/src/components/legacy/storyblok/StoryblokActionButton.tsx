@@ -18,4 +18,4 @@ export const StoryblokActionButton = ({ text, url, primaryStyle, _uid, glowEffec
 			</Link>
 		</div>
 	);
-}
+};

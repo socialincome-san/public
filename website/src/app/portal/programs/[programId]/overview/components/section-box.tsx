@@ -26,4 +26,4 @@ export const SectionBox = ({ className, children, href }: SectionBoxProps) => {
 	}
 
 	return content;
-}
+};

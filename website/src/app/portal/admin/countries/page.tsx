@@ -23,4 +23,4 @@ const CountriesDataLoader = async () => {
 	const rows: CountryTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <CountriesTable rows={rows} error={error} />;
-}
+};

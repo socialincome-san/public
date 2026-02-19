@@ -89,6 +89,6 @@ const Navbar = async ({ lang, region }: DefaultParams) => {
 			]}
 		/>
 	);
-}
+};
 
 export default Navbar;

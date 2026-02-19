@@ -35,7 +35,7 @@ const Portrait = ({ name, text, country, image }: PortraitProps) => {
 			</CardFooter>
 		</Card>
 	);
-}
+};
 
 export const ContributorsPeopleCarousel = ({ portraits }: { portraits: PortraitProps[] }) => {
 	const screenSize = useScreenSize();
@@ -71,4 +71,4 @@ export const ContributorsPeopleCarousel = ({ portraits }: { portraits: PortraitP
 			))}
 		</Carousel>
 	);
-}
+};

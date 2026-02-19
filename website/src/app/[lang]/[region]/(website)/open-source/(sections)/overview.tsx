@@ -60,7 +60,7 @@ const OverviewCard = ({ title, total, time }: OverviewProp) => {
 			</div>
 		</Card>
 	);
-}
+};
 
 export const Overview = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
@@ -94,4 +94,4 @@ export const Overview = async ({ lang }: DefaultParams) => {
 			</div>
 		</section>
 	);
-}
+};

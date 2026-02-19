@@ -39,4 +39,4 @@ export const SubscriptionStatusBadge = ({ status, label }: SubscriptionStatusBad
 			{label}
 		</Badge>
 	);
-}
+};

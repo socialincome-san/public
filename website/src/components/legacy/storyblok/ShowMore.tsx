@@ -27,4 +27,4 @@ export const ShowMoreToggle = ({ children, initialCount = 3, showMoreLabel, show
 			)}
 		</div>
 	);
-}
+};

@@ -30,4 +30,4 @@ export const HeroVideo = async ({ lang, region }: DefaultParams) => {
 			/>
 		</div>
 	);
-}
+};

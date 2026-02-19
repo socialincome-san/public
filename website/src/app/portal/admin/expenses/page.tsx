@@ -23,4 +23,4 @@ const ExpensesDataLoader = async () => {
 	const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <ExpensesTable rows={rows} error={error} />;
-}
+};

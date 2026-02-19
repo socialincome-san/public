@@ -172,4 +172,4 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 			</Card>
 		</div>
 	);
-}
+};

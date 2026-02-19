@@ -67,4 +67,4 @@ export const makeSurveyColumns = (hideProgramName = false): ColumnDef<SurveyTabl
 	}
 
 	return columns;
-}
+};

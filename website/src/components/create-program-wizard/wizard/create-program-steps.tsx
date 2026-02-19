@@ -79,4 +79,4 @@ export const CreateProgramSteps = ({ state, send }: Props) => {
 	}
 
 	return null;
-}
+};

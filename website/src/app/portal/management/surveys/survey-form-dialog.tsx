@@ -52,4 +52,4 @@ export const SurveyFormDialog = ({ open, onOpenChange, surveyId, readOnly = fals
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

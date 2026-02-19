@@ -6,7 +6,7 @@ import * as React from 'react';
 
 const Tabs = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) => {
 	return <TabsPrimitive.Root data-slot="tabs" className={cn('flex flex-col gap-2', className)} {...props} />;
-}
+};
 
 const TabsList = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) => {
 	return (
@@ -19,7 +19,7 @@ const TabsList = ({ className, ...props }: React.ComponentProps<typeof TabsPrimi
 			{...props}
 		/>
 	);
-}
+};
 
 const TabsTrigger = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Trigger>) => {
 	return (
@@ -32,5 +32,5 @@ const TabsTrigger = ({ className, ...props }: React.ComponentProps<typeof TabsPr
 			{...props}
 		/>
 	);
-}
+};
 export { Tabs, TabsList, TabsTrigger };

@@ -59,4 +59,4 @@ export const makeCandidateColumns = (
 	);
 
 	return columns;
-}
+};

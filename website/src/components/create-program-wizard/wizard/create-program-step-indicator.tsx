@@ -20,7 +20,7 @@ const getCurrentStepIndex = (state: CreateProgramWizardState): number => {
 		return 3;
 	}
 	return 0;
-}
+};
 
 const stepClasses = {
 	base: 'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors',
@@ -71,4 +71,4 @@ export const CreateProgramStepIndicator = ({ state }: Props) => {
 			})}
 		</div>
 	);
-}
+};

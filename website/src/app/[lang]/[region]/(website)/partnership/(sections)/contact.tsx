@@ -27,4 +27,4 @@ export const Contact = async ({ lang }: DefaultParams) => {
 			</Typography>
 		</div>
 	);
-}
+};

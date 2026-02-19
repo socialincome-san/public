@@ -50,4 +50,4 @@ export const getStarCount = async (): Promise<{ totalStars: number; newStars: nu
 	}
 
 	return { totalStars, newStars };
-}
+};

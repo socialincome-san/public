@@ -25,7 +25,7 @@ export const StepResultBox = ({ id, value, filename, onClear }: Props) => {
 		await navigator.clipboard.writeText(text);
 		setCopied(true);
 		setTimeout(() => setCopied(false), 1200);
-	}
+	};
 
 	const handleDownload = () => {
 		const blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
@@ -35,7 +35,7 @@ export const StepResultBox = ({ id, value, filename, onClear }: Props) => {
 		a.download = filename;
 		a.click();
 		URL.revokeObjectURL(url);
-	}
+	};
 
 	return (
 		<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
@@ -58,4 +58,4 @@ export const StepResultBox = ({ id, value, filename, onClear }: Props) => {
 			</pre>
 		</div>
 	);
-}
+};

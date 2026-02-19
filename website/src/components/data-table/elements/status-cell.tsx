@@ -36,4 +36,4 @@ export const StatusCell = <TData, TValue>({ ctx, variant, label }: Props<TData, 
 		default:
 			return null;
 	}
-}
+};

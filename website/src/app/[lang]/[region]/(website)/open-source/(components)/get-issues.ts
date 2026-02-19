@@ -59,4 +59,4 @@ export const getIssuesData = async (): Promise<IssuesResponse> => {
 	}
 
 	return { issues, labels };
-}
+};

@@ -15,7 +15,7 @@ export const createContributionAction = async (contribution: ContributionCreateI
 
 	revalidatePath('/portal/management/contributions');
 	return res;
-}
+};
 
 export const updateContributionAction = async (contribution: ContributionUpdateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -24,14 +24,14 @@ export const updateContributionAction = async (contribution: ContributionUpdateI
 	const res = await contributionService.update(user.id, contribution);
 	revalidatePath('/portal/management/contributions');
 	return res;
-}
+};
 
 export const getContributionAction = async (contributionId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributionService = new ContributionService();
 
 	return await contributionService.get(user.id, contributionId);
-}
+};
 
 export const getContributionsOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -41,4 +41,4 @@ export const getContributionsOptionsAction = async () => {
 	const campaignOptions = await campaignService.getOptions(user.id);
 
 	return { contributorOptions, campaignOptions };
-}
+};

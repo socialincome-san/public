@@ -30,7 +30,7 @@ const Contributor = ({ name, commits, avatarUrl }: ContributorProp) => {
 			</div>
 		</article>
 	);
-}
+};
 
 export const OpenSourceContributorsClient = ({
 	contributors,
@@ -77,4 +77,4 @@ export const OpenSourceContributorsClient = ({
 			)}
 		</section>
 	);
-}
+};

@@ -84,4 +84,4 @@ export const submitProfileForm = async (
 		organizationId: values.organizationId,
 		address: values.address ?? undefined,
 	});
-}
+};

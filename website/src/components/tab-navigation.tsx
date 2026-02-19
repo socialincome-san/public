@@ -37,4 +37,4 @@ export const TabNavigation = ({ sections }: TabNavigationProps) => {
 			})}
 		</nav>
 	);
-}
+};

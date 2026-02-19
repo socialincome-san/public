@@ -49,4 +49,4 @@ export const makePayoutColumns = (): ColumnDef<PayoutTableViewRow>[] => {
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

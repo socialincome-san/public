@@ -17,15 +17,15 @@ const getLanguage = (slug: string | null) => {
 		}
 	}
 	return DEFAULT_LANGUAGE;
-}
+};
 
 const validateSecret = (secret: string | null) => {
 	return process.env.STORYBLOK_PREVIEW_SECRET && secret === process.env.STORYBLOK_PREVIEW_SECRET;
-}
+};
 
 const validateSlug = (slug: string | undefined | null) => {
 	return slug && ALLOWED_SLUGS_PREFIXES.some((value) => slug.toLowerCase().startsWith(value.toLowerCase()));
-}
+};
 
 const removeLanguagePrefix = (slug: string | null, language: string) => {
 	if (!slug) {
@@ -37,7 +37,7 @@ const removeLanguagePrefix = (slug: string | null, language: string) => {
 		return slug.replace(new RegExp(`^${language}(/|$)`, 'i'), '');
 	}
 	return slug;
-}
+};
 
 const enableDraftModeAndAdaptCookie = async () => {
 	(await draftMode()).enable();
@@ -54,7 +54,7 @@ const enableDraftModeAndAdaptCookie = async () => {
 			sameSite: 'none',
 		});
 	}
-}
+};
 
 /**
  *
@@ -91,4 +91,4 @@ export const GET = async (request: Request) => {
 	const redirectUrl = `/${lang}/${DEFAULT_REGION}/${path}${queryString ? `?${queryString}` : ''}`;
 
 	redirect(redirectUrl, RedirectType.push);
-}
+};

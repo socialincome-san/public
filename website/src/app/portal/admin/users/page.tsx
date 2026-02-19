@@ -23,4 +23,4 @@ const UsersDataLoader = async () => {
 	const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <UsersTable rows={rows} error={error} />;
-}
+};

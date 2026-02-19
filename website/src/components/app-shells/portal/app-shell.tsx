@@ -15,4 +15,4 @@ export const PortalAppShell = ({ children, user }: PortalAppShellProps) => {
 			<div className="container pb-8">{children}</div>
 		</div>
 	);
-}
+};

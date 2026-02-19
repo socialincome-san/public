@@ -17,4 +17,4 @@ export const MoreArticlesLink = ({ text }: MoreArticlesLinkProps) => {
 			</Button>
 		</Typography>
 	);
-}
+};

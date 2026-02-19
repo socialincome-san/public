@@ -22,4 +22,4 @@ export const DownloadCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) =>
 			Download
 		</Link>
 	);
-}
+};

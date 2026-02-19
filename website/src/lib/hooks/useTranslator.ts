@@ -15,4 +15,4 @@ export const useTranslator = (language: LanguageCode, namespace: string) => {
 	}, [language, namespace, translators]);
 
 	return translators.get(namespace);
-}
+};

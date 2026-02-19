@@ -43,4 +43,4 @@ export const CountryConditionBadge = ({ condition }: Props) => {
 			{label}
 		</Badge>
 	);
-}
+};

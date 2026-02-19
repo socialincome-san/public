@@ -51,4 +51,4 @@ export const PillMultiSelect = ({ label, values, selected = [], onToggle }: Pill
 			</div>
 		</div>
 	);
-}
+};

@@ -31,4 +31,4 @@ export const Navbar = async ({ session, lang, region, scope }: Props) => {
 			</div>
 		</>
 	);
-}
+};

@@ -15,7 +15,7 @@ export const createSurveyAction = async (input: SurveyCreateInput) => {
 
 	revalidatePath('/portal/management/surveys');
 	return result;
-}
+};
 
 export const getSurveyAction = async (surveyId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -24,7 +24,7 @@ export const getSurveyAction = async (surveyId: string) => {
 	const result = await service.get(user.id, surveyId);
 
 	return result;
-}
+};
 
 export const updateSurveyAction = async (surveyId: string, input: SurveyUpdateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -34,21 +34,21 @@ export const updateSurveyAction = async (surveyId: string, input: SurveyUpdateIn
 
 	revalidatePath('/portal/management/surveys');
 	return result;
-}
+};
 
 export const getSurveyRecipientOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 	const recipientService = new RecipientService();
 
 	return recipientService.getEditableRecipientOptions(user.id);
-}
+};
 
 export const previewSurveyGenerationAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new SurveyService();
 
 	return service.previewSurveyGeneration(user.id);
-}
+};
 
 export const generateSurveysAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -58,7 +58,7 @@ export const generateSurveysAction = async () => {
 
 	revalidatePath('/portal/management/surveys');
 	return result;
-}
+};
 
 export const getByIdAndRecipient = async (surveyId: string, recipientId: string) => {
 	const survey = await getCurrentSurvey();
@@ -72,7 +72,7 @@ export const getByIdAndRecipient = async (surveyId: string, recipientId: string)
 		throw new Error(`Survey cannot be loaded: ${result.error}`);
 	}
 	return result.data;
-}
+};
 
 export const saveChanges = async (surveyId: string, input: SurveyUpdateInput) => {
 	const survey = await getCurrentSurvey();
@@ -86,4 +86,4 @@ export const saveChanges = async (surveyId: string, input: SurveyUpdateInput) =>
 		throw new Error('Could not save survey changes');
 	}
 	return result.data;
-}
+};

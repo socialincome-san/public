@@ -52,4 +52,4 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId, readOnly = fals
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

@@ -50,4 +50,4 @@ export const OurWork = async ({ lang }: DefaultParams) => {
 			/>
 		</BaseContainer>
 	);
-}
+};

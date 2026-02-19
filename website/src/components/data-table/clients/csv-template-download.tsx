@@ -33,4 +33,4 @@ export const CsvTemplateDownload = ({ template }: Props) => {
 			</Button>
 		</div>
 	);
-}
+};

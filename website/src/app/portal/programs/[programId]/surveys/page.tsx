@@ -41,4 +41,4 @@ const SurveysProgramScopedDataLoader = async ({ params }: { params: Promise<{ pr
 			searchKeys={['name', 'recipientName']}
 		/>
 	);
-}
+};

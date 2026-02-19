@@ -37,4 +37,4 @@ export const FirstIntervalFundingSection = ({ programId, stats }: FirstIntervalF
 			</Card>
 		</div>
 	);
-}
+};

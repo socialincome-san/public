@@ -67,4 +67,4 @@ export const SurveysTableClient = ({ rows, error }: { rows: SurveyTableViewRow[]
 			<GenerateSurveysDialog open={isGenerationDialogOpen} setOpen={setIsGenerationDialogOpen} />
 		</>
 	);
-}
+};

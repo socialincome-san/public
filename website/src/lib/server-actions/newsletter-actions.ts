@@ -8,16 +8,16 @@ import { CreateNewsletterSubscription, SendgridContactType } from '../services/s
 export const subscribeToNewsletterAction = async (subscription: CreateNewsletterSubscription) => {
 	const sendGridService = new SendgridSubscriptionService();
 	return sendGridService.subscribeToNewsletter(subscription);
-}
+};
 
 export const getActiveSubscriptionAction = async (): Promise<ServiceResult<SendgridContactType | null>> => {
 	const contributor = await getAuthenticatedContributorOrThrow();
 	const sendGridService = new SendgridSubscriptionService();
 	return sendGridService.getActiveSubscription(contributor);
-}
+};
 
 export const unsubscribeFromNewsletterAction = async () => {
 	const contributor = await getAuthenticatedContributorOrThrow();
 	const sendGridService = new SendgridSubscriptionService();
 	return sendGridService.unsubscribeFromNewsletter(contributor);
-}
+};

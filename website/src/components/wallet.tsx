@@ -24,7 +24,7 @@ const formatAmount = (amount?: number): string => {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
 	}).format(amount);
-}
+};
 
 export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft, footerRight, href }: WalletProps) => {
 	const content = (
@@ -110,4 +110,4 @@ export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft
 	);
 
 	return href ? <Link href={href}>{content}</Link> : content;
-}
+};

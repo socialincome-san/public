@@ -14,4 +14,4 @@ export const GET = async (request: Request) => {
 	} catch (error: any) {
 		return new Response(null, { status: 500, statusText: error.message });
 	}
-}
+};

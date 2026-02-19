@@ -32,4 +32,4 @@ const OrganizationsDataLoader = async () => {
 			makeColumns={makeOrganizationAdminColumns}
 		/>
 	);
-}
+};

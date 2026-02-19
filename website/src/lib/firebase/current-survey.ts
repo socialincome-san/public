@@ -9,7 +9,7 @@ const findSurveyByEmail = async (email: string): Promise<SurveyPayload | null> =
 	const service = new SurveyService();
 	const result = await service.getByAccessEmail(email);
 	return result.success ? result.data : null;
-}
+};
 
 const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
 	const cookie = await firebaseSessionService.readSessionCookie();
@@ -26,6 +26,6 @@ const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
 		return null;
 	}
 	return findSurveyByEmail(email);
-}
+};
 
 export const getCurrentSurvey = cache(loadCurrentSurvey);

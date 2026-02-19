@@ -32,4 +32,4 @@ export const POST = async (request: NextRequest) => {
 		logger.alert('Stripe webhook error', { error }, { component: 'stripe-webhook' });
 		return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
 	}
-}
+};

@@ -71,4 +71,4 @@ export const BudgetStep = ({
 			</div>
 		</div>
 	);
-}
+};

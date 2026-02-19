@@ -35,4 +35,4 @@ export const SelectionFaq = async ({ lang }: DefaultParams) => {
 			</Link>
 		</BaseContainer>
 	);
-}
+};

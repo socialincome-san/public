@@ -84,4 +84,4 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 			</Table>
 		</div>
 	);
-}
+};

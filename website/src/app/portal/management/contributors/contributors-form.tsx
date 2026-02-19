@@ -110,7 +110,7 @@ export default function ContributorsForm({
 				onError?.(error);
 			}
 		});
-	}
+	};
 
 	useEffect(() => {
 		if (contributorId) {

@@ -68,7 +68,7 @@ const getSimpleMapping = (question: Question, t: TranslateFunction): Object => {
 				? translateChoices(t, question.choices, question.choicesTranslationKey!)
 				: undefined,
 	};
-}
+};
 
 export const livingLocationPage = (t: TranslateFunction) => {
 	return {

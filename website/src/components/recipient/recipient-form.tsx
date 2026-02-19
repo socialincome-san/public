@@ -119,7 +119,7 @@ const getInitialFormSchema = (actorKind: Actor['kind'] = 'user'): RecipientFormS
 	}
 
 	return base;
-}
+};
 
 export const RecipientForm = ({
 	onSuccess,
@@ -269,4 +269,4 @@ export const RecipientForm = ({
 			mode={readOnly ? 'readonly' : recipientId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

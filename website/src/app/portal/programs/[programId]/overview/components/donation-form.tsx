@@ -50,4 +50,4 @@ export const DonationForm = ({ costPerIntervalChf, programId }: DonationFormProp
 			)}
 		</div>
 	);
-}
+};

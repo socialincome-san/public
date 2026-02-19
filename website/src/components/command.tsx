@@ -17,7 +17,7 @@ const Command = ({ className, ...props }: React.ComponentProps<typeof CommandPri
 			{...props}
 		/>
 	);
-}
+};
 
 const CommandDialog = ({
 	title = 'Command Palette',
@@ -45,7 +45,7 @@ const CommandDialog = ({
 			</DialogContent>
 		</Dialog>
 	);
-}
+};
 
 const CommandInput = ({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Input>) => {
 	return (
@@ -61,7 +61,7 @@ const CommandInput = ({ className, ...props }: React.ComponentProps<typeof Comma
 			/>
 		</div>
 	);
-}
+};
 
 const CommandList = ({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) => {
 	return (
@@ -71,11 +71,11 @@ const CommandList = ({ className, ...props }: React.ComponentProps<typeof Comman
 			{...props}
 		/>
 	);
-}
+};
 
 const CommandEmpty = ({ ...props }: React.ComponentProps<typeof CommandPrimitive.Empty>) => {
 	return <CommandPrimitive.Empty data-slot="command-empty" className="py-6 text-center text-sm" {...props} />;
-}
+};
 
 const CommandGroup = ({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Group>) => {
 	return (
@@ -88,7 +88,7 @@ const CommandGroup = ({ className, ...props }: React.ComponentProps<typeof Comma
 			{...props}
 		/>
 	);
-}
+};
 
 const CommandSeparator = ({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Separator>) => {
 	return (
@@ -98,7 +98,7 @@ const CommandSeparator = ({ className, ...props }: React.ComponentProps<typeof C
 			{...props}
 		/>
 	);
-}
+};
 
 const CommandItem = ({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Item>) => {
 	return (
@@ -111,7 +111,7 @@ const CommandItem = ({ className, ...props }: React.ComponentProps<typeof Comman
 			{...props}
 		/>
 	);
-}
+};
 
 const CommandShortcut = ({ className, ...props }: React.ComponentProps<'span'>) => {
 	return (
@@ -121,6 +121,6 @@ const CommandShortcut = ({ className, ...props }: React.ComponentProps<'span'>) 
 			{...props}
 		/>
 	);
-}
+};
 
 export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator };

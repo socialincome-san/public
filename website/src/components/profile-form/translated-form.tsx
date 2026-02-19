@@ -94,4 +94,4 @@ export const TranslatedProfileForm = async ({ session, language = 'en', isNewsle
 	};
 
 	return <ProfileForm session={session} translations={translations} isNewsletterSubscribed={isNewsletterSubscribed} />;
-}
+};

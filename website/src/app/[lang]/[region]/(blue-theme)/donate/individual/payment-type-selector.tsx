@@ -64,7 +64,7 @@ const PaymentTypeFormItem = ({
 			</FormControl>
 		</FormItem>
 	);
-}
+};
 
 export const PaymentTypeSelector = ({ lang, translations, bankTransferForm }: PaymentTypeSelectorProps) => {
 	const form = useFormContext();
@@ -111,4 +111,4 @@ export const PaymentTypeSelector = ({ lang, translations, bankTransferForm }: Pa
 			/>
 		</div>
 	);
-}
+};

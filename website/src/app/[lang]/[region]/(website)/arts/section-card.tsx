@@ -42,4 +42,4 @@ export const SectionCard = ({ card }: SectionCardProps) => {
 			})}
 		</div>
 	);
-}
+};

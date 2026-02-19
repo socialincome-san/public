@@ -71,4 +71,4 @@ export const DrawCard = ({ draw, translations }: DrawCardProps) => {
 			</CollapsibleTrigger>
 		</Collapsible>
 	);
-}
+};

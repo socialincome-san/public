@@ -334,4 +334,4 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 			</form>
 		</Form>
 	);
-}
+};

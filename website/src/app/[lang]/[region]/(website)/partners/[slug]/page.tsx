@@ -18,7 +18,7 @@ const getNGOTranslations = async (
 		}
 	}
 	return { translation: currentNgo };
-}
+};
 
 interface PartnerPageParams extends DefaultParams {
 	slug: string;

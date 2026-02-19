@@ -28,7 +28,7 @@ const Portrait = ({ name, text, country, image }: PortraitProps) => {
 			</div>
 		</div>
 	);
-}
+};
 
 export const ContributorsCarousel = ({ portraits }: { portraits: PortraitProps[] }) => {
 	const screenSize = useScreenSize();
@@ -64,4 +64,4 @@ export const ContributorsCarousel = ({ portraits }: { portraits: PortraitProps[]
 			))}
 		</Carousel>
 	);
-}
+};

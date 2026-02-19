@@ -95,7 +95,7 @@ export default function LocalPartnersForm({
 				onError?.(error);
 			}
 		});
-	}
+	};
 
 	useEffect(() => {
 		if (localPartnerId) {

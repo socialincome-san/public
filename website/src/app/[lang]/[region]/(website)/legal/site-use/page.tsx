@@ -7,7 +7,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 export const generateMetadata = async ({ params }: DefaultPageProps) => {
 	const { lang } = await params;
 	return getMetadata(lang as WebsiteLanguage, 'website-terms-of-use');
-}
+};
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;

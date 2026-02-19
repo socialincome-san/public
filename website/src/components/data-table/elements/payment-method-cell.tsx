@@ -14,4 +14,4 @@ export const PaymentMethodCell = <TData, TValue>({ ctx, variant }: Props<TData, 
 			{String(value)}
 		</span>
 	);
-}
+};

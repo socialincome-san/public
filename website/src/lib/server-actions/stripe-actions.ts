@@ -19,9 +19,9 @@ export const createStripeCheckoutAction = async (input: {
 		...input,
 		stripeCustomerId: contributor?.stripeCustomerId ?? null,
 	});
-}
+};
 
 export const updateContributorAfterCheckoutAction = async (input: UpdateContributorAfterCheckoutInput) => {
 	const stripeService = new StripeService();
 	return stripeService.updateContributorAfterCheckout(input);
-}
+};

@@ -32,4 +32,4 @@ export const Issue = ({ title, url, text }: IssueProps) => {
 			</TableCell>
 		</TableRow>
 	);
-}
+};

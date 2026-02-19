@@ -35,4 +35,4 @@ export const makeYourCertificatesColumns = (
 			cell: (ctx) => <DownloadCell ctx={ctx} />,
 		},
 	];
-}
+};

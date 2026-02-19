@@ -20,4 +20,4 @@ export const SILogo = ({ className, ...props }: HTMLAttributes<SVGElement>) => {
 			</g>
 		</svg>
 	);
-}
+};

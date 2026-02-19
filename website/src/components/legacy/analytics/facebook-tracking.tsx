@@ -25,4 +25,4 @@ export const FacebookTracking = () => {
 	}, []);
 
 	return null;
-}
+};

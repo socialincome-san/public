@@ -72,4 +72,4 @@ export const SectionCard = ({ translations: { card, takeAction } }: SectionCardP
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

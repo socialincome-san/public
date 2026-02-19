@@ -47,4 +47,4 @@ export const HowItWorks = async ({ lang }: DefaultParams) => {
 			</div>
 		</BaseContainer>
 	);
-}
+};

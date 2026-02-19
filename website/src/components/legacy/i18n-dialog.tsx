@@ -122,4 +122,4 @@ export const I18nDialog = ({
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

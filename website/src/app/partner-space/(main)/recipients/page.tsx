@@ -22,4 +22,4 @@ const RecipientsDataLoader = async () => {
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <RecipientsTableClient rows={rows} error={error} readOnly={false} actorKind="local-partner" />;
-}
+};

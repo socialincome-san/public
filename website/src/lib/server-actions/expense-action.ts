@@ -16,7 +16,7 @@ export const createExpenseAction = async (input: ExpenseCreateInput) => {
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
-}
+};
 
 export const updateExpenseAction = async (input: ExpenseUpdateInput) => {
 	const user = await getAuthenticatedUserOrRedirect();
@@ -26,18 +26,18 @@ export const updateExpenseAction = async (input: ExpenseUpdateInput) => {
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
-}
+};
 
 export const getExpenseAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ExpenseService();
 	return service.get(user.id, id);
-}
+};
 
 export const getExpenseOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new OrganizationService();
 	return service.getOptions(user.id);
-}
+};

@@ -83,4 +83,4 @@ export const RichTextRenderer = ({ richTextDocument, translator, lang, region }:
 			),
 		},
 	});
-}
+};

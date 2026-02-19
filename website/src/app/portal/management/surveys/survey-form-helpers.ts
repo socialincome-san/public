@@ -13,7 +13,7 @@ export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyCreateIn
 		accessEmail: schema.fields.accessEmail.value,
 		accessPw: schema.fields.accessPw.value,
 	};
-}
+};
 
 export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: SurveyPayload): SurveyUpdateInput => {
 	const data: SurveyUpdateInput = {
@@ -32,4 +32,4 @@ export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: Surve
 	}
 
 	return data;
-}
+};

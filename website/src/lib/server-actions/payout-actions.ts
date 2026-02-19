@@ -14,7 +14,7 @@ export const createPayoutAction = async (input: PayoutCreateInput) => {
 
 	revalidatePath('/portal/delivery/make-payouts');
 	return result;
-}
+};
 
 export const updatePayoutAction = async (input: PayoutUpdateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -24,18 +24,18 @@ export const updatePayoutAction = async (input: PayoutUpdateInput) => {
 
 	revalidatePath('/portal/delivery/make-payouts');
 	return result;
-}
+};
 
 export const getPayoutAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
 
 	return service.get(user.id, id);
-}
+};
 
 export const getPayoutRecipientOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new RecipientService();
 
 	return service.getEditableRecipientOptions(user.id);
-}
+};

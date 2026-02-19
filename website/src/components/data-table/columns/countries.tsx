@@ -65,4 +65,4 @@ export const makeCountryColumns = (): ColumnDef<CountryTableViewRow>[] => {
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

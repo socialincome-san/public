@@ -74,7 +74,7 @@ const DonationIntervalFormItem = ({
 			</FormControl>
 		</FormItem>
 	);
-}
+};
 
 export const DonationIntervalSelector = ({ lang, translations, monthlyIncome }: DonationIntervalSelectorProps) => {
 	const form = useFormContext();
@@ -124,4 +124,4 @@ export const DonationIntervalSelector = ({ lang, translations, monthlyIncome }: 
 			/>
 		</div>
 	);
-}
+};

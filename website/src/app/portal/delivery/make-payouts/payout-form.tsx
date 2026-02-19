@@ -151,4 +151,4 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 			mode={readOnly ? 'readonly' : payoutId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

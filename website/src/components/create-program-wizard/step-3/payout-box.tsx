@@ -61,4 +61,4 @@ export const PayoutBox = ({
 			</div>
 		</div>
 	);
-}
+};

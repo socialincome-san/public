@@ -11,7 +11,7 @@ export const buildCreatePayoutInput = (schema: PayoutFormSchema): PayoutCreateIn
 		phoneNumber: schema.fields.phoneNumber.value ?? null,
 		comments: null,
 	};
-}
+};
 
 export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: PayoutPayload): PayoutUpdateInput => {
 	const data: PayoutUpdateInput = {
@@ -29,4 +29,4 @@ export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: Payou
 	}
 
 	return data;
-}
+};

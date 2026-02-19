@@ -24,4 +24,4 @@ const RecipientsDataLoader = async () => {
 	const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
 
 	return <RecipientsTableClient rows={rows} error={error} readOnly={readOnly} />;
-}
+};

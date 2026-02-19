@@ -26,7 +26,7 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreat
 					}
 				: null,
 	};
-}
+};
 
 export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryUpdateInput => {
 	return {
@@ -54,4 +54,4 @@ export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: Cou
 					}
 				: null,
 	};
-}
+};

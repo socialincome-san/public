@@ -53,4 +53,4 @@ export const Approach = async ({ lang }: DefaultParams) => {
 			</div>
 		</div>
 	);
-}
+};

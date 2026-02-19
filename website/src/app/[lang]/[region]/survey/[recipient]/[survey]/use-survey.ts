@@ -72,4 +72,4 @@ export const useSurvey = () => {
 	};
 
 	return { survey, hasError, login, logout, loadSurvey, saveSurvey };
-}
+};

@@ -8,4 +8,4 @@ export const GET = async () => {
 	const draft = await draftMode();
 	draft.disable();
 	return new Response('Preview is disabled');
-}
+};

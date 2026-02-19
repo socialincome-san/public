@@ -30,7 +30,7 @@ export const ExpansionRow = ({ row, bgClass }: Props) => {
 		}
 
 		return <p className="text-muted-foreground">{source.text}</p>;
-	}
+	};
 
 	const renderDetails = (details: ProgramCountryFeasibilityRow['cash']['details']) => {
 		return (
@@ -39,7 +39,7 @@ export const ExpansionRow = ({ row, bgClass }: Props) => {
 				{renderSource(details.source)}
 			</div>
 		);
-	}
+	};
 
 	return (
 		<TableRow className={bgClass}>
@@ -52,4 +52,4 @@ export const ExpansionRow = ({ row, bgClass }: Props) => {
 			<TableCell />
 		</TableRow>
 	);
-}
+};

@@ -9,4 +9,4 @@ export const useFirebaseApp = () => {
 		throw new Error('useFirebaseApp must be used within a FirebaseAppProvider');
 	}
 	return app;
-}
+};

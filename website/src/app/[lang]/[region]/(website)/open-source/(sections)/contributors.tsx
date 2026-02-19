@@ -23,4 +23,4 @@ export const OpenSourceContributors = async ({ lang }: DefaultParams) => {
 	return (
 		<OpenSourceContributorsClient contributors={contributors} heading={heading} totalContributors={totalContributors} />
 	);
-}
+};

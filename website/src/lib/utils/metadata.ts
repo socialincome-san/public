@@ -50,4 +50,4 @@ export const getMetadata = async (
 		},
 	};
 	return _.merge(defaultMetadata, metadata);
-}
+};

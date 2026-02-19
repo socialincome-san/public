@@ -39,4 +39,4 @@ export const getContributors = async () => {
 			avatarUrl: contributor.avatar_url,
 		}))
 		.sort((a: Contributor, b: Contributor) => b.commits - a.commits);
-}
+};

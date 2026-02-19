@@ -10,7 +10,7 @@ const findUserByAuthId = async (authUserId: string): Promise<UserSession | null>
 	const service = new UserService();
 	const result = await service.getCurrentUserSession(authUserId);
 	return result.success ? result.data : null;
-}
+};
 
 const loadCurrentUser = async (): Promise<UserSession | null> => {
 	const cookie = await firebaseSessionService.readSessionCookie();
@@ -24,7 +24,7 @@ const loadCurrentUser = async (): Promise<UserSession | null> => {
 
 	const authUserId = decodedTokenResult.data.uid;
 	return findUserByAuthId(authUserId);
-}
+};
 
 const getCurrentUser = cache(loadCurrentUser);
 
@@ -34,7 +34,7 @@ export const getAuthenticatedUserOrRedirect = async (): Promise<UserSession> => 
 		redirect('/login');
 	}
 	return user;
-}
+};
 
 export const getAuthenticatedUserOrThrow = async (): Promise<UserSession> => {
 	const user = await getCurrentUser();
@@ -42,11 +42,11 @@ export const getAuthenticatedUserOrThrow = async (): Promise<UserSession> => {
 		throw new Error('Not authenticated');
 	}
 	return user;
-}
+};
 
 export const requireAdmin = async (user: UserSession): Promise<UserSession> => {
 	if (user.role !== 'admin') {
 		notFound();
 	}
 	return user;
-}
+};

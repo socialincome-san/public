@@ -194,7 +194,7 @@ export const buildUpdateCampaignsInput = (schema: CampaignsFormSchema): Campaign
 		creatorEmail: schema.fields.creatorEmail.value,
 		program: { connect: { id: schema.fields.program.value } },
 	};
-}
+};
 
 export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): CampaignsCreateInput => {
 	return {
@@ -224,4 +224,4 @@ export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): Campaign
 		creatorEmail: schema.fields.creatorEmail.value,
 		program: { connect: { id: schema.fields.program.value } },
 	};
-}
+};

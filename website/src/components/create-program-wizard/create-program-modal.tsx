@@ -55,4 +55,4 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 			</Dialog>
 		</>
 	);
-}
+};

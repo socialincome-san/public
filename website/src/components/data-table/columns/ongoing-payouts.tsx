@@ -10,7 +10,7 @@ import type { ColumnDef, HeaderContext } from '@tanstack/react-table';
 const getMonthLabelFromData = (ctx: HeaderContext<OngoingPayoutTableViewRow, unknown>, index: number): string => {
 	const firstRow = ctx.table.options.data[0] as OngoingPayoutTableViewRow | undefined;
 	return firstRow?.last3Months[index]?.monthLabel ?? '–';
-}
+};
 
 export const makeOngoingPayoutColumns = (): ColumnDef<OngoingPayoutTableViewRow>[] => {
 	return [
@@ -53,4 +53,4 @@ export const makeOngoingPayoutColumns = (): ColumnDef<OngoingPayoutTableViewRow>
 			cell: (ctx) => <StatusCell ctx={ctx} variant="payout" />,
 		},
 	];
-}
+};

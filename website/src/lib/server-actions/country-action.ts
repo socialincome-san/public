@@ -15,7 +15,7 @@ export const createCountryAction = async (input: CountryCreateInput) => {
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
-}
+};
 
 export const updateCountryAction = async (input: CountryUpdateInput) => {
 	const user = await getAuthenticatedUserOrRedirect();
@@ -24,14 +24,14 @@ export const updateCountryAction = async (input: CountryUpdateInput) => {
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
-}
+};
 
 export const getCountryAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	return service.get(user.id, id);
-}
+};
 
 export const getProgramCountryFeasibilityAction = async () => {
 	return service.getProgramCountryFeasibility();
-}
+};

@@ -9,7 +9,7 @@ export const buildCreateUserInput = (schema: UserFormSchema): UserCreateInput =>
 		role: schema.fields.role.value,
 		organizationId: schema.fields.organizationId.value,
 	};
-}
+};
 
 export const buildUpdateUserInput = (schema: UserFormSchema, existing: UserPayload): UserUpdateInput => {
 	return {
@@ -20,4 +20,4 @@ export const buildUpdateUserInput = (schema: UserFormSchema, existing: UserPaylo
 		role: schema.fields.role.value,
 		organizationId: schema.fields.organizationId.value,
 	};
-}
+};

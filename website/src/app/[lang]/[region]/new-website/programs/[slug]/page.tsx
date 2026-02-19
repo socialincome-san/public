@@ -89,4 +89,4 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 			</ul>
 		</div>
 	);
-}
+};

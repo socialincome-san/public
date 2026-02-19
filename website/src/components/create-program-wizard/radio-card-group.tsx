@@ -21,4 +21,4 @@ export const RadioCardGroup = ({ value, onChange, layout = 'stack', children }: 
 			{children}
 		</RadioGroup>
 	);
-}
+};

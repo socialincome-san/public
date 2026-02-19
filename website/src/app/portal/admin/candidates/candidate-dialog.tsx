@@ -55,4 +55,4 @@ export const CandidateDialog = ({
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

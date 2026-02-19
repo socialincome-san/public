@@ -21,4 +21,4 @@ export const WebsiteAppShell = ({ children, session, lang, region, scope }: Webs
 			{scope === 'website' && <Footer lang={lang} region={region} />}
 		</div>
 	);
-}
+};

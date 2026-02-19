@@ -58,4 +58,4 @@ export const HeroSection = async ({ lang }: DefaultParams) => {
 			</div>
 		</div>
 	);
-}
+};

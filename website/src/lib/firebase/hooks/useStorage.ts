@@ -19,7 +19,7 @@ export const useStorage = () => {
 	}
 
 	return storage;
-}
+};
 
 export const useStorageDownloadURL = (storageRef: StorageReference | undefined) => {
 	const [url, setUrl] = useState<string | undefined>(undefined);
@@ -40,4 +40,4 @@ export const useStorageDownloadURL = (storageRef: StorageReference | undefined) 
 		}
 	}, []);
 	return { data: url, loading, error };
-}
+};

@@ -16,4 +16,4 @@ export const Input = ({ className, type, ...props }: React.ComponentProps<'input
 			{...props}
 		/>
 	);
-}
+};

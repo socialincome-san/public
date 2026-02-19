@@ -69,4 +69,4 @@ export const Combobox = ({
 			</PopoverContent>
 		</Popover>
 	);
-}
+};

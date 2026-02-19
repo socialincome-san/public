@@ -109,4 +109,4 @@ export const Recipients = async ({ lang }: DefaultParams) => {
 			</div>
 		</BaseContainer>
 	);
-}
+};

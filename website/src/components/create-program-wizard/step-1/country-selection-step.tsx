@@ -29,4 +29,4 @@ export const CountrySelectionStep = ({ rows, selectedCountryId, openRowIds, onSe
 			/>
 		</div>
 	);
-}
+};

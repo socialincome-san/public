@@ -15,4 +15,4 @@ export const CurrencyRedirect = (props: { currency: WebsiteCurrency }) => {
 	}, [currency, props.currency]);
 
 	return null;
-}
+};

@@ -23,4 +23,4 @@ const ContributionsDataLoader = async () => {
 	const readOnly = result.success ? result.data.permission !== 'edit' : true;
 
 	return <ContributionsTableClient rows={rows} error={error} readOnly={readOnly} />;
-}
+};

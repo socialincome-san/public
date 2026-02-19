@@ -30,4 +30,4 @@ const OngoingPayoutsDataLoader = async () => {
 			makeColumns={makeOngoingPayoutColumns}
 		/>
 	);
-}
+};

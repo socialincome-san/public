@@ -22,4 +22,4 @@ export const ProgressCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) =>
 			</span>
 		</div>
 	);
-}
+};

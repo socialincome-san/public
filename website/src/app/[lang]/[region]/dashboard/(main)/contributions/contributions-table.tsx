@@ -34,4 +34,4 @@ export const ContributionsTable = async ({ lang }: { lang: WebsiteLanguage }) =>
 			lang={lang}
 		/>
 	);
-}
+};

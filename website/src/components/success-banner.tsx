@@ -23,4 +23,4 @@ export const SuccessBanner = ({ title, description, action }: Props) => {
 			{action && <div>{action}</div>}
 		</div>
 	);
-}
+};

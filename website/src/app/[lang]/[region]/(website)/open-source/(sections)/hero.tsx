@@ -24,4 +24,4 @@ export const Hero = async ({ lang }: DefaultParams) => {
 			</Typography>
 		</div>
 	);
-}
+};

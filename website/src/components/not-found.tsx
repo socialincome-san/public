@@ -14,4 +14,4 @@ export const NotFound = ({ children }: NotFoundProps) => {
 			</div>
 		</div>
 	);
-}
+};

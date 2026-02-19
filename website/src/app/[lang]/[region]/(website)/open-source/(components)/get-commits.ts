@@ -53,4 +53,4 @@ export const getCommits = async () => {
 		totalCommits,
 		newCommits: recentCommits.length,
 	};
-}
+};

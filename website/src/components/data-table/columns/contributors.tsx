@@ -41,4 +41,4 @@ export const makeContributorColumns = (): ColumnDef<ContributorTableViewRow>[] =
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

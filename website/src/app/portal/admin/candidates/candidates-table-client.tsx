@@ -92,4 +92,4 @@ export const CandidatesTableClient = ({ rows, error, readOnly, actorKind = 'user
 			/>
 		</>
 	);
-}
+};

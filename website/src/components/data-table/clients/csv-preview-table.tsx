@@ -35,4 +35,4 @@ export const CsvPreviewTable = ({ rows }: Props) => {
 			</table>
 		</div>
 	);
-}
+};

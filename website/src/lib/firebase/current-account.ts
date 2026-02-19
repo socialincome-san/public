@@ -50,7 +50,7 @@ export const getCurrentSession = async (): Promise<Session | null> => {
 	}
 
 	return null;
-}
+};
 
 export const getActorOrThrow = async (): Promise<Actor> => {
 	const session = await getCurrentSession();
@@ -68,4 +68,4 @@ export const getActorOrThrow = async (): Promise<Actor> => {
 		default:
 			throw new Error('Not authenticated');
 	}
-}
+};

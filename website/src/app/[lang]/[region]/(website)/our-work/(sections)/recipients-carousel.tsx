@@ -41,7 +41,7 @@ const Portrait = ({ name, text, country, image }: PortraitProps) => {
 			</div>
 		</Card>
 	);
-}
+};
 
 export const RecipientsCarousel = ({ portraits }: { portraits: PortraitProps[] }) => {
 	const screenSize = useScreenSize();
@@ -62,4 +62,4 @@ export const RecipientsCarousel = ({ portraits }: { portraits: PortraitProps[] }
 			))}
 		</Carousel>
 	);
-}
+};

@@ -25,7 +25,7 @@ const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArtic
 
 	const res = await storyblokService.getArticleCountByTagForDefaultLang(tagId);
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
-}
+};
 
 export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;

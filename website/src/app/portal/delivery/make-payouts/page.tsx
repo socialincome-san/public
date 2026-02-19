@@ -22,4 +22,4 @@ const PayoutsDataLoader = async () => {
 	const rows: PayoutTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <PayoutsTableClient rows={rows} error={error} />;
-}
+};

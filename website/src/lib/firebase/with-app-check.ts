@@ -21,4 +21,4 @@ export const withAppCheck = <T>(handler: Handler<T>) => {
 
 		return handler(request, context);
 	};
-}
+};

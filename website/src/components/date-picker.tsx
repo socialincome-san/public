@@ -34,7 +34,7 @@ export const DatePicker = ({
 	// avoid time zone issues by normalizing date to noon
 	const normalizeToNoon = (date: Date) => {
 		return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0);
-	}
+	};
 
 	useEffect(() => {
 		if (selected) {
@@ -80,4 +80,4 @@ export const DatePicker = ({
 			</Popover>
 		</div>
 	);
-}
+};

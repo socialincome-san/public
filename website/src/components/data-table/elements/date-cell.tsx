@@ -30,4 +30,4 @@ export const DateCell = <TData, TValue extends Date | string | null>({
 	const formatted = new Intl.DateTimeFormat(locale, options).format(date);
 
 	return <span>{formatted}</span>;
-}
+};

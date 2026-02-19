@@ -50,4 +50,4 @@ export const ProgramSetupStep = ({
 			/>
 		</div>
 	);
-}
+};

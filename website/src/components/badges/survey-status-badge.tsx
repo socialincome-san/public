@@ -33,4 +33,4 @@ export const SurveyStatusBadge = ({ status }: SurveyStatusBadgeProps) => {
 			{label}
 		</Badge>
 	);
-}
+};

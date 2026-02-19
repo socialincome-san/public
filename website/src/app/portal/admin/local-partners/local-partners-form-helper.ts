@@ -48,7 +48,7 @@ export const buildUpdateLocalPartnerInput = (
 			},
 		},
 	};
-}
+};
 
 export const buildCreateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
@@ -69,4 +69,4 @@ export const buildCreateLocalPartnerInput = (
 			},
 		},
 	};
-}
+};

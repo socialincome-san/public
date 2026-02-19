@@ -10,7 +10,7 @@ const findContributorByAuthId = async (authUserId: string): Promise<ContributorS
 	const service = new ContributorService();
 	const result = await service.getCurrentContributorSession(authUserId);
 	return result.success ? result.data : null;
-}
+};
 
 const loadCurrentContributor = async (): Promise<ContributorSession | null> => {
 	const cookie = await firebaseSessionService.readSessionCookie();
@@ -24,7 +24,7 @@ const loadCurrentContributor = async (): Promise<ContributorSession | null> => {
 
 	const authUserId = decodedTokenResult.data.uid;
 	return findContributorByAuthId(authUserId);
-}
+};
 
 const getCurrentContributor = cache(loadCurrentContributor);
 
@@ -34,11 +34,11 @@ export const getAuthenticatedContributorOrRedirect = async (): Promise<Contribut
 		redirect('/login');
 	}
 	return contributor;
-}
+};
 
 export const getOptionalContributor = async (): Promise<ContributorSession | null> => {
 	return await getCurrentContributor();
-}
+};
 
 export const getAuthenticatedContributorOrThrow = async (): Promise<ContributorSession> => {
 	const contributor = await getCurrentContributor();
@@ -46,4 +46,4 @@ export const getAuthenticatedContributorOrThrow = async (): Promise<ContributorS
 		throw new Error('No authenticated contributor found');
 	}
 	return contributor;
-}
+};

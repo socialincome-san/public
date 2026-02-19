@@ -106,7 +106,7 @@ const getInitialFormSchema = (actorKind: Actor['kind'] = 'user'): CandidateFormS
 	}
 
 	return base;
-}
+};
 
 export const CandidateForm = ({
 	onSuccess,
@@ -229,4 +229,4 @@ export const CandidateForm = ({
 			mode={readOnly ? 'readonly' : candidateId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

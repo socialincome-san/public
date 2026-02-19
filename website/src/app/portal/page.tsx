@@ -33,4 +33,4 @@ const PortalDataLoader = async () => {
 			</div>
 		</>
 	);
-}
+};

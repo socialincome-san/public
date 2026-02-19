@@ -25,4 +25,4 @@ export const ExplainerVideo = async ({ lang }: DefaultParams) => {
 			</div>
 		</BaseContainer>
 	);
-}
+};

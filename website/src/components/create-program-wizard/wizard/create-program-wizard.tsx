@@ -16,4 +16,4 @@ export const CreateProgramWizard = ({ state, send }: Props) => {
 			<CreateProgramWizardFooter state={state} send={send} />
 		</div>
 	);
-}
+};

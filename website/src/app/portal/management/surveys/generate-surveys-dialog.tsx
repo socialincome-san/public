@@ -16,7 +16,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 
 	const setResult = (step: number, value: StepResult) => {
 		setResults((prev) => ({ ...prev, [step]: value }));
-	}
+	};
 
 	const steps = [
 		{
@@ -59,7 +59,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 		} catch (e) {
 			setResult(step.id, e instanceof Error ? e.message : 'Unknown error');
 		}
-	}
+	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -104,4 +104,4 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

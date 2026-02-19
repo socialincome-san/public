@@ -12,7 +12,7 @@ type TotalsSectionProps = {
 
 const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
-}
+};
 
 export const TotalsSection = ({ totals, exchangeRate, currency, lang }: TotalsSectionProps) => {
 	const totalContributions = totals.totalContributionsChf * exchangeRate;
@@ -42,4 +42,4 @@ export const TotalsSection = ({ totals, exchangeRate, currency, lang }: TotalsSe
 			</div>
 		</section>
 	);
-}
+};

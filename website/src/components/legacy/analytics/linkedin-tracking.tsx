@@ -20,4 +20,4 @@ export const LinkedInTracking = () => {
 	}, []);
 
 	return null;
-}
+};

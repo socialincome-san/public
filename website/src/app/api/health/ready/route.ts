@@ -11,4 +11,4 @@ export const GET = async () => {
 
 		return NextResponse.json({ status: 'unhealthy' }, { status: 500 });
 	}
-}
+};

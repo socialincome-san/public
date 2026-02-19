@@ -8,4 +8,4 @@ export const WizardLoading = () => {
 			<SpinnerIcon className="h-6 w-6 animate-spin" />
 		</div>
 	);
-}
+};

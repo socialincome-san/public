@@ -28,4 +28,4 @@ export const MobileIllustration = async ({ lang }: DefaultParams) => {
 			</div>
 		</div>
 	);
-}
+};

@@ -8,7 +8,7 @@ export const buildCreateExpenseInput = (schema: ExpenseFormSchema): ExpenseCreat
 		amountChf: Number(schema.fields.amountChf.value),
 		organization: { connect: { id: schema.fields.organization.value } },
 	};
-}
+};
 
 export const buildUpdateExpenseInput = (schema: ExpenseFormSchema, existing: ExpensePayload): ExpenseUpdateInput => {
 	return {
@@ -18,4 +18,4 @@ export const buildUpdateExpenseInput = (schema: ExpenseFormSchema, existing: Exp
 		amountChf: Number(schema.fields.amountChf.value),
 		organization: { connect: { id: schema.fields.organization.value } },
 	};
-}
+};

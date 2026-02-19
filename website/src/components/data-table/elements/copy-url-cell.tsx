@@ -49,4 +49,4 @@ export const CopyUrlCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => 
 			)}
 		</Button>
 	);
-}
+};

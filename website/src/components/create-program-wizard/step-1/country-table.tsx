@@ -15,7 +15,7 @@ const matchesSearch = (row: ProgramCountryFeasibilityRow, search: string) => {
 	const q = search.toLowerCase();
 	const countryName = getCountryNameByCode(row.country.isoCode)?.toLowerCase() ?? '';
 	return row.country.isoCode.toLowerCase().includes(q) || countryName.includes(q);
-}
+};
 
 const meetsAllConditions = (row: ProgramCountryFeasibilityRow) => {
 	return (
@@ -24,7 +24,7 @@ const meetsAllConditions = (row: ProgramCountryFeasibilityRow) => {
 		row.mobileNetwork.condition === 'met' &&
 		row.sanctions.condition === 'met'
 	);
-}
+};
 
 type Props = {
 	rows: ProgramCountryFeasibilityRow[];
@@ -66,4 +66,4 @@ export const CountryTable = ({ rows, value, openIds, onValueChange, onToggleRow 
 			</div>
 		</RadioGroup>
 	);
-}
+};

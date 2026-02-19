@@ -31,4 +31,4 @@ export const FAQ = async ({ lang, region }: DefaultParams) => {
 			</div>
 		</BaseContainer>
 	);
-}
+};

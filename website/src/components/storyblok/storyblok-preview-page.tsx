@@ -34,4 +34,4 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, searchPara
 	}
 
 	return <PageContentType blok={story.content} lang={lang} region={region} />;
-}
+};

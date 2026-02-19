@@ -185,4 +185,4 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 			mode={readOnly ? 'readonly' : contributionId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

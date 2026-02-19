@@ -26,4 +26,4 @@ export const ContributionStatusBadge = ({ status }: ContributionStatusBadgeProps
 			{label}
 		</Badge>
 	);
-}
+};

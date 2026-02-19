@@ -19,7 +19,7 @@ export const buildCreateContributionInput = (schema: ContributionFormSchema): Co
 			connect: { id: schema.fields.campaign.value },
 		},
 	};
-}
+};
 
 export const buildUpdateContributionInput = (
 	schema: ContributionFormSchema,
@@ -43,4 +43,4 @@ export const buildUpdateContributionInput = (
 	}
 
 	return data;
-}
+};

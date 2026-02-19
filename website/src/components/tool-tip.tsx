@@ -6,7 +6,7 @@ import * as React from 'react';
 
 const TooltipProvider = ({ delayDuration = 0, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) => {
 	return <TooltipPrimitive.Provider data-slot="tooltip-provider" delayDuration={delayDuration} {...props} />;
-}
+};
 
 const Tooltip = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>) => {
 	return (
@@ -14,11 +14,11 @@ const Tooltip = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root
 			<TooltipPrimitive.Root data-slot="tooltip" {...props} />
 		</TooltipProvider>
 	);
-}
+};
 
 const TooltipTrigger = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) => {
 	return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
-}
+};
 
 const TooltipContent = ({
 	className,
@@ -42,6 +42,6 @@ const TooltipContent = ({
 			</TooltipPrimitive.Content>
 		</TooltipPrimitive.Portal>
 	);
-}
+};
 
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };

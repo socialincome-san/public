@@ -41,4 +41,4 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

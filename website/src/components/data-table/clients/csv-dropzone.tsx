@@ -42,4 +42,4 @@ export const CsvDropzone = ({ onFileSelected }: Props) => {
 			<p className="text-muted-foreground mt-1 text-xs">or click to select a file</p>
 		</div>
 	);
-}
+};

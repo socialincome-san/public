@@ -81,7 +81,7 @@ const DonationImpact = ({ lang, translations }: DonationImpactProps) => {
 			</div>
 		</div>
 	);
-}
+};
 
 type DonationFormProps = {
 	amount?: number;
@@ -229,4 +229,4 @@ export const DonationForm = ({ amount, translations, lang, region }: DonationFor
 			</Form>
 		</div>
 	);
-}
+};

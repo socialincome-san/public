@@ -95,4 +95,4 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, actorK
 			/>
 		</>
 	);
-}
+};

@@ -31,4 +31,4 @@ export const ProseAccordion = ({ title, items }: PrivacySectionProps) => {
 			</Accordion>
 		</div>
 	);
-}
+};

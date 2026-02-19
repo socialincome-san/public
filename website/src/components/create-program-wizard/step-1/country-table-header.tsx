@@ -33,4 +33,4 @@ export const CountryTableHeader = ({ search, onSearchChange, onlyAllMet, onOnlyA
 			</div>
 		</div>
 	);
-}
+};

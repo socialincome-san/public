@@ -22,4 +22,4 @@ const SurveysDataLoader = async () => {
 	const rows: SurveyTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <SurveysTableClient rows={rows} error={error} />;
-}
+};

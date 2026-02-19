@@ -34,4 +34,4 @@ export const StatProgressCard = ({
 			<Progress value={percent} />
 		</div>
 	);
-}
+};

@@ -12,7 +12,7 @@ const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.s
 
 const getThumbnailOrDefault = (referenceArticle: ReferenceArticle): StoryblokAsset => {
 	return referenceArticle.thumbnail?.filename ? referenceArticle.thumbnail : (defaultThumbnail as StoryblokAsset);
-}
+};
 
 export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: Translator; lang: LanguageCode }) => {
 	const translator = props.translator;
@@ -23,7 +23,7 @@ export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: 
 
 	const showSeparator = (index: number) => {
 		return index > 0 || hasContextInfo;
-	}
+	};
 
 	return (
 		<div className="bg-primary mt-2 w-full rounded-md bg-opacity-10 p-6">
@@ -84,4 +84,4 @@ export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: 
 			</ShowMoreToggle>
 		</div>
 	);
-}
+};

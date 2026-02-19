@@ -23,4 +23,4 @@ export const CreateProgramWizardFooter = ({ state, send }: Props) => {
 			</Button>
 		</div>
 	);
-}
+};

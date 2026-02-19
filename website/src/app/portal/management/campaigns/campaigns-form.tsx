@@ -103,7 +103,7 @@ export default function CampaignsForm({
 				onError?.(error);
 			}
 		});
-	}
+	};
 
 	useEffect(() => {
 		if (campaignId) {

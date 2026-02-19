@@ -31,7 +31,7 @@ export const getDimensionsFromStoryblokImageUrl = (url: string): { width?: numbe
 	const match = url.match(/\/f\/\d+\/(\d+)x(\d+)\//);
 
 	return match ? { width: Number(match[1]), height: Number(match[2]) } : {};
-}
+};
 
 /**
  * Calculate scaled dimensions maintaining aspect ratio.
@@ -50,7 +50,7 @@ export const getScaledDimensions = (url: string, maxWidth: number): { width: num
 		width: maxWidth,
 		height: Math.round((original.height / original.width) * maxWidth),
 	};
-}
+};
 
 /**
  * Annotates a Storyblok image URL with focal point or smart cropping metadata.
@@ -61,7 +61,7 @@ export const formatStoryblokUrl = (url: string, width: number, height: number, f
 	const crop = focus || 'smart';
 	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
 	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
-}
+};
 
 /**
  * Builds a complete Storyblok Image Service URL for direct usage (e.g., OG metadata).
@@ -72,7 +72,7 @@ const formatStoryblokUrlDirect = (url: string, width: number, height: number, fo
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 	return imageSource;
-}
+};
 
 // ==================== Date Utilities ====================
 
@@ -87,7 +87,7 @@ export const toDateObject = (date: string, lang: string) => {
 		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
 	}
 	return dateObject;
-}
+};
 
 /**
  * Format a Storyblok date for display.
@@ -99,7 +99,7 @@ export const formatStoryblokDate = (date: string | null | undefined, lang: strin
 	let dateObject = toDateObject(date, lang);
 
 	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
-}
+};
 
 /**
  * Format a Storyblok date to ISO format.
@@ -111,7 +111,7 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
 	let dateObject = toDateObject(date, defaultLanguage);
 
 	return dateObject.isValid ? dateObject.toISO() : '';
-}
+};
 
 // ==================== URL Utilities ====================
 
@@ -120,7 +120,7 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
  */
 export const createLinkForArticle = (slug: string, lang: string, region: string) => {
 	return `/${lang}/${region}/journal/${slug}`;
-}
+};
 
 /**
  * Resolve a StoryblokMultilink to a URL string.
@@ -143,7 +143,7 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 	}
 
 	return '#';
-}
+};
 
 // ==================== Metadata Utilities ====================
 
@@ -205,4 +205,4 @@ export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<Resolved
 			...(tags && { 'article:tag': tags }),
 		},
 	};
-}
+};

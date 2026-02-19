@@ -43,4 +43,4 @@ export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

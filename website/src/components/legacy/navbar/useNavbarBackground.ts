@@ -7,4 +7,4 @@ export const useNavbarBackground = () => {
 	const { backgroundColor, setBackgroundColor } = useContext(NavbarBackgroundContext);
 
 	return { backgroundColor, setBackgroundColor };
-}
+};

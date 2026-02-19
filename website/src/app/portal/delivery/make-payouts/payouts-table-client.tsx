@@ -68,4 +68,4 @@ export const PayoutsTableClient = ({ rows, error }: { rows: PayoutTableViewRow[]
 			<StartPayoutProcessDialog open={isPayoutProcessDialogOpen} setOpen={setIsPayoutProcessDialogOpen} />
 		</>
 	);
-}
+};

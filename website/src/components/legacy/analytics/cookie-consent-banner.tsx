@@ -47,4 +47,4 @@ export const CookieConsentBanner = ({ translations }: CookieConsentBannerClientP
 			</CardContent>
 		</Card>
 	);
-}
+};

@@ -184,7 +184,7 @@ export const buildUpdateRecipientInput = (
 			},
 		},
 	};
-}
+};
 
 export const buildCreateRecipientInput = (
 	schema: RecipientFormSchema,
@@ -217,4 +217,4 @@ export const buildCreateRecipientInput = (
 			},
 		},
 	};
-}
+};

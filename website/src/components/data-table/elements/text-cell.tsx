@@ -8,4 +8,4 @@ export const TextCell = <TData, TValue>({ ctx, translatedValue }: Props<TData, T
 	const value = ctx.getValue();
 
 	return <span>{!value ? '—' : String(translatedValue || value)}</span>;
-}
+};

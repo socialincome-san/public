@@ -49,4 +49,4 @@ export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 	}
 
 	return <div>Loading...</div>;
-}
+};

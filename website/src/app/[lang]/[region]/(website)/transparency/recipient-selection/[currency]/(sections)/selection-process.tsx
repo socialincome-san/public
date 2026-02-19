@@ -60,7 +60,7 @@ const Box = ({ active, number, title, subtitle, onClick }: BoxProps) => {
 			</div>
 		</button>
 	);
-}
+};
 
 export const SelectionProcess = ({ lang }: DefaultParams) => {
 	const translator = useTranslator(lang as WebsiteLanguage, 'website-selection');
@@ -186,4 +186,4 @@ export const SelectionProcess = ({ lang }: DefaultParams) => {
 			</div>
 		</BaseContainer>
 	);
-}
+};

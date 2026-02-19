@@ -21,4 +21,4 @@ export const CurrencyCell = <TData, TValue>({ ctx, currency = 'CHF' }: CurrencyC
 	});
 
 	return <span>{formatted}</span>;
-}
+};

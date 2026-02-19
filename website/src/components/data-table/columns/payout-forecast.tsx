@@ -35,4 +35,4 @@ export const makePayoutForecastColumns = (): ColumnDef<PayoutForecastTableViewRo
 			cell: (ctx) => <CurrencyCell ctx={ctx} currency="USD" />,
 		},
 	];
-}
+};

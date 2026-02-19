@@ -72,4 +72,4 @@ export const makeRecipientColumns = (
 	);
 
 	return columns;
-}
+};

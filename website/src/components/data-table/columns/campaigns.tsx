@@ -58,4 +58,4 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

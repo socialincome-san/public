@@ -11,7 +11,7 @@ export const generateMetadata = async ({ params }: DefaultPageProps) => {
 	});
 
 	return { title: translator.t('metadata.title') };
-}
+};
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;

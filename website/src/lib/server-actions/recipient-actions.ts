@@ -28,9 +28,12 @@ export const createRecipientAction = async (recipient: RecipientCreateInput) => 
 	}
 
 	return result;
-}
+};
 
-export const updateRecipientAction = async (updateInput: RecipientUpdateInput, nextPaymentPhoneNumber: string | null) => {
+export const updateRecipientAction = async (
+	updateInput: RecipientUpdateInput,
+	nextPaymentPhoneNumber: string | null,
+) => {
 	const actor = await getActorOrThrow();
 
 	const result = await recipientService.update(actor, updateInput, nextPaymentPhoneNumber);
@@ -43,7 +46,7 @@ export const updateRecipientAction = async (updateInput: RecipientUpdateInput, n
 	}
 
 	return result;
-}
+};
 
 export const deleteRecipientAction = async (recipientId: string) => {
 	const actor = await getActorOrThrow();
@@ -58,12 +61,12 @@ export const deleteRecipientAction = async (recipientId: string) => {
 	}
 
 	return result;
-}
+};
 
 export const getRecipientAction = async (recipientId: string) => {
 	const actor = await getActorOrThrow();
 	return await recipientService.get(actor, recipientId);
-}
+};
 
 export const getRecipientOptions = async () => {
 	const actor = await getActorOrThrow();
@@ -82,7 +85,7 @@ export const getRecipientOptions = async () => {
 		programs: { success: true, data: [] },
 		localPartner: { success: true, data: [] },
 	};
-}
+};
 
 export const importRecipientsCsvAction = async (file: File) => {
 	const actor = await getActorOrThrow();
@@ -93,4 +96,4 @@ export const importRecipientsCsvAction = async (file: File) => {
 	revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
 
 	return result;
-}
+};

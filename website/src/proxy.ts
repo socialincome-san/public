@@ -128,4 +128,4 @@ export const proxy = (request: NextRequest) => {
 	response = countryMiddleware(request, response);
 	response = currencyMiddleware(request, response);
 	return response;
-}
+};

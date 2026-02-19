@@ -13,15 +13,15 @@ const SUPPORTED_LANGUAGES: WebsiteLanguage[] = ['de', 'fr', 'it'];
 
 const articleUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
 	return `${url}/${lang}/${region}/journal/${slug}`;
-}
+};
 
 const tagUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
 	return `${url}/${lang}/${region}/journal/tag/${slug}`;
-}
+};
 
 const authorUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
 	return `${url}/${lang}/${region}/journal/author/${slug}`;
-}
+};
 
 const generateAlternativeLanguages = (alternativeArticles: Record<string, string[]>, slug: string) => {
 	return Object.fromEntries(
@@ -30,7 +30,7 @@ const generateAlternativeLanguages = (alternativeArticles: Record<string, string
 			articleUrl(slug, lang),
 		]),
 	);
-}
+};
 
 const generateStoryblokArticlesSitemap = (
 	articles: ISbStoryData<Article>[],
@@ -47,7 +47,7 @@ const generateStoryblokArticlesSitemap = (
 		changeFrequency: 'monthly',
 		lastModified: toDateObject(article.updated_at || article.created_at, defaultLanguage).toString(),
 	}));
-}
+};
 
 const generateStoryblokAuthorsSitemap = (authors: ISbStoryData<Author>[]): MetadataRoute.Sitemap => {
 	return authors.map((author) => ({
@@ -57,7 +57,7 @@ const generateStoryblokAuthorsSitemap = (authors: ISbStoryData<Author>[]): Metad
 		},
 		changeFrequency: 'weekly',
 	}));
-}
+};
 
 const generateStoryblokTagSitemap = (tags: ISbStoryData<Topic>[]): MetadataRoute.Sitemap => {
 	return tags.map((tag) => ({
@@ -67,11 +67,11 @@ const generateStoryblokTagSitemap = (tags: ISbStoryData<Topic>[]): MetadataRoute
 		},
 		changeFrequency: 'weekly',
 	}));
-}
+};
 
 const staticPageUrl = (route: string, lang: WebsiteLanguage, region: WebsiteRegion) => {
 	return `${url}/${lang}/${region}/${route}`;
-}
+};
 
 const generateStaticPagesSitemap = (): MetadataRoute.Sitemap => {
 	return staticRoutes.flatMap((route) =>
@@ -82,7 +82,7 @@ const generateStaticPagesSitemap = (): MetadataRoute.Sitemap => {
 			},
 		})),
 	);
-}
+};
 
 const storyblokService = new StoryblokService();
 
@@ -93,7 +93,7 @@ const getArticlesInAlternativeLanguages = async () => {
 			return { lang, stories: res.success ? res.data : [] };
 		}),
 	);
-}
+};
 
 const STATIC_SITEMAP = generateStaticPagesSitemap();
 

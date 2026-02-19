@@ -61,7 +61,7 @@ export const generateMetadata = async ({ params }: CampaignPageProps) => {
 				}
 			: undefined;
 	return getMetadata(lang as WebsiteLanguage, 'website-campaign', campaignMetadata);
-}
+};
 
 export default async function Page({ params }: CampaignPageProps) {
 	const { lang, campaignId, region } = await params;

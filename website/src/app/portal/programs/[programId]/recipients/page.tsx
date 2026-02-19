@@ -30,4 +30,4 @@ const RecipientsProgramScopedDataLoader = async ({ params }: { params: Promise<{
 	const readOnly = recipientsResult.success ? recipientsResult.data.permission !== ProgramPermission.operator : true;
 
 	return <RecipientsTableClient rows={rows} error={error} programId={programId} readOnly={readOnly} />;
-}
+};

@@ -103,4 +103,4 @@ export const IncomeInput = ({ translations }: { translations: { buttonText: stri
 			</form>
 		</Form>
 	);
-}
+};

@@ -49,4 +49,4 @@ export const SDGGoals = async ({ lang }: DefaultParams) => {
 			</div>
 		</div>
 	);
-}
+};

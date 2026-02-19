@@ -16,7 +16,7 @@ export const createUserAction = async (input: UserCreateInput) => {
 	}
 
 	return result;
-}
+};
 
 export const updateUserAction = async (input: UserUpdateInput) => {
 	const session = await getAuthenticatedUserOrRedirect();
@@ -27,7 +27,7 @@ export const updateUserAction = async (input: UserUpdateInput) => {
 	}
 
 	return result;
-}
+};
 
 export const updateUserSelfAction = async (input: UserUpdateInput) => {
 	const session = await getAuthenticatedUserOrRedirect();
@@ -38,14 +38,14 @@ export const updateUserSelfAction = async (input: UserUpdateInput) => {
 	}
 
 	return result;
-}
+};
 
 export const getUserAction = async (userId: string) => {
 	const session = await getAuthenticatedUserOrRedirect();
 	return service.get(session.id, userId);
-}
+};
 
 export const getUserOptionsAction = async () => {
 	const session = await getAuthenticatedUserOrRedirect();
 	return service.getOptions(session.id);
-}
+};

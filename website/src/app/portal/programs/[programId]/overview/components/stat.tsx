@@ -7,4 +7,4 @@ export const Stat = ({ label, value }: StatProps) => {
 			<p className="font-medium">{value}</p>
 		</div>
 	);
-}
+};

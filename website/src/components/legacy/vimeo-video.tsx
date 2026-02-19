@@ -23,4 +23,4 @@ export const VimeoVideo = ({ videoId, videoOptions }: VimeoVideoProps) => {
 	}, [videoId, videoOptions]);
 
 	return <div ref={playerRef}></div>;
-}
+};

@@ -39,4 +39,4 @@ export const FilterForm = ({ labels, handleLabel, filterText }: FilterFormProps)
 			</Select>
 		</section>
 	);
-}
+};

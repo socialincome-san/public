@@ -43,4 +43,4 @@ export const mockStoryblokIfTestMode = () => {
 				)
 			: original(input, init); // normal fetch
 	}) as typeof fetch;
-}
+};

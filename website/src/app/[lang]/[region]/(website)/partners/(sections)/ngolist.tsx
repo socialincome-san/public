@@ -20,7 +20,7 @@ const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
 
 const getFlag = (abbreviation: string): React.ReactElement => {
 	return country_abbreviations_to_flag_map[abbreviation] ?? <SL_Flag className="h-5 w-5 rounded-full" />;
-}
+};
 export const ngos = ['aurora', 'jamil', 'reachout', 'equal_rights', 'united_polio', 'slaes', 'lizardearth', 'rainbo'];
 
 export const NgoList = async ({ lang, region }: DefaultParams) => {
@@ -90,4 +90,4 @@ export const NgoList = async ({ lang, region }: DefaultParams) => {
 			</div>
 		</div>
 	);
-}
+};

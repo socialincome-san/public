@@ -73,4 +73,4 @@ export const IssueClient = ({ title, issues, labels, tableHeader, filterText, li
 			)}
 		</section>
 	);
-}
+};

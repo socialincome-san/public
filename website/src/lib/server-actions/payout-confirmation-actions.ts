@@ -15,7 +15,7 @@ export const confirmPayoutAction = async (payoutId: string) => {
 	}
 
 	revalidatePath('/portal/monitoring/payout-confirmation');
-}
+};
 
 export const contestPayoutAction = async (payoutId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -27,4 +27,4 @@ export const contestPayoutAction = async (payoutId: string) => {
 	}
 
 	revalidatePath('/portal/monitoring/payout-confirmation');
-}
+};

@@ -58,4 +58,4 @@ export const PastRounds = async ({ lang }: DefaultParams) => {
 			</div>
 		</BaseContainer>
 	);
-}
+};

@@ -11,4 +11,4 @@ export const importExchangeRatesAction = async () => {
 	const result = await service.triggerImportAsAdmin(user.id);
 	revalidatePath('/portal/admin/exchange-rates');
 	return result;
-}
+};

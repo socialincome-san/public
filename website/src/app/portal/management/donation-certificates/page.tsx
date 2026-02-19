@@ -24,4 +24,4 @@ const DonationCertificatesDataLoader = async () => {
 		: [];
 
 	return <DonationCertificateTable error={error} rows={certificateRows} />;
-}
+};

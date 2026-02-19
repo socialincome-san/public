@@ -21,7 +21,7 @@ const FooterLink = ({ label, url, Icon, target = '_self' }: FooterLinkProps) => 
 			</Typography>
 		</Link>
 	);
-}
+};
 
 export default async function Footer({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({

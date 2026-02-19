@@ -36,7 +36,7 @@ export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 	const story = articleResponse.data;
 	const url = `https://socialincome.org/${lang}/journal/${story.slug}`;
 	return generateMetaDataForArticle(story, url);
-}
+};
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
 	return await storyblokService.getArticle(lang, slug);
@@ -50,7 +50,7 @@ const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, v
 			</Badge>
 		</Link>
 	);
-}
+};
 
 export default async function Page(props: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = (await props.params) as { slug: string; lang: WebsiteLanguage; region: WebsiteRegion };

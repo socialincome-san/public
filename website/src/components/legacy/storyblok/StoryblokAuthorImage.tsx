@@ -42,6 +42,6 @@ const StoryblokAuthorImage = (props: {
 			height={AUTHOR_IMAGE_TARGET_HEIGHT}
 		/>
 	);
-}
+};
 
 export default StoryblokAuthorImage;

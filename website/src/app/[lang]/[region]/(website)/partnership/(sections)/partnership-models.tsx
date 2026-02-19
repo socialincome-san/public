@@ -210,4 +210,4 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 			</div>
 		</div>
 	);
-}
+};

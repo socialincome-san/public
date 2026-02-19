@@ -53,4 +53,4 @@ export const ProgramSetupSuccess = ({ programId, publicUrl }: ProgramSetupSucces
 			</div>
 		</Card>
 	);
-}
+};

@@ -179,7 +179,7 @@ export const buildUpdateCandidateInput = (
 			},
 		},
 	};
-}
+};
 
 export const buildCreateCandidateInput = (
 	schema: CandidateFormSchema,
@@ -213,4 +213,4 @@ export const buildCreateCandidateInput = (
 			},
 		},
 	};
-}
+};

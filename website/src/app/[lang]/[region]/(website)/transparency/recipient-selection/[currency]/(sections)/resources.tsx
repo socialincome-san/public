@@ -46,4 +46,4 @@ export const Resources = async ({ lang, currency }: ResourcePageProps) => {
 			</div>
 		</div>
 	);
-}
+};

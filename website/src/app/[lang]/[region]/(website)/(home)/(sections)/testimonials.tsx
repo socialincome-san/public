@@ -46,4 +46,4 @@ export const Testimonials = async ({ lang }: DefaultParams) => {
 			/>
 		</BaseContainer>
 	);
-}
+};

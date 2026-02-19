@@ -26,7 +26,7 @@ export const StartPayoutProcessDialog = ({ open, setOpen }: { open: boolean; set
 
 	const setResult = (step: number, value: StepResult) => {
 		setResults((prev) => ({ ...prev, [step]: value }));
-	}
+	};
 
 	const steps = [
 		{
@@ -79,7 +79,7 @@ export const StartPayoutProcessDialog = ({ open, setOpen }: { open: boolean; set
 		} catch (e) {
 			setResult(step.id, e instanceof Error ? e.message : 'Unknown error');
 		}
-	}
+	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -132,4 +132,4 @@ export const StartPayoutProcessDialog = ({ open, setOpen }: { open: boolean; set
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

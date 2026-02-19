@@ -6,7 +6,7 @@ export const slugify = (value: string): string => {
 		.trim()
 		.replace(/[^a-z0-9]+/g, '-')
 		.replace(/^-+|-+$/g, '');
-}
+};
 
 export const formatCurrency = (value: number): string => {
 	return new Intl.NumberFormat('de-CH', {
@@ -14,7 +14,7 @@ export const formatCurrency = (value: number): string => {
 		currency: 'CHF',
 		maximumFractionDigits: 0,
 	}).format(value);
-}
+};
 
 export const formatCurrencyLocale = (
 	amount: number,
@@ -34,15 +34,15 @@ export const formatCurrencyLocale = (
 		const num = new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(amount);
 		return `${num} ${currency}`;
 	}
-}
+};
 
 export const humanize = (value: string): string => {
 	return value.replace(/_/g, ' ');
-}
+};
 
 export const titleCase = (value: string): string => {
 	return value.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ' ' + d.toUpperCase()));
-}
+};
 
 export const formatNumberLocale = (
 	value: number,
@@ -51,7 +51,7 @@ export const formatNumberLocale = (
 ): string => {
 	const { minimumFractionDigits = 0, maximumFractionDigits = 0 } = options;
 	return new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(value);
-}
+};
 
 export const formatDate = (date: Date | string | null | undefined, pattern = 'dd.MM.yyyy'): string => {
 	if (!date) {
@@ -63,4 +63,4 @@ export const formatDate = (date: Date | string | null | undefined, pattern = 'dd
 	} catch {
 		return '—';
 	}
-}
+};

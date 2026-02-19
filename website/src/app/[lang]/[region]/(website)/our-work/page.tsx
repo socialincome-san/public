@@ -10,7 +10,7 @@ import { Recipients } from './(sections)/recipients';
 export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-our-work');
-}
+};
 
 export default async function Page(props: DefaultPageProps) {
 	const { lang, region } = await props.params;

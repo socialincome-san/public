@@ -53,4 +53,4 @@ export const makeContributionsColumns = (): ColumnDef<ContributionTableViewRow>[
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

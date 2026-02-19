@@ -22,4 +22,4 @@ const CampaignsDataLoader = async () => {
 	const campaignRows: CampaignTableViewRow[] = campaignsResult.success ? campaignsResult.data.tableRows : [];
 
 	return <CampaignsTable rows={campaignRows} error={error} />;
-}
+};

@@ -43,4 +43,4 @@ export const Overview = async ({ lang }: DefaultParams) => {
 			<Typography className="w-full">{translator.t('section-2.text-5')}</Typography>
 		</BaseContainer>
 	);
-}
+};

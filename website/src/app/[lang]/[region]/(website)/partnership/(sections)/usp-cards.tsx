@@ -69,4 +69,4 @@ export const UspCards = async ({ lang }: DefaultParams) => {
 			</div>
 		</div>
 	);
-}
+};

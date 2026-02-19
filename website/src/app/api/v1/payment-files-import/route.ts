@@ -31,4 +31,4 @@ export const POST = async (request: NextRequest) => {
 		logger.alert(`Payment files import failed: ${error}`, { error }, { component: 'payment-files-import' });
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
-}
+};

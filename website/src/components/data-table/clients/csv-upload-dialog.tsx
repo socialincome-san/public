@@ -115,4 +115,4 @@ export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport 
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

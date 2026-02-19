@@ -39,4 +39,4 @@ export const makeDonationCertificateColumns = (): ColumnDef<DonationCertificateT
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 	];
-}
+};

@@ -22,4 +22,4 @@ const ContributorsDataLoader = async () => {
 	const rows: ContributorTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <ContributorsTableClient rows={rows} error={error} />;
-}
+};

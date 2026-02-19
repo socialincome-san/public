@@ -30,6 +30,6 @@ const Progress = ({ className, value = 0, variant = 'default', ...props }: Progr
 			/>
 		</ProgressPrimitive.Root>
 	);
-}
+};
 
 export { Progress };

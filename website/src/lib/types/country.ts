@@ -258,7 +258,7 @@ export const isValidCountryCode = (code: string): code is CountryCode => code in
 
 export const getCountryNameByCode = (code: CountryCode): string => {
 	return COUNTRY_NAMES[code];
-}
+};
 
 export const COUNTRY_OPTIONS = COUNTRY_CODES.map((code) => ({
 	code,

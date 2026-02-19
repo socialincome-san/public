@@ -31,4 +31,4 @@ const OrganizationMembersDataLoader = async () => {
 			makeColumns={makeOrganizationMemberColumns}
 		/>
 	);
-}
+};

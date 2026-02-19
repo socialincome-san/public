@@ -45,4 +45,4 @@ export const StripePaymentButton = ({ amount, intervalCount, lang, region, butto
 			{buttonText}
 		</Button>
 	);
-}
+};

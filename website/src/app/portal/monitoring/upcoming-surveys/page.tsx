@@ -31,4 +31,4 @@ const UpcomingSurveysDataLoader = async () => {
 			searchKeys={['name', 'recipientName']}
 		/>
 	);
-}
+};

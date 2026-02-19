@@ -28,4 +28,4 @@ export const PreviewMessage = () => {
 			</Typography>
 		</span>
 	);
-}
+};

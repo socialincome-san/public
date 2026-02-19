@@ -66,6 +66,6 @@ const Slider = ({
 			))}
 		</SliderPrimitive.Root>
 	);
-}
+};
 
 export { Slider };

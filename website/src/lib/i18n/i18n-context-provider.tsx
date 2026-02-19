@@ -55,7 +55,7 @@ const I18nUrlUpdater = () => {
 	}, [region, router, searchParamsString, setRegion]);
 
 	return null;
-}
+};
 
 export const I18nContextProvider = ({ children }: PropsWithChildren) => {
 	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
@@ -82,4 +82,4 @@ export const I18nContextProvider = ({ children }: PropsWithChildren) => {
 			{children}
 		</I18nContext.Provider>
 	);
-}
+};

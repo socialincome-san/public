@@ -34,4 +34,4 @@ export const makeOrganizationAdminColumns = (): ColumnDef<OrganizationTableViewR
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 	];
-}
+};

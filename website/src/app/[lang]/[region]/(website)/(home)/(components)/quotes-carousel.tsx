@@ -45,4 +45,4 @@ export const QuotesCarousel = (cardsObj: CarouselCardProps) => {
 			))}
 		</Carousel>
 	);
-}
+};

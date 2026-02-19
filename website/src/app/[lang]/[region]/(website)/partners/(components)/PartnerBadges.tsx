@@ -36,7 +36,7 @@ const SDGBadge = ({
 			</HoverCardContent>
 		</HoverCard>
 	);
-}
+};
 
 const FundraiserBadge = ({ fundRaiserTranslation }: FundRaiserBadgeType) => {
 	return (
@@ -46,6 +46,6 @@ const FundraiserBadge = ({ fundRaiserTranslation }: FundRaiserBadgeType) => {
 			</Typography>
 		</Badge>
 	);
-}
+};
 
 export { FundraiserBadge, SDGBadge };

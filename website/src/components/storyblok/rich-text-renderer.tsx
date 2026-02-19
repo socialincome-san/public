@@ -34,4 +34,4 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 			// Todo: Add blocks as soon as we have them ready in the Storyblok schema
 		},
 	});
-}
+};

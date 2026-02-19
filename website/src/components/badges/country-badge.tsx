@@ -14,4 +14,4 @@ export const CountryBadge = ({ country }: Props) => {
 			<span className="font-medium">{getCountryNameByCode(country)}</span>
 		</Badge>
 	);
-}
+};

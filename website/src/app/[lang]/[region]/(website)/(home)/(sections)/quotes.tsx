@@ -17,4 +17,4 @@ export const Quotes = async ({ lang }: DefaultParams) => {
 			<QuotesCarousel {...cards} />
 		</BaseContainer>
 	);
-}
+};

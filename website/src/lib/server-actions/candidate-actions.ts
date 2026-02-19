@@ -25,9 +25,12 @@ export const createCandidateAction = async (data: CandidateCreateInput) => {
 	}
 
 	return result;
-}
+};
 
-export const updateCandidateAction = async (updateInput: CandidateUpdateInput, nextPaymentPhoneNumber: string | null) => {
+export const updateCandidateAction = async (
+	updateInput: CandidateUpdateInput,
+	nextPaymentPhoneNumber: string | null,
+) => {
 	const actor = await getActorOrThrow();
 
 	const result = await candidateService.update(actor, updateInput, nextPaymentPhoneNumber);
@@ -39,7 +42,7 @@ export const updateCandidateAction = async (updateInput: CandidateUpdateInput, n
 	}
 
 	return result;
-}
+};
 
 export const deleteCandidateAction = async (candidateId: string) => {
 	const actor = await getActorOrThrow();
@@ -53,12 +56,12 @@ export const deleteCandidateAction = async (candidateId: string) => {
 	}
 
 	return result;
-}
+};
 
 export const getCandidateAction = async (candidateId: string) => {
 	const actor = await getActorOrThrow();
 	return await candidateService.get(actor, candidateId);
-}
+};
 
 export const getCandidateOptions = async () => {
 	const actor = await getActorOrThrow();
@@ -69,11 +72,11 @@ export const getCandidateOptions = async () => {
 	}
 
 	return { localPartners: { success: true, data: [] } };
-}
+};
 
 export const getCandidateCountAction = async (causes: Cause[], profiles: Profile[], countryId: string | null) => {
 	return candidateService.getCandidateCount(causes, profiles, countryId);
-}
+};
 
 export const importCandidatesCsvAction = async (file: File) => {
 	const actor = await getActorOrThrow();
@@ -87,4 +90,4 @@ export const importCandidatesCsvAction = async (file: File) => {
 	}
 
 	return result;
-}
+};

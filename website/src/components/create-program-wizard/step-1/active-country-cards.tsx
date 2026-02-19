@@ -15,7 +15,7 @@ const formatCountryStats = (programCount: number, recipientCount: number) => {
 	const recipientLabel = `${recipientCount} recipient${recipientCount !== 1 ? 's' : ''}`;
 
 	return `${programLabel} · ${recipientLabel}`;
-}
+};
 
 type Props = {
 	rows: ProgramCountryFeasibilityRow[];
@@ -48,4 +48,4 @@ export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }:
 			)}
 		</div>
 	);
-}
+};

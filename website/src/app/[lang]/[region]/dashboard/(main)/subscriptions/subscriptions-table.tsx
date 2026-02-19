@@ -49,4 +49,4 @@ export const SubscriptionsTable = async ({ lang }: { lang: WebsiteLanguage }) =>
 			}
 		/>
 	);
-}
+};

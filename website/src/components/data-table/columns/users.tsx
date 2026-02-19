@@ -46,4 +46,4 @@ export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

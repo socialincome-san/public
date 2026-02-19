@@ -37,4 +37,4 @@ export const PayoutStatusBadge = ({ status }: PayoutStatusBadgeProps) => {
 			{label}
 		</Badge>
 	);
-}
+};

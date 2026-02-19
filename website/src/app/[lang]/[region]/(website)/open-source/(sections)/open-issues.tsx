@@ -35,4 +35,4 @@ export const OpenIssues = async ({ lang }: DefaultParams) => {
 			filterText={filterText}
 		/>
 	);
-}
+};

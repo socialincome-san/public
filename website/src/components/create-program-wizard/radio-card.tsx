@@ -48,4 +48,4 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 			</div>
 		</label>
 	);
-}
+};

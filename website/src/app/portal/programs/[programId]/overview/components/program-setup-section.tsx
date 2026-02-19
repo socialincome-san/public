@@ -10,4 +10,4 @@ export const ProgramSetupSection = ({ programId, publicUrl }: ProgramSetupSectio
 			<ProgramSetupSuccess programId={programId} publicUrl={publicUrl} />
 		</div>
 	);
-}
+};

@@ -29,7 +29,7 @@ export const buildCreateContributorInput = (schema: ContributorFormSchema): Cont
 
 		...(addressInput && { address: addressInput }),
 	};
-}
+};
 
 export const buildUpdateContributorsInput = (
 	schema: ContributorFormSchema,
@@ -75,4 +75,4 @@ export const buildUpdateContributorsInput = (
 			},
 		},
 	};
-}
+};

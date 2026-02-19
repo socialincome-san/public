@@ -32,4 +32,4 @@ export const IndirectImpactNotice = ({ recipients }: Props) => {
 			</p>
 		</div>
 	);
-}
+};

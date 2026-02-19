@@ -77,4 +77,4 @@ export const UserPrograms = async ({ userId }: Props) => {
 			)}
 		</section>
 	);
-}
+};

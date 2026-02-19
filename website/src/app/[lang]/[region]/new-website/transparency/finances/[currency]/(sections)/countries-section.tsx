@@ -14,7 +14,7 @@ type CountriesSectionProps = {
 
 const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
-}
+};
 
 export const CountriesSection = ({ countries, exchangeRate, currency, lang }: CountriesSectionProps) => {
 	return (
@@ -46,4 +46,4 @@ export const CountriesSection = ({ countries, exchangeRate, currency, lang }: Co
 			</Card>
 		</section>
 	);
-}
+};

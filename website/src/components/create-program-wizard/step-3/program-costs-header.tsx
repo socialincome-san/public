@@ -45,4 +45,4 @@ export const ProgramCostsHeader = ({ totalBudget, monthlyCost, currency, onCurre
 			</Select>
 		</div>
 	);
-}
+};

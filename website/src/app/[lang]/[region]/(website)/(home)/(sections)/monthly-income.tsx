@@ -21,4 +21,4 @@ export const MonthlyIncome = async ({ lang }: DefaultParams) => {
 			<IncomeInput translations={{ buttonText: translator.t('section-3.cta') }} />
 		</BaseContainer>
 	);
-}
+};

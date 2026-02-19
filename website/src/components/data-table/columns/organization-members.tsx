@@ -33,4 +33,4 @@ export const makeOrganizationMemberColumns = (): ColumnDef<OrganizationMemberTab
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 	];
-}
+};

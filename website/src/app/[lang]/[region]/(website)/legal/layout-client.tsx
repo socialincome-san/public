@@ -22,7 +22,7 @@ const NavigationLink = ({ href, Icon, children, ...props }: PropsWithChildren<Na
 			</li>
 		</Link>
 	);
-}
+};
 
 const NavigationSectionTitle = ({ children }: PropsWithChildren) => {
 	return (
@@ -30,7 +30,7 @@ const NavigationSectionTitle = ({ children }: PropsWithChildren) => {
 			{children}
 		</Typography>
 	);
-}
+};
 
 type LayoutClientProps = {
 	params: DefaultParams;
@@ -101,4 +101,4 @@ export const LayoutClient = ({ params, translations, children }: PropsWithChildr
 			</div>
 		</Collapsible>
 	);
-}
+};

@@ -64,7 +64,7 @@ export const buildAddressInput = (contactFields: { [key: string]: FormField }) =
 		zip: contactFields.zip.value ?? '',
 		country,
 	};
-}
+};
 
 // Helper to build common contact fields for create/update
 export const buildCommonContactData = (contactFields: { [key: string]: FormField }) => {
@@ -78,7 +78,7 @@ export const buildCommonContactData = (contactFields: { [key: string]: FormField
 		callingName: contactFields.callingName.value || null,
 		language: contactFields.language.value || null,
 	};
-}
+};
 
 type DropdownItem = {
 	id: string;
@@ -92,4 +92,4 @@ export const getZodEnum = (items: DropdownItem[]) => {
 	}, {});
 
 	return object;
-}
+};

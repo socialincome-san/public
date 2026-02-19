@@ -293,4 +293,4 @@ export const SuccessForm = ({
 			</form>
 		</Form>
 	);
-}
+};

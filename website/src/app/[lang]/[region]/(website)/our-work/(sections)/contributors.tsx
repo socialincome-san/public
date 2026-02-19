@@ -73,4 +73,4 @@ export const Contributors = async ({ lang }: DefaultParams) => {
 			</div>
 		</BaseContainer>
 	);
-}
+};

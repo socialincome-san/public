@@ -11,7 +11,7 @@ import Team from './(sections)/team';
 export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-about-us');
-}
+};
 
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;

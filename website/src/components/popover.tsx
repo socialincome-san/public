@@ -6,11 +6,11 @@ import * as React from 'react';
 
 const Popover = ({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Root>) => {
 	return <PopoverPrimitive.Root data-slot="popover" {...props} />;
-}
+};
 
 const PopoverTrigger = ({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) => {
 	return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
-}
+};
 
 const PopoverContent = ({
 	className,
@@ -32,10 +32,10 @@ const PopoverContent = ({
 			/>
 		</PopoverPrimitive.Portal>
 	);
-}
+};
 
 const PopoverAnchor = ({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Anchor>) => {
 	return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />;
-}
+};
 
 export { Popover, PopoverContent, PopoverTrigger };

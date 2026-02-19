@@ -417,4 +417,4 @@ export const NavbarClient = (props: NavbarProps) => {
 			<MobileNavigation {...props} />
 		</nav>
 	);
-}
+};

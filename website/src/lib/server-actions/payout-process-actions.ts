@@ -16,7 +16,7 @@ export const generateRegistrationCsvAction = async () => {
 	}
 
 	return result.data;
-}
+};
 
 export const generatePayoutCsvAction = async (selectedDate: Date) => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -28,7 +28,7 @@ export const generatePayoutCsvAction = async (selectedDate: Date) => {
 	}
 
 	return result.data;
-}
+};
 
 export const previewCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -40,7 +40,7 @@ export const previewCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 	}
 
 	return result.data;
-}
+};
 
 export const generateCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 	const user = await getAuthenticatedUserOrThrow();
@@ -54,4 +54,4 @@ export const generateCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 	revalidatePath('/portal/delivery/make-payouts');
 
 	return result.data;
-}
+};

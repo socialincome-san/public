@@ -12,10 +12,10 @@ export const revalidate = 900;
 
 const getLinkedInUrl = (handle: string) => {
 	return `https://www.linkedin.com/in/${encodeURIComponent(handle)}`;
-}
+};
 const getGitHubUrl = (username: string) => {
 	return `https://github.com/${encodeURIComponent(username)}`;
-}
+};
 
 const storyblokService = new StoryblokService();
 
@@ -30,7 +30,7 @@ const getTotalArticlesInDefaultLanguage = async (
 
 	const res = await storyblokService.getArticleCountByAuthorForDefaultLang(authorId);
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
-}
+};
 
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;

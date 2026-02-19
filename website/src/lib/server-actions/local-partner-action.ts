@@ -14,7 +14,7 @@ export const createLocalPartnerAction = async (localPartner: LocalPartnerCreateI
 
 	revalidatePath('/portal/admin/local-partners');
 	return result;
-}
+};
 
 export const updateLocalPartnerAction = async (updateInput: LocalPartnerUpdateInput) => {
 	const actor = await getActorOrThrow();
@@ -28,9 +28,9 @@ export const updateLocalPartnerAction = async (updateInput: LocalPartnerUpdateIn
 	}
 
 	return result;
-}
+};
 
 export const getLocalPartnerAction = async (localPartnerId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	return localPartnerService.get(user.id, localPartnerId);
-}
+};

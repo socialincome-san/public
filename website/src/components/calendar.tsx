@@ -126,7 +126,7 @@ const Calendar = ({
 			{...props}
 		/>
 	);
-}
+};
 
 const CalendarDayButton = ({ className, day, modifiers, ...props }: React.ComponentProps<typeof DayButton>) => {
 	const defaultClassNames = getDefaultClassNames();
@@ -158,6 +158,6 @@ const CalendarDayButton = ({ className, day, modifiers, ...props }: React.Compon
 			{...props}
 		/>
 	);
-}
+};
 
 export { Calendar };

@@ -18,9 +18,13 @@ export const calculateTotalBudget = (
 
 	const totalBudget = recipients * payoutPerInterval * numberOfIntervals;
 	return totalBudget;
-}
+};
 
-export const calculateMonthlyCost = (recipients: number, payoutPerInterval: number, interval: PayoutInterval): number => {
+export const calculateMonthlyCost = (
+	recipients: number,
+	payoutPerInterval: number,
+	interval: PayoutInterval,
+): number => {
 	let monthlyCost: number;
 
 	if (interval === 'monthly') {
@@ -32,4 +36,4 @@ export const calculateMonthlyCost = (recipients: number, payoutPerInterval: numb
 	}
 
 	return monthlyCost;
-}
+};

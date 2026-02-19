@@ -32,4 +32,4 @@ export const SegmentedToggle = ({ value, onValueChange, options, className }: Se
 			))}
 		</ToggleGroupPrimitive.Root>
 	);
-}
+};

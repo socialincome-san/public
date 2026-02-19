@@ -25,4 +25,4 @@ export const CampaignStatusBadge = ({ status }: CampaignStatusBadgeProps) => {
 			{label}
 		</Badge>
 	);
-}
+};
