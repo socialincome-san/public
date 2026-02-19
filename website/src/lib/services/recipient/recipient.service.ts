@@ -71,20 +71,21 @@ export class RecipientService extends BaseService {
 					localPartner: recipient.localPartner,
 					contact: recipient.contact,
 
-					paymentInformation:
-						paymentInfoCreate && paymentPhoneNumber
-							? {
-									create: {
-										provider: paymentInfoCreate.provider,
-										code: paymentInfoCreate.code ?? null,
+					paymentInformation: paymentInfoCreate
+						? {
+								create: {
+									provider: paymentInfoCreate.provider,
+									code: paymentInfoCreate.code ?? null,
+									...(paymentPhoneNumber && {
 										phone: {
 											create: {
 												number: paymentPhoneNumber,
 											},
 										},
-									},
-								}
-							: undefined,
+									}),
+								},
+							}
+						: undefined,
 				};
 
 				const newRecipient = await tx.recipient.create({ data });
@@ -183,6 +184,8 @@ export class RecipientService extends BaseService {
 
 		const phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
 
+		const phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
+
 		const phoneChanged =
 			!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
@@ -192,6 +195,10 @@ export class RecipientService extends BaseService {
 				if (!firebaseResult.success) {
 					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
 				}
+			}
+
+			if (phoneRemoved) {
+				await this.firebaseAdminService.deleteByPhoneNumberIfExists(previousPaymentPhoneNumber);
 			}
 
 			if (phoneChanged) {
@@ -216,6 +223,10 @@ export class RecipientService extends BaseService {
 
 			if (phoneAdded && nextPaymentPhoneNumber) {
 				await this.firebaseAdminService.deleteByPhoneNumberIfExists(nextPaymentPhoneNumber);
+			}
+
+			if (phoneRemoved && previousPaymentPhoneNumber) {
+				await this.firebaseAdminService.createByPhoneNumber(previousPaymentPhoneNumber);
 			}
 
 			if (phoneChanged && previousPaymentPhoneNumber && nextPaymentPhoneNumber) {
