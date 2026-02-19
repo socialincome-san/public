@@ -5,8 +5,7 @@ import type { ReactNode } from 'react';
 
 export default async function PortalLayout({ children }: { children: ReactNode }) {
 	const sessions = await getCurrentSessionsOrRedirect();
-	if (!sessions.some((s) => s.type === 'user'))
-	{
+	if (!sessions.some((s) => s.type === 'user')) {
 		redirect('/login');
 	}
 

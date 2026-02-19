@@ -19,7 +19,9 @@ export const DonationForm = ({ costPerIntervalChf, programId }: DonationFormProp
 
 	const handleSubmit = async (formData: FormData) => {
 		const amountNum = Number(formData.get('amount'));
-		if (!Number.isFinite(amountNum) || amountNum < 1) {return;}
+		if (!Number.isFinite(amountNum) || amountNum < 1) {
+			return;
+		}
 
 		setSubmitting(true);
 		try {
