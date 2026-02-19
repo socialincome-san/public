@@ -33,24 +33,34 @@ export const AccountMenu = ({ sessions, scope }: Props) => {
 
 	switch (scope) {
 		case 'website':
-			if (hasUser) items.push({ href: '/portal', label: 'Go to portal', icon: Users });
-			if (hasContributor)
+			if (hasUser) {
+				items.push({ href: '/portal', label: 'Go to portal', icon: Users });
+			}
+			if (hasContributor) {
 				items.push({ href: '/dashboard/contributions', label: 'Go to dashboard', icon: LayoutDashboard });
-			if (hasLocalPartner)
+			}
+			if (hasLocalPartner) {
 				items.push({ href: '/partner-space/recipients', label: 'Go to partner space', icon: Building2 });
+			}
 			break;
 		case 'partner-space':
 			items.push({ href: '/partner-space/profile', label: 'Profile', icon: User });
-			if (hasUser) items.push({ href: '/portal', label: 'Go to portal', icon: Users });
-			if (hasContributor)
+			if (hasUser) {
+				items.push({ href: '/portal', label: 'Go to portal', icon: Users });
+			}
+			if (hasContributor) {
 				items.push({ href: '/dashboard/contributions', label: 'Go to dashboard', icon: LayoutDashboard });
+			}
 			break;
 		case 'dashboard':
 		default:
 			items.push({ href: '/dashboard/profile', label: 'Profile', icon: User });
-			if (hasUser) items.push({ href: '/portal', label: 'Go to portal', icon: Users });
-			if (hasLocalPartner)
+			if (hasUser) {
+				items.push({ href: '/portal', label: 'Go to portal', icon: Users });
+			}
+			if (hasLocalPartner) {
 				items.push({ href: '/partner-space/recipients', label: 'Go to partner space', icon: Building2 });
+			}
 			break;
 	}
 

@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export function DonationSuccessDialog() {
+export const DonationSuccessDialog = () => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -32,4 +32,4 @@ export function DonationSuccessDialog() {
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

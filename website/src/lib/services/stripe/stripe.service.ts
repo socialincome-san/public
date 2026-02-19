@@ -391,9 +391,9 @@ export class StripeService extends BaseService {
 			} = data;
 
 			const metadata: Record<string, string> = {};
-			if (campaignId) metadata.campaignId = campaignId;
-			if (accountId) metadata.accountId = accountId;
-			if (source) metadata.source = source;
+			if (campaignId) {metadata.campaignId = campaignId;}
+			if (accountId) {metadata.accountId = accountId;}
+			if (source) {metadata.source = source;}
 
 			const price = await this.stripe.prices.create({
 				active: true,

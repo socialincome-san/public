@@ -22,20 +22,20 @@ export const createStripeCheckoutAction = async (input: {
 	});
 };
 
-export async function createPortalProgramDonationCheckoutAction(input: {
+export const createPortalProgramDonationCheckoutAction = async (input: {
 	amount: number;
 	programId: string;
 	currency?: string;
 	intervalCount?: number;
 	recurring?: boolean;
-}) {
+}) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const stripe = new StripeService();
 
 	return stripe.createPortalProgramDonationCheckout(user.id, input);
-}
+};
 
-export async function updateContributorAfterCheckoutAction(input: UpdateContributorAfterCheckoutInput) {
+export const updateContributorAfterCheckoutAction = async (input: UpdateContributorAfterCheckoutInput) => {
 	const stripeService = new StripeService();
 	return stripeService.updateContributorAfterCheckout(input);
-}
+};

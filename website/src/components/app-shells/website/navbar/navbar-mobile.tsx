@@ -27,17 +27,17 @@ export const NavbarMobile = ({ lang, scope, sessions }: Props) => {
 	const menuLinks: { href: string; label: string }[] = [{ href: '/', label: translator?.t('metadata.home-link') ?? 'Home' }];
 
 	if (scope === 'website') {
-		if (hasUser) menuLinks.push({ href: '/portal', label: 'Go to portal' });
-		if (hasContributor) menuLinks.push({ href: '/dashboard/contributions', label: 'Go to dashboard' });
-		if (hasLocalPartner) menuLinks.push({ href: '/partner-space/recipients', label: 'Go to partner space' });
+		if (hasUser) {menuLinks.push({ href: '/portal', label: 'Go to portal' });}
+		if (hasContributor) {menuLinks.push({ href: '/dashboard/contributions', label: 'Go to dashboard' });}
+		if (hasLocalPartner) {menuLinks.push({ href: '/partner-space/recipients', label: 'Go to partner space' });}
 	} else {
 		menuLinks.push({
 			href: scope === 'partner-space' ? '/partner-space/profile' : '/dashboard/profile',
 			label: translator?.t('profile.link') ?? 'Profile',
 		});
-		if (hasUser) menuLinks.push({ href: '/portal', label: 'Go to portal' });
-		if (scope === 'partner-space' && hasContributor) menuLinks.push({ href: '/dashboard/contributions', label: 'Go to dashboard' });
-		if (scope === 'dashboard' && hasLocalPartner) menuLinks.push({ href: '/partner-space/recipients', label: 'Go to partner space' });
+		if (hasUser) {menuLinks.push({ href: '/portal', label: 'Go to portal' });}
+		if (scope === 'partner-space' && hasContributor) {menuLinks.push({ href: '/dashboard/contributions', label: 'Go to dashboard' });}
+		if (scope === 'dashboard' && hasLocalPartner) {menuLinks.push({ href: '/partner-space/recipients', label: 'Go to partner space' });}
 	}
 
 	return (
