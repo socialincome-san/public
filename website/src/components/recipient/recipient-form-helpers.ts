@@ -30,8 +30,8 @@ export function buildUpdateRecipientInput(
 		code: paymentInfoFields.code.value?.trim() || null,
 	};
 
-	const nextPaymentPhoneNumber = paymentInfoFields.phone.value ?? null;
-	const nextContactPhoneNumber = contactFields.phone.value ?? null;
+	const nextPaymentPhoneNumber = paymentInfoFields.phone.value?.trim() || null;
+	const nextContactPhoneNumber = contactFields.phone.value?.trim() || null;
 
 	const previousPaymentPhone = recipient.paymentInformation?.phone;
 	const previousContactPhone = recipient.contact.phone;
@@ -39,14 +39,13 @@ export function buildUpdateRecipientInput(
 	const previousPaymentPhoneNumber = previousPaymentPhone?.number ?? null;
 	const previousContactPhoneNumber = previousContactPhone?.number ?? null;
 
-	const paymentPhoneHasChanged = !!(nextPaymentPhoneNumber && nextPaymentPhoneNumber !== previousPaymentPhoneNumber);
-	const contactPhoneHasChanged = !!(nextContactPhoneNumber && nextContactPhoneNumber !== previousContactPhoneNumber);
+	const paymentPhoneHasChanged = (nextPaymentPhoneNumber ?? '') !== (previousPaymentPhoneNumber ?? '');
+	const contactPhoneHasChanged = (nextContactPhoneNumber ?? '') !== (previousContactPhoneNumber ?? '');
 
 	const previouslySharedPhoneRecord =
 		previousPaymentPhone?.id && previousContactPhone?.id && previousPaymentPhone.id === previousContactPhone.id;
 
-	let paymentPhoneWriteOperation: Prisma.PhoneUpdateOneRequiredWithoutPaymentInformationsNestedInput | undefined =
-		undefined;
+	let paymentPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutPaymentInformationsNestedInput | undefined = undefined;
 
 	let contactPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutContactsNestedInput | undefined = undefined;
 
@@ -126,6 +125,14 @@ export function buildUpdateRecipientInput(
 		}
 	}
 
+	if (contactPhoneHasChanged && !nextContactPhoneNumber) {
+		contactPhoneWriteOperation = { disconnect: true };
+	}
+
+	if (paymentPhoneHasChanged && !nextPaymentPhoneNumber) {
+		paymentPhoneWriteOperation = { disconnect: true };
+	}
+
 	const addressUpdateOperation = buildAddressInput(contactFields);
 
 	return {
@@ -142,9 +149,11 @@ export function buildUpdateRecipientInput(
 			upsert: {
 				create: {
 					...basePaymentInformation,
-					phone: {
-						create: {
-							number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
+					...(nextPaymentPhoneNumber ?? previousPaymentPhoneNumber) && {
+						phone: {
+							create: {
+								number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
+							},
 						},
 					},
 				},
@@ -195,7 +204,9 @@ export function buildCreateRecipientInput(
 			create: {
 				provider: paymentInfoFields.provider.value,
 				code: paymentInfoFields.code.value?.trim() || null,
-				phone: { create: { number: paymentInfoFields.phone.value } },
+				...(paymentInfoFields.phone.value?.trim() && {
+					phone: { create: { number: paymentInfoFields.phone.value!.trim() } },
+				}),
 			},
 		},
 		contact: {

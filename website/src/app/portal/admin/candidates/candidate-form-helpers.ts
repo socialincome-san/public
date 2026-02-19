@@ -27,11 +27,11 @@ export function buildUpdateCandidateInput(
 
 	const basePaymentInformation = {
 		provider: paymentInfoFields.provider.value,
-		code: paymentInfoFields.code.value,
+		code: paymentInfoFields.code.value?.trim() || null,
 	};
 
-	const nextPaymentPhoneNumber = paymentInfoFields.phone.value ?? null;
-	const nextContactPhoneNumber = contactFields.phone.value ?? null;
+	const nextPaymentPhoneNumber = paymentInfoFields.phone.value?.trim() || null;
+	const nextContactPhoneNumber = contactFields.phone.value?.trim() || null;
 
 	const previousPaymentPhone = candidate.paymentInformation?.phone;
 	const previousContactPhone = candidate.contact.phone;
@@ -39,14 +39,13 @@ export function buildUpdateCandidateInput(
 	const previousPaymentPhoneNumber = previousPaymentPhone?.number ?? null;
 	const previousContactPhoneNumber = previousContactPhone?.number ?? null;
 
-	const paymentPhoneHasChanged = !!(nextPaymentPhoneNumber && nextPaymentPhoneNumber !== previousPaymentPhoneNumber);
-	const contactPhoneHasChanged = !!(nextContactPhoneNumber && nextContactPhoneNumber !== previousContactPhoneNumber);
+	const paymentPhoneHasChanged = (nextPaymentPhoneNumber ?? '') !== (previousPaymentPhoneNumber ?? '');
+	const contactPhoneHasChanged = (nextContactPhoneNumber ?? '') !== (previousContactPhoneNumber ?? '');
 
 	const previouslySharedPhoneRecord =
 		previousPaymentPhone?.id && previousContactPhone?.id && previousPaymentPhone.id === previousContactPhone.id;
 
-	let paymentPhoneWriteOperation: Prisma.PhoneUpdateOneRequiredWithoutPaymentInformationsNestedInput | undefined =
-		undefined;
+	let paymentPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutPaymentInformationsNestedInput | undefined = undefined;
 	let contactPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutContactsNestedInput | undefined = undefined;
 
 	const willConvergeToSamePhone =
@@ -125,6 +124,14 @@ export function buildUpdateCandidateInput(
 		}
 	}
 
+	if (contactPhoneHasChanged && !nextContactPhoneNumber) {
+		contactPhoneWriteOperation = { disconnect: true };
+	}
+
+	if (paymentPhoneHasChanged && !nextPaymentPhoneNumber) {
+		paymentPhoneWriteOperation = { disconnect: true };
+	}
+
 	const addressUpdateOperation = buildAddressInput(contactFields);
 
 	return {
@@ -138,9 +145,11 @@ export function buildUpdateCandidateInput(
 			upsert: {
 				create: {
 					...basePaymentInformation,
-					phone: {
-						create: {
-							number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
+					...(nextPaymentPhoneNumber ?? previousPaymentPhoneNumber) && {
+						phone: {
+							create: {
+								number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
+							},
 						},
 					},
 				},
@@ -188,8 +197,10 @@ export function buildCreateCandidateInput(
 		paymentInformation: {
 			create: {
 				provider: paymentInfoFields.provider.value,
-				code: paymentInfoFields.code.value,
-				phone: { create: { number: paymentInfoFields.phone.value } },
+				code: paymentInfoFields.code.value?.trim() || null,
+				...(paymentInfoFields.phone.value?.trim() && {
+					phone: { create: { number: paymentInfoFields.phone.value!.trim() } },
+				}),
 			},
 		},
 		contact: {
