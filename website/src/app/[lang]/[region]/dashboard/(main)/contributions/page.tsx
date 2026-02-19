@@ -5,10 +5,11 @@ import { DefaultPageProps } from '../../..';
 import { ContributionsTable } from './contributions-table';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const { lang } = await params;
-	return (
-		<Suspense fallback={<SpinnerIcon />}>
-			<ContributionsTable lang={lang as WebsiteLanguage} />
-		</Suspense>
-	);
+  const { lang } = await params;
+
+  return (
+    <Suspense fallback={<SpinnerIcon />}>
+      <ContributionsTable lang={lang as WebsiteLanguage} />
+    </Suspense>
+  );
 }

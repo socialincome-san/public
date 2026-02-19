@@ -11,19 +11,19 @@ import { NextRequest, NextResponse } from 'next/server';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+  const recipientService = new RecipientService();
+  const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	if (!recipientResult.success) {
-		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
-	}
+  if (!recipientResult.success) {
+    return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
+  }
 
-	const payoutService = new PayoutService();
-	const payoutsResult = await payoutService.getByRecipientId(recipientResult.data.id);
+  const payoutService = new PayoutService();
+  const payoutsResult = await payoutService.getByRecipientId(recipientResult.data.id);
 
-	if (!payoutsResult.success) {
-		return new Response(payoutsResult.error, { status: 500 });
-	}
+  if (!payoutsResult.success) {
+    return new Response(payoutsResult.error, { status: 500 });
+  }
 
-	return NextResponse.json(payoutsResult.data, { status: 200 });
+  return NextResponse.json(payoutsResult.data, { status: 200 });
 });

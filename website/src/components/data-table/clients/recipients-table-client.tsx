@@ -13,86 +13,86 @@ import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
 
 type Props = {
-	rows: RecipientTableViewRow[];
-	error: string | null;
-	programId?: string;
-	readOnly?: boolean;
-	actorKind?: Actor['kind'];
+  rows: RecipientTableViewRow[];
+  error: string | null;
+  programId?: string;
+  readOnly?: boolean;
+  actorKind?: Actor['kind'];
 };
 
 export const RecipientsTableClient = ({ rows, error, programId, readOnly, actorKind = 'user' }: Props) => {
-	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
-	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
-	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
-	const [recipientError, setRecipientError] = useState<string | null>(null);
-	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
+  const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
+  const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
+  const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
+  const [recipientError, setRecipientError] = useState<string | null>(null);
+  const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 
-	const openCreateRecipientDialog = () => {
-		setRecipientError(null);
-		setSelectedRecipientId(undefined);
-		setIsRecipientReadOnly(readOnly ?? false);
-		setIsRecipientDialogOpen(true);
-	};
+  const openCreateRecipientDialog = () => {
+    setRecipientError(null);
+    setSelectedRecipientId(undefined);
+    setIsRecipientReadOnly(readOnly ?? false);
+    setIsRecipientDialogOpen(true);
+  };
 
-	const openEditRecipientDialog = (row: RecipientTableViewRow) => {
-		setRecipientError(null);
-		setSelectedRecipientId(row.id);
-		setIsRecipientReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
-		setIsRecipientDialogOpen(true);
-	};
+  const openEditRecipientDialog = (row: RecipientTableViewRow) => {
+    setRecipientError(null);
+    setSelectedRecipientId(row.id);
+    setIsRecipientReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
+    setIsRecipientDialogOpen(true);
+  };
 
-	const closeRecipientDialog = () => {
-		setIsRecipientDialogOpen(false);
-		setRecipientError(null);
-	};
+  const closeRecipientDialog = () => {
+    setIsRecipientDialogOpen(false);
+    setRecipientError(null);
+  };
 
-	return (
-		<>
-			<DataTable
-				title="Recipients"
-				error={error}
-				emptyMessage="No recipients found"
-				data={rows}
-				makeColumns={makeRecipientColumns}
-				hideLocalPartner={actorKind === 'local-partner'}
-				actions={
-					<div className="flex gap-2">
-						<Button disabled={readOnly} onClick={openCreateRecipientDialog}>
-							Add new recipient
-						</Button>
+  return (
+    <>
+      <DataTable
+        title="Recipients"
+        error={error}
+        emptyMessage="No recipients found"
+        data={rows}
+        makeColumns={makeRecipientColumns}
+        hideLocalPartner={actorKind === 'local-partner'}
+        actions={
+          <div className="flex gap-2">
+            <Button disabled={readOnly} onClick={openCreateRecipientDialog}>
+              Add new recipient
+            </Button>
 
-						<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
-							Upload CSV
-							<UploadIcon />
-						</Button>
-					</div>
-				}
-				onRowClick={openEditRecipientDialog}
-				searchKeys={['firstName', 'lastName', 'localPartnerName', 'programName']}
-			/>
+            <Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
+              Upload CSV
+              <UploadIcon />
+            </Button>
+          </div>
+        }
+        onRowClick={openEditRecipientDialog}
+        searchKeys={['firstName', 'lastName', 'localPartnerName', 'programName']}
+      />
 
-			<RecipientDialog
-				open={isRecipientDialogOpen}
-				onOpenChange={closeRecipientDialog}
-				recipientId={selectedRecipientId}
-				readOnly={isRecipientReadOnly}
-				programId={programId}
-				actorKind={actorKind}
-				errorMessage={recipientError}
-				onError={setRecipientError}
-			/>
+      <RecipientDialog
+        open={isRecipientDialogOpen}
+        onOpenChange={closeRecipientDialog}
+        recipientId={selectedRecipientId}
+        readOnly={isRecipientReadOnly}
+        programId={programId}
+        actorKind={actorKind}
+        errorMessage={recipientError}
+        onError={setRecipientError}
+      />
 
-			<CsvUploadDialog
-				open={isCsvUploadDialogOpen}
-				onOpenChange={setIsCsvUploadDialogOpen}
-				title="Upload recipients CSV"
-				template={{
-					headers: ['firstName', 'lastName', 'programId', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
-					filename: 'recipients-import-template.csv',
-				}}
-				onImport={(file) => importRecipientsCsvAction(file)}
-			/>
-		</>
-	);
+      <CsvUploadDialog
+        open={isCsvUploadDialogOpen}
+        onOpenChange={setIsCsvUploadDialogOpen}
+        title="Upload recipients CSV"
+        template={{
+          headers: ['firstName', 'lastName', 'programId', 'localPartnerId'],
+          exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
+          filename: 'recipients-import-template.csv',
+        }}
+        onImport={(file) => importRecipientsCsvAction(file)}
+      />
+    </>
+  );
 };

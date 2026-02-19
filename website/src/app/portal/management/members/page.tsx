@@ -6,29 +6,29 @@ import { OrganizationMemberTableViewRow } from '@/lib/services/organization/orga
 import { Suspense } from 'react';
 
 export default function OrganizationMembersPage() {
-	return (
-		<Suspense>
-			<OrganizationMembersDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <OrganizationMembersDataLoader />
+    </Suspense>
+  );
 }
 
 const OrganizationMembersDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new OrganizationService();
-	const result = await service.getOrganizationMembersTableView(user.id);
+  const service = new OrganizationService();
+  const result = await service.getOrganizationMembersTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: OrganizationMemberTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: OrganizationMemberTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return (
-		<DataTable
-			title="Organization Members"
-			error={error}
-			emptyMessage="No members found"
-			data={rows}
-			makeColumns={makeOrganizationMemberColumns}
-		/>
-	);
+  return (
+    <DataTable
+      title="Organization Members"
+      error={error}
+      emptyMessage="No members found"
+      data={rows}
+      makeColumns={makeOrganizationMemberColumns}
+    />
+  );
 };

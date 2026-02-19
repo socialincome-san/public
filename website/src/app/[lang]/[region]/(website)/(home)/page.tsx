@@ -11,21 +11,21 @@ import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
 
 export default async function Page(props: DefaultPageProps) {
-	const params = await props.params;
-	const { lang, region } = params;
+  const params = await props.params;
+  const { lang, region } = params;
 
-	return (
-		<div className="hero-video -mb-28 -mt-24 md:-mt-36">
-			<HeroVideo lang={lang} region={region} />
-			<Overview lang={lang} region={region} />
-			<MonthlyIncome lang={lang} region={region} />
-			<ExplainerVideo lang={lang} region={region} />
-			<MobileIllustration lang={lang} region={region} />
-			<FAQ lang={lang} region={region} />
-			<Approach lang={lang} region={region} />
-			<Quotes lang={lang} region={region} />
-			<SDGGoals lang={lang} region={region} />
-			<Testimonials lang={lang} region={region} />
-		</div>
-	);
+  return (
+    <div className="hero-video -mb-28 -mt-24 md:-mt-36">
+      <HeroVideo lang={lang} region={region} />
+      <Overview lang={lang} region={region} />
+      <MonthlyIncome lang={lang} region={region} />
+      <ExplainerVideo lang={lang} region={region} />
+      <MobileIllustration lang={lang} region={region} />
+      <FAQ lang={lang} region={region} />
+      <Approach lang={lang} region={region} />
+      <Quotes lang={lang} region={region} />
+      <SDGGoals lang={lang} region={region} />
+      <Testimonials lang={lang} region={region} />
+    </div>
+  );
 }

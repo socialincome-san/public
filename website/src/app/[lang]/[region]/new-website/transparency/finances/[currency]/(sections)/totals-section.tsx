@@ -4,42 +4,42 @@ import { TransparencyTotals } from '@/lib/services/transparency/transparency.typ
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type TotalsSectionProps = {
-	totals: TransparencyTotals;
-	exchangeRate: number;
-	currency: WebsiteCurrency;
-	lang: WebsiteLanguage;
+  totals: TransparencyTotals;
+  exchangeRate: number;
+  currency: WebsiteCurrency;
+  lang: WebsiteLanguage;
 };
 
 const formatNumber = (value: number, lang: WebsiteLanguage): string => {
-	return new Intl.NumberFormat(lang).format(value);
+  return new Intl.NumberFormat(lang).format(value);
 };
 
 export const TotalsSection = ({ totals, exchangeRate, currency, lang }: TotalsSectionProps) => {
-	const totalContributions = totals.totalContributionsChf * exchangeRate;
+  const totalContributions = totals.totalContributionsChf * exchangeRate;
 
-	return (
-		<section>
-			<h2 className="mb-6 text-2xl font-semibold">Overview</h2>
-			<div className="grid gap-6 md:grid-cols-3">
-				<Card>
-					<div className="space-y-2">
-						<p className="text-muted-foreground text-sm">Total Contributions</p>
-						<p className="text-3xl font-bold">{formatCurrencyLocale(totalContributions, currency, lang)}</p>
-					</div>
-				</Card>
-				<Card>
-					<div className="space-y-2">
-						<p className="text-muted-foreground text-sm">Total Contributors</p>
-						<p className="text-3xl font-bold">{formatNumber(totals.totalContributors, lang)}</p>
-					</div>
-				</Card>
-				<Card>
-					<div className="space-y-2">
-						<p className="text-muted-foreground text-sm">Total Contributions Count</p>
-						<p className="text-3xl font-bold">{formatNumber(totals.totalContributionsCount, lang)}</p>
-					</div>
-				</Card>
-			</div>
-		</section>
-	);
+  return (
+    <section>
+      <h2 className="mb-6 text-2xl font-semibold">Overview</h2>
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Total Contributions</p>
+            <p className="text-3xl font-bold">{formatCurrencyLocale(totalContributions, currency, lang)}</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Total Contributors</p>
+            <p className="text-3xl font-bold">{formatNumber(totals.totalContributors, lang)}</p>
+          </div>
+        </Card>
+        <Card>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Total Contributions Count</p>
+            <p className="text-3xl font-bold">{formatNumber(totals.totalContributionsCount, lang)}</p>
+          </div>
+        </Card>
+      </div>
+    </section>
+  );
 };

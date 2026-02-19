@@ -11,80 +11,80 @@ import { useState } from 'react';
 import ContributorsForm from './contributors-form';
 
 export default function ContributorsTableClient({
-	rows,
-	error,
-	readOnly,
+  rows,
+  error,
+  readOnly,
 }: {
-	rows: ContributorTableViewRow[];
-	error: string | null;
-	readOnly?: boolean;
+  rows: ContributorTableViewRow[];
+  error: string | null;
+  readOnly?: boolean;
 }) {
-	const [open, setOpen] = useState(false);
-	const [contributorId, setContributorId] = useState<string | undefined>();
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [contributorId, setContributorId] = useState<string | undefined>();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	const [rowReadOnly, setRowReadOnly] = useState(readOnly ?? false);
+  const [rowReadOnly, setRowReadOnly] = useState(readOnly ?? false);
 
-	const openEmptyForm = () => {
-		setContributorId(undefined);
-		setRowReadOnly(readOnly ?? false);
-		setErrorMessage(null);
-		setOpen(true);
-	};
+  const openEmptyForm = () => {
+    setContributorId(undefined);
+    setRowReadOnly(readOnly ?? false);
+    setErrorMessage(null);
+    setOpen(true);
+  };
 
-	const openEditForm = (row: ContributorTableViewRow) => {
-		setContributorId(row.id);
-		setRowReadOnly(row.permission === 'readonly' ? true : (readOnly ?? false));
-		setErrorMessage(null);
-		setOpen(true);
-	};
+  const openEditForm = (row: ContributorTableViewRow) => {
+    setContributorId(row.id);
+    setRowReadOnly(row.permission === 'readonly' ? true : (readOnly ?? false));
+    setErrorMessage(null);
+    setOpen(true);
+  };
 
-	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving contributor: ${error}`);
-		logger.error('Contributor Form Error', { error });
-	};
+  const onError = (error: unknown) => {
+    setErrorMessage(`Error saving contributor: ${error}`);
+    logger.error('Contributor Form Error', { error });
+  };
 
-	return (
-		<>
-			<DataTable
-				title="Contributors"
-				error={error}
-				emptyMessage="No contributors found"
-				data={rows}
-				makeColumns={makeContributorColumns}
-				actions={
-					<Button disabled={readOnly} onClick={openEmptyForm}>
-						Add new contributor
-					</Button>
-				}
-				onRowClick={openEditForm}
-				searchKeys={['firstName', 'lastName', 'email']}
-			/>
+  return (
+    <>
+      <DataTable
+        title="Contributors"
+        error={error}
+        emptyMessage="No contributors found"
+        data={rows}
+        makeColumns={makeContributorColumns}
+        actions={
+          <Button disabled={readOnly} onClick={openEmptyForm}>
+            Add new contributor
+          </Button>
+        }
+        onRowClick={openEditForm}
+        searchKeys={['firstName', 'lastName', 'email']}
+      />
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>
-							{rowReadOnly ? 'View Contributor' : contributorId ? 'Edit Contributor' : 'New Contributor'}
-						</DialogTitle>
-					</DialogHeader>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>
+              {rowReadOnly ? 'View Contributor' : contributorId ? 'Edit Contributor' : 'New Contributor'}
+            </DialogTitle>
+          </DialogHeader>
 
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
-						</Alert>
-					)}
+          {errorMessage && (
+            <Alert variant="destructive">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+            </Alert>
+          )}
 
-					<ContributorsForm
-						contributorId={contributorId}
-						readOnly={rowReadOnly}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
-		</>
-	);
+          <ContributorsForm
+            contributorId={contributorId}
+            readOnly={rowReadOnly}
+            onSuccess={() => setOpen(false)}
+            onCancel={() => setOpen(false)}
+            onError={onError}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 }

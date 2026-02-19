@@ -7,35 +7,37 @@ import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { revalidatePath } from 'next/cache';
 
 export const createPayoutAction = async (input: PayoutCreateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
+  const user = await getAuthenticatedUserOrThrow();
+  const service = new PayoutService();
 
-	const result = await service.create(user.id, input);
+  const result = await service.create(user.id, input);
 
-	revalidatePath('/portal/delivery/make-payouts');
-	return result;
+  revalidatePath('/portal/delivery/make-payouts');
+
+  return result;
 };
 
 export const updatePayoutAction = async (input: PayoutUpdateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
+  const user = await getAuthenticatedUserOrThrow();
+  const service = new PayoutService();
 
-	const result = await service.update(user.id, input);
+  const result = await service.update(user.id, input);
 
-	revalidatePath('/portal/delivery/make-payouts');
-	return result;
+  revalidatePath('/portal/delivery/make-payouts');
+
+  return result;
 };
 
 export const getPayoutAction = async (id: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
+  const user = await getAuthenticatedUserOrThrow();
+  const service = new PayoutService();
 
-	return service.get(user.id, id);
+  return service.get(user.id, id);
 };
 
 export const getPayoutRecipientOptionsAction = async () => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new RecipientService();
+  const user = await getAuthenticatedUserOrThrow();
+  const service = new RecipientService();
 
-	return service.getEditableRecipientOptions(user.id);
+  return service.getEditableRecipientOptions(user.id);
 };

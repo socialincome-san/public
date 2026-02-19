@@ -12,84 +12,84 @@ import { useState } from 'react';
 import { CandidateDialog } from './candidate-dialog';
 
 type Props = {
-	rows: CandidatesTableViewRow[];
-	error: string | null;
-	readOnly?: boolean;
-	actorKind?: Actor['kind'];
+  rows: CandidatesTableViewRow[];
+  error: string | null;
+  readOnly?: boolean;
+  actorKind?: Actor['kind'];
 };
 
 export const CandidatesTableClient = ({ rows, error, readOnly, actorKind = 'user' }: Props) => {
-	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
-	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
-	const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
-	const [candidateError, setCandidateError] = useState<string | null>(null);
-	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
+  const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
+  const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
+  const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
+  const [candidateError, setCandidateError] = useState<string | null>(null);
+  const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 
-	const openCreateDialog = () => {
-		setCandidateError(null);
-		setSelectedCandidateId(undefined);
-		setIsReadOnly(readOnly ?? false);
-		setIsCandidateDialogOpen(true);
-	};
+  const openCreateDialog = () => {
+    setCandidateError(null);
+    setSelectedCandidateId(undefined);
+    setIsReadOnly(readOnly ?? false);
+    setIsCandidateDialogOpen(true);
+  };
 
-	const openEditDialog = (_row: CandidatesTableViewRow) => {
-		setCandidateError(null);
-		setSelectedCandidateId(_row.id);
-		setIsReadOnly(readOnly ?? false);
-		setIsCandidateDialogOpen(true);
-	};
+  const openEditDialog = (_row: CandidatesTableViewRow) => {
+    setCandidateError(null);
+    setSelectedCandidateId(_row.id);
+    setIsReadOnly(readOnly ?? false);
+    setIsCandidateDialogOpen(true);
+  };
 
-	const closeCandidateDialog = () => {
-		setIsCandidateDialogOpen(false);
-		setCandidateError(null);
-	};
+  const closeCandidateDialog = () => {
+    setIsCandidateDialogOpen(false);
+    setCandidateError(null);
+  };
 
-	return (
-		<>
-			<DataTable
-				title="Candidate Pool"
-				error={error}
-				emptyMessage="No candidates found"
-				data={rows}
-				makeColumns={makeCandidateColumns}
-				hideLocalPartner={actorKind === 'local-partner'}
-				actions={
-					<div className="flex gap-2">
-						<Button disabled={readOnly} onClick={openCreateDialog}>
-							Add new candidate
-						</Button>
+  return (
+    <>
+      <DataTable
+        title="Candidate Pool"
+        error={error}
+        emptyMessage="No candidates found"
+        data={rows}
+        makeColumns={makeCandidateColumns}
+        hideLocalPartner={actorKind === 'local-partner'}
+        actions={
+          <div className="flex gap-2">
+            <Button disabled={readOnly} onClick={openCreateDialog}>
+              Add new candidate
+            </Button>
 
-						<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
-							Upload CSV
-							<UploadIcon />
-						</Button>
-					</div>
-				}
-				onRowClick={openEditDialog}
-				searchKeys={['firstName', 'lastName', 'localPartnerName']}
-			/>
+            <Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
+              Upload CSV
+              <UploadIcon />
+            </Button>
+          </div>
+        }
+        onRowClick={openEditDialog}
+        searchKeys={['firstName', 'lastName', 'localPartnerName']}
+      />
 
-			<CandidateDialog
-				open={isCandidateDialogOpen}
-				onOpenChange={closeCandidateDialog}
-				candidateId={selectedCandidateId}
-				readOnly={isReadOnly}
-				actorKind={actorKind}
-				errorMessage={candidateError}
-				onError={setCandidateError}
-			/>
+      <CandidateDialog
+        open={isCandidateDialogOpen}
+        onOpenChange={closeCandidateDialog}
+        candidateId={selectedCandidateId}
+        readOnly={isReadOnly}
+        actorKind={actorKind}
+        errorMessage={candidateError}
+        onError={setCandidateError}
+      />
 
-			<CsvUploadDialog
-				open={isCsvUploadDialogOpen}
-				onOpenChange={setIsCsvUploadDialogOpen}
-				title="Upload candidates CSV"
-				template={{
-					headers: ['firstName', 'lastName', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'local_partner_id_here'],
-					filename: 'candidates-import-template.csv',
-				}}
-				onImport={(file) => importCandidatesCsvAction(file)}
-			/>
-		</>
-	);
+      <CsvUploadDialog
+        open={isCsvUploadDialogOpen}
+        onOpenChange={setIsCsvUploadDialogOpen}
+        title="Upload candidates CSV"
+        template={{
+          headers: ['firstName', 'lastName', 'localPartnerId'],
+          exampleRow: ['John', 'Doe', 'local_partner_id_here'],
+          filename: 'candidates-import-template.csv',
+        }}
+        onImport={(file) => importCandidatesCsvAction(file)}
+      />
+    </>
+  );
 };

@@ -8,24 +8,25 @@ import { useState } from 'react';
 import GenerateDonationCertificatesDialog from './generate-donation-certificates-dialog';
 
 export const DonationCertificateTable = ({
-	rows,
-	error,
+  rows,
+  error,
 }: {
-	rows: DonationCertificateTableViewRow[];
-	error: string | null;
+  rows: DonationCertificateTableViewRow[];
+  error: string | null;
 }) => {
-	const [open, setOpen] = useState<boolean>(false);
-	return (
-		<>
-			<GenerateDonationCertificatesDialog open={open} setOpen={setOpen} />
-			<DataTable
-				title="Donation Certificates"
-				error={error}
-				emptyMessage="No donation certificates found"
-				data={rows}
-				makeColumns={makeDonationCertificateColumns}
-				actions={<Button onClick={() => setOpen(true)}>Generate Donation Certificates</Button>}
-			/>
-		</>
-	);
+  const [open, setOpen] = useState<boolean>(false);
+
+  return (
+    <>
+      <GenerateDonationCertificatesDialog open={open} setOpen={setOpen} />
+      <DataTable
+        title="Donation Certificates"
+        error={error}
+        emptyMessage="No donation certificates found"
+        data={rows}
+        makeColumns={makeDonationCertificateColumns}
+        actions={<Button onClick={() => setOpen(true)}>Generate Donation Certificates</Button>}
+      />
+    </>
+  );
 };

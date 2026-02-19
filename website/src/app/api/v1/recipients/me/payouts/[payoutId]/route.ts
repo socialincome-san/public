@@ -14,25 +14,25 @@ type Params = Promise<{ payoutId: string }>;
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {
-	const { payoutId } = await params;
+  const { payoutId } = await params;
 
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+  const recipientService = new RecipientService();
+  const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	if (!recipientResult.success) {
-		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
-	}
+  if (!recipientResult.success) {
+    return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
+  }
 
-	const payoutService = new PayoutService();
-	const payoutResult = await payoutService.getByRecipientAndId(recipientResult.data.id, payoutId);
+  const payoutService = new PayoutService();
+  const payoutResult = await payoutService.getByRecipientAndId(recipientResult.data.id, payoutId);
 
-	if (!payoutResult.success) {
-		return new Response(payoutResult.error, { status: 500 });
-	}
+  if (!payoutResult.success) {
+    return new Response(payoutResult.error, { status: 500 });
+  }
 
-	if (!payoutResult.data) {
-		return new Response(`Payout "${payoutId}" not found for recipient`, { status: 404 });
-	}
+  if (!payoutResult.data) {
+    return new Response(`Payout "${payoutId}" not found for recipient`, { status: 404 });
+  }
 
-	return NextResponse.json(payoutResult.data, { status: 200 });
+  return NextResponse.json(payoutResult.data, { status: 200 });
 });

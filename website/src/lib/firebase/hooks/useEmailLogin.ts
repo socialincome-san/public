@@ -11,123 +11,125 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 type UseEmailAuthenticationProps = {
-	lang: WebsiteLanguage;
-	onLoginSuccess?: (userId: string) => Promise<void>;
+  lang: WebsiteLanguage;
+  onLoginSuccess?: (userId: string) => Promise<void>;
 };
 
 export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationProps) => {
-	const { auth } = useAuth();
-	const [authListenerRegistered, setAuthListenerRegistered] = useState(false);
-	const [signingIn, setSigningIn] = useState(false);
-	const [sendingEmail, setSendingEmail] = useState(false);
-	const [emailSent, setEmailSent] = useState(false);
-	const translator = useTranslator(lang, 'website-login');
+  const { auth } = useAuth();
+  const [authListenerRegistered, setAuthListenerRegistered] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const translator = useTranslator(lang, 'website-login');
 
-	useEffect(() => {
-		const url = new URL(window.location.href);
-		const continueUrl = url.searchParams.get('continueUrl');
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const continueUrl = url.searchParams.get('continueUrl');
 
-		setSigningIn(continueUrl !== null || url.searchParams.get('email') !== null);
+    setSigningIn(continueUrl !== null || url.searchParams.get('email') !== null);
 
-		if (authListenerRegistered) {
-			return;
-		}
+    if (authListenerRegistered) {
+      return;
+    }
 
-		const unsubscribe = auth.onAuthStateChanged(() => {
-			setAuthListenerRegistered(true);
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      setAuthListenerRegistered(true);
 
-			if (!isSignInWithEmailLink(auth, url.toString())) {
-				return;
-			}
+      if (!isSignInWithEmailLink(auth, url.toString())) {
+        return;
+      }
 
-			const email = new URL(continueUrl ?? window.location.href).searchParams.get('email');
+      const email = new URL(continueUrl ?? window.location.href).searchParams.get('email');
 
-			if (email) {
-				void signIn(email);
-			} else {
-				translator && toast.error(translator.t('error.invalid-email'));
-			}
-		});
+      if (email) {
+        void signIn(email);
+      } else {
+        translator && toast.error(translator.t('error.invalid-email'));
+      }
+    });
 
-		return () => unsubscribe();
-	}, [auth, authListenerRegistered, translator]);
+    return () => unsubscribe();
+  }, [auth, authListenerRegistered, translator]);
 
-	const setServerSession = async (): Promise<boolean> => {
-		const user = auth.currentUser;
-		if (!user) {
-			return false;
-		}
+  const setServerSession = async (): Promise<boolean> => {
+    const user = auth.currentUser;
+    if (!user) {
+      return false;
+    }
 
-		try {
-			const idToken = await user.getIdToken(true);
+    try {
+      const idToken = await user.getIdToken(true);
 
-			const result = await createSessionAction(idToken);
-			return result.success;
-		} catch {
-			return false;
-		}
-	};
+      const result = await createSessionAction(idToken);
 
-	const signIn = async (email: string) => {
-		const url = window.location.href;
+      return result.success;
+    } catch {
+      return false;
+    }
+  };
 
-		try {
-			const { user } = await signInWithEmailLink(auth, email, url);
+  const signIn = async (email: string) => {
+    const url = window.location.href;
 
-			const ok = await setServerSession();
-			if (!ok) {
-				await signOut(auth).catch(() => {});
-				translator && toast.error(translator.t('error.unknown'));
-				return;
-			}
+    try {
+      const { user } = await signInWithEmailLink(auth, email, url);
 
-			if (onLoginSuccess) {
-				await onLoginSuccess(user.uid);
-			}
-		} catch (error: unknown) {
-			if (error instanceof FirebaseError) {
-				switch (error.code) {
-					case 'auth/user-not-found':
-						translator && toast.error(translator.t('error.user-not-found'));
-						break;
-					case 'auth/invalid-email':
-						translator && toast.error(translator.t('error.invalid-email'));
-						break;
-					default:
-						translator && toast.error(translator.t('error.unknown'));
-				}
-			} else {
-				translator && toast.error(translator.t('error.unknown'));
-			}
-		}
-	};
+      const ok = await setServerSession();
+      if (!ok) {
+        await signOut(auth).catch(() => {});
+        translator && toast.error(translator.t('error.unknown'));
 
-	const sendSignInEmail = async (email: string, targetUrl?: string) => {
-		setSendingEmail(true);
+        return;
+      }
 
-		const url = new URL(targetUrl || window.location.href);
-		url.searchParams.set('email', email);
+      if (onLoginSuccess) {
+        await onLoginSuccess(user.uid);
+      }
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case 'auth/user-not-found':
+            translator && toast.error(translator.t('error.user-not-found'));
+            break;
+          case 'auth/invalid-email':
+            translator && toast.error(translator.t('error.invalid-email'));
+            break;
+          default:
+            translator && toast.error(translator.t('error.unknown'));
+        }
+      } else {
+        translator && toast.error(translator.t('error.unknown'));
+      }
+    }
+  };
 
-		const actionCodeSettings = {
-			url: url.toString(),
-			handleCodeInApp: true,
-		};
+  const sendSignInEmail = async (email: string, targetUrl?: string) => {
+    setSendingEmail(true);
 
-		try {
-			await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-			setEmailSent(true);
-		} catch (error) {
-			logger.error('Error sending sign-in email', { error });
-			translator && toast.error(translator.t('error.unknown'));
-		} finally {
-			setSendingEmail(false);
-		}
-	};
+    const url = new URL(targetUrl || window.location.href);
+    url.searchParams.set('email', email);
 
-	return {
-		signingIn,
-		sendSignInEmail,
-		sendingEmail,
-		emailSent,
-	};
+    const actionCodeSettings = {
+      url: url.toString(),
+      handleCodeInApp: true,
+    };
+
+    try {
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      setEmailSent(true);
+    } catch (error) {
+      logger.error('Error sending sign-in email', { error });
+      translator && toast.error(translator.t('error.unknown'));
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
+  return {
+    signingIn,
+    sendSignInEmail,
+    sendingEmail,
+    emailSent,
+  };
 };

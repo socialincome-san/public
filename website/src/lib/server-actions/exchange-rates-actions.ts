@@ -5,10 +5,11 @@ import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.
 import { revalidatePath } from 'next/cache';
 
 export const importExchangeRatesAction = async () => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new ExchangeRateService();
+  const user = await getAuthenticatedUserOrThrow();
+  const service = new ExchangeRateService();
 
-	const result = await service.triggerImportAsAdmin(user.id);
-	revalidatePath('/portal/admin/exchange-rates');
-	return result;
+  const result = await service.triggerImportAsAdmin(user.id);
+  revalidatePath('/portal/admin/exchange-rates');
+
+  return result;
 };

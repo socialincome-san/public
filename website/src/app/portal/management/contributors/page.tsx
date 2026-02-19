@@ -5,21 +5,21 @@ import { Suspense } from 'react';
 import ContributorsTableClient from './contributors-table-client';
 
 export default function ContributorsPage() {
-	return (
-		<Suspense>
-			<ContributorsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <ContributorsDataLoader />
+    </Suspense>
+  );
 }
 
 const ContributorsDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new ContributorService();
-	const result = await service.getTableView(user.id);
+  const service = new ContributorService();
+  const result = await service.getTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: ContributorTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: ContributorTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <ContributorsTableClient rows={rows} error={error} />;
+  return <ContributorsTableClient rows={rows} error={error} />;
 };

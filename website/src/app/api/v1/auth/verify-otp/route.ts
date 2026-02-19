@@ -11,26 +11,26 @@ import { NextResponse } from 'next/server';
  * @openapi
  */
 export const POST = withAppCheck(async (request: Request) => {
-	let body: unknown;
+  let body: unknown;
 
-	try {
-		body = await request.json();
-	} catch {
-		return new Response('Invalid JSON body', { status: 400 });
-	}
+  try {
+    body = await request.json();
+  } catch {
+    return new Response('Invalid JSON body', { status: 400 });
+  }
 
-	const parsed = VerifyOtpRequest.safeParse(body);
+  const parsed = VerifyOtpRequest.safeParse(body);
 
-	if (!parsed.success) {
-		return new Response(parsed.error.message, { status: 400 });
-	}
+  if (!parsed.success) {
+    return new Response(parsed.error.message, { status: 400 });
+  }
 
-	const service = new TwilioService();
-	const result = await service.verifyOtp(parsed.data);
+  const service = new TwilioService();
+  const result = await service.verifyOtp(parsed.data);
 
-	if (!result.success) {
-		return new Response(result.error, { status: result.status ?? 400 });
-	}
+  if (!result.success) {
+    return new Response(result.error, { status: result.status ?? 400 });
+  }
 
-	return NextResponse.json(result.data, { status: 200 });
+  return NextResponse.json(result.data, { status: 200 });
 });

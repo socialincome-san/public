@@ -11,20 +11,20 @@ mockStoryblokIfTestMode();
  * Storyblok component registry mapping component names to React components.
  */
 export const storyblokComponents = {
-	page: PageContentType,
-	heroVideo: HeroVideoBlockServer,
-	text: TextBlock,
-	imageText: ImageTextBlock,
+  page: PageContentType,
+  heroVideo: HeroVideoBlockServer,
+  text: TextBlock,
+  imageText: ImageTextBlock,
 };
 
 /**
  * Initialize and return the Storyblok API client.
  */
 export const getStoryblokApi = () => {
-	return storyblokInit({
-		accessToken: process.env.STORYBLOK_PREVIEW_TOKEN,
-		use: [apiPlugin],
-		components: storyblokComponents,
-		enableFallbackComponent: true,
-	})();
+  return storyblokInit({
+    accessToken: process.env.STORYBLOK_PREVIEW_TOKEN,
+    use: [apiPlugin],
+    components: storyblokComponents,
+    enableFallbackComponent: true,
+  })();
 };

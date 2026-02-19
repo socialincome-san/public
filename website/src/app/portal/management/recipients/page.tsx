@@ -6,22 +6,22 @@ import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.t
 import { Suspense } from 'react';
 
 export default function RecipientsPage() {
-	return (
-		<Suspense>
-			<RecipientsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <RecipientsDataLoader />
+    </Suspense>
+  );
 }
 
 const RecipientsDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const recipientService = new RecipientService();
-	const result = await recipientService.getTableView(user.id);
+  const recipientService = new RecipientService();
+  const result = await recipientService.getTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
-	const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
+  const error = result.success ? null : result.error;
+  const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
+  const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
 
-	return <RecipientsTableClient rows={rows} error={error} readOnly={readOnly} />;
+  return <RecipientsTableClient rows={rows} error={error} readOnly={readOnly} />;
 };

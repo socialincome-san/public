@@ -5,21 +5,21 @@ import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.t
 import { Suspense } from 'react';
 
 export default function RecipientsPage() {
-	return (
-		<Suspense>
-			<RecipientsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <RecipientsDataLoader />
+    </Suspense>
+  );
 }
 
 const RecipientsDataLoader = async () => {
-	const partner = await getAuthenticatedLocalPartnerOrRedirect();
+  const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
-	const recipientService = new RecipientService();
-	const result = await recipientService.getTableViewByLocalPartnerId(partner.id);
+  const recipientService = new RecipientService();
+  const result = await recipientService.getTableViewByLocalPartnerId(partner.id);
 
-	const error = result.success ? null : result.error;
-	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <RecipientsTableClient rows={rows} error={error} readOnly={false} actorKind="local-partner" />;
+  return <RecipientsTableClient rows={rows} error={error} readOnly={false} actorKind="local-partner" />;
 };

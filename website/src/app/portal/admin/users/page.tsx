@@ -5,22 +5,22 @@ import { Suspense } from 'react';
 import UsersTable from './users-table';
 
 export default function UsersPage() {
-	return (
-		<Suspense>
-			<UsersDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <UsersDataLoader />
+    </Suspense>
+  );
 }
 
 const UsersDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+  const user = await getAuthenticatedUserOrRedirect();
+  await requireAdmin(user);
 
-	const service = new UserService();
-	const result = await service.getTableView(user.id);
+  const service = new UserService();
+  const result = await service.getTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <UsersTable rows={rows} error={error} />;
+  return <UsersTable rows={rows} error={error} />;
 };

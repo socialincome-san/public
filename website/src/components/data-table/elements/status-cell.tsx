@@ -13,27 +13,27 @@ import { SurveyStatusBadge } from '@/components/badges/survey-status-badge';
 type StatusVariant = 'contribution' | 'payout' | 'recipient' | 'survey' | 'campaign' | 'subscription' | 'boolean';
 
 type Props<TData, TValue> = CellType<TData, TValue> & {
-	variant: StatusVariant;
-	label?: string;
+  variant: StatusVariant;
+  label?: string;
 };
 
 export const StatusCell = <TData, TValue>({ ctx, variant, label }: Props<TData, TValue>) => {
-	const value = ctx.getValue();
+  const value = ctx.getValue();
 
-	switch (variant) {
-		case 'contribution':
-			return <ContributionStatusBadge status={value as ContributionStatus} />;
-		case 'payout':
-			return <PayoutStatusBadge status={value as PayoutStatus} />;
-		case 'survey':
-			return <SurveyStatusBadge status={value as SurveyStatus} />;
-		case 'campaign':
-			return <CampaignStatusBadge status={!!value} />;
-		case 'subscription':
-			return <SubscriptionStatusBadge status={value as SubscriptionStatus} label={label || (value as string)} />;
-		case 'boolean':
-			return <BooleanBadge value={!!value} />;
-		default:
-			return null;
-	}
+  switch (variant) {
+    case 'contribution':
+      return <ContributionStatusBadge status={value as ContributionStatus} />;
+    case 'payout':
+      return <PayoutStatusBadge status={value as PayoutStatus} />;
+    case 'survey':
+      return <SurveyStatusBadge status={value as SurveyStatus} />;
+    case 'campaign':
+      return <CampaignStatusBadge status={!!value} />;
+    case 'subscription':
+      return <SubscriptionStatusBadge status={value as SubscriptionStatus} label={label || (value as string)} />;
+    case 'boolean':
+      return <BooleanBadge value={!!value} />;
+    default:
+      return null;
+  }
 };

@@ -10,94 +10,99 @@ const SESSION_EXPIRES_IN_MS = SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 export class FirebaseSessionService extends BaseService {
-	private async createSessionCookie(idToken: string): Promise<ServiceResult<string>> {
-		try {
-			const cookie = await authAdmin.auth.createSessionCookie(idToken, {
-				expiresIn: SESSION_EXPIRES_IN_MS,
-			});
+  private async createSessionCookie(idToken: string): Promise<ServiceResult<string>> {
+    try {
+      const cookie = await authAdmin.auth.createSessionCookie(idToken, {
+        expiresIn: SESSION_EXPIRES_IN_MS,
+      });
 
-			const verified = await this.verifySessionCookie(cookie);
-			if (!verified.success) {
-				return this.resultFail('invalid-token');
-			}
+      const verified = await this.verifySessionCookie(cookie);
+      if (!verified.success) {
+        return this.resultFail('invalid-token');
+      }
 
-			return this.resultOk(cookie);
-		} catch {
-			return this.resultFail('invalid-token');
-		}
-	}
+      return this.resultOk(cookie);
+    } catch {
+      return this.resultFail('invalid-token');
+    }
+  }
 
-	private async setSessionCookie(value: string): Promise<void> {
-		const store = await cookies();
-		store.set({
-			name: SESSION_COOKIE_NAME,
-			value,
-			httpOnly: true,
-			secure: IS_PROD,
-			sameSite: 'lax',
-			path: '/',
-			maxAge: Math.floor(SESSION_EXPIRES_IN_MS / 1000),
-		});
-	}
+  private async setSessionCookie(value: string): Promise<void> {
+    const store = await cookies();
+    store.set({
+      name: SESSION_COOKIE_NAME,
+      value,
+      httpOnly: true,
+      secure: IS_PROD,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: Math.floor(SESSION_EXPIRES_IN_MS / 1000),
+    });
+  }
 
-	async createSessionAndSetCookie(idToken: string): Promise<ServiceResult<boolean>> {
-		if (!idToken) {
-			return this.resultFail('missing-id-token');
-		}
+  async createSessionAndSetCookie(idToken: string): Promise<ServiceResult<boolean>> {
+    if (!idToken) {
+      return this.resultFail('missing-id-token');
+    }
 
-		const result = await this.createSessionCookie(idToken);
-		if (!result.success) {
-			return result;
-		}
+    const result = await this.createSessionCookie(idToken);
+    if (!result.success) {
+      return result;
+    }
 
-		await this.setSessionCookie(result.data);
-		return this.resultOk(true);
-	}
+    await this.setSessionCookie(result.data);
 
-	async clearSessionCookie(): Promise<ServiceResult<boolean>> {
-		try {
-			const store = await cookies();
-			store.set({
-				name: SESSION_COOKIE_NAME,
-				value: '',
-				httpOnly: true,
-				secure: IS_PROD,
-				sameSite: 'lax',
-				path: '/',
-				maxAge: 0,
-			});
-			return this.resultOk(true);
-		} catch {
-			return this.resultFail('logout-failed');
-		}
-	}
+    return this.resultOk(true);
+  }
 
-	async readSessionCookie(): Promise<string | null> {
-		const store = await cookies();
-		return store.get(SESSION_COOKIE_NAME)?.value ?? null;
-	}
+  async clearSessionCookie(): Promise<ServiceResult<boolean>> {
+    try {
+      const store = await cookies();
+      store.set({
+        name: SESSION_COOKIE_NAME,
+        value: '',
+        httpOnly: true,
+        secure: IS_PROD,
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 0,
+      });
 
-	async verifySessionCookie(cookie: string): Promise<ServiceResult<DecodedIdToken>> {
-		try {
-			const decoded = await authAdmin.auth.verifySessionCookie(cookie, true);
-			return this.resultOk(decoded);
-		} catch (error) {
-			return this.resultFail(`Invalid or expired session cookie: ${JSON.stringify(error)}`);
-		}
-	}
+      return this.resultOk(true);
+    } catch {
+      return this.resultFail('logout-failed');
+    }
+  }
 
-	async getDecodedSessionFromRequest(request: Request): Promise<ServiceResult<DecodedIdToken>> {
-		const cookieHeader = request.headers.get('cookie');
-		if (!cookieHeader) {
-			return this.resultFail('Missing session cookie');
-		}
+  async readSessionCookie(): Promise<string | null> {
+    const store = await cookies();
 
-		const match = cookieHeader.match(/session=([^;]+)/);
-		if (!match) {
-			return this.resultFail('Missing session cookie');
-		}
+    return store.get(SESSION_COOKIE_NAME)?.value ?? null;
+  }
 
-		const cookie = match[1];
-		return this.verifySessionCookie(cookie);
-	}
+  async verifySessionCookie(cookie: string): Promise<ServiceResult<DecodedIdToken>> {
+    try {
+      const decoded = await authAdmin.auth.verifySessionCookie(cookie, true);
+
+      return this.resultOk(decoded);
+    } catch (error) {
+      return this.resultFail(`Invalid or expired session cookie: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async getDecodedSessionFromRequest(request: Request): Promise<ServiceResult<DecodedIdToken>> {
+    const cookieHeader = request.headers.get('cookie');
+    if (!cookieHeader) {
+      return this.resultFail('Missing session cookie');
+    }
+
+    const match = cookieHeader.match(/session=([^;]+)/);
+    if (!match) {
+      return this.resultFail('Missing session cookie');
+    }
+
+    const cookie = match[1];
+
+    return this.verifySessionCookie(cookie);
+  }
 }

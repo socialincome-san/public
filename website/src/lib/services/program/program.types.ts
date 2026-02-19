@@ -2,51 +2,51 @@ import { Cause, CountryCode, PayoutInterval, ProgramPermission } from '@/generat
 import { Profile } from '../candidate/candidate.types';
 
 export type ProgramWallet = {
-	id: string;
-	programName: string;
-	country: CountryCode;
-	payoutCurrency: string;
-	recipientsCount: number;
-	totalPayoutsSum: number;
-	permission: ProgramPermission;
-	isReadyForFirstPayouts: boolean;
+  id: string;
+  programName: string;
+  country: CountryCode;
+  payoutCurrency: string;
+  recipientsCount: number;
+  totalPayoutsSum: number;
+  permission: ProgramPermission;
+  isReadyForFirstPayouts: boolean;
 };
 
 export type ProgramWallets = {
-	wallets: ProgramWallet[];
+  wallets: ProgramWallet[];
 };
 
 export type ProgramOption = {
-	id: string;
-	name: string;
+  id: string;
+  name: string;
 };
 
 export type CreateProgramInput = {
-	countryId: string;
-	amountOfRecipientsForStart: number;
-	programDurationInMonths: number;
-	payoutPerInterval: number;
-	payoutCurrency: string;
-	payoutInterval: PayoutInterval;
-	targetCauses: Cause[];
-	targetProfiles: Profile[];
+  countryId: string;
+  amountOfRecipientsForStart: number;
+  programDurationInMonths: number;
+  payoutPerInterval: number;
+  payoutCurrency: string;
+  payoutInterval: PayoutInterval;
+  targetCauses: Cause[];
+  targetProfiles: Profile[];
 };
 
 export type PublicProgramDetails = {
-	programId: string;
-	programName: string;
-	countryIsoCode: string;
-	ownerOrganizationName: string | null;
-	operatorOrganizationName: string | null;
-	targetCauses: Cause[];
-	amountOfRecipientsForStart: number | null;
-	programDurationInMonths: number;
-	payoutPerInterval: number;
-	payoutCurrency: string;
-	payoutInterval: PayoutInterval;
-	recipientsCount: number;
-	totalPayoutsCount: number;
-	totalPayoutsSum: number;
-	completedSurveysCount: number;
-	startedAt: Date | null;
+  programId: string;
+  programName: string;
+  countryIsoCode: string;
+  ownerOrganizationName: string | null;
+  operatorOrganizationName: string | null;
+  targetCauses: Cause[];
+  amountOfRecipientsForStart: number | null;
+  programDurationInMonths: number;
+  payoutPerInterval: number;
+  payoutCurrency: string;
+  payoutInterval: PayoutInterval;
+  recipientsCount: number;
+  totalPayoutsCount: number;
+  totalPayoutsSum: number;
+  completedSurveysCount: number;
+  startedAt: Date | null;
 };

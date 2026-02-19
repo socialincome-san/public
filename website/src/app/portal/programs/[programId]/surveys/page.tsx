@@ -10,35 +10,35 @@ import { Suspense } from 'react';
 type Props = { params: Promise<{ programId: string }> };
 
 export default function SurveysPageProgramScoped({ params }: Props) {
-	return (
-		<Card>
-			<Suspense>
-				<SurveysProgramScopedDataLoader params={params} />
-			</Suspense>
-		</Card>
-	);
+  return (
+    <Card>
+      <Suspense>
+        <SurveysProgramScopedDataLoader params={params} />
+      </Suspense>
+    </Card>
+  );
 }
 
 const SurveysProgramScopedDataLoader = async ({ params }: { params: Promise<{ programId: string }> }) => {
-	const { programId } = await params;
-	const user = await getAuthenticatedUserOrRedirect();
+  const { programId } = await params;
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const surveyService = new SurveyService();
-	const surveysResult = await surveyService.getTableViewProgramScoped(user.id, programId);
+  const surveyService = new SurveyService();
+  const surveysResult = await surveyService.getTableViewProgramScoped(user.id, programId);
 
-	const error = surveysResult.success ? null : surveysResult.error;
-	const rows: SurveyTableViewRow[] = surveysResult.success ? surveysResult.data.tableRows : [];
+  const error = surveysResult.success ? null : surveysResult.error;
+  const rows: SurveyTableViewRow[] = surveysResult.success ? surveysResult.data.tableRows : [];
 
-	return (
-		<DataTable
-			title="Surveys"
-			error={error}
-			emptyMessage="No surveys found"
-			data={rows}
-			makeColumns={makeSurveyColumns}
-			actions={<Button>Add new survey</Button>}
-			hideProgramName
-			searchKeys={['name', 'recipientName']}
-		/>
-	);
+  return (
+    <DataTable
+      title="Surveys"
+      error={error}
+      emptyMessage="No surveys found"
+      data={rows}
+      makeColumns={makeSurveyColumns}
+      actions={<Button>Add new survey</Button>}
+      hideProgramName
+      searchKeys={['name', 'recipientName']}
+    />
+  );
 };

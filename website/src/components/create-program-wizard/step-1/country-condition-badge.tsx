@@ -6,41 +6,41 @@ import { AlertTriangleIcon, CheckIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 
 const CONDITION_UI: Record<
-	CountryCondition,
-	{
-		variant: 'verified' | 'destructive' | 'secondary';
-		label: string;
-		Icon: ComponentType<any>;
-	}
+  CountryCondition,
+  {
+    variant: 'verified' | 'destructive' | 'secondary';
+    label: string;
+    Icon: ComponentType<unknown>;
+  }
 > = {
-	[CountryCondition.MET]: {
-		variant: 'verified',
-		label: 'Condition met',
-		Icon: CheckIcon,
-	},
-	[CountryCondition.NOT_MET]: {
-		variant: 'destructive',
-		label: 'Conditions not met',
-		Icon: XCircleIcon,
-	},
-	[CountryCondition.RESTRICTIONS_APPLY]: {
-		variant: 'secondary',
-		label: 'Restrictions apply',
-		Icon: AlertTriangleIcon,
-	},
+  [CountryCondition.MET]: {
+    variant: 'verified',
+    label: 'Condition met',
+    Icon: CheckIcon,
+  },
+  [CountryCondition.NOT_MET]: {
+    variant: 'destructive',
+    label: 'Conditions not met',
+    Icon: XCircleIcon,
+  },
+  [CountryCondition.RESTRICTIONS_APPLY]: {
+    variant: 'secondary',
+    label: 'Restrictions apply',
+    Icon: AlertTriangleIcon,
+  },
 };
 
 type Props = {
-	condition: CountryCondition;
+  condition: CountryCondition;
 };
 
 export const CountryConditionBadge = ({ condition }: Props) => {
-	const { variant, label, Icon } = CONDITION_UI[condition];
+  const { variant, label, Icon } = CONDITION_UI[condition];
 
-	return (
-		<Badge variant={variant}>
-			<Icon className="mr-1 h-4 w-4" />
-			{label}
-		</Badge>
-	);
+  return (
+    <Badge variant={variant}>
+      <Icon className="mr-1 h-4 w-4" />
+      {label}
+    </Badge>
+  );
 };

@@ -7,38 +7,32 @@ import { importExchangeRatesAction } from '@/lib/server-actions/exchange-rates-a
 import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
 import { useState, useTransition } from 'react';
 
-export default function ExchangeRatesTable({
-	rows,
-	error,
-}: {
-	rows: ExchangeRatesTableViewRow[];
-	error: string | null;
-}) {
-	const [isLoading, startTransition] = useTransition();
-	const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+export default function ExchangeRatesTable({ rows, error }: { rows: ExchangeRatesTableViewRow[]; error: string | null }) {
+  const [isLoading, startTransition] = useTransition();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
-	const triggerImport = () => {
-		setErrorMessage(undefined);
-		startTransition(async () => {
-			const result = await importExchangeRatesAction();
-			if (!result.success) {
-				setErrorMessage(result.error);
-			}
-		});
-	};
+  const triggerImport = () => {
+    setErrorMessage(undefined);
+    startTransition(async () => {
+      const result = await importExchangeRatesAction();
+      if (!result.success) {
+        setErrorMessage(result.error);
+      }
+    });
+  };
 
-	return (
-		<DataTable
-			title="Exchange Rates for last month"
-			error={error || errorMessage}
-			emptyMessage="No exchange rates found"
-			data={rows}
-			makeColumns={makeExchangeRatesColumns}
-			actions={
-				<Button disabled={isLoading} onClick={triggerImport}>
-					{isLoading ? 'Importing...' : 'Import last month'}
-				</Button>
-			}
-		/>
-	);
+  return (
+    <DataTable
+      title="Exchange Rates for last month"
+      error={error || errorMessage}
+      emptyMessage="No exchange rates found"
+      data={rows}
+      makeColumns={makeExchangeRatesColumns}
+      actions={
+        <Button disabled={isLoading} onClick={triggerImport}>
+          {isLoading ? 'Importing...' : 'Import last month'}
+        </Button>
+      }
+    />
+  );
 }

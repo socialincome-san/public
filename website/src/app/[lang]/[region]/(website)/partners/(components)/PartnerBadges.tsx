@@ -4,48 +4,48 @@ import { Badge, HoverCard, HoverCardContent, HoverCardTrigger, Separator, Typogr
 import Image from 'next/image';
 
 const SDGBadge = ({
-	hoverCardOrgName,
-	sdgNumber,
-	translatorSdg,
-	translatorSdgTitle,
-	translatorSdgMission1,
-	translatorSdgMission2,
+  hoverCardOrgName,
+  sdgNumber,
+  translatorSdg,
+  translatorSdgTitle,
+  translatorSdgMission1,
+  translatorSdgMission2,
 }: SdgBadgeType) => {
-	return (
-		<HoverCard>
-			<HoverCardTrigger>
-				<Badge variant="interactive">
-					<Typography size="sm" weight="normal" className="text-inherit">
-						{translatorSdgTitle}
-					</Typography>
-				</Badge>
-			</HoverCardTrigger>
-			<HoverCardContent>
-				<div className="flex items-center">
-					<Image className="mr-1 h-4 w-4 rounded-full" src={SdgIcon} alt="SDG Icon" />
-					<Typography size="sm" weight="normal">
-						{translatorSdg} {sdgNumber?.toString() || ''}: {translatorSdgTitle}
-					</Typography>
-				</div>
-				<Separator className="bg-primary mb-3 mt-3 bg-opacity-20" />
-				<div>
-					<Typography size="sm" weight="normal">
-						{translatorSdgMission1} {hoverCardOrgName} {translatorSdgMission2}
-					</Typography>
-				</div>
-			</HoverCardContent>
-		</HoverCard>
-	);
+  return (
+    <HoverCard>
+      <HoverCardTrigger>
+        <Badge variant="interactive">
+          <Typography size="sm" weight="normal" className="text-inherit">
+            {translatorSdgTitle}
+          </Typography>
+        </Badge>
+      </HoverCardTrigger>
+      <HoverCardContent>
+        <div className="flex items-center">
+          <Image className="mr-1 h-4 w-4 rounded-full" src={SdgIcon} alt="SDG Icon" />
+          <Typography size="sm" weight="normal">
+            {translatorSdg} {sdgNumber?.toString() || ''}: {translatorSdgTitle}
+          </Typography>
+        </div>
+        <Separator className="mb-3 mt-3 bg-primary bg-opacity-20" />
+        <div>
+          <Typography size="sm" weight="normal">
+            {translatorSdgMission1} {hoverCardOrgName} {translatorSdgMission2}
+          </Typography>
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  );
 };
 
 const FundraiserBadge = ({ fundRaiserTranslation }: FundRaiserBadgeType) => {
-	return (
-		<Badge variant="interactive-accent">
-			<Typography size="sm" weight="normal" className="text-inherit">
-				{fundRaiserTranslation}
-			</Typography>
-		</Badge>
-	);
+  return (
+    <Badge variant="interactive-accent">
+      <Typography size="sm" weight="normal" className="text-inherit">
+        {fundRaiserTranslation}
+      </Typography>
+    </Badge>
+  );
 };
 
 export { FundraiserBadge, SDGBadge };

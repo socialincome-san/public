@@ -11,19 +11,19 @@ import { NextRequest, NextResponse } from 'next/server';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+  const recipientService = new RecipientService();
+  const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	if (!recipientResult.success) {
-		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
-	}
+  if (!recipientResult.success) {
+    return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
+  }
 
-	const surveyService = new SurveyService();
-	const surveysResult = await surveyService.getByRecipientId(recipientResult.data.id);
+  const surveyService = new SurveyService();
+  const surveysResult = await surveyService.getByRecipientId(recipientResult.data.id);
 
-	if (!surveysResult.success) {
-		return new Response(surveysResult.error, { status: 500 });
-	}
+  if (!surveysResult.success) {
+    return new Response(surveysResult.error, { status: 500 });
+  }
 
-	return NextResponse.json(surveysResult.data, { status: 200 });
+  return NextResponse.json(surveysResult.data, { status: 200 });
 });

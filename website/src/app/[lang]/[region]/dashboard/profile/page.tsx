@@ -6,22 +6,22 @@ import { getActiveSubscriptionAction } from '@/lib/server-actions/newsletter-act
 import { DefaultPageProps } from '../..';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const { lang } = await params;
-	const contributor = await getAuthenticatedContributorOrRedirect();
+  const { lang } = await params;
+  const contributor = await getAuthenticatedContributorOrRedirect();
 
-	const newsletterSubscription = await getActiveSubscriptionAction();
-	const newsletterSubscribed =
-		newsletterSubscription.success &&
-		newsletterSubscription.data !== null &&
-		newsletterSubscription.data.status === 'subscribed';
+  const newsletterSubscription = await getActiveSubscriptionAction();
+  const newsletterSubscribed =
+    newsletterSubscription.success &&
+    newsletterSubscription.data !== null &&
+    newsletterSubscription.data.status === 'subscribed';
 
-	return (
-		<Card>
-			<TranslatedProfileForm
-				session={contributor}
-				isNewsletterSubscribed={newsletterSubscribed}
-				language={lang as WebsiteLanguage}
-			/>
-		</Card>
-	);
+  return (
+    <Card>
+      <TranslatedProfileForm
+        session={contributor}
+        isNewsletterSubscribed={newsletterSubscribed}
+        language={lang as WebsiteLanguage}
+      />
+    </Card>
+  );
 }

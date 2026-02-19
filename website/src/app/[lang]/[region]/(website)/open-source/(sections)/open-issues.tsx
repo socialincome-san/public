@@ -5,34 +5,34 @@ import { getIssuesData } from '../(components)/get-issues';
 import { IssueClient } from '../(components)/issues-client';
 
 type Issues = {
-	title: string;
-	header: string;
-	link: string;
-	filter: string;
+  title: string;
+  header: string;
+  link: string;
+  filter: string;
 };
 
 export const OpenIssues = async ({ lang }: DefaultParams) => {
-	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
-		namespaces: ['website-open-source'],
-	});
+  const translator = await Translator.getInstance({
+    language: lang as WebsiteLanguage,
+    namespaces: ['website-open-source'],
+  });
 
-	const issuesMeta: Issues = translator.t('issues');
-	const title = issuesMeta.title;
-	const tableHeader = issuesMeta.header;
-	const linkText = issuesMeta.link;
-	const filterText = issuesMeta.filter;
+  const issuesMeta: Issues = translator.t('issues');
+  const title = issuesMeta.title;
+  const tableHeader = issuesMeta.header;
+  const linkText = issuesMeta.link;
+  const filterText = issuesMeta.filter;
 
-	const { issues, labels } = await getIssuesData();
+  const { issues, labels } = await getIssuesData();
 
-	return (
-		<IssueClient
-			title={title}
-			issues={issues}
-			labels={labels}
-			tableHeader={tableHeader}
-			linkText={linkText}
-			filterText={filterText}
-		/>
-	);
+  return (
+    <IssueClient
+      title={title}
+      issues={issues}
+      labels={labels}
+      tableHeader={tableHeader}
+      linkText={linkText}
+      filterText={filterText}
+    />
+  );
 };

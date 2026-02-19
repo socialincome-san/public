@@ -9,29 +9,29 @@ import { YourContributionsTableViewRow } from '@/lib/services/contribution/contr
 import Link from 'next/link';
 
 export const ContributionsTable = async ({ lang }: { lang: WebsiteLanguage }) => {
-	const contributor = await getAuthenticatedContributorOrRedirect();
+  const contributor = await getAuthenticatedContributorOrRedirect();
 
-	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
+  const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
-	const service = new ContributionService();
-	const result = await service.getYourContributionsTableView(contributor.id);
+  const service = new ContributionService();
+  const result = await service.getYourContributionsTableView(contributor.id);
 
-	const error = result.success ? null : result.error;
-	const rows: YourContributionsTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: YourContributionsTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return (
-		<DataTable
-			title={translator.t('sections.contributions.payments')}
-			error={error}
-			emptyMessage={translator.t('contributions.no-contributions')}
-			data={rows}
-			actions={
-				<Link href="/donate/individual">
-					<Button>{translator.t('contributions.new-contribution')}</Button>
-				</Link>
-			}
-			makeColumns={makeYourContributionsColumns}
-			lang={lang}
-		/>
-	);
+  return (
+    <DataTable
+      title={translator.t('sections.contributions.payments')}
+      error={error}
+      emptyMessage={translator.t('contributions.no-contributions')}
+      data={rows}
+      actions={
+        <Link href="/donate/individual">
+          <Button>{translator.t('contributions.new-contribution')}</Button>
+        </Link>
+      }
+      makeColumns={makeYourContributionsColumns}
+      lang={lang}
+    />
+  );
 };

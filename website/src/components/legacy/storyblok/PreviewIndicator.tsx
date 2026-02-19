@@ -2,6 +2,7 @@ import { PreviewMessage } from '@/components/legacy/storyblok/PreviewMessageAler
 import { draftMode } from 'next/headers';
 
 export const PreviewIndicator = async () => {
-	let isPreview = (await draftMode()).isEnabled;
-	return isPreview && <PreviewMessage />;
+  const isPreview = (await draftMode()).isEnabled;
+
+  return isPreview && <PreviewMessage />;
 };

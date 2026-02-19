@@ -1,0 +1,5 @@
+{
+	"singleQuote": true,
+	"printWidth": 125,
+	"plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"]
+}

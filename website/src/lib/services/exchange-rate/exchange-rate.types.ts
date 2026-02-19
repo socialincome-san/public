@@ -1,20 +1,20 @@
 import { Prisma } from '@/generated/prisma/client';
 
 export type ExchangeRatesTableViewRow = {
-	id: string;
-	currency: string;
-	rate: number;
-	timestamp: Date;
-	createdAt: Date;
+  id: string;
+  currency: string;
+  rate: number;
+  timestamp: Date;
+  createdAt: Date;
 };
 
 export type ExchangeRate = {
-	currency: string;
-	rate: number;
+  currency: string;
+  rate: number;
 };
 
 export type ExchangeRatesTableView = {
-	tableRows: ExchangeRatesTableViewRow[];
+  tableRows: ExchangeRatesTableViewRow[];
 };
 
 /**

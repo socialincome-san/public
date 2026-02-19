@@ -5,10 +5,11 @@ import { DefaultPageProps } from '../../..';
 import { SubscriptionsTable } from './subscriptions-table';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const { lang } = await params;
-	return (
-		<Suspense fallback={<SpinnerIcon />}>
-			<SubscriptionsTable lang={lang as WebsiteLanguage} />
-		</Suspense>
-	);
+  const { lang } = await params;
+
+  return (
+    <Suspense fallback={<SpinnerIcon />}>
+      <SubscriptionsTable lang={lang as WebsiteLanguage} />
+    </Suspense>
+  );
 }

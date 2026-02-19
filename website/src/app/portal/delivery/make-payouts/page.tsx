@@ -5,21 +5,21 @@ import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import { Suspense } from 'react';
 
 export default function PayoutsPage() {
-	return (
-		<Suspense>
-			<PayoutsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <PayoutsDataLoader />
+    </Suspense>
+  );
 }
 
 const PayoutsDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const payoutService = new PayoutService();
-	const result = await payoutService.getTableView(user.id);
+  const payoutService = new PayoutService();
+  const result = await payoutService.getTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: PayoutTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: PayoutTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <PayoutsTableClient rows={rows} error={error} />;
+  return <PayoutsTableClient rows={rows} error={error} />;
 };

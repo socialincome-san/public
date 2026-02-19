@@ -11,29 +11,29 @@ import { apiPlugin, storyblokInit } from '@storyblok/react';
 import { useEffect, useState } from 'react';
 
 storyblokInit({
-	accessToken: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN,
-	use: [apiPlugin],
-	components: storyblokComponents,
-	enableFallbackComponent: true,
+  accessToken: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN,
+  use: [apiPlugin],
+  components: storyblokComponents,
+  enableFallbackComponent: true,
 });
 
 type Props = {
-	initialStory: ISbStoryData<Page>;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+  initialStory: ISbStoryData<Page>;
+  lang: WebsiteLanguage;
+  region: WebsiteRegion;
 };
 
 export const StoryblokPreviewSyncer = ({ initialStory, lang, region }: Props) => {
-	const [story, setStory] = useState(initialStory);
+  const [story, setStory] = useState(initialStory);
 
-	useEffect(() => {
-		(async () => {
-			await loadStoryblokBridge();
-			registerStoryblokBridge({
-				onInput: (updatedStory) => setStory(updatedStory as ISbStoryData<Page>),
-			});
-		})();
-	}, []);
+  useEffect(() => {
+    (async () => {
+      await loadStoryblokBridge();
+      registerStoryblokBridge({
+        onInput: (updatedStory) => setStory(updatedStory as ISbStoryData<Page>),
+      });
+    })();
+  }, []);
 
-	return <PageContentType blok={story.content} lang={lang} region={region} />;
+  return <PageContentType blok={story.content} lang={lang} region={region} />;
 };

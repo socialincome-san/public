@@ -9,106 +9,103 @@ import { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 type PaymentTypeTranslations = {
-	title: string;
-	creditCard: string;
-	bankTransfer: string;
-	creditCardDescription: string;
-	bankTransferDescription: string;
+  title: string;
+  creditCard: string;
+  bankTransfer: string;
+  creditCardDescription: string;
+  bankTransferDescription: string;
 };
 
 type PaymentTypeSelectorProps = {
-	lang: WebsiteLanguage;
-	translations: PaymentTypeTranslations;
-	bankTransferForm: ReactNode;
-	hasContent?: boolean;
+  lang: WebsiteLanguage;
+  translations: PaymentTypeTranslations;
+  bankTransferForm: ReactNode;
+  hasContent?: boolean;
 };
 
 const PaymentTypeFormItem = ({
-	active,
-	title,
-	description,
-	paymentType,
-	hasContent,
+  active,
+  title,
+  description,
+  paymentType,
+  hasContent,
 }: {
-	active: boolean;
-	title: string;
-	description: string;
-	paymentType: PaymentType;
-	hasContent?: boolean;
+  active: boolean;
+  title: string;
+  description: string;
+  paymentType: PaymentType;
+  hasContent?: boolean;
 }) => {
-	const { setValue } = useFormContext();
+  const { setValue } = useFormContext();
 
-	return (
-		<FormItem>
-			<FormControl
-				className={classNames(
-					'flex flex-1 cursor-pointer flex-row border-2 p-4 focus:outline-none',
-					{ 'shadow-sm': !active },
-					{ 'border-accent bg-card-muted': active },
-					{ 'rounded-lg': !hasContent },
-					{ 'rounded-b-none rounded-t-lg border-b-0 pb-8': hasContent },
-				)}
-			>
-				<div onClick={() => setValue('paymentType', paymentType)}>
-					<div className="flex flex-1">
-						<div className="flex flex-col space-y-1">
-							<Typography weight="bold">{title}</Typography>
-							<Typography size="sm">{description}</Typography>
-						</div>
-					</div>
-					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')}
-						aria-hidden="true"
-					/>
-				</div>
-			</FormControl>
-		</FormItem>
-	);
+  return (
+    <FormItem>
+      <FormControl
+        className={classNames(
+          'flex flex-1 cursor-pointer flex-row border-2 p-4 focus:outline-none',
+          { 'shadow-sm': !active },
+          { 'border-accent bg-card-muted': active },
+          { 'rounded-lg': !hasContent },
+          { 'rounded-b-none rounded-t-lg border-b-0 pb-8': hasContent },
+        )}
+      >
+        <div onClick={() => setValue('paymentType', paymentType)}>
+          <div className="flex flex-1">
+            <div className="flex flex-col space-y-1">
+              <Typography weight="bold">{title}</Typography>
+              <Typography size="sm">{description}</Typography>
+            </div>
+          </div>
+          <CheckCircleIcon className={classNames(!active ? 'invisible' : '', 'h-5 w-5 text-accent')} aria-hidden="true" />
+        </div>
+      </FormControl>
+    </FormItem>
+  );
 };
 
 export const PaymentTypeSelector = ({ lang, translations, bankTransferForm }: PaymentTypeSelectorProps) => {
-	const form = useFormContext();
+  const form = useFormContext();
 
-	return (
-		<div className="flex flex-col">
-			<Typography size="lg" weight="medium" className="mb-4">
-				{translations.title}
-			</Typography>
-			<FormField
-				control={form.control}
-				name="paymentType"
-				render={({ field }) => {
-					const isActive = field.value === 'bank_transfer';
+  return (
+    <div className="flex flex-col">
+      <Typography size="lg" weight="medium" className="mb-4">
+        {translations.title}
+      </Typography>
+      <FormField
+        control={form.control}
+        name="paymentType"
+        render={({ field }) => {
+          const isActive = field.value === 'bank_transfer';
 
-					return (
-						<FormItem className="space-y-3">
-							<FormControl>
-								<RadioGroup
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-									className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
-								>
-									<PaymentTypeFormItem
-										active={field.value === PaymentTypes.CREDIT_CARD}
-										paymentType={PaymentTypes.CREDIT_CARD}
-										title={translations.creditCard}
-										description={translations.creditCardDescription}
-									/>
-									<PaymentTypeFormItem
-										active={isActive}
-										paymentType={PaymentTypes.BANK_TRANSFER}
-										title={translations.bankTransfer}
-										description={translations.bankTransferDescription}
-										hasContent={isActive}
-									/>
-								</RadioGroup>
-							</FormControl>
-							<FormMessage />
-							{field.value === 'bank_transfer' && bankTransferForm}
-						</FormItem>
-					);
-				}}
-			/>
-		</div>
-	);
+          return (
+            <FormItem className="space-y-3">
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
+                >
+                  <PaymentTypeFormItem
+                    active={field.value === PaymentTypes.CREDIT_CARD}
+                    paymentType={PaymentTypes.CREDIT_CARD}
+                    title={translations.creditCard}
+                    description={translations.creditCardDescription}
+                  />
+                  <PaymentTypeFormItem
+                    active={isActive}
+                    paymentType={PaymentTypes.BANK_TRANSFER}
+                    title={translations.bankTransfer}
+                    description={translations.bankTransferDescription}
+                    hasContent={isActive}
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+              {field.value === 'bank_transfer' && bankTransferForm}
+            </FormItem>
+          );
+        }}
+      />
+    </div>
+  );
 };

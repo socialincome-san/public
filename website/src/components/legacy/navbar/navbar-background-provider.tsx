@@ -3,19 +3,19 @@
 import { createContext, PropsWithChildren, useState } from 'react';
 
 export const NavbarBackgroundContext = createContext<{
-	backgroundColor: string | null;
-	setBackgroundColor: (background: string | null) => void;
+  backgroundColor: string | null;
+  setBackgroundColor: (background: string | null) => void;
 }>({
-	backgroundColor: null,
-	setBackgroundColor: () => {},
+  backgroundColor: null,
+  setBackgroundColor: () => {},
 });
 
 export const NavbarBackgroundProvider = ({ children }: PropsWithChildren) => {
-	const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
+  const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
 
-	return (
-		<NavbarBackgroundContext.Provider value={{ backgroundColor, setBackgroundColor }}>
-			{children}
-		</NavbarBackgroundContext.Provider>
-	);
+  return (
+    <NavbarBackgroundContext.Provider value={{ backgroundColor, setBackgroundColor }}>
+      {children}
+    </NavbarBackgroundContext.Provider>
+  );
 };

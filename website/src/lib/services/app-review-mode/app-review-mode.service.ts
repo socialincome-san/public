@@ -5,111 +5,112 @@ import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
 
 export class AppReviewModeService extends BaseService {
-	isEnabled(): boolean {
-		return process.env.APP_REVIEW_MODE_ENABLED === 'true';
-	}
+  isEnabled(): boolean {
+    return process.env.APP_REVIEW_MODE_ENABLED === 'true';
+  }
 
-	isReviewPhone(phone: string): boolean {
-		const reviewPhone = process.env.APP_REVIEW_PHONE_NUMBER;
-		if (!reviewPhone) {
-			return false;
-		}
-		return phone === reviewPhone || `+${phone}` === reviewPhone;
-	}
+  isReviewPhone(phone: string): boolean {
+    const reviewPhone = process.env.APP_REVIEW_PHONE_NUMBER;
+    if (!reviewPhone) {
+      return false;
+    }
 
-	shouldBypass(phone: string): boolean {
-		return this.isEnabled() && this.isReviewPhone(phone);
-	}
+    return phone === reviewPhone || `+${phone}` === reviewPhone;
+  }
 
-	getMockRecipient(phone: string): ServiceResult<RecipientWithPaymentInfo> {
-		if (!this.shouldBypass(phone)) {
-			return this.resultFail('App review mode not active for this phone');
-		}
+  shouldBypass(phone: string): boolean {
+    return this.isEnabled() && this.isReviewPhone(phone);
+  }
 
-		const recipient: RecipientWithPaymentInfo = {
-			id: 'app-review-recipient-tony',
-			legacyFirestoreId: null,
-			contactId: 'tony-stark-contact',
-			startDate: new Date('1970-05-29T00:00:00.000Z'),
-			suspendedAt: null,
-			suspensionReason: null,
-			successorName: 'Pepper Potts',
-			termsAccepted: true,
-			paymentInformationId: 'stark-payment-info',
-			programId: 'avengers-program',
-			localPartnerId: 'stark-industries-partner',
-			createdAt: now(),
-			updatedAt: now(),
+  getMockRecipient(phone: string): ServiceResult<RecipientWithPaymentInfo> {
+    if (!this.shouldBypass(phone)) {
+      return this.resultFail('App review mode not active for this phone');
+    }
 
-			localPartner: {
-				id: 'stark-industries-partner',
-				accountId: 'stark-industries-account',
-				legacyFirestoreId: null,
-				name: 'Stark Industries',
-				causes: [],
-				contactId: 'stark-industries-contact',
-				createdAt: now(),
-				updatedAt: now(),
-			},
+    const recipient: RecipientWithPaymentInfo = {
+      id: 'app-review-recipient-tony',
+      legacyFirestoreId: null,
+      contactId: 'tony-stark-contact',
+      startDate: new Date('1970-05-29T00:00:00.000Z'),
+      suspendedAt: null,
+      suspensionReason: null,
+      successorName: 'Pepper Potts',
+      termsAccepted: true,
+      paymentInformationId: 'stark-payment-info',
+      programId: 'avengers-program',
+      localPartnerId: 'stark-industries-partner',
+      createdAt: now(),
+      updatedAt: now(),
 
-			program: {
-				id: 'avengers-program',
-				name: 'Avengers Initiative',
-				amountOfRecipientsForStart: 6,
-				programDurationInMonths: 60,
-				payoutPerInterval: new Prisma.Decimal(5000000),
-				payoutCurrency: 'USD',
-				payoutInterval: PayoutInterval.monthly,
-				targetCauses: [],
-				countryId: 'usa',
-				country: {
-					isoCode: 'US',
-				},
-				createdAt: now(),
-				updatedAt: now(),
-			},
+      localPartner: {
+        id: 'stark-industries-partner',
+        accountId: 'stark-industries-account',
+        legacyFirestoreId: null,
+        name: 'Stark Industries',
+        causes: [],
+        contactId: 'stark-industries-contact',
+        createdAt: now(),
+        updatedAt: now(),
+      },
 
-			contact: {
-				id: 'tony-stark-contact',
-				firstName: 'Tony',
-				lastName: 'Stark',
-				callingName: 'Iron Man',
-				email: 'tony@starkindustries.com',
-				gender: Gender.male,
-				language: 'en',
-				dateOfBirth: new Date('1970-05-29'),
-				profession: 'Genius, billionaire, playboy, philanthropist',
-				addressId: 'stark-tower-address',
-				phoneId: 'tony-stark-phone',
-				isInstitution: false,
-				createdAt: now(),
-				updatedAt: now(),
-				phone: {
-					id: 'tony-stark-phone',
-					number: phone,
-					hasWhatsApp: true,
-					createdAt: now(),
-					updatedAt: now(),
-				},
-			},
+      program: {
+        id: 'avengers-program',
+        name: 'Avengers Initiative',
+        amountOfRecipientsForStart: 6,
+        programDurationInMonths: 60,
+        payoutPerInterval: new Prisma.Decimal(5000000),
+        payoutCurrency: 'USD',
+        payoutInterval: PayoutInterval.monthly,
+        targetCauses: [],
+        countryId: 'usa',
+        country: {
+          isoCode: 'US',
+        },
+        createdAt: now(),
+        updatedAt: now(),
+      },
 
-			paymentInformation: {
-				id: 'stark-payment-info',
-				code: 'IRONMAN',
-				provider: PaymentProvider.orange_money,
-				phoneId: 'ironman-payment-phone',
-				createdAt: now(),
-				updatedAt: now(),
-				phone: {
-					id: 'ironman-payment-phone',
-					number: phone,
-					hasWhatsApp: true,
-					createdAt: now(),
-					updatedAt: now(),
-				},
-			},
-		};
+      contact: {
+        id: 'tony-stark-contact',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        callingName: 'Iron Man',
+        email: 'tony@starkindustries.com',
+        gender: Gender.male,
+        language: 'en',
+        dateOfBirth: new Date('1970-05-29'),
+        profession: 'Genius, billionaire, playboy, philanthropist',
+        addressId: 'stark-tower-address',
+        phoneId: 'tony-stark-phone',
+        isInstitution: false,
+        createdAt: now(),
+        updatedAt: now(),
+        phone: {
+          id: 'tony-stark-phone',
+          number: phone,
+          hasWhatsApp: true,
+          createdAt: now(),
+          updatedAt: now(),
+        },
+      },
 
-		return this.resultOk(recipient);
-	}
+      paymentInformation: {
+        id: 'stark-payment-info',
+        code: 'IRONMAN',
+        provider: PaymentProvider.orange_money,
+        phoneId: 'ironman-payment-phone',
+        createdAt: now(),
+        updatedAt: now(),
+        phone: {
+          id: 'ironman-payment-phone',
+          number: phone,
+          hasWhatsApp: true,
+          createdAt: now(),
+          updatedAt: now(),
+        },
+      },
+    };
+
+    return this.resultOk(recipient);
+  }
 }

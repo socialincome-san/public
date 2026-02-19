@@ -1,11 +1,4 @@
-import {
-  Country,
-  PaymentProvider,
-  NetworkTechnology,
-  SanctionRegime,
-  Prisma
-} from '@/generated/prisma/client';
-
+import { Country, NetworkTechnology, PaymentProvider, Prisma, SanctionRegime } from '@/generated/prisma/client';
 
 export const countriesData: Country[] = [
   {
@@ -14,14 +7,14 @@ export const countriesData: Country[] = [
     isActive: false,
     microfinanceIndex: new Prisma.Decimal('6.05'),
     latestSurveyDate: new Date('2025-02-06'),
-    microfinanceSourceLinkId: "source-link-1",
+    microfinanceSourceLinkId: 'source-link-1',
     paymentProviders: [PaymentProvider.orange_money],
     populationCoverage: new Prisma.Decimal('98.2'),
     networkTechnology: NetworkTechnology.g3,
-    networkSourceLinkId: "source-link-3",
+    networkSourceLinkId: 'source-link-3',
     sanctions: [],
     createdAt: new Date('2024-03-12T12:00:00.000Z'),
-    updatedAt: null
+    updatedAt: null,
   },
   {
     id: 'country-angola',
@@ -36,7 +29,7 @@ export const countriesData: Country[] = [
     networkSourceLinkId: 'source-link-3',
     sanctions: [SanctionRegime.eu, SanctionRegime.us],
     createdAt: new Date('2024-03-12T12:00:00.000Z'),
-    updatedAt: null
+    updatedAt: null,
   },
   {
     id: 'country-burkina-faso',
@@ -51,7 +44,7 @@ export const countriesData: Country[] = [
     networkSourceLinkId: 'source-link-3',
     sanctions: [],
     createdAt: new Date('2024-03-12T12:00:00.000Z'),
-    updatedAt: null
+    updatedAt: null,
   },
   {
     id: 'country-tanzania',
@@ -66,7 +59,7 @@ export const countriesData: Country[] = [
     networkSourceLinkId: 'source-link-3',
     sanctions: [],
     createdAt: new Date('2024-03-12T12:00:00.000Z'),
-    updatedAt: null
+    updatedAt: null,
   },
   {
     id: 'country-ethiopia',
@@ -81,9 +74,9 @@ export const countriesData: Country[] = [
     networkSourceLinkId: 'source-link-3',
     sanctions: [SanctionRegime.us],
     createdAt: new Date('2024-03-12T12:00:00.000Z'),
-    updatedAt: null
+    updatedAt: null,
   },
-    {
+  {
     id: 'country-sierra-leone',
     isoCode: 'SL',
     isActive: true,
@@ -96,7 +89,6 @@ export const countriesData: Country[] = [
     networkSourceLinkId: 'source-link-3',
     sanctions: [SanctionRegime.us],
     createdAt: new Date('2024-03-12T12:00:00.000Z'),
-    updatedAt: null
+    updatedAt: null,
   },
-  
 ];

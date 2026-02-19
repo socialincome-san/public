@@ -3,9 +3,9 @@
 import { useEffect } from 'react';
 
 export const FacebookTracking = () => {
-	useEffect(() => {
-		if (process.env.NEXT_PUBLIC_FACEBOOK_TRACKING_ID) {
-			const fbeventsScript = `
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_FACEBOOK_TRACKING_ID) {
+      const fbeventsScript = `
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -16,13 +16,13 @@ export const FacebookTracking = () => {
         'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '${process.env.NEXT_PUBLIC_FACEBOOK_TRACKING_ID}');
         fbq('track', 'PageView');`;
-			const scriptElement = document.createElement('script');
-			scriptElement.textContent = fbeventsScript;
-			document.head.appendChild(scriptElement);
+      const scriptElement = document.createElement('script');
+      scriptElement.textContent = fbeventsScript;
+      document.head.appendChild(scriptElement);
 
-			console.debug('Enabled Facebook tracking');
-		}
-	}, []);
+      console.debug('Enabled Facebook tracking');
+    }
+  }, []);
 
-	return null;
+  return null;
 };

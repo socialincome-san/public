@@ -7,7 +7,7 @@ import type { CreateProgramInput } from '../services/program/program.types';
 const service = new ProgramService();
 
 export const createProgramAction = async (input: CreateProgramInput) => {
-	const user = await getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
-	return service.create(user.id, input);
+  return service.create(user.id, input);
 };

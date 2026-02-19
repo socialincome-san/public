@@ -9,51 +9,53 @@ const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
 const DEFAULT_REGION = 'int';
 
 const getLanguage = (slug: string | null) => {
-	if (slug) {
-		for (let lang of ALLOWED_LANGUAGES) {
-			if (slug.toLowerCase().startsWith(lang.toLowerCase())) {
-				return lang;
-			}
-		}
-	}
-	return DEFAULT_LANGUAGE;
+  if (slug) {
+    for (const lang of ALLOWED_LANGUAGES) {
+      if (slug.toLowerCase().startsWith(lang.toLowerCase())) {
+        return lang;
+      }
+    }
+  }
+
+  return DEFAULT_LANGUAGE;
 };
 
 const validateSecret = (secret: string | null) => {
-	return process.env.STORYBLOK_PREVIEW_SECRET && secret === process.env.STORYBLOK_PREVIEW_SECRET;
+  return process.env.STORYBLOK_PREVIEW_SECRET && secret === process.env.STORYBLOK_PREVIEW_SECRET;
 };
 
 const validateSlug = (slug: string | undefined | null) => {
-	return slug && ALLOWED_SLUGS_PREFIXES.some((value) => slug.toLowerCase().startsWith(value.toLowerCase()));
+  return slug && ALLOWED_SLUGS_PREFIXES.some((value) => slug.toLowerCase().startsWith(value.toLowerCase()));
 };
 
 const removeLanguagePrefix = (slug: string | null, language: string) => {
-	if (!slug) {
-		return slug;
-	}
-	const lowerSlug = slug.toLowerCase();
-	const lowerLang = language.toLowerCase();
-	if (lowerSlug === lowerLang || lowerSlug.startsWith(`${lowerLang}/`)) {
-		return slug.replace(new RegExp(`^${language}(/|$)`, 'i'), '');
-	}
-	return slug;
+  if (!slug) {
+    return slug;
+  }
+  const lowerSlug = slug.toLowerCase();
+  const lowerLang = language.toLowerCase();
+  if (lowerSlug === lowerLang || lowerSlug.startsWith(`${lowerLang}/`)) {
+    return slug.replace(new RegExp(`^${language}(/|$)`, 'i'), '');
+  }
+
+  return slug;
 };
 
 const enableDraftModeAndAdaptCookie = async () => {
-	(await draftMode()).enable();
+  (await draftMode()).enable();
 
-	const draft = (await cookies()).get(DRAFT_MODE_COOKIE_NAME);
-	const draftValue = draft?.value;
-	if (draftValue) {
-		(await cookies()).set({
-			name: DRAFT_MODE_COOKIE_NAME,
-			value: draftValue,
-			httpOnly: true,
-			path: '/',
-			secure: true,
-			sameSite: 'none',
-		});
-	}
+  const draft = (await cookies()).get(DRAFT_MODE_COOKIE_NAME);
+  const draftValue = draft?.value;
+  if (draftValue) {
+    (await cookies()).set({
+      name: DRAFT_MODE_COOKIE_NAME,
+      value: draftValue,
+      httpOnly: true,
+      path: '/',
+      secure: true,
+      sameSite: 'none',
+    });
+  }
 };
 
 /**
@@ -65,30 +67,30 @@ const enableDraftModeAndAdaptCookie = async () => {
  * GUI. Therefore, we enable the preview-mode by setting the Draft Mode cookie according to the official NextJS guidelines.
  */
 export const GET = async (request: Request) => {
-	const { searchParams } = new URL(request.url);
-	const secret = searchParams.get('secret');
-	const lang = getLanguage(searchParams.get('slug'));
-	const slug = removeLanguagePrefix(searchParams.get('slug'), lang);
+  const { searchParams } = new URL(request.url);
+  const secret = searchParams.get('secret');
+  const lang = getLanguage(searchParams.get('slug'));
+  const slug = removeLanguagePrefix(searchParams.get('slug'), lang);
 
-	if (!validateSlug(slug)) {
-		return new Response('Invalid slug', { status: 400 });
-	}
+  if (!validateSlug(slug)) {
+    return new Response('Invalid slug', { status: 400 });
+  }
 
-	if (!validateSecret(secret)) {
-		return new Response('Invalid token', { status: 401 });
-	}
-	await enableDraftModeAndAdaptCookie();
+  if (!validateSecret(secret)) {
+    return new Response('Invalid token', { status: 401 });
+  }
+  await enableDraftModeAndAdaptCookie();
 
-	const path = slug!.toLowerCase().startsWith(NEW_WEBSITE_SLUG) ? `${slug}/preview` : slug!;
+  const path = slug!.toLowerCase().startsWith(NEW_WEBSITE_SLUG) ? `${slug}/preview` : slug!;
 
-	const storyblokParams = new URLSearchParams();
-	for (const [key, value] of searchParams.entries()) {
-		if (key.startsWith('_storyblok')) {
-			storyblokParams.set(key, value);
-		}
-	}
-	const queryString = storyblokParams.toString();
-	const redirectUrl = `/${lang}/${DEFAULT_REGION}/${path}${queryString ? `?${queryString}` : ''}`;
+  const storyblokParams = new URLSearchParams();
+  for (const [key, value] of searchParams.entries()) {
+    if (key.startsWith('_storyblok')) {
+      storyblokParams.set(key, value);
+    }
+  }
+  const queryString = storyblokParams.toString();
+  const redirectUrl = `/${lang}/${DEFAULT_REGION}/${path}${queryString ? `?${queryString}` : ''}`;
 
-	redirect(redirectUrl, RedirectType.push);
+  redirect(redirectUrl, RedirectType.push);
 };

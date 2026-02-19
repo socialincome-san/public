@@ -5,111 +5,114 @@ import { UserService } from '../user/user.service';
 import { ExchangeRateImportService } from './exchange-rate-import.service';
 import { ExchangeRate, ExchangeRates, ExchangeRatesTableView, ExchangeRatesTableViewRow } from './exchange-rate.types';
 export class ExchangeRateService extends BaseService {
-	private userService = new UserService();
-	private importService = new ExchangeRateImportService();
+  private userService = new UserService();
+  private importService = new ExchangeRateImportService();
 
-	async getLatestRates(): Promise<ServiceResult<ExchangeRates>> {
-		try {
-			const result = await this.db.$transaction(async (tx) => {
-				const latest = await tx.exchangeRate.findFirst({
-					orderBy: { timestamp: 'desc' },
-					select: { timestamp: true },
-				});
+  async getLatestRates(): Promise<ServiceResult<ExchangeRates>> {
+    try {
+      const result = await this.db.$transaction(async (tx) => {
+        const latest = await tx.exchangeRate.findFirst({
+          orderBy: { timestamp: 'desc' },
+          select: { timestamp: true },
+        });
 
-				if (!latest) {
-					return null;
-				}
+        if (!latest) {
+          return null;
+        }
 
-				const latestRates = await tx.exchangeRate.findMany({
-					where: { timestamp: latest.timestamp },
-					select: { currency: true, rate: true },
-				});
+        const latestRates = await tx.exchangeRate.findMany({
+          where: { timestamp: latest.timestamp },
+          select: { currency: true, rate: true },
+        });
 
-				if (latestRates.length === 0) {
-					return null;
-				}
+        if (latestRates.length === 0) {
+          return null;
+        }
 
-				return Object.fromEntries(latestRates.map((r) => [r.currency, Number(r.rate)])) as ExchangeRates;
-			});
+        return Object.fromEntries(latestRates.map((r) => [r.currency, Number(r.rate)])) as ExchangeRates;
+      });
 
-			if (!result) {
-				return this.resultFail('No exchange rates found');
-			}
+      if (!result) {
+        return this.resultFail('No exchange rates found');
+      }
 
-			return this.resultOk(result);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch latest exchange rates: ${JSON.stringify(error)}`);
-		}
-	}
+      return this.resultOk(result);
+    } catch (error) {
+      this.logger.error(error);
 
-	async getLatestRateForCurrency(currency: string): Promise<ServiceResult<ExchangeRate>> {
-		try {
-			const result = await this.db.exchangeRate.findFirst({
-				where: { currency },
-				select: { currency: true, rate: true },
-				orderBy: { timestamp: 'desc' },
-			});
+      return this.resultFail(`Could not fetch latest exchange rates: ${JSON.stringify(error)}`);
+    }
+  }
 
-			if (!result) {
-				return this.resultFail('No exchange rate found');
-			}
+  async getLatestRateForCurrency(currency: string): Promise<ServiceResult<ExchangeRate>> {
+    try {
+      const result = await this.db.exchangeRate.findFirst({
+        where: { currency },
+        select: { currency: true, rate: true },
+        orderBy: { timestamp: 'desc' },
+      });
 
-			return this.resultOk({
-				...result,
-				rate: Number(result.rate),
-			});
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch latest exchange rate: ${JSON.stringify(error)}`);
-		}
-	}
+      if (!result) {
+        return this.resultFail('No exchange rate found');
+      }
 
-	async getTableView(userId: string): Promise<ServiceResult<ExchangeRatesTableView>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
+      return this.resultOk({
+        ...result,
+        rate: Number(result.rate),
+      });
+    } catch (error) {
+      this.logger.error(error);
 
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
+      return this.resultFail(`Could not fetch latest exchange rate: ${JSON.stringify(error)}`);
+    }
+  }
 
-		try {
-			const oneMonthAgo = now();
-			oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-			oneMonthAgo.setHours(0, 0, 0, 0);
-			const rates = await this.db.exchangeRate.findMany({
-				where: { timestamp: { gte: oneMonthAgo } },
-				select: {
-					id: true,
-					currency: true,
-					timestamp: true,
-					createdAt: true,
-					rate: true,
-				},
-				orderBy: { timestamp: 'desc' },
-			});
+  async getTableView(userId: string): Promise<ServiceResult<ExchangeRatesTableView>> {
+    const isAdminResult = await this.userService.isAdmin(userId);
 
-			const tableRows: ExchangeRatesTableViewRow[] = rates.map((rate) => ({
-				id: rate.id,
-				currency: rate.currency,
-				rate: Number(rate.rate),
-				timestamp: rate.timestamp,
-				createdAt: rate.createdAt,
-			}));
+    if (!isAdminResult.success) {
+      return this.resultFail(isAdminResult.error);
+    }
 
-			return this.resultOk({ tableRows });
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch exchange rates: ${JSON.stringify(error)}`);
-		}
-	}
+    try {
+      const oneMonthAgo = now();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      oneMonthAgo.setHours(0, 0, 0, 0);
+      const rates = await this.db.exchangeRate.findMany({
+        where: { timestamp: { gte: oneMonthAgo } },
+        select: {
+          id: true,
+          currency: true,
+          timestamp: true,
+          createdAt: true,
+          rate: true,
+        },
+        orderBy: { timestamp: 'desc' },
+      });
 
-	async triggerImportAsAdmin(userId: string): Promise<ServiceResult<void>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
+      const tableRows: ExchangeRatesTableViewRow[] = rates.map((rate) => ({
+        id: rate.id,
+        currency: rate.currency,
+        rate: Number(rate.rate),
+        timestamp: rate.timestamp,
+        createdAt: rate.createdAt,
+      }));
 
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
+      return this.resultOk({ tableRows });
+    } catch (error) {
+      this.logger.error(error);
 
-		return await this.importService.import();
-	}
+      return this.resultFail(`Could not fetch exchange rates: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async triggerImportAsAdmin(userId: string): Promise<ServiceResult<void>> {
+    const isAdminResult = await this.userService.isAdmin(userId);
+
+    if (!isAdminResult.success) {
+      return this.resultFail(isAdminResult.error);
+    }
+
+    return await this.importService.import();
+  }
 }

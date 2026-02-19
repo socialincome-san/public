@@ -9,72 +9,75 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function FinishLoginPage() {
-	const { auth } = useAuth();
-	const router = useRouter();
+  const { auth } = useAuth();
+  const router = useRouter();
 
-	const [status, setStatus] = useState<'checking' | 'signing-in' | 'error'>('checking');
+  const [status, setStatus] = useState<'checking' | 'signing-in' | 'error'>('checking');
 
-	useEffect(() => {
-		const run = async () => {
-			const url = window.location.href;
+  useEffect(() => {
+    const run = async () => {
+      const url = window.location.href;
 
-			if (!isSignInWithEmailLink(auth, url)) {
-				setStatus('error');
-				return;
-			}
+      if (!isSignInWithEmailLink(auth, url)) {
+        setStatus('error');
 
-			setStatus('signing-in');
+        return;
+      }
 
-			// only allow login from same device
-			const email = localStorage.getItem('loginEmail');
+      setStatus('signing-in');
 
-			if (!email) {
-				setStatus('error');
-				return;
-			}
+      // only allow login from same device
+      const email = localStorage.getItem('loginEmail');
 
-			try {
-				await signInWithEmailLink(auth, email, url);
+      if (!email) {
+        setStatus('error');
 
-				localStorage.removeItem('loginEmail');
+        return;
+      }
 
-				const user = auth.currentUser;
-				if (!user) {
-					throw new Error('No user after login');
-				}
+      try {
+        await signInWithEmailLink(auth, email, url);
 
-				const idToken = await user.getIdToken(true);
-				const result = await createSessionAction(idToken);
+        localStorage.removeItem('loginEmail');
 
-				if (!result.success) {
-					await signOut(auth);
-					setStatus('error');
-					return;
-				}
+        const user = auth.currentUser;
+        if (!user) {
+          throw new Error('No user after login');
+        }
 
-				router.replace(`/${NEW_WEBSITE_SLUG}/auth/my-account`);
-			} catch {
-				setStatus('error');
-			}
-		};
+        const idToken = await user.getIdToken(true);
+        const result = await createSessionAction(idToken);
 
-		void run();
-	}, [auth, router]);
+        if (!result.success) {
+          await signOut(auth);
+          setStatus('error');
 
-	if (status === 'checking') {
-		return <div className="flex min-h-screen items-center justify-center">Checking login…</div>;
-	}
+          return;
+        }
 
-	if (status === 'signing-in') {
-		return <div className="flex min-h-screen items-center justify-center">Signing you in…</div>;
-	}
+        router.replace(`/${NEW_WEBSITE_SLUG}/auth/my-account`);
+      } catch {
+        setStatus('error');
+      }
+    };
 
-	return (
-		<div className="flex min-h-screen flex-col items-center justify-center gap-4 text-center">
-			<p>Login failed.</p>
-			<Link className="underline" href="/">
-				Return home
-			</Link>
-		</div>
-	);
+    void run();
+  }, [auth, router]);
+
+  if (status === 'checking') {
+    return <div className="flex min-h-screen items-center justify-center">Checking login…</div>;
+  }
+
+  if (status === 'signing-in') {
+    return <div className="flex min-h-screen items-center justify-center">Signing you in…</div>;
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 text-center">
+      <p>Login failed.</p>
+      <Link className="underline" href="/">
+        Return home
+      </Link>
+    </div>
+  );
 }

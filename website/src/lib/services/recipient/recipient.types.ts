@@ -1,87 +1,87 @@
 import { Address, Gender, PaymentProvider, Phone, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
-	include: {
-		contact: {
-			include: {
-				phone: true;
-			};
-		};
-		paymentInformation: {
-			include: {
-				phone: true;
-			};
-		};
-		program: {
-			include: {
-				country: {
-					select: {
-						isoCode: true;
-					};
-				};
-			};
-		};
-		localPartner: true;
-	};
+  include: {
+    contact: {
+      include: {
+        phone: true;
+      };
+    };
+    paymentInformation: {
+      include: {
+        phone: true;
+      };
+    };
+    program: {
+      include: {
+        country: {
+          select: {
+            isoCode: true;
+          };
+        };
+      };
+    };
+    localPartner: true;
+  };
 }>;
 
 export type RecipientPayload = {
-	id: string;
-	startDate: Date | null;
-	suspendedAt: Date | null;
-	suspensionReason: string | null;
-	successorName: string | null;
-	termsAccepted: boolean;
-	localPartner: {
-		id: string;
-		name: string;
-	};
-	program: {
-		id: string;
-		name: string;
-	} | null;
-	contact: {
-		id: string;
-		firstName: string;
-		lastName: string;
-		callingName: string | null;
-		email: string | null;
-		gender: Gender | null;
-		language: string | null;
-		dateOfBirth: Date | null;
-		profession: string | null;
-		phone: Phone | null;
-		address: Address | null;
-	};
-	paymentInformation: {
-		id: string;
-		code: string | null;
-		provider: PaymentProvider | null;
-		phone: Phone | null;
-	} | null;
+  id: string;
+  startDate: Date | null;
+  suspendedAt: Date | null;
+  suspensionReason: string | null;
+  successorName: string | null;
+  termsAccepted: boolean;
+  localPartner: {
+    id: string;
+    name: string;
+  };
+  program: {
+    id: string;
+    name: string;
+  } | null;
+  contact: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    callingName: string | null;
+    email: string | null;
+    gender: Gender | null;
+    language: string | null;
+    dateOfBirth: Date | null;
+    profession: string | null;
+    phone: Phone | null;
+    address: Address | null;
+  };
+  paymentInformation: {
+    id: string;
+    code: string | null;
+    provider: PaymentProvider | null;
+    phone: Phone | null;
+  } | null;
 };
 
 export type RecipientTableViewRow = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	dateOfBirth: Date | null;
-	startDate: Date | null;
-	localPartnerName: string | null;
-	suspendedAt: Date | null;
-	suspensionReason: string | null;
-	programId: string | null;
-	programName: string | null;
-	payoutsReceived: number;
-	payoutsTotal: number;
-	payoutsProgressPercent: number;
-	createdAt: Date;
-	permission: ProgramPermission;
+  id: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date | null;
+  startDate: Date | null;
+  localPartnerName: string | null;
+  suspendedAt: Date | null;
+  suspensionReason: string | null;
+  programId: string | null;
+  programName: string | null;
+  payoutsReceived: number;
+  payoutsTotal: number;
+  payoutsProgressPercent: number;
+  createdAt: Date;
+  permission: ProgramPermission;
 };
 
 export type RecipientTableView = {
-	tableRows: RecipientTableViewRow[];
-	permission: ProgramPermission;
+  tableRows: RecipientTableViewRow[];
+  permission: ProgramPermission;
 };
 
 export type RecipientCreateInput = Prisma.RecipientCreateInput;
@@ -89,6 +89,6 @@ export type RecipientUpdateInput = Prisma.RecipientUpdateInput;
 export type RecipientPrismaUpdateInput = Prisma.RecipientUpdateInput;
 
 export type RecipientOption = {
-	id: string;
-	fullName: string;
+  id: string;
+  fullName: string;
 };

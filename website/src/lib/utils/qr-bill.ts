@@ -7,8 +7,8 @@
  */
 
 import {
-	CONTRIBUTION_REFERENCE_ID_LENGTH,
-	CONTRIBUTOR_REFERENCE_ID_LENGTH,
+  CONTRIBUTION_REFERENCE_ID_LENGTH,
+  CONTRIBUTOR_REFERENCE_ID_LENGTH,
 } from '@/lib/services/bank-transfer/bank-transfer-config';
 import { SwissQRBill, SwissQRCode } from 'swissqrbill/svg';
 import { Data } from 'swissqrbill/types';
@@ -19,15 +19,15 @@ import { Data } from 'swissqrbill/types';
  * @returns The check digit (0-9)
  */
 const calculateCheckDigit = (reference: string): number => {
-	const weights = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
-	let carry = 0;
+  const weights = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
+  let carry = 0;
 
-	for (let i = 0; i < reference.length; i++) {
-		const digit = parseInt(reference[i], 10);
-		carry = weights[(carry + digit) % 10];
-	}
+  for (let i = 0; i < reference.length; i++) {
+    const digit = parseInt(reference[i], 10);
+    carry = weights[(carry + digit) % 10];
+  }
 
-	return (10 - carry) % 10;
+  return (10 - carry) % 10;
 };
 
 /**
@@ -37,51 +37,51 @@ const calculateCheckDigit = (reference: string): number => {
  * @returns The complete QR bill reference with check digit
  */
 const generateQrBillReference = (contributorCreatedAt: string, contributionCreatedAt: string): string => {
-	if (contributorCreatedAt.length > CONTRIBUTOR_REFERENCE_ID_LENGTH) {
-		throw new Error('contributorCreatedAt too long');
-	}
-	if (contributionCreatedAt.length > CONTRIBUTION_REFERENCE_ID_LENGTH) {
-		throw new Error('contributionCreatedAt too long, should be timestamp in seconds');
-	}
+  if (contributorCreatedAt.length > CONTRIBUTOR_REFERENCE_ID_LENGTH) {
+    throw new Error('contributorCreatedAt too long');
+  }
+  if (contributionCreatedAt.length > CONTRIBUTION_REFERENCE_ID_LENGTH) {
+    throw new Error('contributionCreatedAt too long, should be timestamp in seconds');
+  }
 
-	// Create the base reference without check digit
-	const baseReference = `000${contributorCreatedAt}${contributionCreatedAt}`;
+  // Create the base reference without check digit
+  const baseReference = `000${contributorCreatedAt}${contributionCreatedAt}`;
 
-	// Calculate and append check digit
-	const checkDigit = calculateCheckDigit(baseReference);
+  // Calculate and append check digit
+  const checkDigit = calculateCheckDigit(baseReference);
 
-	return `${baseReference}${checkDigit}`;
+  return `${baseReference}${checkDigit}`;
 };
 
 type GenerateQrBillSvgProps = {
-	amount: number;
-	contributorReferenceId: string;
-	contributionReferenceId: string;
-	currency: 'CHF' | 'EUR';
-	type: 'QRCODE' | 'QRBILL';
+  amount: number;
+  contributorReferenceId: string;
+  contributionReferenceId: string;
+  currency: 'CHF' | 'EUR';
+  type: 'QRCODE' | 'QRBILL';
 };
 
 export const generateQrBillSvg = ({
-	amount,
-	contributorReferenceId,
-	contributionReferenceId,
-	currency,
-	type,
+  amount,
+  contributorReferenceId,
+  contributionReferenceId,
+  currency,
+  type,
 }: GenerateQrBillSvgProps): string => {
-	const data: Data = {
-		amount: Number(amount),
-		currency: currency,
-		creditor: {
-			account: 'CH6730000001151126386',
-			address: 'Zweierstrasse',
-			buildingNumber: 103,
-			zip: 8003,
-			city: 'Zürich',
-			country: 'CH',
-			name: 'Social Income',
-		},
-		reference: generateQrBillReference(contributorReferenceId, contributionReferenceId),
-	};
+  const data: Data = {
+    amount: Number(amount),
+    currency: currency,
+    creditor: {
+      account: 'CH6730000001151126386',
+      address: 'Zweierstrasse',
+      buildingNumber: 103,
+      zip: 8003,
+      city: 'Zürich',
+      country: 'CH',
+      name: 'Social Income',
+    },
+    reference: generateQrBillReference(contributorReferenceId, contributionReferenceId),
+  };
 
-	return type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();
+  return type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();
 };

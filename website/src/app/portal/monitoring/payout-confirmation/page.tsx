@@ -5,31 +5,31 @@ import { PayoutService } from '@/lib/services/payout/payout.service';
 import { Suspense } from 'react';
 
 export default function ConfirmPayoutsPage() {
-	return (
-		<Suspense>
-			<ConfirmPayoutsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <ConfirmPayoutsDataLoader />
+    </Suspense>
+  );
 }
 
 const ConfirmPayoutsDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new PayoutService();
-	const result = await service.getPayoutConfirmationTableView(user.id);
+  const service = new PayoutService();
+  const result = await service.getPayoutConfirmationTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows = result.success ? result.data.tableRows : [];
 
-	return (
-		<DataTable
-			title="Payout confirmations"
-			error={error}
-			emptyMessage="No payouts waiting for confirmation"
-			data={rows}
-			makeColumns={makePayoutConfirmationColumns}
-			initialSorting={[{ id: 'paymentAt', desc: false }]}
-			searchKeys={['recipientFirstName', 'recipientLastName', 'programName', 'phoneNumber']}
-		/>
-	);
+  return (
+    <DataTable
+      title="Payout confirmations"
+      error={error}
+      emptyMessage="No payouts waiting for confirmation"
+      data={rows}
+      makeColumns={makePayoutConfirmationColumns}
+      initialSorting={[{ id: 'paymentAt', desc: false }]}
+      searchKeys={['recipientFirstName', 'recipientLastName', 'programName', 'phoneNumber']}
+    />
+  );
 };

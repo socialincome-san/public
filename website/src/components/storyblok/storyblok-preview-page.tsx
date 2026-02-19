@@ -9,29 +9,29 @@ import { notFound } from 'next/navigation';
 const storyblokService = new StoryblokService();
 
 type Props = {
-	storyPath: string;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
-	searchParams: Record<string, string | undefined>;
+  storyPath: string;
+  lang: WebsiteLanguage;
+  region: WebsiteRegion;
+  searchParams: Record<string, string | undefined>;
 };
 
 export const StoryblokPreviewPage = async ({ storyPath, lang, region, searchParams }: Props) => {
-	const isVisualEditor = !!searchParams['_storyblok'];
-	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
+  const isVisualEditor = !!searchParams['_storyblok'];
+  const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
 
-	if (!storyResult.success) {
-		return notFound();
-	}
+  if (!storyResult.success) {
+    return notFound();
+  }
 
-	const story = storyResult.data;
+  const story = storyResult.data;
 
-	if (!story) {
-		return notFound();
-	}
+  if (!story) {
+    return notFound();
+  }
 
-	if (isVisualEditor) {
-		return <StoryblokPreviewSyncer initialStory={story} lang={lang} region={region} />;
-	}
+  if (isVisualEditor) {
+    return <StoryblokPreviewSyncer initialStory={story} lang={lang} region={region} />;
+  }
 
-	return <PageContentType blok={story.content} lang={lang} region={region} />;
+  return <PageContentType blok={story.content} lang={lang} region={region} />;
 };

@@ -9,30 +9,30 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { DownloadCell } from '../elements/download-cell';
 
 export const makeYourCertificatesColumns = (
-	hideProgramName: boolean = false,
-	hideLocalPartner: boolean = false,
-	translator?: Translator,
+  hideProgramName: boolean = false,
+  hideLocalPartner: boolean = false,
+  translator?: Translator,
 ): ColumnDef<YourDonationCertificateTableViewRow>[] => {
-	return [
-		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('donation-certificates.created')}</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'year',
-			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('donation-certificates.year')}</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'language',
-			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('donation-certificates.language')}</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'storagePath',
-			header: '',
-			cell: (ctx) => <DownloadCell ctx={ctx} />,
-		},
-	];
+  return [
+    {
+      accessorKey: 'createdAt',
+      header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('donation-certificates.created')}</SortableHeader>,
+      cell: (ctx) => <DateCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'year',
+      header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('donation-certificates.year')}</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'language',
+      header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('donation-certificates.language')}</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'storagePath',
+      header: '',
+      cell: (ctx) => <DownloadCell ctx={ctx} />,
+    },
+  ];
 };

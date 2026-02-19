@@ -3,32 +3,37 @@ import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
-	const apiKey = request.headers.get('x-api-key');
+  const apiKey = request.headers.get('x-api-key');
 
-	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
-		logger.alert('Scheduler API key not set or wrong');
-		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-	}
+  if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
+    logger.alert('Scheduler API key not set or wrong');
 
-	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
-		logger.alert('Payment files storage bucket env var not set');
-		return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
-	}
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+  }
 
-	const service = new PaymentFileImportService(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
+  if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
+    logger.alert('Payment files storage bucket env var not set');
 
-	try {
-		const result = await service.importPaymentFiles();
-		if (!result.success) {
-			logger.alert(`Payment files import failed: ${result.error}`, { result }, { component: 'payment-files-import' });
-			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
-		}
-		logger.info(
-			`Payment files import succeeded. Updated following contributions: ${result.data.map((c) => c.id).join(', ')}`,
-		);
-		return NextResponse.json(result.data, { status: 201 });
-	} catch (error) {
-		logger.alert(`Payment files import failed: ${error}`, { error }, { component: 'payment-files-import' });
-		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
-	}
+    return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
+  }
+
+  const service = new PaymentFileImportService(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
+
+  try {
+    const result = await service.importPaymentFiles();
+    if (!result.success) {
+      logger.alert(`Payment files import failed: ${result.error}`, { result }, { component: 'payment-files-import' });
+
+      return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
+    }
+    logger.info(
+      `Payment files import succeeded. Updated following contributions: ${result.data.map((c) => c.id).join(', ')}`,
+    );
+
+    return NextResponse.json(result.data, { status: 201 });
+  } catch (error) {
+    logger.alert(`Payment files import failed: ${error}`, { error }, { component: 'payment-files-import' });
+
+    return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
+  }
 };

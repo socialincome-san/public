@@ -5,40 +5,40 @@ import { TabNavigation } from '@/components/tab-navigation';
 import { ReactNode } from 'react';
 
 type ManagementLayoutProps = {
-	children: ReactNode;
+  children: ReactNode;
 };
 
 export default async function ManagementLayout({ children }: ManagementLayoutProps) {
-	const breadcrumbLinks = [
-		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: '/portal/management', label: 'Management' },
-	];
+  const breadcrumbLinks = [
+    { href: '/', label: 'Website' },
+    { href: '/portal', label: 'Portal' },
+    { href: '/portal/management', label: 'Management' },
+  ];
 
-	const sections = [
-		// Program access–based
-		{ href: `/portal/management/recipients`, label: 'Recipients' },
-		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing Payouts' },
-		{ href: `/portal/management/surveys`, label: 'Surveys' },
+  const sections = [
+    // Program access–based
+    { href: `/portal/management/recipients`, label: 'Recipients' },
+    { href: `/portal/management/ongoing-payouts`, label: 'Ongoing Payouts' },
+    { href: `/portal/management/surveys`, label: 'Surveys' },
 
-		// Organization access–based
-		{ href: `/portal/management/contributors`, label: 'Contributors' },
-		{ href: `/portal/management/contributions`, label: 'Contributions' },
-		{ href: `/portal/management/donation-certificates`, label: 'Donation Certificates' },
-		{ href: `/portal/management/campaigns`, label: 'Campaigns' },
-		{ href: `/portal/management/members`, label: 'Organization Members' },
-	];
+    // Organization access–based
+    { href: `/portal/management/contributors`, label: 'Contributors' },
+    { href: `/portal/management/contributions`, label: 'Contributions' },
+    { href: `/portal/management/donation-certificates`, label: 'Donation Certificates' },
+    { href: `/portal/management/campaigns`, label: 'Campaigns' },
+    { href: `/portal/management/members`, label: 'Organization Members' },
+  ];
 
-	return (
-		<>
-			<Breadcrumb links={breadcrumbLinks} />
-			<h1 className="py-8 text-5xl">Management</h1>
+  return (
+    <>
+      <Breadcrumb links={breadcrumbLinks} />
+      <h1 className="py-8 text-5xl">Management</h1>
 
-			<TabNavigation sections={sections} />
+      <TabNavigation sections={sections} />
 
-			<Card>
-				<div>{children}</div>
-			</Card>
-		</>
-	);
+      <Card>
+        <div>{children}</div>
+      </Card>
+    </>
+  );
 }

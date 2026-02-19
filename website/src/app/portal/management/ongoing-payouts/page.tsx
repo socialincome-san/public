@@ -5,29 +5,29 @@ import { PayoutService } from '@/lib/services/payout/payout.service';
 import { Suspense } from 'react';
 
 export default function OngoingPayoutsPage() {
-	return (
-		<Suspense>
-			<OngoingPayoutsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <OngoingPayoutsDataLoader />
+    </Suspense>
+  );
 }
 
 const OngoingPayoutsDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new PayoutService();
-	const result = await service.getOngoingPayoutTableView(user.id);
+  const service = new PayoutService();
+  const result = await service.getOngoingPayoutTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows = result.success ? result.data.tableRows : [];
 
-	return (
-		<DataTable
-			title="Ongoing Payouts"
-			error={error}
-			emptyMessage="No ongoing payouts found"
-			data={rows}
-			makeColumns={makeOngoingPayoutColumns}
-		/>
-	);
+  return (
+    <DataTable
+      title="Ongoing Payouts"
+      error={error}
+      emptyMessage="No ongoing payouts found"
+      data={rows}
+      makeColumns={makeOngoingPayoutColumns}
+    />
+  );
 };

@@ -17,60 +17,60 @@ type Params = Promise<{ payoutId: string }>;
  * @openapi
  */
 export const POST = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {
-	const { payoutId } = await params;
+  const { payoutId } = await params;
 
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+  const recipientService = new RecipientService();
+  const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	if (!recipientResult.success) {
-		logger.warn('[POST /payouts/:id/confirm] Recipient resolution failed', {
-			error: recipientResult.error,
-			status: recipientResult.status,
-		});
+  if (!recipientResult.success) {
+    logger.warn('[POST /payouts/:id/confirm] Recipient resolution failed', {
+      error: recipientResult.error,
+      status: recipientResult.status,
+    });
 
-		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
-	}
+    return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
+  }
 
-	let body: unknown;
-	try {
-		body = await request.json();
-	} catch {
-		body = {};
-	}
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
 
-	const parsed = ConfirmPayoutBody.safeParse(body);
+  const parsed = ConfirmPayoutBody.safeParse(body);
 
-	if (!parsed.success) {
-		logger.warn('[POST /payouts/:id/confirm] Validation failed', {
-			zodErrors: parsed.error.format(),
-		});
+  if (!parsed.success) {
+    logger.warn('[POST /payouts/:id/confirm] Validation failed', {
+      zodErrors: parsed.error.format(),
+    });
 
-		return new Response(parsed.error.message, { status: 400 });
-	}
+    return new Response(parsed.error.message, { status: 400 });
+  }
 
-	const payoutService = new PayoutService();
-	const confirmResult = await payoutService.updateStatusByRecipient(
-		recipientResult.data.id,
-		payoutId,
-		'confirmed',
-		parsed.data.comments ?? null,
-	);
+  const payoutService = new PayoutService();
+  const confirmResult = await payoutService.updateStatusByRecipient(
+    recipientResult.data.id,
+    payoutId,
+    'confirmed',
+    parsed.data.comments ?? null,
+  );
 
-	if (!confirmResult.success) {
-		logger.error('[POST /payouts/:id/confirm] Update failed', {
-			error: confirmResult.error,
-			payoutId,
-			recipientId: recipientResult.data.id,
-		});
+  if (!confirmResult.success) {
+    logger.error('[POST /payouts/:id/confirm] Update failed', {
+      error: confirmResult.error,
+      payoutId,
+      recipientId: recipientResult.data.id,
+    });
 
-		return new Response(confirmResult.error, { status: 500 });
-	}
+    return new Response(confirmResult.error, { status: 500 });
+  }
 
-	logger.info('[POST /payouts/:id/confirm] Payout confirmed', {
-		payoutId,
-		recipientId: recipientResult.data.id,
-		hasComments: Boolean(parsed.data.comments),
-	});
+  logger.info('[POST /payouts/:id/confirm] Payout confirmed', {
+    payoutId,
+    recipientId: recipientResult.data.id,
+    hasComments: Boolean(parsed.data.comments),
+  });
 
-	return NextResponse.json(confirmResult.data, { status: 200 });
+  return NextResponse.json(confirmResult.data, { status: 200 });
 });
