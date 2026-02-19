@@ -17,7 +17,7 @@ export type Actor =
 	| { kind: 'local-partner'; session: LocalPartnerSession }
 	| never;
 
-export async function getCurrentSession(): Promise<Session | null> {
+export const getCurrentSession = async (): Promise<Session | null> => {
 	const firebaseSessionService = new FirebaseSessionService();
 	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
@@ -52,7 +52,7 @@ export async function getCurrentSession(): Promise<Session | null> {
 	return null;
 }
 
-export async function getActorOrThrow(): Promise<Actor> {
+export const getActorOrThrow = async (): Promise<Actor> => {
 	const session = await getCurrentSession();
 
 	switch (session?.type) {

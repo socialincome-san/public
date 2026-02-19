@@ -5,7 +5,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export async function ExplainerVideo({ lang }: DefaultParams) {
+export const ExplainerVideo = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'website-videos'],

@@ -4,10 +4,10 @@ import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.
 import { UserSession } from '@/lib/services/user/user.types';
 import { ProfileFormInput } from './schemas';
 
-export function buildDefaultValues(
+export const buildDefaultValues = (
 	session: ContributorSession | LocalPartnerSession | UserSession,
 	isNewsletterSubscribed?: boolean,
-): ProfileFormInput {
+): ProfileFormInput => {
 	const address = {
 		country: session.country ?? null,
 		street: session.street ?? '',

@@ -23,7 +23,7 @@ type PaymentTypeSelectorProps = {
 	hasContent?: boolean;
 };
 
-function PaymentTypeFormItem({
+const PaymentTypeFormItem = ({
 	active,
 	title,
 	description,
@@ -35,7 +35,7 @@ function PaymentTypeFormItem({
 	description: string;
 	paymentType: PaymentType;
 	hasContent?: boolean;
-}) {
+}) => {
 	const { setValue } = useFormContext();
 
 	return (
@@ -66,7 +66,7 @@ function PaymentTypeFormItem({
 	);
 }
 
-export function PaymentTypeSelector({ lang, translations, bankTransferForm }: PaymentTypeSelectorProps) {
+export const PaymentTypeSelector = ({ lang, translations, bankTransferForm }: PaymentTypeSelectorProps) => {
 	const form = useFormContext();
 
 	return (

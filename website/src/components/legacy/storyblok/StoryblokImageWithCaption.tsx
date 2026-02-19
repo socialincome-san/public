@@ -2,13 +2,13 @@ import { getDimensionsFromStoryblokImageUrl } from '@/lib/services/storyblok/sto
 import { Typography } from '@socialincome/ui';
 import Image from 'next/image';
 
-export function StoryblokImageWithCaption({
+export const StoryblokImageWithCaption = ({
 	image,
 	caption,
 }: {
 	image: { filename: string; alt?: string; focus?: string };
 	caption: string;
-}) {
+}) => {
 	if (!image?.filename) {
 		return null;
 	}

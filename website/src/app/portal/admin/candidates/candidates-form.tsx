@@ -47,7 +47,7 @@ export type CandidateFormSchema = {
 	};
 };
 
-function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): CandidateFormSchema {
+const getInitialFormSchema = (actorKind: Actor['kind'] = 'user'): CandidateFormSchema => {
 	const base: CandidateFormSchema = {
 		label: 'Candidates',
 		fields: {
@@ -108,14 +108,14 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): CandidateFormS
 	return base;
 }
 
-export function CandidateForm({
+export const CandidateForm = ({
 	onSuccess,
 	onError,
 	onCancel,
 	candidateId,
 	readOnly,
 	actorKind = 'user',
-}: CandidateFormProps) {
+}: CandidateFormProps) => {
 	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(actorKind));
 	const [candidate, setCandidate] = useState<CandidatePayload>();
 	const [isLoading, startTransition] = useTransition();

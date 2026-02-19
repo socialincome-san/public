@@ -12,7 +12,7 @@ type ComboboxOption = {
 	label: string;
 };
 
-export function Combobox({
+export const Combobox = ({
 	options = [],
 	value,
 	onChange,
@@ -24,7 +24,7 @@ export function Combobox({
 	onChange: (value: string) => void;
 	placeholder?: string;
 	disabled?: boolean;
-}) {
+}) => {
 	const [open, setOpen] = useState(false);
 	const selected = options.find((o) => o.id === value);
 

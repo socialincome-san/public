@@ -18,7 +18,7 @@ interface PageProps {
 
 const storyblokService = new StoryblokService();
 
-async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
+const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArticlesInSelectedLanguage: number) => {
 	if (lang == defaultLanguage) {
 		return totalArticlesInSelectedLanguage;
 	}

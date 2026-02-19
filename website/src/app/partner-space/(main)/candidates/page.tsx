@@ -12,7 +12,7 @@ export default function CandidatesPage() {
 	);
 }
 
-async function CandidatesDataLoader() {
+const CandidatesDataLoader = async () => {
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
 	const candidateService = new CandidateService();

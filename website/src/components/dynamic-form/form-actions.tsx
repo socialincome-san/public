@@ -9,7 +9,7 @@ type FormActionsProps = {
 	onDelete?: () => void;
 };
 
-export function FormActions({ mode, isLoading = false, onCancel, onDelete }: FormActionsProps) {
+export const FormActions = ({ mode, isLoading = false, onCancel, onDelete }: FormActionsProps) => {
 	const [confirmOpen, setConfirmOpen] = useState(false);
 
 	const showSave = mode !== 'readonly';

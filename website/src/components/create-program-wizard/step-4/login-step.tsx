@@ -6,7 +6,7 @@ type Props = {
 	onSuccess: () => void;
 };
 
-export function LoginStep({}: Props) {
+export const LoginStep = ({}: Props) => {
 	return (
 		<div className="flex flex-col items-center justify-center py-10">
 			<Typography weight="bold" size="xl">

@@ -4,7 +4,7 @@ import { getOptionalContributorAction } from '@/lib/server-actions/contributor-a
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { useEffect, useState } from 'react';
 
-export function useContributorSession() {
+export const useContributorSession = () => {
 	const [contributorSession, setContributorSession] = useState<ContributorSession | null | undefined>(undefined);
 
 	useEffect(() => {

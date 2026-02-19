@@ -1,4 +1,4 @@
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
 	try {
 		const country = request.headers.get('cf-ipcountry') || 'Unknown';
 		const ip = request.headers.get('cf-connecting-ip') || 'Unknown';

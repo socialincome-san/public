@@ -1,6 +1,6 @@
 let patched = false;
 
-export function mockStoryblokIfTestMode() {
+export const mockStoryblokIfTestMode = () => {
 	const mode = process.env.STORYBLOK_MOCK_MODE;
 	if (!['record', 'replay'].includes(mode ?? '')) {
 		return;

@@ -10,18 +10,18 @@ import Link from 'next/link';
 
 const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };
 
-function getThumbnailOrDefault(referenceArticle: ReferenceArticle): StoryblokAsset {
+const getThumbnailOrDefault = (referenceArticle: ReferenceArticle): StoryblokAsset => {
 	return referenceArticle.thumbnail?.filename ? referenceArticle.thumbnail : (defaultThumbnail as StoryblokAsset);
 }
 
-export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: Translator; lang: LanguageCode }) {
+export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: Translator; lang: LanguageCode }) => {
 	const translator = props.translator;
 	const lang = props.lang;
 	const references = props.references ?? [];
 	const hasContextInfo = !!props.context;
 	const showThumbnails = references.some((it) => !!it.thumbnail?.filename);
 
-	function showSeparator(index: number) {
+	const showSeparator = (index: number) => {
 		return index > 0 || hasContextInfo;
 	}
 

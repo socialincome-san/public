@@ -10,20 +10,20 @@ import Link from 'next/link';
 
 export const revalidate = 900;
 
-function getLinkedInUrl(handle: string) {
+const getLinkedInUrl = (handle: string) => {
 	return `https://www.linkedin.com/in/${encodeURIComponent(handle)}`;
 }
-function getGitHubUrl(username: string) {
+const getGitHubUrl = (username: string) => {
 	return `https://github.com/${encodeURIComponent(username)}`;
 }
 
 const storyblokService = new StoryblokService();
 
-async function getTotalArticlesInDefaultLanguage(
+const getTotalArticlesInDefaultLanguage = async (
 	lang: string,
 	totalArticlesInSelectedLanguage: number,
 	authorId: string,
-) {
+) => {
 	if (lang == defaultLanguage) {
 		return totalArticlesInSelectedLanguage;
 	}

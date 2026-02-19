@@ -13,7 +13,7 @@ export default function RecipientsPage() {
 	);
 }
 
-async function RecipientsDataLoader() {
+const RecipientsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const recipientService = new RecipientService();

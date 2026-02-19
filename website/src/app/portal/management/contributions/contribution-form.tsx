@@ -80,7 +80,7 @@ const initialFormSchema: ContributionFormSchema = {
 	},
 };
 
-export function ContributionForm({ onSuccess, onError, onCancel, contributionId, readOnly }: ContributionFormProps) {
+export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId, readOnly }: ContributionFormProps) => {
 	const [formSchema, setFormSchema] = useState(initialFormSchema);
 	const [contribution, setContribution] = useState<ContributionPayload>();
 	const [optionsLoaded, setOptionsLoaded] = useState(false);

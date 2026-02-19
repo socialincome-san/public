@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/database/prisma';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export const GET = async () => {
 	try {
 		await prisma.$queryRaw`SELECT 1`;
 

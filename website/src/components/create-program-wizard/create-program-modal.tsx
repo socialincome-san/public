@@ -13,7 +13,7 @@ type Props = {
 	isAuthenticated?: boolean;
 };
 
-export function CreateProgramModal({ trigger, isAuthenticated = false }: Props) {
+export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) => {
 	const [state, send] = useMachine(createProgramWizardMachine, {
 		input: { isAuthenticated },
 	});

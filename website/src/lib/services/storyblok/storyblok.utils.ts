@@ -24,7 +24,7 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
  * Based on official documentation: https://www.storyblok.com/faq/image-dimensions-assets-js
  * Format example: https://a.storyblok.com/f/51376/664x488/f4f9d1769c/visual-editor-features.jpg
  */
-export function getDimensionsFromStoryblokImageUrl(url: string): { width?: number; height?: number } {
+export const getDimensionsFromStoryblokImageUrl = (url: string): { width?: number; height?: number } => {
 	if (!url) {
 		return {};
 	}
@@ -36,7 +36,7 @@ export function getDimensionsFromStoryblokImageUrl(url: string): { width?: numbe
 /**
  * Calculate scaled dimensions maintaining aspect ratio.
  */
-export function getScaledDimensions(url: string, maxWidth: number): { width: number; height: number } | null {
+export const getScaledDimensions = (url: string, maxWidth: number): { width: number; height: number } | null => {
 	const original = getDimensionsFromStoryblokImageUrl(url);
 	if (!original.width || !original.height) {
 		return null;
@@ -57,7 +57,7 @@ export function getScaledDimensions(url: string, maxWidth: number): { width: num
  * The actual image transformation is handled by the custom image loader.
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
-export function formatStoryblokUrl(url: string, width: number, height: number, focus?: string | null) {
+export const formatStoryblokUrl = (url: string, width: number, height: number, focus?: string | null) => {
 	const crop = focus || 'smart';
 	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
 	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
@@ -68,7 +68,7 @@ export function formatStoryblokUrl(url: string, width: number, height: number, f
  * Unlike formatStoryblokUrl, this returns a URL that can be fetched directly without
  * going through the Next.js image loader.
  */
-function formatStoryblokUrlDirect(url: string, width: number, height: number, focus?: string | null) {
+const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 	return imageSource;
@@ -81,7 +81,7 @@ function formatStoryblokUrlDirect(url: string, width: number, height: number, fo
  * Storyblok returns date fields in the following format "yyyy-MM-dd HH:mm" without timezone.
  * Nevertheless, the fields `first_published_at` and 'published_at' are returned in proper ISO8601 format.
  */
-export function toDateObject(date: string, lang: string) {
+export const toDateObject = (date: string, lang: string) => {
 	let dateObject = DateTime.fromISO(date).setLocale(lang);
 	if (!dateObject.isValid) {
 		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
@@ -92,7 +92,7 @@ export function toDateObject(date: string, lang: string) {
 /**
  * Format a Storyblok date for display.
  */
-export function formatStoryblokDate(date: string | null | undefined, lang: string) {
+export const formatStoryblokDate = (date: string | null | undefined, lang: string) => {
 	if (!date) {
 		return '';
 	}
@@ -104,7 +104,7 @@ export function formatStoryblokDate(date: string | null | undefined, lang: strin
 /**
  * Format a Storyblok date to ISO format.
  */
-function formatStoryblokDateToIso(date: string | null | undefined) {
+const formatStoryblokDateToIso = (date: string | null | undefined) => {
 	if (!date) {
 		return '';
 	}
@@ -118,7 +118,7 @@ function formatStoryblokDateToIso(date: string | null | undefined) {
 /**
  * Create a link URL for a journal article.
  */
-export function createLinkForArticle(slug: string, lang: string, region: string) {
+export const createLinkForArticle = (slug: string, lang: string, region: string) => {
 	return `/${lang}/${region}/journal/${slug}`;
 }
 
@@ -126,7 +126,7 @@ export function createLinkForArticle(slug: string, lang: string, region: string)
  * Resolve a StoryblokMultilink to a URL string.
  * Handles both external URLs (linktype 'url') and internal story links (linktype 'story').
  */
-export function resolveStoryblokLink(link: StoryblokMultilink | undefined, lang: string, region: string): string {
+export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang: string, region: string): string => {
 	if (!link) {
 		return '#';
 	}
@@ -150,7 +150,7 @@ export function resolveStoryblokLink(link: StoryblokMultilink | undefined, lang:
 /**
  * Generate Next.js Metadata for a Storyblok article.
  */
-export function generateMetaDataForArticle(storyblokStory: ISbStoryData<ResolvedArticle>, url: string): Metadata {
+export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<ResolvedArticle>, url: string): Metadata => {
 	const storyblokArticle = storyblokStory.content;
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;

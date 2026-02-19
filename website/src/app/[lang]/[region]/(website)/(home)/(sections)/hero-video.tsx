@@ -5,7 +5,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import MuxVideoComponent from '../(components)/mux-video';
 
-export async function HeroVideo({ lang, region }: DefaultParams) {
+export const HeroVideo = async ({ lang, region }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'common'],

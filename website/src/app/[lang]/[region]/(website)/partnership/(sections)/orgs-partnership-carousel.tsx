@@ -11,7 +11,7 @@ import microsoftSVG from '../(assets)/microsoft.svg';
 import milkSVG from '../(assets)/milk.svg';
 import smartiveSVG from '../(assets)/smartive.svg';
 
-export function OrgsPartnershipCarousel() {
+export const OrgsPartnershipCarousel = () => {
 	const screenSize = useScreenSize();
 
 	const companyLogos = [

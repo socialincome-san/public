@@ -12,7 +12,7 @@ type FooterLinkProps = {
 	target?: HTMLAttributeAnchorTarget;
 };
 
-function FooterLink({ label, url, Icon, target = '_self' }: FooterLinkProps) {
+const FooterLink = ({ label, url, Icon, target = '_self' }: FooterLinkProps) => {
 	return (
 		<Link href={url} className="group inline-flex items-center space-x-3" target={target}>
 			{Icon && <Icon className="group-hover:fill-base-content fill-muted-foreground h-4 w-4" />}

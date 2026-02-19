@@ -8,7 +8,7 @@ type Metadata = {
 	heading: string;
 };
 
-export async function OpenSourceContributors({ lang }: DefaultParams) {
+export const OpenSourceContributors = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-open-source'],

@@ -12,7 +12,7 @@ export default function ContributorsPage() {
 	);
 }
 
-async function ContributorsDataLoader() {
+const ContributorsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributorService();

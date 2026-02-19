@@ -12,7 +12,7 @@ interface GitHubStar {
 	starred_at: string;
 }
 
-export async function getStarCount(): Promise<{ totalStars: number; newStars: number }> {
+export const getStarCount = async (): Promise<{ totalStars: number; newStars: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
 	const repoRes = await fetchData(owner, repo, repoUrl);
 

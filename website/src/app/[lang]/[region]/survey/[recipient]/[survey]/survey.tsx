@@ -20,7 +20,7 @@ type SurveyProps = {
 	lang: SurveyLanguage;
 };
 
-export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
+export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
 
 	useEffect(() => {

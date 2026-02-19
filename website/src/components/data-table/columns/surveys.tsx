@@ -8,7 +8,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeSurveyColumns(hideProgramName = false): ColumnDef<SurveyTableViewRow>[] {
+export const makeSurveyColumns = (hideProgramName = false): ColumnDef<SurveyTableViewRow>[] => {
 	const columns: ColumnDef<SurveyTableViewRow>[] = [
 		{
 			accessorKey: 'name',

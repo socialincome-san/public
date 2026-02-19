@@ -22,7 +22,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-export function IncomeInput({ translations }: { translations: { buttonText: string } }) {
+export const IncomeInput = ({ translations }: { translations: { buttonText: string } }) => {
 	const { currency, language, region, setCurrency } = useI18n();
 	const router = useRouter();
 

@@ -2,10 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Currently there is no standard way to get all static paths of NextJS
-function getStaticPages(startPath: string): string[] {
+const getStaticPages = (startPath: string): string[] => {
 	const routes: string[] = [];
 	const excludedPrefixes = ['_', '['];
-	function traverse(currentPath: string, currentRoute = '') {
+	const traverse = (currentPath: string, currentRoute = '') => {
 		const directoryEntries = fs.readdirSync(currentPath, { withFileTypes: true });
 
 		for (const directoryEntry of directoryEntries) {
@@ -32,7 +32,7 @@ function getStaticPages(startPath: string): string[] {
 	return routes;
 }
 
-function writePagesToFile(pages: string[], folderPath: string, fileName: string) {
+const writePagesToFile = (pages: string[], folderPath: string, fileName: string) => {
 	fs.mkdirSync(folderPath, { recursive: true });
 	const filePath = path.join(folderPath, fileName);
 	const content = JSON.stringify(pages, null, 2);

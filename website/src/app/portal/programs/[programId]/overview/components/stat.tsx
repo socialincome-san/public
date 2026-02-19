@@ -1,6 +1,6 @@
 type StatProps = { label: string; value: string | number };
 
-export function Stat({ label, value }: StatProps) {
+export const Stat = ({ label, value }: StatProps) => {
 	return (
 		<div>
 			<p className="text-muted-foreground text-xs">{label}</p>

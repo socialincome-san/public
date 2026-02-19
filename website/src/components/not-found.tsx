@@ -2,7 +2,7 @@ type NotFoundProps = {
 	children: React.ReactNode;
 };
 
-export function NotFound({ children }: NotFoundProps) {
+export const NotFound = ({ children }: NotFoundProps) => {
 	return (
 		<div className="flex min-h-screen items-center px-4 py-12 sm:px-6 md:px-8 lg:px-12 xl:px-16">
 			<div className="w-full space-y-6 text-center">

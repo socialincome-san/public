@@ -17,7 +17,7 @@ type Props = {
 	scope: Scope;
 };
 
-export async function Navbar({ session, lang, region, scope }: Props) {
+export const Navbar = async ({ session, lang, region, scope }: Props) => {
 	const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
 	const menu = result.success ? result.data.content.menu : [];
 

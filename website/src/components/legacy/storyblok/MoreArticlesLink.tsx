@@ -7,7 +7,7 @@ type MoreArticlesLinkProps = {
 	text: string;
 };
 
-export function MoreArticlesLink({ text }: MoreArticlesLinkProps) {
+export const MoreArticlesLink = ({ text }: MoreArticlesLinkProps) => {
 	const setLanguage = useI18n().setLanguage;
 
 	return (

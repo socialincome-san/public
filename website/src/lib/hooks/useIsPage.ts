@@ -1,6 +1,6 @@
 import { usePathname } from 'next/navigation';
 
-export function useIsPage(page: string) {
+export const useIsPage = (page: string) => {
 	const pathname = usePathname();
 	// URL structure: /[lang]/[region]/[page]
 	const segments = pathname.split('/');

@@ -10,7 +10,7 @@ import type { CountryTableViewRow } from '@/lib/services/country/country.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
+export const makeCountryColumns = (): ColumnDef<CountryTableViewRow>[] => {
 	return [
 		{
 			id: 'flag',

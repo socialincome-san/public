@@ -84,7 +84,7 @@ const initialFormSchema: SurveyFormSchema = {
 	},
 };
 
-export function SurveyForm({ onSuccess, onError, onCancel, surveyId, readOnly }: SurveyFormProps) {
+export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }: SurveyFormProps) => {
 	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(initialFormSchema);
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();

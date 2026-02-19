@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils/cn';
 import { CreateProgramWizardState } from './types';
 
-function getCurrentStepIndex(state: CreateProgramWizardState): number {
+const getCurrentStepIndex = (state: CreateProgramWizardState): number => {
 	if (state.matches('countrySelection')) {
 		return 0;
 	}
@@ -40,7 +40,7 @@ type Props = {
 	state: CreateProgramWizardState;
 };
 
-export function CreateProgramStepIndicator({ state }: Props) {
+export const CreateProgramStepIndicator = ({ state }: Props) => {
 	const activeIndex = getCurrentStepIndex(state);
 
 	const showLoginStep = state.context.isAuthenticated === false;

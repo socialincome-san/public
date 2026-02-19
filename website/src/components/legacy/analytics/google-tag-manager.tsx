@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-export function GoogleTagManager() {
+export const GoogleTagManager = () => {
 	useEffect(() => {
 		if (process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID) {
 			const gtmScript = `

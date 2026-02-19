@@ -16,7 +16,7 @@ type WalletProps = {
 	href?: string;
 };
 
-function formatAmount(amount?: number): string {
+const formatAmount = (amount?: number): string => {
 	if (amount == null || isNaN(amount)) {
 		return '';
 	}
@@ -26,7 +26,7 @@ function formatAmount(amount?: number): string {
 	}).format(amount);
 }
 
-export function Wallet({ variant = 'default', title, subtitle, badge, footerLeft, footerRight, href }: WalletProps) {
+export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft, footerRight, href }: WalletProps) => {
 	const content = (
 		<Card
 			variant="noPadding"

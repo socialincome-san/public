@@ -16,7 +16,7 @@ type Props = {
 	onError: (error: string) => void;
 };
 
-export function CandidateDialog({
+export const CandidateDialog = ({
 	open,
 	onOpenChange,
 	candidateId,
@@ -24,7 +24,7 @@ export function CandidateDialog({
 	actorKind,
 	errorMessage,
 	onError,
-}: Props) {
+}: Props) => {
 	const handleError = (error: unknown) => {
 		onError(`Error saving candidate: ${error}`);
 		logger.error('Candidate Form Error', { error });

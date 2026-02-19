@@ -1,7 +1,7 @@
 import { UserCreateInput, UserPayload, UserUpdateInput } from '@/lib/services/user/user.types';
 import { UserFormSchema } from './users-form';
 
-export function buildCreateUserInput(schema: UserFormSchema): UserCreateInput {
+export const buildCreateUserInput = (schema: UserFormSchema): UserCreateInput => {
 	return {
 		firstName: schema.fields.firstName.value,
 		lastName: schema.fields.lastName.value,
@@ -11,7 +11,7 @@ export function buildCreateUserInput(schema: UserFormSchema): UserCreateInput {
 	};
 }
 
-export function buildUpdateUserInput(schema: UserFormSchema, existing: UserPayload): UserUpdateInput {
+export const buildUpdateUserInput = (schema: UserFormSchema, existing: UserPayload): UserUpdateInput => {
 	return {
 		id: existing.id,
 		firstName: schema.fields.firstName.value,

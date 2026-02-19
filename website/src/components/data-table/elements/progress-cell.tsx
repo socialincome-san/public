@@ -3,7 +3,7 @@
 import { CellType } from '@/components/data-table/elements/types';
 import { Progress } from '@/components/progress';
 
-export function ProgressCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
+export const ProgressCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const percent = ctx.getValue() as number;
 
 	const { payoutsReceived, payoutsTotal } = ctx.row.original as {

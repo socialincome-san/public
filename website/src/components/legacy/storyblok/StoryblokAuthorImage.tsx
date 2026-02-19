@@ -15,13 +15,13 @@ type Size = 'small' | 'medium' | 'large' | 'extra-large';
 const AUTHOR_IMAGE_TARGET_HEIGHT = 300;
 const AUTHOR_IMAGE_TARGET_WIDTH = 300;
 
-function StoryblokAuthorImage(props: {
+const StoryblokAuthorImage = (props: {
 	author: ISbStoryData<Author>;
 	size?: Size;
 	className?: string;
 	lang: string;
 	region: string;
-}) {
+}) => {
 	const { author, size = 'medium', className = '' } = props;
 
 	if (!author.content.avatar.filename) {

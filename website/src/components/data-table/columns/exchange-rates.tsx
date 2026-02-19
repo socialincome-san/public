@@ -6,7 +6,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeExchangeRatesColumns(): ColumnDef<ExchangeRatesTableViewRow>[] {
+export const makeExchangeRatesColumns = (): ColumnDef<ExchangeRatesTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'currency',

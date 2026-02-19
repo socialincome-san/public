@@ -7,7 +7,7 @@ import type { ContributionTableViewRow } from '@/lib/services/contribution/contr
 import { useState } from 'react';
 import { ContributionFormDialog } from './contributions-form-dialog';
 
-export function ContributionsTableClient({
+export const ContributionsTableClient = ({
 	rows,
 	error,
 	readOnly,
@@ -15,7 +15,7 @@ export function ContributionsTableClient({
 	rows: ContributionTableViewRow[];
 	error: string | null;
 	readOnly: boolean;
-}) {
+}) => {
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [contributionId, setContributionId] = useState<string | undefined>(undefined);
 

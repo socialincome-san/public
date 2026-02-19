@@ -166,7 +166,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 	},
 };
 
-export function buildUpdateCampaignsInput(schema: CampaignsFormSchema): CampaignsUpdateInput {
+export const buildUpdateCampaignsInput = (schema: CampaignsFormSchema): CampaignsUpdateInput => {
 	return {
 		title: schema.fields.title.value,
 		description: schema.fields.description.value,
@@ -196,7 +196,7 @@ export function buildUpdateCampaignsInput(schema: CampaignsFormSchema): Campaign
 	};
 }
 
-export function buildCreateCampaignsInput(schema: CampaignsFormSchema): CampaignsCreateInput {
+export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): CampaignsCreateInput => {
 	return {
 		title: schema.fields.title.value,
 		description: schema.fields.description.value,

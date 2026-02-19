@@ -12,7 +12,7 @@ type Props = {
 	payout: PayoutConfirmationTableViewRow;
 };
 
-export function PayoutConfirmationActionsCell({ payout }: Props) {
+export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 	const [isPending, startTransition] = useTransition();
 	const [confirmOpen, setConfirmOpen] = useState(false);
 	const [contestOpen, setContestOpen] = useState(false);

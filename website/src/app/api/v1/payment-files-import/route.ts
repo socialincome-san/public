@@ -2,7 +2,7 @@ import { PaymentFileImportService } from '@/lib/services/payment-file-import/pay
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
 	const apiKey = request.headers.get('x-api-key');
 
 	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {

@@ -9,7 +9,7 @@ import { YourDonationCertificateTableViewRow } from '@/lib/services/donation-cer
 import { useState } from 'react';
 import GenerateDonationCertificateDialog from './generate-donation-certificate-dialog';
 
-export function YourDonationCertificateTable({
+export const YourDonationCertificateTable = ({
 	rows,
 	error,
 	lang,
@@ -17,7 +17,7 @@ export function YourDonationCertificateTable({
 	rows: YourDonationCertificateTableViewRow[];
 	error: string | null;
 	lang: WebsiteLanguage;
-}) {
+}) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const translator = useTranslator(lang, 'website-me');
 

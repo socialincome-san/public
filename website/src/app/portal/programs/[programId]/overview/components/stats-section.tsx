@@ -12,7 +12,7 @@ import { StatProgressCard } from './stat-progress-card';
 
 type StatsSectionProps = { programId: string; stats: ProgramDashboardStats };
 
-export function StatsSection({ programId, stats }: StatsSectionProps) {
+export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const getCreditStatusLabel = (creditsInIntervals: number, totalExpected: number) => {
 		if (creditsInIntervals < 1) {
 			return 'Not secured';

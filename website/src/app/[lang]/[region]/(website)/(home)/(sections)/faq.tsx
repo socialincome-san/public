@@ -5,7 +5,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
 
-export async function FAQ({ lang, region }: DefaultParams) {
+export const FAQ = async ({ lang, region }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'website-faq'],

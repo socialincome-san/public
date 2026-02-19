@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-export function FacebookTracking() {
+export const FacebookTracking = () => {
 	useEffect(() => {
 		if (process.env.NEXT_PUBLIC_FACEBOOK_TRACKING_ID) {
 			const fbeventsScript = `

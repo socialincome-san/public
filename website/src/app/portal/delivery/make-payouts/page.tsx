@@ -12,7 +12,7 @@ export default function PayoutsPage() {
 	);
 }
 
-async function PayoutsDataLoader() {
+const PayoutsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const payoutService = new PayoutService();

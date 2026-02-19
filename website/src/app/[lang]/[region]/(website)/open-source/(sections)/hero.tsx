@@ -4,7 +4,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export async function Hero({ lang }: DefaultParams) {
+export const Hero = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-open-source'],

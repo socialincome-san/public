@@ -9,8 +9,8 @@ type Props = {
 	bgClass: string;
 };
 
-export function ExpansionRow({ row, bgClass }: Props) {
-	function renderSource(source: ProgramCountryFeasibilityRow['cash']['details']['source'] | undefined) {
+export const ExpansionRow = ({ row, bgClass }: Props) => {
+	const renderSource = (source: ProgramCountryFeasibilityRow['cash']['details']['source'] | undefined) => {
 		if (!source) {
 			return null;
 		}
@@ -32,7 +32,7 @@ export function ExpansionRow({ row, bgClass }: Props) {
 		return <p className="text-muted-foreground">{source.text}</p>;
 	}
 
-	function renderDetails(details: ProgramCountryFeasibilityRow['cash']['details']) {
+	const renderDetails = (details: ProgramCountryFeasibilityRow['cash']['details']) => {
 		return (
 			<div className="space-y-1 text-sm">
 				<p>{details.text}</p>

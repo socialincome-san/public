@@ -50,7 +50,7 @@ type DonationImpactProps = {
 	translations: DonationImpactTranslations;
 };
 
-function DonationImpact({ lang, translations }: DonationImpactProps) {
+const DonationImpact = ({ lang, translations }: DonationImpactProps) => {
 	const amount = Math.round(useWatch({ name: 'monthlyIncome' }) * 0.01);
 	const translator = useTranslator(lang, 'website-donate');
 	const { currency } = useI18n();
@@ -105,7 +105,7 @@ type DonationFormProps = {
 	};
 } & DefaultParams;
 
-export function DonationForm({ amount, translations, lang, region }: DonationFormProps) {
+export const DonationForm = ({ amount, translations, lang, region }: DonationFormProps) => {
 	const { currency } = useI18n();
 
 	const formSchema = z

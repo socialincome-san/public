@@ -11,7 +11,7 @@ export default function PortalPage() {
 	);
 }
 
-async function PortalDataLoader() {
+const PortalDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const breadcrumbLinks = [

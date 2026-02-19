@@ -12,7 +12,7 @@ export default function UsersPage() {
 	);
 }
 
-async function UsersDataLoader() {
+const UsersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

@@ -13,7 +13,7 @@ export default function OrganizationsPage() {
 	);
 }
 
-async function OrganizationsDataLoader() {
+const OrganizationsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

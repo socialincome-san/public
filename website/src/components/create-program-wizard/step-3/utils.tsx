@@ -1,11 +1,11 @@
 import type { PayoutInterval } from '@/generated/prisma/enums';
 
-export function calculateTotalBudget(
+export const calculateTotalBudget = (
 	recipients: number,
 	durationMonths: number,
 	payoutPerInterval: number,
 	interval: PayoutInterval,
-): number {
+): number => {
 	let numberOfIntervals: number;
 
 	if (interval === 'monthly') {
@@ -20,7 +20,7 @@ export function calculateTotalBudget(
 	return totalBudget;
 }
 
-export function calculateMonthlyCost(recipients: number, payoutPerInterval: number, interval: PayoutInterval): number {
+export const calculateMonthlyCost = (recipients: number, payoutPerInterval: number, interval: PayoutInterval): number => {
 	let monthlyCost: number;
 
 	if (interval === 'monthly') {

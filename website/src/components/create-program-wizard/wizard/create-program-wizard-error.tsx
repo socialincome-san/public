@@ -7,7 +7,7 @@ type Props = {
 	onRetry: () => void;
 };
 
-export function WizardError({ message, onRetry }: Props) {
+export const WizardError = ({ message, onRetry }: Props) => {
 	return (
 		<div className="space-y-4 text-center">
 			<p className="text-destructive font-medium">{message}</p>

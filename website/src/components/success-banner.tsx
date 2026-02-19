@@ -7,7 +7,7 @@ type Props = {
 	action?: ReactNode;
 };
 
-export function SuccessBanner({ title, description, action }: Props) {
+export const SuccessBanner = ({ title, description, action }: Props) => {
 	return (
 		<div className="flex items-center justify-between rounded-xl border bg-green-50 px-6 py-4">
 			<div className="flex items-start gap-3">

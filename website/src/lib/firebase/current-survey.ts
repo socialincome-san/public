@@ -5,13 +5,13 @@ import { SurveyPayload } from '../services/survey/survey.types';
 
 const firebaseSessionService = new FirebaseSessionService();
 
-async function findSurveyByEmail(email: string): Promise<SurveyPayload | null> {
+const findSurveyByEmail = async (email: string): Promise<SurveyPayload | null> => {
 	const service = new SurveyService();
 	const result = await service.getByAccessEmail(email);
 	return result.success ? result.data : null;
 }
 
-async function loadCurrentSurvey(): Promise<SurveyPayload | null> {
+const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
 	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;

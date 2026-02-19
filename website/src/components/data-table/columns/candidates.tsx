@@ -9,10 +9,10 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeCandidateColumns(
+export const makeCandidateColumns = (
 	hideProgramName = false,
 	hideLocalPartner = false,
-): ColumnDef<CandidatesTableViewRow>[] {
+): ColumnDef<CandidatesTableViewRow>[] => {
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
 		{
 			accessorKey: 'firstName',

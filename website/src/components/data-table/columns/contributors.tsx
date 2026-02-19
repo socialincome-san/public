@@ -7,7 +7,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeContributorColumns(): ColumnDef<ContributorTableViewRow>[] {
+export const makeContributorColumns = (): ColumnDef<ContributorTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'firstName',

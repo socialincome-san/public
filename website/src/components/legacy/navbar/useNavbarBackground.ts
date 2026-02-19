@@ -3,7 +3,7 @@
 import { useContext } from 'react';
 import { NavbarBackgroundContext } from './navbar-background-provider';
 
-export function useNavbarBackground() {
+export const useNavbarBackground = () => {
 	const { backgroundColor, setBackgroundColor } = useContext(NavbarBackgroundContext);
 
 	return { backgroundColor, setBackgroundColor };

@@ -8,7 +8,7 @@ import { StripeService } from '@/lib/services/stripe/stripe.service';
 import { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
 import Link from 'next/link';
 
-export async function SubscriptionsTable({ lang }: { lang: WebsiteLanguage }) {
+export const SubscriptionsTable = async ({ lang }: { lang: WebsiteLanguage }) => {
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });

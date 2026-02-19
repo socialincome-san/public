@@ -3,7 +3,7 @@ import { NavbarClient } from '@/components/legacy/navbar/navbar-client';
 import { Translator } from '@/lib/i18n/translator';
 import { mainWebsiteLanguages, websiteCurrencies, WebsiteLanguage, websiteRegions } from '@/lib/i18n/utils';
 
-async function Navbar({ lang, region }: DefaultParams) {
+const Navbar = async ({ lang, region }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['common', 'website-common', 'website-me'],

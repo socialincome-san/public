@@ -13,7 +13,7 @@ type PayoutFormDialogProps = {
 	readOnly?: boolean;
 };
 
-export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = false }: PayoutFormDialogProps) {
+export const PayoutFormDialog = ({ open, onOpenChange, payoutId, readOnly = false }: PayoutFormDialogProps) => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {

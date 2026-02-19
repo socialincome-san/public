@@ -9,12 +9,12 @@ import { useState } from 'react';
 
 type StepResult = string | object | string[] | null;
 
-export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
+export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 
 	const iconClass = 'h-4 w-4';
 
-	function setResult(step: number, value: StepResult) {
+	const setResult = (step: number, value: StepResult) => {
 		setResults((prev) => ({ ...prev, [step]: value }));
 	}
 
@@ -52,7 +52,7 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 		},
 	];
 
-	async function run(step: (typeof steps)[number]) {
+	const run = async (step: (typeof steps)[number]) => {
 		try {
 			const result = await step.action();
 			setResult(step.id, result);

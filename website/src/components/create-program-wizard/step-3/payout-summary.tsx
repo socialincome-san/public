@@ -9,7 +9,7 @@ type Props = {
 	currency: string;
 };
 
-export function PayoutSummary({ programDuration, payoutPerInterval, payoutInterval, currency }: Props) {
+export const PayoutSummary = ({ programDuration, payoutPerInterval, payoutInterval, currency }: Props) => {
 	return (
 		<div className="divide-y text-sm">
 			<div className="flex justify-between py-3">

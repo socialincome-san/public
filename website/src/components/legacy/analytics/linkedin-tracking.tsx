@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-export function LinkedInTracking() {
+export const LinkedInTracking = () => {
 	useEffect(() => {
 		if (process.env.NEXT_PUBLIC_LINKEDIN_TRACKING_ID) {
 			// @ts-ignore

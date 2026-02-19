@@ -21,7 +21,7 @@ interface IssueClientProps {
 	filterText: string;
 }
 
-export function IssueClient({ title, issues, labels, tableHeader, filterText, linkText }: IssueClientProps) {
+export const IssueClient = ({ title, issues, labels, tableHeader, filterText, linkText }: IssueClientProps) => {
 	const [filteredLabel, setFilteredLabel] = useState('');
 	const [showAllIssues, setShowAllIssues] = useState(false);
 

@@ -13,7 +13,7 @@ type CookieConsentBannerClientProps = {
 	};
 };
 
-export function CookieConsentBanner({ translations }: CookieConsentBannerClientProps) {
+export const CookieConsentBanner = ({ translations }: CookieConsentBannerClientProps) => {
 	const isSurveyPage = useIsPage('survey');
 	const [hideBanner, setHideBanner] = useState(true);
 

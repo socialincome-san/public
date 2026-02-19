@@ -5,7 +5,7 @@ import { PayoutInterval } from '@/generated/prisma/enums';
 import { PayoutControls } from './payout-controls';
 import { PayoutSummary } from './payout-summary';
 
-export function PayoutBox({
+export const PayoutBox = ({
 	programDuration,
 	payoutPerInterval,
 	payoutInterval,
@@ -25,7 +25,7 @@ export function PayoutBox({
 	onPayoutChange: (value: number) => void;
 	onIntervalChange: (value: PayoutInterval) => void;
 	onToggleCustomizePayouts: () => void;
-}) {
+}) => {
 	return (
 		<div className="flex h-full flex-col rounded-xl border p-8">
 			<h3 className="font-medium">Payouts</h3>

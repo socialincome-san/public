@@ -12,7 +12,7 @@ type TabNavigationProps = {
 	sections: Section[];
 };
 
-export function TabNavigation({ sections }: TabNavigationProps) {
+export const TabNavigation = ({ sections }: TabNavigationProps) => {
 	const pathname = usePathname();
 
 	const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`) || pathname.endsWith(href);

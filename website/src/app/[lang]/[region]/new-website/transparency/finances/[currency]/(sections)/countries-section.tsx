@@ -12,11 +12,11 @@ type CountriesSectionProps = {
 	lang: WebsiteLanguage;
 };
 
-function formatNumber(value: number, lang: WebsiteLanguage): string {
+const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
 }
 
-export function CountriesSection({ countries, exchangeRate, currency, lang }: CountriesSectionProps) {
+export const CountriesSection = ({ countries, exchangeRate, currency, lang }: CountriesSectionProps) => {
 	return (
 		<section>
 			<h2 className="mb-6 text-2xl font-semibold">Top Contributing Countries</h2>

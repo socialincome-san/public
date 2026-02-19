@@ -38,7 +38,7 @@ export const PaymentTypes = {
 
 export type PaymentType = (typeof PaymentTypes)[keyof typeof PaymentTypes];
 
-export function GenericDonationForm({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) {
+export const GenericDonationForm = ({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) => {
 	const router = useRouter();
 	const { currency } = useI18n();
 	const [submitting, setSubmitting] = useState(false);

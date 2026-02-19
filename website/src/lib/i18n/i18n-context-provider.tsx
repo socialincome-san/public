@@ -23,7 +23,7 @@ type I18nContextProps = {
 
 export const I18nContext = createContext<I18nContextProps>(undefined!);
 
-function I18nUrlUpdater() {
+const I18nUrlUpdater = () => {
 	// This component is used to watch the URL and update the language and region in the context if the URL changes.
 	// It's a separate component because it uses the useSearchParams hook, and needs to be wrapped in a Suspense
 	// boundary (https://nextjs.org/docs/messages/deopted-into-client-rendering).
@@ -57,7 +57,7 @@ function I18nUrlUpdater() {
 	return null;
 }
 
-export function I18nContextProvider({ children }: PropsWithChildren) {
+export const I18nContextProvider = ({ children }: PropsWithChildren) => {
 	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
 	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
 	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);

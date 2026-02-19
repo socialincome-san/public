@@ -8,11 +8,11 @@ import { UserSession } from '@/lib/services/user/user.types';
 import { toggleNewsletter } from './newsletter';
 import { ProfileFormOutput } from './schemas';
 
-export async function submitProfileForm(
+export const submitProfileForm = async (
 	values: ProfileFormOutput,
 	session: ContributorSession | LocalPartnerSession | UserSession,
 	isNewsletterSubscribed: boolean,
-) {
+) => {
 	if (values.type === 'contributor') {
 		const resultNewsletter = await toggleNewsletter(values, session as ContributorSession, isNewsletterSubscribed);
 		if (!resultNewsletter.success) {

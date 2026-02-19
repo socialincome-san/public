@@ -4,7 +4,7 @@ import { now } from '@/lib/utils/now';
 import { CellContext } from '@tanstack/react-table';
 import { differenceInYears } from 'date-fns';
 
-function calculateAge(date: Date | string | null): number | null {
+const calculateAge = (date: Date | string | null): number | null => {
 	if (!date) {
 		return null;
 	}
@@ -24,7 +24,7 @@ type AgeCellProps<TData, TValue> = {
 	ctx: CellContext<TData, TValue>;
 };
 
-export function AgeCell<TData, TValue>({ ctx }: AgeCellProps<TData, TValue>) {
+export const AgeCell = <TData, TValue>({ ctx }: AgeCellProps<TData, TValue>) => {
 	const date = ctx.getValue() as Date | string | null;
 	const age = calculateAge(date);
 

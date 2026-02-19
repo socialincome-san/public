@@ -9,7 +9,7 @@ type ProgramSetupSuccessProps = {
 	publicUrl: string;
 };
 
-export function ProgramSetupSuccess({ programId, publicUrl }: ProgramSetupSuccessProps) {
+export const ProgramSetupSuccess = ({ programId, publicUrl }: ProgramSetupSuccessProps) => {
 	return (
 		<Card>
 			<div className="space-y-6">

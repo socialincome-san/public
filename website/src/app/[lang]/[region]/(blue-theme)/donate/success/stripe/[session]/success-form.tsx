@@ -62,7 +62,7 @@ type SuccessFormProps = {
 	country?: CountryCode;
 };
 
-export function SuccessForm({
+export const SuccessForm = ({
 	lang,
 	stripeCheckoutSessionId,
 	translations,
@@ -71,7 +71,7 @@ export function SuccessForm({
 	email,
 	country,
 	onSuccessURL,
-}: SuccessFormProps) {
+}: SuccessFormProps) => {
 	const router = useRouter();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');

@@ -10,11 +10,11 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { PaymentMethodCell } from '../elements/payment-method-cell';
 import { StatusCell } from '../elements/status-cell';
 
-export function makeYourStripeSubscriptionsColumns(
+export const makeYourStripeSubscriptionsColumns = (
 	hideProgramName: boolean = false,
 	hideLocalPartner: boolean = false,
 	translator?: Translator,
-): ColumnDef<StripeSubscriptionRow>[] {
+): ColumnDef<StripeSubscriptionRow>[] => {
 	return [
 		{
 			accessorKey: 'created',

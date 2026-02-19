@@ -12,7 +12,7 @@ export default function CampaignsPage() {
 	);
 }
 
-async function CampaignsDataLoader() {
+const CampaignsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const campaignService = new CampaignService();

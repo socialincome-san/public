@@ -17,7 +17,7 @@ interface GitHubContributor {
 	contributions: number;
 }
 
-export async function getContributors() {
+export const getContributors = async () => {
 	const url = `https://api.github.com/repos/${owner}/${repo}/contributors`;
 	const contributorsRes = await fetchData(owner, repo, url);
 	const contributors = await contributorsRes.json();

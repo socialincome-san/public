@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { ContributionForm } from './contribution-form';
 
-export function ContributionFormDialog({
+export const ContributionFormDialog = ({
 	open,
 	onOpenChange,
 	contributionId,
@@ -13,7 +13,7 @@ export function ContributionFormDialog({
 	onOpenChange: (open: boolean) => void;
 	contributionId?: string;
 	readOnly: boolean;
-}) {
+}) => {
 	let dialogTitle = 'Add Contribution';
 	if (contributionId) {
 		dialogTitle = readOnly ? 'View Contribution' : 'Edit Contribution';

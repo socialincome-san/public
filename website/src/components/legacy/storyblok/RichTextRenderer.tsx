@@ -27,7 +27,7 @@ type RichTextRendererProps = {
 	region: WebsiteRegion;
 };
 
-export function RichTextRenderer({ richTextDocument, translator, lang, region }: RichTextRendererProps) {
+export const RichTextRenderer = ({ richTextDocument, translator, lang, region }: RichTextRendererProps) => {
 	return render(richTextDocument, {
 		markResolvers: {
 			[MARK_LINK]: (children: any, props: any) => (

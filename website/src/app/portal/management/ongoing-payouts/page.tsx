@@ -12,7 +12,7 @@ export default function OngoingPayoutsPage() {
 	);
 }
 
-async function OngoingPayoutsDataLoader() {
+const OngoingPayoutsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new PayoutService();

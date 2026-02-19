@@ -6,7 +6,7 @@ type Props = {
 	recipients: number;
 };
 
-export function IndirectImpactNotice({ recipients }: Props) {
+export const IndirectImpactNotice = ({ recipients }: Props) => {
 	const indirect = recipients * 5;
 
 	return (

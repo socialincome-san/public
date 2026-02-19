@@ -11,7 +11,7 @@ type Props = {
 	onClear: () => void;
 };
 
-export function StepResultBox({ id, value, filename, onClear }: Props) {
+export const StepResultBox = ({ id, value, filename, onClear }: Props) => {
 	const [copied, setCopied] = useState(false);
 
 	if (!value) {
@@ -21,13 +21,13 @@ export function StepResultBox({ id, value, filename, onClear }: Props) {
 	const isObject = typeof value === 'object';
 	const text = isObject ? JSON.stringify(value, null, 2) : String(value);
 
-	async function handleCopy() {
+	const handleCopy = async () => {
 		await navigator.clipboard.writeText(text);
 		setCopied(true);
 		setTimeout(() => setCopied(false), 1200);
 	}
 
-	function handleDownload() {
+	const handleDownload = () => {
 		const blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');

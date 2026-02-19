@@ -7,7 +7,7 @@ type PortalAppShellProps = {
 	user?: UserSession;
 };
 
-export function PortalAppShell({ children, user }: PortalAppShellProps) {
+export const PortalAppShell = ({ children, user }: PortalAppShellProps) => {
 	return (
 		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-gradient-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed">
 			{user && <Navbar user={user} />}

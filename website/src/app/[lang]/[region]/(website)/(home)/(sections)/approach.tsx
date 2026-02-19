@@ -11,7 +11,7 @@ type ApproachCardProps = {
 	}[];
 };
 
-export async function Approach({ lang }: DefaultParams) {
+export const Approach = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home'],

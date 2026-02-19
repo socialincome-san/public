@@ -8,7 +8,7 @@ type Props = {
 	onFileSelected: (file: File) => void;
 };
 
-export function CsvDropzone({ onFileSelected }: Props) {
+export const CsvDropzone = ({ onFileSelected }: Props) => {
 	const onDrop = (files: File[]) => {
 		const file = files[0];
 

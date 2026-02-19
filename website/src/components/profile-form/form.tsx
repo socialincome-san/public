@@ -28,7 +28,7 @@ type Props = {
 	isNewsletterSubscribed?: boolean;
 };
 
-export function ProfileForm({ session, translations, isNewsletterSubscribed = false }: Props) {
+export const ProfileForm = ({ session, translations, isNewsletterSubscribed = false }: Props) => {
 	const [errorMessage, setErrorMessage] = useState('');
 
 	const form = useForm<ProfileFormInput, unknown, ProfileFormOutput>({

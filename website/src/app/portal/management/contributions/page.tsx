@@ -12,7 +12,7 @@ export default function ContributionsPage() {
 	);
 }
 
-async function ContributionsDataLoader() {
+const ContributionsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributionService();

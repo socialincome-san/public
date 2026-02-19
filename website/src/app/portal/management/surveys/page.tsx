@@ -12,7 +12,7 @@ export default function SurveysPage() {
 	);
 }
 
-async function SurveysDataLoader() {
+const SurveysDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new SurveyService();

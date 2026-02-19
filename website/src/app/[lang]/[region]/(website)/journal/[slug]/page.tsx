@@ -27,7 +27,7 @@ export const revalidate = 900;
 
 const storyblokService = new StoryblokService();
 
-export async function generateMetadata(props: DefaultLayoutPropsWithSlug) {
+export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
 	if (!articleResponse.success) {
@@ -42,7 +42,7 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 	return await storyblokService.getArticle(lang, slug);
 });
 
-function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') {
+const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge variant={variant} className="mt-6">

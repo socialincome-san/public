@@ -8,11 +8,11 @@ import { YourDonationCertificateTableViewRow } from '@/lib/services/donation-cer
 import type { ColumnDef } from '@tanstack/react-table';
 import { DownloadCell } from '../elements/download-cell';
 
-export function makeYourCertificatesColumns(
+export const makeYourCertificatesColumns = (
 	hideProgramName: boolean = false,
 	hideLocalPartner: boolean = false,
 	translator?: Translator,
-): ColumnDef<YourDonationCertificateTableViewRow>[] {
+): ColumnDef<YourDonationCertificateTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'createdAt',

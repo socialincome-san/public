@@ -24,7 +24,7 @@ type DrawFile = {
 	round: number;
 };
 
-export async function loadPastDraws(): Promise<Array<CompletedDraw>> {
+export const loadPastDraws = async (): Promise<Array<CompletedDraw>> => {
 	const files = await fs.readdir(DRAWS_PATH);
 	try {
 		return (
@@ -52,7 +52,7 @@ export async function loadPastDraws(): Promise<Array<CompletedDraw>> {
 }
 
 // extracts the name from a file of format `{count}-{name}-{date}.txt` and capitalises the first letter
-function extractDrawName(filename: string): string {
+const extractDrawName = (filename: string): string => {
 	const drawNameMatch = filename.match(/\d-([A-Za-z \-]+)-.*\.txt/);
 	if (drawNameMatch == null || drawNameMatch.length < 2) {
 		return '';

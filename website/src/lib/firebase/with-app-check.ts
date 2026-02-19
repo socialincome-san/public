@@ -6,7 +6,7 @@ type Handler<T> = (request: NextRequest, context: { params: T }) => Promise<Resp
 
 // Checks Firebase App Check token from the request before proceeding to the handler
 // https://firebase.google.com/docs/app-check
-export function withAppCheck<T>(handler: Handler<T>) {
+export const withAppCheck = <T>(handler: Handler<T>) => {
 	return async (request: NextRequest, context: { params: T }): Promise<Response> => {
 		const firebaseService = new FirebaseAdminService();
 

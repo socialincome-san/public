@@ -25,7 +25,7 @@ const SURVEY_STATUS_UI: Record<
 	missed: { variant: 'destructive', label: 'Missed', Icon: CircleSlashIcon },
 };
 
-export function SurveyStatusBadge({ status }: SurveyStatusBadgeProps) {
+export const SurveyStatusBadge = ({ status }: SurveyStatusBadgeProps) => {
 	const { variant, label, Icon } = SURVEY_STATUS_UI[status];
 	return (
 		<Badge variant={variant}>

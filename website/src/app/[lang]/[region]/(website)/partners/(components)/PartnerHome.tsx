@@ -17,11 +17,11 @@ const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
 	CH: <CH_Flag className="h-5 w-5 rounded-full" />,
 };
 
-function getFlag(abbreviation: string): ReactElement<any> {
+const getFlag = (abbreviation: string): ReactElement<any> => {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL_Flag className="h-5 w-5 rounded-full" />;
 }
 
-export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang, region }: NgoHomeProps) {
+export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang, region }: NgoHomeProps) => {
 	const image_base_path = '/assets/partners/';
 
 	const countryBadge: CountryBadgeType = {

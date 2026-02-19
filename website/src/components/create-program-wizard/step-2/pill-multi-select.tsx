@@ -25,7 +25,7 @@ const pillClasses = {
 	inactive: 'bg-background hover:bg-muted border',
 };
 
-export function PillMultiSelect({ label, values, selected = [], onToggle }: PillMultiSelectProps) {
+export const PillMultiSelect = ({ label, values, selected = [], onToggle }: PillMultiSelectProps) => {
 	return (
 		<div className="space-y-2">
 			<p className="text-sm font-medium">{label}</p>

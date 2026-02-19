@@ -3,7 +3,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CardContent, CardHeader, GlowHoverCard, Typography } from '@socialincome/ui';
 
-export async function UspCards({ lang }: DefaultParams) {
+export const UspCards = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-partnership'],

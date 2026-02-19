@@ -7,7 +7,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeUserColumns(): ColumnDef<UserTableViewRow>[] {
+export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'firstName',

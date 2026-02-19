@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';
 import { SurveyFormDialog } from './survey-form-dialog';
 
-export function SurveysTableClient({ rows, error }: { rows: SurveyTableViewRow[]; error: string | null }) {
+export const SurveysTableClient = ({ rows, error }: { rows: SurveyTableViewRow[]; error: string | null }) => {
 	const [isSurveyFormOpen, setIsSurveyFormOpen] = useState(false);
 	const [surveyId, setSurveyId] = useState<string | undefined>(undefined);
 	const [readOnly, setReadOnly] = useState(false);

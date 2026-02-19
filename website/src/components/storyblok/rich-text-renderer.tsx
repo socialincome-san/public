@@ -5,7 +5,7 @@ type RichTextRendererProps = {
 	richTextDocument: StoryblokRichtext;
 };
 
-export function RichTextRenderer({ richTextDocument }: RichTextRendererProps) {
+export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) => {
 	return render(richTextDocument, {
 		markResolvers: {
 			[MARK_LINK]: (children: any, props: any) => (

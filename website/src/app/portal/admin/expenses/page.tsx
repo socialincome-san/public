@@ -12,7 +12,7 @@ export default function ExpensesPage() {
 	);
 }
 
-async function ExpensesDataLoader() {
+const ExpensesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

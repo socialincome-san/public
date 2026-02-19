@@ -5,7 +5,7 @@ import { ContributorSession } from '@/lib/services/contributor/contributor.types
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { ProfileFormOutput } from './schemas';
 
-export async function toggleNewsletter(values: ProfileFormOutput, session: ContributorSession, isSubscribed: boolean) {
+export const toggleNewsletter = async (values: ProfileFormOutput, session: ContributorSession, isSubscribed: boolean) => {
 	if (values.type !== 'contributor') {
 		return { success: true };
 	}
@@ -36,6 +36,6 @@ export async function toggleNewsletter(values: ProfileFormOutput, session: Contr
 	return unsubscribeFromNewsletterAction();
 }
 
-function formatNewsletterLanguage(lang?: string): SupportedLanguage {
+const formatNewsletterLanguage = (lang?: string): SupportedLanguage => {
 	return lang && mainWebsiteLanguages.includes(lang as WebsiteLanguage) ? (lang as SupportedLanguage) : 'en';
 }

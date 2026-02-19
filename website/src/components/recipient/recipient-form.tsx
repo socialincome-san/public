@@ -51,7 +51,7 @@ export type RecipientFormSchema = {
 	};
 };
 
-function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormSchema {
+const getInitialFormSchema = (actorKind: Actor['kind'] = 'user'): RecipientFormSchema => {
 	const base: RecipientFormSchema = {
 		label: 'Recipients',
 		fields: {
@@ -121,7 +121,7 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormS
 	return base;
 }
 
-export function RecipientForm({
+export const RecipientForm = ({
 	onSuccess,
 	onError,
 	onCancel,
@@ -129,7 +129,7 @@ export function RecipientForm({
 	readOnly,
 	programId,
 	actorKind = 'user',
-}: RecipientFormProps) {
+}: RecipientFormProps) => {
 	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(actorKind));
 	const [recipient, setRecipient] = useState<RecipientPayload>();
 	const [isLoading, startTransition] = useTransition();

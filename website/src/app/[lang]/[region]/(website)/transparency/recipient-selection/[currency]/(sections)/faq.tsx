@@ -6,7 +6,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Link from 'next/link';
 
-export async function SelectionFaq({ lang }: DefaultParams) {
+export const SelectionFaq = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'website-faq', 'website-selection'],

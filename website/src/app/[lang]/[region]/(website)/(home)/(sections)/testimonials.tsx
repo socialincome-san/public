@@ -8,7 +8,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer } from '@socialincome/ui';
 import { ContributorsCarousel } from '../(components)/contributors-carousel';
 
-export async function Testimonials({ lang }: DefaultParams) {
+export const Testimonials = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['countries', 'website-our-work'],

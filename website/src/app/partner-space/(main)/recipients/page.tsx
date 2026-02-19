@@ -12,7 +12,7 @@ export default function RecipientsPage() {
 	);
 }
 
-async function RecipientsDataLoader() {
+const RecipientsDataLoader = async () => {
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
 	const recipientService = new RecipientService();

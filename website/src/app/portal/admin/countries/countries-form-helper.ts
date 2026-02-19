@@ -1,7 +1,7 @@
 import { CountryCreateInput, CountryPayload, CountryUpdateInput } from '@/lib/services/country/country.types';
 import { CountryFormSchema } from './countries-form';
 
-export function buildCreateCountryInput(schema: CountryFormSchema): CountryCreateInput {
+export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreateInput => {
 	return {
 		isoCode: schema.fields.isoCode.value,
 		isActive: schema.fields.isActive.value,
@@ -28,7 +28,7 @@ export function buildCreateCountryInput(schema: CountryFormSchema): CountryCreat
 	};
 }
 
-export function buildUpdateCountryInput(schema: CountryFormSchema, existing: CountryPayload): CountryUpdateInput {
+export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryUpdateInput => {
 	return {
 		id: existing.id,
 		isoCode: schema.fields.isoCode.value,

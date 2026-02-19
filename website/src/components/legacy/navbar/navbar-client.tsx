@@ -408,7 +408,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 	);
 };
 
-export function NavbarClient(props: NavbarProps) {
+export const NavbarClient = (props: NavbarProps) => {
 	const { backgroundColor } = useNavbarBackground();
 
 	return (

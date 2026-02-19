@@ -13,7 +13,7 @@ type NavigationLinkProps = {
 	Icon: React.ForwardRefExoticComponent<React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>>;
 } & LinkProps;
 
-function NavigationLink({ href, Icon, children, ...props }: PropsWithChildren<NavigationLinkProps>) {
+const NavigationLink = ({ href, Icon, children, ...props }: PropsWithChildren<NavigationLinkProps>) => {
 	return (
 		<Link href={href} {...props}>
 			<li className="hover:bg-muted flex-inline flex items-center rounded px-4 py-3">
@@ -24,7 +24,7 @@ function NavigationLink({ href, Icon, children, ...props }: PropsWithChildren<Na
 	);
 }
 
-function NavigationSectionTitle({ children }: PropsWithChildren) {
+const NavigationSectionTitle = ({ children }: PropsWithChildren) => {
 	return (
 		<Typography weight="medium" className="py-2">
 			{children}
@@ -43,7 +43,7 @@ type LayoutClientProps = {
 	};
 };
 
-export function LayoutClient({ params, translations, children }: PropsWithChildren<LayoutClientProps>) {
+export const LayoutClient = ({ params, translations, children }: PropsWithChildren<LayoutClientProps>) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const navigationMenu = (

@@ -16,7 +16,7 @@ interface IssueProps extends Pick<Issue, 'title' | 'url'> {
 	text: string;
 }
 
-export function Issue({ title, url, text }: IssueProps) {
+export const Issue = ({ title, url, text }: IssueProps) => {
 	return (
 		<TableRow className="p-5 hover:bg-transparent">
 			<TableCell className="text-xl">{title}</TableCell>

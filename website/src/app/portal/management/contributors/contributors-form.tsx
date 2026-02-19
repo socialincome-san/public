@@ -92,7 +92,7 @@ export default function ContributorsForm({
 		});
 	};
 
-	async function onSubmit(schema: ContributorFormSchema) {
+	const onSubmit = async (schema: ContributorFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res;

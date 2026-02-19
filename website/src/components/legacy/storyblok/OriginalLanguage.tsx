@@ -11,14 +11,14 @@ type OriginalLanguageLinkProps = {
 	languageName: string;
 };
 
-export function OriginalLanguageLink({
+export const OriginalLanguageLink = ({
 	originalLanguage,
 	slug,
 	lang,
 	region,
 	text,
 	languageName,
-}: OriginalLanguageLinkProps) {
+}: OriginalLanguageLinkProps) => {
 	return (
 		originalLanguage &&
 		originalLanguage !== lang && (

@@ -4,7 +4,7 @@ import type { ActionButton } from '@/generated/storyblok/types/109655/storyblok-
 import { Button, useGlowHover } from '@socialincome/ui';
 import Link from 'next/link';
 
-export function StoryblokActionButton({ text, url, primaryStyle, _uid, glowEffect }: ActionButton) {
+export const StoryblokActionButton = ({ text, url, primaryStyle, _uid, glowEffect }: ActionButton) => {
 	return (
 		<div className="my-10 flex w-full justify-center">
 			<Link key={_uid} href={url} target="_blank" className="no-underline" rel="noopener noreferrer">

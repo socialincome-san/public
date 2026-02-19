@@ -8,7 +8,7 @@ import { loadPastDraws } from './state';
 
 const revalidate = 3600 * 24; // update once a day
 
-export async function PastRounds({ lang }: DefaultParams) {
+export const PastRounds = async ({ lang }: DefaultParams) => {
 	const pastDraws = await loadPastDraws();
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,

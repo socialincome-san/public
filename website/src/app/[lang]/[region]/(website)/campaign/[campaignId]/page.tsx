@@ -34,7 +34,7 @@ export type CampaignPageProps = {
 	params: Promise<CampaignPageParams>;
 };
 
-export async function generateMetadata({ params }: CampaignPageProps) {
+export const generateMetadata = async ({ params }: CampaignPageProps) => {
 	const { campaignId, lang } = await params;
 	const result = await getCampaignByIdAction(campaignId);
 	if (!result.success) {

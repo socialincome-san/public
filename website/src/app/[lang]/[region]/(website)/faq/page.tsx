@@ -5,7 +5,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function generateMetadata(props: DefaultPageProps) {
+export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-faq');
 }

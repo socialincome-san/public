@@ -15,7 +15,7 @@ interface IssuesResponse {
 	labels: string[];
 }
 
-export async function getIssuesData(): Promise<IssuesResponse> {
+export const getIssuesData = async (): Promise<IssuesResponse> => {
 	const issues: Issue[] = [];
 	const labels: string[] = [];
 	let page = 1;

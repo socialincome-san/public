@@ -6,9 +6,9 @@ import { ContributorService } from '@/lib/services/contributor/contributor.servi
 import { BankContributorData } from '@/lib/services/contributor/contributor.types';
 import { DateTime } from 'luxon';
 
-export async function getReferenceIds(
+export const getReferenceIds = async (
 	email: string,
-): Promise<{ contributorReferenceId: string; contributionReferenceId: string } | undefined> {
+): Promise<{ contributorReferenceId: string; contributionReferenceId: string } | undefined> => {
 	const contributorService = new ContributorService();
 	const contributorReferenceId = await contributorService.getOrCreateReferenceIdByEmail(email);
 	if (!contributorReferenceId.success) {
@@ -18,7 +18,7 @@ export async function getReferenceIds(
 	return { contributorReferenceId: contributorReferenceId.data, contributionReferenceId };
 }
 
-export async function createContributionForContributor(payment: BankTransferPayment, userData: BankContributorData) {
+export const createContributionForContributor = async (payment: BankTransferPayment, userData: BankContributorData) => {
 	const bankTransferService = new BankTransferService();
 	return await bankTransferService.createContributionForNewOrExistingContributor(payment, userData);
 }

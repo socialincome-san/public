@@ -9,7 +9,7 @@ import claudiaImage from '../(assets)/claudia.jpg';
 import rubenImage from '../(assets)/ruben.jpg';
 import vanjaImg from '../(assets)/vanja.jpg';
 
-export async function Contributors({ lang }: DefaultParams) {
+export const Contributors = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['countries', 'website-our-work'],

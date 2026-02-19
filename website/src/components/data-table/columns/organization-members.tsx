@@ -5,7 +5,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeOrganizationMemberColumns(): ColumnDef<OrganizationMemberTableViewRow>[] {
+export const makeOrganizationMemberColumns = (): ColumnDef<OrganizationMemberTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'firstName',

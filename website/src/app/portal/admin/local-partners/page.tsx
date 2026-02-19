@@ -12,7 +12,7 @@ export default function LocalPartnersPage() {
 	);
 }
 
-async function LocalPartnersDataLoader() {
+const LocalPartnersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

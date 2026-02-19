@@ -70,7 +70,7 @@ const initialFormSchema: PayoutFormSchema = {
 	},
 };
 
-export function PayoutForm({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) {
+export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) => {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [payout, setPayout] = useState<PayoutPayload>();
 	const [isLoading, startTransition] = useTransition();

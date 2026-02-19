@@ -6,7 +6,7 @@ import { type PayoutCreateInput, type PayoutUpdateInput } from '@/lib/services/p
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { revalidatePath } from 'next/cache';
 
-export async function createPayoutAction(input: PayoutCreateInput) {
+export const createPayoutAction = async (input: PayoutCreateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
 
@@ -16,7 +16,7 @@ export async function createPayoutAction(input: PayoutCreateInput) {
 	return result;
 }
 
-export async function updatePayoutAction(input: PayoutUpdateInput) {
+export const updatePayoutAction = async (input: PayoutUpdateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
 
@@ -26,14 +26,14 @@ export async function updatePayoutAction(input: PayoutUpdateInput) {
 	return result;
 }
 
-export async function getPayoutAction(id: string) {
+export const getPayoutAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
 
 	return service.get(user.id, id);
 }
 
-export async function getPayoutRecipientOptionsAction() {
+export const getPayoutRecipientOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new RecipientService();
 

@@ -8,7 +8,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeExpenseColumns(): ColumnDef<ExpenseTableViewRow>[] {
+export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'type',

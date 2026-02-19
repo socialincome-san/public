@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { PayoutFormDialog } from './payout-form-dialog';
 import { StartPayoutProcessDialog } from './start-payout-process-dialog';
 
-export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]; error: string | null }) {
+export const PayoutsTableClient = ({ rows, error }: { rows: PayoutTableViewRow[]; error: string | null }) => {
 	const [isPayoutFormOpen, setIsPayoutFormOpen] = useState(false);
 	const [payoutId, setPayoutId] = useState<string | undefined>(undefined);
 	const [readOnly, setReadOnly] = useState(false);

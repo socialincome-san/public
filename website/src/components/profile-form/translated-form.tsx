@@ -48,7 +48,7 @@ type Props = {
 	isNewsletterSubscribed?: boolean;
 };
 
-export async function TranslatedProfileForm({ session, language = 'en', isNewsletterSubscribed }: Props) {
+export const TranslatedProfileForm = async ({ session, language = 'en', isNewsletterSubscribed }: Props) => {
 	const translator = await Translator.getInstance({
 		language,
 		namespaces: ['website-me', 'countries'],

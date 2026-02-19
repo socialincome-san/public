@@ -1,7 +1,7 @@
 import { ExpenseCreateInput, ExpensePayload, ExpenseUpdateInput } from '@/lib/services/expense/expense.types';
 import { ExpenseFormSchema } from './expenses-form';
 
-export function buildCreateExpenseInput(schema: ExpenseFormSchema): ExpenseCreateInput {
+export const buildCreateExpenseInput = (schema: ExpenseFormSchema): ExpenseCreateInput => {
 	return {
 		type: schema.fields.type.value,
 		year: Number(schema.fields.year.value),
@@ -10,7 +10,7 @@ export function buildCreateExpenseInput(schema: ExpenseFormSchema): ExpenseCreat
 	};
 }
 
-export function buildUpdateExpenseInput(schema: ExpenseFormSchema, existing: ExpensePayload): ExpenseUpdateInput {
+export const buildUpdateExpenseInput = (schema: ExpenseFormSchema, existing: ExpensePayload): ExpenseUpdateInput => {
 	return {
 		id: existing.id,
 		type: schema.fields.type.value,

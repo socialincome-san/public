@@ -11,19 +11,19 @@ const url = 'https://socialincome.org';
 
 const SUPPORTED_LANGUAGES: WebsiteLanguage[] = ['de', 'fr', 'it'];
 
-function articleUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
+const articleUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
 	return `${url}/${lang}/${region}/journal/${slug}`;
 }
 
-function tagUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
+const tagUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
 	return `${url}/${lang}/${region}/journal/tag/${slug}`;
 }
 
-function authorUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
+const authorUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
 	return `${url}/${lang}/${region}/journal/author/${slug}`;
 }
 
-function generateAlternativeLanguages(alternativeArticles: Record<string, string[]>, slug: string) {
+const generateAlternativeLanguages = (alternativeArticles: Record<string, string[]>, slug: string) => {
 	return Object.fromEntries(
 		SUPPORTED_LANGUAGES.filter((lang) => alternativeArticles[lang].includes(slug)).map((lang) => [
 			lang,
@@ -32,10 +32,10 @@ function generateAlternativeLanguages(alternativeArticles: Record<string, string
 	);
 }
 
-function generateStoryblokArticlesSitemap(
+const generateStoryblokArticlesSitemap = (
 	articles: ISbStoryData<Article>[],
 	articlesAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStoryData<Article>[] }[],
-): MetadataRoute.Sitemap {
+): MetadataRoute.Sitemap => {
 	const alternativeArticles = Object.fromEntries(
 		articlesAlternativeLanguages.map(({ lang, stories }) => [lang, stories.map((it) => it.slug)]),
 	) as Record<string, string[]>;
@@ -49,7 +49,7 @@ function generateStoryblokArticlesSitemap(
 	}));
 }
 
-function generateStoryblokAuthorsSitemap(authors: ISbStoryData<Author>[]): MetadataRoute.Sitemap {
+const generateStoryblokAuthorsSitemap = (authors: ISbStoryData<Author>[]): MetadataRoute.Sitemap => {
 	return authors.map((author) => ({
 		url: authorUrl(author.slug, defaultLanguage),
 		alternates: {
@@ -59,7 +59,7 @@ function generateStoryblokAuthorsSitemap(authors: ISbStoryData<Author>[]): Metad
 	}));
 }
 
-function generateStoryblokTagSitemap(tags: ISbStoryData<Topic>[]): MetadataRoute.Sitemap {
+const generateStoryblokTagSitemap = (tags: ISbStoryData<Topic>[]): MetadataRoute.Sitemap => {
 	return tags.map((tag) => ({
 		url: tagUrl(tag.slug, defaultLanguage),
 		alternates: {
@@ -69,11 +69,11 @@ function generateStoryblokTagSitemap(tags: ISbStoryData<Topic>[]): MetadataRoute
 	}));
 }
 
-function staticPageUrl(route: string, lang: WebsiteLanguage, region: WebsiteRegion) {
+const staticPageUrl = (route: string, lang: WebsiteLanguage, region: WebsiteRegion) => {
 	return `${url}/${lang}/${region}/${route}`;
 }
 
-function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
+const generateStaticPagesSitemap = (): MetadataRoute.Sitemap => {
 	return staticRoutes.flatMap((route) =>
 		websiteRegions.map((region) => ({
 			url: staticPageUrl(route, defaultLanguage, region),
@@ -86,7 +86,7 @@ function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
 
 const storyblokService = new StoryblokService();
 
-async function getArticlesInAlternativeLanguages() {
+const getArticlesInAlternativeLanguages = async () => {
 	return Promise.all(
 		SUPPORTED_LANGUAGES.map(async (lang) => {
 			const res = await storyblokService.getOverviewArticles(lang);

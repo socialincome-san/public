@@ -19,7 +19,7 @@ type Props = {
 	onToggleRow: (id: string) => void;
 };
 
-export function CountryTableBody({ rows, value, openIds, onToggleRow }: Props) {
+export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) => {
 	return (
 		<div className="max-h-96 overflow-auto rounded-xl border">
 			<Table className="table-fixed">

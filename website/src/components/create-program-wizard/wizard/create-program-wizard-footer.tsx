@@ -9,7 +9,7 @@ type Props = {
 	send: CreateProgramWizardSend;
 };
 
-export function CreateProgramWizardFooter({ state, send }: Props) {
+export const CreateProgramWizardFooter = ({ state, send }: Props) => {
 	return (
 		<div className="flex items-center justify-between border-t pt-4">
 			<Button variant="outline" onClick={() => send({ type: 'BACK' })} disabled={!state.can({ type: 'BACK' })}>

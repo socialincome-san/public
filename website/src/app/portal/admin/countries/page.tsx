@@ -12,7 +12,7 @@ export default function CountriesPage() {
 	);
 }
 
-async function CountriesDataLoader() {
+const CountriesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

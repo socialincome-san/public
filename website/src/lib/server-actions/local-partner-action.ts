@@ -8,7 +8,7 @@ import { getActorOrThrow } from '../firebase/current-account';
 
 const localPartnerService = new LocalPartnerService();
 
-export async function createLocalPartnerAction(localPartner: LocalPartnerCreateInput) {
+export const createLocalPartnerAction = async (localPartner: LocalPartnerCreateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const result = await localPartnerService.create(user.id, localPartner);
 
@@ -16,7 +16,7 @@ export async function createLocalPartnerAction(localPartner: LocalPartnerCreateI
 	return result;
 }
 
-export async function updateLocalPartnerAction(updateInput: LocalPartnerUpdateInput) {
+export const updateLocalPartnerAction = async (updateInput: LocalPartnerUpdateInput) => {
 	const actor = await getActorOrThrow();
 
 	const result = await localPartnerService.update(actor, updateInput);
@@ -30,7 +30,7 @@ export async function updateLocalPartnerAction(updateInput: LocalPartnerUpdateIn
 	return result;
 }
 
-export async function getLocalPartnerAction(localPartnerId: string) {
+export const getLocalPartnerAction = async (localPartnerId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	return localPartnerService.get(user.id, localPartnerId);
 }

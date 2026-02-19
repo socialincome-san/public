@@ -18,7 +18,7 @@ export default function RecipientsPageProgramScoped({ params }: Props) {
 	);
 }
 
-async function RecipientsProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
+const RecipientsProgramScopedDataLoader = async ({ params }: { params: Promise<{ programId: string }> }) => {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 

@@ -4,12 +4,12 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Typography } from '@socialincome/ui';
 
-export function StoryblokCampaignDonate(props: {
+export const StoryblokCampaignDonate = (props: {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	translator: Translator;
 	campaignId?: string;
-}) {
+}) => {
 	const { translator, region, lang } = props;
 	const donationInterval = DonationInterval.Monthly;
 	return (

@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-export function slugify(value: string): string {
+export const slugify = (value: string): string => {
 	return value
 		.toLowerCase()
 		.trim()
@@ -8,7 +8,7 @@ export function slugify(value: string): string {
 		.replace(/^-+|-+$/g, '');
 }
 
-export function formatCurrency(value: number): string {
+export const formatCurrency = (value: number): string => {
 	return new Intl.NumberFormat('de-CH', {
 		style: 'currency',
 		currency: 'CHF',
@@ -16,12 +16,12 @@ export function formatCurrency(value: number): string {
 	}).format(value);
 }
 
-export function formatCurrencyLocale(
+export const formatCurrencyLocale = (
 	amount: number,
 	currency: string,
 	locale: string,
 	options: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
-): string {
+): string => {
 	const { minimumFractionDigits = 0, maximumFractionDigits = 0 } = options;
 	try {
 		return new Intl.NumberFormat(locale, {
@@ -36,24 +36,24 @@ export function formatCurrencyLocale(
 	}
 }
 
-export function humanize(value: string): string {
+export const humanize = (value: string): string => {
 	return value.replace(/_/g, ' ');
 }
 
-export function titleCase(value: string): string {
+export const titleCase = (value: string): string => {
 	return value.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ' ' + d.toUpperCase()));
 }
 
-export function formatNumberLocale(
+export const formatNumberLocale = (
 	value: number,
 	locale: string,
 	options: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
-): string {
+): string => {
 	const { minimumFractionDigits = 0, maximumFractionDigits = 0 } = options;
 	return new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(value);
 }
 
-export function formatDate(date: Date | string | null | undefined, pattern = 'dd.MM.yyyy'): string {
+export const formatDate = (date: Date | string | null | undefined, pattern = 'dd.MM.yyyy'): string => {
 	if (!date) {
 		return '—';
 	}

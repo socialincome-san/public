@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { CountryTableBody } from './country-table-body';
 import { CountryTableHeader } from './country-table-header';
 
-function matchesSearch(row: ProgramCountryFeasibilityRow, search: string) {
+const matchesSearch = (row: ProgramCountryFeasibilityRow, search: string) => {
 	if (!search.trim()) {
 		return true;
 	}
@@ -17,7 +17,7 @@ function matchesSearch(row: ProgramCountryFeasibilityRow, search: string) {
 	return row.country.isoCode.toLowerCase().includes(q) || countryName.includes(q);
 }
 
-function meetsAllConditions(row: ProgramCountryFeasibilityRow) {
+const meetsAllConditions = (row: ProgramCountryFeasibilityRow) => {
 	return (
 		row.cash.condition === 'met' &&
 		row.mobileMoney.condition === 'met' &&
@@ -34,7 +34,7 @@ type Props = {
 	onToggleRow: (id: string) => void;
 };
 
-export function CountryTable({ rows, value, openIds, onValueChange, onToggleRow }: Props) {
+export const CountryTable = ({ rows, value, openIds, onValueChange, onToggleRow }: Props) => {
 	const [search, setSearch] = useState('');
 	const [onlyAllMet, setOnlyAllMet] = useState(false);
 

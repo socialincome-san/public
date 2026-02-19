@@ -3,7 +3,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Typography } from '@socialincome/ui';
 
-export async function OrgsPartnershipTitle({ lang }: DefaultParams) {
+export const OrgsPartnershipTitle = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-partnership'],

@@ -9,7 +9,7 @@ type Props = {
 	userId: string;
 };
 
-export async function UserPrograms({ userId }: Props) {
+export const UserPrograms = async ({ userId }: Props) => {
 	const service = new ProgramService();
 	const result = await service.getProgramWallets(userId);
 

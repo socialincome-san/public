@@ -12,7 +12,7 @@ export default function ExchangeRatesPage() {
 	);
 }
 
-async function ExchangeRatesDataLoader() {
+const ExchangeRatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 

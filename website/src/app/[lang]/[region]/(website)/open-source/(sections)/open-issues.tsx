@@ -11,7 +11,7 @@ type Issues = {
 	filter: string;
 };
 
-export async function OpenIssues({ lang }: DefaultParams) {
+export const OpenIssues = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-open-source'],

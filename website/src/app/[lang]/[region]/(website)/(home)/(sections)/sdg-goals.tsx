@@ -7,7 +7,7 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import Town from '../(assets)/sdg-town.jpg';
 
-export async function SDGGoals({ lang }: DefaultParams) {
+export const SDGGoals = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home'],

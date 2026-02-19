@@ -12,7 +12,7 @@ type PortraitProps = {
 	image: string | StaticImport;
 };
 
-function Portrait({ name, text, country, image }: PortraitProps) {
+const Portrait = ({ name, text, country, image }: PortraitProps) => {
 	return (
 		<div className="mb-16 px-1">
 			<div className="flex h-64 flex-col justify-between border-b-2 border-t-2 py-4 md:h-72">
@@ -30,7 +30,7 @@ function Portrait({ name, text, country, image }: PortraitProps) {
 	);
 }
 
-export function ContributorsCarousel({ portraits }: { portraits: PortraitProps[] }) {
+export const ContributorsCarousel = ({ portraits }: { portraits: PortraitProps[] }) => {
 	const screenSize = useScreenSize();
 
 	let slidesToScroll;

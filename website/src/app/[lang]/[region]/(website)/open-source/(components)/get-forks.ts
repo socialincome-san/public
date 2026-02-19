@@ -9,7 +9,7 @@ interface GitHubFork {
 	created_at: string;
 }
 
-export async function getForkCount(): Promise<{ totalForks: number; newForks: number }> {
+export const getForkCount = async (): Promise<{ totalForks: number; newForks: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
 	const repoDataRes = await fetchData(owner, repo, repoUrl);
 	const repoData = await repoDataRes.json();

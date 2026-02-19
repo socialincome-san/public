@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 
 const service = new UserService();
 
-export async function createUserAction(input: UserCreateInput) {
+export const createUserAction = async (input: UserCreateInput) => {
 	const session = await getAuthenticatedUserOrRedirect();
 	const result = await service.create(session.id, input);
 
@@ -18,7 +18,7 @@ export async function createUserAction(input: UserCreateInput) {
 	return result;
 }
 
-export async function updateUserAction(input: UserUpdateInput) {
+export const updateUserAction = async (input: UserUpdateInput) => {
 	const session = await getAuthenticatedUserOrRedirect();
 	const result = await service.update(session.id, input);
 
@@ -29,7 +29,7 @@ export async function updateUserAction(input: UserUpdateInput) {
 	return result;
 }
 
-export async function updateUserSelfAction(input: UserUpdateInput) {
+export const updateUserSelfAction = async (input: UserUpdateInput) => {
 	const session = await getAuthenticatedUserOrRedirect();
 	const result = await service.updateSelf(session.id, input);
 
@@ -40,12 +40,12 @@ export async function updateUserSelfAction(input: UserUpdateInput) {
 	return result;
 }
 
-export async function getUserAction(userId: string) {
+export const getUserAction = async (userId: string) => {
 	const session = await getAuthenticatedUserOrRedirect();
 	return service.get(session.id, userId);
 }
 
-export async function getUserOptionsAction() {
+export const getUserOptionsAction = async () => {
 	const session = await getAuthenticatedUserOrRedirect();
 	return service.getOptions(session.id);
 }

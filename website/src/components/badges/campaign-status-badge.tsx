@@ -16,7 +16,7 @@ const CAMPAIGN_STATUS_UI: Record<
 	inactive: { variant: 'default', label: 'Inactive', Icon: CircleSlashIcon },
 };
 
-export function CampaignStatusBadge({ status }: CampaignStatusBadgeProps) {
+export const CampaignStatusBadge = ({ status }: CampaignStatusBadgeProps) => {
 	const key = status ? 'active' : 'inactive';
 	const { variant, label, Icon } = CAMPAIGN_STATUS_UI[key];
 	return (

@@ -12,7 +12,7 @@ export default function ConfirmPayoutsPage() {
 	);
 }
 
-async function ConfirmPayoutsDataLoader() {
+const ConfirmPayoutsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new PayoutService();

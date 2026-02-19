@@ -6,13 +6,13 @@ import { cache } from 'react';
 
 const firebaseSessionService = new FirebaseSessionService();
 
-async function findContributorByAuthId(authUserId: string): Promise<ContributorSession | null> {
+const findContributorByAuthId = async (authUserId: string): Promise<ContributorSession | null> => {
 	const service = new ContributorService();
 	const result = await service.getCurrentContributorSession(authUserId);
 	return result.success ? result.data : null;
 }
 
-async function loadCurrentContributor(): Promise<ContributorSession | null> {
+const loadCurrentContributor = async (): Promise<ContributorSession | null> => {
 	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;
@@ -28,7 +28,7 @@ async function loadCurrentContributor(): Promise<ContributorSession | null> {
 
 const getCurrentContributor = cache(loadCurrentContributor);
 
-export async function getAuthenticatedContributorOrRedirect(): Promise<ContributorSession> {
+export const getAuthenticatedContributorOrRedirect = async (): Promise<ContributorSession> => {
 	const contributor = await getCurrentContributor();
 	if (!contributor) {
 		redirect('/login');
@@ -36,11 +36,11 @@ export async function getAuthenticatedContributorOrRedirect(): Promise<Contribut
 	return contributor;
 }
 
-export async function getOptionalContributor(): Promise<ContributorSession | null> {
+export const getOptionalContributor = async (): Promise<ContributorSession | null> => {
 	return await getCurrentContributor();
 }
 
-export async function getAuthenticatedContributorOrThrow(): Promise<ContributorSession> {
+export const getAuthenticatedContributorOrThrow = async (): Promise<ContributorSession> => {
 	const contributor = await getCurrentContributor();
 	if (!contributor) {
 		throw new Error('No authenticated contributor found');

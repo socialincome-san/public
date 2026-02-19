@@ -36,14 +36,14 @@ export type BankTransferFormProps = {
 	};
 };
 
-export function BankTransferForm({
+export const BankTransferForm = ({
 	amount,
 	intervalCount,
 	translations,
 	lang,
 	region,
 	qrBillType,
-}: BankTransferFormProps) {
+}: BankTransferFormProps) => {
 	const form = useFormContext();
 	const { currency } = useI18n();
 	const { contributorSession } = useContributorSession();

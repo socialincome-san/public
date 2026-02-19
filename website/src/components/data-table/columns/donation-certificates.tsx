@@ -6,7 +6,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeDonationCertificateColumns(): ColumnDef<DonationCertificateTableViewRow>[] {
+export const makeDonationCertificateColumns = (): ColumnDef<DonationCertificateTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'year',
