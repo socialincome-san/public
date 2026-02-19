@@ -25,7 +25,7 @@ jobs:
         run: npm install --no-save prettier@3.4.2 prettier-plugin-organize-imports@4.1.0 prettier-plugin-tailwindcss@0.6.9
 
       - name: Prettify code
-        uses: creyD/prettier_action@31355f8eef017f8aeba2e0bc09d8502b13dbbad1 # v4.3
+        uses: creyD/prettier_action@8c18391fdc98ed0d884c6345f03975edac71b8f0 # v4.6
         with:
           prettier_version: 3.4.2
           prettier_plugins: prettier-plugin-organize-imports@4.1.0 prettier-plugin-tailwindcss@0.6.9
