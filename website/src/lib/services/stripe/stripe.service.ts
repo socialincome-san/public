@@ -14,12 +14,16 @@ import { titleCase } from '@/lib/utils/string-utils';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
-import { ProgramAccessService } from '../program-access/program-access.service';
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
 import { ContributorService } from '../contributor/contributor.service';
-import { ContributorUpdateInput, ContributorWithContact, StripeContributorData } from '../contributor/contributor.types';
+import {
+	ContributorUpdateInput,
+	ContributorWithContact,
+	StripeContributorData,
+} from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { ProgramAccessService } from '../program-access/program-access.service';
 import {
 	CheckoutMetadata,
 	StripeCustomerData,
@@ -126,9 +130,8 @@ export class StripeService extends BaseService {
 						referral: ContributorReferralSource.other,
 					};
 
-					const contributorResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth(
-						contributorData,
-					);
+					const contributorResult =
+						await this.contributorService.getOrCreateContributorWithFirebaseAuth(contributorData);
 					if (!contributorResult.success) {
 						this.logger.error(contributorResult.error);
 						return this.resultFail(contributorResult.error);
@@ -391,9 +394,15 @@ export class StripeService extends BaseService {
 			} = data;
 
 			const metadata: Record<string, string> = {};
-			if (campaignId) {metadata.campaignId = campaignId;}
-			if (accountId) {metadata.accountId = accountId;}
-			if (source) {metadata.source = source;}
+			if (campaignId) {
+				metadata.campaignId = campaignId;
+			}
+			if (accountId) {
+				metadata.accountId = accountId;
+			}
+			if (source) {
+				metadata.source = source;
+			}
 
 			const price = await this.stripe.prices.create({
 				active: true,
@@ -515,10 +524,7 @@ export class StripeService extends BaseService {
 		});
 	}
 
-	private async createStripeCustomerForPortal(
-		email: string,
-		name?: string,
-	): Promise<ServiceResult<string>> {
+	private async createStripeCustomerForPortal(email: string, name?: string): Promise<ServiceResult<string>> {
 		try {
 			const customer = await this.stripe.customers.create({
 				email,
