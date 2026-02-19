@@ -4,7 +4,7 @@ export const fetchData = async (owner: string, repo: string, url: string) => {
   };
   // Conditionally add the Authorization header if GITHUB_PAT is available
   if (process.env.GITHUB_PAT) {
-    headers['Authorization'] = `Bearer ${process.env.GITHUB_PAT}`;
+    headers.Authorization = `Bearer ${process.env.GITHUB_PAT}`;
   }
   const res = await fetch(url, {
     headers,

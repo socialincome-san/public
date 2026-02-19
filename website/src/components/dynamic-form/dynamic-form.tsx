@@ -26,9 +26,7 @@ export type FormField = {
 
 export type FormSchema = {
   label: string;
-  fields: {
-    [key: string]: FormField | FormSchema;
-  };
+  fields: Record<string, FormField | FormSchema>;
 };
 
 // recursively build Zod Schema from Form Schema
@@ -39,7 +37,7 @@ const buildZodSchema = (schemaDef: FormSchema): ZodObject<unknown> => {
     const value = schemaDef.fields[key];
 
     if (isFormField(value) && value.zodSchema) {
-      result[key] = value.zodSchema as ZodTypeAny;
+      result[key] = value.zodSchema;
     } else {
       // nested object
       result[key] = buildZodSchema(value as FormSchema);
@@ -174,7 +172,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 
   const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
 
-  const onValidationErrors = (e: Object) => {
+  const onValidationErrors = (e: object) => {
     console.warn('dynamic form validation errors: ', e);
     setOpenAccordion('all');
   };
@@ -259,7 +257,7 @@ const GenericFormField = ({
     ? (formSchema.fields[parentOption] as FormSchema)?.fields[option]
     : formSchema.fields[option];
 
-  const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { [key: string]: string } => {
+  const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): Record<string, string> => {
     const def = getDef(key, zodSchema, parentOption);
     if (isOptional(key, zodSchema, parentOption)) {
       return def.innerType._def.values;

@@ -1,4 +1,3 @@
-import { CountryCode } from '@/generated/prisma/enums';
 import { WebsiteLanguage, mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
@@ -28,7 +27,7 @@ export const toggleNewsletter = async (values: ProfileFormOutput, session: Contr
       firstname: values.firstName,
       lastname: values.lastName,
       language,
-      country: session.country as CountryCode,
+      country: session.country!,
       isContributor: true,
     });
   }

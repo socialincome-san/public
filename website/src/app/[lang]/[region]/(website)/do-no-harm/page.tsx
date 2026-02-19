@@ -23,7 +23,7 @@ export default async function Page({ params }: DefaultPageProps) {
     namespaces: ['website-do-no-harm'],
   });
 
-  const data = translator.t('content') as DoNoHarmContent;
+  const data = translator.t('content');
 
   return (
     <BaseContainer className="flex flex-col items-start space-y-8 pt-16">

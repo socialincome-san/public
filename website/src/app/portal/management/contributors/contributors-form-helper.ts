@@ -8,9 +8,7 @@ import {
 import { ContributorFormSchema } from './contributors-form';
 
 export const buildCreateContributorInput = (schema: ContributorFormSchema): ContributorFormCreateInput => {
-  const contactFields: {
-    [key: string]: FormField;
-  } = schema.fields.contact.fields;
+  const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 
   const addressInput = buildAddressInput(contactFields);
 
@@ -35,9 +33,7 @@ export const buildUpdateContributorsInput = (
   schema: ContributorFormSchema,
   contributor: ContributorPayload,
 ): ContributorUpdateInput => {
-  const contactFields: {
-    [key: string]: FormField;
-  } = schema.fields.contact.fields;
+  const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 
   // Contact Phone Update Logic
   const contactPhoneUpdate = contactFields.phone.value

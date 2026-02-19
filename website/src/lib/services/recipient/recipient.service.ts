@@ -194,7 +194,7 @@ export class RecipientService extends BaseService {
 
     try {
       if (phoneAdded) {
-        const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
+        const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber);
         if (!firebaseResult.success) {
           return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
         }
@@ -207,7 +207,7 @@ export class RecipientService extends BaseService {
       if (phoneChanged) {
         const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(
           previousPaymentPhoneNumber,
-          nextPaymentPhoneNumber!,
+          nextPaymentPhoneNumber,
         );
 
         if (!firebaseResult.success) {

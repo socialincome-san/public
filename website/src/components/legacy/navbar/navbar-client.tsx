@@ -99,7 +99,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
     case 'about-us':
     case 'our-work':
     case 'transparency':
-      const section = navigation!.find((section) => section.id === visibleSection);
+      const section = navigation.find((section) => section.id === visibleSection);
       content = (
         <div className="flex flex-col space-y-8">
           <Typography size="5xl" color="accent" weight="medium">
@@ -190,9 +190,9 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
       break;
     case 'main':
     default:
-      const ourWork = navigation![0];
-      const aboutUs = navigation![1];
-      const transparency = navigation![2];
+      const ourWork = navigation[0];
+      const aboutUs = navigation[1];
+      const transparency = navigation[2];
 
       content = (
         <div className="flex h-full w-full flex-col justify-between">
@@ -271,9 +271,9 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
     </Link>
   );
 
-  const ourWork = navigation![0];
-  const aboutUs = navigation![1];
-  const transparency = navigation![2];
+  const ourWork = navigation[0];
+  const aboutUs = navigation[1];
+  const transparency = navigation[2];
 
   return (
     <div className="hidden h-20 flex-row items-baseline justify-between gap-x-4 overflow-hidden px-8 py-6 transition-[height] duration-500 ease-in group-hover/navbar:h-60 md:flex">

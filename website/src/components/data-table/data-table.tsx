@@ -51,9 +51,7 @@ export default function DataTable<Row>({
       return;
     }
     const filtered = data.filter((row) => {
-      return searchKeys?.some((key) =>
-        (row[key as keyof Row] as string)?.toString().toLowerCase().includes(search.toLowerCase()),
-      );
+      return searchKeys?.some((key) => (row[key] as string)?.toString().toLowerCase().includes(search.toLowerCase()));
     });
     setFilteredData(filtered);
   };

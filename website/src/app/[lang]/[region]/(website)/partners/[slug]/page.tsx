@@ -12,7 +12,7 @@ const getNGOTranslations = async (
 ): Promise<{ translation: NgoEntryJSON | undefined }> => {
   let currentNgo: NgoEntryJSON | undefined = undefined;
   for (const ngo of ngos) {
-    if ((translator.t(ngo) as NgoEntryJSON)['org-slug'] === slug) {
+    if (translator.t(ngo)['org-slug'] === slug) {
       currentNgo = translator.t(ngo);
       break;
     }
@@ -61,7 +61,7 @@ export default async function Page({ params }: PartnerPageProps) {
   if (!currentNgo) {
     redirect('/not-found');
   }
-  const currentNgoCountry = translator.t(currentNgo!['org-country'] || 'SL');
+  const currentNgoCountry = translator.t(currentNgo['org-country'] || 'SL');
 
   return (
     <PartnerHome

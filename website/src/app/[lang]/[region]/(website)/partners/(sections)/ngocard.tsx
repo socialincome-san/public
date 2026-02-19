@@ -1,7 +1,6 @@
 import { FundraiserBadge, SDGBadge } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
 import { NgoCardProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import {
   Badge,
   Card,
@@ -34,11 +33,11 @@ export default async function NgoCard({
   region,
 }: NgoCardProps) {
   const translator = await Translator.getInstance({
-    language: lang as WebsiteLanguage,
+    language: lang,
     namespaces: ['website-common', 'countries', 'website-partners'],
   });
 
-  const showVisitOnline: boolean = !!(
+  const showVisitOnline = !!(
     ngoHoverCard.orgInstagram ||
     ngoHoverCard.orgFacebook ||
     ngoHoverCard.orgWebsite ||
@@ -46,7 +45,7 @@ export default async function NgoCard({
     ngoHoverCard.orgYoutube
   );
 
-  const showFundRaiser: boolean = !!ngoHoverCard.orgFundRaiserText;
+  const showFundRaiser = !!ngoHoverCard.orgFundRaiserText;
 
   const SL_flag = SL as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
 

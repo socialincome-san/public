@@ -150,7 +150,7 @@ const groups: Group[] = [
 
 export default async function Team({ lang }: { lang: WebsiteLanguage }) {
   const translator = await Translator.getInstance({
-    language: lang as WebsiteLanguage,
+    language: lang,
     namespaces: ['countries', 'website-about-us'],
   });
 

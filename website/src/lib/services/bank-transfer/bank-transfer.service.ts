@@ -1,5 +1,4 @@
 import { ContributionStatus, DonationInterval, PaymentEventType } from '@/generated/prisma/client';
-import { Currency } from '@/lib/types/currency';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
@@ -60,7 +59,7 @@ export class BankTransferService extends BaseService {
       contribution: {
         create: {
           amount: payment.amount,
-          currency: payment.currency as Currency,
+          currency: payment.currency,
           amountChf: payment.amount,
           feesChf: 0,
           interval: this.getDonationInterval(payment.interval),

@@ -7,7 +7,7 @@ const DEFAULT_HEIGHT = 15;
 const DEFAULT_WIDTH = 25;
 
 export const ThumbnailImage = ({ thumbnail }: { thumbnail?: StoryblokAsset }) => {
-  if (!thumbnail || !thumbnail.filename) {
+  if (!thumbnail?.filename) {
     return null;
   }
 

@@ -21,7 +21,7 @@ import { RecipientFormSchema } from './recipient-form';
 export const buildUpdateRecipientInput = (
   schema: RecipientFormSchema,
   recipient: RecipientPayload,
-  contactFields: { [key: string]: FormField },
+  contactFields: Record<string, FormField>,
 ): RecipientUpdateInput => {
   const paymentInfoFields = schema.fields.paymentInformation.fields;
 
@@ -188,7 +188,7 @@ export const buildUpdateRecipientInput = (
 
 export const buildCreateRecipientInput = (
   schema: RecipientFormSchema,
-  contactFields: { [key: string]: FormField },
+  contactFields: Record<string, FormField>,
 ): RecipientCreateInput => {
   const paymentInfoFields = schema.fields.paymentInformation.fields;
 
@@ -205,7 +205,7 @@ export const buildCreateRecipientInput = (
         provider: paymentInfoFields.provider.value,
         code: paymentInfoFields.code.value?.trim() || null,
         ...(paymentInfoFields.phone.value?.trim() && {
-          phone: { create: { number: paymentInfoFields.phone.value!.trim() } },
+          phone: { create: { number: paymentInfoFields.phone.value.trim() } },
         }),
       },
     },

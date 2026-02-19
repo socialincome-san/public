@@ -80,9 +80,7 @@ export default function LocalPartnersForm({
     startTransition(async () => {
       try {
         let res: { success: boolean; error?: string };
-        const contactFields: {
-          [key: string]: FormField;
-        } = schema.fields.contact.fields;
+        const contactFields: Record<string, FormField> = schema.fields.contact.fields;
         if (localPartnerId && localPartner) {
           const data = buildUpdateLocalPartnerInput(schema, localPartner, contactFields);
           res = await updateLocalPartnerAction({ id: localPartnerId, ...data });

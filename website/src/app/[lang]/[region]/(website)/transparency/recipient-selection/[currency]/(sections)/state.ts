@@ -19,12 +19,12 @@ export type CompletedDraw = {
 type DrawFile = {
   time: number;
   totalCount: number;
-  winners: Array<string>;
+  winners: string[];
   randomness: string;
   round: number;
 };
 
-export const loadPastDraws = async (): Promise<Array<CompletedDraw>> => {
+export const loadPastDraws = async (): Promise<CompletedDraw[]> => {
   const files = await fs.readdir(DRAWS_PATH);
   try {
     return (

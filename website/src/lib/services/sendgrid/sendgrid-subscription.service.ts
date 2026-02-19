@@ -1,4 +1,3 @@
-import { CountryCode } from '@/generated/prisma/enums';
 import { Client } from '@sendgrid/client';
 import { ContributorSession } from '../contributor/contributor.types';
 import { ServiceResult } from '../core/base.types';
@@ -65,7 +64,7 @@ export class SendgridSubscriptionService extends Client {
         email: contributor.email,
         status: 'unsubscribed',
         language: (contributor.language || 'de') as SupportedLanguage,
-        country: (contributor.country || 'CH') as CountryCode,
+        country: contributor.country || 'CH',
       });
 
       return this.resultOk(undefined);

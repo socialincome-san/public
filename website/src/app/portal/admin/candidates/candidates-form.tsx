@@ -170,7 +170,7 @@ export const CandidateForm = ({
     startTransition(async () => {
       try {
         let result: { success: boolean; error?: string };
-        const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
+        const contactFields = schema.fields.contact.fields as Record<string, FormField>;
 
         if (candidateId && candidate) {
           const data: CandidateUpdateInput = buildUpdateCandidateInput(schema, candidate, contactFields);

@@ -108,7 +108,7 @@ export const SuccessForm = ({
         stripeCheckoutSessionId,
         user: {
           email: values.email,
-          language: lang as WebsiteLanguage,
+          language: lang,
           personal: {
             name: values.firstname,
             lastname: values.lastname,

@@ -93,7 +93,7 @@ export class ContributionService extends BaseService {
         },
       });
 
-      if (!existing || existing.campaign.organizationId !== accessResult.data.id) {
+      if (existing?.campaign.organizationId !== accessResult.data.id) {
         return this.resultFail('Permission denied');
       }
 

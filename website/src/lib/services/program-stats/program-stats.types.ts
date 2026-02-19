@@ -38,23 +38,23 @@ export type ProgramForDashboard = {
   payoutCurrency: string;
   payoutInterval: string;
 
-  recipients: Array<{
+  recipients: {
     id: string;
-    payouts: Array<{
+    payouts: {
       paymentAt: Date;
       amountChf: unknown | null;
       status: PayoutStatus;
-    }>;
-    surveys: Array<{
+    }[];
+    surveys: {
       id: string;
       status: SurveyStatus;
-    }>;
-  }>;
+    }[];
+  }[];
 
-  campaigns: Array<{
-    contributions: Array<{
+  campaigns: {
+    contributions: {
       amountChf: unknown;
       contributorId: string;
-    }>;
-  }>;
+    }[];
+  }[];
 };

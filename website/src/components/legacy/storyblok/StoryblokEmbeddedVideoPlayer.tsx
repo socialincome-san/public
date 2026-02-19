@@ -16,7 +16,7 @@ export const StoryblokEmbeddedVideoPlayer = ({ caption, muxPlaybackId, url, _uid
       <div className="w-full px-0 py-4">
         <iframe
           key={`embeddedVideoPlayer${_uid}`}
-          src={videoUrl!}
+          src={videoUrl}
           title="Video player"
           sandbox="allow-scripts allow-same-origin allow-presentation "
           allow="fullscreen"

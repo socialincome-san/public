@@ -85,23 +85,23 @@ interface StoryblokMultilink {
 }
 interface StoryblokTable {
   fieldtype: 'table';
-  thead: Array<{
+  thead: {
     _uid: string;
     value: string;
     component: '_table_head';
     _editable?: string;
-  }>;
-  tbody: Array<{
+  }[];
+  tbody: {
     _uid: string;
     component: '_table_row';
     _editable?: string;
-    body: Array<{
+    body: {
       _uid: string;
       value: string;
       component: '_table_col';
       _editable?: string;
-    }>;
-  }>;
+    }[];
+  }[];
 }
 interface StoryblokRichtext {
   type: string;

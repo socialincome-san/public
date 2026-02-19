@@ -10,7 +10,7 @@ import { LocalPartnerFormSchema } from './local-partners-form';
 export const buildUpdateLocalPartnerInput = (
   schema: LocalPartnerFormSchema,
   localPartner: LocalPartnerPayload,
-  contactFields: { [key: string]: FormField },
+  contactFields: Record<string, FormField>,
 ): LocalPartnerUpdateInput => {
   // Contact Phone Update Logic
   const contactPhoneUpdate = contactFields.phone.value
@@ -52,7 +52,7 @@ export const buildUpdateLocalPartnerInput = (
 
 export const buildCreateLocalPartnerInput = (
   schema: LocalPartnerFormSchema,
-  contactFields: { [key: string]: FormField },
+  contactFields: Record<string, FormField>,
 ): LocalPartnerCreateInput => {
   const addressInput = buildAddressInput(contactFields);
 

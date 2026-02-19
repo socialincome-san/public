@@ -210,7 +210,7 @@ export class PayoutProcessService extends BaseService {
           const payoutPerInterval = r.program.payoutPerInterval;
           const currency = r.program.payoutCurrency;
           const rateCurrency = rates[currency];
-          const rateChf = rates['CHF'];
+          const rateChf = rates.CHF;
           const amountChf = rateCurrency && rateChf ? (payoutPerInterval / rateCurrency) * rateChf : null;
           const phoneNumber = r.paymentInformation?.phone?.number ?? 'NO_PHONE';
 

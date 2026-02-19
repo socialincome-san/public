@@ -13,7 +13,7 @@ export const StoryblokArticleCard = (props: { lang: string; region: string; arti
   const author = article.content.author;
 
   return (
-    <Link href={`/${props.lang}/${props.region}/journal/${article.slug!}`}>
+    <Link href={`/${props.lang}/${props.region}/journal/${article.slug}`}>
       <div className="mb-4 overflow-hidden transition-transform duration-200 hover:scale-[101%]">
         {article.content.image.filename && (
           <Image

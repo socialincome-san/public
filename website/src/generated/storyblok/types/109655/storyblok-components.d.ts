@@ -22,7 +22,7 @@ export interface Article {
   author: ISbStoryData<Author> | string;
   displayInOverviewPage?: boolean;
   originalLanguage?: '' | 'en' | 'fr' | 'de' | 'it';
-  type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
+  type: ISbStoryData<ArticleType> | string;
   tags?: (ISbStoryData<Topic> | string)[];
   showRelativeArticles?: boolean;
   footnotes?: StoryblokRichtext;

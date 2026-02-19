@@ -208,7 +208,7 @@ export const RecipientForm = ({
     startTransition(async () => {
       try {
         let res: { success: boolean; error?: string };
-        const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
+        const contactFields = schema.fields.contact.fields as Record<string, FormField>;
 
         if (recipientId && recipient) {
           const data: RecipientUpdateInput = buildUpdateRecipientInput(schema, recipient, contactFields);

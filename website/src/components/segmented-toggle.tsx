@@ -6,7 +6,7 @@ type Option = { value: string; label: string };
 type SegmentedToggleProps = {
   value: string;
   onValueChange: (value: string) => void;
-  options: ReadonlyArray<Option>;
+  options: readonly Option[];
   className?: string;
 };
 

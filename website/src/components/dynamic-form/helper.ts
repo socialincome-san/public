@@ -17,12 +17,8 @@ type Contact = {
 
 export const getContactValuesFromPayload = (
   contact: Contact,
-  contactFields: {
-    [key: string]: FormField;
-  },
-): {
-  [key: string]: FormField;
-} => {
+  contactFields: Record<string, FormField>,
+): Record<string, FormField> => {
   contactFields.firstName.value = contact.firstName;
   contactFields.lastName.value = contact.lastName;
   contactFields.callingName.value = contact.callingName;
@@ -42,7 +38,7 @@ export const getContactValuesFromPayload = (
   return contactFields;
 };
 
-export const buildAddressInput = (contactFields: { [key: string]: FormField }) => {
+export const buildAddressInput = (contactFields: Record<string, FormField>) => {
   const country =
     contactFields.country.value && contactFields.country.value !== '' ? contactFields.country.value : undefined;
 
@@ -67,7 +63,7 @@ export const buildAddressInput = (contactFields: { [key: string]: FormField }) =
 };
 
 // Helper to build common contact fields for create/update
-export const buildCommonContactData = (contactFields: { [key: string]: FormField }) => {
+export const buildCommonContactData = (contactFields: Record<string, FormField>) => {
   return {
     firstName: contactFields.firstName.value,
     lastName: contactFields.lastName.value,

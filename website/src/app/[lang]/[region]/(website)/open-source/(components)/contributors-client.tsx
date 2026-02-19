@@ -37,7 +37,7 @@ export const OpenSourceContributorsClient = ({
   heading,
   totalContributors,
 }: {
-  contributors: Array<{ name: string; commits: number; avatarUrl: string; id: number }>;
+  contributors: { name: string; commits: number; avatarUrl: string; id: number }[];
   heading: string;
   totalContributors: number;
 }) => {

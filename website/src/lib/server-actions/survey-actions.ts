@@ -65,7 +65,7 @@ export const generateSurveysAction = async () => {
 
 export const getByIdAndRecipient = async (surveyId: string, recipientId: string) => {
   const survey = await getCurrentSurvey();
-  if (!survey || survey.id !== surveyId || survey.recipientId !== recipientId) {
+  if (survey?.id !== surveyId || survey.recipientId !== recipientId) {
     const reason = !survey ? 'no survey' : survey.id !== surveyId ? 'survey ID mismatch' : 'recipient ID mismatch';
     throw new Error(`Unauthorized: ${reason}`);
   }
@@ -80,7 +80,7 @@ export const getByIdAndRecipient = async (surveyId: string, recipientId: string)
 
 export const saveChanges = async (surveyId: string, input: SurveyUpdateInput) => {
   const survey = await getCurrentSurvey();
-  if (!survey || survey.id !== surveyId) {
+  if (survey?.id !== surveyId) {
     throw new Error('Unauthorized');
   }
   const service = new SurveyService();

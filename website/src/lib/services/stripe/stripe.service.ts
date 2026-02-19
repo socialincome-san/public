@@ -43,7 +43,7 @@ export class StripeService extends BaseService {
         case 'charge.succeeded':
         case 'charge.updated': // For final balance_transaction updates
         case 'charge.failed': {
-          const charge = event.data.object as Stripe.Charge;
+          const charge = event.data.object;
           this.logger.info('Processing charge event', { eventType: event.type, chargeId: charge.id });
 
           const result = await this.processChargeEvent(charge);

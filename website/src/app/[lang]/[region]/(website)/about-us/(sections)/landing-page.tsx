@@ -8,7 +8,7 @@ import changeGif from '../(assets)/change.gif';
 
 export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
   const translator = await Translator.getInstance({
-    language: lang as WebsiteLanguage,
+    language: lang,
     namespaces: ['website-about-us'],
   });
 
