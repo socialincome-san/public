@@ -10,7 +10,7 @@ const expected = {
 		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber',
 
 	step2:
-		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Aminata,Kamara,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,50,Mohamed,Bangura,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber',
+		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Aminata,Kamara,OM-SL-001,SocialIncomeMarch2025,subscriber91234567,40,John,Badingu,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,50,Mohamed,Bangura,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber',
 
 	step3: [
 		{
@@ -22,6 +22,17 @@ const expected = {
 			paymentAt: '2025-03-12T11:00:00.000Z',
 			phoneNumber: '+41791234567',
 			recipientId: 'recipient-1',
+			status: 'paid',
+		},
+		{
+			amount: 40,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'John',
+			lastName: 'Badingu',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+41791234567',
+			recipientId: 'recipient-2',
 			status: 'paid',
 		},
 		{
