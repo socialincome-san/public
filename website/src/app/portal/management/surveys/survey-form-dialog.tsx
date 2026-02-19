@@ -13,7 +13,7 @@ type SurveyFormDialogProps = {
 	readOnly?: boolean;
 };
 
-export function SurveyFormDialog({ open, onOpenChange, surveyId, readOnly = false }: SurveyFormDialogProps) {
+export const SurveyFormDialog = ({ open, onOpenChange, surveyId, readOnly = false }: SurveyFormDialogProps) => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {
@@ -52,4 +52,4 @@ export function SurveyFormDialog({ open, onOpenChange, surveyId, readOnly = fals
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

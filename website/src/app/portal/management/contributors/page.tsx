@@ -12,7 +12,7 @@ export default function ContributorsPage() {
 	);
 }
 
-async function ContributorsDataLoader() {
+const ContributorsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributorService();
@@ -22,4 +22,4 @@ async function ContributorsDataLoader() {
 	const rows: ContributorTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <ContributorsTableClient rows={rows} error={error} />;
-}
+};

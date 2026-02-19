@@ -76,7 +76,7 @@ export default function LocalPartnersForm({
 		}
 	};
 
-	async function onSubmit(schema: typeof initialFormSchema) {
+	const onSubmit = async (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res: { success: boolean; error?: string };
@@ -95,7 +95,7 @@ export default function LocalPartnersForm({
 				onError?.(error);
 			}
 		});
-	}
+	};
 
 	useEffect(() => {
 		if (localPartnerId) {

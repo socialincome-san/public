@@ -9,7 +9,7 @@ type Props = {
 	onChange: (value: number) => void;
 };
 
-export function RecipientsBox({ amountOfRecipients, filteredRecipients, onChange }: Props) {
+export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange }: Props) => {
 	const noCandidates = filteredRecipients === 0;
 	const atMax = !noCandidates && amountOfRecipients === filteredRecipients;
 
@@ -57,4 +57,4 @@ export function RecipientsBox({ amountOfRecipients, filteredRecipients, onChange
 			</div>
 		</div>
 	);
-}
+};

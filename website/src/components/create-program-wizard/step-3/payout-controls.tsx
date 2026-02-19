@@ -14,7 +14,7 @@ type Props = {
 	onIntervalChange: (value: PayoutInterval) => void;
 };
 
-export function PayoutControls({
+export const PayoutControls = ({
 	programDuration,
 	payoutPerInterval,
 	payoutInterval,
@@ -22,7 +22,7 @@ export function PayoutControls({
 	onDurationChange,
 	onPayoutChange,
 	onIntervalChange,
-}: Props) {
+}: Props) => {
 	return (
 		<div className="space-y-6">
 			<div className="space-y-2">
@@ -72,4 +72,4 @@ export function PayoutControls({
 			</div>
 		</div>
 	);
-}
+};

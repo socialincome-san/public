@@ -5,7 +5,7 @@ type RichTextRendererProps = {
 	richTextDocument: StoryblokRichtext;
 };
 
-export function RichTextRenderer({ richTextDocument }: RichTextRendererProps) {
+export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) => {
 	return render(richTextDocument, {
 		markResolvers: {
 			[MARK_LINK]: (children: any, props: any) => (
@@ -34,4 +34,4 @@ export function RichTextRenderer({ richTextDocument }: RichTextRendererProps) {
 			// Todo: Add blocks as soon as we have them ready in the Storyblok schema
 		},
 	});
-}
+};

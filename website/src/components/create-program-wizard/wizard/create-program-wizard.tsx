@@ -9,11 +9,11 @@ type Props = {
 	send: CreateProgramWizardSend;
 };
 
-export function CreateProgramWizard({ state, send }: Props) {
+export const CreateProgramWizard = ({ state, send }: Props) => {
 	return (
 		<div className="space-y-6">
 			<CreateProgramSteps state={state} send={send} />
 			<CreateProgramWizardFooter state={state} send={send} />
 		</div>
 	);
-}
+};

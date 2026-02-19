@@ -34,7 +34,7 @@ type FirebaseOobCodesResponse = {
 
 const EMULATOR_API = 'http://127.0.0.1:9099/emulator/v1/projects/demo-social-income-local/oobCodes';
 
-export async function loginAs(browser: Browser, actor: Actor): Promise<void> {
+export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => {
 	const context = await browser.newContext();
 	const page = await context.newPage();
 
@@ -64,4 +64,4 @@ export async function loginAs(browser: Browser, actor: Actor): Promise<void> {
 	await context.storageState({ path: state });
 
 	await context.close();
-}
+};

@@ -13,7 +13,7 @@ const PARTNER_CANDIDATES_PATH = '/partner-space/candidates';
 const candidateService = new CandidateService();
 const localPartnerService = new LocalPartnerService();
 
-export async function createCandidateAction(data: CandidateCreateInput) {
+export const createCandidateAction = async (data: CandidateCreateInput) => {
 	const actor = await getActorOrThrow();
 
 	const result = await candidateService.create(actor, data);
@@ -25,9 +25,12 @@ export async function createCandidateAction(data: CandidateCreateInput) {
 	}
 
 	return result;
-}
+};
 
-export async function updateCandidateAction(updateInput: CandidateUpdateInput, nextPaymentPhoneNumber: string | null) {
+export const updateCandidateAction = async (
+	updateInput: CandidateUpdateInput,
+	nextPaymentPhoneNumber: string | null,
+) => {
 	const actor = await getActorOrThrow();
 
 	const result = await candidateService.update(actor, updateInput, nextPaymentPhoneNumber);
@@ -39,9 +42,9 @@ export async function updateCandidateAction(updateInput: CandidateUpdateInput, n
 	}
 
 	return result;
-}
+};
 
-export async function deleteCandidateAction(candidateId: string) {
+export const deleteCandidateAction = async (candidateId: string) => {
 	const actor = await getActorOrThrow();
 
 	const result = await candidateService.delete(actor, candidateId);
@@ -53,14 +56,14 @@ export async function deleteCandidateAction(candidateId: string) {
 	}
 
 	return result;
-}
+};
 
-export async function getCandidateAction(candidateId: string) {
+export const getCandidateAction = async (candidateId: string) => {
 	const actor = await getActorOrThrow();
 	return await candidateService.get(actor, candidateId);
-}
+};
 
-export async function getCandidateOptions() {
+export const getCandidateOptions = async () => {
 	const actor = await getActorOrThrow();
 
 	if (actor.kind === 'user') {
@@ -69,13 +72,13 @@ export async function getCandidateOptions() {
 	}
 
 	return { localPartners: { success: true, data: [] } };
-}
+};
 
-export async function getCandidateCountAction(causes: Cause[], profiles: Profile[], countryId: string | null) {
+export const getCandidateCountAction = async (causes: Cause[], profiles: Profile[], countryId: string | null) => {
 	return candidateService.getCandidateCount(causes, profiles, countryId);
-}
+};
 
-export async function importCandidatesCsvAction(file: File) {
+export const importCandidatesCsvAction = async (file: File) => {
 	const actor = await getActorOrThrow();
 
 	const result = await candidateService.importCsv(actor, file);
@@ -87,4 +90,4 @@ export async function importCandidatesCsvAction(file: File) {
 	}
 
 	return result;
-}
+};

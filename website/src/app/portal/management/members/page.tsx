@@ -13,7 +13,7 @@ export default function OrganizationMembersPage() {
 	);
 }
 
-async function OrganizationMembersDataLoader() {
+const OrganizationMembersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new OrganizationService();
@@ -31,4 +31,4 @@ async function OrganizationMembersDataLoader() {
 			makeColumns={makeOrganizationMemberColumns}
 		/>
 	);
-}
+};

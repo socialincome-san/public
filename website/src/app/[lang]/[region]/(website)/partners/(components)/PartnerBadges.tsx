@@ -3,14 +3,14 @@ import { FundRaiserBadgeType, SdgBadgeType } from '@/app/[lang]/[region]/(websit
 import { Badge, HoverCard, HoverCardContent, HoverCardTrigger, Separator, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 
-function SDGBadge({
+const SDGBadge = ({
 	hoverCardOrgName,
 	sdgNumber,
 	translatorSdg,
 	translatorSdgTitle,
 	translatorSdgMission1,
 	translatorSdgMission2,
-}: SdgBadgeType) {
+}: SdgBadgeType) => {
 	return (
 		<HoverCard>
 			<HoverCardTrigger>
@@ -36,9 +36,9 @@ function SDGBadge({
 			</HoverCardContent>
 		</HoverCard>
 	);
-}
+};
 
-function FundraiserBadge({ fundRaiserTranslation }: FundRaiserBadgeType) {
+const FundraiserBadge = ({ fundRaiserTranslation }: FundRaiserBadgeType) => {
 	return (
 		<Badge variant="interactive-accent">
 			<Typography size="sm" weight="normal" className="text-inherit">
@@ -46,6 +46,6 @@ function FundraiserBadge({ fundRaiserTranslation }: FundRaiserBadgeType) {
 			</Typography>
 		</Badge>
 	);
-}
+};
 
 export { FundraiserBadge, SDGBadge };

@@ -19,7 +19,7 @@ export default function SurveysPageProgramScoped({ params }: Props) {
 	);
 }
 
-async function SurveysProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
+const SurveysProgramScopedDataLoader = async ({ params }: { params: Promise<{ programId: string }> }) => {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
@@ -41,4 +41,4 @@ async function SurveysProgramScopedDataLoader({ params }: { params: Promise<{ pr
 			searchKeys={['name', 'recipientName']}
 		/>
 	);
-}
+};

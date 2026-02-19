@@ -9,7 +9,7 @@ type Props = {
 	onCurrencyChange: (value: string) => void;
 };
 
-export function ProgramCostsHeader({ totalBudget, monthlyCost, currency, onCurrencyChange }: Props) {
+export const ProgramCostsHeader = ({ totalBudget, monthlyCost, currency, onCurrencyChange }: Props) => {
 	return (
 		<div className="flex items-start justify-between text-cyan-900">
 			<div className="space-y-1">
@@ -45,4 +45,4 @@ export function ProgramCostsHeader({ totalBudget, monthlyCost, currency, onCurre
 			</Select>
 		</div>
 	);
-}
+};

@@ -23,7 +23,7 @@ type Props = {
 	onToggleCustomizePayouts: () => void;
 };
 
-export function BudgetStep({
+export const BudgetStep = ({
 	amountOfRecipients,
 	filteredRecipients,
 	programDuration,
@@ -37,7 +37,7 @@ export function BudgetStep({
 	onIntervalChange,
 	onCurrencyChange,
 	onToggleCustomizePayouts,
-}: Props) {
+}: Props) => {
 	const totalBudget = calculateTotalBudget(amountOfRecipients, programDuration, payoutPerInterval, payoutInterval);
 	const monthlyCost = calculateMonthlyCost(amountOfRecipients, payoutPerInterval, payoutInterval);
 
@@ -71,4 +71,4 @@ export function BudgetStep({
 			</div>
 		</div>
 	);
-}
+};

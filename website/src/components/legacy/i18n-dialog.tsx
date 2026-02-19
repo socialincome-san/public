@@ -42,13 +42,13 @@ type I18nDialogProps = {
 	};
 };
 
-export function I18nDialog({
+export const I18nDialog = ({
 	languages,
 	regions,
 	currencies,
 	translations,
 	children,
-}: PropsWithChildren<I18nDialogProps>) {
+}: PropsWithChildren<I18nDialogProps>) => {
 	const isSurveyPage = useIsPage('survey');
 	const [open, setOpen] = useState(false);
 	const { language, setLanguage, region, setRegion, currency, setCurrency } = useI18n();
@@ -122,4 +122,4 @@ export function I18nDialog({
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

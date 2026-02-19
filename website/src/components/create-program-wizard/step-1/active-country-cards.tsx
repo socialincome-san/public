@@ -6,7 +6,7 @@ import { getCountryNameByCode } from '@/lib/types/country';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';
 
-function formatCountryStats(programCount: number, recipientCount: number) {
+const formatCountryStats = (programCount: number, recipientCount: number) => {
 	if (programCount === 0 && recipientCount === 0) {
 		return 'No active programs';
 	}
@@ -15,7 +15,7 @@ function formatCountryStats(programCount: number, recipientCount: number) {
 	const recipientLabel = `${recipientCount} recipient${recipientCount !== 1 ? 's' : ''}`;
 
 	return `${programLabel} · ${recipientLabel}`;
-}
+};
 
 type Props = {
 	rows: ProgramCountryFeasibilityRow[];
@@ -23,7 +23,7 @@ type Props = {
 	onSelectCountry: (id: string) => void;
 };
 
-export function ActiveCountryCards({ rows, selectedCountryId, onSelectCountry }: Props) {
+export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }: Props) => {
 	return (
 		<div className="space-y-3">
 			<p className="text-sm font-medium">Choose a country</p>
@@ -48,4 +48,4 @@ export function ActiveCountryCards({ rows, selectedCountryId, onSelectCountry }:
 			)}
 		</div>
 	);
-}
+};

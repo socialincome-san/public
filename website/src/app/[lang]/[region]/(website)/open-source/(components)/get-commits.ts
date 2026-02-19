@@ -17,7 +17,7 @@ interface GitHubCommit {
 	};
 }
 
-export async function getCommits() {
+export const getCommits = async () => {
 	// Calculate the date 30 days ago from today
 	const endDate = now().toISOString();
 	const startDate = now();
@@ -53,4 +53,4 @@ export async function getCommits() {
 		totalCommits,
 		newCommits: recentCommits.length,
 	};
-}
+};

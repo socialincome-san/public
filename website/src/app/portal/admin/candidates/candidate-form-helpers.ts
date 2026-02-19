@@ -18,11 +18,11 @@ import { Prisma } from '@/generated/prisma/client';
 import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
 import { CandidateFormSchema } from './candidates-form';
 
-export function buildUpdateCandidateInput(
+export const buildUpdateCandidateInput = (
 	schema: CandidateFormSchema,
 	candidate: CandidatePayload,
 	contactFields: { [key: string]: FormField },
-): CandidateUpdateInput {
+): CandidateUpdateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
 	const basePaymentInformation = {
@@ -179,12 +179,12 @@ export function buildUpdateCandidateInput(
 			},
 		},
 	};
-}
+};
 
-export function buildCreateCandidateInput(
+export const buildCreateCandidateInput = (
 	schema: CandidateFormSchema,
 	contactFields: { [key: string]: FormField },
-): CandidateCreateInput {
+): CandidateCreateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 	const addressInput = buildAddressInput(contactFields);
 
@@ -213,4 +213,4 @@ export function buildCreateCandidateInput(
 			},
 		},
 	};
-}
+};

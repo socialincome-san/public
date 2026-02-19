@@ -8,7 +8,7 @@ type VimeoVideoProps = {
 	videoOptions?: VimeoEmbedParameters;
 };
 
-export function VimeoVideo({ videoId, videoOptions }: VimeoVideoProps) {
+export const VimeoVideo = ({ videoId, videoOptions }: VimeoVideoProps) => {
 	const playerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -23,4 +23,4 @@ export function VimeoVideo({ videoId, videoOptions }: VimeoVideoProps) {
 	}, [videoId, videoOptions]);
 
 	return <div ref={playerRef}></div>;
-}
+};

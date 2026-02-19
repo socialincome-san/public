@@ -1,6 +1,6 @@
+import type { Scope } from '@/components/app-shells/website/navbar/display-session';
 import { NavbarDesktop } from '@/components/app-shells/website/navbar/navbar-desktop';
 import { NavbarMobile } from '@/components/app-shells/website/navbar/navbar-mobile';
-import type { Scope } from '@/components/app-shells/website/navbar/display-session';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { Session } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -17,7 +17,7 @@ type Props = {
 	scope: Scope;
 };
 
-export async function Navbar({ sessions, lang, region, scope }: Props) {
+export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
 	const menu = result.success ? result.data.content.menu : [];
 
@@ -31,4 +31,4 @@ export async function Navbar({ sessions, lang, region, scope }: Props) {
 			</div>
 		</>
 	);
-}
+};

@@ -2,17 +2,17 @@
 
 import { StripeService } from '@/lib/services/stripe/stripe.service';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
-import { getAuthenticatedUserOrThrow } from '../firebase/current-user';
 import { getOptionalContributor } from '../firebase/current-contributor';
+import { getAuthenticatedUserOrThrow } from '../firebase/current-user';
 
-export async function createStripeCheckoutAction(input: {
+export const createStripeCheckoutAction = async (input: {
 	amount: number;
 	intervalCount?: number;
 	currency?: string;
 	successUrl: string;
 	recurring?: boolean;
 	campaignId?: string;
-}) {
+}) => {
 	const contributor = await getOptionalContributor();
 	const stripe = new StripeService();
 
@@ -20,7 +20,7 @@ export async function createStripeCheckoutAction(input: {
 		...input,
 		stripeCustomerId: contributor?.stripeCustomerId ?? null,
 	});
-}
+};
 
 export async function createPortalProgramDonationCheckoutAction(input: {
 	amount: number;

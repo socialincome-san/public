@@ -9,10 +9,10 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeRecipientColumns(
+export const makeRecipientColumns = (
 	hideProgramName = false,
 	hideLocalPartner = false,
-): ColumnDef<RecipientTableViewRow>[] {
+): ColumnDef<RecipientTableViewRow>[] => {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{
 			accessorKey: 'firstName',
@@ -72,4 +72,4 @@ export function makeRecipientColumns(
 	);
 
 	return columns;
-}
+};

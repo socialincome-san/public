@@ -7,7 +7,7 @@ import type { SurveyCreateInput, SurveyUpdateInput } from '@/lib/services/survey
 import { revalidatePath } from 'next/cache';
 import { getCurrentSurvey } from '../firebase/current-survey';
 
-export async function createSurveyAction(input: SurveyCreateInput) {
+export const createSurveyAction = async (input: SurveyCreateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new SurveyService();
 
@@ -15,18 +15,18 @@ export async function createSurveyAction(input: SurveyCreateInput) {
 
 	revalidatePath('/portal/management/surveys');
 	return result;
-}
+};
 
-export async function getSurveyAction(surveyId: string) {
+export const getSurveyAction = async (surveyId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new SurveyService();
 
 	const result = await service.get(user.id, surveyId);
 
 	return result;
-}
+};
 
-export async function updateSurveyAction(surveyId: string, input: SurveyUpdateInput) {
+export const updateSurveyAction = async (surveyId: string, input: SurveyUpdateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new SurveyService();
 
@@ -34,23 +34,23 @@ export async function updateSurveyAction(surveyId: string, input: SurveyUpdateIn
 
 	revalidatePath('/portal/management/surveys');
 	return result;
-}
+};
 
-export async function getSurveyRecipientOptionsAction() {
+export const getSurveyRecipientOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 	const recipientService = new RecipientService();
 
 	return recipientService.getEditableRecipientOptions(user.id);
-}
+};
 
-export async function previewSurveyGenerationAction() {
+export const previewSurveyGenerationAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new SurveyService();
 
 	return service.previewSurveyGeneration(user.id);
-}
+};
 
-export async function generateSurveysAction() {
+export const generateSurveysAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new SurveyService();
 
@@ -58,9 +58,9 @@ export async function generateSurveysAction() {
 
 	revalidatePath('/portal/management/surveys');
 	return result;
-}
+};
 
-export async function getByIdAndRecipient(surveyId: string, recipientId: string) {
+export const getByIdAndRecipient = async (surveyId: string, recipientId: string) => {
 	const survey = await getCurrentSurvey();
 	if (!survey || survey.id !== surveyId || survey.recipientId !== recipientId) {
 		const reason = !survey ? 'no survey' : survey.id !== surveyId ? 'survey ID mismatch' : 'recipient ID mismatch';
@@ -72,9 +72,9 @@ export async function getByIdAndRecipient(surveyId: string, recipientId: string)
 		throw new Error(`Survey cannot be loaded: ${result.error}`);
 	}
 	return result.data;
-}
+};
 
-export async function saveChanges(surveyId: string, input: SurveyUpdateInput) {
+export const saveChanges = async (surveyId: string, input: SurveyUpdateInput) => {
 	const survey = await getCurrentSurvey();
 	if (!survey || survey.id !== surveyId) {
 		throw new Error('Unauthorized');
@@ -86,4 +86,4 @@ export async function saveChanges(surveyId: string, input: SurveyUpdateInput) {
 		throw new Error('Could not save survey changes');
 	}
 	return result.data;
-}
+};

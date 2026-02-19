@@ -4,7 +4,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export async function Overview({ lang }: DefaultParams) {
+export const Overview = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home'],
@@ -43,4 +43,4 @@ export async function Overview({ lang }: DefaultParams) {
 			<Typography className="w-full">{translator.t('section-2.text-5')}</Typography>
 		</BaseContainer>
 	);
-}
+};

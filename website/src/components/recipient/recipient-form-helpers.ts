@@ -18,11 +18,11 @@ import { Prisma } from '@/generated/prisma/client';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { RecipientFormSchema } from './recipient-form';
 
-export function buildUpdateRecipientInput(
+export const buildUpdateRecipientInput = (
 	schema: RecipientFormSchema,
 	recipient: RecipientPayload,
 	contactFields: { [key: string]: FormField },
-): RecipientUpdateInput {
+): RecipientUpdateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
 	const basePaymentInformation = {
@@ -184,12 +184,12 @@ export function buildUpdateRecipientInput(
 			},
 		},
 	};
-}
+};
 
-export function buildCreateRecipientInput(
+export const buildCreateRecipientInput = (
 	schema: RecipientFormSchema,
 	contactFields: { [key: string]: FormField },
-): RecipientCreateInput {
+): RecipientCreateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
 	return {
@@ -217,4 +217,4 @@ export function buildCreateRecipientInput(
 			},
 		},
 	};
-}
+};

@@ -11,7 +11,7 @@ type Props = {
 	children: ReactNode;
 };
 
-export function RadioCardGroup({ value, onChange, layout = 'stack', children }: Props) {
+export const RadioCardGroup = ({ value, onChange, layout = 'stack', children }: Props) => {
 	return (
 		<RadioGroup
 			value={value}
@@ -21,4 +21,4 @@ export function RadioCardGroup({ value, onChange, layout = 'stack', children }: 
 			{children}
 		</RadioGroup>
 	);
-}
+};

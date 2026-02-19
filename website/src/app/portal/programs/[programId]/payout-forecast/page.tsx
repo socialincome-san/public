@@ -18,7 +18,7 @@ export default function FinancesPageProgramScoped({ params }: Props) {
 	);
 }
 
-async function FinancesProgramScopedDataLoader({ params }: { params: Promise<{ programId: string }> }) {
+const FinancesProgramScopedDataLoader = async ({ params }: { params: Promise<{ programId: string }> }) => {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
@@ -37,4 +37,4 @@ async function FinancesProgramScopedDataLoader({ params }: { params: Promise<{ p
 			makeColumns={makePayoutForecastColumns}
 		/>
 	);
-}
+};

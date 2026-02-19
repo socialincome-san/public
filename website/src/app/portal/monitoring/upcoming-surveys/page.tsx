@@ -12,7 +12,7 @@ export default function UpcomingSurveysPage() {
 	);
 }
 
-async function UpcomingSurveysDataLoader() {
+const UpcomingSurveysDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new SurveyService();
@@ -31,4 +31,4 @@ async function UpcomingSurveysDataLoader() {
 			searchKeys={['name', 'recipientName']}
 		/>
 	);
-}
+};

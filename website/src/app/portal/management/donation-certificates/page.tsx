@@ -12,7 +12,7 @@ export default function DonationCertificatesPage() {
 	);
 }
 
-async function DonationCertificatesDataLoader() {
+const DonationCertificatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new DonationCertificateService();
@@ -24,4 +24,4 @@ async function DonationCertificatesDataLoader() {
 		: [];
 
 	return <DonationCertificateTable error={error} rows={certificateRows} />;
-}
+};

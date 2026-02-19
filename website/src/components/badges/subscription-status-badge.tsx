@@ -31,7 +31,7 @@ const SUBSCRIPTION_STATUS_UI: Record<
 	default: { variant: 'default', Icon: null },
 };
 
-export function SubscriptionStatusBadge({ status, label }: SubscriptionStatusBadgeProps) {
+export const SubscriptionStatusBadge = ({ status, label }: SubscriptionStatusBadgeProps) => {
 	const { variant, Icon } = SUBSCRIPTION_STATUS_UI[status] || SUBSCRIPTION_STATUS_UI.default;
 	return (
 		<Badge variant={variant}>
@@ -39,4 +39,4 @@ export function SubscriptionStatusBadge({ status, label }: SubscriptionStatusBad
 			{label}
 		</Badge>
 	);
-}
+};

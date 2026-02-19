@@ -4,10 +4,10 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function generateMetadata({ params }: DefaultPageProps) {
+export const generateMetadata = async ({ params }: DefaultPageProps) => {
 	const { lang } = await params;
 	return getMetadata(lang as WebsiteLanguage, 'website-terms-of-use');
-}
+};
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;

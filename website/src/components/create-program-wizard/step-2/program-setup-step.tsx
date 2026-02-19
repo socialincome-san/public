@@ -20,7 +20,7 @@ type Props = {
 	onToggleProfile: (profile: Profile) => void;
 };
 
-export function ProgramSetupStep({
+export const ProgramSetupStep = ({
 	programManagement,
 	recipientApproach,
 	targetCauses,
@@ -32,7 +32,7 @@ export function ProgramSetupStep({
 	onSelectRecipientApproach,
 	onToggleCause,
 	onToggleProfile,
-}: Props) {
+}: Props) => {
 	return (
 		<div className="space-y-8">
 			<ProgramManagementSection value={programManagement} onChange={onSelectProgramManagement} />
@@ -50,4 +50,4 @@ export function ProgramSetupStep({
 			/>
 		</div>
 	);
-}
+};

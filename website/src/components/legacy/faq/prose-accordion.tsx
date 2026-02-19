@@ -8,7 +8,7 @@ type PrivacySectionProps = {
 	}[];
 };
 
-export function ProseAccordion({ title, items }: PrivacySectionProps) {
+export const ProseAccordion = ({ title, items }: PrivacySectionProps) => {
 	return (
 		<div>
 			<Typography as="h2" size="3xl" weight="bold">
@@ -31,4 +31,4 @@ export function ProseAccordion({ title, items }: PrivacySectionProps) {
 			</Accordion>
 		</div>
 	);
-}
+};

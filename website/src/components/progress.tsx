@@ -11,7 +11,7 @@ type ProgressProps = React.ComponentProps<typeof ProgressPrimitive.Root> & {
 	variant?: ProgressVariant;
 };
 
-function Progress({ className, value = 0, variant = 'default', ...props }: ProgressProps) {
+const Progress = ({ className, value = 0, variant = 'default', ...props }: ProgressProps) => {
 	const indicatorClass =
 		variant === 'urgent'
 			? 'bg-rose-400'
@@ -30,6 +30,6 @@ function Progress({ className, value = 0, variant = 'default', ...props }: Progr
 			/>
 		</ProgressPrimitive.Root>
 	);
-}
+};
 
 export { Progress };

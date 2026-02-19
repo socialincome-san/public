@@ -1,6 +1,6 @@
 import { usePathname } from 'next/navigation';
 
-export function useIsPage(page: string) {
+export const useIsPage = (page: string) => {
 	const pathname = usePathname();
 	// URL structure: /[lang]/[region]/[page]
 	const segments = pathname.split('/');
@@ -11,4 +11,4 @@ export function useIsPage(page: string) {
 	}
 
 	return segments.length >= 4 ? segments[3] === page : false;
-}
+};

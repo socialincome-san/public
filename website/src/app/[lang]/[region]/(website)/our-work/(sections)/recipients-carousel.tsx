@@ -14,7 +14,7 @@ type PortraitProps = {
 	country: string;
 };
 
-function Portrait({ name, text, country, image }: PortraitProps) {
+const Portrait = ({ name, text, country, image }: PortraitProps) => {
 	return (
 		<Card className="flex flex-col space-y-2 md:flex-row md:space-y-0">
 			<div className="flex flex-col items-center md:basis-1/2">
@@ -41,9 +41,9 @@ function Portrait({ name, text, country, image }: PortraitProps) {
 			</div>
 		</Card>
 	);
-}
+};
 
-export function RecipientsCarousel({ portraits }: { portraits: PortraitProps[] }) {
+export const RecipientsCarousel = ({ portraits }: { portraits: PortraitProps[] }) => {
 	const screenSize = useScreenSize();
 
 	return (
@@ -62,4 +62,4 @@ export function RecipientsCarousel({ portraits }: { portraits: PortraitProps[] }
 			))}
 		</Carousel>
 	);
-}
+};

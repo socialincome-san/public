@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { ChevronDownIcon, ChevronsUpDownIcon, ChevronUpIcon } from 'lucide-react';
 import { HeaderType } from './types';
 
-export function SortableHeader<TData, TValue>({ ctx, children }: HeaderType<TData, TValue>) {
+export const SortableHeader = <TData, TValue>({ ctx, children }: HeaderType<TData, TValue>) => {
 	const { column } = ctx;
 	const isSorted = column.getIsSorted();
 
@@ -21,4 +21,4 @@ export function SortableHeader<TData, TValue>({ ctx, children }: HeaderType<TDat
 			{!isSorted && <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-40" aria-hidden />}
 		</Button>
 	);
-}
+};

@@ -15,7 +15,7 @@ type Props = {
 	searchParams: Record<string, string | undefined>;
 };
 
-export async function StoryblokPreviewPage({ storyPath, lang, region, searchParams }: Props) {
+export const StoryblokPreviewPage = async ({ storyPath, lang, region, searchParams }: Props) => {
 	const isVisualEditor = !!searchParams['_storyblok'];
 	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
 
@@ -34,4 +34,4 @@ export async function StoryblokPreviewPage({ storyPath, lang, region, searchPara
 	}
 
 	return <PageContentType blok={story.content} lang={lang} region={region} />;
-}
+};

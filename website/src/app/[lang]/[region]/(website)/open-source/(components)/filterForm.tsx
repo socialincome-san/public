@@ -9,7 +9,7 @@ interface FilterFormProps {
 	filterText: string;
 }
 
-export function FilterForm({ labels, handleLabel, filterText }: FilterFormProps) {
+export const FilterForm = ({ labels, handleLabel, filterText }: FilterFormProps) => {
 	const [selectedLabel, setSelectedLabel] = useState('');
 
 	const handleChange = (value: string) => {
@@ -39,4 +39,4 @@ export function FilterForm({ labels, handleLabel, filterText }: FilterFormProps)
 			</Select>
 		</section>
 	);
-}
+};

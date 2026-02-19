@@ -11,7 +11,7 @@ type ResourcePageProps = {
 
 const roundAmount = (amount: number) => (amount ? Math.round(amount / 10) * 10 : 0);
 
-export async function Resources({ lang, currency }: ResourcePageProps) {
+export const Resources = async ({ lang, currency }: ResourcePageProps) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-selection'],
@@ -46,4 +46,4 @@ export async function Resources({ lang, currency }: ResourcePageProps) {
 			</div>
 		</div>
 	);
-}
+};

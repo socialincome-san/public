@@ -24,7 +24,7 @@ type DonationIntervalSelectorProps = {
 	monthlyIncome: number;
 };
 
-function DonationIntervalFormItem({
+const DonationIntervalFormItem = ({
 	active,
 	title,
 	donationInterval,
@@ -36,7 +36,7 @@ function DonationIntervalFormItem({
 	donationInterval: DonationInterval;
 	lang: WebsiteLanguage;
 	monthlyIncome: number;
-}) {
+}) => {
 	const translator = useTranslator(lang, 'website-donate');
 	const { currency } = useI18n();
 	const { setValue } = useFormContext<{ donationInterval: DonationInterval }>();
@@ -74,9 +74,9 @@ function DonationIntervalFormItem({
 			</FormControl>
 		</FormItem>
 	);
-}
+};
 
-export function DonationIntervalSelector({ lang, translations, monthlyIncome }: DonationIntervalSelectorProps) {
+export const DonationIntervalSelector = ({ lang, translations, monthlyIncome }: DonationIntervalSelectorProps) => {
 	const form = useFormContext();
 
 	return (
@@ -124,4 +124,4 @@ export function DonationIntervalSelector({ lang, translations, monthlyIncome }: 
 			/>
 		</div>
 	);
-}
+};

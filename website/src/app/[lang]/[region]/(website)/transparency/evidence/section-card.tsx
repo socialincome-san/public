@@ -29,7 +29,7 @@ type SectionCardProps = {
 	translations: { card: CardTranslation; takeAction: string };
 };
 
-export function SectionCard({ translations: { card, takeAction } }: SectionCardProps) {
+export const SectionCard = ({ translations: { card, takeAction } }: SectionCardProps) => {
 	return (
 		<Dialog>
 			<DialogTrigger>
@@ -72,4 +72,4 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

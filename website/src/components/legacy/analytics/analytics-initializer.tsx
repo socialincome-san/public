@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
 	}
 }
 
-export function AnalyticsInitializer() {
+export const AnalyticsInitializer = () => {
 	const app = useFirebaseApp();
 	const [allowTracking, setAllowTracking] = useState(false);
 
@@ -57,4 +57,4 @@ export function AnalyticsInitializer() {
 		);
 	}
 	return null;
-}
+};

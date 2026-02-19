@@ -9,14 +9,14 @@ type StatProgressCardProps = {
 	percent: number;
 };
 
-export function StatProgressCard({
+export const StatProgressCard = ({
 	title,
 	leftLabel,
 	rightLabel,
 	leftValue,
 	rightValue,
 	percent,
-}: StatProgressCardProps) {
+}: StatProgressCardProps) => {
 	return (
 		<div className="space-y-4">
 			<h2 className="text-lg font-semibold">{title}</h2>
@@ -34,4 +34,4 @@ export function StatProgressCard({
 			<Progress value={percent} />
 		</div>
 	);
-}
+};

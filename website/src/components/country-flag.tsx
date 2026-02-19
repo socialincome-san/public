@@ -5,16 +5,16 @@ import { cn } from '@/lib/utils/cn';
 import Image from 'next/image';
 import { useState } from 'react';
 
-function slugifyCountry(name: string): string {
+const slugifyCountry = (name: string): string => {
 	return name.toLowerCase().replace(/\s+/g, '_');
-}
+};
 
 type CountryFlagProps = {
 	country: CountryCode;
 	size?: 'sm' | 'lg';
 };
 
-export function CountryFlag({ country, size = 'lg' }: CountryFlagProps) {
+export const CountryFlag = ({ country, size = 'lg' }: CountryFlagProps) => {
 	const [hasError, setHasError] = useState(false);
 
 	const containerSize = size === 'sm' ? 'size-4 text-[10px]' : 'size-9 text-[12px]';
@@ -46,4 +46,4 @@ export function CountryFlag({ country, size = 'lg' }: CountryFlagProps) {
 			/>
 		</div>
 	);
-}
+};

@@ -12,7 +12,7 @@ type DonationFormProps = {
 	programId: string;
 };
 
-export function DonationForm({ costPerIntervalChf, programId }: DonationFormProps) {
+export const DonationForm = ({ costPerIntervalChf, programId }: DonationFormProps) => {
 	const router = useRouter();
 	const [method, setMethod] = useState<'credit' | 'bank'>('credit');
 	const [submitting, setSubmitting] = useState(false);
@@ -80,4 +80,4 @@ export function DonationForm({ costPerIntervalChf, programId }: DonationFormProp
 			)}
 		</form>
 	);
-}
+};

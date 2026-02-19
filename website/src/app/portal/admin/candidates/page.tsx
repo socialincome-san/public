@@ -12,7 +12,7 @@ export default function CandidatesPage() {
 	);
 }
 
-async function CandidatesDataLoader() {
+const CandidatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
@@ -22,4 +22,4 @@ async function CandidatesDataLoader() {
 	const rows: CandidatesTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <CandidatesTableClient rows={rows} error={error} readOnly={false} />;
-}
+};

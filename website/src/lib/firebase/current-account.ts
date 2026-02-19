@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { ContributorService } from '../services/contributor/contributor.service';
 import { ContributorSession } from '../services/contributor/contributor.types';
 import { FirebaseSessionService } from '../services/firebase/firebase-session.service';
@@ -5,7 +6,6 @@ import { LocalPartnerService } from '../services/local-partner/local-partner.ser
 import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
 import { UserService } from '../services/user/user.service';
 import { UserSession } from '../services/user/user.types';
-import { redirect } from 'next/navigation';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
@@ -18,8 +18,7 @@ export type Actor =
 async function getAuthUserIdFromCookie(): Promise<string | null> {
 	const firebaseSessionService = new FirebaseSessionService();
 	const cookie = await firebaseSessionService.readSessionCookie();
-	if (!cookie)
-	{
+	if (!cookie) {
 		return null;
 	}
 	const result = await firebaseSessionService.verifySessionCookie(cookie);
@@ -28,8 +27,7 @@ async function getAuthUserIdFromCookie(): Promise<string | null> {
 
 export async function getCurrentSessions(): Promise<Session[]> {
 	const authUserId = await getAuthUserIdFromCookie();
-	if (!authUserId)
-	{
+	if (!authUserId) {
 		return [];
 	}
 
@@ -39,18 +37,15 @@ export async function getCurrentSessions(): Promise<Session[]> {
 
 	const out: Session[] = [];
 	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
-	if (contributorResult.success && contributorResult.data)
-	{
+	if (contributorResult.success && contributorResult.data) {
 		out.push(contributorResult.data);
 	}
 	const userResult = await userService.getCurrentUserSession(authUserId);
-	if (userResult.success && userResult.data)
-	{
+	if (userResult.success && userResult.data) {
 		out.push(userResult.data);
 	}
 	const partnerResult = await localPartnerService.getCurrentLocalPartnerSession(authUserId);
-	if (partnerResult.success && partnerResult.data)
-	{
+	if (partnerResult.success && partnerResult.data) {
 		out.push(partnerResult.data);
 	}
 	return out;
@@ -58,8 +53,7 @@ export async function getCurrentSessions(): Promise<Session[]> {
 
 export async function getCurrentSessionsOrRedirect(): Promise<Session[]> {
 	const sessions = await getCurrentSessions();
-	if (sessions.length === 0)
-	{
+	if (sessions.length === 0) {
 		redirect('/login');
 	}
 	return sessions;
@@ -68,20 +62,16 @@ export async function getCurrentSessionsOrRedirect(): Promise<Session[]> {
 export async function getActorOrThrow(): Promise<Actor> {
 	const sessions = await getCurrentSessions();
 	const session = sessions[0];
-	if (!session)
-	{
+	if (!session) {
 		throw new Error('Not authenticated');
 	}
-	if (session.type === 'user')
-	{
+	if (session.type === 'user') {
 		return { kind: 'user', session };
 	}
-	if (session.type === 'contributor')
-	{
+	if (session.type === 'contributor') {
 		return { kind: 'contributor', session };
 	}
-	if (session.type === 'local-partner')
-	{
+	if (session.type === 'local-partner') {
 		return { kind: 'local-partner', session };
 	}
 	throw new Error('Not authenticated');

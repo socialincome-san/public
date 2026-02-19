@@ -25,7 +25,7 @@ type Props = {
 	onImport: (file: File) => Promise<ServiceResult<{ created: number }>>;
 };
 
-export function CsvUploadDialog({ open, onOpenChange, title, template, onImport }: Props) {
+export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport }: Props) => {
 	const [file, setFile] = useState<File | null>(null);
 	const [previewRows, setPreviewRows] = useState<CsvRow[] | null>(null);
 	const [isImporting, setIsImporting] = useState(false);
@@ -115,4 +115,4 @@ export function CsvUploadDialog({ open, onOpenChange, title, template, onImport 
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

@@ -7,12 +7,12 @@ import { cache } from 'react';
 const firebaseSessionService = new FirebaseSessionService();
 const service = new LocalPartnerService();
 
-async function findLocalPartnerByAuthId(authUserId: string): Promise<LocalPartnerSession | null> {
+const findLocalPartnerByAuthId = async (authUserId: string): Promise<LocalPartnerSession | null> => {
 	const result = await service.getCurrentLocalPartnerSession(authUserId);
 	return result.success ? result.data : null;
-}
+};
 
-async function loadCurrentLocalPartner(): Promise<LocalPartnerSession | null> {
+const loadCurrentLocalPartner = async (): Promise<LocalPartnerSession | null> => {
 	const cookie = await firebaseSessionService.readSessionCookie();
 	if (!cookie) {
 		return null;
@@ -25,22 +25,22 @@ async function loadCurrentLocalPartner(): Promise<LocalPartnerSession | null> {
 
 	const authUserId = decodedTokenResult.data.uid;
 	return findLocalPartnerByAuthId(authUserId);
-}
+};
 
 const getCurrentLocalPartner = cache(loadCurrentLocalPartner);
 
-export async function getAuthenticatedLocalPartnerOrRedirect(): Promise<LocalPartnerSession> {
+export const getAuthenticatedLocalPartnerOrRedirect = async (): Promise<LocalPartnerSession> => {
 	const partner = await getCurrentLocalPartner();
 	if (!partner) {
 		redirect('/login');
 	}
 	return partner;
-}
+};
 
-export async function getAuthenticatedLocalPartnerOrThrow(): Promise<LocalPartnerSession> {
+export const getAuthenticatedLocalPartnerOrThrow = async (): Promise<LocalPartnerSession> => {
 	const partner = await getCurrentLocalPartner();
 	if (!partner) {
 		throw new Error('No authenticated local partner found');
 	}
 	return partner;
-}
+};

@@ -20,7 +20,7 @@ type Props = {
 	actorKind?: Actor['kind'];
 };
 
-export function RecipientsTableClient({ rows, error, programId, readOnly, actorKind = 'user' }: Props) {
+export const RecipientsTableClient = ({ rows, error, programId, readOnly, actorKind = 'user' }: Props) => {
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
 	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
@@ -95,4 +95,4 @@ export function RecipientsTableClient({ rows, error, programId, readOnly, actorK
 			/>
 		</>
 	);
-}
+};

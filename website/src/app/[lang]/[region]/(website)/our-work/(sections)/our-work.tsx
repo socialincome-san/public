@@ -7,7 +7,7 @@ import { Badge, BaseContainer, Dialog, DialogContent, DialogTrigger, Typography 
 import Image from 'next/image';
 import phonesGif from '../(assets)/phones-1.gif';
 
-export async function OurWork({ lang }: DefaultParams) {
+export const OurWork = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-our-work', 'website-videos'],
@@ -50,4 +50,4 @@ export async function OurWork({ lang }: DefaultParams) {
 			/>
 		</BaseContainer>
 	);
-}
+};

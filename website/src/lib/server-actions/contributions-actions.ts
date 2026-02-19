@@ -7,7 +7,7 @@ import { ContributionCreateInput, ContributionUpdateInput } from '@/lib/services
 import { ContributorService } from '@/lib/services/contributor/contributor.service';
 import { revalidatePath } from 'next/cache';
 
-export async function createContributionAction(contribution: ContributionCreateInput) {
+export const createContributionAction = async (contribution: ContributionCreateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributionService = new ContributionService();
 
@@ -15,25 +15,25 @@ export async function createContributionAction(contribution: ContributionCreateI
 
 	revalidatePath('/portal/management/contributions');
 	return res;
-}
+};
 
-export async function updateContributionAction(contribution: ContributionUpdateInput) {
+export const updateContributionAction = async (contribution: ContributionUpdateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributionService = new ContributionService();
 
 	const res = await contributionService.update(user.id, contribution);
 	revalidatePath('/portal/management/contributions');
 	return res;
-}
+};
 
-export async function getContributionAction(contributionId: string) {
+export const getContributionAction = async (contributionId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributionService = new ContributionService();
 
 	return await contributionService.get(user.id, contributionId);
-}
+};
 
-export async function getContributionsOptionsAction() {
+export const getContributionsOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributorService = new ContributorService();
 	const campaignService = new CampaignService();
@@ -41,4 +41,4 @@ export async function getContributionsOptionsAction() {
 	const campaignOptions = await campaignService.getOptions(user.id);
 
 	return { contributorOptions, campaignOptions };
-}
+};

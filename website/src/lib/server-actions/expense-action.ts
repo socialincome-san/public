@@ -8,7 +8,7 @@ import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/expenses';
 
-export async function createExpenseAction(input: ExpenseCreateInput) {
+export const createExpenseAction = async (input: ExpenseCreateInput) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ExpenseService();
@@ -16,9 +16,9 @@ export async function createExpenseAction(input: ExpenseCreateInput) {
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
-}
+};
 
-export async function updateExpenseAction(input: ExpenseUpdateInput) {
+export const updateExpenseAction = async (input: ExpenseUpdateInput) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ExpenseService();
@@ -26,18 +26,18 @@ export async function updateExpenseAction(input: ExpenseUpdateInput) {
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
-}
+};
 
-export async function getExpenseAction(id: string) {
+export const getExpenseAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ExpenseService();
 	return service.get(user.id, id);
-}
+};
 
-export async function getExpenseOptionsAction() {
+export const getExpenseOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new OrganizationService();
 	return service.getOptions(user.id);
-}
+};

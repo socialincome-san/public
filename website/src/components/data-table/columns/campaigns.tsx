@@ -9,7 +9,7 @@ import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.type
 import type { ColumnDef } from '@tanstack/react-table';
 import { CopyUrlCell } from '../elements/copy-url-cell';
 
-export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
+export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'title',
@@ -58,4 +58,4 @@ export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

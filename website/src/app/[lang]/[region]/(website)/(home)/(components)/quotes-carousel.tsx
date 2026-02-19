@@ -12,7 +12,7 @@ export type CarouselCardProps = {
 	author: string;
 }[];
 
-export function QuotesCarousel(cardsObj: CarouselCardProps) {
+export const QuotesCarousel = (cardsObj: CarouselCardProps) => {
 	let cardsArr = [];
 	for (const index in cardsObj) {
 		cardsArr.push(cardsObj[index]);
@@ -45,4 +45,4 @@ export function QuotesCarousel(cardsObj: CarouselCardProps) {
 			))}
 		</Carousel>
 	);
-}
+};

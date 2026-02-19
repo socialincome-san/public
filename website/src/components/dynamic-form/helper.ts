@@ -42,7 +42,7 @@ export const getContactValuesFromPayload = (
 	return contactFields;
 };
 
-export function buildAddressInput(contactFields: { [key: string]: FormField }) {
+export const buildAddressInput = (contactFields: { [key: string]: FormField }) => {
 	const country =
 		contactFields.country.value && contactFields.country.value !== '' ? contactFields.country.value : undefined;
 
@@ -64,10 +64,10 @@ export function buildAddressInput(contactFields: { [key: string]: FormField }) {
 		zip: contactFields.zip.value ?? '',
 		country,
 	};
-}
+};
 
 // Helper to build common contact fields for create/update
-export function buildCommonContactData(contactFields: { [key: string]: FormField }) {
+export const buildCommonContactData = (contactFields: { [key: string]: FormField }) => {
 	return {
 		firstName: contactFields.firstName.value,
 		lastName: contactFields.lastName.value,
@@ -78,18 +78,18 @@ export function buildCommonContactData(contactFields: { [key: string]: FormField
 		callingName: contactFields.callingName.value || null,
 		language: contactFields.language.value || null,
 	};
-}
+};
 
 type DropdownItem = {
 	id: string;
 	label: string;
 };
 
-export function getZodEnum(items: DropdownItem[]) {
+export const getZodEnum = (items: DropdownItem[]) => {
 	const object = items.reduce<Record<string, string>>((acc, item) => {
 		acc[item.label] = item.id;
 		return acc;
 	}, {});
 
 	return object;
-}
+};

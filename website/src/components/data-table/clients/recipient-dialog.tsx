@@ -17,7 +17,7 @@ type Props = {
 	onError: (error: string) => void;
 };
 
-export function RecipientDialog({
+export const RecipientDialog = ({
 	open,
 	onOpenChange,
 	recipientId,
@@ -26,7 +26,7 @@ export function RecipientDialog({
 	actorKind,
 	errorMessage,
 	onError,
-}: Props) {
+}: Props) => {
 	const handleError = (error: unknown) => {
 		onError(`Error saving recipient: ${error}`);
 		logger.error('Recipient Form Error', { error });
@@ -58,4 +58,4 @@ export function RecipientDialog({
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

@@ -8,7 +8,7 @@ import { StatProgressCard } from './stat-progress-card';
 
 type FirstIntervalFundingSectionProps = { programId: string; stats: ProgramDashboardStats };
 
-export function FirstIntervalFundingSection({ programId, stats }: FirstIntervalFundingSectionProps) {
+export const FirstIntervalFundingSection = ({ programId, stats }: FirstIntervalFundingSectionProps) => {
 	const percent =
 		stats.costPerIntervalChf > 0
 			? Math.min(100, (stats.contributedToProgramSoFarChf / stats.costPerIntervalChf) * 100)
@@ -37,4 +37,4 @@ export function FirstIntervalFundingSection({ programId, stats }: FirstIntervalF
 			</Card>
 		</div>
 	);
-}
+};

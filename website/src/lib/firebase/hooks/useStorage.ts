@@ -7,7 +7,7 @@ import { useFirebaseApp } from './useFirebaseApp';
 const storageEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_HOST;
 const storageEmulatorPort = Number(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_PORT);
 
-export function useStorage() {
+export const useStorage = () => {
 	const connectStorageEmulatorCalled = useRef(false);
 	const app = useFirebaseApp();
 	const storage = getStorage(app);
@@ -19,9 +19,9 @@ export function useStorage() {
 	}
 
 	return storage;
-}
+};
 
-export function useStorageDownloadURL(storageRef: StorageReference | undefined) {
+export const useStorageDownloadURL = (storageRef: StorageReference | undefined) => {
 	const [url, setUrl] = useState<string | undefined>(undefined);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<Error | undefined>(undefined);
@@ -40,4 +40,4 @@ export function useStorageDownloadURL(storageRef: StorageReference | undefined) 
 		}
 	}, []);
 	return { data: url, loading, error };
-}
+};

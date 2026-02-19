@@ -7,7 +7,7 @@ import { ref } from 'firebase/storage';
 import { Download } from 'lucide-react';
 import Link from 'next/link';
 
-export function DownloadCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
+export const DownloadCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const storagePath = String(ctx.getValue() ?? '');
 	const storage = useStorage();
 	const { data, loading } = useStorageDownloadURL(ref(storage, storagePath));
@@ -22,4 +22,4 @@ export function DownloadCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
 			Download
 		</Link>
 	);
-}
+};

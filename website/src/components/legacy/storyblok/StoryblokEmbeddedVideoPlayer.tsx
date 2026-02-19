@@ -7,7 +7,7 @@ const SUPPORTED_VIDEO_PROVIDERS_MATCHERS = [new YouTubeVideoMatchAndExtract(), n
 const getMuxPlayerUrl = (muxPlaybackId: string | undefined) =>
 	muxPlaybackId && `https://player.mux.com/${muxPlaybackId}`;
 
-export function StoryblokEmbeddedVideoPlayer({ caption, muxPlaybackId, url, _uid }: EmbeddedVideo) {
+export const StoryblokEmbeddedVideoPlayer = ({ caption, muxPlaybackId, url, _uid }: EmbeddedVideo) => {
 	const videoUrl = url
 		? SUPPORTED_VIDEO_PROVIDERS_MATCHERS.map((it) => it.parseUrl(url)).find((it) => !!it)
 		: getMuxPlayerUrl(muxPlaybackId);
@@ -32,4 +32,4 @@ export function StoryblokEmbeddedVideoPlayer({ caption, muxPlaybackId, url, _uid
 			</div>
 		)
 	);
-}
+};

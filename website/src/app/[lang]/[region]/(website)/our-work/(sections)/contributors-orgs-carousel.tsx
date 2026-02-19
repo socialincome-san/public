@@ -14,7 +14,7 @@ import rkkPNG from '../(assets)/rkk.png';
 import srgSVG from '../(assets)/srg.svg';
 import unSVG from '../(assets)/un.svg';
 
-export function ContributorsOrgsCarousel() {
+export const ContributorsOrgsCarousel = () => {
 	const screenSize = useScreenSize();
 
 	const companyLogos = [
@@ -62,4 +62,4 @@ export function ContributorsOrgsCarousel() {
 			))}
 		</Carousel>
 	);
-}
+};

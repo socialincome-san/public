@@ -10,11 +10,11 @@ type TotalsSectionProps = {
 	lang: WebsiteLanguage;
 };
 
-function formatNumber(value: number, lang: WebsiteLanguage): string {
+const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
-}
+};
 
-export function TotalsSection({ totals, exchangeRate, currency, lang }: TotalsSectionProps) {
+export const TotalsSection = ({ totals, exchangeRate, currency, lang }: TotalsSectionProps) => {
 	const totalContributions = totals.totalContributionsChf * exchangeRate;
 
 	return (
@@ -42,4 +42,4 @@ export function TotalsSection({ totals, exchangeRate, currency, lang }: TotalsSe
 			</div>
 		</section>
 	);
-}
+};

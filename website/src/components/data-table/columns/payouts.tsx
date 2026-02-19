@@ -9,7 +9,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makePayoutColumns(): ColumnDef<PayoutTableViewRow>[] {
+export const makePayoutColumns = (): ColumnDef<PayoutTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'recipientFirstName',
@@ -49,4 +49,4 @@ export function makePayoutColumns(): ColumnDef<PayoutTableViewRow>[] {
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

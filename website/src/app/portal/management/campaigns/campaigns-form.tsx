@@ -87,7 +87,7 @@ export default function CampaignsForm({
 		}));
 	};
 
-	async function onSubmit(schema: typeof initialFormSchema) {
+	const onSubmit = async (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res;
@@ -103,7 +103,7 @@ export default function CampaignsForm({
 				onError?.(error);
 			}
 		});
-	}
+	};
 
 	useEffect(() => {
 		if (campaignId) {

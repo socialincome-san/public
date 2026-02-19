@@ -7,7 +7,7 @@ import {
 } from '@/lib/services/contributor/contributor.types';
 import { ContributorFormSchema } from './contributors-form';
 
-export function buildCreateContributorInput(schema: ContributorFormSchema): ContributorFormCreateInput {
+export const buildCreateContributorInput = (schema: ContributorFormSchema): ContributorFormCreateInput => {
 	const contactFields: {
 		[key: string]: FormField;
 	} = schema.fields.contact.fields;
@@ -29,12 +29,12 @@ export function buildCreateContributorInput(schema: ContributorFormSchema): Cont
 
 		...(addressInput && { address: addressInput }),
 	};
-}
+};
 
-export function buildUpdateContributorsInput(
+export const buildUpdateContributorsInput = (
 	schema: ContributorFormSchema,
 	contributor: ContributorPayload,
-): ContributorUpdateInput {
+): ContributorUpdateInput => {
 	const contactFields: {
 		[key: string]: FormField;
 	} = schema.fields.contact.fields;
@@ -75,4 +75,4 @@ export function buildUpdateContributorsInput(
 			},
 		},
 	};
-}
+};

@@ -18,7 +18,7 @@ import { Data } from 'swissqrbill/types';
  * @param reference The reference number without check digit
  * @returns The check digit (0-9)
  */
-function calculateCheckDigit(reference: string): number {
+const calculateCheckDigit = (reference: string): number => {
 	const weights = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
 	let carry = 0;
 
@@ -28,7 +28,7 @@ function calculateCheckDigit(reference: string): number {
 	}
 
 	return (10 - carry) % 10;
-}
+};
 
 /**
  * Generates a QR bill reference
@@ -36,7 +36,7 @@ function calculateCheckDigit(reference: string): number {
  * @param contributionCreatedAt The timestamp when the contribution was created (in seconds)
  * @returns The complete QR bill reference with check digit
  */
-function generateQrBillReference(contributorCreatedAt: string, contributionCreatedAt: string): string {
+const generateQrBillReference = (contributorCreatedAt: string, contributionCreatedAt: string): string => {
 	if (contributorCreatedAt.length > CONTRIBUTOR_REFERENCE_ID_LENGTH) {
 		throw new Error('contributorCreatedAt too long');
 	}
@@ -51,7 +51,7 @@ function generateQrBillReference(contributorCreatedAt: string, contributionCreat
 	const checkDigit = calculateCheckDigit(baseReference);
 
 	return `${baseReference}${checkDigit}`;
-}
+};
 
 type GenerateQrBillSvgProps = {
 	amount: number;
@@ -61,13 +61,13 @@ type GenerateQrBillSvgProps = {
 	type: 'QRCODE' | 'QRBILL';
 };
 
-export function generateQrBillSvg({
+export const generateQrBillSvg = ({
 	amount,
 	contributorReferenceId,
 	contributionReferenceId,
 	currency,
 	type,
-}: GenerateQrBillSvgProps): string {
+}: GenerateQrBillSvgProps): string => {
 	const data: Data = {
 		amount: Number(amount),
 		currency: currency,
@@ -84,4 +84,4 @@ export function generateQrBillSvg({
 	};
 
 	return type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();
-}
+};

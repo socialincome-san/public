@@ -8,7 +8,7 @@ type CurrencyCellProps<TData, TValue> = {
 	currency?: string;
 };
 
-export function CurrencyCell<TData, TValue>({ ctx, currency = 'CHF' }: CurrencyCellProps<TData, TValue>) {
+export const CurrencyCell = <TData, TValue>({ ctx, currency = 'CHF' }: CurrencyCellProps<TData, TValue>) => {
 	const value = ctx.getValue() as number | null;
 
 	if (value == null || isNaN(value)) {
@@ -21,4 +21,4 @@ export function CurrencyCell<TData, TValue>({ ctx, currency = 'CHF' }: CurrencyC
 	});
 
 	return <span>{formatted}</span>;
-}
+};

@@ -14,7 +14,7 @@ type PortraitProps = {
 	image: string | StaticImport;
 };
 
-function Portrait({ name, text, country, image }: PortraitProps) {
+const Portrait = ({ name, text, country, image }: PortraitProps) => {
 	return (
 		<Card className="flex min-h-[24rem] flex-col">
 			<CardHeader>
@@ -35,9 +35,9 @@ function Portrait({ name, text, country, image }: PortraitProps) {
 			</CardFooter>
 		</Card>
 	);
-}
+};
 
-export function ContributorsPeopleCarousel({ portraits }: { portraits: PortraitProps[] }) {
+export const ContributorsPeopleCarousel = ({ portraits }: { portraits: PortraitProps[] }) => {
 	const screenSize = useScreenSize();
 
 	let slidesToScroll;
@@ -71,4 +71,4 @@ export function ContributorsPeopleCarousel({ portraits }: { portraits: PortraitP
 			))}
 		</Carousel>
 	);
-}
+};

@@ -15,7 +15,7 @@ const recipientService = new RecipientService();
 const programService = new ProgramService();
 const localPartnerService = new LocalPartnerService();
 
-export async function createRecipientAction(recipient: RecipientCreateInput) {
+export const createRecipientAction = async (recipient: RecipientCreateInput) => {
 	const actor = await getActorOrThrow();
 
 	const result = await recipientService.create(actor, recipient);
@@ -28,9 +28,12 @@ export async function createRecipientAction(recipient: RecipientCreateInput) {
 	}
 
 	return result;
-}
+};
 
-export async function updateRecipientAction(updateInput: RecipientUpdateInput, nextPaymentPhoneNumber: string | null) {
+export const updateRecipientAction = async (
+	updateInput: RecipientUpdateInput,
+	nextPaymentPhoneNumber: string | null,
+) => {
 	const actor = await getActorOrThrow();
 
 	const result = await recipientService.update(actor, updateInput, nextPaymentPhoneNumber);
@@ -43,9 +46,9 @@ export async function updateRecipientAction(updateInput: RecipientUpdateInput, n
 	}
 
 	return result;
-}
+};
 
-export async function deleteRecipientAction(recipientId: string) {
+export const deleteRecipientAction = async (recipientId: string) => {
 	const actor = await getActorOrThrow();
 
 	const result = await recipientService.delete(actor, recipientId);
@@ -58,14 +61,14 @@ export async function deleteRecipientAction(recipientId: string) {
 	}
 
 	return result;
-}
+};
 
-export async function getRecipientAction(recipientId: string) {
+export const getRecipientAction = async (recipientId: string) => {
 	const actor = await getActorOrThrow();
 	return await recipientService.get(actor, recipientId);
-}
+};
 
-export async function getRecipientOptions() {
+export const getRecipientOptions = async () => {
 	const actor = await getActorOrThrow();
 
 	if (actor.kind === 'user') {
@@ -82,9 +85,9 @@ export async function getRecipientOptions() {
 		programs: { success: true, data: [] },
 		localPartner: { success: true, data: [] },
 	};
-}
+};
 
-export async function importRecipientsCsvAction(file: File) {
+export const importRecipientsCsvAction = async (file: File) => {
 	const actor = await getActorOrThrow();
 
 	const result = await recipientService.importCsv(actor, file);
@@ -93,4 +96,4 @@ export async function importRecipientsCsvAction(file: File) {
 	revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
 
 	return result;
-}
+};

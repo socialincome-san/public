@@ -23,7 +23,7 @@ interface Overview {
 	stars: OverviewItem;
 }
 
-function OverviewCard({ title, total, time }: OverviewProp) {
+const OverviewCard = ({ title, total, time }: OverviewProp) => {
 	return (
 		<Card className="bg-background hover:bg-primary rounded-lg border-2 border-opacity-80 px-2 py-5 shadow-none hover:bg-opacity-10 md:px-5 md:py-5">
 			{/* Large screens layout */}
@@ -60,9 +60,9 @@ function OverviewCard({ title, total, time }: OverviewProp) {
 			</div>
 		</Card>
 	);
-}
+};
 
-export async function Overview({ lang }: DefaultParams) {
+export const Overview = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-open-source'],
@@ -94,4 +94,4 @@ export async function Overview({ lang }: DefaultParams) {
 			</div>
 		</section>
 	);
-}
+};
