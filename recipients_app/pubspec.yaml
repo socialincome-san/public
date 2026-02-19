@@ -48,7 +48,7 @@ dependencies:
   webview_flutter: ^4.13.0
 
 dev_dependencies:
-  alchemist: ^0.12.1
+  alchemist: 0.13.0
   bloc_test: ^10.0.0
   build_runner: ^2.6.0
   dart_mappable_builder: ^4.6.0
