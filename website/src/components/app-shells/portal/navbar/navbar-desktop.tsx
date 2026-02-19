@@ -13,16 +13,24 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
 import { SILogo } from '@/components/svg/si-logo';
+import type { Session } from '@/lib/firebase/current-account';
 import type { UserSession } from '@/lib/services/user/user.types';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
-export const NavbarDesktop = ({ user }: { user: UserSession }) => {
+type NavbarDesktopProps = { sessions: Session[] };
+
+export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 	const pathname = usePathname();
-	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(user);
+	const user = sessions.find((s): s is UserSession => s.type === 'user');
+	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(sessions);
 	const { logout } = useLogout();
+
+	if (!user) {
+		return null;
+	}
 
 	return (
 		<nav className="container flex h-20 items-center justify-between">
@@ -37,7 +45,7 @@ export const NavbarDesktop = ({ user }: { user: UserSession }) => {
 						isDropdown ? (
 							<ProgramDropdown
 								key={href}
-								user={user}
+								sessions={sessions}
 								active={isActiveLink(pathname, href, activeBase)}
 								className="relative text-lg"
 							/>

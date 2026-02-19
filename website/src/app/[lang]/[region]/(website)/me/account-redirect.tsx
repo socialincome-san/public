@@ -1,4 +1,4 @@
-import { getCurrentSession } from '@/lib/firebase/current-account';
+import { getCurrentSessions } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/ui';
@@ -7,7 +7,8 @@ import { redirect } from 'next/navigation';
 
 export async function AccountRedirect({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-login'] });
-	const session = await getCurrentSession();
+	const sessions = await getCurrentSessions();
+	const session = sessions[0] ?? null;
 	const sessionType = session?.type;
 
 	if (sessionType === 'contributor') {

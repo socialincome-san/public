@@ -5,29 +5,40 @@ import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
-import { Session } from '@/lib/firebase/current-account';
+import { displaySession, type Scope } from '@/components/app-shells/website/navbar/display-session';
+import type { Session } from '@/lib/firebase/current-account';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import Link from 'next/link';
 
 type Props = {
-	session: Session | null;
 	lang: WebsiteLanguage;
+	scope: Scope;
+	sessions: Session[];
 };
 
-export const NavbarMobile = ({ session, lang }: Props) => {
+export const NavbarMobile = ({ lang, scope, sessions }: Props) => {
 	const { logout } = useLogout();
 	const translator = useTranslator(lang, 'website-me');
-	const menuLinks = [
-		{
-			href: '/',
-			label: translator?.t('metadata.home-link'),
-		},
-		{
-			href: session?.type === 'local-partner' ? '/partner-space/profile' : '/dashboard/profile',
+	const session = displaySession(sessions, scope);
+	const hasUser = sessions.some((s) => s.type === 'user');
+	const hasContributor = sessions.some((s) => s.type === 'contributor');
+	const hasLocalPartner = sessions.some((s) => s.type === 'local-partner');
+	const menuLinks: { href: string; label: string }[] = [{ href: '/', label: translator?.t('metadata.home-link') ?? 'Home' }];
+
+	if (scope === 'website') {
+		if (hasUser) menuLinks.push({ href: '/portal', label: 'Go to portal' });
+		if (hasContributor) menuLinks.push({ href: '/dashboard/contributions', label: 'Go to dashboard' });
+		if (hasLocalPartner) menuLinks.push({ href: '/partner-space/recipients', label: 'Go to partner space' });
+	} else {
+		menuLinks.push({
+			href: scope === 'partner-space' ? '/partner-space/profile' : '/dashboard/profile',
 			label: translator?.t('profile.link') ?? 'Profile',
-		},
-	];
+		});
+		if (hasUser) menuLinks.push({ href: '/portal', label: 'Go to portal' });
+		if (scope === 'partner-space' && hasContributor) menuLinks.push({ href: '/dashboard/contributions', label: 'Go to dashboard' });
+		if (scope === 'dashboard' && hasLocalPartner) menuLinks.push({ href: '/partner-space/recipients', label: 'Go to partner space' });
+	}
 
 	return (
 		<nav className="container flex h-20 items-center justify-between">

@@ -14,9 +14,10 @@ import { titleCase } from '@/lib/utils/string-utils';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
+import { ProgramAccessService } from '../program-access/program-access.service';
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
 import { ContributorService } from '../contributor/contributor.service';
-import { ContributorUpdateInput, StripeContributorData } from '../contributor/contributor.types';
+import { ContributorUpdateInput, ContributorWithContact, StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
@@ -33,6 +34,7 @@ export class StripeService extends BaseService {
 	private readonly contributorService = new ContributorService();
 	private readonly contributionService = new ContributionService();
 	private readonly campaignService = new CampaignService();
+	private readonly programAccessService = new ProgramAccessService();
 
 	async handleWebhookEvent(
 		body: string,
@@ -80,54 +82,84 @@ export class StripeService extends BaseService {
 
 			const stripeCustomer = await this.retrieveStripeCustomer(fullCharge.customer as string);
 
-			// Extract campaign ID from checkout session metadata
+			// Extract campaign ID and optional accountId (portal flow) from checkout session metadata
 			const checkoutMetadata = await this.getCheckoutMetadata(fullCharge);
 
-			let contributor;
+			let contributor: ContributorWithContact | undefined;
 			let isNewContributor = false;
 
-			if (fullCharge.status === 'succeeded') {
-				// For successful payments: get or create contributor
-				const { firstName, lastName } = this.splitName(stripeCustomer.name);
-				const contributorData: StripeContributorData = {
-					stripeCustomerId: stripeCustomer.id,
-					email: stripeCustomer.email,
-					firstName,
-					lastName,
-					referral: ContributorReferralSource.other,
-				};
-
-				const contributorResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth(contributorData);
-				if (!contributorResult.success) {
-					this.logger.error(contributorResult.error);
-					return this.resultFail(contributorResult.error);
+			// Portal flow: metadata has accountId (logged-in user donating from portal)
+			const accountId = checkoutMetadata?.accountId as string | undefined;
+			if (accountId) {
+				const user = await this.db.user.findUnique({
+					where: { accountId },
+					select: { contactId: true },
+				});
+				if (user) {
+					const portalResult = await this.contributorService.getOrCreateContributorForAccount(
+						accountId,
+						stripeCustomer.id,
+						user.contactId,
+					);
+					if (!portalResult.success) {
+						this.logger.error(portalResult.error);
+						return this.resultFail(portalResult.error);
+					}
+					contributor = portalResult.data.contributor;
+					isNewContributor = portalResult.data.isNewContributor;
+					if (isNewContributor) {
+						this.logger.info('Created new contributor (portal)', { contributorId: contributor.id });
+					}
 				}
+			}
 
-				contributor = contributorResult.data.contributor;
-				isNewContributor = contributorResult.data.isNewContributor;
+			if (!contributor) {
+				// Public flow: get or create contributor by Stripe customer / email
+				if (fullCharge.status === 'succeeded') {
+					// For successful payments: get or create contributor
+					const { firstName, lastName } = this.splitName(stripeCustomer.name);
+					const contributorData: StripeContributorData = {
+						stripeCustomerId: stripeCustomer.id,
+						email: stripeCustomer.email,
+						firstName,
+						lastName,
+						referral: ContributorReferralSource.other,
+					};
 
-				if (isNewContributor) {
-					this.logger.info('Created new contributor', { contributorId: contributor.id });
+					const contributorResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth(
+						contributorData,
+					);
+					if (!contributorResult.success) {
+						this.logger.error(contributorResult.error);
+						return this.resultFail(contributorResult.error);
+					}
+
+					contributor = contributorResult.data.contributor;
+					isNewContributor = contributorResult.data.isNewContributor;
+
+					if (isNewContributor) {
+						this.logger.info('Created new contributor', { contributorId: contributor.id });
+					}
+				} else {
+					// For failed/pending payments: only process if contributor already exists
+					const existingContributorResult = await this.contributorService.findByStripeCustomerOrEmail(
+						stripeCustomer.id,
+						stripeCustomer.email || undefined,
+					);
+
+					if (!existingContributorResult.success) {
+						this.logger.error(existingContributorResult.error);
+						return this.resultFail(existingContributorResult.error);
+					}
+
+					if (!existingContributorResult.data) {
+						this.logger.info(`Skipping non-successful charge for non-existent contributor`);
+						return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
+					}
+
+					contributor = existingContributorResult.data;
+					isNewContributor = false;
 				}
-			} else {
-				// For failed/pending payments: only process if contributor already exists
-				const existingContributorResult = await this.contributorService.findByStripeCustomerOrEmail(
-					stripeCustomer.id,
-					stripeCustomer.email || undefined,
-				);
-
-				if (!existingContributorResult.success) {
-					this.logger.error(existingContributorResult.error);
-					return this.resultFail(existingContributorResult.error);
-				}
-
-				if (!existingContributorResult.data) {
-					this.logger.info(`Skipping non-successful charge for non-existent contributor`);
-					return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
-				}
-
-				contributor = existingContributorResult.data;
-				isNewContributor = false;
 			}
 
 			// Use fallback campaign if no specific campaign was selected
@@ -342,6 +374,8 @@ export class StripeService extends BaseService {
 		intervalCount?: number;
 		stripeCustomerId?: string | null;
 		campaignId?: string;
+		accountId?: string;
+		source?: string;
 	}): Promise<ServiceResult<string>> {
 		try {
 			const {
@@ -352,7 +386,14 @@ export class StripeService extends BaseService {
 				recurring = false,
 				stripeCustomerId,
 				campaignId,
+				accountId,
+				source,
 			} = data;
+
+			const metadata: Record<string, string> = {};
+			if (campaignId) metadata.campaignId = campaignId;
+			if (accountId) metadata.accountId = accountId;
+			if (source) metadata.source = source;
 
 			const price = await this.stripe.prices.create({
 				active: true,
@@ -376,9 +417,7 @@ export class StripeService extends BaseService {
 				success_url: successUrl,
 				locale: 'auto',
 
-				...(campaignId && {
-					metadata: { campaignId },
-				}),
+				...(Object.keys(metadata).length > 0 && { metadata }),
 
 				...(recurring &&
 					campaignId && {
@@ -392,6 +431,103 @@ export class StripeService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async createPortalProgramDonationCheckout(
+		userId: string,
+		input: {
+			amount: number;
+			programId: string;
+			currency?: string;
+			intervalCount?: number;
+			recurring?: boolean;
+		},
+	): Promise<ServiceResult<string>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+		if (!accessResult.success || !accessResult.data.some((p) => p.programId === input.programId)) {
+			return this.resultFail('Program not found or access denied');
+		}
+
+		const user = await this.db.user.findUnique({
+			where: { id: userId },
+			select: {
+				accountId: true,
+				contactId: true,
+				contact: {
+					select: { id: true, email: true, firstName: true, lastName: true },
+				},
+			},
+		});
+		if (!user) {
+			return this.resultFail('User account not found');
+		}
+
+		let stripeCustomerId: string | null = null;
+		const contributor = await this.db.contributor.findUnique({
+			where: { accountId: user.accountId },
+			select: { stripeCustomerId: true },
+		});
+
+		if (contributor?.stripeCustomerId) {
+			stripeCustomerId = contributor.stripeCustomerId;
+		} else {
+			// First-time portal donor: create Stripe Customer with user's email/name so Checkout
+			// prefills and locks the email (no different-email mismatch).
+			const email = user.contact?.email ?? null;
+			if (!email) {
+				return this.resultFail('User contact email is required for portal donations');
+			}
+			const name = [user.contact?.firstName, user.contact?.lastName].filter(Boolean).join(' ') || undefined;
+			const createCustomerResult = await this.createStripeCustomerForPortal(email, name);
+			if (!createCustomerResult.success) {
+				return createCustomerResult;
+			}
+			stripeCustomerId = createCustomerResult.data;
+			const contributorResult = await this.contributorService.getOrCreateContributorForAccount(
+				user.accountId,
+				stripeCustomerId,
+				user.contactId,
+			);
+			if (!contributorResult.success) {
+				return this.resultFail(contributorResult.error);
+			}
+		}
+
+		const campaignResult = await this.campaignService.getActiveCampaignForProgram(input.programId);
+		if (!campaignResult.success) {
+			return this.resultFail(campaignResult.error);
+		}
+
+		const baseUrl = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+		const successUrl = `${baseUrl}/portal/programs/${input.programId}/overview?donation=success`;
+
+		return this.createCheckoutSession({
+			amount: input.amount,
+			currency: input.currency ?? 'CHF',
+			intervalCount: input.intervalCount ?? 1,
+			recurring: input.recurring ?? false,
+			successUrl,
+			campaignId: campaignResult.data.id,
+			accountId: user.accountId,
+			source: 'portal',
+			stripeCustomerId,
+		});
+	}
+
+	private async createStripeCustomerForPortal(
+		email: string,
+		name?: string,
+	): Promise<ServiceResult<string>> {
+		try {
+			const customer = await this.stripe.customers.create({
+				email,
+				name: name || undefined,
+			});
+			return this.resultOk(customer.id);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not create Stripe customer: ${JSON.stringify(error)}`);
 		}
 	}
 
