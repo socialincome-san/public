@@ -10,52 +10,52 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { CopyUrlCell } from '../elements/copy-url-cell';
 
 export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
-	return [
-		{
-			accessorKey: 'title',
-			header: (ctx) => <SortableHeader ctx={ctx}>Title</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'description',
-			header: (ctx) => <SortableHeader ctx={ctx}>Description</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'currency',
-			header: (ctx) => <SortableHeader ctx={ctx}>Currency</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'endDate',
-			header: (ctx) => <SortableHeader ctx={ctx}>End Date</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'isActive',
-			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <StatusCell ctx={ctx} variant="campaign" />,
-		},
-		{
-			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'link',
-			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
-			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
-		},
-		{
-			id: 'actions',
-			header: '',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
-		},
-	];
+  return [
+    {
+      accessorKey: 'title',
+      header: (ctx) => <SortableHeader ctx={ctx}>Title</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'description',
+      header: (ctx) => <SortableHeader ctx={ctx}>Description</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'currency',
+      header: (ctx) => <SortableHeader ctx={ctx}>Currency</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'endDate',
+      header: (ctx) => <SortableHeader ctx={ctx}>End Date</SortableHeader>,
+      cell: (ctx) => <DateCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'isActive',
+      header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
+      cell: (ctx) => <StatusCell ctx={ctx} variant="campaign" />,
+    },
+    {
+      accessorKey: 'programName',
+      header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'createdAt',
+      header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+      cell: (ctx) => <DateCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'link',
+      header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
+      cell: (ctx) => <CopyUrlCell ctx={ctx} />,
+    },
+    {
+      id: 'actions',
+      header: '',
+      enableSorting: false,
+      cell: (ctx) => <ActionCell ctx={ctx} />,
+    },
+  ];
 };

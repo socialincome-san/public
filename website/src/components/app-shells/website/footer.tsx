@@ -16,62 +16,63 @@ import NextLink from 'next/link';
 const storyblokService = new StoryblokService();
 
 type Props = {
-	lang: WebsiteLanguage;
-	region: string;
+  lang: WebsiteLanguage;
+  region: string;
 };
 
 const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.ComponentType<{ className?: string }>> = {
-	instagram: InstagramIcon,
-	linkedin: LinkedinIcon,
-	facebook: FacebookIcon,
-	github: GithubIcon,
-	newsletter: PaperPlaneIcon,
+  instagram: InstagramIcon,
+  linkedin: LinkedinIcon,
+  facebook: FacebookIcon,
+  github: GithubIcon,
+  newsletter: PaperPlaneIcon,
 };
 
 export const Footer = async ({ lang, region }: Props) => {
-	const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
-	const footerMenu = result.success ? result.data.content.footerMenu : [];
-	const copyrightNotice = result.success ? result.data.content.copyrightNotice : undefined;
+  const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+  const footerMenu = result.success ? result.data.content.footerMenu : [];
+  const copyrightNotice = result.success ? result.data.content.copyrightNotice : undefined;
 
-	return (
-		<div className="bg-primary container mb-10 grid grid-cols-1 gap-4 rounded-3xl px-8 pb-8 pt-10 text-white sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto]">
-			<div>
-				<SocialIncomeLogo width={222} height={22} />
-			</div>
-			<div className="mt-8 lg:mt-16">
-				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-					{footerMenu.map((menuGroup) => (
-						<div key={menuGroup._uid}>
-							<h5 className="text-lg font-bold text-white">{menuGroup.label}</h5>
-							<ul className="mt-4 space-y-3">
-								{menuGroup.items?.map((item) => {
-									const Icon = item.icon ? IconMap[item.icon] : null;
-									return (
-										<li key={item._uid}>
-											<NextLink
-												href={resolveStoryblokLink(item.link, lang, region)}
-												target={item.newTab ? '_blank' : '_self'}
-												rel={item.newTab ? 'noopener noreferrer' : undefined}
-												className="flex items-center gap-3 font-medium text-white/50 transition-colors hover:text-white"
-											>
-												{Icon && <Icon className="text-input" />}
-												{item.label}
-											</NextLink>
-										</li>
-									);
-								})}
-							</ul>
-						</div>
-					))}
-				</div>
-				{copyrightNotice && (
-					<div className="mt-16">
-						<p className="text-xs font-medium text-white/50">
-							{copyrightNotice.replace('%YEAR%', now().getFullYear().toString())}
-						</p>
-					</div>
-				)}
-			</div>
-		</div>
-	);
+  return (
+    <div className="container mb-10 grid grid-cols-1 gap-4 rounded-3xl bg-primary px-8 pb-8 pt-10 text-white sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto]">
+      <div>
+        <SocialIncomeLogo width={222} height={22} />
+      </div>
+      <div className="mt-8 lg:mt-16">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+          {footerMenu.map((menuGroup) => (
+            <div key={menuGroup._uid}>
+              <h5 className="text-lg font-bold text-white">{menuGroup.label}</h5>
+              <ul className="mt-4 space-y-3">
+                {menuGroup.items?.map((item) => {
+                  const Icon = item.icon ? IconMap[item.icon] : null;
+
+                  return (
+                    <li key={item._uid}>
+                      <NextLink
+                        href={resolveStoryblokLink(item.link, lang, region)}
+                        target={item.newTab ? '_blank' : '_self'}
+                        rel={item.newTab ? 'noopener noreferrer' : undefined}
+                        className="flex items-center gap-3 font-medium text-white/50 transition-colors hover:text-white"
+                      >
+                        {Icon && <Icon className="text-input" />}
+                        {item.label}
+                      </NextLink>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+        {copyrightNotice && (
+          <div className="mt-16">
+            <p className="text-xs font-medium text-white/50">
+              {copyrightNotice.replace('%YEAR%', now().getFullYear().toString())}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };

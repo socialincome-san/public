@@ -9,28 +9,30 @@ import { getActorOrThrow } from '../firebase/current-account';
 const localPartnerService = new LocalPartnerService();
 
 export const createLocalPartnerAction = async (localPartner: LocalPartnerCreateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const result = await localPartnerService.create(user.id, localPartner);
+  const user = await getAuthenticatedUserOrThrow();
+  const result = await localPartnerService.create(user.id, localPartner);
 
-	revalidatePath('/portal/admin/local-partners');
-	return result;
+  revalidatePath('/portal/admin/local-partners');
+
+  return result;
 };
 
 export const updateLocalPartnerAction = async (updateInput: LocalPartnerUpdateInput) => {
-	const actor = await getActorOrThrow();
+  const actor = await getActorOrThrow();
 
-	const result = await localPartnerService.update(actor, updateInput);
+  const result = await localPartnerService.update(actor, updateInput);
 
-	if (actor.kind === 'user') {
-		revalidatePath('/portal/admin/local-partners');
-	} else if (actor.kind === 'local-partner') {
-		revalidatePath('/partner-space/profile');
-	}
+  if (actor.kind === 'user') {
+    revalidatePath('/portal/admin/local-partners');
+  } else if (actor.kind === 'local-partner') {
+    revalidatePath('/partner-space/profile');
+  }
 
-	return result;
+  return result;
 };
 
 export const getLocalPartnerAction = async (localPartnerId: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	return localPartnerService.get(user.id, localPartnerId);
+  const user = await getAuthenticatedUserOrThrow();
+
+  return localPartnerService.get(user.id, localPartnerId);
 };

@@ -9,32 +9,30 @@ import { StatProgressCard } from './stat-progress-card';
 type FirstIntervalFundingSectionProps = { programId: string; stats: ProgramDashboardStats };
 
 export const FirstIntervalFundingSection = ({ programId, stats }: FirstIntervalFundingSectionProps) => {
-	const percent =
-		stats.costPerIntervalChf > 0
-			? Math.min(100, (stats.contributedToProgramSoFarChf / stats.costPerIntervalChf) * 100)
-			: 0;
+  const percent =
+    stats.costPerIntervalChf > 0 ? Math.min(100, (stats.contributedToProgramSoFarChf / stats.costPerIntervalChf) * 100) : 0;
 
-	return (
-		<div className="space-y-4">
-			<SectionTitle>First Interval Funding</SectionTitle>
-			<Card>
-				<div className="space-y-6">
-					<SectionBox>
-						<StatProgressCard
-							title="You need to cover the first interval to start the program"
-							leftLabel="Current Contributions"
-							rightLabel="Minimum Required"
-							leftValue={formatCurrency(stats.contributedToProgramSoFarChf)}
-							rightValue={formatCurrency(stats.costPerIntervalChf)}
-							percent={percent}
-						/>
-					</SectionBox>
+  return (
+    <div className="space-y-4">
+      <SectionTitle>First Interval Funding</SectionTitle>
+      <Card>
+        <div className="space-y-6">
+          <SectionBox>
+            <StatProgressCard
+              title="You need to cover the first interval to start the program"
+              leftLabel="Current Contributions"
+              rightLabel="Minimum Required"
+              leftValue={formatCurrency(stats.contributedToProgramSoFarChf)}
+              rightValue={formatCurrency(stats.costPerIntervalChf)}
+              percent={percent}
+            />
+          </SectionBox>
 
-					<SectionBox>
-						<DonationForm costPerIntervalChf={stats.costPerIntervalChf} programId={programId} />
-					</SectionBox>
-				</div>
-			</Card>
-		</div>
-	);
+          <SectionBox>
+            <DonationForm costPerIntervalChf={stats.costPerIntervalChf} programId={programId} />
+          </SectionBox>
+        </div>
+      </Card>
+    </div>
+  );
 };

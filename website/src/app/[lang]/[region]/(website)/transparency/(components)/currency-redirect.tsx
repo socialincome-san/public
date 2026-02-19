@@ -6,13 +6,13 @@ import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 
 export const CurrencyRedirect = (props: { currency: WebsiteCurrency }) => {
-	const { currency } = useI18n();
+  const { currency } = useI18n();
 
-	useEffect(() => {
-		if (currency && props.currency !== currency) {
-			redirect('./' + currency.toLowerCase());
-		}
-	}, [currency, props.currency]);
+  useEffect(() => {
+    if (currency && props.currency !== currency) {
+      redirect('./' + currency.toLowerCase());
+    }
+  }, [currency, props.currency]);
 
-	return null;
+  return null;
 };

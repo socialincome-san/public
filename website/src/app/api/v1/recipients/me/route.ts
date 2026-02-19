@@ -12,21 +12,21 @@ import { RecipientSelfUpdate } from '../../models';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+  const recipientService = new RecipientService();
+  const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	if (!recipientResult.success) {
-		logger.warn('[GET /recipients/me] Failed', {
-			error: recipientResult.error,
-			status: recipientResult.status,
-		});
+  if (!recipientResult.success) {
+    logger.warn('[GET /recipients/me] Failed', {
+      error: recipientResult.error,
+      status: recipientResult.status,
+    });
 
-		return new Response(recipientResult.error, {
-			status: recipientResult.status ?? 500,
-		});
-	}
+    return new Response(recipientResult.error, {
+      status: recipientResult.status ?? 500,
+    });
+  }
 
-	return NextResponse.json(recipientResult.data, { status: 200 });
+  return NextResponse.json(recipientResult.data, { status: 200 });
 });
 
 /**
@@ -38,130 +38,131 @@ export const GET = withAppCheck(async (request: NextRequest) => {
  * @openapi
  */
 export const PATCH = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
+  const recipientService = new RecipientService();
 
-	logger.info('[PATCH /recipients/me] Incoming request', {
-		contentType: request.headers.get('content-type'),
-	});
+  logger.info('[PATCH /recipients/me] Incoming request', {
+    contentType: request.headers.get('content-type'),
+  });
 
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+  const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	if (!recipientResult.success) {
-		logger.warn('[PATCH /recipients/me] Recipient resolution failed', {
-			error: recipientResult.error,
-			status: recipientResult.status,
-		});
+  if (!recipientResult.success) {
+    logger.warn('[PATCH /recipients/me] Recipient resolution failed', {
+      error: recipientResult.error,
+      status: recipientResult.status,
+    });
 
-		return new Response(recipientResult.error, {
-			status: recipientResult.status ?? 500,
-		});
-	}
+    return new Response(recipientResult.error, {
+      status: recipientResult.status ?? 500,
+    });
+  }
 
-	const recipient = recipientResult.data;
+  const recipient = recipientResult.data;
 
-	let body: unknown;
+  let body: unknown;
 
-	try {
-		body = await request.json();
-	} catch {
-		logger.warn('[PATCH /recipients/me] Invalid JSON body');
-		return new Response('Invalid JSON body', { status: 400 });
-	}
+  try {
+    body = await request.json();
+  } catch {
+    logger.warn('[PATCH /recipients/me] Invalid JSON body');
 
-	const parsed = RecipientSelfUpdate.safeParse(body);
+    return new Response('Invalid JSON body', { status: 400 });
+  }
 
-	if (!parsed.success) {
-		logger.warn('[PATCH /recipients/me] Validation failed', {
-			zodErrors: parsed.error.format(),
-		});
+  const parsed = RecipientSelfUpdate.safeParse(body);
 
-		return new Response(parsed.error.message, { status: 400 });
-	}
+  if (!parsed.success) {
+    logger.warn('[PATCH /recipients/me] Validation failed', {
+      zodErrors: parsed.error.format(),
+    });
 
-	const data = parsed.data;
+    return new Response(parsed.error.message, { status: 400 });
+  }
 
-	const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
-	const newPaymentPhone = data.paymentPhone ?? null;
+  const data = parsed.data;
 
-	logger.info('[PATCH /recipients/me] Phone update intent', {
-		oldPaymentPhone,
-		newPaymentPhone,
-		contactPhone: data.contactPhone === null ? null : typeof data.contactPhone === 'string' ? 'provided' : 'unchanged',
-	});
+  const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
+  const newPaymentPhone = data.paymentPhone ?? null;
 
-	const updateData: RecipientPrismaUpdateInput = {
-		contact: {
-			update: {
-				firstName: data.firstName,
-				lastName: data.lastName,
-				callingName: data.callingName,
-				gender: data.gender,
-				dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
-				language: data.language,
-				email: data.email,
-				phone:
-					data.contactPhone === null
-						? { disconnect: true }
-						: typeof data.contactPhone === 'string'
-							? {
-									connectOrCreate: {
-										where: { number: data.contactPhone },
-										create: { number: data.contactPhone },
-									},
-								}
-							: undefined,
-			},
-		},
+  logger.info('[PATCH /recipients/me] Phone update intent', {
+    oldPaymentPhone,
+    newPaymentPhone,
+    contactPhone: data.contactPhone === null ? null : typeof data.contactPhone === 'string' ? 'provided' : 'unchanged',
+  });
 
-		successorName: data.successorName,
-		termsAccepted: data.termsAccepted,
+  const updateData: RecipientPrismaUpdateInput = {
+    contact: {
+      update: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        callingName: data.callingName,
+        gender: data.gender,
+        dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
+        language: data.language,
+        email: data.email,
+        phone:
+          data.contactPhone === null
+            ? { disconnect: true }
+            : typeof data.contactPhone === 'string'
+              ? {
+                  connectOrCreate: {
+                    where: { number: data.contactPhone },
+                    create: { number: data.contactPhone },
+                  },
+                }
+              : undefined,
+      },
+    },
 
-		paymentInformation:
-			data.paymentPhone || data.paymentProvider
-				? {
-						upsert: {
-							update: {
-								provider: data.paymentProvider,
-								phone: data.paymentPhone
-									? {
-											connectOrCreate: {
-												where: { number: data.paymentPhone },
-												create: { number: data.paymentPhone },
-											},
-										}
-									: undefined,
-							},
-							create: {
-								provider: data.paymentProvider!,
-								code: recipient.paymentInformation?.code ?? '',
-								phone: {
-									connectOrCreate: {
-										where: { number: data.paymentPhone! },
-										create: { number: data.paymentPhone! },
-									},
-								},
-							},
-						},
-					}
-				: undefined,
-	};
+    successorName: data.successorName,
+    termsAccepted: data.termsAccepted,
 
-	const updateResult = await recipientService.updateSelf(recipient.id, updateData, {
-		oldPaymentPhone,
-		newPaymentPhone,
-	});
+    paymentInformation:
+      data.paymentPhone || data.paymentProvider
+        ? {
+            upsert: {
+              update: {
+                provider: data.paymentProvider,
+                phone: data.paymentPhone
+                  ? {
+                      connectOrCreate: {
+                        where: { number: data.paymentPhone },
+                        create: { number: data.paymentPhone },
+                      },
+                    }
+                  : undefined,
+              },
+              create: {
+                provider: data.paymentProvider!,
+                code: recipient.paymentInformation?.code ?? '',
+                phone: {
+                  connectOrCreate: {
+                    where: { number: data.paymentPhone! },
+                    create: { number: data.paymentPhone! },
+                  },
+                },
+              },
+            },
+          }
+        : undefined,
+  };
 
-	if (!updateResult.success) {
-		logger.error('[PATCH /recipients/me] Update failed', {
-			error: updateResult.error,
-		});
+  const updateResult = await recipientService.updateSelf(recipient.id, updateData, {
+    oldPaymentPhone,
+    newPaymentPhone,
+  });
 
-		return new Response(updateResult.error, { status: 500 });
-	}
+  if (!updateResult.success) {
+    logger.error('[PATCH /recipients/me] Update failed', {
+      error: updateResult.error,
+    });
 
-	logger.info('[PATCH /recipients/me] Update successful', {
-		recipientId: recipient.id,
-	});
+    return new Response(updateResult.error, { status: 500 });
+  }
 
-	return NextResponse.json(updateResult.data, { status: 200 });
+  logger.info('[PATCH /recipients/me] Update successful', {
+    recipientId: recipient.id,
+  });
+
+  return NextResponse.json(updateResult.data, { status: 200 });
 });

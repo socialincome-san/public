@@ -7,26 +7,26 @@ import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
 export const useLogout = () => {
-	const router = useRouter();
-	const { auth } = useAuth();
+  const router = useRouter();
+  const { auth } = useAuth();
 
-	const logout = async () => {
-		try {
-			const result = await logoutAction();
+  const logout = async () => {
+    try {
+      const result = await logoutAction();
 
-			if (!result.success) {
-				logger.error('Logout failed', { error: result.error });
-			}
+      if (!result.success) {
+        logger.error('Logout failed', { error: result.error });
+      }
 
-			await signOut(auth).catch((err) => {
-				logger.error('Firebase sign-out error', { error: err });
-			});
+      await signOut(auth).catch((err) => {
+        logger.error('Firebase sign-out error', { error: err });
+      });
 
-			router.push('/login');
-		} catch (error) {
-			logger.error('Logout error', { error });
-		}
-	};
+      router.push('/login');
+    } catch (error) {
+      logger.error('Logout error', { error });
+    }
+  };
 
-	return { logout };
+  return { logout };
 };

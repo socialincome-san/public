@@ -11,58 +11,58 @@ import { getCountryNameByCode } from '@/lib/types/country';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export const makeCountryColumns = (): ColumnDef<CountryTableViewRow>[] => {
-	return [
-		{
-			id: 'flag',
-			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
-			accessorFn: (row) => row.isoCode,
-			cell: ({ row }) => <CountryFlag country={row.original.isoCode} />,
-		},
-		{
-			accessorKey: 'name',
-			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
-			accessorFn: (row) => getCountryNameByCode(row.isoCode),
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			id: 'isActive',
-			header: (ctx) => <SortableHeader ctx={ctx}>Active</SortableHeader>,
-			accessorFn: (row) => row.isActive,
-			cell: (ctx) => <StatusCell ctx={ctx} variant="boolean" />,
-		},
-		{
-			id: 'microfinanceIndex',
-			header: (ctx) => <SortableHeader ctx={ctx}>Microfinance Index</SortableHeader>,
-			accessorFn: (row) => row.microfinanceIndex ?? '',
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			id: 'populationCoverage',
-			header: (ctx) => <SortableHeader ctx={ctx}>Population Coverage %</SortableHeader>,
-			accessorFn: (row) => row.populationCoverage ?? '',
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'networkTechnology',
-			header: (ctx) => <SortableHeader ctx={ctx}>Network Technology</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'latestSurveyDate',
-			header: (ctx) => <SortableHeader ctx={ctx}>Latest Survey</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
-		},
+  return [
+    {
+      id: 'flag',
+      header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
+      accessorFn: (row) => row.isoCode,
+      cell: ({ row }) => <CountryFlag country={row.original.isoCode} />,
+    },
+    {
+      accessorKey: 'name',
+      header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
+      accessorFn: (row) => getCountryNameByCode(row.isoCode),
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      id: 'isActive',
+      header: (ctx) => <SortableHeader ctx={ctx}>Active</SortableHeader>,
+      accessorFn: (row) => row.isActive,
+      cell: (ctx) => <StatusCell ctx={ctx} variant="boolean" />,
+    },
+    {
+      id: 'microfinanceIndex',
+      header: (ctx) => <SortableHeader ctx={ctx}>Microfinance Index</SortableHeader>,
+      accessorFn: (row) => row.microfinanceIndex ?? '',
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      id: 'populationCoverage',
+      header: (ctx) => <SortableHeader ctx={ctx}>Population Coverage %</SortableHeader>,
+      accessorFn: (row) => row.populationCoverage ?? '',
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'networkTechnology',
+      header: (ctx) => <SortableHeader ctx={ctx}>Network Technology</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'latestSurveyDate',
+      header: (ctx) => <SortableHeader ctx={ctx}>Latest Survey</SortableHeader>,
+      cell: (ctx) => <DateCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'createdAt',
+      header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+      cell: (ctx) => <DateCell ctx={ctx} />,
+    },
 
-		{
-			id: 'actions',
-			header: '',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
-		},
-	];
+    {
+      id: 'actions',
+      header: '',
+      enableSorting: false,
+      cell: (ctx) => <ActionCell ctx={ctx} />,
+    },
+  ];
 };

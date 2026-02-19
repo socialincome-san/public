@@ -5,16 +5,16 @@ import { BaseContainer } from '@socialincome/ui';
 import { CarouselCardProps, QuotesCarousel } from '../(components)/quotes-carousel';
 
 export const Quotes = async ({ lang }: DefaultParams) => {
-	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
-		namespaces: ['website-home', 'common'],
-	});
+  const translator = await Translator.getInstance({
+    language: lang as WebsiteLanguage,
+    namespaces: ['website-home', 'common'],
+  });
 
-	const cards = translator.t<CarouselCardProps>('section-8.cards');
+  const cards = translator.t<CarouselCardProps>('section-8.cards');
 
-	return (
-		<BaseContainer className="my-40">
-			<QuotesCarousel {...cards} />
-		</BaseContainer>
-	);
+  return (
+    <BaseContainer className="my-40">
+      <QuotesCarousel {...cards} />
+    </BaseContainer>
+  );
 };

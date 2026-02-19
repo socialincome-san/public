@@ -5,22 +5,22 @@ import { OpenSourceContributorsClient } from '../(components)/contributors-clien
 import { getContributors } from '../(components)/get-contributors';
 
 type Metadata = {
-	heading: string;
+  heading: string;
 };
 
 export const OpenSourceContributors = async ({ lang }: DefaultParams) => {
-	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
-		namespaces: ['website-open-source'],
-	});
+  const translator = await Translator.getInstance({
+    language: lang as WebsiteLanguage,
+    namespaces: ['website-open-source'],
+  });
 
-	const metadata: Metadata = translator.t('metadata');
-	const heading = metadata.heading;
+  const metadata: Metadata = translator.t('metadata');
+  const heading = metadata.heading;
 
-	const contributors = await getContributors();
-	const totalContributors = contributors.length;
+  const contributors = await getContributors();
+  const totalContributors = contributors.length;
 
-	return (
-		<OpenSourceContributorsClient contributors={contributors} heading={heading} totalContributors={totalContributors} />
-	);
+  return (
+    <OpenSourceContributorsClient contributors={contributors} heading={heading} totalContributors={totalContributors} />
+  );
 };

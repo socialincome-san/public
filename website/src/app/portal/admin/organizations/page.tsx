@@ -6,30 +6,30 @@ import type { OrganizationTableViewRow } from '@/lib/services/organization/organ
 import { Suspense } from 'react';
 
 export default function OrganizationsPage() {
-	return (
-		<Suspense>
-			<OrganizationsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <OrganizationsDataLoader />
+    </Suspense>
+  );
 }
 
 const OrganizationsDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+  const user = await getAuthenticatedUserOrRedirect();
+  await requireAdmin(user);
 
-	const service = new OrganizationService();
-	const result = await service.getAdminTableView(user.id);
+  const service = new OrganizationService();
+  const result = await service.getAdminTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: OrganizationTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: OrganizationTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return (
-		<DataTable
-			title="All Organizations"
-			error={error}
-			emptyMessage="No organizations found"
-			data={rows}
-			makeColumns={makeOrganizationAdminColumns}
-		/>
-	);
+  return (
+    <DataTable
+      title="All Organizations"
+      error={error}
+      emptyMessage="No organizations found"
+      data={rows}
+      makeColumns={makeOrganizationAdminColumns}
+    />
+  );
 };

@@ -5,22 +5,22 @@ import { Suspense } from 'react';
 import CountriesTable from './countries-table';
 
 export default function CountriesPage() {
-	return (
-		<Suspense>
-			<CountriesDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <CountriesDataLoader />
+    </Suspense>
+  );
 }
 
 const CountriesDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+  const user = await getAuthenticatedUserOrRedirect();
+  await requireAdmin(user);
 
-	const service = new CountryService();
-	const result = await service.getTableView(user.id);
+  const service = new CountryService();
+  const result = await service.getTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: CountryTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: CountryTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <CountriesTable rows={rows} error={error} />;
+  return <CountriesTable rows={rows} error={error} />;
 };

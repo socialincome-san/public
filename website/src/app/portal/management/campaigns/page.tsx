@@ -5,21 +5,21 @@ import { Suspense } from 'react';
 import CampaignsTable from './campaigns-table';
 
 export default function CampaignsPage() {
-	return (
-		<Suspense>
-			<CampaignsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <CampaignsDataLoader />
+    </Suspense>
+  );
 }
 
 const CampaignsDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const campaignService = new CampaignService();
-	const campaignsResult = await campaignService.getTableView(user.id);
+  const campaignService = new CampaignService();
+  const campaignsResult = await campaignService.getTableView(user.id);
 
-	const error = campaignsResult.success ? null : campaignsResult.error;
-	const campaignRows: CampaignTableViewRow[] = campaignsResult.success ? campaignsResult.data.tableRows : [];
+  const error = campaignsResult.success ? null : campaignsResult.error;
+  const campaignRows: CampaignTableViewRow[] = campaignsResult.success ? campaignsResult.data.tableRows : [];
 
-	return <CampaignsTable rows={campaignRows} error={error} />;
+  return <CampaignsTable rows={campaignRows} error={error} />;
 };

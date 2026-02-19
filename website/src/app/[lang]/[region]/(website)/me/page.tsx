@@ -6,14 +6,14 @@ import { DefaultPageProps } from '../..';
 import { AccountRedirect } from './account-redirect';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const { lang } = await params;
-	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-login'] });
+  const { lang } = await params;
+  const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-login'] });
 
-	return (
-		<BaseContainer className="min-h-screen-navbar mx-auto flex max-w-lg flex-col">
-			<Suspense fallback={translator.t('detect-account-type')}>
-				<AccountRedirect lang={lang as WebsiteLanguage} />
-			</Suspense>
-		</BaseContainer>
-	);
+  return (
+    <BaseContainer className="min-h-screen-navbar mx-auto flex max-w-lg flex-col">
+      <Suspense fallback={translator.t('detect-account-type')}>
+        <AccountRedirect lang={lang as WebsiteLanguage} />
+      </Suspense>
+    </BaseContainer>
+  );
 }

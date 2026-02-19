@@ -7,32 +7,33 @@ import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.ty
 import type { ColumnDef } from '@tanstack/react-table';
 
 export const makePayoutForecastColumns = (): ColumnDef<PayoutForecastTableViewRow>[] => {
-	return [
-		{
-			accessorKey: 'period',
-			header: (ctx) => <SortableHeader ctx={ctx}>Period</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'numberOfRecipients',
-			header: (ctx) => <SortableHeader ctx={ctx}>Recipients</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			id: 'amountInProgramCurrency',
-			header: (ctx) => {
-				const firstRow = ctx.table.options.data?.[0];
-				const currencyLabel = firstRow?.programCurrency ? ` (${firstRow.programCurrency})` : '';
-				return <SortableHeader ctx={ctx}>{`Amount${currencyLabel}`}</SortableHeader>;
-			},
-			accessorFn: (row) => row.amountInProgramCurrency,
-			cell: (ctx) => <CurrencyCell ctx={ctx} currency={ctx.row.original.programCurrency} />,
-		},
-		{
-			id: 'amountUsd',
-			header: (ctx) => <SortableHeader ctx={ctx}>Amount (USD)</SortableHeader>,
-			accessorFn: (row) => row.amountUsd,
-			cell: (ctx) => <CurrencyCell ctx={ctx} currency="USD" />,
-		},
-	];
+  return [
+    {
+      accessorKey: 'period',
+      header: (ctx) => <SortableHeader ctx={ctx}>Period</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'numberOfRecipients',
+      header: (ctx) => <SortableHeader ctx={ctx}>Recipients</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      id: 'amountInProgramCurrency',
+      header: (ctx) => {
+        const firstRow = ctx.table.options.data?.[0];
+        const currencyLabel = firstRow?.programCurrency ? ` (${firstRow.programCurrency})` : '';
+
+        return <SortableHeader ctx={ctx}>{`Amount${currencyLabel}`}</SortableHeader>;
+      },
+      accessorFn: (row) => row.amountInProgramCurrency,
+      cell: (ctx) => <CurrencyCell ctx={ctx} currency={ctx.row.original.programCurrency} />,
+    },
+    {
+      id: 'amountUsd',
+      header: (ctx) => <SortableHeader ctx={ctx}>Amount (USD)</SortableHeader>,
+      accessorFn: (row) => row.amountUsd,
+      cell: (ctx) => <CurrencyCell ctx={ctx} currency="USD" />,
+    },
+  ];
 };

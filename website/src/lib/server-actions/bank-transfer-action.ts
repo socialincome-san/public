@@ -7,18 +7,20 @@ import { BankContributorData } from '@/lib/services/contributor/contributor.type
 import { DateTime } from 'luxon';
 
 export const getReferenceIds = async (
-	email: string,
+  email: string,
 ): Promise<{ contributorReferenceId: string; contributionReferenceId: string } | undefined> => {
-	const contributorService = new ContributorService();
-	const contributorReferenceId = await contributorService.getOrCreateReferenceIdByEmail(email);
-	if (!contributorReferenceId.success) {
-		return;
-	}
-	const contributionReferenceId = Math.round(DateTime.now().toMillis() / 1000).toString();
-	return { contributorReferenceId: contributorReferenceId.data, contributionReferenceId };
+  const contributorService = new ContributorService();
+  const contributorReferenceId = await contributorService.getOrCreateReferenceIdByEmail(email);
+  if (!contributorReferenceId.success) {
+    return;
+  }
+  const contributionReferenceId = Math.round(DateTime.now().toMillis() / 1000).toString();
+
+  return { contributorReferenceId: contributorReferenceId.data, contributionReferenceId };
 };
 
 export const createContributionForContributor = async (payment: BankTransferPayment, userData: BankContributorData) => {
-	const bankTransferService = new BankTransferService();
-	return await bankTransferService.createContributionForNewOrExistingContributor(payment, userData);
+  const bankTransferService = new BankTransferService();
+
+  return await bankTransferService.createContributionForNewOrExistingContributor(payment, userData);
 };

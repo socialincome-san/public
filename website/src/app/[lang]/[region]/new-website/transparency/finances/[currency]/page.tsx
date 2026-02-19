@@ -14,53 +14,49 @@ export const generateStaticParams = () => websiteCurrencies.map((currency) => ({
 type TransparencyFinancesParams = DefaultParams & { currency: Currency };
 
 export default async function Page({ params }: DefaultLayoutProps<TransparencyFinancesParams>) {
-	const { lang, currency } = await params;
+  const { lang, currency } = await params;
 
-	const transparencyService = new TransparencyService();
-	const exchangeRateService = new ExchangeRateService();
+  const transparencyService = new TransparencyService();
+  const exchangeRateService = new ExchangeRateService();
 
-	const timeRanges = Array.from({ length: 12 }, (_, i) => {
-		const start = DateTime.now()
-			.minus({ months: 11 - i })
-			.startOf('month');
-		const end = start.endOf('month');
-		return { start, end };
-	});
+  const timeRanges = Array.from({ length: 12 }, (_, i) => {
+    const start = DateTime.now()
+      .minus({ months: 11 - i })
+      .startOf('month');
+    const end = start.endOf('month');
 
-	const [dataResult, rateResult] = await Promise.all([
-		transparencyService.getTransparencyData(timeRanges),
-		exchangeRateService.getLatestRateForCurrency(currency.toUpperCase()),
-	]);
+    return { start, end };
+  });
 
-	if (!dataResult.success) {
-		return <div>Error loading transparency data</div>;
-	}
+  const [dataResult, rateResult] = await Promise.all([
+    transparencyService.getTransparencyData(timeRanges),
+    exchangeRateService.getLatestRateForCurrency(currency.toUpperCase()),
+  ]);
 
-	const exchangeRate = rateResult.success ? rateResult.data.rate : 1;
-	const data = dataResult.data;
-	const currencyCode = currency.toUpperCase() as WebsiteCurrency;
-	const language = lang as WebsiteLanguage;
+  if (!dataResult.success) {
+    return <div>Error loading transparency data</div>;
+  }
 
-	const serializedTimeRanges = data.timeRanges.map((range) => ({
-		startIso: range.start.toISO()!,
-		totalChf: range.totalChf,
-	}));
+  const exchangeRate = rateResult.success ? rateResult.data.rate : 1;
+  const data = dataResult.data;
+  const currencyCode = currency.toUpperCase() as WebsiteCurrency;
+  const language = lang as WebsiteLanguage;
 
-	return (
-		<div className="container mx-auto space-y-12 py-12">
-			<TotalsSection totals={data.totals} exchangeRate={exchangeRate} currency={currencyCode} lang={language} />
-			<TimeSeriesSection
-				timeRanges={serializedTimeRanges}
-				exchangeRate={exchangeRate}
-				currency={currencyCode}
-				lang={language}
-			/>
-			<CountriesSection
-				countries={data.topCountries}
-				exchangeRate={exchangeRate}
-				currency={currencyCode}
-				lang={language}
-			/>
-		</div>
-	);
+  const serializedTimeRanges = data.timeRanges.map((range) => ({
+    startIso: range.start.toISO()!,
+    totalChf: range.totalChf,
+  }));
+
+  return (
+    <div className="container mx-auto space-y-12 py-12">
+      <TotalsSection totals={data.totals} exchangeRate={exchangeRate} currency={currencyCode} lang={language} />
+      <TimeSeriesSection
+        timeRanges={serializedTimeRanges}
+        exchangeRate={exchangeRate}
+        currency={currencyCode}
+        lang={language}
+      />
+      <CountriesSection countries={data.topCountries} exchangeRate={exchangeRate} currency={currencyCode} lang={language} />
+    </div>
+  );
 }

@@ -9,604 +9,619 @@ import { ProgramAccessService } from '../program-access/program-access.service';
 import { RecipientService } from '../recipient/recipient.service';
 import { SurveyScheduleService } from '../survey-schedule/survey-schedule.service';
 import {
-	SurveyCreateInput,
-	SurveyGenerationPreviewResult,
-	SurveyGenerationResult,
-	SurveyPayload,
-	SurveyTableView,
-	SurveyTableViewRow,
-	SurveyUpdateInput,
-	SurveyWithRecipient,
+  SurveyCreateInput,
+  SurveyGenerationPreviewResult,
+  SurveyGenerationResult,
+  SurveyPayload,
+  SurveyTableView,
+  SurveyTableViewRow,
+  SurveyUpdateInput,
+  SurveyWithRecipient,
 } from './survey.types';
 
 export class SurveyService extends BaseService {
-	private programAccessService = new ProgramAccessService();
-	private recipientService = new RecipientService();
-	private surveyScheduleService = new SurveyScheduleService();
-	private firebaseAdminService = new FirebaseAdminService();
-
-	async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
-		try {
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
-
-			const accessiblePrograms = accessibleProgramsResult.data;
-			if (accessiblePrograms.length === 0) {
-				return this.resultOk({ tableRows: [] });
-			}
-
-			const programIds = accessiblePrograms.map((p) => p.programId);
-
-			const surveys = await this.db.survey.findMany({
-				where: { recipient: { programId: { in: programIds } } },
-				select: {
-					id: true,
-					name: true,
-					questionnaire: true,
-					status: true,
-					language: true,
-					dueAt: true,
-					completedAt: true,
-					createdAt: true,
-					accessEmail: true,
-					accessPw: true,
-					recipient: {
-						select: {
-							id: true,
-							contact: { select: { firstName: true, lastName: true } },
-							program: { select: { id: true, name: true } },
-						},
-					},
-				},
-				orderBy: { dueAt: 'desc' },
-			});
-
-			const tableRows: SurveyTableViewRow[] = surveys
-				.filter((s) => s.recipient.program !== null)
-				.map((survey) => {
-					const programId = survey.recipient.program!.id;
-
-					const programPermissions = accessiblePrograms
-						.filter((p) => p.programId === programId)
-						.map((p) => p.permission);
-
-					const permission = programPermissions.includes(ProgramPermission.operator)
-						? ProgramPermission.operator
-						: ProgramPermission.owner;
-
-					return {
-						id: survey.id,
-						name: survey.name,
-						recipientName:
-							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
-						programId,
-						programName: survey.recipient.program!.name,
-						questionnaire: survey.questionnaire,
-						status: survey.status,
-						language: survey.language,
-						dueAt: survey.dueAt,
-						completedAt: survey.completedAt,
-						createdAt: survey.createdAt,
-						surveyUrl: this.buildSurveyUrl({
-							surveyId: survey.id,
-							recipientId: survey.recipient.id,
-							accessEmail: survey.accessEmail,
-							accessPw: survey.accessPw,
-						}),
-						permission,
-					};
-				});
-
-			return this.resultOk({ tableRows });
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async getUpcomingSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
-		try {
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
-
-			const accessiblePrograms = accessibleProgramsResult.data;
-			if (accessiblePrograms.length === 0) {
-				return this.resultOk({ tableRows: [] });
-			}
-
-			const programIds = accessiblePrograms.map((p) => p.programId);
-
-			const nowDate = now();
-			const from = startOfMonth(subMonths(nowDate, 1));
-			const to = endOfMonth(nowDate);
-
-			const surveys = await this.db.survey.findMany({
-				where: {
-					status: { not: SurveyStatus.completed },
-					dueAt: {
-						gte: from,
-						lte: to,
-					},
-					recipient: {
-						programId: { in: programIds },
-					},
-				},
-				select: {
-					id: true,
-					name: true,
-					questionnaire: true,
-					status: true,
-					language: true,
-					dueAt: true,
-					completedAt: true,
-					createdAt: true,
-					accessEmail: true,
-					accessPw: true,
-					recipient: {
-						select: {
-							id: true,
-							contact: { select: { firstName: true, lastName: true } },
-							program: { select: { id: true, name: true } },
-						},
-					},
-				},
-				orderBy: { dueAt: 'desc' },
-			});
-
-			const tableRows: SurveyTableViewRow[] = surveys
-				.filter((s) => s.recipient.program !== null)
-				.map((survey) => {
-					const programId = survey.recipient.program!.id;
-
-					const permissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
-
-					const permission = permissions.includes(ProgramPermission.operator)
-						? ProgramPermission.operator
-						: ProgramPermission.owner;
-
-					return {
-						id: survey.id,
-						name: survey.name,
-						recipientName:
-							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
-						programId,
-						programName: survey.recipient.program!.name,
-						questionnaire: survey.questionnaire,
-						status: survey.status,
-						language: survey.language,
-						dueAt: survey.dueAt,
-						completedAt: survey.completedAt,
-						createdAt: survey.createdAt,
-						surveyUrl: this.buildSurveyUrl({
-							surveyId: survey.id,
-							recipientId: survey.recipient.id,
-							accessEmail: survey.accessEmail,
-							accessPw: survey.accessPw,
-						}),
-						permission,
-					};
-				});
-
-			return this.resultOk({ tableRows });
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch upcoming surveys: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<SurveyTableView>> {
-		const base = await this.getTableView(userId);
-		if (!base.success) {
-			return base;
-		}
-
-		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
-		return this.resultOk({ tableRows: filteredRows });
-	}
-
-	private buildSurveyUrl({
-		surveyId,
-		recipientId,
-		accessEmail,
-		accessPw,
-	}: {
-		surveyId: string;
-		recipientId: string;
-		accessEmail: string;
-		accessPw: string;
-	}): string {
-		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
-		const url = new URL([base, 'survey', recipientId, surveyId].join('/'));
-		url.search = new URLSearchParams({ email: accessEmail, pw: accessPw }).toString();
-		return url.toString();
-	}
-
-	async create(userId: string, input: SurveyCreateInput): Promise<ServiceResult<SurveyPayload>> {
-		try {
-			if (!input.recipient?.connect?.id) {
-				return this.resultFail('Recipient is required');
-			}
-
-			const recipient = await this.db.recipient.findUnique({
-				where: { id: input.recipient.connect.id },
-				select: { program: { select: { id: true } } },
-			});
-
-			if (!recipient) {
-				return this.resultFail('Recipient not found');
-			}
-
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
-
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program?.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
-				return this.resultFail('Access denied');
-			}
-
-			const survey = await this.db.survey.create({
-				data: input,
-			});
-
-			const payload: SurveyPayload = {
-				id: survey.id,
-				name: survey.name,
-				questionnaire: survey.questionnaire,
-				language: survey.language,
-				dueAt: survey.dueAt,
-				completedAt: survey.completedAt,
-				status: survey.status,
-				data: survey.data,
-				accessEmail: survey.accessEmail,
-				accessPw: survey.accessPw,
-				recipientId: survey.recipientId,
-				surveyScheduleId: survey.surveyScheduleId,
-				createdAt: survey.createdAt,
-				updatedAt: survey.updatedAt,
-			};
-			return this.resultOk(payload);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Failed to create survey: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async get(userId: string, surveyId: string): Promise<ServiceResult<SurveyPayload>> {
-		try {
-			const survey = await this.db.survey.findUnique({
-				where: { id: surveyId },
-				include: {
-					recipient: {
-						select: { program: { select: { id: true } } },
-					},
-				},
-			});
-
-			if (!survey) {
-				return this.resultFail('Survey not found');
-			}
-
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
-
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
-			if (!programAccess) {
-				return this.resultFail('Access denied');
-			}
-
-			const payload: SurveyPayload = {
-				id: survey.id,
-				name: survey.name,
-				questionnaire: survey.questionnaire,
-				language: survey.language,
-				dueAt: survey.dueAt,
-				completedAt: survey.completedAt,
-				status: survey.status,
-				data: survey.data,
-				accessEmail: survey.accessEmail,
-				accessPw: survey.accessPw,
-				recipientId: survey.recipientId,
-				surveyScheduleId: survey.surveyScheduleId,
-				createdAt: survey.createdAt,
-				updatedAt: survey.updatedAt,
-			};
-			return this.resultOk(payload);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Failed to get survey: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async update(userId: string, surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> {
-		try {
-			const survey = await this.db.survey.findUnique({
-				where: { id: surveyId },
-				select: { recipient: { select: { program: { select: { id: true } } } } },
-			});
-
-			if (!survey) {
-				return this.resultFail('Survey not found');
-			}
-
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
-
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
-				return this.resultFail('Access denied');
-			}
-
-			const updatedSurvey = await this.db.survey.update({
-				where: { id: surveyId },
-				data: input,
-			});
-
-			const payload: SurveyPayload = {
-				id: updatedSurvey.id,
-				name: updatedSurvey.name,
-				questionnaire: updatedSurvey.questionnaire,
-				language: updatedSurvey.language,
-				dueAt: updatedSurvey.dueAt,
-				completedAt: updatedSurvey.completedAt,
-				status: updatedSurvey.status,
-				data: updatedSurvey.data,
-				accessEmail: updatedSurvey.accessEmail,
-				accessPw: updatedSurvey.accessPw,
-				recipientId: updatedSurvey.recipientId,
-				surveyScheduleId: updatedSurvey.surveyScheduleId,
-				createdAt: updatedSurvey.createdAt,
-				updatedAt: updatedSurvey.updatedAt,
-			};
-			return this.resultOk(payload);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async previewSurveyGeneration(userId: string): Promise<ServiceResult<SurveyGenerationPreviewResult>> {
-		try {
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
-
-			const accessiblePrograms = accessibleProgramsResult.data;
-			if (accessiblePrograms.length === 0) {
-				return this.resultOk({ surveys: [] });
-			}
-
-			const programIds = accessiblePrograms.map((p) => p.programId);
-
-			const recipientsResult = await this.recipientService.getSurveyRecipients(programIds);
-			if (!recipientsResult.success) {
-				return this.resultFail(recipientsResult.error);
-			}
-
-			const schedulesResult = await this.surveyScheduleService.getByProgramIds(programIds);
-			if (!schedulesResult.success) {
-				return this.resultFail(schedulesResult.error);
-			}
-
-			const recipients = recipientsResult.data;
-			const schedules = schedulesResult.data;
-
-			const existingSurveys = await this.db.survey.findMany({
-				where: {
-					recipient: { id: { in: recipients.map((r) => r.id) } },
-				},
-				select: {
-					recipientId: true,
-					name: true,
-					accessEmail: true,
-				},
-			});
-
-			const surveys: SurveyCreateInput[] = [];
-
-			for (const recipient of recipients) {
-				if (!recipient.startDate) {
-					continue;
-				}
-
-				const recipientSchedules = schedules.filter((schedule) => schedule.programId === recipient.programId);
-
-				for (const schedule of recipientSchedules) {
-					const hasExistingSurvey = existingSurveys.some(
-						(existing) => existing.recipientId === recipient.id && existing.name === schedule.name,
-					);
-
-					if (hasExistingSurvey) {
-						continue;
-					}
-
-					const dueDate = addMonths(recipient.startDate, schedule.dueInMonthsAfterStart);
-					const surveyStatus = dueDate < now() ? SurveyStatus.missed : SurveyStatus.new;
-
-					let email: string;
-					do {
-						// ensure uniqueness in preview list
-						email = this.rndString(16).toLowerCase() + '@si.org';
-					} while (existingSurveys.some((s) => s.accessEmail === email));
-
-					const password = this.rndString(16);
-					surveys.push({
-						name: schedule.name,
-						recipient: { connect: { id: recipient.id } },
-						questionnaire: schedule.questionnaire,
-						language: 'en',
-						dueAt: dueDate,
-						status: surveyStatus,
-						data: {},
-						accessEmail: email,
-						accessPw: password,
-						surveySchedule: { connect: { id: schedule.id } },
-					});
-				}
-			}
-
-			return this.resultOk({ surveys });
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Failed to preview survey generation: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async generateSurveys(userId: string): Promise<ServiceResult<SurveyGenerationResult>> {
-		try {
-			const previewResult = await this.previewSurveyGeneration(userId);
-			if (!previewResult.success) {
-				return this.resultFail(previewResult.error);
-			}
-
-			const surveysToCreate = previewResult.data.surveys;
-			if (surveysToCreate.length === 0) {
-				return this.resultOk({
-					surveysCreated: 0,
-					message: 'No surveys to create',
-				});
-			}
-
-			let surveysCreated = 0;
-
-			for (const surveyInput of surveysToCreate) {
-				const firebaseResult = await this.firebaseAdminService.createSurveyUser(
-					surveyInput.accessEmail,
-					surveyInput.accessPw,
-				);
-				if (!firebaseResult.success) {
-					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
-				}
-				await this.db.survey.create({ data: surveyInput });
-				surveysCreated++;
-			}
-
-			return this.resultOk({
-				surveysCreated,
-				message: `Successfully created ${surveysCreated} surveys`,
-			});
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Failed to generate surveys: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async getByRecipientId(recipientId: string): Promise<ServiceResult<SurveyPayload[]>> {
-		try {
-			const surveys = await this.db.survey.findMany({
-				where: { recipientId },
-				orderBy: [{ dueAt: 'desc' }, { createdAt: 'desc' }],
-			});
-			return this.resultOk(surveys);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async getByAccessEmail(email: string): Promise<ServiceResult<SurveyPayload>> {
-		try {
-			const surveys = await this.db.survey.findUnique({
-				where: { accessEmail: email },
-			});
-			if (!surveys) {
-				return this.resultFail('Survey not found');
-			}
-			return this.resultOk(surveys);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async getByIdAndRecipient(surveyId: string, recipientId: string): Promise<ServiceResult<SurveyWithRecipient>> {
-		try {
-			const surveys = await this.db.survey.findUnique({
-				where: { id: surveyId, recipientId },
-				select: {
-					id: true,
-					name: true,
-					questionnaire: true,
-					status: true,
-					data: true,
-					language: true,
-					recipient: {
-						select: {
-							id: true,
-							contact: {
-								select: {
-									firstName: true,
-									lastName: true,
-								},
-							},
-						},
-					},
-				},
-			});
-
-			if (!surveys) {
-				return this.resultFail('Survey not found');
-			}
-			return this.resultOk({
-				...surveys,
-				nameOfRecipient:
-					`${surveys.recipient.contact?.firstName ?? ''} ${surveys.recipient.contact?.lastName ?? ''}`.trim(),
-			});
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async saveChanges(surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> {
-		try {
-			const survey = await this.db.survey.findUnique({
-				where: { id: surveyId },
-			});
-
-			if (!survey) {
-				return this.resultFail('Survey not found');
-			}
-
-			const updatedSurvey = await this.db.survey.update({
-				where: { id: surveyId },
-				data: input,
-			});
-
-			const payload: SurveyPayload = {
-				id: updatedSurvey.id,
-				name: updatedSurvey.name,
-				questionnaire: updatedSurvey.questionnaire,
-				language: updatedSurvey.language,
-				dueAt: updatedSurvey.dueAt,
-				completedAt: updatedSurvey.completedAt,
-				status: updatedSurvey.status,
-				data: updatedSurvey.data,
-				accessEmail: updatedSurvey.accessEmail,
-				accessPw: updatedSurvey.accessPw,
-				recipientId: updatedSurvey.recipientId,
-				surveyScheduleId: updatedSurvey.surveyScheduleId,
-				createdAt: updatedSurvey.createdAt,
-				updatedAt: updatedSurvey.updatedAt,
-			};
-			return this.resultOk(payload);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
-		}
-	}
-
-	private rndString(bytes: number): string {
-		return crypto.randomBytes(bytes).toString('base64url');
-	}
+  private programAccessService = new ProgramAccessService();
+  private recipientService = new RecipientService();
+  private surveyScheduleService = new SurveyScheduleService();
+  private firebaseAdminService = new FirebaseAdminService();
+
+  async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
+    try {
+      const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+      if (!accessibleProgramsResult.success) {
+        return this.resultFail(accessibleProgramsResult.error);
+      }
+
+      const accessiblePrograms = accessibleProgramsResult.data;
+      if (accessiblePrograms.length === 0) {
+        return this.resultOk({ tableRows: [] });
+      }
+
+      const programIds = accessiblePrograms.map((p) => p.programId);
+
+      const surveys = await this.db.survey.findMany({
+        where: { recipient: { programId: { in: programIds } } },
+        select: {
+          id: true,
+          name: true,
+          questionnaire: true,
+          status: true,
+          language: true,
+          dueAt: true,
+          completedAt: true,
+          createdAt: true,
+          accessEmail: true,
+          accessPw: true,
+          recipient: {
+            select: {
+              id: true,
+              contact: { select: { firstName: true, lastName: true } },
+              program: { select: { id: true, name: true } },
+            },
+          },
+        },
+        orderBy: { dueAt: 'desc' },
+      });
+
+      const tableRows: SurveyTableViewRow[] = surveys
+        .filter((s) => s.recipient.program !== null)
+        .map((survey) => {
+          const programId = survey.recipient.program!.id;
+
+          const programPermissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
+
+          const permission = programPermissions.includes(ProgramPermission.operator)
+            ? ProgramPermission.operator
+            : ProgramPermission.owner;
+
+          return {
+            id: survey.id,
+            name: survey.name,
+            recipientName: `${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+            programId,
+            programName: survey.recipient.program!.name,
+            questionnaire: survey.questionnaire,
+            status: survey.status,
+            language: survey.language,
+            dueAt: survey.dueAt,
+            completedAt: survey.completedAt,
+            createdAt: survey.createdAt,
+            surveyUrl: this.buildSurveyUrl({
+              surveyId: survey.id,
+              recipientId: survey.recipient.id,
+              accessEmail: survey.accessEmail,
+              accessPw: survey.accessPw,
+            }),
+            permission,
+          };
+        });
+
+      return this.resultOk({ tableRows });
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async getUpcomingSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
+    try {
+      const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+      if (!accessibleProgramsResult.success) {
+        return this.resultFail(accessibleProgramsResult.error);
+      }
+
+      const accessiblePrograms = accessibleProgramsResult.data;
+      if (accessiblePrograms.length === 0) {
+        return this.resultOk({ tableRows: [] });
+      }
+
+      const programIds = accessiblePrograms.map((p) => p.programId);
+
+      const nowDate = now();
+      const from = startOfMonth(subMonths(nowDate, 1));
+      const to = endOfMonth(nowDate);
+
+      const surveys = await this.db.survey.findMany({
+        where: {
+          status: { not: SurveyStatus.completed },
+          dueAt: {
+            gte: from,
+            lte: to,
+          },
+          recipient: {
+            programId: { in: programIds },
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          questionnaire: true,
+          status: true,
+          language: true,
+          dueAt: true,
+          completedAt: true,
+          createdAt: true,
+          accessEmail: true,
+          accessPw: true,
+          recipient: {
+            select: {
+              id: true,
+              contact: { select: { firstName: true, lastName: true } },
+              program: { select: { id: true, name: true } },
+            },
+          },
+        },
+        orderBy: { dueAt: 'desc' },
+      });
+
+      const tableRows: SurveyTableViewRow[] = surveys
+        .filter((s) => s.recipient.program !== null)
+        .map((survey) => {
+          const programId = survey.recipient.program!.id;
+
+          const permissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
+
+          const permission = permissions.includes(ProgramPermission.operator)
+            ? ProgramPermission.operator
+            : ProgramPermission.owner;
+
+          return {
+            id: survey.id,
+            name: survey.name,
+            recipientName: `${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+            programId,
+            programName: survey.recipient.program!.name,
+            questionnaire: survey.questionnaire,
+            status: survey.status,
+            language: survey.language,
+            dueAt: survey.dueAt,
+            completedAt: survey.completedAt,
+            createdAt: survey.createdAt,
+            surveyUrl: this.buildSurveyUrl({
+              surveyId: survey.id,
+              recipientId: survey.recipient.id,
+              accessEmail: survey.accessEmail,
+              accessPw: survey.accessPw,
+            }),
+            permission,
+          };
+        });
+
+      return this.resultOk({ tableRows });
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Could not fetch upcoming surveys: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<SurveyTableView>> {
+    const base = await this.getTableView(userId);
+    if (!base.success) {
+      return base;
+    }
+
+    const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+
+    return this.resultOk({ tableRows: filteredRows });
+  }
+
+  private buildSurveyUrl({
+    surveyId,
+    recipientId,
+    accessEmail,
+    accessPw,
+  }: {
+    surveyId: string;
+    recipientId: string;
+    accessEmail: string;
+    accessPw: string;
+  }): string {
+    const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+    const url = new URL([base, 'survey', recipientId, surveyId].join('/'));
+    url.search = new URLSearchParams({ email: accessEmail, pw: accessPw }).toString();
+
+    return url.toString();
+  }
+
+  async create(userId: string, input: SurveyCreateInput): Promise<ServiceResult<SurveyPayload>> {
+    try {
+      if (!input.recipient?.connect?.id) {
+        return this.resultFail('Recipient is required');
+      }
+
+      const recipient = await this.db.recipient.findUnique({
+        where: { id: input.recipient.connect.id },
+        select: { program: { select: { id: true } } },
+      });
+
+      if (!recipient) {
+        return this.resultFail('Recipient not found');
+      }
+
+      const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+      if (!accessibleProgramsResult.success) {
+        return this.resultFail(accessibleProgramsResult.error);
+      }
+
+      const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program?.id);
+      if (!programAccess || programAccess.permission === ProgramPermission.owner) {
+        return this.resultFail('Access denied');
+      }
+
+      const survey = await this.db.survey.create({
+        data: input,
+      });
+
+      const payload: SurveyPayload = {
+        id: survey.id,
+        name: survey.name,
+        questionnaire: survey.questionnaire,
+        language: survey.language,
+        dueAt: survey.dueAt,
+        completedAt: survey.completedAt,
+        status: survey.status,
+        data: survey.data,
+        accessEmail: survey.accessEmail,
+        accessPw: survey.accessPw,
+        recipientId: survey.recipientId,
+        surveyScheduleId: survey.surveyScheduleId,
+        createdAt: survey.createdAt,
+        updatedAt: survey.updatedAt,
+      };
+
+      return this.resultOk(payload);
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Failed to create survey: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async get(userId: string, surveyId: string): Promise<ServiceResult<SurveyPayload>> {
+    try {
+      const survey = await this.db.survey.findUnique({
+        where: { id: surveyId },
+        include: {
+          recipient: {
+            select: { program: { select: { id: true } } },
+          },
+        },
+      });
+
+      if (!survey) {
+        return this.resultFail('Survey not found');
+      }
+
+      const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+      if (!accessibleProgramsResult.success) {
+        return this.resultFail(accessibleProgramsResult.error);
+      }
+
+      const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
+      if (!programAccess) {
+        return this.resultFail('Access denied');
+      }
+
+      const payload: SurveyPayload = {
+        id: survey.id,
+        name: survey.name,
+        questionnaire: survey.questionnaire,
+        language: survey.language,
+        dueAt: survey.dueAt,
+        completedAt: survey.completedAt,
+        status: survey.status,
+        data: survey.data,
+        accessEmail: survey.accessEmail,
+        accessPw: survey.accessPw,
+        recipientId: survey.recipientId,
+        surveyScheduleId: survey.surveyScheduleId,
+        createdAt: survey.createdAt,
+        updatedAt: survey.updatedAt,
+      };
+
+      return this.resultOk(payload);
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Failed to get survey: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async update(userId: string, surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> {
+    try {
+      const survey = await this.db.survey.findUnique({
+        where: { id: surveyId },
+        select: { recipient: { select: { program: { select: { id: true } } } } },
+      });
+
+      if (!survey) {
+        return this.resultFail('Survey not found');
+      }
+
+      const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+      if (!accessibleProgramsResult.success) {
+        return this.resultFail(accessibleProgramsResult.error);
+      }
+
+      const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
+      if (!programAccess || programAccess.permission === ProgramPermission.owner) {
+        return this.resultFail('Access denied');
+      }
+
+      const updatedSurvey = await this.db.survey.update({
+        where: { id: surveyId },
+        data: input,
+      });
+
+      const payload: SurveyPayload = {
+        id: updatedSurvey.id,
+        name: updatedSurvey.name,
+        questionnaire: updatedSurvey.questionnaire,
+        language: updatedSurvey.language,
+        dueAt: updatedSurvey.dueAt,
+        completedAt: updatedSurvey.completedAt,
+        status: updatedSurvey.status,
+        data: updatedSurvey.data,
+        accessEmail: updatedSurvey.accessEmail,
+        accessPw: updatedSurvey.accessPw,
+        recipientId: updatedSurvey.recipientId,
+        surveyScheduleId: updatedSurvey.surveyScheduleId,
+        createdAt: updatedSurvey.createdAt,
+        updatedAt: updatedSurvey.updatedAt,
+      };
+
+      return this.resultOk(payload);
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async previewSurveyGeneration(userId: string): Promise<ServiceResult<SurveyGenerationPreviewResult>> {
+    try {
+      const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+      if (!accessibleProgramsResult.success) {
+        return this.resultFail(accessibleProgramsResult.error);
+      }
+
+      const accessiblePrograms = accessibleProgramsResult.data;
+      if (accessiblePrograms.length === 0) {
+        return this.resultOk({ surveys: [] });
+      }
+
+      const programIds = accessiblePrograms.map((p) => p.programId);
+
+      const recipientsResult = await this.recipientService.getSurveyRecipients(programIds);
+      if (!recipientsResult.success) {
+        return this.resultFail(recipientsResult.error);
+      }
+
+      const schedulesResult = await this.surveyScheduleService.getByProgramIds(programIds);
+      if (!schedulesResult.success) {
+        return this.resultFail(schedulesResult.error);
+      }
+
+      const recipients = recipientsResult.data;
+      const schedules = schedulesResult.data;
+
+      const existingSurveys = await this.db.survey.findMany({
+        where: {
+          recipient: { id: { in: recipients.map((r) => r.id) } },
+        },
+        select: {
+          recipientId: true,
+          name: true,
+          accessEmail: true,
+        },
+      });
+
+      const surveys: SurveyCreateInput[] = [];
+
+      for (const recipient of recipients) {
+        if (!recipient.startDate) {
+          continue;
+        }
+
+        const recipientSchedules = schedules.filter((schedule) => schedule.programId === recipient.programId);
+
+        for (const schedule of recipientSchedules) {
+          const hasExistingSurvey = existingSurveys.some(
+            (existing) => existing.recipientId === recipient.id && existing.name === schedule.name,
+          );
+
+          if (hasExistingSurvey) {
+            continue;
+          }
+
+          const dueDate = addMonths(recipient.startDate, schedule.dueInMonthsAfterStart);
+          const surveyStatus = dueDate < now() ? SurveyStatus.missed : SurveyStatus.new;
+
+          let email: string;
+          do {
+            // ensure uniqueness in preview list
+            email = this.rndString(16).toLowerCase() + '@si.org';
+          } while (existingSurveys.some((s) => s.accessEmail === email));
+
+          const password = this.rndString(16);
+          surveys.push({
+            name: schedule.name,
+            recipient: { connect: { id: recipient.id } },
+            questionnaire: schedule.questionnaire,
+            language: 'en',
+            dueAt: dueDate,
+            status: surveyStatus,
+            data: {},
+            accessEmail: email,
+            accessPw: password,
+            surveySchedule: { connect: { id: schedule.id } },
+          });
+        }
+      }
+
+      return this.resultOk({ surveys });
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Failed to preview survey generation: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async generateSurveys(userId: string): Promise<ServiceResult<SurveyGenerationResult>> {
+    try {
+      const previewResult = await this.previewSurveyGeneration(userId);
+      if (!previewResult.success) {
+        return this.resultFail(previewResult.error);
+      }
+
+      const surveysToCreate = previewResult.data.surveys;
+      if (surveysToCreate.length === 0) {
+        return this.resultOk({
+          surveysCreated: 0,
+          message: 'No surveys to create',
+        });
+      }
+
+      let surveysCreated = 0;
+
+      for (const surveyInput of surveysToCreate) {
+        const firebaseResult = await this.firebaseAdminService.createSurveyUser(
+          surveyInput.accessEmail,
+          surveyInput.accessPw,
+        );
+        if (!firebaseResult.success) {
+          return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+        }
+        await this.db.survey.create({ data: surveyInput });
+        surveysCreated++;
+      }
+
+      return this.resultOk({
+        surveysCreated,
+        message: `Successfully created ${surveysCreated} surveys`,
+      });
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Failed to generate surveys: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async getByRecipientId(recipientId: string): Promise<ServiceResult<SurveyPayload[]>> {
+    try {
+      const surveys = await this.db.survey.findMany({
+        where: { recipientId },
+        orderBy: [{ dueAt: 'desc' }, { createdAt: 'desc' }],
+      });
+
+      return this.resultOk(surveys);
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async getByAccessEmail(email: string): Promise<ServiceResult<SurveyPayload>> {
+    try {
+      const surveys = await this.db.survey.findUnique({
+        where: { accessEmail: email },
+      });
+      if (!surveys) {
+        return this.resultFail('Survey not found');
+      }
+
+      return this.resultOk(surveys);
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async getByIdAndRecipient(surveyId: string, recipientId: string): Promise<ServiceResult<SurveyWithRecipient>> {
+    try {
+      const surveys = await this.db.survey.findUnique({
+        where: { id: surveyId, recipientId },
+        select: {
+          id: true,
+          name: true,
+          questionnaire: true,
+          status: true,
+          data: true,
+          language: true,
+          recipient: {
+            select: {
+              id: true,
+              contact: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!surveys) {
+        return this.resultFail('Survey not found');
+      }
+
+      return this.resultOk({
+        ...surveys,
+        nameOfRecipient: `${surveys.recipient.contact?.firstName ?? ''} ${surveys.recipient.contact?.lastName ?? ''}`.trim(),
+      });
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
+    }
+  }
+
+  async saveChanges(surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> {
+    try {
+      const survey = await this.db.survey.findUnique({
+        where: { id: surveyId },
+      });
+
+      if (!survey) {
+        return this.resultFail('Survey not found');
+      }
+
+      const updatedSurvey = await this.db.survey.update({
+        where: { id: surveyId },
+        data: input,
+      });
+
+      const payload: SurveyPayload = {
+        id: updatedSurvey.id,
+        name: updatedSurvey.name,
+        questionnaire: updatedSurvey.questionnaire,
+        language: updatedSurvey.language,
+        dueAt: updatedSurvey.dueAt,
+        completedAt: updatedSurvey.completedAt,
+        status: updatedSurvey.status,
+        data: updatedSurvey.data,
+        accessEmail: updatedSurvey.accessEmail,
+        accessPw: updatedSurvey.accessPw,
+        recipientId: updatedSurvey.recipientId,
+        surveyScheduleId: updatedSurvey.surveyScheduleId,
+        createdAt: updatedSurvey.createdAt,
+        updatedAt: updatedSurvey.updatedAt,
+      };
+
+      return this.resultOk(payload);
+    } catch (error) {
+      this.logger.error(error);
+
+      return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
+    }
+  }
+
+  private rndString(bytes: number): string {
+    return crypto.randomBytes(bytes).toString('base64url');
+  }
 }

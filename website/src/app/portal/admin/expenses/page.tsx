@@ -5,22 +5,22 @@ import { Suspense } from 'react';
 import ExpensesTable from './expenses-table';
 
 export default function ExpensesPage() {
-	return (
-		<Suspense>
-			<ExpensesDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <ExpensesDataLoader />
+    </Suspense>
+  );
 }
 
 const ExpensesDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+  const user = await getAuthenticatedUserOrRedirect();
+  await requireAdmin(user);
 
-	const service = new ExpenseService();
-	const result = await service.getTableView(user.id);
+  const service = new ExpenseService();
+  const result = await service.getTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <ExpensesTable rows={rows} error={error} />;
+  return <ExpensesTable rows={rows} error={error} />;
 };

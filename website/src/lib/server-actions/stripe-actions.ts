@@ -5,23 +5,24 @@ import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/strip
 import { getOptionalContributor } from '../firebase/current-contributor';
 
 export const createStripeCheckoutAction = async (input: {
-	amount: number;
-	intervalCount?: number;
-	currency?: string;
-	successUrl: string;
-	recurring?: boolean;
-	campaignId?: string;
+  amount: number;
+  intervalCount?: number;
+  currency?: string;
+  successUrl: string;
+  recurring?: boolean;
+  campaignId?: string;
 }) => {
-	const contributor = await getOptionalContributor();
-	const stripe = new StripeService();
+  const contributor = await getOptionalContributor();
+  const stripe = new StripeService();
 
-	return stripe.createCheckoutSession({
-		...input,
-		stripeCustomerId: contributor?.stripeCustomerId ?? null,
-	});
+  return stripe.createCheckoutSession({
+    ...input,
+    stripeCustomerId: contributor?.stripeCustomerId ?? null,
+  });
 };
 
 export const updateContributorAfterCheckoutAction = async (input: UpdateContributorAfterCheckoutInput) => {
-	const stripeService = new StripeService();
-	return stripeService.updateContributorAfterCheckout(input);
+  const stripeService = new StripeService();
+
+  return stripeService.updateContributorAfterCheckout(input);
 };

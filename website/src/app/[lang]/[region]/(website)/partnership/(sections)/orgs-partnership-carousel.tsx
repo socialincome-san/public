@@ -12,48 +12,48 @@ import milkSVG from '../(assets)/milk.svg';
 import smartiveSVG from '../(assets)/smartive.svg';
 
 export const OrgsPartnershipCarousel = () => {
-	const screenSize = useScreenSize();
+  const screenSize = useScreenSize();
 
-	const companyLogos = [
-		{ logo: govSVG, name: 'FDFA', url: 'https://www.fdfa.admin.ch' },
-		{ logo: smartiveSVG, name: 'Smartive', url: 'https://smartive.ch' },
-		{ logo: googlenonprofitSVG, name: 'Google Nonprofit', url: 'https://www.google.com/nonprofits/' },
-		{ logo: githubSVG, name: 'GitHub', url: 'https://github.com' },
-		{ logo: microsoftSVG, name: 'Microsoft', url: 'https://www.microsoft.com' },
-		{ logo: milkSVG, name: 'Milk', url: 'https://milkinteractive.ch' },
-	];
+  const companyLogos = [
+    { logo: govSVG, name: 'FDFA', url: 'https://www.fdfa.admin.ch' },
+    { logo: smartiveSVG, name: 'Smartive', url: 'https://smartive.ch' },
+    { logo: googlenonprofitSVG, name: 'Google Nonprofit', url: 'https://www.google.com/nonprofits/' },
+    { logo: githubSVG, name: 'GitHub', url: 'https://github.com' },
+    { logo: microsoftSVG, name: 'Microsoft', url: 'https://www.microsoft.com' },
+    { logo: milkSVG, name: 'Milk', url: 'https://milkinteractive.ch' },
+  ];
 
-	let slidesToScroll;
-	switch (screenSize) {
-		case null:
-		case 'xs':
-		case 'sm':
-			slidesToScroll = 2;
-			break;
-		case 'md':
-			slidesToScroll = 4;
-			break;
-		default:
-			slidesToScroll = 5;
-			break;
-	}
+  let slidesToScroll;
+  switch (screenSize) {
+    case null:
+    case 'xs':
+    case 'sm':
+      slidesToScroll = 2;
+      break;
+    case 'md':
+      slidesToScroll = 4;
+      break;
+    default:
+      slidesToScroll = 5;
+      break;
+  }
 
-	return (
-		<Carousel
-			options={{
-				loop: false,
-				autoPlay: { enabled: true },
-				slidesToScroll: slidesToScroll,
-			}}
-			showDots
-		>
-			{companyLogos.map((entry, index) => (
-				<CarouselContent key={index} className="aspect-video p-8">
-					<Link href={entry.url} target="_blank">
-						<Image src={entry.logo} alt={`${entry.name} Logo`} className="h-full object-contain" />
-					</Link>
-				</CarouselContent>
-			))}
-		</Carousel>
-	);
+  return (
+    <Carousel
+      options={{
+        loop: false,
+        autoPlay: { enabled: true },
+        slidesToScroll: slidesToScroll,
+      }}
+      showDots
+    >
+      {companyLogos.map((entry, index) => (
+        <CarouselContent key={index} className="aspect-video p-8">
+          <Link href={entry.url} target="_blank">
+            <Image src={entry.logo} alt={`${entry.name} Logo`} className="h-full object-contain" />
+          </Link>
+        </CarouselContent>
+      ))}
+    </Carousel>
+  );
 };

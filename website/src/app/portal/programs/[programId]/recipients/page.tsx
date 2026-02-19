@@ -9,25 +9,25 @@ import { Suspense } from 'react';
 type Props = { params: Promise<{ programId: string }> };
 
 export default function RecipientsPageProgramScoped({ params }: Props) {
-	return (
-		<Card>
-			<Suspense>
-				<RecipientsProgramScopedDataLoader params={params} />
-			</Suspense>
-		</Card>
-	);
+  return (
+    <Card>
+      <Suspense>
+        <RecipientsProgramScopedDataLoader params={params} />
+      </Suspense>
+    </Card>
+  );
 }
 
 const RecipientsProgramScopedDataLoader = async ({ params }: { params: Promise<{ programId: string }> }) => {
-	const { programId } = await params;
-	const user = await getAuthenticatedUserOrRedirect();
+  const { programId } = await params;
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const recipientService = new RecipientService();
-	const recipientsResult = await recipientService.getTableViewProgramScoped(user.id, programId);
+  const recipientService = new RecipientService();
+  const recipientsResult = await recipientService.getTableViewProgramScoped(user.id, programId);
 
-	const error = recipientsResult.success ? null : recipientsResult.error;
-	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];
-	const readOnly = recipientsResult.success ? recipientsResult.data.permission !== ProgramPermission.operator : true;
+  const error = recipientsResult.success ? null : recipientsResult.error;
+  const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];
+  const readOnly = recipientsResult.success ? recipientsResult.data.permission !== ProgramPermission.operator : true;
 
-	return <RecipientsTableClient rows={rows} error={error} programId={programId} readOnly={readOnly} />;
+  return <RecipientsTableClient rows={rows} error={error} programId={programId} readOnly={readOnly} />;
 };

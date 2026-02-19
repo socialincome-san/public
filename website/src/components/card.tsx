@@ -5,42 +5,42 @@ import Link from 'next/link';
 import * as React from 'react';
 
 const cardVariants = cva('bg-background rounded-3xl shadow-lg transition-all', {
-	variants: {
-		variant: {
-			default: 'p-10',
-			noPadding: '',
-		},
-		clickable: {
-			true: 'hover:shadow-xl hover:-translate-y-1 cursor-pointer',
-			false: '',
-		},
-	},
-	defaultVariants: {
-		variant: 'default',
-		clickable: false,
-	},
+  variants: {
+    variant: {
+      default: 'p-10',
+      noPadding: '',
+    },
+    clickable: {
+      true: 'hover:shadow-xl hover:-translate-y-1 cursor-pointer',
+      false: '',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+    clickable: false,
+  },
 });
 
 type CardProps = React.HTMLAttributes<HTMLDivElement> &
-	VariantProps<typeof cardVariants> & {
-		href?: string;
-	};
+  VariantProps<typeof cardVariants> & {
+    href?: string;
+  };
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-	({ className, variant, clickable, href, children, ...props }, ref) => {
-		const content = (
-			<div ref={ref} className={cn(cardVariants({ variant, clickable: !!href }), 'relative', className)} {...props}>
-				{href && <ChevronRightIcon className="text-muted-foreground absolute right-6 top-6 h-5 w-5" />}
-				{children}
-			</div>
-		);
+  ({ className, variant, clickable, href, children, ...props }, ref) => {
+    const content = (
+      <div ref={ref} className={cn(cardVariants({ variant, clickable: !!href }), 'relative', className)} {...props}>
+        {href && <ChevronRightIcon className="absolute right-6 top-6 h-5 w-5 text-muted-foreground" />}
+        {children}
+      </div>
+    );
 
-		if (href) {
-			return <Link href={href}>{content}</Link>;
-		}
+    if (href) {
+      return <Link href={href}>{content}</Link>;
+    }
 
-		return content;
-	},
+    return content;
+  },
 );
 
 Card.displayName = 'Card';

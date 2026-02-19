@@ -5,24 +5,25 @@ import { CircleSlashIcon, HourglassIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 
 type CampaignStatusBadgeProps = {
-	status: boolean;
+  status: boolean;
 };
 
 const CAMPAIGN_STATUS_UI: Record<
-	'active' | 'inactive',
-	{ variant: 'verified' | 'destructive' | 'outline' | 'secondary' | 'default'; label: string; Icon: ComponentType<any> }
+  'active' | 'inactive',
+  { variant: 'verified' | 'destructive' | 'outline' | 'secondary' | 'default'; label: string; Icon: ComponentType<unknown> }
 > = {
-	active: { variant: 'verified', label: 'Active', Icon: HourglassIcon },
-	inactive: { variant: 'default', label: 'Inactive', Icon: CircleSlashIcon },
+  active: { variant: 'verified', label: 'Active', Icon: HourglassIcon },
+  inactive: { variant: 'default', label: 'Inactive', Icon: CircleSlashIcon },
 };
 
 export const CampaignStatusBadge = ({ status }: CampaignStatusBadgeProps) => {
-	const key = status ? 'active' : 'inactive';
-	const { variant, label, Icon } = CAMPAIGN_STATUS_UI[key];
-	return (
-		<Badge variant={variant}>
-			<Icon className="mr-1 h-4 w-4" />
-			{label}
-		</Badge>
-	);
+  const key = status ? 'active' : 'inactive';
+  const { variant, label, Icon } = CAMPAIGN_STATUS_UI[key];
+
+  return (
+    <Badge variant={variant}>
+      <Icon className="mr-1 h-4 w-4" />
+      {label}
+    </Badge>
+  );
 };

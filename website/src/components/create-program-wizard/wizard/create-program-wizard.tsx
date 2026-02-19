@@ -5,15 +5,15 @@ import { CreateProgramWizardFooter } from './create-program-wizard-footer';
 import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
 
 type Props = {
-	state: CreateProgramWizardState;
-	send: CreateProgramWizardSend;
+  state: CreateProgramWizardState;
+  send: CreateProgramWizardSend;
 };
 
 export const CreateProgramWizard = ({ state, send }: Props) => {
-	return (
-		<div className="space-y-6">
-			<CreateProgramSteps state={state} send={send} />
-			<CreateProgramWizardFooter state={state} send={send} />
-		</div>
-	);
+  return (
+    <div className="space-y-6">
+      <CreateProgramSteps state={state} send={send} />
+      <CreateProgramWizardFooter state={state} send={send} />
+    </div>
+  );
 };

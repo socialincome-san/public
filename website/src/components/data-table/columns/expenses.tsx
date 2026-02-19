@@ -9,38 +9,38 @@ import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
-	return [
-		{
-			accessorKey: 'type',
-			header: (ctx) => <SortableHeader ctx={ctx}>Type</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'year',
-			header: (ctx) => <SortableHeader ctx={ctx}>Year</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			id: 'amountChf',
-			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,
-			accessorFn: (row) => row.amountChf,
-			cell: (ctx) => <CurrencyCell ctx={ctx} currency="CHF" />,
-		},
-		{
-			accessorKey: 'organizationName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Organization</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
-		},
-		{
-			id: 'actions',
-			header: '',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
-		},
-	];
+  return [
+    {
+      accessorKey: 'type',
+      header: (ctx) => <SortableHeader ctx={ctx}>Type</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'year',
+      header: (ctx) => <SortableHeader ctx={ctx}>Year</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      id: 'amountChf',
+      header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,
+      accessorFn: (row) => row.amountChf,
+      cell: (ctx) => <CurrencyCell ctx={ctx} currency="CHF" />,
+    },
+    {
+      accessorKey: 'organizationName',
+      header: (ctx) => <SortableHeader ctx={ctx}>Organization</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'createdAt',
+      header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+      cell: (ctx) => <DateCell ctx={ctx} />,
+    },
+    {
+      id: 'actions',
+      header: '',
+      enableSorting: false,
+      cell: (ctx) => <ActionCell ctx={ctx} />,
+    },
+  ];
 };

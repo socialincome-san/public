@@ -11,35 +11,35 @@ import NextLink from 'next/link';
 import Markdown from 'react-markdown';
 
 type Props = {
-	blok: HeroVideo;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
-	subtitleUrl?: string;
+  blok: HeroVideo;
+  lang: WebsiteLanguage;
+  region: WebsiteRegion;
+  subtitleUrl?: string;
 };
 
 export default function HeroVideoBlock({ blok, lang, region, subtitleUrl }: Props) {
-	const { heading, description, muxPlaybackId, button } = blok;
+  const { heading, description, muxPlaybackId, button } = blok;
 
-	// TODO: Find a way to let the user enable/disable captions
-	const showCaptions = false;
+  // TODO: Find a way to let the user enable/disable captions
+  const showCaptions = false;
 
-	return (
-		<div
-			{...storyblokEditable(blok as SbBlokData)}
-			className="storyblok__outline hero-video-block relative aspect-[16/9] max-h-[80vh] w-full overflow-hidden rounded-b-[56px]"
-		>
-			<MuxVideo
-				className="z-10 h-full w-full object-cover"
-				playbackId={muxPlaybackId}
-				poster={`https://image.mux.com/${muxPlaybackId}/thumbnail.jpg?time=2`}
-				preload="metadata"
-				loop
-				muted
-				autoPlay
-				playsInline
-			>
-				{subtitleUrl && <track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />}
-				<style>{`
+  return (
+    <div
+      {...storyblokEditable(blok as SbBlokData)}
+      className="storyblok__outline hero-video-block relative aspect-[16/9] max-h-[80vh] w-full overflow-hidden rounded-b-[56px]"
+    >
+      <MuxVideo
+        className="z-10 h-full w-full object-cover"
+        playbackId={muxPlaybackId}
+        poster={`https://image.mux.com/${muxPlaybackId}/thumbnail.jpg?time=2`}
+        preload="metadata"
+        loop
+        muted
+        autoPlay
+        playsInline
+      >
+        {subtitleUrl && <track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />}
+        <style>{`
           video::cue {
             background-color: rgba(0, 0, 0, 0.8);
             color: white;
@@ -48,30 +48,31 @@ export default function HeroVideoBlock({ blok, lang, region, subtitleUrl }: Prop
             opacity: ${showCaptions ? 1 : 0};
           }
         `}</style>
-			</MuxVideo>
-			<div className="container absolute inset-x-0 bottom-[20%] z-20 flex flex-row items-center justify-between gap-4 text-white">
-				<div className="flex max-w-2xl flex-col gap-6">
-					{heading && (
-						<h1 className="text-6xl font-light [&_strong]:font-bold">
-							<Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown>
-						</h1>
-					)}
-					{description && <p className="text-xl">{description}</p>}
-					{button && (
-						<div>
-							{button.map(({ _uid, label, link }) => {
-								const href = resolveStoryblokLink(link, lang, region);
-								return (
-									<Button key={_uid} variant="outline" size="lg" asChild>
-										<NextLink href={href}>{label}</NextLink>
-									</Button>
-								);
-							})}
-						</div>
-					)}
-				</div>
-				<MakeDonationForm lang={lang} />
-			</div>
-		</div>
-	);
+      </MuxVideo>
+      <div className="container absolute inset-x-0 bottom-[20%] z-20 flex flex-row items-center justify-between gap-4 text-white">
+        <div className="flex max-w-2xl flex-col gap-6">
+          {heading && (
+            <h1 className="text-6xl font-light [&_strong]:font-bold">
+              <Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown>
+            </h1>
+          )}
+          {description && <p className="text-xl">{description}</p>}
+          {button && (
+            <div>
+              {button.map(({ _uid, label, link }) => {
+                const href = resolveStoryblokLink(link, lang, region);
+
+                return (
+                  <Button key={_uid} variant="outline" size="lg" asChild>
+                    <NextLink href={href}>{label}</NextLink>
+                  </Button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <MakeDonationForm lang={lang} />
+      </div>
+    </div>
+  );
 }

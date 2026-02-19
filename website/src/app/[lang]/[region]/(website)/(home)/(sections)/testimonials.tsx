@@ -9,41 +9,41 @@ import { BaseContainer } from '@socialincome/ui';
 import { ContributorsCarousel } from '../(components)/contributors-carousel';
 
 export const Testimonials = async ({ lang }: DefaultParams) => {
-	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
-		namespaces: ['countries', 'website-our-work'],
-	});
+  const translator = await Translator.getInstance({
+    language: lang as WebsiteLanguage,
+    namespaces: ['countries', 'website-our-work'],
+  });
 
-	return (
-		<BaseContainer className="my-40">
-			<ContributorsCarousel
-				portraits={[
-					{
-						name: 'Carlos',
-						image: carlosImg,
-						text: translator.t('contributors.portraits.carlos'),
-						country: translator.t('US'),
-					},
-					{
-						name: 'Vanja',
-						image: vanjaImg,
-						text: translator.t('contributors.portraits.vanja'),
-						country: translator.t('CH'),
-					},
-					{
-						name: 'Ruben',
-						image: rubenImage,
-						text: translator.t('contributors.portraits.ruben'),
-						country: translator.t('CH'),
-					},
-					{
-						name: 'Claudia',
-						image: claudiaImage,
-						text: translator.t('contributors.portraits.claudia'),
-						country: translator.t('CH'),
-					},
-				]}
-			/>
-		</BaseContainer>
-	);
+  return (
+    <BaseContainer className="my-40">
+      <ContributorsCarousel
+        portraits={[
+          {
+            name: 'Carlos',
+            image: carlosImg,
+            text: translator.t('contributors.portraits.carlos'),
+            country: translator.t('US'),
+          },
+          {
+            name: 'Vanja',
+            image: vanjaImg,
+            text: translator.t('contributors.portraits.vanja'),
+            country: translator.t('CH'),
+          },
+          {
+            name: 'Ruben',
+            image: rubenImage,
+            text: translator.t('contributors.portraits.ruben'),
+            country: translator.t('CH'),
+          },
+          {
+            name: 'Claudia',
+            image: claudiaImage,
+            text: translator.t('contributors.portraits.claudia'),
+            country: translator.t('CH'),
+          },
+        ]}
+      />
+    </BaseContainer>
+  );
 };

@@ -5,22 +5,22 @@ import { Suspense } from 'react';
 import { ContributionsTableClient } from './contributions-table-client';
 
 export default function ContributionsPage() {
-	return (
-		<Suspense>
-			<ContributionsDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <ContributionsDataLoader />
+    </Suspense>
+  );
 }
 
 const ContributionsDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+  const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new ContributionService();
-	const result = await service.getTableView(user.id);
+  const service = new ContributionService();
+  const result = await service.getTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];
-	const readOnly = result.success ? result.data.permission !== 'edit' : true;
+  const error = result.success ? null : result.error;
+  const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];
+  const readOnly = result.success ? result.data.permission !== 'edit' : true;
 
-	return <ContributionsTableClient rows={rows} error={error} readOnly={readOnly} />;
+  return <ContributionsTableClient rows={rows} error={error} readOnly={readOnly} />;
 };

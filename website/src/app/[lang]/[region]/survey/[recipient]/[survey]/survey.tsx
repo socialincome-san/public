@@ -15,38 +15,38 @@ import { useSurvey } from './use-survey';
 export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
 
 type SurveyProps = {
-	surveyId: string;
-	recipientId: string;
-	lang: SurveyLanguage;
+  surveyId: string;
+  recipientId: string;
+  lang: SurveyLanguage;
 };
 
 export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
-	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
+  const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
 
-	useEffect(() => {
-		loadSurvey(surveyId, recipientId);
-	}, [surveyId, recipientId]);
+  useEffect(() => {
+    loadSurvey(surveyId, recipientId);
+  }, [surveyId, recipientId]);
 
-	const translator = useTranslator(lang, 'website-survey');
+  const translator = useTranslator(lang, 'website-survey');
 
-	if (!hasError && survey && translator) {
-		if (survey.status == SurveyStatus.completed) {
-			return <div>Survey already completed</div>;
-		}
+  if (!hasError && survey && translator) {
+    if (survey.status == SurveyStatus.completed) {
+      return <div>Survey already completed</div>;
+    }
 
-		const model = new Model({
-			...settings(translator.t),
-			pages: getQuestionnaire(survey.questionnaire, translator.t, survey.nameOfRecipient),
-		});
-		model.currentPageNo = (survey.data as Model).pageNo;
+    const model = new Model({
+      ...settings(translator.t),
+      pages: getQuestionnaire(survey.questionnaire, translator.t, survey.nameOfRecipient),
+    });
+    model.currentPageNo = (survey.data as Model).pageNo;
 
-		model.onPartialSend.add((data) => saveSurvey(surveyId, data, SurveyStatus.in_progress));
-		model.onComplete.add((data) => saveSurvey(surveyId, data, SurveyStatus.completed));
+    model.onPartialSend.add((data) => saveSurvey(surveyId, data, SurveyStatus.in_progress));
+    model.onComplete.add((data) => saveSurvey(surveyId, data, SurveyStatus.completed));
 
-		return <SurveyReact id="react-survey" model={model} />;
-	} else if (hasError) {
-		return <div>Error loading survey. Please try again later.</div>;
-	}
+    return <SurveyReact id="react-survey" model={model} />;
+  } else if (hasError) {
+    return <div>Error loading survey. Please try again later.</div>;
+  }
 
-	return <div>Loading...</div>;
+  return <div>Loading...</div>;
 };

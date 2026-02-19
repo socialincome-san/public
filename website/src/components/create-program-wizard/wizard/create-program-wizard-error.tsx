@@ -3,15 +3,15 @@
 import { Button } from '@/components/button';
 
 type Props = {
-	message: string;
-	onRetry: () => void;
+  message: string;
+  onRetry: () => void;
 };
 
 export const WizardError = ({ message, onRetry }: Props) => {
-	return (
-		<div className="space-y-4 text-center">
-			<p className="text-destructive font-medium">{message}</p>
-			<Button onClick={onRetry}>Retry</Button>
-		</div>
-	);
+  return (
+    <div className="space-y-4 text-center">
+      <p className="font-medium text-destructive">{message}</p>
+      <Button onClick={onRetry}>Retry</Button>
+    </div>
+  );
 };

@@ -4,17 +4,17 @@ import { defaultLanguage } from '@/lib/i18n/utils';
 import { Button, Typography } from '@socialincome/ui';
 
 type MoreArticlesLinkProps = {
-	text: string;
+  text: string;
 };
 
 export const MoreArticlesLink = ({ text }: MoreArticlesLinkProps) => {
-	const setLanguage = useI18n().setLanguage;
+  const setLanguage = useI18n().setLanguage;
 
-	return (
-		<Typography size="sm">
-			<Button variant="link" onClick={() => setLanguage(defaultLanguage)}>
-				{text}
-			</Button>
-		</Typography>
-	);
+  return (
+    <Typography size="sm">
+      <Button variant="link" onClick={() => setLanguage(defaultLanguage)}>
+        {text}
+      </Button>
+    </Typography>
+  );
 };

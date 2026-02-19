@@ -12,18 +12,15 @@ export const revalidate = 900;
 const storyblokService = new StoryblokService();
 
 export default async function ContentPage({ params }: DefaultLayoutPropsWithSlug) {
-	const { slug, lang, region } = await params;
+  const { slug, lang, region } = await params;
 
-	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(
-		`${NEW_WEBSITE_SLUG}/${slug}`,
-		lang,
-	);
+  const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(`${NEW_WEBSITE_SLUG}/${slug}`, lang);
 
-	if (!storyResult.success) {
-		return notFound();
-	}
+  if (!storyResult.success) {
+    return notFound();
+  }
 
-	const story = storyResult.data;
+  const story = storyResult.data;
 
-	return <PageContentType blok={story.content} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />;
+  return <PageContentType blok={story.content} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />;
 }

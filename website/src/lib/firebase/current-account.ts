@@ -12,60 +12,60 @@ import { getAuthenticatedUserOrThrow } from './current-user';
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
 export type Actor =
-	| { kind: 'user'; session: UserSession }
-	| { kind: 'contributor'; session: ContributorSession }
-	| { kind: 'local-partner'; session: LocalPartnerSession }
-	| never;
+  | { kind: 'user'; session: UserSession }
+  | { kind: 'contributor'; session: ContributorSession }
+  | { kind: 'local-partner'; session: LocalPartnerSession }
+  | never;
 
 export const getCurrentSession = async (): Promise<Session | null> => {
-	const firebaseSessionService = new FirebaseSessionService();
-	const cookie = await firebaseSessionService.readSessionCookie();
-	if (!cookie) {
-		return null;
-	}
+  const firebaseSessionService = new FirebaseSessionService();
+  const cookie = await firebaseSessionService.readSessionCookie();
+  if (!cookie) {
+    return null;
+  }
 
-	const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
-	if (!decodedTokenResult.success) {
-		return null;
-	}
+  const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
+  if (!decodedTokenResult.success) {
+    return null;
+  }
 
-	const authUserId = decodedTokenResult.data.uid;
+  const authUserId = decodedTokenResult.data.uid;
 
-	const contributorService = new ContributorService();
-	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
-	if (contributorResult.success && contributorResult.data) {
-		return contributorResult.data;
-	}
+  const contributorService = new ContributorService();
+  const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
+  if (contributorResult.success && contributorResult.data) {
+    return contributorResult.data;
+  }
 
-	const partnerService = new LocalPartnerService();
-	const partnerResult = await partnerService.getCurrentLocalPartnerSession(authUserId);
-	if (partnerResult.success && partnerResult.data) {
-		return partnerResult.data;
-	}
+  const partnerService = new LocalPartnerService();
+  const partnerResult = await partnerService.getCurrentLocalPartnerSession(authUserId);
+  if (partnerResult.success && partnerResult.data) {
+    return partnerResult.data;
+  }
 
-	const userService = new UserService();
-	const userResult = await userService.getCurrentUserSession(authUserId);
-	if (userResult.success && userResult.data) {
-		return userResult.data;
-	}
+  const userService = new UserService();
+  const userResult = await userService.getCurrentUserSession(authUserId);
+  if (userResult.success && userResult.data) {
+    return userResult.data;
+  }
 
-	return null;
+  return null;
 };
 
 export const getActorOrThrow = async (): Promise<Actor> => {
-	const session = await getCurrentSession();
+  const session = await getCurrentSession();
 
-	switch (session?.type) {
-		case 'user':
-			return { kind: 'user', session: await getAuthenticatedUserOrThrow() };
+  switch (session?.type) {
+    case 'user':
+      return { kind: 'user', session: await getAuthenticatedUserOrThrow() };
 
-		case 'contributor':
-			return { kind: 'contributor', session: await getAuthenticatedContributorOrThrow() };
+    case 'contributor':
+      return { kind: 'contributor', session: await getAuthenticatedContributorOrThrow() };
 
-		case 'local-partner':
-			return { kind: 'local-partner', session: await getAuthenticatedLocalPartnerOrThrow() };
+    case 'local-partner':
+      return { kind: 'local-partner', session: await getAuthenticatedLocalPartnerOrThrow() };
 
-		default:
-			throw new Error('Not authenticated');
-	}
+    default:
+      throw new Error('Not authenticated');
+  }
 };

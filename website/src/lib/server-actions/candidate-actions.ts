@@ -14,80 +14,79 @@ const candidateService = new CandidateService();
 const localPartnerService = new LocalPartnerService();
 
 export const createCandidateAction = async (data: CandidateCreateInput) => {
-	const actor = await getActorOrThrow();
+  const actor = await getActorOrThrow();
 
-	const result = await candidateService.create(actor, data);
+  const result = await candidateService.create(actor, data);
 
-	if (actor.kind === 'user') {
-		revalidatePath(ADMIN_CANDIDATES_PATH);
-	} else if (actor.kind === 'local-partner') {
-		revalidatePath(PARTNER_CANDIDATES_PATH);
-	}
+  if (actor.kind === 'user') {
+    revalidatePath(ADMIN_CANDIDATES_PATH);
+  } else if (actor.kind === 'local-partner') {
+    revalidatePath(PARTNER_CANDIDATES_PATH);
+  }
 
-	return result;
+  return result;
 };
 
-export const updateCandidateAction = async (
-	updateInput: CandidateUpdateInput,
-	nextPaymentPhoneNumber: string | null,
-) => {
-	const actor = await getActorOrThrow();
+export const updateCandidateAction = async (updateInput: CandidateUpdateInput, nextPaymentPhoneNumber: string | null) => {
+  const actor = await getActorOrThrow();
 
-	const result = await candidateService.update(actor, updateInput, nextPaymentPhoneNumber);
+  const result = await candidateService.update(actor, updateInput, nextPaymentPhoneNumber);
 
-	if (actor.kind === 'user') {
-		revalidatePath(ADMIN_CANDIDATES_PATH);
-	} else if (actor.kind === 'local-partner') {
-		revalidatePath(PARTNER_CANDIDATES_PATH);
-	}
+  if (actor.kind === 'user') {
+    revalidatePath(ADMIN_CANDIDATES_PATH);
+  } else if (actor.kind === 'local-partner') {
+    revalidatePath(PARTNER_CANDIDATES_PATH);
+  }
 
-	return result;
+  return result;
 };
 
 export const deleteCandidateAction = async (candidateId: string) => {
-	const actor = await getActorOrThrow();
+  const actor = await getActorOrThrow();
 
-	const result = await candidateService.delete(actor, candidateId);
+  const result = await candidateService.delete(actor, candidateId);
 
-	if (actor.kind === 'user') {
-		revalidatePath(ADMIN_CANDIDATES_PATH);
-	} else if (actor.kind === 'local-partner') {
-		revalidatePath(PARTNER_CANDIDATES_PATH);
-	}
+  if (actor.kind === 'user') {
+    revalidatePath(ADMIN_CANDIDATES_PATH);
+  } else if (actor.kind === 'local-partner') {
+    revalidatePath(PARTNER_CANDIDATES_PATH);
+  }
 
-	return result;
+  return result;
 };
 
 export const getCandidateAction = async (candidateId: string) => {
-	const actor = await getActorOrThrow();
-	return await candidateService.get(actor, candidateId);
+  const actor = await getActorOrThrow();
+
+  return await candidateService.get(actor, candidateId);
 };
 
 export const getCandidateOptions = async () => {
-	const actor = await getActorOrThrow();
+  const actor = await getActorOrThrow();
 
-	if (actor.kind === 'user') {
-		const localPartners = await localPartnerService.getOptions();
-		return { localPartners };
-	}
+  if (actor.kind === 'user') {
+    const localPartners = await localPartnerService.getOptions();
 
-	return { localPartners: { success: true, data: [] } };
+    return { localPartners };
+  }
+
+  return { localPartners: { success: true, data: [] } };
 };
 
 export const getCandidateCountAction = async (causes: Cause[], profiles: Profile[], countryId: string | null) => {
-	return candidateService.getCandidateCount(causes, profiles, countryId);
+  return candidateService.getCandidateCount(causes, profiles, countryId);
 };
 
 export const importCandidatesCsvAction = async (file: File) => {
-	const actor = await getActorOrThrow();
+  const actor = await getActorOrThrow();
 
-	const result = await candidateService.importCsv(actor, file);
+  const result = await candidateService.importCsv(actor, file);
 
-	if (actor.kind === 'user') {
-		revalidatePath(ADMIN_CANDIDATES_PATH);
-	} else if (actor.kind === 'local-partner') {
-		revalidatePath(PARTNER_CANDIDATES_PATH);
-	}
+  if (actor.kind === 'user') {
+    revalidatePath(ADMIN_CANDIDATES_PATH);
+  } else if (actor.kind === 'local-partner') {
+    revalidatePath(PARTNER_CANDIDATES_PATH);
+  }
 
-	return result;
+  return result;
 };

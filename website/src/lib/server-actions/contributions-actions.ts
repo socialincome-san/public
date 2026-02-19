@@ -8,37 +8,39 @@ import { ContributorService } from '@/lib/services/contributor/contributor.servi
 import { revalidatePath } from 'next/cache';
 
 export const createContributionAction = async (contribution: ContributionCreateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const contributionService = new ContributionService();
+  const user = await getAuthenticatedUserOrThrow();
+  const contributionService = new ContributionService();
 
-	const res = await contributionService.create(user.id, contribution);
+  const res = await contributionService.create(user.id, contribution);
 
-	revalidatePath('/portal/management/contributions');
-	return res;
+  revalidatePath('/portal/management/contributions');
+
+  return res;
 };
 
 export const updateContributionAction = async (contribution: ContributionUpdateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const contributionService = new ContributionService();
+  const user = await getAuthenticatedUserOrThrow();
+  const contributionService = new ContributionService();
 
-	const res = await contributionService.update(user.id, contribution);
-	revalidatePath('/portal/management/contributions');
-	return res;
+  const res = await contributionService.update(user.id, contribution);
+  revalidatePath('/portal/management/contributions');
+
+  return res;
 };
 
 export const getContributionAction = async (contributionId: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const contributionService = new ContributionService();
+  const user = await getAuthenticatedUserOrThrow();
+  const contributionService = new ContributionService();
 
-	return await contributionService.get(user.id, contributionId);
+  return await contributionService.get(user.id, contributionId);
 };
 
 export const getContributionsOptionsAction = async () => {
-	const user = await getAuthenticatedUserOrThrow();
-	const contributorService = new ContributorService();
-	const campaignService = new CampaignService();
-	const contributorOptions = await contributorService.getOptions(user.id);
-	const campaignOptions = await campaignService.getOptions(user.id);
+  const user = await getAuthenticatedUserOrThrow();
+  const contributorService = new ContributorService();
+  const campaignService = new CampaignService();
+  const contributorOptions = await contributorService.getOptions(user.id);
+  const campaignOptions = await campaignService.getOptions(user.id);
 
-	return { contributorOptions, campaignOptions };
+  return { contributorOptions, campaignOptions };
 };

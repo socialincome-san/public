@@ -8,13 +8,13 @@ import { Metadata } from 'next';
 
 // Helper type to remove index signature from a type
 type RemoveIndexSignature<T> = {
-	[K in keyof T as string extends K ? never : K]: T[K];
+  [K in keyof T as string extends K ? never : K]: T[K];
 };
 
 export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'type' | 'tags'> & {
-	author: ISbStoryData<Author>;
-	type: ISbStoryData<ArticleType>;
-	tags?: ISbStoryData<Topic>[];
+  author: ISbStoryData<Author>;
+  type: ISbStoryData<ArticleType>;
+  tags?: ISbStoryData<Topic>[];
 };
 
 // ==================== Image Utilities ====================
@@ -25,31 +25,31 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
  * Format example: https://a.storyblok.com/f/51376/664x488/f4f9d1769c/visual-editor-features.jpg
  */
 export const getDimensionsFromStoryblokImageUrl = (url: string): { width?: number; height?: number } => {
-	if (!url) {
-		return {};
-	}
-	const match = url.match(/\/f\/\d+\/(\d+)x(\d+)\//);
+  if (!url) {
+    return {};
+  }
+  const match = url.match(/\/f\/\d+\/(\d+)x(\d+)\//);
 
-	return match ? { width: Number(match[1]), height: Number(match[2]) } : {};
+  return match ? { width: Number(match[1]), height: Number(match[2]) } : {};
 };
 
 /**
  * Calculate scaled dimensions maintaining aspect ratio.
  */
 export const getScaledDimensions = (url: string, maxWidth: number): { width: number; height: number } | null => {
-	const original = getDimensionsFromStoryblokImageUrl(url);
-	if (!original.width || !original.height) {
-		return null;
-	}
+  const original = getDimensionsFromStoryblokImageUrl(url);
+  if (!original.width || !original.height) {
+    return null;
+  }
 
-	if (original.width <= maxWidth) {
-		return { width: original.width, height: original.height };
-	}
+  if (original.width <= maxWidth) {
+    return { width: original.width, height: original.height };
+  }
 
-	return {
-		width: maxWidth,
-		height: Math.round((original.height / original.width) * maxWidth),
-	};
+  return {
+    width: maxWidth,
+    height: Math.round((original.height / original.width) * maxWidth),
+  };
 };
 
 /**
@@ -58,9 +58,10 @@ export const getScaledDimensions = (url: string, maxWidth: number): { width: num
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
 export const formatStoryblokUrl = (url: string, width: number, height: number, focus?: string | null) => {
-	const crop = focus || 'smart';
-	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
-	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
+  const crop = focus || 'smart';
+  const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
+
+  return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
 };
 
 /**
@@ -69,9 +70,10 @@ export const formatStoryblokUrl = (url: string, width: number, height: number, f
  * going through the Next.js image loader.
  */
 const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
-	let imageSource = url + `/m/${width}x${height}`;
-	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
-	return imageSource;
+  let imageSource = url + `/m/${width}x${height}`;
+  imageSource += focus ? `/filters:focal(${focus})` : '/smart';
+
+  return imageSource;
 };
 
 // ==================== Date Utilities ====================
@@ -82,35 +84,36 @@ const formatStoryblokUrlDirect = (url: string, width: number, height: number, fo
  * Nevertheless, the fields `first_published_at` and 'published_at' are returned in proper ISO8601 format.
  */
 export const toDateObject = (date: string, lang: string) => {
-	let dateObject = DateTime.fromISO(date).setLocale(lang);
-	if (!dateObject.isValid) {
-		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
-	}
-	return dateObject;
+  let dateObject = DateTime.fromISO(date).setLocale(lang);
+  if (!dateObject.isValid) {
+    dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
+  }
+
+  return dateObject;
 };
 
 /**
  * Format a Storyblok date for display.
  */
 export const formatStoryblokDate = (date: string | null | undefined, lang: string) => {
-	if (!date) {
-		return '';
-	}
-	let dateObject = toDateObject(date, lang);
+  if (!date) {
+    return '';
+  }
+  const dateObject = toDateObject(date, lang);
 
-	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
+  return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
 };
 
 /**
  * Format a Storyblok date to ISO format.
  */
 const formatStoryblokDateToIso = (date: string | null | undefined) => {
-	if (!date) {
-		return '';
-	}
-	let dateObject = toDateObject(date, defaultLanguage);
+  if (!date) {
+    return '';
+  }
+  const dateObject = toDateObject(date, defaultLanguage);
 
-	return dateObject.isValid ? dateObject.toISO() : '';
+  return dateObject.isValid ? dateObject.toISO() : '';
 };
 
 // ==================== URL Utilities ====================
@@ -119,7 +122,7 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
  * Create a link URL for a journal article.
  */
 export const createLinkForArticle = (slug: string, lang: string, region: string) => {
-	return `/${lang}/${region}/journal/${slug}`;
+  return `/${lang}/${region}/journal/${slug}`;
 };
 
 /**
@@ -127,22 +130,23 @@ export const createLinkForArticle = (slug: string, lang: string, region: string)
  * Handles both external URLs (linktype 'url') and internal story links (linktype 'story').
  */
 export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang: string, region: string): string => {
-	if (!link) {
-		return '#';
-	}
+  if (!link) {
+    return '#';
+  }
 
-	if (link.linktype === 'url') {
-		return link.url || '#';
-	}
+  if (link.linktype === 'url') {
+    return link.url || '#';
+  }
 
-	if (link.linktype === 'story') {
-		// cached_url contains the full Storyblok slug, e.g. "new-website/about"
-		// Strip the "new-website/" prefix to get the page slug
-		const slug = link.cached_url?.replace(new RegExp(`^${NEW_WEBSITE_SLUG}/`), '') || '';
-		return `/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}`;
-	}
+  if (link.linktype === 'story') {
+    // cached_url contains the full Storyblok slug, e.g. "new-website/about"
+    // Strip the "new-website/" prefix to get the page slug
+    const slug = link.cached_url?.replace(new RegExp(`^${NEW_WEBSITE_SLUG}/`), '') || '';
 
-	return '#';
+    return `/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}`;
+  }
+
+  return '#';
 };
 
 // ==================== Metadata Utilities ====================
@@ -151,58 +155,58 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
  * Generate Next.js Metadata for a Storyblok article.
  */
 export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<ResolvedArticle>, url: string): Metadata => {
-	const storyblokArticle = storyblokStory.content;
-	const title = storyblokArticle.title;
-	const description = storyblokArticle.leadText;
-	const authorsFullName = `${storyblokArticle.author.content.firstName} ${storyblokArticle.author.content.lastName}`;
-	const imageFilename = storyblokArticle.image?.filename;
-	const tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
+  const storyblokArticle = storyblokStory.content;
+  const title = storyblokArticle.title;
+  const description = storyblokArticle.leadText;
+  const authorsFullName = `${storyblokArticle.author.content.firstName} ${storyblokArticle.author.content.lastName}`;
+  const imageFilename = storyblokArticle.image?.filename;
+  const tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
 
-	let imageMetaData: { url: string; width?: number; height?: number } | undefined;
-	if (imageFilename) {
-		const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
-		if (dimensions.width && dimensions.height) {
-			// Use direct URL for OG metadata since it doesn't go through the Next.js image loader
-			const imageUrl = formatStoryblokUrlDirect(
-				imageFilename,
-				dimensions.width,
-				dimensions.height,
-				storyblokArticle.image.focus ?? undefined,
-			);
-			imageMetaData = {
-				url: imageUrl,
-				width: dimensions.width,
-				height: dimensions.height,
-			};
-		}
-	}
+  let imageMetaData: { url: string; width?: number; height?: number } | undefined;
+  if (imageFilename) {
+    const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
+    if (dimensions.width && dimensions.height) {
+      // Use direct URL for OG metadata since it doesn't go through the Next.js image loader
+      const imageUrl = formatStoryblokUrlDirect(
+        imageFilename,
+        dimensions.width,
+        dimensions.height,
+        storyblokArticle.image.focus ?? undefined,
+      );
+      imageMetaData = {
+        url: imageUrl,
+        width: dimensions.width,
+        height: dimensions.height,
+      };
+    }
+  }
 
-	return {
-		title: title,
-		description: description,
-		keywords: tags,
-		authors: { name: authorsFullName },
-		openGraph: {
-			title: title,
-			description: description,
-			images: imageMetaData,
-			url: url,
-			type: 'article',
-		},
-		twitter: {
-			title: title,
-			description: description,
-			images: imageMetaData,
-			card: 'summary_large_image',
-			site: '@so_income',
-			creator: '@so_income',
-		},
-		other: {
-			'article:published_time': formatStoryblokDateToIso(storyblokStory.first_published_at),
-			'article:modified_time': formatStoryblokDateToIso(storyblokStory.updated_at),
-			'article:author': authorsFullName,
-			'article:section': 'News',
-			...(tags && { 'article:tag': tags }),
-		},
-	};
+  return {
+    title: title,
+    description: description,
+    keywords: tags,
+    authors: { name: authorsFullName },
+    openGraph: {
+      title: title,
+      description: description,
+      images: imageMetaData,
+      url: url,
+      type: 'article',
+    },
+    twitter: {
+      title: title,
+      description: description,
+      images: imageMetaData,
+      card: 'summary_large_image',
+      site: '@so_income',
+      creator: '@so_income',
+    },
+    other: {
+      'article:published_time': formatStoryblokDateToIso(storyblokStory.first_published_at),
+      'article:modified_time': formatStoryblokDateToIso(storyblokStory.updated_at),
+      'article:author': authorsFullName,
+      'article:section': 'News',
+      ...(tags && { 'article:tag': tags }),
+    },
+  };
 };

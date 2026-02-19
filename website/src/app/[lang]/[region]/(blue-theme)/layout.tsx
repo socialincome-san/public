@@ -5,17 +5,18 @@ import { getMetadata } from '@/lib/utils/metadata';
 import { PropsWithChildren } from 'react';
 
 export const generateMetadata = async (props: DefaultLayoutProps) => {
-	const params = await props.params;
-	return getMetadata(params.lang as WebsiteLanguage, 'website-donate');
+  const params = await props.params;
+
+  return getMetadata(params.lang as WebsiteLanguage, 'website-donate');
 };
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	const { lang, region } = (await params) as { lang: WebsiteLanguage; region: WebsiteRegion };
+  const { lang, region } = (await params) as { lang: WebsiteLanguage; region: WebsiteRegion };
 
-	return (
-		<div className="theme-blue min-h-screen">
-			<Navbar lang={lang} region={region} />
-			<main className="pt-24 md:pt-36">{children}</main>
-		</div>
-	);
+  return (
+    <div className="theme-blue min-h-screen">
+      <Navbar lang={lang} region={region} />
+      <main className="pt-24 md:pt-36">{children}</main>
+    </div>
+  );
 }

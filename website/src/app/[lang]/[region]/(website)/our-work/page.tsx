@@ -8,18 +8,20 @@ import { OurWork } from './(sections)/our-work';
 import { Recipients } from './(sections)/recipients';
 
 export const generateMetadata = async (props: DefaultPageProps) => {
-	const params = await props.params;
-	return getMetadata(params.lang as WebsiteLanguage, 'website-our-work');
+  const params = await props.params;
+
+  return getMetadata(params.lang as WebsiteLanguage, 'website-our-work');
 };
 
 export default async function Page(props: DefaultPageProps) {
-	const { lang, region } = await props.params;
-	return (
-		<BaseContainer className="space-y-56 pt-40">
-			<OurWork lang={lang} region={region} />
-			<HowItWorks lang={lang} region={region} />
-			<Contributors lang={lang} region={region} />
-			<Recipients lang={lang} region={region} />
-		</BaseContainer>
-	);
+  const { lang, region } = await props.params;
+
+  return (
+    <BaseContainer className="space-y-56 pt-40">
+      <OurWork lang={lang} region={region} />
+      <HowItWorks lang={lang} region={region} />
+      <Contributors lang={lang} region={region} />
+      <Recipients lang={lang} region={region} />
+    </BaseContainer>
+  );
 }

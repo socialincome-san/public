@@ -7,31 +7,32 @@ import { BaseContainer } from '@socialincome/ui';
 import { PropsWithChildren } from 'react';
 
 export const generateMetadata = async (props: DefaultLayoutProps) => {
-	const params = await props.params;
-	return getMetadata(params.lang as WebsiteLanguage, 'website-legal');
+  const params = await props.params;
+
+  return getMetadata(params.lang as WebsiteLanguage, 'website-legal');
 };
 
 export default async function Layout({ children, ...props }: PropsWithChildren<DefaultLayoutProps>) {
-	const params = await props.params;
-	const translator = await Translator.getInstance({
-		language: params.lang as WebsiteLanguage,
-		namespaces: 'website-legal',
-	});
+  const params = await props.params;
+  const translator = await Translator.getInstance({
+    language: params.lang as WebsiteLanguage,
+    namespaces: 'website-legal',
+  });
 
-	return (
-		<BaseContainer>
-			<LayoutClient
-				params={params}
-				translations={{
-					title: translator.t('title'),
-					privacyTitle: translator.t('privacy-title'),
-					termsOfUseTitle: translator.t('terms-of-use-title'),
-					termsAndConditionsTitle: translator.t('terms-and-conditions-title'),
-					fundraisersTitle: translator.t('fundraisers-title'),
-				}}
-			>
-				{children}
-			</LayoutClient>
-		</BaseContainer>
-	);
+  return (
+    <BaseContainer>
+      <LayoutClient
+        params={params}
+        translations={{
+          title: translator.t('title'),
+          privacyTitle: translator.t('privacy-title'),
+          termsOfUseTitle: translator.t('terms-of-use-title'),
+          termsAndConditionsTitle: translator.t('terms-and-conditions-title'),
+          fundraisersTitle: translator.t('fundraisers-title'),
+        }}
+      >
+        {children}
+      </LayoutClient>
+    </BaseContainer>
+  );
 }

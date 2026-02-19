@@ -5,22 +5,22 @@ import { Suspense } from 'react';
 import LocalPartnersTable from './local-partners-table';
 
 export default function LocalPartnersPage() {
-	return (
-		<Suspense>
-			<LocalPartnersDataLoader />
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <LocalPartnersDataLoader />
+    </Suspense>
+  );
 }
 
 const LocalPartnersDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+  const user = await getAuthenticatedUserOrRedirect();
+  await requireAdmin(user);
 
-	const service = new LocalPartnerService();
-	const result = await service.getTableView(user.id);
+  const service = new LocalPartnerService();
+  const result = await service.getTableView(user.id);
 
-	const error = result.success ? null : result.error;
-	const rows: LocalPartnerTableViewRow[] = result.success ? result.data.tableRows : [];
+  const error = result.success ? null : result.error;
+  const rows: LocalPartnerTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <LocalPartnersTable rows={rows} error={error} />;
+  return <LocalPartnersTable rows={rows} error={error} />;
 };

@@ -10,33 +10,31 @@ import { useState } from 'react';
 import GenerateDonationCertificateDialog from './generate-donation-certificate-dialog';
 
 export const YourDonationCertificateTable = ({
-	rows,
-	error,
-	lang,
+  rows,
+  error,
+  lang,
 }: {
-	rows: YourDonationCertificateTableViewRow[];
-	error: string | null;
-	lang: WebsiteLanguage;
+  rows: YourDonationCertificateTableViewRow[];
+  error: string | null;
+  lang: WebsiteLanguage;
 }) => {
-	const [open, setOpen] = useState<boolean>(false);
-	const translator = useTranslator(lang, 'website-me');
+  const [open, setOpen] = useState<boolean>(false);
+  const translator = useTranslator(lang, 'website-me');
 
-	return (
-		<>
-			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} lang={lang} />
-			<DataTable
-				title={translator?.t('sections.contributions.donation-certificates-long')}
-				error={error}
-				emptyMessage={
-					translator?.t('donation-certificates.no-certificates-yet') || 'You have no donation certificates yet.'
-				}
-				data={rows}
-				actions={
-					<Button onClick={() => setOpen(true)}>{translator?.t('donation-certificates.generate-certificate')}</Button>
-				}
-				makeColumns={makeYourCertificatesColumns}
-				lang={lang}
-			/>
-		</>
-	);
+  return (
+    <>
+      <GenerateDonationCertificateDialog open={open} setOpen={setOpen} lang={lang} />
+      <DataTable
+        title={translator?.t('sections.contributions.donation-certificates-long')}
+        error={error}
+        emptyMessage={translator?.t('donation-certificates.no-certificates-yet') || 'You have no donation certificates yet.'}
+        data={rows}
+        actions={
+          <Button onClick={() => setOpen(true)}>{translator?.t('donation-certificates.generate-certificate')}</Button>
+        }
+        makeColumns={makeYourCertificatesColumns}
+        lang={lang}
+      />
+    </>
+  );
 };

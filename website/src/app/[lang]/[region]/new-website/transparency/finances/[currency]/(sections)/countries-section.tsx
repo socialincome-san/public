@@ -6,44 +6,45 @@ import { ContributionsByCountry } from '@/lib/services/transparency/transparency
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type CountriesSectionProps = {
-	countries: ContributionsByCountry[];
-	exchangeRate: number;
-	currency: WebsiteCurrency;
-	lang: WebsiteLanguage;
+  countries: ContributionsByCountry[];
+  exchangeRate: number;
+  currency: WebsiteCurrency;
+  lang: WebsiteLanguage;
 };
 
 const formatNumber = (value: number, lang: WebsiteLanguage): string => {
-	return new Intl.NumberFormat(lang).format(value);
+  return new Intl.NumberFormat(lang).format(value);
 };
 
 export const CountriesSection = ({ countries, exchangeRate, currency, lang }: CountriesSectionProps) => {
-	return (
-		<section>
-			<h2 className="mb-6 text-2xl font-semibold">Top Contributing Countries</h2>
-			<Card>
-				<div className="space-y-6">
-					{countries.map((country) => {
-						const totalConverted = country.totalChf * exchangeRate;
-						return (
-							<div key={country.countryCode} className="space-y-2">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-3">
-										<CountryFlag country={country.countryCode} size="sm" />
-										<span className="font-medium">{country.country}</span>
-									</div>
-									<div className="text-right">
-										<span className="font-semibold">{formatCurrencyLocale(totalConverted, currency, lang)}</span>
-										<span className="text-muted-foreground ml-2 text-sm">
-											({formatNumber(country.contributorCount, lang)} contributors)
-										</span>
-									</div>
-								</div>
-								<Progress value={country.percentageOfTotal} />
-							</div>
-						);
-					})}
-				</div>
-			</Card>
-		</section>
-	);
+  return (
+    <section>
+      <h2 className="mb-6 text-2xl font-semibold">Top Contributing Countries</h2>
+      <Card>
+        <div className="space-y-6">
+          {countries.map((country) => {
+            const totalConverted = country.totalChf * exchangeRate;
+
+            return (
+              <div key={country.countryCode} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <CountryFlag country={country.countryCode} size="sm" />
+                    <span className="font-medium">{country.country}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-semibold">{formatCurrencyLocale(totalConverted, currency, lang)}</span>
+                    <span className="ml-2 text-sm text-muted-foreground">
+                      ({formatNumber(country.contributorCount, lang)} contributors)
+                    </span>
+                  </div>
+                </div>
+                <Progress value={country.percentageOfTotal} />
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+    </section>
+  );
 };

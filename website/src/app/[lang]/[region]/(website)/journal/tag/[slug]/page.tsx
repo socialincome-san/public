@@ -9,68 +9,69 @@ import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 export const revalidate = 900;
 
 interface PageParams extends DefaultParams {
-	slug: string;
+  slug: string;
 }
 
 interface PageProps {
-	params: Promise<PageParams>;
+  params: Promise<PageParams>;
 }
 
 const storyblokService = new StoryblokService();
 
 const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArticlesInSelectedLanguage: number) => {
-	if (lang == defaultLanguage) {
-		return totalArticlesInSelectedLanguage;
-	}
+  if (lang == defaultLanguage) {
+    return totalArticlesInSelectedLanguage;
+  }
 
-	const res = await storyblokService.getArticleCountByTagForDefaultLang(tagId);
-	return res.success ? res.data : totalArticlesInSelectedLanguage;
+  const res = await storyblokService.getArticleCountByTagForDefaultLang(tagId);
+
+  return res.success ? res.data : totalArticlesInSelectedLanguage;
 };
 
 export default async function Page({ params }: PageProps) {
-	const { slug, lang, region } = await params;
+  const { slug, lang, region } = await params;
 
-	const tagResult = await storyblokService.getTag(slug, lang);
-	if (!tagResult.success) {
-		return null;
-	}
-	const tag = tagResult.data;
+  const tagResult = await storyblokService.getTag(slug, lang);
+  if (!tagResult.success) {
+    return null;
+  }
+  const tag = tagResult.data;
 
-	const articlesResult = await storyblokService.getArticlesByTag(tag.uuid, lang);
-	const articles = articlesResult.success ? articlesResult.data : [];
+  const articlesResult = await storyblokService.getArticlesByTag(tag.uuid, lang);
+  const articles = articlesResult.success ? articlesResult.data : [];
 
-	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
-		namespaces: ['website-journal', 'common'],
-	});
+  const translator = await Translator.getInstance({
+    language: lang as WebsiteLanguage,
+    namespaces: ['website-journal', 'common'],
+  });
 
-	const totalArticlesInSelectedLanguage = articles.length;
+  const totalArticlesInSelectedLanguage = articles.length;
 
-	const totalArticlesInDefault = await getTotalArticlesInDefault(lang, tag.uuid, totalArticlesInSelectedLanguage);
+  const totalArticlesInDefault = await getTotalArticlesInDefault(lang, tag.uuid, totalArticlesInSelectedLanguage);
 
-	return (
-		<BaseContainer>
-			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">
-				<div>
-					<Typography weight="bold" size="4xl">
-						{tag.content.value}
-					</Typography>
-					<Typography className="mt-2 text-black">{tag.content.description}</Typography>
-				</div>
-			</div>
+  return (
+    <BaseContainer>
+      <div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">
+        <div>
+          <Typography weight="bold" size="4xl">
+            {tag.content.value}
+          </Typography>
+          <Typography className="mt-2 text-black">{tag.content.description}</Typography>
+        </div>
+      </div>
 
-			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{articles.map((article) => (
-					<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
-				))}
-			</div>
+      <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {articles.map((article) => (
+          <StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
+        ))}
+      </div>
 
-			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
-				<div>
-					<Separator className="my-8" />
-					<MoreArticlesLink text={translator.t('overview.more-articles')} />
-				</div>
-			)}
-		</BaseContainer>
-	);
+      {totalArticlesInDefault > totalArticlesInSelectedLanguage && (
+        <div>
+          <Separator className="my-8" />
+          <MoreArticlesLink text={translator.t('overview.more-articles')} />
+        </div>
+      )}
+    </BaseContainer>
+  );
 }

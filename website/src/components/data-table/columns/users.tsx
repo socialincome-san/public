@@ -8,42 +8,42 @@ import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
-	return [
-		{
-			accessorKey: 'firstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'lastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'email',
-			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'role',
-			header: (ctx) => <SortableHeader ctx={ctx}>Role</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'organizationName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Organization</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} options={{ year: 'numeric', month: '2-digit', day: '2-digit' }} />,
-		},
-		{
-			id: 'actions',
-			header: '',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
-		},
-	];
+  return [
+    {
+      accessorKey: 'firstName',
+      header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'lastName',
+      header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'email',
+      header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'role',
+      header: (ctx) => <SortableHeader ctx={ctx}>Role</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'organizationName',
+      header: (ctx) => <SortableHeader ctx={ctx}>Organization</SortableHeader>,
+      cell: (ctx) => <TextCell ctx={ctx} />,
+    },
+    {
+      accessorKey: 'createdAt',
+      header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+      cell: (ctx) => <DateCell ctx={ctx} options={{ year: 'numeric', month: '2-digit', day: '2-digit' }} />,
+    },
+    {
+      id: 'actions',
+      header: '',
+      enableSorting: false,
+      cell: (ctx) => <ActionCell ctx={ctx} />,
+    },
+  ];
 };

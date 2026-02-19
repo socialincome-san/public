@@ -21,39 +21,39 @@ export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
  * Otherwise, try to find the best locale from the Accept-Language header, and if that fails, return the default locale.
  */
 export const findBestLocale = (
-	request: NextRequest,
+  request: NextRequest,
 ): {
-	region: WebsiteRegion;
-	language: WebsiteLanguage;
+  region: WebsiteRegion;
+  language: WebsiteLanguage;
 } => {
-	if (
-		request.cookies.has(LANGUAGE_COOKIE) &&
-		mainWebsiteLanguages.includes(request.cookies.get(LANGUAGE_COOKIE)!.value as WebsiteLanguage) &&
-		request.cookies.has(REGION_COOKIE) &&
-		websiteRegions.includes(request.cookies.get(REGION_COOKIE)!.value as WebsiteRegion)
-	) {
-		return {
-			language: request.cookies.get(LANGUAGE_COOKIE)!.value as WebsiteLanguage,
-			region: request.cookies.get(REGION_COOKIE)!.value as WebsiteRegion,
-		};
-	}
+  if (
+    request.cookies.has(LANGUAGE_COOKIE) &&
+    mainWebsiteLanguages.includes(request.cookies.get(LANGUAGE_COOKIE)!.value as WebsiteLanguage) &&
+    request.cookies.has(REGION_COOKIE) &&
+    websiteRegions.includes(request.cookies.get(REGION_COOKIE)!.value as WebsiteRegion)
+  ) {
+    return {
+      language: request.cookies.get(LANGUAGE_COOKIE)!.value as WebsiteLanguage,
+      region: request.cookies.get(REGION_COOKIE)!.value as WebsiteRegion,
+    };
+  }
 
-	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
-	const cfCountry = request.headers.get('cf-ipcountry')?.toLowerCase();
+  const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
+  const cfCountry = request.headers.get('cf-ipcountry')?.toLowerCase();
 
-	const bestOption = options.find(
-		(option) =>
-			option.code &&
-			option.region &&
-			mainWebsiteLanguages.includes(option.code as WebsiteLanguage) &&
-			websiteRegions.includes(option.region.toLowerCase() as WebsiteRegion),
-	);
+  const bestOption = options.find(
+    (option) =>
+      option.code &&
+      option.region &&
+      mainWebsiteLanguages.includes(option.code as WebsiteLanguage) &&
+      websiteRegions.includes(option.region.toLowerCase() as WebsiteRegion),
+  );
 
-	return {
-		language: (bestOption?.code as WebsiteLanguage) || defaultLanguage,
-		region:
-			(cfCountry && websiteRegions.includes(cfCountry as WebsiteRegion) && (cfCountry as WebsiteRegion)) ||
-			(bestOption?.region?.toLowerCase() as WebsiteRegion) ||
-			defaultRegion,
-	};
+  return {
+    language: (bestOption?.code as WebsiteLanguage) || defaultLanguage,
+    region:
+      (cfCountry && websiteRegions.includes(cfCountry as WebsiteRegion) && (cfCountry as WebsiteRegion)) ||
+      (bestOption?.region?.toLowerCase() as WebsiteRegion) ||
+      defaultRegion,
+  };
 };

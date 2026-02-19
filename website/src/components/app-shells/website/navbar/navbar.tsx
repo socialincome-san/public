@@ -11,24 +11,24 @@ import { ISbStoryData } from '@storyblok/js';
 const storyblokService = new StoryblokService();
 
 type Props = {
-	session: Session | null;
-	lang: WebsiteLanguage;
-	region: string;
-	scope: Scope;
+  session: Session | null;
+  lang: WebsiteLanguage;
+  region: string;
+  scope: Scope;
 };
 
 export const Navbar = async ({ session, lang, region, scope }: Props) => {
-	const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
-	const menu = result.success ? result.data.content.menu : [];
+  const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+  const menu = result.success ? result.data.content.menu : [];
 
-	return (
-		<>
-			<div className="relative hidden lg:block">
-				<NavbarDesktop session={session} menu={menu} lang={lang} region={region} scope={scope} />
-			</div>
-			<div className="lg:hidden">
-				<NavbarMobile session={session} lang={lang} />
-			</div>
-		</>
-	);
+  return (
+    <>
+      <div className="relative hidden lg:block">
+        <NavbarDesktop session={session} menu={menu} lang={lang} region={region} scope={scope} />
+      </div>
+      <div className="lg:hidden">
+        <NavbarMobile session={session} lang={lang} />
+      </div>
+    </>
+  );
 };

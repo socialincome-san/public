@@ -7,58 +7,59 @@ import { getStorage, Storage } from 'firebase-admin/storage';
 const { credential } = admin;
 
 const getOrInitializeFirebaseAdmin = (options?: AppOptions, name?: string): App => {
-	const apps = getApps();
+  const apps = getApps();
 
-	if (name) {
-		const existingNamed = apps.find((app) => app.name === name);
-		if (existingNamed) {
-			return existingNamed;
-		}
+  if (name) {
+    const existingNamed = apps.find((app) => app.name === name);
+    if (existingNamed) {
+      return existingNamed;
+    }
 
-		return initializeApp(options, name);
-	}
+    return initializeApp(options, name);
+  }
 
-	return apps.find((app) => app.options.projectId === options?.projectId) || apps.at(0) || initializeApp(options);
+  return apps.find((app) => app.options.projectId === options?.projectId) || apps.at(0) || initializeApp(options);
 };
 
 interface UploadProps {
-	bucket?: Bucket;
-	sourceFilePath: string;
-	destinationFilePath: string;
+  bucket?: Bucket;
+  sourceFilePath: string;
+  destinationFilePath: string;
 }
 
 class StorageAdmin {
-	readonly storage: Storage;
+  readonly storage: Storage;
 
-	constructor(app?: App) {
-		app = app ? app : getOrInitializeFirebaseAdmin();
-		this.storage = getStorage(app);
-	}
+  constructor(app?: App) {
+    app = app ? app : getOrInitializeFirebaseAdmin();
+    this.storage = getStorage(app);
+  }
 
-	uploadFile = async ({ bucket, sourceFilePath, destinationFilePath }: UploadProps) => {
-		const destinationBucket = bucket || this.storage.bucket();
-		return await destinationBucket.upload(sourceFilePath, { destination: destinationFilePath });
-	};
+  uploadFile = async ({ bucket, sourceFilePath, destinationFilePath }: UploadProps) => {
+    const destinationBucket = bucket || this.storage.bucket();
+
+    return await destinationBucket.upload(sourceFilePath, { destination: destinationFilePath });
+  };
 }
 
 class AuthAdmin {
-	readonly auth: Auth;
+  readonly auth: Auth;
 
-	constructor(app?: App) {
-		app = app ? app : getOrInitializeFirebaseAdmin();
-		this.auth = getAuth(app);
-	}
+  constructor(app?: App) {
+    app = app ? app : getOrInitializeFirebaseAdmin();
+    this.auth = getAuth(app);
+  }
 }
 
 const { FIREBASE_SERVICE_ACCOUNT_JSON, FIREBASE_DATABASE_URL } = process.env;
 
 const credentials =
-	FIREBASE_SERVICE_ACCOUNT_JSON && FIREBASE_DATABASE_URL
-		? {
-				credential: credential.cert(JSON.parse(Buffer.from(FIREBASE_SERVICE_ACCOUNT_JSON, 'base64').toString('utf-8'))),
-				databaseURL: FIREBASE_DATABASE_URL,
-			}
-		: undefined;
+  FIREBASE_SERVICE_ACCOUNT_JSON && FIREBASE_DATABASE_URL
+    ? {
+        credential: credential.cert(JSON.parse(Buffer.from(FIREBASE_SERVICE_ACCOUNT_JSON, 'base64').toString('utf-8'))),
+        databaseURL: FIREBASE_DATABASE_URL,
+      }
+    : undefined;
 
 const app = getOrInitializeFirebaseAdmin(credentials);
 

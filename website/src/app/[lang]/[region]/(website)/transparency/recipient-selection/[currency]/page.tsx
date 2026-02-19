@@ -12,24 +12,24 @@ export const revalidate = 3600; // update once an hour
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
 interface TransparencyPageParams extends DefaultParams {
-	currency: Currency;
+  currency: Currency;
 }
 
 interface TransparencyPageProps {
-	params: Promise<TransparencyPageParams>;
+  params: Promise<TransparencyPageParams>;
 }
 
 export default async function Page({ params }: TransparencyPageProps) {
-	const { lang, region, currency } = await params;
+  const { lang, region, currency } = await params;
 
-	return (
-		<div className="-mt-24 md:-mt-36">
-			<CurrencyRedirect currency={currency.toUpperCase() as WebsiteCurrency} />
-			<HeroSection lang={lang} region={region} />
-			<Resources lang={lang} region={region} currency={currency} />
-			<SelectionProcess lang={lang} region={region} />
-			<PastRounds lang={lang} region={region} />
-			<SelectionFaq lang={lang} region={region} />
-		</div>
-	);
+  return (
+    <div className="-mt-24 md:-mt-36">
+      <CurrencyRedirect currency={currency.toUpperCase() as WebsiteCurrency} />
+      <HeroSection lang={lang} region={region} />
+      <Resources lang={lang} region={region} currency={currency} />
+      <SelectionProcess lang={lang} region={region} />
+      <PastRounds lang={lang} region={region} />
+      <SelectionFaq lang={lang} region={region} />
+    </div>
+  );
 }
