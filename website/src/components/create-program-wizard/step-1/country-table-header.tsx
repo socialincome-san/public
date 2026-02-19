@@ -11,7 +11,7 @@ type Props = {
 	onOnlyAllMetChange: (v: boolean) => void;
 };
 
-export function CountryTableHeader({ search, onSearchChange, onlyAllMet, onOnlyAllMetChange }: Props) {
+export const CountryTableHeader = ({ search, onSearchChange, onlyAllMet, onOnlyAllMetChange }: Props) => {
 	return (
 		<div className="flex items-center justify-between">
 			<p className="text-sm font-medium">Check cash program feasibility</p>
@@ -33,4 +33,4 @@ export function CountryTableHeader({ search, onSearchChange, onlyAllMet, onOnlyA
 			</div>
 		</div>
 	);
-}
+};

@@ -12,7 +12,7 @@ export default function ExpensesPage() {
 	);
 }
 
-async function ExpensesDataLoader() {
+const ExpensesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
@@ -23,4 +23,4 @@ async function ExpensesDataLoader() {
 	const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <ExpensesTable rows={rows} error={error} />;
-}
+};

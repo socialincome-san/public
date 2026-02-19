@@ -7,11 +7,11 @@ import {
 } from '@/lib/services/local-partner/local-partner.types';
 import { LocalPartnerFormSchema } from './local-partners-form';
 
-export function buildUpdateLocalPartnerInput(
+export const buildUpdateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
 	localPartner: LocalPartnerPayload,
 	contactFields: { [key: string]: FormField },
-): LocalPartnerUpdateInput {
+): LocalPartnerUpdateInput => {
 	// Contact Phone Update Logic
 	const contactPhoneUpdate = contactFields.phone.value
 		? {
@@ -48,12 +48,12 @@ export function buildUpdateLocalPartnerInput(
 			},
 		},
 	};
-}
+};
 
-export function buildCreateLocalPartnerInput(
+export const buildCreateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
 	contactFields: { [key: string]: FormField },
-): LocalPartnerCreateInput {
+): LocalPartnerCreateInput => {
 	const addressInput = buildAddressInput(contactFields);
 
 	return {
@@ -69,4 +69,4 @@ export function buildCreateLocalPartnerInput(
 			},
 		},
 	};
-}
+};

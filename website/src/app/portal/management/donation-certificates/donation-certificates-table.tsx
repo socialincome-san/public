@@ -7,13 +7,13 @@ import { DonationCertificateTableViewRow } from '@/lib/services/donation-certifi
 import { useState } from 'react';
 import GenerateDonationCertificatesDialog from './generate-donation-certificates-dialog';
 
-export function DonationCertificateTable({
+export const DonationCertificateTable = ({
 	rows,
 	error,
 }: {
 	rows: DonationCertificateTableViewRow[];
 	error: string | null;
-}) {
+}) => {
 	const [open, setOpen] = useState<boolean>(false);
 	return (
 		<>
@@ -28,4 +28,4 @@ export function DonationCertificateTable({
 			/>
 		</>
 	);
-}
+};

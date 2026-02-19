@@ -5,7 +5,7 @@ import { Button } from '@socialincome/ui';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-export async function AccountRedirect({ lang }: { lang: WebsiteLanguage }) {
+export const AccountRedirect = async ({ lang }: { lang: WebsiteLanguage }) => {
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-login'] });
 	const session = await getCurrentSession();
 	const sessionType = session?.type;
@@ -28,4 +28,4 @@ export async function AccountRedirect({ lang }: { lang: WebsiteLanguage }) {
 			</Link>
 		</>
 	);
-}
+};

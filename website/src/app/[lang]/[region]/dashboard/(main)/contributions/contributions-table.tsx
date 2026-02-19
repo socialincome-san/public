@@ -8,7 +8,7 @@ import { ContributionService } from '@/lib/services/contribution/contribution.se
 import { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
 import Link from 'next/link';
 
-export async function ContributionsTable({ lang }: { lang: WebsiteLanguage }) {
+export const ContributionsTable = async ({ lang }: { lang: WebsiteLanguage }) => {
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
@@ -34,4 +34,4 @@ export async function ContributionsTable({ lang }: { lang: WebsiteLanguage }) {
 			lang={lang}
 		/>
 	);
-}
+};

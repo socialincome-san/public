@@ -7,7 +7,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeLocalPartnerColumns(): ColumnDef<LocalPartnerTableViewRow>[] {
+export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'name',
@@ -41,4 +41,4 @@ export function makeLocalPartnerColumns(): ColumnDef<LocalPartnerTableViewRow>[]
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

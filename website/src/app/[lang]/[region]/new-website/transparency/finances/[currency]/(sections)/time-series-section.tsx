@@ -19,7 +19,7 @@ type TimeSeriesSectionProps = {
 	lang: WebsiteLanguage;
 };
 
-export function TimeSeriesSection({ timeRanges, exchangeRate, currency, lang }: TimeSeriesSectionProps) {
+export const TimeSeriesSection = ({ timeRanges, exchangeRate, currency, lang }: TimeSeriesSectionProps) => {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
 	const convertedRanges = timeRanges.map((range) => {
@@ -70,4 +70,4 @@ export function TimeSeriesSection({ timeRanges, exchangeRate, currency, lang }: 
 			</Card>
 		</section>
 	);
-}
+};

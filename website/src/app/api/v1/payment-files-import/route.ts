@@ -2,7 +2,7 @@ import { PaymentFileImportService } from '@/lib/services/payment-file-import/pay
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
 	const apiKey = request.headers.get('x-api-key');
 
 	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
@@ -31,4 +31,4 @@ export async function POST(request: NextRequest) {
 		logger.alert(`Payment files import failed: ${error}`, { error }, { component: 'payment-files-import' });
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
-}
+};

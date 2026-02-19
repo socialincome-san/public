@@ -12,7 +12,7 @@ type Props = {
 	onToggleRow: (id: string) => void;
 };
 
-export function CountrySelectionStep({ rows, selectedCountryId, openRowIds, onSelectCountry, onToggleRow }: Props) {
+export const CountrySelectionStep = ({ rows, selectedCountryId, openRowIds, onSelectCountry, onToggleRow }: Props) => {
 	const active = rows.filter((r) => r.country.isActive);
 	const inactive = rows.filter((r) => !r.country.isActive);
 
@@ -29,4 +29,4 @@ export function CountrySelectionStep({ rows, selectedCountryId, openRowIds, onSe
 			/>
 		</div>
 	);
-}
+};

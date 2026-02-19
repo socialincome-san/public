@@ -7,10 +7,10 @@ import { HowItWorks } from './(sections)/how-it-works';
 import { OurWork } from './(sections)/our-work';
 import { Recipients } from './(sections)/recipients';
 
-export async function generateMetadata(props: DefaultPageProps) {
+export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-our-work');
-}
+};
 
 export default async function Page(props: DefaultPageProps) {
 	const { lang, region } = await props.params;

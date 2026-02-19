@@ -14,7 +14,7 @@ type Props = {
 	children?: ReactNode;
 };
 
-export function RadioCard({ value, checked, disabled, label, description, badge, children }: Props) {
+export const RadioCard = ({ value, checked, disabled, label, description, badge, children }: Props) => {
 	return (
 		<label
 			data-testid={`radio-card-${value}`}
@@ -48,4 +48,4 @@ export function RadioCard({ value, checked, disabled, label, description, badge,
 			</div>
 		</label>
 	);
-}
+};

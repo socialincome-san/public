@@ -12,7 +12,7 @@ export default function RecipientsPage() {
 	);
 }
 
-async function RecipientsDataLoader() {
+const RecipientsDataLoader = async () => {
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
 	const recipientService = new RecipientService();
@@ -22,4 +22,4 @@ async function RecipientsDataLoader() {
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <RecipientsTableClient rows={rows} error={error} readOnly={false} actorKind="local-partner" />;
-}
+};

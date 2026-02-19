@@ -12,7 +12,7 @@ export default function UsersPage() {
 	);
 }
 
-async function UsersDataLoader() {
+const UsersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
@@ -23,4 +23,4 @@ async function UsersDataLoader() {
 	const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <UsersTable rows={rows} error={error} />;
-}
+};

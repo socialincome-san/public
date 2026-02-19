@@ -17,7 +17,7 @@ type BoxProps = {
 	onClick: () => void;
 };
 
-function Box({ active, number, title, subtitle, onClick }: BoxProps) {
+const Box = ({ active, number, title, subtitle, onClick }: BoxProps) => {
 	return (
 		<button
 			onClick={onClick}
@@ -60,9 +60,9 @@ function Box({ active, number, title, subtitle, onClick }: BoxProps) {
 			</div>
 		</button>
 	);
-}
+};
 
-export function SelectionProcess({ lang }: DefaultParams) {
+export const SelectionProcess = ({ lang }: DefaultParams) => {
 	const translator = useTranslator(lang as WebsiteLanguage, 'website-selection');
 	const [activeBox, setActiveBox] = useState<'preselection' | 'selection'>('preselection');
 	const { ref, isIntersecting, entry } = useIntersectionObserver({ threshold: 0.2 });
@@ -186,4 +186,4 @@ export function SelectionProcess({ lang }: DefaultParams) {
 			</div>
 		</BaseContainer>
 	);
-}
+};

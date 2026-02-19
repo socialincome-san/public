@@ -6,7 +6,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeOrganizationAdminColumns(): ColumnDef<OrganizationTableViewRow>[] {
+export const makeOrganizationAdminColumns = (): ColumnDef<OrganizationTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'name',
@@ -34,4 +34,4 @@ export function makeOrganizationAdminColumns(): ColumnDef<OrganizationTableViewR
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 	];
-}
+};

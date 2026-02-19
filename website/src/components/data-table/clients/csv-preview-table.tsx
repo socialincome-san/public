@@ -2,7 +2,7 @@ type Props = {
 	rows: Record<string, string>[];
 };
 
-export function CsvPreviewTable({ rows }: Props) {
+export const CsvPreviewTable = ({ rows }: Props) => {
 	if (rows.length === 0) {
 		return null;
 	}
@@ -35,4 +35,4 @@ export function CsvPreviewTable({ rows }: Props) {
 			</table>
 		</div>
 	);
-}
+};

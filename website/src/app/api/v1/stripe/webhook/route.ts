@@ -2,7 +2,7 @@ import { StripeService } from '@/lib/services/stripe/stripe.service';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
 	try {
 		const signature = request.headers.get('stripe-signature');
 		if (!signature) {
@@ -32,4 +32,4 @@ export async function POST(request: NextRequest) {
 		logger.alert('Stripe webhook error', { error }, { component: 'stripe-webhook' });
 		return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
 	}
-}
+};

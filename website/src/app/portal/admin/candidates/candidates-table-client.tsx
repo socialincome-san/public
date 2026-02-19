@@ -18,7 +18,7 @@ type Props = {
 	actorKind?: Actor['kind'];
 };
 
-export function CandidatesTableClient({ rows, error, readOnly, actorKind = 'user' }: Props) {
+export const CandidatesTableClient = ({ rows, error, readOnly, actorKind = 'user' }: Props) => {
 	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
 	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
 	const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
@@ -92,4 +92,4 @@ export function CandidatesTableClient({ rows, error, readOnly, actorKind = 'user
 			/>
 		</>
 	);
-}
+};

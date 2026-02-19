@@ -8,11 +8,11 @@ import type { YourContributionsTableViewRow } from '@/lib/services/contribution/
 import type { ColumnDef } from '@tanstack/react-table';
 import { CurrencyCell } from '../elements/currency-cell';
 
-export function makeYourContributionsColumns(
+export const makeYourContributionsColumns = (
 	hideProgramName: boolean = false,
 	hideLocalPartner: boolean = false,
 	translator?: Translator,
-): ColumnDef<YourContributionsTableViewRow>[] {
+): ColumnDef<YourContributionsTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'createdAt',
@@ -38,4 +38,4 @@ export function makeYourContributionsColumns(
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 	];
-}
+};

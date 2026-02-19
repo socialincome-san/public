@@ -7,7 +7,7 @@ import Image from 'next/image';
 import globeRotating from '../(assets)/globe.svg';
 import ScrollToChevron from '../(components)/scroll-to-chevron';
 
-export async function HeroSection({ lang }: DefaultParams) {
+export const HeroSection = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-selection'],
@@ -58,4 +58,4 @@ export async function HeroSection({ lang }: DefaultParams) {
 			</div>
 		</div>
 	);
-}
+};

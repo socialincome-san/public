@@ -12,7 +12,7 @@ export default function CampaignsPage() {
 	);
 }
 
-async function CampaignsDataLoader() {
+const CampaignsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const campaignService = new CampaignService();
@@ -22,4 +22,4 @@ async function CampaignsDataLoader() {
 	const campaignRows: CampaignTableViewRow[] = campaignsResult.success ? campaignsResult.data.tableRows : [];
 
 	return <CampaignsTable rows={campaignRows} error={error} />;
-}
+};

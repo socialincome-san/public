@@ -1,4 +1,4 @@
-export async function fetchData(owner: string, repo: string, url: string) {
+export const fetchData = async (owner: string, repo: string, url: string) => {
 	const headers: Record<string, string> = {
 		Accept: 'application/vnd.github+json',
 	};
@@ -25,4 +25,4 @@ export async function fetchData(owner: string, repo: string, url: string) {
 	}
 
 	return res;
-}
+};

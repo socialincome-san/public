@@ -10,7 +10,7 @@ type SegmentedToggleProps = {
 	className?: string;
 };
 
-export function SegmentedToggle({ value, onValueChange, options, className }: SegmentedToggleProps) {
+export const SegmentedToggle = ({ value, onValueChange, options, className }: SegmentedToggleProps) => {
 	return (
 		<ToggleGroupPrimitive.Root
 			type="single"
@@ -32,4 +32,4 @@ export function SegmentedToggle({ value, onValueChange, options, className }: Se
 			))}
 		</ToggleGroupPrimitive.Root>
 	);
-}
+};

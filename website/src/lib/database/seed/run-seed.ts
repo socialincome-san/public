@@ -24,7 +24,7 @@ import { surveySchedulesData } from './data/survey-schedules.data';
 import { countriesData } from './data/countries.data';
 import { sourceLinksData } from './data/source-links.data';
 
-export async function seedDatabase() {
+export const seedDatabase = async () => {
 	await prisma.$transaction(async (tx) => {
 		await tx.survey.deleteMany();
 		await tx.surveySchedule.deleteMany();

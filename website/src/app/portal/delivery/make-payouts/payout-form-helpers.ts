@@ -1,7 +1,7 @@
 import { PayoutCreateInput, PayoutPayload, PayoutUpdateInput } from '@/lib/services/payout/payout.types';
 import { PayoutFormSchema } from './payout-form';
 
-export function buildCreatePayoutInput(schema: PayoutFormSchema): PayoutCreateInput {
+export const buildCreatePayoutInput = (schema: PayoutFormSchema): PayoutCreateInput => {
 	return {
 		recipient: { connect: { id: schema.fields.recipientId.value } },
 		amount: schema.fields.amount.value,
@@ -11,9 +11,9 @@ export function buildCreatePayoutInput(schema: PayoutFormSchema): PayoutCreateIn
 		phoneNumber: schema.fields.phoneNumber.value ?? null,
 		comments: null,
 	};
-}
+};
 
-export function buildUpdatePayoutInput(schema: PayoutFormSchema, existing: PayoutPayload): PayoutUpdateInput {
+export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: PayoutPayload): PayoutUpdateInput => {
 	const data: PayoutUpdateInput = {
 		id: existing.id,
 		amount: schema.fields.amount.value,
@@ -29,4 +29,4 @@ export function buildUpdatePayoutInput(schema: PayoutFormSchema, existing: Payou
 	}
 
 	return data;
-}
+};

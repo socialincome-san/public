@@ -12,7 +12,7 @@ export default function LocalPartnersPage() {
 	);
 }
 
-async function LocalPartnersDataLoader() {
+const LocalPartnersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
@@ -23,4 +23,4 @@ async function LocalPartnersDataLoader() {
 	const rows: LocalPartnerTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <LocalPartnersTable rows={rows} error={error} />;
-}
+};

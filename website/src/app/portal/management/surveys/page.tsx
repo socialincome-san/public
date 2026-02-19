@@ -12,7 +12,7 @@ export default function SurveysPage() {
 	);
 }
 
-async function SurveysDataLoader() {
+const SurveysDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new SurveyService();
@@ -22,4 +22,4 @@ async function SurveysDataLoader() {
 	const rows: SurveyTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <SurveysTableClient rows={rows} error={error} />;
-}
+};

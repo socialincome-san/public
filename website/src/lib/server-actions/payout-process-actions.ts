@@ -6,7 +6,7 @@ import { PayoutProcessService } from '../services/payout-process/payout-process.
 
 const service = new PayoutProcessService();
 
-export async function generateRegistrationCsvAction() {
+export const generateRegistrationCsvAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
 
 	const result = await service.generateRegistrationCSV(user.id);
@@ -16,9 +16,9 @@ export async function generateRegistrationCsvAction() {
 	}
 
 	return result.data;
-}
+};
 
-export async function generatePayoutCsvAction(selectedDate: Date) {
+export const generatePayoutCsvAction = async (selectedDate: Date) => {
 	const user = await getAuthenticatedUserOrThrow();
 
 	const result = await service.generatePayoutCSV(user.id, selectedDate);
@@ -28,9 +28,9 @@ export async function generatePayoutCsvAction(selectedDate: Date) {
 	}
 
 	return result.data;
-}
+};
 
-export async function previewCurrentMonthPayoutsAction(selectedDate: Date) {
+export const previewCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 	const user = await getAuthenticatedUserOrThrow();
 
 	const result = await service.previewCurrentMonthPayouts(user.id, selectedDate);
@@ -40,9 +40,9 @@ export async function previewCurrentMonthPayoutsAction(selectedDate: Date) {
 	}
 
 	return result.data;
-}
+};
 
-export async function generateCurrentMonthPayoutsAction(selectedDate: Date) {
+export const generateCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 	const user = await getAuthenticatedUserOrThrow();
 
 	const result = await service.generateCurrentMonthPayouts(user.id, selectedDate);
@@ -54,4 +54,4 @@ export async function generateCurrentMonthPayoutsAction(selectedDate: Date) {
 	revalidatePath('/portal/delivery/make-payouts');
 
 	return result.data;
-}
+};

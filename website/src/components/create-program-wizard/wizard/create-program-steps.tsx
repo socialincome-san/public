@@ -13,7 +13,7 @@ type Props = {
 	send: CreateProgramWizardSend;
 };
 
-export function CreateProgramSteps({ state, send }: Props) {
+export const CreateProgramSteps = ({ state, send }: Props) => {
 	if (state.matches('loading') || state.matches('saving')) {
 		return <WizardLoading />;
 	}
@@ -79,4 +79,4 @@ export function CreateProgramSteps({ state, send }: Props) {
 	}
 
 	return null;
-}
+};

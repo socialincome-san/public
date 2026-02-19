@@ -22,7 +22,7 @@ type Props = {
 	onToggleProfile: (profile: Profile) => void;
 };
 
-export function RecipientSelectionSection({
+export const RecipientSelectionSection = ({
 	value,
 	targetCauses,
 	targetProfiles,
@@ -32,7 +32,7 @@ export function RecipientSelectionSection({
 	onChangeApproach,
 	onToggleCause,
 	onToggleProfile,
-}: Props) {
+}: Props) => {
 	const noUniversalRecipients = value === 'universal' && totalRecipients === 0;
 	const noTargetedRecipients = value === 'targeted' && filteredRecipients === 0;
 
@@ -116,4 +116,4 @@ export function RecipientSelectionSection({
 			</RadioCardGroup>
 		</div>
 	);
-}
+};

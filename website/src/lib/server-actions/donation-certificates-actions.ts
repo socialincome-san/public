@@ -7,27 +7,27 @@ import { LanguageCode } from '@/lib/types/language';
 import { revalidatePath } from 'next/cache';
 import { getAuthenticatedContributorOrRedirect } from '../firebase/current-contributor';
 
-export async function getContributorOptions() {
+export const getContributorOptions = async () => {
 	await getAuthenticatedUserOrThrow();
 	const contributorService = new ContributorService();
 
 	return await contributorService.getByIds();
-}
+};
 
-export async function generateDonationCertificates(year: number, contributorIds: string[], language?: LanguageCode) {
+export const generateDonationCertificates = async (year: number, contributorIds: string[], language?: LanguageCode) => {
 	await getAuthenticatedUserOrThrow();
 	const donationCertificateService = new DonationCertificateService();
 
 	const result = await donationCertificateService.createDonationCertificates(year, contributorIds, language);
 	revalidatePath('/portal/management/donation-certificates');
 	return result;
-}
+};
 
-export async function generateDonationCertificateForCurrentUser(year: number, language?: LanguageCode) {
+export const generateDonationCertificateForCurrentUser = async (year: number, language?: LanguageCode) => {
 	const contributorSession = await getAuthenticatedContributorOrRedirect();
 	const donationCertificateService = new DonationCertificateService();
 
 	const result = await donationCertificateService.createDonationCertificate(year, contributorSession.id, language);
 	revalidatePath('/dashboard/donation-certificates');
 	return result;
-}
+};

@@ -4,10 +4,10 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import { PropsWithChildren } from 'react';
 
-export async function generateMetadata(props: DefaultLayoutProps) {
+export const generateMetadata = async (props: DefaultLayoutProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-donate');
-}
+};
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang, region } = (await params) as { lang: WebsiteLanguage; region: WebsiteRegion };

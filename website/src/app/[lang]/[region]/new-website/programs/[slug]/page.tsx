@@ -12,7 +12,7 @@ export default function ProgramsPage({ params, searchParams }: DefaultLayoutProp
 	);
 }
 
-async function ProgramsPageDataLoader({ params, searchParams }: DefaultLayoutPropsWithSlug & DefaultPageProps) {
+const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPropsWithSlug & DefaultPageProps) => {
 	const { slug } = await params;
 	const query = await searchParams;
 
@@ -89,4 +89,4 @@ async function ProgramsPageDataLoader({ params, searchParams }: DefaultLayoutPro
 			</ul>
 		</div>
 	);
-}
+};

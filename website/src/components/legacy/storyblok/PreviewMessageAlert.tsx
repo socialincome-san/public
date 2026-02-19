@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 import { Typography } from '@socialincome/ui';
 import { useState } from 'react';
 
-export function PreviewMessage() {
+export const PreviewMessage = () => {
 	const [visible, setVisible] = useState(true);
 
 	if (!visible) {
@@ -28,4 +28,4 @@ export function PreviewMessage() {
 			</Typography>
 		</span>
 	);
-}
+};

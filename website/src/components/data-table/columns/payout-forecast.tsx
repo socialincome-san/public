@@ -6,7 +6,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makePayoutForecastColumns(): ColumnDef<PayoutForecastTableViewRow>[] {
+export const makePayoutForecastColumns = (): ColumnDef<PayoutForecastTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'period',
@@ -35,4 +35,4 @@ export function makePayoutForecastColumns(): ColumnDef<PayoutForecastTableViewRo
 			cell: (ctx) => <CurrencyCell ctx={ctx} currency="USD" />,
 		},
 	];
-}
+};

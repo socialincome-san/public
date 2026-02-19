@@ -5,11 +5,11 @@ import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from 'lucide-react';
 import * as React from 'react';
 
-function Accordion({ ...props }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
+const Accordion = ({ ...props }: React.ComponentProps<typeof AccordionPrimitive.Root>) => {
 	return <AccordionPrimitive.Root data-slot="accordion" {...props} />;
-}
+};
 
-function AccordionItem({ className, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+const AccordionItem = ({ className, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>) => {
 	return (
 		<AccordionPrimitive.Item
 			data-slot="accordion-item"
@@ -17,9 +17,13 @@ function AccordionItem({ className, ...props }: React.ComponentProps<typeof Acco
 			{...props}
 		/>
 	);
-}
+};
 
-function AccordionTrigger({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+const AccordionTrigger = ({
+	className,
+	children,
+	...props
+}: React.ComponentProps<typeof AccordionPrimitive.Trigger>) => {
 	return (
 		<AccordionPrimitive.Header className="flex">
 			<AccordionPrimitive.Trigger
@@ -35,9 +39,13 @@ function AccordionTrigger({ className, children, ...props }: React.ComponentProp
 			</AccordionPrimitive.Trigger>
 		</AccordionPrimitive.Header>
 	);
-}
+};
 
-function AccordionContent({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Content>) {
+const AccordionContent = ({
+	className,
+	children,
+	...props
+}: React.ComponentProps<typeof AccordionPrimitive.Content>) => {
 	return (
 		<AccordionPrimitive.Content
 			data-slot="accordion-content"
@@ -47,6 +55,6 @@ function AccordionContent({ className, children, ...props }: React.ComponentProp
 			<div className={cn('pb-4 pt-0', className)}>{children}</div>
 		</AccordionPrimitive.Content>
 	);
-}
+};
 
 export { Accordion, AccordionContent, AccordionItem, AccordionTrigger };

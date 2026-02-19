@@ -12,7 +12,7 @@ export default function PayoutsPage() {
 	);
 }
 
-async function PayoutsDataLoader() {
+const PayoutsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const payoutService = new PayoutService();
@@ -22,4 +22,4 @@ async function PayoutsDataLoader() {
 	const rows: PayoutTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <PayoutsTableClient rows={rows} error={error} />;
-}
+};

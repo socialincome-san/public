@@ -22,12 +22,12 @@ type BaseTableProps<TData, TValue> = {
 	initialSorting?: SortingState;
 };
 
-export function BaseTable<TData, TValue>({
+export const BaseTable = <TData, TValue>({
 	columns,
 	data,
 	onRowClick,
 	initialSorting = [],
-}: BaseTableProps<TData, TValue>) {
+}: BaseTableProps<TData, TValue>) => {
 	const [sorting, setSorting] = useState<SortingState>(initialSorting);
 
 	const table = useReactTable({
@@ -132,4 +132,4 @@ export function BaseTable<TData, TValue>({
 			</div>
 		</div>
 	);
-}
+};

@@ -5,7 +5,7 @@ import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { PayoutService } from '@/lib/services/payout/payout.service';
 import { revalidatePath } from 'next/cache';
 
-export async function confirmPayoutAction(payoutId: string) {
+export const confirmPayoutAction = async (payoutId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
 
@@ -15,9 +15,9 @@ export async function confirmPayoutAction(payoutId: string) {
 	}
 
 	revalidatePath('/portal/monitoring/payout-confirmation');
-}
+};
 
-export async function contestPayoutAction(payoutId: string) {
+export const contestPayoutAction = async (payoutId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
 
@@ -27,4 +27,4 @@ export async function contestPayoutAction(payoutId: string) {
 	}
 
 	revalidatePath('/portal/monitoring/payout-confirmation');
-}
+};

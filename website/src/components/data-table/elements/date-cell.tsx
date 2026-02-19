@@ -8,7 +8,7 @@ type DateCellProps<TData, TValue> = {
 	options?: Intl.DateTimeFormatOptions;
 };
 
-export function DateCell<TData, TValue extends Date | string | null>({
+export const DateCell = <TData, TValue extends Date | string | null>({
 	ctx,
 	locale = 'de-CH',
 	options = {
@@ -19,7 +19,7 @@ export function DateCell<TData, TValue extends Date | string | null>({
 		minute: '2-digit',
 		second: '2-digit',
 	},
-}: DateCellProps<TData, TValue>) {
+}: DateCellProps<TData, TValue>) => {
 	const value = ctx.getValue();
 
 	if (!value) {
@@ -30,4 +30,4 @@ export function DateCell<TData, TValue extends Date | string | null>({
 	const formatted = new Intl.DateTimeFormat(locale, options).format(date);
 
 	return <span>{formatted}</span>;
-}
+};

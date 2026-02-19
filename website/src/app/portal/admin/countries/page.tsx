@@ -12,7 +12,7 @@ export default function CountriesPage() {
 	);
 }
 
-async function CountriesDataLoader() {
+const CountriesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
@@ -23,4 +23,4 @@ async function CountriesDataLoader() {
 	const rows: CountryTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <CountriesTable rows={rows} error={error} />;
-}
+};

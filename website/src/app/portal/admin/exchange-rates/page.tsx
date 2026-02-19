@@ -12,7 +12,7 @@ export default function ExchangeRatesPage() {
 	);
 }
 
-async function ExchangeRatesDataLoader() {
+const ExchangeRatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
@@ -23,4 +23,4 @@ async function ExchangeRatesDataLoader() {
 	const rows: ExchangeRatesTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <ExchangeRatesTable rows={rows} error={error} />;
-}
+};

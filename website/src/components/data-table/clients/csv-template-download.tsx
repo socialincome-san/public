@@ -10,7 +10,7 @@ type Props = {
 	};
 };
 
-export function CsvTemplateDownload({ template }: Props) {
+export const CsvTemplateDownload = ({ template }: Props) => {
 	const handleDownload = () => {
 		const csvContent = [template.headers.join(','), template.exampleRow.join(',')].join('\n');
 
@@ -33,4 +33,4 @@ export function CsvTemplateDownload({ template }: Props) {
 			</Button>
 		</div>
 	);
-}
+};

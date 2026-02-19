@@ -13,7 +13,7 @@ export default function RecipientsPage() {
 	);
 }
 
-async function RecipientsDataLoader() {
+const RecipientsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const recipientService = new RecipientService();
@@ -24,4 +24,4 @@ async function RecipientsDataLoader() {
 	const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
 
 	return <RecipientsTableClient rows={rows} error={error} readOnly={readOnly} />;
-}
+};

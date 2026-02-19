@@ -13,7 +13,7 @@ type WebsiteAppShellProps = {
 	scope: Scope;
 };
 
-export function WebsiteAppShell({ children, session, lang, region, scope }: WebsiteAppShellProps) {
+export const WebsiteAppShell = ({ children, session, lang, region, scope }: WebsiteAppShellProps) => {
 	return (
 		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-gradient-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed antialiased">
 			<Navbar session={session} lang={lang} region={region} scope={scope} />
@@ -21,4 +21,4 @@ export function WebsiteAppShell({ children, session, lang, region, scope }: Webs
 			{scope === 'website' && <Footer lang={lang} region={region} />}
 		</div>
 	);
-}
+};

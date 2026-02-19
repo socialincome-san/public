@@ -9,7 +9,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { Model } from 'survey-core';
 
-export function useSurvey() {
+export const useSurvey = () => {
 	const { auth } = useAuth();
 	const [survey, setSurvey] = useState<SurveyWithRecipient | null>(null);
 	const [hasError, setHasError] = useState<boolean>(false);
@@ -72,4 +72,4 @@ export function useSurvey() {
 	};
 
 	return { survey, hasError, login, logout, loadSurvey, saveSurvey };
-}
+};

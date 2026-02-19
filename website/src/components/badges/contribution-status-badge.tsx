@@ -18,7 +18,7 @@ const RECIPIENT_STATUS_UI: Record<
 	succeeded: { variant: 'verified', label: 'Succeeded', Icon: CheckIcon },
 };
 
-export function ContributionStatusBadge({ status }: ContributionStatusBadgeProps) {
+export const ContributionStatusBadge = ({ status }: ContributionStatusBadgeProps) => {
 	const { variant, label, Icon } = RECIPIENT_STATUS_UI[status];
 	return (
 		<Badge variant={variant}>
@@ -26,4 +26,4 @@ export function ContributionStatusBadge({ status }: ContributionStatusBadgeProps
 			{label}
 		</Badge>
 	);
-}
+};

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import Image from 'next/image';
 import phonesGif from '../(assets)/phones-2.gif';
 
-export async function HowItWorks({ lang }: DefaultParams) {
+export const HowItWorks = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-our-work'],
@@ -47,4 +47,4 @@ export async function HowItWorks({ lang }: DefaultParams) {
 			</div>
 		</BaseContainer>
 	);
-}
+};

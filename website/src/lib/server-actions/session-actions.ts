@@ -4,10 +4,10 @@ import { FirebaseSessionService } from '../services/firebase/firebase-session.se
 
 const firebaseSessionService = new FirebaseSessionService();
 
-export async function createSessionAction(idToken: string) {
+export const createSessionAction = async (idToken: string) => {
 	return firebaseSessionService.createSessionAndSetCookie(idToken);
-}
+};
 
-export async function logoutAction() {
+export const logoutAction = async () => {
 	return firebaseSessionService.clearSessionCookie();
-}
+};

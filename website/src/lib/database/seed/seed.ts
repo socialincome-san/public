@@ -1,7 +1,7 @@
 import { seedDatabase } from './run-seed';
 import { prisma } from '../prisma';
 
-async function main() {
+const main = async () => {
 	try {
 		await seedDatabase();
 		console.log('✅ Seed completed');

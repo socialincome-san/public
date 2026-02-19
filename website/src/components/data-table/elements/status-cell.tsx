@@ -17,7 +17,7 @@ type Props<TData, TValue> = CellType<TData, TValue> & {
 	label?: string;
 };
 
-export function StatusCell<TData, TValue>({ ctx, variant, label }: Props<TData, TValue>) {
+export const StatusCell = <TData, TValue>({ ctx, variant, label }: Props<TData, TValue>) => {
 	const value = ctx.getValue();
 
 	switch (variant) {
@@ -36,4 +36,4 @@ export function StatusCell<TData, TValue>({ ctx, variant, label }: Props<TData, 
 		default:
 			return null;
 	}
-}
+};

@@ -19,7 +19,7 @@ const PAYOUT_STATUS_UI: Record<
 	failed: { variant: 'destructive', label: 'Failed', Icon: XCircleIcon },
 };
 
-export function PayoutStatusBadge({ status }: PayoutStatusBadgeProps) {
+export const PayoutStatusBadge = ({ status }: PayoutStatusBadgeProps) => {
 	if (!status) {
 		return (
 			<Badge variant="outline">
@@ -37,4 +37,4 @@ export function PayoutStatusBadge({ status }: PayoutStatusBadgeProps) {
 			{label}
 		</Badge>
 	);
-}
+};

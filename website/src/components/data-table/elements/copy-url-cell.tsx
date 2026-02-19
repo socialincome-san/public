@@ -21,7 +21,7 @@ const useCopyToClipboard = (timeout = 1500) => {
 	return { copied, copy };
 };
 
-export function CopyUrlCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
+export const CopyUrlCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const url = String(ctx.getValue() ?? '');
 	const { copied, copy } = useCopyToClipboard();
 
@@ -49,4 +49,4 @@ export function CopyUrlCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
 			)}
 		</Button>
 	);
-}
+};

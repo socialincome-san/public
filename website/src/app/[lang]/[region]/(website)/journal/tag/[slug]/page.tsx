@@ -18,14 +18,14 @@ interface PageProps {
 
 const storyblokService = new StoryblokService();
 
-async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
+const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArticlesInSelectedLanguage: number) => {
 	if (lang == defaultLanguage) {
 		return totalArticlesInSelectedLanguage;
 	}
 
 	const res = await storyblokService.getArticleCountByTagForDefaultLang(tagId);
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
-}
+};
 
 export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;

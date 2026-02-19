@@ -12,7 +12,7 @@ export default function CandidatesPage() {
 	);
 }
 
-async function CandidatesDataLoader() {
+const CandidatesDataLoader = async () => {
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
 	const candidateService = new CandidateService();
@@ -22,4 +22,4 @@ async function CandidatesDataLoader() {
 	const rows: CandidatesTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <CandidatesTableClient rows={rows} error={error} readOnly={false} actorKind="local-partner" />;
-}
+};

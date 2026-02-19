@@ -12,7 +12,7 @@ export default function ContributionsPage() {
 	);
 }
 
-async function ContributionsDataLoader() {
+const ContributionsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributionService();
@@ -23,4 +23,4 @@ async function ContributionsDataLoader() {
 	const readOnly = result.success ? result.data.permission !== 'edit' : true;
 
 	return <ContributionsTableClient rows={rows} error={error} readOnly={readOnly} />;
-}
+};
