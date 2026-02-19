@@ -126,14 +126,18 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 	};
 
 	useEffect(() => {
-		if (!userId) return;
+		if (!userId) {
+			return;
+		}
 		startTransition(async () => await loadUser(userId));
 	}, [userId]);
 
 	useEffect(() => {
 		startTransition(async () => {
 			const res = await getUserOptionsAction();
-			if (!res.success) return;
+			if (!res.success) {
+				return;
+			}
 			setOptions(res.data);
 		});
 	}, []);

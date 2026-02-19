@@ -1,6 +1,6 @@
-import { PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { ContributionStatus, PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { slugify } from '@/lib/utils/slugify';
+import { slugify } from '@/lib/utils/string-utils';
 import { CandidateService } from '../candidate/candidate.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -53,32 +53,37 @@ export class ProgramService extends BaseService {
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const wallets: ProgramWallet[] = programs.map((program) => {
-				const permission = accessiblePrograms.some(
-					(a) => a.programId === program.id && a.permission === ProgramPermission.operator,
-				)
-					? ProgramPermission.operator
-					: ProgramPermission.owner;
+			const wallets: ProgramWallet[] = await Promise.all(
+				programs.map(async (program) => {
+					const permission = accessiblePrograms.some(
+						(a) => a.programId === program.id && a.permission === ProgramPermission.operator,
+					)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
 
-				const recipientsCount = program.recipients.length;
+					const recipientsCount = program.recipients.length;
 
-				let totalPayoutsSum = 0;
-				for (const recipient of program.recipients) {
-					for (const payout of recipient.payouts) {
-						totalPayoutsSum += Number(payout.amount ?? 0);
+					let totalPayoutsSum = 0;
+					for (const recipient of program.recipients) {
+						for (const payout of recipient.payouts) {
+							totalPayoutsSum += Number(payout.amount ?? 0);
+						}
 					}
-				}
 
-				return {
-					id: program.id,
-					programName: program.name,
-					country: program.country.isoCode,
-					payoutCurrency: program.payoutCurrency,
-					recipientsCount,
-					totalPayoutsSum,
-					permission,
-				};
-			});
+					const isReadyForFirstPayoutsResult = await this.isReadyForFirstPayoutInterval(program.id);
+
+					return {
+						id: program.id,
+						programName: program.name,
+						country: program.country.isoCode,
+						payoutCurrency: program.payoutCurrency,
+						recipientsCount,
+						totalPayoutsSum,
+						permission,
+						isReadyForFirstPayouts: isReadyForFirstPayoutsResult.success ? isReadyForFirstPayoutsResult.data : false,
+					};
+				}),
+			);
 
 			return this.resultOk({ wallets });
 		} catch (error) {
@@ -294,6 +299,20 @@ export class ProgramService extends BaseService {
 		}
 	}
 
+	async getProgramIdBySlug(slug: string): Promise<ServiceResult<string>> {
+		try {
+			const programs = await this.db.program.findMany({ select: { id: true, name: true } });
+			const match = programs.find((p) => slugify(p.name) === slug);
+			if (!match) {
+				return this.resultFail('Program not found');
+			}
+			return this.resultOk(match.id);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not resolve programId by slug: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getProgramNameById(programId: string): Promise<ServiceResult<string>> {
 		try {
 			const program = await this.db.program.findUnique({
@@ -309,6 +328,55 @@ export class ProgramService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch program name: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
+		try {
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: {
+					payoutPerInterval: true,
+					recipients: {
+						select: { id: true },
+					},
+					campaigns: {
+						select: {
+							contributions: {
+								where: { status: ContributionStatus.succeeded },
+								select: { amountChf: true },
+							},
+						},
+					},
+				},
+			});
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			const recipientCount = program.recipients.length;
+
+			if (recipientCount === 0) {
+				return this.resultOk(false);
+			}
+
+			let totalContributions = 0;
+
+			for (const campaign of program.campaigns) {
+				for (const contribution of campaign.contributions) {
+					totalContributions += Number(contribution.amountChf);
+				}
+			}
+
+			const requiredAmount = recipientCount * Number(program.payoutPerInterval);
+
+			const isReady = totalContributions >= requiredAmount;
+
+			return this.resultOk(isReady);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not check program readiness: ${JSON.stringify(error)}`);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import { Address, Gender, PaymentProvider, Phone, Prisma, RecipientStatus } from '@/generated/prisma/client';
+import { Address, Gender, PaymentProvider, Phone, Prisma } from '@/generated/prisma/client';
 
 export enum Profile {
 	male = 'male',
@@ -8,7 +8,8 @@ export enum Profile {
 
 export type CandidatePayload = {
 	id: string;
-	status: RecipientStatus;
+	suspendedAt: Date | null;
+	suspensionReason: string | null;
 	successorName: string | null;
 	termsAccepted: boolean;
 	localPartner: {
@@ -42,7 +43,8 @@ export type CandidatesTableViewRow = {
 	lastName: string;
 	dateOfBirth: Date | null;
 	localPartnerName: string | null;
-	status: RecipientStatus;
+	suspendedAt: Date | null;
+	suspensionReason: string | null;
 	createdAt: Date;
 };
 

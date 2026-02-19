@@ -339,7 +339,9 @@ export class CountryService extends BaseService {
 	}
 
 	private getCashCondition(microfinanceIndex: number | null): CountryCondition {
-		if (microfinanceIndex === null) return CountryCondition.NOT_MET;
+		if (microfinanceIndex === null) {
+			return CountryCondition.NOT_MET;
+		}
 		return microfinanceIndex < 3 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
@@ -348,7 +350,9 @@ export class CountryService extends BaseService {
 	}
 
 	private getMobileNetworkCondition(populationCoverage: number | null): CountryCondition {
-		if (populationCoverage === null) return CountryCondition.NOT_MET;
+		if (populationCoverage === null) {
+			return CountryCondition.NOT_MET;
+		}
 		return populationCoverage >= 50 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 

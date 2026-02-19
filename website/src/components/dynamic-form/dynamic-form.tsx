@@ -63,10 +63,18 @@ const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any
 const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
 	const def = getDef(key, zodSchema, parentKey);
 	let type = def.typeName;
-	if (isOptional(key, zodSchema, parentKey)) type = def.innerType._def.typeName;
-	if (type === 'ZodEffects') return def.innerType._def.schema._def.typeName;
-	if (type === 'ZodUnion') return def.innerType._def.options[0]._def.typeName;
-	if (type === 'ZodNativeEnum') return 'ZodEnum';
+	if (isOptional(key, zodSchema, parentKey)) {
+		type = def.innerType._def.typeName;
+	}
+	if (type === 'ZodEffects') {
+		return def.innerType._def.schema._def.typeName;
+	}
+	if (type === 'ZodUnion') {
+		return def.innerType._def.options[0]._def.typeName;
+	}
+	if (type === 'ZodNativeEnum') {
+		return 'ZodEnum';
+	}
 	return type;
 };
 
@@ -121,8 +129,9 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 				if (!isFormField(field)) {
 					//nested
 					for (const [nestedName, nestedField] of Object.entries(field.fields)) {
-						if (isFormField(nestedField) && nestedField.value != null)
+						if (isFormField(nestedField) && nestedField.value != null) {
 							form.setValue(`${name}.${nestedName}` as any, nestedField.value);
+						}
 					}
 				} else if (field.value != null) {
 					form.setValue(name, field.value);
@@ -253,13 +262,17 @@ const GenericFormField = ({
 
 	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { [key: string]: string } => {
 		const def = getDef(key, zodSchema, parentOption);
-		if (isOptional(key, zodSchema, parentOption)) return def.innerType._def.values;
+		if (isOptional(key, zodSchema, parentOption)) {
+			return def.innerType._def.values;
+		}
 		return getType(key, zodSchema, parentOption) === 'ZodEnum' && def.values;
 	};
 
 	const getDateMinMax = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { min?: Date; max?: Date } => {
 		let def = getDef(key, zodSchema, parentOption);
-		if (isOptional(key, zodSchema, parentOption)) def = def.innerType._def;
+		if (isOptional(key, zodSchema, parentOption)) {
+			def = def.innerType._def;
+		}
 		const dateConstraints: { min?: Date; max?: Date } = {};
 
 		if (def.checks) {

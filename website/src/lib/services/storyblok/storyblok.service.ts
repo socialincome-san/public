@@ -276,7 +276,9 @@ export class StoryblokService extends BaseService {
 				const idsToIgnore = [...result.map((s) => s.id), articleId].join(',');
 				const remaining = numberOfArticles - result.length;
 				const overview = await this.getOverviewArticles(lang, idsToIgnore, remaining);
-				if (overview.success) result = [...result, ...overview.data];
+				if (overview.success) {
+					result = [...result, ...overview.data];
+				}
 			}
 
 			return this.resultOk(result);

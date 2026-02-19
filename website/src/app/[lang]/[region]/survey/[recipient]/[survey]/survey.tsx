@@ -14,11 +14,11 @@ import { useSurvey } from './use-survey';
 
 export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
 
-interface SurveyProps {
+type SurveyProps = {
 	surveyId: string;
 	recipientId: string;
 	lang: SurveyLanguage;
-}
+};
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
@@ -30,7 +30,9 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	const translator = useTranslator(lang, 'website-survey');
 
 	if (!hasError && survey && translator) {
-		if (survey.status == SurveyStatus.completed) return <div>Survey already completed</div>;
+		if (survey.status == SurveyStatus.completed) {
+			return <div>Survey already completed</div>;
+		}
 
 		const model = new Model({
 			...settings(translator.t),

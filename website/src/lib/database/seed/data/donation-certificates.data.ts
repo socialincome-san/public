@@ -8,7 +8,7 @@ export const donationCertificatesData: DonationCertificate[] = [
 		year: 2024,
 		storagePath: '/certificates/contributor-1-2024.pdf',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: new Date(),
+		updatedAt: null,
 		language: 'de',
 	},
 	{
@@ -18,7 +18,7 @@ export const donationCertificatesData: DonationCertificate[] = [
 		year: 2024,
 		storagePath: '/certificates/contributor-2-2024.pdf',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: new Date(),
+		updatedAt: null,
 		language: 'de',
 	},
 	{
@@ -28,7 +28,7 @@ export const donationCertificatesData: DonationCertificate[] = [
 		year: 2024,
 		storagePath: '/certificates/contributor-3-2024.pdf',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: new Date(),
+		updatedAt: null,
 		language: 'de',
 	}
 ];

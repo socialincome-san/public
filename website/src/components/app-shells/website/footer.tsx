@@ -9,6 +9,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { now } from '@/lib/utils/now';
 import { ISbStoryData } from '@storyblok/js';
 import NextLink from 'next/link';
 
@@ -66,7 +67,7 @@ export const Footer = async ({ lang, region }: Props) => {
 				{copyrightNotice && (
 					<div className="mt-16">
 						<p className="text-xs font-medium text-white/50">
-							{copyrightNotice.replace('%YEAR%', new Date().getFullYear().toString())}
+							{copyrightNotice.replace('%YEAR%', now().getFullYear().toString())}
 						</p>
 					</div>
 				)}

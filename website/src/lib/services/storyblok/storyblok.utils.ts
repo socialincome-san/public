@@ -127,7 +127,9 @@ export function createLinkForArticle(slug: string, lang: string, region: string)
  * Handles both external URLs (linktype 'url') and internal story links (linktype 'story').
  */
 export function resolveStoryblokLink(link: StoryblokMultilink | undefined, lang: string, region: string): string {
-	if (!link) return '#';
+	if (!link) {
+		return '#';
+	}
 
 	if (link.linktype === 'url') {
 		return link.url || '#';

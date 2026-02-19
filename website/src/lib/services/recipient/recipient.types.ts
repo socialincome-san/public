@@ -1,13 +1,4 @@
-import {
-	Address,
-	Gender,
-	PaymentProvider,
-	PayoutStatus,
-	Phone,
-	Prisma,
-	ProgramPermission,
-	RecipientStatus,
-} from '@/generated/prisma/client';
+import { Address, Gender, PaymentProvider, Phone, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {
@@ -37,7 +28,8 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 export type RecipientPayload = {
 	id: string;
 	startDate: Date | null;
-	status: RecipientStatus;
+	suspendedAt: Date | null;
+	suspensionReason: string | null;
 	successorName: string | null;
 	termsAccepted: boolean;
 	localPartner: {
@@ -74,8 +66,10 @@ export type RecipientTableViewRow = {
 	firstName: string;
 	lastName: string;
 	dateOfBirth: Date | null;
+	startDate: Date | null;
 	localPartnerName: string | null;
-	status: RecipientStatus;
+	suspendedAt: Date | null;
+	suspensionReason: string | null;
 	programId: string | null;
 	programName: string | null;
 	payoutsReceived: number;
@@ -88,24 +82,6 @@ export type RecipientTableViewRow = {
 export type RecipientTableView = {
 	tableRows: RecipientTableViewRow[];
 	permission: ProgramPermission;
-};
-
-export type PayoutRecipient = {
-	id: string;
-	contact: { firstName: string; lastName: string };
-	paymentInformation: {
-		code: string | null;
-		phone: { number: string } | null;
-	} | null;
-	program: {
-		payoutPerInterval: number;
-		payoutCurrency: string;
-		programDurationInMonths: number;
-	};
-	payouts: {
-		paymentAt: Date;
-		status: PayoutStatus;
-	}[];
 };
 
 export type RecipientCreateInput = Prisma.RecipientCreateInput;

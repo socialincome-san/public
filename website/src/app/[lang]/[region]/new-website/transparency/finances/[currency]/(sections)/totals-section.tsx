@@ -1,6 +1,7 @@
 import { Card } from '@/components/card';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { TransparencyTotals } from '@/lib/services/transparency/transparency.types';
+import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type TotalsSectionProps = {
 	totals: TransparencyTotals;
@@ -8,15 +9,6 @@ type TotalsSectionProps = {
 	currency: WebsiteCurrency;
 	lang: WebsiteLanguage;
 };
-
-function formatCurrency(amount: number, currency: string, lang: WebsiteLanguage): string {
-	return new Intl.NumberFormat(lang, {
-		style: 'currency',
-		currency,
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 0,
-	}).format(amount);
-}
 
 function formatNumber(value: number, lang: WebsiteLanguage): string {
 	return new Intl.NumberFormat(lang).format(value);
@@ -32,7 +24,7 @@ export function TotalsSection({ totals, exchangeRate, currency, lang }: TotalsSe
 				<Card>
 					<div className="space-y-2">
 						<p className="text-muted-foreground text-sm">Total Contributions</p>
-						<p className="text-3xl font-bold">{formatCurrency(totalContributions, currency, lang)}</p>
+						<p className="text-3xl font-bold">{formatCurrencyLocale(totalContributions, currency, lang)}</p>
 					</div>
 				</Card>
 				<Card>

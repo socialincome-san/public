@@ -398,7 +398,9 @@ export class ContributorService extends BaseService {
 			const existingContributor = await this.db.contributor.findFirst({
 				where: { paymentReferenceId: contributorData.paymentReferenceId },
 			});
-			if (existingContributor) return this.resultOk(existingContributor);
+			if (existingContributor) {
+				return this.resultOk(existingContributor);
+			}
 
 			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: contributorData.email,

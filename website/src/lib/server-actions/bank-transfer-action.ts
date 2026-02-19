@@ -11,7 +11,9 @@ export async function getReferenceIds(
 ): Promise<{ contributorReferenceId: string; contributionReferenceId: string } | undefined> {
 	const contributorService = new ContributorService();
 	const contributorReferenceId = await contributorService.getOrCreateReferenceIdByEmail(email);
-	if (!contributorReferenceId.success) return;
+	if (!contributorReferenceId.success) {
+		return;
+	}
 	const contributionReferenceId = Math.round(DateTime.now().toMillis() / 1000).toString();
 	return { contributorReferenceId: contributorReferenceId.data, contributionReferenceId };
 }

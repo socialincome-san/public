@@ -1,13 +1,12 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { ContributionStatus, PayoutStatus, RecipientStatus, SurveyStatus } from '@/generated/prisma/enums';
+import { ContributionStatus, PayoutStatus, SurveyStatus } from '@/generated/prisma/enums';
 
 import { BooleanBadge } from '@/components/badges/boolean-badge';
 import { CampaignStatusBadge } from '@/components/badges/campaign-status-badge';
 import { ContributionStatusBadge } from '@/components/badges/contribution-status-badge';
 import { PayoutStatusBadge } from '@/components/badges/payout-status-badge';
-import { RecipientStatusBadge } from '@/components/badges/recipient-status-badge';
 import { SubscriptionStatus, SubscriptionStatusBadge } from '@/components/badges/subscription-status-badge';
 import { SurveyStatusBadge } from '@/components/badges/survey-status-badge';
 
@@ -26,8 +25,6 @@ export function StatusCell<TData, TValue>({ ctx, variant, label }: Props<TData, 
 			return <ContributionStatusBadge status={value as ContributionStatus} />;
 		case 'payout':
 			return <PayoutStatusBadge status={value as PayoutStatus} />;
-		case 'recipient':
-			return <RecipientStatusBadge status={value as RecipientStatus} />;
 		case 'survey':
 			return <SurveyStatusBadge status={value as SurveyStatus} />;
 		case 'campaign':

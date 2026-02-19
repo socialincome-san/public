@@ -90,7 +90,9 @@ export function ContributionForm({ onSuccess, onError, onCancel, contributionId,
 		startTransition(async () => {
 			const { contributorOptions, campaignOptions } = await getContributionsOptionsAction();
 
-			if (!contributorOptions.success || !campaignOptions.success) return;
+			if (!contributorOptions.success || !campaignOptions.success) {
+				return;
+			}
 
 			const contributorEnum = getZodEnum(
 				contributorOptions.data.map((c: ContributorOption) => ({
@@ -126,11 +128,15 @@ export function ContributionForm({ onSuccess, onError, onCancel, contributionId,
 	}, []);
 
 	useEffect(() => {
-		if (!contributionId || !optionsLoaded) return;
+		if (!contributionId || !optionsLoaded) {
+			return;
+		}
 
 		startTransition(async () => {
 			const result = await getContributionAction(contributionId);
-			if (!result.success) return onError?.(result.error);
+			if (!result.success) {
+				return onError?.(result.error);
+			}
 
 			setContribution(result.data);
 

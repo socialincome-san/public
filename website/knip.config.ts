@@ -29,6 +29,7 @@ const config: KnipConfig = {
 		'@radix-ui/react-slider',
 		'@radix-ui/react-tabs',
 		'@radix-ui/react-tooltip',
+		'@radix-ui/react-toggle-group',
 		'@firebase/analytics',
 		'@sendgrid/client',
 		'@google-cloud/storage',

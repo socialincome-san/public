@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils/cn';
+import { humanize } from '@/lib/utils/string-utils';
 import { X } from 'lucide-react';
 
 type PillMultiSelectProps = {
@@ -9,10 +10,6 @@ type PillMultiSelectProps = {
 	selected?: string[];
 	onToggle: (value: string) => void;
 };
-
-function humanize(value: string) {
-	return value.replace(/_/g, ' ');
-}
 
 const pillClasses = {
 	base: 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-sm relative z-10 transition-colors',

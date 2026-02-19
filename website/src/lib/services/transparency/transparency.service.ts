@@ -99,7 +99,9 @@ export class TransparencyService extends BaseService {
 		const countryMap = new Map<CountryCode, { totalChf: number; contributors: Set<string> }>();
 		for (const c of contributions) {
 			const country = c.contributor.contact.address?.country;
-			if (!country) continue;
+			if (!country) {
+				continue;
+			}
 
 			let entry = countryMap.get(country);
 			if (!entry) {

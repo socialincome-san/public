@@ -4,6 +4,7 @@ import { createSessionAction, logoutAction } from '@/lib/server-actions/session-
 import { getByIdAndRecipient, saveChanges } from '@/lib/server-actions/survey-actions';
 import { SurveyWithRecipient } from '@/lib/services/survey/survey.types';
 import { logger } from '@/lib/utils/logger';
+import { now } from '@/lib/utils/now';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { Model } from 'survey-core';
@@ -55,7 +56,7 @@ export function useSurvey() {
 			await saveChanges(surveyId, {
 				data: data,
 				status: status,
-				completedAt: status == SurveyStatus.completed ? new Date(Date.now()) : null,
+				completedAt: status == SurveyStatus.completed ? now() : null,
 			});
 		} catch (error) {
 			if (retryCount >= 2) {
@@ -66,7 +67,7 @@ export function useSurvey() {
 			}
 			logger.error('error saving survey, retrying');
 			retryCount++;
-			window.setTimeout(() => saveSurvey(surveyId, survey, status, retryCount), 2000);
+			globalThis.setTimeout(() => saveSurvey(surveyId, survey, status, retryCount), 2000);
 		}
 	};
 

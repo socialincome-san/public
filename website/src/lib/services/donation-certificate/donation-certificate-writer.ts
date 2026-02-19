@@ -1,5 +1,6 @@
 import { Translator } from '@/lib/i18n/translator';
 import { LanguageCode } from '@/lib/types/language';
+import { now } from '@/lib/utils/now';
 import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
@@ -40,7 +41,7 @@ export class DonationCertificateWriter {
 		});
 
 		const header = translator.t('header');
-		const location = translator.t('location', { context: { date: new Date() } });
+		const location = translator.t('location', { context: { date: now() } });
 		const country = translator.t(this.donator.address?.country as string, { namespace: 'countries' });
 		const title = translator.t('title', { context: { year: this.year } });
 		const text1 = translator.t('text-1', {
@@ -88,11 +89,18 @@ export class DonationCertificateWriter {
 			pdfDocument.moveDown(6);
 			pdfDocument.fontSize(12);
 			pdfDocument.text(`${this.donator.firstName} ${this.donator.lastName}`);
-			if (this.donator.email) pdfDocument.text(this.donator.email);
-			if (this.donator.address?.street)
+			if (this.donator.email) {
+				pdfDocument.text(this.donator.email);
+			}
+			if (this.donator.address?.street) {
 				pdfDocument.text(`${this.donator.address?.street} ${this.donator.address?.number}`);
-			if (this.donator.address?.city) pdfDocument.text(`${this.donator.address?.zip} ${this.donator.address?.city}`);
-			if (this.donator.address?.country) pdfDocument.text(country);
+			}
+			if (this.donator.address?.city) {
+				pdfDocument.text(`${this.donator.address?.zip} ${this.donator.address?.city}`);
+			}
+			if (this.donator.address?.country) {
+				pdfDocument.text(country);
+			}
 
 			pdfDocument.moveDown(6);
 			pdfDocument.text(location);

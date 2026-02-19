@@ -7,22 +7,48 @@ test.beforeEach(async () => {
 
 const expected = {
 	step1:
-		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber91234567,OM-SL-001,subscriber91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber',
+		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber',
 
 	step2:
-		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Aminata,Kamara,OM-SL-001,SocialIncomeMarch2025,subscriber91234567,40,John,Badingu,OM-SL-001,SocialIncomeMarch2025,subscriber91234567,60,Mariatu,Koroma,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,60,Joseph,Conteh,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber',
+		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Aminata,Kamara,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,50,Mohamed,Bangura,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber',
 
-	step3Recipients: [
-		{ firstName: 'Aminata', lastName: 'Kamara', phoneNumber: '+41791234567', amount: 50 },
-		{ firstName: 'John', lastName: 'Badingu', phoneNumber: '+41791234567', amount: 40 },
-		{ firstName: 'Mariatu', lastName: 'Koroma', phoneNumber: '+41791234567', amount: 60 },
-		{ firstName: 'Joseph', lastName: 'Conteh', phoneNumber: '+23277111222', amount: 60 },
-		{ firstName: 'Isatu', lastName: 'Conteh', phoneNumber: '+23288765432', amount: 50 },
+	step3: [
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Aminata',
+			lastName: 'Kamara',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+41791234567',
+			recipientId: 'recipient-1',
+			status: 'paid',
+		},
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Mohamed',
+			lastName: 'Bangura',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+23277111222',
+			recipientId: 'recipient-2',
+			status: 'paid',
+		},
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Isatu',
+			lastName: 'Conteh',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+23288765432',
+			recipientId: 'recipient-3',
+			status: 'paid',
+		},
 	],
 
-	step4: 'Created 5 payouts for 2025-03',
-	step5: '[]',
-	step6: 'No recipients to update',
+	step4: 'Created 3 payouts for 2025-03',
 };
 
 test('Payout Process', async ({ page }) => {
@@ -61,18 +87,23 @@ test('Payout Process', async ({ page }) => {
 		.then((text) => {
 			const data = JSON.parse(text);
 
-			expect(data).toHaveLength(expected.step3Recipients.length);
+			expect(data).toHaveLength(expected.step3.length);
 
-			for (const r of expected.step3Recipients) {
+			for (const r of expected.step3) {
 				expect(data).toEqual(
 					expect.arrayContaining([
 						expect.objectContaining({
+							amount: r.amount,
+							amountChf: r.amountChf,
+							currency: r.currency,
 							firstName: r.firstName,
 							lastName: r.lastName,
+							paymentAt: expect.stringMatching(
+								new RegExp(`^${r.paymentAt.slice(0, 10)}`), // Only assert the YYYY-MM-DD part to avoid failures due to timezone differences.
+							),
 							phoneNumber: r.phoneNumber,
-							currency: 'SLE',
-							amount: r.amount,
-							amountChf: expect.any(Number),
+							recipientId: r.recipientId,
+							status: r.status,
 						}),
 					]),
 				);
@@ -86,23 +117,5 @@ test('Payout Process', async ({ page }) => {
 		.innerText()
 		.then((text) => {
 			expect(text).toContain(expected.step4);
-		});
-
-	await page.getByTestId('payout-step-5-button').click();
-
-	await page
-		.getByTestId('step-result-box-5')
-		.innerText()
-		.then((text) => {
-			expect(text).toContain(expected.step5);
-		});
-
-	await page.getByTestId('payout-step-6-button').click();
-
-	await page
-		.getByTestId('step-result-box-6')
-		.innerText()
-		.then((text) => {
-			expect(text).toContain(expected.step6);
 		});
 });

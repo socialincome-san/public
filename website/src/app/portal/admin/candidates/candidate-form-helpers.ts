@@ -129,7 +129,8 @@ export function buildUpdateCandidateInput(
 
 	return {
 		id: candidate.id,
-		status: schema.fields.status.value,
+		suspendedAt: schema.fields.suspendedAt.value,
+		suspensionReason: schema.fields.suspensionReason.value,
 		successorName: schema.fields.successorName.value || null,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner?.value } },
@@ -179,7 +180,8 @@ export function buildCreateCandidateInput(
 	const addressInput = buildAddressInput(contactFields);
 
 	return {
-		status: schema.fields.status.value,
+		suspendedAt: schema.fields.suspendedAt.value,
+		suspensionReason: schema.fields.suspensionReason.value,
 		successorName: schema.fields.successorName.value,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner?.value } },

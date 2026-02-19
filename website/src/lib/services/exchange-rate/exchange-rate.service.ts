@@ -1,3 +1,4 @@
+import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
@@ -72,7 +73,7 @@ export class ExchangeRateService extends BaseService {
 		}
 
 		try {
-			const oneMonthAgo = new Date();
+			const oneMonthAgo = now();
 			oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 			oneMonthAgo.setHours(0, 0, 0, 0);
 			const rates = await this.db.exchangeRate.findMany({

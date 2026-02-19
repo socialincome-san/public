@@ -1,4 +1,3 @@
-import { RecipientStatus } from '@/generated/prisma/enums';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { getCandidateService, getFirebaseAdminService } from '../../utils';
@@ -6,14 +5,12 @@ import { getCandidateService, getFirebaseAdminService } from '../../utils';
 const ADD_CANDIDATE = {
 	firstName: 'Steve',
 	lastName: 'Rogers',
-	status: RecipientStatus.waitlisted,
 	localPartnerName: 'Kenema Youth Foundation',
 };
 
 const EDIT_CANDIDATE = {
 	firstName: 'Natasha',
 	lastName: 'Romanoff',
-	status: RecipientStatus.waitlisted,
 	successorName: 'Yelena Belova',
 	callingName: 'Black Widow',
 	email: 'natasha.romanoff@example.com',
@@ -31,19 +28,16 @@ const CSV_CANDIDATES = [
 	{
 		firstName: 'Bruce',
 		lastName: 'Banner',
-		status: RecipientStatus.active,
 		localPartnerName: 'Makeni Development Initiative',
 	},
 	{
 		firstName: 'Scott',
 		lastName: 'Lang',
-		status: RecipientStatus.suspended,
 		localPartnerName: 'Makeni Development Initiative',
 	},
 	{
 		firstName: 'Clint',
 		lastName: 'Barton',
-		status: RecipientStatus.active,
 		localPartnerName: 'Bo Women Empowerment Group',
 	},
 ];
@@ -55,9 +49,6 @@ test.beforeEach(async () => {
 test('Add new candidate', async ({ page }) => {
 	await page.goto('/portal/admin/candidates');
 	await page.getByRole('button', { name: 'Add new candidate' }).click();
-
-	await page.getByTestId('form-item-status').click();
-	await page.getByRole('option', { name: 'waitlisted' }).click();
 
 	await page.getByTestId('form-item-localPartner').click();
 	await page.getByRole('option', { name: ADD_CANDIDATE.localPartnerName }).click();
@@ -72,14 +63,15 @@ test('Add new candidate', async ({ page }) => {
 	const service = await getCandidateService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	const row = result.data.tableRows.find(
 		(r) => r.firstName === ADD_CANDIDATE.firstName && r.lastName === ADD_CANDIDATE.lastName,
 	);
 
 	expect(row).toBeDefined();
-	expect(row?.status).toBe(ADD_CANDIDATE.status);
 	expect(row?.localPartnerName).toBe(ADD_CANDIDATE.localPartnerName);
 });
 
@@ -133,14 +125,15 @@ test('Edit existing candidate', async ({ page }) => {
 	const service = await getCandidateService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	const row = result.data.tableRows.find(
 		(r) => r.firstName === EDIT_CANDIDATE.firstName && r.lastName === EDIT_CANDIDATE.lastName,
 	);
 
 	expect(row).toBeDefined();
-	expect(row?.status).toBe(EDIT_CANDIDATE.status);
 	expect(row?.localPartnerName).toBe(EDIT_CANDIDATE.localPartnerName);
 
 	await page.goto('http://localhost:4000/auth');
@@ -167,7 +160,9 @@ test('Delete candidate', async ({ page }) => {
 	const service = await getCandidateService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	const deleted = result.data.tableRows.find((r) => r.firstName === 'Hawa' && r.lastName === 'Kamara');
 
@@ -190,7 +185,9 @@ test('CSV Upload', async ({ page }) => {
 	const service = await getCandidateService();
 	const result = await service.getTableView('user-2');
 
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 
 	for (const expected of CSV_CANDIDATES) {
 		const row = result.data.tableRows.find(
@@ -198,7 +195,6 @@ test('CSV Upload', async ({ page }) => {
 		);
 
 		expect(row).toBeDefined();
-		expect(row?.status).toBe(expected.status);
 		expect(row?.localPartnerName).toBe(expected.localPartnerName);
 	}
 });

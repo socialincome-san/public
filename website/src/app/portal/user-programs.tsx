@@ -1,3 +1,4 @@
+import { Badge } from '@/components/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet';
 import { ProgramPermission } from '@/generated/prisma/enums';
@@ -32,6 +33,7 @@ export async function UserPrograms({ userId }: Props) {
 							href={`/portal/programs/${program.id}/overview`}
 							title={program.programName}
 							subtitle={getCountryNameByCode(program.country)}
+							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 							footerLeft={{
 								label: 'Paid out',
 								currency: program.payoutCurrency,
@@ -58,6 +60,7 @@ export async function UserPrograms({ userId }: Props) {
 								href={`/portal/programs/${program.id}/overview`}
 								title={program.programName}
 								subtitle={getCountryNameByCode(program.country)}
+								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 								footerLeft={{
 									label: 'Paid out',
 									currency: program.payoutCurrency,

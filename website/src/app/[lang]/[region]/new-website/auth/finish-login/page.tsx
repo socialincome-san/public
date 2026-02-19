@@ -39,7 +39,9 @@ export default function FinishLoginPage() {
 				localStorage.removeItem('loginEmail');
 
 				const user = auth.currentUser;
-				if (!user) throw new Error('No user after login');
+				if (!user) {
+					throw new Error('No user after login');
+				}
 
 				const idToken = await user.getIdToken(true);
 				const result = await createSessionAction(idToken);

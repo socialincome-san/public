@@ -358,7 +358,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 		);
 
 		const arraysEqual = React.useCallback((a: string[], b: string[]): boolean => {
-			if (a.length !== b.length) return false;
+			if (a.length !== b.length) {
+				return false;
+			}
 			const sortedA = [...a].sort();
 			const sortedB = [...b].sort();
 			return sortedA.every((val, index) => val === sortedB[index]);
@@ -408,7 +410,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 		const [screenSize, setScreenSize] = React.useState<'mobile' | 'tablet' | 'desktop'>('desktop');
 
 		React.useEffect(() => {
-			if (typeof window === 'undefined') return;
+			if (typeof window === 'undefined') {
+				return;
+			}
 			const handleResize = () => {
 				const width = window.innerWidth;
 				if (width < 640) {
@@ -502,7 +506,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 		};
 
 		const getAllOptions = React.useCallback((): MultiSelectOption[] => {
-			if (options.length === 0) return [];
+			if (options.length === 0) {
+				return [];
+			}
 			let allOptions: MultiSelectOption[];
 			if (isGroupedOptions(options)) {
 				allOptions = options.flatMap((group) => group.options);
@@ -549,8 +555,12 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 		);
 
 		const filteredOptions = React.useMemo(() => {
-			if (!searchable || !searchValue) return options;
-			if (options.length === 0) return [];
+			if (!searchable || !searchValue) {
+				return options;
+			}
+			if (options.length === 0) {
+				return [];
+			}
 			if (isGroupedOptions(options)) {
 				return options
 					.map((group) => ({
@@ -582,9 +592,13 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 		};
 
 		const toggleOption = (optionValue: string) => {
-			if (disabled) return;
+			if (disabled) {
+				return;
+			}
 			const option = getOptionByValue(optionValue);
-			if (option?.disabled) return;
+			if (option?.disabled) {
+				return;
+			}
 			const newSelectedValues = selectedValues.includes(optionValue)
 				? selectedValues.filter((value) => value !== optionValue)
 				: [...selectedValues, optionValue];
@@ -596,25 +610,33 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 		};
 
 		const handleClear = () => {
-			if (disabled) return;
+			if (disabled) {
+				return;
+			}
 			setSelectedValues([]);
 			onValueChange([]);
 		};
 
 		const handleTogglePopover = () => {
-			if (disabled) return;
+			if (disabled) {
+				return;
+			}
 			setIsPopoverOpen((prev) => !prev);
 		};
 
 		const clearExtraOptions = () => {
-			if (disabled) return;
+			if (disabled) {
+				return;
+			}
 			const newSelectedValues = selectedValues.slice(0, responsiveSettings.maxCount);
 			setSelectedValues(newSelectedValues);
 			onValueChange(newSelectedValues);
 		};
 
 		const toggleAll = () => {
-			if (disabled) return;
+			if (disabled) {
+				return;
+			}
 			const allOptions = getAllOptions().filter((option) => !option.disabled);
 			if (selectedValues.length === allOptions.length) {
 				handleClear();
@@ -630,7 +652,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 		};
 
 		React.useEffect(() => {
-			if (!resetOnDefaultValueChange) return;
+			if (!resetOnDefaultValueChange) {
+				return;
+			}
 			const prevDefaultValue = prevDefaultValueRef.current;
 			if (!arraysEqual(prevDefaultValue, defaultValue)) {
 				if (!arraysEqual(selectedValues, defaultValue)) {

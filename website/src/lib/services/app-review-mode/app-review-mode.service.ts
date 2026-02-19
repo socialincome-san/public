@@ -1,4 +1,5 @@
-import { Gender, PaymentProvider, PayoutInterval, Prisma, RecipientStatus } from '@/generated/prisma/client';
+import { Gender, PaymentProvider, PayoutInterval, Prisma } from '@/generated/prisma/client';
+import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
@@ -30,14 +31,15 @@ export class AppReviewModeService extends BaseService {
 			legacyFirestoreId: null,
 			contactId: 'tony-stark-contact',
 			startDate: new Date('1970-05-29T00:00:00.000Z'),
-			status: RecipientStatus.active,
+			suspendedAt: null,
+			suspensionReason: null,
 			successorName: 'Pepper Potts',
 			termsAccepted: true,
 			paymentInformationId: 'stark-payment-info',
 			programId: 'avengers-program',
 			localPartnerId: 'stark-industries-partner',
-			createdAt: new Date(),
-			updatedAt: new Date(),
+			createdAt: now(),
+			updatedAt: now(),
 
 			localPartner: {
 				id: 'stark-industries-partner',
@@ -46,8 +48,8 @@ export class AppReviewModeService extends BaseService {
 				name: 'Stark Industries',
 				causes: [],
 				contactId: 'stark-industries-contact',
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: now(),
+				updatedAt: now(),
 			},
 
 			program: {
@@ -63,8 +65,8 @@ export class AppReviewModeService extends BaseService {
 				country: {
 					isoCode: 'US',
 				},
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: now(),
+				updatedAt: now(),
 			},
 
 			contact: {
@@ -80,14 +82,14 @@ export class AppReviewModeService extends BaseService {
 				addressId: 'stark-tower-address',
 				phoneId: 'tony-stark-phone',
 				isInstitution: false,
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: now(),
+				updatedAt: now(),
 				phone: {
 					id: 'tony-stark-phone',
 					number: phone,
 					hasWhatsApp: true,
-					createdAt: new Date(),
-					updatedAt: new Date(),
+					createdAt: now(),
+					updatedAt: now(),
 				},
 			},
 
@@ -96,14 +98,14 @@ export class AppReviewModeService extends BaseService {
 				code: 'IRONMAN',
 				provider: PaymentProvider.orange_money,
 				phoneId: 'ironman-payment-phone',
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: now(),
+				updatedAt: now(),
 				phone: {
 					id: 'ironman-payment-phone',
 					number: phone,
 					hasWhatsApp: true,
-					createdAt: new Date(),
-					updatedAt: new Date(),
+					createdAt: now(),
+					updatedAt: now(),
 				},
 			},
 		};

@@ -10,6 +10,7 @@
  */
 
 import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@/generated/prisma/client';
+import { titleCase } from '@/lib/utils/string-utils';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
@@ -295,8 +296,6 @@ export class StripeService extends BaseService {
 	}
 
 	private getPaymentMethod(paymentMethod: Stripe.PaymentMethod): StripePaymentMethod {
-		const titleCase = (s: string) =>
-			s.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ' ' + d.toUpperCase()));
 		if (paymentMethod.type === 'card' && paymentMethod.card) {
 			return {
 				type: 'card',

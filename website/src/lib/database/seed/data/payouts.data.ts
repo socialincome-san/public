@@ -36,7 +36,7 @@ export const payoutsData: Payout[] = [
 		amountChf: new Prisma.Decimal(30),
 		currency: 'SLE',
 		paymentAt: new Date('2024-06-01'),
-		status: PayoutStatus.created,
+		status: PayoutStatus.paid,
 		phoneNumber: '+23288765432',
 		comments: 'Pending confirmation from partner.',
 		recipientId: 'recipient-3',

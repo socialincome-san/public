@@ -69,28 +69,6 @@ export type PayoutForecastTableView = {
 	tableRows: PayoutForecastTableViewRow[];
 };
 
-export type PreviewPayout = {
-	recipientId: string;
-	firstName: string;
-	lastName: string;
-	phoneNumber: string | null;
-	currency: string;
-	amount: number;
-	amountChf: number | null;
-	paymentAt: Date;
-	status: PayoutStatus;
-};
-
-export type RecipientCompletionPreview = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	paidCount: number;
-	programDurationInMonths: number;
-	remaining: number;
-	isCompleted: boolean;
-};
-
 export type PayoutPayload = {
 	id: string;
 	recipient: {

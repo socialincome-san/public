@@ -116,7 +116,9 @@ export default function CampaignsForm({
 		// load options for program
 		startTransition(async () => {
 			const programs = await getProgramsOptions();
-			if (!programs.success) return;
+			if (!programs.success) {
+				return;
+			}
 			setOptions(programs.data);
 		});
 	}, []);

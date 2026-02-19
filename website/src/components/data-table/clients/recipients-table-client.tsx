@@ -87,8 +87,8 @@ export function RecipientsTableClient({ rows, error, programId, readOnly, actorK
 				onOpenChange={setIsCsvUploadDialogOpen}
 				title="Upload recipients CSV"
 				template={{
-					headers: ['firstName', 'lastName', 'status', 'programId', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'active', 'program_id_here', 'local_partner_id_here'],
+					headers: ['firstName', 'lastName', 'programId', 'localPartnerId'],
+					exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
 					filename: 'recipients-import-template.csv',
 				}}
 				onImport={(file) => importRecipientsCsvAction(file)}

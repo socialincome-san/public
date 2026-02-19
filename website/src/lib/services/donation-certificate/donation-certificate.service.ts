@@ -248,7 +248,9 @@ export class DonationCertificateService extends BaseService {
 						default:
 							creationWithFailures.push(contributorsId);
 					}
-				} else successCount++;
+				} else {
+					successCount++;
+				}
 			}),
 		);
 		if (successCount === 0) {

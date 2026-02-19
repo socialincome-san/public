@@ -25,7 +25,9 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 		if (!hideOverlay) {
 			id = setTimeout(() => setHideOverlay(true), OVERLAY_FADE_OUT_DELAY);
 		}
-		if (id) return () => clearTimeout(id);
+		if (id) {
+			return () => clearTimeout(id);
+		}
 	}, [hideOverlay, setHideOverlay]);
 
 	useEventListener('mousemove', () => setHideOverlay(false));

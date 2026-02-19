@@ -3,7 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
-import { PaymentProvider, RecipientStatus } from '@/generated/prisma/enums';
+import { PaymentProvider } from '@/generated/prisma/enums';
 import { Actor } from '@/lib/firebase/current-account';
 import {
 	createCandidateAction,
@@ -30,7 +30,8 @@ type CandidateFormProps = {
 export type CandidateFormSchema = {
 	label: string;
 	fields: {
-		status: FormField;
+		suspendedAt: FormField;
+		suspensionReason: FormField;
 		successorName: FormField;
 		termsAccepted: FormField;
 		paymentInformation: {
@@ -50,10 +51,13 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): CandidateFormS
 	const base: CandidateFormSchema = {
 		label: 'Candidates',
 		fields: {
-			status: {
-				placeholder: 'Status',
-				label: 'Status',
-				zodSchema: z.nativeEnum(RecipientStatus),
+			suspendedAt: {
+				label: 'Suspended At',
+				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
+			},
+			suspensionReason: {
+				label: 'Suspension Reason',
+				zodSchema: z.string().optional(),
 			},
 			successorName: {
 				placeholder: 'Successor',
@@ -123,7 +127,8 @@ export function CandidateForm({
 				setCandidate(result.data);
 				const newSchema = { ...formSchema };
 				const contactValues = getContactValuesFromPayload(result.data.contact, newSchema.fields.contact.fields);
-				newSchema.fields.status.value = result.data.status;
+				newSchema.fields.suspendedAt.value = result.data.suspendedAt;
+				newSchema.fields.suspensionReason.value = result.data.suspensionReason;
 				newSchema.fields.successorName.value = result.data.successorName;
 				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
 				if (newSchema.fields.localPartner) {
@@ -207,7 +212,9 @@ export function CandidateForm({
 	useEffect(() => {
 		startTransition(async () => {
 			const { localPartners } = await getCandidateOptions();
-			if (!localPartners.success) return;
+			if (!localPartners.success) {
+				return;
+			}
 			setOptions(localPartners.data);
 		});
 	}, []);

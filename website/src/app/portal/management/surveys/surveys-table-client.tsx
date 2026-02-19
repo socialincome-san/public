@@ -5,6 +5,7 @@ import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import DataTable from '@/components/data-table/data-table';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
+import { ClipboardListIcon } from 'lucide-react';
 import { useState } from 'react';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';
 import { SurveyFormDialog } from './survey-form-dialog';
@@ -47,7 +48,10 @@ export function SurveysTableClient({ rows, error }: { rows: SurveyTableViewRow[]
 				actions={
 					<div className="flex gap-2">
 						<Button onClick={openEmptyForm}>Add survey</Button>
-						<Button onClick={() => setIsGenerationDialogOpen(true)}>Generate surveys</Button>
+						<Button variant="outline" onClick={() => setIsGenerationDialogOpen(true)}>
+							Generate surveys
+							<ClipboardListIcon />
+						</Button>
 					</div>
 				}
 				searchKeys={['name', 'recipientName', 'programName']}

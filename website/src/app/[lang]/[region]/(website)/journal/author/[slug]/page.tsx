@@ -36,7 +36,9 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 	const { slug, lang, region } = await props.params;
 
 	const authorResult = await storyblokService.getAuthor(slug, lang);
-	if (!authorResult.success) return null;
+	if (!authorResult.success) {
+		return null;
+	}
 	const author = authorResult.data;
 
 	const authorId = author.uuid;

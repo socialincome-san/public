@@ -1,5 +1,6 @@
 'use client';
 
+import { now } from '@/lib/utils/now';
 import { CellContext } from '@tanstack/react-table';
 import { differenceInYears } from 'date-fns';
 
@@ -13,7 +14,7 @@ function calculateAge(date: Date | string | null): number | null {
 		return null;
 	}
 
-	const today = new Date();
+	const today = now();
 	const age = differenceInYears(today, birthDate);
 
 	return age >= 0 ? age : null;

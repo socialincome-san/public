@@ -13,7 +13,8 @@ import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode
 import _ from 'lodash';
 import { useEffect, useState, useTransition } from 'react';
 
-const CURRENT_YEAR = new Date().getFullYear();
+import { now } from '@/lib/utils/now';
+const CURRENT_YEAR = now().getFullYear();
 const LANGUAGES: LanguageCode[] = ['en', 'de', 'fr', 'it'];
 export default function GenerateDonationCertificatesDialog({
 	open,
@@ -47,8 +48,11 @@ export default function GenerateDonationCertificatesDialog({
 		setError(undefined);
 		startTransition(async () => {
 			const result = await generateDonationCertificates(year, selectedContributors, language);
-			if (!result.success) setError(result.error);
-			else setSuccess(result.data);
+			if (!result.success) {
+				setError(result.error);
+			} else {
+				setSuccess(result.data);
+			}
 		});
 	};
 

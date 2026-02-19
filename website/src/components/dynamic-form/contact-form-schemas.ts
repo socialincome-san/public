@@ -1,6 +1,7 @@
 import { Gender } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { now } from '@/lib/utils/now';
 import z from 'zod';
 import { FormSchema } from './dynamic-form';
 import { getZodEnum } from './helper';
@@ -40,7 +41,7 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 			},
 			dateOfBirth: {
 				label: 'Date of birth',
-				zodSchema: z.date().max(new Date(), { message: 'Too young!' }).optional(),
+				zodSchema: z.date().max(now(), { message: 'Too young!' }).optional(),
 			},
 			profession: {
 				placeholder: 'Profession',

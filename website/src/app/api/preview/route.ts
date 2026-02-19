@@ -11,7 +11,9 @@ const DEFAULT_REGION = 'int';
 function getLanguage(slug: string | null) {
 	if (slug) {
 		for (let lang of ALLOWED_LANGUAGES) {
-			if (slug.toLowerCase().startsWith(lang.toLowerCase())) return lang;
+			if (slug.toLowerCase().startsWith(lang.toLowerCase())) {
+				return lang;
+			}
 		}
 	}
 	return DEFAULT_LANGUAGE;
@@ -26,7 +28,9 @@ function validateSlug(slug: string | undefined | null) {
 }
 
 function removeLanguagePrefix(slug: string | null, language: string) {
-	if (!slug) return slug;
+	if (!slug) {
+		return slug;
+	}
 	const lowerSlug = slug.toLowerCase();
 	const lowerLang = language.toLowerCase();
 	if (lowerSlug === lowerLang || lowerSlug.startsWith(`${lowerLang}/`)) {

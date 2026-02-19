@@ -17,7 +17,9 @@ export class FirebaseSessionService extends BaseService {
 			});
 
 			const verified = await this.verifySessionCookie(cookie);
-			if (!verified.success) return this.resultFail('invalid-token');
+			if (!verified.success) {
+				return this.resultFail('invalid-token');
+			}
 
 			return this.resultOk(cookie);
 		} catch {
@@ -39,10 +41,14 @@ export class FirebaseSessionService extends BaseService {
 	}
 
 	async createSessionAndSetCookie(idToken: string): Promise<ServiceResult<boolean>> {
-		if (!idToken) return this.resultFail('missing-id-token');
+		if (!idToken) {
+			return this.resultFail('missing-id-token');
+		}
 
 		const result = await this.createSessionCookie(idToken);
-		if (!result.success) return result;
+		if (!result.success) {
+			return result;
+		}
 
 		await this.setSessionCookie(result.data);
 		return this.resultOk(true);

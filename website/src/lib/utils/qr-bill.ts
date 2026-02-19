@@ -37,9 +37,12 @@ function calculateCheckDigit(reference: string): number {
  * @returns The complete QR bill reference with check digit
  */
 function generateQrBillReference(contributorCreatedAt: string, contributionCreatedAt: string): string {
-	if (contributorCreatedAt.length > CONTRIBUTOR_REFERENCE_ID_LENGTH) throw new Error('contributorCreatedAt too long');
-	if (contributionCreatedAt.length > CONTRIBUTION_REFERENCE_ID_LENGTH)
+	if (contributorCreatedAt.length > CONTRIBUTOR_REFERENCE_ID_LENGTH) {
+		throw new Error('contributorCreatedAt too long');
+	}
+	if (contributionCreatedAt.length > CONTRIBUTION_REFERENCE_ID_LENGTH) {
 		throw new Error('contributionCreatedAt too long, should be timestamp in seconds');
+	}
 
 	// Create the base reference without check digit
 	const baseReference = `000${contributorCreatedAt}${contributionCreatedAt}`;

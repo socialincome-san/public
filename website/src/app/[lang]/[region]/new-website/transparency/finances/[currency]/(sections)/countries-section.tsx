@@ -3,6 +3,7 @@ import { CountryFlag } from '@/components/country-flag';
 import { Progress } from '@/components/progress';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributionsByCountry } from '@/lib/services/transparency/transparency.types';
+import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type CountriesSectionProps = {
 	countries: ContributionsByCountry[];
@@ -10,15 +11,6 @@ type CountriesSectionProps = {
 	currency: WebsiteCurrency;
 	lang: WebsiteLanguage;
 };
-
-function formatCurrency(amount: number, currency: string, lang: WebsiteLanguage): string {
-	return new Intl.NumberFormat(lang, {
-		style: 'currency',
-		currency,
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 0,
-	}).format(amount);
-}
 
 function formatNumber(value: number, lang: WebsiteLanguage): string {
 	return new Intl.NumberFormat(lang).format(value);
@@ -40,7 +32,7 @@ export function CountriesSection({ countries, exchangeRate, currency, lang }: Co
 										<span className="font-medium">{country.country}</span>
 									</div>
 									<div className="text-right">
-										<span className="font-semibold">{formatCurrency(totalConverted, currency, lang)}</span>
+										<span className="font-semibold">{formatCurrencyLocale(totalConverted, currency, lang)}</span>
 										<span className="text-muted-foreground ml-2 text-sm">
 											({formatNumber(country.contributorCount, lang)} contributors)
 										</span>
