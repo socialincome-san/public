@@ -52,7 +52,7 @@ export default function FinishLoginPage() {
 					return;
 				}
 
-				router.replace(`/${NEW_WEBSITE_SLUG}/auth/my-account`);
+				router.replace(`/${NEW_WEBSITE_SLUG}/auth/after-login`);
 			} catch {
 				setStatus('error');
 			}

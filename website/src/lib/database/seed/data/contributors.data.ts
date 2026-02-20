@@ -28,7 +28,7 @@ export const contributorsData: Contributor[] = [
 	{
 		id: 'contributor-3',
 		legacyFirestoreId: null,
-		accountId: 'account-3',
+		accountId: 'account-9',
 		contactId: 'contact-3',
 		referral: ContributorReferralSource.social_media,
 		paymentReferenceId: null,
@@ -69,6 +69,18 @@ export const contributorsData: Contributor[] = [
 		referral: ContributorReferralSource.other,
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-006',
+		needsOnboarding: false,
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'contributor-7',
+		legacyFirestoreId: null,
+		accountId: 'account-13',
+		contactId: 'contact-31',
+		referral: ContributorReferralSource.family_and_friends,
+		paymentReferenceId: null,
+		stripeCustomerId: 'stripe-cust-007',
 		needsOnboarding: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null

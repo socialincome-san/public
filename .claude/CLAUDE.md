@@ -91,11 +91,12 @@ npm run format-code           # Prettier
 
 ## Test Accounts (Local Dev)
 
-| Role          | Email              | Route          |
-| ------------- | ------------------ | -------------- |
-| Contributor   | test@dashboard.org | /dashboard     |
-| User          | test@portal.org    | /portal        |
-| Local Partner | test@partner.org   | /partner-space |
+| Role               | Email              | Route               |
+| ------------------ | ------------------ | ------------------- |
+| Contributor        | test@dashboard.org | /dashboard          |
+| User               | test@portal.org    | /portal             |
+| Local Partner      | test@partner.org   | /partner-space      |
+| User + Contributor | test@combined.org  | /portal, /dashboard |
 
 ## Resources
 

@@ -36,11 +36,3 @@ export const getAuthenticatedLocalPartnerOrRedirect = async (): Promise<LocalPar
 	}
 	return partner;
 };
-
-export const getAuthenticatedLocalPartnerOrThrow = async (): Promise<LocalPartnerSession> => {
-	const partner = await getCurrentLocalPartner();
-	if (!partner) {
-		throw new Error('No authenticated local partner found');
-	}
-	return partner;
-};

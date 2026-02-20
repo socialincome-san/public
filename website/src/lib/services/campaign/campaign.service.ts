@@ -289,6 +289,26 @@ export class CampaignService extends BaseService {
 		}
 	}
 
+	async getActiveCampaignForProgram(programId: string): Promise<ServiceResult<Campaign>> {
+		try {
+			const campaign = await this.db.campaign.findFirst({
+				where: {
+					programId,
+					isActive: true,
+				},
+			});
+
+			if (campaign) {
+				return this.resultOk(campaign);
+			}
+
+			return this.getFallbackCampaign();
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch campaign for program: ${JSON.stringify(error)}`);
+		}
+	}
+
 	private getCampaignLink(id: string, legacyFirestoreId: string | null): string {
 		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
 		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${legacyFirestoreId || id}`;

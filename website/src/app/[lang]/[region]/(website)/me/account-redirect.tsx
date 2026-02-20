@@ -1,13 +1,18 @@
-import { getCurrentSession } from '@/lib/firebase/current-account';
+import { getCurrentSessions } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/ui';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-export const AccountRedirect = async ({ lang }: { lang: WebsiteLanguage }) => {
+type Props = {
+	lang: WebsiteLanguage;
+};
+
+export const AccountRedirect = async ({ lang }: Props) => {
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-login'] });
-	const session = await getCurrentSession();
+	const sessions = await getCurrentSessions();
+	const session = sessions[0] ?? null; //this is on the old website. The old website does not support multiple sessions.
 	const sessionType = session?.type;
 
 	if (sessionType === 'contributor') {

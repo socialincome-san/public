@@ -361,6 +361,49 @@ export class ContributorService extends BaseService {
 		}
 	}
 
+	async getOrCreateContributorForAccount(
+		accountId: string,
+		stripeCustomerId: string,
+		contactId: string,
+	): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> {
+		try {
+			const existing = await this.db.contributor.findUnique({
+				where: { accountId },
+				include: { contact: true },
+			});
+
+			if (existing) {
+				if (!existing.stripeCustomerId) {
+					await this.updateStripeCustomerId(existing.id, stripeCustomerId);
+					const updated = await this.db.contributor.findUnique({
+						where: { id: existing.id },
+						include: { contact: true },
+					});
+					// Prefer freshly fetched; if null (e.g. race), return existing with the id we just set
+					const contributor = updated ?? { ...existing, stripeCustomerId };
+					return this.resultOk({ contributor, isNewContributor: false });
+				}
+				return this.resultOk({ contributor: existing, isNewContributor: false });
+			}
+
+			const contributor = await this.db.contributor.create({
+				data: {
+					account: { connect: { id: accountId } },
+					contact: { connect: { id: contactId } },
+					stripeCustomerId,
+					referral: ContributorReferralSource.other,
+					needsOnboarding: false,
+				},
+				include: { contact: true },
+			});
+
+			return this.resultOk({ contributor, isNewContributor: true });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not get or create contributor for account: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getOrCreateReferenceIdByEmail(email: string): Promise<ServiceResult<string>> {
 		try {
 			let referenceId: string;
