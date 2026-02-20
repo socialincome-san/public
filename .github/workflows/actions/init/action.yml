@@ -43,7 +43,7 @@ runs:
 
     - name: Create credentials JSON file
       if: inputs.firebaseServiceAccountJSON
-      uses: jsdaniell/create-json@6c509494d7b009b842fb0a158852ba244920bc38 # v1.2.2
+      uses: jsdaniell/create-json@b8e77fa01397ca39cc4a6198cc29a3be5481afef # v1.2.3
       with:
         name: credentials.json
         json: ${{ inputs.firebaseServiceAccountJSON }}
