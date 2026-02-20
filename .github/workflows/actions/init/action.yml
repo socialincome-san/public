@@ -21,7 +21,7 @@ runs:
         gpg --keyserver keyserver.ubuntu.com --recv-keys 5BE8A3F6C8A5C01D106C0AD820B1A390B168D356
 
     - name: Setup Node.js
-      uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2
+      uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
       with:
         version: 2025.6.0
         install: ${{ inputs.installDependencies == 'true' }}
