@@ -51,7 +51,7 @@
 		"firebase-tools": "15.6.0",
 		"prettier": "3.8.1",
 		"prettier-plugin-organize-imports": "4.3.0",
-		"prettier-plugin-tailwindcss": "0.6.9",
+		"prettier-plugin-tailwindcss": "0.7.2",
 		"ssl-proxy": "1.0.3",
 		"typescript": "5.9.3"
 	},
