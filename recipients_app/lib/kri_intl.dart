@@ -594,6 +594,24 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
 
   @override
   String get cancelButtonLabel => "TAP YA";
+
+  @override
+  String get collapsedHint => "Collapse";
+
+  @override
+  String get expandedHint => "Expand";
+
+  @override
+  String get expansionTileCollapsedHint => "Collapse for more details";
+
+  @override
+  String get expansionTileCollapsedTapHint => "Collapse for more details";
+
+  @override
+  String get expansionTileExpandedHint => "Expand for more details";
+
+  @override
+  String get expansionTileExpandedTapHint => "Expand for more details";
 }
 
 // #docregion Delegate

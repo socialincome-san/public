@@ -1,5 +1,6 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
+import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/demo_manager.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
@@ -21,6 +22,11 @@ class TermsAndConditionsPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: Text(context.l10n.account),
+        leading: BackButton(
+          onPressed: () {
+            context.read<AuthCubit>().logout();
+          },
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -40,17 +46,17 @@ class TermsAndConditionsPage extends StatelessWidget {
                         TextSpan(
                           text: context.l10n.createAccountInfo,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         TextSpan(
                           text: context.l10n.privacyPolicy,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
                               const url = "https://socialincome.org/privacy";
@@ -88,15 +94,11 @@ class TermsAndConditionsPage extends StatelessWidget {
               children: [
                 ButtonBig(
                   onPressed: () {
-                    final updated = context.read<AuthCubit>().state.recipient?.copyWith(
-                          termsAccepted: true,
-                        );
-
-                    if (updated != null) {
-                      context.read<AuthCubit>().updateRecipient(updated);
-                    }
+                    context.read<AuthCubit>().updateRecipient(
+                      selfUpdate: const RecipientSelfUpdate(termsAccepted: true),
+                    );
                   },
-                  label: demoManager.isDemoEnabled ? context.l10n.createAccountDemo : context.l10n.createAccount,
+                  label: demoManager.isDemoEnabled ? context.l10n.createAccountDemo : context.l10n.createAccount, // TODO: change label to "Accept and Continue" or similar
                 ),
               ],
             ),

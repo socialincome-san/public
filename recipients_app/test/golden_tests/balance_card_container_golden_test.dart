@@ -1,8 +1,14 @@
 import "package:alchemist/alchemist.dart";
-import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/payment/payment.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
+import "package:app/data/enums/balance_card_status.dart";
+import "package:app/data/enums/payout_status.dart";
+import "package:app/data/enums/payout_ui_status.dart";
+import "package:app/data/models/currency.dart";
+import "package:app/data/models/payment/mapped_payout.dart";
+import "package:app/data/models/payment/next_payout_data.dart";
+import "package:app/data/models/payment/payout.dart";
+import "package:app/data/models/payment/payouts_ui_state.dart";
 import "package:app/view/widgets/income/income.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mocktail/mocktail.dart";
 
@@ -10,10 +16,10 @@ import "../helpers/golden_test_device_scenario.dart";
 import "../helpers/pump_app.dart";
 
 void main() {
-  late PaymentsCubit mockPaymentsCubit;
+  late PayoutsCubit mockPayoutsCubit;
 
   setUp(() {
-    mockPaymentsCubit = MockPaymentsCubit();
+    mockPayoutsCubit = MockPayoutsCubit();
   });
 
   group("ListTile Golden Tests", () {
@@ -21,38 +27,48 @@ void main() {
       "renders correctly",
       fileName: "balance_card_confirmed",
       pumpWidget: (tester, widget) {
-        when(() => mockPaymentsCubit.state).thenReturn(
-          PaymentsState(
-            paymentsUiState: PaymentsUiState(
+        when(() => mockPayoutsCubit.state).thenReturn(
+          PayoutsState(
+            payoutsUiState: PayoutsUiState(
               status: BalanceCardStatus.allConfirmed,
-              nextPayment: const NextPaymentData(
+              nextPayout: const NextPayoutData(
                 amount: 100,
-                currency: "SLE",
-                daysToPayment: 10,
+                currency: Currency.sle,
+                daysToPayout: 10,
               ),
-              confirmedPaymentsCount: 2,
-              unconfirmedPaymentsCount: 0,
-              payments: [
-                MappedPayment(
-                  payment: SocialIncomePayment(
+              confirmedPayoutsCount: 2,
+              unconfirmedPayoutsCount: 0,
+              payouts: [
+                MappedPayout(
+                  payout: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.confirmed,
+                  uiStatus: PayoutUiStatus.confirmed,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.confirmed,
+                  uiStatus: PayoutUiStatus.confirmed,
                 ),
               ],
             ),
           ),
         );
 
-        return tester.pumpApp(widget, paymentsCubit: mockPaymentsCubit);
+        return tester.pumpApp(widget, paymentsCubit: mockPayoutsCubit);
       },
       builder: () => GoldenTestDeviceScenario(
         name: "only confirmed payments",
@@ -64,38 +80,48 @@ void main() {
       "renders correctly",
       fileName: "balance_card_confirmed_and_paid",
       pumpWidget: (tester, widget) {
-        when(() => mockPaymentsCubit.state).thenReturn(
-          PaymentsState(
-            paymentsUiState: PaymentsUiState(
+        when(() => mockPayoutsCubit.state).thenReturn(
+          PayoutsState(
+            payoutsUiState: PayoutsUiState(
               status: BalanceCardStatus.allConfirmed,
-              nextPayment: const NextPaymentData(
+              nextPayout: const NextPayoutData(
                 amount: 100,
-                currency: "SLE",
-                daysToPayment: 10,
+                currency: Currency.sle,
+                daysToPayout: 10,
               ),
-              confirmedPaymentsCount: 1,
-              unconfirmedPaymentsCount: 1,
-              payments: [
-                MappedPayment(
-                  payment: SocialIncomePayment(
+              confirmedPayoutsCount: 1,
+              unconfirmedPayoutsCount: 1,
+              payouts: [
+                MappedPayout(
+                  payout: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.toReview,
+                  uiStatus: PayoutUiStatus.toReview,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.confirmed,
+                  uiStatus: PayoutUiStatus.confirmed,
                 ),
               ],
             ),
           ),
         );
 
-        return tester.pumpApp(widget, paymentsCubit: mockPaymentsCubit);
+        return tester.pumpApp(widget, paymentsCubit: mockPayoutsCubit);
       },
       builder: () => GoldenTestDeviceScenario(
         name: "confirmed and in review payments",
@@ -107,38 +133,48 @@ void main() {
       "renders correctly",
       fileName: "balance_card_confirmed_and_contested",
       pumpWidget: (tester, widget) {
-        when(() => mockPaymentsCubit.state).thenReturn(
-          PaymentsState(
-            paymentsUiState: PaymentsUiState(
+        when(() => mockPayoutsCubit.state).thenReturn(
+          PayoutsState(
+            payoutsUiState: PayoutsUiState(
               status: BalanceCardStatus.allConfirmed,
-              nextPayment: const NextPaymentData(
+              nextPayout: const NextPayoutData(
                 amount: 100,
-                currency: "SLE",
-                daysToPayment: 10,
+                currency: Currency.sle,
+                daysToPayout: 10,
               ),
-              confirmedPaymentsCount: 1,
-              unconfirmedPaymentsCount: 1,
-              payments: [
-                MappedPayment(
-                  payment: SocialIncomePayment(
+              confirmedPayoutsCount: 1,
+              unconfirmedPayoutsCount: 1,
+              payouts: [
+                MappedPayout(
+                  payout: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.contested,
+                  uiStatus: PayoutUiStatus.contested,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.confirmed,
+                  uiStatus: PayoutUiStatus.confirmed,
                 ),
               ],
             ),
           ),
         );
 
-        return tester.pumpApp(widget, paymentsCubit: mockPaymentsCubit);
+        return tester.pumpApp(widget, paymentsCubit: mockPayoutsCubit);
       },
       builder: () => GoldenTestDeviceScenario(
         name: "confirmed and contested payments",
@@ -150,52 +186,72 @@ void main() {
       "renders correctly",
       fileName: "balance_card_confirmed_and_triple_inreview",
       pumpWidget: (tester, widget) {
-        when(() => mockPaymentsCubit.state).thenReturn(
-          PaymentsState(
-            paymentsUiState: PaymentsUiState(
+        when(() => mockPayoutsCubit.state).thenReturn(
+          PayoutsState(
+            payoutsUiState: PayoutsUiState(
               status: BalanceCardStatus.onHold,
-              nextPayment: const NextPaymentData(
+              nextPayout: const NextPayoutData(
                 amount: 100,
-                currency: "SLE",
-                daysToPayment: 10,
+                currency: Currency.sle,
+                daysToPayout: 10,
               ),
-              confirmedPaymentsCount: 1,
-              unconfirmedPaymentsCount: 3,
-              payments: [
-                MappedPayment(
-                  payment: SocialIncomePayment(
+              confirmedPayoutsCount: 1,
+              unconfirmedPayoutsCount: 3,
+              payouts: [
+                MappedPayout(
+                  payout: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 10)),
+                    paymentAt: DateTime(2023, 10).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 10).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.onHoldToReview,
+                  uiStatus: PayoutUiStatus.onHoldToReview,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 9)),
+                    paymentAt: DateTime(2023, 9).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 9).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.onHoldToReview,
+                  uiStatus: PayoutUiStatus.onHoldToReview,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "3",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "3",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.onHoldToReview,
+                  uiStatus: PayoutUiStatus.onHoldToReview,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "4",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "4",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.confirmed,
+                  uiStatus: PayoutUiStatus.confirmed,
                 ),
               ],
             ),
           ),
         );
 
-        return tester.pumpApp(widget, paymentsCubit: mockPaymentsCubit);
+        return tester.pumpApp(widget, paymentsCubit: mockPayoutsCubit);
       },
       builder: () => GoldenTestDeviceScenario(
         name: "confirmed and contested payments",
@@ -207,52 +263,72 @@ void main() {
       "renders correctly",
       fileName: "balance_card_confirmed_and_triple_contested",
       pumpWidget: (tester, widget) {
-        when(() => mockPaymentsCubit.state).thenReturn(
-          PaymentsState(
-            paymentsUiState: PaymentsUiState(
+        when(() => mockPayoutsCubit.state).thenReturn(
+          PayoutsState(
+            payoutsUiState: PayoutsUiState(
               status: BalanceCardStatus.allConfirmed,
-              nextPayment: const NextPaymentData(
+              nextPayout: const NextPayoutData(
                 amount: 100,
-                currency: "SLE",
-                daysToPayment: 10,
+                currency: Currency.sle,
+                daysToPayout: 10,
               ),
-              confirmedPaymentsCount: 1,
-              unconfirmedPaymentsCount: 0,
-              payments: [
-                MappedPayment(
-                  payment: SocialIncomePayment(
+              confirmedPayoutsCount: 1,
+              unconfirmedPayoutsCount: 0,
+              payouts: [
+                MappedPayout(
+                  payout: Payout(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 10)),
+                    paymentAt: DateTime(2023, 10).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 10).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.contested,
+                  uiStatus: PayoutUiStatus.contested,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 9)),
+                    paymentAt: DateTime(2023, 9).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 9).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.contested,
+                  uiStatus: PayoutUiStatus.contested,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "3",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
+                    paymentAt: DateTime(2023, 8).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "3",
+                    createdAt: DateTime(2023, 8).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.contested,
+                  uiStatus: PayoutUiStatus.contested,
                 ),
-                MappedPayment(
-                  payment: SocialIncomePayment(
+                MappedPayout(
+                  payout: Payout(
                     id: "4",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
+                    paymentAt: DateTime(2023, 7).toIso8601String(),
+                    amount: 100,
+                    currency: Currency.sle,
+                    status: PayoutStatus.confirmed,
+                    recipientId: "4",
+                    createdAt: DateTime(2023, 7).toIso8601String(),
                   ),
-                  uiStatus: PaymentUiStatus.confirmed,
+                  uiStatus: PayoutUiStatus.confirmed,
                 ),
               ],
             ),
           ),
         );
 
-        return tester.pumpApp(widget, paymentsCubit: mockPaymentsCubit);
+        return tester.pumpApp(widget, paymentsCubit: mockPayoutsCubit);
       },
       builder: () => GoldenTestDeviceScenario(
         name: "confirmed and contested payments",
