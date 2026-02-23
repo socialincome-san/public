@@ -23,7 +23,7 @@ import {
 	TableRow,
 	Typography,
 } from '@socialincome/ui';
-import { Progress } from '@socialincome/ui/src/components/progress';
+import { Progress } from '@socialincome/ui';
 import Link from 'next/link';
 
 interface CampaignPageParams extends DefaultParams {

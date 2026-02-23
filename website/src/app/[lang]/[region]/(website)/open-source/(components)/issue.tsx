@@ -2,7 +2,7 @@
 
 import { buttonVariants } from '@/components/button';
 import { TableCell, TableRow } from '@socialincome/ui';
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 import Link from 'next/link';
 
 interface Issue {

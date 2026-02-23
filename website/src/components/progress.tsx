@@ -1,7 +1,7 @@
 'use client';
 
 import * as ProgressPrimitive from '@radix-ui/react-progress';
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 import * as React from 'react';
 
 type ProgressVariant = 'default' | 'urgent';

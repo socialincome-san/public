@@ -3,7 +3,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { OVERLAY_FADE_OUT_DELAY } from '@/app/[lang]/[region]/(website)/(home)/(components)/mux-video';
 import { Button, Typography, useGlowHover } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor } from '@socialincome/ui';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { RefObject, useEffect, useState } from 'react';

@@ -3,7 +3,7 @@ import { CardTranslation, SectionCard } from '@/app/[lang]/[region]/(website)/tr
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor } from '@socialincome/ui';
 
 export default async function Section1({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({

@@ -1,5 +1,9 @@
 import './tokens.css';
 
+export { cn, getFlagImageURL } from './lib/utils';
+export type { FontColor } from './interfaces/color';
+export * from './components/progress';
+
 export * from './components/accordion';
 export * from './components/alert';
 export * from './components/avatar';

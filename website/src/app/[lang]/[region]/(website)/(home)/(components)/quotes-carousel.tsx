@@ -1,6 +1,6 @@
 'use client';
 import { Carousel, CarouselContent, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor } from '@socialincome/ui';
 import Image from 'next/image';
 
 export type CarouselCardProps = {

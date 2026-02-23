@@ -7,7 +7,7 @@ import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
+import { SpinnerIcon } from '@socialincome/ui';
 import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';

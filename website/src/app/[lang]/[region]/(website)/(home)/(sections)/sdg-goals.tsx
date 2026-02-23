@@ -3,7 +3,7 @@ import sdgLogo from '@/app/[lang]/[region]/(website)/(home)/(assets)/sdg-logo.sv
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor } from '@socialincome/ui';
 import Image from 'next/image';
 import Town from '../(assets)/sdg-town.jpg';
 

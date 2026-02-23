@@ -3,7 +3,7 @@ import { VimeoVideo } from '@/components/legacy/vimeo-video';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor } from '@socialincome/ui';
 
 export const ExplainerVideo = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({

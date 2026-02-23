@@ -1,5 +1,5 @@
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 
 type Option = { value: string; label: string };
 

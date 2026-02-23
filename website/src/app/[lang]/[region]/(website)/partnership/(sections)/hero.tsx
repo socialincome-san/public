@@ -2,7 +2,7 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor } from '@socialincome/ui';
 
 export const Hero = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({

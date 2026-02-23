@@ -52,7 +52,7 @@ import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/wi
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor } from '@socialincome/ui';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';

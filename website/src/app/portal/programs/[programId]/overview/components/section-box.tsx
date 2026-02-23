@@ -1,4 +1,4 @@
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 import { ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';

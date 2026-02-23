@@ -9,7 +9,7 @@ import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { DonateIcon, SIIcon, Typography } from '@socialincome/ui';
-import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
+import { getFlagImageURL } from '@socialincome/ui';
 import classNames from 'classnames';
 import _ from 'lodash';
 import Image from 'next/image';

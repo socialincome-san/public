@@ -1,4 +1,4 @@
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 

@@ -9,7 +9,7 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
-import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/src/components/toggle-group';
+import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
