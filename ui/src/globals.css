@@ -19,7 +19,7 @@
 
 	.prose,
 	.prose h1 {
-		color: var(--foreground);
+		color: hsl(var(--foreground));
 	}
 	.prose {
 		--tw-prose-headings: hsl(var(--foreground));
