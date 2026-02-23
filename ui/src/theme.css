@@ -37,6 +37,7 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-sm: calc(var(--radius) - 4px);
 
+	--breakpoint-lg: 64rem;
 	--breakpoint-2xl: 87.5rem;
 
 	--animate-accordion-down: accordion-down 0.2s ease-out;

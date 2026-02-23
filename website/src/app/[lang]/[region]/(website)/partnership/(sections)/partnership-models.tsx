@@ -35,7 +35,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 				{/* Card 1 */}
 				<Dialog>
 					<DialogTrigger className="text-left">
-						<Card className="hover:bg-primary hover:bg-opacity-10 max-w-lg rounded-lg p-6 shadow-none">
+						<Card className="hover:bg-primary/10 max-w-lg rounded-lg p-6 shadow-none">
 							<CardHeader className="p-0">
 								<CardTitle className="flex items-center justify-between">
 									<Typography size="2xl" weight="medium">
@@ -46,7 +46,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 									</Badge>
 								</CardTitle>
 							</CardHeader>
-							<Separator className="bg-primary bg-opacity-30 mt-4" />
+							<Separator className="bg-primary/30 mt-4" />
 							<CardContent className="my-4 p-0">
 								<Typography size="lg">{translator.t('partnership-models.card-4-description')}</Typography>
 							</CardContent>
@@ -114,7 +114,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 				{/* Card 2 */}
 				<Dialog>
 					<DialogTrigger className="text-left">
-						<Card className="hover:bg-primary hover:bg-opacity-10 max-w-lg rounded-lg p-6 shadow-none">
+						<Card className="hover:bg-primary/10 max-w-lg rounded-lg p-6 shadow-none">
 							<CardHeader className="p-0">
 								<CardTitle className="flex items-center justify-between">
 									<Typography size="2xl" weight="medium">
@@ -122,7 +122,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 									</Typography>
 								</CardTitle>
 							</CardHeader>
-							<Separator className="bg-primary bg-opacity-30 mt-4" />
+							<Separator className="bg-primary/30 mt-4" />
 							<CardContent className="my-4 p-0">
 								<Typography size="lg">{translator.t('partnership-models.card-2-description')}</Typography>
 							</CardContent>
@@ -164,7 +164,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 				{/* Card 3 */}
 				<Dialog>
 					<DialogTrigger className="text-left">
-						<Card className="hover:bg-primary hover:bg-opacity-10 max-w-lg rounded-lg p-6 shadow-none">
+						<Card className="hover:bg-primary/10 max-w-lg rounded-lg p-6 shadow-none">
 							<CardHeader className="p-0">
 								<CardTitle className="flex items-center justify-between">
 									<Typography size="2xl" weight="medium">
@@ -172,7 +172,7 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 									</Typography>
 								</CardTitle>
 							</CardHeader>
-							<Separator className="bg-primary bg-opacity-30 mt-4" />
+							<Separator className="bg-primary/30 mt-4" />
 							<CardContent className="my-4 p-0">
 								<Typography size="lg">{translator.t('partnership-models.card-3-description')}</Typography>
 							</CardContent>

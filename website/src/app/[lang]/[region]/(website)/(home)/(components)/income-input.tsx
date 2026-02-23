@@ -50,7 +50,7 @@ export const IncomeInput = ({ translations }: { translations: { buttonText: stri
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<div className="border-opacity-40 mx-auto flex max-w-72 items-center justify-center border-b border-white pb-3 text-white">
+				<div className="mx-auto flex max-w-72 items-center justify-center border-b border-white/40 pb-3 text-white">
 					<FormField
 						control={form.control}
 						name="value"

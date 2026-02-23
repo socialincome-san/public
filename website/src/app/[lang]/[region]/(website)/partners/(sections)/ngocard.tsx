@@ -53,7 +53,7 @@ export default async function NgoCard({
 	return (
 		<Dialog>
 			<DialogTrigger className="text-left">
-				<Card className="hover:bg-primary hover:bg-opacity-10 max-w-lg rounded-lg p-6 shadow-none">
+				<Card className="hover:bg-primary/10 max-w-lg rounded-lg p-6 shadow-none">
 					<CardHeader className="p-0">
 						<CardTitle className="flex items-center justify-between">
 							<Typography size="2xl" weight="medium">
@@ -61,7 +61,7 @@ export default async function NgoCard({
 							</Typography>
 						</CardTitle>
 					</CardHeader>
-					<Separator className="bg-primary bg-opacity-30 mt-4" />
+					<Separator className="bg-primary/30 mt-4" />
 					<CardContent className="my-4 p-0">
 						<Typography size="lg">{orgMission}</Typography>
 					</CardContent>
@@ -119,7 +119,7 @@ export default async function NgoCard({
 							</Typography>
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-							<Badge className="bg-primary hover:bg-primary text-primary bg-opacity-10 hover:bg-opacity-100 space-x-2 px-4 py-2 hover:text-white">
+							<Badge className="bg-primary/10 hover:bg-primary text-primary space-x-2 px-4 py-2 hover:text-white">
 								{countryBadge?.countryFlagComponent || <SL_flag className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
 									{translator.t(countryBadge?.countryAbbreviation || 'SL')}
@@ -128,7 +128,7 @@ export default async function NgoCard({
 						</div>
 					</div>
 					{showFundRaiser && (
-						<div className="border-primary border-opacity-80 mb-8 flex items-center justify-start space-x-5 rounded-md border-2 py-4 pl-4">
+						<div className="border-primary/80 mb-8 flex items-center justify-start space-x-5 rounded-md border-2 py-4 pl-4">
 							<FundraiserBadge fundRaiserTranslation={translator.t('ngo-generic.fundraiser')} />
 							<span>
 								{ngoHoverCard.orgFundRaiserText?.map((fragment, index) => {
@@ -166,7 +166,7 @@ export default async function NgoCard({
 							</div>
 						);
 					})}
-					<Separator className="bg-primary bg-opacity-10 my-6" />
+					<Separator className="bg-primary/10 my-6" />
 					{ngoHoverCard.quote && ngoHoverCard.quoteAuthor ? (
 						<>
 							<div className="py-12 text-center">
@@ -192,7 +192,7 @@ export default async function NgoCard({
 									</Typography>
 								</div>
 							</div>
-							<Separator className="bg-primary bg-opacity-10 my-6" />
+							<Separator className="bg-primary/10 my-6" />
 						</>
 					) : (
 						''

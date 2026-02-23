@@ -92,7 +92,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 						</div>
 					</div>
 					{showFundRaiser && (
-						<div className="border-primary border-opacity-80 mb-8 flex items-center justify-start space-x-5 rounded-md border-2 py-4 pl-4">
+						<div className="border-primary/80 mb-8 flex items-center justify-start space-x-5 rounded-md border-2 py-4 pl-4">
 							<FundraiserBadge fundRaiserTranslation={translations.fundRaiser} />
 							<span>
 								{ngoHoverCard.orgFundRaiserText?.map((fragment, index) => {
@@ -130,7 +130,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 							</div>
 						);
 					})}
-					<Separator className="bg-primary bg-opacity-10 my-6" />
+					<Separator className="bg-primary/10 my-6" />
 					{ngoHoverCard.quote && ngoHoverCard.quoteAuthor ? (
 						<>
 							<div className="py-12 text-center">
@@ -156,7 +156,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 									</Typography>
 								</div>
 							</div>
-							<Separator className="bg-primary bg-opacity-10 my-6" />
+							<Separator className="bg-primary/10 my-6" />
 						</>
 					) : (
 						''

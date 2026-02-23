@@ -125,7 +125,7 @@
 		"prisma": "7.4.0",
 		"storyblok": "4.15.0",
 		"tailwindcss": "4.2.0",
-		"tailwindcss-animate": "^1.0.7",
+		"tw-animate-css": "^1.3.4",
 		"ts-jest": "29.4.6",
 		"tsx": "4.21.0",
 		"typescript": "5.9.3"

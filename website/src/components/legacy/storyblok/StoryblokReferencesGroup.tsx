@@ -26,7 +26,7 @@ export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: 
 	};
 
 	return (
-		<div className="bg-primary bg-opacity-10 mt-2 w-full rounded-md p-6">
+		<div className="bg-primary/10 mt-2 w-full rounded-md p-6">
 			{hasContextInfo && (
 				<Typography color="foreground" className="m-0 mb-2 p-0">
 					{translator.t('reference-article.context.' + props.context)}
