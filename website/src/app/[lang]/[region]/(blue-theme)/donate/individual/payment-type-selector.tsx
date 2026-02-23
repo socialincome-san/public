@@ -46,7 +46,7 @@ const PaymentTypeFormItem = ({
 					{ 'shadow-xs': !active },
 					{ 'border-accent bg-card-muted': active },
 					{ 'rounded-lg': !hasContent },
-					{ 'rounded-b-none rounded-t-lg border-b-0 pb-8': hasContent },
+					{ 'rounded-t-lg rounded-b-none border-b-0 pb-8': hasContent },
 				)}
 			>
 				<div onClick={() => setValue('paymentType', paymentType)}>

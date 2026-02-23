@@ -51,8 +51,7 @@ import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/wi
 
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui';
+import { BaseContainer, FontColor, FontSize, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
@@ -209,7 +208,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 									<Typography
 										color="muted-foreground"
 										size={{ sm: 'xs', md: 'sm', lg: 'md' }[group.size] as FontSize}
-										className="hyphens-auto wrap-break-word"
+										className="wrap-break-word hyphens-auto"
 									>
 										{translator.t(`team.roles.${person.role}`)}
 									</Typography>

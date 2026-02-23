@@ -49,7 +49,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				{translator.t('overview.description')}
 			</Typography>
 
-			<Typography className="mb-4 mt-12 text-center" size="3xl" weight="medium">
+			<Typography className="mt-12 mb-4 text-center" size="3xl" weight="medium">
 				{translator.t('overview.editors')}
 			</Typography>
 

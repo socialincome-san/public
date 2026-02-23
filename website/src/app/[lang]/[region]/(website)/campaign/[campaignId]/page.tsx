@@ -17,13 +17,13 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
+	Progress,
 	Table,
 	TableBody,
 	TableCell,
 	TableRow,
 	Typography,
 } from '@socialincome/ui';
-import { Progress } from '@socialincome/ui';
 import Link from 'next/link';
 
 interface CampaignPageParams extends DefaultParams {

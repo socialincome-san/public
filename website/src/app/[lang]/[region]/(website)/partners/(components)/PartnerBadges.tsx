@@ -27,7 +27,7 @@ const SDGBadge = ({
 						{translatorSdg} {sdgNumber?.toString() || ''}: {translatorSdgTitle}
 					</Typography>
 				</div>
-				<Separator className="bg-primary mb-3 mt-3 bg-opacity-20" />
+				<Separator className="bg-primary bg-opacity-20 mt-3 mb-3" />
 				<div>
 					<Typography size="sm" weight="normal">
 						{translatorSdgMission1} {hoverCardOrgName} {translatorSdgMission2}

@@ -8,8 +8,7 @@ import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
-import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
+import { Button, Form, FormControl, FormField, FormItem, Input, ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -160,7 +159,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 													interval === DonationInterval.Monthly ? [10, 30, 100, 150, 200] : [25, 50, 100, 500, 1000],
 												)}
 											</ToggleGroup>
-											<div className="flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">
+											<div className="flex flex-col sm:flex-row sm:space-y-0 sm:space-x-2 md:items-center">
 												<Input className="mb-4 h-12 text-lg sm:mb-0" {...field} />
 												<CurrencySelector
 													className="h-12 sm:basis-1/3 md:max-w-48"

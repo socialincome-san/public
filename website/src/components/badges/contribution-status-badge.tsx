@@ -11,7 +11,11 @@ type ContributionStatusBadgeProps = {
 
 const RECIPIENT_STATUS_UI: Record<
 	ContributionStatus,
-	{ variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'secondary' | 'default'; label: string; Icon: ComponentType<any> }
+	{
+		variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'secondary' | 'default';
+		label: string;
+		Icon: ComponentType<any>;
+	}
 > = {
 	failed: { variant: 'destructive', label: 'Failed', Icon: UserXIcon },
 	pending: { variant: 'outline', label: 'Pending', Icon: HourglassIcon },
