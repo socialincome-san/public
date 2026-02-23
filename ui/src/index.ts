@@ -1,6 +1,6 @@
 import './tokens.css';
 
-export { cn, getFlagImageURL } from './lib/utils';
+export { cn } from './lib/utils';
 export type { FontColor } from './interfaces/color';
 export * from './components/progress';
 
