@@ -93,7 +93,7 @@ export class PaymentFileImportService extends BaseService {
 	 * gets the contributions information from the payment file
 	 * @param file The path of the file to process
 	 */
-	private getContributionsFromPaymentFile(file: string): BankContribution[] {
+	getContributionsFromPaymentFile(file: string): BankContribution[] {
 		const xml = fs.readFileSync(file, 'utf8');
 		const xmlDoc = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
 		const select = xpath.useNamespaces({ ns: 'urn:iso:std:iso:20022:tech:xsd:camt.054.001.08' });
@@ -102,17 +102,20 @@ export class PaymentFileImportService extends BaseService {
 		const contributions: BankContribution[] = [];
 
 		for (let node of nodes) {
-			const referenceId = select('string(//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
+			const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
 			if (!referenceId) {
 				this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
 				continue;
 			}
 
+			const amountStr = select('string(ancestor::ns:Ntry/ns:Amt)', node) as string;
+			const currencyStr = select('string(ancestor::ns:Ntry/ns:Amt/@Ccy)', node) as string;
+
 			contributions.push({
 				referenceId,
-				amount: parseFloat(select('string(//ns:Amt)', node) as string),
-				currency: (select('string(//ns:Amt/@Ccy)', node) as string).toUpperCase() as Currency,
+				amount: parseFloat(amountStr),
+				currency: (currencyStr || 'CHF').toUpperCase() as Currency,
 				rawContent: node.toString(),
 			});
 		}
