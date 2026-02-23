@@ -26,13 +26,13 @@ const expected = {
 		},
 		{
 			amount: 40,
-			amountChf: 2.0833333333333335,
+			amountChf: 1.6666666666666667,
 			currency: 'SLE',
 			firstName: 'John',
 			lastName: 'Badingu',
 			paymentAt: '2025-03-12T11:00:00.000Z',
 			phoneNumber: '+41791234567',
-			recipientId: 'recipient-2',
+			recipientId: 'recipient-4',
 			status: 'paid',
 		},
 		{
@@ -59,7 +59,7 @@ const expected = {
 		},
 	],
 
-	step4: 'Created 3 payouts for 2025-03',
+	step4: 'Created 4 payouts for 2025-03',
 };
 
 test('Payout Process', async ({ page }) => {
