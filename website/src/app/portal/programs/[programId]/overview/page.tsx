@@ -6,11 +6,9 @@ type Props = { params: Promise<{ programId: string }> };
 
 export default function OverviewPageProgramScoped({ params }: Props) {
 	return (
-		<>
-			<Suspense>
-				<OverviewProgramScopedDataLoader params={params} />
-				<DonationSuccessDialog />
-			</Suspense>
-		</>
+		<Suspense>
+			<OverviewProgramScopedDataLoader params={params} />
+			<DonationSuccessDialog />
+		</Suspense>
 	);
 }
