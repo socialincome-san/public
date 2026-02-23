@@ -48,7 +48,7 @@
 	"dependencies": {
 		"@heroicons/react": "^2.1.5",
 		"@lottiefiles/react-lottie-player": "^3.5.4",
-		"@mux/mux-video-react": "^0.12.0",
+		"@mux/mux-video-react": "^0.30.0",
 		"@prisma/adapter-pg": "^7.4.0",
 		"@prisma/client": "7.4.0",
 		"@radix-ui/react-avatar": "^1.1.10",
