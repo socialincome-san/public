@@ -23,9 +23,13 @@ export const POST = async (request: NextRequest) => {
 			logger.alert(`Payment files import failed: ${result.error}`, { result }, { component: 'payment-files-import' });
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
-		logger.info(
-			`Payment files import succeeded. Updated following contributions: ${result.data.map((c) => c.id).join(', ')}`,
-		);
+		if (result.data.length > 0) {
+			logger.info(
+				`Payment files import succeeded. Updated following payment events: ${result.data.map((c) => c.id).join(', ')}`,
+			);
+		} else {
+			logger.info('Payment files import succeeded. No payment events updated.');
+		}
 		return NextResponse.json(result.data, { status: 201 });
 	} catch (error) {
 		logger.alert(`Payment files import failed: ${error}`, { error }, { component: 'payment-files-import' });

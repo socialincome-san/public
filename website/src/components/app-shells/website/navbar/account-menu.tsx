@@ -10,44 +10,60 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
-import { Session } from '@/lib/firebase/current-account';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import { LogOut, User } from 'lucide-react';
+import type { Session } from '@/lib/firebase/current-account';
+import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
-export type Scope = 'website' | 'dashboard' | 'partner-space';
+import { displaySession, type Scope } from './display-session';
 
 type Props = {
-	session: Session;
+	sessions: Session[];
 	scope: Scope;
 };
 
-export const AccountMenu = ({ session, scope }: Props) => {
+export const AccountMenu = ({ sessions, scope }: Props) => {
 	const { logout } = useLogout();
+	const session = displaySession(sessions, scope);
+	const hasUser = sessions.some((s) => s.type === 'user');
+	const hasContributor = sessions.some((s) => s.type === 'contributor');
+	const hasLocalPartner = sessions.some((s) => s.type === 'local-partner');
 
-	let linkInDropdown: { href: string; label: string };
+	const items: { href: string; label: string; icon: typeof User }[] = [];
 
 	switch (scope) {
 		case 'website':
-			linkInDropdown = {
-				href: `/${NEW_WEBSITE_SLUG}/auth/my-account`,
-				label: 'My Account',
-			};
+			if (hasUser) {
+				items.push({ href: '/portal', label: 'Go to portal', icon: Users });
+			}
+			if (hasContributor) {
+				items.push({ href: '/dashboard/contributions', label: 'Go to dashboard', icon: LayoutDashboard });
+			}
+			if (hasLocalPartner) {
+				items.push({ href: '/partner-space/recipients', label: 'Go to partner space', icon: Building2 });
+			}
 			break;
-
 		case 'partner-space':
-			linkInDropdown = {
-				href: '/partner-space/profile',
-				label: 'Profile',
-			};
+			items.push({ href: '/partner-space/profile', label: 'Profile', icon: User });
+			if (hasUser) {
+				items.push({ href: '/portal', label: 'Go to portal', icon: Users });
+			}
+			if (hasContributor) {
+				items.push({ href: '/dashboard/contributions', label: 'Go to dashboard', icon: LayoutDashboard });
+			}
 			break;
-
 		case 'dashboard':
 		default:
-			linkInDropdown = {
-				href: '/dashboard/profile',
-				label: 'Profile',
-			};
+			items.push({ href: '/dashboard/profile', label: 'Profile', icon: User });
+			if (hasUser) {
+				items.push({ href: '/portal', label: 'Go to portal', icon: Users });
+			}
+			if (hasLocalPartner) {
+				items.push({ href: '/partner-space/recipients', label: 'Go to partner space', icon: Building2 });
+			}
 			break;
+	}
+
+	if (!session) {
+		return null;
 	}
 
 	return (
@@ -68,12 +84,17 @@ export const AccountMenu = ({ session, scope }: Props) => {
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent align="end" className="w-64">
-				<DropdownMenuItem asChild>
-					<Link href={linkInDropdown.href} className="flex items-center gap-2">
-						<User className="h-4 w-4" />
-						<span>{linkInDropdown.label}</span>
-					</Link>
-				</DropdownMenuItem>
+				{items.map((item) => {
+					const Icon = item.icon;
+					return (
+						<DropdownMenuItem key={item.href} asChild>
+							<Link href={item.href} className="flex items-center gap-2">
+								<Icon className="h-4 w-4" />
+								<span>{item.label}</span>
+							</Link>
+						</DropdownMenuItem>
+					);
+				})}
 
 				<DropdownMenuSeparator />
 

@@ -4,6 +4,7 @@ on:
   pull_request:
     paths-ignore:
       - "recipients_app/**"
+  merge_group:
   push:
     branches:
       - main

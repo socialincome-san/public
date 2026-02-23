@@ -1,8 +1,7 @@
 'use client';
 
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { createSessionAction } from '@/lib/server-actions/session-actions';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { createSessionAction, getRedirectPathAfterLoginAction } from '@/lib/server-actions/session-actions';
 import { isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -52,7 +51,8 @@ export default function FinishLoginPage() {
 					return;
 				}
 
-				router.replace(`/${NEW_WEBSITE_SLUG}/auth/my-account`);
+				const redirectPath = await getRedirectPathAfterLoginAction();
+				router.replace(redirectPath);
 			} catch {
 				setStatus('error');
 			}

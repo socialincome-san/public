@@ -301,4 +301,14 @@ export const addressesData: Address[] = [
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
+	{
+		id: 'address-31',
+		street: 'Test Street',
+		number: '1',
+		city: 'Zürich',
+		zip: '8000',
+		country: 'CH',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
 ];
