@@ -12,6 +12,12 @@
 	"submit-button": "Send login link",
 	"check-email": "You should have received an email with a link to sign in.",
 	"confirm-email-title": "Confirm your email address",
+	"confirm-login": {
+		"title": "Complete sign in",
+		"body": "Click the button below to complete sign in.",
+		"cta": "Complete sign in",
+		"return-home": "Return home"
+	},
 	"error": {
 		"user-not-found": "User not found",
 		"invalid-email": "Invalid email address",

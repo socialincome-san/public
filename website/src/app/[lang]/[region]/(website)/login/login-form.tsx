@@ -85,7 +85,9 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 		<Form {...form}>
 			<form
 				className="flex flex-col space-y-2 text-center"
-				onSubmit={form.handleSubmit((values) => sendSignInEmail(values.email))}
+				onSubmit={form.handleSubmit((values) =>
+					sendSignInEmail(values.email, `${window.location.origin}/${lang}/${region}/auth/confirm-login`),
+				)}
 			>
 				<Typography weight="bold" size="2xl" className="mb-4">
 					{translations.title}
