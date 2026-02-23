@@ -1,10 +1,7 @@
 'use client';
 
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import {
-	createSessionAction,
-	getRedirectPathAfterLoginAction,
-} from '@/lib/server-actions/session-actions';
+import { createSessionAction, getRedirectPathAfterLoginAction } from '@/lib/server-actions/session-actions';
 import { isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
