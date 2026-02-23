@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: deploy-terraform-gcp-staging
+  cancel-in-progress: false
+
 env:
   ENVIRONMENT: staging
   APP_NAME: website

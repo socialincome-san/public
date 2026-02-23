@@ -5,6 +5,10 @@ on:
     tags:
       - release-*
 
+concurrency:
+  group: deploy-terraform-gcp-staging
+  cancel-in-progress: false
+
 env:
   ENVIRONMENT: prod
   APP_NAME: website
