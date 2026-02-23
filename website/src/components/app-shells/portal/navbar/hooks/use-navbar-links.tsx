@@ -1,5 +1,6 @@
-import { UserSession } from '@/lib/services/user/user.types';
-import { LucideIcon, Settings, User } from 'lucide-react';
+import type { Session } from '@/lib/firebase/current-account';
+import type { UserSession } from '@/lib/services/user/user.types';
+import { LayoutDashboard, LucideIcon, Settings, User } from 'lucide-react';
 
 type NavLink = {
 	href: string;
@@ -9,7 +10,9 @@ type NavLink = {
 	isDropdown?: boolean;
 };
 
-export const useNavbarLinks = (user: UserSession) => {
+export const useNavbarLinks = (sessions: Session[]) => {
+	const user = sessions.find((s): s is UserSession => s.type === 'user');
+	const hasContributor = sessions.some((s) => s.type === 'contributor');
 	const mainNavLinks: NavLink[] = [
 		{
 			href: '/portal/programs',
@@ -41,7 +44,16 @@ export const useNavbarLinks = (user: UserSession) => {
 			label: 'Profile',
 			icon: User,
 		},
-		...(user.role === 'admin'
+		...(hasContributor
+			? [
+					{
+						href: '/dashboard/contributions',
+						label: 'Switch to dashboard',
+						icon: LayoutDashboard,
+					},
+				]
+			: []),
+		...(user?.role === 'admin'
 			? [
 					{
 						href: '/portal/admin/organizations',

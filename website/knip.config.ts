@@ -1,12 +1,7 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-	ignoreFiles: [
-		'src/lib/database/schema.prisma',
-		'test/e2e/setup/test-setup.ts',
-		'test/e2e/setup/utils.ts',
-		'src/lib/utils/storyblock-image-loader.ts',
-	],
+	ignoreFiles: ['test/e2e/setup/test-setup.ts', 'test/e2e/setup/utils.ts', 'src/lib/utils/storyblock-image-loader.ts'],
 	ignoreDependencies: [
 		'react',
 		'react-hook-form',
