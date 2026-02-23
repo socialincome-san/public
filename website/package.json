@@ -107,7 +107,6 @@
 		"@playwright/test": "1.58.2",
 		"@tailwindcss/postcss": "^4.2.0",
 		"@tailwindcss/typography": "0.5.19",
-		"tailwindcss-animate": "^1.0.7",
 		"@types/accept-language-parser": "1.5.8",
 		"@types/jest": "30.0.0",
 		"@types/lodash": "4.17.23",
@@ -126,6 +125,7 @@
 		"prisma": "7.4.0",
 		"storyblok": "4.15.0",
 		"tailwindcss": "4.2.0",
+		"tailwindcss-animate": "^1.0.7",
 		"ts-jest": "29.4.6",
 		"tsx": "4.21.0",
 		"typescript": "5.9.3"
