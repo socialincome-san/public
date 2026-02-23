@@ -43,13 +43,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Run Aikido scan
         run: |
           aikido-local-scanner scan ./ \
             --apikey ${{ secrets.AIKIDO_API_KEY }} \
             --repositoryname socialincome-public \
-            --branchname ${{ github.head_ref || github.ref_name }}
+            --branchname ${{ github.head_ref || github.ref_name }} \
+            --fail-on high \
+            ${{ github.event_name == 'pull_request' && format('--gating-mode pr --base-commit-id {0} --head-commit-id {1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || '' }}
 
   lint:
     name: "✨ Lint"
