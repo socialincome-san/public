@@ -24,7 +24,7 @@ export const SegmentedToggle = ({ value, onValueChange, options, className }: Se
 					value={opt.value}
 					className={cn(
 						'text-muted-foreground data-[state=on]:text-foreground hover:text-foreground rounded-full px-3 py-1 text-sm transition-colors',
-						'data-[state=on]:bg-background data-[state=on]:shadow-xs',
+						'data-[state=on]:bg-background data-[state=on]:shadow-2xs',
 					)}
 				>
 					{opt.label}

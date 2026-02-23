@@ -197,7 +197,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
 									{formSchema.fields[option].label}
 								</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:!h-0" forceMount>
+								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:h-0!" forceMount>
 									{getOptions(option).map((nestedOption) => (
 										<GenericFormField
 											option={nestedOption}

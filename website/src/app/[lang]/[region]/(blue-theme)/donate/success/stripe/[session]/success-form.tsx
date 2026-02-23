@@ -206,7 +206,7 @@ export const SuccessForm = ({
 										<SelectValue placeholder={field.value && countryTranslator?.t(field.value)} />
 									</SelectTrigger>
 								</FormControl>
-								<SelectContent className="max-h-[16rem] overflow-y-auto">
+								<SelectContent className="max-h-64 overflow-y-auto">
 									<SelectGroup>
 										{COUNTRY_CODES.map((country: CountryCode) => (
 											<SelectItem key={country} value={country}>

@@ -9,10 +9,10 @@ type PortalAppShellProps = {
 
 export const PortalAppShell = ({ children, user }: PortalAppShellProps) => {
 	return (
-		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-gradient-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed">
+		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-linear-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed">
 			{user && <Navbar user={user} />}
 
-			<div className="container pb-8">{children}</div>
+			<div className="container mx-auto pb-8">{children}</div>
 		</div>
 	);
 };

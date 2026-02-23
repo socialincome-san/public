@@ -198,7 +198,7 @@ export const DonationForm = ({ amount, translations, lang, region }: DonationFor
 										lang={lang as WebsiteLanguage}
 										translations={translations.paymentType}
 										bankTransferForm={
-											<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
+											<div className="border-accent bg-card-muted mt-[-2px]! rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
 												<BankTransferForm
 													lang={lang as WebsiteLanguage}
 													region={region}

@@ -1,29 +1,120 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@font-face {
-	font-family: 'Unica77';
-	src: url('../../../ui/assets/fonts/Unica77LLWeb-Light.woff2') format('woff2');
-	font-weight: 300;
+@source '../../../ui/src';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@plugin '@tailwindcss/typography';
+@plugin 'tailwindcss-animate';
+
+@theme inline {
+	--font-sans: 'Unica77', ui-sans-serif, system-ui, sans-serif;
+
+	--color-border: hsl(var(--border));
+	--color-input: hsl(var(--input));
+	--color-ring: hsl(var(--ring));
+	--color-background: hsl(var(--background));
+	--color-foreground: hsl(var(--foreground));
+	--color-muted: hsl(var(--muted));
+	--color-muted-foreground: hsl(var(--muted-foreground));
+	--color-primary: hsl(var(--primary));
+	--color-primary-muted: hsl(var(--primary-muted));
+	--color-primary-foreground: hsl(var(--primary-foreground));
+	--color-primary-foreground-muted: hsl(var(--primary-foreground-muted));
+	--color-secondary: hsl(var(--secondary));
+	--color-secondary-muted: hsl(var(--secondary-muted));
+	--color-secondary-foreground: hsl(var(--secondary-foreground));
+	--color-secondary-foreground-muted: hsl(var(--secondary-foreground-muted));
+	--color-destructive: hsl(var(--destructive));
+	--color-destructive-muted: hsl(var(--destructive-muted));
+	--color-destructive-foreground: hsl(var(--destructive-foreground));
+	--color-destructive-foreground-muted: hsl(var(--destructive-foreground-muted));
+	--color-accent: hsl(var(--accent));
+	--color-accent-muted: hsl(var(--accent-muted));
+	--color-accent-foreground: hsl(var(--accent-foreground));
+	--color-accent-foreground-muted: hsl(var(--accent-foreground-muted));
+	--color-popover: hsl(var(--popover));
+	--color-popover-muted: hsl(var(--popover-muted));
+	--color-popover-foreground: hsl(var(--popover-foreground));
+	--color-popover-foreground-muted: hsl(var(--popover-foreground-muted));
+	--color-card: hsl(var(--card));
+	--color-card-muted: hsl(var(--card-muted));
+	--color-card-foreground: hsl(var(--card-foreground));
+	--color-card-foreground-muted: hsl(var(--card-foreground-muted));
+
+	--radius-lg: var(--radius);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-sm: calc(var(--radius) - 4px);
+
+	--breakpoint-2xl: 87.5rem;
+
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+	--animate-enter-from-top: enterFromTop 100ms ease-out;
+	--animate-fade-out: fadeOut 75ms ease-out;
+
+	@keyframes accordion-down {
+		from {
+			height: 0;
+		}
+		to {
+			height: var(--radix-accordion-content-height);
+		}
+	}
+	@keyframes accordion-up {
+		from {
+			height: var(--radix-accordion-content-height);
+		}
+		to {
+			height: 0;
+		}
+	}
+	@keyframes enterFromTop {
+		from {
+			opacity: 0;
+			transform: translateY(-25px) scale(0.9);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+	@keyframes fadeOut {
+		from {
+			opacity: 1;
+			transform: scale(1);
+		}
+		to {
+			opacity: 0;
+			transform: scale(0.95);
+		}
+	}
 }
 
-@font-face {
-	font-family: 'Unica77';
-	src: url('../../../ui/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
-	font-weight: normal;
-}
+@layer utilities {
+	@font-face {
+		font-family: 'Unica77';
+		src: url('../../../ui/assets/fonts/Unica77LLWeb-Light.woff2') format('woff2');
+		font-weight: 300;
+	}
 
-@font-face {
-	font-family: 'Unica77';
-	src: url('../../../ui/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
-	font-weight: 500;
-}
+	@font-face {
+		font-family: 'Unica77';
+		src: url('../../../ui/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
+		font-weight: normal;
+	}
 
-@font-face {
-	font-family: 'Unica77';
-	src: url('../../../ui/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
-	font-weight: 700;
+	@font-face {
+		font-family: 'Unica77';
+		src: url('../../../ui/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
+		font-weight: 500;
+	}
+
+	@font-face {
+		font-family: 'Unica77';
+		src: url('../../../ui/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
+		font-weight: 700;
+	}
 }
 
 @layer base {
@@ -36,18 +127,30 @@
 		--popover: 0 0% 100%;
 		--popover-foreground: 197 79% 15%;
 		--primary: 197 79% 15%;
+		--primary-muted: 197 79% 22%;
 		--primary-foreground: 210 40% 98%;
+		--primary-foreground-muted: 210 40% 90%;
 		--secondary: 210 40% 96%;
+		--secondary-muted: 210 40% 92%;
 		--secondary-foreground: 197 79% 15%;
+		--secondary-foreground-muted: 197 79% 25%;
 		--muted: 210 40% 96%;
 		--muted-foreground: 215 16% 47%;
 		--accent: 210 40% 96%;
+		--accent-muted: 210 40% 92%;
 		--accent-foreground: 197 79% 15%;
+		--accent-foreground-muted: 197 79% 25%;
 		--destructive: 0 84% 60%;
+		--destructive-muted: 0 84% 70%;
 		--destructive-foreground: 0 86% 97%;
+		--destructive-foreground-muted: 0 86% 92%;
 		--border: 214 32% 91%;
 		--input: 213 27% 84%;
 		--ring: 215 20% 65%;
+		--popover-muted: 210 40% 96%;
+		--popover-foreground-muted: 197 79% 25%;
+		--card-muted: 210 40% 96%;
+		--card-foreground-muted: 197 79% 25%;
 		--radius: 0.625rem;
 		--chart-1: 21 90% 48%;
 		--chart-2: 160 16% 66%;
@@ -70,5 +173,26 @@
 		--confirm-foreground: 141 84% 93%;
 		--gradient-card-from: 203 40% 53%;
 		--gradient-card-to: 96 10% 81%;
+	}
+
+	body {
+		font-feature-settings: 'ss04' on;
+	}
+
+	button:not([disabled]),
+	[role='button']:not([disabled]) {
+		cursor: pointer;
+	}
+
+	/* Typography plugin customization (prose colors) */
+
+	.prose,
+	.prose h1 {
+		color: var(--foreground);
+	}
+	.prose {
+		--tw-prose-headings: hsl(var(--foreground));
+		--tw-prose-quotes: hsl(var(--accent));
+		--tw-prose-links: hsl(var(--foreground));
 	}
 }

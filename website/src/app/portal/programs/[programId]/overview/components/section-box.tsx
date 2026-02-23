@@ -19,7 +19,7 @@ export const SectionBox = ({ className, children, href }: SectionBoxProps) => {
 
 	if (href) {
 		return (
-			<Link href={href} className="block transition-transform hover:-translate-y-[5px] hover:shadow-sm">
+			<Link href={href} className="block transition-transform hover:-translate-y-[5px] hover:shadow-xs">
 				{content}
 			</Link>
 		);

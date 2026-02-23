@@ -30,7 +30,7 @@ export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft
 	const content = (
 		<Card
 			variant="noPadding"
-			className="flex min-h-full max-w-full cursor-pointer flex-col overflow-hidden transition hover:shadow-sm"
+			className="flex min-h-full max-w-full cursor-pointer flex-col overflow-hidden transition hover:shadow-xs"
 			style={{
 				['--slant-shift' as any]: '50px',
 				['--slant-width' as any]: '40px',
@@ -54,9 +54,9 @@ export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft
 				['--text-color' as any]: variant === 'default' ? 'hsl(var(--card))' : 'inherit',
 			}}
 		>
-			<div className="-mb-[var(--slant-height)] flex flex-col" style={{ background: 'var(--wallet-back-bg)' }}>
+			<div className="-mb-(--slant-height) flex flex-col" style={{ background: 'var(--wallet-back-bg)' }}>
 				<div
-					className="relative m-[calc(3*var(--shadow-size))] mb-0 h-[var(--stack-height)] rounded-sm"
+					className="relative m-[calc(3*var(--shadow-size))] mb-0 h-(--stack-height) rounded-sm"
 					style={{
 						boxShadow: 'var(--wallet-cards-box-shadow)',
 						background: 'var(--wallet-cards-background)',
@@ -97,7 +97,7 @@ export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft
 							</div>
 						) : (
 							<div className="flex h-full flex-col items-center justify-center gap-4">
-								<Button variant="secondary" size="icon" className="h-12 w-12 rounded-full shadow-sm" aria-label="Add">
+								<Button variant="secondary" size="icon" className="h-12 w-12 rounded-full shadow-xs" aria-label="Add">
 									<PlusIcon className="h-6 w-6" />
 								</Button>
 								<p className="text-2xl">{title}</p>

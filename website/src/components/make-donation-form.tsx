@@ -42,7 +42,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 							const parsed = parseFloat(e.target.value);
 							setMonthlyIncome(isNaN(parsed) ? 0 : parsed);
 						}}
-						className="w-full text-lg font-medium leading-none outline-none"
+						className="w-full text-lg font-medium leading-none outline-hidden"
 					/>
 				</div>
 				<div className="bg-muted px-3 py-2">
@@ -81,7 +81,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 					onClick={() => setCadence('monthly')}
 					className={cn(
 						'cursor-pointer rounded-md px-3 py-2 text-sm font-semibold transition-colors',
-						cadence === 'monthly' && 'bg-white shadow-sm',
+						cadence === 'monthly' && 'bg-white shadow-xs',
 					)}
 				>
 					{t('monthly')}
@@ -91,7 +91,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 					onClick={() => setCadence('one-time')}
 					className={cn(
 						'cursor-pointer rounded-md px-3 py-2 text-sm font-semibold transition-colors',
-						cadence === 'one-time' && 'bg-white shadow-sm',
+						cadence === 'one-time' && 'bg-white shadow-xs',
 					)}
 				>
 					{t('one-time')}

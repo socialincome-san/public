@@ -1,4 +1,4 @@
-import './globals.css';
+import './tokens.css';
 
 export * from './components/accordion';
 export * from './components/alert';

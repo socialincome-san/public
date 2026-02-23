@@ -44,7 +44,7 @@ export const Combobox = ({
 				<Command>
 					<CommandInput
 						placeholder="Search..."
-						className="h-9 outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+						className="h-9 outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0"
 					/>
 					<CommandList>
 						<CommandEmpty>No results found.</CommandEmpty>

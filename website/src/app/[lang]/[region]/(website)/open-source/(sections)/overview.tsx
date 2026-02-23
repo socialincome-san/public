@@ -29,7 +29,7 @@ const OverviewCard = ({ title, total, time }: OverviewProp) => {
 			{/* Large screens layout */}
 			<div className="hidden h-full items-center justify-between gap-4 md:flex">
 				{/* Number on the left */}
-				<div className="flex-shrink-0">
+				<div className="shrink-0">
 					<Typography as="span" size="5xl" weight="medium">
 						{total}
 					</Typography>

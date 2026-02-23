@@ -10,7 +10,7 @@ type CampaignStatusBadgeProps = {
 
 const CAMPAIGN_STATUS_UI: Record<
 	'active' | 'inactive',
-	{ variant: 'verified' | 'destructive' | 'outline' | 'secondary' | 'default'; label: string; Icon: ComponentType<any> }
+	{ variant: 'verified' | 'destructive' | 'outline-solid' | 'secondary' | 'default'; label: string; Icon: ComponentType<any> }
 > = {
 	active: { variant: 'verified', label: 'Active', Icon: HourglassIcon },
 	inactive: { variant: 'default', label: 'Inactive', Icon: CircleSlashIcon },

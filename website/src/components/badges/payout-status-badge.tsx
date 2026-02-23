@@ -11,7 +11,7 @@ type PayoutStatusBadgeProps = {
 
 const PAYOUT_STATUS_UI: Record<
 	PayoutStatus,
-	{ variant: 'default' | 'verified' | 'destructive' | 'secondary' | 'outline'; label: string; Icon: ComponentType<any> }
+	{ variant: 'default' | 'verified' | 'destructive' | 'secondary' | 'outline' | 'outline-solid'; label: string; Icon: ComponentType<any> }
 > = {
 	paid: { variant: 'verified', label: 'Paid', Icon: CheckIcon },
 	confirmed: { variant: 'verified', label: 'Confirmed', Icon: CheckIcon },

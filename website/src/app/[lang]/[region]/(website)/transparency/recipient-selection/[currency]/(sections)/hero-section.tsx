@@ -15,7 +15,7 @@ export const HeroSection = async ({ lang }: DefaultParams) => {
 
 	return (
 		<div className="theme-blue flex h-[calc(100svh)] min-h-[600px] flex-col">
-			<div className="mt-[80px] flex flex-grow flex-col items-center justify-center p-6 text-center">
+			<div className="mt-[80px] flex grow flex-col items-center justify-center p-6 text-center">
 				<div className="pb-4">
 					<Typography size="xl" className="opacity-60">
 						{translator.t('section-1.subtitle')}
@@ -36,7 +36,7 @@ export const HeroSection = async ({ lang }: DefaultParams) => {
 				</div>
 			</div>
 
-			<div className="flex flex-grow items-start justify-center">
+			<div className="flex grow items-start justify-center">
 				<div className="flex flex-col items-center sm:flex-row sm:space-x-4">
 					<Image className="h-12 w-12 md:h-20 md:w-20" src={globeRotating} alt="Globe Icon" />
 					<div className="mx-auto my-4 max-w-4xl whitespace-pre text-center sm:text-left">

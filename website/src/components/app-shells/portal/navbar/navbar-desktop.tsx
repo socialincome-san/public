@@ -25,7 +25,7 @@ export const NavbarDesktop = ({ user }: { user: UserSession }) => {
 	const { logout } = useLogout();
 
 	return (
-		<nav className="container flex h-20 items-center justify-between">
+		<nav className="container mx-auto flex h-20 items-center justify-between">
 			<Link href="/portal">
 				<SILogo />
 			</Link>

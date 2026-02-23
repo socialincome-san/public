@@ -42,7 +42,12 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 	return await storyblokService.getArticle(lang, slug);
 });
 
-const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
+const badgeWithLink = (
+	lang: string,
+	region: string,
+	tag: ISbStoryData<Topic>,
+	variant: 'outline' | 'outline-solid' | 'foreground',
+) => {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge variant={variant} className="mt-6">
@@ -133,7 +138,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<Typography
 							weight="medium"
-							className="mb-3 mt-8 hyphens-auto break-words"
+							className="mb-3 mt-8 hyphens-auto wrap-break-word"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="5xl"
 						>
@@ -142,7 +147,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<Typography
 							weight="normal"
-							className="hyphens-auto break-words"
+							className="hyphens-auto wrap-break-word"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="3xl"
 						>
@@ -166,7 +171,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<div className="mt-4 flex flex-wrap justify-start gap-2">
 							{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
-								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
+								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline-solid' : 'foreground'),
 							)}
 						</div>
 					</div>

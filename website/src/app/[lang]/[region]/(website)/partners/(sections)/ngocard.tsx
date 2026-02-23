@@ -103,7 +103,7 @@ export default async function NgoCard({
 						alt="Organization Photo"
 						unoptimized
 					/>
-					<div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-t from-black to-transparent">
+					<div className="absolute bottom-0 left-0 h-32 w-full bg-linear-to-t from-black to-transparent">
 						<DialogTitle className="text-accent absolute bottom-0 left-0 px-8 py-4">
 							<Typography size="5xl" weight="medium">
 								{ngoHoverCard.orgLongName}
@@ -113,7 +113,7 @@ export default async function NgoCard({
 				</DialogHeader>
 				<div className="px-8 pb-10">
 					<div className="flex flex-col gap-2 p-0 pb-8 pt-2 sm:flex-row sm:items-center sm:justify-between">
-						<div className="pb-4 text-center sm:order-2 sm:flex-shrink-0 sm:pb-0 sm:text-right">
+						<div className="pb-4 text-center sm:order-2 sm:shrink-0 sm:pb-0 sm:text-right">
 							<Typography size="md" weight="normal">
 								{translator.t('ngo-generic.partner-since')} {ngoHoverCard.partnershipStart}
 							</Typography>
@@ -286,7 +286,7 @@ export default async function NgoCard({
 						</div>
 						<div className="col-span-2">
 							<Link href={`/${lang}/${region}/partners/${ngoHoverCard.orgSlug}`}>
-								<Typography size="lg" className="break-words underline">
+								<Typography size="lg" className="wrap-break-word underline">
 									{`socialincome.org/partners/${ngoHoverCard.orgSlug}`}
 								</Typography>
 							</Link>

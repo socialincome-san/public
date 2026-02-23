@@ -15,7 +15,7 @@ type WebsiteAppShellProps = {
 
 export const WebsiteAppShell = ({ children, session, lang, region, scope }: WebsiteAppShellProps) => {
 	return (
-		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-gradient-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed antialiased">
+		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-linear-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed antialiased">
 			<Navbar session={session} lang={lang} region={region} scope={scope} />
 			<div className="[&:not(:has(>.hero-video-block))]:mt-20">{children}</div>
 			{scope === 'website' && <Footer lang={lang} region={region} />}

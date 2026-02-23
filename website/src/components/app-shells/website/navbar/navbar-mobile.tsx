@@ -30,7 +30,7 @@ export const NavbarMobile = ({ session, lang }: Props) => {
 	];
 
 	return (
-		<nav className="container flex h-20 items-center justify-between">
+		<nav className="container mx-auto flex h-20 items-center justify-between">
 			<Link href="/">
 				<SocialIncomeLogo />
 			</Link>

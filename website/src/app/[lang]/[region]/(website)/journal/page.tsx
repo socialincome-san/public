@@ -74,7 +74,7 @@ export default async function Page({ params }: DefaultPageProps) {
 								lang={lang}
 								region={region}
 							/>
-							<div className="line-clamp-2 max-w-24 overflow-hidden break-words">
+							<div className="line-clamp-2 max-w-24 overflow-hidden wrap-break-word">
 								<Typography>{author.content.firstName}</Typography>
 								<Typography>{author.content.lastName}</Typography>
 							</div>

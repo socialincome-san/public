@@ -27,7 +27,7 @@ const Slider = ({
 			className={cn(
 				'relative flex w-full touch-none select-none items-center',
 				'data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col',
-				'data-[disabled]:opacity-50',
+				'data-disabled:opacity-50',
 				className,
 			)}
 			{...props}
@@ -56,10 +56,10 @@ const Slider = ({
 					key={index}
 					className={cn(
 						'block size-4 shrink-0 rounded-full bg-white',
-						'border-primary border shadow-sm',
-						'transition-[box-shadow]',
+						'border-primary border shadow-xs',
+						'transition-shadow',
 						'ring-ring/50 hover:ring-4',
-						'focus-visible:outline-none focus-visible:ring-4',
+						'focus-visible:outline-hidden focus-visible:ring-4',
 						'disabled:pointer-events-none disabled:opacity-50',
 					)}
 				/>

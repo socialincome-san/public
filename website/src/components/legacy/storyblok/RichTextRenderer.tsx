@@ -39,7 +39,7 @@ export const RichTextRenderer = ({ richTextDocument, translator, lang, region }:
 		nodeResolvers: {
 			// @ts-ignore
 			[NODE_LI]: (children: any, props: any) => (
-				<li className="m-0.5 p-0.5 [&::marker]:text-black [&>*]:m-0 [&>*]:p-0" {...props}>
+				<li className="m-0.5 p-0.5 [&::marker]:text-black *:m-0 *:p-0" {...props}>
 					{children}
 				</li>
 			),

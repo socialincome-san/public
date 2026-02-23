@@ -12,7 +12,7 @@ type SurveyStatusBadgeProps = {
 const SURVEY_STATUS_UI: Record<
 	SurveyStatus,
 	{
-		variant: 'verified' | 'destructive' | 'outline' | 'secondary' | 'default';
+		variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'secondary' | 'default';
 		label: string;
 		Icon: ComponentType<any>;
 	}

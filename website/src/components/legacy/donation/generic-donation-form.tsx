@@ -163,7 +163,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 											<div className="flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">
 												<Input className="mb-4 h-12 text-lg sm:mb-0" {...field} />
 												<CurrencySelector
-													className="h-12 sm:basis-1/3 md:max-w-[12rem]"
+													className="h-12 sm:basis-1/3 md:max-w-48"
 													currencies={['USD', 'EUR', 'CHF']}
 													fontSize="md"
 												/>

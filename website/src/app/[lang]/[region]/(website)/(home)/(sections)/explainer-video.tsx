@@ -20,7 +20,7 @@ export const ExplainerVideo = async ({ lang }: DefaultParams) => {
 					</Typography>
 				))}
 			</Typography>
-			<div className="mx-auto mt-16 aspect-video w-96 max-w-full md:mt-24 md:w-[32rem]">
+			<div className="mx-auto mt-16 aspect-video w-96 max-w-full md:mt-24 md:w-lg">
 				<VimeoVideo videoId={Number(translator.t('id.video-02'))} />
 			</div>
 		</BaseContainer>

@@ -28,7 +28,7 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 				};
 				return <Tag className={styles[level]}>{children}</Tag>;
 			},
-			[NODE_LI]: (children) => <li className="m-0.5 p-0.5 [&::marker]:text-black [&>*]:m-0 [&>*]:p-0">{children}</li>,
+			[NODE_LI]: (children) => <li className="m-0.5 p-0.5 [&::marker]:text-black *:m-0 *:p-0">{children}</li>,
 		},
 		blokResolvers: {
 			// Todo: Add blocks as soon as we have them ready in the Storyblok schema
