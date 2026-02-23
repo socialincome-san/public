@@ -1,8 +1,8 @@
 import './tokens.css';
 
-export { cn } from './lib/utils';
-export type { FontColor } from './interfaces/color';
 export * from './components/progress';
+export type { FontColor } from './interfaces/color';
+export { cn } from './lib/utils';
 
 export * from './components/accordion';
 export * from './components/alert';

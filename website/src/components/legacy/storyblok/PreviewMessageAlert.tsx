@@ -12,7 +12,7 @@ export const PreviewMessage = () => {
 	}
 
 	return (
-		<span className="text-shadow-md bg-accent fixed left-5 top-72 z-10000 w-[150px] rounded-md p-2 shadow-lg">
+		<span className="bg-accent fixed top-72 left-5 z-10000 w-[150px] rounded-md p-2 shadow-lg text-shadow-md">
 			<Typography as="span" weight="bold">
 				Preview Mode
 			</Typography>

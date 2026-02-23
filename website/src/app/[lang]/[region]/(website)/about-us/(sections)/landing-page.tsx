@@ -1,7 +1,15 @@
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Badge, BaseContainer, linkCn, Popover, PopoverContent, PopoverTrigger, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui';
+import {
+	Badge,
+	BaseContainer,
+	FontColor,
+	linkCn,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+	Typography,
+} from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import changeGif from '../(assets)/change.gif';

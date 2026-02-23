@@ -18,11 +18,7 @@ const Portrait = ({ name, text, country, image }: PortraitProps) => {
 	return (
 		<Card className="flex flex-col space-y-2 md:flex-row md:space-y-0">
 			<div className="flex flex-col items-center md:basis-1/2">
-				<Image
-					src={image}
-					alt={`${name} Image`}
-					className="max-h-96 grow rounded-sm object-contain md:max-h-full"
-				/>
+				<Image src={image} alt={`${name} Image`} className="max-h-96 grow rounded-sm object-contain md:max-h-full" />
 			</div>
 			<div className="space-y-4 p-4 md:basis-1/2 md:space-y-8 md:p-8">
 				<Image src={doubleQuotesSVG} alt="double quotes" className="text-accent h-8 w-8 md:h-16 md:w-16" />

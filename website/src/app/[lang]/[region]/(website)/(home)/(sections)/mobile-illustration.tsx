@@ -1,8 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui';
+import { FontColor, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import MobilesImg from '../(assets)/mobilesImgData.png';
 
