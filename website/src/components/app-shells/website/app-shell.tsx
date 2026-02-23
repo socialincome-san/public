@@ -18,7 +18,13 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 	return (
 		<div className="theme-new text-primary flex min-h-screen w-full flex-col bg-linear-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed antialiased">
 			<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
-			<div className={isContained ? 'container mt-20 flex-1 pb-8' : '[&:not(:has(>.hero-video-block))]:mt-20'}>
+			<div
+				className={
+					isContained
+						? 'w-site-width max-w-content mx-auto mt-20 flex-1 pb-8'
+						: '[&:not(:has(>.hero-video-block))]:mt-20'
+				}
+			>
 				{children}
 			</div>
 			{scope === 'website' && <Footer lang={lang} region={region} />}

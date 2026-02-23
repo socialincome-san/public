@@ -55,7 +55,7 @@ export const NavbarMobile = ({ lang, scope, sessions }: Props) => {
 	}
 
 	return (
-		<nav className="container mx-auto flex h-20 items-center justify-between">
+		<nav className="w-site-width max-w-content mx-auto flex h-20 items-center justify-between">
 			<Link href="/">
 				<SocialIncomeLogo />
 			</Link>
