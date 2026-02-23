@@ -96,6 +96,6 @@ export const MenuDesktop = ({ nav, lang, region }: Props) => (
 				);
 			})}
 		</NavigationMenu.List>
-		<NavigationMenu.Viewport className="data-[state=closed]:animate-fade-out data-[state=open]:animate-enter-from-top absolute inset-x-0 top-[calc(100%+1rem)] z-50 w-2xl" />
+		<NavigationMenu.Viewport className="data-[state=closed]:animate-fade-out data-[state=open]:animate-enter-from-top absolute inset-x-0 top-[calc(100%+1rem)] z-50 w-full" />
 	</NavigationMenu.Root>
 );

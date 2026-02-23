@@ -10,7 +10,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 
 	return (
 		<WebsiteAppShell session={contributor} lang={lang as WebsiteLanguage} region={region} scope="dashboard">
-			{children}
+			<div className="container mx-auto">{children}</div>
 		</WebsiteAppShell>
 	);
 }
