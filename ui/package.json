@@ -54,7 +54,7 @@
 		"cssnano": "7.1.2",
 		"postcss": "8.5.6",
 		"postcss-import": "16.1.1",
-		"postcss-nesting": "12.1.5",
+		"postcss-nesting": "14.0.0",
 		"prop-types": "15.8.1",
 		"storybook": "8.6.17",
 		"tailwind-merge": "3.4.1",
