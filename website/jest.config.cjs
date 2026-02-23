@@ -4,4 +4,5 @@ module.exports = {
 	testPathIgnorePatterns: ['.d.ts', '.js'],
 	testTimeout: 60000,
 	setupFiles: ['dotenv/config'],
+	moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
 };
