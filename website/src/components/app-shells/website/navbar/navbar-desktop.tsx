@@ -23,7 +23,7 @@ type Props = {
 export const NavbarDesktop = ({ menu, lang, region, scope, sessions }: Props) => {
 	const session = displaySession(sessions, scope);
 	return (
-		<nav className="absolute inset-x-0 top-5 z-50 w-site-width max-w-content mx-auto flex h-14 items-center justify-between rounded-full bg-white p-2 shadow-[0_0_28px_rgba(0,0,0,0.05)]">
+		<nav className="w-site-width max-w-content absolute inset-x-0 top-5 z-50 mx-auto flex h-14 items-center justify-between rounded-full bg-white p-2 shadow-[0_0_28px_rgba(0,0,0,0.05)]">
 			<Link href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}`} className="text-accent-foreground ml-4">
 				<SocialIncomeLogo />
 			</Link>
