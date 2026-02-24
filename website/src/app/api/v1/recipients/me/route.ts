@@ -12,7 +12,6 @@ import { RecipientSelfUpdate } from '../../models';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	
 	const recipientResult = await services.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
@@ -38,7 +37,6 @@ export const GET = withAppCheck(async (request: NextRequest) => {
  * @openapi
  */
 export const PATCH = withAppCheck(async (request: NextRequest) => {
-	
 
 	logger.info('[PATCH /recipients/me] Incoming request', {
 		contentType: request.headers.get('content-type'),

@@ -15,8 +15,6 @@ type TransparencyFinancesParams = DefaultParams & { currency: Currency };
 export default async function Page({ params }: DefaultLayoutProps<TransparencyFinancesParams>) {
 	const { lang, currency } = await params;
 
-	
-
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
 		const start = DateTime.now()
 			.minus({ months: 11 - i })

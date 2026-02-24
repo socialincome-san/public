@@ -14,8 +14,6 @@ export default function ProgramsPage({ params, searchParams }: DefaultLayoutProp
 const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPropsWithSlug & DefaultPageProps) => {
 	const { slug } = await params;
 	const query = await searchParams;
-
-	
 	const statsResult = await services.programStats.getProgramDashboardStatsBySlug(slug);
 
 	if (!statsResult.success || !statsResult.data) {
