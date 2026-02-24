@@ -1,4 +1,4 @@
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
@@ -8,6 +8,7 @@ const badgeVariants = cva('inline-flex items-center rounded-full border py-1 px-
 			default: 'bg-muted border-border text-slate-700',
 			secondary: 'bg-orange-50 border-orange-300 text-orange-700',
 			outline: 'bg-sky-50 border-sky-300 text-sky-700',
+			'outline-solid': 'border-foreground text-foreground bg-transparent',
 			destructive: 'bg-rose-50 border-rose-300 text-rose-700',
 			verified: 'bg-green-50 border-green-300 text-green-700',
 			country: 'bg-background border-border text-foreground',

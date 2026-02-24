@@ -10,21 +10,22 @@ const badgeVariants = cva(
 			variant: {
 				default: 'border-transparent bg-primary text-primary-foreground',
 				foreground: 'border-transparent bg-foreground text-primary-foreground',
-				faded: 'border-transparent bg-primary bg-opacity-10 text-primary',
+				faded: 'border-transparent bg-primary/10 text-primary',
 				secondary: 'border-transparent bg-secondary text-secondary-foreground',
 				destructive: 'border-transparent bg-destructive text-destructive-foreground',
 				muted: 'border-muted-foreground text-muted-foreground',
 				accent: 'border-transparent bg-accent text-accent-foreground',
 				outline: 'text-primary border-primary bg-white',
+				'outline-solid': 'border-foreground text-foreground bg-transparent',
 				white: 'border-white bg-transparent text-white',
 				interactive:
-					'border-transparent bg-primary bg-opacity-10 text-primary hover:bg-opacity-100 hover:text-white focus:ring-2 focus:ring-ring focus:ring-offset-2',
+					'border-transparent bg-primary/10 text-primary hover:bg-primary/100 hover:text-white focus:ring-2 focus:ring-ring focus:ring-offset-2',
 				'interactive-accent':
-					'border-transparent bg-accent bg-opacity-50 text-primary hover:bg-opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2',
+					'border-transparent bg-accent/50 text-primary hover:bg-accent/100 focus:ring-2 focus:ring-ring focus:ring-offset-2',
 				'interactive-secondary':
-					'border-transparent bg-secondary bg-opacity-10 text-secondary hover:bg-opacity-100 hover:text-white focus:ring-2 focus:ring-ring focus:ring-offset-2',
+					'border-transparent bg-secondary/10 text-secondary hover:bg-secondary/100 hover:text-white focus:ring-2 focus:ring-ring focus:ring-offset-2',
 				'interactive-destructive':
-					'border-transparent bg-destructive bg-opacity-10 text-destructive hover:bg-opacity-100 hover:text-white focus:ring-2 focus:ring-ring focus:ring-offset-2',
+					'border-transparent bg-destructive/10 text-destructive hover:bg-destructive/100 hover:text-white focus:ring-2 focus:ring-ring focus:ring-offset-2',
 				'interactive-muted':
 					'border-muted-foreground text-muted-foreground hover:bg-muted-foreground hover:text-muted focus:ring-2 focus:ring-ring focus:ring-offset-2',
 				'interactive-outline':

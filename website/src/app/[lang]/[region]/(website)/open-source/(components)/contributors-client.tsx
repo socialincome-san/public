@@ -14,7 +14,7 @@ const GITHUB_BASE_URL = 'https://github.com';
 const Contributor = ({ name, commits, avatarUrl }: ContributorProp) => {
 	return (
 		<article className="flex min-w-60 flex-row items-center py-2">
-			<Avatar className="h-12 w-12 flex-shrink-0">
+			<Avatar className="h-12 w-12 shrink-0">
 				<AvatarImage src={avatarUrl} alt={`${name}'s avatar`} />
 				<AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
 			</Avatar>

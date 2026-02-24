@@ -6,10 +6,9 @@ import { SILogo } from '@/components/legacy/logos/si-logo';
 import { useNavbarBackground } from '@/components/legacy/navbar/useNavbarBackground';
 import { CountryCode } from '@/generated/prisma/enums';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getFlagImageURL, WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { DonateIcon, SIIcon, Typography } from '@socialincome/ui';
-import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
 import classNames from 'classnames';
 import _ from 'lodash';
 import Image from 'next/image';
@@ -125,7 +124,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							.map((reg) => (
 								<div key={reg.code} className="flex-inline flex items-center space-x-2">
 									<CheckIcon
-										className={classNames('stroke-3 h-5 w-5', {
+										className={classNames('h-5 w-5 stroke-3', {
 											'text-accent': reg.code === region,
 											'text-transparent': reg.code !== region,
 										})}
@@ -147,7 +146,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							.map((l) => (
 								<div key={l.code} className="flex-inline flex items-center space-x-2">
 									<CheckIcon
-										className={classNames('stroke-3 h-5 w-5', {
+										className={classNames('h-5 w-5 stroke-3', {
 											'text-accent': l.code === language,
 											'text-transparent': l.code !== language,
 										})}
@@ -169,7 +168,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							.map((curr) => (
 								<div key={curr.code} className="flex-inline flex items-center space-x-2">
 									<CheckIcon
-										className={classNames('stroke-3 h-5 w-5', {
+										className={classNames('h-5 w-5 stroke-3', {
 											'text-accent': curr.code === currency,
 											'text-transparent': curr.code !== currency,
 										})}
@@ -251,11 +250,11 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 					</Link>
 				) : (
 					<ChevronLeftIcon
-						className="text-accent stroke-3 h-6 cursor-pointer"
+						className="text-accent h-6 cursor-pointer stroke-3"
 						onClick={() => setVisibleSection('main')}
 					/>
 				)}
-				<XMarkIcon className="text-accent stroke-3 h-6 cursor-pointer" onClick={() => setVisibleSection(null)} />
+				<XMarkIcon className="text-accent h-6 cursor-pointer stroke-3" onClick={() => setVisibleSection(null)} />
 			</div>
 			<div className={classNames({ hidden: _.isNull(visibleSection), 'flex h-full': !_.isNull(visibleSection) })}>
 				{content}
@@ -303,10 +302,10 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 			</div>
 			<div className="flex flex-row items-center justify-evenly gap-x-10 overflow-visible">
 				<div className="group/our-work relative flex flex-1 justify-end">
-					<NavbarLink className="whitespace-nowrap px-2" href={ourWork.href}>
+					<NavbarLink className="px-2 whitespace-nowrap" href={ourWork.href}>
 						{ourWork.title}
 					</NavbarLink>
-					<div className="absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap pt-2 opacity-0 group-hover/our-work:flex group-hover/our-work:opacity-100">
+					<div className="absolute top-full left-2 mt-0 hidden flex-col overflow-visible pt-2 whitespace-nowrap opacity-0 group-hover/our-work:flex group-hover/our-work:opacity-100">
 						{ourWork.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
@@ -315,10 +314,10 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					</div>
 				</div>
 				<div className="group/about-us relative flex flex-1 justify-center">
-					<NavbarLink className="whitespace-nowrap px-2" href={aboutUs.href}>
+					<NavbarLink className="px-2 whitespace-nowrap" href={aboutUs.href}>
 						{aboutUs.title}
 					</NavbarLink>
-					<div className="absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap pt-2 opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
+					<div className="absolute top-full left-2 mt-0 hidden flex-col overflow-visible pt-2 whitespace-nowrap opacity-0 group-hover/about-us:opacity-100 group-hover/navbar:flex">
 						{aboutUs.links?.map((link, index) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
@@ -327,10 +326,10 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					</div>
 				</div>
 				<div className="group/transparency relative flex flex-1 justify-start">
-					<NavbarLink className="whitespace-nowrap px-2" href={transparency.href}>
+					<NavbarLink className="px-2 whitespace-nowrap" href={transparency.href}>
 						{transparency.title}
 					</NavbarLink>
-					<div className="absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap pt-2 opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
+					<div className="absolute top-full left-2 mt-0 hidden flex-col overflow-visible pt-2 whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
 						{transparency.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
@@ -339,7 +338,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					</div>
 				</div>
 			</div>
-			<div className="group/i18n relative flex flex-col overflow-visible whitespace-nowrap pl-[80px] lg:pl-[200px]">
+			<div className="group/i18n relative flex flex-col overflow-visible pl-[80px] whitespace-nowrap lg:pl-[200px]">
 				<div className="flex flex-row items-baseline justify-end">
 					{(!isIntRegion || (isIntRegion && country)) && (
 						<Image
@@ -354,7 +353,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					)}{' '}
 					<Typography size="lg">{languages.find((l) => l.code === lang)?.translation}</Typography>
 				</div>
-				<div className="absolute right-0 top-full mt-0 hidden min-w-[160px] max-w-[170px] grid-cols-3 gap-x-6 pt-4 text-left opacity-0 group-hover/navbar:grid group-hover/i18n:opacity-100">
+				<div className="absolute top-full right-0 mt-0 hidden max-w-[170px] min-w-[160px] grid-cols-3 gap-x-6 pt-4 text-left opacity-0 group-hover/i18n:opacity-100 group-hover/navbar:grid">
 					<div className="flex flex-col items-end pr-0 lg:pr-4">
 						{regions
 							.sort((a, b) => a.translation.localeCompare(b.translation))

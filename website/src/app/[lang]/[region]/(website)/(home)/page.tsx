@@ -15,7 +15,7 @@ export default async function Page(props: DefaultPageProps) {
 	const { lang, region } = params;
 
 	return (
-		<div className="hero-video -mb-28 -mt-24 md:-mt-36">
+		<div className="hero-video -mt-24 -mb-28 md:-mt-36">
 			<HeroVideo lang={lang} region={region} />
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />

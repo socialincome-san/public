@@ -163,7 +163,7 @@ export const DonationForm = ({ amount, translations, lang, region }: DonationFor
 			</Typography>
 			<Form {...form}>
 				<form className="flex flex-col space-y-8">
-					<div className="mb-2 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 md:items-center">
+					<div className="mb-2 flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 md:items-center">
 						<FormField
 							control={form.control}
 							name="monthlyIncome"
@@ -198,7 +198,7 @@ export const DonationForm = ({ amount, translations, lang, region }: DonationFor
 										lang={lang as WebsiteLanguage}
 										translations={translations.paymentType}
 										bankTransferForm={
-											<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
+											<div className="border-accent bg-card-muted mt-[-2px]! rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
 												<BankTransferForm
 													lang={lang as WebsiteLanguage}
 													region={region}

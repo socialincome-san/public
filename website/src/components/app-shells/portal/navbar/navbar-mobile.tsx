@@ -76,7 +76,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 			{isMenuOpen && (
 				<div className="border-border border-b">
 					<div className="flex flex-col">
-						<div className="flex-grow space-y-1 overflow-y-auto p-2">
+						<div className="grow space-y-1 overflow-y-auto p-2">
 							{mainNavLinks.map(({ href, label, isDropdown, activeBase }) =>
 								isDropdown ? (
 									<ProgramDropdown
