@@ -43,10 +43,10 @@
 	"devDependencies": {
 		"@storybook/addon-essentials": "8.6.14",
 		"@storybook/addon-interactions": "8.6.14",
-		"@storybook/addon-onboarding": "8.6.17",
+		"@storybook/addon-onboarding": "10.2.10",
 		"@storybook/blocks": "8.6.14",
-		"@storybook/react": "8.6.17",
-		"@storybook/react-vite": "8.6.17",
+		"@storybook/react": "10.2.10",
+		"@storybook/react-vite": "10.2.10",
 		"@storybook/test": "8.6.15",
 		"@tailwindcss/postcss": "^4.2.0",
 		"@tailwindcss/typography": "0.5.19",
@@ -55,10 +55,10 @@
 		"postcss-import": "16.1.1",
 		"postcss-nesting": "14.0.0",
 		"prop-types": "15.8.1",
-		"storybook": "8.6.17",
+		"storybook": "10.2.10",
 		"tailwind-merge": "3.4.1",
 		"tailwindcss": "4.2.0",
-		"vite": "6.4.1"
+		"vite": "7.3.1"
 	},
 	"scripts": {
 		"storybook": "storybook dev -p 6006",
