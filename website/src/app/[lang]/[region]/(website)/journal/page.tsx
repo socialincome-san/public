@@ -10,8 +10,6 @@ import Link from 'next/link';
 
 export const revalidate = 900;
 
-const storyblokService = services.storyblok;
-
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
 
@@ -21,9 +19,9 @@ export default async function Page({ params }: DefaultPageProps) {
 	});
 
 	const [articlesResult, authorsResult, tagsResult] = await Promise.all([
-		storyblokService.getOverviewArticles(lang),
-		storyblokService.getOverviewAuthors(lang),
-		storyblokService.getOverviewTags(lang),
+		services.storyblok.getOverviewArticles(lang),
+		services.storyblok.getOverviewAuthors(lang),
+		services.storyblok.getOverviewTags(lang),
 	]);
 
 	const articles = articlesResult.success ? articlesResult.data : [];
@@ -33,7 +31,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	let totalArticlesInDefaultLang = articles.length;
 
 	if (lang !== defaultLanguage) {
-		const countRes = await storyblokService.getOverviewArticlesCountForDefaultLang();
+		const countRes = await services.storyblok.getOverviewArticlesCountForDefaultLang();
 		if (countRes.success) {
 			totalArticlesInDefaultLang = countRes.data;
 		}

@@ -31,7 +31,6 @@ import { TransparencyService } from './transparency/transparency.service';
 import { TwilioService } from './twilio/twilio.service';
 import { UserService } from './user/user.service';
 
-// Tier 0: leaf services with no service dependencies
 const appReviewMode = new AppReviewModeService(prisma);
 const organizationAccess = new OrganizationAccessService(prisma);
 const programAccess = new ProgramAccessService(prisma);
@@ -44,11 +43,9 @@ const programStats = new ProgramStatsService(prisma);
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const sendgrid = new SendgridSubscriptionService();
 
-// Tier 1: services that depend on tier-0 services
 const user = new UserService(prisma, firebaseAdmin);
 const contribution = new ContributionService(prisma, organizationAccess);
 
-// Tier 2
 const candidate = new CandidateService(prisma, user, firebaseAdmin);
 const localPartner = new LocalPartnerService(prisma, user, firebaseAdmin);
 const country = new CountryService(prisma, user);
@@ -57,7 +54,6 @@ const expense = new ExpenseService(prisma, user);
 const organization = new OrganizationService(prisma, user, organizationAccess);
 const contributor = new ContributorService(prisma, organizationAccess, firebaseAdmin, sendgrid);
 
-// Tier 3
 const donationCertificate = new DonationCertificateService(prisma, organizationAccess, contributor, contribution);
 const campaign = new CampaignService(prisma, organizationAccess, exchangeRate);
 const recipient = new RecipientService(prisma, programAccess, firebaseAdmin, appReviewMode);
@@ -66,7 +62,6 @@ const payout = new PayoutService(prisma, programAccess, exchangeRate);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
 const stripe = new StripeService(prisma, contributor, contribution, campaign, programAccess);
 
-// Tier 4
 const payoutProcess = new PayoutProcessService(prisma, programAccess, program, exchangeRate);
 const bankTransfer = new BankTransferService(prisma, contributor, campaign, contribution);
 const paymentFileImport = new PaymentFileImportService(

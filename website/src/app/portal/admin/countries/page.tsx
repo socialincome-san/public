@@ -16,8 +16,7 @@ const CountriesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = services.country;
-	const result = await service.getTableView(user.id);
+	const result = await services.country.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: CountryTableViewRow[] = result.success ? result.data.tableRows : [];

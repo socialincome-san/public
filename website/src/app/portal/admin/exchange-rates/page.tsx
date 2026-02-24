@@ -16,8 +16,7 @@ const ExchangeRatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = services.exchangeRate;
-	const result = await service.getTableView(user.id);
+	const result = await services.exchangeRate.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: ExchangeRatesTableViewRow[] = result.success ? result.data.tableRows : [];

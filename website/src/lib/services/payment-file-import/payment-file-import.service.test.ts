@@ -22,7 +22,7 @@ const fixturePath = path.join(path.dirname(__filename), '__fixtures__', 'camt054
 describe('PaymentFileImportService.getContributionsFromPaymentFile', () => {
 	test('extracts two contributions with correct Ref and Amt per entry (real file)', () => {
 		const service = new PaymentFileImportService(
-			new PrismaClient(),
+			{} as PrismaClient,
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			new (ContributorService as any)(),
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

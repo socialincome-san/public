@@ -17,8 +17,7 @@ const OrganizationsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = services.organization;
-	const result = await service.getAdminTableView(user.id);
+	const result = await services.organization.getAdminTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: OrganizationTableViewRow[] = result.success ? result.data.tableRows : [];

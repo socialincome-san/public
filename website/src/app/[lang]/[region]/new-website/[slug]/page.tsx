@@ -9,12 +9,10 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-const storyblokService = services.storyblok;
-
 export default async function ContentPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = await params;
 
-	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(
+	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(
 		`${NEW_WEBSITE_SLUG}/${slug}`,
 		lang,
 	);

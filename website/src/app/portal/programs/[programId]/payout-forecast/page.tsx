@@ -22,8 +22,7 @@ const FinancesProgramScopedDataLoader = async ({ params }: { params: Promise<{ p
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const payoutService = services.payout;
-	const result = await payoutService.getForecastTableView(user.id, programId, MONTHS_AHEAD);
+	const result = await services.payout.getForecastTableView(user.id, programId, MONTHS_AHEAD);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

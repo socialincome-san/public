@@ -6,8 +6,6 @@ import { services } from '@/lib/services/services';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
-const storyblokService = services.storyblok;
-
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
@@ -17,7 +15,7 @@ type Props = {
 
 export const StoryblokPreviewPage = async ({ storyPath, lang, region, searchParams }: Props) => {
 	const isVisualEditor = !!searchParams['_storyblok'];
-	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
+	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
 
 	if (!storyResult.success) {
 		return notFound();

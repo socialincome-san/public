@@ -16,8 +16,7 @@ const ExpensesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = services.expense;
-	const result = await service.getTableView(user.id);
+	const result = await services.expense.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];

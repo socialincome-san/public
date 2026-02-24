@@ -16,8 +16,7 @@ const CandidatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const candidateService = services.candidate;
-	const result = await candidateService.getTableView(user.id);
+	const result = await services.candidate.getTableView(user.id);
 	const error = result.success ? null : result.error;
 	const rows: CandidatesTableViewRow[] = result.success ? result.data.tableRows : [];
 

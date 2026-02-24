@@ -9,12 +9,10 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-const storyblokService = services.storyblok;
-
 export default async function HomePage({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
 
-	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(NEW_WEBSITE_SLUG, lang);
+	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(NEW_WEBSITE_SLUG, lang);
 
 	if (!storyResult.success) {
 		return notFound();

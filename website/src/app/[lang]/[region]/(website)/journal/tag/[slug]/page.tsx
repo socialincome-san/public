@@ -16,27 +16,25 @@ interface PageProps {
 	params: Promise<PageParams>;
 }
 
-const storyblokService = services.storyblok;
-
 const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArticlesInSelectedLanguage: number) => {
 	if (lang == defaultLanguage) {
 		return totalArticlesInSelectedLanguage;
 	}
 
-	const res = await storyblokService.getArticleCountByTagForDefaultLang(tagId);
+	const res = await services.storyblok.getArticleCountByTagForDefaultLang(tagId);
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
 };
 
 export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;
 
-	const tagResult = await storyblokService.getTag(slug, lang);
+	const tagResult = await services.storyblok.getTag(slug, lang);
 	if (!tagResult.success) {
 		return null;
 	}
 	const tag = tagResult.data;
 
-	const articlesResult = await storyblokService.getArticlesByTag(tag.uuid, lang);
+	const articlesResult = await services.storyblok.getArticlesByTag(tag.uuid, lang);
 	const articles = articlesResult.success ? articlesResult.data : [];
 
 	const translator = await Translator.getInstance({

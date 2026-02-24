@@ -17,8 +17,6 @@ const getGitHubUrl = (username: string) => {
 	return `https://github.com/${encodeURIComponent(username)}`;
 };
 
-const storyblokService = services.storyblok;
-
 const getTotalArticlesInDefaultLanguage = async (
 	lang: string,
 	totalArticlesInSelectedLanguage: number,
@@ -28,14 +26,14 @@ const getTotalArticlesInDefaultLanguage = async (
 		return totalArticlesInSelectedLanguage;
 	}
 
-	const res = await storyblokService.getArticleCountByAuthorForDefaultLang(authorId);
+	const res = await services.storyblok.getArticleCountByAuthorForDefaultLang(authorId);
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
 };
 
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
 
-	const authorResult = await storyblokService.getAuthor(slug, lang);
+	const authorResult = await services.storyblok.getAuthor(slug, lang);
 	if (!authorResult.success) {
 		return null;
 	}
@@ -43,7 +41,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 	const authorId = author.uuid;
 
-	const articlesResult = await storyblokService.getArticlesByAuthor(authorId, lang);
+	const articlesResult = await services.storyblok.getArticlesByAuthor(authorId, lang);
 	const articles = articlesResult.success ? articlesResult.data : [];
 
 	const totalArticlesInSelectedLanguage = articles.length;

@@ -13,8 +13,7 @@ export const ContributionsTable = async ({ lang }: { lang: WebsiteLanguage }) =>
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
-	const service = services.contribution;
-	const result = await service.getYourContributionsTableView(contributor.id);
+	const result = await services.contribution.getYourContributionsTableView(contributor.id);
 
 	const error = result.success ? null : result.error;
 	const rows: YourContributionsTableViewRow[] = result.success ? result.data.tableRows : [];

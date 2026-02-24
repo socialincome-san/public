@@ -15,8 +15,7 @@ export default function UpcomingSurveysPage() {
 const UpcomingSurveysDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = services.survey;
-	const result = await service.getUpcomingSurveyTableView(user.id);
+	const result = await services.survey.getUpcomingSurveyTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

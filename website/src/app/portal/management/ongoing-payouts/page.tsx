@@ -15,8 +15,7 @@ export default function OngoingPayoutsPage() {
 const OngoingPayoutsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = services.payout;
-	const result = await service.getOngoingPayoutTableView(user.id);
+	const result = await services.payout.getOngoingPayoutTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

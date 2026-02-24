@@ -22,8 +22,7 @@ const RecipientsProgramScopedDataLoader = async ({ params }: { params: Promise<{
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const recipientService = services.recipient;
-	const recipientsResult = await recipientService.getTableViewProgramScoped(user.id, programId);
+	const recipientsResult = await services.recipient.getTableViewProgramScoped(user.id, programId);
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];

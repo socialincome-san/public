@@ -8,8 +8,7 @@ import { YourDonationCertificateTable } from './your-donation-certificate-table-
 export default async function YourDonationCertificates({ lang }: DefaultParams) {
 	const contributor = await getAuthenticatedContributorOrRedirect();
 
-	const service = services.donationCertificate;
-	const result = await service.getYourCertificatesTableView(contributor.id);
+	const result = await services.donationCertificate.getYourCertificatesTableView(contributor.id);
 	const error = result.success ? null : result.error;
 	const rows: YourDonationCertificateTableViewRow[] = result.success ? result.data.tableRows : [];
 	return <YourDonationCertificateTable rows={rows} error={error} lang={lang as WebsiteLanguage} />;

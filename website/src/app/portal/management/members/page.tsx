@@ -16,8 +16,7 @@ export default function OrganizationMembersPage() {
 const OrganizationMembersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = services.organization;
-	const result = await service.getOrganizationMembersTableView(user.id);
+	const result = await services.organization.getOrganizationMembersTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: OrganizationMemberTableViewRow[] = result.success ? result.data.tableRows : [];

@@ -10,8 +10,7 @@ type Props = {
 };
 
 export const UserPrograms = async ({ userId }: Props) => {
-	const service = services.program;
-	const result = await service.getProgramWallets(userId);
+	const result = await services.program.getProgramWallets(userId);
 
 	if (!result.success) {
 		return <div>{result.error}</div>;

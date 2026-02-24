@@ -15,8 +15,7 @@ export default function CandidatesPage() {
 const CandidatesDataLoader = async () => {
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
-	const candidateService = services.candidate;
-	const result = await candidateService.getTableViewByLocalPartner(partner.id);
+	const result = await services.candidate.getTableViewByLocalPartner(partner.id);
 
 	const error = result.success ? null : result.error;
 	const rows: CandidatesTableViewRow[] = result.success ? result.data.tableRows : [];

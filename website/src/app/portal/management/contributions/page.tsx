@@ -15,8 +15,7 @@ export default function ContributionsPage() {
 const ContributionsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = services.contribution;
-	const result = await service.getTableView(user.id);
+	const result = await services.contribution.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];

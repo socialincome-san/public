@@ -15,8 +15,7 @@ export default function SurveysPage() {
 const SurveysDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = services.survey;
-	const result = await service.getTableView(user.id);
+	const result = await services.survey.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: SurveyTableViewRow[] = result.success ? result.data.tableRows : [];

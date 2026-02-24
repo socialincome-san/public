@@ -15,8 +15,7 @@ export default function PayoutsPage() {
 const PayoutsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const payoutService = services.payout;
-	const result = await payoutService.getTableView(user.id);
+	const result = await services.payout.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: PayoutTableViewRow[] = result.success ? result.data.tableRows : [];

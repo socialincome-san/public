@@ -20,8 +20,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: 'website-donate' });
 
-	const stripeService = services.stripe;
-	const sessionResult = await stripeService.getCheckoutSession(session);
+	const sessionResult = await services.stripe.getCheckoutSession(session);
 	if (!sessionResult.success) {
 		throw new Error(sessionResult.error);
 	}
@@ -29,7 +28,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 	const checkoutSession = sessionResult.data;
 	const recurring = checkoutSession.mode === 'subscription';
 
-	const contributorResult = await stripeService.getContributorFromCheckoutSession(checkoutSession);
+	const contributorResult = await services.stripe.getContributorFromCheckoutSession(checkoutSession);
 	if (!contributorResult.success) {
 		throw new Error(contributorResult.error);
 	}

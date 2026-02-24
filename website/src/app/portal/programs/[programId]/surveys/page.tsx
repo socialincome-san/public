@@ -23,8 +23,7 @@ const SurveysProgramScopedDataLoader = async ({ params }: { params: Promise<{ pr
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const surveyService = services.survey;
-	const surveysResult = await surveyService.getTableViewProgramScoped(user.id, programId);
+	const surveysResult = await services.survey.getTableViewProgramScoped(user.id, programId);
 
 	const error = surveysResult.success ? null : surveysResult.error;
 	const rows: SurveyTableViewRow[] = surveysResult.success ? surveysResult.data.tableRows : [];

@@ -15,8 +15,7 @@ export default function CampaignsPage() {
 const CampaignsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const campaignService = services.campaign;
-	const campaignsResult = await campaignService.getTableView(user.id);
+	const campaignsResult = await services.campaign.getTableView(user.id);
 
 	const error = campaignsResult.success ? null : campaignsResult.error;
 	const campaignRows: CampaignTableViewRow[] = campaignsResult.success ? campaignsResult.data.tableRows : [];

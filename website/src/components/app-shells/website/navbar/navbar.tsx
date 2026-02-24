@@ -8,8 +8,6 @@ import { services } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ISbStoryData } from '@storyblok/js';
 
-const storyblokService = services.storyblok;
-
 type Props = {
 	sessions: Session[];
 	lang: WebsiteLanguage;
@@ -18,7 +16,7 @@ type Props = {
 };
 
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
-	const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
 	const menu = result.success ? result.data.content.menu : [];
 
 	return (

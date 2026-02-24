@@ -16,8 +16,7 @@ const LocalPartnersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = services.localPartner;
-	const result = await service.getTableView(user.id);
+	const result = await services.localPartner.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: LocalPartnerTableViewRow[] = result.success ? result.data.tableRows : [];

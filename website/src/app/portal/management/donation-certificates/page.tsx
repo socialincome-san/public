@@ -15,8 +15,7 @@ export default function DonationCertificatesPage() {
 const DonationCertificatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = services.donationCertificate;
-	const certificatesResult = await service.getTableView(user.id);
+	const certificatesResult = await services.donationCertificate.getTableView(user.id);
 
 	const error = certificatesResult.success ? null : certificatesResult.error;
 	const certificateRows: DonationCertificateTableViewRow[] = certificatesResult.success

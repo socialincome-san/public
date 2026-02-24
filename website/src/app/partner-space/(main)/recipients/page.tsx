@@ -15,8 +15,7 @@ export default function RecipientsPage() {
 const RecipientsDataLoader = async () => {
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
-	const recipientService = services.recipient;
-	const result = await recipientService.getTableViewByLocalPartnerId(partner.id);
+	const result = await services.recipient.getTableViewByLocalPartnerId(partner.id);
 
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];

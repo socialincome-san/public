@@ -13,13 +13,11 @@ export const SubscriptionsTable = async ({ lang }: { lang: WebsiteLanguage }) =>
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
-	const stripeService = services.stripe;
-
-	const subscriptionsResult = await stripeService.getSubscriptionsTableView(contributor.stripeCustomerId);
+	const subscriptionsResult = await services.stripe.getSubscriptionsTableView(contributor.stripeCustomerId);
 
 	const rows: StripeSubscriptionRow[] = subscriptionsResult.success ? subscriptionsResult.data.rows : [];
 
-	const billingPortal = await stripeService.createManageSubscriptionsSession(
+	const billingPortal = await services.stripe.createManageSubscriptionsSession(
 		contributor.stripeCustomerId,
 		contributor.language,
 	);

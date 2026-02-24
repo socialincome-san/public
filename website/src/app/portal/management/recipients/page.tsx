@@ -16,8 +16,7 @@ export default function RecipientsPage() {
 const RecipientsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const recipientService = services.recipient;
-	const result = await recipientService.getTableView(user.id);
+	const result = await services.recipient.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];

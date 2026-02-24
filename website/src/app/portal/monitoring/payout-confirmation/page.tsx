@@ -15,8 +15,7 @@ export default function ConfirmPayoutsPage() {
 const ConfirmPayoutsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = services.payout;
-	const result = await service.getPayoutConfirmationTableView(user.id);
+	const result = await services.payout.getPayoutConfirmationTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
