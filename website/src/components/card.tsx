@@ -1,4 +1,4 @@
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -30,7 +30,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 	({ className, variant, clickable, href, children, ...props }, ref) => {
 		const content = (
 			<div ref={ref} className={cn(cardVariants({ variant, clickable: !!href }), 'relative', className)} {...props}>
-				{href && <ChevronRightIcon className="text-muted-foreground absolute right-6 top-6 h-5 w-5" />}
+				{href && <ChevronRightIcon className="text-muted-foreground absolute top-6 right-6 h-5 w-5" />}
 				{children}
 			</div>
 		);

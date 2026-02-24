@@ -206,7 +206,7 @@ export const SuccessForm = ({
 										<SelectValue placeholder={field.value && countryTranslator?.t(field.value)} />
 									</SelectTrigger>
 								</FormControl>
-								<SelectContent className="max-h-[16rem] overflow-y-auto">
+								<SelectContent className="max-h-64 overflow-y-auto">
 									<SelectGroup>
 										{COUNTRY_CODES.map((country: CountryCode) => (
 											<SelectItem key={country} value={country}>
@@ -272,7 +272,7 @@ export const SuccessForm = ({
 					control={form.control}
 					name="termsAndConditions"
 					render={({ field }) => (
-						<FormItem className="col-span-2 flex flex-row items-start space-x-3 space-y-0 px-2 py-4">
+						<FormItem className="col-span-2 flex flex-row items-start space-y-0 space-x-3 px-2 py-4">
 							<FormControl>
 								<Checkbox data-testid="terms-and-conditions" checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>

@@ -37,7 +37,7 @@ const CurrencySelector = React.forwardRef<HTMLDivElement, CurrencySelectorProps>
 		const Flag = FLAG_COMPONENTS[currency ?? 'CHF'];
 
 		return (
-			<div ref={ref} className={classNames('w-full md:max-w-[12rem]', className)} {...props}>
+			<div ref={ref} className={classNames('w-full md:max-w-48', className)} {...props}>
 				<Select
 					value={currency}
 					onValueChange={(currency: WebsiteCurrency) => {

@@ -10,5 +10,5 @@ const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mo
 });
 
 export const SIAnimatedLogo = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => {
-	return <Player src={file} autoplay keepLastFrame className={twMerge('[&>svg]:!w-auto', className)} {...props} />;
+	return <Player src={file} autoplay keepLastFrame className={twMerge('[&>svg]:w-auto!', className)} {...props} />;
 };

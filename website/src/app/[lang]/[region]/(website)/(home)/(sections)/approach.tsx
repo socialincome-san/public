@@ -27,7 +27,7 @@ export const Approach = async ({ lang }: DefaultParams) => {
 				{cards.map((card) => (
 					<GlowHoverCard
 						key={card.title}
-						className="theme-blue mx-auto min-w-80 max-w-md flex-1 rounded-none border-none"
+						className="theme-blue mx-auto max-w-md min-w-80 flex-1 rounded-none border-none"
 					>
 						<CardHeader className="mb-1">
 							<Typography size="md" className="opacity-40">

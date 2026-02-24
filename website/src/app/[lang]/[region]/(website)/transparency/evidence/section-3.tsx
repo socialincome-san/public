@@ -1,8 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor, Typography } from '@socialincome/ui';
 import { CardTranslation, SectionCard } from './section-card';
 
 export default async function Section3({ lang }: DefaultParams) {

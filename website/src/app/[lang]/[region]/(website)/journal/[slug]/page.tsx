@@ -42,7 +42,12 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 	return await storyblokService.getArticle(lang, slug);
 });
 
-const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
+const badgeWithLink = (
+	lang: string,
+	region: string,
+	tag: ISbStoryData<Topic>,
+	variant: 'outline' | 'outline-solid' | 'foreground',
+) => {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge variant={variant} className="mt-6">
@@ -133,7 +138,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<Typography
 							weight="medium"
-							className="mb-3 mt-8 hyphens-auto break-words"
+							className="mt-8 mb-3 wrap-break-word hyphens-auto"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="5xl"
 						>
@@ -142,7 +147,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<Typography
 							weight="normal"
-							className="hyphens-auto break-words"
+							className="wrap-break-word hyphens-auto"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="3xl"
 						>
@@ -166,7 +171,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<div className="mt-4 flex flex-wrap justify-start gap-2">
 							{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
-								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
+								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline-solid' : 'foreground'),
 							)}
 						</div>
 					</div>
@@ -230,7 +235,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							{translator.t('article.keep-reading')}
 						</Typography>
 
-						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-5 md:pl-20 md:pr-20 lg:grid-cols-3">
+						<div className="mt-3 mb-10 grid grid-cols-1 content-center justify-center gap-4 p-5 md:pr-20 md:pl-20 lg:grid-cols-3">
 							{articles.map((article) => (
 								<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} />
 							))}

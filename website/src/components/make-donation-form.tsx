@@ -30,7 +30,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 
 	return (
 		<div className="text-foreground border-border w-96 rounded-3xl border bg-white p-9 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
-			<h3 className="mb-5 text-2xl font-semibold leading-none">{t('title')}</h3>
+			<h3 className="mb-5 text-2xl leading-none font-semibold">{t('title')}</h3>
 
 			<div className="border-muted mb-3 grid grid-cols-[70%_30%] overflow-hidden rounded-md border">
 				<div className="border-muted border-r px-3 py-2">
@@ -42,12 +42,12 @@ export const MakeDonationForm = ({ lang }: Props) => {
 							const parsed = parseFloat(e.target.value);
 							setMonthlyIncome(isNaN(parsed) ? 0 : parsed);
 						}}
-						className="w-full text-lg font-medium leading-none outline-none"
+						className="w-full text-lg leading-none font-medium outline-hidden"
 					/>
 				</div>
 				<div className="bg-muted px-3 py-2">
 					<div className="text-[10px] font-medium">{t('your-one-percent')}</div>
-					<div className="whitespace-nowrap text-lg font-medium leading-none">
+					<div className="text-lg leading-none font-medium whitespace-nowrap">
 						{t('currency-prefix')} {Math.round(monthlyIncome / 100)}
 					</div>
 				</div>
@@ -64,7 +64,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 							type="button"
 							onClick={() => setSelectedAmount(option.value)}
 							className={cn(
-								'flex flex-col items-center justify-center p-3 font-medium leading-none transition-colors',
+								'flex flex-col items-center justify-center p-3 leading-none font-medium transition-colors',
 								isSelected && 'bg-muted',
 							)}
 						>
@@ -81,7 +81,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 					onClick={() => setCadence('monthly')}
 					className={cn(
 						'cursor-pointer rounded-md px-3 py-2 text-sm font-semibold transition-colors',
-						cadence === 'monthly' && 'bg-white shadow-sm',
+						cadence === 'monthly' && 'bg-white shadow-xs',
 					)}
 				>
 					{t('monthly')}
@@ -91,7 +91,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 					onClick={() => setCadence('one-time')}
 					className={cn(
 						'cursor-pointer rounded-md px-3 py-2 text-sm font-semibold transition-colors',
-						cadence === 'one-time' && 'bg-white shadow-sm',
+						cadence === 'one-time' && 'bg-white shadow-xs',
 					)}
 				>
 					{t('one-time')}

@@ -2,8 +2,7 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { CardTranslation, SectionCard } from '@/app/[lang]/[region]/(website)/transparency/evidence/section-card';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor, Typography } from '@socialincome/ui';
 
 export default async function Section1({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -36,7 +35,7 @@ export default async function Section1({ lang }: DefaultParams) {
 						</Typography>
 					))}
 				</Typography>
-				<div className="mb-16 mt-12 grid grid-cols-1 gap-16 md:grid-cols-6 lg:grid-cols-8">
+				<div className="mt-12 mb-16 grid grid-cols-1 gap-16 md:grid-cols-6 lg:grid-cols-8">
 					<Typography size="2xl" weight="medium" className="md:col-span-3">
 						{translator.t(`section-2.evidence`)}
 					</Typography>

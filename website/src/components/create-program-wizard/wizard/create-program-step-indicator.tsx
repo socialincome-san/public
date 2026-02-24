@@ -26,9 +26,9 @@ const stepClasses = {
 	base: 'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors',
 	active: [
 		'relative isolate z-10',
-		'text-primary-foreground bg-primary/90 shadow',
+		'text-primary-foreground bg-primary/90 shadow-sm',
 		'after:absolute after:inset-0 after:-z-10 after:rounded-full',
-		'after:bg-gradient-to-r after:from-[hsl(var(--gradient-button-from))] after:to-[hsl(var(--gradient-button-to))]',
+		'after:bg-linear-to-r after:from-[hsl(var(--gradient-button-from))] after:to-[hsl(var(--gradient-button-to))]',
 		'after:opacity-100 hover:after:opacity-0',
 		'after:transition-opacity',
 	],

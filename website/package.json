@@ -105,6 +105,8 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "1.58.2",
+		"@tailwindcss/postcss": "^4.2.0",
+		"@tailwindcss/typography": "0.5.19",
 		"@types/accept-language-parser": "1.5.8",
 		"@types/jest": "30.0.0",
 		"@types/lodash": "4.17.23",
@@ -113,7 +115,6 @@
 		"@types/pdfkit": "0.17.5",
 		"@types/ssh2-sftp-client": "9.0.6",
 		"@types/vimeo__player": "2.18.3",
-		"autoprefixer": "10.4.24",
 		"eslint": "9.39.2",
 		"eslint-config-next": "16.1.6",
 		"jest": "30.2.0",
@@ -123,7 +124,8 @@
 		"postcss": "8.5.6",
 		"prisma": "7.4.0",
 		"storyblok": "4.15.0",
-		"tailwindcss": "3.4.19",
+		"tailwindcss": "4.2.0",
+		"tw-animate-css": "^1.3.4",
 		"ts-jest": "29.4.6",
 		"tsx": "4.21.0",
 		"typescript": "5.9.3"
