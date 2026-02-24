@@ -1,6 +1,6 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { UserRecord } from 'firebase-admin/auth';
-import { Twilio } from 'twilio';
+import type { Twilio } from 'twilio';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -21,11 +21,18 @@ export class TwilioService extends BaseService {
 		this.appReviewModeService = appReviewModeService;
 	}
 
-	private readonly twilioClient = new Twilio(process.env.TWILIO_API_KEY_SID, process.env.TWILIO_API_KEY_SECRET, {
-		accountSid: process.env.TWILIO_ACCOUNT_SID,
-	});
-
+	private _twilioClient: Twilio | null = null;
 	private readonly TWILIO_VERIFY_SERVICE_SID = process.env.TWILIO_VERIFY_SERVICE_SID;
+
+	private async getTwilioClient(): Promise<Twilio> {
+		if (!this._twilioClient) {
+			const { Twilio: TwilioConstructor } = await import('twilio');
+			this._twilioClient = new TwilioConstructor(process.env.TWILIO_API_KEY_SID, process.env.TWILIO_API_KEY_SECRET, {
+				accountSid: process.env.TWILIO_ACCOUNT_SID,
+			});
+		}
+		return this._twilioClient;
+	}
 
 	async requestOtp(phoneNumber: string): Promise<ServiceResult<boolean>> {
 		const envCheck = this.requireTwilioEnvVars();
@@ -45,7 +52,7 @@ export class TwilioService extends BaseService {
 
 		try {
 			this.logger.info('Twilio: Requesting OTP for phone');
-			await this.twilioClient.verify.v2.services(this.TWILIO_VERIFY_SERVICE_SID ?? '').verifications.create({
+			await (await this.getTwilioClient()).verify.v2.services(this.TWILIO_VERIFY_SERVICE_SID ?? '').verifications.create({
 				to: phoneResult.data,
 				channel: 'sms',
 			});
@@ -80,7 +87,7 @@ export class TwilioService extends BaseService {
 
 		try {
 			this.logger.info('Twilio: Attempting to verify OTP for phone');
-			const verification = await this.twilioClient.verify.v2
+			const verification = await (await this.getTwilioClient()).verify.v2
 				.services(this.TWILIO_VERIFY_SERVICE_SID ?? '')
 				.verificationChecks.create({
 					to: phoneResult.data,

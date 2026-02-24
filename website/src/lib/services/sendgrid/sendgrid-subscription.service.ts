@@ -1,5 +1,5 @@
 import { CountryCode } from '@/generated/prisma/enums';
-import { Client } from '@sendgrid/client';
+import type { Client } from '@sendgrid/client';
 import { ContributorSession } from '../contributor/contributor.types';
 import { ServiceResult } from '../core/base.types';
 import {
@@ -11,9 +11,11 @@ import {
 	Suppression,
 } from './types';
 
-export class SendgridSubscriptionService extends Client {
+export class SendgridSubscriptionService {
 	listId: string;
 	suppressionListId: number; // unsubscribe group id
+	private readonly apiKey: string;
+	private _client: Client | null = null;
 
 	protected resultOk<T>(data: T, status?: number): ServiceResult<T> {
 		return { success: true, data, status };
@@ -24,11 +26,23 @@ export class SendgridSubscriptionService extends Client {
 	}
 
 	constructor() {
-		super();
 		const env: SendgridClientProps = this.validateSendgridEnvVars();
-		this.setApiKey(env.SENDGRID_API_KEY);
+		this.apiKey = env.SENDGRID_API_KEY;
 		this.listId = env.SENDGRID_LIST_ID;
 		this.suppressionListId = env.SENDGRID_SUPPRESSION_LIST_ID;
+	}
+
+	private async getClient(): Promise<Client> {
+		if (!this._client) {
+			const { Client } = await import('@sendgrid/client');
+			this._client = new Client();
+			this._client.setApiKey(this.apiKey);
+		}
+		return this._client;
+	}
+
+	private async request(...args: Parameters<Client['request']>): ReturnType<Client['request']> {
+		return (await this.getClient()).request(...args);
 	}
 
 	getActiveSubscription = async (
