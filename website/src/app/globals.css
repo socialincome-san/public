@@ -5,9 +5,9 @@
 @source '../../../ui/src/components';
 @source '../../../ui/src/icons';
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
 	--animate-enter-from-top: enterFromTop 100ms ease-out;
