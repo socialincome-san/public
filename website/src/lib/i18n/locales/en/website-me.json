@@ -160,6 +160,11 @@
 			"button": "Sign Out"
 		}
 	},
+	"navigation": {
+		"go-to-portal": "Go to portal",
+		"go-to-dashboard": "Go to dashboard",
+		"go-to-partner-space": "Go to partner space"
+	},
 	"work-info": {
 		"work": "Work",
 		"add-employer": "Add new employer",

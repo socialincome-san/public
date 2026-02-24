@@ -11,17 +11,17 @@ import { ChevronDown } from 'lucide-react';
 import NextLink from 'next/link';
 
 type Props = {
-	nav: Layout['menu'];
+	menu: Layout['menu'];
 	lang: WebsiteLanguage;
 	region: string;
 };
 
 const FALLBACK_BADGE_COUNT = 23;
 
-export const MenuDesktop = ({ nav, lang, region }: Props) => (
+export const MenuDesktop = ({ menu, lang, region }: Props) => (
 	<NavigationMenu.Root>
 		<NavigationMenu.List className="flex items-center gap-1">
-			{nav.map((item) => {
+			{menu.map((item) => {
 				if (!item.label) {
 					return null;
 				}

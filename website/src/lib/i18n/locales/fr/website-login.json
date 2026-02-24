@@ -18,5 +18,16 @@
 		"unknown": "Connexion impossible"
 	},
 	"detect-account-type": "Détection du type de compte...",
-	"invalid-account-type": "Type de compte invalide, veuillez réessayer ou contacter le support."
+	"invalid-account-type": "Type de compte invalide, veuillez réessayer ou contacter le support.",
+	"flyout": {
+		"login-button": "Connexion",
+		"title": "Se connecter",
+		"magic-link-description": "Nous t’enverrons un lien magique pour te connecter.",
+		"sending": "Envoi en cours...",
+		"sent-message": "Si un compte existe pour {{ email }}, tu recevras bientôt un lien de connexion.",
+		"retry": "Réessayer",
+		"support-prefix": "Si tu ne le reçois pas, contacte",
+		"no-account": "Tu n’as pas de compte ?",
+		"get-started": "Découvre comment commencer"
+	}
 }

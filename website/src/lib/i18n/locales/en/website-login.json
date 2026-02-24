@@ -18,5 +18,16 @@
 		"unknown": "Login failed"
 	},
 	"detect-account-type": "Detecting account type...",
-	"invalid-account-type": "Invalid account type, please try again or contact support."
+	"invalid-account-type": "Invalid account type, please try again or contact support.",
+	"flyout": {
+		"login-button": "Login",
+		"title": "Sign in",
+		"magic-link-description": "We'll send you a magic link to sign in.",
+		"sending": "Sending...",
+		"sent-message": "If an account exists for {{ email }}, you'll receive a login link shortly.",
+		"retry": "Retry",
+		"support-prefix": "If it doesn't arrive, contact",
+		"no-account": "Don't have an account?",
+		"get-started": "Learn how to get started"
+	}
 }

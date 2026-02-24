@@ -18,5 +18,16 @@
 		"unknown": "Login fehlgeschlagen"
 	},
 	"detect-account-type": "Konto-Typ wird erkannt...",
-	"invalid-account-type": "Ungültiger Konto-Typ, bitte versuchen Sie es erneut, oder kontaktieren Sie den Support."
+	"invalid-account-type": "Ungültiger Konto-Typ, bitte versuchen Sie es erneut, oder kontaktieren Sie den Support.",
+	"flyout": {
+		"login-button": "Anmelden",
+		"title": "Anmelden",
+		"magic-link-description": "Wir senden dir einen Magic Link zum Anmelden.",
+		"sending": "Wird gesendet...",
+		"sent-message": "Wenn ein Konto für {{ email }} existiert, erhältst du in Kürze einen Anmeldelink.",
+		"retry": "Erneut versuchen",
+		"support-prefix": "Wenn sie nicht ankommt, kontaktiere",
+		"no-account": "Du hast noch kein Konto?",
+		"get-started": "Erfahre, wie du loslegen kannst"
+	}
 }

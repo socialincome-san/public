@@ -4,6 +4,7 @@ import { hasDropdownChildren, isDropdownItem, isMenuItem } from '@/components/ap
 import { Button } from '@/components/button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
+import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
@@ -12,7 +13,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FC, startTransition, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 const FALLBACK_BADGE_COUNT = 23;
 
@@ -23,15 +24,15 @@ type Props = {
 };
 
 export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
+	const commonTranslator = useTranslator(lang, 'website-common');
+	const donateTranslator = useTranslator(lang, 'website-donate');
 	const [open, setOpen] = useState(false);
 	const [activeDropdown, setActiveDropdown] = useState<DropdownItem | null>(null);
 	const pathname = usePathname();
 
 	useEffect(() => {
-		startTransition(() => {
-			setOpen(false);
-			setActiveDropdown(null);
-		});
+		setOpen(false);
+		setActiveDropdown(null);
 	}, [pathname]);
 
 	const handleOpenChange = useCallback((nextOpen: boolean) => {
@@ -46,11 +47,11 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 	return (
 		<Dialog.Root open={open} onOpenChange={handleOpenChange}>
 			{open ? (
-				<Dialog.Close className="lg:hidden" aria-label="Close menu">
+				<Dialog.Close className="lg:hidden" aria-label={commonTranslator?.t('menu.close') ?? 'Close menu'}>
 					<X className="size-6" />
 				</Dialog.Close>
 			) : (
-				<Dialog.Trigger className="lg:hidden" aria-label="Open menu">
+				<Dialog.Trigger className="lg:hidden" aria-label={commonTranslator?.t('menu.open') ?? 'Open menu'}>
 					<Menu className="size-6" />
 				</Dialog.Trigger>
 			)}
@@ -58,7 +59,7 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 			<Dialog.Portal>
 				<Dialog.Overlay className="theme-new text-foreground fixed inset-0 z-100 overflow-y-auto bg-white lg:hidden">
 					<Dialog.Content className="flex min-h-full flex-col">
-						<Dialog.Title className="sr-only">Menu</Dialog.Title>
+						<Dialog.Title className="sr-only">{commonTranslator?.t('menu.title') ?? 'Menu'}</Dialog.Title>
 						<div className="border-muted mb-4 flex h-18 shrink-0 items-center justify-between border-b px-4">
 							<NextLink
 								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}`}
@@ -67,7 +68,7 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 							>
 								<SocialIncomeLogo />
 							</NextLink>
-							<Dialog.Close aria-label="Close menu">
+							<Dialog.Close aria-label={commonTranslator?.t('menu.close') ?? 'Close menu'}>
 								<X className="size-6" />
 							</Dialog.Close>
 						</div>
@@ -132,7 +133,7 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 											onClick={() => setActiveDropdown(null)}
 										>
 											<ChevronLeft className="size-4" />
-											Back
+											{commonTranslator?.t('menu.back') ?? 'Back'}
 										</button>
 
 										<h2 className="mb-4 text-2xl font-bold">{activeDropdown.label}</h2>
@@ -165,7 +166,9 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 							</div>
 						</div>
 						<div className="border-muted flex h-18 shrink-0 items-center justify-between border-t px-4 shadow-[0_-3px_14px_rgba(0,0,0,0.05)]">
-							<Button className="h-11 rounded-full px-5 text-sm font-medium">Donate now</Button>
+							<Button className="h-11 rounded-full px-5 text-sm font-medium">
+								{donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
+							</Button>
 						</div>
 					</Dialog.Content>
 				</Dialog.Overlay>
