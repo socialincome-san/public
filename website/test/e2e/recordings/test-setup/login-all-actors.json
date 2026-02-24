@@ -724,7 +724,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -1044,7 +1044,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
@@ -1275,7 +1275,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -1595,7 +1595,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
@@ -1826,7 +1826,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -2146,7 +2146,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
@@ -2377,7 +2377,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -2697,7 +2697,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
@@ -2928,7 +2928,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -3248,7 +3248,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
@@ -3479,7 +3479,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -3799,7 +3799,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
@@ -4030,7 +4030,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -4350,7 +4350,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
@@ -4581,7 +4581,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -4901,7 +4901,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
@@ -5132,7 +5132,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "Programs",
+                "label": "text in header",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -5452,7 +5452,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay connected",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {
