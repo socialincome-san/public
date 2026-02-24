@@ -2,8 +2,6 @@ import { PrismaClient } from '@/generated/prisma/client';
 import type { Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
-import { draftMode } from 'next/headers';
-import { notFound } from 'next/navigation';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { getStoryblokApi } from './storyblok.config';
@@ -28,6 +26,7 @@ export class StoryblokService extends BaseService {
 	}
 
 	async getStoryParams(language: string): Promise<ISbStoriesParams> {
+		const { draftMode } = await import('next/headers');
 		return {
 			language,
 			version: (await draftMode()).isEnabled ? 'draft' : 'published',
@@ -44,6 +43,7 @@ export class StoryblokService extends BaseService {
 		} catch (error: any) {
 			if (error?.status === 404) {
 				if (lang === defaultLanguage) {
+					const { notFound } = await import('next/navigation');
 					return notFound();
 				}
 				return await this.withLanguageFallback(loader, defaultLanguage, slug);

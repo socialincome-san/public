@@ -1,7 +1,6 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { authAdmin } from '@/lib/firebase/firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/auth';
-import { cookies } from 'next/headers';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
@@ -33,6 +32,7 @@ export class FirebaseSessionService extends BaseService {
 	}
 
 	private async setSessionCookie(value: string): Promise<void> {
+		const { cookies } = await import('next/headers');
 		const store = await cookies();
 		store.set({
 			name: SESSION_COOKIE_NAME,
@@ -61,6 +61,7 @@ export class FirebaseSessionService extends BaseService {
 
 	async clearSessionCookie(): Promise<ServiceResult<boolean>> {
 		try {
+			const { cookies } = await import('next/headers');
 			const store = await cookies();
 			store.set({
 				name: SESSION_COOKIE_NAME,
@@ -78,6 +79,7 @@ export class FirebaseSessionService extends BaseService {
 	}
 
 	async readSessionCookie(): Promise<string | null> {
+		const { cookies } = await import('next/headers');
 		const store = await cookies();
 		return store.get(SESSION_COOKIE_NAME)?.value ?? null;
 	}
