@@ -15,10 +15,7 @@ const recipientService = new RecipientService();
 const programService = new ProgramService();
 const localPartnerService = new LocalPartnerService();
 
-export const createRecipientAction = async (
-	recipient: RecipientCreateInput,
-	sessionType: Session['type'] = 'user',
-) => {
+export const createRecipientAction = async (recipient: RecipientCreateInput, sessionType: Session['type'] = 'user') => {
 	const session = await getSessionByTypeOrThrow(sessionType);
 	const result = await recipientService.create(session, recipient);
 	if (session.type === 'user') {
@@ -87,4 +84,3 @@ export const importRecipientsCsvAction = async (file: File, sessionType: Session
 	}
 	return result;
 };
-

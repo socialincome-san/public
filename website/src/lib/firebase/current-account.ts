@@ -78,4 +78,3 @@ export const getSessionByTypeOrThrow = async (type: Session['type']): Promise<Se
 	}
 	return session;
 };
-

@@ -33,4 +33,3 @@ export const getLocalPartnerAction = async (localPartnerId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
 	return localPartnerService.get(user.id, localPartnerId);
 };
-

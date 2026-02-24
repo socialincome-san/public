@@ -78,4 +78,3 @@ export const importCandidatesCsvAction = async (file: File, sessionType: Session
 	}
 	return result;
 };
-
