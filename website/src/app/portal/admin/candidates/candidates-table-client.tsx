@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { CsvUploadDialog } from '@/components/data-table/clients/csv-upload-dialog';
 import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
 import DataTable from '@/components/data-table/data-table';
-import { Actor } from '@/lib/firebase/current-account';
+import type { Session } from '@/lib/firebase/current-account';
 import { importCandidatesCsvAction } from '@/lib/server-actions/candidate-actions';
 import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { UploadIcon } from 'lucide-react';
@@ -15,10 +15,10 @@ type Props = {
 	rows: CandidatesTableViewRow[];
 	error: string | null;
 	readOnly?: boolean;
-	actorKind?: Actor['kind'];
+	sessionType?: Session['type'];
 };
 
-export const CandidatesTableClient = ({ rows, error, readOnly, actorKind = 'user' }: Props) => {
+export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'user' }: Props) => {
 	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
 	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
 	const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
@@ -52,7 +52,7 @@ export const CandidatesTableClient = ({ rows, error, readOnly, actorKind = 'user
 				emptyMessage="No candidates found"
 				data={rows}
 				makeColumns={makeCandidateColumns}
-				hideLocalPartner={actorKind === 'local-partner'}
+				hideLocalPartner={sessionType === 'local-partner'}
 				actions={
 					<div className="flex gap-2">
 						<Button disabled={readOnly} onClick={openCreateDialog}>
@@ -74,7 +74,7 @@ export const CandidatesTableClient = ({ rows, error, readOnly, actorKind = 'user
 				onOpenChange={closeCandidateDialog}
 				candidateId={selectedCandidateId}
 				readOnly={isReadOnly}
-				actorKind={actorKind}
+				sessionType={sessionType}
 				errorMessage={candidateError}
 				onError={setCandidateError}
 			/>
@@ -88,7 +88,7 @@ export const CandidatesTableClient = ({ rows, error, readOnly, actorKind = 'user
 					exampleRow: ['John', 'Doe', 'local_partner_id_here'],
 					filename: 'candidates-import-template.csv',
 				}}
-				onImport={(file) => importCandidatesCsvAction(file)}
+				onImport={(file) => importCandidatesCsvAction(file, sessionType)}
 			/>
 		</>
 	);

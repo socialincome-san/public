@@ -4,7 +4,7 @@ import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import { PaymentProvider } from '@/generated/prisma/enums';
-import { Actor } from '@/lib/firebase/current-account';
+import type { Session } from '@/lib/firebase/current-account';
 import {
 	createCandidateAction,
 	deleteCandidateAction,
@@ -24,7 +24,7 @@ type CandidateFormProps = {
 	onCancel?: () => void;
 	readOnly?: boolean;
 	candidateId?: string;
-	actorKind?: Actor['kind'];
+	sessionType?: Session['type'];
 };
 
 export type CandidateFormSchema = {
@@ -47,7 +47,7 @@ export type CandidateFormSchema = {
 	};
 };
 
-const getInitialFormSchema = (actorKind: Actor['kind'] = 'user'): CandidateFormSchema => {
+const getInitialFormSchema = (sessionType: Session['type'] = 'user'): CandidateFormSchema => {
 	const base: CandidateFormSchema = {
 		label: 'Candidates',
 		fields: {
@@ -101,7 +101,7 @@ const getInitialFormSchema = (actorKind: Actor['kind'] = 'user'): CandidateFormS
 		},
 	};
 
-	if (actorKind === 'local-partner') {
+	if (sessionType === 'local-partner') {
 		delete base.fields.localPartner;
 	}
 
@@ -114,15 +114,15 @@ export const CandidateForm = ({
 	onCancel,
 	candidateId,
 	readOnly,
-	actorKind = 'user',
+	sessionType = 'user',
 }: CandidateFormProps) => {
-	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(actorKind));
+	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(sessionType));
 	const [candidate, setCandidate] = useState<CandidatePayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	const loadCandidate = async (candidateId: string) => {
 		try {
-			const result = await getCandidateAction(candidateId);
+			const result = await getCandidateAction(candidateId, sessionType);
 			if (result.success) {
 				setCandidate(result.data);
 				const newSchema = { ...formSchema };
@@ -148,7 +148,7 @@ export const CandidateForm = ({
 	};
 
 	const setOptions = (localPartner: LocalPartnerOption[]) => {
-		if (actorKind === 'local-partner') {
+		if (sessionType === 'local-partner') {
 			return;
 		}
 
@@ -175,10 +175,10 @@ export const CandidateForm = ({
 				if (candidateId && candidate) {
 					const data: CandidateUpdateInput = buildUpdateCandidateInput(schema, candidate, contactFields);
 					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
-					result = await updateCandidateAction(data, nextPaymentPhoneNumber);
+					result = await updateCandidateAction(data, nextPaymentPhoneNumber, sessionType);
 				} else {
 					const data: CandidateCreateInput = buildCreateCandidateInput(schema, contactFields);
-					result = await createCandidateAction(data);
+					result = await createCandidateAction(data, sessionType);
 				}
 
 				result.success ? onSuccess?.() : onError?.(result.error);
@@ -195,7 +195,7 @@ export const CandidateForm = ({
 
 		startTransition(async () => {
 			try {
-				const result = await deleteCandidateAction(candidateId);
+				const result = await deleteCandidateAction(candidateId, sessionType);
 				result.success ? onSuccess?.() : onError?.(result.error);
 			} catch (error) {
 				onError?.(error);
@@ -211,7 +211,7 @@ export const CandidateForm = ({
 
 	useEffect(() => {
 		startTransition(async () => {
-			const { localPartners } = await getCandidateOptions();
+			const { localPartners } = await getCandidateOptions(sessionType);
 			if (!localPartners.success) {
 				return;
 			}

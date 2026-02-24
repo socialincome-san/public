@@ -85,7 +85,7 @@ export default function LocalPartnersForm({
 				} = schema.fields.contact.fields;
 				if (localPartnerId && localPartner) {
 					const data = buildUpdateLocalPartnerInput(schema, localPartner, contactFields);
-					res = await updateLocalPartnerAction({ id: localPartnerId, ...data });
+					res = await updateLocalPartnerAction({ id: localPartnerId, ...data }, 'user');
 				} else {
 					const data = buildCreateLocalPartnerInput(schema, contactFields);
 					res = await createLocalPartnerAction(data);
