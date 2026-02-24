@@ -9,7 +9,7 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreat
 		populationCoverage: schema.fields.populationCoverage.value ?? null,
 		latestSurveyDate: schema.fields.latestSurveyDate.value ?? null,
 		networkTechnology: schema.fields.networkTechnology.value ?? null,
-		paymentProviders: schema.fields.paymentProviders.value ?? [],
+		mobileMoneyProviderIds: schema.fields.mobileMoneyProviders.value ?? [],
 		sanctions: schema.fields.sanctions.value ?? [],
 		microfinanceSourceLink:
 			schema.fields.microfinanceSourceText.value || schema.fields.microfinanceSourceHref.value
@@ -37,7 +37,7 @@ export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: Cou
 		populationCoverage: schema.fields.populationCoverage.value ?? null,
 		latestSurveyDate: schema.fields.latestSurveyDate.value ?? null,
 		networkTechnology: schema.fields.networkTechnology.value ?? null,
-		paymentProviders: schema.fields.paymentProviders.value ?? [],
+		mobileMoneyProviderIds: schema.fields.mobileMoneyProviders.value ?? [],
 		sanctions: schema.fields.sanctions.value ?? [],
 		microfinanceSourceLink:
 			schema.fields.microfinanceSourceText.value || schema.fields.microfinanceSourceHref.value

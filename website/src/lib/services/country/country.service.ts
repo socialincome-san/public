@@ -1,4 +1,4 @@
-import { CountryCode, NetworkTechnology, PaymentProvider, Prisma, SanctionRegime } from '@/generated/prisma/client';
+import { CountryCode, NetworkTechnology, Prisma, SanctionRegime } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -10,6 +10,7 @@ import {
 	CountryTableView,
 	CountryTableViewRow,
 	CountryUpdateInput,
+	MobileMoneyProviderRef,
 	ProgramCountryFeasibilityRow,
 	ProgramCountryFeasibilityView,
 } from './country.types';
@@ -33,7 +34,10 @@ export class CountryService extends BaseService {
 					populationCoverage: input.populationCoverage ?? undefined,
 					latestSurveyDate: input.latestSurveyDate ?? undefined,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
-					paymentProviders: input.paymentProviders ? (input.paymentProviders as PaymentProvider[]) : undefined,
+					mobileMoneyProviders:
+						input.mobileMoneyProviderIds?.length ?
+							{ connect: input.mobileMoneyProviderIds.map((id) => ({ id })) }
+						:	undefined,
 					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? { create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href } }
@@ -42,7 +46,11 @@ export class CountryService extends BaseService {
 						? { create: { text: input.networkSourceLink.text, href: input.networkSourceLink.href } }
 						: undefined,
 				},
-				include: { microfinanceSourceLink: true, networkSourceLink: true },
+				include: {
+					microfinanceSourceLink: true,
+					networkSourceLink: true,
+					mobileMoneyProviders: { select: { id: true, name: true } },
+				},
 			});
 
 			return this.resultOk({
@@ -53,7 +61,7 @@ export class CountryService extends BaseService {
 				populationCoverage: created.populationCoverage ? Number(created.populationCoverage) : null,
 				latestSurveyDate: created.latestSurveyDate ?? null,
 				networkTechnology: created.networkTechnology ?? null,
-				paymentProviders: created.paymentProviders ?? [],
+				mobileMoneyProviders: created.mobileMoneyProviders ?? [],
 				sanctions: created.sanctions ?? [],
 				microfinanceSourceLink: created.microfinanceSourceLink
 					? {
@@ -93,7 +101,10 @@ export class CountryService extends BaseService {
 					populationCoverage: input.populationCoverage,
 					latestSurveyDate: input.latestSurveyDate,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
-					paymentProviders: input.paymentProviders ? (input.paymentProviders as PaymentProvider[]) : undefined,
+					mobileMoneyProviders:
+						input.mobileMoneyProviderIds !== undefined ?
+							{ set: input.mobileMoneyProviderIds.map((id) => ({ id })) }
+						:	undefined,
 					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? {
@@ -112,7 +123,11 @@ export class CountryService extends BaseService {
 							}
 						: undefined,
 				},
-				include: { microfinanceSourceLink: true, networkSourceLink: true },
+				include: {
+					microfinanceSourceLink: true,
+					networkSourceLink: true,
+					mobileMoneyProviders: { select: { id: true, name: true } },
+				},
 			});
 
 			return this.resultOk({
@@ -123,7 +138,7 @@ export class CountryService extends BaseService {
 				populationCoverage: updated.populationCoverage ? Number(updated.populationCoverage) : null,
 				latestSurveyDate: updated.latestSurveyDate ?? null,
 				networkTechnology: updated.networkTechnology ?? null,
-				paymentProviders: updated.paymentProviders ?? [],
+				mobileMoneyProviders: updated.mobileMoneyProviders ?? [],
 				sanctions: updated.sanctions ?? [],
 				microfinanceSourceLink: updated.microfinanceSourceLink
 					? {
@@ -156,7 +171,11 @@ export class CountryService extends BaseService {
 		try {
 			const country = await this.db.country.findUnique({
 				where: { id: countryId },
-				include: { microfinanceSourceLink: true, networkSourceLink: true },
+				include: {
+					microfinanceSourceLink: true,
+					networkSourceLink: true,
+					mobileMoneyProviders: { select: { id: true, name: true } },
+				},
 			});
 
 			if (!country) {
@@ -171,7 +190,7 @@ export class CountryService extends BaseService {
 				populationCoverage: country.populationCoverage ? Number(country.populationCoverage) : null,
 				latestSurveyDate: country.latestSurveyDate ?? null,
 				networkTechnology: country.networkTechnology ?? null,
-				paymentProviders: country.paymentProviders ?? [],
+				mobileMoneyProviders: country.mobileMoneyProviders ?? [],
 				sanctions: country.sanctions ?? [],
 				microfinanceSourceLink: country.microfinanceSourceLink
 					? {
@@ -211,7 +230,7 @@ export class CountryService extends BaseService {
 					populationCoverage: true,
 					networkTechnology: true,
 					latestSurveyDate: true,
-					paymentProviders: true,
+					mobileMoneyProviders: { select: { id: true, name: true } },
 					sanctions: true,
 					createdAt: true,
 				},
@@ -226,7 +245,7 @@ export class CountryService extends BaseService {
 				populationCoverage: c.populationCoverage ? Number(c.populationCoverage) : null,
 				networkTechnology: c.networkTechnology ?? null,
 				latestSurveyDate: c.latestSurveyDate ?? null,
-				paymentProviders: c.paymentProviders ?? [],
+				mobileMoneyProviders: c.mobileMoneyProviders ?? [],
 				sanctions: c.sanctions ?? [],
 				createdAt: c.createdAt,
 			}));
@@ -244,6 +263,7 @@ export class CountryService extends BaseService {
 				include: {
 					microfinanceSourceLink: true,
 					networkSourceLink: true,
+					mobileMoneyProviders: { select: { id: true, name: true } },
 					programs: {
 						include: {
 							_count: {
@@ -296,9 +316,9 @@ export class CountryService extends BaseService {
 					},
 
 					mobileMoney: {
-						condition: this.getMobileMoneyCondition(country.paymentProviders),
+						condition: this.getMobileMoneyCondition(country.mobileMoneyProviders),
 						details: {
-							text: this.getMobileMoneyDetailsText(country.isoCode, country.paymentProviders),
+							text: this.getMobileMoneyDetailsText(country.isoCode, country.mobileMoneyProviders),
 							source: {
 								text: 'Source: SI Research',
 							},
@@ -345,8 +365,10 @@ export class CountryService extends BaseService {
 		return microfinanceIndex < 3 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
-	private getMobileMoneyCondition(paymentProviders: PaymentProvider[] | null): CountryCondition {
-		return paymentProviders && paymentProviders.length > 0 ? CountryCondition.MET : CountryCondition.NOT_MET;
+	private getMobileMoneyCondition(mobileMoneyProviders: MobileMoneyProviderRef[] | null): CountryCondition {
+		return mobileMoneyProviders && mobileMoneyProviders.length > 0 ?
+				CountryCondition.MET
+			:	CountryCondition.NOT_MET;
 	}
 
 	private getMobileNetworkCondition(populationCoverage: number | null): CountryCondition {
@@ -370,16 +392,19 @@ export class CountryService extends BaseService {
 			: `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired.`;
 	}
 
-	private getMobileMoneyDetailsText(countryIsoCode: CountryCode, paymentProviders: PaymentProvider[] | null): string {
-		if (!paymentProviders || paymentProviders.length === 0) {
+	private getMobileMoneyDetailsText(
+		countryIsoCode: CountryCode,
+		mobileMoneyProviders: MobileMoneyProviderRef[] | null,
+	): string {
+		if (!mobileMoneyProviders || mobileMoneyProviders.length === 0) {
 			return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is not sufficient.`;
 		}
 
-		const providers = paymentProviders.map(this.formatEnum).join(', ');
+		const providers = mobileMoneyProviders.map((p) => p.name).join(', ');
 
 		return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is considered sufficient. Following ${
-			paymentProviders.length
-		} provider${paymentProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
+			mobileMoneyProviders.length
+		} provider${mobileMoneyProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
 	}
 
 	private getMobileNetworkDetailsText(countryIsoCode: CountryCode, populationCoverage: number | null): string {
@@ -400,12 +425,5 @@ export class CountryService extends BaseService {
 
 	private toNumber(value: Prisma.Decimal | null): number | null {
 		return value === null ? null : Number(value);
-	}
-
-	private formatEnum(value: string): string {
-		return value
-			.replace(/_/g, ' ')
-			.toLowerCase()
-			.replace(/^\w/, (c) => c.toUpperCase());
 	}
 }

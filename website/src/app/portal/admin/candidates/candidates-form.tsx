@@ -3,7 +3,6 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
-import { PaymentProvider } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
 import {
 	createCandidateAction,
@@ -12,6 +11,7 @@ import {
 	getCandidateOptions,
 	updateCandidateAction,
 } from '@/lib/server-actions/candidate-actions';
+import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
@@ -78,7 +78,7 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): CandidateF
 					provider: {
 						placeholder: 'Provider',
 						label: 'Provider',
-						zodSchema: z.nativeEnum(PaymentProvider).optional(),
+						zodSchema: z.string().optional(),
 					},
 					code: {
 						placeholder: 'Code',
@@ -134,7 +134,8 @@ export const CandidateForm = ({
 				if (newSchema.fields.localPartner) {
 					newSchema.fields.localPartner.value = result.data.localPartner.id;
 				}
-				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
+				newSchema.fields.paymentInformation.fields.provider.value =
+					result.data.paymentInformation?.mobileMoneyProvider?.id;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
 				newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
 				newSchema.fields.contact.fields = contactValues;
@@ -147,20 +148,35 @@ export const CandidateForm = ({
 		}
 	};
 
-	const setOptions = (localPartner: LocalPartnerOption[]) => {
-		if (sessionType === 'local-partner') {
-			return;
-		}
-
+	const setOptions = (
+		localPartner: LocalPartnerOption[],
+		mobileMoneyProviders: { id: string; name: string }[],
+	) => {
 		const partnersObj = getZodEnum(localPartner.map(({ id, name }) => ({ id, label: name })));
+		const providerOptions = mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name }));
+		const providerEnum = getZodEnum(providerOptions);
 
 		setFormSchema((prev) => ({
 			...prev,
 			fields: {
 				...prev.fields,
-				localPartner: {
-					...prev.fields.localPartner!,
-					zodSchema: z.nativeEnum(partnersObj),
+				...(prev.fields.localPartner && {
+					localPartner: {
+						...prev.fields.localPartner,
+						zodSchema: z.nativeEnum(partnersObj),
+					},
+				}),
+				paymentInformation: {
+					...prev.fields.paymentInformation,
+					fields: {
+						...prev.fields.paymentInformation.fields,
+						provider: {
+							...prev.fields.paymentInformation.fields.provider,
+							options: providerOptions,
+							zodSchema:
+								providerOptions.length > 0 ? z.nativeEnum(providerEnum) : z.string().optional(),
+						},
+					},
 				},
 			},
 		}));
@@ -211,13 +227,19 @@ export const CandidateForm = ({
 
 	useEffect(() => {
 		startTransition(async () => {
-			const { localPartners } = await getCandidateOptions(sessionType);
+			const [{ localPartners }, supportedProviders] = await Promise.all([
+				getCandidateOptions(sessionType),
+				getSupportedMobileMoneyProviderOptionsAction(),
+			]);
 			if (!localPartners.success) {
 				return;
 			}
-			setOptions(localPartners.data);
+			setOptions(
+				localPartners.data,
+				supportedProviders.success ? supportedProviders.data : [],
+			);
 		});
-	}, []);
+	}, [sessionType]);
 
 	return (
 		<DynamicForm

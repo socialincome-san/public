@@ -25,9 +25,13 @@ export const buildUpdateCandidateInput = (
 ): CandidateUpdateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
+	const mobileMoneyProviderId = paymentInfoFields.provider.value as string | undefined;
 	const basePaymentInformation = {
-		provider: paymentInfoFields.provider.value,
 		code: paymentInfoFields.code.value?.trim() || null,
+		mobileMoneyProvider:
+			mobileMoneyProviderId ?
+				{ connect: { id: mobileMoneyProviderId } }
+			:	{ disconnect: true },
 	};
 
 	const nextPaymentPhoneNumber = paymentInfoFields.phone.value?.trim() || null;
@@ -196,7 +200,9 @@ export const buildCreateCandidateInput = (
 		localPartner: { connect: { id: schema.fields.localPartner?.value } },
 		paymentInformation: {
 			create: {
-				provider: paymentInfoFields.provider.value,
+				...(paymentInfoFields.provider.value && {
+					mobileMoneyProvider: { connect: { id: paymentInfoFields.provider.value as string } },
+				}),
 				code: paymentInfoFields.code.value?.trim() || null,
 				...(paymentInfoFields.phone.value?.trim() && {
 					phone: { create: { number: paymentInfoFields.phone.value!.trim() } },

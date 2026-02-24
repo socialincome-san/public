@@ -1,4 +1,4 @@
-import { Address, Gender, PaymentProvider, Phone, Prisma } from '@/generated/prisma/client';
+import { Address, Gender, Phone, Prisma } from '@/generated/prisma/client';
 
 export enum Profile {
 	male = 'male',
@@ -32,7 +32,7 @@ export type CandidatePayload = {
 	paymentInformation: {
 		id: string;
 		code: string | null;
-		provider: PaymentProvider | null;
+		mobileMoneyProvider: { id: string; name: string } | null;
 		phone: Phone | null;
 	} | null;
 };
