@@ -13,7 +13,7 @@ export const displaySession = (sessions: Session[], scope: Scope): Session | nul
 	return sessions[0] ?? null;
 };
 
-export type NavbarMenuItem = Layout['menu'][number];
+type NavbarMenuItem = Layout['menu'][number];
 
 export const isMenuItem = (item: NavbarMenuItem): item is MenuItem => item.component === 'menuItem';
 
