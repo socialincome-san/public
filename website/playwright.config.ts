@@ -1,4 +1,4 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test', quiet: true });
@@ -68,6 +68,13 @@ export default defineConfig({
 		{
 			name: 'public-website',
 			testMatch: /public-website\/.*\.e2e\.ts/,
+		},
+		{
+			name: 'public-website-mobile',
+			testMatch: /public-website\/.*\.e2e\.ts/,
+			use: {
+				...devices['iPhone 15'],
+			},
 		},
 	],
 	webServer: {
