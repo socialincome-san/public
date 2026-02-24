@@ -1,6 +1,6 @@
-import { LANGUAGE_COOKIE, REGION_COOKIE } from '@socialincome/website/src/app/[lang]/[region]';
+import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]/index';
 import langParser from 'accept-language-parser';
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { CountryCode } from '../../generated/prisma/enums';
 import { Currency } from '../types/currency';
 import { LanguageCode } from '../types/language';
