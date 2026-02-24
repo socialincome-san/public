@@ -68,7 +68,7 @@ export const MenuDesktop = ({ nav, lang, region }: Props) => (
 								<div className="grid flex-1 grid-cols-3 gap-8 p-8">
 									{item.menuItemGroups.map((group) => (
 										<div key={group._uid} className="flex flex-col gap-4">
-											<div className="text-lg font-bold leading-none">{group.label}</div>
+											<div className="text-lg leading-none font-bold">{group.label}</div>
 											<div className="flex flex-col gap-2.5">
 												{group.items?.map((child) => (
 													<NavigationMenu.Link key={child._uid} asChild>
@@ -79,7 +79,7 @@ export const MenuDesktop = ({ nav, lang, region }: Props) => (
 															className="text-muted-foreground hover:text-foreground group flex w-fit items-center gap-2 font-medium transition-colors"
 														>
 															<span>{child.label}</span>
-															<span className="rounded-full border border-slate-300 px-2 py-0.5 text-[10px] font-semibold leading-none text-slate-500">
+															<span className="rounded-full border border-slate-300 px-2 py-0.5 text-[10px] leading-none font-semibold text-slate-500">
 																{FALLBACK_BADGE_COUNT}
 															</span>
 														</NextLink>
@@ -96,6 +96,6 @@ export const MenuDesktop = ({ nav, lang, region }: Props) => (
 				);
 			})}
 		</NavigationMenu.List>
-		<NavigationMenu.Viewport className="w-2xl data-[state=closed]:animate-fade-out data-[state=open]:animate-enter-from-top absolute inset-x-0 top-[calc(100%+1rem)] z-50" />
+		<NavigationMenu.Viewport className="data-[state=closed]:animate-fade-out data-[state=open]:animate-enter-from-top absolute inset-x-0 top-[calc(100%+1rem)] z-50 w-full" />
 	</NavigationMenu.Root>
 );

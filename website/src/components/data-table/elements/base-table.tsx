@@ -3,7 +3,7 @@
 import { Button } from '@/components/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 import {
 	ColumnDef,
 	flexRender,

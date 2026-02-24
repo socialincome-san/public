@@ -21,7 +21,7 @@ export const Basic: Story = {
 			<PopoverContent>
 				<div className="grid gap-4">
 					<div className="space-y-2">
-						<h4 className="font-medium leading-none">Dimensions</h4>
+						<h4 className="leading-none font-medium">Dimensions</h4>
 						<p className="text-muted-foreground text-sm">Set the dimensions for the layer.</p>
 					</div>
 				</div>
@@ -40,7 +40,7 @@ export const WithFormElements: Story = {
 			<PopoverContent className="w-80">
 				<div className="grid gap-4">
 					<div className="space-y-2">
-						<h4 className="font-medium leading-none">Profile</h4>
+						<h4 className="leading-none font-medium">Profile</h4>
 						<p className="text-muted-foreground text-sm">Update your profile information.</p>
 					</div>
 					<div className="grid gap-2">
@@ -87,7 +87,7 @@ export const WithRichContent: Story = {
 			<PopoverContent className="w-96">
 				<div className="grid gap-4">
 					<div className="space-y-2">
-						<h4 className="font-medium leading-none">Product Details</h4>
+						<h4 className="leading-none font-medium">Product Details</h4>
 						<div className="flex items-center gap-4">
 							<div className="bg-muted h-16 w-16 rounded-md" />
 							<div>

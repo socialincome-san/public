@@ -31,7 +31,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		}
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
 			setPlaying(false);
-			setBackgroundColor('!bg-background');
+			setBackgroundColor('bg-background!');
 		} else {
 			setPlaying(true);
 			setBackgroundColor(null);

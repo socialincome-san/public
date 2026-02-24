@@ -27,13 +27,10 @@ const Box = ({ active, number, title, subtitle, onClick }: BoxProps) => {
 			})}
 		>
 			<div
-				className={classNames(
-					'bg-primary flex h-8 w-8 items-center justify-center rounded-full bg-opacity-10 text-lg',
-					{
-						'text-primary bg-white bg-opacity-100': active,
-						'text-primary group-hover:bg-white': !active,
-					},
-				)}
+				className={classNames('bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full text-lg', {
+					'text-primary bg-white': active,
+					'text-primary group-hover:bg-white': !active,
+				})}
 			>
 				{number}
 			</div>

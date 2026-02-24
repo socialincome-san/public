@@ -14,9 +14,9 @@ type PillMultiSelectProps = {
 const pillClasses = {
 	base: 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-sm relative z-10 transition-colors',
 	active: [
-		'text-primary-foreground bg-primary/90 shadow',
+		'text-primary-foreground bg-primary/90 shadow-sm',
 		'after:absolute after:inset-0 after:-z-10 after:rounded-full',
-		'after:bg-gradient-to-r',
+		'after:bg-linear-to-r',
 		'after:from-[hsl(var(--gradient-button-from))]',
 		'after:to-[hsl(var(--gradient-button-to))]',
 		'after:opacity-100 hover:after:opacity-0',

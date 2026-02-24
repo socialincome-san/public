@@ -191,7 +191,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 										<SelectValue placeholder={translations.selectOptionPlaceholder} />
 									</SelectTrigger>
 								</FormControl>
-								<SelectContent className="max-h-[16rem] overflow-y-auto">
+								<SelectContent className="max-h-64 overflow-y-auto">
 									{COUNTRY_OPTIONS.map((c) => (
 										<SelectItem key={c.code} value={c.code}>
 											{c.name}

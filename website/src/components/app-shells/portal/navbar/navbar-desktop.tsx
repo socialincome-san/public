@@ -33,7 +33,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 	}
 
 	return (
-		<nav className="container flex h-20 items-center justify-between">
+		<nav className="w-site-width max-w-content mx-auto flex h-20 items-center justify-between">
 			<Link href="/portal">
 				<SILogo />
 			</Link>

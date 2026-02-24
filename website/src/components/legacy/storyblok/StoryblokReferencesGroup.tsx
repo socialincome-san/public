@@ -26,7 +26,7 @@ export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: 
 	};
 
 	return (
-		<div className="bg-primary mt-2 w-full rounded-md bg-opacity-10 p-6">
+		<div className="bg-primary/10 mt-2 w-full rounded-md p-6">
 			{hasContextInfo && (
 				<Typography color="foreground" className="m-0 mb-2 p-0">
 					{translator.t('reference-article.context.' + props.context)}
@@ -38,7 +38,7 @@ export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: 
 			>
 				{references.map((reference, index) => (
 					<div key={reference._uid}>
-						{showSeparator(index) && <Separator className="bg-foreground m-0 mb-4 mt-4 opacity-15" />}
+						{showSeparator(index) && <Separator className="bg-foreground m-0 mt-4 mb-4 opacity-15" />}
 						<div className="flex items-start gap-8">
 							{showThumbnails && <ThumbnailImage thumbnail={getThumbnailOrDefault(reference)} />}
 							<div className="flex flex-col justify-center">

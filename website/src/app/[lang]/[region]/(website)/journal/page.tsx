@@ -49,7 +49,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				{translator.t('overview.description')}
 			</Typography>
 
-			<Typography className="mb-4 mt-12 text-center" size="3xl" weight="medium">
+			<Typography className="mt-12 mb-4 text-center" size="3xl" weight="medium">
 				{translator.t('overview.editors')}
 			</Typography>
 
@@ -74,7 +74,7 @@ export default async function Page({ params }: DefaultPageProps) {
 								lang={lang}
 								region={region}
 							/>
-							<div className="line-clamp-2 max-w-24 overflow-hidden break-words">
+							<div className="line-clamp-2 max-w-24 overflow-hidden wrap-break-word">
 								<Typography>{author.content.firstName}</Typography>
 								<Typography>{author.content.lastName}</Typography>
 							</div>

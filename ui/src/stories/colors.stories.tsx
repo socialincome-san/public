@@ -122,7 +122,7 @@ export const ColorSystem = () => {
 						</li>
 						<li>
 							<strong>Buttons & Interactive Elements:</strong>
-							<ul className="ml-4 mt-1">
+							<ul className="mt-1 ml-4">
 								<li>Primary buttons: bg-primary with text-primary-foreground</li>
 								<li>Secondary buttons: bg-card-muted with text-muted-foreground</li>
 								<li>Add hover:bg-primary/90 for hover states</li>

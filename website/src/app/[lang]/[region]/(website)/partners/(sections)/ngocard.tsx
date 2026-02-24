@@ -53,7 +53,7 @@ export default async function NgoCard({
 	return (
 		<Dialog>
 			<DialogTrigger className="text-left">
-				<Card className="hover:bg-primary max-w-lg rounded-lg p-6 shadow-none hover:bg-opacity-10">
+				<Card className="hover:bg-primary/10 max-w-lg rounded-lg p-6 shadow-none">
 					<CardHeader className="p-0">
 						<CardTitle className="flex items-center justify-between">
 							<Typography size="2xl" weight="medium">
@@ -61,7 +61,7 @@ export default async function NgoCard({
 							</Typography>
 						</CardTitle>
 					</CardHeader>
-					<Separator className="bg-primary mt-4 bg-opacity-30" />
+					<Separator className="bg-primary/30 mt-4" />
 					<CardContent className="my-4 p-0">
 						<Typography size="lg">{orgMission}</Typography>
 					</CardContent>
@@ -103,7 +103,7 @@ export default async function NgoCard({
 						alt="Organization Photo"
 						unoptimized
 					/>
-					<div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-t from-black to-transparent">
+					<div className="absolute bottom-0 left-0 h-32 w-full bg-linear-to-t from-black to-transparent">
 						<DialogTitle className="text-accent absolute bottom-0 left-0 px-8 py-4">
 							<Typography size="5xl" weight="medium">
 								{ngoHoverCard.orgLongName}
@@ -112,14 +112,14 @@ export default async function NgoCard({
 					</div>
 				</DialogHeader>
 				<div className="px-8 pb-10">
-					<div className="flex flex-col gap-2 p-0 pb-8 pt-2 sm:flex-row sm:items-center sm:justify-between">
-						<div className="pb-4 text-center sm:order-2 sm:flex-shrink-0 sm:pb-0 sm:text-right">
+					<div className="flex flex-col gap-2 p-0 pt-2 pb-8 sm:flex-row sm:items-center sm:justify-between">
+						<div className="pb-4 text-center sm:order-2 sm:shrink-0 sm:pb-0 sm:text-right">
 							<Typography size="md" weight="normal">
 								{translator.t('ngo-generic.partner-since')} {ngoHoverCard.partnershipStart}
 							</Typography>
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-							<Badge className="bg-primary hover:bg-primary text-primary space-x-2 bg-opacity-10 px-4 py-2 hover:bg-opacity-100 hover:text-white">
+							<Badge className="bg-primary/10 hover:bg-primary text-primary space-x-2 px-4 py-2 hover:text-white">
 								{countryBadge?.countryFlagComponent || <SL_flag className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
 									{translator.t(countryBadge?.countryAbbreviation || 'SL')}
@@ -128,7 +128,7 @@ export default async function NgoCard({
 						</div>
 					</div>
 					{showFundRaiser && (
-						<div className="border-primary mb-8 flex items-center justify-start space-x-5 rounded-md border-2 border-opacity-80 py-4 pl-4">
+						<div className="border-primary/80 mb-8 flex items-center justify-start space-x-5 rounded-md border-2 py-4 pl-4">
 							<FundraiserBadge fundRaiserTranslation={translator.t('ngo-generic.fundraiser')} />
 							<span>
 								{ngoHoverCard.orgFundRaiserText?.map((fragment, index) => {
@@ -166,7 +166,7 @@ export default async function NgoCard({
 							</div>
 						);
 					})}
-					<Separator className="bg-primary my-6 bg-opacity-10" />
+					<Separator className="bg-primary/10 my-6" />
 					{ngoHoverCard.quote && ngoHoverCard.quoteAuthor ? (
 						<>
 							<div className="py-12 text-center">
@@ -192,7 +192,7 @@ export default async function NgoCard({
 									</Typography>
 								</div>
 							</div>
-							<Separator className="bg-primary my-6 bg-opacity-10" />
+							<Separator className="bg-primary/10 my-6" />
 						</>
 					) : (
 						''
@@ -286,7 +286,7 @@ export default async function NgoCard({
 						</div>
 						<div className="col-span-2">
 							<Link href={`/${lang}/${region}/partners/${ngoHoverCard.orgSlug}`}>
-								<Typography size="lg" className="break-words underline">
+								<Typography size="lg" className="wrap-break-word underline">
 									{`socialincome.org/partners/${ngoHoverCard.orgSlug}`}
 								</Typography>
 							</Link>
