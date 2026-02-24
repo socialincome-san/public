@@ -12,6 +12,12 @@
 	"submit-button": "Anmeldelink senden",
 	"check-email": "Du solltest eine E-Mail mit einem Link zum Anmelden erhalten haben.",
 	"confirm-email-title": "Bestätigen Sie Ihre E-Mail-Adresse",
+	"confirm-login": {
+		"title": "Anmeldung abschliessen",
+		"body": "Klicke auf den Button unten, um die Anmeldung abzuschliessen.",
+		"cta": "Anmeldung abschliessen",
+		"return-home": "Zurück zur Startseite"
+	},
 	"error": {
 		"user-not-found": "Benutzer nicht gefunden",
 		"invalid-email": "Ungültige E-Mail-Adresse",
