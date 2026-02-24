@@ -7,12 +7,6 @@ import { LocalPartnerSession } from '../services/local-partner/local-partner.typ
 import { UserService } from '../services/user/user.service';
 import { UserSession } from '../services/user/user.types';
 
-export enum SessionType {
-	User = 'user',
-	Contributor = 'contributor',
-	LocalPartner = 'local-partner',
-}
-
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
 const getAuthUserIdFromCookie = async (): Promise<string | null> => {
@@ -55,14 +49,6 @@ export const getCurrentSessionsOrRedirect = async (): Promise<Session[]> => {
 	const sessions = await getCurrentSessions();
 	if (sessions.length === 0) {
 		redirect('/login');
-	}
-	return sessions;
-};
-
-export const getSessionsOrThrow = async (): Promise<Session[]> => {
-	const sessions = await getCurrentSessions();
-	if (sessions.length === 0) {
-		throw new Error('Not authenticated');
 	}
 	return sessions;
 };
