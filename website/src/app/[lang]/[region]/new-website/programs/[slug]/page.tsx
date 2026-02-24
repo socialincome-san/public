@@ -24,7 +24,6 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 
 	const isPreview = query.preview === 'true';
 	if (!isPreview) {
-		
 		const idResult = await services.program.getProgramIdBySlug(slug);
 		if (!idResult.success) {
 			return notFound();
