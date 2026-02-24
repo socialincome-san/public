@@ -16,7 +16,10 @@ type Props = {
 };
 
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
-	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(
+		`${NEW_WEBSITE_SLUG}/layout`,
+		lang,
+	);
 	const menu = result.success ? result.data.content.menu : [];
 
 	return (

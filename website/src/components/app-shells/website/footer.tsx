@@ -27,7 +27,10 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 };
 
 export const Footer = async ({ lang, region }: Props) => {
-	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(
+		`${NEW_WEBSITE_SLUG}/layout`,
+		lang,
+	);
 	const footerMenu = result.success ? result.data.content.footerMenu : [];
 	const copyrightNotice = result.success ? result.data.content.copyrightNotice : undefined;
 
