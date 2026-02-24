@@ -7,13 +7,13 @@ import { LocalPartnerSession } from '../services/local-partner/local-partner.typ
 import { UserService } from '../services/user/user.service';
 import { UserSession } from '../services/user/user.types';
 
-export type Session = ContributorSession | LocalPartnerSession | UserSession;
+export enum SessionType {
+	User = 'user',
+	Contributor = 'contributor',
+	LocalPartner = 'local-partner',
+}
 
-export type Actor =
-	| { kind: 'user'; session: UserSession }
-	| { kind: 'contributor'; session: ContributorSession }
-	| { kind: 'local-partner'; session: LocalPartnerSession }
-	| never;
+export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
 const getAuthUserIdFromCookie = async (): Promise<string | null> => {
 	const firebaseSessionService = new FirebaseSessionService();
@@ -59,20 +59,23 @@ export const getCurrentSessionsOrRedirect = async (): Promise<Session[]> => {
 	return sessions;
 };
 
-export const getActorOrThrow = async (): Promise<Actor> => {
+export const getSessionsOrThrow = async (): Promise<Session[]> => {
 	const sessions = await getCurrentSessions();
-	const session = sessions[0];
-	if (!session) {
+	if (sessions.length === 0) {
 		throw new Error('Not authenticated');
 	}
-	if (session.type === 'user') {
-		return { kind: 'user', session };
-	}
-	if (session.type === 'contributor') {
-		return { kind: 'contributor', session };
-	}
-	if (session.type === 'local-partner') {
-		return { kind: 'local-partner', session };
-	}
-	throw new Error('Not authenticated');
+	return sessions;
 };
+
+export const getSessionByTypeOrThrow = async (type: Session['type']): Promise<Session> => {
+	const sessions = await getCurrentSessions();
+	if (sessions.length === 0) {
+		throw new Error('Not authenticated');
+	}
+	const session = sessions.find((s) => s.type === type);
+	if (!session) {
+		throw new Error(`No ${type} session`);
+	}
+	return session;
+};
+

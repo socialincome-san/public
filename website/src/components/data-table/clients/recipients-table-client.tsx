@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import DataTable from '@/components/data-table/data-table';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { Actor } from '@/lib/firebase/current-account';
+import type { Session } from '@/lib/firebase/current-account';
 import { importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { UploadIcon } from 'lucide-react';
@@ -17,10 +17,10 @@ type Props = {
 	error: string | null;
 	programId?: string;
 	readOnly?: boolean;
-	actorKind?: Actor['kind'];
+	sessionType?: Session['type'];
 };
 
-export const RecipientsTableClient = ({ rows, error, programId, readOnly, actorKind = 'user' }: Props) => {
+export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessionType = 'user' }: Props) => {
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
 	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
@@ -54,7 +54,7 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, actorK
 				emptyMessage="No recipients found"
 				data={rows}
 				makeColumns={makeRecipientColumns}
-				hideLocalPartner={actorKind === 'local-partner'}
+				hideLocalPartner={sessionType === 'local-partner'}
 				actions={
 					<div className="flex gap-2">
 						<Button disabled={readOnly} onClick={openCreateRecipientDialog}>
@@ -77,7 +77,7 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, actorK
 				recipientId={selectedRecipientId}
 				readOnly={isRecipientReadOnly}
 				programId={programId}
-				actorKind={actorKind}
+				sessionType={sessionType}
 				errorMessage={recipientError}
 				onError={setRecipientError}
 			/>
@@ -91,7 +91,7 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, actorK
 					exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
 					filename: 'recipients-import-template.csv',
 				}}
-				onImport={(file) => importRecipientsCsvAction(file)}
+				onImport={(file) => importRecipientsCsvAction(file, sessionType)}
 			/>
 		</>
 	);

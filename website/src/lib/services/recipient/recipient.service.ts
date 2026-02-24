@@ -1,5 +1,5 @@
 import { ProgramPermission, Recipient } from '@/generated/prisma/client';
-import { Actor } from '@/lib/firebase/current-account';
+import { Session } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
@@ -22,36 +22,31 @@ export class RecipientService extends BaseService {
 	private firebaseAdminService = new FirebaseAdminService();
 	private appReviewModeService = new AppReviewModeService();
 
-	async create(actor: Actor, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
+	async create(session: Session, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const programId = recipient.program?.connect?.id;
 		if (!programId) {
 			return this.resultFail('No program specified for recipient creation');
 		}
 
-		if (actor.kind === 'user') {
-			const userId = actor.session.id;
-
+		if (session.type === 'user') {
+			const userId = session.id;
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
 			}
-
 			const hasOperatorAccess = accessResult.data.some(
 				(a) => a.programId === programId && a.permission === ProgramPermission.operator,
 			);
-
 			if (!hasOperatorAccess) {
 				return this.resultFail('Permission denied');
 			}
 		}
 
-		if (actor.kind === 'local-partner') {
-			const partnerId = actor.session.id;
-
-			recipient.localPartner = { connect: { id: partnerId } };
+		if (session.type === 'local-partner') {
+			recipient.localPartner = { connect: { id: session.id } };
 		}
 
-		if (actor.kind === 'contributor') {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -106,11 +101,11 @@ export class RecipientService extends BaseService {
 	}
 
 	async update(
-		actor: Actor,
+		session: Session,
 		updateInput: RecipientPrismaUpdateInput,
 		nextPaymentPhoneNumber: string | null,
 	): Promise<ServiceResult<Recipient>> {
-		if (actor.kind === 'contributor') {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -133,20 +128,18 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		if (actor.kind === 'user') {
-			const userId = actor.session.id;
+		if (session.type === 'user') {
+			const userId = session.id;
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
 			}
-
 			const existingProgramAllowed = accessResult.data.some(
 				(a) => a.programId === existing.programId && a.permission === ProgramPermission.operator,
 			);
 			if (!existingProgramAllowed) {
 				return this.resultFail('Permission denied');
 			}
-
 			const requestedProgramId = updateInput.program?.connect?.id;
 			if (requestedProgramId) {
 				const requestedProgramAllowed = accessResult.data.some(
@@ -158,8 +151,8 @@ export class RecipientService extends BaseService {
 			}
 		}
 
-		if (actor.kind === 'local-partner') {
-			const partnerId = actor.session.id;
+		if (session.type === 'local-partner') {
+			const partnerId = session.id;
 			if (existing.localPartnerId !== partnerId) {
 				return this.resultFail('Permission denied');
 			}
@@ -286,7 +279,7 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async delete(actor: Actor, recipientId: string): Promise<ServiceResult<{ id: string }>> {
+	async delete(session: Session, recipientId: string): Promise<ServiceResult<{ id: string }>> {
 		const existing = await this.db.recipient.findUnique({
 			where: { id: recipientId },
 			select: {
@@ -305,30 +298,28 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		if (actor.kind === 'user') {
-			const userId = actor.session.id;
+		if (session.type === 'user') {
+			const userId = session.id;
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
 			}
-
 			const allowed = accessResult.data.some(
 				(a) => a.programId === existing.programId && a.permission === ProgramPermission.operator,
 			);
-
 			if (!allowed) {
 				return this.resultFail('Permission denied');
 			}
 		}
 
-		if (actor.kind === 'local-partner') {
-			const partnerId = actor.session.id;
+		if (session.type === 'local-partner') {
+			const partnerId = session.id;
 			if (existing.localPartnerId !== partnerId) {
 				return this.resultFail('Permission denied');
 			}
 		}
 
-		if (actor.kind === 'contributor') {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -351,7 +342,7 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async get(actor: Actor, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
+	async get(session: Session, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
 		const recipient = await this.db.recipient.findUnique({
 			where: { id: recipientId },
 			select: {
@@ -403,8 +394,8 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Recipient not found');
 		}
 
-		if (actor.kind === 'user') {
-			const userId = actor.session.id;
+		if (session.type === 'user') {
+			const userId = session.id;
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
@@ -415,14 +406,14 @@ export class RecipientService extends BaseService {
 			}
 		}
 
-		if (actor.kind === 'local-partner') {
-			const partnerId = actor.session.id;
+		if (session.type === 'local-partner') {
+			const partnerId = session.id;
 			if (recipient.localPartner?.id !== partnerId) {
 				return this.resultFail('Permission denied');
 			}
 		}
 
-		if (actor.kind === 'contributor') {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -758,7 +749,7 @@ export class RecipientService extends BaseService {
 		return this.resultOk(recipientResult.data);
 	}
 
-	async importCsv(actor: Actor, file: File): Promise<ServiceResult<{ created: number }>> {
+	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {
 		let created = 0;
 
 		let rows;
@@ -800,7 +791,7 @@ export class RecipientService extends BaseService {
 				},
 			};
 
-			const result = await this.create(actor, recipient);
+			const result = await this.create(session, recipient);
 
 			if (!result.success) {
 				return this.resultFail(`Row ${rowNumber}: ${result.error}`);

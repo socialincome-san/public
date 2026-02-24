@@ -1,5 +1,5 @@
 import { Cause, CountryCode, Prisma } from '@/generated/prisma/client';
-import { Actor } from '@/lib/firebase/current-account';
+import { Session } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
@@ -117,20 +117,20 @@ export class CandidateService extends BaseService {
 		return where;
 	}
 
-	async create(actor: Actor, candidate: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
-		if (actor.kind === 'contributor') {
+	async create(session: Session, candidate: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
-		if (actor.kind === 'user') {
-			const admin = await this.assertAdmin(actor.session.id);
+		if (session.type === 'user') {
+			const admin = await this.assertAdmin(session.id);
 			if (!admin.success) {
 				return this.resultFail(admin.error);
 			}
 		}
 
-		if (actor.kind === 'local-partner') {
-			candidate.localPartner = { connect: { id: actor.session.id } };
+		if (session.type === 'local-partner') {
+			candidate.localPartner = { connect: { id: session.id } };
 		}
 
 		candidate.program = undefined;
@@ -218,11 +218,11 @@ export class CandidateService extends BaseService {
 	}
 
 	async update(
-		actor: Actor,
+		session: Session,
 		updateInput: CandidatePrismaUpdateInput,
 		nextPaymentPhoneNumber: string | null,
 	): Promise<ServiceResult<CandidatePayload>> {
-		if (actor.kind === 'contributor') {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -249,15 +249,15 @@ export class CandidateService extends BaseService {
 			return this.resultFail('Not a candidate');
 		}
 
-		if (actor.kind === 'user') {
-			const admin = await this.assertAdmin(actor.session.id);
+		if (session.type === 'user') {
+			const admin = await this.assertAdmin(session.id);
 			if (!admin.success) {
 				return this.resultFail(admin.error);
 			}
 		}
 
-		if (actor.kind === 'local-partner') {
-			const partnerId = actor.session.id;
+		if (session.type === 'local-partner') {
+			const partnerId = session.id;
 			if (existing.localPartnerId !== partnerId) {
 				return this.resultFail('Permission denied');
 			}
@@ -398,7 +398,7 @@ export class CandidateService extends BaseService {
 		}
 	}
 
-	async delete(actor: Actor, candidateId: string): Promise<ServiceResult<{ id: string }>> {
+	async delete(session: Session, candidateId: string): Promise<ServiceResult<{ id: string }>> {
 		const existing = await this.db.recipient.findUnique({
 			where: { id: candidateId },
 			select: {
@@ -417,21 +417,21 @@ export class CandidateService extends BaseService {
 			return this.resultFail('Candidate not found');
 		}
 
-		if (actor.kind === 'user') {
-			const admin = await this.assertAdmin(actor.session.id);
+		if (session.type === 'user') {
+			const admin = await this.assertAdmin(session.id);
 			if (!admin.success) {
 				return this.resultFail(admin.error);
 			}
 		}
 
-		if (actor.kind === 'local-partner') {
-			const partnerId = actor.session.id;
+		if (session.type === 'local-partner') {
+			const partnerId = session.id;
 			if (existing.localPartnerId !== partnerId) {
 				return this.resultFail('Permission denied');
 			}
 		}
 
-		if (actor.kind === 'contributor') {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -459,8 +459,8 @@ export class CandidateService extends BaseService {
 		}
 	}
 
-	async get(actor: Actor, id: string): Promise<ServiceResult<CandidatePayload>> {
-		if (actor.kind === 'contributor') {
+	async get(session: Session, id: string): Promise<ServiceResult<CandidatePayload>> {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
@@ -509,15 +509,15 @@ export class CandidateService extends BaseService {
 			return this.resultFail('Not a candidate');
 		}
 
-		if (actor.kind === 'user') {
-			const admin = await this.assertAdmin(actor.session.id);
+		if (session.type === 'user') {
+			const admin = await this.assertAdmin(session.id);
 			if (!admin.success) {
 				return this.resultFail(admin.error);
 			}
 		}
 
-		if (actor.kind === 'local-partner') {
-			if (candidate.localPartnerId !== actor.session.id) {
+		if (session.type === 'local-partner') {
+			if (candidate.localPartnerId !== session.id) {
 				return this.resultFail('Permission denied');
 			}
 		}
@@ -681,7 +681,7 @@ export class CandidateService extends BaseService {
 		}
 	}
 
-	async importCsv(actor: Actor, file: File): Promise<ServiceResult<{ created: number }>> {
+	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {
 		let created = 0;
 
 		let rows;
@@ -717,7 +717,7 @@ export class CandidateService extends BaseService {
 				},
 			};
 
-			const result = await this.create(actor, candidate);
+			const result = await this.create(session, candidate);
 
 			if (!result.success) {
 				return this.resultFail(`Row ${rowNumber}: ${result.error}`);

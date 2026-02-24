@@ -1,6 +1,6 @@
 'use server';
 
-import { getActorOrThrow } from '@/lib/firebase/current-account';
+import { getSessionByTypeOrThrow, type Session } from '@/lib/firebase/current-account';
 import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
 import { ProgramService } from '@/lib/services/program/program.service';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
@@ -15,85 +15,76 @@ const recipientService = new RecipientService();
 const programService = new ProgramService();
 const localPartnerService = new LocalPartnerService();
 
-export const createRecipientAction = async (recipient: RecipientCreateInput) => {
-	const actor = await getActorOrThrow();
-
-	const result = await recipientService.create(actor, recipient);
-
-	if (actor.kind === 'user') {
+export const createRecipientAction = async (
+	recipient: RecipientCreateInput,
+	sessionType: Session['type'] = 'user',
+) => {
+	const session = await getSessionByTypeOrThrow(sessionType);
+	const result = await recipientService.create(session, recipient);
+	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
-	} else if (actor.kind === 'local-partner') {
+	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
-
 	return result;
 };
 
 export const updateRecipientAction = async (
 	updateInput: RecipientUpdateInput,
 	nextPaymentPhoneNumber: string | null,
+	sessionType: Session['type'] = 'user',
 ) => {
-	const actor = await getActorOrThrow();
-
-	const result = await recipientService.update(actor, updateInput, nextPaymentPhoneNumber);
-
-	if (actor.kind === 'user') {
+	const session = await getSessionByTypeOrThrow(sessionType);
+	const result = await recipientService.update(session, updateInput, nextPaymentPhoneNumber);
+	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
-	} else if (actor.kind === 'local-partner') {
+	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
-
 	return result;
 };
 
-export const deleteRecipientAction = async (recipientId: string) => {
-	const actor = await getActorOrThrow();
-
-	const result = await recipientService.delete(actor, recipientId);
-
-	if (actor.kind === 'user') {
+export const deleteRecipientAction = async (recipientId: string, sessionType: Session['type'] = 'user') => {
+	const session = await getSessionByTypeOrThrow(sessionType);
+	const result = await recipientService.delete(session, recipientId);
+	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
-	} else if (actor.kind === 'local-partner') {
+	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
-
 	return result;
 };
 
-export const getRecipientAction = async (recipientId: string) => {
-	const actor = await getActorOrThrow();
-	return await recipientService.get(actor, recipientId);
+export const getRecipientAction = async (recipientId: string, sessionType: Session['type'] = 'user') => {
+	const session = await getSessionByTypeOrThrow(sessionType);
+	return await recipientService.get(session, recipientId);
 };
 
-export const getRecipientOptions = async () => {
-	const actor = await getActorOrThrow();
-
-	if (actor.kind === 'user') {
-		const programs = await programService.getOptions(actor.session.id);
-		const localPartner = await localPartnerService.getOptions();
-
+export const getRecipientOptions = async (sessionType: Session['type'] = 'user') => {
+	if (sessionType !== 'user') {
 		return {
-			programs,
-			localPartner,
+			programs: { success: true, data: [] },
+			localPartner: { success: true, data: [] },
 		};
 	}
-
-	return {
-		programs: { success: true, data: [] },
-		localPartner: { success: true, data: [] },
-	};
+	const session = await getSessionByTypeOrThrow('user');
+	const programs = await programService.getOptions(session.id);
+	const localPartner = await localPartnerService.getOptions();
+	return { programs, localPartner };
 };
 
-export const importRecipientsCsvAction = async (file: File) => {
-	const actor = await getActorOrThrow();
-
-	const result = await recipientService.importCsv(actor, file);
-
-	revalidatePath(PORTAL_RECIPIENTS_PATH);
-	revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
-
+export const importRecipientsCsvAction = async (file: File, sessionType: Session['type'] = 'user') => {
+	const session = await getSessionByTypeOrThrow(sessionType);
+	const result = await recipientService.importCsv(session, file);
+	if (session.type === 'user') {
+		revalidatePath(PORTAL_RECIPIENTS_PATH);
+		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
+	} else if (session.type === 'local-partner') {
+		revalidatePath(PARTNER_RECIPIENTS_PATH);
+	}
 	return result;
 };
+

@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { Actor } from '@/lib/firebase/current-account';
+import type { Session } from '@/lib/firebase/current-account';
 import { logger } from '@/lib/utils/logger';
 import { CandidateForm } from './candidates-form';
 
@@ -11,7 +11,7 @@ type Props = {
 	onOpenChange: (open: boolean) => void;
 	candidateId?: string;
 	readOnly: boolean;
-	actorKind: Actor['kind'];
+	sessionType: Session['type'];
 	errorMessage: string | null;
 	onError: (error: string) => void;
 };
@@ -21,7 +21,7 @@ export const CandidateDialog = ({
 	onOpenChange,
 	candidateId,
 	readOnly,
-	actorKind,
+	sessionType,
 	errorMessage,
 	onError,
 }: Props) => {
@@ -50,7 +50,7 @@ export const CandidateDialog = ({
 					onSuccess={() => onOpenChange(false)}
 					onCancel={() => onOpenChange(false)}
 					onError={handleError}
-					actorKind={actorKind}
+					sessionType={sessionType}
 				/>
 			</DialogContent>
 		</Dialog>

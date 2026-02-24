@@ -73,7 +73,7 @@ export const submitProfileForm = async (
 			},
 		};
 
-		return updateLocalPartnerAction(update);
+		return updateLocalPartnerAction(update, 'local-partner');
 	}
 
 	return updateUserSelfAction({

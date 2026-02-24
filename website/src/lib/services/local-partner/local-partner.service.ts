@@ -1,5 +1,5 @@
 import { LocalPartner } from '@/generated/prisma/client';
-import { Actor } from '@/lib/firebase/current-account';
+import { Session } from '@/lib/firebase/current-account';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -62,9 +62,9 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
-	async update(actor: Actor, input: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
-		if (actor.kind === 'local-partner') {
-			input.id = actor.session.id;
+	async update(session: Session, input: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+		if (session.type === 'local-partner') {
+			input.id = session.id;
 		}
 		const partnerId = input.id?.toString();
 		if (!partnerId) {
@@ -88,14 +88,17 @@ export class LocalPartnerService extends BaseService {
 			return this.resultFail('Local partner not found');
 		}
 
-		if (actor.kind === 'contributor') {
+		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
 
-		if (actor.kind === 'user') {
-			const isAdmin = await this.userService.isAdmin(actor.session.id);
+		if (session.type === 'user') {
+			const isAdmin = await this.userService.isAdmin(session.id);
 			if (!isAdmin.success) {
 				return this.resultFail(isAdmin.error);
+			}
+			if (!isAdmin.data) {
+				return this.resultFail('Permission denied');
 			}
 		}
 
@@ -103,7 +106,7 @@ export class LocalPartnerService extends BaseService {
 		const oldEmail = existing.contact?.email ?? null;
 		const firebaseUid = existing.account.firebaseAuthUserId;
 
-		if (actor.kind === 'user' && newEmail && newEmail !== oldEmail) {
+		if (session.type === 'user' && newEmail && newEmail !== oldEmail) {
 			const firebaseResult = await this.firebaseAdminService.updateByUid(firebaseUid, { email: newEmail });
 			if (!firebaseResult.success) {
 				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });

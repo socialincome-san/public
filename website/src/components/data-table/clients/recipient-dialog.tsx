@@ -3,7 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { RecipientForm } from '@/components/recipient/recipient-form';
-import { Actor } from '@/lib/firebase/current-account';
+import type { Session } from '@/lib/firebase/current-account';
 import { logger } from '@/lib/utils/logger';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 	recipientId?: string;
 	readOnly: boolean;
 	programId?: string;
-	actorKind: Actor['kind'];
+	sessionType: Session['type'];
 	errorMessage: string | null;
 	onError: (error: string) => void;
 };
@@ -23,7 +23,7 @@ export const RecipientDialog = ({
 	recipientId,
 	readOnly,
 	programId,
-	actorKind,
+	sessionType,
 	errorMessage,
 	onError,
 }: Props) => {
@@ -53,9 +53,10 @@ export const RecipientDialog = ({
 					onCancel={() => onOpenChange(false)}
 					onError={handleError}
 					programId={programId}
-					actorKind={actorKind}
+					sessionType={sessionType}
 				/>
 			</DialogContent>
 		</Dialog>
 	);
 };
+
