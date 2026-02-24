@@ -12,7 +12,9 @@ import {
 } from './transparency.types';
 
 export class TransparencyService extends BaseService {
-	constructor(db: PrismaClient) { super(db); }
+	constructor(db: PrismaClient) {
+		super(db);
+	}
 
 	async getTransparencyData(timeRanges: TimeRange[]): Promise<ServiceResult<TransparencyData>> {
 		try {

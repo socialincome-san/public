@@ -5,7 +5,9 @@ import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
 
 export class AppReviewModeService extends BaseService {
-	constructor(db: PrismaClient) { super(db); }
+	constructor(db: PrismaClient) {
+		super(db);
+	}
 
 	isEnabled(): boolean {
 		return process.env.APP_REVIEW_MODE_ENABLED === 'true';

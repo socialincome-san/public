@@ -7,7 +7,9 @@ import { ServiceResult } from '../core/base.types';
 import { ProgramDashboardStats, ProgramForDashboard } from './program-stats.types';
 
 export class ProgramStatsService extends BaseService {
-	constructor(db: PrismaClient) { super(db); }
+	constructor(db: PrismaClient) {
+		super(db);
+	}
 
 	async getProgramDashboardStats(programId: string): Promise<ServiceResult<ProgramDashboardStats>> {
 		try {

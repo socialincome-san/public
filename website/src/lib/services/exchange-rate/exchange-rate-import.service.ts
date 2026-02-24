@@ -11,7 +11,9 @@ type ExchangeRateResponse = {
 };
 
 export class ExchangeRateImportService extends BaseService {
-	constructor(db: PrismaClient) { super(db); }
+	constructor(db: PrismaClient) {
+		super(db);
+	}
 
 	static readonly DAY_IN_MILLISECONDS = 60 * 60 * 24 * 1000;
 

@@ -11,7 +11,9 @@ const SESSION_EXPIRES_IN_MS = SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 export class FirebaseSessionService extends BaseService {
-	constructor(db: PrismaClient) { super(db); }
+	constructor(db: PrismaClient) {
+		super(db);
+	}
 
 	private async createSessionCookie(idToken: string): Promise<ServiceResult<string>> {
 		try {

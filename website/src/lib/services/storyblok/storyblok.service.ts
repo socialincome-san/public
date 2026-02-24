@@ -23,7 +23,9 @@ const STORIES_PATH = 'cdn/stories';
 const EXCLUDED_FIELDS_FOR_COUNTING = [CONTENT, LEAD_TEXT].join(',');
 
 export class StoryblokService extends BaseService {
-	constructor(db: PrismaClient) { super(db); }
+	constructor(db: PrismaClient) {
+		super(db);
+	}
 
 	async getStoryParams(language: string): Promise<ISbStoriesParams> {
 		return {

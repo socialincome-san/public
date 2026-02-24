@@ -8,7 +8,9 @@ import { ServiceResult } from '../core/base.types';
 const { appCheck } = admin;
 
 export class FirebaseAdminService extends BaseService {
-	constructor(db: PrismaClient) { super(db); }
+	constructor(db: PrismaClient) {
+		super(db);
+	}
 
 	async createByPhoneNumber(phoneNumber: string): Promise<ServiceResult<UserRecord>> {
 		try {
