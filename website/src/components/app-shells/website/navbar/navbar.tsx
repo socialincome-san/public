@@ -7,8 +7,8 @@ import { Button } from '@/components/button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { Session } from '@/lib/firebase/current-account';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@/lib/i18n/translator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { cn } from '@/lib/utils/cn';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
@@ -54,7 +54,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 						{translator.t('donation-form.donate-now')}
 					</Button>
 				)}
-				<MenuMobile menu={menu} lang={lang} region={region} />
+				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
 			</div>
 		</nav>
 	);

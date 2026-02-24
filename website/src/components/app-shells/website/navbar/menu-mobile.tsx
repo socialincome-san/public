@@ -1,9 +1,19 @@
 'use client';
 
-import { hasDropdownChildren, isDropdownItem, isMenuItem } from '@/components/app-shells/website/navbar/utils';
+import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
+import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
+import {
+	displaySession,
+	hasDropdownChildren,
+	isDropdownItem,
+	isMenuItem,
+	Scope,
+} from '@/components/app-shells/website/navbar/utils';
 import { Button } from '@/components/button';
+import { MakeDonationForm } from '@/components/make-donation-form';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
+import { Session } from '@/lib/firebase/current-account';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
@@ -18,12 +28,15 @@ import { FC, useCallback, useEffect, useState } from 'react';
 const FALLBACK_BADGE_COUNT = 23;
 
 type Props = {
+	sessions: Session[];
+	scope: Scope;
 	menu: Layout['menu'];
 	lang: WebsiteLanguage;
 	region: string;
 };
 
-export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
+export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) => {
+	const session = displaySession(sessions, scope);
 	const commonTranslator = useTranslator(lang, 'website-common');
 	const donateTranslator = useTranslator(lang, 'website-donate');
 	const [open, setOpen] = useState(false);
@@ -118,6 +131,9 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 										return null;
 									})}
 								</ul>
+								<div className="mt-4">
+									<MakeDonationForm lang={lang} />
+								</div>
 							</div>
 
 							<div
@@ -129,18 +145,18 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 								{activeDropdown && (
 									<>
 										<button
-											className="flex items-center gap-1 py-3 text-sm font-medium"
+											className="mb-4 flex items-center gap-1 py-4 text-sm font-medium"
 											onClick={() => setActiveDropdown(null)}
 										>
 											<ChevronLeft className="size-4" />
 											{commonTranslator?.t('menu.back') ?? 'Back'}
 										</button>
 
-										<h2 className="mb-4 text-2xl font-bold">{activeDropdown.label}</h2>
+										<h2 className="mb-4 text-xl font-medium">{activeDropdown.label}</h2>
 
 										{activeDropdown.menuItemGroups.map((group) => (
 											<div key={group._uid} className="mb-6">
-												<h3 className="mb-2 text-sm font-bold">{group.label}</h3>
+												<h3 className="mb-2 font-bold">{group.label}</h3>
 												<ul className="flex flex-col gap-2">
 													{group.items?.map((child) => (
 														<li key={child._uid}>
@@ -148,7 +164,7 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 																href={resolveStoryblokLink(child.link, lang, region)}
 																target={child.newTab ? '_blank' : undefined}
 																rel={child.newTab ? 'noopener noreferrer' : undefined}
-																className="text-muted-foreground flex items-center gap-2 font-medium"
+																className="text-muted-foreground flex items-center gap-2 text-sm font-medium"
 																onClick={close}
 															>
 																{child.label}
@@ -169,6 +185,7 @@ export const MenuMobile: FC<Props> = ({ menu, lang, region }) => {
 							<Button className="h-11 rounded-full px-5 text-sm font-medium">
 								{donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
 							</Button>
+							{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 						</div>
 					</Dialog.Content>
 				</Dialog.Overlay>
