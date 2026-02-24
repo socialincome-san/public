@@ -67,7 +67,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 						alt="Organization Photo"
 						unoptimized
 					/>
-					<div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-t from-black to-transparent">
+					<div className="absolute bottom-0 left-0 h-32 w-full bg-linear-to-t from-black to-transparent">
 						<div className="text-accent absolute bottom-0 left-0 px-8 py-4">
 							<Typography size="5xl" weight="medium">
 								{ngoHoverCard.orgLongName}
@@ -75,9 +75,9 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 						</div>
 					</div>
 				</div>
-				<div className="px-8 pb-10 pt-2">
-					<div className="flex flex-col gap-2 p-0 pb-8 pt-2 sm:flex-row sm:items-center sm:justify-between">
-						<div className="pb-4 text-center sm:order-2 sm:flex-shrink-0 sm:pb-0 sm:text-right">
+				<div className="px-8 pt-2 pb-10">
+					<div className="flex flex-col gap-2 p-0 pt-2 pb-8 sm:flex-row sm:items-center sm:justify-between">
+						<div className="pb-4 text-center sm:order-2 sm:shrink-0 sm:pb-0 sm:text-right">
 							<Typography size="md" weight="normal">
 								{translations.partnerSince} {ngoHoverCard.partnershipStart}
 							</Typography>
@@ -92,7 +92,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 						</div>
 					</div>
 					{showFundRaiser && (
-						<div className="border-primary mb-8 flex items-center justify-start space-x-5 rounded-md border-2 border-opacity-80 py-4 pl-4">
+						<div className="border-primary/80 mb-8 flex items-center justify-start space-x-5 rounded-md border-2 py-4 pl-4">
 							<FundraiserBadge fundRaiserTranslation={translations.fundRaiser} />
 							<span>
 								{ngoHoverCard.orgFundRaiserText?.map((fragment, index) => {
@@ -130,7 +130,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 							</div>
 						);
 					})}
-					<Separator className="bg-primary my-6 bg-opacity-10" />
+					<Separator className="bg-primary/10 my-6" />
 					{ngoHoverCard.quote && ngoHoverCard.quoteAuthor ? (
 						<>
 							<div className="py-12 text-center">
@@ -156,7 +156,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 									</Typography>
 								</div>
 							</div>
-							<Separator className="bg-primary my-6 bg-opacity-10" />
+							<Separator className="bg-primary/10 my-6" />
 						</>
 					) : (
 						''
@@ -250,7 +250,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 						</div>
 						<div className="col-span-2">
 							<Link href={`/${lang}/${region}/partners/${ngoHoverCard.orgSlug}`}>
-								<Typography size="lg" className="break-words underline">
+								<Typography size="lg" className="wrap-break-word underline">
 									{`socialincome.org/partners/${ngoHoverCard.orgSlug}`}
 								</Typography>
 							</Link>

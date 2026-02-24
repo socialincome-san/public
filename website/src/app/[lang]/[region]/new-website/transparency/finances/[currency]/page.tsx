@@ -47,7 +47,7 @@ export default async function Page({ params }: DefaultLayoutProps<TransparencyFi
 	}));
 
 	return (
-		<div className="container mx-auto space-y-12 py-12">
+		<div className="w-site-width max-w-content mx-auto space-y-12 py-12">
 			<TotalsSection totals={data.totals} exchangeRate={exchangeRate} currency={currencyCode} lang={language} />
 			<TimeSeriesSection
 				timeRanges={serializedTimeRanges}

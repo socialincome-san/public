@@ -35,7 +35,7 @@ export const OurWork = async ({ lang }: DefaultParams) => {
 								</Typography>
 							</Badge>
 						</DialogTrigger>
-						<DialogContent className="max-w-screen-lg overflow-hidden rounded p-0">
+						<DialogContent className="max-w-(--breakpoint-lg) overflow-hidden rounded p-0">
 							<VimeoVideo videoId={Number(translator.t('id.video-02'))} videoOptions={{ autoplay: true }} />
 						</DialogContent>
 					</Dialog>

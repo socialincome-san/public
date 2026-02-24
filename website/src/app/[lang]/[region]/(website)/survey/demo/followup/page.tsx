@@ -20,7 +20,7 @@ export default async function Page(props: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-10 pb-16 pt-8">
+		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-10 pt-8 pb-16">
 			<Typography size="5xl" weight="bold">
 				{translator.t('titleFollowup')}
 			</Typography>

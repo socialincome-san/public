@@ -42,11 +42,11 @@ const PaymentTypeFormItem = ({
 		<FormItem>
 			<FormControl
 				className={classNames(
-					'flex flex-1 cursor-pointer flex-row border-2 p-4 focus:outline-none',
-					{ 'shadow-sm': !active },
+					'flex flex-1 cursor-pointer flex-row border-2 p-4 focus:outline-hidden',
+					{ 'shadow-xs': !active },
 					{ 'border-accent bg-card-muted': active },
 					{ 'rounded-lg': !hasContent },
-					{ 'rounded-b-none rounded-t-lg border-b-0 pb-8': hasContent },
+					{ 'rounded-t-lg rounded-b-none border-b-0 pb-8': hasContent },
 				)}
 			>
 				<div onClick={() => setValue('paymentType', paymentType)}>

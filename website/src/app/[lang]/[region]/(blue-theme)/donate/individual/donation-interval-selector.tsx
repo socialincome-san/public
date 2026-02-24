@@ -51,7 +51,7 @@ const DonationIntervalFormItem = ({
 		<FormItem>
 			<FormControl
 				className={classNames(
-					'flex h-full flex-1 cursor-pointer flex-row rounded-lg border-2 p-4 shadow-sm focus:outline-none',
+					'flex h-full flex-1 cursor-pointer flex-row rounded-lg border-2 p-4 shadow-xs focus:outline-hidden',
 					{ 'border-accent bg-card-muted': active },
 				)}
 			>

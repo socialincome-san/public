@@ -1,29 +1,64 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '../../../ui/src/theme.css';
 
-@font-face {
-	font-family: 'Unica77';
-	src: url('../../../ui/assets/fonts/Unica77LLWeb-Light.woff2') format('woff2');
-	font-weight: 300;
+@source '../../../ui/src/components';
+@source '../../../ui/src/icons';
+
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+	--animate-enter-from-top: enterFromTop 100ms ease-out;
+	--animate-fade-out: fadeOut 75ms ease-out;
+
+	@keyframes enterFromTop {
+		from {
+			opacity: 0;
+			transform: translateY(-25px) scale(0.9);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+	@keyframes fadeOut {
+		from {
+			opacity: 1;
+			transform: scale(1);
+		}
+		to {
+			opacity: 0;
+			transform: scale(0.95);
+		}
+	}
 }
 
-@font-face {
-	font-family: 'Unica77';
-	src: url('../../../ui/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
-	font-weight: normal;
-}
+@layer utilities {
+	@font-face {
+		font-family: 'Unica77';
+		src: url('../../../ui/assets/fonts/Unica77LLWeb-Light.woff2') format('woff2');
+		font-weight: 300;
+	}
 
-@font-face {
-	font-family: 'Unica77';
-	src: url('../../../ui/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
-	font-weight: 500;
-}
+	@font-face {
+		font-family: 'Unica77';
+		src: url('../../../ui/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
+		font-weight: normal;
+	}
 
-@font-face {
-	font-family: 'Unica77';
-	src: url('../../../ui/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
-	font-weight: 700;
+	@font-face {
+		font-family: 'Unica77';
+		src: url('../../../ui/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
+		font-weight: 500;
+	}
+
+	@font-face {
+		font-family: 'Unica77';
+		src: url('../../../ui/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
+		font-weight: 700;
+	}
 }
 
 @layer base {
@@ -36,18 +71,30 @@
 		--popover: 0 0% 100%;
 		--popover-foreground: 197 79% 15%;
 		--primary: 197 79% 15%;
+		--primary-muted: 197 79% 22%;
 		--primary-foreground: 210 40% 98%;
+		--primary-foreground-muted: 210 40% 90%;
 		--secondary: 210 40% 96%;
+		--secondary-muted: 210 40% 92%;
 		--secondary-foreground: 197 79% 15%;
+		--secondary-foreground-muted: 197 79% 25%;
 		--muted: 210 40% 96%;
 		--muted-foreground: 215 16% 47%;
 		--accent: 210 40% 96%;
+		--accent-muted: 210 40% 92%;
 		--accent-foreground: 197 79% 15%;
+		--accent-foreground-muted: 197 79% 25%;
 		--destructive: 0 84% 60%;
+		--destructive-muted: 0 84% 70%;
 		--destructive-foreground: 0 86% 97%;
+		--destructive-foreground-muted: 0 86% 92%;
 		--border: 214 32% 91%;
 		--input: 213 27% 84%;
 		--ring: 215 20% 65%;
+		--popover-muted: 210 40% 96%;
+		--popover-foreground-muted: 197 79% 25%;
+		--card-muted: 210 40% 96%;
+		--card-foreground-muted: 197 79% 25%;
 		--radius: 0.625rem;
 		--chart-1: 21 90% 48%;
 		--chart-2: 160 16% 66%;
@@ -70,5 +117,34 @@
 		--confirm-foreground: 141 84% 93%;
 		--gradient-card-from: 203 40% 53%;
 		--gradient-card-to: 96 10% 81%;
+	}
+
+	body {
+		font-feature-settings: 'ss04' on;
+	}
+
+	button:not([disabled]),
+	[role='button']:not([disabled]) {
+		cursor: pointer;
+	}
+
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentColor);
+	}
+
+	/* Typography plugin customization (prose colors) */
+
+	.prose,
+	.prose h1 {
+		color: hsl(var(--foreground));
+	}
+	.prose {
+		--tw-prose-headings: hsl(var(--foreground));
+		--tw-prose-quotes: hsl(var(--accent));
+		--tw-prose-links: hsl(var(--foreground));
 	}
 }
