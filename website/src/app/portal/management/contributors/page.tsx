@@ -1,5 +1,5 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { services } from '@/lib/services/services';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { Suspense } from 'react';
 import ContributorsTableClient from './contributors-table-client';
@@ -15,7 +15,7 @@ export default function ContributorsPage() {
 const ContributorsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new ContributorService();
+	const service = services.contributor;
 	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;

@@ -1,7 +1,7 @@
 import { makeOrganizationAdminColumns } from '@/components/data-table/columns/organizations';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { OrganizationService } from '@/lib/services/organization/organization.service';
+import { services } from '@/lib/services/services';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
 import { Suspense } from 'react';
 
@@ -17,7 +17,7 @@ const OrganizationsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = new OrganizationService();
+	const service = services.organization;
 	const result = await service.getAdminTableView(user.id);
 
 	const error = result.success ? null : result.error;

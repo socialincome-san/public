@@ -1,7 +1,6 @@
 import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
 import { websiteCurrencies, WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.service';
-import { TransparencyService } from '@/lib/services/transparency/transparency.service';
+import { services } from '@/lib/services/services';
 import { Currency } from '@/lib/types/currency';
 import { DateTime } from 'luxon';
 import { CountriesSection } from './(sections)/countries-section';
@@ -16,8 +15,7 @@ type TransparencyFinancesParams = DefaultParams & { currency: Currency };
 export default async function Page({ params }: DefaultLayoutProps<TransparencyFinancesParams>) {
 	const { lang, currency } = await params;
 
-	const transparencyService = new TransparencyService();
-	const exchangeRateService = new ExchangeRateService();
+	
 
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
 		const start = DateTime.now()
@@ -28,8 +26,8 @@ export default async function Page({ params }: DefaultLayoutProps<TransparencyFi
 	});
 
 	const [dataResult, rateResult] = await Promise.all([
-		transparencyService.getTransparencyData(timeRanges),
-		exchangeRateService.getLatestRateForCurrency(currency.toUpperCase()),
+		services.transparency.getTransparencyData(timeRanges),
+		services.exchangeRate.getLatestRateForCurrency(currency.toUpperCase()),
 	]);
 
 	if (!dataResult.success) {

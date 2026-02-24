@@ -1,4 +1,4 @@
-import { ContributionStatus, PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { ContributionStatus, PayoutStatus, ProgramPermission, PrismaClient, SurveyStatus } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { slugify } from '@/lib/utils/string-utils';
 import { CandidateService } from '../candidate/candidate.service';
@@ -14,8 +14,14 @@ import {
 } from './program.types';
 
 export class ProgramService extends BaseService {
-	private programAccessService = new ProgramAccessService();
-	private candidateService = new CandidateService();
+	private readonly programAccessService: ProgramAccessService;
+	private readonly candidateService: CandidateService;
+
+	constructor(db: PrismaClient, programAccessService: ProgramAccessService, candidateService: CandidateService) {
+		super(db);
+		this.programAccessService = programAccessService;
+		this.candidateService = candidateService;
+	}
 
 	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {

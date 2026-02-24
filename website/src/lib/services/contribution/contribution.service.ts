@@ -1,4 +1,4 @@
-import { Contribution, ContributionStatus, PaymentEvent } from '@/generated/prisma/client';
+import { Contribution, ContributionStatus, PaymentEvent, PrismaClient } from '@/generated/prisma/client';
 import { endOfYear, startOfYear } from 'date-fns';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
@@ -18,7 +18,12 @@ import {
 } from './contribution.types';
 
 export class ContributionService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
+	private readonly organizationAccessService: OrganizationAccessService;
+
+	constructor(db: PrismaClient, organizationAccessService: OrganizationAccessService) {
+		super(db);
+		this.organizationAccessService = organizationAccessService;
+	}
 
 	async get(userId: string, contributionId: string): Promise<ServiceResult<ContributionPayload>> {
 		try {

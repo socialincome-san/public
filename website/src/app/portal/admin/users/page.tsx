@@ -1,5 +1,5 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { UserService } from '@/lib/services/user/user.service';
+import { services } from '@/lib/services/services';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import { Suspense } from 'react';
 import UsersTable from './users-table';
@@ -16,7 +16,7 @@ const UsersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = new UserService();
+	const service = services.user;
 	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;

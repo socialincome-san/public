@@ -3,7 +3,7 @@ import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArt
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { services } from '@/lib/services/services';
 import { LanguageCode } from '@/lib/types/language';
 import { BaseContainer, linkCn, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ const getGitHubUrl = (username: string) => {
 	return `https://github.com/${encodeURIComponent(username)}`;
 };
 
-const storyblokService = new StoryblokService();
+const storyblokService = services.storyblok;
 
 const getTotalArticlesInDefaultLanguage = async (
 	lang: string,

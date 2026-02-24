@@ -1,8 +1,10 @@
-import { OrganizationPermission } from '@/generated/prisma/client';
+import { OrganizationPermission, PrismaClient } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ActiveOrganizationAccess } from './organization-access.types';
 export class OrganizationAccessService extends BaseService {
+	constructor(db: PrismaClient) { super(db); }
+
 	async getActiveOrganizationAccess(userId: string): Promise<ServiceResult<ActiveOrganizationAccess>> {
 		try {
 			const user = await this.db.user.findUnique({

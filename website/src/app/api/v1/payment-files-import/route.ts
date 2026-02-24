@@ -1,4 +1,4 @@
-import { PaymentFileImportService } from '@/lib/services/payment-file-import/payment-file-import.service';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -10,15 +10,8 @@ export const POST = async (request: NextRequest) => {
 		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 	}
 
-	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
-		logger.alert('Payment files storage bucket env var not set');
-		return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
-	}
-
-	const service = new PaymentFileImportService(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
-
 	try {
-		const result = await service.importPaymentFiles();
+		const result = await services.paymentFileImport.importPaymentFiles();
 		if (!result.success) {
 			logger.alert(`Payment files import failed: ${result.error}`, { result }, { component: 'payment-files-import' });
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });

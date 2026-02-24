@@ -1,4 +1,5 @@
 import type { Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
+import { PrismaClient } from '@/generated/prisma/client';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
@@ -22,6 +23,8 @@ const STORIES_PATH = 'cdn/stories';
 const EXCLUDED_FIELDS_FOR_COUNTING = [CONTENT, LEAD_TEXT].join(',');
 
 export class StoryblokService extends BaseService {
+	constructor(db: PrismaClient) { super(db); }
+
 	async getStoryParams(language: string): Promise<ISbStoriesParams> {
 		return {
 			language,

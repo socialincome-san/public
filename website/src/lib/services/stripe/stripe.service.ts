@@ -9,7 +9,7 @@
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
-import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@/generated/prisma/client';
+import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { titleCase } from '@/lib/utils/string-utils';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
@@ -35,10 +35,18 @@ import {
 } from './stripe.types';
 export class StripeService extends BaseService {
 	private readonly stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
-	private readonly contributorService = new ContributorService();
-	private readonly contributionService = new ContributionService();
-	private readonly campaignService = new CampaignService();
-	private readonly programAccessService = new ProgramAccessService();
+	private readonly contributorService: ContributorService;
+	private readonly contributionService: ContributionService;
+	private readonly campaignService: CampaignService;
+	private readonly programAccessService: ProgramAccessService;
+
+	constructor(db: PrismaClient, contributorService: ContributorService, contributionService: ContributionService, campaignService: CampaignService, programAccessService: ProgramAccessService) {
+		super(db);
+		this.contributorService = contributorService;
+		this.contributionService = contributionService;
+		this.campaignService = campaignService;
+		this.programAccessService = programAccessService;
+	}
 
 	async handleWebhookEvent(
 		body: string,

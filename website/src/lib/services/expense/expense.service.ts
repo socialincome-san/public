@@ -1,3 +1,4 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
@@ -10,7 +11,12 @@ import {
 } from './expense.types';
 
 export class ExpenseService extends BaseService {
-	private userService = new UserService();
+	private readonly userService: UserService;
+
+	constructor(db: PrismaClient, userService: UserService) {
+		super(db);
+		this.userService = userService;
+	}
 
 	async create(userId: string, input: ExpenseCreateInput): Promise<ServiceResult<ExpensePayload>> {
 		const isAdminResult = await this.userService.isAdmin(userId);

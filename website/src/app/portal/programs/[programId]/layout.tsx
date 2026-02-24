@@ -1,6 +1,6 @@
 import { TabNavigation } from '@/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ProgramService } from '@/lib/services/program/program.service';
+import { services } from '@/lib/services/services';
 
 import { CountryBadge } from '@/components/badges/country-badge';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
@@ -15,7 +15,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new ProgramService();
+	const service = services.program;
 	const result = await service.getProgramWalletsProgramScoped(user.id, programId);
 
 	if (!result.success) {

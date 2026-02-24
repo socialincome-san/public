@@ -1,4 +1,5 @@
 import { CountryCode } from '@/generated/prisma/enums';
+import { PrismaClient } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -11,6 +12,8 @@ import {
 } from './transparency.types';
 
 export class TransparencyService extends BaseService {
+	constructor(db: PrismaClient) { super(db); }
+
 	async getTransparencyData(timeRanges: TimeRange[]): Promise<ServiceResult<TransparencyData>> {
 		try {
 			const [totals, timeRangeData, topCountries] = await Promise.all([

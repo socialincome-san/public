@@ -2,7 +2,7 @@ import { Badge } from '@/components/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { ProgramService } from '@/lib/services/program/program.service';
+import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const UserPrograms = async ({ userId }: Props) => {
-	const service = new ProgramService();
+	const service = services.program;
 	const result = await service.getProgramWallets(userId);
 
 	if (!result.success) {

@@ -1,5 +1,5 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { CampaignService } from '@/lib/services/campaign/campaign.service';
+import { services } from '@/lib/services/services';
 import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
 import { Suspense } from 'react';
 import CampaignsTable from './campaigns-table';
@@ -15,7 +15,7 @@ export default function CampaignsPage() {
 const CampaignsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const campaignService = new CampaignService();
+	const campaignService = services.campaign;
 	const campaignsResult = await campaignService.getTableView(user.id);
 
 	const error = campaignsResult.success ? null : campaignsResult.error;

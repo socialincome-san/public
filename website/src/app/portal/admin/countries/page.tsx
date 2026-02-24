@@ -1,5 +1,5 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { CountryService } from '@/lib/services/country/country.service';
+import { services } from '@/lib/services/services';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
 import { Suspense } from 'react';
 import CountriesTable from './countries-table';
@@ -16,7 +16,7 @@ const CountriesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = new CountryService();
+	const service = services.country;
 	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;

@@ -1,4 +1,4 @@
-import { ContributionStatus, PaymentEvent, PaymentEventType } from '@/generated/prisma/client';
+import { ContributionStatus, PaymentEvent, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { Currency } from '@/lib/types/currency';
 import xmldom from '@xmldom/xmldom';
@@ -25,14 +25,17 @@ const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
 
 export class PaymentFileImportService extends BaseService {
-	private contributorService = new ContributorService();
-	private contributionService = new ContributionService();
-	private readonly campaignService = new CampaignService();
-	private readonly bucketName;
+	private readonly contributorService: ContributorService;
+	private readonly contributionService: ContributionService;
+	private readonly campaignService: CampaignService;
+	private readonly bucketName: string;
 	private readonly xmlSelectExpression = '//ns:BkToCstmrDbtCdtNtfctn/ns:Ntfctn/ns:Ntry/ns:NtryDtls/ns:TxDtls';
 
-	constructor(bucketName: string) {
-		super();
+	constructor(db: PrismaClient, contributorService: ContributorService, contributionService: ContributionService, campaignService: CampaignService, bucketName: string) {
+		super(db);
+		this.contributorService = contributorService;
+		this.contributionService = contributionService;
+		this.campaignService = campaignService;
 		this.bucketName = bucketName;
 	}
 

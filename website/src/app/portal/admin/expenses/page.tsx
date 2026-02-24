@@ -1,5 +1,5 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { ExpenseService } from '@/lib/services/expense/expense.service';
+import { services } from '@/lib/services/services';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
 import { Suspense } from 'react';
 import ExpensesTable from './expenses-table';
@@ -16,7 +16,7 @@ const ExpensesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = new ExpenseService();
+	const service = services.expense;
 	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;

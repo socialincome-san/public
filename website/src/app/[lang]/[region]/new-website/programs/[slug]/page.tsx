@@ -1,6 +1,5 @@
 import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[region]';
-import { ProgramStatsService } from '@/lib/services/program-stats/program-stats.service';
-import { ProgramService } from '@/lib/services/program/program.service';
+import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -16,8 +15,8 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 	const { slug } = await params;
 	const query = await searchParams;
 
-	const statsService = new ProgramStatsService();
-	const statsResult = await statsService.getProgramDashboardStatsBySlug(slug);
+	
+	const statsResult = await services.programStats.getProgramDashboardStatsBySlug(slug);
 
 	if (!statsResult.success || !statsResult.data) {
 		return notFound();
@@ -27,12 +26,12 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 
 	const isPreview = query.preview === 'true';
 	if (!isPreview) {
-		const programService = new ProgramService();
-		const idResult = await programService.getProgramIdBySlug(slug);
+		
+		const idResult = await services.program.getProgramIdBySlug(slug);
 		if (!idResult.success) {
 			return notFound();
 		}
-		const readyResult = await programService.isReadyForFirstPayoutInterval(idResult.data);
+		const readyResult = await services.program.isReadyForFirstPayoutInterval(idResult.data);
 		if (!readyResult.success || !readyResult.data) {
 			return notFound();
 		}

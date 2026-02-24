@@ -1,7 +1,7 @@
 import { makeOngoingPayoutColumns } from '@/components/data-table/columns/ongoing-payouts';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutService } from '@/lib/services/payout/payout.service';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 
 export default function OngoingPayoutsPage() {
@@ -15,7 +15,7 @@ export default function OngoingPayoutsPage() {
 const OngoingPayoutsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new PayoutService();
+	const service = services.payout;
 	const result = await service.getOngoingPayoutTableView(user.id);
 
 	const error = result.success ? null : result.error;

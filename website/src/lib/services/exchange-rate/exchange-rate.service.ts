@@ -1,3 +1,4 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -5,8 +6,14 @@ import { UserService } from '../user/user.service';
 import { ExchangeRateImportService } from './exchange-rate-import.service';
 import { ExchangeRate, ExchangeRates, ExchangeRatesTableView, ExchangeRatesTableViewRow } from './exchange-rate.types';
 export class ExchangeRateService extends BaseService {
-	private userService = new UserService();
-	private importService = new ExchangeRateImportService();
+	private readonly userService: UserService;
+	private readonly importService: ExchangeRateImportService;
+
+	constructor(db: PrismaClient, userService: UserService, importService: ExchangeRateImportService) {
+		super(db);
+		this.userService = userService;
+		this.importService = importService;
+	}
 
 	async getLatestRates(): Promise<ServiceResult<ExchangeRates>> {
 		try {

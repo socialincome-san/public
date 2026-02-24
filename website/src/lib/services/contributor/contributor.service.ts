@@ -1,4 +1,4 @@
-import { Contributor, ContributorReferralSource, OrganizationPermission } from '@/generated/prisma/client';
+import { Contributor, ContributorReferralSource, OrganizationPermission, PrismaClient } from '@/generated/prisma/client';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -21,9 +21,16 @@ import {
 } from './contributor.types';
 
 export class ContributorService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
-	private firebaseAdminService = new FirebaseAdminService();
-	private sendGridService = new SendgridSubscriptionService();
+	private readonly organizationAccessService: OrganizationAccessService;
+	private readonly firebaseAdminService: FirebaseAdminService;
+	private readonly sendGridService: SendgridSubscriptionService;
+
+	constructor(db: PrismaClient, organizationAccessService: OrganizationAccessService, firebaseAdminService: FirebaseAdminService, sendGridService: SendgridSubscriptionService) {
+		super(db);
+		this.organizationAccessService = organizationAccessService;
+		this.firebaseAdminService = firebaseAdminService;
+		this.sendGridService = sendGridService;
+	}
 
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
 		try {

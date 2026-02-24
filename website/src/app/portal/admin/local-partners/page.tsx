@@ -1,5 +1,5 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
+import { services } from '@/lib/services/services';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import { Suspense } from 'react';
 import LocalPartnersTable from './local-partners-table';
@@ -16,7 +16,7 @@ const LocalPartnersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
-	const service = new LocalPartnerService();
+	const service = services.localPartner;
 	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;

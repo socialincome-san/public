@@ -1,5 +1,6 @@
 import { UserRecord } from 'firebase-admin/auth';
 import { Twilio } from 'twilio';
+import { PrismaClient } from '@/generated/prisma/client';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -7,8 +8,14 @@ import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { VerifyOtpRequest, VerifyOtpResult } from './twilio.types';
 
 export class TwilioService extends BaseService {
-	private readonly firebaseAdminService = new FirebaseAdminService();
-	private readonly appReviewModeService = new AppReviewModeService();
+	private readonly firebaseAdminService: FirebaseAdminService;
+	private readonly appReviewModeService: AppReviewModeService;
+
+	constructor(db: PrismaClient, firebaseAdminService: FirebaseAdminService, appReviewModeService: AppReviewModeService) {
+		super(db);
+		this.firebaseAdminService = firebaseAdminService;
+		this.appReviewModeService = appReviewModeService;
+	}
 
 	private readonly twilioClient = new Twilio(process.env.TWILIO_API_KEY_SID, process.env.TWILIO_API_KEY_SECRET, {
 		accountSid: process.env.TWILIO_ACCOUNT_SID,

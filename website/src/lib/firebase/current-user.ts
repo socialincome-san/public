@@ -1,23 +1,19 @@
-import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
-import { UserService } from '@/lib/services/user/user.service';
+import { services } from '@/lib/services/services';
 import { UserSession } from '@/lib/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 
-const firebaseSessionService = new FirebaseSessionService();
-
 const findUserByAuthId = async (authUserId: string): Promise<UserSession | null> => {
-	const service = new UserService();
-	const result = await service.getCurrentUserSession(authUserId);
+	const result = await services.user.getCurrentUserSession(authUserId);
 	return result.success ? result.data : null;
 };
 
 const loadCurrentUser = async (): Promise<UserSession | null> => {
-	const cookie = await firebaseSessionService.readSessionCookie();
+	const cookie = await services.firebaseSession.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await firebaseSessionService.verifySessionCookie(cookie);
+	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}

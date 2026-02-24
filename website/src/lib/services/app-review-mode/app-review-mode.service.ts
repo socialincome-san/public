@@ -1,10 +1,12 @@
-import { Gender, PaymentProvider, PayoutInterval, Prisma } from '@/generated/prisma/client';
+import { Gender, PaymentProvider, PayoutInterval, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
 
 export class AppReviewModeService extends BaseService {
+	constructor(db: PrismaClient) { super(db); }
+
 	isEnabled(): boolean {
 		return process.env.APP_REVIEW_MODE_ENABLED === 'true';
 	}

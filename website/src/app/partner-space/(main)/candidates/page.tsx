@@ -1,6 +1,6 @@
 import { CandidatesTableClient } from '@/app/portal/admin/candidates/candidates-table-client';
 import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
-import { CandidateService } from '@/lib/services/candidate/candidate.service';
+import { services } from '@/lib/services/services';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { Suspense } from 'react';
 
@@ -15,7 +15,7 @@ export default function CandidatesPage() {
 const CandidatesDataLoader = async () => {
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 
-	const candidateService = new CandidateService();
+	const candidateService = services.candidate;
 	const result = await candidateService.getTableViewByLocalPartner(partner.id);
 
 	const error = result.success ? null : result.error;

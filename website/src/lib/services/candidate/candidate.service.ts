@@ -1,4 +1,4 @@
-import { Cause, CountryCode, Prisma } from '@/generated/prisma/client';
+import { Cause, CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
@@ -16,8 +16,14 @@ import {
 } from './candidate.types';
 
 export class CandidateService extends BaseService {
-	private userService = new UserService();
-	private firebaseAdminService = new FirebaseAdminService();
+	private readonly userService: UserService;
+	private readonly firebaseAdminService: FirebaseAdminService;
+
+	constructor(db: PrismaClient, userService: UserService, firebaseAdminService: FirebaseAdminService) {
+		super(db);
+		this.userService = userService;
+		this.firebaseAdminService = firebaseAdminService;
+	}
 
 	private async assertAdmin(userId: string): Promise<ServiceResult<true>> {
 		const isAdmin = await this.userService.isAdmin(userId);

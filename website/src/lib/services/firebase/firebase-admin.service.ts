@@ -1,12 +1,15 @@
 import { authAdmin } from '@/lib/firebase/firebase-admin';
 import admin from 'firebase-admin';
 import { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
+import { PrismaClient } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
 const { appCheck } = admin;
 
 export class FirebaseAdminService extends BaseService {
+	constructor(db: PrismaClient) { super(db); }
+
 	async createByPhoneNumber(phoneNumber: string): Promise<ServiceResult<UserRecord>> {
 		try {
 			const existingUserResult = await this.getByPhoneNumber(phoneNumber);

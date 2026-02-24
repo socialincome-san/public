@@ -3,7 +3,7 @@ import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { services } from '@/lib/services/services';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
@@ -16,7 +16,7 @@ interface PageProps {
 	params: Promise<PageParams>;
 }
 
-const storyblokService = new StoryblokService();
+const storyblokService = services.storyblok;
 
 const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArticlesInSelectedLanguage: number) => {
 	if (lang == defaultLanguage) {

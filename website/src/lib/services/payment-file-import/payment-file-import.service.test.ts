@@ -1,4 +1,8 @@
 import path from 'node:path';
+import { PrismaClient } from '@/generated/prisma/client';
+import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { ContributionService } from '@/lib/services/contribution/contribution.service';
+import { CampaignService } from '@/lib/services/campaign/campaign.service';
 import { PaymentFileImportService } from './payment-file-import.service';
 
 jest.mock('@/lib/firebase/firebase-admin', () => ({
@@ -17,7 +21,16 @@ const fixturePath = path.join(path.dirname(__filename), '__fixtures__', 'camt054
 
 describe('PaymentFileImportService.getContributionsFromPaymentFile', () => {
 	test('extracts two contributions with correct Ref and Amt per entry (real file)', () => {
-		const service = new PaymentFileImportService('test-bucket');
+		const service = new PaymentFileImportService(
+			new PrismaClient(),
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			new (ContributorService as any)(),
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			new (ContributionService as any)(),
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			new (CampaignService as any)(),
+			'test-bucket',
+		);
 		const result = service.getContributionsFromPaymentFile(fixturePath);
 
 		expect(result).toHaveLength(2);

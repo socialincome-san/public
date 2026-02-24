@@ -1,16 +1,14 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
 import { LocalPartnerCreateInput, LocalPartnerUpdateInput } from '@/lib/services/local-partner/local-partner.types';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 import { getActorOrThrow } from '../firebase/current-account';
 
-const localPartnerService = new LocalPartnerService();
-
 export const createLocalPartnerAction = async (localPartner: LocalPartnerCreateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
-	const result = await localPartnerService.create(user.id, localPartner);
+	const result = await services.localPartner.create(user.id, localPartner);
 
 	revalidatePath('/portal/admin/local-partners');
 	return result;
@@ -19,7 +17,7 @@ export const createLocalPartnerAction = async (localPartner: LocalPartnerCreateI
 export const updateLocalPartnerAction = async (updateInput: LocalPartnerUpdateInput) => {
 	const actor = await getActorOrThrow();
 
-	const result = await localPartnerService.update(actor, updateInput);
+	const result = await services.localPartner.update(actor, updateInput);
 
 	if (actor.kind === 'user') {
 		revalidatePath('/portal/admin/local-partners');
@@ -32,5 +30,5 @@ export const updateLocalPartnerAction = async (updateInput: LocalPartnerUpdateIn
 
 export const getLocalPartnerAction = async (localPartnerId: string) => {
 	const user = await getAuthenticatedUserOrThrow();
-	return localPartnerService.get(user.id, localPartnerId);
+	return services.localPartner.get(user.id, localPartnerId);
 };

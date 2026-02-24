@@ -1,4 +1,4 @@
-import { PayoutStatus, ProgramPermission } from '@/generated/prisma/client';
+import { PayoutStatus, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -22,8 +22,14 @@ import {
 } from './payout.types';
 
 export class PayoutService extends BaseService {
-	private programAccessService = new ProgramAccessService();
-	private exchangeRateService = new ExchangeRateService();
+	private readonly programAccessService: ProgramAccessService;
+	private readonly exchangeRateService: ExchangeRateService;
+
+	constructor(db: PrismaClient, programAccessService: ProgramAccessService, exchangeRateService: ExchangeRateService) {
+		super(db);
+		this.programAccessService = programAccessService;
+		this.exchangeRateService = exchangeRateService;
+	}
 
 	async getTableView(userId: string): Promise<ServiceResult<PayoutTableView>> {
 		try {

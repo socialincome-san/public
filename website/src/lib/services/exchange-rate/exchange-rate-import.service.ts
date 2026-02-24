@@ -1,4 +1,4 @@
-import { ExchangeRate } from '@/generated/prisma/client';
+import { ExchangeRate, PrismaClient } from '@/generated/prisma/client';
 import { now, nowMs } from '@/lib/utils/now';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
@@ -11,6 +11,8 @@ type ExchangeRateResponse = {
 };
 
 export class ExchangeRateImportService extends BaseService {
+	constructor(db: PrismaClient) { super(db); }
+
 	static readonly DAY_IN_MILLISECONDS = 60 * 60 * 24 * 1000;
 
 	private async getAllRatesSince(date: Date): Promise<ServiceResult<ExchangeRate[]>> {

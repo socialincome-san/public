@@ -1,24 +1,18 @@
 'use server';
 
 import { getActorOrThrow } from '@/lib/firebase/current-account';
-import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
-import { ProgramService } from '@/lib/services/program/program.service';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { RecipientCreateInput, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
 const PORTAL_RECIPIENTS_PATH = '/portal/management/recipients';
 const PORTAL_PROGRAM_RECIPIENTS_PATH = '/portal/programs/[programId]/recipients';
 const PARTNER_RECIPIENTS_PATH = '/partner-space/recipients';
 
-const recipientService = new RecipientService();
-const programService = new ProgramService();
-const localPartnerService = new LocalPartnerService();
-
 export const createRecipientAction = async (recipient: RecipientCreateInput) => {
 	const actor = await getActorOrThrow();
 
-	const result = await recipientService.create(actor, recipient);
+	const result = await services.recipient.create(actor, recipient);
 
 	if (actor.kind === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
@@ -36,7 +30,7 @@ export const updateRecipientAction = async (
 ) => {
 	const actor = await getActorOrThrow();
 
-	const result = await recipientService.update(actor, updateInput, nextPaymentPhoneNumber);
+	const result = await services.recipient.update(actor, updateInput, nextPaymentPhoneNumber);
 
 	if (actor.kind === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
@@ -51,7 +45,7 @@ export const updateRecipientAction = async (
 export const deleteRecipientAction = async (recipientId: string) => {
 	const actor = await getActorOrThrow();
 
-	const result = await recipientService.delete(actor, recipientId);
+	const result = await services.recipient.delete(actor, recipientId);
 
 	if (actor.kind === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
@@ -65,15 +59,15 @@ export const deleteRecipientAction = async (recipientId: string) => {
 
 export const getRecipientAction = async (recipientId: string) => {
 	const actor = await getActorOrThrow();
-	return await recipientService.get(actor, recipientId);
+	return await services.recipient.get(actor, recipientId);
 };
 
 export const getRecipientOptions = async () => {
 	const actor = await getActorOrThrow();
 
 	if (actor.kind === 'user') {
-		const programs = await programService.getOptions(actor.session.id);
-		const localPartner = await localPartnerService.getOptions();
+		const programs = await services.program.getOptions(actor.session.id);
+		const localPartner = await services.localPartner.getOptions();
 
 		return {
 			programs,
@@ -90,7 +84,7 @@ export const getRecipientOptions = async () => {
 export const importRecipientsCsvAction = async (file: File) => {
 	const actor = await getActorOrThrow();
 
-	const result = await recipientService.importCsv(actor, file);
+	const result = await services.recipient.importCsv(actor, file);
 
 	revalidatePath(PORTAL_RECIPIENTS_PATH);
 	revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');

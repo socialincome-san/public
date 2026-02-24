@@ -4,7 +4,7 @@ import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { ContributionService } from '@/lib/services/contribution/contribution.service';
+import { services } from '@/lib/services/services';
 import { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
 import Link from 'next/link';
 
@@ -13,7 +13,7 @@ export const ContributionsTable = async ({ lang }: { lang: WebsiteLanguage }) =>
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
-	const service = new ContributionService();
+	const service = services.contribution;
 	const result = await service.getYourContributionsTableView(contributor.id);
 
 	const error = result.success ? null : result.error;

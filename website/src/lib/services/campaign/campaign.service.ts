@@ -1,4 +1,4 @@
-import { Campaign } from '@/generated/prisma/client';
+import { Campaign, PrismaClient } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { nowMs } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
@@ -16,8 +16,14 @@ import {
 } from './campaign.types';
 
 export class CampaignService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
-	private exchangeRateService = new ExchangeRateService();
+	private readonly organizationAccessService: OrganizationAccessService;
+	private readonly exchangeRateService: ExchangeRateService;
+
+	constructor(db: PrismaClient, organizationAccessService: OrganizationAccessService, exchangeRateService: ExchangeRateService) {
+		super(db);
+		this.organizationAccessService = organizationAccessService;
+		this.exchangeRateService = exchangeRateService;
+	}
 
 	private daysUntilTs(ts: Date): number {
 		const diffInMs = ts.getTime() - nowMs();

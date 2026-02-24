@@ -1,4 +1,4 @@
-import { ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import crypto from 'crypto';
 import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns';
@@ -20,10 +20,18 @@ import {
 } from './survey.types';
 
 export class SurveyService extends BaseService {
-	private programAccessService = new ProgramAccessService();
-	private recipientService = new RecipientService();
-	private surveyScheduleService = new SurveyScheduleService();
-	private firebaseAdminService = new FirebaseAdminService();
+	private readonly programAccessService: ProgramAccessService;
+	private readonly recipientService: RecipientService;
+	private readonly surveyScheduleService: SurveyScheduleService;
+	private readonly firebaseAdminService: FirebaseAdminService;
+
+	constructor(db: PrismaClient, programAccessService: ProgramAccessService, recipientService: RecipientService, surveyScheduleService: SurveyScheduleService, firebaseAdminService: FirebaseAdminService) {
+		super(db);
+		this.programAccessService = programAccessService;
+		this.recipientService = recipientService;
+		this.surveyScheduleService = surveyScheduleService;
+		this.firebaseAdminService = firebaseAdminService;
+	}
 
 	async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
