@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import LocalPartnersTable from './local-partners-table';
 

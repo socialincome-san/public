@@ -1,7 +1,7 @@
 'use server';
 
-import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
 import { services } from '@/lib/services/services';
+import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
 import { getOptionalContributor } from '../firebase/current-contributor';
 import { getAuthenticatedUserOrThrow } from '../firebase/current-user';
 

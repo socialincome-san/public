@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import CampaignsTable from './campaigns-table';
 

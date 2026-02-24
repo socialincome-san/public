@@ -1,7 +1,7 @@
 import { CandidatesTableClient } from '@/app/portal/admin/candidates/candidates-table-client';
 import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
-import { services } from '@/lib/services/services';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 
 export default function CandidatesPage() {

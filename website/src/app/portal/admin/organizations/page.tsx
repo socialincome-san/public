@@ -1,8 +1,8 @@
 import { makeOrganizationAdminColumns } from '@/components/data-table/columns/organizations';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 
 export default function OrganizationsPage() {

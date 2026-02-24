@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import { ContributionsTableClient } from './contributions-table-client';
 

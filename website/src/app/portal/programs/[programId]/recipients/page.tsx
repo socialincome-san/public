@@ -2,8 +2,8 @@ import { Card } from '@/components/card';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };

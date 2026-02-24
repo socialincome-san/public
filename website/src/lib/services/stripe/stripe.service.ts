@@ -9,7 +9,12 @@
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
-import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
+import {
+	ContributionStatus,
+	ContributorReferralSource,
+	PaymentEventType,
+	PrismaClient,
+} from '@/generated/prisma/client';
 import { titleCase } from '@/lib/utils/string-utils';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
@@ -40,7 +45,13 @@ export class StripeService extends BaseService {
 	private readonly campaignService: CampaignService;
 	private readonly programAccessService: ProgramAccessService;
 
-	constructor(db: PrismaClient, contributorService: ContributorService, contributionService: ContributionService, campaignService: CampaignService, programAccessService: ProgramAccessService) {
+	constructor(
+		db: PrismaClient,
+		contributorService: ContributorService,
+		contributionService: ContributionService,
+		campaignService: CampaignService,
+		programAccessService: ProgramAccessService,
+	) {
 		super(db);
 		this.contributorService = contributorService;
 		this.contributionService = contributionService;

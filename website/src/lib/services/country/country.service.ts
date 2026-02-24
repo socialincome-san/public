@@ -1,4 +1,11 @@
-import { CountryCode, NetworkTechnology, PaymentProvider, Prisma, PrismaClient, SanctionRegime } from '@/generated/prisma/client';
+import {
+	CountryCode,
+	NetworkTechnology,
+	PaymentProvider,
+	Prisma,
+	PrismaClient,
+	SanctionRegime,
+} from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';

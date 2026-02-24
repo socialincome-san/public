@@ -23,7 +23,12 @@ export class DonationCertificateService extends BaseService {
 	private readonly contributionService: ContributionService;
 	private bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
 
-	constructor(db: PrismaClient, organizationAccessService: OrganizationAccessService, contributorService: ContributorService, contributionService: ContributionService) {
+	constructor(
+		db: PrismaClient,
+		organizationAccessService: OrganizationAccessService,
+		contributorService: ContributorService,
+		contributionService: ContributionService,
+	) {
 		super(db);
 		this.organizationAccessService = organizationAccessService;
 		this.contributorService = contributorService;

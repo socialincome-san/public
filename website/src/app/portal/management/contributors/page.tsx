@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import ContributorsTableClient from './contributors-table-client';
 

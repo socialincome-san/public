@@ -25,7 +25,13 @@ export class SurveyService extends BaseService {
 	private readonly surveyScheduleService: SurveyScheduleService;
 	private readonly firebaseAdminService: FirebaseAdminService;
 
-	constructor(db: PrismaClient, programAccessService: ProgramAccessService, recipientService: RecipientService, surveyScheduleService: SurveyScheduleService, firebaseAdminService: FirebaseAdminService) {
+	constructor(
+		db: PrismaClient,
+		programAccessService: ProgramAccessService,
+		recipientService: RecipientService,
+		surveyScheduleService: SurveyScheduleService,
+		firebaseAdminService: FirebaseAdminService,
+	) {
 		super(db);
 		this.programAccessService = programAccessService;
 		this.recipientService = recipientService;

@@ -1,7 +1,7 @@
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
-import { services } from '@/lib/services/services';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 
 export default function RecipientsPage() {

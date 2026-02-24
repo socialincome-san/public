@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import ExpensesTable from './expenses-table';
 

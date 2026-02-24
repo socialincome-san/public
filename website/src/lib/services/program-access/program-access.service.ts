@@ -1,4 +1,4 @@
-import { ProgramPermission, PrismaClient } from '@/generated/prisma/client';
+import { PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccesses } from './program-access.types';

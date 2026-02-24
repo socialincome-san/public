@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import CountriesTable from './countries-table';
 

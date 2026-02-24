@@ -1,7 +1,7 @@
 import { PayoutsTableClient } from '@/app/portal/delivery/make-payouts/payouts-table-client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 
 export default function PayoutsPage() {

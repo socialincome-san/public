@@ -1,5 +1,5 @@
-import type { Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { PrismaClient } from '@/generated/prisma/client';
+import type { Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';

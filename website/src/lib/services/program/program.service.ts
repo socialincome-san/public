@@ -1,4 +1,10 @@
-import { ContributionStatus, PayoutStatus, ProgramPermission, PrismaClient, SurveyStatus } from '@/generated/prisma/client';
+import {
+	ContributionStatus,
+	PayoutStatus,
+	PrismaClient,
+	ProgramPermission,
+	SurveyStatus,
+} from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { slugify } from '@/lib/utils/string-utils';
 import { CandidateService } from '../candidate/candidate.service';

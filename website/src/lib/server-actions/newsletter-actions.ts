@@ -2,8 +2,8 @@
 
 import { getAuthenticatedContributorOrThrow } from '../firebase/current-contributor';
 import { ServiceResult } from '../services/core/base.types';
-import { services } from '../services/services';
 import { CreateNewsletterSubscription, SendgridContactType } from '../services/sendgrid/types';
+import { services } from '../services/services';
 
 export const subscribeToNewsletterAction = async (subscription: CreateNewsletterSubscription) => {
 	return services.sendgrid.subscribeToNewsletter(subscription);

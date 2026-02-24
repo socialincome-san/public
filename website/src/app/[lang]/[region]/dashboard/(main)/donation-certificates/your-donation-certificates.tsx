@@ -1,8 +1,8 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { YourDonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
+import { services } from '@/lib/services/services';
 import { YourDonationCertificateTable } from './your-donation-certificate-table-client';
 
 export default async function YourDonationCertificates({ lang }: DefaultParams) {

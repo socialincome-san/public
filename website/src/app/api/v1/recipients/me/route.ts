@@ -1,6 +1,6 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { services } from '@/lib/services/services';
 import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
@@ -37,7 +37,6 @@ export const GET = withAppCheck(async (request: NextRequest) => {
  * @openapi
  */
 export const PATCH = withAppCheck(async (request: NextRequest) => {
-
 	logger.info('[PATCH /recipients/me] Incoming request', {
 		contentType: request.headers.get('content-type'),
 	});

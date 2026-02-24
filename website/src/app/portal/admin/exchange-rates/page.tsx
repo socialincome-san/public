@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import ExchangeRatesTable from './exchange-rates-table';
 

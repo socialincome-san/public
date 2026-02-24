@@ -1,4 +1,4 @@
-import { ProgramPermission, PrismaClient, Recipient } from '@/generated/prisma/client';
+import { PrismaClient, ProgramPermission, Recipient } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
@@ -22,7 +22,12 @@ export class RecipientService extends BaseService {
 	private readonly firebaseAdminService: FirebaseAdminService;
 	private readonly appReviewModeService: AppReviewModeService;
 
-	constructor(db: PrismaClient, programAccessService: ProgramAccessService, firebaseAdminService: FirebaseAdminService, appReviewModeService: AppReviewModeService) {
+	constructor(
+		db: PrismaClient,
+		programAccessService: ProgramAccessService,
+		firebaseAdminService: FirebaseAdminService,
+		appReviewModeService: AppReviewModeService,
+	) {
 		super(db);
 		this.programAccessService = programAccessService;
 		this.firebaseAdminService = firebaseAdminService;

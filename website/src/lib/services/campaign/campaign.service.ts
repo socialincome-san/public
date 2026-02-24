@@ -19,7 +19,11 @@ export class CampaignService extends BaseService {
 	private readonly organizationAccessService: OrganizationAccessService;
 	private readonly exchangeRateService: ExchangeRateService;
 
-	constructor(db: PrismaClient, organizationAccessService: OrganizationAccessService, exchangeRateService: ExchangeRateService) {
+	constructor(
+		db: PrismaClient,
+		organizationAccessService: OrganizationAccessService,
+		exchangeRateService: ExchangeRateService,
+	) {
 		super(db);
 		this.organizationAccessService = organizationAccessService;
 		this.exchangeRateService = exchangeRateService;

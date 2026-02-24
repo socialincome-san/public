@@ -13,7 +13,12 @@ export class PayoutProcessService extends BaseService {
 	private readonly programService: ProgramService;
 	private readonly exchangeRateService: ExchangeRateService;
 
-	constructor(db: PrismaClient, programAccessService: ProgramAccessService, programService: ProgramService, exchangeRateService: ExchangeRateService) {
+	constructor(
+		db: PrismaClient,
+		programAccessService: ProgramAccessService,
+		programService: ProgramService,
+		exchangeRateService: ExchangeRateService,
+	) {
 		super(db);
 		this.programAccessService = programAccessService;
 		this.programService = programService;

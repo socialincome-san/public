@@ -1,6 +1,6 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import { UserRecord } from 'firebase-admin/auth';
 import { Twilio } from 'twilio';
-import { PrismaClient } from '@/generated/prisma/client';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -11,7 +11,11 @@ export class TwilioService extends BaseService {
 	private readonly firebaseAdminService: FirebaseAdminService;
 	private readonly appReviewModeService: AppReviewModeService;
 
-	constructor(db: PrismaClient, firebaseAdminService: FirebaseAdminService, appReviewModeService: AppReviewModeService) {
+	constructor(
+		db: PrismaClient,
+		firebaseAdminService: FirebaseAdminService,
+		appReviewModeService: AppReviewModeService,
+	) {
 		super(db);
 		this.firebaseAdminService = firebaseAdminService;
 		this.appReviewModeService = appReviewModeService;

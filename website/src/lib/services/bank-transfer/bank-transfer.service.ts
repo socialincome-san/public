@@ -14,7 +14,12 @@ export class BankTransferService extends BaseService {
 	private readonly campaignService: CampaignService;
 	private readonly contributionService: ContributionService;
 
-	constructor(db: PrismaClient, contributorService: ContributorService, campaignService: CampaignService, contributionService: ContributionService) {
+	constructor(
+		db: PrismaClient,
+		contributorService: ContributorService,
+		campaignService: CampaignService,
+		contributionService: ContributionService,
+	) {
 		super(db);
 		this.contributorService = contributorService;
 		this.campaignService = campaignService;

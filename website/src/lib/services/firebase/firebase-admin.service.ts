@@ -1,7 +1,7 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import { authAdmin } from '@/lib/firebase/firebase-admin';
 import admin from 'firebase-admin';
 import { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
-import { PrismaClient } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 

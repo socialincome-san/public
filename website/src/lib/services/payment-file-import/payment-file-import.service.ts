@@ -31,7 +31,13 @@ export class PaymentFileImportService extends BaseService {
 	private readonly bucketName: string;
 	private readonly xmlSelectExpression = '//ns:BkToCstmrDbtCdtNtfctn/ns:Ntfctn/ns:Ntry/ns:NtryDtls/ns:TxDtls';
 
-	constructor(db: PrismaClient, contributorService: ContributorService, contributionService: ContributionService, campaignService: CampaignService, bucketName: string) {
+	constructor(
+		db: PrismaClient,
+		contributorService: ContributorService,
+		contributionService: ContributionService,
+		campaignService: CampaignService,
+		bucketName: string,
+	) {
 		super(db);
 		this.contributorService = contributorService;
 		this.contributionService = contributionService;

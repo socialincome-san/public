@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
 import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import { DonationCertificateTable } from './donation-certificates-table';
 
