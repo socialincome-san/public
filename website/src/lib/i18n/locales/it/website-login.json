@@ -12,6 +12,12 @@
 	"submit-button": "Invia link per accedere",
 	"check-email": "Dovresti aver ricevuto un'email con un link per accedere.",
 	"confirm-email-title": "Conferma il tuo indirizzo email",
+	"confirm-login": {
+		"title": "Completa l'accesso",
+		"body": "Clicca il pulsante qui sotto per completare l'accesso.",
+		"cta": "Completa l'accesso",
+		"return-home": "Torna alla home"
+	},
 	"error": {
 		"user-not-found": "Utente non trovato",
 		"invalid-email": "Indirizzo email non valido",

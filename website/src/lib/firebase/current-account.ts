@@ -9,12 +9,6 @@ import { UserSession } from '../services/user/user.types';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
-export type Actor =
-	| { kind: 'user'; session: UserSession }
-	| { kind: 'contributor'; session: ContributorSession }
-	| { kind: 'local-partner'; session: LocalPartnerSession }
-	| never;
-
 const getAuthUserIdFromCookie = async (): Promise<string | null> => {
 	const firebaseSessionService = new FirebaseSessionService();
 	const cookie = await firebaseSessionService.readSessionCookie();
@@ -59,20 +53,14 @@ export const getCurrentSessionsOrRedirect = async (): Promise<Session[]> => {
 	return sessions;
 };
 
-export const getActorOrThrow = async (): Promise<Actor> => {
+export const getSessionByTypeOrThrow = async (type: Session['type']): Promise<Session> => {
 	const sessions = await getCurrentSessions();
-	const session = sessions[0];
-	if (!session) {
+	if (sessions.length === 0) {
 		throw new Error('Not authenticated');
 	}
-	if (session.type === 'user') {
-		return { kind: 'user', session };
+	const session = sessions.find((s) => s.type === type);
+	if (!session) {
+		throw new Error(`No ${type} session`);
 	}
-	if (session.type === 'contributor') {
-		return { kind: 'contributor', session };
-	}
-	if (session.type === 'local-partner') {
-		return { kind: 'local-partner', session };
-	}
-	throw new Error('Not authenticated');
+	return session;
 };

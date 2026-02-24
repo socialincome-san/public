@@ -50,7 +50,7 @@ export const LoginFlyout = ({ lang }: Props) => {
 			localStorage.setItem('loginEmail', email);
 
 			const actionCodeSettings = {
-				url: `${window.location.origin}/${NEW_WEBSITE_SLUG}/auth/finish-login`,
+				url: `${window.location.origin}/${NEW_WEBSITE_SLUG}/auth/confirm-login`,
 				handleCodeInApp: true,
 			};
 

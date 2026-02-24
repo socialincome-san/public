@@ -4,7 +4,7 @@ import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import { PaymentProvider } from '@/generated/prisma/enums';
-import { Actor } from '@/lib/firebase/current-account';
+import type { Session } from '@/lib/firebase/current-account';
 import {
 	createRecipientAction,
 	deleteRecipientAction,
@@ -26,7 +26,7 @@ type RecipientFormProps = {
 	readOnly?: boolean;
 	recipientId?: string;
 	programId?: string;
-	actorKind?: Actor['kind'];
+	sessionType?: Session['type'];
 };
 
 export type RecipientFormSchema = {
@@ -51,7 +51,7 @@ export type RecipientFormSchema = {
 	};
 };
 
-const getInitialFormSchema = (actorKind: Actor['kind'] = 'user'): RecipientFormSchema => {
+const getInitialFormSchema = (sessionType: Session['type'] = 'user'): RecipientFormSchema => {
 	const base: RecipientFormSchema = {
 		label: 'Recipients',
 		fields: {
@@ -113,7 +113,7 @@ const getInitialFormSchema = (actorKind: Actor['kind'] = 'user'): RecipientFormS
 		},
 	};
 
-	if (actorKind === 'local-partner') {
+	if (sessionType === 'local-partner') {
 		delete base.fields.program;
 		delete base.fields.localPartner;
 	}
@@ -128,15 +128,15 @@ export const RecipientForm = ({
 	recipientId,
 	readOnly,
 	programId,
-	actorKind = 'user',
+	sessionType = 'user',
 }: RecipientFormProps) => {
-	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(actorKind));
+	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(sessionType));
 	const [recipient, setRecipient] = useState<RecipientPayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	const loadRecipient = async (recipientId: string) => {
 		try {
-			const result = await getRecipientAction(recipientId);
+			const result = await getRecipientAction(recipientId, sessionType);
 			if (result.success) {
 				setRecipient(result.data);
 				const newSchema = { ...formSchema };
@@ -168,7 +168,7 @@ export const RecipientForm = ({
 	};
 
 	const setOptions = (localPartner: LocalPartnerOption[], programs: ProgramOption[]) => {
-		if (actorKind === 'local-partner') {
+		if (sessionType === 'local-partner') {
 			return;
 		}
 
@@ -213,10 +213,10 @@ export const RecipientForm = ({
 				if (recipientId && recipient) {
 					const data: RecipientUpdateInput = buildUpdateRecipientInput(schema, recipient, contactFields);
 					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
-					res = await updateRecipientAction(data, nextPaymentPhoneNumber);
+					res = await updateRecipientAction(data, nextPaymentPhoneNumber, sessionType);
 				} else {
 					const data: RecipientCreateInput = buildCreateRecipientInput(schema, contactFields);
-					res = await createRecipientAction(data);
+					res = await createRecipientAction(data, sessionType);
 				}
 
 				res.success ? onSuccess?.() : onError?.(res.error);
@@ -233,7 +233,7 @@ export const RecipientForm = ({
 
 		startTransition(async () => {
 			try {
-				const result = await deleteRecipientAction(recipientId);
+				const result = await deleteRecipientAction(recipientId, sessionType);
 				result.success ? onSuccess?.() : onError?.(result.error);
 			} catch (error) {
 				onError?.(error);
@@ -251,7 +251,7 @@ export const RecipientForm = ({
 	useEffect(() => {
 		// load options for program and local partners
 		startTransition(async () => {
-			const { programs, localPartner } = await getRecipientOptions();
+			const { programs, localPartner } = await getRecipientOptions(sessionType);
 			if (!programs.success || !localPartner.success) {
 				return;
 			}
