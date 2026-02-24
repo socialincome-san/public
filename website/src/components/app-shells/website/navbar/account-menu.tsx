@@ -1,6 +1,7 @@
 'use client';
 
 import { useLogout } from '@/components/app-shells/use-logout';
+import { displaySession, Scope } from '@/components/app-shells/website/navbar/utils';
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import {
@@ -13,7 +14,6 @@ import {
 import type { Session } from '@/lib/firebase/current-account';
 import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
-import { displaySession, type Scope } from './display-session';
 
 type Props = {
 	sessions: Session[];

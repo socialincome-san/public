@@ -1,8 +1,8 @@
 import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
-import { displaySession, type Scope } from '@/components/app-shells/website/navbar/display-session';
 import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
 import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
-import { MobileMenu } from '@/components/app-shells/website/navbar/mobile-menu';
+import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
+import { displaySession, Scope } from '@/components/app-shells/website/navbar/utils';
 import { Button } from '@/components/button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -44,20 +44,11 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 			</div>
 
 			<div className="flex items-center gap-4">
-				{!session && (
-					<span className="hidden lg:block">
-						<LoginFlyout />
-					</span>
-				)}
-				{session && (
-					<span className="hidden lg:block">
-						<AccountMenu sessions={sessions} scope={scope} />
-					</span>
-				)}
-				{!session && (
-					<Button className="hidden rounded-full px-5 text-sm font-semibold lg:block lg:h-11">Donate now</Button>
-				)}
-				<MobileMenu menu={menu} lang={lang} region={region} />
+				<span className="hidden lg:block">
+					{session ? <AccountMenu sessions={sessions} scope={scope} /> : <LoginFlyout />}
+				</span>
+				{!session && <Button className="rounded-full px-5 text-sm font-semibold lg:h-11">Donate now</Button>}
+				<MenuMobile menu={menu} lang={lang} region={region} />
 			</div>
 		</nav>
 	);
