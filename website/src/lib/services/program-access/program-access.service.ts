@@ -1,9 +1,13 @@
-import { ProgramPermission } from '@/generated/prisma/client';
+import { PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccesses } from './program-access.types';
 
 export class ProgramAccessService extends BaseService {
+	constructor(db: PrismaClient) {
+		super(db);
+	}
+
 	async getAccessiblePrograms(userId: string): Promise<ServiceResult<ProgramAccesses>> {
 		try {
 			const user = await this.db.user.findUnique({

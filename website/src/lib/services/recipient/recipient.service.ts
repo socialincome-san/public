@@ -1,4 +1,4 @@
-import { ProgramPermission, Recipient } from '@/generated/prisma/client';
+import { PrismaClient, ProgramPermission, Recipient } from '@/generated/prisma/client';
 import { Actor } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
@@ -18,9 +18,21 @@ import {
 } from './recipient.types';
 
 export class RecipientService extends BaseService {
-	private programAccessService = new ProgramAccessService();
-	private firebaseAdminService = new FirebaseAdminService();
-	private appReviewModeService = new AppReviewModeService();
+	private readonly programAccessService: ProgramAccessService;
+	private readonly firebaseAdminService: FirebaseAdminService;
+	private readonly appReviewModeService: AppReviewModeService;
+
+	constructor(
+		db: PrismaClient,
+		programAccessService: ProgramAccessService,
+		firebaseAdminService: FirebaseAdminService,
+		appReviewModeService: AppReviewModeService,
+	) {
+		super(db);
+		this.programAccessService = programAccessService;
+		this.firebaseAdminService = firebaseAdminService;
+		this.appReviewModeService = appReviewModeService;
+	}
 
 	async create(actor: Actor, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const programId = recipient.program?.connect?.id;

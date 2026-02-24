@@ -1,11 +1,9 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import type { Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
-import { draftMode } from 'next/headers';
-import { notFound } from 'next/navigation';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { getStoryblokApi } from './storyblok.config';
 import type { ResolvedArticle } from './storyblok.utils';
 
 enum StoryblokContentType {
@@ -22,7 +20,17 @@ const STORIES_PATH = 'cdn/stories';
 const EXCLUDED_FIELDS_FOR_COUNTING = [CONTENT, LEAD_TEXT].join(',');
 
 export class StoryblokService extends BaseService {
+	constructor(db: PrismaClient) {
+		super(db);
+	}
+
+	private async getApi() {
+		const { getStoryblokApi } = await import('./storyblok.config');
+		return getStoryblokApi();
+	}
+
 	async getStoryParams(language: string): Promise<ISbStoriesParams> {
+		const { draftMode } = await import('next/headers');
 		return {
 			language,
 			version: (await draftMode()).isEnabled ? 'draft' : 'published',
@@ -39,6 +47,7 @@ export class StoryblokService extends BaseService {
 		} catch (error: any) {
 			if (error?.status === 404) {
 				if (lang === defaultLanguage) {
+					const { notFound } = await import('next/navigation');
 					return notFound();
 				}
 				return await this.withLanguageFallback(loader, defaultLanguage, slug);
@@ -51,7 +60,7 @@ export class StoryblokService extends BaseService {
 		try {
 			const data = await this.withLanguageFallback(
 				async (language: string) => {
-					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, await this.getStoryParams(language));
+					const response = await (await this.getApi()).get(`cdn/stories/${slug}`, await this.getStoryParams(language));
 					return response.data.story as T;
 				},
 				lang,
@@ -73,7 +82,7 @@ export class StoryblokService extends BaseService {
 				content_type: StoryblokContentType.Article,
 				filter_query: { displayInOverviewPage: { is: true } },
 			};
-			const res = await getStoryblokApi().get(STORIES_PATH, params);
+			const res = await (await this.getApi()).get(STORIES_PATH, params);
 			return this.resultOk(res.total);
 		} catch (error) {
 			this.logger.error(error);
@@ -90,7 +99,7 @@ export class StoryblokService extends BaseService {
 				content_type: StoryblokContentType.Article,
 				filter_query: this.articleByTagsFilter(tagId),
 			};
-			const res = await getStoryblokApi().get(STORIES_PATH, params);
+			const res = await (await this.getApi()).get(STORIES_PATH, params);
 			return this.resultOk(res.total);
 		} catch (error) {
 			this.logger.error(error);
@@ -107,7 +116,7 @@ export class StoryblokService extends BaseService {
 				content_type: StoryblokContentType.Article,
 				filter_query: this.articlesByAuthorFilter(authorId),
 			};
-			const res = await getStoryblokApi().get(STORIES_PATH, params);
+			const res = await (await this.getApi()).get(STORIES_PATH, params);
 			return this.resultOk(res.total);
 		} catch (error) {
 			this.logger.error(error);
@@ -122,7 +131,7 @@ export class StoryblokService extends BaseService {
 				content_type: StoryblokContentType.Author,
 				filter_query: { displayInOverviewPage: { is: true } },
 			};
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await (await this.getApi()).getAll(STORIES_PATH, params);
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
@@ -137,7 +146,7 @@ export class StoryblokService extends BaseService {
 				content_type: StoryblokContentType.Tag,
 				filter_query: { displayInOverviewPage: { is: true } },
 			};
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await (await this.getApi()).getAll(STORIES_PATH, params);
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
@@ -148,7 +157,7 @@ export class StoryblokService extends BaseService {
 	async getTag(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Topic>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/tag/${s}`, await this.getStoryParams(l)),
+				async (l, s) => (await this.getApi()).get(`cdn/stories/tag/${s}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
@@ -162,7 +171,7 @@ export class StoryblokService extends BaseService {
 	async getAuthor(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Author>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/author/${s}`, await this.getStoryParams(l)),
+				async (l, s) => (await this.getApi()).get(`cdn/stories/author/${s}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
@@ -184,7 +193,7 @@ export class StoryblokService extends BaseService {
 				content_type: StoryblokContentType.Article,
 				filter_query: this.articleByTagsFilter(tagId),
 			};
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await (await this.getApi()).getAll(STORIES_PATH, params);
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
@@ -203,7 +212,7 @@ export class StoryblokService extends BaseService {
 				content_type: StoryblokContentType.Article,
 				filter_query: this.articlesByAuthorFilter(authorId),
 			};
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await (await this.getApi()).getAll(STORIES_PATH, params);
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
@@ -229,11 +238,11 @@ export class StoryblokService extends BaseService {
 			};
 
 			if (limit) {
-				const res = await getStoryblokApi().get(STORIES_PATH, params);
+				const res = await (await this.getApi()).get(STORIES_PATH, params);
 				return this.resultOk(res.data.stories);
 			}
 
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await (await this.getApi()).getAll(STORIES_PATH, params);
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
@@ -249,7 +258,7 @@ export class StoryblokService extends BaseService {
 						...(await this.getStoryParams(l)),
 						resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 					};
-					return getStoryblokApi().get(`cdn/stories/journal/${s}`, params);
+					return (await this.getApi()).get(`cdn/stories/journal/${s}`, params);
 				},
 				lang,
 				slug,
@@ -320,6 +329,6 @@ export class StoryblokService extends BaseService {
 			content_type: StoryblokContentType.Article,
 			filter_query: filter,
 		};
-		return getStoryblokApi().get(STORIES_PATH, params);
+		return (await this.getApi()).get(STORIES_PATH, params);
 	}
 }

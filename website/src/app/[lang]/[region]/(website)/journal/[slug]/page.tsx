@@ -6,7 +6,7 @@ import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorI
 import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { services } from '@/lib/services/services';
 import {
 	formatStoryblokDate,
 	formatStoryblokUrl,
@@ -25,8 +25,6 @@ const ARTICLE_IMAGE_HEIGHT = 960;
 
 export const revalidate = 900;
 
-const storyblokService = new StoryblokService();
-
 export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
@@ -39,7 +37,7 @@ export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 };
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
-	return await storyblokService.getArticle(lang, slug);
+	return await services.storyblok.getArticle(lang, slug);
 });
 
 const badgeWithLink = (
@@ -69,7 +67,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 	const articleData = story.content;
 	const author = articleData.author as ISbStoryData<any>;
 
-	const relativeResult = await storyblokService.getRelativeArticles(
+	const relativeResult = await services.storyblok.getRelativeArticles(
 		author.uuid,
 		story.id,
 		(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) => tag.uuid) ?? [],

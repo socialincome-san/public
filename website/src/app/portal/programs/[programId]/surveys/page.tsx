@@ -3,7 +3,7 @@ import { Card } from '@/components/card';
 import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { SurveyService } from '@/lib/services/survey/survey.service';
+import { services } from '@/lib/services/services';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
 import { Suspense } from 'react';
 
@@ -23,8 +23,7 @@ const SurveysProgramScopedDataLoader = async ({ params }: { params: Promise<{ pr
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const surveyService = new SurveyService();
-	const surveysResult = await surveyService.getTableViewProgramScoped(user.id, programId);
+	const surveysResult = await services.survey.getTableViewProgramScoped(user.id, programId);
 
 	const error = surveysResult.success ? null : surveysResult.error;
 	const rows: SurveyTableViewRow[] = surveysResult.success ? surveysResult.data.tableRows : [];

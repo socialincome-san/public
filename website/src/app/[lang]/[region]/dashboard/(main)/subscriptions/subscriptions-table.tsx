@@ -4,7 +4,7 @@ import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { StripeService } from '@/lib/services/stripe/stripe.service';
+import { services } from '@/lib/services/services';
 import { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
 import Link from 'next/link';
 
@@ -13,13 +13,11 @@ export const SubscriptionsTable = async ({ lang }: { lang: WebsiteLanguage }) =>
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
-	const stripeService = new StripeService();
-
-	const subscriptionsResult = await stripeService.getSubscriptionsTableView(contributor.stripeCustomerId);
+	const subscriptionsResult = await services.stripe.getSubscriptionsTableView(contributor.stripeCustomerId);
 
 	const rows: StripeSubscriptionRow[] = subscriptionsResult.success ? subscriptionsResult.data.rows : [];
 
-	const billingPortal = await stripeService.createManageSubscriptionsSession(
+	const billingPortal = await services.stripe.createManageSubscriptionsSession(
 		contributor.stripeCustomerId,
 		contributor.language,
 	);

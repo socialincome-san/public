@@ -1,6 +1,6 @@
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ContributionService } from '@/lib/services/contribution/contribution.service';
 import { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 import { ContributionsTableClient } from './contributions-table-client';
 
@@ -15,8 +15,7 @@ export default function ContributionsPage() {
 const ContributionsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new ContributionService();
-	const result = await service.getTableView(user.id);
+	const result = await services.contribution.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];

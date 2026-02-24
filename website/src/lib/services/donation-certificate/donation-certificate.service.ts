@@ -1,4 +1,4 @@
-import { DonationCertificate } from '@/generated/prisma/client';
+import { DonationCertificate, PrismaClient } from '@/generated/prisma/client';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, LanguageCode } from '@/lib/types/language';
@@ -18,10 +18,22 @@ import {
 import { DonationCertificateError } from './types';
 
 export class DonationCertificateService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
-	private contributorService = new ContributorService();
-	private contributionService = new ContributionService();
+	private readonly organizationAccessService: OrganizationAccessService;
+	private readonly contributorService: ContributorService;
+	private readonly contributionService: ContributionService;
 	private bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+
+	constructor(
+		db: PrismaClient,
+		organizationAccessService: OrganizationAccessService,
+		contributorService: ContributorService,
+		contributionService: ContributionService,
+	) {
+		super(db);
+		this.organizationAccessService = organizationAccessService;
+		this.contributorService = contributorService;
+		this.contributionService = contributionService;
+	}
 
 	async getTableView(userId: string): Promise<ServiceResult<DonationCertificateTableView>> {
 		try {

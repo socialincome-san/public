@@ -1,4 +1,4 @@
-import { OrganizationPermission, ProgramPermission } from '@/generated/prisma/client';
+import { OrganizationPermission, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -12,8 +12,14 @@ import {
 } from './organization.types';
 
 export class OrganizationService extends BaseService {
-	private userService = new UserService();
-	private organizationAccessService = new OrganizationAccessService();
+	private readonly userService: UserService;
+	private readonly organizationAccessService: OrganizationAccessService;
+
+	constructor(db: PrismaClient, userService: UserService, organizationAccessService: OrganizationAccessService) {
+		super(db);
+		this.userService = userService;
+		this.organizationAccessService = organizationAccessService;
+	}
 
 	async getOrganizationMembersTableView(userId: string): Promise<ServiceResult<OrganizationMemberTableView>> {
 		try {

@@ -1,6 +1,6 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import { authAdmin } from '@/lib/firebase/firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/auth';
-import { cookies } from 'next/headers';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
@@ -10,6 +10,10 @@ const SESSION_EXPIRES_IN_MS = SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 export class FirebaseSessionService extends BaseService {
+	constructor(db: PrismaClient) {
+		super(db);
+	}
+
 	private async createSessionCookie(idToken: string): Promise<ServiceResult<string>> {
 		try {
 			const cookie = await authAdmin.auth.createSessionCookie(idToken, {
@@ -28,6 +32,7 @@ export class FirebaseSessionService extends BaseService {
 	}
 
 	private async setSessionCookie(value: string): Promise<void> {
+		const { cookies } = await import('next/headers');
 		const store = await cookies();
 		store.set({
 			name: SESSION_COOKIE_NAME,
@@ -56,6 +61,7 @@ export class FirebaseSessionService extends BaseService {
 
 	async clearSessionCookie(): Promise<ServiceResult<boolean>> {
 		try {
+			const { cookies } = await import('next/headers');
 			const store = await cookies();
 			store.set({
 				name: SESSION_COOKIE_NAME,
@@ -73,6 +79,7 @@ export class FirebaseSessionService extends BaseService {
 	}
 
 	async readSessionCookie(): Promise<string | null> {
+		const { cookies } = await import('next/headers');
 		const store = await cookies();
 		return store.get(SESSION_COOKIE_NAME)?.value ?? null;
 	}

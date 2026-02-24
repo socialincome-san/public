@@ -1,5 +1,4 @@
-import { ProgramStatsService } from '@/lib/services/program-stats/program-stats.service';
-import { ProgramService } from '@/lib/services/program/program.service';
+import { services } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { slugify } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';
@@ -14,16 +13,13 @@ type Props = { params: Promise<{ programId: string }> };
 export default async function OverviewProgramScopedDataLoader({ params }: Props) {
 	const { programId } = await params;
 
-	const programService = new ProgramService();
-	const statsService = new ProgramStatsService();
-
-	const programNameResult = await programService.getProgramNameById(programId);
+	const programNameResult = await services.program.getProgramNameById(programId);
 
 	if (!programNameResult.success || !programNameResult.data) {
 		return <div className="p-4">Error loading the program overview</div>;
 	}
 
-	const statsResult = await statsService.getProgramDashboardStats(programId);
+	const statsResult = await services.programStats.getProgramDashboardStats(programId);
 
 	if (!statsResult.success) {
 		return <div className="p-4">Error loading financial statistics</div>;
@@ -31,7 +27,7 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 	const stats = statsResult.data;
 
-	const readyForFirstPayoutResult = await programService.isReadyForFirstPayoutInterval(programId);
+	const readyForFirstPayoutResult = await services.program.isReadyForFirstPayoutInterval(programId);
 	const readyForFirstPayout = readyForFirstPayoutResult.success ? readyForFirstPayoutResult.data : false;
 
 	const programSlug = slugify(programNameResult.data);

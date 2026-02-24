@@ -1,4 +1,4 @@
-import { UserRole } from '@/generated/prisma/client';
+import { PrismaClient, UserRole } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -12,7 +12,12 @@ import {
 } from './user.types';
 
 export class UserService extends BaseService {
-	private firebaseAdminService = new FirebaseAdminService();
+	private readonly firebaseAdminService: FirebaseAdminService;
+
+	constructor(db: PrismaClient, firebaseAdminService: FirebaseAdminService) {
+		super(db);
+		this.firebaseAdminService = firebaseAdminService;
+	}
 
 	async create(actorUserId: string, input: UserCreateInput): Promise<ServiceResult<UserPayload>> {
 		const isAdminResult = await this.isAdmin(actorUserId);

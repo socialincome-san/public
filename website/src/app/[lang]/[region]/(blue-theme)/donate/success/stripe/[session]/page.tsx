@@ -3,7 +3,7 @@ import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/s
 import { CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { StripeService } from '@/lib/services/stripe/stripe.service';
+import { services } from '@/lib/services/services';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
 
@@ -20,8 +20,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: 'website-donate' });
 
-	const stripeService = new StripeService();
-	const sessionResult = await stripeService.getCheckoutSession(session);
+	const sessionResult = await services.stripe.getCheckoutSession(session);
 	if (!sessionResult.success) {
 		throw new Error(sessionResult.error);
 	}
@@ -29,7 +28,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 	const checkoutSession = sessionResult.data;
 	const recurring = checkoutSession.mode === 'subscription';
 
-	const contributorResult = await stripeService.getContributorFromCheckoutSession(checkoutSession);
+	const contributorResult = await services.stripe.getContributorFromCheckoutSession(checkoutSession);
 	if (!contributorResult.success) {
 		throw new Error(contributorResult.error);
 	}

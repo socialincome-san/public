@@ -3,7 +3,7 @@ import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { services } from '@/lib/services/services';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
@@ -16,27 +16,25 @@ interface PageProps {
 	params: Promise<PageParams>;
 }
 
-const storyblokService = new StoryblokService();
-
 const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArticlesInSelectedLanguage: number) => {
 	if (lang == defaultLanguage) {
 		return totalArticlesInSelectedLanguage;
 	}
 
-	const res = await storyblokService.getArticleCountByTagForDefaultLang(tagId);
+	const res = await services.storyblok.getArticleCountByTagForDefaultLang(tagId);
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
 };
 
 export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;
 
-	const tagResult = await storyblokService.getTag(slug, lang);
+	const tagResult = await services.storyblok.getTag(slug, lang);
 	if (!tagResult.success) {
 		return null;
 	}
 	const tag = tagResult.data;
 
-	const articlesResult = await storyblokService.getArticlesByTag(tag.uuid, lang);
+	const articlesResult = await services.storyblok.getArticlesByTag(tag.uuid, lang);
 	const articles = articlesResult.success ? articlesResult.data : [];
 
 	const translator = await Translator.getInstance({

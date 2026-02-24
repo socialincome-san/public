@@ -2,7 +2,7 @@ import { Card } from '@/components/card';
 import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutService } from '@/lib/services/payout/payout.service';
+import { services } from '@/lib/services/services';
 import { Suspense } from 'react';
 
 type Props = { params: Promise<{ programId: string }> };
@@ -22,8 +22,7 @@ const FinancesProgramScopedDataLoader = async ({ params }: { params: Promise<{ p
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const payoutService = new PayoutService();
-	const result = await payoutService.getForecastTableView(user.id, programId, MONTHS_AHEAD);
+	const result = await services.payout.getForecastTableView(user.id, programId, MONTHS_AHEAD);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
