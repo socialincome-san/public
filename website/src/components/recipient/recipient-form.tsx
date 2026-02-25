@@ -4,6 +4,7 @@ import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
+import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import {
 	createRecipientAction,
 	deleteRecipientAction,
@@ -11,7 +12,6 @@ import {
 	getRecipientOptions,
 	updateRecipientAction,
 } from '@/lib/server-actions/recipient-actions';
-import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
 import { ProgramOption } from '@/lib/services/program/program.types';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
@@ -268,11 +268,7 @@ export const RecipientForm = ({
 			if (!programs.success || !localPartner.success) {
 				return;
 			}
-			setOptions(
-				localPartner.data,
-				programs.data,
-				supportedProviders.success ? supportedProviders.data : [],
-			);
+			setOptions(localPartner.data, programs.data, supportedProviders.success ? supportedProviders.data : []);
 		});
 	}, [sessionType, programId]);
 

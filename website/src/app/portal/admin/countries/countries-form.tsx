@@ -156,24 +156,15 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 					if (countryId && countryResult?.success) {
 						next.fields.isoCode.value = countryResult.data.isoCode;
 						next.fields.isActive.value = countryResult.data.isActive;
-						next.fields.microfinanceIndex.value =
-							countryResult.data.microfinanceIndex ?? undefined;
-						next.fields.microfinanceSourceText.value =
-							countryResult.data.microfinanceSourceLink?.text ?? undefined;
-						next.fields.microfinanceSourceHref.value =
-							countryResult.data.microfinanceSourceLink?.href ?? undefined;
-						next.fields.populationCoverage.value =
-							countryResult.data.populationCoverage ?? undefined;
-						next.fields.latestSurveyDate.value =
-							countryResult.data.latestSurveyDate ?? undefined;
-						next.fields.networkTechnology.value =
-							countryResult.data.networkTechnology ?? undefined;
-						next.fields.networkSourceText.value =
-							countryResult.data.networkSourceLink?.text ?? undefined;
-						next.fields.networkSourceHref.value =
-							countryResult.data.networkSourceLink?.href ?? undefined;
-						next.fields.mobileMoneyProviders.value =
-							countryResult.data.mobileMoneyProviders?.map((p) => p.id) ?? [];
+						next.fields.microfinanceIndex.value = countryResult.data.microfinanceIndex ?? undefined;
+						next.fields.microfinanceSourceText.value = countryResult.data.microfinanceSourceLink?.text ?? undefined;
+						next.fields.microfinanceSourceHref.value = countryResult.data.microfinanceSourceLink?.href ?? undefined;
+						next.fields.populationCoverage.value = countryResult.data.populationCoverage ?? undefined;
+						next.fields.latestSurveyDate.value = countryResult.data.latestSurveyDate ?? undefined;
+						next.fields.networkTechnology.value = countryResult.data.networkTechnology ?? undefined;
+						next.fields.networkSourceText.value = countryResult.data.networkSourceLink?.text ?? undefined;
+						next.fields.networkSourceHref.value = countryResult.data.networkSourceLink?.href ?? undefined;
+						next.fields.mobileMoneyProviders.value = countryResult.data.mobileMoneyProviders?.map((p) => p.id) ?? [];
 						next.fields.sanctions.value = countryResult.data.sanctions ?? [];
 					}
 

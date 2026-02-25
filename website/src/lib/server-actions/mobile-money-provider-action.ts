@@ -11,9 +11,7 @@ import { revalidatePath } from 'next/cache';
 const REVALIDATE_PATH = '/portal/admin/mobile-money-providers';
 const service = new MobileMoneyProviderService();
 
-export const createMobileMoneyProviderAction = async (
-	input: MobileMoneyProviderCreateInput,
-) => {
+export const createMobileMoneyProviderAction = async (input: MobileMoneyProviderCreateInput) => {
 	const user = await getAuthenticatedUserOrRedirect();
 	const result = await service.create(user.id, input);
 	revalidatePath(REVALIDATE_PATH);
@@ -21,9 +19,7 @@ export const createMobileMoneyProviderAction = async (
 	return result;
 };
 
-export const updateMobileMoneyProviderAction = async (
-	input: MobileMoneyProviderUpdateInput,
-) => {
+export const updateMobileMoneyProviderAction = async (input: MobileMoneyProviderUpdateInput) => {
 	const user = await getAuthenticatedUserOrRedirect();
 	const result = await service.update(user.id, input);
 	revalidatePath(REVALIDATE_PATH);

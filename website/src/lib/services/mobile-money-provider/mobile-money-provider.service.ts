@@ -87,7 +87,6 @@ export class MobileMoneyProviderService extends BaseService {
 				where: { id: providerId },
 			});
 			if (!provider) {
-
 				return this.resultFail('Could not get mobile money provider');
 			}
 
@@ -126,9 +125,7 @@ export class MobileMoneyProviderService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(
-				`Could not fetch mobile money providers: ${JSON.stringify(error)}`,
-			);
+			return this.resultFail(`Could not fetch mobile money providers: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -148,9 +145,7 @@ export class MobileMoneyProviderService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(
-				`Could not fetch mobile money provider options: ${JSON.stringify(error)}`,
-			);
+			return this.resultFail(`Could not fetch mobile money provider options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -166,9 +161,7 @@ export class MobileMoneyProviderService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(
-				`Could not fetch supported mobile money providers: ${JSON.stringify(error)}`,
-			);
+			return this.resultFail(`Could not fetch supported mobile money providers: ${JSON.stringify(error)}`);
 		}
 	}
 }

@@ -148,10 +148,7 @@ export const CandidateForm = ({
 		}
 	};
 
-	const setOptions = (
-		localPartner: LocalPartnerOption[],
-		mobileMoneyProviders: { id: string; name: string }[],
-	) => {
+	const setOptions = (localPartner: LocalPartnerOption[], mobileMoneyProviders: { id: string; name: string }[]) => {
 		const partnersObj = getZodEnum(localPartner.map(({ id, name }) => ({ id, label: name })));
 		const providerOptions = mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name }));
 		const providerEnum = getZodEnum(providerOptions);
@@ -173,8 +170,7 @@ export const CandidateForm = ({
 						provider: {
 							...prev.fields.paymentInformation.fields.provider,
 							options: providerOptions,
-							zodSchema:
-								providerOptions.length > 0 ? z.nativeEnum(providerEnum) : z.string().optional(),
+							zodSchema: providerOptions.length > 0 ? z.nativeEnum(providerEnum) : z.string().optional(),
 						},
 					},
 				},
@@ -234,10 +230,7 @@ export const CandidateForm = ({
 			if (!localPartners.success) {
 				return;
 			}
-			setOptions(
-				localPartners.data,
-				supportedProviders.success ? supportedProviders.data : [],
-			);
+			setOptions(localPartners.data, supportedProviders.success ? supportedProviders.data : []);
 		});
 	}, [sessionType]);
 

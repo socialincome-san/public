@@ -20,9 +20,7 @@ const MobileMoneyProvidersDataLoader = async () => {
 	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
-	const rows: MobileMoneyProviderTableViewRow[] = result.success
-		? result.data.tableRows
-		: [];
+	const rows: MobileMoneyProviderTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return <MobileMoneyProvidersTable rows={rows} error={error} />;
 };

@@ -134,9 +134,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 									: undefined,
 							},
 							create: {
-								mobileMoneyProvider: data.paymentProvider
-									? { connect: { id: data.paymentProvider } }
-									: undefined,
+								mobileMoneyProvider: data.paymentProvider ? { connect: { id: data.paymentProvider } } : undefined,
 								code: recipient.paymentInformation?.code ?? '',
 								phone: {
 									connectOrCreate: {

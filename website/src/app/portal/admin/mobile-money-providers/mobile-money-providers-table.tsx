@@ -58,9 +58,7 @@ export default function MobileMoneyProvidersTable({
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">
-								{errorMessage}
-							</AlertDescription>
+							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<MobileMoneyProvidersForm

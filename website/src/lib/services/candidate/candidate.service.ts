@@ -153,10 +153,9 @@ export class CandidateService extends BaseService {
 					paymentInformation: paymentInfoCreate
 						? {
 								create: {
-									mobileMoneyProvider:
-										paymentInfoCreate.mobileMoneyProvider?.connect ?
-											paymentInfoCreate.mobileMoneyProvider
-										:	undefined,
+									mobileMoneyProvider: paymentInfoCreate.mobileMoneyProvider?.connect
+										? paymentInfoCreate.mobileMoneyProvider
+										: undefined,
 									code: paymentInfoCreate.code ?? null,
 									...(paymentPhoneNumber && {
 										phone: {

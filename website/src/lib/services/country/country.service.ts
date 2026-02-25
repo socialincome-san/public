@@ -34,10 +34,9 @@ export class CountryService extends BaseService {
 					populationCoverage: input.populationCoverage ?? undefined,
 					latestSurveyDate: input.latestSurveyDate ?? undefined,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
-					mobileMoneyProviders:
-						input.mobileMoneyProviderIds?.length ?
-							{ connect: input.mobileMoneyProviderIds.map((id) => ({ id })) }
-						:	undefined,
+					mobileMoneyProviders: input.mobileMoneyProviderIds?.length
+						? { connect: input.mobileMoneyProviderIds.map((id) => ({ id })) }
+						: undefined,
 					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? { create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href } }
@@ -102,9 +101,9 @@ export class CountryService extends BaseService {
 					latestSurveyDate: input.latestSurveyDate,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
 					mobileMoneyProviders:
-						input.mobileMoneyProviderIds !== undefined ?
-							{ set: input.mobileMoneyProviderIds.map((id) => ({ id })) }
-						:	undefined,
+						input.mobileMoneyProviderIds !== undefined
+							? { set: input.mobileMoneyProviderIds.map((id) => ({ id })) }
+							: undefined,
 					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? {
@@ -366,9 +365,7 @@ export class CountryService extends BaseService {
 	}
 
 	private getMobileMoneyCondition(mobileMoneyProviders: MobileMoneyProviderRef[] | null): CountryCondition {
-		return mobileMoneyProviders && mobileMoneyProviders.length > 0 ?
-				CountryCondition.MET
-			:	CountryCondition.NOT_MET;
+		return mobileMoneyProviders && mobileMoneyProviders.length > 0 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
 	private getMobileNetworkCondition(populationCoverage: number | null): CountryCondition {

@@ -28,10 +28,7 @@ export const buildUpdateRecipientInput = (
 	const mobileMoneyProviderId = paymentInfoFields.provider.value as string | undefined;
 	const basePaymentInformation = {
 		code: paymentInfoFields.code.value?.trim() || null,
-		mobileMoneyProvider:
-			mobileMoneyProviderId ?
-				{ connect: { id: mobileMoneyProviderId } }
-			:	{ disconnect: true },
+		mobileMoneyProvider: mobileMoneyProviderId ? { connect: { id: mobileMoneyProviderId } } : { disconnect: true },
 	};
 
 	const nextPaymentPhoneNumber = paymentInfoFields.phone.value?.trim() || null;
