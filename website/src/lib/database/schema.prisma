@@ -843,7 +843,7 @@ model Country {
 
 model MobileMoneyProvider {
   id           String   @id @default(cuid()) @map("id")
-  name         String   @map("name")
+  name         String   @unique @map("name")
   isSupported  Boolean  @map("is_supported")
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)

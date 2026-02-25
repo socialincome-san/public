@@ -28,6 +28,15 @@ export const buildUpdateCandidateInput = (
 	const mobileMoneyProviderId = paymentInfoFields.provider.value as string | undefined;
 	const basePaymentInformation = {
 		code: paymentInfoFields.code.value?.trim() || null,
+	};
+	const createPaymentInformation = {
+		...basePaymentInformation,
+		...(mobileMoneyProviderId && {
+			mobileMoneyProvider: { connect: { id: mobileMoneyProviderId } },
+		}),
+	};
+	const updatePaymentInformation = {
+		...basePaymentInformation,
 		mobileMoneyProvider: mobileMoneyProviderId ? { connect: { id: mobileMoneyProviderId } } : { disconnect: true },
 	};
 
@@ -145,7 +154,7 @@ export const buildUpdateCandidateInput = (
 		paymentInformation: {
 			upsert: {
 				create: {
-					...basePaymentInformation,
+					...createPaymentInformation,
 					...((nextPaymentPhoneNumber ?? previousPaymentPhoneNumber) && {
 						phone: {
 							create: {
@@ -155,7 +164,7 @@ export const buildUpdateCandidateInput = (
 					}),
 				},
 				update: {
-					...basePaymentInformation,
+					...updatePaymentInformation,
 					phone: paymentPhoneWriteOperation,
 				},
 				where: { id: candidate.paymentInformation?.id },
