@@ -32,11 +32,6 @@ export const getMobileMoneyProviderAction = async (id: string) => {
 	return service.get(user.id, id);
 };
 
-export const getMobileMoneyProvidersTableViewAction = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
-	return service.getTableView(user.id);
-};
-
 export const getMobileMoneyProviderOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	return service.getOptions(user.id);
