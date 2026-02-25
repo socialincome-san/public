@@ -185,12 +185,12 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 						/>
 					</div>
 					{region === 'ch' && ['CHF', 'EUR'].includes(currency || '') && (
-						<div className="mb-4 flex items-center justify-between space-x-4">
+						<div className="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<FormField
 								control={form.control}
 								name="paymentType"
 								render={({ field }) => (
-									<FormItem className="flex-1">
+									<FormItem className="w-full flex-1 sm:w-auto">
 										<FormControl>
 											<ToggleGroup
 												type="single"
@@ -198,11 +198,11 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 												value={field.value}
 												onValueChange={(value: string) => form.setValue('paymentType', value)}
 											>
-												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.CREDIT_CARD}>
+												<ToggleGroupItem className="text-md m-1 rounded-full px-6 whitespace-nowrap" value={PaymentTypes.CREDIT_CARD}>
 													{translations.paymentType.creditCard}
 												</ToggleGroupItem>
 
-												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.BANK_TRANSFER}>
+												<ToggleGroupItem className="text-md m-1 rounded-full px-6 whitespace-nowrap" value={PaymentTypes.BANK_TRANSFER}>
 													{translations.paymentType.bankTransfer}
 												</ToggleGroupItem>
 											</ToggleGroup>
@@ -210,9 +210,11 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 									</FormItem>
 								)}
 							/>
-
-							<div>
-								<Typography size="md" className="mt-2 text-blue-50">
+							<div className="w-full flex justify-center sm:justify-start">
+								<Typography
+									size="md"
+									className="mt-2 text-blue-50 text-center sm:text-left"
+								>
 									{translations.feeNotice}
 								</Typography>
 							</div>
