@@ -6,6 +6,7 @@
 	"button-text": "Make a Difference",
 	"button-text-short": "Donate Now",
 	"one-time-donation": "Make a one-time donation",
+	"fee-notice": "Bank transfers has the lowest fees",
 	"payment-type": {
 		"title": "Select Payment Method",
 		"credit-card": "Credit Card",

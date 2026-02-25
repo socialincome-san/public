@@ -8,7 +8,17 @@ import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, FormControl, FormField, FormItem, Input, ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
+import {
+	Button,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	Input,
+	ToggleGroup,
+	ToggleGroupItem,
+	Typography
+} from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,6 +31,7 @@ type DonationFormProps = {
 		oneTime: string;
 		amount: string;
 		submit: string;
+		feeNotice: string;
 		paymentType: {
 			bankTransfer: string;
 			creditCard: string;
@@ -174,23 +185,32 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 						/>
 					</div>
 					{region === 'ch' && ['CHF', 'EUR'].includes(currency || '') && (
-						<div className="flex flex-col space-y-4">
+						<div className="flex items-center justify-between space-x-4 mb-4">
 							<FormField
 								control={form.control}
 								name="paymentType"
 								render={({ field }) => (
-									<FormItem className="flex-1 sm:basis-2/3">
+									<FormItem className="flex-1">
 										<FormControl>
 											<ToggleGroup
 												type="single"
-												className="bg-popover mb-4 inline-flex rounded-full"
+												className="bg-popover inline-flex rounded-full"
 												value={field.value}
-												onValueChange={(value: string) => form.setValue('paymentType', value)}
+												onValueChange={(value: string) =>
+													form.setValue('paymentType', value)
+												}
 											>
-												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.CREDIT_CARD}>
+												<ToggleGroupItem
+													className="text-md m-1 rounded-full px-6"
+													value={PaymentTypes.CREDIT_CARD}
+												>
 													{translations.paymentType.creditCard}
 												</ToggleGroupItem>
-												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.BANK_TRANSFER}>
+
+												<ToggleGroupItem
+													className="text-md m-1 rounded-full px-6"
+													value={PaymentTypes.BANK_TRANSFER}
+												>
 													{translations.paymentType.bankTransfer}
 												</ToggleGroupItem>
 											</ToggleGroup>
@@ -198,6 +218,12 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 									</FormItem>
 								)}
 							/>
+
+							<div>
+								<Typography size="md" className="mt-2 text-blue-50" >
+									{translations.feeNotice}
+								</Typography>
+							</div>
 						</div>
 					)}
 					{form.watch('paymentType') === PaymentTypes.BANK_TRANSFER ? (
