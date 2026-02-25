@@ -58,6 +58,7 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 	}
 
 	await page.goto(latest.oobLink);
+	await page.getByTestId('confirm-login-button').click();
 
 	await expect(page.getByTestId(testId)).toBeVisible();
 
