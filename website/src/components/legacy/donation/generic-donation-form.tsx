@@ -17,7 +17,7 @@ import {
 	Input,
 	ToggleGroup,
 	ToggleGroupItem,
-	Typography
+	Typography,
 } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -185,7 +185,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 						/>
 					</div>
 					{region === 'ch' && ['CHF', 'EUR'].includes(currency || '') && (
-						<div className="flex items-center justify-between space-x-4 mb-4">
+						<div className="mb-4 flex items-center justify-between space-x-4">
 							<FormField
 								control={form.control}
 								name="paymentType"
@@ -196,21 +196,13 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 												type="single"
 												className="bg-popover inline-flex rounded-full"
 												value={field.value}
-												onValueChange={(value: string) =>
-													form.setValue('paymentType', value)
-												}
+												onValueChange={(value: string) => form.setValue('paymentType', value)}
 											>
-												<ToggleGroupItem
-													className="text-md m-1 rounded-full px-6"
-													value={PaymentTypes.CREDIT_CARD}
-												>
+												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.CREDIT_CARD}>
 													{translations.paymentType.creditCard}
 												</ToggleGroupItem>
 
-												<ToggleGroupItem
-													className="text-md m-1 rounded-full px-6"
-													value={PaymentTypes.BANK_TRANSFER}
-												>
+												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.BANK_TRANSFER}>
 													{translations.paymentType.bankTransfer}
 												</ToggleGroupItem>
 											</ToggleGroup>
@@ -220,7 +212,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 							/>
 
 							<div>
-								<Typography size="md" className="mt-2 text-blue-50" >
+								<Typography size="md" className="mt-2 text-blue-50">
 									{translations.feeNotice}
 								</Typography>
 							</div>
