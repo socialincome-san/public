@@ -316,9 +316,6 @@
           },
           "paymentProvider": {
             "type": "string",
-            "enum": [
-              "orange_money"
-            ],
             "nullable": true
           },
           "successorName": {
@@ -339,11 +336,24 @@
           "id": {
             "type": "string"
           },
-          "provider": {
-            "type": "string",
-            "enum": [
-              "orange_money"
+          "mobileMoneyProvider": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
             ],
+            "nullable": true
+          },
+          "mobileMoneyProviderId": {
+            "type": "string",
             "nullable": true
           },
           "code": {
