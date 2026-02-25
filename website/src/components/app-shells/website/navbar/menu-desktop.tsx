@@ -1,5 +1,7 @@
 'use client';
 
+import { hasDropdownChildren, isDropdownItem, isMenuItem } from '@/components/app-shells/website/navbar/utils';
+import { MakeDonationForm } from '@/components/make-donation-form';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
@@ -7,32 +9,24 @@ import { cn } from '@/lib/utils/cn';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { ChevronDown } from 'lucide-react';
 import NextLink from 'next/link';
-import { MakeDonationForm } from '../../../make-donation-form';
 
 type Props = {
-	nav: Layout['menu'];
+	menu: Layout['menu'];
 	lang: WebsiteLanguage;
 	region: string;
 };
 
 const FALLBACK_BADGE_COUNT = 23;
 
-export const MenuDesktop = ({ nav, lang, region }: Props) => (
+export const MenuDesktop = ({ menu, lang, region }: Props) => (
 	<NavigationMenu.Root>
 		<NavigationMenu.List className="flex items-center gap-1">
-			{nav.map((item) => {
+			{menu.map((item) => {
 				if (!item.label) {
 					return null;
 				}
 
-				const isDropdown = item.component === 'dropdownItem';
-				const hasChildren = isDropdown && item.menuItemGroups.some((group) => (group.items?.length ?? 0) > 0);
-
-				if (!hasChildren) {
-					if (isDropdown) {
-						return null;
-					}
-
+				if (isMenuItem(item)) {
 					const href = resolveStoryblokLink(item.link, lang, region);
 
 					return (
@@ -49,6 +43,14 @@ export const MenuDesktop = ({ nav, lang, region }: Props) => (
 							</NavigationMenu.Link>
 						</NavigationMenu.Item>
 					);
+				}
+
+				if (!isDropdownItem(item)) {
+					return null;
+				}
+
+				if (!hasDropdownChildren(item)) {
+					return null;
 				}
 
 				return (
@@ -89,7 +91,9 @@ export const MenuDesktop = ({ nav, lang, region }: Props) => (
 										</div>
 									))}
 								</div>
-								<MakeDonationForm lang={lang} />
+								<div className="w-96 shrink-0">
+									<MakeDonationForm lang={lang} />
+								</div>
 							</div>
 						</NavigationMenu.Content>
 					</NavigationMenu.Item>

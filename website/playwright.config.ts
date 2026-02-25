@@ -1,7 +1,17 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test', quiet: true });
+
+const publicWebsiteCookieConsentState = {
+	cookies: [],
+	origins: [
+		{
+			origin: 'http://localhost:3000',
+			localStorage: [{ name: 'cookie_consent', value: 'denied' }],
+		},
+	],
+};
 
 export default defineConfig({
 	testDir: './test',
@@ -68,6 +78,17 @@ export default defineConfig({
 		{
 			name: 'public-website',
 			testMatch: /public-website\/.*\.e2e\.ts/,
+			use: {
+				storageState: publicWebsiteCookieConsentState,
+			},
+		},
+		{
+			name: 'public-website-mobile',
+			testMatch: /public-website\/.*\.e2e\.ts/,
+			use: {
+				...devices['iPhone 15'],
+				storageState: publicWebsiteCookieConsentState,
+			},
 		},
 	],
 	webServer: {

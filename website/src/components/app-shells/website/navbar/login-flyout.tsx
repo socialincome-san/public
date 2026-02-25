@@ -6,6 +6,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sendSignInLinkToEmail } from 'firebase/auth';
@@ -23,8 +25,13 @@ type FormValues = z.infer<typeof formSchema>;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const LoginFlyout = () => {
+type Props = {
+	lang: WebsiteLanguage;
+};
+
+export const LoginFlyout = ({ lang }: Props) => {
 	const { auth } = useAuth();
+	const translator = useTranslator(lang, 'website-login');
 
 	const [open, setOpen] = useState(false);
 	const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
@@ -63,17 +70,20 @@ export const LoginFlyout = () => {
 		setStatus('idle');
 	};
 
+	const t = (key: string, fallback: string, context?: Record<string, unknown>) =>
+		translator?.t(key, context ? { context } : undefined) ?? fallback;
+
 	return (
 		<>
 			<Button data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
 				<UserRound />
-				Login
+				{t('flyout.login-button', 'Login')}
 			</Button>
 
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Sign in</DialogTitle>
+						<DialogTitle>{t('flyout.title', 'Sign in')}</DialogTitle>
 					</DialogHeader>
 
 					{status === 'idle' && (
@@ -84,7 +94,7 @@ export const LoginFlyout = () => {
 									name="email"
 									render={({ field }) => (
 										<FormItem>
-											<Label>Email</Label>
+											<Label>{t('email', 'Email')}</Label>
 											<FormControl>
 												<Input type="email" placeholder="you@example.org" {...field} />
 											</FormControl>
@@ -94,29 +104,34 @@ export const LoginFlyout = () => {
 								/>
 
 								<Button type="submit" className="w-full">
-									Send login link
+									{t('submit-button', 'Send login link')}
 								</Button>
 
-								<p className="text-muted-foreground text-center text-xs">We’ll send you a magic link to sign in.</p>
+								<p className="text-muted-foreground text-center text-xs">
+									{t('flyout.magic-link-description', "We'll send you a magic link to sign in.")}
+								</p>
 							</form>
 						</Form>
 					)}
 
-					{status === 'sending' && <div className="mt-4 text-center text-sm">Sending…</div>}
+					{status === 'sending' && <div className="mt-4 text-center text-sm">{t('flyout.sending', 'Sending...')}</div>}
 
 					{status === 'sent' && (
 						<div className="mt-4 space-y-4 text-center">
 							<p className="text-sm">
-								If an account exists for <span className="font-medium">{submittedEmail}</span>, you’ll receive a login
-								link shortly.
+								{t(
+									'flyout.sent-message',
+									`If an account exists for ${submittedEmail}, you'll receive a login link shortly.`,
+									{ email: submittedEmail },
+								)}
 							</p>
 
 							<Button variant="outline" onClick={retry} className="w-full">
-								Retry
+								{t('flyout.retry', 'Retry')}
 							</Button>
 
 							<p className="text-muted-foreground text-xs">
-								If it doesn’t arrive, contact{' '}
+								{t('flyout.support-prefix', "If it doesn't arrive, contact")}{' '}
 								<a className="underline" href="mailto:support@socialincome.org">
 									support@socialincome.org
 								</a>
@@ -126,9 +141,9 @@ export const LoginFlyout = () => {
 
 					<div className="mt-6 border-t pt-4 text-center">
 						<p className="text-sm">
-							Don’t have an account?{' '}
+							{t('flyout.no-account', "Don't have an account?")}{' '}
 							<Link href="/get-started" className="underline">
-								Learn how to get started
+								{t('flyout.get-started', 'Learn how to get started')}
 							</Link>
 						</p>
 					</div>
