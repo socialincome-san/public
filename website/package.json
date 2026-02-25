@@ -91,7 +91,7 @@
 		"react-dropzone": "^15.0.0",
 		"react-hot-toast": "^2.4.1",
 		"react-markdown": "^10.1.0",
-		"ssh2-sftp-client": "^11.0.0",
+		"ssh2-sftp-client": "^12.0.0",
 		"storyblok-rich-text-react-renderer": "~3.0.1",
 		"stripe": "^17.1.0",
 		"survey-core": "^1.12.59",
