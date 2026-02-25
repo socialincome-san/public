@@ -198,11 +198,17 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 												value={field.value}
 												onValueChange={(value: string) => form.setValue('paymentType', value)}
 											>
-												<ToggleGroupItem className="text-md m-1 rounded-full px-6 whitespace-nowrap" value={PaymentTypes.CREDIT_CARD}>
+												<ToggleGroupItem
+													className="text-md m-1 rounded-full px-6 whitespace-nowrap"
+													value={PaymentTypes.CREDIT_CARD}
+												>
 													{translations.paymentType.creditCard}
 												</ToggleGroupItem>
 
-												<ToggleGroupItem className="text-md m-1 rounded-full px-6 whitespace-nowrap" value={PaymentTypes.BANK_TRANSFER}>
+												<ToggleGroupItem
+													className="text-md m-1 rounded-full px-6 whitespace-nowrap"
+													value={PaymentTypes.BANK_TRANSFER}
+												>
 													{translations.paymentType.bankTransfer}
 												</ToggleGroupItem>
 											</ToggleGroup>
@@ -210,11 +216,8 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 									</FormItem>
 								)}
 							/>
-							<div className="w-full flex justify-center sm:justify-start">
-								<Typography
-									size="md"
-									className="mt-2 text-blue-50 text-center sm:text-left"
-								>
+							<div className="flex w-full justify-center sm:justify-start">
+								<Typography size="md" className="mt-2 text-center text-blue-50 sm:text-left">
 									{translations.feeNotice}
 								</Typography>
 							</div>
