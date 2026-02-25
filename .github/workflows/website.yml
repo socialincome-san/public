@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - name: Install Safe Chain (CI)
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run website:lint
@@ -76,7 +76,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run website:check:unused
@@ -88,7 +88,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run website:build-paths
@@ -101,7 +101,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run website:test:unit
