@@ -19,6 +19,33 @@ export class CandidateService extends BaseService {
 	private userService = new UserService();
 	private firebaseAdminService = new FirebaseAdminService();
 
+	private async deletePhoneIfOrphaned(phoneId: string): Promise<void> {
+		const phone = await this.db.phone.findUnique({
+			where: { id: phoneId },
+			select: {
+				_count: {
+					select: {
+						contacts: true,
+						paymentInformations: true,
+					},
+				},
+			},
+		});
+
+		if (!phone) {
+			return;
+		}
+
+		const hasAnyReference = phone._count.contacts > 0 || phone._count.paymentInformations > 0;
+		if (hasAnyReference) {
+			return;
+		}
+
+		await this.db.phone.delete({
+			where: { id: phoneId },
+		});
+	}
+
 	private async assertAdmin(userId: string): Promise<ServiceResult<true>> {
 		const isAdmin = await this.userService.isAdmin(userId);
 		if (!isAdmin.success) {
@@ -233,9 +260,14 @@ export class CandidateService extends BaseService {
 			select: {
 				localPartnerId: true,
 				programId: true,
+				contact: {
+					select: {
+						phone: { select: { id: true } },
+					},
+				},
 				paymentInformation: {
 					select: {
-						phone: { select: { number: true } },
+						phone: { select: { id: true, number: true } },
 					},
 				},
 			},
@@ -266,6 +298,8 @@ export class CandidateService extends BaseService {
 
 		updateInput.program = undefined;
 
+		const previousContactPhoneId = existing.contact.phone?.id ?? null;
+		const previousPaymentPhoneId = existing.paymentInformation?.phone?.id ?? null;
 		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
 
 		if (!previousPaymentPhoneNumber && !nextPaymentPhoneNumber) {
@@ -305,6 +339,11 @@ export class CandidateService extends BaseService {
 						},
 					},
 				});
+
+				if (previousContactPhoneId) {
+					await this.deletePhoneIfOrphaned(previousContactPhoneId);
+				}
+
 				return this.resultOk(updatedCandidate);
 			} catch (error) {
 				this.logger.error(error);
@@ -377,6 +416,14 @@ export class CandidateService extends BaseService {
 					},
 				},
 			});
+
+			if (previousContactPhoneId) {
+				await this.deletePhoneIfOrphaned(previousContactPhoneId);
+			}
+
+			if (previousPaymentPhoneId) {
+				await this.deletePhoneIfOrphaned(previousPaymentPhoneId);
+			}
 
 			return this.resultOk(updatedCandidate);
 		} catch (error) {
