@@ -175,7 +175,9 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 								{translator.t(`team.groups.${group.name}.subtitle`)}
 							</Typography>
 							<div className="md:col-span-2">
-								<Typography size="lg" className="mb-8 [&_a]:underline"
+								<Typography
+									size="lg"
+									className="mb-8 [&_a]:underline"
 									dangerouslySetInnerHTML={{
 										__html: translator.t(`team.groups.${group.name}.description`),
 									}}
