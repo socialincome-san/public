@@ -2,7 +2,12 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
-import { createCountryAction, deleteCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
+import {
+	createCountryAction,
+	deleteCountryAction,
+	getCountryAction,
+	updateCountryAction,
+} from '@/lib/server-actions/country-action';
 import { getMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { CountryPayload, NETWORK_TECH_LABELS } from '@/lib/services/country/country.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
@@ -147,7 +152,7 @@ const initialFormSchema: CountryFormSchema = {
 			},
 		},
 		noSanctions: {
-			label: 'No sanctions',
+			label: 'Sanctions',
 			fields: {
 				sanctions: {
 					label: 'Sanctions',

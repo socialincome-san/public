@@ -24,34 +24,42 @@ test('Add new country', async ({ page }) => {
 	await page.getByPlaceholder('Search').fill('switzer');
 	await page.getByRole('option', { name: 'Switzerland' }).click();
 
+	await page.getByTestId('form-accordion-trigger-suitabilityOfCash').click();
 	await page
-		.getByTestId('form-item-microfinanceIndex')
+		.getByTestId('form-item-suitabilityOfCash.microfinanceIndex')
 		.locator('input')
 		.fill(String(expectedCountry.microfinanceIndex));
 
-	await page.getByTestId('form-item-microfinanceSourceText').locator('input').fill('source text');
-
-	await page.getByTestId('form-item-microfinanceSourceHref').locator('input').fill('https://source-url.ch');
+	await page.getByTestId('form-item-suitabilityOfCash.microfinanceSourceText').locator('input').fill('source text');
 
 	await page
-		.getByTestId('form-item-populationCoverage')
+		.getByTestId('form-item-suitabilityOfCash.microfinanceSourceHref')
 		.locator('input')
-		.fill(String(expectedCountry.populationCoverage));
+		.fill('https://source-url.ch');
 
-	await page.getByTestId('form-item-latestSurveyDate').locator('button').click();
+	await page.getByTestId('form-item-suitabilityOfCash.latestSurveyDate').locator('button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
 	await page.getByLabel('Choose the Year').selectOption('2025');
 	await page.getByRole('button', { name: 'Wednesday, March 12th,' }).click();
 
-	await page.getByTestId('form-item-networkTechnology').click();
+	await page.getByTestId('form-accordion-trigger-mobileNetwork').click();
+
+	await page
+		.getByTestId('form-item-mobileNetwork.populationCoverage')
+		.locator('input')
+		.fill(String(expectedCountry.populationCoverage));
+
+	await page.getByTestId('form-item-mobileNetwork.networkTechnology').click();
 	await page.getByRole('option', { name: '5G' }).click();
 
-	await page.getByTestId('form-item-mobileMoneyProviders').click();
+	await page.getByTestId('form-accordion-trigger-mobileMoney').click();
+	await page.getByTestId('form-item-mobileMoney.mobileMoneyProviders').click();
 	await page.getByPlaceholder('Search').fill('Orange Mon');
 	await page.getByRole('option', { name: expectedCountry.mobileMoneyProviderName }).click();
 	await page.keyboard.press('Escape');
 
-	await page.getByTestId('form-item-sanctions').click();
+	await page.getByTestId('form-accordion-trigger-noSanctions').click();
+	await page.getByTestId('form-item-noSanctions.sanctions').click();
 	await page.getByPlaceholder('Search').fill(expectedCountry.sanctions[0]);
 	await page.getByRole('option', { name: expectedCountry.sanctions[0] }).click();
 	await page.keyboard.press('Escape');
@@ -66,7 +74,7 @@ test('Add new country', async ({ page }) => {
 		throw new Error(result.error);
 	}
 
-	expect(result.data.tableRows.length).toBe(7);
+	expect(result.data.tableRows.length).toBe(10);
 
 	const country = result.data.tableRows.find((c) => c.isoCode === expectedCountry.isoCode);
 
