@@ -1,6 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/dynamic-form/helper';
 import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
 import {
 	createCountryAction,
@@ -11,6 +12,7 @@ import {
 import { getMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { CountryPayload, NETWORK_TECH_LABELS } from '@/lib/services/country/country.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { allCurrencies } from '@/lib/types/currency';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCountryInput, buildUpdateCountryInput } from './countries-form-helper';
@@ -27,6 +29,8 @@ export type CountryFormSchema = {
 	fields: {
 		isoCode: FormField;
 		isActive: FormField;
+		currency: FormField;
+		defaultPayoutAmount: FormField;
 		suitabilityOfCash: {
 			label: string;
 			fields: {
@@ -78,6 +82,17 @@ const initialFormSchema: CountryFormSchema = {
 			placeholder: 'Active',
 			label: 'Is Active',
 			zodSchema: z.boolean().optional(),
+		},
+		currency: {
+			label: 'Currency',
+			placeholder: 'Select currency',
+			useCombobox: true,
+			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((currency) => ({ id: currency, label: currency })))),
+		},
+		defaultPayoutAmount: {
+			placeholder: '100',
+			label: 'Default payout amount',
+			zodSchema: z.coerce.number().positive(),
 		},
 		suitabilityOfCash: {
 			label: 'Suitability of cash',
@@ -226,6 +241,8 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 					if (countryId && countryResult?.success) {
 						next.fields.isoCode.value = countryResult.data.isoCode;
 						next.fields.isActive.value = countryResult.data.isActive;
+						next.fields.currency.value = countryResult.data.currency;
+						next.fields.defaultPayoutAmount.value = countryResult.data.defaultPayoutAmount;
 						next.fields.suitabilityOfCash.fields.cashConditionOverride.value =
 							countryResult.data.cashConditionOverride ?? false;
 						next.fields.suitabilityOfCash.fields.microfinanceIndex.value =

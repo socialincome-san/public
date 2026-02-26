@@ -10,6 +10,8 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreat
 	return {
 		isoCode: schema.fields.isoCode.value,
 		isActive: schema.fields.isActive.value,
+		currency: schema.fields.currency.value,
+		defaultPayoutAmount: schema.fields.defaultPayoutAmount.value,
 		microfinanceIndex: cash.microfinanceIndex.value ?? null,
 		cashConditionOverride: cash.cashConditionOverride.value ?? false,
 		populationCoverage: mobileNetwork.populationCoverage.value ?? null,
@@ -45,6 +47,8 @@ export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: Cou
 		id: existing.id,
 		isoCode: schema.fields.isoCode.value,
 		isActive: schema.fields.isActive.value,
+		currency: schema.fields.currency.value,
+		defaultPayoutAmount: schema.fields.defaultPayoutAmount.value,
 		microfinanceIndex: cash.microfinanceIndex.value ?? null,
 		cashConditionOverride: cash.cashConditionOverride.value ?? false,
 		populationCoverage: mobileNetwork.populationCoverage.value ?? null,

@@ -978,6 +978,8 @@ model Country {
   id       String      @id @default(cuid()) @map("id")
   isoCode  CountryCode @unique @map("iso_code")
   isActive Boolean     @default(false) @map("is_active")
+  currency Currency    @map("currency")
+  defaultPayoutAmount Decimal  @map("default_payout_amount") @db.Decimal(12, 4)
   cashConditionOverride Boolean? @map("cash_condition_override")
   microfinanceIndex     Decimal? @map("microfinance_index") @db.Decimal(4, 2)
   latestSurveyDate      DateTime? @map("latest_survey_date") @db.Date
