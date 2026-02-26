@@ -975,17 +975,17 @@ model ExchangeRate {
 }
 
 model Country {
-  id       String      @id @default(cuid()) @map("id")
-  isoCode  CountryCode @unique @map("iso_code")
-  isActive Boolean     @default(false) @map("is_active")
-  currency Currency    @map("currency")
-  defaultPayoutAmount Decimal  @map("default_payout_amount") @db.Decimal(12, 4)
-  cashConditionOverride Boolean? @map("cash_condition_override")
-  microfinanceIndex     Decimal? @map("microfinance_index") @db.Decimal(4, 2)
-  latestSurveyDate      DateTime? @map("latest_survey_date") @db.Date
-  microfinanceSourceLinkId String?     @map("microfinance_source_link_id")
-  microfinanceSourceLink   SourceLink? @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
-  mobileMoneyConditionOverride Boolean? @map("mobile_money_condition_override")
+  id                           String                @id @default(cuid()) @map("id")
+  isoCode                      CountryCode           @unique @map("iso_code")
+  isActive                     Boolean               @default(false) @map("is_active")
+  currency                     Currency              @map("currency")
+  defaultPayoutAmount          Decimal               @map("default_payout_amount") @db.Decimal(12, 4)
+  cashConditionOverride        Boolean               @default(false) @map("cash_condition_override")
+  microfinanceIndex            Decimal?              @map("microfinance_index") @db.Decimal(4, 2)
+  latestSurveyDate             DateTime?             @map("latest_survey_date") @db.Date
+  microfinanceSourceLinkId     String?               @map("microfinance_source_link_id")
+  microfinanceSourceLink       SourceLink?           @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
+  mobileMoneyConditionOverride Boolean               @default(false) @map("mobile_money_condition_override")
   mobileMoneyProviders         MobileMoneyProvider[]
 
   populationCoverage Decimal?           @map("population_coverage") @db.Decimal(5, 2)
@@ -1004,11 +1004,11 @@ model Country {
 }
 
 model MobileMoneyProvider {
-  id           String   @id @default(cuid()) @map("id")
-  name         String   @unique @map("name")
-  isSupported  Boolean  @map("is_supported")
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id          String    @id @default(cuid()) @map("id")
+  name        String    @unique @map("name")
+  isSupported Boolean   @map("is_supported")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   countries           Country[]
   paymentInformations PaymentInformation[]
