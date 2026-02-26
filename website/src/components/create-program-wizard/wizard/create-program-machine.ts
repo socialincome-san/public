@@ -43,7 +43,7 @@ export const createProgramWizardMachine = setup({
 		};
 
 		events: // step 1
-			| { type: 'SELECT_COUNTRY'; id: string }
+		| { type: 'SELECT_COUNTRY'; id: string }
 			| { type: 'TOGGLE_COUNTRY_ROW'; id: string }
 
 			// step 2
