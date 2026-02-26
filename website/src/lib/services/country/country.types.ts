@@ -29,10 +29,12 @@ export type CountryPayload = {
 	isoCode: CountryCode;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
+	cashConditionOverride: boolean;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	mobileMoneyProviders?: MobileMoneyProviderRef[] | null;
+	mobileMoneyConditionOverride: boolean;
 	sanctions?: string[] | null;
 	microfinanceSourceLink?: { id: string; text: string; href: string } | null;
 	networkSourceLink?: { id: string; text: string; href: string } | null;
@@ -42,10 +44,12 @@ export type CountryCreateInput = {
 	isoCode: CountryCode;
 	isActive: boolean;
 	microfinanceIndex?: number | null;
+	cashConditionOverride: boolean;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	mobileMoneyProviderIds?: string[];
+	mobileMoneyConditionOverride: boolean;
 	sanctions?: string[];
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;
@@ -56,10 +60,12 @@ export type CountryUpdateInput = {
 	isoCode?: CountryCode;
 	isActive?: boolean;
 	microfinanceIndex?: number | null;
+	cashConditionOverride: boolean;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	mobileMoneyProviderIds?: string[];
+	mobileMoneyConditionOverride: boolean;
 	sanctions?: string[];
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;

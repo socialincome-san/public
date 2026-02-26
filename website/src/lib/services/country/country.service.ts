@@ -31,12 +31,14 @@ export class CountryService extends BaseService {
 					isoCode: input.isoCode,
 					isActive: input.isActive,
 					microfinanceIndex: input.microfinanceIndex ?? undefined,
+					cashConditionOverride: input.cashConditionOverride,
 					populationCoverage: input.populationCoverage ?? undefined,
 					latestSurveyDate: input.latestSurveyDate ?? undefined,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
 					mobileMoneyProviders: input.mobileMoneyProviderIds?.length
 						? { connect: input.mobileMoneyProviderIds.map((id) => ({ id })) }
 						: undefined,
+					mobileMoneyConditionOverride: input.mobileMoneyConditionOverride,
 					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? { create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href } }
@@ -57,10 +59,12 @@ export class CountryService extends BaseService {
 				isoCode: created.isoCode,
 				isActive: created.isActive,
 				microfinanceIndex: created.microfinanceIndex ? Number(created.microfinanceIndex) : null,
+				cashConditionOverride: created.cashConditionOverride ?? false,
 				populationCoverage: created.populationCoverage ? Number(created.populationCoverage) : null,
 				latestSurveyDate: created.latestSurveyDate ?? null,
 				networkTechnology: created.networkTechnology ?? null,
 				mobileMoneyProviders: created.mobileMoneyProviders ?? [],
+				mobileMoneyConditionOverride: created.mobileMoneyConditionOverride ?? false,
 				sanctions: created.sanctions ?? [],
 				microfinanceSourceLink: created.microfinanceSourceLink
 					? {
@@ -97,6 +101,7 @@ export class CountryService extends BaseService {
 					isoCode: input.isoCode,
 					isActive: input.isActive,
 					microfinanceIndex: input.microfinanceIndex,
+					cashConditionOverride: input.cashConditionOverride,
 					populationCoverage: input.populationCoverage,
 					latestSurveyDate: input.latestSurveyDate,
 					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
@@ -104,6 +109,7 @@ export class CountryService extends BaseService {
 						input.mobileMoneyProviderIds !== undefined
 							? { set: input.mobileMoneyProviderIds.map((id) => ({ id })) }
 							: undefined,
+					mobileMoneyConditionOverride: input.mobileMoneyConditionOverride,
 					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: input.microfinanceSourceLink
 						? {
@@ -134,10 +140,12 @@ export class CountryService extends BaseService {
 				isoCode: updated.isoCode,
 				isActive: updated.isActive,
 				microfinanceIndex: updated.microfinanceIndex ? Number(updated.microfinanceIndex) : null,
+				cashConditionOverride: updated.cashConditionOverride ?? false,
 				populationCoverage: updated.populationCoverage ? Number(updated.populationCoverage) : null,
 				latestSurveyDate: updated.latestSurveyDate ?? null,
 				networkTechnology: updated.networkTechnology ?? null,
 				mobileMoneyProviders: updated.mobileMoneyProviders ?? [],
+				mobileMoneyConditionOverride: updated.mobileMoneyConditionOverride ?? false,
 				sanctions: updated.sanctions ?? [],
 				microfinanceSourceLink: updated.microfinanceSourceLink
 					? {
@@ -186,10 +194,12 @@ export class CountryService extends BaseService {
 				isoCode: country.isoCode,
 				isActive: country.isActive,
 				microfinanceIndex: country.microfinanceIndex ? Number(country.microfinanceIndex) : null,
+				cashConditionOverride: country.cashConditionOverride ?? false,
 				populationCoverage: country.populationCoverage ? Number(country.populationCoverage) : null,
 				latestSurveyDate: country.latestSurveyDate ?? null,
 				networkTechnology: country.networkTechnology ?? null,
 				mobileMoneyProviders: country.mobileMoneyProviders ?? [],
+				mobileMoneyConditionOverride: country.mobileMoneyConditionOverride ?? false,
 				sanctions: country.sanctions ?? [],
 				microfinanceSourceLink: country.microfinanceSourceLink
 					? {
@@ -281,6 +291,13 @@ export class CountryService extends BaseService {
 			const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => {
 				const microfinanceIndex = this.toNumber(country.microfinanceIndex);
 				const populationCoverage = this.toNumber(country.populationCoverage);
+				const cashIsOverridden = country.cashConditionOverride ?? false;
+				const mobileMoneyIsOverridden = country.mobileMoneyConditionOverride ?? false;
+				const cashCondition = this.getCashCondition(microfinanceIndex, cashIsOverridden);
+				const mobileMoneyCondition = this.getMobileMoneyCondition(
+					country.mobileMoneyProviders,
+					mobileMoneyIsOverridden,
+				);
 
 				const programCount = country._count.programs;
 
@@ -303,22 +320,24 @@ export class CountryService extends BaseService {
 					},
 
 					cash: {
-						condition: this.getCashCondition(microfinanceIndex),
+						condition: cashCondition,
 						details: {
-							text: this.getCashDetailsText(country.isoCode, microfinanceIndex),
+							text: this.getCashDetailsText(country.isoCode, microfinanceIndex, cashCondition),
 							source: country.microfinanceSourceLink
 								? {
 										text: country.microfinanceSourceLink.text,
 										href: country.microfinanceSourceLink.href,
 									}
-								: undefined,
+								: cashIsOverridden
+									? { text: 'Source: SI Research' }
+									: undefined,
 						},
 					},
 
 					mobileMoney: {
-						condition: this.getMobileMoneyCondition(country.mobileMoneyProviders),
+						condition: mobileMoneyCondition,
 						details: {
-							text: this.getMobileMoneyDetailsText(country.isoCode, country.mobileMoneyProviders),
+							text: this.getMobileMoneyDetailsText(country.isoCode, country.mobileMoneyProviders, mobileMoneyCondition),
 							source: {
 								text: 'Source: SI Research',
 							},
@@ -358,14 +377,25 @@ export class CountryService extends BaseService {
 		}
 	}
 
-	private getCashCondition(microfinanceIndex: number | null): CountryCondition {
+	private getCashCondition(microfinanceIndex: number | null, overwriteCondition: boolean): CountryCondition {
+		if (overwriteCondition) {
+			return CountryCondition.MET;
+		}
+
 		if (microfinanceIndex === null) {
 			return CountryCondition.NOT_MET;
 		}
 		return microfinanceIndex >= 3.5 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
-	private getMobileMoneyCondition(mobileMoneyProviders: MobileMoneyProviderRef[] | null): CountryCondition {
+	private getMobileMoneyCondition(
+		mobileMoneyProviders: MobileMoneyProviderRef[] | null,
+		overwriteCondition: boolean,
+	): CountryCondition {
+		if (overwriteCondition) {
+			return CountryCondition.MET;
+		}
+
 		return mobileMoneyProviders && mobileMoneyProviders.length > 0 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
@@ -380,22 +410,33 @@ export class CountryService extends BaseService {
 		return sanctions && sanctions.length > 0 ? CountryCondition.RESTRICTIONS_APPLY : CountryCondition.MET;
 	}
 
-	private getCashDetailsText(countryIsoCode: CountryCode, microfinanceIndex: number | null): string {
-		if (microfinanceIndex === null) {
-			return `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired.`;
+	private getCashDetailsText(
+		countryIsoCode: CountryCode,
+		microfinanceIndex: number | null,
+		condition: CountryCondition,
+	): string {
+		if (condition === CountryCondition.MET) {
+			return microfinanceIndex === null
+				? `Market functionality in ${getCountryNameByCode(countryIsoCode)} appears intact.`
+				: `Market functionality in ${getCountryNameByCode(countryIsoCode)} appears intact (MFI ${microfinanceIndex}).`;
 		}
 
-		return microfinanceIndex >= 3.5
-			? `Market functionality in ${getCountryNameByCode(countryIsoCode)} appears intact (MFI ${microfinanceIndex}).`
+		return microfinanceIndex === null
+			? `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired.`
 			: `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired (MFI ${microfinanceIndex}).`;
 	}
 
 	private getMobileMoneyDetailsText(
 		countryIsoCode: CountryCode,
 		mobileMoneyProviders: MobileMoneyProviderRef[] | null,
+		condition: CountryCondition,
 	): string {
-		if (!mobileMoneyProviders || mobileMoneyProviders.length === 0) {
+		if (condition !== CountryCondition.MET) {
 			return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is not sufficient.`;
+		}
+
+		if (!mobileMoneyProviders || mobileMoneyProviders.length === 0) {
+			return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is considered sufficient.`;
 		}
 
 		const providers = mobileMoneyProviders.map((p) => p.name).join(', ');

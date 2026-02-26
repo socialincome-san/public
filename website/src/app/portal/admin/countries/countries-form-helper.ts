@@ -11,10 +11,12 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreat
 		isoCode: schema.fields.isoCode.value,
 		isActive: schema.fields.isActive.value,
 		microfinanceIndex: cash.microfinanceIndex.value ?? null,
+		cashConditionOverride: cash.cashConditionOverride.value ?? false,
 		populationCoverage: mobileNetwork.populationCoverage.value ?? null,
 		latestSurveyDate: cash.latestSurveyDate.value ?? null,
 		networkTechnology: mobileNetwork.networkTechnology.value ?? null,
 		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
+		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
 		sanctions: sanctions.sanctions.value ?? [],
 		microfinanceSourceLink:
 			cash.microfinanceSourceText.value || cash.microfinanceSourceHref.value
@@ -44,10 +46,12 @@ export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: Cou
 		isoCode: schema.fields.isoCode.value,
 		isActive: schema.fields.isActive.value,
 		microfinanceIndex: cash.microfinanceIndex.value ?? null,
+		cashConditionOverride: cash.cashConditionOverride.value ?? false,
 		populationCoverage: mobileNetwork.populationCoverage.value ?? null,
 		latestSurveyDate: cash.latestSurveyDate.value ?? null,
 		networkTechnology: mobileNetwork.networkTechnology.value ?? null,
 		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
+		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
 		sanctions: sanctions.sanctions.value ?? [],
 		microfinanceSourceLink:
 			cash.microfinanceSourceText.value || cash.microfinanceSourceHref.value

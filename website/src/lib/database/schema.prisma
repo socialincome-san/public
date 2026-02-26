@@ -801,14 +801,13 @@ model Country {
   id       String      @id @default(cuid()) @map("id")
   isoCode  CountryCode @unique @map("iso_code")
   isActive Boolean     @default(false) @map("is_active")
-
-  microfinanceIndex Decimal?  @map("microfinance_index") @db.Decimal(4, 2)
-  latestSurveyDate  DateTime? @map("latest_survey_date") @db.Date
-
+  cashConditionOverride Boolean? @map("cash_condition_override")
+  microfinanceIndex     Decimal? @map("microfinance_index") @db.Decimal(4, 2)
+  latestSurveyDate      DateTime? @map("latest_survey_date") @db.Date
   microfinanceSourceLinkId String?     @map("microfinance_source_link_id")
   microfinanceSourceLink   SourceLink? @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
-
-  mobileMoneyProviders MobileMoneyProvider[]
+  mobileMoneyConditionOverride Boolean? @map("mobile_money_condition_override")
+  mobileMoneyProviders         MobileMoneyProvider[]
 
   populationCoverage Decimal?           @map("population_coverage") @db.Decimal(5, 2)
   networkTechnology  NetworkTechnology? @map("network_technology")

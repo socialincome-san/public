@@ -25,6 +25,7 @@ export type CountryFormSchema = {
 		suitabilityOfCash: {
 			label: string;
 			fields: {
+				cashConditionOverride: FormField;
 				microfinanceIndex: FormField;
 				latestSurveyDate: FormField;
 				microfinanceSourceText: FormField;
@@ -34,6 +35,7 @@ export type CountryFormSchema = {
 		mobileMoney: {
 			label: string;
 			fields: {
+				mobileMoneyConditionOverride: FormField;
 				mobileMoneyProviders: FormField;
 			};
 		};
@@ -75,6 +77,10 @@ const initialFormSchema: CountryFormSchema = {
 		suitabilityOfCash: {
 			label: 'Suitability of cash',
 			fields: {
+				cashConditionOverride: {
+					label: 'Override automated result (set as met)',
+					zodSchema: z.boolean().optional(),
+				},
 				microfinanceIndex: {
 					placeholder: '4.92',
 					label: 'MFI',
@@ -99,6 +105,10 @@ const initialFormSchema: CountryFormSchema = {
 		mobileMoney: {
 			label: 'Mobile money',
 			fields: {
+				mobileMoneyConditionOverride: {
+					label: 'Override automated result (set as met)',
+					zodSchema: z.boolean().optional(),
+				},
 				mobileMoneyProviders: {
 					label: 'Mobile money providers',
 					placeholder: 'Select mobile money providers',
@@ -196,6 +206,8 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 					if (countryId && countryResult?.success) {
 						next.fields.isoCode.value = countryResult.data.isoCode;
 						next.fields.isActive.value = countryResult.data.isActive;
+						next.fields.suitabilityOfCash.fields.cashConditionOverride.value =
+							countryResult.data.cashConditionOverride ?? false;
 						next.fields.suitabilityOfCash.fields.microfinanceIndex.value =
 							countryResult.data.microfinanceIndex ?? undefined;
 						next.fields.suitabilityOfCash.fields.latestSurveyDate.value =
@@ -214,6 +226,8 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 							countryResult.data.networkSourceLink?.href ?? undefined;
 						next.fields.mobileMoney.fields.mobileMoneyProviders.value =
 							countryResult.data.mobileMoneyProviders?.map((p) => p.id) ?? [];
+						next.fields.mobileMoney.fields.mobileMoneyConditionOverride.value =
+							countryResult.data.mobileMoneyConditionOverride ?? false;
 						next.fields.noSanctions.fields.sanctions.value = countryResult.data.sanctions ?? [];
 					}
 
