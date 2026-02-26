@@ -802,36 +802,20 @@ model Country {
   isoCode  CountryCode @unique @map("iso_code")
   isActive Boolean     @default(false) @map("is_active")
 
-  //
-  // PRECONDITION 1: Suitability of cash
-  // Condition met when microfinanceIndex < 3
-  //
   microfinanceIndex Decimal?  @map("microfinance_index") @db.Decimal(4, 2)
   latestSurveyDate  DateTime? @map("latest_survey_date") @db.Date
 
   microfinanceSourceLinkId String?     @map("microfinance_source_link_id")
   microfinanceSourceLink   SourceLink? @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
 
-  //
-  // PRECONDITION 2: Mobile Money
-  // Condition met when mobileMoneyProviders.length >= 1
-  //
   mobileMoneyProviders MobileMoneyProvider[]
 
-  //
-  // PRECONDITION 3: Mobile Network
-  // Condition met when populationCoverage >= 50
-  //
   populationCoverage Decimal?           @map("population_coverage") @db.Decimal(5, 2)
   networkTechnology  NetworkTechnology? @map("network_technology")
 
   networkSourceLinkId String?     @map("network_source_link_id")
   networkSourceLink   SourceLink? @relation("networkSource", fields: [networkSourceLinkId], references: [id])
 
-  //
-  // PRECONDITION 4: No sanctions
-  // Condition NOT met → "Restrictions apply" when sanctions.length >= 1
-  //
   sanctions SanctionRegime[] @map("sanctions")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)

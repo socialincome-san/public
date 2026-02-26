@@ -232,6 +232,7 @@ export class CountryService extends BaseService {
 					mobileMoneyProviders: { select: { id: true, name: true } },
 					sanctions: true,
 					createdAt: true,
+					updatedAt: true,
 				},
 				orderBy: [{ isoCode: 'asc' }],
 			});
@@ -246,7 +247,7 @@ export class CountryService extends BaseService {
 				latestSurveyDate: c.latestSurveyDate ?? null,
 				mobileMoneyProviders: c.mobileMoneyProviders ?? [],
 				sanctions: c.sanctions ?? [],
-				createdAt: c.createdAt,
+				updatedAt: c.updatedAt ?? c.createdAt,
 			}));
 
 			return this.resultOk({ tableRows });
@@ -361,7 +362,7 @@ export class CountryService extends BaseService {
 		if (microfinanceIndex === null) {
 			return CountryCondition.NOT_MET;
 		}
-		return microfinanceIndex < 3 ? CountryCondition.MET : CountryCondition.NOT_MET;
+		return microfinanceIndex >= 3.5 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
 	private getMobileMoneyCondition(mobileMoneyProviders: MobileMoneyProviderRef[] | null): CountryCondition {
@@ -384,9 +385,9 @@ export class CountryService extends BaseService {
 			return `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired.`;
 		}
 
-		return microfinanceIndex < 3
-			? `Market functionality in ${getCountryNameByCode(countryIsoCode)} is considered sufficient.`
-			: `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired.`;
+		return microfinanceIndex >= 3.5
+			? `Market functionality in ${getCountryNameByCode(countryIsoCode)} appears intact (MFI ${microfinanceIndex}).`
+			: `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired (MFI ${microfinanceIndex}).`;
 	}
 
 	private getMobileMoneyDetailsText(

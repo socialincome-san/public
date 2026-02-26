@@ -17,7 +17,7 @@ export type CountryTableViewRow = {
 	microfinanceSourceHref?: string | null;
 	networkSourceText?: string | null;
 	networkSourceHref?: string | null;
-	createdAt: Date;
+	updatedAt: Date;
 };
 
 export type CountryTableView = {
