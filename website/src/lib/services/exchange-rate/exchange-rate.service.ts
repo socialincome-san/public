@@ -1,4 +1,5 @@
 import { now } from '@/lib/utils/now';
+import { Currency } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
@@ -43,7 +44,7 @@ export class ExchangeRateService extends BaseService {
 		}
 	}
 
-	async getLatestRateForCurrency(currency: string): Promise<ServiceResult<ExchangeRate>> {
+	async getLatestRateForCurrency(currency: Currency): Promise<ServiceResult<ExchangeRate>> {
 		try {
 			const result = await this.db.exchangeRate.findFirst({
 				where: { currency },

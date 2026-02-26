@@ -1,6 +1,8 @@
+import type { Currency } from '@/lib/types/currency';
+
 export type BankContribution = {
 	amount: number;
-	currency: string;
+	currency: Currency;
 	referenceId: string;
 	rawContent: string;
 };

@@ -1,4 +1,4 @@
-import { ContributionStatus, OrganizationPermission, PaymentEventType, Prisma } from '@/generated/prisma/client';
+import { ContributionStatus, Currency, OrganizationPermission, PaymentEventType, Prisma } from '@/generated/prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;
@@ -6,7 +6,7 @@ export type ContributionTableViewRow = {
 	lastName: string;
 	email: string;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	campaignTitle: string;
 	programName: string | null;
 	createdAt: Date;
@@ -23,7 +23,7 @@ export type ContributionCreateInput = Prisma.ContributionCreateInput;
 export type ContributionPayload = {
 	id: string;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	amountChf: number;
 	feesChf: number;
 	status: ContributionStatus;
@@ -38,7 +38,7 @@ export type ContributionPayload = {
 export type ContributionDonationEntry = {
 	contributorId: string;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	amountChf: number;
 	feesChf: number;
 	status: ContributionStatus;
@@ -48,7 +48,7 @@ export type ContributionDonationEntry = {
 export type StripeContributionCreateData = {
 	contributorId: string;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	amountChf: number;
 	feesChf: number;
 	status: ContributionStatus;
@@ -67,7 +67,7 @@ export type PaymentEventCreateInput = Prisma.PaymentEventCreateInput;
 export type YourContributionsTableViewRow = {
 	createdAt: Date;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	campaignTitle: string;
 };
 

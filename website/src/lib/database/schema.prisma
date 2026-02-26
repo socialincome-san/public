@@ -120,7 +120,7 @@ enum SanctionRegime {
   other
 }
 
-/// ISO 3166-1 alpha-2 country codes
+// ISO 3166-1 alpha-2 country codes
 enum CountryCode {
   AF
   AX
@@ -373,6 +373,183 @@ enum CountryCode {
   ZW
 }
 
+// ISO 4217 currency codes
+enum Currency {
+  AED
+  AFN
+  ALL
+  AMD
+  ANG
+  AOA
+  ARS
+  AUD
+  AWG
+  AZN
+  BAM
+  BBD
+  BDT
+  BGN
+  BHD
+  BIF
+  BMD
+  BND
+  BOB
+  BRL
+  BSD
+  BTC
+  BTN
+  BWP
+  BYN
+  BYR
+  BZD
+  CAD
+  CDF
+  CHF
+  CLF
+  CLP
+  CNY
+  COP
+  CRC
+  CUC
+  CUP
+  CVE
+  CZK
+  DJF
+  DKK
+  DOP
+  DZD
+  EGP
+  ERN
+  ETB
+  EUR
+  FJD
+  FKP
+  FOK
+  GBP
+  GEL
+  GGP
+  GHS
+  GIP
+  GMD
+  GNF
+  GTQ
+  GYD
+  HKD
+  HNL
+  HRK
+  HTG
+  HUF
+  IDR
+  ILS
+  IMP
+  INR
+  IQD
+  IRR
+  ISK
+  JEP
+  JMD
+  JOD
+  JPY
+  KES
+  KGS
+  KHR
+  KID
+  KMF
+  KPW
+  KRW
+  KWD
+  KYD
+  KZT
+  LAK
+  LBP
+  LKR
+  LRD
+  LSL
+  LTL
+  LYD
+  LVL
+  MAD
+  MDL
+  MGA
+  MKD
+  MMK
+  MNT
+  MOP
+  MRO
+  MUR
+  MVR
+  MWK
+  MXN
+  MYR
+  MZN
+  NAD
+  NGN
+  NIO
+  NOK
+  NPR
+  NZD
+  OMR
+  PAB
+  PEN
+  PGK
+  PHP
+  PKR
+  PLN
+  PYG
+  QAR
+  RON
+  RSD
+  RUB
+  RWF
+  SAR
+  SBD
+  SCR
+  SDG
+  SEK
+  SGD
+  SHP
+  SLE
+  SLL
+  SOS
+  SRD
+  SSP
+  STD
+  SVC
+  SYP
+  SZL
+  THB
+  TJS
+  TMT
+  TND
+  TOP
+  TRY
+  TTD
+  TWD
+  TZS
+  UAH
+  UGX
+  USD
+  UYU
+  UZS
+  VEF
+  VES
+  VND
+  VUV
+  WST
+  XAF
+  XAU
+  XAG
+  XCD
+  XDR
+  XOF
+  XPF
+  YER
+  ZAR
+  ZMK
+  ZMW
+  ZWL
+}
+
 model Account {
   id String @id @default(cuid()) @map("id")
 
@@ -432,7 +609,7 @@ model Contribution {
   id                String             @id @default(cuid()) @map("id")
   legacyFirestoreId String?            @unique @map("legacy_firestore_id")
   amount            Decimal            @map("amount") @db.Decimal(12, 4)
-  currency          String             @map("currency")
+  currency          Currency           @map("currency")
   amountChf         Decimal            @map("amount_chf") @db.Decimal(12, 4)
   feesChf           Decimal            @map("fees_chf") @db.Decimal(12, 4)
   interval          DonationInterval?  @map("interval")
@@ -509,7 +686,7 @@ model Payout {
   legacyFirestoreId String?      @unique @map("legacy_firestore_id")
   amount            Decimal      @map("amount") @db.Decimal(12, 4)
   amountChf         Decimal?     @map("amount_chf") @db.Decimal(12, 4)
-  currency          String       @map("currency")
+  currency          Currency     @map("currency")
   paymentAt         DateTime     @map("payment_at") @db.Timestamptz(3)
   status            PayoutStatus @map("status")
   phoneNumber       String?      @map("phone_number")
@@ -637,7 +814,7 @@ model Program {
   amountOfRecipientsForStart Int?           @map("amount_of_recipients_for_start")
   programDurationInMonths    Int            @map("program_duration_in_months")
   payoutPerInterval          Decimal        @map("payout_per_interval") @db.Decimal(12, 4)
-  payoutCurrency             String         @map("payout_currency")
+  payoutCurrency             Currency       @map("payout_currency")
   payoutInterval             PayoutInterval @default(monthly) @map("payout_interval")
   targetCauses               Cause[]        @map("target_causes")
 
@@ -670,7 +847,7 @@ model Campaign {
   linkFacebook           String?      @map("link_facebook")
   linkX                  String?      @map("link_x")
   goal                   Decimal?     @map("goal") @db.Decimal(12, 4)
-  currency               String       @map("currency")
+  currency               Currency     @map("currency")
   additionalAmountChf    Decimal?     @map("additional_amount_chf") @db.Decimal(12, 4)
   endDate                DateTime     @map("end_date") @db.Timestamptz(3)
   isActive               Boolean      @default(false) @map("is_active")
@@ -787,7 +964,7 @@ model Phone {
 model ExchangeRate {
   id                String   @id @default(cuid()) @map("id")
   legacyFirestoreId String?  @unique @map("legacy_firestore_id")
-  currency          String   @map("currency")
+  currency          Currency @map("currency")
   rate              Decimal  @map("rate") @db.Decimal(18, 8)
   timestamp         DateTime @map("timestamp") @db.Timestamptz(3)
 

@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@/generated/prisma/enums';
-import { websiteCurrencies } from '@/lib/i18n/utils';
+import { allCurrencies } from '@/lib/types/currency';
 import {
 	createPayoutAction,
 	getPayoutAction,
@@ -50,9 +50,10 @@ const initialFormSchema: PayoutFormSchema = {
 			zodSchema: z.coerce.number().nonnegative(),
 		},
 		currency: {
-			placeholder: 'USD, EUR, CHF',
+			placeholder: 'Select currency',
 			label: 'Currency Code',
-			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
+			useCombobox: true,
+			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		phoneNumber: {
 			placeholder: '+223...',

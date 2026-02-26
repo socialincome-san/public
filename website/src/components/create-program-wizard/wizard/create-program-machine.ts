@@ -5,6 +5,7 @@ import { createProgramAction } from '@/lib/server-actions/program-actions';
 import { Profile } from '@/lib/services/candidate/candidate.types';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput } from '@/lib/services/program/program.types';
+import type { Currency } from '@/lib/types/currency';
 import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 
@@ -31,7 +32,7 @@ export const createProgramWizardMachine = setup({
 			programDuration: number;
 			payoutPerInterval: number;
 			payoutInterval: PayoutInterval;
-			currency: string;
+			currency: Currency;
 			customizePayouts: boolean;
 
 			// step 4
@@ -57,7 +58,7 @@ export const createProgramWizardMachine = setup({
 			| { type: 'SET_PROGRAM_DURATION'; value: number }
 			| { type: 'SET_PAYOUT_PER_INTERVAL'; value: number }
 			| { type: 'SET_PAYOUT_INTERVAL'; value: PayoutInterval }
-			| { type: 'SET_CURRENCY'; value: string }
+			| { type: 'SET_CURRENCY'; value: Currency }
 			| { type: 'TOGGLE_CUSTOMIZE_PAYOUTS' }
 			| { type: 'NEXT' }
 			| { type: 'BACK' }
