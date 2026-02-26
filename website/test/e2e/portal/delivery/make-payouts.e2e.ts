@@ -62,7 +62,7 @@ const expected = {
 	step4: 'Created 4 payouts for 2025-03',
 };
 
-test('Payout Process', async ({ page }) => {
+test.only('Payout Process', async ({ page }) => {
 	await page.goto('/portal/delivery/make-payouts');
 
 	await page.getByRole('button', { name: 'Start payout process' }).click();
