@@ -330,10 +330,10 @@ const GenericFormField = ({
 										modalPopover
 										options={options}
 										defaultValue={field.value ?? []}
-											onValueChange={(value) => {
-												field.onChange(value);
-												emitChange(value);
-											}}
+										onValueChange={(value) => {
+											field.onChange(value);
+											emitChange(value);
+										}}
 										placeholder={formFieldSchema.placeholder}
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
@@ -378,10 +378,10 @@ const GenericFormField = ({
 									<DatePicker
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 										{...form.register(optionKey)}
-											onSelect={(value) => {
-												field.onChange(value);
-												emitChange(value);
-											}}
+										onSelect={(value) => {
+											field.onChange(value);
+											emitChange(value);
+										}}
 										selected={field.value}
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										startMonth={getDateMinMax(option, parentOption).min}
