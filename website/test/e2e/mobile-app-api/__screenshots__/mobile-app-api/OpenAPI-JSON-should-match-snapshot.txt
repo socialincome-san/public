@@ -127,7 +127,7 @@
             "nullable": true
           },
           "currency": {
-            "type": "string"
+            "$ref": "#/components/schemas/currencyEnum"
           },
           "paymentAt": {
             "type": "string"
@@ -330,6 +330,9 @@
           "$ref": "#/components/schemas/Survey"
         }
       },
+      "currencyEnum": {
+        "type": "string"
+      },
       "PaymentInformation": {
         "type": "object",
         "properties": {
@@ -517,7 +520,7 @@
             ]
           },
           "payoutCurrency": {
-            "type": "string"
+            "$ref": "#/components/schemas/currencyEnum"
           },
           "payoutInterval": {
             "type": "string",
