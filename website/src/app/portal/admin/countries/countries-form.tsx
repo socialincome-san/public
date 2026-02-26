@@ -11,8 +11,8 @@ import {
 } from '@/lib/server-actions/country-action';
 import { getMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { CountryPayload, NETWORK_TECH_LABELS } from '@/lib/services/country/country.types';
-import { COUNTRY_OPTIONS } from '@/lib/types/country';
-import { allCurrencies } from '@/lib/types/currency';
+import { COUNTRY_OPTIONS, isValidCountryCode } from '@/lib/types/country';
+import { allCurrencies, bestGuessCurrency } from '@/lib/types/currency';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCountryInput, buildUpdateCountryInput } from './countries-form-helper';
@@ -85,6 +85,15 @@ const initialFormSchema: CountryFormSchema = {
 						id: c.code,
 						label: c.name,
 					})),
+					onChange: (value, form) => {
+						if (!isValidCountryCode(value)) {
+							return;
+						}
+						form.setValue('countrySettings.currency', bestGuessCurrency(value), {
+							shouldValidate: true,
+							shouldDirty: true,
+						});
+					},
 				},
 				isActive: {
 					placeholder: 'Active',
