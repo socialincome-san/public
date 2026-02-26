@@ -108,10 +108,10 @@ const groups: Group[] = [
 		name: 'board',
 		size: 'md',
 		people: [
-			{ name: 'Kabelo Ruffo', role: 'co-president', image: kabeloImage },
+			{ name: 'Kabelo Ruffo', role: 'board-member', image: kabeloImage },
 			{ name: 'Flavien Meyer', role: 'co-president', image: flavienImage },
 			{ name: 'Fabio Hurni', role: 'board-member', image: fabioImage },
-			{ name: 'Nina Limacher', role: 'board-member', image: ninaImage },
+			{ name: 'Nina Limacher', role: 'co-president', image: ninaImage },
 			{ name: 'Marion Quartier', role: 'board-member', image: marionImage },
 		],
 	},
@@ -175,9 +175,13 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 								{translator.t(`team.groups.${group.name}.subtitle`)}
 							</Typography>
 							<div className="md:col-span-2">
-								<Typography size="lg" className="mb-8">
-									{translator.t(`team.groups.${group.name}.description`)}
-								</Typography>
+								<Typography
+									size="lg"
+									className="mb-8 [&_a]:underline"
+									dangerouslySetInnerHTML={{
+										__html: translator.t(`team.groups.${group.name}.description`),
+									}}
+								/>
 							</div>
 						</div>
 						<ul
