@@ -2,16 +2,17 @@ import { CountryCreateInput, CountryPayload, CountryUpdateInput } from '@/lib/se
 import { CountryFormSchema } from './countries-form';
 
 export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreateInput => {
+	const countrySettings = schema.fields.countrySettings.fields;
 	const cash = schema.fields.suitabilityOfCash.fields;
 	const mobileMoney = schema.fields.mobileMoney.fields;
 	const mobileNetwork = schema.fields.mobileNetwork.fields;
 	const sanctions = schema.fields.noSanctions.fields;
 
 	return {
-		isoCode: schema.fields.isoCode.value,
-		isActive: schema.fields.isActive.value,
-		currency: schema.fields.currency.value,
-		defaultPayoutAmount: schema.fields.defaultPayoutAmount.value,
+		isoCode: countrySettings.isoCode.value,
+		isActive: countrySettings.isActive.value,
+		currency: countrySettings.currency.value,
+		defaultPayoutAmount: countrySettings.defaultPayoutAmount.value,
 		microfinanceIndex: cash.microfinanceIndex.value ?? null,
 		cashConditionOverride: cash.cashConditionOverride.value ?? false,
 		populationCoverage: mobileNetwork.populationCoverage.value ?? null,
@@ -38,6 +39,7 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreat
 };
 
 export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryUpdateInput => {
+	const countrySettings = schema.fields.countrySettings.fields;
 	const cash = schema.fields.suitabilityOfCash.fields;
 	const mobileMoney = schema.fields.mobileMoney.fields;
 	const mobileNetwork = schema.fields.mobileNetwork.fields;
@@ -45,10 +47,10 @@ export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: Cou
 
 	return {
 		id: existing.id,
-		isoCode: schema.fields.isoCode.value,
-		isActive: schema.fields.isActive.value,
-		currency: schema.fields.currency.value,
-		defaultPayoutAmount: schema.fields.defaultPayoutAmount.value,
+		isoCode: countrySettings.isoCode.value,
+		isActive: countrySettings.isActive.value,
+		currency: countrySettings.currency.value,
+		defaultPayoutAmount: countrySettings.defaultPayoutAmount.value,
 		microfinanceIndex: cash.microfinanceIndex.value ?? null,
 		cashConditionOverride: cash.cashConditionOverride.value ?? false,
 		populationCoverage: mobileNetwork.populationCoverage.value ?? null,

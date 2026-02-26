@@ -27,10 +27,15 @@ type CountryFormProps = {
 export type CountryFormSchema = {
 	label: string;
 	fields: {
-		isoCode: FormField;
-		isActive: FormField;
-		currency: FormField;
-		defaultPayoutAmount: FormField;
+		countrySettings: {
+			label: string;
+			fields: {
+				isoCode: FormField;
+				isActive: FormField;
+				currency: FormField;
+				defaultPayoutAmount: FormField;
+			};
+		};
 		suitabilityOfCash: {
 			label: string;
 			fields: {
@@ -69,30 +74,35 @@ export type CountryFormSchema = {
 const initialFormSchema: CountryFormSchema = {
 	label: 'Country',
 	fields: {
-		isoCode: {
-			label: 'Country',
-			zodSchema: z.enum(COUNTRY_OPTIONS.map((c) => c.code) as [string, ...string[]]),
-			useCombobox: true,
-			options: COUNTRY_OPTIONS.map((c) => ({
-				id: c.code,
-				label: c.name,
-			})),
-		},
-		isActive: {
-			placeholder: 'Active',
-			label: 'Is Active',
-			zodSchema: z.boolean().optional(),
-		},
-		currency: {
-			label: 'Currency',
-			placeholder: 'Select currency',
-			useCombobox: true,
-			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((currency) => ({ id: currency, label: currency })))),
-		},
-		defaultPayoutAmount: {
-			placeholder: '100',
-			label: 'Default payout amount',
-			zodSchema: z.coerce.number().positive(),
+		countrySettings: {
+			label: 'Country setup',
+			fields: {
+				isoCode: {
+					label: 'Country',
+					zodSchema: z.enum(COUNTRY_OPTIONS.map((c) => c.code) as [string, ...string[]]),
+					useCombobox: true,
+					options: COUNTRY_OPTIONS.map((c) => ({
+						id: c.code,
+						label: c.name,
+					})),
+				},
+				isActive: {
+					placeholder: 'Active',
+					label: 'Is Active',
+					zodSchema: z.boolean().optional(),
+				},
+				currency: {
+					label: 'Currency',
+					placeholder: 'Select currency',
+					useCombobox: true,
+					zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((currency) => ({ id: currency, label: currency })))),
+				},
+				defaultPayoutAmount: {
+					placeholder: '100',
+					label: 'Default payout amount',
+					zodSchema: z.coerce.number().positive(),
+				},
+			},
 		},
 		suitabilityOfCash: {
 			label: 'Suitability of cash',
@@ -239,10 +249,10 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 						};
 					}
 					if (countryId && countryResult?.success) {
-						next.fields.isoCode.value = countryResult.data.isoCode;
-						next.fields.isActive.value = countryResult.data.isActive;
-						next.fields.currency.value = countryResult.data.currency;
-						next.fields.defaultPayoutAmount.value = countryResult.data.defaultPayoutAmount;
+						next.fields.countrySettings.fields.isoCode.value = countryResult.data.isoCode;
+						next.fields.countrySettings.fields.isActive.value = countryResult.data.isActive;
+						next.fields.countrySettings.fields.currency.value = countryResult.data.currency;
+						next.fields.countrySettings.fields.defaultPayoutAmount.value = countryResult.data.defaultPayoutAmount;
 						next.fields.suitabilityOfCash.fields.cashConditionOverride.value =
 							countryResult.data.cashConditionOverride ?? false;
 						next.fields.suitabilityOfCash.fields.microfinanceIndex.value =

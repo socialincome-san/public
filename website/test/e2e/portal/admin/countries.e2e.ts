@@ -10,6 +10,8 @@ test.beforeEach(async () => {
 test('Add new country', async ({ page }) => {
 	const expectedCountry = {
 		isoCode: 'CH' as const,
+		currency: 'CHF' as const,
+		defaultPayoutAmount: 100,
 		microfinanceIndex: new Prisma.Decimal(1.11),
 		populationCoverage: new Prisma.Decimal(82.3),
 		networkTechnology: 'g5' as const,
@@ -20,9 +22,17 @@ test('Add new country', async ({ page }) => {
 	await page.goto('/portal/admin/countries');
 	await page.getByRole('button', { name: 'Add country' }).click();
 
-	await page.getByTestId('form-item-isoCode').click();
+	await page.getByTestId('form-accordion-trigger-countrySettings').click();
+
+	await page.getByTestId('form-item-countrySettings.isoCode').click();
 	await page.getByPlaceholder('Search').fill('switzer');
 	await page.getByRole('option', { name: 'Switzerland' }).click();
+	await page.getByTestId('form-item-countrySettings.currency').click();
+	await page.getByRole('option', { name: expectedCountry.currency }).click();
+	await page
+		.getByTestId('form-item-countrySettings.defaultPayoutAmount')
+		.locator('input')
+		.fill(String(expectedCountry.defaultPayoutAmount));
 
 	await page.getByTestId('form-accordion-trigger-suitabilityOfCash').click();
 	await page
