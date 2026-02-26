@@ -34,6 +34,7 @@ export default async function Page(props: DefaultPageProps) {
 								creditCard: translator.t('payment-type.credit-card'),
 								bankTransfer: translator.t('payment-type.bank-transfer'),
 							},
+							feeNotice: translator.t('fee-notice'),
 							bankTransfer: {
 								firstName: translator.t('success.user-form.firstname'),
 								lastName: translator.t('success.user-form.lastname'),
