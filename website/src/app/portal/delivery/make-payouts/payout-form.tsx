@@ -3,7 +3,6 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@/generated/prisma/enums';
-import { allCurrencies } from '@/lib/types/currency';
 import {
 	createPayoutAction,
 	getPayoutAction,
@@ -12,6 +11,7 @@ import {
 } from '@/lib/server-actions/payout-actions';
 import type { PayoutPayload } from '@/lib/services/payout/payout.types';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
+import { allCurrencies } from '@/lib/types/currency';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';

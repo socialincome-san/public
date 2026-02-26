@@ -1,7 +1,7 @@
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import { allCurrencies } from '@/lib/types/currency';
 import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { allCurrencies } from '@/lib/types/currency';
 import z from 'zod';
 
 type CampaignsFormSchema = {

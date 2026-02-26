@@ -1,5 +1,5 @@
-import { CountryCode, Currency as CurrencyValues } from '../../generated/prisma/enums';
 import type { Currency } from '../../generated/prisma/enums';
+import { CountryCode, Currency as CurrencyValues } from '../../generated/prisma/enums';
 
 export type { Currency };
 
