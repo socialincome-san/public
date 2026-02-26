@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
-import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
+import { createCountryAction, deleteCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
 import { getMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { CountryPayload, NETWORK_TECH_LABELS } from '@/lib/services/country/country.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
@@ -183,6 +183,21 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 		});
 	};
 
+	const onDelete = () => {
+		if (!countryId) {
+			return;
+		}
+
+		startTransition(async () => {
+			try {
+				const result = await deleteCountryAction(countryId);
+				result.success ? onSuccess?.() : onError?.(result.error);
+			} catch (e) {
+				onError?.(e);
+			}
+		});
+	};
+
 	useEffect(() => {
 		startTransition(async () => {
 			try {
@@ -249,6 +264,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={countryId ? 'edit' : 'add'}
 		/>
 	);

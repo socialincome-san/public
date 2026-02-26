@@ -104,6 +104,45 @@ export class MobileMoneyProviderService extends BaseService {
 		}
 	}
 
+	async delete(userId: string, providerId: string): Promise<ServiceResult<{ id: string }>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
+		try {
+			const provider = await this.db.mobileMoneyProvider.findUnique({
+				where: { id: providerId },
+				select: {
+					id: true,
+					_count: {
+						select: {
+							countries: true,
+							paymentInformations: true,
+						},
+					},
+				},
+			});
+
+			if (!provider) {
+				return this.resultFail('Mobile money provider not found');
+			}
+
+			if (provider._count.countries > 0 || provider._count.paymentInformations > 0) {
+				return this.resultFail('Cannot delete mobile money provider because it is still in use');
+			}
+
+			await this.db.mobileMoneyProvider.delete({
+				where: { id: providerId },
+			});
+
+			return this.resultOk({ id: providerId });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not delete mobile money provider: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getTableView(userId: string): Promise<ServiceResult<MobileMoneyProviderTableView>> {
 		const isAdminResult = await this.userService.isAdmin(userId);
 		if (!isAdminResult.success) {

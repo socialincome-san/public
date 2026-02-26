@@ -26,6 +26,15 @@ export const updateCountryAction = async (input: CountryUpdateInput) => {
 	return res;
 };
 
+export const deleteCountryAction = async (id: string) => {
+	const user = await getAuthenticatedUserOrRedirect();
+
+	const res = await service.delete(user.id, id);
+
+	revalidatePath(REVALIDATE_PATH);
+	return res;
+};
+
 export const getCountryAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrRedirect();
 

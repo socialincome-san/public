@@ -730,7 +730,7 @@ model Address {
 model PaymentInformation {
   id                    String               @id @default(cuid()) @map("id")
   mobileMoneyProviderId String?              @map("mobile_money_provider_id")
-  mobileMoneyProvider   MobileMoneyProvider? @relation(fields: [mobileMoneyProviderId], references: [id])
+  mobileMoneyProvider   MobileMoneyProvider? @relation(fields: [mobileMoneyProviderId], references: [id], onDelete: Restrict)
   code                  String?              @unique @map("code")
   phoneId               String?              @map("phone_id")
   phone                 Phone?               @relation(fields: [phoneId], references: [id])

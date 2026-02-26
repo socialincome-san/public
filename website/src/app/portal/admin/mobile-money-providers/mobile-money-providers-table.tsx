@@ -1,14 +1,11 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
 import { makeMobileMoneyProviderColumns } from '@/components/data-table/columns/mobile-money-providers';
 import DataTable from '@/components/data-table/data-table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
-import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
-import MobileMoneyProvidersForm from './mobile-money-providers-form';
+import { MobileMoneyProviderDialog } from './mobile-money-provider-dialog';
 
 export default function MobileMoneyProvidersTable({
 	rows,
@@ -33,11 +30,6 @@ export default function MobileMoneyProvidersTable({
 		setOpen(true);
 	};
 
-	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving mobile money provider: ${error}`);
-		logger.error('Mobile Money Provider Form Error', { error });
-	};
-
 	return (
 		<>
 			<DataTable
@@ -50,25 +42,13 @@ export default function MobileMoneyProvidersTable({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>{providerId ? 'Edit' : 'Add'} mobile money provider</DialogTitle>
-					</DialogHeader>
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-					<MobileMoneyProvidersForm
-						providerId={providerId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
+			<MobileMoneyProviderDialog
+				open={open}
+				onOpenChange={setOpen}
+				providerId={providerId}
+				errorMessage={errorMessage}
+				onError={setErrorMessage}
+			/>
 		</>
 	);
 }

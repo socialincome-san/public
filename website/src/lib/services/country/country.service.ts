@@ -222,6 +222,44 @@ export class CountryService extends BaseService {
 		}
 	}
 
+	async delete(userId: string, countryId: string): Promise<ServiceResult<{ id: string }>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
+		try {
+			const country = await this.db.country.findUnique({
+				where: { id: countryId },
+				select: {
+					id: true,
+					_count: {
+						select: {
+							programs: true,
+						},
+					},
+				},
+			});
+
+			if (!country) {
+				return this.resultFail('Country not found');
+			}
+
+			if (country._count.programs > 0) {
+				return this.resultFail('Cannot delete country because it is still used by programs');
+			}
+
+			await this.db.country.delete({
+				where: { id: countryId },
+			});
+
+			return this.resultOk({ id: countryId });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not delete country: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getTableView(userId: string): Promise<ServiceResult<CountryTableView>> {
 		const isAdminResult = await this.userService.isAdmin(userId);
 
