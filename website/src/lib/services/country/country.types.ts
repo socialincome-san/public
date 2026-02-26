@@ -1,4 +1,7 @@
-import { CountryCode, NetworkTechnology, PaymentProvider } from '@/generated/prisma/enums';
+import { MobileMoneyProvider } from '@/generated/prisma/client';
+import { CountryCode, NetworkTechnology } from '@/generated/prisma/enums';
+
+export type MobileMoneyProviderRef = Pick<MobileMoneyProvider, 'id' | 'name'>;
 
 export type CountryTableViewRow = {
 	id: string;
@@ -8,7 +11,7 @@ export type CountryTableViewRow = {
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
-	paymentProviders?: string[] | null;
+	mobileMoneyProviders?: MobileMoneyProviderRef[] | null;
 	sanctions?: string[] | null;
 	microfinanceSourceText?: string | null;
 	microfinanceSourceHref?: string | null;
@@ -29,7 +32,7 @@ export type CountryPayload = {
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
-	paymentProviders?: string[] | null;
+	mobileMoneyProviders?: MobileMoneyProviderRef[] | null;
 	sanctions?: string[] | null;
 	microfinanceSourceLink?: { id: string; text: string; href: string } | null;
 	networkSourceLink?: { id: string; text: string; href: string } | null;
@@ -42,7 +45,7 @@ export type CountryCreateInput = {
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
-	paymentProviders?: string[];
+	mobileMoneyProviderIds?: string[];
 	sanctions?: string[];
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;
@@ -56,7 +59,7 @@ export type CountryUpdateInput = {
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
-	paymentProviders?: string[];
+	mobileMoneyProviderIds?: string[];
 	sanctions?: string[];
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;
@@ -110,8 +113,4 @@ export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
 	[NetworkTechnology.g5]: '5G',
 	[NetworkTechnology.satellite]: 'Satellite',
 	[NetworkTechnology.unknown]: 'Unknown',
-};
-
-export const PAYMENT_PROVIDER_LABELS: Record<PaymentProvider, string> = {
-	[PaymentProvider.orange_money]: 'Orange Money',
 };

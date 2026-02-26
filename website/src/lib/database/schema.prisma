@@ -86,10 +86,6 @@ enum UserRole {
   user
 }
 
-enum PaymentProvider {
-  orange_money
-}
-
 enum DonationInterval {
   monthly
   quarterly
@@ -732,11 +728,12 @@ model Address {
 }
 
 model PaymentInformation {
-  id       String            @id @default(cuid()) @map("id")
-  provider PaymentProvider?  @map("provider")
-  code     String?           @unique @map("code")
-  phoneId  String?           @map("phone_id")
-  phone    Phone?           @relation(fields: [phoneId], references: [id])
+  id                    String               @id @default(cuid()) @map("id")
+  mobileMoneyProviderId String?              @map("mobile_money_provider_id")
+  mobileMoneyProvider   MobileMoneyProvider? @relation(fields: [mobileMoneyProviderId], references: [id])
+  code                  String?              @unique @map("code")
+  phoneId               String?              @map("phone_id")
+  phone                 Phone?               @relation(fields: [phoneId], references: [id])
 
   recipients Recipient[]
 
@@ -817,9 +814,9 @@ model Country {
 
   //
   // PRECONDITION 2: Mobile Money
-  // Condition met when paymentProviders.length >= 1
+  // Condition met when mobileMoneyProviders.length >= 1
   //
-  paymentProviders PaymentProvider[] @map("payment_providers")
+  mobileMoneyProviders MobileMoneyProvider[]
 
   //
   // PRECONDITION 3: Mobile Network
@@ -842,6 +839,19 @@ model Country {
   programs  Program[]
 
   @@map("country")
+}
+
+model MobileMoneyProvider {
+  id           String   @id @default(cuid()) @map("id")
+  name         String   @unique @map("name")
+  isSupported  Boolean  @map("is_supported")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  countries           Country[]
+  paymentInformations PaymentInformation[]
+
+  @@map("mobile_money_provider")
 }
 
 model SourceLink {

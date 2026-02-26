@@ -3,8 +3,8 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
-import { PaymentProvider } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
+import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import {
 	createRecipientAction,
 	deleteRecipientAction,
@@ -90,7 +90,7 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): RecipientF
 					provider: {
 						placeholder: 'Provider',
 						label: 'Provider',
-						zodSchema: z.nativeEnum(PaymentProvider).optional(),
+						zodSchema: z.string().optional(),
 					},
 					code: {
 						placeholder: 'Code',
@@ -154,7 +154,8 @@ export const RecipientForm = ({
 					newSchema.fields.localPartner.value = result.data.localPartner.id;
 				}
 
-				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
+				newSchema.fields.paymentInformation.fields.provider.value =
+					result.data.paymentInformation?.mobileMoneyProvider?.id;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
 				newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
 				newSchema.fields.contact.fields = contactValues;
@@ -167,21 +168,20 @@ export const RecipientForm = ({
 		}
 	};
 
-	const setOptions = (localPartner: LocalPartnerOption[], programs: ProgramOption[]) => {
-		if (sessionType === 'local-partner') {
-			return;
-		}
-
+	const setOptions = (
+		localPartner: LocalPartnerOption[],
+		programs: ProgramOption[],
+		mobileMoneyProviders: { id: string; name: string }[],
+	) => {
 		const optionsToZodEnum = (options: LocalPartnerOption[] | ProgramOption[]) =>
 			getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
 
 		const partnersObj = optionsToZodEnum(localPartner);
-
-		const programsToFilter = programs
-			// filter by program id if in program scope
-			.filter((p) => !programId || p.id === programId);
-
+		const programsToFilter = programs.filter((p) => !programId || p.id === programId);
 		const programsObj = optionsToZodEnum(programsToFilter);
+
+		const providerOptions = mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name }));
+		const providerEnum = getZodEnum(providerOptions);
 
 		setFormSchema((prevSchema) => {
 			const updated = { ...prevSchema, fields: { ...prevSchema.fields } };
@@ -192,13 +192,23 @@ export const RecipientForm = ({
 					zodSchema: z.nativeEnum(partnersObj),
 				};
 			}
-
 			if (updated.fields.program) {
 				updated.fields.program = {
 					...updated.fields.program,
 					zodSchema: z.nativeEnum(programsObj),
 				};
 			}
+			updated.fields.paymentInformation = {
+				...updated.fields.paymentInformation,
+				fields: {
+					...updated.fields.paymentInformation.fields,
+					provider: {
+						...updated.fields.paymentInformation.fields.provider,
+						options: providerOptions,
+						zodSchema: providerOptions.length > 0 ? z.nativeEnum(providerEnum) : z.string().optional(),
+					},
+				},
+			};
 
 			return updated;
 		});
@@ -249,15 +259,18 @@ export const RecipientForm = ({
 	}, [recipientId]);
 
 	useEffect(() => {
-		// load options for program and local partners
+		// load options for program, local partners, and supported mobile money providers
 		startTransition(async () => {
-			const { programs, localPartner } = await getRecipientOptions(sessionType);
+			const [{ programs, localPartner }, supportedProviders] = await Promise.all([
+				getRecipientOptions(sessionType),
+				getSupportedMobileMoneyProviderOptionsAction(),
+			]);
 			if (!programs.success || !localPartner.success) {
 				return;
 			}
-			setOptions(localPartner.data, programs.data);
+			setOptions(localPartner.data, programs.data, supportedProviders.success ? supportedProviders.data : []);
 		});
-	}, []);
+	}, [sessionType, programId]);
 
 	return (
 		<DynamicForm

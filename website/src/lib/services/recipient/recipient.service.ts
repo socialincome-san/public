@@ -96,7 +96,9 @@ export class RecipientService extends BaseService {
 					paymentInformation: paymentInfoCreate
 						? {
 								create: {
-									provider: paymentInfoCreate.provider,
+									mobileMoneyProvider: paymentInfoCreate.mobileMoneyProvider?.connect
+										? paymentInfoCreate.mobileMoneyProvider
+										: undefined,
 									code: paymentInfoCreate.code ?? null,
 									...(paymentPhoneNumber && {
 										phone: {
@@ -325,7 +327,12 @@ export class RecipientService extends BaseService {
 				data,
 				include: {
 					contact: { include: { phone: true } },
-					paymentInformation: { include: { phone: true } },
+					paymentInformation: {
+						include: {
+							phone: true,
+							mobileMoneyProvider: true,
+						},
+					},
 					program: {
 						include: {
 							country: {
@@ -461,7 +468,7 @@ export class RecipientService extends BaseService {
 					select: {
 						id: true,
 						code: true,
-						provider: true,
+						mobileMoneyProvider: { select: { id: true, name: true } },
 						phone: true,
 					},
 				},
@@ -495,7 +502,7 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Permission denied');
 		}
 
-		return this.resultOk(recipient);
+		return this.resultOk(recipient as RecipientPayload);
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
@@ -766,6 +773,7 @@ export class RecipientService extends BaseService {
 					paymentInformation: {
 						include: {
 							phone: true,
+							mobileMoneyProvider: true,
 						},
 					},
 					program: {

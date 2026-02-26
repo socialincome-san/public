@@ -21,7 +21,7 @@ const EDIT_RECIPIENT = {
 	programName: 'Migros Education SL',
 	localPartnerName: 'Bo Women Empowerment Group',
 	phone: '+666666666',
-	paymentProvider: 'orange_money',
+	paymentProvider: 'Orange Money',
 	paymentCode: 'OM123456',
 	country: 'Sierra Leone',
 };

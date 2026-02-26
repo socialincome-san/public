@@ -180,7 +180,9 @@ export class CandidateService extends BaseService {
 					paymentInformation: paymentInfoCreate
 						? {
 								create: {
-									provider: paymentInfoCreate.provider,
+									mobileMoneyProvider: paymentInfoCreate.mobileMoneyProvider?.connect
+										? paymentInfoCreate.mobileMoneyProvider
+										: undefined,
 									code: paymentInfoCreate.code ?? null,
 									...(paymentPhoneNumber && {
 										phone: {
@@ -222,7 +224,7 @@ export class CandidateService extends BaseService {
 							select: {
 								id: true,
 								code: true,
-								provider: true,
+								mobileMoneyProvider: { select: { id: true, name: true } },
 								phone: true,
 							},
 						},
@@ -333,7 +335,7 @@ export class CandidateService extends BaseService {
 							select: {
 								id: true,
 								code: true,
-								provider: true,
+								mobileMoneyProvider: { select: { id: true, name: true } },
 								phone: true,
 							},
 						},
@@ -410,7 +412,7 @@ export class CandidateService extends BaseService {
 						select: {
 							id: true,
 							code: true,
-							provider: true,
+							mobileMoneyProvider: { select: { id: true, name: true } },
 							phone: true,
 						},
 					},
@@ -539,7 +541,7 @@ export class CandidateService extends BaseService {
 					select: {
 						id: true,
 						code: true,
-						provider: true,
+						mobileMoneyProvider: { select: { id: true, name: true } },
 						phone: true,
 					},
 				},

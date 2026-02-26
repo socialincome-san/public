@@ -19,7 +19,7 @@ const EDIT_CANDIDATE = {
 	gender: 'female',
 	localPartnerName: 'Bo Women Empowerment Group',
 	phone: '+444444444',
-	paymentProvider: 'orange_money',
+	paymentProvider: 'Orange Money',
 	paymentCode: 'OM123456',
 	country: 'Sierra Leone',
 };

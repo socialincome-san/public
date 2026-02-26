@@ -1,4 +1,4 @@
-import { Gender, PaymentProvider, PayoutInterval, Prisma } from '@/generated/prisma/client';
+import { Gender, PayoutInterval, Prisma } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -96,7 +96,14 @@ export class AppReviewModeService extends BaseService {
 			paymentInformation: {
 				id: 'stark-payment-info',
 				code: 'IRONMAN',
-				provider: PaymentProvider.orange_money,
+				mobileMoneyProviderId: 'mobile-money-provider-id-1',
+				mobileMoneyProvider: {
+					id: 'mobile-money-provider-id-1',
+					name: 'Orange Money',
+					isSupported: true,
+					createdAt: now(),
+					updatedAt: now(),
+				},
 				phoneId: 'ironman-payment-phone',
 				createdAt: now(),
 				updatedAt: now(),

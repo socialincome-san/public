@@ -1,9 +1,10 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@/generated/prisma/enums';
+import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
 import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
-import { CountryPayload, NETWORK_TECH_LABELS, PAYMENT_PROVIDER_LABELS } from '@/lib/services/country/country.types';
+import { getMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
+import { CountryPayload, NETWORK_TECH_LABELS } from '@/lib/services/country/country.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -29,7 +30,7 @@ export type CountryFormSchema = {
 		networkTechnology: FormField;
 		networkSourceText: FormField;
 		networkSourceHref: FormField;
-		paymentProviders: FormField;
+		mobileMoneyProviders: FormField;
 		sanctions: FormField;
 	};
 };
@@ -94,14 +95,11 @@ const initialFormSchema: CountryFormSchema = {
 			label: 'Technology source URL',
 			zodSchema: z.string().optional(),
 		},
-		paymentProviders: {
-			label: 'Payment providers',
-			placeholder: 'Select payment providers',
-			zodSchema: z.array(z.nativeEnum(PaymentProvider)).optional(),
-			options: Object.entries(PAYMENT_PROVIDER_LABELS).map(([value, label]) => ({
-				id: value,
-				label,
-			})),
+		mobileMoneyProviders: {
+			label: 'Mobile money providers',
+			placeholder: 'Select mobile money providers',
+			zodSchema: z.array(z.string()).optional(),
+			options: [],
 		},
 		sanctions: {
 			label: 'Sanctions',
@@ -119,15 +117,16 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 	const onSubmit = (schema: CountryFormSchema) => {
 		startTransition(async () => {
 			try {
-				let res: { success: boolean; error?: string };
+				let result: { success: boolean; error?: string };
 				if (countryId && country) {
 					const data = buildUpdateCountryInput(schema, country);
-					res = await updateCountryAction(data);
+					result = await updateCountryAction(data);
 				} else {
 					const data = buildCreateCountryInput(schema);
-					res = await createCountryAction(data);
+					result = await createCountryAction(data);
 				}
-				res.success ? onSuccess?.() : onError?.(res.error);
+
+				result.success ? onSuccess?.() : onError?.(result.error);
 			} catch (e) {
 				onError?.(e);
 			}
@@ -135,32 +134,45 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 	};
 
 	useEffect(() => {
-		if (!countryId) {
-			return;
-		}
 		startTransition(async () => {
 			try {
-				const result = await getCountryAction(countryId);
-				if (result.success) {
-					setCountry(result.data);
-					setFormSchema((prev) => {
-						const next = { ...prev };
-						next.fields.isoCode.value = result.data.isoCode;
-						next.fields.isActive.value = result.data.isActive;
-						next.fields.microfinanceIndex.value = result.data.microfinanceIndex ?? undefined;
-						next.fields.microfinanceSourceText.value = result.data.microfinanceSourceLink?.text ?? undefined;
-						next.fields.microfinanceSourceHref.value = result.data.microfinanceSourceLink?.href ?? undefined;
-						next.fields.populationCoverage.value = result.data.populationCoverage ?? undefined;
-						next.fields.latestSurveyDate.value = result.data.latestSurveyDate ?? undefined;
-						next.fields.networkTechnology.value = result.data.networkTechnology ?? undefined;
-						next.fields.networkSourceText.value = result.data.networkSourceLink?.text ?? undefined;
-						next.fields.networkSourceHref.value = result.data.networkSourceLink?.href ?? undefined;
-						next.fields.paymentProviders.value = result.data.paymentProviders ?? [];
-						next.fields.sanctions.value = result.data.sanctions ?? [];
-						return next;
-					});
-				} else {
-					onError?.(result.error);
+				const [countryResult, optionsResult] = await Promise.all([
+					countryId ? getCountryAction(countryId) : Promise.resolve(null),
+					getMobileMoneyProviderOptionsAction(),
+				]);
+
+				if (countryId && countryResult?.success) {
+					setCountry(countryResult.data);
+				}
+
+				setFormSchema((prev) => {
+					const next = { ...prev, fields: { ...prev.fields } };
+					if (optionsResult.success && optionsResult.data.length > 0) {
+						next.fields.mobileMoneyProviders = {
+							...next.fields.mobileMoneyProviders,
+							options: optionsResult.data.map((p) => ({ id: p.id, label: p.name })),
+						};
+					}
+					if (countryId && countryResult?.success) {
+						next.fields.isoCode.value = countryResult.data.isoCode;
+						next.fields.isActive.value = countryResult.data.isActive;
+						next.fields.microfinanceIndex.value = countryResult.data.microfinanceIndex ?? undefined;
+						next.fields.microfinanceSourceText.value = countryResult.data.microfinanceSourceLink?.text ?? undefined;
+						next.fields.microfinanceSourceHref.value = countryResult.data.microfinanceSourceLink?.href ?? undefined;
+						next.fields.populationCoverage.value = countryResult.data.populationCoverage ?? undefined;
+						next.fields.latestSurveyDate.value = countryResult.data.latestSurveyDate ?? undefined;
+						next.fields.networkTechnology.value = countryResult.data.networkTechnology ?? undefined;
+						next.fields.networkSourceText.value = countryResult.data.networkSourceLink?.text ?? undefined;
+						next.fields.networkSourceHref.value = countryResult.data.networkSourceLink?.href ?? undefined;
+						next.fields.mobileMoneyProviders.value = countryResult.data.mobileMoneyProviders?.map((p) => p.id) ?? [];
+						next.fields.sanctions.value = countryResult.data.sanctions ?? [];
+					}
+
+					return next;
+				});
+
+				if (countryId && countryResult && !countryResult.success) {
+					onError?.(countryResult.error);
 				}
 			} catch (e) {
 				onError?.(e);
