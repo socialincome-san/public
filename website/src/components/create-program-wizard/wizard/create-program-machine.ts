@@ -1,11 +1,10 @@
-import { Cause, PayoutInterval } from '@/generated/prisma/enums';
+import { Cause, Currency, PayoutInterval } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import { Profile } from '@/lib/services/candidate/candidate.types';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput } from '@/lib/services/program/program.types';
-import type { Currency } from '@/lib/types/currency';
 import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 
@@ -44,7 +43,7 @@ export const createProgramWizardMachine = setup({
 		};
 
 		events: // step 1
-		| { type: 'SELECT_COUNTRY'; id: string }
+			| { type: 'SELECT_COUNTRY'; id: string }
 			| { type: 'TOGGLE_COUNTRY_ROW'; id: string }
 
 			// step 2

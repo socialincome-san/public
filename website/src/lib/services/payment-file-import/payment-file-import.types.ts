@@ -1,4 +1,4 @@
-import type { Currency } from '@/lib/types/currency';
+import { Currency } from '@/generated/prisma/enums';
 
 export type BankContribution = {
 	amount: number;

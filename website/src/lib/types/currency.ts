@@ -1,10 +1,6 @@
-import type { Currency } from '../../generated/prisma/enums';
-import { CountryCode, Currency as CurrencyValues } from '../../generated/prisma/enums';
+import { CountryCode, Currency } from '../../generated/prisma/enums';
 
-export type { Currency };
-
-const CURRENCIES = Object.values(CurrencyValues) as Currency[];
-export const allCurrencies = CURRENCIES;
+export const allCurrencies = Object.values(Currency) as Currency[];
 
 const FALLBACK_CURRENCY: Currency = 'USD';
 const countryToCurrency = new Map<CountryCode, Currency>([
@@ -173,7 +169,6 @@ const countryToCurrency = new Map<CountryCode, Currency>([
 ]);
 
 export const bestGuessCurrency = (country: CountryCode | undefined): Currency => {
-	// best guess mapping from two-letter country code to a supported currency
 	if (!country) {
 		return FALLBACK_CURRENCY;
 	}
@@ -182,5 +177,5 @@ export const bestGuessCurrency = (country: CountryCode | undefined): Currency =>
 };
 
 export const isValidCurrency = (currency: string | undefined): currency is Currency => {
-	return CURRENCIES.includes(currency as Currency);
+	return allCurrencies.includes(currency as Currency);
 };
