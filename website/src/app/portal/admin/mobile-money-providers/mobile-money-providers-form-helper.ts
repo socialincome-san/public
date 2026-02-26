@@ -9,7 +9,7 @@ export const buildCreateMobileMoneyProviderInput = (
 	schema: MobileMoneyProviderFormSchema,
 ): MobileMoneyProviderCreateInput => ({
 	name: schema.fields.name.value ?? '',
-	isSupported: schema.fields.isSupported.value ?? true,
+	isSupported: schema.fields.isSupported.value ?? false,
 });
 
 export const buildUpdateMobileMoneyProviderInput = (

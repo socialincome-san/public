@@ -256,9 +256,9 @@ export const SuccessForm = ({
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									<SelectItem value="familyfriends">{translations.referrals.familyfriends}</SelectItem>
+									<SelectItem value="family_and_friends">{translations.referrals.familyfriends}</SelectItem>
 									<SelectItem value="work">{translations.referrals.work}</SelectItem>
-									<SelectItem value="socialmedia">{translations.referrals.socialmedia}</SelectItem>
+									<SelectItem value="social_media">{translations.referrals.socialmedia}</SelectItem>
 									<SelectItem value="media">{translations.referrals.media}</SelectItem>
 									<SelectItem value="presentation">{translations.referrals.presentation}</SelectItem>
 									<SelectItem value="other">{translations.referrals.other}</SelectItem>
