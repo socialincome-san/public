@@ -18,17 +18,21 @@ type Props = {
 	region: string;
 	scope: Scope;
 	sessions: Session[];
+	isNewWebsiteEnabled: boolean;
 };
 
-export const NavbarDesktop = ({ menu, lang, region, scope, sessions }: Props) => {
+export const NavbarDesktop = ({ menu, lang, region, scope, sessions, isNewWebsiteEnabled }: Props) => {
 	const session = displaySession(sessions, scope);
 	return (
 		<nav className="w-site-width max-w-content absolute inset-x-0 top-5 z-50 mx-auto flex h-14 items-center justify-between rounded-full bg-white p-2 shadow-[0_0_28px_rgba(0,0,0,0.05)]">
-			<Link href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}`} className="text-accent-foreground ml-4">
+			<Link
+				href={isNewWebsiteEnabled ? `/${lang}/${region}/${NEW_WEBSITE_SLUG}` : `/${lang}/${region}`}
+				className="text-accent-foreground ml-4"
+			>
 				<SocialIncomeLogo />
 			</Link>
 
-			<MenuDesktop nav={menu} lang={lang} region={region} />
+			{isNewWebsiteEnabled && <MenuDesktop nav={menu} lang={lang} region={region} />}
 
 			<div className="flex items-center gap-4">
 				{!session && <LoginFlyout />}
