@@ -8,6 +8,8 @@ import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ISbStoryData } from '@storyblok/js';
 
+const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
+
 const storyblokService = new StoryblokService();
 
 type Props = {
@@ -24,7 +26,14 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	return (
 		<>
 			<div className="relative hidden lg:block">
-				<NavbarDesktop menu={menu} lang={lang} region={region} scope={scope} sessions={sessions} />
+				<NavbarDesktop
+					menu={menu}
+					lang={lang}
+					region={region}
+					scope={scope}
+					sessions={sessions}
+					isNewWebsiteEnabled={ENABLE_NEW_WEBSITE}
+				/>
 			</div>
 			<div className="lg:hidden">
 				<NavbarMobile lang={lang} scope={scope} sessions={sessions} />
