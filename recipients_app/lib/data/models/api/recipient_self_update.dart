@@ -1,6 +1,6 @@
 import "package:app/data/enums/gender.dart";
-import "package:app/data/enums/payment_provider.dart";
 import "package:app/data/models/language_code.dart";
+import "package:app/data/models/mobile_money_provider.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "recipient_self_update.mapper.dart";
@@ -16,7 +16,7 @@ class RecipientSelfUpdate with RecipientSelfUpdateMappable {
   final String? email;
   final String? contactPhone;
   final String? paymentPhone;
-  final PaymentProvider? paymentProvider;
+  final MobileMoneyProvider? mobileMoneyProvider;
   final String? successorName;
   final bool? termsAccepted;
 
@@ -30,7 +30,7 @@ class RecipientSelfUpdate with RecipientSelfUpdateMappable {
     this.email,
     this.contactPhone,
     this.paymentPhone,
-    this.paymentProvider,
+    this.mobileMoneyProvider,
     this.successorName,
     this.termsAccepted,
   });

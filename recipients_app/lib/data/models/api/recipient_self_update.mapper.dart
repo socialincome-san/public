@@ -17,7 +17,7 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
       MapperContainer.globals.use(_instance = RecipientSelfUpdateMapper._());
       GenderMapper.ensureInitialized();
       LanguageCodeMapper.ensureInitialized();
-      PaymentProviderMapper.ensureInitialized();
+      MobileMoneyProviderMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -79,10 +79,14 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
     _$paymentPhone,
     opt: true,
   );
-  static PaymentProvider? _$paymentProvider(RecipientSelfUpdate v) =>
-      v.paymentProvider;
-  static const Field<RecipientSelfUpdate, PaymentProvider> _f$paymentProvider =
-      Field('paymentProvider', _$paymentProvider, opt: true);
+  static MobileMoneyProvider? _$mobileMoneyProvider(RecipientSelfUpdate v) =>
+      v.mobileMoneyProvider;
+  static const Field<RecipientSelfUpdate, MobileMoneyProvider>
+  _f$mobileMoneyProvider = Field(
+    'mobileMoneyProvider',
+    _$mobileMoneyProvider,
+    opt: true,
+  );
   static String? _$successorName(RecipientSelfUpdate v) => v.successorName;
   static const Field<RecipientSelfUpdate, String> _f$successorName = Field(
     'successorName',
@@ -107,7 +111,7 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
     #email: _f$email,
     #contactPhone: _f$contactPhone,
     #paymentPhone: _f$paymentPhone,
-    #paymentProvider: _f$paymentProvider,
+    #mobileMoneyProvider: _f$mobileMoneyProvider,
     #successorName: _f$successorName,
     #termsAccepted: _f$termsAccepted,
   };
@@ -125,7 +129,7 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
       email: data.dec(_f$email),
       contactPhone: data.dec(_f$contactPhone),
       paymentPhone: data.dec(_f$paymentPhone),
-      paymentProvider: data.dec(_f$paymentProvider),
+      mobileMoneyProvider: data.dec(_f$mobileMoneyProvider),
       successorName: data.dec(_f$successorName),
       termsAccepted: data.dec(_f$termsAccepted),
     );
@@ -201,6 +205,8 @@ abstract class RecipientSelfUpdateCopyWith<
   $Out
 >
     implements ClassCopyWith<$R, $In, $Out> {
+  MobileMoneyProviderCopyWith<$R, MobileMoneyProvider, MobileMoneyProvider>?
+  get mobileMoneyProvider;
   $R call({
     String? firstName,
     String? lastName,
@@ -211,7 +217,7 @@ abstract class RecipientSelfUpdateCopyWith<
     String? email,
     String? contactPhone,
     String? paymentPhone,
-    PaymentProvider? paymentProvider,
+    MobileMoneyProvider? mobileMoneyProvider,
     String? successorName,
     bool? termsAccepted,
   });
@@ -229,6 +235,11 @@ class _RecipientSelfUpdateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<RecipientSelfUpdate> $mapper =
       RecipientSelfUpdateMapper.ensureInitialized();
   @override
+  MobileMoneyProviderCopyWith<$R, MobileMoneyProvider, MobileMoneyProvider>?
+  get mobileMoneyProvider => $value.mobileMoneyProvider?.copyWith.$chain(
+    (v) => call(mobileMoneyProvider: v),
+  );
+  @override
   $R call({
     Object? firstName = $none,
     Object? lastName = $none,
@@ -239,7 +250,7 @@ class _RecipientSelfUpdateCopyWithImpl<$R, $Out>
     Object? email = $none,
     Object? contactPhone = $none,
     Object? paymentPhone = $none,
-    Object? paymentProvider = $none,
+    Object? mobileMoneyProvider = $none,
     Object? successorName = $none,
     Object? termsAccepted = $none,
   }) => $apply(
@@ -253,7 +264,8 @@ class _RecipientSelfUpdateCopyWithImpl<$R, $Out>
       if (email != $none) #email: email,
       if (contactPhone != $none) #contactPhone: contactPhone,
       if (paymentPhone != $none) #paymentPhone: paymentPhone,
-      if (paymentProvider != $none) #paymentProvider: paymentProvider,
+      if (mobileMoneyProvider != $none)
+        #mobileMoneyProvider: mobileMoneyProvider,
       if (successorName != $none) #successorName: successorName,
       if (termsAccepted != $none) #termsAccepted: termsAccepted,
     }),
@@ -269,7 +281,10 @@ class _RecipientSelfUpdateCopyWithImpl<$R, $Out>
     email: data.get(#email, or: $value.email),
     contactPhone: data.get(#contactPhone, or: $value.contactPhone),
     paymentPhone: data.get(#paymentPhone, or: $value.paymentPhone),
-    paymentProvider: data.get(#paymentProvider, or: $value.paymentProvider),
+    mobileMoneyProvider: data.get(
+      #mobileMoneyProvider,
+      or: $value.mobileMoneyProvider,
+    ),
     successorName: data.get(#successorName, or: $value.successorName),
     termsAccepted: data.get(#termsAccepted, or: $value.termsAccepted),
   );

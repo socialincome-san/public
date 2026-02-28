@@ -1,4 +1,4 @@
-import "package:app/data/enums/payment_provider.dart";
+import "package:app/data/models/mobile_money_provider.dart";
 import "package:app/data/models/phone.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
@@ -7,7 +7,8 @@ part "payment_information.mapper.dart";
 @MappableClass()
 class PaymentInformation with PaymentInformationMappable {
   final String id;
-  final PaymentProvider provider;
+  final String mobileMoneyProviderId;
+  final MobileMoneyProvider mobileMoneyProvider;
   final String code;
   final String phoneId;
   final Phone phone;
@@ -16,7 +17,8 @@ class PaymentInformation with PaymentInformationMappable {
 
   const PaymentInformation({
     required this.id,
-    required this.provider,
+    required this.mobileMoneyProviderId,
+    required this.mobileMoneyProvider,
     required this.code,
     required this.phoneId,
     required this.phone,

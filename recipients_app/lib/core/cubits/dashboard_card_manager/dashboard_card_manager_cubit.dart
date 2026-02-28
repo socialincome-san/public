@@ -28,13 +28,14 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     final List<DashboardCard> cards = [];
 
     try {
-      // TODO(dev): currently payment phone number is used for login, we need to switch that
-      // TODO(migration): unclear what the comment above means :D
+      // INFO: Currently the payment phone number is used for phone authentication, too. 
+      // In the backend the payment phone number must be the same as the Firebase auth phome number.
+      // That's why at the moment the payment phone number can not be changed by the mobile app user.
       final contactPhoneNumber = recipient.contact.phone?.number;
       final paymentPhoneNumber = recipient.paymentInformation?.phone.number;
 
-      // TODO(migration): clarify logic here. If we want to set the contact phone number as payment phone number we 
-      // also need to set the payment provider (API enforces that). How do we get that info from the user?
+      // TODO(migration): Clarify logic here. Given the info above, do we even have a scenario where the payment phone number is null? 
+      // If not, we can simplify this logic and just ask "Is your contact phone number the same as your payment phone number?" 
       if (paymentPhoneNumber == null && contactPhoneNumber != null) {
         final paymentPhoneCard = DashboardCard(
           title: "My Profile",
@@ -84,8 +85,6 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       await userRepository.updateRecipient(
         RecipientSelfUpdate(
           paymentPhone: recipient.contact.phone?.number,
-          // TODO: We need to handle a missing provider info in the UI before this can work properly
-          paymentProvider: recipient.paymentInformation?.provider,
         ),
       );
 

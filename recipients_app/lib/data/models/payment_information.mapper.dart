@@ -15,7 +15,7 @@ class PaymentInformationMapper extends ClassMapperBase<PaymentInformation> {
   static PaymentInformationMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PaymentInformationMapper._());
-      PaymentProviderMapper.ensureInitialized();
+      MobileMoneyProviderMapper.ensureInitialized();
       PhoneMapper.ensureInitialized();
     }
     return _instance!;
@@ -26,11 +26,14 @@ class PaymentInformationMapper extends ClassMapperBase<PaymentInformation> {
 
   static String _$id(PaymentInformation v) => v.id;
   static const Field<PaymentInformation, String> _f$id = Field('id', _$id);
-  static PaymentProvider _$provider(PaymentInformation v) => v.provider;
-  static const Field<PaymentInformation, PaymentProvider> _f$provider = Field(
-    'provider',
-    _$provider,
-  );
+  static String _$mobileMoneyProviderId(PaymentInformation v) =>
+      v.mobileMoneyProviderId;
+  static const Field<PaymentInformation, String> _f$mobileMoneyProviderId =
+      Field('mobileMoneyProviderId', _$mobileMoneyProviderId);
+  static MobileMoneyProvider _$mobileMoneyProvider(PaymentInformation v) =>
+      v.mobileMoneyProvider;
+  static const Field<PaymentInformation, MobileMoneyProvider>
+  _f$mobileMoneyProvider = Field('mobileMoneyProvider', _$mobileMoneyProvider);
   static String _$code(PaymentInformation v) => v.code;
   static const Field<PaymentInformation, String> _f$code = Field(
     'code',
@@ -61,7 +64,8 @@ class PaymentInformationMapper extends ClassMapperBase<PaymentInformation> {
   @override
   final MappableFields<PaymentInformation> fields = const {
     #id: _f$id,
-    #provider: _f$provider,
+    #mobileMoneyProviderId: _f$mobileMoneyProviderId,
+    #mobileMoneyProvider: _f$mobileMoneyProvider,
     #code: _f$code,
     #phoneId: _f$phoneId,
     #phone: _f$phone,
@@ -72,7 +76,8 @@ class PaymentInformationMapper extends ClassMapperBase<PaymentInformation> {
   static PaymentInformation _instantiate(DecodingData data) {
     return PaymentInformation(
       id: data.dec(_f$id),
-      provider: data.dec(_f$provider),
+      mobileMoneyProviderId: data.dec(_f$mobileMoneyProviderId),
+      mobileMoneyProvider: data.dec(_f$mobileMoneyProvider),
       code: data.dec(_f$code),
       phoneId: data.dec(_f$phoneId),
       phone: data.dec(_f$phone),
@@ -152,10 +157,13 @@ abstract class PaymentInformationCopyWith<
   $Out
 >
     implements ClassCopyWith<$R, $In, $Out> {
+  MobileMoneyProviderCopyWith<$R, MobileMoneyProvider, MobileMoneyProvider>
+  get mobileMoneyProvider;
   PhoneCopyWith<$R, Phone, Phone> get phone;
   $R call({
     String? id,
-    PaymentProvider? provider,
+    String? mobileMoneyProviderId,
+    MobileMoneyProvider? mobileMoneyProvider,
     String? code,
     String? phoneId,
     Phone? phone,
@@ -176,12 +184,18 @@ class _PaymentInformationCopyWithImpl<$R, $Out>
   late final ClassMapperBase<PaymentInformation> $mapper =
       PaymentInformationMapper.ensureInitialized();
   @override
+  MobileMoneyProviderCopyWith<$R, MobileMoneyProvider, MobileMoneyProvider>
+  get mobileMoneyProvider => $value.mobileMoneyProvider.copyWith.$chain(
+    (v) => call(mobileMoneyProvider: v),
+  );
+  @override
   PhoneCopyWith<$R, Phone, Phone> get phone =>
       $value.phone.copyWith.$chain((v) => call(phone: v));
   @override
   $R call({
     String? id,
-    PaymentProvider? provider,
+    String? mobileMoneyProviderId,
+    MobileMoneyProvider? mobileMoneyProvider,
     String? code,
     String? phoneId,
     Phone? phone,
@@ -190,7 +204,10 @@ class _PaymentInformationCopyWithImpl<$R, $Out>
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
-      if (provider != null) #provider: provider,
+      if (mobileMoneyProviderId != null)
+        #mobileMoneyProviderId: mobileMoneyProviderId,
+      if (mobileMoneyProvider != null)
+        #mobileMoneyProvider: mobileMoneyProvider,
       if (code != null) #code: code,
       if (phoneId != null) #phoneId: phoneId,
       if (phone != null) #phone: phone,
@@ -201,7 +218,14 @@ class _PaymentInformationCopyWithImpl<$R, $Out>
   @override
   PaymentInformation $make(CopyWithData data) => PaymentInformation(
     id: data.get(#id, or: $value.id),
-    provider: data.get(#provider, or: $value.provider),
+    mobileMoneyProviderId: data.get(
+      #mobileMoneyProviderId,
+      or: $value.mobileMoneyProviderId,
+    ),
+    mobileMoneyProvider: data.get(
+      #mobileMoneyProvider,
+      or: $value.mobileMoneyProvider,
+    ),
     code: data.get(#code, or: $value.code),
     phoneId: data.get(#phoneId, or: $value.phoneId),
     phone: data.get(#phone, or: $value.phone),

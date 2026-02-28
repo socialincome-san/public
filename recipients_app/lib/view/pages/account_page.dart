@@ -3,9 +3,9 @@ import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/enums/gender.dart";
-import "package:app/data/enums/payment_provider.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/language_code.dart";
+import "package:app/data/models/mobile_money_provider.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
@@ -344,17 +344,20 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 InputText(
                   hintText: "${context.l10n.paymentNumber}*",
+                  // INFO: Currently the payment phone number is used for phone authentication, too. 
+                  // In the backend the payment phone number must be the same as the Firebase auth phome number.
+                  // That's why at the moment the payment phone number can not be changed by the mobile app user.
                   isReadOnly: true,
                   controller: _paymentNumberController,
                   keyboardType: TextInputType.number,
-                  onFocusLostAndValueChanged: () {
-                    final value = _paymentNumberController.text;
-                    if (value.isNotEmpty) {
-                      context.read<AuthCubit>().updateRecipient(
-                        selfUpdate: RecipientSelfUpdate(paymentPhone: value),
-                      );
-                    }
-                  },
+                  // onFocusLostAndValueChanged: () {
+                  //   final value = _paymentNumberController.text;
+                  //   if (value.isNotEmpty) {
+                  //     context.read<AuthCubit>().updateRecipient(
+                  //       selfUpdate: RecipientSelfUpdate(paymentPhone: value),
+                  //     );
+                  //   }
+                  // },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return context.l10n.paymentNumberError;
@@ -370,11 +373,11 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
 
                 /// PAYMENT PROVIDER
-                InputDropdown<PaymentProvider>(
+                InputDropdown<MobileMoneyProvider>(
                   label: "${context.l10n.mobilePaymentProvider}*",
                   items: const [
                     DropdownMenuItem(
-                      value: PaymentProvider.orangeMoney,
+                      value: MobileMoneyProvider(id: "orange-money", name: "Orange Money SL"), // TODO(migration): update when we have more providers
                       child: Text("Orange Money SL"),
                     ),
                     // TODO(migration): raphi said currently theres only orange money
@@ -383,7 +386,7 @@ class AccountPageState extends State<AccountPage> {
                       child: Text("Africell Money"),
                     ), */
                   ],
-                  value: recipient.paymentInformation?.provider,
+                  value: recipient.paymentInformation?.mobileMoneyProvider,
                   validator: (value) {
                     if (value == null) {
                       return context.l10n.paymentProviderError;
@@ -391,7 +394,7 @@ class AccountPageState extends State<AccountPage> {
                     return null;
                   },
                   onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                    selfUpdate: RecipientSelfUpdate(paymentProvider: value),
+                    selfUpdate: RecipientSelfUpdate(mobileMoneyProvider: value),
                   ),
                 ),
                 const SizedBox(height: 24),
