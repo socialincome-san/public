@@ -1,4 +1,3 @@
-import "package:app/data/enums/recipient_status.dart";
 import "package:app/data/models/contact.dart";
 import "package:app/data/models/local_partner.dart";
 import "package:app/data/models/payment_information.dart";
@@ -10,7 +9,6 @@ part "recipient.mapper.dart";
 @MappableClass()
 class Recipient with RecipientMappable {
   final String id;
-  final RecipientStatus status;
   final String? startDate;
   final String? successorName;
   final bool termsAccepted;
@@ -28,7 +26,6 @@ class Recipient with RecipientMappable {
   const Recipient({
     required this.id,
     required this.contactId,
-    required this.status,
     this.startDate,
     this.successorName,
     required this.termsAccepted,

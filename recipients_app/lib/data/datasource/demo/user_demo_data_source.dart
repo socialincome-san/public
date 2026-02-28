@@ -4,7 +4,6 @@ import "package:app/data/datasource/demo/demo_user.dart";
 import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/enums/gender.dart";
 import "package:app/data/enums/payout_interval.dart";
-import "package:app/data/enums/recipient_status.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/contact.dart";
 import "package:app/data/models/country.dart";
@@ -71,7 +70,6 @@ class UserDemoDataSource implements UserDataSource {
       createdAt: DateTime.now().toIso8601String(),
       updatedAt: DateTime.now().toIso8601String(),
     ),
-    status: RecipientStatus.active,
     createdAt: DateTime.now().toIso8601String(),
     program: Program(
       // ownerOrganizationId: "demo",

@@ -15,7 +15,6 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
   static RecipientMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = RecipientMapper._());
-      RecipientStatusMapper.ensureInitialized();
       ContactMapper.ensureInitialized();
       ProgramMapper.ensureInitialized();
       LocalPartnerMapper.ensureInitialized();
@@ -33,11 +32,6 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
   static const Field<Recipient, String> _f$contactId = Field(
     'contactId',
     _$contactId,
-  );
-  static RecipientStatus _$status(Recipient v) => v.status;
-  static const Field<Recipient, RecipientStatus> _f$status = Field(
-    'status',
-    _$status,
   );
   static String? _$startDate(Recipient v) => v.startDate;
   static const Field<Recipient, String> _f$startDate = Field(
@@ -107,7 +101,6 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
   final MappableFields<Recipient> fields = const {
     #id: _f$id,
     #contactId: _f$contactId,
-    #status: _f$status,
     #startDate: _f$startDate,
     #successorName: _f$successorName,
     #termsAccepted: _f$termsAccepted,
@@ -126,7 +119,6 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
     return Recipient(
       id: data.dec(_f$id),
       contactId: data.dec(_f$contactId),
-      status: data.dec(_f$status),
       startDate: data.dec(_f$startDate),
       successorName: data.dec(_f$successorName),
       termsAccepted: data.dec(_f$termsAccepted),
@@ -209,7 +201,6 @@ abstract class RecipientCopyWith<$R, $In extends Recipient, $Out>
   $R call({
     String? id,
     String? contactId,
-    RecipientStatus? status,
     String? startDate,
     String? successorName,
     bool? termsAccepted,
@@ -252,7 +243,6 @@ class _RecipientCopyWithImpl<$R, $Out>
   $R call({
     String? id,
     String? contactId,
-    RecipientStatus? status,
     Object? startDate = $none,
     Object? successorName = $none,
     bool? termsAccepted,
@@ -269,7 +259,6 @@ class _RecipientCopyWithImpl<$R, $Out>
     FieldCopyWithData({
       if (id != null) #id: id,
       if (contactId != null) #contactId: contactId,
-      if (status != null) #status: status,
       if (startDate != $none) #startDate: startDate,
       if (successorName != $none) #successorName: successorName,
       if (termsAccepted != null) #termsAccepted: termsAccepted,
@@ -289,7 +278,6 @@ class _RecipientCopyWithImpl<$R, $Out>
   Recipient $make(CopyWithData data) => Recipient(
     id: data.get(#id, or: $value.id),
     contactId: data.get(#contactId, or: $value.contactId),
-    status: data.get(#status, or: $value.status),
     startDate: data.get(#startDate, or: $value.startDate),
     successorName: data.get(#successorName, or: $value.successorName),
     termsAccepted: data.get(#termsAccepted, or: $value.termsAccepted),
