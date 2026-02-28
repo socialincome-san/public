@@ -32,7 +32,7 @@ class DashboardPage extends StatelessWidget {
         BlocProvider(
           create: (context) => DashboardCardManagerCubit(
             crashReportingRepository: context.read<CrashReportingRepository>(),
-            userRepository: context.read<UserRepository>(),
+            authCubit: context.read<AuthCubit>(),
           )..fetchCards(),
         ),
         BlocProvider(

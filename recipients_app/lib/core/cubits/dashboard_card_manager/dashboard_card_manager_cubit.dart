@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/view/widgets/account/dashboard_card.dart";
@@ -10,18 +11,18 @@ part "dashboard_card_manager_cubit.mapper.dart";
 part "dashboard_card_manager_state.dart";
 
 class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
-  final UserRepository userRepository;
+  final AuthCubit authCubit;
   final CrashReportingRepository crashReportingRepository;
 
   DashboardCardManagerCubit({
-    required this.userRepository,
+    required this.authCubit,
     required this.crashReportingRepository,
   }) : super(const DashboardCardManagerState());
 
   Future<void> fetchCards() async {
     emit(state.copyWith(status: DashboardCardManagerStatus.loading));
 
-    final recipient = userRepository.currentRecipient;
+    final recipient = authCubit.state.recipient;
 
     if (recipient == null) return;
 
@@ -65,12 +66,12 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     emit(state.copyWith(status: DashboardCardManagerStatus.updating));
 
     try {
-      final recipient = userRepository.currentRecipient;
+      final recipient = authCubit.state.recipient;
 
       if (recipient == null) throw Exception("Recipient not found");
 
-      await userRepository.updateRecipient(
-        RecipientSelfUpdate(contactPhone: recipient.paymentInformation?.phone.number),
+      await authCubit.updateRecipient(
+        selfUpdate: RecipientSelfUpdate(contactPhone: recipient.paymentInformation?.phone.number),
       );
 
       emit(state.copyWith(status: DashboardCardManagerStatus.updated, cards: []));
