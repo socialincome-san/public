@@ -1,60 +1,62 @@
+import "dart:convert";
+
 import "package:app/data/datasource/user_data_source.dart";
+import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/recipient.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
+import "package:app/data/services/authenticated_client.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
-const String recipientCollection = "/recipients";
-
 class UserRemoteDataSource implements UserDataSource {
-  final FirebaseFirestore firestore;
   final FirebaseAuth firebaseAuth;
+  final AuthenticatedClient authenticatedClient;
 
-  const UserRemoteDataSource({
-    required this.firestore,
+  Recipient? _currentRecipient;
+
+  UserRemoteDataSource({
     required this.firebaseAuth,
+    required this.authenticatedClient,
   });
 
   @override
-  User? get currentUser => firebaseAuth.currentUser;
+  User? get currentFirebaseUser => firebaseAuth.currentUser;
 
-  /// Fetches the user data by userId from firestore and maps it to a recipient object
-  /// Returns null if the user does not exist.
+  @override
+  Recipient? get currentRecipient => _currentRecipient;
+
   @override
   Future<Recipient?> fetchRecipient(User firebaseUser) async {
-    final phoneNumber = firebaseUser.phoneNumber ?? "";
+    final uri = authenticatedClient.resolveUri("recipients/me");
+    final response = await authenticatedClient.get(uri);
 
-    final matchingUsers = await firestore
-        .collection(recipientCollection)
-        .where(
-          "mobile_money_phone.phone",
-          isEqualTo: int.parse(phoneNumber.substring(1)),
-        )
-        .get();
-
-    if (matchingUsers.docs.isEmpty) {
+    if (response.statusCode == 404) { // no user found
+      _currentRecipient = null;
       return null;
     }
 
-    final userSnapshot = matchingUsers.docs.firstOrNull;
-
-    // This doesnt work because user id from firebaseAuth is not related to user id from firestore
-    // Needs to be discussed if changes should be made or not
-    // final userSnapshot =
-    //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
-
-    if (userSnapshot != null && userSnapshot.exists) {
-      return Recipient.fromMap(userSnapshot.data()).copyWith(
-        userId: userSnapshot.id,
-      );
-    } else {
-      return null;
+    if (response.statusCode != 200) { // any other error
+      _currentRecipient = null;
+      throw Exception("Failed to fetch recipient: ${response.statusCode}");
     }
+
+    final recipient = RecipientMapper.fromJson(response.body);
+    _currentRecipient = recipient;
+    return recipient;
   }
 
   @override
-  Future<void> updateRecipient(Recipient recipient) {
-    final updatedRecipient = recipient.copyWith(updatedBy: recipient.userId);
+  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
+    final uri = authenticatedClient.resolveUri("recipients/me");
+    final response = await authenticatedClient.patch(
+      uri,
+      body: jsonEncode(selfUpdate.toMap()),
+    );
 
-    return firestore.collection(recipientCollection).doc(recipient.userId).update(updatedRecipient.toJson());
+    if (response.statusCode != 200) {
+      throw Exception("Failed to update recipient: ${response.statusCode}");
+    }
+
+    final recipient = RecipientMapper.fromJson(response.body);
+    _currentRecipient = recipient;
+    return recipient;
   }
 }

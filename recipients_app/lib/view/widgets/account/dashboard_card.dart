@@ -8,7 +8,6 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 enum DashboardCardType {
-  paymentNumberEqualsContactNumber,
   contactNumberEqualsPaymentNumber,
 }
 
@@ -29,6 +28,8 @@ class DashboardCard extends DashboardItem {
 
   @override
   Widget build(BuildContext context) {
+    final isUpdating = context.watch<DashboardCardManagerCubit>().state.status == DashboardCardManagerStatus.updating;
+
     return Card(
       elevation: 0,
       clipBehavior: Clip.antiAlias,
@@ -47,8 +48,8 @@ class DashboardCard extends DashboardItem {
                 Text(
                   message,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.normal,
-                      ),
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
               ],
             ),
@@ -60,6 +61,7 @@ class DashboardCard extends DashboardItem {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ButtonSmall(
+                  isLoading: isUpdating,
                   color: Colors.black,
                   label: primaryButtonText,
                   onPressed: () => _onPressPrimary(context),
@@ -67,6 +69,7 @@ class DashboardCard extends DashboardItem {
                 ),
                 const SizedBox(width: 8),
                 ButtonSmall(
+                  isLoading: isUpdating,
                   color: Colors.black,
                   onPressed: () => _onPressSecondary(context),
                   label: secondaryButtonText,
@@ -84,18 +87,12 @@ class DashboardCard extends DashboardItem {
     switch (type) {
       /// On pressing no, user should be forwarded to account page
       /// to fill missing information
-      case DashboardCardType.paymentNumberEqualsContactNumber:
       case DashboardCardType.contactNumberEqualsPaymentNumber:
         final recipient = context.read<AuthCubit>().state.recipient!;
 
-        final organization = context.read<AuthCubit>().state.organization;
-
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AccountPage(
-              recipient: recipient,
-              organization: organization,
-            ),
+            builder: (context) => AccountPage(recipient: recipient),
           ),
         );
     }
@@ -103,8 +100,6 @@ class DashboardCard extends DashboardItem {
 
   void _onPressPrimary(BuildContext context) {
     switch (type) {
-      case DashboardCardType.paymentNumberEqualsContactNumber:
-        context.read<DashboardCardManagerCubit>().updatePaymentNumber();
       case DashboardCardType.contactNumberEqualsPaymentNumber:
         context.read<DashboardCardManagerCubit>().updateContactNumber();
     }

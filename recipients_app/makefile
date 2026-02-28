@@ -1,22 +1,25 @@
 .PHONY: generate watch test clean get translations fontsize-smallest fontsize-regular fontsize-largest flavor-stage flavor-prod
 
 generate:
-	dart run build_runner build --delete-conflicting-outputs
+	fvm dart run build_runner build --delete-conflicting-outputs
 
 watch:
-	dart run build_runner watch --delete-conflicting-outputs
+	fvm dart run build_runner watch --delete-conflicting-outputs
 
 test: 
 	echo $(VAR)
 
 clean:
-	flutter clean
+	fvm flutter clean
 
 get: 
-	flutter pub get
+	fvm flutter pub get
+
+cleanget:
+	make clean && make get
 
 translations:
-	flutter gen-l10n
+	fvm flutter gen-l10n
 
 fontsize-smallest:
 	adb shell settings put system font_scale 0.8

@@ -1,8 +1,11 @@
 import "package:app/data/models/survey/survey.dart";
 import "package:app/data/models/survey/survey_card_status.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-class MappedSurvey extends Equatable {
+part "mapped_survey.mapper.dart";
+
+@MappableClass()
+class MappedSurvey with MappedSurveyMappable {
   final String name;
   final Survey survey;
   final String surveyUrl;
@@ -18,14 +21,4 @@ class MappedSurvey extends Equatable {
     required this.daysToOverdue,
     required this.daysAfterOverdue,
   });
-
-  @override
-  List<Object?> get props => [
-        name,
-        survey,
-        surveyUrl,
-        cardStatus,
-        daysToOverdue,
-        daysAfterOverdue,
-      ];
 }

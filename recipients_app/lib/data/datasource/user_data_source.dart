@@ -1,8 +1,10 @@
+import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/recipient.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
 abstract class UserDataSource {
-  User? get currentUser;
+  User? get currentFirebaseUser;
+  Recipient? get currentRecipient;
   Future<Recipient?> fetchRecipient(User firebaseUser);
-  Future<void> updateRecipient(Recipient recipient);
+  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate);
 }

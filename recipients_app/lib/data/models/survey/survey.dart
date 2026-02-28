@@ -1,80 +1,41 @@
-import "package:app/core/helpers/timestamp_converter.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
-import "package:equatable/equatable.dart";
-import "package:json_annotation/json_annotation.dart";
+import "package:app/data/models/survey/survey_questionnaire.dart";
+import "package:app/data/models/survey/survey_status.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-part "survey.g.dart";
+part "survey.mapper.dart";
 
-@JsonSerializable()
-@TimestampConverter()
-class Survey extends Equatable {
-  @JsonKey(defaultValue: "")
+@MappableClass()
+class Survey with SurveyMappable {
   final String id;
-  final SurveyServerStatus? status;
-  @JsonKey(name: "due_date_at")
-  final Timestamp? dueDateAt;
-  @JsonKey(name: "completed_at")
-  final Timestamp? completedAt;
-  @JsonKey(name: "access_email")
-  final String? accessEmail;
-  @JsonKey(name: "access_pw")
-  final String? accessPassword;
+  final String name;
+  final String recipientId;
+  final String language;
+  final String dueAt;
+  final String? completedAt;
+  final SurveyQuestionnaire questionnaire;
+  final SurveyStatus status;
+  final String? surveyScheduleId;
+  // TODO(migration): what is this?
+  final Object? data;
+  final String accessEmail;
+  final String accessPw;
+  final String createdAt;
+  final String? updatedAt;
 
   const Survey({
     required this.id,
-    this.status,
-    this.dueDateAt,
+    required this.name,
+    required this.recipientId,
+    required this.language,
+    required this.dueAt,
     this.completedAt,
-    this.accessEmail,
-    this.accessPassword,
+    required this.questionnaire,
+    required this.status,
+    this.surveyScheduleId,
+    required this.data,
+    required this.accessEmail,
+    required this.accessPw,
+    required this.createdAt,
+    this.updatedAt,
   });
-
-  @override
-  List<Object?> get props {
-    return [
-      id,
-      status,
-      dueDateAt,
-      completedAt,
-      accessEmail,
-      accessPassword,
-    ];
-  }
-
-  factory Survey.fromJson(Map<String, dynamic> json) => _$SurveyFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SurveyToJson(this);
-
-  Survey copyWith({
-    String? id,
-    SurveyServerStatus? status,
-    Timestamp? dueDateAt,
-    Timestamp? completedAt,
-    String? accessEmail,
-    String? accessPassword,
-  }) {
-    return Survey(
-      id: id ?? this.id,
-      status: status ?? this.status,
-      dueDateAt: dueDateAt ?? this.dueDateAt,
-      completedAt: completedAt ?? this.completedAt,
-      accessEmail: accessEmail ?? this.accessEmail,
-      accessPassword: accessPassword ?? this.accessPassword,
-    );
-  }
-}
-
-enum SurveyServerStatus {
-  @JsonValue("new")
-  created,
-  @JsonValue("sent")
-  sent,
-  @JsonValue("scheduled")
-  scheduled,
-  @JsonValue("in-progress")
-  inProgress,
-  @JsonValue("completed")
-  completed,
-  @JsonValue("missed")
-  missed;
 }

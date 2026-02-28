@@ -1,16 +1,21 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
-import "package:app/data/models/models.dart";
+import "package:app/core/helpers/string_extensions.dart";
+import "package:app/data/enums/gender.dart";
+import "package:app/data/models/api/recipient_self_update.dart";
+import "package:app/data/models/language_code.dart";
+import "package:app/data/models/mobile_money_provider.dart";
+import "package:app/data/models/recipient.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_spacings.dart";
 import "package:app/ui/inputs/input_dropdown.dart";
 import "package:app/ui/inputs/input_text.dart";
-import "package:app/view/widgets/account/organization_info.dart";
+import "package:app/view/widgets/account/local_partner_info.dart";
+import "package:app/view/widgets/account/program_info.dart";
 import "package:app/view/widgets/dialogs/social_income_contact_dialog.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
@@ -18,11 +23,9 @@ import "package:package_info_plus/package_info_plus.dart";
 
 class AccountPage extends StatefulWidget {
   final Recipient recipient;
-  final Organization? organization;
 
   const AccountPage({
     required this.recipient,
-    this.organization,
   });
 
   @override
@@ -55,25 +58,25 @@ class AccountPageState extends State<AccountPage> {
     super.initState();
 
     _nameController = TextEditingController(
-      text: widget.recipient.firstName ?? "",
+      text: widget.recipient.contact.firstName,
     );
     _surnameController = TextEditingController(
-      text: widget.recipient.lastName ?? "",
+      text: widget.recipient.contact.lastName,
     );
     _callingNameController = TextEditingController(
-      text: widget.recipient.callingName ?? "",
+      text: widget.recipient.contact.callingName,
     );
     _emailController = TextEditingController(
-      text: widget.recipient.email ?? "",
+      text: widget.recipient.contact.email,
     );
     _birthDateController = TextEditingController(
       text: "",
     );
     _paymentNumberController = TextEditingController(
-      text: widget.recipient.mobileMoneyPhone?.phoneNumber.toString() ?? "",
+      text: widget.recipient.paymentInformation?.phone.number ?? "",
     );
     _contactNumberController = TextEditingController(
-      text: widget.recipient.communicationMobilePhone?.phoneNumber.toString() ?? "",
+      text: widget.recipient.contact.phone?.number ?? "",
     );
     _successorNameController = TextEditingController(
       text: widget.recipient.successorName ?? "",
@@ -83,7 +86,7 @@ class AccountPageState extends State<AccountPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final locale = Localizations.localeOf(context).toLanguageTag();
-      _birthDateController.text = getFormattedDate(widget.recipient.birthDate, locale) ?? "";
+      _birthDateController.text = getFormattedDate(widget.recipient.contact.dateOfBirth?.toDate(), locale) ?? "";
     });
   }
 
@@ -149,6 +152,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
 
+                /// FIRST NAME
                 InputText(
                   hintText: "${context.l10n.name}*",
                   controller: _nameController,
@@ -158,15 +162,18 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _nameController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(firstName: value),
-                          );
+                        selfUpdate: RecipientSelfUpdate(firstName: value),
+                      );
                     }
                   },
                 ),
                 const SizedBox(height: 16),
+
+                /// SURNAME
                 InputText(
                   controller: _surnameController,
                   hintText: "${context.l10n.surname}*",
@@ -176,80 +183,88 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _surnameController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              lastName: value,
-                            ),
-                          );
+                        selfUpdate: RecipientSelfUpdate(lastName: value),
+                      );
                     }
                   },
                 ),
                 const SizedBox(height: 16),
+
+                /// CALLING NAME
                 InputText(
                   controller: _callingNameController,
                   hintText: context.l10n.callingName,
-                  onSubmitted: (value) => context.read<AuthCubit>().updateRecipient(
-                        recipient.copyWith(callingName: value),
-                      ),
+                  onFocusLostAndValueChanged: () {
+                    final value = _callingNameController.text;
+                    context.read<AuthCubit>().updateRecipient(
+                      selfUpdate: RecipientSelfUpdate(callingName: value),
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
-                InputDropdown<String>(
+
+                /// GENDER
+                InputDropdown<Gender>(
                   label: "${context.l10n.gender}*",
                   items: [
                     DropdownMenuItem(
-                      value: "male",
+                      value: Gender.male,
                       child: Text(context.l10n.male),
                     ),
                     DropdownMenuItem(
-                      value: "female",
+                      value: Gender.female,
                       child: Text(context.l10n.female),
                     ),
                     DropdownMenuItem(
-                      value: "other",
+                      value: Gender.other,
                       child: Text(context.l10n.other),
                     ),
+                    DropdownMenuItem(
+                      value: Gender.private,
+                      child: Text(context.l10n.private),
+                    ),
                   ],
-                  value: recipient.gender,
+                  value: recipient.contact.gender,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null) {
                       return context.l10n.genderError;
                     }
                     return null;
                   },
                   onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                        recipient.copyWith(
-                          gender: value,
-                        ),
-                      ),
+                    selfUpdate: RecipientSelfUpdate(gender: value),
+                  ),
                 ),
                 const SizedBox(height: 16),
+
+                /// BIRTHDAY
                 InputText(
                   hintText: "${context.l10n.dateOfBirth}*",
                   controller: _birthDateController,
                   isReadOnly: true,
-                  onTap: () => showDatePicker(
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime(DateTime.now().year - 10),
-                    initialDate: recipient.birthDate?.toDate() ?? DateTime(2000),
-                    context: context,
-                  ).then((value) {
-                    if (value != null) {
-                      // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
-                      if (context.mounted) {
-                        final timestamp = Timestamp.fromDate(value);
-
-                        context.read<AuthCubit>().updateRecipient(
-                              recipient.copyWith(
-                                birthDate: timestamp,
-                              ),
+                  onTap: () =>
+                      showDatePicker(
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime(DateTime.now().year - 10),
+                        initialDate: recipient.contact.dateOfBirth?.toDate() ?? DateTime(2000),
+                        context: context,
+                      ).then((value) {
+                        // Update value only if changed
+                        if (value != null && value != recipient.contact.dateOfBirth?.toDate()) {
+                          // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
+                          if (context.mounted) {
+                            context.read<AuthCubit>().updateRecipient(
+                              selfUpdate: RecipientSelfUpdate(dateOfBirth: value.toIso8601String()),
                             );
-                        _birthDateController.text = getFormattedDate(timestamp, locale) ?? "";
-                      }
-                    }
-                    return;
-                  }),
+                            _birthDateController.text = getFormattedDate(value, locale) ?? "";
+                          }
+                        }
+                        return;
+                      }),
                   suffixIcon: const Icon(
                     Icons.calendar_today,
                     color: AppColors.primaryColor,
@@ -262,20 +277,22 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                InputDropdown<String>(
+
+                /// UI LANGUAGE
+                InputDropdown<LanguageCode>(
                   label: "${context.l10n.language}*",
                   items: [
-                    DropdownMenuItem(
-                      value: "en",
-                      child: Text(context.l10n.english),
-                    ),
-                    DropdownMenuItem(
-                      value: "kri",
-                      child: Text(context.l10n.krio),
-                    ),
+                      DropdownMenuItem(
+                        value: LanguageCode.en,
+                        child: Text(context.l10n.english),
+                      ),
+                      DropdownMenuItem(
+                        value: LanguageCode.kri,
+                        child: Text(context.l10n.krio),
+                      ),
                   ],
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null) {
                       return context.l10n.languageError;
                     }
                     return null;
@@ -284,21 +301,23 @@ class AccountPageState extends State<AccountPage> {
                     // change language accordingly
                     context.read<SettingsCubit>().changeLanguage(value!);
                     context.read<AuthCubit>().updateRecipient(
-                          recipient.copyWith(selectedLanguage: value),
-                        );
+                      selfUpdate: RecipientSelfUpdate(language: value),
+                    );
                   },
-                  value: recipient.selectedLanguage,
+                  value: recipient.contact.language,
                 ),
-
                 const SizedBox(height: 16),
+
+                /// EMAIL ADDRESS
                 InputText(
                   hintText: context.l10n.email,
                   controller: _emailController,
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _emailController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(email: value),
-                          );
+                        selfUpdate: RecipientSelfUpdate(email: value),
+                      );
                     }
                   },
                   keyboardType: TextInputType.emailAddress,
@@ -306,7 +325,7 @@ class AccountPageState extends State<AccountPage> {
                     if (value == null || value.isEmpty) return null;
 
                     final emailRegex = RegExp(
-                      r"^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$",
+                      r"^[\w\-\+]+(\.[\w\-\+]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$",
                     );
                     if (!emailRegex.hasMatch(value)) {
                       return context.l10n.errorEmailInvalid;
@@ -316,6 +335,8 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 24),
+
+                /// PAYMENT PHONE
                 Text(
                   context.l10n.paymentPhone,
                   style: Theme.of(context).textTheme.bodyLarge,
@@ -323,18 +344,20 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 InputText(
                   hintText: "${context.l10n.paymentNumber}*",
+                  // INFO: Currently the payment phone number is used for phone authentication, too. 
+                  // In the backend the payment phone number must be the same as the Firebase auth phome number.
+                  // That's why at the moment the payment phone number can not be changed by the mobile app user.
                   isReadOnly: true,
                   controller: _paymentNumberController,
                   keyboardType: TextInputType.number,
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
-                      context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              mobileMoneyPhone: Phone(int.parse(value)),
-                            ),
-                          );
-                    }
-                  },
+                  // onFocusLostAndValueChanged: () {
+                  //   final value = _paymentNumberController.text;
+                  //   if (value.isNotEmpty) {
+                  //     context.read<AuthCubit>().updateRecipient(
+                  //       selfUpdate: RecipientSelfUpdate(paymentPhone: value),
+                  //     );
+                  //   }
+                  // },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return context.l10n.paymentNumberError;
@@ -348,28 +371,31 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                InputDropdown<String>(
+
+                /// PAYMENT PROVIDER
+                InputDropdown<MobileMoneyProvider>(
                   label: "${context.l10n.mobilePaymentProvider}*",
                   items: const [
                     DropdownMenuItem(
-                      value: "orange_money_sl",
+                      value: MobileMoneyProvider(id: "orange-money", name: "Orange Money SL"), // TODO(migration): update when we have more providers
                       child: Text("Orange Money SL"),
                     ),
-                    DropdownMenuItem(
-                      value: "africell_money",
+                    // TODO(migration): raphi said currently theres only orange money
+                    /* DropdownMenuItem(
+                      value: PaymentProvider.africellMoney,
                       child: Text("Africell Money"),
-                    ),
+                    ), */
                   ],
-                  value: recipient.paymentProvider,
+                  value: recipient.paymentInformation?.mobileMoneyProvider,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null) {
                       return context.l10n.paymentProviderError;
                     }
                     return null;
                   },
                   onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                        recipient.copyWith(paymentProvider: value),
-                      ),
+                    selfUpdate: RecipientSelfUpdate(mobileMoneyProvider: value),
+                  ),
                 ),
                 const SizedBox(height: 24),
 
@@ -387,26 +413,23 @@ class AccountPageState extends State<AccountPage> {
                     if (value == null || value.isEmpty) {
                       return context.l10n.contactNumberError;
                     }
-
                     if (int.tryParse(value) == null) {
                       return context.l10n.contactNumberError2;
                     }
-
                     return null;
                   },
-                  onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _contactNumberController.text;
+                    if (value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              communicationMobilePhone: Phone(
-                                int.parse(value),
-                              ),
-                            ),
-                          );
+                        selfUpdate: RecipientSelfUpdate(contactPhone: value),
+                      );
                     }
                   },
                 ),
                 const SizedBox(height: 24),
+
+                /// CONTACT PREFERENCE
                 // TODO add later
                 /*const SizedBox(height: 8),
                      DropdownButtonFormField<String>(
@@ -441,16 +464,24 @@ class AccountPageState extends State<AccountPage> {
                   hintText: context.l10n.successorName,
                   controller: _successorNameController,
                   keyboardType: TextInputType.name,
-                  onSubmitted: (value) {
+                  onFocusLostAndValueChanged: () {
+                    final value = _successorNameController.text;
                     context.read<AuthCubit>().updateRecipient(
-                          recipient.copyWith(successorName: value),
-                        );
+                      selfUpdate: RecipientSelfUpdate(successorName: value),
+                    );
                   },
                 ),
+                const SizedBox(height: 16),
 
                 /// RECOMMENDING ORGA
-                if (widget.organization != null) OrganizationInfo(organization: widget.organization!),
-                const SizedBox(height: 24),
+                LocalPartnerInfo(localPartner: widget.recipient.localPartner),
+                const SizedBox(height: 16),
+
+                /// PROGRAMM INFO
+                ProgramInfo(program: widget.recipient.program),
+                const SizedBox(height: 16),
+
+                /// SUPPORT
                 Text(
                   context.l10n.support,
                   style: Theme.of(context).textTheme.bodyLarge,
@@ -466,6 +497,8 @@ class AccountPageState extends State<AccountPage> {
                   label: context.l10n.getInTouch,
                 ),
                 const SizedBox(height: 24),
+
+                /// ACCOUNT
                 Text(
                   context.l10n.account,
                   style: Theme.of(context).textTheme.bodyLarge,
@@ -473,11 +506,15 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 Text(context.l10n.accountInfo),
                 const SizedBox(height: 16),
+
+                /// SIGN OUT
                 ButtonBig(
                   onPressed: () => context.read<AuthCubit>().logout(),
                   label: context.l10n.signOut,
                 ),
                 const SizedBox(height: 16),
+
+                /// APP VERSION
                 Text(
                   "${context.l10n.appVersion} ${_packageInfo.version} (${_packageInfo.buildNumber})",
                   textAlign: TextAlign.center,
@@ -492,10 +529,10 @@ class AccountPageState extends State<AccountPage> {
   }
 
   String? getFormattedDate(
-    Timestamp? timestamp,
+    DateTime? date,
     String locale,
   ) {
-    if (timestamp == null) return null;
-    return DateFormat.yMd(locale).format(timestamp.toDate());
+    if (date == null) return null;
+    return DateFormat.yMd(locale).format(date);
   }
 }

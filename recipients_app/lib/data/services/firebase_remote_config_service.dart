@@ -18,7 +18,7 @@ class FirebaseRemoteConfigService {
   const FirebaseRemoteConfigService({
     required this.firebaseRemoteConfig,
     required this.packageInfo,
-    required this.crashReportingRepository, 
+    required this.crashReportingRepository,
     this.minimumFetchInterval = const Duration(hours: 1),
   });
 
@@ -63,7 +63,7 @@ class FirebaseRemoteConfigService {
         jsonDecode(appVersionJson) as Map<String, dynamic>,
       );
 
-      return AppVersionInfo.fromJson(jsonMap);
+      return AppVersionInfoMapper.fromMap(jsonMap);
     } catch (ex, stack) {
       log(
         "Error parsing app_version_info from Remote Config: $appVersionJson",

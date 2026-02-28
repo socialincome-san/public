@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get other;
 
+  /// No description provided for @private.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get private;
+
   /// No description provided for @genderError.
   ///
   /// In en, this message translates to:
@@ -437,7 +443,7 @@ abstract class AppLocalizations {
   /// No description provided for @createAccountInfo.
   ///
   /// In en, this message translates to:
-  /// **'By creating an account, you agree with our '**
+  /// **'Before proceeding, you must accept our '**
   String get createAccountInfo;
 
   /// No description provided for @privacyPolicy.
@@ -455,7 +461,7 @@ abstract class AppLocalizations {
   /// No description provided for @createAccount.
   ///
   /// In en, this message translates to:
-  /// **'Create Account'**
+  /// **'Accept and Continue'**
   String get createAccount;
 
   /// No description provided for @recommendingOrganization.
@@ -463,6 +469,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recommending Organization'**
   String get recommendingOrganization;
+
+  /// No description provided for @programInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Program Information'**
+  String get programInformation;
 
   /// No description provided for @call.
   ///
@@ -542,6 +554,18 @@ abstract class AppLocalizations {
   /// **'Amount'**
   String get amount;
 
+  /// No description provided for @interval.
+  ///
+  /// In en, this message translates to:
+  /// **'Interval'**
+  String get interval;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
   /// No description provided for @nextMonth.
   ///
   /// In en, this message translates to:
@@ -583,6 +607,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'days'**
   String get days;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get month;
+
+  /// No description provided for @months.
+  ///
+  /// In en, this message translates to:
+  /// **'months'**
+  String get months;
 
   /// No description provided for @myPayments.
   ///
@@ -1489,6 +1525,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income.'**
   String get appUpdateWidgetErrorLaunchingStore;
+
+  /// No description provided for @country.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// No description provided for @recipientNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipient account found for this phone number. Please check your phone number or contact your local partner.'**
+  String get recipientNotFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,6 +1,9 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/models.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
+import "package:app/data/enums/balance_card_status.dart";
+import "package:app/data/enums/payout_status.dart";
+import "package:app/data/models/currency.dart";
+import "package:app/data/models/payment/mapped_payout.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payment_tile.dart";
@@ -20,7 +23,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   Widget build(BuildContext context) {
     final recipient = context.watch<AuthCubit>().state.recipient;
-    final paymentsUiState = context.watch<PaymentsCubit>().state.paymentsUiState!;
+    final payoutsUiState = context.watch<PayoutsCubit>().state.payoutsUiState!;
 
     return Scaffold(
       appBar: AppBar(
@@ -30,7 +33,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
       ),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () => context.read<PaymentsCubit>().loadPayments(),
+        onRefresh: () => context.read<PayoutsCubit>().loadPayments(),
         child: ListView(
           padding: AppSpacings.h8,
           children: [
@@ -51,7 +54,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "${recipient?.mobileMoneyPhone?.phoneNumber ?? ""}",
+                        recipient?.contact.phone?.number ?? "",
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
@@ -71,7 +74,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               const SizedBox(height: 4),
                               Text(
                                 _calculatePastPayments(
-                                  paymentsUiState.payments,
+                                  payoutsUiState.payouts,
                                 ),
                                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                                   color: AppColors.primaryColor,
@@ -89,13 +92,13 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                paymentsUiState.status != BalanceCardStatus.onHold
+                                payoutsUiState.status != BalanceCardStatus.onHold
                                     ? _calculateFuturePayments(
-                                        paymentsUiState.payments,
+                                        payoutsUiState.payouts,
                                       )
                                     : context.l10n.paymentsSuspended,
                                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                  color: paymentsUiState.status != BalanceCardStatus.onHold
+                                  color: payoutsUiState.status != BalanceCardStatus.onHold
                                       ? AppColors.primaryColor
                                       : AppColors.redColor,
                                   fontWeight: FontWeight.bold,
@@ -111,7 +114,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
               ),
             ),
             const SizedBox(height: 16),
-            if (paymentsUiState.payments.isEmpty)
+            if (payoutsUiState.payouts.isEmpty)
               Padding(
                 padding: AppSpacings.a8,
                 child: Center(
@@ -124,11 +127,11 @@ class _PaymentsPageState extends State<PaymentsPage> {
             else
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: paymentsUiState.payments.length,
+                itemCount: payoutsUiState.payouts.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return PaymentTile(
-                    mappedPayment: paymentsUiState.payments[index],
+                    mappedPayment: payoutsUiState.payouts[index],
                   );
                 },
               ),
@@ -138,34 +141,34 @@ class _PaymentsPageState extends State<PaymentsPage> {
     );
   }
 
-  String _calculatePastPayments(List<MappedPayment> mappedPayments) {
+  String _calculatePastPayments(List<MappedPayout> mappedPayments) {
     var total = 0;
 
-    final List<MappedPayment> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
+    final List<MappedPayout> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
 
     for (final payment in paidOrConfirmedPayments) {
       // Some of the users still have the currency SLL from the begining of the program. We will change it to SLE.
-      final factor = (payment.payment.currency == "SLL") ? 1000 : 1;
-      total += (payment.payment.amount ?? 0) ~/ factor;
+      final factor = (payment.payout.currency.name.toUpperCase() == "SLL") ? 1000 : 1;
+      total += (payment.payout.amount) ~/ factor;
     }
 
-    return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $total";
+    return "${paidOrConfirmedPayments.firstOrNull?.payout.currency.toDisplayString() ?? "???"} $total";
   }
 
-  String _calculateFuturePayments(List<MappedPayment> mappedPayments) {
-    final List<MappedPayment> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
+  String _calculateFuturePayments(List<MappedPayout> mappedPayments) {
+    final List<MappedPayout> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
 
     // Due to problem that payment amount can change, we need to calculate the future payments without calculation of previous payments
     final futurePayments = (kProgramDurationMonths - paidOrConfirmedPayments.length) * kCurrentPaymentAmount;
 
-    return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $futurePayments";
+    return "${paidOrConfirmedPayments.firstOrNull?.payout.currency.toDisplayString() ?? "???"} $futurePayments";
   }
 
-  List<MappedPayment> _getAllPaidOrConfirmedPayments(List<MappedPayment> mappedPayments) {
+  List<MappedPayout> _getAllPaidOrConfirmedPayments(List<MappedPayout> mappedPayments) {
     final paidOrConfirmedPayments = mappedPayments.where(
       (payment) {
-        final paymentStatus = payment.payment.status;
-        return paymentStatus == PaymentStatus.paid || paymentStatus == PaymentStatus.confirmed;
+        final paymentStatus = payment.payout.status;
+        return paymentStatus == PayoutStatus.paid || paymentStatus == PayoutStatus.confirmed;
       },
     ).toList();
     return paidOrConfirmedPayments;

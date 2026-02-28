@@ -1,5 +1,6 @@
-import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/payment/payment.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
+import "package:app/data/enums/contest_reason.dart";
+import "package:app/data/models/payment/payout.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/inputs/input_text_area.dart";
@@ -10,9 +11,9 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 class ReviewPaymentModal extends StatefulWidget {
-  final SocialIncomePayment _payment;
+  final Payout _payout;
 
-  const ReviewPaymentModal(this._payment, {super.key});
+  const ReviewPaymentModal(this._payout, {super.key});
 
   @override
   State<ReviewPaymentModal> createState() => _ReviewPaymentModalState();
@@ -141,10 +142,10 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
     if (otherReasonComment != null) {
       otherReasonCommentFormatted = ": $otherReasonComment";
     }
-    context.read<PaymentsCubit>().contestPayment(
-          widget._payment,
-          reason.localized(context.l10n) + otherReasonCommentFormatted,
-        );
+    context.read<PayoutsCubit>().contestPayment(
+      widget._payout,
+      reason.localized(context.l10n) + otherReasonCommentFormatted,
+    );
     Navigator.pop(context);
   }
 }
