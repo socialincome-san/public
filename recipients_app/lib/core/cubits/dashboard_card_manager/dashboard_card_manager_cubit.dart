@@ -28,25 +28,12 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     final List<DashboardCard> cards = [];
 
     try {
-      // INFO: Currently the payment phone number is used for phone authentication, too. 
-      // In the backend the payment phone number must be the same as the Firebase auth phome number.
-      // That's why at the moment the payment phone number can not be changed by the mobile app user.
+      // HINT: Currently the payment phone number can not be empty. 
+      // Current backend behaviour:
+      // If you change the payment number this triggers the deletion of the firebase auth user and the creation of a new one with the new phone number.
+      // That means the payment number is always the same as the firebase auth phone number and so it can not be null.
       final contactPhoneNumber = recipient.contact.phone?.number;
       final paymentPhoneNumber = recipient.paymentInformation?.phone.number;
-
-      // TODO(migration): Clarify logic here. Given the info above, do we even have a scenario where the payment phone number is null? 
-      // If not, we can simplify this logic and just ask "Is your contact phone number the same as your payment phone number?" 
-      if (paymentPhoneNumber == null && contactPhoneNumber != null) {
-        final paymentPhoneCard = DashboardCard(
-          title: "My Profile",
-          message: "Is your contact phone number ($contactPhoneNumber) also your payment phone number?",
-          primaryButtonText: "Yes",
-          secondaryButtonText: "No",
-          type: DashboardCardType.paymentNumberEqualsContactNumber,
-        );
-
-        cards.add(paymentPhoneCard);
-      }
 
       if (contactPhoneNumber == null && paymentPhoneNumber != null) {
         final contactPhoneCard = DashboardCard(
@@ -70,32 +57,6 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
         state.copyWith(status: DashboardCardManagerStatus.error, exception: ex),
-      );
-    }
-  }
-
-  Future<void> updatePaymentNumber() async {
-    emit(state.copyWith(status: DashboardCardManagerStatus.updating));
-
-    try {
-      final recipient = userRepository.currentRecipient;
-
-      if (recipient == null) throw Exception("Recipient not found");
-
-      await userRepository.updateRecipient(
-        RecipientSelfUpdate(
-          paymentPhone: recipient.contact.phone?.number,
-        ),
-      );
-
-      emit(state.copyWith(status: DashboardCardManagerStatus.updated, cards: []));
-    } on Exception catch (ex, stackTrace) {
-      crashReportingRepository.logError(ex, stackTrace);
-      emit(
-        state.copyWith(
-          status: DashboardCardManagerStatus.error,
-          exception: ex,
-        ),
       );
     }
   }

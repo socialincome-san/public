@@ -8,7 +8,6 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 enum DashboardCardType {
-  paymentNumberEqualsContactNumber,
   contactNumberEqualsPaymentNumber,
 }
 
@@ -88,7 +87,6 @@ class DashboardCard extends DashboardItem {
     switch (type) {
       /// On pressing no, user should be forwarded to account page
       /// to fill missing information
-      case DashboardCardType.paymentNumberEqualsContactNumber:
       case DashboardCardType.contactNumberEqualsPaymentNumber:
         final recipient = context.read<AuthCubit>().state.recipient!;
 
@@ -102,8 +100,6 @@ class DashboardCard extends DashboardItem {
 
   void _onPressPrimary(BuildContext context) {
     switch (type) {
-      case DashboardCardType.paymentNumberEqualsContactNumber:
-        context.read<DashboardCardManagerCubit>().updatePaymentNumber();
       case DashboardCardType.contactNumberEqualsPaymentNumber:
         context.read<DashboardCardManagerCubit>().updateContactNumber();
     }
