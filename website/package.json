@@ -115,7 +115,7 @@
 		"@types/pdfkit": "0.17.5",
 		"@types/ssh2-sftp-client": "9.0.6",
 		"@types/vimeo__player": "2.18.3",
-		"eslint": "9.39.2",
+		"eslint": "10.0.2",
 		"eslint-config-next": "16.1.6",
 		"jest": "30.2.0",
 		"knip": "5.84.1",
