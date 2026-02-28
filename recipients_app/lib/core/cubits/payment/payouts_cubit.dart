@@ -68,21 +68,17 @@ class PayoutsCubit extends Cubit<PayoutsState> {
   }
 
   Future<void> confirmPayment(Payout payout) async {
-    emit(state.copyWith(status: PayoutsStatus.loading));
-
     try {
+      // Queue the operation (actual execution happens via UpdateQueueService)
       await paymentRepository.confirmPayment(
         payoutId: payout.id,
       );
 
-      final payouts = await paymentRepository.fetchPayouts();
-
-      final paymentUiState = await _mapPayoutsUiState(payouts);
-
+      // Emit queued status to indicate operation has been queued
+      // QueueEventListener will trigger loadPayments() when operation completes
       emit(
         state.copyWith(
-          status: PayoutsStatus.updated,
-          payoutsUiState: paymentUiState,
+          status: PayoutsStatus.queued,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -100,22 +96,18 @@ class PayoutsCubit extends Cubit<PayoutsState> {
     Payout payout,
     String contestReason,
   ) async {
-    emit(state.copyWith(status: PayoutsStatus.loading));
-
     try {
+      // Queue the operation (actual execution happens via UpdateQueueService)
       await paymentRepository.contestPayment(
         payoutId: payout.id,
         contestReason: contestReason,
       );
 
-      final payouts = await paymentRepository.fetchPayouts();
-
-      final paymentUiState = await _mapPayoutsUiState(payouts);
-
+      // Emit queued status to indicate operation has been queued
+      // QueueEventListener will trigger loadPayments() when operation completes
       emit(
         state.copyWith(
-          status: PayoutsStatus.updated,
-          payoutsUiState: paymentUiState,
+          status: PayoutsStatus.queued,
         ),
       );
     } on Exception catch (ex, stackTrace) {

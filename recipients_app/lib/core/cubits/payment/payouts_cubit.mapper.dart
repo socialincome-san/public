@@ -35,6 +35,8 @@ class PayoutsStatusMapper extends EnumMapper<PayoutsStatus> {
         return PayoutsStatus.success;
       case r'updated':
         return PayoutsStatus.updated;
+      case r'queued':
+        return PayoutsStatus.queued;
       case r'failure':
         return PayoutsStatus.failure;
       default:
@@ -53,6 +55,8 @@ class PayoutsStatusMapper extends EnumMapper<PayoutsStatus> {
         return r'success';
       case PayoutsStatus.updated:
         return r'updated';
+      case PayoutsStatus.queued:
+        return r'queued';
       case PayoutsStatus.failure:
         return r'failure';
     }

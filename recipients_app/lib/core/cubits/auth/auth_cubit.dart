@@ -113,15 +113,15 @@ class AuthCubit extends Cubit<AuthState> {
 
   /// Use the RecipientSelfUpdate model to update the recipient.
   Future<void> updateRecipient({required RecipientSelfUpdate selfUpdate}) async {
-    emit(state.copyWith(status: AuthStatus.updatingRecipient));
-
     try {
-      final updatedRecipient = await userRepository.updateRecipient(selfUpdate);
+      // Queue the operation (actual execution happens via UpdateQueueService)
+      await userRepository.updateRecipient(selfUpdate);
 
+      // Emit queued status to indicate operation has been queued
+      // QueueEventListener will trigger init() when operation completes
       emit(
         state.copyWith(
-          status: AuthStatus.updateRecipientSuccess,
-          recipient: updatedRecipient,
+          status: AuthStatus.updateRecipientQueued,
           exception: null,
         ),
       );

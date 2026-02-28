@@ -3,19 +3,14 @@ import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/database/app_database.dart";
-import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
-import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/local/payout_local_data_source.dart";
 import "package:app/data/datasource/local/survey_local_data_source.dart";
-import "package:app/data/datasource/local/user_local_data_source.dart";
-import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
-import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/models/app_version_info.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
+import "package:app/data/services/update_queue_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
 import "package:app/l10n/arb/app_localizations.dart";
@@ -27,7 +22,7 @@ import "package:app/view/pages/terms_and_conditions_page.dart";
 import "package:app/view/pages/welcome_page.dart";
 import "package:app/view/widgets/app_update_check_widget.dart";
 import "package:app/view/widgets/offline_banner.dart";
-import "package:connectivity_plus/connectivity_plus.dart";
+import "package:app/view/widgets/queue_event_listener.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -38,22 +33,18 @@ class MyApp extends StatelessWidget {
   final FirebaseMessaging messaging;
   final DemoManager demoManager;
   final AppDatabase appDatabase;
-  final Connectivity connectivity;
+  final ConnectivityCubit connectivityCubit;
 
   final CrashReportingRepository crashReportingRepository;
 
-  final UserRemoteDataSource userRemoteDataSource;
-  final UserDemoDataSource userDemoDataSource;
-  final UserLocalDataSource userLocalDataSource;
-
-  final PayoutRemoteDataSource paymentRemoteDataSource;
-  final PayoutDemoDataSource paymentDemoDataSource;
-  final PayoutLocalDataSource paymentLocalDataSource;
+  final UserRepository userRepository;
+  final PaymentRepository paymentRepository;
 
   final SurveyRemoteDataSource surveyRemoteDataSource;
   final SurveyDemoDataSource surveyDemoDataSource;
   final SurveyLocalDataSource surveyLocalDataSource;
 
+  final UpdateQueueService updateQueueService;
   final AuthService authService;
   final FirebaseRemoteConfigService firebaseRemoteConfigService;
 
@@ -64,18 +55,13 @@ class MyApp extends StatelessWidget {
     required this.messaging,
     required this.demoManager,
     required this.appDatabase,
-    required this.connectivity,
-    required this.userRemoteDataSource,
-    required this.userDemoDataSource,
-    required this.userLocalDataSource,
-    required this.paymentRemoteDataSource,
-    required this.paymentDemoDataSource,
-    required this.paymentLocalDataSource,
+    required this.connectivityCubit,
+    required this.userRepository,
+    required this.paymentRepository,
     required this.surveyRemoteDataSource,
     required this.surveyDemoDataSource,
     required this.surveyLocalDataSource,
-    // required this.organizationRemoteDataSource,
-    // required this.organizationDemoDataSource,
+    required this.updateQueueService,
     required this.authService,
     required this.firebaseRemoteConfigService,
     required this.crashReportingRepository,
@@ -90,23 +76,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<DemoManager>(create: (context) => demoManager),
         RepositoryProvider<AppDatabase>.value(value: appDatabase),
         RepositoryProvider(create: (context) => MessagingRepository(messaging: messaging)),
-        RepositoryProvider(
-          create: (context) => UserRepository(
-            remoteDataSource: userRemoteDataSource,
-            demoDataSource: userDemoDataSource,
-            localDataSource: userLocalDataSource,
-            demoManager: demoManager,
-          ),
-        ),
+        RepositoryProvider<UserRepository>.value(value: userRepository),
         RepositoryProvider.value(value: crashReportingRepository),
-        RepositoryProvider(
-          create: (context) => PaymentRepository(
-            remoteDataSource: paymentRemoteDataSource,
-            demoDataSource: paymentDemoDataSource,
-            localDataSource: paymentLocalDataSource,
-            demoManager: demoManager,
-          ),
-        ),
+        RepositoryProvider<PaymentRepository>.value(value: paymentRepository),
         RepositoryProvider(
           create: (context) => SurveyRepository(
             remoteDataSource: surveyRemoteDataSource,
@@ -115,6 +87,7 @@ class MyApp extends StatelessWidget {
             demoManager: demoManager,
           ),
         ),
+        RepositoryProvider<UpdateQueueService>.value(value: updateQueueService),
         RepositoryProvider<AuthService>.value(value: authService),
         RepositoryProvider<FirebaseRemoteConfigService>.value(
           value: firebaseRemoteConfigService,
@@ -136,14 +109,13 @@ class MyApp extends StatelessWidget {
               crashReportingRepository: context.read<CrashReportingRepository>(),
             )..initMessaging(),
           ),
-          BlocProvider(
-            create: (context) => ConnectivityCubit(
-              connectivity: connectivity,
-            )..initialize(),
-          ),
+          BlocProvider<ConnectivityCubit>.value(value: connectivityCubit),
         ],
-        child: _App(
-          appVersionInfo: appVersionInfo,
+        child: QueueEventListener(
+          queueService: updateQueueService,
+          child: _App(
+            appVersionInfo: appVersionInfo,
+          ),
         ),
       ),
     );
@@ -213,6 +185,7 @@ class _App extends StatelessWidget {
                   case AuthStatus.authenticated:
                   case AuthStatus.updateRecipientFailure:
                   case AuthStatus.updateRecipientSuccess:
+                  case AuthStatus.updateRecipientQueued:
                   case AuthStatus.updatingRecipient:
                     FlutterNativeSplash.remove();
                     if (state.recipient?.termsAccepted == true) {

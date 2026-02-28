@@ -1,3 +1,4 @@
+import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
 import "package:app/core/helpers/custom_bloc_observer.dart";
 import "package:app/data/database/app_database.dart";
 import "package:app/data/datasource/demo/payout_demo_data_source.dart";
@@ -9,10 +10,13 @@ import "package:app/data/datasource/local/user_local_data_source.dart";
 import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
-import "package:app/data/repositories/crash_reporting_repository.dart";
+import "package:app/data/repositories/queue_aware_payment_repository.dart";
+import "package:app/data/repositories/queue_aware_user_repository.dart";
+import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/authenticated_client.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
+import "package:app/data/services/update_queue_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
 import "package:connectivity_plus/connectivity_plus.dart";
@@ -107,6 +111,50 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   const crashReportingRepository = CrashReportingRepository();
 
+  // Create base repositories (needed by UpdateQueueService)
+  final userRepository = UserRepository(
+    remoteDataSource: userRemoteDataSource,
+    demoDataSource: userDemoDataSource,
+    localDataSource: userLocalDataSource,
+    demoManager: demoManager,
+  );
+
+  final paymentRepository = PaymentRepository(
+    remoteDataSource: paymentRemoteDataSource,
+    demoDataSource: paymentDemoDataSource,
+    localDataSource: paymentLocalDataSource,
+    demoManager: demoManager,
+  );
+
+  // Create ConnectivityCubit (needed by UpdateQueueService)
+  final connectivityCubit = ConnectivityCubit(connectivity: connectivity)..initialize();
+
+  // Create UpdateQueueService
+  final updateQueueService = UpdateQueueService(
+    database: appDatabase,
+    connectivityCubit: connectivityCubit,
+    paymentRepository: paymentRepository,
+    userRepository: userRepository,
+    crashReportingRepository: crashReportingRepository,
+  );
+
+  // Create queue-aware repository wrappers
+  final queueAwarePaymentRepository = QueueAwarePaymentRepository(
+    remoteDataSource: paymentRemoteDataSource,
+    demoDataSource: paymentDemoDataSource,
+    localDataSource: paymentLocalDataSource,
+    demoManager: demoManager,
+    queueService: updateQueueService,
+  );
+
+  final queueAwareUserRepository = QueueAwareUserRepository(
+    remoteDataSource: userRemoteDataSource,
+    demoDataSource: userDemoDataSource,
+    localDataSource: userLocalDataSource,
+    demoManager: demoManager,
+    queueService: updateQueueService,
+  );
+
   final firebaseRemoteConfigService = FirebaseRemoteConfigService(
     firebaseRemoteConfig: FirebaseRemoteConfig.instance,
     packageInfo: packageInfo,
@@ -131,18 +179,13 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
         messaging: messaging,
         demoManager: demoManager,
         appDatabase: appDatabase,
-        connectivity: connectivity,
-        userRemoteDataSource: userRemoteDataSource,
-        userDemoDataSource: userDemoDataSource,
-        userLocalDataSource: userLocalDataSource,
-        paymentRemoteDataSource: paymentRemoteDataSource,
-        paymentDemoDataSource: paymentDemoDataSource,
-        paymentLocalDataSource: paymentLocalDataSource,
+        connectivityCubit: connectivityCubit,
+        userRepository: queueAwareUserRepository,
+        paymentRepository: queueAwarePaymentRepository,
         surveyRemoteDataSource: surveyRemoteDataSource,
         surveyDemoDataSource: surveyDemoDataSource,
         surveyLocalDataSource: surveyLocalDataSource,
-        // organizationRemoteDataSource: organizationRemoteDataSource,
-        // organizationDemoDataSource: organizationDemoDataSource,
+        updateQueueService: updateQueueService,
         authService: authService,
         firebaseRemoteConfigService: firebaseRemoteConfigService,
         crashReportingRepository: crashReportingRepository,

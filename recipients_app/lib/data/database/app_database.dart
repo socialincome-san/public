@@ -55,19 +55,33 @@ class Surveys extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [Recipients, Payouts, Surveys])
+// UpdateQueue table - stores pending update operations
+class UpdateQueue extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get operationType => text()(); // 'confirm_payment', 'update_recipient', etc.
+  TextColumn get operationPayload => text()(); // JSON serialized parameters
+  DateTimeColumn get createdAt => dateTime()();
+  IntColumn get retryCount => integer().withDefault(const Constant(0))();
+  TextColumn get status => text().withDefault(const Constant("pending"))(); // pending/processing/failed
+  TextColumn get error => text().nullable()();
+}
+
+@DriftDatabase(tables: [Recipients, Payouts, Surveys, UpdateQueue])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   // Migration strategy for future versions
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
       onUpgrade: (migrator, from, to) async {
-        // Future migrations will go here
+        if (from == 1) {
+          // Add UpdateQueue table in schema version 2
+          await migrator.createTable(updateQueue);
+        }
       },
     );
   }

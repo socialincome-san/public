@@ -6,6 +6,7 @@ enum PayoutsStatus {
   loading,
   success,
   updated,
+  queued,
   failure,
 }
 

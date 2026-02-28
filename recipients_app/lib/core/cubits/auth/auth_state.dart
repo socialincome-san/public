@@ -7,6 +7,7 @@ enum AuthStatus {
   authenticated,
   authenticatedWithoutRecipient,
   updatingRecipient,
+  updateRecipientQueued,
   updateRecipientSuccess,
   updateRecipientFailure,
   failure,
