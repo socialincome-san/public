@@ -1,4 +1,7 @@
+import { Currency } from '@/generated/prisma/enums';
 import { z } from 'zod';
+
+const currencyEnum = z.enum(Object.values(Currency) as [string, ...string[]]);
 
 const Phone = z.object({
 	id: z.string(),
@@ -55,7 +58,7 @@ const Program = z.object({
 	countryId: z.string(),
 	country: Country,
 	payoutPerInterval: z.union([z.number(), z.string()]),
-	payoutCurrency: z.string(),
+	payoutCurrency: currencyEnum,
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
 	programDurationInMonths: z.number(),
 	createdAt: z.string(),
@@ -85,7 +88,7 @@ const Payout = z.object({
 	id: z.string(),
 	amount: z.union([z.number(), z.string()]),
 	amountChf: z.union([z.number(), z.string()]).nullable(),
-	currency: z.string(),
+	currency: currencyEnum,
 	paymentAt: z.string(),
 	status: z.enum(['paid', 'confirmed', 'contested', 'failed']),
 	phoneNumber: z.string().nullable(),

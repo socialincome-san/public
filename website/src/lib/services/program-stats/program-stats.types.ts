@@ -1,4 +1,4 @@
-import { PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
+import { Currency, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
 
 export type ProgramDashboardStats = {
 	contributedToProgramSoFarChf: number;
@@ -12,7 +12,7 @@ export type ProgramDashboardStats = {
 	totalPayoutsCount: number;
 	payoutPerInterval: number;
 	payoutInterval: string;
-	payoutCurrency: string;
+	payoutCurrency: Currency;
 	costPerIntervalChf: number;
 	payoutProgressPercent: number;
 
@@ -35,7 +35,7 @@ export type ProgramDashboardStats = {
 export type ProgramForDashboard = {
 	programDurationInMonths: number;
 	payoutPerInterval: unknown;
-	payoutCurrency: string;
+	payoutCurrency: Currency;
 	payoutInterval: string;
 
 	recipients: Array<{

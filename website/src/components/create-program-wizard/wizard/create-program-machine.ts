@@ -1,4 +1,4 @@
-import { Cause, PayoutInterval } from '@/generated/prisma/enums';
+import { Cause, Currency, PayoutInterval } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
@@ -31,7 +31,7 @@ export const createProgramWizardMachine = setup({
 			programDuration: number;
 			payoutPerInterval: number;
 			payoutInterval: PayoutInterval;
-			currency: string;
+			currency: Currency;
 			customizePayouts: boolean;
 
 			// step 4
@@ -57,7 +57,7 @@ export const createProgramWizardMachine = setup({
 			| { type: 'SET_PROGRAM_DURATION'; value: number }
 			| { type: 'SET_PAYOUT_PER_INTERVAL'; value: number }
 			| { type: 'SET_PAYOUT_INTERVAL'; value: PayoutInterval }
-			| { type: 'SET_CURRENCY'; value: string }
+			| { type: 'SET_CURRENCY'; value: Currency }
 			| { type: 'TOGGLE_CUSTOMIZE_PAYOUTS' }
 			| { type: 'NEXT' }
 			| { type: 'BACK' }

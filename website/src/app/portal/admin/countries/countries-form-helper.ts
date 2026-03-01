@@ -2,55 +2,75 @@ import { CountryCreateInput, CountryPayload, CountryUpdateInput } from '@/lib/se
 import { CountryFormSchema } from './countries-form';
 
 export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreateInput => {
+	const countrySettings = schema.fields.countrySettings.fields;
+	const cash = schema.fields.suitabilityOfCash.fields;
+	const mobileMoney = schema.fields.mobileMoney.fields;
+	const mobileNetwork = schema.fields.mobileNetwork.fields;
+	const sanctions = schema.fields.noSanctions.fields;
+
 	return {
-		isoCode: schema.fields.isoCode.value,
-		isActive: schema.fields.isActive.value,
-		microfinanceIndex: schema.fields.microfinanceIndex.value ?? null,
-		populationCoverage: schema.fields.populationCoverage.value ?? null,
-		latestSurveyDate: schema.fields.latestSurveyDate.value ?? null,
-		networkTechnology: schema.fields.networkTechnology.value ?? null,
-		mobileMoneyProviderIds: schema.fields.mobileMoneyProviders.value ?? [],
-		sanctions: schema.fields.sanctions.value ?? [],
+		isoCode: countrySettings.isoCode.value,
+		isActive: countrySettings.isActive.value,
+		currency: countrySettings.currency.value,
+		defaultPayoutAmount: countrySettings.defaultPayoutAmount.value,
+		microfinanceIndex: cash.microfinanceIndex.value ?? null,
+		cashConditionOverride: cash.cashConditionOverride.value ?? false,
+		populationCoverage: mobileNetwork.populationCoverage.value ?? null,
+		latestSurveyDate: cash.latestSurveyDate.value ?? null,
+		networkTechnology: mobileNetwork.networkTechnology.value ?? null,
+		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
+		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
+		sanctions: sanctions.sanctions.value ?? [],
 		microfinanceSourceLink:
-			schema.fields.microfinanceSourceText.value || schema.fields.microfinanceSourceHref.value
+			cash.microfinanceSourceText.value || cash.microfinanceSourceHref.value
 				? {
-						text: schema.fields.microfinanceSourceText.value ?? '',
-						href: schema.fields.microfinanceSourceHref.value ?? '',
+						text: cash.microfinanceSourceText.value ?? '',
+						href: cash.microfinanceSourceHref.value ?? '',
 					}
 				: null,
 		networkSourceLink:
-			schema.fields.networkSourceText.value || schema.fields.networkSourceHref.value
+			mobileNetwork.networkSourceText.value || mobileNetwork.networkSourceHref.value
 				? {
-						text: schema.fields.networkSourceText.value ?? '',
-						href: schema.fields.networkSourceHref.value ?? '',
+						text: mobileNetwork.networkSourceText.value ?? '',
+						href: mobileNetwork.networkSourceHref.value ?? '',
 					}
 				: null,
 	};
 };
 
 export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryUpdateInput => {
+	const countrySettings = schema.fields.countrySettings.fields;
+	const cash = schema.fields.suitabilityOfCash.fields;
+	const mobileMoney = schema.fields.mobileMoney.fields;
+	const mobileNetwork = schema.fields.mobileNetwork.fields;
+	const sanctions = schema.fields.noSanctions.fields;
+
 	return {
 		id: existing.id,
-		isoCode: schema.fields.isoCode.value,
-		isActive: schema.fields.isActive.value,
-		microfinanceIndex: schema.fields.microfinanceIndex.value ?? null,
-		populationCoverage: schema.fields.populationCoverage.value ?? null,
-		latestSurveyDate: schema.fields.latestSurveyDate.value ?? null,
-		networkTechnology: schema.fields.networkTechnology.value ?? null,
-		mobileMoneyProviderIds: schema.fields.mobileMoneyProviders.value ?? [],
-		sanctions: schema.fields.sanctions.value ?? [],
+		isoCode: countrySettings.isoCode.value,
+		isActive: countrySettings.isActive.value,
+		currency: countrySettings.currency.value,
+		defaultPayoutAmount: countrySettings.defaultPayoutAmount.value,
+		microfinanceIndex: cash.microfinanceIndex.value ?? null,
+		cashConditionOverride: cash.cashConditionOverride.value ?? false,
+		populationCoverage: mobileNetwork.populationCoverage.value ?? null,
+		latestSurveyDate: cash.latestSurveyDate.value ?? null,
+		networkTechnology: mobileNetwork.networkTechnology.value ?? null,
+		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
+		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
+		sanctions: sanctions.sanctions.value ?? [],
 		microfinanceSourceLink:
-			schema.fields.microfinanceSourceText.value || schema.fields.microfinanceSourceHref.value
+			cash.microfinanceSourceText.value || cash.microfinanceSourceHref.value
 				? {
-						text: schema.fields.microfinanceSourceText.value ?? '',
-						href: schema.fields.microfinanceSourceHref.value ?? '',
+						text: cash.microfinanceSourceText.value ?? '',
+						href: cash.microfinanceSourceHref.value ?? '',
 					}
 				: null,
 		networkSourceLink:
-			schema.fields.networkSourceText.value || schema.fields.networkSourceHref.value
+			mobileNetwork.networkSourceText.value || mobileNetwork.networkSourceHref.value
 				? {
-						text: schema.fields.networkSourceText.value ?? '',
-						href: schema.fields.networkSourceHref.value ?? '',
+						text: mobileNetwork.networkSourceText.value ?? '',
+						href: mobileNetwork.networkSourceHref.value ?? '',
 					}
 				: null,
 	};

@@ -1,14 +1,10 @@
 import { ExchangeRate } from '@/generated/prisma/client';
+import { isValidCurrency } from '@/lib/types/currency';
 import { now, nowMs } from '@/lib/utils/now';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateCreateInput, ExchangeRates } from './exchange-rate.types';
-type ExchangeRateResponse = {
-	base: string;
-	date: string;
-	rates: ExchangeRates;
-};
+import { ExchangeRateCreateInput, ExchangeRateResponse } from './exchange-rate.types';
 
 export class ExchangeRateImportService extends BaseService {
 	static readonly DAY_IN_MILLISECONDS = 60 * 60 * 24 * 1000;
@@ -56,6 +52,9 @@ export class ExchangeRateImportService extends BaseService {
 	private async storeExchangeRates(response: ExchangeRateResponse): Promise<ServiceResult<ExchangeRateCreateInput[]>> {
 		const data: ExchangeRateCreateInput[] = [];
 		for (const [currency, rate] of Object.entries(response.rates ?? {})) {
+			if (!isValidCurrency(currency)) {
+				continue;
+			}
 			data.push({
 				currency: currency,
 				rate: rate,

@@ -1,4 +1,4 @@
-import { MobileMoneyProvider } from '@/generated/prisma/client';
+import { Currency, MobileMoneyProvider } from '@/generated/prisma/client';
 import { CountryCode, NetworkTechnology } from '@/generated/prisma/enums';
 
 export type MobileMoneyProviderRef = Pick<MobileMoneyProvider, 'id' | 'name'>;
@@ -7,6 +7,8 @@ export type CountryTableViewRow = {
 	id: string;
 	isoCode: CountryCode;
 	isActive: boolean;
+	currency?: Currency | null;
+	defaultPayoutAmount?: number | null;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
@@ -17,7 +19,7 @@ export type CountryTableViewRow = {
 	microfinanceSourceHref?: string | null;
 	networkSourceText?: string | null;
 	networkSourceHref?: string | null;
-	createdAt: Date;
+	updatedAt: Date;
 };
 
 export type CountryTableView = {
@@ -28,11 +30,15 @@ export type CountryPayload = {
 	id: string;
 	isoCode: CountryCode;
 	isActive: boolean;
+	currency: Currency;
+	defaultPayoutAmount: number;
 	microfinanceIndex?: number | null;
+	cashConditionOverride: boolean;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	mobileMoneyProviders?: MobileMoneyProviderRef[] | null;
+	mobileMoneyConditionOverride: boolean;
 	sanctions?: string[] | null;
 	microfinanceSourceLink?: { id: string; text: string; href: string } | null;
 	networkSourceLink?: { id: string; text: string; href: string } | null;
@@ -41,11 +47,15 @@ export type CountryPayload = {
 export type CountryCreateInput = {
 	isoCode: CountryCode;
 	isActive: boolean;
+	currency: Currency;
+	defaultPayoutAmount: number;
 	microfinanceIndex?: number | null;
+	cashConditionOverride: boolean;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	mobileMoneyProviderIds?: string[];
+	mobileMoneyConditionOverride: boolean;
 	sanctions?: string[];
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;
@@ -55,11 +65,15 @@ export type CountryUpdateInput = {
 	id: string;
 	isoCode?: CountryCode;
 	isActive?: boolean;
+	currency: Currency;
+	defaultPayoutAmount: number;
 	microfinanceIndex?: number | null;
+	cashConditionOverride: boolean;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
 	mobileMoneyProviderIds?: string[];
+	mobileMoneyConditionOverride: boolean;
 	sanctions?: string[];
 	microfinanceSourceLink?: { text: string; href: string } | null;
 	networkSourceLink?: { text: string; href: string } | null;

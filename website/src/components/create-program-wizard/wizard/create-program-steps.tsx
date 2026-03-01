@@ -1,5 +1,6 @@
 'use client';
 
+import { Currency } from '@/generated/prisma/enums';
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
@@ -68,7 +69,7 @@ export const CreateProgramSteps = ({ state, send }: Props) => {
 				onDurationChange={(v) => send({ type: 'SET_PROGRAM_DURATION', value: v })}
 				onPayoutChange={(v) => send({ type: 'SET_PAYOUT_PER_INTERVAL', value: v })}
 				onIntervalChange={(v) => send({ type: 'SET_PAYOUT_INTERVAL', value: v })}
-				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v })}
+				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v as Currency })}
 				onToggleCustomizePayouts={() => send({ type: 'TOGGLE_CUSTOMIZE_PAYOUTS' })}
 			/>
 		);

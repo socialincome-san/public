@@ -120,7 +120,7 @@ enum SanctionRegime {
   other
 }
 
-/// ISO 3166-1 alpha-2 country codes
+// ISO 3166-1 alpha-2 country codes
 enum CountryCode {
   AF
   AX
@@ -373,6 +373,183 @@ enum CountryCode {
   ZW
 }
 
+// ISO 4217 currency codes
+enum Currency {
+  AED
+  AFN
+  ALL
+  AMD
+  ANG
+  AOA
+  ARS
+  AUD
+  AWG
+  AZN
+  BAM
+  BBD
+  BDT
+  BGN
+  BHD
+  BIF
+  BMD
+  BND
+  BOB
+  BRL
+  BSD
+  BTC
+  BTN
+  BWP
+  BYN
+  BYR
+  BZD
+  CAD
+  CDF
+  CHF
+  CLF
+  CLP
+  CNY
+  COP
+  CRC
+  CUC
+  CUP
+  CVE
+  CZK
+  DJF
+  DKK
+  DOP
+  DZD
+  EGP
+  ERN
+  ETB
+  EUR
+  FJD
+  FKP
+  FOK
+  GBP
+  GEL
+  GGP
+  GHS
+  GIP
+  GMD
+  GNF
+  GTQ
+  GYD
+  HKD
+  HNL
+  HRK
+  HTG
+  HUF
+  IDR
+  ILS
+  IMP
+  INR
+  IQD
+  IRR
+  ISK
+  JEP
+  JMD
+  JOD
+  JPY
+  KES
+  KGS
+  KHR
+  KID
+  KMF
+  KPW
+  KRW
+  KWD
+  KYD
+  KZT
+  LAK
+  LBP
+  LKR
+  LRD
+  LSL
+  LTL
+  LYD
+  LVL
+  MAD
+  MDL
+  MGA
+  MKD
+  MMK
+  MNT
+  MOP
+  MRO
+  MUR
+  MVR
+  MWK
+  MXN
+  MYR
+  MZN
+  NAD
+  NGN
+  NIO
+  NOK
+  NPR
+  NZD
+  OMR
+  PAB
+  PEN
+  PGK
+  PHP
+  PKR
+  PLN
+  PYG
+  QAR
+  RON
+  RSD
+  RUB
+  RWF
+  SAR
+  SBD
+  SCR
+  SDG
+  SEK
+  SGD
+  SHP
+  SLE
+  SLL
+  SOS
+  SRD
+  SSP
+  STD
+  SVC
+  SYP
+  SZL
+  THB
+  TJS
+  TMT
+  TND
+  TOP
+  TRY
+  TTD
+  TWD
+  TZS
+  UAH
+  UGX
+  USD
+  UYU
+  UZS
+  VEF
+  VES
+  VND
+  VUV
+  WST
+  XAF
+  XAU
+  XAG
+  XCD
+  XDR
+  XOF
+  XPF
+  YER
+  ZAR
+  ZMK
+  ZMW
+  ZWL
+}
+
 model Account {
   id String @id @default(cuid()) @map("id")
 
@@ -432,7 +609,7 @@ model Contribution {
   id                String             @id @default(cuid()) @map("id")
   legacyFirestoreId String?            @unique @map("legacy_firestore_id")
   amount            Decimal            @map("amount") @db.Decimal(12, 4)
-  currency          String             @map("currency")
+  currency          Currency           @map("currency")
   amountChf         Decimal            @map("amount_chf") @db.Decimal(12, 4)
   feesChf           Decimal            @map("fees_chf") @db.Decimal(12, 4)
   interval          DonationInterval?  @map("interval")
@@ -509,7 +686,7 @@ model Payout {
   legacyFirestoreId String?      @unique @map("legacy_firestore_id")
   amount            Decimal      @map("amount") @db.Decimal(12, 4)
   amountChf         Decimal?     @map("amount_chf") @db.Decimal(12, 4)
-  currency          String       @map("currency")
+  currency          Currency     @map("currency")
   paymentAt         DateTime     @map("payment_at") @db.Timestamptz(3)
   status            PayoutStatus @map("status")
   phoneNumber       String?      @map("phone_number")
@@ -637,7 +814,7 @@ model Program {
   amountOfRecipientsForStart Int?           @map("amount_of_recipients_for_start")
   programDurationInMonths    Int            @map("program_duration_in_months")
   payoutPerInterval          Decimal        @map("payout_per_interval") @db.Decimal(12, 4)
-  payoutCurrency             String         @map("payout_currency")
+  payoutCurrency             Currency       @map("payout_currency")
   payoutInterval             PayoutInterval @default(monthly) @map("payout_interval")
   targetCauses               Cause[]        @map("target_causes")
 
@@ -670,7 +847,7 @@ model Campaign {
   linkFacebook           String?      @map("link_facebook")
   linkX                  String?      @map("link_x")
   goal                   Decimal?     @map("goal") @db.Decimal(12, 4)
-  currency               String       @map("currency")
+  currency               Currency     @map("currency")
   additionalAmountChf    Decimal?     @map("additional_amount_chf") @db.Decimal(12, 4)
   endDate                DateTime     @map("end_date") @db.Timestamptz(3)
   isActive               Boolean      @default(false) @map("is_active")
@@ -730,7 +907,7 @@ model Address {
 model PaymentInformation {
   id                    String               @id @default(cuid()) @map("id")
   mobileMoneyProviderId String?              @map("mobile_money_provider_id")
-  mobileMoneyProvider   MobileMoneyProvider? @relation(fields: [mobileMoneyProviderId], references: [id])
+  mobileMoneyProvider   MobileMoneyProvider? @relation(fields: [mobileMoneyProviderId], references: [id], onDelete: Restrict)
   code                  String?              @unique @map("code")
   phoneId               String?              @map("phone_id")
   phone                 Phone?               @relation(fields: [phoneId], references: [id])
@@ -787,7 +964,7 @@ model Phone {
 model ExchangeRate {
   id                String   @id @default(cuid()) @map("id")
   legacyFirestoreId String?  @unique @map("legacy_firestore_id")
-  currency          String   @map("currency")
+  currency          Currency @map("currency")
   rate              Decimal  @map("rate") @db.Decimal(18, 8)
   timestamp         DateTime @map("timestamp") @db.Timestamptz(3)
 
@@ -798,40 +975,25 @@ model ExchangeRate {
 }
 
 model Country {
-  id       String      @id @default(cuid()) @map("id")
-  isoCode  CountryCode @unique @map("iso_code")
-  isActive Boolean     @default(false) @map("is_active")
+  id                           String                @id @default(cuid()) @map("id")
+  isoCode                      CountryCode           @unique @map("iso_code")
+  isActive                     Boolean               @default(false) @map("is_active")
+  currency                     Currency              @map("currency")
+  defaultPayoutAmount          Decimal               @map("default_payout_amount") @db.Decimal(12, 4)
+  cashConditionOverride        Boolean               @default(false) @map("cash_condition_override")
+  microfinanceIndex            Decimal?              @map("microfinance_index") @db.Decimal(4, 2)
+  latestSurveyDate             DateTime?             @map("latest_survey_date") @db.Date
+  microfinanceSourceLinkId     String?               @map("microfinance_source_link_id")
+  microfinanceSourceLink       SourceLink?           @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
+  mobileMoneyConditionOverride Boolean               @default(false) @map("mobile_money_condition_override")
+  mobileMoneyProviders         MobileMoneyProvider[]
 
-  //
-  // PRECONDITION 1: Suitability of cash
-  // Condition met when microfinanceIndex < 3
-  //
-  microfinanceIndex Decimal?  @map("microfinance_index") @db.Decimal(4, 2)
-  latestSurveyDate  DateTime? @map("latest_survey_date") @db.Date
-
-  microfinanceSourceLinkId String?     @map("microfinance_source_link_id")
-  microfinanceSourceLink   SourceLink? @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
-
-  //
-  // PRECONDITION 2: Mobile Money
-  // Condition met when mobileMoneyProviders.length >= 1
-  //
-  mobileMoneyProviders MobileMoneyProvider[]
-
-  //
-  // PRECONDITION 3: Mobile Network
-  // Condition met when populationCoverage >= 50
-  //
   populationCoverage Decimal?           @map("population_coverage") @db.Decimal(5, 2)
   networkTechnology  NetworkTechnology? @map("network_technology")
 
   networkSourceLinkId String?     @map("network_source_link_id")
   networkSourceLink   SourceLink? @relation("networkSource", fields: [networkSourceLinkId], references: [id])
 
-  //
-  // PRECONDITION 4: No sanctions
-  // Condition NOT met → "Restrictions apply" when sanctions.length >= 1
-  //
   sanctions SanctionRegime[] @map("sanctions")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
@@ -842,11 +1004,11 @@ model Country {
 }
 
 model MobileMoneyProvider {
-  id           String   @id @default(cuid()) @map("id")
-  name         String   @unique @map("name")
-  isSupported  Boolean  @map("is_supported")
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id          String    @id @default(cuid()) @map("id")
+  name        String    @unique @map("name")
+  isSupported Boolean   @map("is_supported")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   countries           Country[]
   paymentInformations PaymentInformation[]

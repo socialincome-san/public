@@ -1,6 +1,7 @@
 'use client';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { allCurrencies } from '@/lib/types/currency';
 
 type Props = {
 	totalBudget: number;
@@ -38,9 +39,11 @@ export const ProgramCostsHeader = ({ totalBudget, monthlyCost, currency, onCurre
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>
-					<SelectItem value="CHF">CHF</SelectItem>
-					<SelectItem value="USD">USD</SelectItem>
-					<SelectItem value="EUR">EUR</SelectItem>
+					{allCurrencies.map((currencyOption) => (
+						<SelectItem key={currencyOption} value={currencyOption}>
+							{currencyOption}
+						</SelectItem>
+					))}
 				</SelectContent>
 			</Select>
 		</div>

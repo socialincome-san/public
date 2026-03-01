@@ -1,4 +1,4 @@
-import { PayoutStatus } from '@/generated/prisma/client';
+import { Currency, PayoutStatus } from '@/generated/prisma/client';
 
 export type PayoutRecipient = {
 	id: string;
@@ -9,7 +9,7 @@ export type PayoutRecipient = {
 	} | null;
 	program: {
 		payoutPerInterval: number;
-		payoutCurrency: string;
+		payoutCurrency: Currency;
 		programDurationInMonths: number;
 	};
 	payouts: {
@@ -23,7 +23,7 @@ export type PreviewPayout = {
 	firstName: string;
 	lastName: string;
 	phoneNumber: string | null;
-	currency: string;
+	currency: Currency;
 	amount: number;
 	amountChf: number | null;
 	paymentAt: Date;

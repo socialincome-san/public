@@ -2,7 +2,7 @@ import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
 import { websiteCurrencies, WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.service';
 import { TransparencyService } from '@/lib/services/transparency/transparency.service';
-import { Currency } from '@/lib/types/currency';
+import { isValidCurrency } from '@/lib/types/currency';
 import { DateTime } from 'luxon';
 import { CountriesSection } from './(sections)/countries-section';
 import { TimeSeriesSection } from './(sections)/time-series-section';
@@ -11,7 +11,7 @@ import { TotalsSection } from './(sections)/totals-section';
 export const revalidate = 3600;
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
-type TransparencyFinancesParams = DefaultParams & { currency: Currency };
+type TransparencyFinancesParams = DefaultParams & { currency: string };
 
 export default async function Page({ params }: DefaultLayoutProps<TransparencyFinancesParams>) {
 	const { lang, currency } = await params;
@@ -26,10 +26,12 @@ export default async function Page({ params }: DefaultLayoutProps<TransparencyFi
 		const end = start.endOf('month');
 		return { start, end };
 	});
+	const requestedCurrency = currency.toUpperCase();
+	const exchangeCurrency = isValidCurrency(requestedCurrency) ? requestedCurrency : 'USD';
 
 	const [dataResult, rateResult] = await Promise.all([
 		transparencyService.getTransparencyData(timeRanges),
-		exchangeRateService.getLatestRateForCurrency(currency.toUpperCase()),
+		exchangeRateService.getLatestRateForCurrency(exchangeCurrency),
 	]);
 
 	if (!dataResult.success) {
