@@ -1,4 +1,4 @@
-import { Address, Gender, PaymentProvider, Phone, Prisma, ProgramPermission } from '@/generated/prisma/client';
+import { Address, Gender, Phone, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {
@@ -10,6 +10,7 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 		paymentInformation: {
 			include: {
 				phone: true;
+				mobileMoneyProvider: true;
 			};
 		};
 		program: {
@@ -56,7 +57,7 @@ export type RecipientPayload = {
 	paymentInformation: {
 		id: string;
 		code: string | null;
-		provider: PaymentProvider | null;
+		mobileMoneyProvider: { id: string; name: string } | null;
 		phone: Phone | null;
 	} | null;
 };

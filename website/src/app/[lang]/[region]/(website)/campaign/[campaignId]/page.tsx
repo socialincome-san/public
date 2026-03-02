@@ -198,6 +198,7 @@ export default async function Page({ params }: CampaignPageProps) {
 														bankTransfer: translator.t('payment-type.bank-transfer'),
 														creditCard: translator.t('payment-type.credit-card'),
 													},
+													feeNotice: translator.t('fee-notice'),
 													bankTransfer: {
 														firstName: translator.t('success.user-form.firstname'),
 														lastName: translator.t('success.user-form.lastname'),

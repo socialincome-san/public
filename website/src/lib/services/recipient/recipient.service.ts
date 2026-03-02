@@ -22,6 +22,33 @@ export class RecipientService extends BaseService {
 	private firebaseAdminService = new FirebaseAdminService();
 	private appReviewModeService = new AppReviewModeService();
 
+	private async deletePhoneIfOrphaned(phoneId: string): Promise<void> {
+		const phone = await this.db.phone.findUnique({
+			where: { id: phoneId },
+			select: {
+				_count: {
+					select: {
+						contacts: true,
+						paymentInformations: true,
+					},
+				},
+			},
+		});
+
+		if (!phone) {
+			return;
+		}
+
+		const hasAnyReference = phone._count.contacts > 0 || phone._count.paymentInformations > 0;
+		if (hasAnyReference) {
+			return;
+		}
+
+		await this.db.phone.delete({
+			where: { id: phoneId },
+		});
+	}
+
 	async create(session: Session, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const programId = recipient.program?.connect?.id;
 		if (!programId) {
@@ -69,7 +96,9 @@ export class RecipientService extends BaseService {
 					paymentInformation: paymentInfoCreate
 						? {
 								create: {
-									provider: paymentInfoCreate.provider,
+									mobileMoneyProvider: paymentInfoCreate.mobileMoneyProvider?.connect
+										? paymentInfoCreate.mobileMoneyProvider
+										: undefined,
 									code: paymentInfoCreate.code ?? null,
 									...(paymentPhoneNumber && {
 										phone: {
@@ -116,9 +145,14 @@ export class RecipientService extends BaseService {
 			select: {
 				programId: true,
 				localPartnerId: true,
+				contact: {
+					select: {
+						phone: { select: { id: true } },
+					},
+				},
 				paymentInformation: {
 					select: {
-						phone: { select: { number: true } },
+						phone: { select: { id: true, number: true } },
 					},
 				},
 			},
@@ -160,6 +194,8 @@ export class RecipientService extends BaseService {
 			delete updateInput.program;
 		}
 
+		const previousContactPhoneId = existing.contact.phone?.id ?? null;
+		const previousPaymentPhoneId = existing.paymentInformation?.phone?.id ?? null;
 		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
 
 		if (!previousPaymentPhoneNumber && !nextPaymentPhoneNumber) {
@@ -168,6 +204,11 @@ export class RecipientService extends BaseService {
 					where: { id: recipientId },
 					data: updateInput,
 				});
+
+				if (previousContactPhoneId) {
+					await this.deletePhoneIfOrphaned(previousContactPhoneId);
+				}
+
 				return this.resultOk(updatedRecipient);
 			} catch (error) {
 				this.logger.error(error);
@@ -210,6 +251,14 @@ export class RecipientService extends BaseService {
 				data: updateInput,
 			});
 
+			if (previousContactPhoneId) {
+				await this.deletePhoneIfOrphaned(previousContactPhoneId);
+			}
+
+			if (previousPaymentPhoneId) {
+				await this.deletePhoneIfOrphaned(previousPaymentPhoneId);
+			}
+
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
 			this.logger.error(error);
@@ -239,6 +288,26 @@ export class RecipientService extends BaseService {
 		},
 	): Promise<ServiceResult<RecipientWithPaymentInfo>> {
 		try {
+			const existing = await this.db.recipient.findUnique({
+				where: { id: recipientId },
+				select: {
+					contact: {
+						select: {
+							phone: { select: { id: true } },
+						},
+					},
+					paymentInformation: {
+						select: {
+							phone: { select: { id: true } },
+						},
+					},
+				},
+			});
+
+			if (!existing) {
+				return this.resultFail('Recipient not found');
+			}
+
 			const phoneChanged =
 				options.oldPaymentPhone && options.newPaymentPhone && options.oldPaymentPhone !== options.newPaymentPhone;
 
@@ -258,7 +327,12 @@ export class RecipientService extends BaseService {
 				data,
 				include: {
 					contact: { include: { phone: true } },
-					paymentInformation: { include: { phone: true } },
+					paymentInformation: {
+						include: {
+							phone: true,
+							mobileMoneyProvider: true,
+						},
+					},
 					program: {
 						include: {
 							country: {
@@ -271,6 +345,17 @@ export class RecipientService extends BaseService {
 					localPartner: true,
 				},
 			});
+
+			const previousContactPhoneId = existing.contact.phone?.id;
+			const previousPaymentPhoneId = existing.paymentInformation?.phone?.id;
+
+			if (previousContactPhoneId) {
+				await this.deletePhoneIfOrphaned(previousContactPhoneId);
+			}
+
+			if (previousPaymentPhoneId) {
+				await this.deletePhoneIfOrphaned(previousPaymentPhoneId);
+			}
 
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
@@ -383,7 +468,7 @@ export class RecipientService extends BaseService {
 					select: {
 						id: true,
 						code: true,
-						provider: true,
+						mobileMoneyProvider: { select: { id: true, name: true } },
 						phone: true,
 					},
 				},
@@ -417,7 +502,7 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Permission denied');
 		}
 
-		return this.resultOk(recipient);
+		return this.resultOk(recipient as RecipientPayload);
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
@@ -688,6 +773,7 @@ export class RecipientService extends BaseService {
 					paymentInformation: {
 						include: {
 							phone: true,
+							mobileMoneyProvider: true,
 						},
 					},
 					program: {

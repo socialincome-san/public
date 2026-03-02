@@ -22,6 +22,7 @@ import { exchangeRatesData } from './data/exchange-rates.data';
 import { addressesData } from './data/addresses.data';
 import { surveySchedulesData } from './data/survey-schedules.data';
 import { countriesData } from './data/countries.data';
+import { mobileMoneyProvidersData } from './data/mobile-money-providers.data';
 import { sourceLinksData } from './data/source-links.data';
 
 export const seedDatabase = async () => {
@@ -50,9 +51,11 @@ export const seedDatabase = async () => {
 		await tx.account.deleteMany();
 		await tx.sourceLink.deleteMany();
 		await tx.country.deleteMany();
+		await tx.mobileMoneyProvider.deleteMany();
 
 		await tx.sourceLink.createMany({ data: sourceLinksData, skipDuplicates: true });
 		await tx.country.createMany({ data: countriesData, skipDuplicates: true });
+		await tx.mobileMoneyProvider.createMany({ data: mobileMoneyProvidersData, skipDuplicates: true });
 		await tx.account.createMany({ data: accountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });

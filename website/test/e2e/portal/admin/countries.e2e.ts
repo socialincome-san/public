@@ -1,4 +1,4 @@
-import { Country, Prisma } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { getCountryService } from '../../utils';
@@ -8,20 +8,13 @@ test.beforeEach(async () => {
 });
 
 test('Add new country', async ({ page }) => {
-	const expectedCountry: Country = {
-		id: '',
-		isoCode: 'CH',
+	const expectedCountry = {
+		isoCode: 'CH' as const,
 		microfinanceIndex: new Prisma.Decimal(1.11),
 		populationCoverage: new Prisma.Decimal(82.3),
-		networkTechnology: 'g5',
-		paymentProviders: ['orange_money'],
-		sanctions: ['us'],
-		isActive: false,
-		latestSurveyDate: null,
-		microfinanceSourceLinkId: null,
-		networkSourceLinkId: null,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null,
+		networkTechnology: 'g5' as const,
+		sanctions: ['us'] as const,
+		mobileMoneyProviderName: 'Orange Money',
 	};
 
 	await page.goto('/portal/admin/countries');
@@ -53,9 +46,9 @@ test('Add new country', async ({ page }) => {
 	await page.getByTestId('form-item-networkTechnology').click();
 	await page.getByRole('option', { name: '5G' }).click();
 
-	await page.getByTestId('form-item-paymentProviders').click();
+	await page.getByTestId('form-item-mobileMoneyProviders').click();
 	await page.getByPlaceholder('Search').fill('Orange Mon');
-	await page.getByRole('option', { name: 'Orange Money' }).click();
+	await page.getByRole('option', { name: expectedCountry.mobileMoneyProviderName }).click();
 	await page.keyboard.press('Escape');
 
 	await page.getByTestId('form-item-sanctions').click();
@@ -83,6 +76,6 @@ test('Add new country', async ({ page }) => {
 	expect(country?.microfinanceIndex).toBe(Number(expectedCountry.microfinanceIndex));
 	expect(country?.populationCoverage).toBe(Number(expectedCountry.populationCoverage));
 	expect(country?.networkTechnology).toBe(expectedCountry.networkTechnology);
-	expect(country?.paymentProviders).toContain(expectedCountry.paymentProviders[0]);
+	expect(country?.mobileMoneyProviders?.some((p) => p.name === expectedCountry.mobileMoneyProviderName)).toBe(true);
 	expect(country?.sanctions).toContain(expectedCountry.sanctions[0]);
 });

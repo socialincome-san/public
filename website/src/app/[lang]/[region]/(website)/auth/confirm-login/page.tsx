@@ -19,7 +19,10 @@ export default function ConfirmLoginPage() {
 
 	const continueToLogin = () => {
 		const path = window.location.pathname.replace(/\/auth\/confirm-login\/?$/, '/login');
-		window.location.href = path + window.location.search;
+		const searchParams = new URLSearchParams(window.location.search);
+		searchParams.set('confirmed', 'true');
+		const queryString = searchParams.toString();
+		window.location.href = queryString ? `${path}?${queryString}` : path;
 	};
 
 	return (

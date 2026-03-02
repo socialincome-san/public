@@ -121,7 +121,9 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 				? {
 						upsert: {
 							update: {
-								provider: data.paymentProvider,
+								mobileMoneyProvider: data.paymentProvider
+									? { connect: { id: data.paymentProvider } }
+									: { disconnect: true },
 								phone: data.paymentPhone
 									? {
 											connectOrCreate: {
@@ -132,7 +134,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 									: undefined,
 							},
 							create: {
-								provider: data.paymentProvider!,
+								mobileMoneyProvider: data.paymentProvider ? { connect: { id: data.paymentProvider } } : undefined,
 								code: recipient.paymentInformation?.code ?? '',
 								phone: {
 									connectOrCreate: {

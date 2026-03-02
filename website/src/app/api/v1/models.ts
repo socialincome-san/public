@@ -10,7 +10,8 @@ const Phone = z.object({
 
 const PaymentInformation = z.object({
 	id: z.string(),
-	provider: z.enum(['orange_money']).nullable(),
+	mobileMoneyProvider: z.object({ id: z.string(), name: z.string() }).nullable(),
+	mobileMoneyProviderId: z.string().nullable().optional(),
 	code: z.string().nullable(),
 	phoneId: z.string(),
 	phone: Phone,
@@ -126,7 +127,7 @@ export const RecipientSelfUpdate = z.object({
 	termsAccepted: z.boolean().optional(),
 	contactPhone: z.string().nullable().optional(),
 	paymentPhone: z.string().optional(),
-	paymentProvider: z.enum(['orange_money']).optional(),
+	paymentProvider: z.string().optional(),
 	successorName: z.string().optional(),
 });
 

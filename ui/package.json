@@ -56,7 +56,7 @@
 		"postcss-nesting": "14.0.0",
 		"prop-types": "15.8.1",
 		"storybook": "10.2.10",
-		"tailwind-merge": "3.4.1",
+		"tailwind-merge": "3.5.0",
 		"tailwindcss": "4.2.0",
 		"vite": "7.3.1"
 	},

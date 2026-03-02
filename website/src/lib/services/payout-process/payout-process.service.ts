@@ -73,9 +73,7 @@ export class PayoutProcessService extends BaseService {
 						},
 					},
 				},
-				orderBy: {
-					paymentInformation: { code: 'asc' },
-				},
+				orderBy: [{ paymentInformation: { code: 'asc' } }, { id: 'asc' }],
 			});
 
 			const mapped: PayoutRecipient[] = recipients
