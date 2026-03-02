@@ -1,10 +1,11 @@
-import { ContributionStatus, PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { slugify } from '@/lib/utils/string-utils';
 import { CandidateService } from '../candidate/candidate.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
+import { ProgramStatsService } from '../program-stats/program-stats.service';
 import {
 	CreateProgramInput,
 	ProgramOption,
@@ -16,6 +17,7 @@ import {
 export class ProgramService extends BaseService {
 	private programAccessService = new ProgramAccessService();
 	private candidateService = new CandidateService();
+	private programStatsService = new ProgramStatsService();
 
 	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {
@@ -38,9 +40,8 @@ export class ProgramService extends BaseService {
 					id: true,
 					name: true,
 					country: {
-						select: { isoCode: true },
+						select: { isoCode: true, currency: true },
 					},
-					payoutCurrency: true,
 					recipients: {
 						select: {
 							payouts: {
@@ -70,13 +71,13 @@ export class ProgramService extends BaseService {
 						}
 					}
 
-					const isReadyForFirstPayoutsResult = await this.isReadyForFirstPayoutInterval(program.id);
+					const isReadyForFirstPayoutsResult = await this.programStatsService.isReadyForFirstPayoutInterval(program.id);
 
 					return {
 						id: program.id,
 						programName: program.name,
 						country: program.country.isoCode,
-						payoutCurrency: program.payoutCurrency,
+						payoutCurrency: program.country.currency,
 						recipientsCount,
 						totalPayoutsSum,
 						permission,
@@ -164,7 +165,6 @@ export class ProgramService extends BaseService {
 					amountOfRecipientsForStart: input.amountOfRecipientsForStart ?? null,
 					programDurationInMonths: input.programDurationInMonths,
 					payoutPerInterval: input.payoutPerInterval,
-					payoutCurrency: input.payoutCurrency,
 					payoutInterval: input.payoutInterval,
 					targetCauses: input.targetCauses,
 				},
@@ -210,10 +210,9 @@ export class ProgramService extends BaseService {
 					amountOfRecipientsForStart: true,
 					programDurationInMonths: true,
 					payoutPerInterval: true,
-					payoutCurrency: true,
 					payoutInterval: true,
 					country: {
-						select: { isoCode: true },
+						select: { isoCode: true, currency: true },
 					},
 					programAccesses: {
 						select: {
@@ -283,7 +282,7 @@ export class ProgramService extends BaseService {
 				amountOfRecipientsForStart: program.amountOfRecipientsForStart,
 				programDurationInMonths: program.programDurationInMonths,
 				payoutPerInterval: Number(program.payoutPerInterval),
-				payoutCurrency: program.payoutCurrency,
+				payoutCurrency: program.country.currency,
 				payoutInterval: program.payoutInterval,
 
 				recipientsCount: program.recipients.length,
@@ -328,55 +327,6 @@ export class ProgramService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch program name: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
-		try {
-			const program = await this.db.program.findUnique({
-				where: { id: programId },
-				select: {
-					payoutPerInterval: true,
-					recipients: {
-						select: { id: true },
-					},
-					campaigns: {
-						select: {
-							contributions: {
-								where: { status: ContributionStatus.succeeded },
-								select: { amountChf: true },
-							},
-						},
-					},
-				},
-			});
-
-			if (!program) {
-				return this.resultFail('Program not found');
-			}
-
-			const recipientCount = program.recipients.length;
-
-			if (recipientCount === 0) {
-				return this.resultOk(false);
-			}
-
-			let totalContributions = 0;
-
-			for (const campaign of program.campaigns) {
-				for (const contribution of campaign.contributions) {
-					totalContributions += Number(contribution.amountChf);
-				}
-			}
-
-			const requiredAmount = recipientCount * Number(program.payoutPerInterval);
-
-			const isReady = totalContributions >= requiredAmount;
-
-			return this.resultOk(isReady);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail(`Could not check program readiness: ${JSON.stringify(error)}`);
 		}
 	}
 }

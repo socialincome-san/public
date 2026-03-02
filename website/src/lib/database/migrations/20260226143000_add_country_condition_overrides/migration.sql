@@ -48,10 +48,6 @@ ALTER TABLE "payout"
 ALTER COLUMN "currency" TYPE "Currency"
 USING ("currency"::"Currency");
 
-ALTER TABLE "program"
-ALTER COLUMN "payout_currency" TYPE "Currency"
-USING ("payout_currency"::"Currency");
-
 ALTER TABLE "campaign"
 ALTER COLUMN "currency" TYPE "Currency"
 USING ("currency"::"Currency");
@@ -65,7 +61,7 @@ ADD COLUMN "currency" "Currency",
 ADD COLUMN "default_payout_amount" DECIMAL(12,4);
 
 UPDATE "country" c
-SET "currency" = p."payout_currency"
+SET "currency" = p."payout_currency"::"Currency"
 FROM (
   SELECT "country_id", MIN("payout_currency") AS "payout_currency"
   FROM "program"
@@ -97,3 +93,6 @@ WHERE "default_payout_amount" IS NULL;
 
 ALTER TABLE "country"
 ALTER COLUMN "default_payout_amount" SET NOT NULL;
+
+ALTER TABLE "program"
+DROP COLUMN "payout_currency";

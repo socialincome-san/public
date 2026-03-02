@@ -61,9 +61,17 @@ export const CreateProgramSteps = ({ state, send }: Props) => {
 				amountOfRecipients={state.context.amountOfRecipients}
 				filteredRecipients={state.context.filteredRecipients}
 				programDuration={state.context.programDuration}
+				payoutPerIntervalMin={state.context.payoutPerIntervalMin}
+				payoutPerIntervalMax={state.context.payoutPerIntervalMax}
 				payoutPerInterval={state.context.payoutPerInterval}
 				payoutInterval={state.context.payoutInterval}
-				currency={state.context.currency}
+				payoutCurrency={state.context.payoutCurrency}
+				displayCurrency={state.context.displayCurrency}
+				calculatedTotalBudget={state.context.calculatedTotalBudget}
+				displayMonthlyCost={state.context.displayMonthlyCost}
+				exchangeRateText={state.context.exchangeRateText}
+				totalBudgetTooltipText={state.context.totalBudgetTooltipText}
+				isCalculatingBudget={state.context.isCalculatingBudget}
 				customizePayouts={state.context.customizePayouts}
 				onRecipientsChange={(v) => send({ type: 'SET_AMOUNT_OF_RECIPIENTS', value: v })}
 				onDurationChange={(v) => send({ type: 'SET_PROGRAM_DURATION', value: v })}

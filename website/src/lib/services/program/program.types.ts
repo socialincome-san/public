@@ -26,7 +26,6 @@ export type CreateProgramInput = {
 	amountOfRecipientsForStart: number;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
-	payoutCurrency: Currency;
 	payoutInterval: PayoutInterval;
 	targetCauses: Cause[];
 	targetProfiles: Profile[];

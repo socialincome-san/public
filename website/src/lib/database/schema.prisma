@@ -814,7 +814,6 @@ model Program {
   amountOfRecipientsForStart Int?           @map("amount_of_recipients_for_start")
   programDurationInMonths    Int            @map("program_duration_in_months")
   payoutPerInterval          Decimal        @map("payout_per_interval") @db.Decimal(12, 4)
-  payoutCurrency             Currency       @map("payout_currency")
   payoutInterval             PayoutInterval @default(monthly) @map("payout_interval")
   targetCauses               Cause[]        @map("target_causes")
 

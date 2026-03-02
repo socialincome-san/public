@@ -5,12 +5,12 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
-import { ProgramService } from '../program/program.service';
+import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 
 export class PayoutProcessService extends BaseService {
 	private programAccessService = new ProgramAccessService();
-	private programService = new ProgramService();
+	private programStatsService = new ProgramStatsService();
 	private exchangeRateService = new ExchangeRateService();
 
 	async getRecipientsReadyForFirstPayout(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
@@ -29,7 +29,7 @@ export class PayoutProcessService extends BaseService {
 			const programIdsReadyForFirstPayoutInterval: string[] = [];
 
 			for (const program of accessiblePrograms) {
-				const result = await this.programService.isReadyForFirstPayoutInterval(program.programId);
+				const result = await this.programStatsService.isReadyForFirstPayoutInterval(program.programId);
 
 				if (result.success && result.data === true) {
 					programIdsReadyForFirstPayoutInterval.push(program.programId);
@@ -41,11 +41,11 @@ export class PayoutProcessService extends BaseService {
 			const recipients = await this.db.recipient.findMany({
 				where: {
 					programId: { in: programIdsReadyForFirstPayoutInterval },
-					startDate: { lte: nowDate },
-					OR: [{ suspendedAt: null }, { suspendedAt: { gt: nowDate } }],
 				},
 				select: {
 					id: true,
+					startDate: true,
+					suspendedAt: true,
 					contact: {
 						select: {
 							firstName: true,
@@ -61,9 +61,13 @@ export class PayoutProcessService extends BaseService {
 					program: {
 						select: {
 							payoutPerInterval: true,
-							payoutCurrency: true,
 							programDurationInMonths: true,
 							payoutInterval: true,
+							country: {
+								select: {
+									currency: true,
+								},
+							},
 						},
 					},
 					payouts: {
@@ -84,20 +88,14 @@ export class PayoutProcessService extends BaseService {
 					const paidCount = recipient.payouts.filter(
 						(p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed,
 					).length;
-
-					let intervalInMonths = 1;
-
-					if (program.payoutInterval === 'quarterly') {
-						intervalInMonths = 3;
-					}
-
-					if (program.payoutInterval === 'yearly') {
-						intervalInMonths = 12;
-					}
-
-					const expectedPayouts = Math.ceil(program.programDurationInMonths / intervalInMonths);
-
-					return paidCount < expectedPayouts;
+					return this.programStatsService.isRecipientEligibleForPayout({
+						startDate: recipient.startDate,
+						suspendedAt: recipient.suspendedAt,
+						paidOrConfirmedCount: paidCount,
+						programDurationInMonths: program.programDurationInMonths,
+						payoutInterval: program.payoutInterval,
+						nowDate,
+					});
 				})
 				.map((recipient) => ({
 					id: recipient.id,
@@ -105,7 +103,7 @@ export class PayoutProcessService extends BaseService {
 					paymentInformation: recipient.paymentInformation,
 					program: {
 						payoutPerInterval: Number(recipient.program!.payoutPerInterval),
-						payoutCurrency: recipient.program!.payoutCurrency,
+						payoutCurrency: recipient.program!.country.currency,
 						programDurationInMonths: recipient.program!.programDurationInMonths,
 					},
 					payouts: recipient.payouts,

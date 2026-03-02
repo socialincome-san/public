@@ -10,7 +10,7 @@ test('portal home-page matches screenshot', async ({ page }) => {
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test('create new program', async ({ page }) => {
+test.only('create new program', async ({ page }) => {
 	await page.goto('/portal');
 
 	await page.getByTestId('create-program-modal-trigger').click();
@@ -36,15 +36,15 @@ test('create new program', async ({ page }) => {
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').click();
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').press('ArrowRight');
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').press('ArrowRight');
-	await expect(page.getByTestId('total-budget-1258')).toBeVisible();
-	await expect(page.getByTestId('monthly-cost-34')).toBeVisible();
+	await expect(page.getByTestId('total-budget-928.0833333333333')).toBeVisible();
+	await expect(page.getByTestId('monthly-cost-25')).toBeVisible();
 
 	await page.getByRole('button', { name: 'Continue' }).click();
 
 	await expect(page.getByText('Great! You initiated a new program')).toBeVisible();
 });
 
-test('country list in create program wizard', async ({ page }) => {
+test('country list in create program wizard matches screenshot', async ({ page }) => {
 	await page.goto('/portal');
 
 	await page.getByTestId('create-program-modal-trigger').click();

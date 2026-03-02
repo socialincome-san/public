@@ -32,7 +32,7 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 		if (!idResult.success) {
 			return notFound();
 		}
-		const readyResult = await programService.isReadyForFirstPayoutInterval(idResult.data);
+		const readyResult = await statsService.isReadyForFirstPayoutInterval(idResult.data);
 		if (!readyResult.success || !readyResult.data) {
 			return notFound();
 		}
@@ -79,13 +79,6 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 					<span className="text-muted-foreground">Surveys completed</span>
 					<span className="font-semibold">{stats.completedSurveysCount}</span>
 				</li>
-
-				{stats.firstPayoutDate && (
-					<li className="flex justify-between gap-4 p-3">
-						<span className="text-muted-foreground">First payout date</span>
-						<span className="font-medium">{new Date(stats.firstPayoutDate).toLocaleDateString()}</span>
-					</li>
-				)}
 			</ul>
 		</div>
 	);

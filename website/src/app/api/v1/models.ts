@@ -58,7 +58,6 @@ const Program = z.object({
 	countryId: z.string(),
 	country: Country,
 	payoutPerInterval: z.union([z.number(), z.string()]),
-	payoutCurrency: currencyEnum,
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
 	programDurationInMonths: z.number(),
 	createdAt: z.string(),

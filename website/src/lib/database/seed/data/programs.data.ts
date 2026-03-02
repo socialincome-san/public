@@ -1,4 +1,4 @@
-import { Prisma, Program, PayoutInterval, Cause } from '@/generated/prisma/client';
+import { Prisma, Program } from '@/generated/prisma/client';
 
 export const programsData: Program[] = [
 	{
@@ -7,10 +7,9 @@ export const programsData: Program[] = [
 		amountOfRecipientsForStart: null,
 		programDurationInMonths: 12,
 		payoutPerInterval: new Prisma.Decimal(50),
-		payoutCurrency: 'SLE',
 		payoutInterval: 'monthly',
 		targetCauses: [],
-		countryId: 'country-algeria',
+		countryId: 'country-sierra-leone',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -20,10 +19,9 @@ export const programsData: Program[] = [
 		amountOfRecipientsForStart: null,
 		programDurationInMonths: 8,
 		payoutPerInterval: new Prisma.Decimal(40),
-		payoutCurrency: 'SLE',
 		payoutInterval: 'monthly',
 		targetCauses: [],
-		countryId: 'country-algeria',
+		countryId: 'country-sierra-leone',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -33,10 +31,9 @@ export const programsData: Program[] = [
 		amountOfRecipientsForStart: null,
 		programDurationInMonths: 6,
 		payoutPerInterval: new Prisma.Decimal(75),
-		payoutCurrency: 'SLE',
 		payoutInterval: 'monthly',
 		targetCauses: [],
-		countryId: 'country-algeria',
+		countryId: 'country-sierra-leone',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -46,10 +43,9 @@ export const programsData: Program[] = [
 		amountOfRecipientsForStart: null,
 		programDurationInMonths: 9,
 		payoutPerInterval: new Prisma.Decimal(60),
-		payoutCurrency: 'SLE',
 		payoutInterval: 'monthly',
 		targetCauses: [],
-		countryId: 'country-algeria',
+		countryId: 'country-sierra-leone',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	},
@@ -59,7 +55,6 @@ export const programsData: Program[] = [
 		amountOfRecipientsForStart: null,
 		programDurationInMonths: 10,
 		payoutPerInterval: new Prisma.Decimal(80),
-		payoutCurrency: 'LRD',
 		payoutInterval: 'monthly',
 		targetCauses: [],
 		countryId: 'country-angola',

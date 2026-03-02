@@ -1,12 +1,68 @@
-import { ContributionStatus, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
+import { ContributionStatus, Currency, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
-import { addMonths, differenceInMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramDashboardStats, ProgramForDashboard } from './program-stats.types';
+import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
+import {
+	ProgramBudgetCalculation,
+	ProgramBudgetCalculationInput,
+	ProgramDashboardStats,
+	ProgramForDashboard,
+} from './program-stats.types';
 
 export class ProgramStatsService extends BaseService {
+	private exchangeRateService = new ExchangeRateService();
+
+	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
+		try {
+			const program = await this.loadProgram(programId);
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			const nowDate = now();
+			const expectedIntervals = this.getExpectedIntervals(program.programDurationInMonths, program.payoutInterval);
+			const cohorts = this.splitRecipientCohorts(program, nowDate, expectedIntervals);
+			if (cohorts.activeRecipientsCount === 0) {
+				return this.resultOk(false);
+			}
+
+			const payoutPerInterval = Number(program.payoutPerInterval);
+			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(
+				cohorts.activeRecipientsCount,
+				payoutPerInterval,
+			);
+			const rates = await this.getLatestRatesOrUndefined();
+			const costPerIntervalChf =
+				this.convertCurrencyAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
+				costPerIntervalProgramCurrency;
+
+			let totalContributionsChf = 0;
+			for (const campaign of program.campaigns) {
+				for (const contribution of campaign.contributions) {
+					totalContributionsChf += Number(contribution.amountChf);
+				}
+			}
+
+			return this.resultOk(totalContributionsChf >= costPerIntervalChf);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not check program readiness: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async calculateProgramBudget(input: ProgramBudgetCalculationInput): Promise<ServiceResult<ProgramBudgetCalculation>> {
+		try {
+			const rates = await this.getLatestRatesOrUndefined();
+			const calculation = this.calculateProgramBudgetWithRates(input, rates);
+			return this.resultOk(calculation);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not calculate program budget preview: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getProgramDashboardStats(programId: string): Promise<ServiceResult<ProgramDashboardStats>> {
 		try {
 			const program = await this.loadProgram(programId);
@@ -17,22 +73,48 @@ export class ProgramStatsService extends BaseService {
 			const nowDate = now();
 			const recipientsCount = program.recipients.length;
 			const payoutPerInterval = Number(program.payoutPerInterval);
-			const intervalInMonths = this.getIntervalInMonths(program.payoutInterval);
-			const expectedPayoutsPerRecipient = Math.ceil(program.programDurationInMonths / intervalInMonths);
+			const totalExpectedIntervals = this.getExpectedIntervals(program.programDurationInMonths, program.payoutInterval);
+			const cohorts = this.splitRecipientCohorts(program, nowDate, totalExpectedIntervals);
 
-			const costPerIntervalChf = recipientsCount * payoutPerInterval;
-			const totalProgramCostsChf = recipientsCount * payoutPerInterval * expectedPayoutsPerRecipient;
+			const rates = await this.getLatestRatesOrUndefined();
 
+			const budgetInputBase = {
+				amountOfRecipients: cohorts.activeRecipientsCount,
+				programDuration: program.programDurationInMonths,
+				defaultPayoutPerInterval: payoutPerInterval,
+				payoutPerInterval,
+				payoutInterval: program.payoutInterval,
+				payoutCurrency: program.country.currency,
+			} as const;
+
+			const budgetInChf = this.calculateProgramBudgetWithRates({ ...budgetInputBase, displayCurrency: 'CHF' }, rates);
+			const budgetInProgramCurrency = this.calculateProgramBudgetWithRates(
+				{ ...budgetInputBase, displayCurrency: program.country.currency },
+				rates,
+			);
+			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(
+				cohorts.activeRecipientsCount,
+				payoutPerInterval,
+			);
+			const costPerIntervalChf =
+				this.convertCurrencyAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
+				costPerIntervalProgramCurrency;
+			const payoutProgressExchangeRateText = this.getExchangeRateText('CHF', program.country.currency, rates);
+
+			const totalProgramCostsChf = budgetInChf.calculatedTotalBudget;
+			const totalProgramCostsProgramCurrency = budgetInProgramCurrency.calculatedTotalBudget;
 			const contributions = this.computeContributions(program, totalProgramCostsChf);
-			const payouts = this.computePayouts(program, totalProgramCostsChf);
+			const payouts = this.computePayouts(program, totalProgramCostsProgramCurrency);
 			const credits = this.computeAvailableCredits(
 				contributions.contributedToProgramSoFarChf,
 				payouts.paidOutSoFarChf,
 				costPerIntervalChf,
-				expectedPayoutsPerRecipient,
+				totalExpectedIntervals,
 			);
+			const availableCreditsProgramCurrency =
+				this.convertCurrencyAmount(credits.availableCreditsChf, 'CHF', program.country.currency, rates) ??
+				credits.availableCreditsChf;
 			const surveys = this.computeSurveys(program);
-			const lifecycle = this.computeLifecycle(payouts.firstPayoutDate, program.programDurationInMonths, nowDate);
 
 			return this.resultOk({
 				contributedToProgramSoFarChf: contributions.contributedToProgramSoFarChf,
@@ -43,24 +125,30 @@ export class ProgramStatsService extends BaseService {
 				fundingProgressPercent: contributions.fundingProgressPercent,
 
 				paidOutSoFarChf: payouts.paidOutSoFarChf,
+				paidOutSoFarProgramCurrency: payouts.paidOutSoFarProgramCurrency,
 				totalPayoutsCount: payouts.totalPayoutsCount,
 				payoutPerInterval,
 				payoutInterval: program.payoutInterval,
-				payoutCurrency: program.payoutCurrency,
+				payoutCurrency: program.country.currency,
 				costPerIntervalChf,
+				costPerIntervalProgramCurrency,
 				payoutProgressPercent: payouts.payoutProgressPercent,
+				payoutProgressExchangeRateText,
+				totalProgramCostsProgramCurrency,
 
 				availableCreditsChf: credits.availableCreditsChf,
+				availableCreditsProgramCurrency,
 				availableCreditsInIntervals: credits.availableCreditsInIntervals,
-				totalExpectedIntervals: credits.totalExpectedIntervals,
+				totalExpectedIntervals,
 
 				completedSurveysCount: surveys.completedSurveysCount,
 				totalSurveysCount: surveys.totalSurveysCount,
 				surveyCompletionPercent: surveys.surveyCompletionPercent,
 
-				firstPayoutDate: payouts.firstPayoutDate,
-				programEndDate: lifecycle.programEndDate,
-				lifecycleProgressPercent: lifecycle.lifecycleProgressPercent,
+				futureRecipientsCount: cohorts.futureRecipientsCount,
+				activeRecipientsCount: cohorts.activeRecipientsCount,
+				suspendedRecipientsCount: cohorts.suspendedRecipientsCount,
+				completedRecipientsCount: cohorts.completedRecipientsCount,
 
 				programDurationInMonths: program.programDurationInMonths,
 				recipientsCount,
@@ -94,14 +182,21 @@ export class ProgramStatsService extends BaseService {
 				name: true,
 				programDurationInMonths: true,
 				payoutPerInterval: true,
-				payoutCurrency: true,
+				country: {
+					select: {
+						currency: true,
+					},
+				},
 				payoutInterval: true,
 				recipients: {
 					select: {
 						id: true,
+						startDate: true,
+						suspendedAt: true,
 						payouts: {
 							select: {
 								paymentAt: true,
+								amount: true,
 								amountChf: true,
 								status: true,
 							},
@@ -156,27 +251,34 @@ export class ProgramStatsService extends BaseService {
 		};
 	}
 
-	private computePayouts(program: ProgramForDashboard, totalProgramCostsChf: number) {
+	private computePayouts(program: ProgramForDashboard, totalProgramCostsProgramCurrency: number) {
 		let paidOutSoFarChf = 0;
+		let paidOutSoFarProgramCurrency = 0;
 		let totalPayoutsCount = 0;
-		let firstPayoutDate: Date | null = null;
 
 		for (const recipient of program.recipients) {
+			const paidOrConfirmedCount = this.countPaidOrConfirmedPayouts(recipient.payouts);
+			totalPayoutsCount += paidOrConfirmedCount;
+
 			for (const payout of recipient.payouts) {
 				if (payout.status === PayoutStatus.paid || payout.status === PayoutStatus.confirmed) {
-					totalPayoutsCount++;
 					paidOutSoFarChf += Number(payout.amountChf ?? 0);
-
-					if (!firstPayoutDate || payout.paymentAt < firstPayoutDate) {
-						firstPayoutDate = payout.paymentAt;
-					}
+					paidOutSoFarProgramCurrency += Number(payout.amount ?? 0);
 				}
 			}
 		}
 
-		const payoutProgressPercent = totalProgramCostsChf > 0 ? (paidOutSoFarChf / totalProgramCostsChf) * 100 : 0;
+		const payoutProgressPercent =
+			totalProgramCostsProgramCurrency > 0
+				? (paidOutSoFarProgramCurrency / totalProgramCostsProgramCurrency) * 100
+				: 0;
 
-		return { paidOutSoFarChf, totalPayoutsCount, firstPayoutDate, payoutProgressPercent };
+		return {
+			paidOutSoFarChf,
+			paidOutSoFarProgramCurrency,
+			totalPayoutsCount,
+			payoutProgressPercent,
+		};
 	}
 
 	private computeAvailableCredits(
@@ -207,32 +309,214 @@ export class ProgramStatsService extends BaseService {
 		return { completedSurveysCount, totalSurveysCount, surveyCompletionPercent };
 	}
 
-	private computeLifecycle(firstPayoutDate: Date | null, programDurationInMonths: number, now: Date) {
-		let programEndDate: Date | null = null;
-		let lifecycleProgressPercent = 0;
-
-		if (firstPayoutDate) {
-			programEndDate = addMonths(firstPayoutDate, programDurationInMonths);
-			const monthsPassed = differenceInMonths(now, firstPayoutDate);
-			lifecycleProgressPercent = programDurationInMonths > 0 ? (monthsPassed / programDurationInMonths) * 100 : 0;
-			if (lifecycleProgressPercent > 100) {
-				lifecycleProgressPercent = 100;
-			}
-			if (lifecycleProgressPercent < 0) {
-				lifecycleProgressPercent = 0;
-			}
+	isRecipientEligibleForPayout(params: {
+		startDate: Date | null;
+		suspendedAt: Date | null;
+		paidOrConfirmedCount: number;
+		programDurationInMonths: number;
+		payoutInterval: string;
+		nowDate: Date;
+	}): boolean {
+		const hasStarted = this.isRecipientStartedNow(params.startDate, params.nowDate);
+		if (!hasStarted) {
+			return false;
 		}
 
-		return { programEndDate, lifecycleProgressPercent };
+		if (this.isRecipientSuspendedNow(params.suspendedAt, params.nowDate)) {
+			return false;
+		}
+
+		const expectedIntervals = this.getExpectedIntervals(params.programDurationInMonths, params.payoutInterval);
+		return !this.isRecipientCompleted(params.paidOrConfirmedCount, expectedIntervals);
 	}
 
-	private getIntervalInMonths(interval: string): number {
+	private async getLatestRatesOrUndefined(): Promise<Partial<Record<Currency, number>> | undefined> {
+		const latestRatesResult = await this.exchangeRateService.getLatestRates();
+		return latestRatesResult.success ? latestRatesResult.data : undefined;
+	}
+
+	private getNumberOfIntervals(programDurationInMonths: number, interval: string): number {
 		if (interval === 'quarterly') {
-			return 3;
+			return Math.ceil(programDurationInMonths / 3);
 		}
 		if (interval === 'yearly') {
-			return 12;
+			return Math.ceil(programDurationInMonths / 12);
 		}
-		return 1;
+		return programDurationInMonths;
+	}
+
+	private getExpectedIntervals(programDurationInMonths: number, interval: string): number {
+		return this.getNumberOfIntervals(programDurationInMonths, interval);
+	}
+
+	private calculateCostPerInterval(activeRecipientsCount: number, payoutPerInterval: number): number {
+		return activeRecipientsCount * payoutPerInterval;
+	}
+
+	private countPaidOrConfirmedPayouts(
+		payouts: Array<{ status: PayoutStatus }>,
+	): number {
+		return payouts.filter((p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed).length;
+	}
+
+	private calculateTotalBudget(
+		recipients: number,
+		durationMonths: number,
+		payoutPerInterval: number,
+		interval: string,
+	): number {
+		const numberOfIntervals = this.getNumberOfIntervals(durationMonths, interval);
+		return recipients * payoutPerInterval * numberOfIntervals;
+	}
+
+	private calculateMonthlyCost(recipients: number, payoutPerInterval: number, interval: string): number {
+		if (interval === 'quarterly') {
+			return (recipients * payoutPerInterval) / 3;
+		}
+		if (interval === 'yearly') {
+			return (recipients * payoutPerInterval) / 12;
+		}
+		return recipients * payoutPerInterval;
+	}
+
+	private convertCurrencyAmount(
+		amount: number,
+		fromCurrency: Currency,
+		toCurrency: Currency,
+		rates?: Partial<Record<Currency, number>>,
+	): number | undefined {
+		if (fromCurrency === toCurrency) {
+			return amount;
+		}
+		if (!rates) {
+			return undefined;
+		}
+		const fromRate = rates[fromCurrency];
+		const toRate = rates[toCurrency];
+		if (!fromRate || !toRate) {
+			return undefined;
+		}
+		return amount * (toRate / fromRate);
+	}
+
+	private getExchangeRateText(
+		fromCurrency: Currency,
+		toCurrency: Currency,
+		rates?: Partial<Record<Currency, number>>,
+	): string | undefined {
+		const converted = this.convertCurrencyAmount(1, fromCurrency, toCurrency, rates);
+		if (converted === undefined) {
+			return undefined;
+		}
+		return `1 ${fromCurrency} = ${Number(converted.toFixed(4))} ${toCurrency}`;
+	}
+
+	private calculateProgramBudgetWithRates(
+		input: ProgramBudgetCalculationInput,
+		rates?: Partial<Record<Currency, number>>,
+	): ProgramBudgetCalculation {
+		const totalBudget = this.calculateTotalBudget(
+			input.amountOfRecipients,
+			input.programDuration,
+			input.payoutPerInterval,
+			input.payoutInterval,
+		);
+		const monthlyCost = this.calculateMonthlyCost(input.amountOfRecipients, input.payoutPerInterval, input.payoutInterval);
+		const numberOfIntervals = this.getNumberOfIntervals(input.programDuration, input.payoutInterval);
+
+		let calculatedTotalBudget = totalBudget;
+		let displayMonthlyCost = monthlyCost;
+		let exchangeRateText: string | undefined = `1 ${input.payoutCurrency} = 1 ${input.displayCurrency}`;
+
+		if (input.displayCurrency !== input.payoutCurrency) {
+			const convertedTotal = this.convertCurrencyAmount(totalBudget, input.payoutCurrency, input.displayCurrency, rates);
+			const convertedMonthly = this.convertCurrencyAmount(monthlyCost, input.payoutCurrency, input.displayCurrency, rates);
+			exchangeRateText = this.getExchangeRateText(input.payoutCurrency, input.displayCurrency, rates);
+			if (convertedTotal !== undefined && convertedMonthly !== undefined && exchangeRateText) {
+				calculatedTotalBudget = convertedTotal;
+				displayMonthlyCost = convertedMonthly;
+			}
+		}
+
+		const payoutPerIntervalMin = Math.max(1, Math.floor(input.defaultPayoutPerInterval / 2));
+		const payoutPerIntervalMax = Math.max(payoutPerIntervalMin + 1, Math.ceil(input.defaultPayoutPerInterval * 2));
+		const intervalLabel =
+			input.payoutInterval === 'quarterly'
+				? 'quarterly intervals'
+				: input.payoutInterval === 'yearly'
+					? 'yearly intervals'
+					: 'monthly intervals';
+
+		let totalBudgetTooltipText =
+			`${input.amountOfRecipients.toLocaleString('de-CH')} recipients x ` +
+			`${input.payoutPerInterval.toLocaleString('de-CH')} ${input.payoutCurrency} payout per interval x ` +
+			`${numberOfIntervals.toLocaleString('de-CH')} ${intervalLabel} = ` +
+			`${totalBudget.toLocaleString('de-CH')} ${input.payoutCurrency}`;
+
+		if (input.displayCurrency !== input.payoutCurrency && exchangeRateText) {
+			const factor = this.convertCurrencyAmount(1, input.payoutCurrency, input.displayCurrency, rates);
+			totalBudgetTooltipText +=
+				` | Currency conversion: ${totalBudget.toLocaleString('de-CH')} ${input.payoutCurrency} x ` +
+				`${Number((factor ?? 1).toFixed(4))} = ${calculatedTotalBudget.toLocaleString('de-CH')} ${input.displayCurrency}`;
+		}
+
+		return {
+			calculatedTotalBudget,
+			displayMonthlyCost,
+			exchangeRateText,
+			totalBudgetTooltipText,
+			payoutPerIntervalMin,
+			payoutPerIntervalMax,
+		};
+	}
+
+	private splitRecipientCohorts(program: ProgramForDashboard, nowDate: Date, expectedIntervals: number) {
+		let futureRecipientsCount = 0;
+		let activeRecipientsCount = 0;
+		let suspendedRecipientsCount = 0;
+		let completedRecipientsCount = 0;
+
+		for (const recipient of program.recipients) {
+			const hasStarted = this.isRecipientStartedNow(recipient.startDate, nowDate);
+			const isFuture = !hasStarted;
+			const isSuspended = this.isRecipientSuspendedNow(recipient.suspendedAt, nowDate);
+			const paidOrConfirmedCount = this.countPaidOrConfirmedPayouts(recipient.payouts);
+			const isCompleted = this.isRecipientCompleted(paidOrConfirmedCount, expectedIntervals);
+
+			if (isFuture) {
+				futureRecipientsCount++;
+				continue;
+			}
+			if (isCompleted) {
+				completedRecipientsCount++;
+				continue;
+			}
+			if (isSuspended) {
+				suspendedRecipientsCount++;
+				continue;
+			}
+			if (hasStarted) {
+				activeRecipientsCount++;
+			}
+		}
+
+		return {
+			futureRecipientsCount,
+			activeRecipientsCount,
+			suspendedRecipientsCount,
+			completedRecipientsCount,
+		};
+	}
+
+	private isRecipientStartedNow(startDate: Date | null, nowDate: Date): boolean {
+		return startDate !== null && startDate < nowDate;
+	}
+
+	private isRecipientSuspendedNow(suspendedAt: Date | null, nowDate: Date): boolean {
+		return suspendedAt !== null && suspendedAt <= nowDate;
+	}
+
+	private isRecipientCompleted(paidOrConfirmedCount: number, expectedIntervals: number): boolean {
+		return paidOrConfirmedCount >= expectedIntervals;
 	}
 }

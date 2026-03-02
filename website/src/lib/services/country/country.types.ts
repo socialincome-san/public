@@ -104,6 +104,8 @@ export type ProgramCountryFeasibilityRow = {
 	country: {
 		isoCode: CountryCode;
 		isActive: boolean;
+		currency: Currency;
+		defaultPayoutAmount: number;
 	};
 
 	stats: {

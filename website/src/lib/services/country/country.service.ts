@@ -360,6 +360,8 @@ export class CountryService extends BaseService {
 					country: {
 						isoCode: country.isoCode,
 						isActive: country.isActive,
+						currency: country.currency,
+						defaultPayoutAmount: Number(country.defaultPayoutAmount),
 					},
 
 					stats: {
