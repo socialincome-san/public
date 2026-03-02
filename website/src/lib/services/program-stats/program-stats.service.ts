@@ -93,7 +93,10 @@ export class ProgramStatsService extends BaseService {
 				{ ...budgetInputBase, displayCurrency: program.country.currency },
 				rates,
 			);
-			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(recipientsForTotalCost, payoutPerInterval);
+			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(
+				cohorts.activeRecipientsCount,
+				payoutPerInterval,
+			);
 			const costPerIntervalChf =
 				this.convertCurrencyAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
 				costPerIntervalProgramCurrency;

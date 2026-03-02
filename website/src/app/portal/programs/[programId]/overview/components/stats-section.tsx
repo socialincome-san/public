@@ -68,7 +68,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 		`Contributions (${stats.contributedToProgramSoFarChf.toFixed(2)} CHF) - ` +
 		`Paid out (${stats.paidOutSoFarChf.toFixed(2)} CHF) = ` +
 		`Available credits (${stats.availableCreditsChf.toFixed(2)} CHF). ` +
-		`Interval cost (${recipientsUsedForTotalCost} non-suspended recipients): ${stats.costPerIntervalChf.toFixed(2)} CHF. ` +
+		`Interval cost (${stats.activeRecipientsCount} active recipients): ${stats.costPerIntervalChf.toFixed(2)} CHF. ` +
 		`Available intervals: ${stats.availableCreditsChf.toFixed(2)} / ${stats.costPerIntervalChf.toFixed(2)} = ` +
 		`${stats.availableCreditsInIntervals.toFixed(1)}.`;
 	const totalContributionsExplanation = `Sum of all succeeded contributions in CHF: ${stats.contributedToProgramSoFarChf.toFixed(2)} CHF.`;

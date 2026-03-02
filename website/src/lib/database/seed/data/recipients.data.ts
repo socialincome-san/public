@@ -35,7 +35,7 @@ export const recipientsData: Recipient[] = [
 		id: 'recipient-3',
 		legacyFirestoreId: null,
 		contactId: 'contact-6',
-		startDate: new Date('2027-01-01'),
+		startDate: new Date('2024-03-01'),
 		suspendedAt: null,
 		suspensionReason: null,
 		successorName: null,
