@@ -15,6 +15,8 @@ import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ISbStoryData } from '@storyblok/js';
 import NextLink from 'next/link';
 
+const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
+
 const storyblokService = new StoryblokService();
 
 type Props = {
@@ -41,9 +43,11 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				<SocialIncomeLogo />
 			</NextLink>
 
-			<div className="hidden lg:block">
-				<MenuDesktop menu={menu} lang={lang} region={region} />
-			</div>
+			{ENABLE_NEW_WEBSITE && (
+				<div className="hidden lg:block">
+					<MenuDesktop menu={menu} lang={lang} region={region} />
+				</div>
+			)}
 
 			<div className="flex items-center gap-4">
 				<div className="hidden lg:block">
@@ -54,7 +58,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 						{translator.t('donation-form.donate-now')}
 					</Button>
 				)}
-				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
+				{ENABLE_NEW_WEBSITE && <MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />}
 			</div>
 		</nav>
 	);
