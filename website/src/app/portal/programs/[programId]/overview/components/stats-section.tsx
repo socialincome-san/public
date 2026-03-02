@@ -72,12 +72,9 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 		`Available intervals: ${stats.availableCreditsChf.toFixed(2)} / ${stats.costPerIntervalChf.toFixed(2)} = ` +
 		`${stats.availableCreditsInIntervals.toFixed(1)}.`;
 	const totalContributionsExplanation = `Sum of all succeeded contributions in CHF: ${stats.contributedToProgramSoFarChf.toFixed(2)} CHF.`;
-	const totalProgramCostChfExplanation =
-		`Non-suspended recipients (${recipientsUsedForTotalCost}) x payout per interval (${stats.payoutPerInterval} ${stats.payoutCurrency}) x expected intervals (${stats.totalExpectedIntervals}), converted to CHF = ${stats.totalProgramCostsChf.toFixed(2)} CHF.`;
-	const paidOutSoFarExplanation =
-		`Sum of all paid/confirmed payouts in ${stats.payoutCurrency}: ${stats.paidOutSoFarProgramCurrency.toFixed(2)} ${stats.payoutCurrency}.`;
-	const totalProgramCostProgramCurrencyExplanation =
-		`Non-suspended recipients (${recipientsUsedForTotalCost}) x payout per interval (${stats.payoutPerInterval} ${stats.payoutCurrency}) x expected intervals (${stats.totalExpectedIntervals}) = ${stats.totalProgramCostsProgramCurrency.toFixed(2)} ${stats.payoutCurrency}.`;
+	const totalProgramCostChfExplanation = `Non-suspended recipients (${recipientsUsedForTotalCost}) x payout per interval (${stats.payoutPerInterval} ${stats.payoutCurrency}) x expected intervals (${stats.totalExpectedIntervals}), converted to CHF = ${stats.totalProgramCostsChf.toFixed(2)} CHF.`;
+	const paidOutSoFarExplanation = `Sum of all paid/confirmed payouts in ${stats.payoutCurrency}: ${stats.paidOutSoFarProgramCurrency.toFixed(2)} ${stats.payoutCurrency}.`;
+	const totalProgramCostProgramCurrencyExplanation = `Non-suspended recipients (${recipientsUsedForTotalCost}) x payout per interval (${stats.payoutPerInterval} ${stats.payoutCurrency}) x expected intervals (${stats.totalExpectedIntervals}) = ${stats.totalProgramCostsProgramCurrency.toFixed(2)} ${stats.payoutCurrency}.`;
 
 	return (
 		<div className="space-y-4">

@@ -53,37 +53,37 @@ export const BudgetStep = ({
 	onCurrencyChange,
 	onToggleCustomizePayouts,
 }: Props) => (
-		<div className="space-y-8">
-			<ProgramCostsHeader
-				totalBudget={calculatedTotalBudget}
-				monthlyCost={displayMonthlyCost}
-				currency={displayCurrency}
-				exchangeRateText={exchangeRateText}
-				totalBudgetTooltipText={totalBudgetTooltipText}
-				isCalculatingBudget={isCalculatingBudget}
-				onCurrencyChange={onCurrencyChange}
+	<div className="space-y-8">
+		<ProgramCostsHeader
+			totalBudget={calculatedTotalBudget}
+			monthlyCost={displayMonthlyCost}
+			currency={displayCurrency}
+			exchangeRateText={exchangeRateText}
+			totalBudgetTooltipText={totalBudgetTooltipText}
+			isCalculatingBudget={isCalculatingBudget}
+			onCurrencyChange={onCurrencyChange}
+		/>
+
+		<div className="grid gap-6 md:grid-cols-2">
+			<RecipientsBox
+				amountOfRecipients={amountOfRecipients}
+				filteredRecipients={filteredRecipients}
+				onChange={onRecipientsChange}
 			/>
 
-			<div className="grid gap-6 md:grid-cols-2">
-				<RecipientsBox
-					amountOfRecipients={amountOfRecipients}
-					filteredRecipients={filteredRecipients}
-					onChange={onRecipientsChange}
-				/>
-
-				<PayoutBox
-					programDuration={programDuration}
-					payoutPerIntervalMin={payoutPerIntervalMin}
-					payoutPerIntervalMax={payoutPerIntervalMax}
-					payoutPerInterval={payoutPerInterval}
-					payoutInterval={payoutInterval}
-					currency={payoutCurrency}
-					customizePayouts={customizePayouts}
-					onDurationChange={onDurationChange}
-					onPayoutChange={onPayoutChange}
-					onIntervalChange={onIntervalChange}
-					onToggleCustomizePayouts={onToggleCustomizePayouts}
-				/>
-			</div>
+			<PayoutBox
+				programDuration={programDuration}
+				payoutPerIntervalMin={payoutPerIntervalMin}
+				payoutPerIntervalMax={payoutPerIntervalMax}
+				payoutPerInterval={payoutPerInterval}
+				payoutInterval={payoutInterval}
+				currency={payoutCurrency}
+				customizePayouts={customizePayouts}
+				onDurationChange={onDurationChange}
+				onPayoutChange={onPayoutChange}
+				onIntervalChange={onIntervalChange}
+				onToggleCustomizePayouts={onToggleCustomizePayouts}
+			/>
 		</div>
+	</div>
 );

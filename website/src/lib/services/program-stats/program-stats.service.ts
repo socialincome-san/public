@@ -93,10 +93,7 @@ export class ProgramStatsService extends BaseService {
 				{ ...budgetInputBase, displayCurrency: program.country.currency },
 				rates,
 			);
-			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(
-				recipientsForTotalCost,
-				payoutPerInterval,
-			);
+			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(recipientsForTotalCost, payoutPerInterval);
 			const costPerIntervalChf =
 				this.convertCurrencyAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
 				costPerIntervalProgramCurrency;
@@ -270,9 +267,7 @@ export class ProgramStatsService extends BaseService {
 		}
 
 		const payoutProgressPercent =
-			totalProgramCostsProgramCurrency > 0
-				? (paidOutSoFarProgramCurrency / totalProgramCostsProgramCurrency) * 100
-				: 0;
+			totalProgramCostsProgramCurrency > 0 ? (paidOutSoFarProgramCurrency / totalProgramCostsProgramCurrency) * 100 : 0;
 
 		return {
 			paidOutSoFarChf,
@@ -354,16 +349,11 @@ export class ProgramStatsService extends BaseService {
 		return activeRecipientsCount * payoutPerInterval;
 	}
 
-	private countPaidOrConfirmedPayouts(
-		payouts: Array<{ status: PayoutStatus }>,
-	): number {
+	private countPaidOrConfirmedPayouts(payouts: Array<{ status: PayoutStatus }>): number {
 		return payouts.filter((p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed).length;
 	}
 
-	private countNonSuspendedRecipients(
-		recipients: Array<{ suspendedAt: Date | null }>,
-		nowDate: Date,
-	): number {
+	private countNonSuspendedRecipients(recipients: Array<{ suspendedAt: Date | null }>, nowDate: Date): number {
 		return recipients.filter((recipient) => !this.isRecipientSuspendedNow(recipient.suspendedAt, nowDate)).length;
 	}
 
@@ -429,7 +419,11 @@ export class ProgramStatsService extends BaseService {
 			input.payoutPerInterval,
 			input.payoutInterval,
 		);
-		const monthlyCost = this.calculateMonthlyCost(input.amountOfRecipients, input.payoutPerInterval, input.payoutInterval);
+		const monthlyCost = this.calculateMonthlyCost(
+			input.amountOfRecipients,
+			input.payoutPerInterval,
+			input.payoutInterval,
+		);
 		const numberOfIntervals = this.getNumberOfIntervals(input.programDuration, input.payoutInterval);
 
 		let calculatedTotalBudget = totalBudget;
@@ -437,8 +431,18 @@ export class ProgramStatsService extends BaseService {
 		let exchangeRateText: string | undefined = `1 ${input.payoutCurrency} = 1 ${input.displayCurrency}`;
 
 		if (input.displayCurrency !== input.payoutCurrency) {
-			const convertedTotal = this.convertCurrencyAmount(totalBudget, input.payoutCurrency, input.displayCurrency, rates);
-			const convertedMonthly = this.convertCurrencyAmount(monthlyCost, input.payoutCurrency, input.displayCurrency, rates);
+			const convertedTotal = this.convertCurrencyAmount(
+				totalBudget,
+				input.payoutCurrency,
+				input.displayCurrency,
+				rates,
+			);
+			const convertedMonthly = this.convertCurrencyAmount(
+				monthlyCost,
+				input.payoutCurrency,
+				input.displayCurrency,
+				rates,
+			);
 			exchangeRateText = this.getExchangeRateText(input.payoutCurrency, input.displayCurrency, rates);
 			if (convertedTotal !== undefined && convertedMonthly !== undefined && exchangeRateText) {
 				calculatedTotalBudget = convertedTotal;
