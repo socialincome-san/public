@@ -24,22 +24,20 @@ export default function HeroVideoBlock({ blok, lang, region, subtitleUrl }: Prop
 	const showCaptions = false;
 
 	return (
-		<div
-			{...storyblokEditable(blok as SbBlokData)}
-			className="storyblok__outline hero-video-block relative aspect-video max-h-[80vh] w-full overflow-hidden rounded-b-[56px]"
-		>
-			<MuxVideo
-				className="z-10 h-full w-full object-cover"
-				playbackId={muxPlaybackId}
-				poster={`https://image.mux.com/${muxPlaybackId}/thumbnail.jpg?time=2`}
-				preload="metadata"
-				loop
-				muted
-				autoPlay
-				playsInline
-			>
-				{subtitleUrl && <track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />}
-				<style>{`
+		<div {...storyblokEditable(blok as SbBlokData)} className="storyblok__outline hero-video-block flex flex-col gap-6">
+			<div className="relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl md:min-h-160 md:rounded-b-[56px]">
+				<MuxVideo
+					className="z-10 h-full w-full object-cover"
+					playbackId={muxPlaybackId}
+					poster={`https://image.mux.com/${muxPlaybackId}/thumbnail.jpg?time=2`}
+					preload="metadata"
+					loop
+					muted
+					autoPlay
+					playsInline
+				>
+					{subtitleUrl && <track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />}
+					<style>{`
           video::cue {
             background-color: rgba(0, 0, 0, 0.8);
             color: white;
@@ -48,28 +46,34 @@ export default function HeroVideoBlock({ blok, lang, region, subtitleUrl }: Prop
             opacity: ${showCaptions ? 1 : 0};
           }
         `}</style>
-			</MuxVideo>
-			<div className="w-site-width max-w-content absolute inset-x-0 bottom-[20%] z-20 mx-auto flex flex-row items-center justify-between gap-4 text-white">
-				<div className="flex max-w-2xl flex-col gap-6">
-					{heading && (
-						<h1 className="text-6xl font-light [&_strong]:font-bold">
-							<Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown>
-						</h1>
-					)}
-					{description && <p className="text-xl">{description}</p>}
-					{button && (
-						<div>
-							{button.map(({ _uid, label, link }) => {
-								const href = resolveStoryblokLink(link, lang, region);
-								return (
-									<Button key={_uid} variant="outline" size="lg" asChild>
-										<NextLink href={href}>{label}</NextLink>
-									</Button>
-								);
-							})}
-						</div>
-					)}
+				</MuxVideo>
+				<div className="w-site-width max-w-content absolute inset-0 z-20 mx-auto flex flex-row items-center justify-between gap-4 text-white">
+					<div className="flex max-w-2xl flex-col gap-6">
+						{heading && (
+							<h1 className="text-4xl font-light xl:text-6xl [&_strong]:font-bold">
+								<Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown>
+							</h1>
+						)}
+						{description && <p className="text-xl">{description}</p>}
+						{button && (
+							<div>
+								{button.map(({ _uid, label, link }) => {
+									const href = resolveStoryblokLink(link, lang, region);
+									return (
+										<Button key={_uid} variant="outline" size="lg" asChild>
+											<NextLink href={href}>{label}</NextLink>
+										</Button>
+									);
+								})}
+							</div>
+						)}
+					</div>
+					<div className="hidden shrink-0 lg:block">
+						<MakeDonationForm lang={lang} />
+					</div>
 				</div>
+			</div>
+			<div className="flex justify-center lg:hidden">
 				<MakeDonationForm lang={lang} />
 			</div>
 		</div>

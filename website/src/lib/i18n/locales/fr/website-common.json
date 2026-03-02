@@ -52,6 +52,12 @@
 		"youtube": "YouTube",
 		"x": "X"
 	},
+	"menu": {
+		"open": "Ouvrir le menu",
+		"close": "Fermer le menu",
+		"title": "Menu",
+		"back": "Retour"
+	},
 	"sdg": {
 		"sdg": "ODD",
 		"sdg1-title": "Pas de Pauvreté",

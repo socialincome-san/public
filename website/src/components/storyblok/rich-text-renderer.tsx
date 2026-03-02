@@ -1,5 +1,13 @@
+import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
-import { MARK_LINK, NODE_HEADING, NODE_LI, render, StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
+import {
+	MARK_LINK,
+	NODE_HEADING,
+	NODE_LI,
+	NODE_PARAGRAPH,
+	render,
+	StoryblokRichtext,
+} from 'storyblok-rich-text-react-renderer';
 
 type RichTextRendererProps = {
 	richTextDocument: StoryblokRichtext;
@@ -26,9 +34,10 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 					5: 'text-lg font-medium',
 					6: 'text-base font-medium',
 				};
-				return <Tag className={styles[level]}>{children}</Tag>;
+				return <Tag className={cn(styles[level], 'my-4')}>{children}</Tag>;
 			},
 			[NODE_LI]: (children) => <li className="m-0.5 p-0.5 *:m-0 *:p-0 [&::marker]:text-black">{children}</li>,
+			[NODE_PARAGRAPH]: (children) => <p className="my-4">{children}</p>,
 		},
 		blokResolvers: {
 			// Todo: Add blocks as soon as we have them ready in the Storyblok schema
