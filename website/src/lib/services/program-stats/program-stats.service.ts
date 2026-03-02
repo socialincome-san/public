@@ -75,24 +75,9 @@ export class ProgramStatsService extends BaseService {
 			const payoutPerInterval = Number(program.payoutPerInterval);
 			const totalExpectedIntervals = this.getExpectedIntervals(program.programDurationInMonths, program.payoutInterval);
 			const cohorts = this.splitRecipientCohorts(program, nowDate, totalExpectedIntervals);
-			const recipientsForTotalCost = this.countNonSuspendedRecipients(program.recipients, nowDate);
 
 			const rates = await this.getLatestRatesOrUndefined();
 
-			const budgetInputBase = {
-				amountOfRecipients: recipientsForTotalCost,
-				programDuration: program.programDurationInMonths,
-				defaultPayoutPerInterval: payoutPerInterval,
-				payoutPerInterval,
-				payoutInterval: program.payoutInterval,
-				payoutCurrency: program.country.currency,
-			} as const;
-
-			const budgetInChf = this.calculateProgramBudgetWithRates({ ...budgetInputBase, displayCurrency: 'CHF' }, rates);
-			const budgetInProgramCurrency = this.calculateProgramBudgetWithRates(
-				{ ...budgetInputBase, displayCurrency: program.country.currency },
-				rates,
-			);
 			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(
 				cohorts.activeRecipientsCount,
 				payoutPerInterval,
@@ -102,10 +87,25 @@ export class ProgramStatsService extends BaseService {
 				costPerIntervalProgramCurrency;
 			const payoutProgressExchangeRateText = this.getExchangeRateText('CHF', program.country.currency, rates);
 
-			const totalProgramCostsChf = budgetInChf.calculatedTotalBudget;
-			const totalProgramCostsProgramCurrency = budgetInProgramCurrency.calculatedTotalBudget;
+			const payouts = this.computePayouts(program);
+			const projectedRemainingProgramCurrency = this.computeProjectedRemainingProgramCurrency({
+				recipients: program.recipients,
+				expectedIntervals: totalExpectedIntervals,
+				nowDate,
+				payoutPerInterval,
+			});
+			const projectedRemainingChf =
+				this.convertCurrencyAmount(projectedRemainingProgramCurrency, program.country.currency, 'CHF', rates) ??
+				projectedRemainingProgramCurrency;
+
+			const totalProgramCostsProgramCurrency = payouts.paidOutSoFarProgramCurrency + projectedRemainingProgramCurrency;
+			const totalProgramCostsChf = payouts.paidOutSoFarChf + projectedRemainingChf;
+			const payoutProgressPercent =
+				totalProgramCostsProgramCurrency > 0
+					? (payouts.paidOutSoFarProgramCurrency / totalProgramCostsProgramCurrency) * 100
+					: 0;
+
 			const contributions = this.computeContributions(program, totalProgramCostsChf);
-			const payouts = this.computePayouts(program, totalProgramCostsProgramCurrency);
 			const credits = this.computeAvailableCredits(
 				contributions.contributedToProgramSoFarChf,
 				payouts.paidOutSoFarChf,
@@ -133,7 +133,7 @@ export class ProgramStatsService extends BaseService {
 				payoutCurrency: program.country.currency,
 				costPerIntervalChf,
 				costPerIntervalProgramCurrency,
-				payoutProgressPercent: payouts.payoutProgressPercent,
+				payoutProgressPercent,
 				payoutProgressExchangeRateText,
 				totalProgramCostsProgramCurrency,
 
@@ -252,7 +252,7 @@ export class ProgramStatsService extends BaseService {
 		};
 	}
 
-	private computePayouts(program: ProgramForDashboard, totalProgramCostsProgramCurrency: number) {
+	private computePayouts(program: ProgramForDashboard) {
 		let paidOutSoFarChf = 0;
 		let paidOutSoFarProgramCurrency = 0;
 		let totalPayoutsCount = 0;
@@ -269,15 +269,36 @@ export class ProgramStatsService extends BaseService {
 			}
 		}
 
-		const payoutProgressPercent =
-			totalProgramCostsProgramCurrency > 0 ? (paidOutSoFarProgramCurrency / totalProgramCostsProgramCurrency) * 100 : 0;
-
 		return {
 			paidOutSoFarChf,
 			paidOutSoFarProgramCurrency,
 			totalPayoutsCount,
-			payoutProgressPercent,
 		};
+	}
+
+	private computeProjectedRemainingProgramCurrency(params: {
+		recipients: ProgramForDashboard['recipients'];
+		expectedIntervals: number;
+		nowDate: Date;
+		payoutPerInterval: number;
+	}): number {
+		let projectedRemainingProgramCurrency = 0;
+
+		for (const recipient of params.recipients) {
+			const hasStarted = this.isRecipientStartedNow(recipient.startDate, params.nowDate);
+			const isFuture = !hasStarted;
+			const isSuspended = this.isRecipientSuspendedNow(recipient.suspendedAt, params.nowDate);
+			const paidOrConfirmedCount = this.countPaidOrConfirmedPayouts(recipient.payouts);
+			const isCompleted = this.isRecipientCompleted(paidOrConfirmedCount, params.expectedIntervals);
+
+			if (isSuspended || isCompleted) {
+				continue;
+			}
+			const remainingIntervals = Math.max(0, params.expectedIntervals - paidOrConfirmedCount);
+			projectedRemainingProgramCurrency += remainingIntervals * params.payoutPerInterval;
+		}
+
+		return projectedRemainingProgramCurrency;
 	}
 
 	private computeAvailableCredits(
@@ -354,10 +375,6 @@ export class ProgramStatsService extends BaseService {
 
 	private countPaidOrConfirmedPayouts(payouts: Array<{ status: PayoutStatus }>): number {
 		return payouts.filter((p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed).length;
-	}
-
-	private countNonSuspendedRecipients(recipients: Array<{ suspendedAt: Date | null }>, nowDate: Date): number {
-		return recipients.filter((recipient) => !this.isRecipientSuspendedNow(recipient.suspendedAt, nowDate)).length;
 	}
 
 	private calculateTotalBudget(

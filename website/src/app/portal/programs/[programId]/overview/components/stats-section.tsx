@@ -63,7 +63,8 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const { Icon, color } = getCreditIcon(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const creditStatus = getCreditStatusLabel(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const creditExplanation = getCreditStatusExplanation(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
-	const recipientsUsedForTotalCost = stats.recipientsCount - stats.suspendedRecipientsCount;
+	const projectedRemainingProgramCurrency =
+		stats.totalProgramCostsProgramCurrency - stats.paidOutSoFarProgramCurrency;
 	const intervalsExplanation =
 		`Contributions (${stats.contributedToProgramSoFarChf.toFixed(2)} CHF) - ` +
 		`Paid out (${stats.paidOutSoFarChf.toFixed(2)} CHF) = ` +
@@ -72,9 +73,15 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 		`Available intervals: ${stats.availableCreditsChf.toFixed(2)} / ${stats.costPerIntervalChf.toFixed(2)} = ` +
 		`${stats.availableCreditsInIntervals.toFixed(1)}.`;
 	const totalContributionsExplanation = `Sum of all succeeded contributions in CHF: ${stats.contributedToProgramSoFarChf.toFixed(2)} CHF.`;
-	const totalProgramCostChfExplanation = `Non-suspended recipients (${recipientsUsedForTotalCost}) x payout per interval (${stats.payoutPerInterval} ${stats.payoutCurrency}) x expected intervals (${stats.totalExpectedIntervals}), converted to CHF = ${stats.totalProgramCostsChf.toFixed(2)} CHF.`;
+	const totalProgramCostChfExplanation =
+		`Total program cost = sum of all paid/confirmed payouts + all future payouts from active and future recipients ` +
+		`calculated with the current program config (payout amount and interval). ` +
+		`Current value: ${stats.totalProgramCostsChf.toFixed(2)} CHF.`;
 	const paidOutSoFarExplanation = `Sum of all paid/confirmed payouts in ${stats.payoutCurrency}: ${stats.paidOutSoFarProgramCurrency.toFixed(2)} ${stats.payoutCurrency}.`;
-	const totalProgramCostProgramCurrencyExplanation = `Non-suspended recipients (${recipientsUsedForTotalCost}) x payout per interval (${stats.payoutPerInterval} ${stats.payoutCurrency}) x expected intervals (${stats.totalExpectedIntervals}) = ${stats.totalProgramCostsProgramCurrency.toFixed(2)} ${stats.payoutCurrency}.`;
+	const totalProgramCostProgramCurrencyExplanation =
+		`Total program cost = sum of all paid/confirmed payouts + all future payouts from active and future recipients ` +
+		`calculated with the current program config (payout amount and interval). ` +
+		`Current value: ${stats.totalProgramCostsProgramCurrency.toFixed(2)} ${stats.payoutCurrency}.`;
 
 	return (
 		<div className="space-y-4">
@@ -129,6 +136,10 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 									<Stat
 										label="Cost / Interval"
 										value={formatCurrencyLocale(stats.costPerIntervalProgramCurrency, stats.payoutCurrency, 'de-CH')}
+									/>
+									<Stat
+										label="Projected Remaining"
+										value={formatCurrencyLocale(projectedRemainingProgramCurrency, stats.payoutCurrency, 'de-CH')}
 									/>
 								</AdditionalNumbers>
 							</div>
@@ -192,6 +203,19 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 					</div>
 
 					<div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+						<SectionBox href={`/portal/programs/${programId}/recipients`}>
+							<div className="space-y-6">
+								<h2 className="text-lg font-semibold">Recipient Status</h2>
+								<div className="text-xl font-semibold">{stats.recipientsCount} recipients</div>
+								<AdditionalNumbers>
+									<Stat label="Future" value={stats.futureRecipientsCount} />
+									<Stat label="Active" value={stats.activeRecipientsCount} />
+									<Stat label="Suspended" value={stats.suspendedRecipientsCount} />
+									<Stat label="Completed" value={stats.completedRecipientsCount} />
+								</AdditionalNumbers>
+							</div>
+						</SectionBox>
+
 						<SectionBox href={`/portal/programs/${programId}/surveys`}>
 							<StatProgressCard
 								title="Survey Progress"
@@ -201,18 +225,6 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 								rightValue={`${stats.totalSurveysCount}`}
 								percent={stats.surveyCompletionPercent}
 							/>
-						</SectionBox>
-
-						<SectionBox href={`/portal/programs/${programId}/recipients`}>
-							<div className="space-y-6">
-								<h2 className="text-lg font-semibold">Recipient Status</h2>
-								<AdditionalNumbers>
-									<Stat label="Future" value={stats.futureRecipientsCount} />
-									<Stat label="Active" value={stats.activeRecipientsCount} />
-									<Stat label="Suspended" value={stats.suspendedRecipientsCount} />
-									<Stat label="Completed" value={stats.completedRecipientsCount} />
-								</AdditionalNumbers>
-							</div>
 						</SectionBox>
 					</div>
 				</div>
