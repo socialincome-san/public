@@ -63,8 +63,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const { Icon, color } = getCreditIcon(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const creditStatus = getCreditStatusLabel(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const creditExplanation = getCreditStatusExplanation(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
-	const projectedRemainingProgramCurrency =
-		stats.totalProgramCostsProgramCurrency - stats.paidOutSoFarProgramCurrency;
+	const projectedRemainingProgramCurrency = stats.totalProgramCostsProgramCurrency - stats.paidOutSoFarProgramCurrency;
 	const intervalsExplanation =
 		`Contributions (${stats.contributedToProgramSoFarChf.toFixed(2)} CHF) - ` +
 		`Paid out (${stats.paidOutSoFarChf.toFixed(2)} CHF) = ` +
