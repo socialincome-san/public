@@ -75,11 +75,12 @@ export class ProgramStatsService extends BaseService {
 			const payoutPerInterval = Number(program.payoutPerInterval);
 			const totalExpectedIntervals = this.getExpectedIntervals(program.programDurationInMonths, program.payoutInterval);
 			const cohorts = this.splitRecipientCohorts(program, nowDate, totalExpectedIntervals);
+			const recipientsForTotalCost = this.countNonSuspendedRecipients(program.recipients, nowDate);
 
 			const rates = await this.getLatestRatesOrUndefined();
 
 			const budgetInputBase = {
-				amountOfRecipients: cohorts.activeRecipientsCount,
+				amountOfRecipients: recipientsForTotalCost,
 				programDuration: program.programDurationInMonths,
 				defaultPayoutPerInterval: payoutPerInterval,
 				payoutPerInterval,
@@ -93,7 +94,7 @@ export class ProgramStatsService extends BaseService {
 				rates,
 			);
 			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(
-				cohorts.activeRecipientsCount,
+				recipientsForTotalCost,
 				payoutPerInterval,
 			);
 			const costPerIntervalChf =
@@ -357,6 +358,13 @@ export class ProgramStatsService extends BaseService {
 		payouts: Array<{ status: PayoutStatus }>,
 	): number {
 		return payouts.filter((p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed).length;
+	}
+
+	private countNonSuspendedRecipients(
+		recipients: Array<{ suspendedAt: Date | null }>,
+		nowDate: Date,
+	): number {
+		return recipients.filter((recipient) => !this.isRecipientSuspendedNow(recipient.suspendedAt, nowDate)).length;
 	}
 
 	private calculateTotalBudget(
