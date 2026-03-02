@@ -137,7 +137,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 							</div>
 						</SectionBox>
 
-						<SectionBox className="h-full">
+						<SectionBox href={`/portal/programs/${programId}/payout-forecast`} className="h-full">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
 									<h2 className="text-lg font-semibold">Available Credits</h2>
