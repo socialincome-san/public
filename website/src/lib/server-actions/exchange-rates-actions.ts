@@ -12,8 +12,3 @@ export const importExchangeRatesAction = async () => {
 	revalidatePath('/portal/admin/exchange-rates');
 	return result;
 };
-
-export const getLatestExchangeRatesAction = async () => {
-	await getAuthenticatedUserOrThrow();
-	return service.getLatestRates();
-};
