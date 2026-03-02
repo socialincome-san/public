@@ -23,6 +23,10 @@ export const StatProgressCard = ({
 	rightValue,
 	percent,
 }: StatProgressCardProps) => {
+	const safePercent = Number.isFinite(percent) ? Math.max(0, percent) : 0;
+	const progressValue = Math.min(100, safePercent);
+	const percentLabel = `${safePercent.toFixed(1)}%`;
+
 	return (
 		<div className="space-y-4">
 			<h2 className="text-lg font-semibold">{title}</h2>
@@ -73,7 +77,10 @@ export const StatProgressCard = ({
 				<span>{rightValue}</span>
 			</div>
 
-			<Progress value={percent} />
+			<div className="space-y-1">
+				<Progress value={progressValue} />
+				<div className="text-muted-foreground flex justify-end text-xs">{percentLabel}</div>
+			</div>
 		</div>
 	);
 };

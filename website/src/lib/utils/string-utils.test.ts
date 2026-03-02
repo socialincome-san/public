@@ -74,6 +74,31 @@ describe('string-utils', () => {
 			const result = formatCurrencyLocale(1000, 'XXX', 'de-CH');
 			expect(result).toContain('XXX');
 		});
+
+		test('uses compact currency format when threshold is reached', () => {
+			const amount = 294_104_200;
+			const expected = new Intl.NumberFormat('en', {
+				style: 'currency',
+				currency: 'CHF',
+				notation: 'compact',
+				compactDisplay: 'short',
+				maximumFractionDigits: 1,
+			}).format(amount);
+
+			expect(formatCurrencyLocale(amount, 'CHF', 'de-CH', { compactThreshold: 1_000_000 })).toBe(expected);
+		});
+
+		test('keeps regular currency format when below compact threshold', () => {
+			const amount = 999_999;
+			const expected = new Intl.NumberFormat('de-CH', {
+				style: 'currency',
+				currency: 'CHF',
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 0,
+			}).format(amount);
+
+			expect(formatCurrencyLocale(amount, 'CHF', 'de-CH', { compactThreshold: 1_000_000 })).toBe(expected);
+		});
 	});
 
 	describe('formatNumberLocale', () => {
@@ -91,6 +116,26 @@ describe('string-utils', () => {
 				value,
 			);
 			expect(formatNumberLocale(value, 'de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })).toBe(expected);
+		});
+
+		test('uses compact number format when threshold is reached', () => {
+			const value = 294_104_200;
+			const expected = new Intl.NumberFormat('en', {
+				notation: 'compact',
+				compactDisplay: 'short',
+				maximumFractionDigits: 1,
+			}).format(value);
+
+			expect(formatNumberLocale(value, 'de-CH', { compactThreshold: 1_000_000 })).toBe(expected);
+		});
+
+		test('keeps regular number format when below compact threshold', () => {
+			const value = 999_999;
+			const expected = new Intl.NumberFormat('de-CH', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(
+				value,
+			);
+
+			expect(formatNumberLocale(value, 'de-CH', { compactThreshold: 1_000_000 })).toBe(expected);
 		});
 	});
 

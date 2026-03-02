@@ -88,12 +88,13 @@ export class ProgramStatsService extends BaseService {
 			const payoutProgressExchangeRateText = this.getExchangeRateText('CHF', program.country.currency, rates);
 
 			const payouts = this.computePayouts(program);
-			const projectedRemainingProgramCurrency = this.computeProjectedRemainingProgramCurrency({
+			const projection = this.computeProjectedRemaining({
 				recipients: program.recipients,
 				expectedIntervals: totalExpectedIntervals,
 				nowDate,
 				payoutPerInterval,
 			});
+			const projectedRemainingProgramCurrency = projection.projectedRemainingProgramCurrency;
 			const projectedRemainingChf =
 				this.convertCurrencyAmount(projectedRemainingProgramCurrency, program.country.currency, 'CHF', rates) ??
 				projectedRemainingProgramCurrency;
@@ -128,6 +129,9 @@ export class ProgramStatsService extends BaseService {
 				paidOutSoFarChf: payouts.paidOutSoFarChf,
 				paidOutSoFarProgramCurrency: payouts.paidOutSoFarProgramCurrency,
 				totalPayoutsCount: payouts.totalPayoutsCount,
+				payoutsDoneCount: payouts.payoutsDoneCount,
+				remainingPayoutsCount: projection.remainingPayoutsCount,
+				remainingIntervalsCount: projection.remainingIntervalsCount,
 				payoutPerInterval,
 				payoutInterval: program.payoutInterval,
 				payoutCurrency: program.country.currency,
@@ -256,10 +260,12 @@ export class ProgramStatsService extends BaseService {
 		let paidOutSoFarChf = 0;
 		let paidOutSoFarProgramCurrency = 0;
 		let totalPayoutsCount = 0;
+		let payoutsDoneCount = 0;
 
 		for (const recipient of program.recipients) {
 			const paidOrConfirmedCount = this.countPaidOrConfirmedPayouts(recipient.payouts);
 			totalPayoutsCount += paidOrConfirmedCount;
+			payoutsDoneCount += recipient.payouts.length;
 
 			for (const payout of recipient.payouts) {
 				if (payout.status === PayoutStatus.paid || payout.status === PayoutStatus.confirmed) {
@@ -273,16 +279,23 @@ export class ProgramStatsService extends BaseService {
 			paidOutSoFarChf,
 			paidOutSoFarProgramCurrency,
 			totalPayoutsCount,
+			payoutsDoneCount,
 		};
 	}
 
-	private computeProjectedRemainingProgramCurrency(params: {
+	private computeProjectedRemaining(params: {
 		recipients: ProgramForDashboard['recipients'];
 		expectedIntervals: number;
 		nowDate: Date;
 		payoutPerInterval: number;
-	}): number {
+	}): {
+		projectedRemainingProgramCurrency: number;
+		remainingPayoutsCount: number;
+		remainingIntervalsCount: number;
+	} {
 		let projectedRemainingProgramCurrency = 0;
+		let remainingPayoutsCount = 0;
+		let remainingIntervalsCount = 0;
 
 		for (const recipient of params.recipients) {
 			const hasStarted = this.isRecipientStartedNow(recipient.startDate, params.nowDate);
@@ -296,9 +309,11 @@ export class ProgramStatsService extends BaseService {
 			}
 			const remainingIntervals = Math.max(0, params.expectedIntervals - paidOrConfirmedCount);
 			projectedRemainingProgramCurrency += remainingIntervals * params.payoutPerInterval;
+			remainingPayoutsCount += remainingIntervals;
+			remainingIntervalsCount = Math.max(remainingIntervalsCount, remainingIntervals);
 		}
 
-		return projectedRemainingProgramCurrency;
+		return { projectedRemainingProgramCurrency, remainingPayoutsCount, remainingIntervalsCount };
 	}
 
 	private computeAvailableCredits(

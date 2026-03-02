@@ -27,17 +27,77 @@ REFERENCES "mobile_money_provider"("id")
 ON DELETE RESTRICT
 ON UPDATE CASCADE;
 
-CREATE TYPE "Currency" AS ENUM (
-  'AED','AFN','ALL','AMD','ANG','AOA','ARS','AUD','AWG','AZN','BAM','BBD','BDT','BGN','BHD','BIF','BMD','BND',
-  'BOB','BRL','BSD','BTC','BTN','BWP','BYN','BYR','BZD','CAD','CDF','CHF','CLF','CLP','CNY','COP','CRC','CUC',
-  'CUP','CVE','CZK','DJF','DKK','DOP','DZD','EGP','ERN','ETB','EUR','FJD','FKP','FOK','GBP','GEL','GGP','GHS',
-  'GIP','GMD','GNF','GTQ','GYD','HKD','HNL','HRK','HTG','HUF','IDR','ILS','IMP','INR','IQD','IRR','ISK','JEP',
-  'JMD','JOD','JPY','KES','KGS','KHR','KID','KMF','KPW','KRW','KWD','KYD','KZT','LAK','LBP','LKR','LRD','LSL',
-  'LTL','LYD','LVL','MAD','MDL','MGA','MKD','MMK','MNT','MOP','MRO','MUR','MVR','MWK','MXN','MYR','MZN','NAD',
-  'NGN','NIO','NOK','NPR','NZD','OMR','PAB','PEN','PGK','PHP','PKR','PLN','PYG','QAR','RON','RSD','RUB','RWF',
-  'SAR','SBD','SCR','SDG','SEK','SGD','SHP','SLE','SLL','SOS','SRD','SSP','STD','SVC','SYP','SZL','THB','TJS',
-  'TMT','TND','TOP','TRY','TTD','TWD','TZS','UAH','UGX','USD','UYU','UZS','VEF','VES','VND','VUV','WST','XAF',
-  'XAU','XAG','XCD','XDR','XOF','XPF','YER','ZAR','ZMK','ZMW','ZWL'
+DO $$
+BEGIN
+  CREATE TYPE "Currency" AS ENUM (
+    'AED','AFN','ALL','AMD','ANG','AOA','ARS','AUD','AWG','AZN','BAM','BBD','BDT','BGN','BHD','BIF','BMD','BND',
+    'BOB','BRL','BSD','BTC','BTN','BWP','BYN','BYR','BZD','CAD','CDF','CHF','CLF','CLP','CNY','COP','CRC','CUC',
+    'CUP','CVE','CZK','DJF','DKK','DOP','DZD','EGP','ERN','ETB','EUR','FJD','FKP','FOK','GBP','GEL','GGP','GHS',
+    'GIP','GMD','GNF','GTQ','GYD','HKD','HNL','HRK','HTG','HUF','IDR','ILS','IMP','INR','IQD','IRR','ISK','JEP',
+    'JMD','JOD','JPY','KES','KGS','KHR','KID','KMF','KPW','KRW','KWD','KYD','KZT','LAK','LBP','LKR','LRD','LSL',
+    'LTL','LYD','LVL','MAD','MDL','MGA','MKD','MMK','MNT','MOP','MRO','MUR','MVR','MWK','MXN','MYR','MZN','NAD',
+    'NGN','NIO','NOK','NPR','NZD','OMR','PAB','PEN','PGK','PHP','PKR','PLN','PYG','QAR','RON','RSD','RUB','RWF',
+    'SAR','SBD','SCR','SDG','SEK','SGD','SHP','SLE','SLL','SOS','SRD','SSP','STD','SVC','SYP','SZL','THB','TJS',
+    'TMT','TND','TOP','TRY','TTD','TWD','TZS','UAH','UGX','USD','UYU','UZS','VEF','VES','VND','VUV','WST','XAF',
+    'XAU','XAG','XCD','XDR','XOF','XPF','YER','ZAR','ZMK','ZMW','ZWL'
+  );
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+-- Normalize legacy/non-ISO aliases before converting text -> enum.
+-- CNH (offshore yuan) is mapped to CNY.
+UPDATE "contribution" SET "currency" = 'CNY' WHERE UPPER("currency") = 'CNH';
+UPDATE "payout" SET "currency" = 'CNY' WHERE UPPER("currency") = 'CNH';
+UPDATE "campaign" SET "currency" = 'CNY' WHERE UPPER("currency") = 'CNH';
+UPDATE "exchange_rate" SET "currency" = 'CNY' WHERE UPPER("currency") = 'CNH';
+
+-- Uppercase any lowercase codes and coerce unknown/null values to USD
+-- to keep migration deployable against legacy production data.
+UPDATE "contribution"
+SET "currency" = COALESCE(UPPER("currency"), 'USD')
+WHERE "currency" IS NULL OR "currency" <> UPPER("currency");
+UPDATE "payout"
+SET "currency" = COALESCE(UPPER("currency"), 'USD')
+WHERE "currency" IS NULL OR "currency" <> UPPER("currency");
+UPDATE "campaign"
+SET "currency" = COALESCE(UPPER("currency"), 'USD')
+WHERE "currency" IS NULL OR "currency" <> UPPER("currency");
+UPDATE "exchange_rate"
+SET "currency" = COALESCE(UPPER("currency"), 'USD')
+WHERE "currency" IS NULL OR "currency" <> UPPER("currency");
+
+UPDATE "contribution"
+SET "currency" = 'USD'
+WHERE "currency" NOT IN (
+  SELECT e.enumlabel
+  FROM pg_enum e
+  JOIN pg_type t ON t.oid = e.enumtypid
+  WHERE t.typname = 'Currency'
+);
+UPDATE "payout"
+SET "currency" = 'USD'
+WHERE "currency" NOT IN (
+  SELECT e.enumlabel
+  FROM pg_enum e
+  JOIN pg_type t ON t.oid = e.enumtypid
+  WHERE t.typname = 'Currency'
+);
+UPDATE "campaign"
+SET "currency" = 'USD'
+WHERE "currency" NOT IN (
+  SELECT e.enumlabel
+  FROM pg_enum e
+  JOIN pg_type t ON t.oid = e.enumtypid
+  WHERE t.typname = 'Currency'
+);
+UPDATE "exchange_rate"
+SET "currency" = 'USD'
+WHERE "currency" NOT IN (
+  SELECT e.enumlabel
+  FROM pg_enum e
+  JOIN pg_type t ON t.oid = e.enumtypid
+  WHERE t.typname = 'Currency'
 );
 
 ALTER TABLE "contribution"

@@ -11,6 +11,9 @@ export type ProgramDashboardStats = {
 	paidOutSoFarChf: number;
 	paidOutSoFarProgramCurrency: number;
 	totalPayoutsCount: number;
+	payoutsDoneCount: number;
+	remainingPayoutsCount: number;
+	remainingIntervalsCount: number;
 	payoutPerInterval: number;
 	payoutInterval: string;
 	payoutCurrency: Currency;
