@@ -161,7 +161,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-3',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -176,7 +176,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-3',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -191,7 +191,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-1',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -206,7 +206,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-2',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -221,7 +221,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-3',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -236,7 +236,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-1',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -251,7 +251,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-2',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -266,7 +266,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-3',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -281,7 +281,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-1',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -296,7 +296,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-2',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -311,7 +311,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-3',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
@@ -326,7 +326,7 @@ export const recipientsData: Recipient[] = [
 		successorName: null,
 		termsAccepted: false,
 		paymentInformationId: 'payment-information-1',
-		programId: 'program-1',
+		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
