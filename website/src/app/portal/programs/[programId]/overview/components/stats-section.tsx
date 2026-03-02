@@ -1,6 +1,7 @@
 import { Card } from '@/components/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
+import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { AlertCircle, CheckCircle, CircleHelp, TriangleAlert } from 'lucide-react';
 import { AdditionalNumbers } from './additional-numbers';
 import { SectionBox } from './section-box';
@@ -63,6 +64,10 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const creditStatus = getCreditStatusLabel(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const creditExplanation = getCreditStatusExplanation(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const projectedRemainingProgramCurrency = stats.totalProgramCostsProgramCurrency - stats.paidOutSoFarProgramCurrency;
+	const formatMoney = (amount: number, currency: string) =>
+		formatCurrencyLocale(amount, currency, 'de-CH', { compactThreshold: 1_000_000 });
+	const formatNumber = (value: number, maximumFractionDigits = 0) =>
+		formatNumberLocale(value, 'de-CH', { maximumFractionDigits, compactThreshold: 1_000_000 });
 	const intervalsExplanation =
 		'Available credits in CHF are succeeded contributions minus paid and confirmed payouts. ' +
 		'Available intervals are available credits divided by cost per interval.';
