@@ -78,7 +78,7 @@ export const LoginFlyout = ({ lang }: Props) => {
 			</Button>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
+				<DialogContent className="z-200" overlayClassName="z-200">
 					<DialogHeader>
 						<DialogTitle>{translator?.t('flyout.title')}</DialogTitle>
 					</DialogHeader>
