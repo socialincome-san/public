@@ -23,7 +23,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 const FALLBACK_BADGE_COUNT = 23;
 
@@ -48,14 +48,12 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 		setActiveDropdown(null);
 	}, [pathname]);
 
-	const handleOpenChange = useCallback((nextOpen: boolean) => {
+	const handleOpenChange = (nextOpen: boolean) => {
 		setOpen(nextOpen);
 		if (!nextOpen) {
 			setActiveDropdown(null);
 		}
-	}, []);
-
-	const close = useCallback(() => handleOpenChange(false), [handleOpenChange]);
+	};
 
 	return (
 		<Dialog.Root open={open} onOpenChange={handleOpenChange}>
@@ -77,7 +75,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 							<NextLink
 								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}`}
 								className="text-accent-foreground"
-								onClick={close}
+								onClick={() => handleOpenChange(false)}
 							>
 								<SocialIncomeLogo />
 							</NextLink>
@@ -165,7 +163,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 																target={child.newTab ? '_blank' : undefined}
 																rel={child.newTab ? 'noopener noreferrer' : undefined}
 																className="text-muted-foreground flex items-center gap-2 text-sm font-medium"
-																onClick={close}
+																onClick={() => handleOpenChange(false)}
 															>
 																{child.label}
 																<span className="rounded-full border border-slate-300 px-2 py-0.5 text-[10px] leading-none font-semibold text-slate-500">

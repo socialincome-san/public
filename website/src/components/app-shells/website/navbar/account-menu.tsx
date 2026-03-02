@@ -27,6 +27,11 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 	const { logout } = useLogout();
 	const translator = useTranslator(lang, 'website-me');
 	const session = displaySession(sessions, scope);
+
+	if (!session || !translator) {
+		return null;
+	}
+
 	const hasUser = sessions.some((s) => s.type === 'user');
 	const hasContributor = sessions.some((s) => s.type === 'contributor');
 	const hasLocalPartner = sessions.some((s) => s.type === 'local-partner');
@@ -36,54 +41,50 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 	switch (scope) {
 		case 'website':
 			if (hasUser) {
-				items.push({ href: '/portal', label: translator?.t('navigation.go-to-portal') ?? 'Go to portal', icon: Users });
+				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasContributor) {
 				items.push({
 					href: '/dashboard/contributions',
-					label: translator?.t('navigation.go-to-dashboard') ?? 'Go to dashboard',
+					label: translator.t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
 			}
 			if (hasLocalPartner) {
 				items.push({
 					href: '/partner-space/recipients',
-					label: translator?.t('navigation.go-to-partner-space') ?? 'Go to partner space',
+					label: translator.t('navigation.go-to-partner-space'),
 					icon: Building2,
 				});
 			}
 			break;
 		case 'partner-space':
-			items.push({ href: '/partner-space/profile', label: translator?.t('profile.link') ?? 'Profile', icon: User });
+			items.push({ href: '/partner-space/profile', label: translator.t('profile.link'), icon: User });
 			if (hasUser) {
-				items.push({ href: '/portal', label: translator?.t('navigation.go-to-portal') ?? 'Go to portal', icon: Users });
+				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasContributor) {
 				items.push({
 					href: '/dashboard/contributions',
-					label: translator?.t('navigation.go-to-dashboard') ?? 'Go to dashboard',
+					label: translator.t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
 			}
 			break;
 		case 'dashboard':
 		default:
-			items.push({ href: '/dashboard/profile', label: translator?.t('profile.link') ?? 'Profile', icon: User });
+			items.push({ href: '/dashboard/profile', label: translator.t('profile.link'), icon: User });
 			if (hasUser) {
-				items.push({ href: '/portal', label: translator?.t('navigation.go-to-portal') ?? 'Go to portal', icon: Users });
+				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasLocalPartner) {
 				items.push({
 					href: '/partner-space/recipients',
-					label: translator?.t('navigation.go-to-partner-space') ?? 'Go to partner space',
+					label: translator.t('navigation.go-to-partner-space'),
 					icon: Building2,
 				});
 			}
 			break;
-	}
-
-	if (!session) {
-		return null;
 	}
 
 	return (
@@ -126,7 +127,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 					className="text-destructive focus:text-destructive"
 				>
 					<LogOut className="mr-2 h-4 w-4" />
-					<span>{translator?.t('security.sign-out.button') ?? 'Logout'}</span>
+					<span>{translator.t('security.sign-out.button')}</span>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

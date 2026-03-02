@@ -70,20 +70,17 @@ export const LoginFlyout = ({ lang }: Props) => {
 		setStatus('idle');
 	};
 
-	const t = (key: string, fallback: string, context?: Record<string, unknown>) =>
-		translator?.t(key, context ? { context } : undefined) ?? fallback;
-
 	return (
 		<>
 			<Button data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
 				<UserRound />
-				{t('flyout.login-button', 'Login')}
+				{translator?.t('flyout.login-button')}
 			</Button>
 
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>{t('flyout.title', 'Sign in')}</DialogTitle>
+						<DialogTitle>{translator?.t('flyout.title')}</DialogTitle>
 					</DialogHeader>
 
 					{status === 'idle' && (
@@ -94,7 +91,7 @@ export const LoginFlyout = ({ lang }: Props) => {
 									name="email"
 									render={({ field }) => (
 										<FormItem>
-											<Label>{t('email', 'Email')}</Label>
+											<Label>{translator?.t('email')}</Label>
 											<FormControl>
 												<Input type="email" placeholder="you@example.org" {...field} />
 											</FormControl>
@@ -104,34 +101,28 @@ export const LoginFlyout = ({ lang }: Props) => {
 								/>
 
 								<Button type="submit" className="w-full">
-									{t('submit-button', 'Send login link')}
+									{translator?.t('submit-button')}
 								</Button>
 
 								<p className="text-muted-foreground text-center text-xs">
-									{t('flyout.magic-link-description', "We'll send you a magic link to sign in.")}
+									{translator?.t('flyout.magic-link-description')}
 								</p>
 							</form>
 						</Form>
 					)}
 
-					{status === 'sending' && <div className="mt-4 text-center text-sm">{t('flyout.sending', 'Sending...')}</div>}
+					{status === 'sending' && <div className="mt-4 text-center text-sm">{translator?.t('flyout.sending')}</div>}
 
 					{status === 'sent' && (
 						<div className="mt-4 space-y-4 text-center">
-							<p className="text-sm">
-								{t(
-									'flyout.sent-message',
-									`If an account exists for ${submittedEmail}, you'll receive a login link shortly.`,
-									{ email: submittedEmail },
-								)}
-							</p>
+							<p className="text-sm">{translator?.t('flyout.sent-message', { context: { email: submittedEmail } })}</p>
 
 							<Button variant="outline" onClick={retry} className="w-full">
-								{t('flyout.retry', 'Retry')}
+								{translator?.t('flyout.retry')}
 							</Button>
 
 							<p className="text-muted-foreground text-xs">
-								{t('flyout.support-prefix', "If it doesn't arrive, contact")}{' '}
+								{translator?.t('flyout.support-prefix')}{' '}
 								<a className="underline" href="mailto:support@socialincome.org">
 									support@socialincome.org
 								</a>
@@ -141,9 +132,9 @@ export const LoginFlyout = ({ lang }: Props) => {
 
 					<div className="mt-6 border-t pt-4 text-center">
 						<p className="text-sm">
-							{t('flyout.no-account', "Don't have an account?")}{' '}
+							{translator?.t('flyout.no-account')}{' '}
 							<Link href="/get-started" className="underline">
-								{t('flyout.get-started', 'Learn how to get started')}
+								{translator?.t('flyout.get-started')}
 							</Link>
 						</p>
 					</div>

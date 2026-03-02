@@ -76,7 +76,7 @@ export default defineConfig({
 			testMatch: /mobile-app-api\/.*\.e2e\.ts/,
 		},
 		{
-			name: 'public-website',
+			name: 'public-website-desktop',
 			testMatch: /public-website\/.*\.e2e\.ts/,
 			use: {
 				storageState: publicWebsiteCookieConsentState,
