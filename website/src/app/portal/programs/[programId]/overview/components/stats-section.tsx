@@ -87,6 +87,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 		'Average contribution is total succeeded contributions in CHF divided by succeeded contributions count.';
 	const payoutPerIntervalExplanation = 'Payout per interval is the current payout amount configured for the program.';
 	const payoutIntervalExplanation = 'Interval is the current payout cadence configured for the program.';
+	const programDurationExplanation = 'Program duration is the currently configured runtime in months.';
 	const costPerIntervalProgramExplanation =
 		'Cost per interval is active recipients multiplied by payout per interval, shown in the program currency.';
 	const projectedRemainingExplanation =
@@ -174,6 +175,11 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 										tooltipText={payoutPerIntervalExplanation}
 									/>
 									<Stat label="Interval" value={stats.payoutInterval} tooltipText={payoutIntervalExplanation} />
+									<Stat
+										label="Program Duration"
+										value={`${formatNumber(stats.programDurationInMonths)} months`}
+										tooltipText={programDurationExplanation}
+									/>
 									<Stat
 										label="Cost / Interval"
 										value={formatMoney(stats.costPerIntervalProgramCurrency, stats.payoutCurrency)}
