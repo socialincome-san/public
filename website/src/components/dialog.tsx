@@ -29,17 +29,18 @@ const DialogContent = React.forwardRef<
 	React.ElementRef<typeof DialogPrimitive.Content>,
 	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
 		variant?: 'default' | 'large';
+		overlayClassName?: string;
 	}
->(({ className, children, variant = 'default', ...props }, ref) => {
+>(({ className, children, variant = 'default', overlayClassName, ...props }, ref) => {
 	const sizeClasses = variant === 'large' ? 'w-[80vw] max-w-none sm:max-w-none' : 'w-full max-w-lg sm:max-w-[425px]';
 
 	return (
 		<DialogPortal>
-			<DialogOverlay />
+			<DialogOverlay className={overlayClassName} />
 			<DialogPrimitive.Content
 				ref={ref}
 				className={cn(
-					'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 theme-new fixed top-[50%] left-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 sm:rounded-lg',
+					'bg-background max-w-site-width data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 theme-new fixed top-[50%] left-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200',
 					sizeClasses,
 					className,
 				)}
