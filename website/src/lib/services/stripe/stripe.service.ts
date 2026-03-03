@@ -313,7 +313,7 @@ export class StripeService extends BaseService {
 
 					if (defaultPaymentMethod && typeof defaultPaymentMethod !== 'string') {
 						paymentMethod = this.getPaymentMethod(defaultPaymentMethod);
-					} else if (typeof defaultPaymentMethod === 'string') {
+					} else if (typeof defaultPaymentMethod === 'string' && defaultPaymentMethod.trim() !== '') {
 						try {
 							const method = await this.stripe.paymentMethods.retrieve(defaultPaymentMethod);
 							paymentMethod = this.getPaymentMethod(method);
