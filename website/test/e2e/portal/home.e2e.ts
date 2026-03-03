@@ -10,7 +10,7 @@ test('portal home-page matches screenshot', async ({ page }) => {
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test.only('create new program', async ({ page }) => {
+test('create new program', async ({ page }) => {
 	await page.goto('/portal');
 
 	await page.getByTestId('create-program-modal-trigger').click();

@@ -182,7 +182,7 @@ test('Delete recipient', async ({ page }) => {
 		throw new Error(result.error);
 	}
 
-	const deleted = result.data.tableRows.find((r) => r.firstName === 'John' && r.lastName === 'Badingu');
+	const deleted = result.data.tableRows.find((r) => r.firstName === 'Joseph' && r.lastName === 'Conteh');
 
 	expect(deleted).toBeUndefined();
 
