@@ -1,9 +1,10 @@
-import HeroVideoBlockServer from '@/components/content-blocks/hero-video-server';
-import ImageTextBlock from '@/components/content-blocks/image-text';
-import TextBlock from '@/components/content-blocks/text';
+import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
+import { ImageTextBlock } from '@/components/content-blocks/image-text';
+import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
+import { TextBlock } from '@/components/content-blocks/text';
 import PageContentType from '@/components/content-types/page';
+import { mockStoryblokIfTestMode } from '@/lib/services/storyblok/storyblok.mock';
 import { apiPlugin, storyblokInit } from '@storyblok/react';
-import { mockStoryblokIfTestMode } from './storyblok.mock';
 
 mockStoryblokIfTestMode();
 
@@ -15,6 +16,7 @@ export const storyblokComponents = {
 	heroVideo: HeroVideoBlockServer,
 	text: TextBlock,
 	imageText: ImageTextBlock,
+	modalCards: ModalCardsBlock,
 };
 
 /**

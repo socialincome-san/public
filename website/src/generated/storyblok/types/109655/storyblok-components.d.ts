@@ -149,6 +149,27 @@ export interface MenuItemGroup {
   [k: string]: unknown;
 }
 
+export interface ModalCard {
+  heading: string;
+  image: StoryblokAsset;
+  modalContent?: StoryblokRichtext;
+  component: "modalCard";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface ModalCards {
+  heading?: string;
+  explainerVideo?: unknown;
+  labelForExplainerVideo?: string;
+  linkToExplainerVideo?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  cards?: ModalCard[];
+  explainerVideoThumbnail?: StoryblokAsset;
+  component: "modalCards";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface NewsletterSignup {
   component: "newsletterSignup";
   _uid: string;
@@ -156,7 +177,7 @@ export interface NewsletterSignup {
 }
 
 export interface Page {
-  content: (HeroVideo | ImageText | Text)[];
+  content: (HeroVideo | ImageText | ModalCards | Text)[];
   component: "page";
   _uid: string;
   [k: string]: unknown;
