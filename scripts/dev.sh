@@ -2,42 +2,27 @@
 set -euo pipefail
 
 typeset -i CLEANED_UP=0
-FIREBASE_PID=""
-WEBSITE_PID=""
+PIDS=()
 
 cleanup() {
-  if (( CLEANED_UP )); then
-    return
-  fi
+  (( CLEANED_UP )) && return
   CLEANED_UP=1
 
   echo ""
   echo "[dev] Shutting down services..."
 
-  # Ask foreground processes to exit gracefully.
-  if [[ -n "${FIREBASE_PID}" ]] && kill -0 "${FIREBASE_PID}" 2>/dev/null; then
-    kill -INT "${FIREBASE_PID}" 2>/dev/null || true
-  fi
-  if [[ -n "${WEBSITE_PID}" ]] && kill -0 "${WEBSITE_PID}" 2>/dev/null; then
-    kill -INT "${WEBSITE_PID}" 2>/dev/null || true
-  fi
+  for pid in "${PIDS[@]}"; do
+    kill -0 "$pid" 2>/dev/null && kill -INT "$pid" 2>/dev/null || true
+  done
+  wait 2>/dev/null || true
 
-  wait "${FIREBASE_PID}" 2>/dev/null || true
-  wait "${WEBSITE_PID}" 2>/dev/null || true
-
-  # Always tear down docker services so ports are released.
   npm run mockserver:down || true
   npm run db:down || true
 }
 
-on_signal() {
-  cleanup
-  # Ctrl+C should shut down cleanly without surfacing as a task failure.
-  exit 0
-}
-
-trap on_signal INT TERM
-trap cleanup EXIT
+trap 'exit 0'   INT   # Ctrl+C — clean shutdown, not a failure
+trap 'exit 143' TERM  # 128 + 15 (SIGTERM)
+trap cleanup    EXIT
 
 # Defensive cleanup in case a previous run crashed.
 npm run mockserver:down || true
@@ -49,13 +34,17 @@ npm run mockserver:up
 
 # Start long-running foreground processes.
 npm run firebase:serve &
-FIREBASE_PID=$!
+PIDS+=($!)
+
+if ! npm run website:build-paths; then
+  echo "[dev] website:build-paths failed; aborting startup."
+  exit 1
+fi
 
 npm run website:serve &
-WEBSITE_PID=$!
+PIDS+=($!)
 
-# Exit when either process exits, then tear everything down.
-wait -n "${FIREBASE_PID}" "${WEBSITE_PID}"
-EXIT_CODE=$?
-cleanup
-exit "${EXIT_CODE}"
+# Exit when either process dies
+while kill -0 "${PIDS[1]}" 2>/dev/null && kill -0 "${PIDS[2]}" 2>/dev/null; do
+  sleep 1
+done
