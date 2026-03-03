@@ -202,10 +202,9 @@ We use **Playwright** for end‑to‑end testing of the website.
 We use a record/replay mechanism for deterministic tests.
 
 **Record mode**
-
-```
-STORYBLOK_MOCK_MODE=record npm run test:e2e
-```
+1. Set STORYBLOK_MOCK_MODE in .env.development to 'record'
+2. Restart dev server `mise dev`
+3. run tests: `STORYBLOK_MOCK_MODE=record npm run test:e2e`
 
 This:
 
