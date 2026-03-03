@@ -17,7 +17,7 @@ type Props = {
 	subtitleUrl?: string;
 };
 
-export default function HeroVideoBlock({ blok, lang, region, subtitleUrl }: Props) {
+export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl }: Props) => {
 	const { heading, description, muxPlaybackId, button } = blok;
 
 	// TODO: Find a way to let the user enable/disable captions
@@ -78,4 +78,4 @@ export default function HeroVideoBlock({ blok, lang, region, subtitleUrl }: Prop
 			</div>
 		</div>
 	);
-}
+};
