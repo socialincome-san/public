@@ -52,6 +52,12 @@
 		"youtube": "YouTube",
 		"x": "X"
 	},
+	"menu": {
+		"open": "Open menu",
+		"close": "Close menu",
+		"title": "Menu",
+		"back": "Back"
+	},
 	"sdg": {
 		"sdg": "SDG",
 		"sdg1-title": "No Poverty",

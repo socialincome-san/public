@@ -8,7 +8,7 @@ type Props = {
 	blok: Text;
 };
 
-export default function TextBlock({ blok }: Props) {
+export const TextBlock = ({ blok }: Props) => {
 	if (!blok.content) {
 		return null;
 	}
@@ -18,4 +18,4 @@ export default function TextBlock({ blok }: Props) {
 			<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />
 		</BlockWrapper>
 	);
-}
+};

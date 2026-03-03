@@ -1,0 +1,41 @@
+# Twilio Hacker attack summary
+
+- Attack happens between 30.12.2025 and 03.01.2026
+- Damage: approx. $574
+- Cause: Reverse engineering of the mobile app and extraction of the TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_NUMBER, TWILIO_VERIFY_SERVICE_SID.
+    - This was used to call the Twilio API to send 1947 SMS messages.
+
+- Taken actions to block the hacker:
+    - Sandino disabled the Twilio Verify service on 03.01.2025. This stops the attacker from sending more SMS messages and cause more cash damage. But this also affected our mobile app users. They are at the moment not able to log into the app via phone number verification.
+
+- Taken action to lockout the hacker and prevent a new attack:
+    - Disabled all Twilio resources where the hackers has knowledge of. This was:
+        - TWILIO_AUTH_TOKEN
+            - Auth tokens was rotated in all Twilio regions so that the stolen one is now disabled and deleted.
+
+        - TWILIO_VERIFY_SERVICE_SID
+            - Verify service was disabled and we created a new one for the production environment so we have a new TWILIO_VERIFY_SERVICE_SID.
+
+        - TWILIO_ACCOUNT_SID
+            - The account SID can not be disabled or recreated because this is identifies our Twilio account. We would have to created a whole new Twilio account to get a new account id. But I think this is not needed because be disabled the TWILIO_AUTH_TOKEN and TWILIO_VERIFY_SERVICE_SID
+
+        - TWILIO_NUMBER
+            - This is the real phone number +41798079499. I'm unsure how to proceed with that. I can not be used to log into our account or use our Twilio resources. But it could be used to spam us with Junk SMS or maybe to use it as sender of their Junk SMS to other persons. I'm also not sure if we can change it and what would be the cause of this change. 
+        - TODO: Talk about this in the dev team.
+
+
+    - Introduce AppCheck for our existing Twilio backend API to ensure that only authorized callers (our mobile app) can call this API.
+    - Introduce a new backend API to request the sending of an OTP token to the users phone number via Twilio. This API is also secured via AppCheck. I will be used by the mobile app to initiate the phone number verification. With that the mobile app does not need to know any Twilio credentials and therefore the app itself does not contain it anymore. So no hacker can extract it in the future.
+    - I also check the other secrets we have inside the app.
+        - The last one is the SENTRY_URL (=DSN) which is used for crash reporting. It tells the Sentry SDK where to send the events to. See https://docs.sentry.io/concepts/key-terms/dsn-explainer/ for more information. Sentry itself says the following about securing this information: "DSNs are safe to keep public because they only allow submission of new events and related event data; they do not allow read access to any information. 
+            - "While there is a risk of abusing a DSN, where any user can send events to your organization with any information they want, this is a rare occurrence. Sentry provides controls to block IPs and similar concerns. You can also rotate (and revoke) DSNs by navigating to [Project] > Settings > SDK Setup > Client Keys (DSN). If your application is shipped to client devices, if possible, we recommend having a way to configure the DSN dynamically. In an ideal scenario, you can "ship" a new DSN to your application without the customer downloading the latest version. We recognize that this may not always be practical, but we cannot offer further advice as this scenario is implementation specific."
+
+So, I think we did our best to block the attackers, understand the attack and prevent it from happen again. To let our users login again, we still need to ship a new app update which I will do in the next days.
+
+Let me know if there is something we overlooked or what should be also checked.
+
+## Lessons learned:
+- __Avoid shipping any credentials with the mobile app or any client.__
+- Keep such credentials securely in the backend and offer a service for the mobile app to use them.
+- Try to use revokable, usecase dedicated credentials to block attackers quickly and better and without disturbing other functionality.
+- Secure your authentication APIs with services like Firebase AppCheck to ensure only authorized clients can call them.
