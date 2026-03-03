@@ -5,7 +5,6 @@ import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/enums/gender.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/language_code.dart";
-import "package:app/data/models/mobile_money_provider.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
@@ -40,6 +39,7 @@ class AccountPageState extends State<AccountPage> {
   late final TextEditingController _surnameController;
   late final TextEditingController _callingNameController;
   late final TextEditingController _paymentNumberController;
+  late final TextEditingController _mobileMoneyProviderController;
   late final TextEditingController _contactNumberController;
   late final TextEditingController _successorNameController;
   late final TextEditingController _emailController;
@@ -74,6 +74,9 @@ class AccountPageState extends State<AccountPage> {
     );
     _paymentNumberController = TextEditingController(
       text: widget.recipient.paymentInformation?.phone.number ?? "",
+    );
+    _mobileMoneyProviderController = TextEditingController(
+      text: widget.recipient.paymentInformation?.mobileMoneyProvider.name ?? "",
     );
     _contactNumberController = TextEditingController(
       text: widget.recipient.contact.phone?.number ?? "",
@@ -373,29 +376,43 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
 
                 /// PAYMENT PROVIDER
-                InputDropdown<MobileMoneyProvider>(
-                  label: "${context.l10n.mobilePaymentProvider}*",
-                  items: const [
-                    DropdownMenuItem(
-                      value: MobileMoneyProvider(id: "orange-money", name: "Orange Money SL"), // TODO(migration): update when we have more providers
-                      child: Text("Orange Money SL"),
-                    ),
-                    // TODO(migration): raphi said currently theres only orange money
-                    /* DropdownMenuItem(
-                      value: PaymentProvider.africellMoney,
-                      child: Text("Africell Money"),
-                    ), */
-                  ],
-                  value: recipient.paymentInformation?.mobileMoneyProvider,
+                /// TODO(migration): Use InputDropdown when we have more providers and they should be changeable by the user. 
+                /// For now, since there's only one provider and it's not changeable by the user, we just display it as text.
+                // InputDropdown<MobileMoneyProvider>(
+                //   label: "${context.l10n.mobilePaymentProvider}*",
+                //   items: const [
+                //     DropdownMenuItem(
+                //       value: MobileMoneyProvider(id: "orange-money", name: "Orange Money SL"), // TODO(migration): update when we have more providers
+                //       child: Text("Orange Money SL"),
+                //     ),
+                //     // TODO(migration): raphi said currently theres only orange money
+                //     /* DropdownMenuItem(
+                //       value: PaymentProvider.africellMoney,
+                //       child: Text("Africell Money"),
+                //     ), */
+                //   ],
+                //   value: recipient.paymentInformation?.mobileMoneyProvider,
+                //   validator: (value) {
+                //     if (value == null) {
+                //       return context.l10n.paymentProviderError;
+                //     }
+                //     return null;
+                //   },
+                //   onChanged: (value) => context.read<AuthCubit>().updateRecipient(
+                //     selfUpdate: RecipientSelfUpdate(mobileMoneyProvider: value),
+                //   ),
+                // ),
+                InputText(
+                  hintText: "${context.l10n.mobilePaymentProvider}*",
+                  isReadOnly: true,
+                  controller: _mobileMoneyProviderController,
+                  keyboardType: TextInputType.name,
                   validator: (value) {
-                    if (value == null) {
+                    if (value == null || value.isEmpty) {
                       return context.l10n.paymentProviderError;
                     }
                     return null;
                   },
-                  onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                    selfUpdate: RecipientSelfUpdate(mobileMoneyProvider: value),
-                  ),
                 ),
                 const SizedBox(height: 24),
 
