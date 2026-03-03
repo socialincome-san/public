@@ -23,4 +23,8 @@ run = "npm run website:serve"
 depends = ["install", "db", "mockserver", "build-paths"]
 
 [tasks.dev]
-depends = ["firebase", "website"]
+run = "zsh ./scripts/dev.sh"
+depends = ["install"]
+
+[tasks.stop]
+run = "npm run mockserver:down && npm run db:down"
