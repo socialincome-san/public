@@ -85,6 +85,12 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const contributionsExplanation = 'Contributions is the count of contribution records with succeeded status.';
 	const averageContributionExplanation =
 		'Average contribution is total succeeded contributions in CHF divided by succeeded contributions count.';
+	const contributedViaStripeExplanation =
+		'Via Stripe is the CHF sum of succeeded contributions with payment event type stripe.';
+	const contributedViaWireTransferExplanation =
+		'Via wire transfer is the CHF sum of succeeded contributions with payment event type bank transfer.';
+	const contributedViaOthersExplanation =
+		'Others is the CHF sum of succeeded contributions with payment event types other than stripe or bank transfer, including entries without a payment event.';
 	const payoutPerIntervalExplanation = 'Payout per interval is the current payout amount configured for the program.';
 	const payoutIntervalExplanation = 'Interval is the current payout cadence configured for the program.';
 	const programDurationExplanation = 'Program duration is the currently configured runtime in months.';
@@ -149,6 +155,21 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 										label="Avg Contribution"
 										value={formatMoney(stats.averageContributionChf, 'CHF')}
 										tooltipText={averageContributionExplanation}
+									/>
+									<Stat
+										label="Via Stripe"
+										value={formatMoney(stats.contributedViaStripeChf, 'CHF')}
+										tooltipText={contributedViaStripeExplanation}
+									/>
+									<Stat
+										label="Via Wire Transfer"
+										value={formatMoney(stats.contributedViaWireTransferChf, 'CHF')}
+										tooltipText={contributedViaWireTransferExplanation}
+									/>
+									<Stat
+										label="Others"
+										value={formatMoney(stats.contributedViaOthersChf, 'CHF')}
+										tooltipText={contributedViaOthersExplanation}
 									/>
 								</AdditionalNumbers>
 							</div>

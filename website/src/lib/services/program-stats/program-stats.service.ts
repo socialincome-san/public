@@ -1,4 +1,4 @@
-import { ContributionStatus, Currency, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
+import { ContributionStatus, Currency, PaymentEventType, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
@@ -120,6 +120,9 @@ export class ProgramStatsService extends BaseService {
 
 			return this.resultOk({
 				contributedToProgramSoFarChf: contributions.contributedToProgramSoFarChf,
+				contributedViaStripeChf: contributions.contributedViaStripeChf,
+				contributedViaWireTransferChf: contributions.contributedViaWireTransferChf,
+				contributedViaOthersChf: contributions.contributedViaOthersChf,
 				totalProgramCostsChf,
 				contributionsCount: contributions.contributionsCount,
 				contributorsCount: contributions.contributorsCount,
@@ -221,6 +224,11 @@ export class ProgramStatsService extends BaseService {
 							select: {
 								amountChf: true,
 								contributorId: true,
+								paymentEvent: {
+									select: {
+										type: true,
+									},
+								},
 							},
 						},
 					},
@@ -231,12 +239,23 @@ export class ProgramStatsService extends BaseService {
 
 	private computeContributions(program: ProgramForDashboard, totalProgramCostsChf: number) {
 		let contributedToProgramSoFarChf = 0;
+		let contributedViaStripeChf = 0;
+		let contributedViaWireTransferChf = 0;
+		let contributedViaOthersChf = 0;
 		let contributionsCount = 0;
 		const contributorIds = new Set<string>();
 
 		for (const campaign of program.campaigns) {
 			for (const contribution of campaign.contributions) {
-				contributedToProgramSoFarChf += Number(contribution.amountChf);
+				const amountChf = Number(contribution.amountChf);
+				contributedToProgramSoFarChf += amountChf;
+				if (contribution.paymentEvent?.type === PaymentEventType.stripe) {
+					contributedViaStripeChf += amountChf;
+				} else if (contribution.paymentEvent?.type === PaymentEventType.bank_transfer) {
+					contributedViaWireTransferChf += amountChf;
+				} else {
+					contributedViaOthersChf += amountChf;
+				}
 				contributionsCount++;
 				contributorIds.add(contribution.contributorId);
 			}
@@ -249,6 +268,9 @@ export class ProgramStatsService extends BaseService {
 
 		return {
 			contributedToProgramSoFarChf,
+			contributedViaStripeChf,
+			contributedViaWireTransferChf,
+			contributedViaOthersChf,
 			contributionsCount,
 			contributorsCount,
 			averageContributionChf,

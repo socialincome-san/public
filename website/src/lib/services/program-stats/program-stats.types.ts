@@ -1,7 +1,10 @@
-import { Currency, PayoutInterval, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
+import { Currency, PaymentEventType, PayoutInterval, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
 
 export type ProgramDashboardStats = {
 	contributedToProgramSoFarChf: number;
+	contributedViaStripeChf: number;
+	contributedViaWireTransferChf: number;
+	contributedViaOthersChf: number;
 	totalProgramCostsChf: number;
 	contributionsCount: number;
 	contributorsCount: number;
@@ -69,6 +72,9 @@ export type ProgramForDashboard = {
 		contributions: Array<{
 			amountChf: unknown;
 			contributorId: string;
+			paymentEvent: {
+				type: PaymentEventType;
+			} | null;
 		}>;
 	}>;
 };
