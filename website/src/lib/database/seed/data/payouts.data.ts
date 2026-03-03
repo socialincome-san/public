@@ -56,8 +56,6 @@ export const payoutsData: Payout[] = [
 	{ id: 'payout-49', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-01-01'), status: PayoutStatus.paid, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-7.', recipientId: 'recipient-7', createdAt, updatedAt: null },
 	{ id: 'payout-50', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-02-01'), status: PayoutStatus.paid, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-7.', recipientId: 'recipient-7', createdAt, updatedAt: null },
 
-	// suspended recipients (before suspension)
-	{ id: 'payout-61', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-11-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-4.', recipientId: 'recipient-4', createdAt, updatedAt: null },
 
 	// active recipients (one recent payout each)
 	{ id: 'payout-70', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2025-11-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-10.', recipientId: 'recipient-10', createdAt, updatedAt: null },
