@@ -21,37 +21,39 @@ class PaymentRepository {
   PayoutDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
   /// Cache-first fetch with background refresh
-  Future<List<Payout>> fetchPayouts({Function(List<Payout>)? onFreshData}) async {
+  Future<void> fetchPayouts({ required Function(List<Payout>) onData}) async {
     List<Payout> cachedPayouts = [];
 
     // 1. Try cache first (only in non-demo mode)
-    if (!demoManager.isDemoEnabled) {
       try {
         cachedPayouts = await localDataSource.fetchPayouts();
+        if (cachedPayouts.isNotEmpty) {
+          onData(cachedPayouts);
+        }
       } catch (e) {
         // Cache read failed
       }
-    }
 
     // 2. Fetch fresh data
     try {
       final freshPayouts = await _activeDataSource.fetchPayouts();
 
       // 3. Update cache (only in non-demo mode)
-      if (!demoManager.isDemoEnabled) {
-        await localDataSource.savePayouts(freshPayouts);
-      }
+      await localDataSource.savePayouts(freshPayouts);
 
       // 4. Notify if data changed
-      if (onFreshData != null && freshPayouts != cachedPayouts) {
-        onFreshData(freshPayouts);
+      if (freshPayouts != cachedPayouts) {
+        onData(freshPayouts);
       }
-
-      return freshPayouts;
+      
+      // 5. Handle case where both fresh and cached are empty - still notify with empty list
+      if (freshPayouts.isEmpty && cachedPayouts.isEmpty) {
+        onData([]);
+      }
     } catch (e) {
-      // 5. Return cache on network error
+      // Network failed and cached data are availble - just return
       if (cachedPayouts.isNotEmpty) {
-        return cachedPayouts;
+         return;
       }
       rethrow;
     }

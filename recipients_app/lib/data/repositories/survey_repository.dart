@@ -19,40 +19,42 @@ class SurveyRepository {
   SurveyDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
   /// Cache-first fetch with background refresh
-  Future<List<Survey>> fetchSurveys({
+  Future<void> fetchSurveys({
     required String recipientId,
-    Function(List<Survey>)? onFreshData,
+    required Function(List<Survey>) onData,
   }) async {
     List<Survey> cachedSurveys = [];
 
-    // 1. Try cache first (only in non-demo mode)
-    if (!demoManager.isDemoEnabled) {
-      try {
-        cachedSurveys = await localDataSource.fetchSurveys(recipientId: recipientId);
-      } catch (e) {
-        // Cache read failed
+    // 1. Try cache first
+    try {
+      cachedSurveys = await localDataSource.fetchSurveys(recipientId: recipientId);
+      if (cachedSurveys.isNotEmpty) {
+        onData(cachedSurveys);
       }
+    } catch (e) {
+      // Cache read failed
     }
-
+  
     // 2. Fetch fresh data
     try {
       final freshSurveys = await _activeDataSource.fetchSurveys(recipientId: recipientId);
 
-      // 3. Update cache (only in non-demo mode)
-      if (!demoManager.isDemoEnabled) {
-        await localDataSource.saveSurveys(freshSurveys);
-      }
-
+      // 3. Update cache
+      await localDataSource.saveSurveys(freshSurveys);
+      
       // 4. Notify if data changed
-      if (onFreshData != null && freshSurveys != cachedSurveys) {
-        onFreshData(freshSurveys);
+      if (freshSurveys != cachedSurveys) {
+        onData(freshSurveys);
       }
 
-      return freshSurveys;
+      // 5. Handle case where both fresh and cached are empty - still notify with empty list
+      if (freshSurveys.isEmpty && cachedSurveys.isEmpty) {
+        onData([]);
+      }
     } catch (e) {
-      // 5. Return cache on network error
+      // Network failed and cached data are availble - just return
       if (cachedSurveys.isNotEmpty) {
-        return cachedSurveys;
+         return;
       }
       rethrow;
     }

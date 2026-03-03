@@ -34,12 +34,11 @@ class SurveyCubit extends Cubit<SurveyState> {
 
   Future<void> getSurveys() async {
     try {
-      final mappedSurveys = await _getSurveys(
+      await _getSurveys(
         onFreshData: (freshMappedSurveys) {
           // Update UI when fresh data arrives in background
           final dashboardSurveys =
               freshMappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
-
           emit(
             SurveyState(
               status: SurveyStateStatus.updatedSuccess,
@@ -48,16 +47,6 @@ class SurveyCubit extends Cubit<SurveyState> {
             ),
           );
         },
-      );
-
-      final dashboardSurveys = mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
-
-      emit(
-        SurveyState(
-          status: SurveyStateStatus.updatedSuccess,
-          mappedSurveys: mappedSurveys,
-          dashboardMappedSurveys: dashboardSurveys,
-        ),
       );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
@@ -69,18 +58,14 @@ class SurveyCubit extends Cubit<SurveyState> {
     }
   }
 
-  Future<List<MappedSurvey>> _getSurveys({Function(List<MappedSurvey>)? onFreshData}) async {
-    final surveys = await surveyRepository.fetchSurveys(
+  Future<void> _getSurveys({required Function(List<MappedSurvey>) onFreshData}) async {
+    await surveyRepository.fetchSurveys(
       recipientId: recipient.id,
-      onFreshData: onFreshData != null
-          ? (freshSurveys) {
-              final mapped = _mapSurveys(freshSurveys);
-              onFreshData(mapped);
-            }
-          : null,
+      onData: (freshSurveys) {
+        final mapped = _mapSurveys(freshSurveys);
+        onFreshData(mapped);
+      },
     );
-
-    return _mapSurveys(surveys);
   }
 
   List<MappedSurvey> _mapSurveys(List<Survey> surveys) {

@@ -30,42 +30,45 @@ class UserRepository {
 
   /// Cache-first fetch: returns cached data immediately if available,
   /// then fetches fresh data in background via callback
-  Future<Recipient?> fetchRecipient(
-    User firebaseUser, {
-    Function(Recipient?)? onFreshData,
+  Future<void> fetchRecipient({
+    required User firebaseUser, 
+    required Function(Recipient?) onData,
   }) async {
     Recipient? cachedRecipient;
 
-    // 1. Try to load from cache first (only in non-demo mode)
-    if (!demoManager.isDemoEnabled) {
-      try {
-        cachedRecipient = await localDataSource.fetchRecipient(firebaseUser);
-      } catch (e) {
-        // Cache read failed, continue to network
+    // 1. Try to load from cache first
+    try {
+      cachedRecipient = await localDataSource.fetchRecipient(firebaseUser);
+      if (cachedRecipient != null) {
+        onData(cachedRecipient);
       }
+    } catch (e) {
+      // Cache read failed, continue to network
     }
 
     // 2. Fetch fresh data in background
     try {
       final freshRecipient = await _activeDataSource.fetchRecipient(firebaseUser);
 
-      // 3. Update cache with fresh data (only in non-demo mode)
-      if (!demoManager.isDemoEnabled && freshRecipient != null) {
+      // 3. Update cache with fresh data
+      if (freshRecipient != null) {
         await localDataSource.saveRecipient(firebaseUser, freshRecipient);
       }
 
       // 4. Notify caller of fresh data if callback provided
-      if (onFreshData != null && freshRecipient != cachedRecipient) {
-        onFreshData(freshRecipient);
+      if (freshRecipient != cachedRecipient) {
+        onData(freshRecipient);
+      } 
+      
+      // 5. Handle case where both fresh and cached are null - still notify with null
+      if (freshRecipient == null && cachedRecipient == null) {
+        onData(null);
       }
-
-      return freshRecipient;
     } catch (e) {
-      // 5. Network failed - return cached data if available
       if (cachedRecipient != null) {
-        return cachedRecipient;
+         return;
       }
-      rethrow; // No cache available, propagate error
+      rethrow;
     }
   }
 
@@ -73,7 +76,7 @@ class UserRepository {
     final updatedRecipient = await _activeDataSource.updateRecipient(selfUpdate);
 
     // Update cache after successful update
-    if (!demoManager.isDemoEnabled && currentUser != null) {
+    if (currentUser != null) {
       await localDataSource.saveRecipient(currentUser!, updatedRecipient);
     }
 

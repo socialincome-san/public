@@ -28,32 +28,23 @@ class AuthCubit extends Cubit<AuthState> {
     _authSubscription = authService.authStateChanges().listen((user) async {
       if (user != null) {
         try {
-          final recipient = await userRepository.fetchRecipient(
-            user,
-            onFreshData: (freshRecipient) {
+          await userRepository.fetchRecipient(
+            firebaseUser: user,
+            onData: (freshRecipient) {
               // Update UI when fresh data arrives in background
-              if (freshRecipient != null) {
-                emit(
-                  AuthState(
-                    status: AuthStatus.authenticated,
-                    firebaseUser: user,
-                    recipient: freshRecipient,
-                  ),
-                );
+              if (freshRecipient == null) {
+                emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
+                return;
               }
+              
+              emit(
+                AuthState(
+                  status: AuthStatus.authenticated,
+                  firebaseUser: user,
+                  recipient: freshRecipient,
+                ),
+              );
             },
-          );
-          if (recipient == null) {
-            emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
-            return;
-          }
-
-          emit(
-            AuthState(
-              status: AuthStatus.authenticated,
-              firebaseUser: user,
-              recipient: recipient,
-            ),
           );
         } on Exception catch (ex, stackTrace) {
           crashReportingRepository.logError(ex, stackTrace);
@@ -79,32 +70,22 @@ class AuthCubit extends Cubit<AuthState> {
     final user = userRepository.currentUser;
 
     if (user != null) {
-      final recipient = await userRepository.fetchRecipient(
-        user,
-        onFreshData: (freshRecipient) {
+      await userRepository.fetchRecipient(
+        firebaseUser: user,
+        onData: (freshRecipient) {
           // Update UI when fresh data arrives in background
-          if (freshRecipient != null) {
-            emit(
-              AuthState(
-                status: AuthStatus.authenticated,
-                firebaseUser: user,
-                recipient: freshRecipient,
-              ),
-            );
+          if (freshRecipient == null) {
+            emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
+            return;
           }
+          emit(
+            AuthState(
+              status: AuthStatus.authenticated,
+              firebaseUser: user,
+              recipient: freshRecipient,
+            ),
+          );
         },
-      );
-      if (recipient == null) {
-        emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
-        return;
-      }
-
-      emit(
-        AuthState(
-          status: AuthStatus.authenticated,
-          firebaseUser: user,
-          recipient: recipient,
-        ),
       );
     } else {
       emit(const AuthState());

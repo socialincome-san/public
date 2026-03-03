@@ -193,16 +193,17 @@ These implement the same interface as Remote/Demo DataSources but read/write to 
 **Repository Cache Logic:**
 All repositories follow this pattern:
 ```dart
-Future<T> fetchData({Function(T)? onFreshData}) async {
+Future<void> fetchData({Function(T) onData}) async {
   T? cachedData;
 
   // 1. Try cache first (skip in demo mode)
-  if (!demoManager.isDemoEnabled) {
-    try {
-      cachedData = await localDataSource.fetch();
-    } catch (e) {
-      // Cache miss is acceptable
+  try {
+    cachedData = await localDataSource.fetch();
+    if(cachedData){
+      onData(cachedData)
     }
+  } catch (e) {
+    // Cache miss is acceptable
   }
 
   // 2. Fetch fresh data in background
@@ -210,19 +211,20 @@ Future<T> fetchData({Function(T)? onFreshData}) async {
     final freshData = await _activeDataSource.fetch();
 
     // 3. Update cache
-    if (!demoManager.isDemoEnabled && freshData != null) {
+    if (freshData != null) {
       await localDataSource.save(freshData);
     }
 
     // 4. Notify UI if data changed
-    if (onFreshData != null && freshData != cachedData) {
-      onFreshData(freshData);
+    if (freshData != cachedData) {
+      onData(freshData);
     }
 
-    return freshData;
+    // 5. Handle case where both fresh and cached are null - still notify with null
+    if (freshData == null && cachedData == null) {
+      onData(null);
+    }
   } catch (e) {
-    // 5. Network failed - return cache if available
-    if (cachedData != null) return cachedData;
     rethrow;
   }
 }
@@ -259,7 +261,7 @@ emit(state.copyWith(data: data));
 - Cache populated on first successful API fetch
 - Cache updated on every subsequent successful fetch
 - Cache cleared on logout: `UserRepository.clearCache()`
-- Demo mode bypasses all caching logic
+- Demo mode also use caching logic
 
 **Testing Offline Functionality:**
 1. Run app with internet, let data load and cache
@@ -274,7 +276,7 @@ emit(state.copyWith(data: data));
 - Corrupted cache: Try-catch in cache read, falls back to network
 - Cache miss: Network-only fetch on first app launch
 - Write operations offline: Now handled by update queue system (see below)
-- Demo mode: All caching bypassed to preserve mock data
+- Demo mode: Also demo mode data is cached.
 
 ### Update Queue System
 
