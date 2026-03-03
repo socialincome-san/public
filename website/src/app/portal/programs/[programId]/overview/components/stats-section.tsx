@@ -202,11 +202,6 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 										tooltipText={programDurationExplanation}
 									/>
 									<Stat
-										label="Cost / Interval"
-										value={formatMoney(stats.costPerIntervalProgramCurrency, stats.payoutCurrency)}
-										tooltipText={costPerIntervalProgramExplanation}
-									/>
-									<Stat
 										label="Projected Remaining"
 										value={formatMoney(projectedRemainingProgramCurrency, stats.payoutCurrency)}
 										tooltipText={projectedRemainingExplanation}
@@ -292,11 +287,6 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 										tooltipText={remainingIntervalsExplanation}
 									/>
 								</AdditionalNumbers>
-								{stats.payoutProgressExchangeRateText && (
-									<p className="text-muted-foreground pt-2 text-xs">
-										Exchange rate reference: {stats.payoutProgressExchangeRateText}
-									</p>
-								)}
 							</div>
 						</SectionBox>
 					</div>
