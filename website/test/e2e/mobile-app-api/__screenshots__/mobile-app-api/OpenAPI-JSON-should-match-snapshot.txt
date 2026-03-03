@@ -519,9 +519,6 @@
               }
             ]
           },
-          "payoutCurrency": {
-            "$ref": "#/components/schemas/currencyEnum"
-          },
           "payoutInterval": {
             "type": "string",
             "enum": [
@@ -547,7 +544,6 @@
           "countryId",
           "country",
           "payoutPerInterval",
-          "payoutCurrency",
           "payoutInterval",
           "programDurationInMonths",
           "createdAt"
