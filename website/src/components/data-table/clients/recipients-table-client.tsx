@@ -1,13 +1,14 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import DataTable from '@/components/data-table/data-table';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
-import { importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
+import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { UploadIcon } from 'lucide-react';
+import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
+import type { ActionMenuItem } from '../elements/action-menu';
+import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
@@ -27,6 +28,7 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessio
 	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
 	const [recipientError, setRecipientError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
+	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
 
 	const openCreateRecipientDialog = () => {
 		setRecipientError(null);
@@ -47,6 +49,44 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessio
 		setRecipientError(null);
 	};
 
+	const handleDownloadCsv = async () => {
+		setIsCsvDownloading(true);
+		const result = await downloadRecipientsCsvAction(sessionType);
+		setIsCsvDownloading(false);
+
+		if (!result.success) {
+			console.error(result.error);
+			return;
+		}
+
+		downloadCsvFile(result.data, `recipients-export-${new Date().toISOString().slice(0, 10)}.csv`);
+	};
+
+	const actionMenuItems: ActionMenuItem[] = [
+		{
+			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
+			icon: <DownloadIcon />,
+			disabled: isCsvDownloading,
+			onSelect: handleDownloadCsv,
+		},
+		...(canManageRecipients
+			? [
+					{
+						label: 'Add new recipient',
+						icon: <PlusIcon />,
+						disabled: readOnly,
+						onSelect: openCreateRecipientDialog,
+					},
+					{
+						label: 'Upload CSV',
+						icon: <UploadIcon />,
+						disabled: readOnly,
+						onSelect: () => setIsCsvUploadDialogOpen(true),
+					},
+				]
+			: []),
+	];
+
 	return (
 		<>
 			<DataTable
@@ -56,20 +96,7 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessio
 				data={rows}
 				makeColumns={makeRecipientColumns}
 				hideLocalPartner={sessionType === 'local-partner'}
-				actions={
-					canManageRecipients ? (
-						<div className="flex gap-2">
-							<Button disabled={readOnly} onClick={openCreateRecipientDialog}>
-								Add new recipient
-							</Button>
-
-							<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
-								Upload CSV
-								<UploadIcon />
-							</Button>
-						</div>
-					) : undefined
-				}
+				actionMenuItems={actionMenuItems}
 				onRowClick={openEditRecipientDialog}
 				searchKeys={['firstName', 'lastName', 'localPartnerName', 'programName']}
 			/>

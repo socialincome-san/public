@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { makePayoutConfirmationColumns } from '@/components/data-table/columns/payout-confirmation';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -6,7 +7,7 @@ import { Suspense } from 'react';
 
 export default function ConfirmPayoutsPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<ConfirmPayoutsDataLoader />
 		</Suspense>
 	);

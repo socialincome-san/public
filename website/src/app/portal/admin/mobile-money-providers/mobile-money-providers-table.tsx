@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { makeMobileMoneyProviderColumns } from '@/components/data-table/columns/mobile-money-providers';
 import DataTable from '@/components/data-table/data-table';
 import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { MobileMoneyProviderDialog } from './mobile-money-provider-dialog';
 
@@ -38,7 +38,13 @@ export default function MobileMoneyProvidersTable({
 				emptyMessage="No mobile money providers found"
 				data={rows}
 				makeColumns={makeMobileMoneyProviderColumns}
-				actions={<Button onClick={openEmptyForm}>Add provider</Button>}
+				actionMenuItems={[
+					{
+						label: 'Add provider',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 			/>
 

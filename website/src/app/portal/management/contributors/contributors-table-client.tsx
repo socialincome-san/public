@@ -1,12 +1,12 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
 import { makeContributorColumns } from '@/components/data-table/columns/contributors';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { logger } from '@/lib/utils/logger';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ContributorsForm from './contributors-form';
 
@@ -52,11 +52,14 @@ export default function ContributorsTableClient({
 				emptyMessage="No contributors found"
 				data={rows}
 				makeColumns={makeContributorColumns}
-				actions={
-					<Button disabled={readOnly} onClick={openEmptyForm}>
-						Add new contributor
-					</Button>
-				}
+				actionMenuItems={[
+					{
+						label: 'Add new contributor',
+						icon: <PlusIcon />,
+						disabled: readOnly,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 				searchKeys={['firstName', 'lastName', 'email']}
 			/>

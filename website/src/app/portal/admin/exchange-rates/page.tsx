@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.service';
 import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
@@ -6,7 +7,7 @@ import ExchangeRatesTable from './exchange-rates-table';
 
 export default function ExchangeRatesPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<ExchangeRatesDataLoader />
 		</Suspense>
 	);

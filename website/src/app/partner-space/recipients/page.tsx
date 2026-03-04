@@ -1,4 +1,5 @@
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
@@ -6,7 +7,7 @@ import { Suspense } from 'react';
 
 export default function RecipientsPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<RecipientsDataLoader />
 		</Suspense>
 	);

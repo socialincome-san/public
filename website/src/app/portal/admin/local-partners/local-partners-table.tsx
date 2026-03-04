@@ -1,12 +1,12 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
 import { makeLocalPartnerColumns } from '@/components/data-table/columns/local-partners';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import { logger } from '@/lib/utils/logger';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import LocalPartnersForm from './local-partners-form';
 
@@ -45,7 +45,13 @@ export default function LocalPartnersTable({
 				emptyMessage="No local partners found"
 				data={rows}
 				makeColumns={makeLocalPartnerColumns}
-				actions={<Button onClick={openEmptyForm}>Add new local partner</Button>}
+				actionMenuItems={[
+					{
+						label: 'Add new local partner',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 			/>
 

@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { CountryService } from '@/lib/services/country/country.service';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
@@ -6,7 +7,7 @@ import CountriesTable from './countries-table';
 
 export default function CountriesPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<CountriesDataLoader />
 		</Suspense>
 	);

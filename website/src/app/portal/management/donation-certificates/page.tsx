@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { DonationCertificateService } from '@/lib/services/donation-certificate/donation-certificate.service';
 import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
@@ -6,7 +7,7 @@ import { DonationCertificateTable } from './donation-certificates-table';
 
 export default function DonationCertificatesPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<DonationCertificatesDataLoader />
 		</Suspense>
 	);

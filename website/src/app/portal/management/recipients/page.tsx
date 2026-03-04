@@ -1,4 +1,5 @@
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@/lib/services/recipient/recipient.service';
@@ -7,7 +8,7 @@ import { Suspense } from 'react';
 
 export default function RecipientsPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<RecipientsDataLoader />
 		</Suspense>
 	);

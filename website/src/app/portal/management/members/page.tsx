@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { makeOrganizationMemberColumns } from '@/components/data-table/columns/organization-members';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -7,7 +8,7 @@ import { Suspense } from 'react';
 
 export default function OrganizationMembersPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<OrganizationMembersDataLoader />
 		</Suspense>
 	);

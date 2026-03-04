@@ -1,12 +1,12 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
 import { makeUserColumns } from '@/components/data-table/columns/users';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import { logger } from '@/lib/utils/logger';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import UsersForm from './users-form';
 
@@ -40,7 +40,13 @@ export default function UsersTable({ rows, error }: { rows: UserTableViewRow[]; 
 				emptyMessage="No users found"
 				data={rows}
 				makeColumns={makeUserColumns}
-				actions={<Button onClick={openEmptyForm}>Add user</Button>}
+				actionMenuItems={[
+					{
+						label: 'Add user',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 			/>
 

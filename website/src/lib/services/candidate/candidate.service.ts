@@ -1,6 +1,6 @@
 import { Cause, CountryCode, Prisma } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
-import { parseCsvText } from '@/lib/utils/csv';
+import { parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -777,6 +777,166 @@ export class CandidateService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not assign candidates: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async exportCsv(session: Session): Promise<ServiceResult<string>> {
+		if (session.type === 'contributor') {
+			return this.resultFail('Permission denied');
+		}
+
+		if (session.type === 'user') {
+			const admin = await this.assertAdmin(session.id);
+			if (!admin.success) {
+				return this.resultFail(admin.error);
+			}
+		}
+
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where:
+					session.type === 'local-partner'
+						? {
+								programId: null,
+								localPartnerId: session.id,
+							}
+						: {
+								programId: null,
+							},
+				select: {
+					id: true,
+					createdAt: true,
+					updatedAt: true,
+					suspendedAt: true,
+					suspensionReason: true,
+					successorName: true,
+					termsAccepted: true,
+					localPartner: {
+						select: {
+							id: true,
+							name: true,
+							contact: {
+								select: {
+									address: {
+										select: {
+											country: true,
+										},
+									},
+								},
+							},
+						},
+					},
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							callingName: true,
+							email: true,
+							gender: true,
+							language: true,
+							dateOfBirth: true,
+							profession: true,
+							phone: { select: { number: true } },
+							address: {
+								select: {
+									street: true,
+									number: true,
+									zip: true,
+									city: true,
+									country: true,
+								},
+							},
+						},
+					},
+					paymentInformation: {
+						select: {
+							id: true,
+							code: true,
+							phone: { select: { number: true } },
+							mobileMoneyProvider: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			const formatDate = (value: Date | null | undefined) => (value ? value.toISOString() : '');
+			const rows = recipients.map((recipient) => ({
+				id: recipient.id,
+				createdAt: formatDate(recipient.createdAt),
+				updatedAt: formatDate(recipient.updatedAt),
+				localPartnerId: recipient.localPartner?.id ?? '',
+				localPartnerName: recipient.localPartner?.name ?? '',
+				suspendedAt: formatDate(recipient.suspendedAt),
+				suspensionReason: recipient.suspensionReason ?? '',
+				successorName: recipient.successorName ?? '',
+				termsAccepted: recipient.termsAccepted ? 'true' : 'false',
+				countryResolved: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? '',
+				contactId: recipient.contact?.id ?? '',
+				contactFirstName: recipient.contact?.firstName ?? '',
+				contactLastName: recipient.contact?.lastName ?? '',
+				contactCallingName: recipient.contact?.callingName ?? '',
+				contactEmail: recipient.contact?.email ?? '',
+				contactGender: recipient.contact?.gender ?? '',
+				contactLanguage: recipient.contact?.language ?? '',
+				contactDateOfBirth: formatDate(recipient.contact?.dateOfBirth),
+				contactProfession: recipient.contact?.profession ?? '',
+				contactPhone: recipient.contact?.phone?.number ?? '',
+				contactAddressStreet: recipient.contact?.address?.street ?? '',
+				contactAddressNumber: recipient.contact?.address?.number ?? '',
+				contactAddressZip: recipient.contact?.address?.zip ?? '',
+				contactAddressCity: recipient.contact?.address?.city ?? '',
+				contactAddressCountry: recipient.contact?.address?.country ?? '',
+				paymentInformationId: recipient.paymentInformation?.id ?? '',
+				paymentMobileMoneyProviderId: recipient.paymentInformation?.mobileMoneyProvider?.id ?? '',
+				paymentMobileMoneyProviderName: recipient.paymentInformation?.mobileMoneyProvider?.name ?? '',
+				paymentCode: recipient.paymentInformation?.code ?? '',
+				paymentPhone: recipient.paymentInformation?.phone?.number ?? '',
+			}));
+
+			const headers = [
+				'id',
+				'createdAt',
+				'updatedAt',
+				'localPartnerId',
+				'localPartnerName',
+				'suspendedAt',
+				'suspensionReason',
+				'successorName',
+				'termsAccepted',
+				'countryResolved',
+				'contactId',
+				'contactFirstName',
+				'contactLastName',
+				'contactCallingName',
+				'contactEmail',
+				'contactGender',
+				'contactLanguage',
+				'contactDateOfBirth',
+				'contactProfession',
+				'contactPhone',
+				'contactAddressStreet',
+				'contactAddressNumber',
+				'contactAddressZip',
+				'contactAddressCity',
+				'contactAddressCountry',
+				'paymentInformationId',
+				'paymentMobileMoneyProviderId',
+				'paymentMobileMoneyProviderName',
+				'paymentCode',
+				'paymentPhone',
+			];
+
+			return this.resultOk(stringifyCsv(rows, headers));
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not export candidates CSV: ${JSON.stringify(error)}`);
 		}
 	}
 

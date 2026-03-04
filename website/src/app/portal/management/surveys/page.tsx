@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyService } from '@/lib/services/survey/survey.service';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
@@ -6,7 +7,7 @@ import { SurveysTableClient } from './surveys-table-client';
 
 export default function SurveysPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<SurveysDataLoader />
 		</Suspense>
 	);

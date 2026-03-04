@@ -84,3 +84,8 @@ export const importRecipientsCsvAction = async (file: File, sessionType: Session
 	}
 	return result;
 };
+
+export const downloadRecipientsCsvAction = async (sessionType: Session['type'] = 'user') => {
+	const session = await getSessionByTypeOrThrow(sessionType);
+	return recipientService.exportCsv(session);
+};

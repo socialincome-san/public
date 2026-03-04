@@ -78,3 +78,8 @@ export const importCandidatesCsvAction = async (file: File, sessionType: Session
 	}
 	return result;
 };
+
+export const downloadCandidatesCsvAction = async (sessionType: Session['type'] = 'user') => {
+	const session = await getSessionByTypeOrThrow(sessionType);
+	return candidateService.exportCsv(session);
+};

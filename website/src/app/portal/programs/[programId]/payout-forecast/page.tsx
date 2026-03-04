@@ -1,5 +1,6 @@
 import { Card } from '@/components/card';
 import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutService } from '@/lib/services/payout/payout.service';
@@ -11,7 +12,7 @@ const MONTHS_AHEAD = 6;
 export default function FinancesPageProgramScoped({ params }: Props) {
 	return (
 		<Card>
-			<Suspense>
+			<Suspense fallback={<AppLoadingSkeleton />}>
 				<FinancesProgramScopedDataLoader params={params} />
 			</Suspense>
 		</Card>

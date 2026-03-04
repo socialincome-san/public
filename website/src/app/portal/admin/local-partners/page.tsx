@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
@@ -6,7 +7,7 @@ import LocalPartnersTable from './local-partners-table';
 
 export default function LocalPartnersPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<LocalPartnersDataLoader />
 		</Suspense>
 	);

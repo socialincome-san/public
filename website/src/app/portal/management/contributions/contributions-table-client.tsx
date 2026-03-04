@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { makeContributionsColumns } from '@/components/data-table/columns/contributions';
 import DataTable from '@/components/data-table/data-table';
 import type { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { ContributionFormDialog } from './contributions-form-dialog';
 
@@ -44,11 +44,14 @@ export const ContributionsTableClient = ({
 				emptyMessage="No contributions found"
 				data={rows}
 				makeColumns={makeContributionsColumns}
-				actions={
-					<Button disabled={readOnly} onClick={openEmptyForm}>
-						Add contribution
-					</Button>
-				}
+				actionMenuItems={[
+					{
+						label: 'Add contribution',
+						icon: <PlusIcon />,
+						disabled: readOnly,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 				searchKeys={['firstName', 'lastName', 'email', 'campaignTitle', 'programName']}
 			/>

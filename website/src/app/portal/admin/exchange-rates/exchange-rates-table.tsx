@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { makeExchangeRatesColumns } from '@/components/data-table/columns/exchange-rates';
 import DataTable from '@/components/data-table/data-table';
 import { importExchangeRatesAction } from '@/lib/server-actions/exchange-rates-actions';
 import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
+import { RefreshCwIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 
 export default function ExchangeRatesTable({
@@ -34,11 +34,14 @@ export default function ExchangeRatesTable({
 			emptyMessage="No exchange rates found"
 			data={rows}
 			makeColumns={makeExchangeRatesColumns}
-			actions={
-				<Button disabled={isLoading} onClick={triggerImport}>
-					{isLoading ? 'Importing...' : 'Import last month'}
-				</Button>
-			}
+			actionMenuItems={[
+				{
+					label: isLoading ? 'Importing...' : 'Import last month',
+					icon: <RefreshCwIcon />,
+					disabled: isLoading,
+					onSelect: triggerImport,
+				},
+			]}
 		/>
 	);
 }

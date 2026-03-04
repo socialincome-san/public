@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributorService } from '@/lib/services/contributor/contributor.service';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
@@ -6,7 +7,7 @@ import ContributorsTableClient from './contributors-table-client';
 
 export default function ContributorsPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<ContributorsDataLoader />
 		</Suspense>
 	);

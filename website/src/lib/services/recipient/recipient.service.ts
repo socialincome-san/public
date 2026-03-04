@@ -1,6 +1,6 @@
 import { ProgramPermission, Recipient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
-import { parseCsvText } from '@/lib/utils/csv';
+import { parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
@@ -833,6 +833,170 @@ export class RecipientService extends BaseService {
 		}
 
 		return this.resultOk(recipientResult.data);
+	}
+
+	async exportCsv(session: Session): Promise<ServiceResult<string>> {
+		if (session.type === 'contributor') {
+			return this.resultFail('Permission denied');
+		}
+
+		try {
+			let whereProgramIds: string[] | null = null;
+			if (session.type === 'user') {
+				const accessResult = await this.programAccessService.getAccessiblePrograms(session.id);
+				if (!accessResult.success) {
+					return this.resultFail(accessResult.error);
+				}
+				whereProgramIds = accessResult.data.map((a) => a.programId);
+			}
+
+			const recipients = await this.db.recipient.findMany({
+				where:
+					session.type === 'local-partner'
+						? {
+								localPartnerId: session.id,
+								programId: { not: null },
+							}
+						: {
+								programId: { in: whereProgramIds ?? [] },
+							},
+				select: {
+					id: true,
+					startDate: true,
+					suspendedAt: true,
+					suspensionReason: true,
+					successorName: true,
+					termsAccepted: true,
+					createdAt: true,
+					updatedAt: true,
+					program: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
+					localPartner: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							callingName: true,
+							email: true,
+							gender: true,
+							language: true,
+							dateOfBirth: true,
+							profession: true,
+							phone: { select: { number: true } },
+							address: {
+								select: {
+									street: true,
+									number: true,
+									zip: true,
+									city: true,
+									country: true,
+								},
+							},
+						},
+					},
+					paymentInformation: {
+						select: {
+							id: true,
+							code: true,
+							phone: { select: { number: true } },
+							mobileMoneyProvider: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			const formatDate = (value: Date | null | undefined) => (value ? value.toISOString() : '');
+			const rows = recipients.map((recipient) => ({
+				id: recipient.id,
+				createdAt: formatDate(recipient.createdAt),
+				updatedAt: formatDate(recipient.updatedAt),
+				programId: recipient.program?.id ?? '',
+				programName: recipient.program?.name ?? '',
+				localPartnerId: recipient.localPartner?.id ?? '',
+				localPartnerName: recipient.localPartner?.name ?? '',
+				startDate: formatDate(recipient.startDate),
+				suspendedAt: formatDate(recipient.suspendedAt),
+				suspensionReason: recipient.suspensionReason ?? '',
+				successorName: recipient.successorName ?? '',
+				termsAccepted: recipient.termsAccepted ? 'true' : 'false',
+				contactId: recipient.contact?.id ?? '',
+				contactFirstName: recipient.contact?.firstName ?? '',
+				contactLastName: recipient.contact?.lastName ?? '',
+				contactCallingName: recipient.contact?.callingName ?? '',
+				contactEmail: recipient.contact?.email ?? '',
+				contactGender: recipient.contact?.gender ?? '',
+				contactLanguage: recipient.contact?.language ?? '',
+				contactDateOfBirth: formatDate(recipient.contact?.dateOfBirth),
+				contactProfession: recipient.contact?.profession ?? '',
+				contactPhone: recipient.contact?.phone?.number ?? '',
+				contactAddressStreet: recipient.contact?.address?.street ?? '',
+				contactAddressNumber: recipient.contact?.address?.number ?? '',
+				contactAddressZip: recipient.contact?.address?.zip ?? '',
+				contactAddressCity: recipient.contact?.address?.city ?? '',
+				contactAddressCountry: recipient.contact?.address?.country ?? '',
+				paymentInformationId: recipient.paymentInformation?.id ?? '',
+				paymentMobileMoneyProviderId: recipient.paymentInformation?.mobileMoneyProvider?.id ?? '',
+				paymentMobileMoneyProviderName: recipient.paymentInformation?.mobileMoneyProvider?.name ?? '',
+				paymentCode: recipient.paymentInformation?.code ?? '',
+				paymentPhone: recipient.paymentInformation?.phone?.number ?? '',
+			}));
+
+			const headers = [
+				'id',
+				'createdAt',
+				'updatedAt',
+				'programId',
+				'programName',
+				'localPartnerId',
+				'localPartnerName',
+				'startDate',
+				'suspendedAt',
+				'suspensionReason',
+				'successorName',
+				'termsAccepted',
+				'contactId',
+				'contactFirstName',
+				'contactLastName',
+				'contactCallingName',
+				'contactEmail',
+				'contactGender',
+				'contactLanguage',
+				'contactDateOfBirth',
+				'contactProfession',
+				'contactPhone',
+				'contactAddressStreet',
+				'contactAddressNumber',
+				'contactAddressZip',
+				'contactAddressCity',
+				'contactAddressCountry',
+				'paymentInformationId',
+				'paymentMobileMoneyProviderId',
+				'paymentMobileMoneyProviderName',
+				'paymentCode',
+				'paymentPhone',
+			];
+
+			return this.resultOk(stringifyCsv(rows, headers));
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not export recipients CSV: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {

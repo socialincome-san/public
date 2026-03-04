@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { UserService } from '@/lib/services/user/user.service';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
@@ -6,7 +7,7 @@ import UsersTable from './users-table';
 
 export default function UsersPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<UsersDataLoader />
 		</Suspense>
 	);

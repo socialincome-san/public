@@ -1,12 +1,12 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
 import { makeExpenseColumns } from '@/components/data-table/columns/expenses';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
 import { logger } from '@/lib/utils/logger';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';
 
@@ -40,7 +40,13 @@ export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewR
 				emptyMessage="No expenses found"
 				data={rows}
 				makeColumns={makeExpenseColumns}
-				actions={<Button onClick={openEmptyForm}>Add expense</Button>}
+				actionMenuItems={[
+					{
+						label: 'Add expense',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 			/>
 

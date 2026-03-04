@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { CampaignService } from '@/lib/services/campaign/campaign.service';
 import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
@@ -6,7 +7,7 @@ import CampaignsTable from './campaigns-table';
 
 export default function CampaignsPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<CampaignsDataLoader />
 		</Suspense>
 	);

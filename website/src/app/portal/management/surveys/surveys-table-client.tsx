@@ -1,11 +1,10 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import DataTable from '@/components/data-table/data-table';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
-import { ClipboardListIcon } from 'lucide-react';
+import { ClipboardListIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';
 import { SurveyFormDialog } from './survey-form-dialog';
@@ -45,15 +44,18 @@ export const SurveysTableClient = ({ rows, error }: { rows: SurveyTableViewRow[]
 				data={rows}
 				makeColumns={makeSurveyColumns}
 				onRowClick={openEditForm}
-				actions={
-					<div className="flex gap-2">
-						<Button onClick={openEmptyForm}>Add survey</Button>
-						<Button variant="outline" onClick={() => setIsGenerationDialogOpen(true)}>
-							Generate surveys
-							<ClipboardListIcon />
-						</Button>
-					</div>
-				}
+				actionMenuItems={[
+					{
+						label: 'Add survey',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+					{
+						label: 'Generate surveys',
+						icon: <ClipboardListIcon />,
+						onSelect: () => setIsGenerationDialogOpen(true),
+					},
+				]}
 				searchKeys={['name', 'recipientName', 'programName']}
 			/>
 

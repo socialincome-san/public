@@ -1,4 +1,5 @@
 import { CandidatesTableClient } from '@/app/portal/admin/candidates/candidates-table-client';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
@@ -6,7 +7,7 @@ import { Suspense } from 'react';
 
 export default function CandidatesPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<CandidatesDataLoader />
 		</Suspense>
 	);

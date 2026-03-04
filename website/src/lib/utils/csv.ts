@@ -32,3 +32,29 @@ export const parseCsvFile = async (file: File): Promise<CsvRow[]> => {
 	const text = await file.text();
 	return parseCsvText(text);
 };
+
+const escapeCsvValue = (value: string): string => {
+	const escaped = value.replace(/"/g, '""');
+	return /[",\n]/.test(escaped) ? `"${escaped}"` : escaped;
+};
+
+export const stringifyCsv = (rows: CsvRow[], headers?: string[]): string => {
+	const resolvedHeaders = headers ?? (rows.length > 0 ? Object.keys(rows[0]) : []);
+	const headerLine = resolvedHeaders.map((header) => escapeCsvValue(header)).join(',');
+
+	const dataLines = rows.map((row) =>
+		resolvedHeaders.map((header) => escapeCsvValue(row[header] ?? '')).join(','),
+	);
+
+	return [headerLine, ...dataLines].join('\n');
+};
+
+export const downloadCsv = (content: string, filename: string): void => {
+	const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = filename;
+	link.click();
+	URL.revokeObjectURL(url);
+};

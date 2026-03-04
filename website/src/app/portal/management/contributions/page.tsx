@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributionService } from '@/lib/services/contribution/contribution.service';
 import { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
@@ -6,7 +7,7 @@ import { ContributionsTableClient } from './contributions-table-client';
 
 export default function ContributionsPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<ContributionsDataLoader />
 		</Suspense>
 	);

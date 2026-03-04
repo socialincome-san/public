@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { makeDonationCertificateColumns } from '@/components/data-table/columns/donation-certificates';
 import DataTable from '@/components/data-table/data-table';
 import { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
+import { FileTextIcon } from 'lucide-react';
 import { useState } from 'react';
 import GenerateDonationCertificatesDialog from './generate-donation-certificates-dialog';
 
@@ -24,7 +24,13 @@ export const DonationCertificateTable = ({
 				emptyMessage="No donation certificates found"
 				data={rows}
 				makeColumns={makeDonationCertificateColumns}
-				actions={<Button onClick={() => setOpen(true)}>Generate Donation Certificates</Button>}
+				actionMenuItems={[
+					{
+						label: 'Generate Donation Certificates',
+						icon: <FileTextIcon />,
+						onSelect: () => setOpen(true),
+					},
+				]}
 			/>
 		</>
 	);

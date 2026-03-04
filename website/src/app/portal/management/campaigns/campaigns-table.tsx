@@ -1,12 +1,12 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
 import { makeCampaignColumns } from '@/components/data-table/columns/campaigns';
 import DataTable from '@/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
 import { logger } from '@/lib/utils/logger';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import CampaignsForm from './campaigns-form';
 
@@ -42,11 +42,14 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 				data={rows}
 				makeColumns={makeCampaignColumns}
 				onRowClick={openEditForm}
-				actions={
-					<Button disabled={readOnly} onClick={openEmptyForm}>
-						Add new campaign
-					</Button>
-				}
+				actionMenuItems={[
+					{
+						label: 'Add new campaign',
+						icon: <PlusIcon />,
+						disabled: readOnly,
+						onSelect: openEmptyForm,
+					},
+				]}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>

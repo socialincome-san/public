@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { MobileMoneyProviderService } from '@/lib/services/mobile-money-provider/mobile-money-provider.service';
 import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
@@ -6,7 +7,7 @@ import MobileMoneyProvidersTable from './mobile-money-providers-table';
 
 export default function MobileMoneyProvidersPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<MobileMoneyProvidersDataLoader />
 		</Suspense>
 	);

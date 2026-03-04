@@ -1,3 +1,4 @@
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { CandidateService } from '@/lib/services/candidate/candidate.service';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
@@ -6,7 +7,7 @@ import { CandidatesTableClient } from './candidates-table-client';
 
 export default function CandidatesPage() {
 	return (
-		<Suspense>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<CandidatesDataLoader />
 		</Suspense>
 	);

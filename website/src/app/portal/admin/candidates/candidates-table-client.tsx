@@ -1,13 +1,14 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { CsvUploadDialog } from '@/components/data-table/clients/csv-upload-dialog';
 import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
 import DataTable from '@/components/data-table/data-table';
+import type { ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import type { Session } from '@/lib/firebase/current-account';
-import { importCandidatesCsvAction } from '@/lib/server-actions/candidate-actions';
+import { downloadCandidatesCsvAction, importCandidatesCsvAction } from '@/lib/server-actions/candidate-actions';
 import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
-import { UploadIcon } from 'lucide-react';
+import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
+import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CandidateDialog } from './candidate-dialog';
 
@@ -25,6 +26,7 @@ export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'us
 	const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
 	const [candidateError, setCandidateError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
+	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
 
 	const openCreateDialog = () => {
 		setCandidateError(null);
@@ -45,6 +47,44 @@ export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'us
 		setCandidateError(null);
 	};
 
+	const handleDownloadCsv = async () => {
+		setIsCsvDownloading(true);
+		const result = await downloadCandidatesCsvAction(sessionType);
+		setIsCsvDownloading(false);
+
+		if (!result.success) {
+			console.error(result.error);
+			return;
+		}
+
+		downloadCsvFile(result.data, `candidates-export-${new Date().toISOString().slice(0, 10)}.csv`);
+	};
+
+	const actionMenuItems: ActionMenuItem[] = [
+		{
+			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
+			icon: <DownloadIcon />,
+			disabled: isCsvDownloading,
+			onSelect: handleDownloadCsv,
+		},
+		...(canManageCandidates
+			? [
+					{
+						label: 'Add new candidate',
+						icon: <PlusIcon />,
+						disabled: readOnly,
+						onSelect: openCreateDialog,
+					},
+					{
+						label: 'Upload CSV',
+						icon: <UploadIcon />,
+						disabled: readOnly,
+						onSelect: () => setIsCsvUploadDialogOpen(true),
+					},
+				]
+			: []),
+	];
+
 	return (
 		<>
 			<DataTable
@@ -54,20 +94,7 @@ export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'us
 				data={rows}
 				makeColumns={makeCandidateColumns}
 				hideLocalPartner={sessionType === 'local-partner'}
-				actions={
-					canManageCandidates ? (
-						<div className="flex gap-2">
-							<Button disabled={readOnly} onClick={openCreateDialog}>
-								Add new candidate
-							</Button>
-
-							<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
-								Upload CSV
-								<UploadIcon />
-							</Button>
-						</div>
-					) : undefined
-				}
+				actionMenuItems={actionMenuItems}
 				onRowClick={openEditDialog}
 				searchKeys={['firstName', 'lastName', 'localPartnerName']}
 			/>
