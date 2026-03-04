@@ -7,6 +7,7 @@ import type {
 	MobileMoneyProviderUpdateInput,
 } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
 import { revalidatePath } from 'next/cache';
+import { Session } from '../firebase/current-account';
 
 const REVALIDATE_PATH = '/portal/admin/mobile-money-providers';
 const service = new MobileMoneyProviderService();
@@ -45,7 +46,10 @@ export const getMobileMoneyProviderOptionsAction = async () => {
 	return service.getOptions(user.id);
 };
 
-export const getSupportedMobileMoneyProviderOptionsAction = async () => {
+export const getSupportedMobileMoneyProviderOptionsAction = async (sessionType: Session['type'] = 'user') => {
+	if (sessionType !== 'user') {
+		return { success: true, data: [] };
+	}
 	await getAuthenticatedUserOrRedirect();
 	return service.getSupportedOptions();
 };

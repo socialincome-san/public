@@ -592,23 +592,48 @@ export class CandidateService extends BaseService {
 							firstName: true,
 							lastName: true,
 							dateOfBirth: true,
+							gender: true,
+							address: {
+								select: {
+									country: true,
+								},
+							},
+							phone: {
+								select: {
+									number: true,
+								},
+							},
 						},
 					},
-					localPartner: { select: { name: true } },
-					createdAt: true,
+					localPartner: {
+						select: {
+							name: true,
+							contact: {
+								select: {
+									address: {
+										select: {
+											country: true,
+										},
+									},
+								},
+							},
+						},
+					},
 				},
 				orderBy: { createdAt: 'desc' },
 			});
 
 			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
 				id: r.id,
+				country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 				firstName: r.contact?.firstName ?? '',
 				lastName: r.contact?.lastName ?? '',
 				dateOfBirth: r.contact?.dateOfBirth ?? null,
+				contactNumber: r.contact?.phone?.number ?? null,
+				gender: r.contact?.gender ?? null,
 				localPartnerName: r.localPartner?.name ?? null,
 				suspendedAt: r.suspendedAt,
 				suspensionReason: r.suspensionReason,
-				createdAt: r.createdAt,
 			}));
 
 			return this.resultOk({ tableRows });
@@ -634,22 +659,47 @@ export class CandidateService extends BaseService {
 							firstName: true,
 							lastName: true,
 							dateOfBirth: true,
+							gender: true,
+							address: {
+								select: {
+									country: true,
+								},
+							},
+							phone: {
+								select: {
+									number: true,
+								},
+							},
 						},
 					},
-					createdAt: true,
+					localPartner: {
+						select: {
+							contact: {
+								select: {
+									address: {
+										select: {
+											country: true,
+										},
+									},
+								},
+							},
+						},
+					},
 				},
 				orderBy: { createdAt: 'desc' },
 			});
 
 			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
 				id: r.id,
+				country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 				firstName: r.contact?.firstName ?? '',
 				lastName: r.contact?.lastName ?? '',
 				dateOfBirth: r.contact?.dateOfBirth ?? null,
+				contactNumber: r.contact?.phone?.number ?? null,
+				gender: r.contact?.gender ?? null,
 				localPartnerName: null,
 				suspendedAt: r.suspendedAt,
 				suspensionReason: r.suspensionReason,
-				createdAt: r.createdAt,
 			}));
 
 			return this.resultOk({ tableRows });
