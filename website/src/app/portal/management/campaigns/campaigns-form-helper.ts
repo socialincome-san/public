@@ -1,7 +1,7 @@
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import { websiteCurrencies } from '@/lib/i18n/utils';
 import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { allCurrencies } from '@/lib/types/currency';
 import z from 'zod';
 
 type CampaignsFormSchema = {
@@ -98,9 +98,10 @@ export const initialFormSchema: CampaignsFormSchema = {
 			zodSchema: z.number().positive('Goal must be positive').nullable(),
 		},
 		currency: {
-			placeholder: 'USD, EUR, CHF',
+			placeholder: 'Select currency',
 			label: 'Currency Code',
-			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
+			useCombobox: true,
+			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		additionalAmountChf: {
 			placeholder: 'Additional Amount in CHF',

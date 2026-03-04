@@ -10,6 +10,7 @@
  */
 
 import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@/generated/prisma/client';
+import { isValidCurrency } from '@/lib/types/currency';
 import { titleCase } from '@/lib/utils/string-utils';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
@@ -176,11 +177,16 @@ export class StripeService extends BaseService {
 				campaignId = fallbackCampaignResult.data.id;
 			}
 
+			const chargeCurrency = fullCharge.currency.toUpperCase();
+			if (!isValidCurrency(chargeCurrency)) {
+				return this.resultFail(`Unsupported currency from Stripe charge: ${fullCharge.currency}`);
+			}
+
 			// Prepare contribution data with CHF amounts from balance_transaction
 			const contributionData: StripeContributionCreateData = {
 				contributorId: contributor.id,
 				amount: fullCharge.amount / 100, // Original charge amount
-				currency: fullCharge.currency.toUpperCase(),
+				currency: chargeCurrency,
 				amountChf: this.extractAmountChf(fullCharge), // Final settled amount in CHF
 				feesChf: this.extractFeesChf(fullCharge), // Stripe processing fees
 				status: this.constructStatus(fullCharge.status),

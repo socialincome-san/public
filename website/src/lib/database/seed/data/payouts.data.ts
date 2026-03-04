@@ -1,46 +1,62 @@
 import { Payout, PayoutStatus, Prisma } from '@/generated/prisma/client';
 
+const amountSle = new Prisma.Decimal(50);
+const amountChf = new Prisma.Decimal('2.0833');
+const createdAt = new Date('2024-03-12T12:00:00.000Z');
+
 export const payoutsData: Payout[] = [
-	{
-		id: 'payout-1',
-		legacyFirestoreId: null,
-		amount: new Prisma.Decimal(50),
-		amountChf: new Prisma.Decimal(25),
-		currency: 'SLE',
-		paymentAt: new Date('2024-04-01'),
-		status: PayoutStatus.paid,
-		phoneNumber: '+23276123456',
-		comments: 'First payout completed successfully.',
-		recipientId: 'recipient-1',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	},
-	{
-		id: 'payout-2',
-		legacyFirestoreId: null,
-		amount: new Prisma.Decimal(75),
-		amountChf: new Prisma.Decimal(37.5),
-		currency: 'SLE',
-		paymentAt: new Date('2024-05-01'),
-		status: PayoutStatus.paid,
-		phoneNumber: '+23277111222',
-		comments: 'Second payout confirmed.',
-		recipientId: 'recipient-2',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	},
-	{
-		id: 'payout-3',
-		legacyFirestoreId: null,
-		amount: new Prisma.Decimal(60),
-		amountChf: new Prisma.Decimal(30),
-		currency: 'SLE',
-		paymentAt: new Date('2024-06-01'),
-		status: PayoutStatus.paid,
-		phoneNumber: '+23288765432',
-		comments: 'Pending confirmation from partner.',
-		recipientId: 'recipient-3',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+	// recipient-1 (completed)
+	{ id: 'payout-1', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-01-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-2', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-02-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-3', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-03-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-4', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-04-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-5', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-05-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-6', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-06-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-7', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-07-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-8', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-08-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-9', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-09-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-10', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-10-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-11', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-11-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+	{ id: 'payout-12', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-12-01'), status: PayoutStatus.paid, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-1.', recipientId: 'recipient-1', createdAt, updatedAt: null },
+
+	// recipient-2 (completed)
+	{ id: 'payout-13', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-01-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-14', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-02-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-15', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-03-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-16', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-04-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-17', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-05-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-18', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-06-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-19', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-07-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-20', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-08-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-21', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-09-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-22', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-10-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-23', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-11-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+	{ id: 'payout-24', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-12-01'), status: PayoutStatus.confirmed, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-2.', recipientId: 'recipient-2', createdAt, updatedAt: null },
+
+	// recipient-5 (completed)
+	{ id: 'payout-25', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-01-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-26', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-02-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-27', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-03-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-28', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-04-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-29', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-05-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-30', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-06-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-31', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-07-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-32', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-08-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-33', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-09-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-34', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-10-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-35', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-11-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+	{ id: 'payout-36', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-12-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-5.', recipientId: 'recipient-5', createdAt, updatedAt: null },
+
+	// recipient-6 (active)
+	{ id: 'payout-37', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-01-01'), status: PayoutStatus.confirmed, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-6.', recipientId: 'recipient-6', createdAt, updatedAt: null },
+	{ id: 'payout-38', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-02-01'), status: PayoutStatus.confirmed, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-6.', recipientId: 'recipient-6', createdAt, updatedAt: null },
+	{ id: 'payout-39', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-03-01'), status: PayoutStatus.confirmed, phoneNumber: '+23276123456', comments: 'Seed payout for recipient-6.', recipientId: 'recipient-6', createdAt, updatedAt: null },
+
+	// recipient-7 (active)
+	{ id: 'payout-49', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-01-01'), status: PayoutStatus.paid, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-7.', recipientId: 'recipient-7', createdAt, updatedAt: null },
+	{ id: 'payout-50', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2024-02-01'), status: PayoutStatus.paid, phoneNumber: '+23277111222', comments: 'Seed payout for recipient-7.', recipientId: 'recipient-7', createdAt, updatedAt: null },
+
+
+	// active recipients (one recent payout each)
+	{ id: 'payout-70', legacyFirestoreId: null, amount: amountSle, amountChf, currency: 'SLE', paymentAt: new Date('2025-11-01'), status: PayoutStatus.paid, phoneNumber: '+23288765432', comments: 'Seed payout for recipient-10.', recipientId: 'recipient-10', createdAt, updatedAt: null },
 ];

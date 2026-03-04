@@ -1,5 +1,4 @@
-import { ContributionStatus, DonationInterval, PaymentEventType } from '@/generated/prisma/client';
-import { Currency } from '@/lib/types/currency';
+import { ContributionStatus, Currency, DonationInterval, PaymentEventType } from '@/generated/prisma/client';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';

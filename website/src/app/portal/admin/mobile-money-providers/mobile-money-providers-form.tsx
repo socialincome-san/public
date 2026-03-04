@@ -3,6 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import {
 	createMobileMoneyProviderAction,
+	deleteMobileMoneyProviderAction,
 	getMobileMoneyProviderAction,
 	updateMobileMoneyProviderAction,
 } from '@/lib/server-actions/mobile-money-provider-action';
@@ -74,6 +75,21 @@ export default function MobileMoneyProvidersForm({
 		});
 	};
 
+	const onDelete = () => {
+		if (!providerId) {
+			return;
+		}
+
+		startTransition(async () => {
+			try {
+				const result = await deleteMobileMoneyProviderAction(providerId);
+				result.success ? onSuccess?.() : onError?.(result.error);
+			} catch (e) {
+				onError?.(e);
+			}
+		});
+	};
+
 	useEffect(() => {
 		if (!providerId) {
 			return;
@@ -104,6 +120,7 @@ export default function MobileMoneyProvidersForm({
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={providerId ? 'edit' : 'add'}
 		/>
 	);

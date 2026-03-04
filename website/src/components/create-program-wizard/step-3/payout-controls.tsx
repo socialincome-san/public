@@ -6,6 +6,8 @@ import { PayoutInterval } from '@/generated/prisma/enums';
 
 type Props = {
 	programDuration: number;
+	payoutPerIntervalMin: number;
+	payoutPerIntervalMax: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
 	currency: string;
@@ -16,6 +18,8 @@ type Props = {
 
 export const PayoutControls = ({
 	programDuration,
+	payoutPerIntervalMin,
+	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
 	currency,
@@ -51,8 +55,8 @@ export const PayoutControls = ({
 
 				<Slider
 					data-testid="payout-per-interval-slider"
-					min={5}
-					max={100}
+					min={payoutPerIntervalMin}
+					max={payoutPerIntervalMax}
 					step={1}
 					value={[payoutPerInterval]}
 					onValueChange={([v]) => onPayoutChange(v)}

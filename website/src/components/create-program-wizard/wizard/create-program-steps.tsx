@@ -1,5 +1,6 @@
 'use client';
 
+import { Currency } from '@/generated/prisma/enums';
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
@@ -60,15 +61,23 @@ export const CreateProgramSteps = ({ state, send }: Props) => {
 				amountOfRecipients={state.context.amountOfRecipients}
 				filteredRecipients={state.context.filteredRecipients}
 				programDuration={state.context.programDuration}
+				payoutPerIntervalMin={state.context.payoutPerIntervalMin}
+				payoutPerIntervalMax={state.context.payoutPerIntervalMax}
 				payoutPerInterval={state.context.payoutPerInterval}
 				payoutInterval={state.context.payoutInterval}
-				currency={state.context.currency}
+				payoutCurrency={state.context.payoutCurrency}
+				displayCurrency={state.context.displayCurrency}
+				calculatedTotalBudget={state.context.calculatedTotalBudget}
+				displayMonthlyCost={state.context.displayMonthlyCost}
+				exchangeRateText={state.context.exchangeRateText}
+				totalBudgetTooltipText={state.context.totalBudgetTooltipText}
+				isCalculatingBudget={state.context.isCalculatingBudget}
 				customizePayouts={state.context.customizePayouts}
 				onRecipientsChange={(v) => send({ type: 'SET_AMOUNT_OF_RECIPIENTS', value: v })}
 				onDurationChange={(v) => send({ type: 'SET_PROGRAM_DURATION', value: v })}
 				onPayoutChange={(v) => send({ type: 'SET_PAYOUT_PER_INTERVAL', value: v })}
 				onIntervalChange={(v) => send({ type: 'SET_PAYOUT_INTERVAL', value: v })}
-				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v })}
+				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v as Currency })}
 				onToggleCustomizePayouts={() => send({ type: 'TOGGLE_CUSTOMIZE_PAYOUTS' })}
 			/>
 		);

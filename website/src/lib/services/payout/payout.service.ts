@@ -5,6 +5,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
+import { ProgramStatsService } from '../program-stats/program-stats.service';
 import {
 	OngoingPayoutTableView,
 	OngoingPayoutTableViewRow,
@@ -24,6 +25,7 @@ import {
 export class PayoutService extends BaseService {
 	private programAccessService = new ProgramAccessService();
 	private exchangeRateService = new ExchangeRateService();
+	private programStatsService = new ProgramStatsService();
 
 	async getTableView(userId: string): Promise<ServiceResult<PayoutTableView>> {
 		try {
@@ -179,9 +181,16 @@ export class PayoutService extends BaseService {
 				select: {
 					programDurationInMonths: true,
 					payoutPerInterval: true,
-					payoutCurrency: true,
+					payoutInterval: true,
+					country: {
+						select: {
+							currency: true,
+						},
+					},
 					recipients: {
 						select: {
+							startDate: true,
+							suspendedAt: true,
 							payouts: {
 								where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
 								select: { id: true },
@@ -207,6 +216,17 @@ export class PayoutService extends BaseService {
 
 			for (const recipient of program.recipients) {
 				const paid = recipient.payouts.length;
+				const isEligibleNow = this.programStatsService.isRecipientEligibleForPayout({
+					startDate: recipient.startDate,
+					suspendedAt: recipient.suspendedAt,
+					paidOrConfirmedCount: paid,
+					programDurationInMonths: program.programDurationInMonths,
+					payoutInterval: program.payoutInterval,
+					nowDate: now(),
+				});
+				if (!isEligibleNow) {
+					continue;
+				}
 				const remaining = Math.max(0, program.programDurationInMonths - paid);
 				for (let i = 0; i < remaining && i < forecastMonths.length; i++) {
 					const monthLabel = forecastMonths[i];
@@ -219,7 +239,7 @@ export class PayoutService extends BaseService {
 				return this.resultFail(exchangeRateResult.error);
 			}
 
-			const baseRate = exchangeRateResult.data[program.payoutCurrency];
+			const baseRate = exchangeRateResult.data[program.country.currency];
 			const usdRate = exchangeRateResult.data.USD;
 
 			if (!baseRate || !usdRate) {
@@ -236,7 +256,7 @@ export class PayoutService extends BaseService {
 					numberOfRecipients: count,
 					amountInProgramCurrency: Number(program.payoutPerInterval) * count,
 					amountUsd: payoutPerIntervalUsd * count,
-					programCurrency: program.payoutCurrency,
+					programCurrency: program.country.currency,
 				};
 			});
 
