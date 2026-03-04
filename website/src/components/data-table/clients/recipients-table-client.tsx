@@ -21,6 +21,7 @@ type Props = {
 };
 
 export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessionType = 'user' }: Props) => {
+	const canManageRecipients = sessionType === 'user';
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
 	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
@@ -56,6 +57,7 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessio
 				makeColumns={makeRecipientColumns}
 				hideLocalPartner={sessionType === 'local-partner'}
 				actions={
+					canManageRecipients ? (
 					<div className="flex gap-2">
 						<Button disabled={readOnly} onClick={openCreateRecipientDialog}>
 							Add new recipient
@@ -66,6 +68,7 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessio
 							<UploadIcon />
 						</Button>
 					</div>
+					) : undefined
 				}
 				onRowClick={openEditRecipientDialog}
 				searchKeys={['firstName', 'lastName', 'localPartnerName', 'programName']}

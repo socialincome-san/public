@@ -225,7 +225,7 @@ export const CandidateForm = ({
 		startTransition(async () => {
 			const [{ localPartners }, supportedProviders] = await Promise.all([
 				getCandidateOptions(sessionType),
-				getSupportedMobileMoneyProviderOptionsAction(),
+				getSupportedMobileMoneyProviderOptionsAction(sessionType),
 			]);
 			if (!localPartners.success) {
 				return;

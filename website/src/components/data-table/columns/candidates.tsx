@@ -2,9 +2,9 @@
 
 import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { AgeCell } from '@/components/data-table/elements/age-cell';
-import { DateCell } from '@/components/data-table/elements/date-cell';
+import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
+import { GenderCell } from '@/components/data-table/elements/gender-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
-import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -14,6 +14,12 @@ export const makeCandidateColumns = (
 	hideLocalPartner = false,
 ): ColumnDef<CandidatesTableViewRow>[] => {
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
+		{
+			id: 'flag',
+			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
+			accessorFn: (row) => row.country ?? '',
+			cell: ({ row }) => <CountryFlagCell country={row.original.country} />,
+		},
 		{
 			accessorKey: 'firstName',
 			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
@@ -25,9 +31,19 @@ export const makeCandidateColumns = (
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
+			accessorKey: 'gender',
+			header: (ctx) => <SortableHeader ctx={ctx}>Gender</SortableHeader>,
+			cell: (ctx) => <GenderCell ctx={ctx} />,
+		},
+		{
 			accessorKey: 'dateOfBirth',
 			header: (ctx) => <SortableHeader ctx={ctx}>Age</SortableHeader>,
 			cell: (ctx) => <AgeCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'contactNumber',
+			header: (ctx) => <SortableHeader ctx={ctx}>Contact number</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 	];
 
@@ -39,24 +55,12 @@ export const makeCandidateColumns = (
 		});
 	}
 
-	columns.push(
-		{
-			accessorKey: 'status',
-			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <StatusCell ctx={ctx} variant="recipient" />,
-		},
-		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
-			cell: (ctx) => <DateCell ctx={ctx} />,
-		},
-		{
-			id: 'actions',
-			header: '',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
-		},
-	);
+	columns.push({
+		id: 'actions',
+		header: '',
+		enableSorting: false,
+		cell: (ctx) => <ActionCell ctx={ctx} />,
+	});
 
 	return columns;
 };

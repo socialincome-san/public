@@ -1,4 +1,4 @@
-import { Address, Gender, Phone, Prisma } from '@/generated/prisma/client';
+import { Address, CountryCode, Gender, Phone, Prisma } from '@/generated/prisma/client';
 
 export enum Profile {
 	male = 'male',
@@ -39,13 +39,15 @@ export type CandidatePayload = {
 
 export type CandidatesTableViewRow = {
 	id: string;
+	country: CountryCode | null;
 	firstName: string;
 	lastName: string;
 	dateOfBirth: Date | null;
+	contactNumber: string | null;
+	gender: Gender | null;
 	localPartnerName: string | null;
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
-	createdAt: Date;
 };
 
 export type CandidatesTableView = {
