@@ -58,16 +58,16 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessio
 				hideLocalPartner={sessionType === 'local-partner'}
 				actions={
 					canManageRecipients ? (
-					<div className="flex gap-2">
-						<Button disabled={readOnly} onClick={openCreateRecipientDialog}>
-							Add new recipient
-						</Button>
+						<div className="flex gap-2">
+							<Button disabled={readOnly} onClick={openCreateRecipientDialog}>
+								Add new recipient
+							</Button>
 
-						<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
-							Upload CSV
-							<UploadIcon />
-						</Button>
-					</div>
+							<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
+								Upload CSV
+								<UploadIcon />
+							</Button>
+						</div>
 					) : undefined
 				}
 				onRowClick={openEditRecipientDialog}

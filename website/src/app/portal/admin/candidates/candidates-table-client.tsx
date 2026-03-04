@@ -56,16 +56,16 @@ export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'us
 				hideLocalPartner={sessionType === 'local-partner'}
 				actions={
 					canManageCandidates ? (
-					<div className="flex gap-2">
-						<Button disabled={readOnly} onClick={openCreateDialog}>
-							Add new candidate
-						</Button>
+						<div className="flex gap-2">
+							<Button disabled={readOnly} onClick={openCreateDialog}>
+								Add new candidate
+							</Button>
 
-						<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
-							Upload CSV
-							<UploadIcon />
-						</Button>
-					</div>
+							<Button variant="outline" disabled={readOnly} onClick={() => setIsCsvUploadDialogOpen(true)}>
+								Upload CSV
+								<UploadIcon />
+							</Button>
+						</div>
 					) : undefined
 				}
 				onRowClick={openEditDialog}
