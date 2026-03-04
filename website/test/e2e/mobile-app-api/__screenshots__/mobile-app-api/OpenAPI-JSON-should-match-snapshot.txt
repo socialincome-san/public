@@ -127,7 +127,7 @@
             "nullable": true
           },
           "currency": {
-            "type": "string"
+            "$ref": "#/components/schemas/currencyEnum"
           },
           "paymentAt": {
             "type": "string"
@@ -330,6 +330,9 @@
           "$ref": "#/components/schemas/Survey"
         }
       },
+      "currencyEnum": {
+        "type": "string"
+      },
       "PaymentInformation": {
         "type": "object",
         "properties": {
@@ -516,9 +519,6 @@
               }
             ]
           },
-          "payoutCurrency": {
-            "type": "string"
-          },
           "payoutInterval": {
             "type": "string",
             "enum": [
@@ -544,7 +544,6 @@
           "countryId",
           "country",
           "payoutPerInterval",
-          "payoutCurrency",
           "payoutInterval",
           "programDurationInMonths",
           "createdAt"

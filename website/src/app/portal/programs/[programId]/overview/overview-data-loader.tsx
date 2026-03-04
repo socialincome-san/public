@@ -31,7 +31,7 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 	const stats = statsResult.data;
 
-	const readyForFirstPayoutResult = await programService.isReadyForFirstPayoutInterval(programId);
+	const readyForFirstPayoutResult = await statsService.isReadyForFirstPayoutInterval(programId);
 	const readyForFirstPayout = readyForFirstPayoutResult.success ? readyForFirstPayoutResult.data : false;
 
 	const programSlug = slugify(programNameResult.data);

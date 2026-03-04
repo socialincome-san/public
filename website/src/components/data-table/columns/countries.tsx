@@ -53,8 +53,8 @@ export const makeCountryColumns = (): ColumnDef<CountryTableViewRow>[] => {
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+			accessorKey: 'updatedAt',
+			header: (ctx) => <SortableHeader ctx={ctx}>Updated</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 

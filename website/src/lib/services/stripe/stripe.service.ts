@@ -10,6 +10,7 @@
  */
 
 import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@/generated/prisma/client';
+import { isValidCurrency } from '@/lib/types/currency';
 import { titleCase } from '@/lib/utils/string-utils';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';
@@ -176,11 +177,16 @@ export class StripeService extends BaseService {
 				campaignId = fallbackCampaignResult.data.id;
 			}
 
+			const chargeCurrency = fullCharge.currency.toUpperCase();
+			if (!isValidCurrency(chargeCurrency)) {
+				return this.resultFail(`Unsupported currency from Stripe charge: ${fullCharge.currency}`);
+			}
+
 			// Prepare contribution data with CHF amounts from balance_transaction
 			const contributionData: StripeContributionCreateData = {
 				contributorId: contributor.id,
 				amount: fullCharge.amount / 100, // Original charge amount
-				currency: fullCharge.currency.toUpperCase(),
+				currency: chargeCurrency,
 				amountChf: this.extractAmountChf(fullCharge), // Final settled amount in CHF
 				feesChf: this.extractFeesChf(fullCharge), // Stripe processing fees
 				status: this.constructStatus(fullCharge.status),
@@ -308,8 +314,24 @@ export class StripeService extends BaseService {
 					const amount = price?.unit_amount ? price.unit_amount / 100 : 0;
 					const currency = price?.currency?.toUpperCase() ?? '';
 					const interval = price?.recurring?.interval_count?.toString() ?? '';
+					let paymentMethod: StripePaymentMethod = { type: 'other', label: 'Unknown' };
+					const defaultPaymentMethod = sub.default_payment_method;
 
-					const method = await this.stripe.paymentMethods.retrieve(sub.default_payment_method?.toString() ?? '');
+					if (defaultPaymentMethod && typeof defaultPaymentMethod !== 'string') {
+						paymentMethod = this.getPaymentMethod(defaultPaymentMethod);
+					} else if (typeof defaultPaymentMethod === 'string' && defaultPaymentMethod.trim() !== '') {
+						try {
+							const method = await this.stripe.paymentMethods.retrieve(defaultPaymentMethod);
+							paymentMethod = this.getPaymentMethod(method);
+						} catch (error) {
+							const stripeError = error as { type?: string; code?: string };
+							const isMissingResource =
+								stripeError.type === 'StripeInvalidRequestError' && stripeError.code === 'resource_missing';
+							if (!isMissingResource) {
+								throw error;
+							}
+						}
+					}
 
 					return {
 						id: sub.id,
@@ -318,13 +340,25 @@ export class StripeService extends BaseService {
 						amount,
 						interval,
 						currency,
-						paymentMethod: this.getPaymentMethod(method),
+						paymentMethod,
 					};
 				}),
 			);
 
 			return this.resultOk({ rows });
 		} catch (error) {
+			const stripeError = error as { type?: string; code?: string; param?: string; message?: string };
+			const isMissingCustomer =
+				stripeError.type === 'StripeInvalidRequestError' &&
+				stripeError.code === 'resource_missing' &&
+				(stripeError.param === 'customer' || stripeError.message?.includes('No such customer'));
+			if (isMissingCustomer) {
+				this.logger.warn('Stripe customer not found in current mode; returning empty subscriptions', {
+					stripeCustomerId,
+				});
+				return this.resultOk({ rows: [] });
+			}
+
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
 		}

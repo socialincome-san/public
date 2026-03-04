@@ -10,9 +10,19 @@ import Link from 'next/link';
 export const DownloadCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const storagePath = String(ctx.getValue() ?? '');
 	const storage = useStorage();
-	const { data, loading } = useStorageDownloadURL(ref(storage, storagePath));
+	const isDownloadablePath = storagePath.startsWith('users/');
+	const storageRef = storagePath && isDownloadablePath ? ref(storage, storagePath) : undefined;
+	const { data, loading } = useStorageDownloadURL(storageRef);
 
-	if (!storagePath || !data || loading) {
+	if (!storagePath) {
+		return null;
+	}
+
+	if (!isDownloadablePath) {
+		return <span className="text-muted-foreground text-sm">Download unavailable</span>;
+	}
+
+	if (!data || loading) {
 		return null;
 	}
 

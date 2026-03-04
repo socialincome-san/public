@@ -1,14 +1,11 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
 import { makeCountryColumns } from '@/components/data-table/columns/countries';
 import DataTable from '@/components/data-table/data-table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
-import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
-import CountriesForm from './countries-form';
+import { CountryDialog } from './country-dialog';
 
 export default function CountriesTable({ rows, error }: { rows: CountryTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
@@ -27,11 +24,6 @@ export default function CountriesTable({ rows, error }: { rows: CountryTableView
 		setOpen(true);
 	};
 
-	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving country: ${error}`);
-		logger.error('Country Form Error', { error });
-	};
-
 	return (
 		<>
 			<DataTable
@@ -44,25 +36,13 @@ export default function CountriesTable({ rows, error }: { rows: CountryTableView
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>{countryId ? 'Edit' : 'Add'} country</DialogTitle>
-					</DialogHeader>
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-					<CountriesForm
-						countryId={countryId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
+			<CountryDialog
+				open={open}
+				onOpenChange={setOpen}
+				countryId={countryId}
+				errorMessage={errorMessage}
+				onError={setErrorMessage}
+			/>
 		</>
 	);
 }

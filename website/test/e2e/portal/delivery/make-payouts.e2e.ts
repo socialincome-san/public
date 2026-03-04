@@ -7,43 +7,32 @@ test.beforeEach(async () => {
 
 const expected = {
 	step1:
-		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber',
+		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber',
 
 	step2:
-		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Aminata,Kamara,OM-SL-001,SocialIncomeMarch2025,subscriber91234567,40,John,Badingu,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,50,Mohamed,Bangura,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber',
+		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Mariatu,Koroma,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,40,Combined,Tester,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber88765432,50,Abdul,Jalloh,OM-SL-003,SocialIncomeMarch2025,subscriber',
 
 	step3: [
 		{
 			amount: 50,
 			amountChf: 2.0833333333333335,
 			currency: 'SLE',
-			firstName: 'Aminata',
-			lastName: 'Kamara',
+			firstName: 'Mariatu',
+			lastName: 'Koroma',
 			paymentAt: '2025-03-12T11:00:00.000Z',
 			phoneNumber: '+41791234567',
-			recipientId: 'recipient-1',
+			recipientId: 'recipient-7',
 			status: 'paid',
 		},
 		{
 			amount: 40,
 			amountChf: 1.6666666666666667,
 			currency: 'SLE',
-			firstName: 'John',
-			lastName: 'Badingu',
-			paymentAt: '2025-03-12T11:00:00.000Z',
-			phoneNumber: '+41791234567',
-			recipientId: 'recipient-4',
-			status: 'paid',
-		},
-		{
-			amount: 50,
-			amountChf: 2.0833333333333335,
-			currency: 'SLE',
-			firstName: 'Mohamed',
-			lastName: 'Bangura',
+			firstName: 'Combined',
+			lastName: 'Tester',
 			paymentAt: '2025-03-12T11:00:00.000Z',
 			phoneNumber: '+23277111222',
-			recipientId: 'recipient-2',
+			recipientId: 'recipient-10',
 			status: 'paid',
 		},
 		{
@@ -55,6 +44,17 @@ const expected = {
 			paymentAt: '2025-03-12T11:00:00.000Z',
 			phoneNumber: '+23288765432',
 			recipientId: 'recipient-3',
+			status: 'paid',
+		},
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Abdul',
+			lastName: 'Jalloh',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+23288765432',
+			recipientId: 'recipient-6',
 			status: 'paid',
 		},
 	],

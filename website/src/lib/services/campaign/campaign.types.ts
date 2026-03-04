@@ -1,11 +1,11 @@
-import { OrganizationPermission, Prisma } from '@/generated/prisma/client';
+import { Currency, OrganizationPermission, Prisma } from '@/generated/prisma/client';
 
 export type CampaignTableViewRow = {
 	id: string;
 	link: string;
 	title: string;
 	description: string;
-	currency: string;
+	currency: Currency;
 	endDate: Date;
 	isActive: boolean;
 	programName: string | null;
@@ -31,7 +31,7 @@ export type CampaignPayload = {
 	linkFacebook?: string | null;
 	linkX?: string | null;
 	goal?: number | null;
-	currency: string;
+	currency: Currency;
 	additionalAmountChf?: number | null;
 	endDate: Date;
 	isActive: boolean;

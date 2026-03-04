@@ -1,227 +1,174 @@
-import { CountryCode } from '../../generated/prisma/enums';
+import { CountryCode, Currency } from '../../generated/prisma/enums';
 
-// ISO 4217 currency codes
-const CURRENCIES = [
-	'AED', // United Arab Emirates
-	'AFN', // Afghanistan
-	'ALL', // Albania
-	'AMD', // Armenia
-	'ANG', // Netherlands Antilles
-	'AOA', // Angola
-	'ARS', // Argentina
-	'AUD', // Australia
-	'AWG', // Aruba
-	'AZN', // Azerbaijan
-	'BAM', // Bosnia and Herzegovina
-	'BBD', // Barbados
-	'BDT', // Bangladesh
-	'BGN', // Bulgaria
-	'BHD', // Bahrain
-	'BIF', // Burundi
-	'BMD', // Bermuda
-	'BND', // Brunei
-	'BOB', // Bolivia
-	'BRL', // Brazil
-	'BSD', // Bahamas
-	'BTC', // Bitcoin
-	'BTN', // Bhutan
-	'BWP', // Botswana
-	'BYN', // Belarus
-	'BYR', // Belarus
-	'BZD', // Belize
-	'CAD', // Canada
-	'CDF', // Congo
-	'CHF', // Switzerland
-	'CLF', // Chile
-	'CLP', // Chile
-	'CNY', // China
-	'COP', // Colombia
-	'CRC', // Costa Rica
-	'CUC', // Cuba
-	'CUP', // Cuba
-	'CVE', // Cape Verde
-	'CZK', // Czech Republic
-	'DJF', // Djibouti
-	'DKK', // Denmark
-	'DOP', // Dominican Republic
-	'DZD', // Algeria
-	'EGP', // Egypt
-	'ERN', // Eritrea
-	'ETB', // Ethiopia
-	'EUR', // Eurozone
-	'FJD', // Fiji
-	'FKP', // Falkland Islands
-	'FOK', // Faroe Islands
-	'GBP', // United Kingdom
-	'GEL', // Georgia
-	'GGP', // Guernsey
-	'GHS', // Ghana
-	'GIP', // Gibraltar
-	'GMD', // Gambia
-	'GNF', // Guinea
-	'GTQ', // Guatemala
-	'GYD', // Guyana
-	'HKD', // Hong Kong
-	'HNL', // Honduras
-	'HRK', // Croatia
-	'HTG', // Haiti
-	'HUF', // Hungary
-	'IDR', // Indonesia
-	'ILS', // Israel
-	'IMP', // Isle of Man
-	'INR', // India
-	'IQD', // Iraq
-	'IRR', // Iran
-	'ISK', // Iceland
-	'JEP', // Jersey
-	'JMD', // Jamaica
-	'JOD', // Jordan
-	'JPY', // Japan
-	'KES', // Kenya
-	'KGS', // Kyrgyzstan
-	'KHR', // Cambodia
-	'KID', // Kiribati
-	'KMF', // Comoros
-	'KPW', // North Korea
-	'KRW', // South Korea
-	'KWD', // Kuwait
-	'KYD', // Cayman Islands
-	'KZT', // Kazakhstan
-	'LAK', // Laos
-	'LBP', // Lebanon
-	'LKR', // Sri Lanka
-	'LRD', // Liberia
-	'LSL', // Lesotho
-	'LTL', // Lithuania
-	'LYD', // Libya
-	'LVL', // Latvia
-	'MAD', // Morocco
-	'MDL', // Moldova
-	'MGA', // Madagascar
-	'MKD', // North Macedonia
-	'MMK', // Myanmar
-	'MNT', // Mongolia
-	'MOP', // Macau
-	'MRO', // Mauritania
-	'MUR', // Mauritius
-	'MVR', // Maldives
-	'MWK', // Malawi
-	'MXN', // Mexico
-	'MYR', // Malaysia
-	'MZN', // Mozambique
-	'NAD', // Namibia
-	'NGN', // Nigeria
-	'NIO', // Nicaragua
-	'NOK', // Norway
-	'NPR', // Nepal
-	'NZD', // New Zealand
-	'OMR', // Oman
-	'PAB', // Panama
-	'PEN', // Peru
-	'PGK', // Papua New Guinea
-	'PHP', // Philippines
-	'PKR', // Pakistan
-	'PLN', // Poland
-	'PYG', // Paraguay
-	'QAR', // Qatar
-	'RON', // Romania
-	'RSD', // Serbia
-	'RUB', // Russia
-	'RWF', // Rwanda
-	'SAR', // Saudi Arabia
-	'SBD', // Solomon Islands
-	'SCR', // Seychelles
-	'SDG', // Sudan
-	'SEK', // Sweden
-	'SGD', // Singapore
-	'SHP', // Saint Helena
-	'SLE', // Sierra Leone
-	'SLL', // Sierra Leone
-	'SOS', // Somalia
-	'SRD', // Suriname
-	'SSP', // South Sudan
-	'STD', // Sao Tome and Principe
-	'SVC', // El Salvador
-	'SYP', // Syria
-	'SZL', // Eswatini
-	'THB', // Thailand
-	'TJS', // Tajikistan
-	'TMT', // Turkmenistan
-	'TND', // Tunisia
-	'TOP', // Tonga
-	'TRY', // Turkey
-	'TTD', // Trinidad and Tobago
-	'TWD', // Taiwan
-	'TZS', // Tanzania
-	'UAH', // Ukraine
-	'UGX', // Uganda
-	'USD', // United States
-	'UYU', // Uruguay
-	'UZS', // Uzbekistan
-	'VEF', // Venezuela
-	'VES', // Venezuela
-	'VND', // Vietnam
-	'VUV', // Vanuatu
-	'WST', // Samoa
-	'XAF', // Central African CFA franc
-	'XAU', // Gold
-	'XAG', // Silver
-	'XCD', // East Caribbean dollar
-	'XDR', // Special Drawing Rights
-	'XOF', // West African CFA franc
-	'XPF', // CFP franc
-	'YER', // Yemen
-	'ZAR', // South Africa
-	'ZMK', // Zambia
-	'ZMW', // Zambia
-	'ZWL', // Zimbabwe
-] as const;
-export type Currency = (typeof CURRENCIES)[number];
+export const allCurrencies = Object.values(Currency) as Currency[];
 
 const FALLBACK_CURRENCY: Currency = 'USD';
 const countryToCurrency = new Map<CountryCode, Currency>([
+	['AE', 'AED'],
+	['AF', 'AFN'],
 	['AD', 'EUR'],
+	['AO', 'AOA'],
+	['AR', 'ARS'],
 	['AL', 'EUR'],
 	['AM', 'EUR'],
+	['AU', 'AUD'],
+	['AZ', 'AZN'],
+	['BD', 'BDT'],
 	['AT', 'EUR'],
+	['BH', 'BHD'],
+	['BO', 'BOB'],
 	['BA', 'EUR'],
 	['BE', 'EUR'],
+	['BJ', 'XOF'],
 	['BG', 'EUR'],
+	['BF', 'XOF'],
+	['BI', 'BIF'],
+	['BN', 'BND'],
+	['BR', 'BRL'],
+	['BW', 'BWP'],
 	['BY', 'EUR'],
+	['BZ', 'BZD'],
+	['CA', 'CAD'],
+	['CD', 'CDF'],
+	['CF', 'XAF'],
+	['CG', 'XAF'],
+	['CI', 'XOF'],
 	['CH', 'CHF'],
+	['CL', 'CLP'],
+	['CM', 'XAF'],
+	['CN', 'CNY'],
+	['CO', 'COP'],
+	['CR', 'CRC'],
+	['CV', 'CVE'],
 	['CY', 'EUR'],
 	['CZ', 'EUR'],
+	['DJ', 'DJF'],
 	['DE', 'EUR'],
+	['DZ', 'DZD'],
 	['DK', 'EUR'],
+	['EG', 'EGP'],
 	['EE', 'EUR'],
+	['ER', 'ERN'],
+	['ET', 'ETB'],
 	['ES', 'EUR'],
 	['FI', 'EUR'],
 	['FO', 'EUR'],
 	['FR', 'EUR'],
-	['GB', 'EUR'],
+	['GB', 'GBP'],
 	['GE', 'EUR'],
+	['GH', 'GHS'],
 	['GI', 'EUR'],
+	['GM', 'GMD'],
+	['GN', 'GNF'],
+	['GQ', 'XAF'],
+	['GT', 'GTQ'],
 	['GR', 'EUR'],
+	['GW', 'XOF'],
+	['GY', 'GYD'],
+	['HK', 'HKD'],
 	['HR', 'EUR'],
 	['HU', 'EUR'],
+	['ID', 'IDR'],
 	['IE', 'EUR'],
+	['IL', 'ILS'],
+	['IN', 'INR'],
+	['IQ', 'IQD'],
+	['IR', 'IRR'],
 	['IS', 'EUR'],
 	['IT', 'EUR'],
+	['JM', 'JMD'],
+	['JO', 'JOD'],
+	['JP', 'JPY'],
+	['KE', 'KES'],
+	['KG', 'KGS'],
+	['KH', 'KHR'],
+	['KM', 'KMF'],
+	['KR', 'KRW'],
+	['KW', 'KWD'],
+	['KZ', 'KZT'],
+	['LA', 'LAK'],
+	['LB', 'LBP'],
+	['LK', 'LKR'],
+	['LR', 'LRD'],
+	['LS', 'LSL'],
 	['LT', 'EUR'],
+	['LY', 'LYD'],
 	['LU', 'EUR'],
 	['LV', 'EUR'],
+	['MA', 'MAD'],
+	['MD', 'MDL'],
+	['MG', 'MGA'],
 	['MC', 'EUR'],
 	['MK', 'EUR'],
+	['ML', 'XOF'],
+	['MM', 'MMK'],
+	['MN', 'MNT'],
+	['MR', 'MRO'],
+	['MU', 'MUR'],
+	['MW', 'MWK'],
+	['MX', 'MXN'],
+	['MY', 'MYR'],
+	['MZ', 'MZN'],
 	['MT', 'EUR'],
+	['NA', 'NAD'],
+	['NE', 'XOF'],
+	['NG', 'NGN'],
+	['NI', 'NIO'],
 	['NL', 'EUR'],
-	['NO', 'EUR'],
+	['NO', 'NOK'],
+	['NP', 'NPR'],
+	['NZ', 'NZD'],
+	['OM', 'OMR'],
+	['PA', 'PAB'],
+	['PE', 'PEN'],
+	['PG', 'PGK'],
+	['PH', 'PHP'],
+	['PK', 'PKR'],
 	['PL', 'EUR'],
 	['PT', 'EUR'],
+	['PY', 'PYG'],
+	['QA', 'QAR'],
+	['RO', 'RON'],
+	['RS', 'RSD'],
+	['RU', 'RUB'],
+	['RW', 'RWF'],
+	['SA', 'SAR'],
+	['SC', 'SCR'],
+	['SD', 'SDG'],
+	['SE', 'SEK'],
+	['SG', 'SGD'],
+	['SL', 'SLE'],
+	['SN', 'XOF'],
+	['SO', 'SOS'],
+	['SS', 'SSP'],
+	['ST', 'STD'],
+	['SV', 'SVC'],
+	['SY', 'SYP'],
+	['SZ', 'SZL'],
+	['TD', 'XAF'],
+	['TG', 'XOF'],
+	['TH', 'THB'],
+	['TJ', 'TJS'],
+	['TM', 'TMT'],
+	['TN', 'TND'],
+	['TR', 'TRY'],
+	['TT', 'TTD'],
+	['TW', 'TWD'],
+	['TZ', 'TZS'],
+	['UA', 'UAH'],
+	['UG', 'UGX'],
 	['US', 'USD'],
+	['UY', 'UYU'],
+	['UZ', 'UZS'],
+	['VE', 'VES'],
+	['VN', 'VND'],
+	['YE', 'YER'],
+	['ZA', 'ZAR'],
+	['ZM', 'ZMW'],
+	['ZW', 'ZWL'],
 ]);
 
 export const bestGuessCurrency = (country: CountryCode | undefined): Currency => {
-	// best guess mapping from two-letter country code to a supported currency
 	if (!country) {
 		return FALLBACK_CURRENCY;
 	}
@@ -230,5 +177,5 @@ export const bestGuessCurrency = (country: CountryCode | undefined): Currency =>
 };
 
 export const isValidCurrency = (currency: string | undefined): currency is Currency => {
-	return CURRENCIES.includes(currency as Currency);
+	return allCurrencies.includes(currency as Currency);
 };

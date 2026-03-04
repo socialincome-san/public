@@ -1,6 +1,6 @@
 import { Card } from '@/components/card';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
-import { formatCurrency } from '@/lib/utils/string-utils';
+import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { DonationForm } from './donation-form';
 import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';
@@ -24,8 +24,12 @@ export const FirstIntervalFundingSection = ({ programId, stats }: FirstIntervalF
 							title="You need to cover the first interval to start the program"
 							leftLabel="Current Contributions"
 							rightLabel="Minimum Required"
-							leftValue={formatCurrency(stats.contributedToProgramSoFarChf)}
-							rightValue={formatCurrency(stats.costPerIntervalChf)}
+							leftValue={formatCurrencyLocale(stats.contributedToProgramSoFarChf, 'CHF', 'de-CH', {
+								compactThreshold: 1_000_000,
+							})}
+							rightValue={formatCurrencyLocale(stats.costPerIntervalChf, 'CHF', 'de-CH', {
+								compactThreshold: 1_000_000,
+							})}
 							percent={percent}
 						/>
 					</SectionBox>

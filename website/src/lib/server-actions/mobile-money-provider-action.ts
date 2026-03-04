@@ -32,6 +32,14 @@ export const getMobileMoneyProviderAction = async (id: string) => {
 	return service.get(user.id, id);
 };
 
+export const deleteMobileMoneyProviderAction = async (id: string) => {
+	const user = await getAuthenticatedUserOrRedirect();
+	const result = await service.delete(user.id, id);
+	revalidatePath(REVALIDATE_PATH);
+
+	return result;
+};
+
 export const getMobileMoneyProviderOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
 	return service.getOptions(user.id);

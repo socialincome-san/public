@@ -15,5 +15,7 @@ test('new website home page matches screenshot', async ({ page }) => {
 	await page.getByText('text in header').isVisible();
 	await page.getByText('text in footer').isVisible();
 
+	await page.waitForTimeout(3000);
+
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

@@ -22,6 +22,7 @@ export type FormField = {
 	useCombobox?: boolean;
 	disabled?: boolean;
 	options?: { id: string; label: string }[];
+	onChange?: (value: any, form: UseFormReturn) => void;
 };
 
 export type FormSchema = {
@@ -301,6 +302,10 @@ const GenericFormField = ({
 	});
 
 	if (isFormField(formFieldSchema)) {
+		const emitChange = (value: any) => {
+			formFieldSchema.onChange?.(value, form);
+		};
+
 		switch (getType(option, zodSchema, parentOption)) {
 			case 'ZodArray': {
 				const values = getEnumArrayValues(option, zodSchema, parentOption);
@@ -325,7 +330,10 @@ const GenericFormField = ({
 										modalPopover
 										options={options}
 										defaultValue={field.value ?? []}
-										onValueChange={field.onChange}
+										onValueChange={(value) => {
+											field.onChange(value);
+											emitChange(value);
+										}}
 										placeholder={formFieldSchema.placeholder}
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
@@ -370,7 +378,10 @@ const GenericFormField = ({
 									<DatePicker
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 										{...form.register(optionKey)}
-										onSelect={field.onChange}
+										onSelect={(value) => {
+											field.onChange(value);
+											emitChange(value);
+										}}
 										selected={field.value}
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										startMonth={getDateMinMax(option, parentOption).min}
@@ -399,7 +410,10 @@ const GenericFormField = ({
 										<Combobox
 											options={items}
 											value={field.value ?? ''}
-											onChange={field.onChange}
+											onChange={(value) => {
+												field.onChange(value);
+												emitChange(value);
+											}}
 											placeholder={formFieldSchema.placeholder}
 											disabled={formFieldSchema.disabled || isLoading || readOnly}
 										/>
@@ -421,7 +435,10 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<Select
 									value={field.value}
-									onValueChange={field.onChange}
+									onValueChange={(value) => {
+										field.onChange(value);
+										emitChange(value);
+									}}
 									disabled={formFieldSchema.disabled || isLoading || readOnly}
 								>
 									<FormControl>
@@ -455,7 +472,10 @@ const GenericFormField = ({
 								<Switch
 									id={optionKey}
 									disabled={formFieldSchema.disabled || isLoading || readOnly}
-									onCheckedChange={field.onChange}
+									onCheckedChange={(value) => {
+										field.onChange(value);
+										emitChange(value);
+									}}
 									checked={field.value}
 								/>
 								<FormMessage />

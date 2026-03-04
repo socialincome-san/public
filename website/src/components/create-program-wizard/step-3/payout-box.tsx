@@ -7,6 +7,8 @@ import { PayoutSummary } from './payout-summary';
 
 export const PayoutBox = ({
 	programDuration,
+	payoutPerIntervalMin,
+	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
 	currency,
@@ -17,6 +19,8 @@ export const PayoutBox = ({
 	onToggleCustomizePayouts,
 }: {
 	programDuration: number;
+	payoutPerIntervalMin: number;
+	payoutPerIntervalMax: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
 	currency: string;
@@ -34,6 +38,8 @@ export const PayoutBox = ({
 				{customizePayouts ? (
 					<PayoutControls
 						programDuration={programDuration}
+						payoutPerIntervalMin={payoutPerIntervalMin}
+						payoutPerIntervalMax={payoutPerIntervalMax}
 						payoutPerInterval={payoutPerInterval}
 						payoutInterval={payoutInterval}
 						currency={currency}

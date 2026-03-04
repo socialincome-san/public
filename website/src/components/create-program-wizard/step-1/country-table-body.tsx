@@ -21,7 +21,7 @@ type Props = {
 
 export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) => {
 	return (
-		<div className="max-h-96 overflow-auto rounded-xl border">
+		<div data-testid="country-table" className="max-h-96 overflow-auto rounded-xl border">
 			<Table className="table-fixed">
 				<TableHeader className="bg-muted/40">
 					<TableRow>

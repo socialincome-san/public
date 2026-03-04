@@ -62,7 +62,6 @@ export class DonationCertificateWriter {
 		const text5 = translator.t('text-5');
 
 		const titleKerrin = translator.t('title-kerrin');
-		const titleSandino = translator.t('title-sandino');
 
 		const footerLeftLine1 = translator.t('footer-left-line-1');
 		const footerLeftLine2 = translator.t('footer-left-line-2');
@@ -138,19 +137,16 @@ export class DonationCertificateWriter {
 			pdfDocument.moveDown(2);
 
 			pdfDocument.text(text5);
-			pdfDocument.moveDown(2);
+			pdfDocument.moveDown(1);
 
-			pdfDocument.image(path.join(ASSET_DIR, 'signatures', 'signature_sandino.png'), 45, yPosition, { width: 200 });
-			pdfDocument.image(path.join(ASSET_DIR, 'signatures', 'signature_kerrin.png'), 240, yPosition, { width: 200 });
-			pdfDocument.moveDown(4);
-
-			yPosition = pdfDocument.y;
-			pdfDocument.text('Sandino Scheidegger', 45, yPosition);
-			pdfDocument.text('Kerrin Dieckmann', 240, yPosition);
+			pdfDocument.image(path.join(ASSET_DIR, 'signatures', 'signature_kerrin.png'), 45, yPosition, { width: 200 });
+			pdfDocument.moveDown(1);
 
 			yPosition = pdfDocument.y;
-			pdfDocument.text(titleSandino, 45, yPosition);
-			pdfDocument.text(titleKerrin, 240, yPosition);
+			pdfDocument.text('Kerrin Dieckmann', 45, yPosition);
+
+			yPosition = pdfDocument.y;
+			pdfDocument.text(titleKerrin, 45, yPosition);
 			pdfDocument.fontSize(10).text(footerLeftLine1, 45, pdfDocument.page.height - 70, { lineBreak: false });
 			pdfDocument.text(footerLeftLine2, 45, pdfDocument.page.height - 55, { lineBreak: false });
 			pdfDocument.text(footerLeftLine3, 45, pdfDocument.page.height - 40, { lineBreak: false });

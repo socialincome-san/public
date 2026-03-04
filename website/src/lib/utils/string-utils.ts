@@ -20,9 +20,36 @@ export const formatCurrencyLocale = (
 	amount: number,
 	currency: string,
 	locale: string,
-	options: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
+	options: {
+		minimumFractionDigits?: number;
+		maximumFractionDigits?: number;
+		compactThreshold?: number;
+		compactLocale?: string;
+		compactMaximumFractionDigits?: number;
+	} = {},
 ): string => {
-	const { minimumFractionDigits = 0, maximumFractionDigits = 0 } = options;
+	const {
+		minimumFractionDigits = 0,
+		maximumFractionDigits = 0,
+		compactThreshold = Number.POSITIVE_INFINITY,
+		compactLocale = 'en',
+		compactMaximumFractionDigits = 1,
+	} = options;
+
+	if (Math.abs(amount) >= compactThreshold) {
+		try {
+			return new Intl.NumberFormat(compactLocale, {
+				style: 'currency',
+				currency,
+				notation: 'compact',
+				compactDisplay: 'short',
+				maximumFractionDigits: compactMaximumFractionDigits,
+			}).format(amount);
+		} catch {
+			// Fallback to regular currency formatting below.
+		}
+	}
+
 	try {
 		return new Intl.NumberFormat(locale, {
 			style: 'currency',
@@ -47,9 +74,30 @@ export const titleCase = (value: string): string => {
 export const formatNumberLocale = (
 	value: number,
 	locale: string,
-	options: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
+	options: {
+		minimumFractionDigits?: number;
+		maximumFractionDigits?: number;
+		compactThreshold?: number;
+		compactLocale?: string;
+		compactMaximumFractionDigits?: number;
+	} = {},
 ): string => {
-	const { minimumFractionDigits = 0, maximumFractionDigits = 0 } = options;
+	const {
+		minimumFractionDigits = 0,
+		maximumFractionDigits = 0,
+		compactThreshold = Number.POSITIVE_INFINITY,
+		compactLocale = 'en',
+		compactMaximumFractionDigits = 1,
+	} = options;
+
+	if (Math.abs(value) >= compactThreshold) {
+		return new Intl.NumberFormat(compactLocale, {
+			notation: 'compact',
+			compactDisplay: 'short',
+			maximumFractionDigits: compactMaximumFractionDigits,
+		}).format(value);
+	}
+
 	return new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(value);
 };
 
