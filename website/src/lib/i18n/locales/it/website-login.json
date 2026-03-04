@@ -24,5 +24,16 @@
 		"unknown": "Accesso fallito"
 	},
 	"detect-account-type": "Rilevamento del tipo di account in corso...",
-	"invalid-account-type": "Tipo di account non valido, riprova o contatta il supporto."
+	"invalid-account-type": "Tipo di account non valido, riprova o contatta il supporto.",
+	"flyout": {
+		"login-button": "Accedi",
+		"title": "Accedi",
+		"magic-link-description": "Ti invieremo un link magico per accedere.",
+		"sending": "Invio in corso...",
+		"sent-message": "Se esiste un account per {{ email }}, riceverai a breve un link di accesso.",
+		"retry": "Riprova",
+		"support-prefix": "Se non arriva, contatta",
+		"no-account": "Non hai un account?",
+		"get-started": "Scopri come iniziare"
+	}
 }

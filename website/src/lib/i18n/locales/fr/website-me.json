@@ -160,6 +160,11 @@
 			"button": "Se déconnecter"
 		}
 	},
+	"navigation": {
+		"go-to-portal": "Aller au portail",
+		"go-to-dashboard": "Aller au tableau de bord",
+		"go-to-partner-space": "Aller à l’espace partenaire"
+	},
 	"work-info": {
 		"work": "Travail",
 		"add-employer": "Ajoute un nouvel employeur",

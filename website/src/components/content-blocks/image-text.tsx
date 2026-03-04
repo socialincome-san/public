@@ -11,7 +11,7 @@ type Props = {
 	blok: ImageText;
 };
 
-export default function ImageTextBlock({ blok }: Props) {
+export const ImageTextBlock = ({ blok }: Props) => {
 	if (!blok.content) {
 		return null;
 	}
@@ -40,4 +40,4 @@ export default function ImageTextBlock({ blok }: Props) {
 			</div>
 		</BlockWrapper>
 	);
-}
+};

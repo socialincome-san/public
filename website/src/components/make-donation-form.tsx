@@ -29,7 +29,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 	const t = (key: string) => translator?.t(`donation-form.${key}`) ?? '';
 
 	return (
-		<div className="text-foreground border-border w-96 rounded-3xl border bg-white p-9 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
+		<div className="text-foreground border-border max-w-site-width w-full rounded-3xl border bg-white p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)] md:p-9">
 			<h3 className="mb-5 text-2xl leading-none font-semibold">{t('title')}</h3>
 
 			<div className="border-muted mb-3 grid grid-cols-[70%_30%] overflow-hidden rounded-md border">
