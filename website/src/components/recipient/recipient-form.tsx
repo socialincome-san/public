@@ -263,7 +263,7 @@ export const RecipientForm = ({
 		startTransition(async () => {
 			const [{ programs, localPartner }, supportedProviders] = await Promise.all([
 				getRecipientOptions(sessionType),
-				getSupportedMobileMoneyProviderOptionsAction(),
+				getSupportedMobileMoneyProviderOptionsAction(sessionType),
 			]);
 			if (!programs.success || !localPartner.success) {
 				return;

@@ -7,6 +7,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
 	const sections = [
 		{ href: '/partner-space/recipients', label: 'Recipients' },
 		{ href: '/partner-space/candidates', label: 'Candidate Pool' },
+		{ href: '/partner-space/profile', label: 'Profile' },
 	];
 
 	const breadcrumbLinks = [
