@@ -15,6 +15,7 @@ import "package:app/data/models/phone.dart";
 import "package:app/data/models/program.dart";
 import "package:app/data/models/recipient.dart";
 import "package:firebase_auth/firebase_auth.dart" as firebase_auth;
+import "package:firebase_auth/firebase_auth.dart";
 
 class UserDemoDataSource implements UserDataSource {
   final Recipient _recipient = Recipient(
@@ -115,24 +116,36 @@ class UserDemoDataSource implements UserDataSource {
   }
 
   @override
-  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
-    return _recipient.copyWith(
+  Future<void> updateRecipient(User firebaseUser, RecipientSelfUpdate selfUpdate) async {
+    _recipient.copyWith(
       contact: _recipient.contact.copyWith(
         firstName: selfUpdate.firstName,
         lastName: selfUpdate.lastName,
-        dateOfBirth: selfUpdate.dateOfBirth,
+        callingName: selfUpdate.callingName,
         gender: selfUpdate.gender,
+        dateOfBirth: selfUpdate.dateOfBirth,
         language: selfUpdate.language,
+        email: selfUpdate.email,
+        phone: selfUpdate.contactPhone != null ? Phone(
+          id: "demo",
+          number: selfUpdate.contactPhone!,
+          hasWhatsApp: _recipient.contact.phone?.hasWhatsApp ?? false,
+          createdAt: _recipient.contact.phone?.createdAt ?? DateTime.now().toIso8601String(),
+          updatedAt: DateTime.now().toIso8601String(),
+        ) : _recipient.contact.phone,
       ),
       paymentInformation: _recipient.paymentInformation?.copyWith(
-        phone: Phone(
+        phone: selfUpdate.paymentPhone != null ? Phone(
           id: "demo",
-          number: selfUpdate.paymentPhone ?? "",
-          hasWhatsApp: false,
-          createdAt: DateTime.now().toIso8601String(),
+          number: selfUpdate.paymentPhone!,
+          hasWhatsApp: _recipient.paymentInformation?.phone.hasWhatsApp ?? false,
+          createdAt: _recipient.paymentInformation?.phone.createdAt ?? DateTime.now().toIso8601String(),
           updatedAt: DateTime.now().toIso8601String(),
-        ),
+        ) : _recipient.paymentInformation?.phone,
+        mobileMoneyProvider: selfUpdate.mobileMoneyProvider ?? _recipient.paymentInformation?.mobileMoneyProvider,
       ),
+      successorName: selfUpdate.successorName,
+      termsAccepted: selfUpdate.termsAccepted,
     );
   }
 
