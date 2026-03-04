@@ -21,5 +21,5 @@ const RecipientsDataLoader = async () => {
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <RecipientsTableClient rows={rows} error={error} readOnly={false} sessionType="local-partner" />;
+	return <RecipientsTableClient rows={rows} error={error} readOnly={true} sessionType="local-partner" />;
 };

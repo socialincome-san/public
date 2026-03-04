@@ -19,6 +19,7 @@ type Props = {
 };
 
 export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'user' }: Props) => {
+	const canManageCandidates = sessionType === 'user';
 	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
 	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
 	const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
@@ -54,6 +55,7 @@ export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'us
 				makeColumns={makeCandidateColumns}
 				hideLocalPartner={sessionType === 'local-partner'}
 				actions={
+					canManageCandidates ? (
 					<div className="flex gap-2">
 						<Button disabled={readOnly} onClick={openCreateDialog}>
 							Add new candidate
@@ -64,6 +66,7 @@ export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'us
 							<UploadIcon />
 						</Button>
 					</div>
+					) : undefined
 				}
 				onRowClick={openEditDialog}
 				searchKeys={['firstName', 'lastName', 'localPartnerName']}
