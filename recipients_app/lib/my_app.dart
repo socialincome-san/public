@@ -3,9 +3,6 @@ import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/database/app_database.dart";
-import "package:app/data/datasource/demo/survey_demo_data_source.dart";
-import "package:app/data/datasource/local/survey_local_data_source.dart";
-import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/models/app_version_info.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
@@ -39,10 +36,7 @@ class MyApp extends StatelessWidget {
 
   final UserRepository userRepository;
   final PaymentRepository paymentRepository;
-
-  final SurveyRemoteDataSource surveyRemoteDataSource;
-  final SurveyDemoDataSource surveyDemoDataSource;
-  final SurveyLocalDataSource surveyLocalDataSource;
+  final SurveyRepository surveyRepository;
 
   final UpdateQueueService updateQueueService;
   final AuthService authService;
@@ -58,9 +52,7 @@ class MyApp extends StatelessWidget {
     required this.connectivityCubit,
     required this.userRepository,
     required this.paymentRepository,
-    required this.surveyRemoteDataSource,
-    required this.surveyDemoDataSource,
-    required this.surveyLocalDataSource,
+    required this.surveyRepository,
     required this.updateQueueService,
     required this.authService,
     required this.firebaseRemoteConfigService,
@@ -79,14 +71,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<UserRepository>.value(value: userRepository),
         RepositoryProvider.value(value: crashReportingRepository),
         RepositoryProvider<PaymentRepository>.value(value: paymentRepository),
-        RepositoryProvider(
-          create: (context) => SurveyRepository(
-            remoteDataSource: surveyRemoteDataSource,
-            demoDataSource: surveyDemoDataSource,
-            localDataSource: surveyLocalDataSource,
-            demoManager: demoManager,
-          ),
-        ),
+        RepositoryProvider<SurveyRepository>.value(value: surveyRepository),
         RepositoryProvider<UpdateQueueService>.value(value: updateQueueService),
         RepositoryProvider<AuthService>.value(value: authService),
         RepositoryProvider<FirebaseRemoteConfigService>.value(

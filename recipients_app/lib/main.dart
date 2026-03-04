@@ -155,6 +155,13 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
     queueService: updateQueueService,
   );
 
+  final surveyRepository = SurveyRepository(
+    remoteDataSource: surveyRemoteDataSource,
+    demoDataSource: surveyDemoDataSource,
+    localDataSource: surveyLocalDataSource,
+    demoManager: demoManager,
+  );
+
   final firebaseRemoteConfigService = FirebaseRemoteConfigService(
     firebaseRemoteConfig: FirebaseRemoteConfig.instance,
     packageInfo: packageInfo,
@@ -182,9 +189,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
         connectivityCubit: connectivityCubit,
         userRepository: queueAwareUserRepository,
         paymentRepository: queueAwarePaymentRepository,
-        surveyRemoteDataSource: surveyRemoteDataSource,
-        surveyDemoDataSource: surveyDemoDataSource,
-        surveyLocalDataSource: surveyLocalDataSource,
+        surveyRepository: surveyRepository,
         updateQueueService: updateQueueService,
         authService: authService,
         firebaseRemoteConfigService: firebaseRemoteConfigService,
