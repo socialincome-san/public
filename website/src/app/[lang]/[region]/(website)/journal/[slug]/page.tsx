@@ -172,7 +172,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 					</div>
 				</div>
 
-				<div className="prose prose-headings:text-foreground mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
+				<div className="prose prose-headings:text-foreground prose-a:text-foreground mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
 					<OriginalLanguageLink
 						originalLanguage={articleData.originalLanguage}
 						slug={slug}
