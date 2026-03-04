@@ -47,7 +47,7 @@ export const StoryblokArticleCard = (props: {
 					<Typography
 						aria-label={article.content.title}
 						size="xl"
-						className="my-4 line-clamp-2 h-14 w-auto overflow-hidden wrap-break-word md:line-clamp-3 md:h-18"
+						className="my-4 line-clamp-2 h-14 w-auto overflow-hidden wrap-break-word md:line-clamp-3"
 						weight="medium"
 					>
 						{`${article.content.title}${article.content.subtitle ? ' ' + article.content.subtitle : ''}`}
