@@ -42,12 +42,7 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 	return await storyblokService.getArticle(lang, slug);
 });
 
-const badgeWithLink = (
-	lang: string,
-	region: string,
-	tag: ISbStoryData<Topic>,
-	variant: 'outline' | 'outline-solid' | 'foreground',
-) => {
+const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge variant={variant} className="mt-6">
@@ -171,13 +166,13 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 						<div className="mt-4 flex flex-wrap justify-start gap-2">
 							{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
-								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline-solid' : 'foreground'),
+								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
 							)}
 						</div>
 					</div>
 				</div>
 
-				<div className="prose mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
+				<div className="prose prose-headings:text-foreground mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
 					<OriginalLanguageLink
 						originalLanguage={articleData.originalLanguage}
 						slug={slug}
@@ -187,7 +182,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						languageName={translator.t('language-name.' + articleData.originalLanguage)}
 					/>
 
-					<Typography weight="bold" size="2xl">
+					<Typography weight="bold" size="2xl" color="foreground">
 						{articleData.leadText}
 					</Typography>
 
