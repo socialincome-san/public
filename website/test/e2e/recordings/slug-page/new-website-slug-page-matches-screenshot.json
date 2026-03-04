@@ -885,7 +885,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "Stay tuned",
+                "label": "text in footer",
                 "component": "menuItemGroup"
               },
               {

@@ -308,8 +308,24 @@ export class StripeService extends BaseService {
 					const amount = price?.unit_amount ? price.unit_amount / 100 : 0;
 					const currency = price?.currency?.toUpperCase() ?? '';
 					const interval = price?.recurring?.interval_count?.toString() ?? '';
+					let paymentMethod: StripePaymentMethod = { type: 'other', label: 'Unknown' };
+					const defaultPaymentMethod = sub.default_payment_method;
 
-					const method = await this.stripe.paymentMethods.retrieve(sub.default_payment_method?.toString() ?? '');
+					if (defaultPaymentMethod && typeof defaultPaymentMethod !== 'string') {
+						paymentMethod = this.getPaymentMethod(defaultPaymentMethod);
+					} else if (typeof defaultPaymentMethod === 'string' && defaultPaymentMethod.trim() !== '') {
+						try {
+							const method = await this.stripe.paymentMethods.retrieve(defaultPaymentMethod);
+							paymentMethod = this.getPaymentMethod(method);
+						} catch (error) {
+							const stripeError = error as { type?: string; code?: string };
+							const isMissingResource =
+								stripeError.type === 'StripeInvalidRequestError' && stripeError.code === 'resource_missing';
+							if (!isMissingResource) {
+								throw error;
+							}
+						}
+					}
 
 					return {
 						id: sub.id,
@@ -318,13 +334,25 @@ export class StripeService extends BaseService {
 						amount,
 						interval,
 						currency,
-						paymentMethod: this.getPaymentMethod(method),
+						paymentMethod,
 					};
 				}),
 			);
 
 			return this.resultOk({ rows });
 		} catch (error) {
+			const stripeError = error as { type?: string; code?: string; param?: string; message?: string };
+			const isMissingCustomer =
+				stripeError.type === 'StripeInvalidRequestError' &&
+				stripeError.code === 'resource_missing' &&
+				(stripeError.param === 'customer' || stripeError.message?.includes('No such customer'));
+			if (isMissingCustomer) {
+				this.logger.warn('Stripe customer not found in current mode; returning empty subscriptions', {
+					stripeCustomerId,
+				});
+				return this.resultOk({ rows: [] });
+			}
+
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
 		}
