@@ -5,6 +5,7 @@ import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/models/queue/queue_events.dart";
 import "package:app/data/services/update_queue_service.dart";
+import "package:app/ui/navigation/app_navigation_keys.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -35,33 +36,25 @@ class _QueueEventListenerState extends State<QueueEventListener> {
   void _handleQueueEvent(QueueEvent event) {
     if (!mounted) return;
 
+    // QueueEventListener sits above MaterialApp, so use the root navigator
+    // context which has access to the Navigator and bloc providers.
+    final navContext = rootNavigatorKey.currentContext;
+    if (navContext == null) return;
+
     if (event is QueueSuccessEvent) {
-      FlushbarHelper.showFlushbar(
-        context,
-        message: event.message,
-      );
-      _refreshDataAfterSuccess(event.operationType);
+      FlushbarHelper.showFlushbar(navContext, message: event.message);
+      _refreshDataAfterSuccess(event.operationType, navContext);
     } else if (event is QueueErrorEvent) {
-      FlushbarHelper.showFlushbar(
-        context,
-        message: event.message,
-        type: FlushbarType.error,
-      );
+      FlushbarHelper.showFlushbar(navContext, message: event.message, type: FlushbarType.error);
     }
   }
 
-  void _refreshDataAfterSuccess(String operationType) {
-    // Trigger appropriate cubit refresh based on operation type
+  void _refreshDataAfterSuccess(String operationType, BuildContext navContext) {
     if (operationType.contains("payment")) {
-      // Refresh payments after payment operations
-      final payoutsCubit = context.read<PayoutsCubit>();
-      payoutsCubit.loadPayments();
+      navContext.read<PayoutsCubit>().loadPayments();
     } else if (operationType.contains("recipient")) {
-      // Refresh user data after recipient update
-      final authCubit = context.read<AuthCubit>();
-      authCubit.init();
+      navContext.read<AuthCubit>().init();
     }
-    // Add more refresh logic for other operation types as needed
   }
 
   @override

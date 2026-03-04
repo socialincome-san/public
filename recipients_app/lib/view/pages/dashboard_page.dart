@@ -23,13 +23,6 @@ class DashboardPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => PayoutsCubit(
-            recipient: authCubit.state.recipient!,
-            paymentRepository: context.read<PaymentRepository>(),
-            crashReportingRepository: context.read<CrashReportingRepository>(),
-          )..loadPayments(),
-        ),
-        BlocProvider(
           create: (context) => DashboardCardManagerCubit(
             crashReportingRepository: context.read<CrashReportingRepository>(),
             authCubit: context.read<AuthCubit>(),

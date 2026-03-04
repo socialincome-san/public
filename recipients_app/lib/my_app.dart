@@ -1,5 +1,6 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/database/app_database.dart";
@@ -95,6 +96,13 @@ class MyApp extends StatelessWidget {
             )..initMessaging(),
           ),
           BlocProvider<ConnectivityCubit>.value(value: connectivityCubit),
+          BlocProvider(
+            create: (context) => PayoutsCubit(
+              recipient: context.read<AuthCubit>().state.recipient!,
+              paymentRepository: context.read<PaymentRepository>(),
+              crashReportingRepository: context.read<CrashReportingRepository>(),
+            )..loadPayments(),
+          ),
         ],
         child: QueueEventListener(
           queueService: updateQueueService,
