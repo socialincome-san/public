@@ -1,9 +1,10 @@
 'use client';
 
 import { CsvUploadDialog } from '@/components/data-table/clients/csv-upload-dialog';
-import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { candidatesTableConfig, getCandidatesTableFilters } from '@/components/data-table/configs/candidates-table.config';
 import type { ActionMenuItem } from '@/components/data-table/elements/action-menu';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import type { Session } from '@/lib/firebase/current-account';
 import { downloadCandidatesCsvAction, importCandidatesCsvAction } from '@/lib/server-actions/candidate-actions';
 import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
@@ -17,9 +18,24 @@ type Props = {
 	error: string | null;
 	readOnly?: boolean;
 	sessionType?: Session['type'];
+	query?: TableQueryState & { totalRows: number };
+	countryFilterOptions?: { value: string; label: string }[];
+	genderFilterOptions?: { value: string; label: string }[];
+	localPartnerFilterOptions?: { value: string; label: string }[];
+	showGenderFilter?: boolean;
 };
 
-export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'user' }: Props) => {
+export const CandidatesTableClient = ({
+	rows,
+	error,
+	readOnly,
+	sessionType = 'user',
+	query,
+	countryFilterOptions = [],
+	genderFilterOptions = [],
+	localPartnerFilterOptions = [],
+	showGenderFilter = false,
+}: Props) => {
 	const canManageCandidates = sessionType === 'user';
 	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
 	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
@@ -87,16 +103,25 @@ export const CandidatesTableClient = ({ rows, error, readOnly, sessionType = 'us
 
 	return (
 		<>
-			<DataTable
-				title="Candidate Pool"
+			<ConfiguredDataTableClient
+				config={candidatesTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No candidates found"
-				data={rows}
-				makeColumns={makeCandidateColumns}
+				query={query}
+				toolbarFilters={getCandidatesTableFilters({
+					query,
+					filterOptions: {
+						countries: countryFilterOptions,
+						genders: genderFilterOptions,
+						localPartners: localPartnerFilterOptions,
+					},
+					showLocalPartnerFilter: sessionType !== 'local-partner',
+					showGenderFilter,
+				})}
 				hideLocalPartner={sessionType === 'local-partner'}
+				showEntityIdColumn={sessionType !== 'local-partner'}
 				actionMenuItems={actionMenuItems}
 				onRowClick={openEditDialog}
-				searchKeys={['firstName', 'lastName', 'localPartnerName']}
 			/>
 
 			<CandidateDialog

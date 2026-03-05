@@ -1,7 +1,7 @@
 import { Prisma } from '@/generated/prisma/client';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { getCountryService } from '../../utils';
+import { getPrismaClient } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -77,22 +77,27 @@ test('Add new country', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const countryService = await getCountryService();
-	const result = await countryService.getTableView('user-2');
+	const prisma = await getPrismaClient();
+	const totalCountries = await prisma.country.count();
+	expect(totalCountries).toBe(10);
 
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	expect(result.data.tableRows.length).toBe(10);
-
-	const country = result.data.tableRows.find((c) => c.isoCode === expectedCountry.isoCode);
+	const country = await prisma.country.findFirst({
+		where: { isoCode: expectedCountry.isoCode },
+		select: {
+			isoCode: true,
+			microfinanceIndex: true,
+			populationCoverage: true,
+			networkTechnology: true,
+			mobileMoneyProviders: { select: { name: true } },
+			sanctions: true,
+		},
+	});
 
 	expect(country).toBeDefined();
 
 	expect(country?.isoCode).toBe(expectedCountry.isoCode);
-	expect(country?.microfinanceIndex).toBe(Number(expectedCountry.microfinanceIndex));
-	expect(country?.populationCoverage).toBe(Number(expectedCountry.populationCoverage));
+	expect(Number(country?.microfinanceIndex ?? 0)).toBe(Number(expectedCountry.microfinanceIndex));
+	expect(Number(country?.populationCoverage ?? 0)).toBe(Number(expectedCountry.populationCoverage));
 	expect(country?.networkTechnology).toBe(expectedCountry.networkTechnology);
 	expect(country?.mobileMoneyProviders?.some((p) => p.name === expectedCountry.mobileMoneyProviderName)).toBe(true);
 	expect(country?.sanctions).toContain(expectedCountry.sanctions[0]);

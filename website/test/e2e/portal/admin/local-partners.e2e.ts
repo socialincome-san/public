@@ -1,6 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { getFirebaseAdminService, getLocalPartnerService } from '../../utils';
+import { getFirebaseAdminService, getPrismaClient } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -29,19 +29,26 @@ test('Add new local partner', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const service = await getLocalPartnerService();
-	const result = await service.getTableView('user-2');
+	const prisma = await getPrismaClient();
+	const count = await prisma.localPartner.count();
+	expect(count).toBe(4);
 
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	expect(result.data.tableRows.length).toBe(4);
-
-	const row = result.data.tableRows.find((r) => r.name === expectedPartner.name);
+	const row = await prisma.localPartner.findFirst({
+		where: { name: expectedPartner.name },
+		select: {
+			contact: {
+				select: {
+					firstName: true,
+					lastName: true,
+				},
+			},
+		},
+	});
 
 	expect(row).toBeDefined();
-	expect(row?.contactPerson).toBe(`${expectedPartner.firstName} ${expectedPartner.lastName}`);
+	expect(`${row?.contact?.firstName ?? ''} ${row?.contact?.lastName ?? ''}`.trim()).toBe(
+		`${expectedPartner.firstName} ${expectedPartner.lastName}`,
+	);
 
 	await page.goto('http://localhost:4000/auth');
 	await page

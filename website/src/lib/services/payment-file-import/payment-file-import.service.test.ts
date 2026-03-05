@@ -9,9 +9,9 @@ jest.mock('@/generated/prisma/client', () => ({
 	ContributionStatus: {},
 	PaymentEventType: {},
 }));
-jest.mock('@/lib/services/contributor/contributor.service', () => ({ ContributorService: class {} }));
-jest.mock('@/lib/services/contribution/contribution.service', () => ({ ContributionService: class {} }));
-jest.mock('@/lib/services/campaign/campaign.service', () => ({ CampaignService: class {} }));
+jest.mock('@/lib/services/contributor/contributor-read.service', () => ({ ContributorReadService: class {} }));
+jest.mock('@/lib/services/contribution/contribution-write.service', () => ({ ContributionWriteService: class {} }));
+jest.mock('@/lib/services/campaign/campaign-read.service', () => ({ CampaignReadService: class {} }));
 
 const fixturePath = path.join(path.dirname(__filename), '__fixtures__', 'camt054-two-entries.xml');
 

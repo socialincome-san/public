@@ -1,8 +1,9 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { makeLocalPartnerColumns } from '@/components/data-table/columns/local-partners';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { localPartnersTableConfig } from '@/components/data-table/configs/local-partners-table.config';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import { logger } from '@/lib/utils/logger';
@@ -13,9 +14,11 @@ import LocalPartnersForm from './local-partners-form';
 export default function LocalPartnersTable({
 	rows,
 	error,
+	query,
 }: {
 	rows: LocalPartnerTableViewRow[];
 	error: string | null;
+	query?: TableQueryState & { totalRows: number };
 }) {
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -39,12 +42,11 @@ export default function LocalPartnersTable({
 
 	return (
 		<>
-			<DataTable
-				title="All Local Partners"
+			<ConfiguredDataTableClient
+				config={localPartnersTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No local partners found"
-				data={rows}
-				makeColumns={makeLocalPartnerColumns}
+				query={query}
 				actionMenuItems={[
 					{
 						label: 'Add new local partner',

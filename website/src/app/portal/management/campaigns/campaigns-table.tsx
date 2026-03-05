@@ -1,8 +1,9 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { makeCampaignColumns } from '@/components/data-table/columns/campaigns';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { campaignsTableConfig } from '@/components/data-table/configs/campaigns-table.config';
+import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
 import { logger } from '@/lib/utils/logger';
@@ -10,7 +11,15 @@ import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import CampaignsForm from './campaigns-form';
 
-export default function CampaignsTable({ rows, error }: { rows: CampaignTableViewRow[]; error: string | null }) {
+export default function CampaignsTable({
+	rows,
+	error,
+	query,
+}: {
+	rows: CampaignTableViewRow[];
+	error: string | null;
+	query?: TableQueryState & { totalRows: number };
+}) {
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [campaignId, setCampaignId] = useState<string | undefined>(undefined);
@@ -35,12 +44,11 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 
 	return (
 		<>
-			<DataTable
-				title="Campaigns"
+			<ConfiguredDataTableClient
+				config={campaignsTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No campaigns found"
-				data={rows}
-				makeColumns={makeCampaignColumns}
+				query={query}
 				onRowClick={openEditForm}
 				actionMenuItems={[
 					{

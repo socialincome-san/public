@@ -1,8 +1,12 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { makeContributorColumns } from '@/components/data-table/columns/contributors';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import {
+	contributorsTableConfig,
+	getContributorsTableFilters,
+} from '@/components/data-table/configs/contributors-table.config';
+import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { logger } from '@/lib/utils/logger';
@@ -14,10 +18,14 @@ export default function ContributorsTableClient({
 	rows,
 	error,
 	readOnly,
+	query,
+	countryFilterOptions = [],
 }: {
 	rows: ContributorTableViewRow[];
 	error: string | null;
 	readOnly?: boolean;
+	query?: TableQueryState & { totalRows: number };
+	countryFilterOptions?: { value: string; label: string }[];
 }) {
 	const [open, setOpen] = useState(false);
 	const [contributorId, setContributorId] = useState<string | undefined>();
@@ -46,12 +54,12 @@ export default function ContributorsTableClient({
 
 	return (
 		<>
-			<DataTable
-				title="Contributors"
+			<ConfiguredDataTableClient
+				config={contributorsTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No contributors found"
-				data={rows}
-				makeColumns={makeContributorColumns}
+				query={query}
+				toolbarFilters={getContributorsTableFilters({ query, countryFilterOptions })}
 				actionMenuItems={[
 					{
 						label: 'Add new contributor',
@@ -61,7 +69,6 @@ export default function ContributorsTableClient({
 					},
 				]}
 				onRowClick={openEditForm}
-				searchKeys={['firstName', 'lastName', 'email']}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>

@@ -1,14 +1,15 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { PayoutService } from '@/lib/services/payout/payout.service';
+import { PayoutReadService } from '@/lib/services/payout/payout-read.service';
+import { PayoutWriteService } from '@/lib/services/payout/payout-write.service';
 import { type PayoutCreateInput, type PayoutUpdateInput } from '@/lib/services/payout/payout.types';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { RecipientReadService } from '@/lib/services/recipient/recipient-read.service';
 import { revalidatePath } from 'next/cache';
 
 export const createPayoutAction = async (input: PayoutCreateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
+	const service = new PayoutWriteService();
 
 	const result = await service.create(user.id, input);
 
@@ -18,7 +19,7 @@ export const createPayoutAction = async (input: PayoutCreateInput) => {
 
 export const updatePayoutAction = async (input: PayoutUpdateInput) => {
 	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
+	const service = new PayoutWriteService();
 
 	const result = await service.update(user.id, input);
 
@@ -28,14 +29,14 @@ export const updatePayoutAction = async (input: PayoutUpdateInput) => {
 
 export const getPayoutAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
+	const service = new PayoutReadService();
 
 	return service.get(user.id, id);
 };
 
 export const getPayoutRecipientOptionsAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
-	const service = new RecipientService();
+	const service = new RecipientReadService();
 
 	return service.getEditableRecipientOptions(user.id);
 };

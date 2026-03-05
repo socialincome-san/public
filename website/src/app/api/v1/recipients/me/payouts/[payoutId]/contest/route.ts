@@ -1,7 +1,7 @@
 import { ContestPayoutBody } from '@/app/api/v1/models';
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { PayoutService } from '@/lib/services/payout/payout.service';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { PayoutWriteService } from '@/lib/services/payout/payout-write.service';
+import { RecipientReadService } from '@/lib/services/recipient/recipient-read.service';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -19,7 +19,7 @@ type Params = Promise<{ payoutId: string }>;
 export const POST = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {
 	const { payoutId } = await params;
 
-	const recipientService = new RecipientService();
+	const recipientService = new RecipientReadService();
 	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
@@ -48,7 +48,7 @@ export const POST = withAppCheck(async (request: NextRequest, { params }: { para
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const payoutService = new PayoutService();
+	const payoutService = new PayoutWriteService();
 	const contestResult = await payoutService.updateStatusByRecipient(
 		recipientResult.data.id,
 		payoutId,

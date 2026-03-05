@@ -15,19 +15,15 @@ export const makeCandidateColumns = (
 ): ColumnDef<CandidatesTableViewRow>[] => {
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
 		{
-			id: 'flag',
-			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
+			id: 'country',
+			header: (ctx) => <SortableHeader ctx={ctx}>Country</SortableHeader>,
 			accessorFn: (row) => row.country ?? '',
 			cell: ({ row }) => <CountryFlagCell country={row.original.country} />,
 		},
 		{
-			accessorKey: 'firstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'lastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
+			id: 'candidate',
+			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>Candidate</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

@@ -7,7 +7,7 @@ type Props = { params: Promise<{ programId: string }> };
 
 export default function OverviewPageProgramScoped({ params }: Props) {
 	return (
-		<Suspense fallback={<AppLoadingSkeleton minHeightClassName="min-h-[420px]" />}>
+		<Suspense fallback={<AppLoadingSkeleton />}>
 			<OverviewProgramScopedDataLoader params={params} />
 			<DonationSuccessDialog />
 		</Suspense>

@@ -1,8 +1,9 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { makeExpenseColumns } from '@/components/data-table/columns/expenses';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { expensesTableConfig } from '@/components/data-table/configs/expenses-table.config';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
 import { logger } from '@/lib/utils/logger';
@@ -10,7 +11,15 @@ import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';
 
-export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewRow[]; error: string | null }) {
+export default function ExpensesTable({
+	rows,
+	error,
+	query,
+}: {
+	rows: ExpenseTableViewRow[];
+	error: string | null;
+	query?: TableQueryState & { totalRows: number };
+}) {
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [expenseId, setExpenseId] = useState<string | undefined>(undefined);
@@ -34,12 +43,11 @@ export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewR
 
 	return (
 		<>
-			<DataTable
-				title="Expenses"
+			<ConfiguredDataTableClient
+				config={expensesTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No expenses found"
-				data={rows}
-				makeColumns={makeExpenseColumns}
+				query={query}
 				actionMenuItems={[
 					{
 						label: 'Add expense',

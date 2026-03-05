@@ -1,4 +1,8 @@
-import { Address, Gender, Phone, Prisma, ProgramPermission } from '@/generated/prisma/client';
+import { Address, Gender, Phone, Prisma } from '@/generated/prisma/client';
+export type {
+	RecipientProgramFilterOption,
+	RecipientTableViewRow,
+} from './recipient-table.types';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {
@@ -60,29 +64,6 @@ export type RecipientPayload = {
 		mobileMoneyProvider: { id: string; name: string } | null;
 		phone: Phone | null;
 	} | null;
-};
-
-export type RecipientTableViewRow = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	dateOfBirth: Date | null;
-	startDate: Date | null;
-	localPartnerName: string | null;
-	suspendedAt: Date | null;
-	suspensionReason: string | null;
-	programId: string | null;
-	programName: string | null;
-	payoutsReceived: number;
-	payoutsTotal: number;
-	payoutsProgressPercent: number;
-	createdAt: Date;
-	permission: ProgramPermission;
-};
-
-export type RecipientTableView = {
-	tableRows: RecipientTableViewRow[];
-	permission: ProgramPermission;
 };
 
 export type RecipientCreateInput = Prisma.RecipientCreateInput;

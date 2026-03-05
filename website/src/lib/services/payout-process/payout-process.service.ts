@@ -3,15 +3,15 @@ import { now } from '@/lib/utils/now';
 import { format, isSameMonth, startOfMonth } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
-import { ProgramAccessService } from '../program-access/program-access.service';
+import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 
 export class PayoutProcessService extends BaseService {
-	private programAccessService = new ProgramAccessService();
+	private programAccessService = new ProgramAccessReadService();
 	private programStatsService = new ProgramStatsService();
-	private exchangeRateService = new ExchangeRateService();
+	private exchangeRateService = new ExchangeRateReadService();
 
 	async getRecipientsReadyForFirstPayout(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
 		try {

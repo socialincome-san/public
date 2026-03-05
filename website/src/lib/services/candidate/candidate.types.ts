@@ -54,6 +54,34 @@ export type CandidatesTableView = {
 	tableRows: CandidatesTableViewRow[];
 };
 
+export type CandidatesTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	country?: string;
+	gender?: string;
+	localPartnerId?: string;
+};
+
+export type CandidatesPaginatedTableView = {
+	tableRows: CandidatesTableViewRow[];
+	totalCount: number;
+	countryFilterOptions: {
+		value: string;
+		label: string;
+	}[];
+	genderFilterOptions: {
+		value: string;
+		label: string;
+	}[];
+	localPartnerFilterOptions: {
+		value: string;
+		label: string;
+	}[];
+};
+
 export type CandidateCreateInput = Prisma.RecipientCreateInput;
 export type CandidateUpdateInput = Prisma.RecipientUpdateInput;
 export type CandidatePrismaUpdateInput = Prisma.RecipientUpdateInput;

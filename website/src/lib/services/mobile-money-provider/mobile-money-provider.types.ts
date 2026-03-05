@@ -5,8 +5,21 @@ export type MobileMoneyProviderTableViewRow = {
 	createdAt: Date;
 };
 
-export type MobileMoneyProviderTableView = {
+type MobileMoneyProviderTableView = {
 	tableRows: MobileMoneyProviderTableViewRow[];
+};
+
+export type MobileMoneyProviderTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type MobileMoneyProviderPaginatedTableView = {
+	tableRows: MobileMoneyProviderTableViewRow[];
+	totalCount: number;
 };
 
 export type MobileMoneyProviderPayload = {

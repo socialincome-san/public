@@ -1,7 +1,8 @@
 'use client';
 
-import { makeYourCertificatesColumns } from '@/components/data-table/columns/your-donation-certificates';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { getYourDonationCertificatesTableConfig } from '@/components/data-table/configs/your-donation-certificates-table.config';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { YourDonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
@@ -13,22 +14,28 @@ export const YourDonationCertificateTable = ({
 	rows,
 	error,
 	lang,
+	query,
 }: {
 	rows: YourDonationCertificateTableViewRow[];
 	error: string | null;
 	lang: WebsiteLanguage;
+	query?: TableQueryState & { totalRows: number };
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const translator = useTranslator(lang, 'website-me');
+	const config = getYourDonationCertificatesTableConfig({
+		title: translator?.t('sections.contributions.donation-certificates-long') ?? '',
+		emptyMessage: translator?.t('donation-certificates.no-certificates-yet') ?? '',
+	});
 
 	return (
 		<>
 			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} lang={lang} />
-			<DataTable
-				title={translator?.t('sections.contributions.donation-certificates-long')}
+			<ConfiguredDataTableClient
+				config={config}
+				rows={rows}
 				error={error}
-				emptyMessage={translator?.t('donation-certificates.no-certificates-yet') ?? ''}
-				data={rows}
+				query={query}
 				actionMenuItems={[
 					{
 						label: translator?.t('donation-certificates.generate-certificate') ?? '',
@@ -36,7 +43,6 @@ export const YourDonationCertificateTable = ({
 						onSelect: () => setOpen(true),
 					},
 				]}
-				makeColumns={makeYourCertificatesColumns}
 				lang={lang}
 			/>
 		</>

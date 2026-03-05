@@ -4,11 +4,11 @@ import { Suspense } from 'react';
 import { DefaultPageProps } from '../..';
 import { ContributionsTable } from './contributions-table';
 
-export default async function Page({ params }: DefaultPageProps) {
+export default async function Page({ params, searchParams }: DefaultPageProps) {
 	const { lang } = await params;
 	return (
 		<Suspense fallback={<AppLoadingSkeleton />}>
-			<ContributionsTable lang={lang as WebsiteLanguage} />
+			<ContributionsTable lang={lang as WebsiteLanguage} searchParams={searchParams} />
 		</Suspense>
 	);
 }

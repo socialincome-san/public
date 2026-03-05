@@ -13,14 +13,38 @@ export type ContributionTableViewRow = {
 	email: string;
 	amount: number;
 	currency: Currency;
+	campaignId: string;
 	campaignTitle: string;
+	paymentEventType: PaymentEventType | null;
 	programName: string | null;
 	createdAt: Date;
 };
 
-export type ContributionTableView = {
+type ContributionTableView = {
 	tableRows: ContributionTableViewRow[];
 	permission: OrganizationPermission;
+};
+
+export type ContributionTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+	campaignId?: string;
+	paymentEventType?: string;
+};
+
+export type ContributionPaginatedTableView = {
+	tableRows: ContributionTableViewRow[];
+	totalCount: number;
+	permission: OrganizationPermission;
+	filterOptions: {
+		programs: { value: string; label: string }[];
+		campaigns: { value: string; label: string }[];
+		paymentEventTypes: { value: string; label: string }[];
+	};
 };
 
 export type ContributionUpdateInput = Prisma.ContributionUpdateInput;
@@ -77,6 +101,19 @@ export type YourContributionsTableViewRow = {
 	campaignTitle: string;
 };
 
-export type YourContributionsTableView = {
+type YourContributionsTableView = {
 	tableRows: YourContributionsTableViewRow[];
+};
+
+export type YourContributionsTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type YourContributionsPaginatedTableView = {
+	tableRows: YourContributionsTableViewRow[];
+	totalCount: number;
 };

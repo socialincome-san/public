@@ -1,11 +1,15 @@
 'use client';
 
-import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
-import DataTable from '@/components/data-table/data-table';
+import {
+	getRecipientsTableFilters,
+	recipientsTableConfig,
+} from '@/components/data-table/configs/recipients-table.config';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { TableQueryState } from '@/components/data-table/query-state';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
-import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
@@ -19,9 +23,21 @@ type Props = {
 	programId?: string;
 	readOnly?: boolean;
 	sessionType?: Session['type'];
+	query?: TableQueryState & { totalRows: number };
+	programFilterOptions?: RecipientProgramFilterOption[];
+	showProgramFilter?: boolean;
 };
 
-export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessionType = 'user' }: Props) => {
+export const RecipientsTableClient = ({
+	rows,
+	error,
+	programId,
+	readOnly,
+	sessionType = 'user',
+	query,
+	programFilterOptions = [],
+	showProgramFilter = true,
+}: Props) => {
 	const canManageRecipients = sessionType === 'user';
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
@@ -89,16 +105,16 @@ export const RecipientsTableClient = ({ rows, error, programId, readOnly, sessio
 
 	return (
 		<>
-			<DataTable
-				title="Recipients"
+			<ConfiguredDataTableClient
+				config={recipientsTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No recipients found"
-				data={rows}
-				makeColumns={makeRecipientColumns}
-				hideLocalPartner={sessionType === 'local-partner'}
 				actionMenuItems={actionMenuItems}
+				query={query}
+				toolbarFilters={getRecipientsTableFilters({ query, programFilterOptions, showProgramFilter })}
+				hideLocalPartner={sessionType === 'local-partner'}
+				showEntityIdColumn={sessionType !== 'local-partner'}
 				onRowClick={openEditRecipientDialog}
-				searchKeys={['firstName', 'lastName', 'localPartnerName', 'programName']}
 			/>
 
 			<RecipientDialog

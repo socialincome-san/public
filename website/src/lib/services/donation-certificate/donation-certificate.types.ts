@@ -11,8 +11,21 @@ export type DonationCertificateTableViewRow = {
 	permission: OrganizationPermission;
 };
 
-export type DonationCertificateTableView = {
+type DonationCertificateTableView = {
 	tableRows: DonationCertificateTableViewRow[];
+};
+
+export type DonationCertificateTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type DonationCertificatePaginatedTableView = {
+	tableRows: DonationCertificateTableViewRow[];
+	totalCount: number;
 };
 
 export type YourDonationCertificateTableViewRow = {
@@ -23,6 +36,19 @@ export type YourDonationCertificateTableViewRow = {
 	createdAt: Date;
 };
 
-export type YourDonationCertificateTableView = {
+type YourDonationCertificateTableView = {
 	tableRows: YourDonationCertificateTableViewRow[];
+};
+
+export type YourDonationCertificateTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type YourDonationCertificatePaginatedTableView = {
+	tableRows: YourDonationCertificateTableViewRow[];
+	totalCount: number;
 };

@@ -1,7 +1,8 @@
 'use client';
 
-import { makeMobileMoneyProviderColumns } from '@/components/data-table/columns/mobile-money-providers';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { mobileMoneyProvidersTableConfig } from '@/components/data-table/configs/mobile-money-providers-table.config';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -10,9 +11,11 @@ import { MobileMoneyProviderDialog } from './mobile-money-provider-dialog';
 export default function MobileMoneyProvidersTable({
 	rows,
 	error,
+	query,
 }: {
 	rows: MobileMoneyProviderTableViewRow[];
 	error: string | null;
+	query?: TableQueryState & { totalRows: number };
 }) {
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -32,12 +35,11 @@ export default function MobileMoneyProvidersTable({
 
 	return (
 		<>
-			<DataTable
-				title="Mobile Money Providers"
+			<ConfiguredDataTableClient
+				config={mobileMoneyProvidersTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No mobile money providers found"
-				data={rows}
-				makeColumns={makeMobileMoneyProviderColumns}
+				query={query}
 				actionMenuItems={[
 					{
 						label: 'Add provider',

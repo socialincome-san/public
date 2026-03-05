@@ -13,13 +13,31 @@ export type ContributorTableViewRow = {
 	firstName: string;
 	lastName: string;
 	email: string;
-	country: string | null;
+	country: CountryCode | null;
 	createdAt: Date;
 	permission: OrganizationPermission;
 };
 
-export type ContributorTableView = {
+type ContributorTableView = {
 	tableRows: ContributorTableViewRow[];
+};
+
+export type ContributorTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	country?: string;
+};
+
+export type ContributorPaginatedTableView = {
+	tableRows: ContributorTableViewRow[];
+	totalCount: number;
+	countryFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 export type ContributorPayload = {

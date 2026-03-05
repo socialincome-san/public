@@ -1,51 +1,46 @@
 import { Card } from '@/components/card';
-import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
-import DataTable from '@/components/data-table/data-table';
+import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { SurveyService } from '@/lib/services/survey/survey.service';
+import { SurveyReadService } from '@/lib/services/survey/survey-read.service';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
-import { PlusIcon } from 'lucide-react';
+import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
+import { SurveysTableClient } from '@/app/portal/management/surveys/surveys-table-client';
 
-type Props = { params: Promise<{ programId: string }> };
+type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
-export default function SurveysPageProgramScoped({ params }: Props) {
+export default function SurveysPageProgramScoped({ params, searchParams }: Props) {
 	return (
 		<Card>
 			<Suspense fallback={<AppLoadingSkeleton />}>
-				<SurveysProgramScopedDataLoader params={params} />
+				<SurveysProgramScopedDataLoader params={params} searchParams={searchParams} />
 			</Suspense>
 		</Card>
 	);
 }
 
-const SurveysProgramScopedDataLoader = async ({ params }: { params: Promise<{ programId: string }> }) => {
+const SurveysProgramScopedDataLoader = async ({ params, searchParams }: Props) => {
 	const { programId } = await params;
+	const resolvedSearchParams = await searchParams;
+	const baseQuery = tableQueryFromSearchParams(resolvedSearchParams);
+	const tableQuery = { ...baseQuery, programId };
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const surveyService = new SurveyService();
-	const surveysResult = await surveyService.getTableViewProgramScoped(user.id, programId);
+	const surveyService = new SurveyReadService();
+	const surveysResult = await surveyService.getPaginatedTableView(user.id, tableQuery);
 
 	const error = surveysResult.success ? null : surveysResult.error;
 	const rows: SurveyTableViewRow[] = surveysResult.success ? surveysResult.data.tableRows : [];
+	const totalRows = surveysResult.success ? surveysResult.data.totalCount : 0;
 
 	return (
-		<DataTable
-			title="Surveys"
+		<SurveysTableClient
+			rows={rows}
 			error={error}
-			emptyMessage="No surveys found"
-			data={rows}
-			makeColumns={makeSurveyColumns}
-			actionMenuItems={[
-				{
-					label: 'Add new survey',
-					icon: <PlusIcon />,
-					disabled: true,
-				},
-			]}
+			query={{ ...tableQuery, totalRows }}
+			showProgramFilter={false}
 			hideProgramName
-			searchKeys={['name', 'recipientName']}
 		/>
 	);
 };

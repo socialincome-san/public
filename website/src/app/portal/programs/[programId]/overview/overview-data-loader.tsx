@@ -1,5 +1,5 @@
 import { ProgramStatsService } from '@/lib/services/program-stats/program-stats.service';
-import { ProgramService } from '@/lib/services/program/program.service';
+import { ProgramReadService } from '@/lib/services/program/program-read.service';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { slugify } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';
@@ -14,7 +14,7 @@ type Props = { params: Promise<{ programId: string }> };
 export default async function OverviewProgramScopedDataLoader({ params }: Props) {
 	const { programId } = await params;
 
-	const programService = new ProgramService();
+	const programService = new ProgramReadService();
 	const statsService = new ProgramStatsService();
 
 	const programNameResult = await programService.getProgramNameById(programId);

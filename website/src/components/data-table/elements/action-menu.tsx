@@ -28,24 +28,14 @@ export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 			return;
 		}
 		if (item.href) {
-			window.location.href = item.href;
+			window.location.assign(item.href);
 		}
 	};
-
-	if (items.length === 1) {
-		const item = items[0];
-		return (
-			<Button type="button" disabled={item.disabled} onClick={() => runAction(item)}>
-				{item.icon}
-				<span>{item.label}</span>
-			</Button>
-		);
-	}
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button type="button" variant="outline" size="icon" aria-label="Table actions" className="rounded-full">
+				<Button type="button" variant="outline" size="icon" aria-label="Table actions">
 					<MoreHorizontalIcon />
 				</Button>
 			</DropdownMenuTrigger>

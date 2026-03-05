@@ -14,13 +14,9 @@ export const makeDonationCertificateColumns = (): ColumnDef<DonationCertificateT
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'contributorFirstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First Name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'contributorLastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last Name</SortableHeader>,
+			id: 'contributor',
+			accessorFn: (row) => `${row.contributorFirstName} ${row.contributorLastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>Contributor</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

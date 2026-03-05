@@ -1,8 +1,8 @@
 import { AnimatedSILogoIcon } from '@/components/svg/animated-si-logo-icon';
+import { cn } from '@socialincome/ui';
 
 type AppLoadingSkeletonProps = {
 	message?: string;
-	minHeightClassName?: string;
 };
 
 const LOADING_MESSAGES = [
@@ -18,17 +18,17 @@ const LOADING_MESSAGES = [
 	'Good things are loading...',
 ] as const;
 
-export const AppLoadingSkeleton = ({
-	message,
-	minHeightClassName = 'min-h-[360px]',
-}: AppLoadingSkeletonProps) => {
-	const randomMessage = LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
+export const AppLoadingSkeleton = ({ message }: AppLoadingSkeletonProps) => {
+	const defaultMessage = LOADING_MESSAGES[0];
 
 	return (
-		<div className={`flex w-full items-center justify-center rounded-xl bg-white ${minHeightClassName}`} data-testid="app-loading-skeleton">
+		<div
+			className={cn('flex w-full items-center justify-center rounded-xl bg-white', 'min-h-[680px] md:min-h-[760px]')}
+			data-testid="app-loading-skeleton"
+		>
 			<div className="flex flex-col items-center gap-3 px-6 text-center">
 				<AnimatedSILogoIcon className="text-primary h-9 w-auto" />
-				<p className="text-muted-foreground text-sm">{message ?? randomMessage}</p>
+				<p className="text-muted-foreground text-sm">{message ?? defaultMessage}</p>
 			</div>
 		</div>
 	);

@@ -12,11 +12,13 @@
 import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@/generated/prisma/client';
 import { isValidCurrency } from '@/lib/types/currency';
 import { titleCase } from '@/lib/utils/string-utils';
+import { toSortKey } from '@/lib/utils/to-sort-key';
 import Stripe from 'stripe';
-import { CampaignService } from '../campaign/campaign.service';
-import { ContributionService } from '../contribution/contribution.service';
+import { CampaignReadService } from '../campaign/campaign-read.service';
+import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
-import { ContributorService } from '../contributor/contributor.service';
+import { ContributorReadService } from '../contributor/contributor-read.service';
+import { ContributorWriteService } from '../contributor/contributor-write.service';
 import {
 	ContributorUpdateInput,
 	ContributorWithContact,
@@ -24,11 +26,13 @@ import {
 } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramAccessService } from '../program-access/program-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
 	CheckoutMetadata,
 	StripeCustomerData,
 	StripePaymentMethod,
+	StripeSubscriptionPaginatedTableView,
+	StripeSubscriptionTableQuery,
 	StripeSubscriptionRow,
 	StripeSubscriptionTableView,
 	UpdateContributorAfterCheckoutInput,
@@ -36,10 +40,11 @@ import {
 } from './stripe.types';
 export class StripeService extends BaseService {
 	private readonly stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
-	private readonly contributorService = new ContributorService();
-	private readonly contributionService = new ContributionService();
-	private readonly campaignService = new CampaignService();
-	private readonly programAccessService = new ProgramAccessService();
+	private readonly contributorReadService = new ContributorReadService();
+	private readonly contributorWriteService = new ContributorWriteService();
+	private readonly contributionService = new ContributionWriteService();
+	private readonly campaignService = new CampaignReadService();
+	private readonly programAccessService = new ProgramAccessReadService();
 
 	async handleWebhookEvent(
 		body: string,
@@ -101,7 +106,7 @@ export class StripeService extends BaseService {
 					select: { contactId: true },
 				});
 				if (user) {
-					const portalResult = await this.contributorService.getOrCreateContributorForAccount(
+					const portalResult = await this.contributorWriteService.getOrCreateContributorForAccount(
 						accountId,
 						stripeCustomer.id,
 						user.contactId,
@@ -132,7 +137,7 @@ export class StripeService extends BaseService {
 					};
 
 					const contributorResult =
-						await this.contributorService.getOrCreateContributorWithFirebaseAuth(contributorData);
+						await this.contributorWriteService.getOrCreateContributorWithFirebaseAuth(contributorData);
 					if (!contributorResult.success) {
 						this.logger.error(contributorResult.error);
 						return this.resultFail(contributorResult.error);
@@ -146,7 +151,7 @@ export class StripeService extends BaseService {
 					}
 				} else {
 					// For failed/pending payments: only process if contributor already exists
-					const existingContributorResult = await this.contributorService.findByStripeCustomerOrEmail(
+					const existingContributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(
 						stripeCustomer.id,
 						stripeCustomer.email || undefined,
 					);
@@ -293,12 +298,50 @@ export class StripeService extends BaseService {
 		return { firstName, lastName };
 	}
 
+	private sortSubscriptionRows(rows: StripeSubscriptionRow[], query: StripeSubscriptionTableQuery): StripeSubscriptionRow[] {
+		const direction = query.sortDirection === 'asc' ? 1 : -1;
+		const sortedRows = [...rows];
+		const sortBy = toSortKey(query.sortBy, ['created', 'status', 'interval', 'paymentMethod', 'amount'] as const);
+		sortedRows.sort((a, b) => {
+			switch (sortBy) {
+				case 'created':
+					return (a.created.getTime() - b.created.getTime()) * direction;
+				case 'status':
+					return a.status.localeCompare(b.status) * direction;
+				case 'interval':
+					return a.interval.localeCompare(b.interval) * direction;
+				case 'paymentMethod':
+					return a.paymentMethod.label.localeCompare(b.paymentMethod.label) * direction;
+				case 'amount':
+					return (a.amount - b.amount) * direction;
+				default:
+					return b.created.getTime() - a.created.getTime();
+			}
+		});
+		return sortedRows;
+	}
+
 	async getSubscriptionsTableView(
 		stripeCustomerId: string | null,
 	): Promise<ServiceResult<StripeSubscriptionTableView>> {
+		const paginated = await this.getPaginatedSubscriptionsTableView(stripeCustomerId, {
+			page: 1,
+			pageSize: 10_000,
+			search: '',
+		});
+		if (!paginated.success) {
+			return this.resultFail(paginated.error);
+		}
+		return this.resultOk({ rows: paginated.data.rows });
+	}
+
+	async getPaginatedSubscriptionsTableView(
+		stripeCustomerId: string | null,
+		query: StripeSubscriptionTableQuery,
+	): Promise<ServiceResult<StripeSubscriptionPaginatedTableView>> {
 		try {
 			if (!stripeCustomerId) {
-				return this.resultOk({ rows: [] });
+				return this.resultOk({ rows: [], totalCount: 0 });
 			}
 
 			const subscriptions = await this.stripe.subscriptions.list({
@@ -345,7 +388,10 @@ export class StripeService extends BaseService {
 				}),
 			);
 
-			return this.resultOk({ rows });
+			const sortedRows = this.sortSubscriptionRows(rows, query);
+			const offset = (query.page - 1) * query.pageSize;
+			const paginatedRows = sortedRows.slice(offset, offset + query.pageSize);
+			return this.resultOk({ rows: paginatedRows, totalCount: sortedRows.length });
 		} catch (error) {
 			const stripeError = error as { type?: string; code?: string; param?: string; message?: string };
 			const isMissingCustomer =
@@ -356,7 +402,7 @@ export class StripeService extends BaseService {
 				this.logger.warn('Stripe customer not found in current mode; returning empty subscriptions', {
 					stripeCustomerId,
 				});
-				return this.resultOk({ rows: [] });
+				return this.resultOk({ rows: [], totalCount: 0 });
 			}
 
 			this.logger.error(error);
@@ -527,7 +573,7 @@ export class StripeService extends BaseService {
 				return createCustomerResult;
 			}
 			stripeCustomerId = createCustomerResult.data;
-			const contributorResult = await this.contributorService.getOrCreateContributorForAccount(
+			const contributorResult = await this.contributorWriteService.getOrCreateContributorForAccount(
 				user.accountId,
 				stripeCustomerId,
 				user.contactId,
@@ -595,7 +641,7 @@ export class StripeService extends BaseService {
 			const stripeCustomerId = session.customer.toString();
 			const email = session.customer_details?.email ?? undefined;
 
-			const contributorResult = await this.contributorService.findByStripeCustomerOrEmail(stripeCustomerId, email);
+			const contributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(stripeCustomerId, email);
 
 			if (!contributorResult.success) {
 				return contributorResult;
@@ -628,7 +674,7 @@ export class StripeService extends BaseService {
 				return this.resultFail('A contributor email is required');
 			}
 
-			const existingResult = await this.contributorService.findByStripeCustomerOrEmail(
+			const existingResult = await this.contributorReadService.findByStripeCustomerOrEmail(
 				stripeCustomer.id,
 				contributorEmail,
 			);
@@ -640,7 +686,7 @@ export class StripeService extends BaseService {
 			let contributor = existingResult.data;
 
 			if (!contributor) {
-				const createResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth({
+				const createResult = await this.contributorWriteService.getOrCreateContributorWithFirebaseAuth({
 					stripeCustomerId: stripeCustomer.id,
 					email: contributorEmail,
 					firstName: user.personal.name,
@@ -686,7 +732,7 @@ export class StripeService extends BaseService {
 				},
 			};
 
-			return this.contributorService.updateSelf(contributor.id, updateInput);
+			return this.contributorWriteService.updateSelf(contributor.id, updateInput);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not update contributor after checkout: ${JSON.stringify(error)}`);

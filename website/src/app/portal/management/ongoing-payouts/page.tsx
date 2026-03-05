@@ -1,34 +1,51 @@
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { makeOngoingPayoutColumns } from '@/components/data-table/columns/ongoing-payouts';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { ongoingPayoutsTableConfig } from '@/components/data-table/configs/ongoing-payouts-table.config';
+import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import type { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutService } from '@/lib/services/payout/payout.service';
+import { PayoutReadService } from '@/lib/services/payout/payout-read.service';
+import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 
-export default function OngoingPayoutsPage() {
+export default function OngoingPayoutsPage({ searchParams }: SearchParamsPageProps) {
 	return (
 		<Suspense fallback={<AppLoadingSkeleton />}>
-			<OngoingPayoutsDataLoader />
+			<OngoingPayoutsDataLoader searchParams={searchParams} />
 		</Suspense>
 	);
 }
 
-const OngoingPayoutsDataLoader = async () => {
+const OngoingPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await getAuthenticatedUserOrRedirect();
+	const resolvedSearchParams = await searchParams;
+	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new PayoutService();
-	const result = await service.getOngoingPayoutTableView(user.id);
+	const service = new PayoutReadService();
+	const result = await service.getPaginatedOngoingPayoutTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
+	const totalRows = result.success ? result.data.totalCount : 0;
+	const programFilterOptions = result.success ? result.data.programFilterOptions : [];
+	const toolbarFilters: TableFilterConfig[] = [
+		{
+			id: 'program',
+			queryKey: 'programId',
+			label: 'Program',
+			placeholder: 'All programs',
+			value: tableQuery.programId,
+			options: programFilterOptions.map((program) => ({ value: program.id, label: program.name })),
+		},
+	];
 
 	return (
-		<DataTable
-			title="Ongoing Payouts"
+		<ConfiguredDataTableClient
+			config={ongoingPayoutsTableConfig}
+			rows={rows}
 			error={error}
-			emptyMessage="No ongoing payouts found"
-			data={rows}
-			makeColumns={makeOngoingPayoutColumns}
+			query={{ ...tableQuery, totalRows }}
+			toolbarFilters={toolbarFilters}
 		/>
 	);
 };

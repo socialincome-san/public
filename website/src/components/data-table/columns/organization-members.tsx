@@ -8,13 +8,9 @@ import type { ColumnDef } from '@tanstack/react-table';
 export const makeOrganizationMemberColumns = (): ColumnDef<OrganizationMemberTableViewRow>[] => {
 	return [
 		{
-			accessorKey: 'firstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'lastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
+			id: 'member',
+			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>Member</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

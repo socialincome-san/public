@@ -1,7 +1,8 @@
 'use client';
 
-import { makeDonationCertificateColumns } from '@/components/data-table/columns/donation-certificates';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { donationCertificatesTableConfig } from '@/components/data-table/configs/donation-certificates-table.config';
+import { TableQueryState } from '@/components/data-table/query-state';
 import { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
 import { FileTextIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -10,20 +11,21 @@ import GenerateDonationCertificatesDialog from './generate-donation-certificates
 export const DonationCertificateTable = ({
 	rows,
 	error,
+	query,
 }: {
 	rows: DonationCertificateTableViewRow[];
 	error: string | null;
+	query?: TableQueryState & { totalRows: number };
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	return (
 		<>
 			<GenerateDonationCertificatesDialog open={open} setOpen={setOpen} />
-			<DataTable
-				title="Donation Certificates"
+			<ConfiguredDataTableClient
+				config={donationCertificatesTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No donation certificates found"
-				data={rows}
-				makeColumns={makeDonationCertificateColumns}
+				query={query}
 				actionMenuItems={[
 					{
 						label: 'Generate Donation Certificates',

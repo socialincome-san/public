@@ -1,15 +1,17 @@
 'use server';
 
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { UserService } from '@/lib/services/user/user.service';
+import { UserReadService } from '@/lib/services/user/user-read.service';
+import { UserWriteService } from '@/lib/services/user/user-write.service';
 import { UserCreateInput, UserUpdateInput } from '@/lib/services/user/user.types';
 import { revalidatePath } from 'next/cache';
 
-const service = new UserService();
+const userReadService = new UserReadService();
+const userWriteService = new UserWriteService();
 
 export const createUserAction = async (input: UserCreateInput) => {
 	const session = await getAuthenticatedUserOrRedirect();
-	const result = await service.create(session.id, input);
+	const result = await userWriteService.create(session.id, input);
 
 	if (result.success) {
 		revalidatePath('/portal/admin/users');
@@ -20,7 +22,7 @@ export const createUserAction = async (input: UserCreateInput) => {
 
 export const updateUserAction = async (input: UserUpdateInput) => {
 	const session = await getAuthenticatedUserOrRedirect();
-	const result = await service.update(session.id, input);
+	const result = await userWriteService.update(session.id, input);
 
 	if (result.success) {
 		revalidatePath('/portal/admin/users');
@@ -31,7 +33,7 @@ export const updateUserAction = async (input: UserUpdateInput) => {
 
 export const updateUserSelfAction = async (input: UserUpdateInput) => {
 	const session = await getAuthenticatedUserOrRedirect();
-	const result = await service.updateSelf(session.id, input);
+	const result = await userWriteService.updateSelf(session.id, input);
 
 	if (result.success) {
 		revalidatePath('/portal/profile');
@@ -42,10 +44,10 @@ export const updateUserSelfAction = async (input: UserUpdateInput) => {
 
 export const getUserAction = async (userId: string) => {
 	const session = await getAuthenticatedUserOrRedirect();
-	return service.get(session.id, userId);
+	return userReadService.get(session.id, userId);
 };
 
 export const getUserOptionsAction = async () => {
 	const session = await getAuthenticatedUserOrRedirect();
-	return service.getOptions(session.id);
+	return userReadService.getOptions(session.id);
 };

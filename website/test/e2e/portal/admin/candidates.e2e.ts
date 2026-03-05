@@ -1,6 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { getCandidateService, getFirebaseAdminService } from '../../utils';
+import { getFirebaseAdminService, getPrismaClient } from '../../utils';
 
 const ADD_CANDIDATE = {
 	firstName: 'Steve',
@@ -60,19 +60,22 @@ test('Add new candidate', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const service = await getCandidateService();
-	const result = await service.getTableView('user-2');
-
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	const row = result.data.tableRows.find(
-		(r) => r.firstName === ADD_CANDIDATE.firstName && r.lastName === ADD_CANDIDATE.lastName,
-	);
+	const prisma = await getPrismaClient();
+	const row = await prisma.recipient.findFirst({
+		where: {
+			programId: null,
+			contact: {
+				firstName: ADD_CANDIDATE.firstName,
+				lastName: ADD_CANDIDATE.lastName,
+			},
+		},
+		select: {
+			localPartner: { select: { name: true } },
+		},
+	});
 
 	expect(row).toBeDefined();
-	expect(row?.localPartnerName).toBe(ADD_CANDIDATE.localPartnerName);
+	expect(row?.localPartner?.name).toBe(ADD_CANDIDATE.localPartnerName);
 });
 
 test('Edit existing candidate', async ({ page }) => {
@@ -122,19 +125,22 @@ test('Edit existing candidate', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const service = await getCandidateService();
-	const result = await service.getTableView('user-2');
-
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	const row = result.data.tableRows.find(
-		(r) => r.firstName === EDIT_CANDIDATE.firstName && r.lastName === EDIT_CANDIDATE.lastName,
-	);
+	const prisma = await getPrismaClient();
+	const row = await prisma.recipient.findFirst({
+		where: {
+			programId: null,
+			contact: {
+				firstName: EDIT_CANDIDATE.firstName,
+				lastName: EDIT_CANDIDATE.lastName,
+			},
+		},
+		select: {
+			localPartner: { select: { name: true } },
+		},
+	});
 
 	expect(row).toBeDefined();
-	expect(row?.localPartnerName).toBe(EDIT_CANDIDATE.localPartnerName);
+	expect(row?.localPartner?.name).toBe(EDIT_CANDIDATE.localPartnerName);
 
 	await page.goto('http://localhost:4000/auth');
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('444444');
@@ -157,16 +163,19 @@ test('Delete candidate', async ({ page }) => {
 	await page.getByRole('button', { name: 'Delete permanently' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const service = await getCandidateService();
-	const result = await service.getTableView('user-2');
+	const prisma = await getPrismaClient();
+	const deleted = await prisma.recipient.findFirst({
+		where: {
+			programId: null,
+			contact: {
+				firstName: 'Hawa',
+				lastName: 'Kamara',
+			},
+		},
+		select: { id: true },
+	});
 
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	const deleted = result.data.tableRows.find((r) => r.firstName === 'Hawa' && r.lastName === 'Kamara');
-
-	expect(deleted).toBeUndefined();
+	expect(deleted).toBeNull();
 
 	await page.goto('http://localhost:4000/auth');
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(phone);
@@ -182,19 +191,23 @@ test('CSV Upload', async ({ page }) => {
 
 	await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
 
-	const service = await getCandidateService();
-	const result = await service.getTableView('user-2');
-
-	if (!result.success) {
-		throw new Error(result.error);
-	}
+	const prisma = await getPrismaClient();
 
 	for (const expected of CSV_CANDIDATES) {
-		const row = result.data.tableRows.find(
-			(r) => r.firstName === expected.firstName && r.lastName === expected.lastName,
-		);
+		const row = await prisma.recipient.findFirst({
+			where: {
+				programId: null,
+				contact: {
+					firstName: expected.firstName,
+					lastName: expected.lastName,
+				},
+			},
+			select: {
+				localPartner: { select: { name: true } },
+			},
+		});
 
 		expect(row).toBeDefined();
-		expect(row?.localPartnerName).toBe(expected.localPartnerName);
+		expect(row?.localPartner?.name).toBe(expected.localPartnerName);
 	}
 });

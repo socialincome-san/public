@@ -1,4 +1,4 @@
-import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { ContributorReadService } from '@/lib/services/contributor/contributor-read.service';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
 import { redirect } from 'next/navigation';
@@ -7,7 +7,7 @@ import { cache } from 'react';
 const firebaseSessionService = new FirebaseSessionService();
 
 const findContributorByAuthId = async (authUserId: string): Promise<ContributorSession | null> => {
-	const service = new ContributorService();
+	const service = new ContributorReadService();
 	const result = await service.getCurrentContributorSession(authUserId);
 	return result.success ? result.data : null;
 };

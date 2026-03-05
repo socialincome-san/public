@@ -1,7 +1,11 @@
 'use client';
 
-import { makeContributionsColumns } from '@/components/data-table/columns/contributions';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import {
+	contributionsTableConfig,
+	getContributionsTableFilters,
+} from '@/components/data-table/configs/contributions-table.config';
+import { TableQueryState } from '@/components/data-table/query-state';
 import type { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -11,10 +15,18 @@ export const ContributionsTableClient = ({
 	rows,
 	error,
 	readOnly,
+	query,
+	filterOptions,
 }: {
 	rows: ContributionTableViewRow[];
 	error: string | null;
 	readOnly: boolean;
+	query?: TableQueryState & { totalRows: number };
+	filterOptions?: {
+		programs: { value: string; label: string }[];
+		campaigns: { value: string; label: string }[];
+		paymentEventTypes: { value: string; label: string }[];
+	};
 }) => {
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [contributionId, setContributionId] = useState<string | undefined>(undefined);
@@ -38,12 +50,15 @@ export const ContributionsTableClient = ({
 
 	return (
 		<>
-			<DataTable
-				title="Contributions"
+			<ConfiguredDataTableClient
+				config={contributionsTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No contributions found"
-				data={rows}
-				makeColumns={makeContributionsColumns}
+				query={query}
+				toolbarFilters={getContributionsTableFilters({
+					query,
+					filterOptions: filterOptions ?? { programs: [], campaigns: [], paymentEventTypes: [] },
+				})}
 				actionMenuItems={[
 					{
 						label: 'Add contribution',
@@ -53,7 +68,6 @@ export const ContributionsTableClient = ({
 					},
 				]}
 				onRowClick={openEditForm}
-				searchKeys={['firstName', 'lastName', 'email', 'campaignTitle', 'programName']}
 			/>
 
 			<ContributionFormDialog

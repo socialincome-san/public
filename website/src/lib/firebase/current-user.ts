@@ -1,5 +1,5 @@
 import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
-import { UserService } from '@/lib/services/user/user.service';
+import { UserReadService } from '@/lib/services/user/user-read.service';
 import { UserSession } from '@/lib/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -7,7 +7,7 @@ import { cache } from 'react';
 const firebaseSessionService = new FirebaseSessionService();
 
 const findUserByAuthId = async (authUserId: string): Promise<UserSession | null> => {
-	const service = new UserService();
+	const service = new UserReadService();
 	const result = await service.getCurrentUserSession(authUserId);
 	return result.success ? result.data : null;
 };
