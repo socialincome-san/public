@@ -35,7 +35,13 @@ export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button type="button" variant="outline" size="icon" aria-label="Table actions">
+				<Button
+					type="button"
+					variant="outline"
+					size="icon"
+					aria-label="Table actions"
+					data-testid="data-table-actions-button"
+				>
 					<MoreHorizontalIcon />
 				</Button>
 			</DropdownMenuTrigger>

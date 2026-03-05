@@ -84,12 +84,19 @@ export const DataTableToolbar = ({
 	};
 
 	return (
-		<div className="flex flex-wrap items-center justify-end gap-2">
+		<div className="flex flex-wrap items-center justify-end gap-2" data-testid="data-table-toolbar">
 			<div className="flex items-center gap-2">
 				{hasSearch ? (
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button type="button" variant="outline" size="icon" className="relative" aria-label="Search">
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								className="relative"
+								aria-label="Search"
+								data-testid="data-table-search-button"
+							>
 								<SearchIcon className="size-4" />
 								{hasSearchValue ? (
 									<span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" aria-hidden />
@@ -109,6 +116,7 @@ export const DataTableToolbar = ({
 								defaultValue={searchValue}
 								onChange={(e) => onSearchChange(e.target.value)}
 								autoFocus
+								data-testid="data-table-search-input"
 							/>
 							<p className="text-muted-foreground text-xs">Fields: {searchKeys.join(', ')}</p>
 						</PopoverContent>
@@ -117,7 +125,13 @@ export const DataTableToolbar = ({
 				{hasColumns ? (
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button type="button" variant="outline" size="icon" aria-label="Columns">
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								aria-label="Columns"
+								data-testid="data-table-columns-button"
+							>
 								<Columns3Icon className="size-4" />
 							</Button>
 						</PopoverTrigger>
@@ -148,7 +162,14 @@ export const DataTableToolbar = ({
 				{hasSorting ? (
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button type="button" variant="outline" size="icon" className="relative" aria-label="Sort">
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								className="relative"
+								aria-label="Sort"
+								data-testid="data-table-sort-button"
+							>
 								<ArrowUpDownIcon className="size-4" />
 								{hasSortingValue ? (
 									<span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" aria-hidden />
@@ -207,7 +228,14 @@ export const DataTableToolbar = ({
 				{hasFilters ? (
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button type="button" variant="outline" size="icon" className="relative" aria-label="Filters">
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								className="relative"
+								aria-label="Filters"
+								data-testid="data-table-filters-button"
+							>
 								<FilterIcon className="size-4" />
 								{activeFilterCount > 0 ? (
 									<span className="bg-primary text-primary-foreground absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none">

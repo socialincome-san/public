@@ -125,7 +125,7 @@ export const BaseTable = <TData, TValue>({
 	};
 
 	return (
-		<div className={cn('flex flex-col', stableTableMinHeightClass)}>
+		<div className={cn('flex flex-col', stableTableMinHeightClass)} data-testid="data-table-base">
 			<div className="overflow-hidden rounded-none">
 				<Table className="w-full border-separate border-spacing-0">
 					<TableHeader>
@@ -168,13 +168,13 @@ export const BaseTable = <TData, TValue>({
 				</Table>
 			</div>
 
-			<div className="mt-auto flex items-center justify-between gap-4 py-4">
+			<div className="mt-auto flex items-center justify-between gap-4 py-4" data-testid="data-table-pagination">
 				<div className="flex items-center gap-2">
 					{showRowsPerPageSelector ? (
 						<>
 							<span className="text-muted-foreground text-sm">Rows per page</span>
 							<Select value={`${pageSize}`} onValueChange={handlePageSizeChange}>
-								<SelectTrigger className="h-8 w-[80px]">
+								<SelectTrigger className="h-8 w-[80px]" data-testid="data-table-page-size-trigger">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
@@ -190,13 +190,25 @@ export const BaseTable = <TData, TValue>({
 				</div>
 
 				<div className="flex items-center gap-4">
-					<Button variant="outline" size="sm" onClick={goToPreviousPage} disabled={!canPreviousPage}>
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={goToPreviousPage}
+						disabled={!canPreviousPage}
+						data-testid="data-table-pagination-previous"
+					>
 						Previous
 					</Button>
-					<span className="text-muted-foreground text-sm">
+					<span className="text-muted-foreground text-sm" data-testid="data-table-pagination-range">
 						{startRow}-{endRow} of {totalRows}
 					</span>
-					<Button variant="outline" size="sm" onClick={goToNextPage} disabled={!canNextPage}>
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={goToNextPage}
+						disabled={!canNextPage}
+						data-testid="data-table-pagination-next"
+					>
 						Next
 					</Button>
 				</div>
