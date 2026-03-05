@@ -1,6 +1,6 @@
 import { Currency, PaymentEventType, Prisma } from '@/generated/prisma/client';
-import { endOfYear, startOfYear } from 'date-fns';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import { endOfYear, startOfYear } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -19,12 +19,23 @@ export class ContributionReadService extends BaseService {
 
 	private buildContributionOrderBy(query: ContributionTableQuery): Prisma.ContributionOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'contributor', 'email', 'amount', 'campaignTitle', 'programName', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'contributor',
+			'email',
+			'amount',
+			'campaignTitle',
+			'programName',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
 			case 'contributor':
-				return [{ contributor: { contact: { firstName: direction } } }, { contributor: { contact: { lastName: direction } } }];
+				return [
+					{ contributor: { contact: { firstName: direction } } },
+					{ contributor: { contact: { lastName: direction } } },
+				];
 			case 'email':
 				return [{ contributor: { contact: { email: direction } } }];
 			case 'amount':
@@ -40,7 +51,9 @@ export class ContributionReadService extends BaseService {
 		}
 	}
 
-	private buildYourContributionOrderBy(query: YourContributionsTableQuery): Prisma.ContributionOrderByWithRelationInput[] {
+	private buildYourContributionOrderBy(
+		query: YourContributionsTableQuery,
+	): Prisma.ContributionOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, ['amount', 'currency', 'campaignTitle', 'createdAt'] as const);
 		switch (sortBy) {
@@ -141,13 +154,17 @@ export class ContributionReadService extends BaseService {
 					new Map(
 						campaigns
 							.filter((campaign) => campaign.program?.id && campaign.program?.name)
-							.map((campaign) => [campaign.program!.id, { value: campaign.program!.id, label: campaign.program!.name }]),
+							.map((campaign) => [
+								campaign.program!.id,
+								{ value: campaign.program!.id, label: campaign.program!.name },
+							]),
 					).values(),
 				),
 				campaigns: campaigns.map((campaign) => ({ value: campaign.id, label: campaign.title })),
 				paymentEventTypes: (Object.values(PaymentEventType) as PaymentEventType[]).map((type) => ({
 					value: type,
-					label: type === 'bank_transfer' ? 'Wire transfer' : type.replace(/_/g, ' ').replace(/^./, (s) => s.toUpperCase()),
+					label:
+						type === 'bank_transfer' ? 'Wire transfer' : type.replace(/_/g, ' ').replace(/^./, (s) => s.toUpperCase()),
 				})),
 			};
 
@@ -285,7 +302,9 @@ export class ContributionReadService extends BaseService {
 	): Promise<ServiceResult<YourContributionsPaginatedTableView>> {
 		try {
 			const search = query.search.trim();
-			const matchedCurrency = Object.values(Currency).find((currency) => currency.toLowerCase() === search.toLowerCase());
+			const matchedCurrency = Object.values(Currency).find(
+				(currency) => currency.toLowerCase() === search.toLowerCase(),
+			);
 			const where = search
 				? {
 						AND: [

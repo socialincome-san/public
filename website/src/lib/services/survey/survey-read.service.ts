@@ -26,17 +26,28 @@ export class SurveyReadService extends BaseService {
 
 	private buildSurveyOrderBy(query: SurveyTableQuery): Prisma.SurveyOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(
-			query.sortBy,
-			['id', 'name', 'recipientName', 'programName', 'questionnaire', 'language', 'status', 'dueAt', 'completedAt', 'createdAt'] as const,
-		);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'name',
+			'recipientName',
+			'programName',
+			'questionnaire',
+			'language',
+			'status',
+			'dueAt',
+			'completedAt',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
 			case 'name':
 				return [{ name: direction }];
 			case 'recipientName':
-				return [{ recipient: { contact: { firstName: direction } } }, { recipient: { contact: { lastName: direction } } }];
+				return [
+					{ recipient: { contact: { firstName: direction } } },
+					{ recipient: { contact: { lastName: direction } } },
+				];
 			case 'programName':
 				return [{ recipient: { program: { name: direction } } }];
 			case 'questionnaire':
@@ -89,7 +100,10 @@ export class SurveyReadService extends BaseService {
 		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
-	async getPaginatedTableView(userId: string, query: SurveyTableQuery): Promise<ServiceResult<SurveyPaginatedTableView>> {
+	async getPaginatedTableView(
+		userId: string,
+		query: SurveyTableQuery,
+	): Promise<ServiceResult<SurveyPaginatedTableView>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessibleProgramsResult.success) {

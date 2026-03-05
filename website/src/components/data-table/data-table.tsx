@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
+import { type ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import { BaseTable } from '@/components/data-table/elements/base-table';
 import { DataTableEmptyState } from '@/components/data-table/elements/data-table-empty-state';
 import {
@@ -8,18 +8,16 @@ import {
 	type ToolbarFilter,
 	type ToolbarSortOption,
 } from '@/components/data-table/elements/data-table-toolbar';
-import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
+import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
 import { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { TableQueryState } from '@/components/data-table/query-state';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/ui';
+import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
-import type { ColumnDef, SortingState } from '@tanstack/react-table';
-import type { VisibilityState } from '@tanstack/react-table';
 import DOMPurify from 'isomorphic-dompurify';
 import { ReactNode, useState } from 'react';
 
@@ -112,7 +110,9 @@ export default function DataTable<Row>({
 	const showControls = !error;
 
 	const onSearchChange = (value: string) => {
-		if (!onQueryChange) {return;}
+		if (!onQueryChange) {
+			return;
+		}
 		onQueryChange(
 			{
 				search: value.trim(),
@@ -126,7 +126,9 @@ export default function DataTable<Row>({
 			? [{ id: activeQuery.sortBy, desc: activeQuery.sortDirection === 'desc' }]
 			: [];
 	const onServerSortingChange = (next: SortingState | ((old: SortingState) => SortingState)) => {
-		if (!onQueryChange) {return;}
+		if (!onQueryChange) {
+			return;
+		}
 		const resolved = functionalUpdate(next, serverSortingState);
 		const topSort = resolved[0];
 		onQueryChange({
@@ -185,11 +187,13 @@ export default function DataTable<Row>({
 		: [];
 	const toolbarSortOptions: ToolbarSortOption[] = sortOptions;
 	const onSortToolbarChange = (sortBy?: string, sortDirection?: 'asc' | 'desc') => {
-		if (!onQueryChange) {return;}
+		if (!onQueryChange) {
+			return;
+		}
 		onQueryChange({
 			page: 1,
 			sortBy: sortBy || undefined,
-			sortDirection: sortBy ? sortDirection ?? 'asc' : undefined,
+			sortDirection: sortBy ? (sortDirection ?? 'asc') : undefined,
 		});
 	};
 
@@ -197,7 +201,8 @@ export default function DataTable<Row>({
 		<div data-testid="data-table">
 			<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
 				<h2 className="text-3xl">
-					{title} <span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
+					{title}{' '}
+					<span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
 				</h2>
 				<DataTableToolbar
 					showControls={showControls}
@@ -232,7 +237,10 @@ export default function DataTable<Row>({
 				</div>
 			) : isEmpty ? (
 				<div className={cn('flex items-start pt-2', stableTableMinHeightClass)}>
-					<div className="w-full p-4 text-gray-500" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}></div>
+					<div
+						className="w-full p-4 text-gray-500"
+						dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}
+					></div>
 				</div>
 			) : (
 				<BaseTable

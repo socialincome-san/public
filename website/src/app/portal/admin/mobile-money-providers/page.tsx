@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { MobileMoneyProviderReadService } from '@/lib/services/mobile-money-provider/mobile-money-provider-read.service';
 import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';

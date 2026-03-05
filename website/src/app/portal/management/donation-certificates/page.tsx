@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { DonationCertificateReadService } from '@/lib/services/donation-certificate/donation-certificate-read.service';
 import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';

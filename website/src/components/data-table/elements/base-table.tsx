@@ -7,7 +7,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@socialincome/ui';
 import {
 	ColumnDef,
-	VisibilityState,
 	flexRender,
 	functionalUpdate,
 	getCoreRowModel,
@@ -15,6 +14,7 @@ import {
 	getSortedRowModel,
 	SortingState,
 	useReactTable,
+	VisibilityState,
 } from '@tanstack/react-table';
 import { useState } from 'react';
 
@@ -190,12 +190,7 @@ export const BaseTable = <TData, TValue>({
 				</div>
 
 				<div className="flex items-center gap-4">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={goToPreviousPage}
-						disabled={!canPreviousPage}
-					>
+					<Button variant="outline" size="sm" onClick={goToPreviousPage} disabled={!canPreviousPage}>
 						Previous
 					</Button>
 					<span className="text-muted-foreground text-sm">

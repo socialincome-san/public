@@ -38,7 +38,11 @@ export class DonationCertificateWriteService extends BaseService {
 			LANGUAGE_CODES.find((l) => l === contributor.language) ||
 			DEFAULT_DONATION_CERTIFICATE_LANGUAGE;
 
-		const existingCertificate = await this.donationCertificateReadService.findByYearAndLanguage(year, contributorsId, lang);
+		const existingCertificate = await this.donationCertificateReadService.findByYearAndLanguage(
+			year,
+			contributorsId,
+			lang,
+		);
 		if (!existingCertificate.success) {
 			this.logger.info(`Could not load existing certificates for contributor ${contributorsId}`);
 			return this.resultFail(DonationCertificateError.technicalError);

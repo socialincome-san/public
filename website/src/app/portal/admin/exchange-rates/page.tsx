@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { ExchangeRateReadService } from '@/lib/services/exchange-rate/exchange-rate-read.service';
 import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';

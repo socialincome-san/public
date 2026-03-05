@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/button';
 import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
-import { InboxIcon } from 'lucide-react';
 import DOMPurify from 'isomorphic-dompurify';
+import { InboxIcon } from 'lucide-react';
 
 type DataTableEmptyStateProps = {
 	emptyMessage: string;
@@ -18,7 +18,10 @@ export const DataTableEmptyState = ({ emptyMessage, actions = [] }: DataTableEmp
 			<div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border">
 				<InboxIcon className="text-muted-foreground size-5" />
 			</div>
-			<div className="text-muted-foreground mb-4 text-sm" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}></div>
+			<div
+				className="text-muted-foreground mb-4 text-sm"
+				dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}
+			></div>
 			{singleAction ? (
 				<Button
 					disabled={singleAction.disabled}

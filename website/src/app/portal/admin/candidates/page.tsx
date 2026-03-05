@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { CandidateReadService } from '@/lib/services/candidate/candidate-read.service';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';

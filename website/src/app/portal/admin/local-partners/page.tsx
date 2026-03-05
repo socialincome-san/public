@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { LocalPartnerReadService } from '@/lib/services/local-partner/local-partner-read.service';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';

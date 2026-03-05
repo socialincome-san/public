@@ -32,8 +32,8 @@ import {
 	StripeCustomerData,
 	StripePaymentMethod,
 	StripeSubscriptionPaginatedTableView,
-	StripeSubscriptionTableQuery,
 	StripeSubscriptionRow,
+	StripeSubscriptionTableQuery,
 	StripeSubscriptionTableView,
 	UpdateContributorAfterCheckoutInput,
 	WebhookResult,
@@ -298,7 +298,10 @@ export class StripeService extends BaseService {
 		return { firstName, lastName };
 	}
 
-	private sortSubscriptionRows(rows: StripeSubscriptionRow[], query: StripeSubscriptionTableQuery): StripeSubscriptionRow[] {
+	private sortSubscriptionRows(
+		rows: StripeSubscriptionRow[],
+		query: StripeSubscriptionTableQuery,
+	): StripeSubscriptionRow[] {
 		const direction = query.sortDirection === 'asc' ? 1 : -1;
 		const sortedRows = [...rows];
 		const sortBy = toSortKey(query.sortBy, ['created', 'status', 'interval', 'paymentMethod', 'amount'] as const);

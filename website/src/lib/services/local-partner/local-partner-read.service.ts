@@ -18,7 +18,14 @@ export class LocalPartnerReadService extends BaseService {
 
 	private buildLocalPartnerOrderBy(query: LocalPartnerTableQuery): Prisma.LocalPartnerOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'name', 'contactPerson', 'contactNumber', 'recipientsCount', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'name',
+			'contactPerson',
+			'contactNumber',
+			'recipientsCount',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];

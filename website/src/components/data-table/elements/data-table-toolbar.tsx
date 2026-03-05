@@ -219,7 +219,13 @@ export const DataTableToolbar = ({
 						<PopoverContent align="end" className="w-[280px] space-y-3 p-3">
 							<div className="flex items-center justify-between">
 								<p className="text-sm font-medium">Filter results</p>
-								<Button type="button" variant="ghost" size="sm" onClick={clearAllFilters} disabled={activeFilterCount === 0}>
+								<Button
+									type="button"
+									variant="ghost"
+									size="sm"
+									onClick={clearAllFilters}
+									disabled={activeFilterCount === 0}
+								>
 									Clear
 								</Button>
 							</div>
@@ -227,7 +233,11 @@ export const DataTableToolbar = ({
 								{filters.map((filter) => (
 									<div key={filter.id} className="space-y-1">
 										<label className="text-muted-foreground text-xs">{filter.label}</label>
-										<Select key={`${filter.id}-${filter.value ?? 'none'}`} value={filter.value} onValueChange={(value) => filter.onChange(value)}>
+										<Select
+											key={`${filter.id}-${filter.value ?? 'none'}`}
+											value={filter.value}
+											onValueChange={(value) => filter.onChange(value)}
+										>
 											<SelectTrigger className="h-9 w-full">
 												<SelectValue placeholder={filter.placeholder} />
 											</SelectTrigger>

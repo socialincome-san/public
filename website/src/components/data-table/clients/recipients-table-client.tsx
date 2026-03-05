@@ -1,19 +1,19 @@
 'use client';
 
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import {
 	getRecipientsTableFilters,
 	recipientsTableConfig,
 } from '@/components/data-table/configs/recipients-table.config';
-import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
-import type { ActionMenuItem } from '../elements/action-menu';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
+import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
 

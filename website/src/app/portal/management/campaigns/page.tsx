@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { CampaignReadService } from '@/lib/services/campaign/campaign-read.service';
 import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';

@@ -8,13 +8,13 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
-import { RecipientOption, RecipientPayload, RecipientWithPaymentInfo } from './recipient.types';
 import {
 	RecipientPaginatedTableView,
 	RecipientTableQuery,
 	RecipientTableView,
 	RecipientTableViewRow,
 } from './recipient-table.types';
+import { RecipientOption, RecipientPayload, RecipientWithPaymentInfo } from './recipient.types';
 
 export class RecipientReadService extends BaseService {
 	private programAccessService = new ProgramAccessReadService();
@@ -551,7 +551,10 @@ export class RecipientReadService extends BaseService {
 		}
 	}
 
-	async getPaginatedTableView(userId: string, query: RecipientTableQuery): Promise<ServiceResult<RecipientPaginatedTableView>> {
+	async getPaginatedTableView(
+		userId: string,
+		query: RecipientTableQuery,
+	): Promise<ServiceResult<RecipientPaginatedTableView>> {
 		try {
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {

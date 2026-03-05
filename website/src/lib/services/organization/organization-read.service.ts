@@ -191,7 +191,9 @@ export class OrganizationReadService extends BaseService {
 			]);
 
 			const tableRows: OrganizationTableViewRow[] = organizations.map((organization) => {
-				const ownedProgramsCount = organization.programAccesses.filter((pa) => pa.permission === ProgramPermission.owner).length;
+				const ownedProgramsCount = organization.programAccesses.filter(
+					(pa) => pa.permission === ProgramPermission.owner,
+				).length;
 				const operatedProgramsCount = organization.programAccesses.filter(
 					(pa) => pa.permission === ProgramPermission.operator,
 				).length;

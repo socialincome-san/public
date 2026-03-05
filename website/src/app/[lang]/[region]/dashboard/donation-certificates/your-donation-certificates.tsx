@@ -20,6 +20,11 @@ export default async function YourDonationCertificates({
 	const rows: YourDonationCertificateTableViewRow[] = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
 	return (
-		<YourDonationCertificateTable rows={rows} error={error} lang={lang as WebsiteLanguage} query={{ ...tableQuery, totalRows }} />
+		<YourDonationCertificateTable
+			rows={rows}
+			error={error}
+			lang={lang as WebsiteLanguage}
+			query={{ ...tableQuery, totalRows }}
+		/>
 	);
 }

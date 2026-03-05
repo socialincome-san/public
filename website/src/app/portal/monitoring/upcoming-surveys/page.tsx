@@ -1,10 +1,10 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import {
 	getUpcomingSurveysTableFilters,
 	upcomingSurveysTableConfig,
 } from '@/components/data-table/configs/upcoming-surveys-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyReadService } from '@/lib/services/survey/survey-read.service';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';

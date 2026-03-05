@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { OrganizationReadService } from '@/lib/services/organization/organization-read.service';
 import { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';

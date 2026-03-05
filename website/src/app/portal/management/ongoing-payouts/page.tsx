@@ -1,8 +1,8 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { ongoingPayoutsTableConfig } from '@/components/data-table/configs/ongoing-payouts-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import type { TableFilterConfig } from '@/components/data-table/table-config.types';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutReadService } from '@/lib/services/payout/payout-read.service';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';

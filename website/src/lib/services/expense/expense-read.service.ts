@@ -10,7 +10,14 @@ export class ExpenseReadService extends BaseService {
 
 	private buildExpenseOrderBy(query: ExpenseTableQuery): Prisma.ExpenseOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'type', 'year', 'amountChf', 'organizationName', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'type',
+			'year',
+			'amountChf',
+			'organizationName',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];

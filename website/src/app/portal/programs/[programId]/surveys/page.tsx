@@ -1,3 +1,4 @@
+import { SurveysTableClient } from '@/app/portal/management/surveys/surveys-table-client';
 import { Card } from '@/components/card';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
@@ -6,7 +7,6 @@ import { SurveyReadService } from '@/lib/services/survey/survey-read.service';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
-import { SurveysTableClient } from '@/app/portal/management/surveys/surveys-table-client';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 

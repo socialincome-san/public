@@ -107,7 +107,9 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	};
 };
 
-export const tableQueryFromSearchParams = (searchParams: Record<string, string | string[] | undefined>): TableQueryState => {
+export const tableQueryFromSearchParams = (
+	searchParams: Record<string, string | string[] | undefined>,
+): TableQueryState => {
 	return normalizeTableQuery({
 		page: searchParams.page,
 		pageSize: searchParams.pageSize,
@@ -143,7 +145,9 @@ export const applyTableQueryPatch = (
 		currency: hasPatchKey('currency') ? patch.currency : currentSearchParams.get('currency'),
 		gender: hasPatchKey('gender') ? patch.gender : currentSearchParams.get('gender'),
 		campaignId: hasPatchKey('campaignId') ? patch.campaignId : currentSearchParams.get('campaignId'),
-		paymentEventType: hasPatchKey('paymentEventType') ? patch.paymentEventType : currentSearchParams.get('paymentEventType'),
+		paymentEventType: hasPatchKey('paymentEventType')
+			? patch.paymentEventType
+			: currentSearchParams.get('paymentEventType'),
 		payoutStatus: hasPatchKey('payoutStatus') ? patch.payoutStatus : currentSearchParams.get('payoutStatus'),
 	});
 

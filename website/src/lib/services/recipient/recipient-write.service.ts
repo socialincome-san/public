@@ -1,4 +1,4 @@
-import { Prisma, ProgramPermission, Recipient } from '@/generated/prisma/client';
+import { ProgramPermission, Recipient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { BaseService } from '../core/base.service';

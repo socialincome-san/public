@@ -6,12 +6,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { UserReadService } from '../user/user-read.service';
-import {
-	CandidateCreateInput,
-	CandidatePayload,
-	CandidatePrismaUpdateInput,
-	Profile,
-} from './candidate.types';
+import { CandidateCreateInput, CandidatePayload, CandidatePrismaUpdateInput, Profile } from './candidate.types';
 
 export class CandidateWriteService extends BaseService {
 	private userService = new UserReadService();

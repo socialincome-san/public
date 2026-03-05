@@ -21,10 +21,16 @@ export class CountryReadService extends BaseService {
 
 	private buildCountryOrderBy(query: CountryTableQuery): Prisma.CountryOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(
-			query.sortBy,
-			['id', 'isoCode', 'isActive', 'microfinanceIndex', 'populationCoverage', 'networkTechnology', 'latestSurveyDate', 'updatedAt'] as const,
-		);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'isoCode',
+			'isActive',
+			'microfinanceIndex',
+			'populationCoverage',
+			'networkTechnology',
+			'latestSurveyDate',
+			'updatedAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
@@ -209,7 +215,10 @@ export class CountryReadService extends BaseService {
 				const cashIsOverridden = country.cashConditionOverride ?? false;
 				const mobileMoneyIsOverridden = country.mobileMoneyConditionOverride ?? false;
 				const cashCondition = this.getCashCondition(microfinanceIndex, cashIsOverridden);
-				const mobileMoneyCondition = this.getMobileMoneyCondition(country.mobileMoneyProviders, mobileMoneyIsOverridden);
+				const mobileMoneyCondition = this.getMobileMoneyCondition(
+					country.mobileMoneyProviders,
+					mobileMoneyIsOverridden,
+				);
 
 				const programCount = country._count.programs;
 

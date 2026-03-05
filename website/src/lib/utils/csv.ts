@@ -42,9 +42,7 @@ export const stringifyCsv = (rows: CsvRow[], headers?: string[]): string => {
 	const resolvedHeaders = headers ?? (rows.length > 0 ? Object.keys(rows[0]) : []);
 	const headerLine = resolvedHeaders.map((header) => escapeCsvValue(header)).join(',');
 
-	const dataLines = rows.map((row) =>
-		resolvedHeaders.map((header) => escapeCsvValue(row[header] ?? '')).join(','),
-	);
+	const dataLines = rows.map((row) => resolvedHeaders.map((header) => escapeCsvValue(row[header] ?? '')).join(','));
 
 	return [headerLine, ...dataLines].join('\n');
 };

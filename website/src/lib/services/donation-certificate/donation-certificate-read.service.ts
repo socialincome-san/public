@@ -1,4 +1,5 @@
 import { DonationCertificate, Prisma } from '@/generated/prisma/client';
+import { LanguageCode } from '@/lib/types/language';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -11,7 +12,6 @@ import {
 	YourDonationCertificateTableQuery,
 	YourDonationCertificateTableViewRow,
 } from './donation-certificate.types';
-import { LanguageCode } from '@/lib/types/language';
 
 export class DonationCertificateReadService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
@@ -27,7 +27,10 @@ export class DonationCertificateReadService extends BaseService {
 			case 'year':
 				return [{ year: direction }];
 			case 'contributor':
-				return [{ contributor: { contact: { firstName: direction } } }, { contributor: { contact: { lastName: direction } } }];
+				return [
+					{ contributor: { contact: { firstName: direction } } },
+					{ contributor: { contact: { lastName: direction } } },
+				];
 			case 'email':
 				return [{ contributor: { contact: { email: direction } } }];
 			case 'storagePath':
@@ -157,7 +160,10 @@ export class DonationCertificateReadService extends BaseService {
 						AND: [
 							{ contributorId },
 							{
-								OR: [{ storagePath: { contains: search, mode: 'insensitive' as const } }, ...(hasYearFilter ? [{ year: parsedYear }] : [])],
+								OR: [
+									{ storagePath: { contains: search, mode: 'insensitive' as const } },
+									...(hasYearFilter ? [{ year: parsedYear }] : []),
+								],
 							},
 						],
 					}

@@ -33,12 +33,22 @@ export class PayoutReadService extends BaseService {
 
 	private buildPayoutOrderBy(query: PayoutTableQuery): Prisma.PayoutOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'recipient', 'programName', 'amount', 'status', 'paymentAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'recipient',
+			'programName',
+			'amount',
+			'status',
+			'paymentAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
 			case 'recipient':
-				return [{ recipient: { contact: { firstName: direction } } }, { recipient: { contact: { lastName: direction } } }];
+				return [
+					{ recipient: { contact: { firstName: direction } } },
+					{ recipient: { contact: { lastName: direction } } },
+				];
 			case 'programName':
 				return [{ recipient: { program: { name: direction } } }];
 			case 'amount':
@@ -67,10 +77,18 @@ export class PayoutReadService extends BaseService {
 		}
 	}
 
-	private sortPayoutForecastRows(rows: PayoutForecastTableViewRow[], query: PayoutForecastTableQuery): PayoutForecastTableViewRow[] {
+	private sortPayoutForecastRows(
+		rows: PayoutForecastTableViewRow[],
+		query: PayoutForecastTableQuery,
+	): PayoutForecastTableViewRow[] {
 		const direction = query.sortDirection === 'asc' ? 1 : -1;
 		const sortedRows = [...rows];
-		const sortBy = toSortKey(query.sortBy, ['period', 'numberOfRecipients', 'amountInProgramCurrency', 'amountUsd'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'period',
+			'numberOfRecipients',
+			'amountInProgramCurrency',
+			'amountUsd',
+		] as const);
 		sortedRows.sort((a, b) => {
 			switch (sortBy) {
 				case 'period':

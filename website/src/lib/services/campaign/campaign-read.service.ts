@@ -7,9 +7,9 @@ import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
-	CampaignPaginatedTableView,
 	CampaignOption,
 	CampaignPage,
+	CampaignPaginatedTableView,
 	CampaignPayload,
 	CampaignTableQuery,
 	CampaignTableViewRow,
@@ -21,10 +21,16 @@ export class CampaignReadService extends BaseService {
 
 	private buildCampaignOrderBy(query: CampaignTableQuery): Prisma.CampaignOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(
-			query.sortBy,
-			['id', 'title', 'description', 'currency', 'endDate', 'isActive', 'programName', 'createdAt'] as const,
-		);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'title',
+			'description',
+			'currency',
+			'endDate',
+			'isActive',
+			'programName',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];

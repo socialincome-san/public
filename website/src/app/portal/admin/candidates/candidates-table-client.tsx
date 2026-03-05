@@ -1,8 +1,11 @@
 'use client';
 
-import { CsvUploadDialog } from '@/components/data-table/clients/csv-upload-dialog';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
-import { candidatesTableConfig, getCandidatesTableFilters } from '@/components/data-table/configs/candidates-table.config';
+import { CsvUploadDialog } from '@/components/data-table/clients/csv-upload-dialog';
+import {
+	candidatesTableConfig,
+	getCandidatesTableFilters,
+} from '@/components/data-table/configs/candidates-table.config';
 import type { ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { Session } from '@/lib/firebase/current-account';

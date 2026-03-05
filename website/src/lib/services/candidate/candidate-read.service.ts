@@ -20,10 +20,15 @@ export class CandidateReadService extends BaseService {
 
 	private buildCandidateOrderBy(query: CandidatesTableQuery): Prisma.RecipientOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(
-			query.sortBy,
-			['id', 'candidate', 'country', 'gender', 'dateOfBirth', 'contactNumber', 'localPartnerName'] as const,
-		);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'candidate',
+			'country',
+			'gender',
+			'dateOfBirth',
+			'contactNumber',
+			'localPartnerName',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
@@ -385,7 +390,13 @@ export class CandidateReadService extends BaseService {
 				.sort()
 				.map((gender) => ({ value: gender, label: gender }));
 
-			return this.resultOk({ tableRows, totalCount, countryFilterOptions, genderFilterOptions, localPartnerFilterOptions });
+			return this.resultOk({
+				tableRows,
+				totalCount,
+				countryFilterOptions,
+				genderFilterOptions,
+				localPartnerFilterOptions,
+			});
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Could not fetch candidates: ${JSON.stringify(error)}`);

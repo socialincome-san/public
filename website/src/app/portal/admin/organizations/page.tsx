@@ -1,7 +1,7 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationsTableConfig } from '@/components/data-table/configs/organizations-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { OrganizationReadService } from '@/lib/services/organization/organization-read.service';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
