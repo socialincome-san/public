@@ -52,7 +52,7 @@ class UserRepository {
 
       // 3. Update cache with fresh data
       if (freshRecipient != null) {
-        await localDataSource.saveRecipient(firebaseUser, freshRecipient);
+        await localDataSource.saveRecipient(freshRecipient);
       }
 
       // 4. Notify caller of fresh data if callback provided
@@ -76,10 +76,8 @@ class UserRepository {
     final updatedRecipient = await _activeDataSource.updateRecipient(selfUpdate);
 
     // Update cache after successful update
-    if (currentUser != null) {
-      await localDataSource.saveRecipient(currentUser!, updatedRecipient);
-    }
-
+    await localDataSource.saveRecipient(updatedRecipient);
+  
     return updatedRecipient;
   }
 

@@ -18,6 +18,9 @@ class QueueAwarePaymentRepository extends PaymentRepository {
   @override
   Future<void> confirmPayment({required String payoutId}) async {
     await _queueService.enqueue(ConfirmPaymentOperation(payoutId: payoutId));
+
+    // Update cache immediately after queuing the operation for better UX; actual remote update happens via queue
+    return localDataSource.confirmPayout(payoutId: payoutId);
   }
 
   @override

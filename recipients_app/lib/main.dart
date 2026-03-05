@@ -90,7 +90,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
     authenticatedClient: authenticatedClient,
   );
   final userDemoDataSource = UserDemoDataSource();
-  final userLocalDataSource = UserLocalDataSource(database: appDatabase);
+  final userLocalDataSource = UserLocalDataSource(database: appDatabase, firebaseAuth: firebaseAuth);
 
   final paymentRemoteDataSource = PayoutRemoteDataSource(
     authenticatedClient: authenticatedClient,

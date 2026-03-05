@@ -15,7 +15,6 @@ import "package:app/data/models/phone.dart";
 import "package:app/data/models/program.dart";
 import "package:app/data/models/recipient.dart";
 import "package:firebase_auth/firebase_auth.dart" as firebase_auth;
-import "package:firebase_auth/firebase_auth.dart";
 
 class UserDemoDataSource implements UserDataSource {
   final Recipient _recipient = Recipient(
@@ -103,6 +102,7 @@ class UserDemoDataSource implements UserDataSource {
     ),
 
   );
+
   final _user = DemoUser();
 
   @override
@@ -116,7 +116,7 @@ class UserDemoDataSource implements UserDataSource {
   }
 
   @override
-  Future<void> updateRecipient(User firebaseUser, RecipientSelfUpdate selfUpdate) async {
+  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
     _recipient.copyWith(
       contact: _recipient.contact.copyWith(
         firstName: selfUpdate.firstName,
@@ -147,6 +147,7 @@ class UserDemoDataSource implements UserDataSource {
       successorName: selfUpdate.successorName,
       termsAccepted: selfUpdate.termsAccepted,
     );
+    return _recipient;
   }
 
   @override
