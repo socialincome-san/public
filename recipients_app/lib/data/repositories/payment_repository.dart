@@ -61,19 +61,25 @@ class PaymentRepository {
 
   Future<void> confirmPayment({
     required String payoutId,
-  }) async =>
-      await _activeDataSource.confirmPayout(payoutId: payoutId);
-  // Note: Caller should refetch to update cache
+  }) async {
+    // Update cache immediately for responsive UI
+    await localDataSource.confirmPayout(payoutId: payoutId);
+    await _activeDataSource.confirmPayout(payoutId: payoutId);
+  }
 
   Future<void> contestPayment({
     required String payoutId,
     required String contestReason,
-  }) async =>
-      await _activeDataSource.contestPayout(
-        payoutId: payoutId,
-        contestReason: contestReason,
-      );
-  // Note: Caller should refetch to update cache
+  }) async {
+    // Update cache immediately for responsive UI
+    await localDataSource.contestPayout(
+      payoutId: payoutId, 
+      contestReason: contestReason);
+    await _activeDataSource.contestPayout(
+      payoutId: payoutId,
+      contestReason: contestReason,
+    );
+  }
 
   Future<void> clearCache() async {
     await localDataSource.clearPayouts();

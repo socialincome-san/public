@@ -2,6 +2,7 @@ import "dart:async";
 
 import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
 import "package:app/data/database/app_database.dart";
+import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/queue/queue_events.dart";
 import "package:app/data/models/queue/queue_operations.dart";
 import "package:app/data/repositories/repositories.dart";
@@ -129,14 +130,12 @@ class UpdateQueueService {
         await userRepository.updateRecipient(op.selfUpdate);
 
       case QueueOperationType.updatePaymentNumber:
-        // final op = UpdatePaymentNumberOperationMapper.fromJson(operation.operationPayload);
-        // TODO: Implement when dashboard repository is created
-        throw UnimplementedError("updatePaymentNumber not yet implemented in queue");
+        final op = UpdatePaymentNumberOperationMapper.fromJson(operation.operationPayload);
+        await userRepository.updateRecipient(RecipientSelfUpdate(paymentPhone: op.phoneNumber));
 
       case QueueOperationType.updateContactNumber:
-        // final op = UpdateContactNumberOperationMapper.fromJson(operation.operationPayload);
-        // TODO: Implement when dashboard repository is created
-        throw UnimplementedError("updateContactNumber not yet implemented in queue");
+        final op = UpdateContactNumberOperationMapper.fromJson(operation.operationPayload);
+        await userRepository.updateRecipient(RecipientSelfUpdate(contactPhone: op.phoneNumber));
     }
   }
 

@@ -63,12 +63,16 @@ class PayoutLocalDataSource implements PayoutDataSource {
   }
 
   @override
-  Future<void> confirmPayout({required String payoutId}) {
-    throw UnimplementedError("Local source cannot confirm remote payout");
+  Future<void> confirmPayout({required String payoutId}) async {
+    await (database.update(database.payouts)..where((p) => p.id.equals(payoutId))).write(
+      db.PayoutsCompanion(status: Value(PayoutStatus.confirmed.toValue())),
+    );
   }
 
   @override
-  Future<void> contestPayout({required String payoutId, required String contestReason}) {
-    throw UnimplementedError("Local source cannot contest remote payout");
+  Future<void> contestPayout({required String payoutId, required String contestReason}) async {
+    await (database.update(database.payouts)..where((p) => p.id.equals(payoutId))).write(
+      db.PayoutsCompanion(status: Value(PayoutStatus.contested.toValue()), comments: Value(contestReason)),
+    );
   }
 }
