@@ -13,7 +13,7 @@ test('make payouts page matches screenshot', async ({ page }) => {
 
 const expected = {
 	step1:
-		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber',
+		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber91234567,OM-SL-001,subscriber91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber77111222,OM-SL-002,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber',
 
 	step2:
 		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Mariatu,Koroma,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,40,Combined,Tester,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber88765432,50,Abdul,Jalloh,OM-SL-003,SocialIncomeMarch2025,subscriber',
