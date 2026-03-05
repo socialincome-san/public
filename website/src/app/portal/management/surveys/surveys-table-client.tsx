@@ -1,16 +1,32 @@
 'use client';
 
-import { Button } from '@/components/button';
-import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { getSurveysTableFilters, surveysTableConfig } from '@/components/data-table/configs/surveys-table.config';
+import { TableQueryState } from '@/components/data-table/query-state';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
-import { ClipboardListIcon } from 'lucide-react';
+import { ClipboardListIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';
 import { SurveyFormDialog } from './survey-form-dialog';
 
-export const SurveysTableClient = ({ rows, error }: { rows: SurveyTableViewRow[]; error: string | null }) => {
+type Props = {
+	rows: SurveyTableViewRow[];
+	error: string | null;
+	query?: TableQueryState & { totalRows: number };
+	programFilterOptions?: { id: string; name: string }[];
+	showProgramFilter?: boolean;
+	hideProgramName?: boolean;
+};
+
+export const SurveysTableClient = ({
+	rows,
+	error,
+	query,
+	programFilterOptions = [],
+	showProgramFilter = true,
+	hideProgramName = false,
+}: Props) => {
 	const [isSurveyFormOpen, setIsSurveyFormOpen] = useState(false);
 	const [surveyId, setSurveyId] = useState<string | undefined>(undefined);
 	const [readOnly, setReadOnly] = useState(false);
@@ -38,23 +54,26 @@ export const SurveysTableClient = ({ rows, error }: { rows: SurveyTableViewRow[]
 
 	return (
 		<>
-			<DataTable
-				title="Surveys"
+			<ConfiguredDataTableClient
+				config={surveysTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No surveys found"
-				data={rows}
-				makeColumns={makeSurveyColumns}
+				query={query}
+				toolbarFilters={getSurveysTableFilters({ query, programFilterOptions, showProgramFilter })}
+				hideProgramName={hideProgramName}
 				onRowClick={openEditForm}
-				actions={
-					<div className="flex gap-2">
-						<Button onClick={openEmptyForm}>Add survey</Button>
-						<Button variant="outline" onClick={() => setIsGenerationDialogOpen(true)}>
-							Generate surveys
-							<ClipboardListIcon />
-						</Button>
-					</div>
-				}
-				searchKeys={['name', 'recipientName', 'programName']}
+				actionMenuItems={[
+					{
+						label: 'Add survey',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+					{
+						label: 'Generate surveys',
+						icon: <ClipboardListIcon />,
+						onSelect: () => setIsGenerationDialogOpen(true),
+					},
+				]}
 			/>
 
 			<SurveyFormDialog

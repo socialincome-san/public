@@ -1,13 +1,22 @@
 'use client';
 
-import { Button } from '@/components/button';
-import { makeCountryColumns } from '@/components/data-table/columns/countries';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { countriesTableConfig } from '@/components/data-table/configs/countries-table.config';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CountryDialog } from './country-dialog';
 
-export default function CountriesTable({ rows, error }: { rows: CountryTableViewRow[]; error: string | null }) {
+export default function CountriesTable({
+	rows,
+	error,
+	query,
+}: {
+	rows: CountryTableViewRow[];
+	error: string | null;
+	query?: TableQueryState & { totalRows: number };
+}) {
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [countryId, setCountryId] = useState<string | undefined>(undefined);
@@ -26,13 +35,18 @@ export default function CountriesTable({ rows, error }: { rows: CountryTableView
 
 	return (
 		<>
-			<DataTable
-				title="Countries"
+			<ConfiguredDataTableClient
+				config={countriesTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No countries found"
-				data={rows}
-				makeColumns={makeCountryColumns}
-				actions={<Button onClick={openEmptyForm}>Add country</Button>}
+				query={query}
+				actionMenuItems={[
+					{
+						label: 'Add country',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 			/>
 

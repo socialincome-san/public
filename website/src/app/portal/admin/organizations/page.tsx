@@ -1,35 +1,40 @@
-import { makeOrganizationAdminColumns } from '@/components/data-table/columns/organizations';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { organizationsTableConfig } from '@/components/data-table/configs/organizations-table.config';
+import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { OrganizationService } from '@/lib/services/organization/organization.service';
+import { OrganizationReadService } from '@/lib/services/organization/organization-read.service';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
+import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 
-export default function OrganizationsPage() {
+export default function OrganizationsPage({ searchParams }: SearchParamsPageProps) {
 	return (
-		<Suspense>
-			<OrganizationsDataLoader />
+		<Suspense fallback={<AppLoadingSkeleton />}>
+			<OrganizationsDataLoader searchParams={searchParams} />
 		</Suspense>
 	);
 }
 
-const OrganizationsDataLoader = async () => {
+const OrganizationsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
+	const resolvedSearchParams = await searchParams;
+	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new OrganizationService();
-	const result = await service.getAdminTableView(user.id);
+	const service = new OrganizationReadService();
+	const result = await service.getPaginatedAdminTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: OrganizationTableViewRow[] = result.success ? result.data.tableRows : [];
+	const totalRows = result.success ? result.data.totalCount : 0;
 
 	return (
-		<DataTable
-			title="All Organizations"
+		<ConfiguredDataTableClient
+			config={organizationsTableConfig}
+			rows={rows}
 			error={error}
-			emptyMessage="No organizations found"
-			data={rows}
-			makeColumns={makeOrganizationAdminColumns}
+			query={{ ...tableQuery, totalRows }}
 		/>
 	);
 };

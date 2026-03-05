@@ -1,17 +1,17 @@
 import { ContributionStatus, Currency, DonationInterval, PaymentEventType } from '@/generated/prisma/client';
-import { CampaignService } from '../campaign/campaign.service';
-import { ContributionService } from '../contribution/contribution.service';
+import { CampaignReadService } from '../campaign/campaign-read.service';
+import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
-import { ContributorService } from '../contributor/contributor.service';
+import { ContributorWriteService } from '../contributor/contributor-write.service';
 import { BankContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankTransferPayment } from './bank-transfer.types';
 
 export class BankTransferService extends BaseService {
-	private contributorService = new ContributorService();
-	private campaignService = new CampaignService();
-	private contributionService = new ContributionService();
+	private contributorService = new ContributorWriteService();
+	private campaignService = new CampaignReadService();
+	private contributionService = new ContributionWriteService();
 
 	async createContributionForNewOrExistingContributor(
 		payment: BankTransferPayment,

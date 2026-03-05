@@ -2,14 +2,14 @@
 
 import { BankTransferService } from '@/lib/services/bank-transfer/bank-transfer.service';
 import { BankTransferPayment } from '@/lib/services/bank-transfer/bank-transfer.types';
-import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { ContributorWriteService } from '@/lib/services/contributor/contributor-write.service';
 import { BankContributorData } from '@/lib/services/contributor/contributor.types';
 import { DateTime } from 'luxon';
 
 export const getReferenceIds = async (
 	email: string,
 ): Promise<{ contributorReferenceId: string; contributionReferenceId: string } | undefined> => {
-	const contributorService = new ContributorService();
+	const contributorService = new ContributorWriteService();
 	const contributorReferenceId = await contributorService.getOrCreateReferenceIdByEmail(email);
 	if (!contributorReferenceId.success) {
 		return;

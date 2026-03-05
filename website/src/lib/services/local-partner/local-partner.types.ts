@@ -13,6 +13,19 @@ export type LocalPartnerTableView = {
 	tableRows: LocalPartnerTableViewRow[];
 };
 
+export type LocalPartnerTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type LocalPartnerPaginatedTableView = {
+	tableRows: LocalPartnerTableViewRow[];
+	totalCount: number;
+};
+
 export type LocalPartnerPayload = {
 	id: string;
 	name: string;

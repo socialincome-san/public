@@ -11,10 +11,10 @@ import {
 	CONTRIBUTION_REFERENCE_ID_LENGTH,
 	CONTRIBUTOR_REFERENCE_ID_LENGTH,
 } from '../bank-transfer/bank-transfer-config';
-import { CampaignService } from '../campaign/campaign.service';
-import { ContributionService } from '../contribution/contribution.service';
+import { CampaignReadService } from '../campaign/campaign-read.service';
+import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
-import { ContributorService } from '../contributor/contributor.service';
+import { ContributorReadService } from '../contributor/contributor-read.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';
@@ -25,9 +25,9 @@ const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
 
 export class PaymentFileImportService extends BaseService {
-	private contributorService = new ContributorService();
-	private contributionService = new ContributionService();
-	private readonly campaignService = new CampaignService();
+	private contributorService = new ContributorReadService();
+	private contributionService = new ContributionWriteService();
+	private readonly campaignService = new CampaignReadService();
 	private readonly bucketName;
 	private readonly xmlSelectExpression = '//ns:BkToCstmrDbtCdtNtfctn/ns:Ntfctn/ns:Ntry/ns:NtryDtls/ns:TxDtls';
 

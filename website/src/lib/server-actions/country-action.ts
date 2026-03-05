@@ -1,17 +1,19 @@
 'use server';
 
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { CountryService } from '@/lib/services/country/country.service';
+import { CountryReadService } from '@/lib/services/country/country-read.service';
+import { CountryWriteService } from '@/lib/services/country/country-write.service';
 import type { CountryCreateInput, CountryUpdateInput } from '@/lib/services/country/country.types';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/countries';
-const service = new CountryService();
+const countryReadService = new CountryReadService();
+const countryWriteService = new CountryWriteService();
 
 export const createCountryAction = async (input: CountryCreateInput) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const res = await service.create(user.id, input);
+	const res = await countryWriteService.create(user.id, input);
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
@@ -20,7 +22,7 @@ export const createCountryAction = async (input: CountryCreateInput) => {
 export const updateCountryAction = async (input: CountryUpdateInput) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const res = await service.update(user.id, input);
+	const res = await countryWriteService.update(user.id, input);
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
@@ -29,7 +31,7 @@ export const updateCountryAction = async (input: CountryUpdateInput) => {
 export const deleteCountryAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const res = await service.delete(user.id, id);
+	const res = await countryWriteService.delete(user.id, id);
 
 	revalidatePath(REVALIDATE_PATH);
 	return res;
@@ -38,9 +40,9 @@ export const deleteCountryAction = async (id: string) => {
 export const getCountryAction = async (id: string) => {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	return service.get(user.id, id);
+	return countryReadService.get(user.id, id);
 };
 
 export const getProgramCountryFeasibilityAction = async () => {
-	return service.getProgramCountryFeasibility();
+	return countryReadService.getProgramCountryFeasibility();
 };

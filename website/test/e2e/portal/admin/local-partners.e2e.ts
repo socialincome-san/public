@@ -1,9 +1,15 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { getFirebaseAdminService, getLocalPartnerService } from '../../utils';
+import { getFirebaseAdminService, getPrismaClient } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
+});
+
+test('admin local partners page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/admin/local-partners');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 const expectedPartner = {
@@ -18,7 +24,8 @@ test('Add new local partner', async ({ page }) => {
 	await firebaseService.deleteByEmailIfExists(expectedPartner.email);
 
 	await page.goto('/portal/admin/local-partners');
-	await page.getByRole('button', { name: 'Add new local partner' }).click();
+	await page.getByTestId('data-table-actions-button').click();
+	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 
 	await page.getByTestId('form-item-name').locator('input').fill(expectedPartner.name);
 
@@ -29,19 +36,26 @@ test('Add new local partner', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const service = await getLocalPartnerService();
-	const result = await service.getTableView('user-2');
+	const prisma = await getPrismaClient();
+	const count = await prisma.localPartner.count();
+	expect(count).toBe(4);
 
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	expect(result.data.tableRows.length).toBe(4);
-
-	const row = result.data.tableRows.find((r) => r.name === expectedPartner.name);
+	const row = await prisma.localPartner.findFirst({
+		where: { name: expectedPartner.name },
+		select: {
+			contact: {
+				select: {
+					firstName: true,
+					lastName: true,
+				},
+			},
+		},
+	});
 
 	expect(row).toBeDefined();
-	expect(row?.contactPerson).toBe(`${expectedPartner.firstName} ${expectedPartner.lastName}`);
+	expect(`${row?.contact?.firstName ?? ''} ${row?.contact?.lastName ?? ''}`.trim()).toBe(
+		`${expectedPartner.firstName} ${expectedPartner.lastName}`,
+	);
 
 	await page.goto('http://localhost:4000/auth');
 	await page

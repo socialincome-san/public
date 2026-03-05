@@ -1,12 +1,12 @@
 import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
 import { cache } from 'react';
-import { SurveyService } from '../services/survey/survey.service';
+import { SurveyReadService } from '../services/survey/survey-read.service';
 import { SurveyPayload } from '../services/survey/survey.types';
 
 const firebaseSessionService = new FirebaseSessionService();
 
 const findSurveyByEmail = async (email: string): Promise<SurveyPayload | null> => {
-	const service = new SurveyService();
+	const service = new SurveyReadService();
 	const result = await service.getByAccessEmail(email);
 	return result.success ? result.data : null;
 };

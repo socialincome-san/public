@@ -1,10 +1,10 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { ExchangeRateService } from '@/lib/services/exchange-rate/exchange-rate.service';
+import { ExchangeRateWriteService } from '@/lib/services/exchange-rate/exchange-rate-write.service';
 import { revalidatePath } from 'next/cache';
 
-const service = new ExchangeRateService();
+const service = new ExchangeRateWriteService();
 
 export const importExchangeRatesAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();

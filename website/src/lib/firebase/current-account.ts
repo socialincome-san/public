@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation';
-import { ContributorService } from '../services/contributor/contributor.service';
+import { ContributorReadService } from '../services/contributor/contributor-read.service';
 import { ContributorSession } from '../services/contributor/contributor.types';
 import { FirebaseSessionService } from '../services/firebase/firebase-session.service';
-import { LocalPartnerService } from '../services/local-partner/local-partner.service';
+import { LocalPartnerReadService } from '../services/local-partner/local-partner-read.service';
 import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
-import { UserService } from '../services/user/user.service';
+import { UserReadService } from '../services/user/user-read.service';
 import { UserSession } from '../services/user/user.types';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
@@ -25,9 +25,9 @@ export const getCurrentSessions = async (): Promise<Session[]> => {
 		return [];
 	}
 
-	const contributorService = new ContributorService();
-	const userService = new UserService();
-	const localPartnerService = new LocalPartnerService();
+	const contributorService = new ContributorReadService();
+	const userService = new UserReadService();
+	const localPartnerService = new LocalPartnerReadService();
 
 	const out: Session[] = [];
 	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);

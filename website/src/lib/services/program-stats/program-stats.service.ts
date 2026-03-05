@@ -3,7 +3,7 @@ import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
+import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import {
 	ProgramBudgetCalculation,
 	ProgramBudgetCalculationInput,
@@ -12,7 +12,7 @@ import {
 } from './program-stats.types';
 
 export class ProgramStatsService extends BaseService {
-	private exchangeRateService = new ExchangeRateService();
+	private exchangeRateService = new ExchangeRateReadService();
 
 	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
 		try {

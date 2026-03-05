@@ -1,11 +1,11 @@
 import { FirebaseSessionService } from '@/lib/services/firebase/firebase-session.service';
-import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
+import { LocalPartnerReadService } from '@/lib/services/local-partner/local-partner-read.service';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const firebaseSessionService = new FirebaseSessionService();
-const service = new LocalPartnerService();
+const service = new LocalPartnerReadService();
 
 const findLocalPartnerByAuthId = async (authUserId: string): Promise<LocalPartnerSession | null> => {
 	const result = await service.getCurrentLocalPartnerSession(authUserId);

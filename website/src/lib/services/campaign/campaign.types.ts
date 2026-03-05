@@ -13,8 +13,21 @@ export type CampaignTableViewRow = {
 	permission: OrganizationPermission;
 };
 
-export type CampaignTableView = {
+type CampaignTableView = {
 	tableRows: CampaignTableViewRow[];
+};
+
+export type CampaignTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type CampaignPaginatedTableView = {
+	tableRows: CampaignTableViewRow[];
+	totalCount: number;
 };
 
 export type CampaignPayload = {

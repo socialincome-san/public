@@ -1,10 +1,10 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { ProgramService } from '../services/program/program.service';
+import { ProgramWriteService } from '../services/program/program-write.service';
 import type { CreateProgramInput } from '../services/program/program.types';
 
-const service = new ProgramService();
+const service = new ProgramWriteService();
 
 export const createProgramAction = async (input: CreateProgramInput) => {
 	const user = await getAuthenticatedUserOrThrow();

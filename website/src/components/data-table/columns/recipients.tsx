@@ -2,6 +2,7 @@
 
 import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { AgeCell } from '@/components/data-table/elements/age-cell';
+import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
@@ -15,14 +16,16 @@ export const makeRecipientColumns = (
 ): ColumnDef<RecipientTableViewRow>[] => {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{
-			accessorKey: 'firstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
+			id: 'recipient',
+			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'lastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			id: 'country',
+			accessorFn: (row) => row.country ?? '',
+			header: (ctx) => <SortableHeader ctx={ctx}>Country</SortableHeader>,
+			cell: ({ row }) => <CountryFlagCell country={row.original.country} />,
 		},
 		{
 			accessorKey: 'dateOfBirth',
@@ -67,6 +70,7 @@ export const makeRecipientColumns = (
 			id: 'actions',
 			header: '',
 			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	);

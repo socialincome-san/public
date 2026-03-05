@@ -1,9 +1,10 @@
 'use server';
 
 import { getSessionByTypeOrThrow, type Session } from '@/lib/firebase/current-account';
-import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
-import { ProgramService } from '@/lib/services/program/program.service';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { LocalPartnerReadService } from '@/lib/services/local-partner/local-partner-read.service';
+import { ProgramReadService } from '@/lib/services/program/program-read.service';
+import { RecipientReadService } from '@/lib/services/recipient/recipient-read.service';
+import { RecipientWriteService } from '@/lib/services/recipient/recipient-write.service';
 import { RecipientCreateInput, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { revalidatePath } from 'next/cache';
 
@@ -11,13 +12,14 @@ const PORTAL_RECIPIENTS_PATH = '/portal/management/recipients';
 const PORTAL_PROGRAM_RECIPIENTS_PATH = '/portal/programs/[programId]/recipients';
 const PARTNER_RECIPIENTS_PATH = '/partner-space/recipients';
 
-const recipientService = new RecipientService();
-const programService = new ProgramService();
-const localPartnerService = new LocalPartnerService();
+const recipientReadService = new RecipientReadService();
+const recipientWriteService = new RecipientWriteService();
+const programService = new ProgramReadService();
+const localPartnerService = new LocalPartnerReadService();
 
 export const createRecipientAction = async (recipient: RecipientCreateInput, sessionType: Session['type'] = 'user') => {
 	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await recipientService.create(session, recipient);
+	const result = await recipientWriteService.create(session, recipient);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
@@ -33,7 +35,7 @@ export const updateRecipientAction = async (
 	sessionType: Session['type'] = 'user',
 ) => {
 	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await recipientService.update(session, updateInput, nextPaymentPhoneNumber);
+	const result = await recipientWriteService.update(session, updateInput, nextPaymentPhoneNumber);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
@@ -45,7 +47,7 @@ export const updateRecipientAction = async (
 
 export const deleteRecipientAction = async (recipientId: string, sessionType: Session['type'] = 'user') => {
 	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await recipientService.delete(session, recipientId);
+	const result = await recipientWriteService.delete(session, recipientId);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
@@ -57,7 +59,7 @@ export const deleteRecipientAction = async (recipientId: string, sessionType: Se
 
 export const getRecipientAction = async (recipientId: string, sessionType: Session['type'] = 'user') => {
 	const session = await getSessionByTypeOrThrow(sessionType);
-	return await recipientService.get(session, recipientId);
+	return await recipientReadService.get(session, recipientId);
 };
 
 export const getRecipientOptions = async (sessionType: Session['type'] = 'user') => {
@@ -75,7 +77,7 @@ export const getRecipientOptions = async (sessionType: Session['type'] = 'user')
 
 export const importRecipientsCsvAction = async (file: File, sessionType: Session['type'] = 'user') => {
 	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await recipientService.importCsv(session, file);
+	const result = await recipientWriteService.importCsv(session, file);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
@@ -83,4 +85,9 @@ export const importRecipientsCsvAction = async (file: File, sessionType: Session
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
 	return result;
+};
+
+export const downloadRecipientsCsvAction = async (sessionType: Session['type'] = 'user') => {
+	const session = await getSessionByTypeOrThrow(sessionType);
+	return recipientReadService.exportCsv(session);
 };
