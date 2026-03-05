@@ -1,4 +1,6 @@
 export const TABLE_PAGE_SIZE_OPTIONS = [10, 50, 100, 1000] as const;
+const MAX_SEARCH_LENGTH = 120;
+const MAX_QUERY_TOKEN_LENGTH = 64;
 
 const DEFAULT_TABLE_QUERY = {
 	page: 1,
@@ -51,6 +53,16 @@ const takeFirst = (value: QueryValue): string | undefined => {
 	return String(value);
 };
 
+const stripControlChars = (value: string): string => value.replace(/[\u0000-\u001F\u007F]/g, '');
+
+const normalizeToken = (value: QueryValue, maxLength: number): string => {
+	const token = takeFirst(value);
+	if (!token) {
+		return '';
+	}
+	return stripControlChars(token).trim().slice(0, maxLength);
+};
+
 const parsePositiveInt = (value: QueryValue, fallback: number) => {
 	const parsed = Number(takeFirst(value));
 	if (!Number.isInteger(parsed) || parsed < 1) {
@@ -65,18 +77,18 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const pageSize = TABLE_PAGE_SIZE_OPTIONS.includes(rawPageSize as (typeof TABLE_PAGE_SIZE_OPTIONS)[number])
 		? rawPageSize
 		: DEFAULT_TABLE_QUERY.pageSize;
-	const search = takeFirst(input.search)?.trim() ?? DEFAULT_TABLE_QUERY.search;
-	const sortBy = takeFirst(input.sortBy)?.trim() ?? '';
-	const rawSortDirection = takeFirst(input.sortDirection)?.trim().toLowerCase();
+	const search = normalizeToken(input.search, MAX_SEARCH_LENGTH) || DEFAULT_TABLE_QUERY.search;
+	const sortBy = normalizeToken(input.sortBy, MAX_QUERY_TOKEN_LENGTH);
+	const rawSortDirection = normalizeToken(input.sortDirection, MAX_QUERY_TOKEN_LENGTH).toLowerCase();
 	const sortDirection = rawSortDirection === 'asc' || rawSortDirection === 'desc' ? rawSortDirection : undefined;
-	const programId = takeFirst(input.programId)?.trim() ?? '';
-	const localPartnerId = takeFirst(input.localPartnerId)?.trim() ?? '';
-	const country = takeFirst(input.country)?.trim() ?? '';
-	const currency = takeFirst(input.currency)?.trim() ?? '';
-	const gender = takeFirst(input.gender)?.trim() ?? '';
-	const campaignId = takeFirst(input.campaignId)?.trim() ?? '';
-	const paymentEventType = takeFirst(input.paymentEventType)?.trim() ?? '';
-	const payoutStatus = takeFirst(input.payoutStatus)?.trim() ?? '';
+	const programId = normalizeToken(input.programId, MAX_QUERY_TOKEN_LENGTH);
+	const localPartnerId = normalizeToken(input.localPartnerId, MAX_QUERY_TOKEN_LENGTH);
+	const country = normalizeToken(input.country, MAX_QUERY_TOKEN_LENGTH);
+	const currency = normalizeToken(input.currency, MAX_QUERY_TOKEN_LENGTH);
+	const gender = normalizeToken(input.gender, MAX_QUERY_TOKEN_LENGTH);
+	const campaignId = normalizeToken(input.campaignId, MAX_QUERY_TOKEN_LENGTH);
+	const paymentEventType = normalizeToken(input.paymentEventType, MAX_QUERY_TOKEN_LENGTH);
+	const payoutStatus = normalizeToken(input.payoutStatus, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
