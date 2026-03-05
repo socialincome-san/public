@@ -42,10 +42,14 @@ class _QueueEventListenerState extends State<QueueEventListener> {
     if (navContext == null) return;
 
     if (event is QueueSuccessEvent) {
-      FlushbarHelper.showFlushbar(navContext, message: event.message);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FlushbarHelper.showFlushbar(navContext, message: event.message);
+      });
       _refreshDataAfterSuccess(event.operationType, navContext);
     } else if (event is QueueErrorEvent) {
-      FlushbarHelper.showFlushbar(navContext, message: event.message, type: FlushbarType.error);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FlushbarHelper.showFlushbar(navContext, message: event.message, type: FlushbarType.error);
+      });
     }
   }
 
