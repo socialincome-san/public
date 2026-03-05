@@ -75,7 +75,7 @@ class SurveyLocalDataSource implements SurveyDataSource {
     });
   }
 
-  Future<void> clearSurveys(String recipientId) async {
-    await (database.delete(database.surveys)..where((s) => s.recipientId.equals(recipientId))).go();
+  Future<void> clearSurveys() async {
+    await database.delete(database.surveys).go();
   }
 }

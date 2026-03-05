@@ -230,4 +230,9 @@ class UpdateQueueService {
     _eventController.close();
     _countController.close();
   }
+
+  Future<void> clearUpdateQueue() async {
+    await database.delete(database.updateQueue).go();
+    await _emitPendingCount();
+  }
 }

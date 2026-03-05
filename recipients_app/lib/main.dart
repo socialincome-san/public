@@ -1,6 +1,7 @@
 import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
 import "package:app/core/helpers/custom_bloc_observer.dart";
 import "package:app/data/database/app_database.dart";
+import "package:app/data/database/app_database_cleaner.dart";
 import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
@@ -138,6 +139,13 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
     crashReportingRepository: crashReportingRepository,
   );
 
+  final appDatabaseCleaner = AppDatabaseCleaner(
+    userLocalDataSource: userLocalDataSource,
+    payoutLocalDataSource: paymentLocalDataSource,
+    surveyLocalDataSource: surveyLocalDataSource,
+    updateQueueService: updateQueueService,
+  );
+
   // Create queue-aware repository wrappers
   final queueAwarePaymentRepository = QueueAwarePaymentRepository(
     remoteDataSource: paymentRemoteDataSource,
@@ -186,6 +194,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
         messaging: messaging,
         demoManager: demoManager,
         appDatabase: appDatabase,
+        appDatabaseCleaner: appDatabaseCleaner,
         connectivityCubit: connectivityCubit,
         userRepository: queueAwareUserRepository,
         paymentRepository: queueAwarePaymentRepository,

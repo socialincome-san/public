@@ -60,7 +60,7 @@ class SurveyRepository {
     }
   }
 
-  Future<void> clearCache(String recipientId) async {
-    await localDataSource.clearSurveys(recipientId);
+  Future<void> clearCache() async {
+    await localDataSource.clearSurveys();
   }
 }

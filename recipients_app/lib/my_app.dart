@@ -4,6 +4,7 @@ import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/database/app_database.dart";
+import "package:app/data/database/app_database_cleaner.dart";
 import "package:app/data/models/app_version_info.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
   final FirebaseMessaging messaging;
   final DemoManager demoManager;
   final AppDatabase appDatabase;
+  final AppDatabaseCleaner appDatabaseCleaner;
   final ConnectivityCubit connectivityCubit;
 
   final CrashReportingRepository crashReportingRepository;
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
     required this.messaging,
     required this.demoManager,
     required this.appDatabase,
+    required this.appDatabaseCleaner,
     required this.connectivityCubit,
     required this.userRepository,
     required this.paymentRepository,
@@ -86,6 +89,7 @@ class MyApp extends StatelessWidget {
               crashReportingRepository: context.read<CrashReportingRepository>(),
               userRepository: context.read<UserRepository>(),
               authService: context.read<AuthService>(),
+              appDatabaseCleaner: appDatabaseCleaner,
             )..init(),
           ),
           BlocProvider(

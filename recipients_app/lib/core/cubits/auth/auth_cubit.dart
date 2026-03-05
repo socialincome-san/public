@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:app/data/database/app_database_cleaner.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
@@ -15,6 +16,7 @@ class AuthCubit extends Cubit<AuthState> {
   final UserRepository userRepository;
   final CrashReportingRepository crashReportingRepository;
   final AuthService authService;
+  final AppDatabaseCleaner appDatabaseCleaner;
 
   late final StreamSubscription<User?> _authSubscription;
 
@@ -22,6 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
     required this.userRepository,
     required this.crashReportingRepository,
     required this.authService,
+    required this.appDatabaseCleaner,
   }) : super(const AuthState()) {
     /// Register a listener which will be triggered if the auth state of the user
     /// changes for whatever reason.
@@ -121,7 +124,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState(status: AuthStatus.loading));
     try {
       // Clear cache before signing out
-      await userRepository.clearCache();
+      await appDatabaseCleaner.cleanDatabase();
       await authService.signOut();
       emit(const AuthState());
     } on Exception catch (ex, stackTrace) {
