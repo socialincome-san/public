@@ -7,6 +7,12 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
+test('admin countries page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/admin/countries');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
 test('Add new country', async ({ page }) => {
 	const expectedCountry = {
 		isoCode: 'CH' as const,
@@ -20,7 +26,8 @@ test('Add new country', async ({ page }) => {
 	};
 
 	await page.goto('/portal/admin/countries');
-	await page.getByRole('button', { name: 'Add country' }).click();
+	await page.getByTestId('data-table-actions-button').click();
+	await page.getByTestId('data-table-action-item-add-country').click();
 
 	await page.getByTestId('form-accordion-trigger-countrySettings').click();
 

@@ -5,8 +5,8 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test('dashboard home-page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/contributions');
+test('admin expenses page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/admin/expenses');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

@@ -17,6 +17,13 @@ type ActionMenuProps = {
 	items?: ActionMenuItem[];
 };
 
+const toTestIdSlug = (label: string): string =>
+	label
+		.toLowerCase()
+		.trim()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
+
 export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 	if (items.length === 0) {
 		return null;
@@ -45,11 +52,12 @@ export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 					<MoreHorizontalIcon />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-56">
+			<DropdownMenuContent align="end" className="w-56" data-testid="data-table-actions-menu">
 				{items.map((item, index) => (
 					<DropdownMenuItem
 						key={`${item.label}-${index}`}
 						disabled={item.disabled}
+						data-testid={`data-table-action-item-${toTestIdSlug(item.label)}`}
 						onSelect={(event) => {
 							event.preventDefault();
 							runAction(item);

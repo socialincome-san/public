@@ -51,9 +51,16 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
+test('management recipients page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/management/recipients');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
 test('Add new recipient', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
-	await page.getByRole('button', { name: 'Add new recipient' }).click();
+	await page.getByTestId('data-table-actions-button').click();
+	await page.getByTestId('data-table-action-item-add-new-recipient').click();
 
 	await page.getByTestId('form-item-program').click();
 	await page.getByRole('option', { name: ADD_RECIPIENT.programName }).click();
@@ -92,7 +99,7 @@ test('Edit existing recipient', async ({ page }) => {
 	await firebaseService.deleteByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
 
 	await page.goto('/portal/management/recipients');
-	await page.getByRole('cell', { name: 'Mohamed' }).click();
+	await page.getByRole('cell', { name: 'Sahr' }).click();
 
 	await page.getByTestId('form-item-startDate').locator('button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
@@ -166,7 +173,7 @@ test('Edit existing recipient', async ({ page }) => {
 });
 
 test('Delete recipient', async ({ page }) => {
-	const phone = '+41791234567';
+	const phone = '+23277111222';
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.createByPhoneNumber(phone);
 
@@ -175,7 +182,7 @@ test('Delete recipient', async ({ page }) => {
 	await expect(page.getByRole('cell', { name: phone })).toBeVisible();
 
 	await page.goto('/portal/management/recipients');
-	await page.getByRole('cell', { name: 'Badingu' }).click();
+	await page.getByRole('cell', { name: 'Sahr' }).click();
 
 	await page.getByRole('button', { name: 'Delete' }).click();
 	await page.getByRole('button', { name: 'Delete permanently' }).click();
@@ -185,8 +192,8 @@ test('Delete recipient', async ({ page }) => {
 	const deleted = await prisma.recipient.findFirst({
 		where: {
 			contact: {
-				firstName: 'John',
-				lastName: 'Badingu',
+				firstName: 'Sahr',
+				lastName: 'Koroma',
 			},
 		},
 		select: { id: true },
@@ -202,7 +209,8 @@ test('Delete recipient', async ({ page }) => {
 test('CSV Upload', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 
-	await page.getByRole('button', { name: 'Upload CSV' }).click();
+	await page.getByTestId('data-table-actions-button').click();
+	await page.getByTestId('data-table-action-item-upload-csv').click();
 	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/portal/management/upload-example.csv');
 	await page.getByTestId('import-button').click();
 

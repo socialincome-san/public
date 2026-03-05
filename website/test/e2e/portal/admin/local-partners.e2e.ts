@@ -6,6 +6,12 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
+test('admin local partners page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/admin/local-partners');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
 const expectedPartner = {
 	name: 'Avengers',
 	firstName: 'Carol',
@@ -18,7 +24,8 @@ test('Add new local partner', async ({ page }) => {
 	await firebaseService.deleteByEmailIfExists(expectedPartner.email);
 
 	await page.goto('/portal/admin/local-partners');
-	await page.getByRole('button', { name: 'Add new local partner' }).click();
+	await page.getByTestId('data-table-actions-button').click();
+	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 
 	await page.getByTestId('form-item-name').locator('input').fill(expectedPartner.name);
 

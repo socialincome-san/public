@@ -46,9 +46,16 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
+test('admin candidates page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/admin/candidates');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
 test('Add new candidate', async ({ page }) => {
 	await page.goto('/portal/admin/candidates');
-	await page.getByRole('button', { name: 'Add new candidate' }).click();
+	await page.getByTestId('data-table-actions-button').click();
+	await page.getByTestId('data-table-action-item-add-new-candidate').click();
 
 	await page.getByTestId('form-item-localPartner').click();
 	await page.getByRole('option', { name: ADD_CANDIDATE.localPartnerName }).click();
@@ -185,7 +192,8 @@ test('Delete candidate', async ({ page }) => {
 test('CSV Upload', async ({ page }) => {
 	await page.goto('/portal/admin/candidates');
 
-	await page.getByRole('button', { name: 'Upload CSV' }).click();
+	await page.getByTestId('data-table-actions-button').click();
+	await page.getByTestId('data-table-action-item-upload-csv').click();
 	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/portal/admin/upload-example.csv');
 	await page.getByTestId('import-button').click();
 

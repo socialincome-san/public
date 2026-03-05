@@ -5,6 +5,12 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
+test('make payouts page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/delivery/make-payouts');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
 const expected = {
 	step1:
 		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber',
@@ -65,7 +71,8 @@ const expected = {
 test('Payout Process', async ({ page }) => {
 	await page.goto('/portal/delivery/make-payouts');
 
-	await page.getByRole('button', { name: 'Start payout process' }).click();
+	await page.getByTestId('data-table-actions-button').click();
+	await page.getByTestId('data-table-action-item-start-payout-process').click();
 
 	await page.getByTestId('date-picker-button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
