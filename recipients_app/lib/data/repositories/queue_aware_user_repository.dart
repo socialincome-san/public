@@ -25,5 +25,5 @@ class QueueAwareUserRepository extends UserRepository {
     return localDataSource.updateRecipient(selfUpdate);
   }
 
-  // All other methods (fetchRecipient, fetchCachedRecipient, clearCache) inherited from UserRepository
+  // All other methods (fetchRecipient, clearCache, ...) inherited from UserRepository
 }
