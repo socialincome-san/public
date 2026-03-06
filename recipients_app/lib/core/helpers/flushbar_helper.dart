@@ -1,4 +1,3 @@
-import "package:another_flushbar/flushbar.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
@@ -13,17 +12,32 @@ abstract class FlushbarHelper {
     required String message,
     FlushbarType type = FlushbarType.success,
   }) {
-    Flushbar(
-      title: title,
-      message: message,
-      duration: _getDuration(type),
-      backgroundColor: _getBackgroundColor(type),
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      flushbarPosition: FlushbarPosition.TOP,
-      titleColor: _getFontColor(type),
-      messageColor: _getFontColor(type),
-    ).show(context);
+    final content = title != null
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: _getFontColor(type), fontSize: 15)),
+              Text(message, style: TextStyle(color: _getFontColor(type), fontSize: 15)),
+            ],
+          )
+        : Text(message, style: TextStyle(color: _getFontColor(type), fontSize: 15));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: content,
+        duration: _getDuration(type),
+        backgroundColor: _getBackgroundColor(type),
+        behavior: SnackBarBehavior.floating,
+        dismissDirection: DismissDirection.up,
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height - 130 - MediaQuery.of(context).viewInsets.bottom,
+          left: 8,
+          right: 8,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
   }
 
   static Color _getBackgroundColor(FlushbarType type) {
