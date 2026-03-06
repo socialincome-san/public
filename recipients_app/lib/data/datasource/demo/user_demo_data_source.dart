@@ -7,7 +7,6 @@ import "package:app/data/enums/payout_interval.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/contact.dart";
 import "package:app/data/models/country.dart";
-import "package:app/data/models/currency.dart";
 import "package:app/data/models/language_code.dart";
 import "package:app/data/models/local_partner.dart";
 import "package:app/data/models/mobile_money_provider.dart";
@@ -80,7 +79,6 @@ class UserDemoDataSource implements UserDataSource {
       countryId: "SL",
       country: const Country(isoCode:"SL"),
       payoutPerInterval: 50,
-      payoutCurrency: Currency.sle,
       payoutInterval: PayoutInterval.monthly,
       programDurationInMonths: 12,
       createdAt: DateTime.now().toIso8601String(),

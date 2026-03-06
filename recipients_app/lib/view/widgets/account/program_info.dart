@@ -67,7 +67,7 @@ class ProgramInfo extends StatelessWidget {
                     Text("${context.l10n.amount}:", style: Theme.of(context).textTheme.bodyMedium),
                     const SizedBox(width: 8),
                     Text(
-                      "${program.payoutPerInterval} ${program.payoutCurrency.toDisplayString()}",
+                      "${program.payoutPerInterval} ${program.country.currency.toDisplayString()}",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],

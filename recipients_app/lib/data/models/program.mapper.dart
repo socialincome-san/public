@@ -16,7 +16,6 @@ class ProgramMapper extends ClassMapperBase<Program> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProgramMapper._());
       CountryMapper.ensureInitialized();
-      CurrencyMapper.ensureInitialized();
       PayoutIntervalMapper.ensureInitialized();
     }
     return _instance!;
@@ -40,11 +39,6 @@ class ProgramMapper extends ClassMapperBase<Program> {
   static const Field<Program, int> _f$payoutPerInterval = Field(
     'payoutPerInterval',
     _$payoutPerInterval,
-  );
-  static Currency _$payoutCurrency(Program v) => v.payoutCurrency;
-  static const Field<Program, Currency> _f$payoutCurrency = Field(
-    'payoutCurrency',
-    _$payoutCurrency,
   );
   static PayoutInterval _$payoutInterval(Program v) => v.payoutInterval;
   static const Field<Program, PayoutInterval> _f$payoutInterval = Field(
@@ -75,7 +69,6 @@ class ProgramMapper extends ClassMapperBase<Program> {
     #countryId: _f$countryId,
     #country: _f$country,
     #payoutPerInterval: _f$payoutPerInterval,
-    #payoutCurrency: _f$payoutCurrency,
     #payoutInterval: _f$payoutInterval,
     #programDurationInMonths: _f$programDurationInMonths,
     #createdAt: _f$createdAt,
@@ -89,7 +82,6 @@ class ProgramMapper extends ClassMapperBase<Program> {
       countryId: data.dec(_f$countryId),
       country: data.dec(_f$country),
       payoutPerInterval: data.dec(_f$payoutPerInterval),
-      payoutCurrency: data.dec(_f$payoutCurrency),
       payoutInterval: data.dec(_f$payoutInterval),
       programDurationInMonths: data.dec(_f$programDurationInMonths),
       createdAt: data.dec(_f$createdAt),
@@ -161,7 +153,6 @@ abstract class ProgramCopyWith<$R, $In extends Program, $Out>
     String? countryId,
     Country? country,
     int? payoutPerInterval,
-    Currency? payoutCurrency,
     PayoutInterval? payoutInterval,
     int? programDurationInMonths,
     String? createdAt,
@@ -188,7 +179,6 @@ class _ProgramCopyWithImpl<$R, $Out>
     String? countryId,
     Country? country,
     int? payoutPerInterval,
-    Currency? payoutCurrency,
     PayoutInterval? payoutInterval,
     int? programDurationInMonths,
     String? createdAt,
@@ -200,7 +190,6 @@ class _ProgramCopyWithImpl<$R, $Out>
       if (countryId != null) #countryId: countryId,
       if (country != null) #country: country,
       if (payoutPerInterval != null) #payoutPerInterval: payoutPerInterval,
-      if (payoutCurrency != null) #payoutCurrency: payoutCurrency,
       if (payoutInterval != null) #payoutInterval: payoutInterval,
       if (programDurationInMonths != null)
         #programDurationInMonths: programDurationInMonths,
@@ -218,7 +207,6 @@ class _ProgramCopyWithImpl<$R, $Out>
       #payoutPerInterval,
       or: $value.payoutPerInterval,
     ),
-    payoutCurrency: data.get(#payoutCurrency, or: $value.payoutCurrency),
     payoutInterval: data.get(#payoutInterval, or: $value.payoutInterval),
     programDurationInMonths: data.get(
       #programDurationInMonths,
