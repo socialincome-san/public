@@ -7,18 +7,13 @@ import "package:app/data/services/authenticated_client.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
 class UserRemoteDataSource implements UserDataSource {
-  final FirebaseAuth firebaseAuth;
   final AuthenticatedClient authenticatedClient;
 
   Recipient? _currentRecipient;
 
   UserRemoteDataSource({
-    required this.firebaseAuth,
     required this.authenticatedClient,
   });
-
-  @override
-  User? get currentFirebaseUser => firebaseAuth.currentUser;
 
   @override
   Recipient? get currentRecipient => _currentRecipient;
@@ -44,7 +39,7 @@ class UserRemoteDataSource implements UserDataSource {
   }
 
   @override
-  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
+  Future<Recipient> updateRecipient(User firebaseUser, RecipientSelfUpdate selfUpdate) async {
     final uri = authenticatedClient.resolveUri("recipients/me");
     final response = await authenticatedClient.patch(
       uri,

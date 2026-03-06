@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:app/data/datasource/demo/demo_user.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
 import "package:app/data/datasource/local/user_local_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
@@ -14,17 +15,19 @@ class UserRepository {
   final UserDemoDataSource demoDataSource;
   final UserLocalDataSource localDataSource;
   final DemoManager demoManager;
+  final FirebaseAuth firebaseAuth;
 
   const UserRepository({
     required this.remoteDataSource,
     required this.demoDataSource,
     required this.localDataSource,
     required this.demoManager,
+    required this.firebaseAuth
   });
 
   UserDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
-  User? get currentUser => _activeDataSource.currentFirebaseUser;
+  User? get currentUser => demoManager.isDemoEnabled ? DemoUser() : firebaseAuth.currentUser;
 
   Recipient? get currentRecipient => _activeDataSource.currentRecipient;
 
@@ -52,7 +55,7 @@ class UserRepository {
 
       // 3. Update cache with fresh data
       if (freshRecipient != null) {
-        await localDataSource.saveRecipient(freshRecipient);
+        await localDataSource.saveRecipient(firebaseUser, freshRecipient);
       }
 
       // 4. Notify caller of fresh data if callback provided
@@ -72,13 +75,14 @@ class UserRepository {
     }
   }
 
-  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
-    final updatedRecipient = await _activeDataSource.updateRecipient(selfUpdate);
-
-    // Update cache after successful update
-    await localDataSource.saveRecipient(updatedRecipient);
-  
-    return updatedRecipient;
+  Future<void> updateRecipient(RecipientSelfUpdate selfUpdate) async {
+    if (currentUser != null) {
+      final updatedRecipient = await _activeDataSource.updateRecipient(currentUser!, selfUpdate);
+      // Update cache after successful update
+      await localDataSource.saveRecipient(currentUser!, updatedRecipient);
+    } else {
+      throw Exception("No authenticated user found.");
+    }
   }
 
   Future<void> clearCache() async {

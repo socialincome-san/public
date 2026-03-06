@@ -6,14 +6,10 @@ import "package:firebase_auth/firebase_auth.dart";
 
 class UserLocalDataSource implements UserDataSource {
   final db.AppDatabase database;
-  final FirebaseAuth firebaseAuth;
 
   Recipient? _cachedRecipient;
 
-  UserLocalDataSource({required this.database, required this.firebaseAuth});
-
-  @override
-  User? get currentFirebaseUser => firebaseAuth.currentUser;
+  UserLocalDataSource({required this.database});
 
   @override
   Recipient? get currentRecipient => _cachedRecipient;
@@ -30,10 +26,10 @@ class UserLocalDataSource implements UserDataSource {
     return _cachedRecipient = RecipientMapper.fromJson(recipientData.recipientJson);
   }
 
-  Future<void> saveRecipient(Recipient recipient) async {
+  Future<void> saveRecipient(User firebaseUser, Recipient recipient) async {
     await database.into(database.recipients).insertOnConflictUpdate(
           db.RecipientsCompanion.insert(
-            id: currentFirebaseUser!.uid,
+            id: firebaseUser.uid,
             recipientJson: recipient.toJson(),
             cachedAt: DateTime.now(),
           ),
@@ -47,7 +43,7 @@ class UserLocalDataSource implements UserDataSource {
   }
 
   @override
-  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
+  Future<Recipient> updateRecipient(User firebaseUser, RecipientSelfUpdate selfUpdate) async {
     if (_cachedRecipient == null) throw Exception("Failed to update recipient because there is no recipient in the cache.");
 
     final updatedContact = _cachedRecipient!.contact.copyWith(
@@ -77,7 +73,7 @@ class UserLocalDataSource implements UserDataSource {
       paymentInformation: updatedPaymentInformation ?? _cachedRecipient!.paymentInformation,
     );
 
-    saveRecipient(newRecipient);
+    saveRecipient(firebaseUser, newRecipient);
     return newRecipient;
   }
 }

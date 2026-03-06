@@ -13,6 +13,7 @@ class QueueAwareUserRepository extends UserRepository {
     required super.demoDataSource,
     required super.localDataSource,
     required super.demoManager,
+    required super.firebaseAuth,
     required UpdateQueueService queueService,
   }): _queueService = queueService;
 
@@ -22,8 +23,10 @@ class QueueAwareUserRepository extends UserRepository {
     await _queueService.enqueue(UpdateRecipientOperation(selfUpdate: selfUpdate));
 
     // Update cache immediately after queuing the operation for better UX; actual remote update happens via queue
-    return localDataSource.updateRecipient(selfUpdate);
+    if (currentUser != null) {
+      return await localDataSource.updateRecipient(currentUser!, selfUpdate);
+    } else {
+      throw Exception("No authenticated user found.");
+    }
   }
-
-  // All other methods (fetchRecipient, clearCache, ...) inherited from UserRepository
 }
