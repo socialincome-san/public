@@ -17,7 +17,7 @@ class SurveyRemoteDataSource implements SurveyDataSource {
     final response = await authenticatedClient.get(uri);
 
     if (response.statusCode != 200) {
-      throw Exception("Failed to fetch surveys: ${response.statusCode}");
+      throw Exception("Failed to fetch surveys: ${response.statusCode} - ${response.body}");
     }
 
     final responseBody = jsonDecode(response.body) as List<dynamic>;

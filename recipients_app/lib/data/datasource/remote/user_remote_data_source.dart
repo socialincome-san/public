@@ -35,7 +35,7 @@ class UserRemoteDataSource implements UserDataSource {
 
     if (response.statusCode != 200) { // any other error
       _currentRecipient = null;
-      throw Exception("Failed to fetch recipient: ${response.statusCode}");
+      throw Exception("Failed to fetch recipient: ${response.statusCode} - ${response.body}");
     }
 
     final recipient = RecipientMapper.fromJson(response.body);
@@ -52,7 +52,7 @@ class UserRemoteDataSource implements UserDataSource {
     );
 
     if (response.statusCode != 200) {
-      throw Exception("Failed to update recipient: ${response.statusCode}");
+      throw Exception("Failed to update recipient: ${response.statusCode} - ${response.body}");
     }
 
     final recipient = RecipientMapper.fromJson(response.body);

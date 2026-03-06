@@ -19,7 +19,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     final response = await authenticatedClient.post(uri);
 
     if (response.statusCode != 200) {
-      throw Exception("Failed to confirm payout: ${response.statusCode}");
+      throw Exception("Failed to confirm payout: ${response.statusCode} - ${response.body}");
     }
 
     return PayoutMapper.fromJson(response.body);
@@ -48,7 +48,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     }
 
     if (response.statusCode != 200) {
-      throw Exception("Failed to contest payout: ${response.statusCode}");
+      throw Exception("Failed to contest payout: ${response.statusCode} - ${response.body}");
     }
 
     return PayoutMapper.fromJson(response.body);
@@ -61,7 +61,7 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     final response = await authenticatedClient.get(uri);
 
     if (response.statusCode != 200) {
-      throw Exception("Failed to fetch payouts: ${response.statusCode}");
+      throw Exception("Failed to fetch payouts: ${response.statusCode} - ${response.body}");
     }
 
     final responseBody = jsonDecode(response.body) as List<dynamic>;
