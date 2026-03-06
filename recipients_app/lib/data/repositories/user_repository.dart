@@ -75,11 +75,12 @@ class UserRepository {
     }
   }
 
-  Future<void> updateRecipient(RecipientSelfUpdate selfUpdate) async {
+  Future<Recipient> updateRecipient(RecipientSelfUpdate selfUpdate) async {
     if (currentUser != null) {
       final updatedRecipient = await _activeDataSource.updateRecipient(currentUser!, selfUpdate);
       // Update cache after successful update
       await localDataSource.saveRecipient(currentUser!, updatedRecipient);
+      return updatedRecipient;
     } else {
       throw Exception("No authenticated user found.");
     }
