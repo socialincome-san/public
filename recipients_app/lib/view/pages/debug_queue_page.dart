@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:app/data/database/app_database.dart";
 import "package:app/data/services/update_queue_service.dart";
 import "package:flutter/material.dart";
@@ -18,12 +20,13 @@ class DebugQueuePage extends StatefulWidget {
 
 class _DebugQueuePageState extends State<DebugQueuePage> {
   late Future<List<UpdateQueueData>> _operationsFuture;
+  late final StreamSubscription<int> _subscription;
 
   @override
   void initState() {
     super.initState();
     _loadOperations();
-    widget.queueService.pendingCountStream.listen((count) {
+    _subscription = widget.queueService.pendingCountStream.listen((count) {
       // Reload operations when queue changes
       _loadOperations();
     });
@@ -33,6 +36,12 @@ class _DebugQueuePageState extends State<DebugQueuePage> {
     setState(() {
       _operationsFuture = widget.queueService.getAllOperations();
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
