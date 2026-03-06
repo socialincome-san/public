@@ -71,17 +71,14 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 1;
 
   // Migration strategy for future versions
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
       onUpgrade: (migrator, from, to) async {
-        if (from == 1) {
-          // Add UpdateQueue table in schema version 2
-          await migrator.createTable(updateQueue);
-        }
+        // Future migrations will go here
       },
     );
   }
