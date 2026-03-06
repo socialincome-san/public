@@ -142,6 +142,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get edit => 'Chenj am';
 
   @override
+  String get queue => 'Kyu';
+
+  @override
   String get underInvestigation => 'Wi stil de wach wetin mek yu mɔni nɔ rich yu';
 
   @override

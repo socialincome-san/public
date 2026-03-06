@@ -142,6 +142,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
+  String get queue => 'Queue';
+
+  @override
   String get underInvestigation => 'Currently under investigation';
 
   @override

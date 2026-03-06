@@ -356,6 +356,12 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get edit;
 
+  /// No description provided for @queue.
+  ///
+  /// In en, this message translates to:
+  /// **'Queue'**
+  String get queue;
+
   /// No description provided for @underInvestigation.
   ///
   /// In en, this message translates to:

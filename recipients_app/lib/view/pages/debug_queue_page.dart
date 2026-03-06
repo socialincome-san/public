@@ -23,6 +23,10 @@ class _DebugQueuePageState extends State<DebugQueuePage> {
   void initState() {
     super.initState();
     _loadOperations();
+    widget.queueService.pendingCountStream.listen((count) {
+      // Reload operations when queue changes
+      _loadOperations();
+    });
   }
 
   void _loadOperations() {
@@ -35,7 +39,7 @@ class _DebugQueuePageState extends State<DebugQueuePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Debug: Queue Operations"),
+        title: const Text("Queue Operations"),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

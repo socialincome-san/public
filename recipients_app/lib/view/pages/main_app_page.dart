@@ -1,10 +1,13 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/recipient.dart";
+import "package:app/data/services/update_queue_service.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/account_page.dart";
 import "package:app/view/pages/dashboard_page.dart";
+import "package:app/view/pages/debug_queue_page.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -39,17 +42,35 @@ class _MainAppPageState extends State<MainAppPage> {
       ],
     );
 
+    final queueButtonRow = Row(
+      children: [
+        ButtonSmall(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DebugQueuePage(
+                  queueService: context.read<UpdateQueueService>(),
+                ),
+              ),
+            );
+          },
+          label: context.l10n.queue,
+          buttonType: ButtonSmallType.outlined,
+          color: AppColors.fontColorDark,
+        ),
+        const SizedBox(width: 8),
+      ],
+    );
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: Row(
           children: [
             Visibility(
-              visible: false,
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              child: editButtonRow,
+              // ignore: avoid_redundant_argument_values
+              visible: kDebugMode,
+              child: queueButtonRow,
             ),
             Expanded(
               child: Center(
