@@ -10,6 +10,8 @@ import "package:app/data/models/country.dart";
 import "package:app/data/models/currency.dart";
 import "package:app/data/models/language_code.dart";
 import "package:app/data/models/local_partner.dart";
+import "package:app/data/models/mobile_money_provider.dart";
+import "package:app/data/models/payment_information.dart";
 import "package:app/data/models/phone.dart";
 import "package:app/data/models/program.dart";
 import "package:app/data/models/recipient.dart";
@@ -84,6 +86,23 @@ class UserDemoDataSource implements UserDataSource {
       createdAt: DateTime.now().toIso8601String(),
       updatedAt: DateTime.now().toIso8601String(),
     ),
+    paymentInformation: PaymentInformation(
+      id: "demo",
+      mobileMoneyProviderId: "demo",
+      mobileMoneyProvider: const MobileMoneyProvider(id: "demo", name: "Demo Mobile Money Provider"),
+      code: "7843754",
+      phoneId: "demo",
+      createdAt: DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
+      phone: Phone(
+        id: "demo",
+        number: "23271118897",
+        hasWhatsApp: false,
+        createdAt: DateTime.now().toIso8601String(),
+        updatedAt: DateTime.now().toIso8601String(),
+      ),
+    ),
+
   );
   final _user = DemoUser();
 
