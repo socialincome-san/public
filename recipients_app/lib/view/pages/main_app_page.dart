@@ -25,15 +25,9 @@ class _MainAppPageState extends State<MainAppPage> {
         ButtonSmall(
           onPressed: () {
             if (recipient == null) return;
-
-            final organization = context.read<AuthCubit>().state.organization;
-
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => AccountPage(
-                  recipient: recipient,
-                  organization: organization,
-                ),
+                builder: (context) => AccountPage(recipient: recipient),
               ),
             );
           },
@@ -70,7 +64,7 @@ class _MainAppPageState extends State<MainAppPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "+${recipient?.mobileMoneyPhone?.phoneNumber}",
+                      recipient?.paymentInformation?.phone.number ?? "Unknown payment phone number",
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: AppColors.primaryColor,
                       ),
@@ -89,12 +83,12 @@ class _MainAppPageState extends State<MainAppPage> {
   }
 
   String _getName(Recipient? recipient) {
-    final preferredName = recipient?.preferredName;
+    final preferredName = recipient?.contact.callingName;
     var name = "";
     if (preferredName != null && preferredName.isNotEmpty) {
       name = preferredName;
     } else {
-      name = recipient?.firstName ?? "";
+      name = recipient?.contact.firstName ?? "";
     }
 
     return name;

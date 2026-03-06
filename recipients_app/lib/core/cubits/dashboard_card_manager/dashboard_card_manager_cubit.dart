@@ -1,35 +1,27 @@
 import "dart:async";
 
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/view/widgets/account/dashboard_card.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "dashboard_card_manager_cubit.mapper.dart";
 part "dashboard_card_manager_state.dart";
 
 class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
   final AuthCubit authCubit;
   final CrashReportingRepository crashReportingRepository;
-  late StreamSubscription<AuthState> authSubscription;
 
   DashboardCardManagerCubit({
     required this.authCubit,
     required this.crashReportingRepository,
-  }) : super(const DashboardCardManagerState()) {
-    authSubscription = authCubit.stream.listen((event) {
-      fetchCards();
-    });
-  }
+  }) : super(const DashboardCardManagerState());
 
-  @override
-  Future<void> close() async {
-    authSubscription.cancel();
-    super.close();
-  }
-  
   Future<void> fetchCards() async {
     emit(state.copyWith(status: DashboardCardManagerStatus.loading));
+
     final recipient = authCubit.state.recipient;
 
     if (recipient == null) return;
@@ -37,28 +29,17 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     final List<DashboardCard> cards = [];
 
     try {
-      // TODO: currently payment phone number is used for login, we need to switch that
-      final paymentPhoneNumber = recipient.mobileMoneyPhone;
-      final contactPhoneNumber = recipient.communicationMobilePhone;
-
-      if (paymentPhoneNumber == null && contactPhoneNumber != null) {
-        final paymentPhoneCard = DashboardCard(
-          title: "My Profile",
-          message:
-              "Is your contact phone number (${contactPhoneNumber.phoneNumber}) also your payment phone number?",
-          primaryButtonText: "Yes",
-          secondaryButtonText: "No",
-          type: DashboardCardType.paymentNumberEqualsContactNumber,
-        );
-
-        cards.add(paymentPhoneCard);
-      }
+      // HINT: Currently the payment phone number can not be empty. 
+      // Current backend behaviour:
+      // If you change the payment number this triggers the deletion of the firebase auth user and the creation of a new one with the new phone number.
+      // That means the payment number is always the same as the firebase auth phone number and so it can not be null.
+      final contactPhoneNumber = recipient.contact.phone?.number;
+      final paymentPhoneNumber = recipient.paymentInformation?.phone.number;
 
       if (contactPhoneNumber == null && paymentPhoneNumber != null) {
         final contactPhoneCard = DashboardCard(
           title: "My Profile",
-          message:
-              "Is your payment phone number (${paymentPhoneNumber.phoneNumber}) also your contact phone number?",
+          message: "Is your payment phone number ($paymentPhoneNumber) also your contact phone number?",
           primaryButtonText: "Yes",
           secondaryButtonText: "No",
           type: DashboardCardType.contactNumberEqualsPaymentNumber,
@@ -81,21 +62,27 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     }
   }
 
-  Future<void> updatePaymentNumber() async {
-    final recipient = authCubit.state.recipient!;
-    await authCubit.updateRecipient(
-      recipient.copyWith(
-        mobileMoneyPhone: recipient.communicationMobilePhone,
-      ),
-    );
-  }
-
   Future<void> updateContactNumber() async {
-    final recipient = authCubit.state.recipient!;
-    await authCubit.updateRecipient(
-      recipient.copyWith(
-        communicationMobilePhone: recipient.mobileMoneyPhone,
-      ),
-    );
+    emit(state.copyWith(status: DashboardCardManagerStatus.updating));
+
+    try {
+      final recipient = authCubit.state.recipient;
+
+      if (recipient == null) throw Exception("Recipient not found");
+
+      await authCubit.updateRecipient(
+        selfUpdate: RecipientSelfUpdate(contactPhone: recipient.paymentInformation?.phone.number),
+      );
+
+      emit(state.copyWith(status: DashboardCardManagerStatus.updated, cards: []));
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+      emit(
+        state.copyWith(
+          status: DashboardCardManagerStatus.error,
+          exception: ex,
+        ),
+      );
+    }
   }
 }
