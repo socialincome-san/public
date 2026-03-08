@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileUpdateError => 'Failed to update profile. Please try again or contact our support';
 
   @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
   String get profile => 'Profile';
 
   @override
@@ -746,6 +749,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get recipientNotFound =>
       'No recipient account found for this phone number. Please check your phone number or contact your local partner.';
+
+  @override
+  String get offlineBanner => 'No internet connection';
+
+  @override
+  String get offlineMutationError => 'This action requires an internet connection';
 
   @override
   String get unknownPaymentPhoneNumber => 'Unknown payment phone number';

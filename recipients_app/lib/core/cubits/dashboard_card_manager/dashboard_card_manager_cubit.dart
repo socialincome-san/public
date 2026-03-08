@@ -70,11 +70,20 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
 
       if (recipient == null) throw Exception("Recipient not found");
 
-      await authCubit.updateRecipient(
+      final result = await authCubit.updateRecipient(
         selfUpdate: RecipientSelfUpdate(contactPhone: recipient.paymentInformation?.phone.number),
       );
 
-      emit(state.copyWith(status: DashboardCardManagerStatus.updated, cards: []));
+      if (result) {
+        emit(state.copyWith(status: DashboardCardManagerStatus.updated, cards: []));
+      } else {
+        emit(
+          state.copyWith(
+            status: DashboardCardManagerStatus.error,
+            exception: Exception("Failed to update contact number"),
+          ),
+        );
+      }
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
