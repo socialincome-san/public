@@ -3,7 +3,7 @@ import "dart:async";
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/repositories/repositories.dart";
-import "package:app/view/widgets/account/dashboard_card.dart";
+import "package:app/view/widgets/dashboard/dashboard_card.dart";
 import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 

@@ -6,7 +6,7 @@ import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_sizes.dart";
 import "package:app/view/pages/surveys_page.dart";
-import "package:app/view/widgets/dashboard_item.dart";
+import "package:app/view/widgets/dashboard/dashboard_item.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 

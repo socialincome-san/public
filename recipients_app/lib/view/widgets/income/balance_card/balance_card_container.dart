@@ -6,7 +6,7 @@ import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payment_tile.dart";
 import "package:app/view/pages/payments_page.dart";
-import "package:app/view/widgets/dashboard_item.dart";
+import "package:app/view/widgets/dashboard/dashboard_item.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_grid.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_header.dart";
 import "package:app/view/widgets/income/balance_card/on_hold_bottom_card.dart";
