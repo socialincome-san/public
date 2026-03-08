@@ -8,7 +8,6 @@ import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/models/survey/survey_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
-import "package:app/main.dart";
 import "package:collection/collection.dart";
 import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -28,6 +27,8 @@ class SurveyCubit extends Cubit<SurveyState> {
   final SurveyRepository surveyRepository;
   final CrashReportingRepository crashReportingRepository;
 
+  StreamSubscription<List<Survey>>? _surveysSubscription;
+
   SurveyCubit({
     required this.recipient,
     required this.surveyRepository,
@@ -35,44 +36,41 @@ class SurveyCubit extends Cubit<SurveyState> {
   }) : super(const SurveyState());
 
   Future<void> getSurveys() async {
-    try {
-      final mappedSurveys = await _getSurveys();
+    _surveysSubscription?.cancel();
+    _surveysSubscription = surveyRepository
+        .fetchSurveys(recipientId: recipient.id)
+        .listen(
+          (surveys) {
+            final mappedSurveys = _mapSurveys(surveys);
+            final dashboardSurveys = mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
 
-      final dashboardSurveys = mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
-
-      emit(
-        SurveyState(
-          status: SurveyStateStatus.updatedSuccess,
-          mappedSurveys: mappedSurveys,
-          dashboardMappedSurveys: dashboardSurveys,
-        ),
-      );
-    } on Exception catch (ex, stackTrace) {
-      if (ex is SocketException) {
-        emit(
-          SurveyState(
-            status: SurveyStateStatus.updatedFailure,
-            exception: ex,
-          ),
+            emit(
+              SurveyState(
+                status: SurveyStateStatus.updatedSuccess,
+                mappedSurveys: mappedSurveys,
+                dashboardMappedSurveys: dashboardSurveys,
+              ),
+            );
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            if (error is SocketException) {
+              // Do not log this kind of errors in Sentry as they are caused by network issues on the client side 
+              // and do not indicate a problem in the app itself.
+            } else {
+              crashReportingRepository.logError(error is Exception ? error : Exception(error.toString()), stackTrace);
+            }
+            emit(
+              SurveyState(
+                status: SurveyStateStatus.updatedFailure,
+                exception: error is Exception ? error : Exception(error.toString()),
+              ),
+            );
+          },
         );
-      } else {
-        crashReportingRepository.logError(ex, stackTrace);
-        emit(
-          SurveyState(
-            status: SurveyStateStatus.updatedFailure,
-            exception: ex,
-          ),
-        );
-      }
-    }
   }
 
-  Future<List<MappedSurvey>> _getSurveys() async {
-    final surveys = await surveyRepository.fetchSurveys(
-      recipientId: recipient.id,
-    );
-
-    final mappedSurveys = surveys
+  List<MappedSurvey> _mapSurveys(List<Survey> surveys) {
+    return surveys
         .map(
           (survey) => MappedSurvey(
             name: _getReadableName(survey.name),
@@ -88,8 +86,12 @@ class SurveyCubit extends Cubit<SurveyState> {
         )
         .sortedBy((element) => element.survey.dueAt)
         .toList();
+  }
 
-    return mappedSurveys;
+  @override
+  Future<void> close() {
+    _surveysSubscription?.cancel();
+    return super.close();
   }
 
   String _getSurveyUrl(Survey survey, String recipientId) {

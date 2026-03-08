@@ -110,6 +110,12 @@ abstract class AppLocalizations {
   /// **'Failed to update profile. Please try again or contact our support'**
   String get profileUpdateError;
 
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
+
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
@@ -1531,6 +1537,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No recipient account found for this phone number. Please check your phone number or contact your local partner.'**
   String get recipientNotFound;
+
+  /// No description provided for @offlineBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get offlineBanner;
+
+  /// No description provided for @offlineMutationError.
+  ///
+  /// In en, this message translates to:
+  /// **'This action requires an internet connection'**
+  String get offlineMutationError;
 
   /// No description provided for @unknownPaymentPhoneNumber.
   ///

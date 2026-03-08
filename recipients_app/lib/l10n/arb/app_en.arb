@@ -3,6 +3,7 @@
     "ok": "OK",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateError": "Failed to update profile. Please try again or contact our support",
+    "anErrorOccurred": "An error occurred",
     "profile": "Profile",
     "personal": "Personal",
     "name": "Name",
@@ -316,5 +317,7 @@
 		}
 	},
 	"noInternetConnection": "No internet connection. Cannot refresh data.",
-	"anErrorOccurred": "An error occurred"
+	"anErrorOccurred": "An error occurred",
+    "offlineBanner": "No internet connection",
+    "offlineMutationError": "This action requires an internet connection"
 }
