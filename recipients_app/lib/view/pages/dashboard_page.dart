@@ -1,3 +1,4 @@
+
 import "dart:io";
 
 import "package:app/core/cubits/auth/auth_cubit.dart";
@@ -6,6 +7,7 @@ import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard/dashboard_item.dart";
 import "package:app/view/widgets/dashboard/empty_item.dart";
@@ -110,13 +112,13 @@ class _DashboardViewState extends State<_DashboardView> {
                   if (state.status == DashboardCardManagerStatus.error) {
                     FlushbarHelper.showFlushbar(
                       context,
-                      message: state.exception?.toString() ?? "An error occurred",
+                      message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
                       type: FlushbarType.error,
                     );
                   } else if (state.status == DashboardCardManagerStatus.updated) {
                     FlushbarHelper.showFlushbar(
                       context,
-                      message: "Profile updated successfully",
+                      message: context.l10n.profileUpdateSuccess,
                     );
                   }
                 },
@@ -130,12 +132,11 @@ class _DashboardViewState extends State<_DashboardView> {
                             message: "No internet connection. Cannot refresh data.",
                             type: FlushbarType.error,
                           )
-                        :
-                    FlushbarHelper.showFlushbar(
-                      context,
-                      message: state.exception?.toString() ?? "An error occurred",
-                      type: FlushbarType.error,
-                    );
+                        : FlushbarHelper.showFlushbar(
+                            context,
+                            message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
+                            type: FlushbarType.error,
+                          );
                   }
                 },
               ),
@@ -148,12 +149,11 @@ class _DashboardViewState extends State<_DashboardView> {
                             message: "No internet connection. Cannot refresh data.",
                             type: FlushbarType.error,
                           )
-                        :
-                    FlushbarHelper.showFlushbar(
-                      context,
-                      message: state.exception?.toString() ?? "An error occurred",
-                      type: FlushbarType.error,
-                    );
+                        : FlushbarHelper.showFlushbar(
+                            context,
+                            message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
+                            type: FlushbarType.error,
+                          );
                   }
                 },
               ),

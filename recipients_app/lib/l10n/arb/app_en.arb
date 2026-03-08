@@ -3,6 +3,7 @@
     "ok": "OK",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateError": "Failed to update profile. Please try again or contact our support",
+    "anErrorOccurred": "An error occurred",
     "profile": "Profile",
     "personal": "Personal",
     "name": "Name",
@@ -298,5 +299,7 @@
     "appUpdateWidgetErrorLaunchingStore": "We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income.",
     "country": "Country",
     "recipientNotFound": "No recipient account found for this phone number. Please check your phone number or contact your local partner.",
+    "offlineBanner": "No internet connection",
+    "offlineMutationError": "This action requires an internet connection",
 	"unknownPaymentPhoneNumber": "Unknown payment phone number"
 }

@@ -3,6 +3,7 @@
     "ok": "OK",
     "profileUpdateSuccess": "Ɔltin bɔt yu go insay wɛl wɛl",
     "profileUpdateError": "Ɔltin bɔt yu nɔ go insay. Duya tray bak ɔ rich awt to wit",
+    "anErrorOccurred": "An error occurred",
     "profile": "Ɔltin bɔt yu",
     "personal": "Yu sɛf sɛf",
     "name": "Nem",
@@ -304,5 +305,7 @@
     "appUpdateWidgetErrorLaunchingStore": "Wi nɔ bin ebul fɔ gayd yu fɔ go na di Stɔ fɔ ɔpdet di ap. Duya opin di Ple Stɔ ap na Andrɔyd ɔ Ap Stɔ ap na iOS ɛn ɔpdet Sɔshial Inkam.",
     "country": "Kɔntri",
     "recipientNotFound": "No risipiɛnt akɔn nɔ fɛn fɔ dis fon nɔmba. Duya chɛk yu fon nɔmba ɔ kɔntak yu lokal patna.",
+    "offlineBanner": "Nɔ intanɛt kɔnɛkshɔn",
+    "offlineMutationError": "Dis akshɔn nid intanɛt kɔnɛkshɔn",
 	"unknownPaymentPhoneNumber": "Di fon nɔmba we yu nɔ no bɔt fɔ pe"
 }

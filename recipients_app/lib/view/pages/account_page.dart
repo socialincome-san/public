@@ -4,6 +4,7 @@ import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/enums/gender.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/language_code.dart";
+import "package:app/data/models/offline_exception.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
@@ -106,7 +107,9 @@ class AccountPageState extends State<AccountPage> {
     _surnameController.dispose();
     _callingNameController.dispose();
     _paymentNumberController.dispose();
+    _mobileMoneyProviderController.dispose();
     _contactNumberController.dispose();
+    _successorNameController.dispose();
     _emailController.dispose();
 
     super.dispose();
@@ -125,7 +128,15 @@ class AccountPageState extends State<AccountPage> {
             context,
             message: context.l10n.profileUpdateSuccess,
           );
-        } else if (state.status == AuthStatus.updateRecipientFailure) {
+        } else if (state.status == AuthStatus.updateRecipientFailure &&
+            state.exception.runtimeType == OfflineMutationException) {
+          FlushbarHelper.showFlushbar(
+            context,
+            message: context.l10n.offlineMutationError,
+            type: FlushbarType.error,
+          );
+        } else if (state.status == AuthStatus.updateRecipientFailure &&
+            state.exception.runtimeType != OfflineMutationException) {
           FlushbarHelper.showFlushbar(
             context,
             message: context.l10n.profileUpdateError,
@@ -284,14 +295,14 @@ class AccountPageState extends State<AccountPage> {
                 InputDropdown<LanguageCode>(
                   label: "${context.l10n.language}*",
                   items: [
-                      DropdownMenuItem(
-                        value: LanguageCode.en,
-                        child: Text(context.l10n.english),
-                      ),
-                      DropdownMenuItem(
-                        value: LanguageCode.kri,
-                        child: Text(context.l10n.krio),
-                      ),
+                    DropdownMenuItem(
+                      value: LanguageCode.en,
+                      child: Text(context.l10n.english),
+                    ),
+                    DropdownMenuItem(
+                      value: LanguageCode.kri,
+                      child: Text(context.l10n.krio),
+                    ),
                   ],
                   validator: (value) {
                     if (value == null) {
@@ -346,7 +357,7 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 InputText(
                   hintText: "${context.l10n.paymentNumber}*",
-                  // INFO: Currently the payment phone number is used for phone authentication, too. 
+                  // INFO: Currently the payment phone number is used for phone authentication, too.
                   // In the backend the payment phone number must be the same as the Firebase auth phome number.
                   // That's why at the moment the payment phone number can not be changed by the mobile app user.
                   isReadOnly: true,
@@ -375,7 +386,7 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
 
                 /// PAYMENT PROVIDER
-                /// TODO(migration): Use InputDropdown when we have more providers and they should be changeable by the user. 
+                /// TODO(migration): Use InputDropdown when we have more providers and they should be changeable by the user.
                 /// For now, since there's only one provider and it's not changeable by the user, we just display it as text.
                 // InputDropdown<MobileMoneyProvider>(
                 //   label: "${context.l10n.mobilePaymentProvider}*",
