@@ -3,6 +3,7 @@
     "ok": "OK",
     "profileUpdateSuccess": "Ɔltin bɔt yu go insay wɛl wɛl",
     "profileUpdateError": "Ɔltin bɔt yu nɔ go insay. Duya tray bak ɔ rich awt to wit",
+    "anErrorOccurred": "Sɔntin nɔ go rayt",
     "profile": "Ɔltin bɔt yu",
     "personal": "Yu sɛf sɛf",
     "name": "Nem",
@@ -322,5 +323,7 @@
 		}
 	},
 	"noInternetConnection": "Nɔ intanɛt kɔnɛkshɔn. Nɔ ebul fɔ rifrɛsh data.",
-	"anErrorOccurred": "Sɔntin nɔ go rayt"
+    "offlineBanner": "Nɔ intanɛt kɔnɛkshɔn",
+    "offlineMutationError": "Dis akshɔn nid intanɛt kɔnɛkshɔn",
+    "offlineBannerMessage": "Yu de ɔflayna. Sho di data we dɛn dɔn kech."
 }

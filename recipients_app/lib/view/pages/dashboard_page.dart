@@ -131,12 +131,11 @@ class _DashboardViewState extends State<_DashboardView> {
                             message: context.l10n.noInternetConnection,
                             type: FlushbarType.error,
                           )
-                        :
-                    FlushbarHelper.showFlushbar(
-                      context,
-                      message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
-                      type: FlushbarType.error,
-                    );
+                        : FlushbarHelper.showFlushbar(
+                            context,
+                            message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
+                            type: FlushbarType.error,
+                          );
                   }
                 },
               ),
@@ -149,12 +148,11 @@ class _DashboardViewState extends State<_DashboardView> {
                             message: context.l10n.noInternetConnection,
                             type: FlushbarType.error,
                           )
-                        :
-                    FlushbarHelper.showFlushbar(
-                      context,
-                      message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
-                      type: FlushbarType.error,
-                    );
+                        : FlushbarHelper.showFlushbar(
+                            context,
+                            message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
+                            type: FlushbarType.error,
+                          );
                   }
                 },
               ),
