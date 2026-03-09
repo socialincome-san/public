@@ -6,6 +6,8 @@ import { expect, test } from '@playwright/test';
 import { saveStoryblokMock, setupStoryblokMock } from '../mock-server';
 import { loginAs } from './utils';
 
+test.describe.configure({ mode: 'serial' });
+
 test('seed database', async () => {
 	await seedDatabase();
 	await prisma.contact.findUniqueOrThrow({

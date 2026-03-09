@@ -193,7 +193,7 @@ export const DataTableToolbar = ({
 								<div className="space-y-1">
 									<label className="text-muted-foreground text-xs">Field</label>
 									<Select value={sortBy} onValueChange={(value) => onSortChange?.(value, sortDirection ?? 'asc')}>
-										<SelectTrigger className="h-9 w-full">
+										<SelectTrigger className="h-9 w-full" data-testid="data-table-sort-field-trigger">
 											<SelectValue placeholder="Choose field" />
 										</SelectTrigger>
 										<SelectContent align="end">
@@ -212,7 +212,7 @@ export const DataTableToolbar = ({
 										onValueChange={(value) => onSortChange?.(sortBy, value as 'asc' | 'desc')}
 										disabled={!sortBy}
 									>
-										<SelectTrigger className="h-9 w-full">
+										<SelectTrigger className="h-9 w-full" data-testid="data-table-sort-direction-trigger">
 											<SelectValue placeholder="Choose direction" />
 										</SelectTrigger>
 										<SelectContent align="end">
