@@ -1,10 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import {
-	getFirebaseAdminService,
-	getRecipientIdByName,
-	getRecipientProgramAndLocalPartnerByName,
-} from '../../utils';
+import { getFirebaseAdminService, getRecipientIdByName, getRecipientProgramAndLocalPartnerByName } from '../../utils';
 
 test.describe.configure({ mode: 'serial' });
 
