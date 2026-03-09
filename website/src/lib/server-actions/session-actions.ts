@@ -4,32 +4,32 @@ import { getCurrentSessions } from '../firebase/current-account';
 import { getServices } from '../services/services';
 
 export const createSessionAction = async (idToken: string) => {
-return getServices().firebaseSession.createSessionAndSetCookie(idToken);
+	return getServices().firebaseSession.createSessionAndSetCookie(idToken);
 };
 
 export const logoutAction = async () => {
-return getServices().firebaseSession.clearSessionCookie();
+	return getServices().firebaseSession.clearSessionCookie();
 };
 
 export const getRedirectPathAfterLoginAction = async (): Promise<string> => {
-const sessions = await getCurrentSessions();
-const session = sessions[0];
+	const sessions = await getCurrentSessions();
+	const session = sessions[0];
 
-if (!session) {
-return '/';
-}
+	if (!session) {
+		return '/';
+	}
 
-if (session.type === 'user') {
-return '/portal';
-}
+	if (session.type === 'user') {
+		return '/portal';
+	}
 
-if (session.type === 'contributor') {
-return '/dashboard/contributions';
-}
+	if (session.type === 'contributor') {
+		return '/dashboard/contributions';
+	}
 
-if (session.type === 'local-partner') {
-return '/partner-space/recipients';
-}
+	if (session.type === 'local-partner') {
+		return '/partner-space/recipients';
+	}
 
-return '/';
+	return '/';
 };
