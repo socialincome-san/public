@@ -62,9 +62,7 @@ const sanitizeStoryblokAssets = <T>(value: T): T => {
 	}
 
 	if (value && typeof value === 'object') {
-		return Object.fromEntries(
-			Object.entries(value).map(([key, entry]) => [key, sanitizeStoryblokAssets(entry)]),
-		) as T;
+		return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, sanitizeStoryblokAssets(entry)])) as T;
 	}
 
 	return value;

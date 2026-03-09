@@ -57,10 +57,7 @@ test('exchange rates pagination updates URL and matches screenshot', async ({ pa
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1-1000 of');
 	await expect(page.getByTestId('data-table-pagination-next')).toBeEnabled();
 
-	await Promise.all([
-		page.waitForURL(/(?:[?&])page=2(?:&|$)/),
-		page.getByTestId('data-table-pagination-next').click(),
-	]);
+	await Promise.all([page.waitForURL(/(?:[?&])page=2(?:&|$)/), page.getByTestId('data-table-pagination-next').click()]);
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1001-');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 
