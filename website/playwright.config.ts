@@ -3,13 +3,6 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test', quiet: true });
 
-const parallelProjectNames = [
-	'portal-parallel',
-	'dashboard-parallel',
-	'partner-space-parallel',
-	'mobile-app-api-parallel',
-] as const;
-
 const publicWebsiteCookieConsentState = {
 	cookies: [],
 	origins: [
@@ -104,7 +97,13 @@ export default defineConfig({
 			use: {
 				storageState: 'playwright/.auth/user.json',
 			},
-			dependencies: ['setup-portal', ...parallelProjectNames],
+			dependencies: [
+				'setup-portal',
+				'portal-parallel',
+				'dashboard-parallel',
+				'partner-space-parallel',
+				'mobile-app-api-parallel',
+			],
 		},
 		{
 			name: 'public-website-desktop-serial',
@@ -112,7 +111,13 @@ export default defineConfig({
 			use: {
 				storageState: publicWebsiteCookieConsentState,
 			},
-			dependencies: ['setup-infra', ...parallelProjectNames],
+			dependencies: [
+				'setup-infra',
+				'portal-parallel',
+				'dashboard-parallel',
+				'partner-space-parallel',
+				'mobile-app-api-parallel',
+			],
 		},
 		{
 			name: 'public-website-mobile-serial',
@@ -121,7 +126,13 @@ export default defineConfig({
 				...devices['iPhone 15'],
 				storageState: publicWebsiteCookieConsentState,
 			},
-			dependencies: ['setup-infra', ...parallelProjectNames],
+			dependencies: [
+				'setup-infra',
+				'portal-parallel',
+				'dashboard-parallel',
+				'partner-space-parallel',
+				'mobile-app-api-parallel',
+			],
 		},
 	],
 	webServer: {

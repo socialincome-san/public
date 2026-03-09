@@ -1,6 +1,11 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { getFirebaseAdminService, getRecipientIdByName, getRecipientProgramAndLocalPartnerByName } from '../../utils';
+import {
+	assertContactExistsByEmail,
+	getFirebaseAdminService,
+	getRecipientIdByName,
+	getRecipientProgramAndLocalPartnerByName,
+} from '../../../../utils';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -54,6 +59,8 @@ test.beforeEach(async () => {
 });
 
 test('Add new recipient', async ({ page }) => {
+	await assertContactExistsByEmail('test@portal.org');
+
 	await page.goto('/portal/management/recipients');
 	await page.getByTestId('data-table-actions-button').click();
 	await page.getByTestId('data-table-action-item-add-new-recipient').click();
