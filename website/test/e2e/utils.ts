@@ -41,4 +41,3 @@ export const assertContactExistsByEmail = async (email: string) => {
 		},
 	});
 };
-
