@@ -1,12 +1,19 @@
-import { PayoutStatus } from '@/generated/prisma/client';
+import { PayoutStatus, PrismaClient } from '@/generated/prisma/client';
 import { ProgramPermission } from '@/generated/prisma/enums';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { PayoutCreateInput, PayoutEntity, PayoutPayload, PayoutUpdateInput } from './payout.types';
 
 export class PayoutWriteService extends BaseService {
-	private programAccessService = new ProgramAccessReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async updatePayoutStatus(userId: string, payoutId: string, newStatus: PayoutStatus): Promise<ServiceResult<string>> {
 		try {

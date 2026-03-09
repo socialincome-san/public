@@ -1,21 +1,17 @@
 import { redirect } from 'next/navigation';
-import { ContributorReadService } from '../services/contributor/contributor-read.service';
 import { ContributorSession } from '../services/contributor/contributor.types';
-import { FirebaseSessionService } from '../services/firebase/firebase-session.service';
-import { LocalPartnerReadService } from '../services/local-partner/local-partner-read.service';
 import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
-import { UserReadService } from '../services/user/user-read.service';
+import { services } from '../services/services';
 import { UserSession } from '../services/user/user.types';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
 const getAuthUserIdFromCookie = async (): Promise<string | null> => {
-	const firebaseSessionService = new FirebaseSessionService();
-	const cookie = await firebaseSessionService.readSessionCookie();
+	const cookie = await services.firebaseSession.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const result = await firebaseSessionService.verifySessionCookie(cookie);
+	const result = await services.firebaseSession.verifySessionCookie(cookie);
 	return result.success ? result.data.uid : null;
 };
 
@@ -25,20 +21,16 @@ export const getCurrentSessions = async (): Promise<Session[]> => {
 		return [];
 	}
 
-	const contributorService = new ContributorReadService();
-	const userService = new UserReadService();
-	const localPartnerService = new LocalPartnerReadService();
-
 	const out: Session[] = [];
-	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
+	const contributorResult = await services.read.contributor.getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
 		out.push(contributorResult.data);
 	}
-	const userResult = await userService.getCurrentUserSession(authUserId);
+	const userResult = await services.read.user.getCurrentUserSession(authUserId);
 	if (userResult.success && userResult.data) {
 		out.push(userResult.data);
 	}
-	const partnerResult = await localPartnerService.getCurrentLocalPartnerSession(authUserId);
+	const partnerResult = await services.read.localPartner.getCurrentLocalPartnerSession(authUserId);
 	if (partnerResult.success && partnerResult.data) {
 		out.push(partnerResult.data);
 	}

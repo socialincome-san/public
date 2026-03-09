@@ -1,4 +1,11 @@
-import { ContributionStatus, Currency, DonationInterval, PaymentEventType } from '@/generated/prisma/client';
+import {
+	ContributionStatus,
+	Currency,
+	DonationInterval,
+	PaymentEventType,
+	PrismaClient,
+} from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
@@ -9,9 +16,15 @@ import { ServiceResult } from '../core/base.types';
 import { BankTransferPayment } from './bank-transfer.types';
 
 export class BankTransferService extends BaseService {
-	private contributorService = new ContributorWriteService();
-	private campaignService = new CampaignReadService();
-	private contributionService = new ContributionWriteService();
+	constructor(
+		db: PrismaClient,
+		private readonly contributorService: ContributorWriteService,
+		private readonly campaignService: CampaignReadService,
+		private readonly contributionService: ContributionWriteService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async createContributionForNewOrExistingContributor(
 		payment: BankTransferPayment,

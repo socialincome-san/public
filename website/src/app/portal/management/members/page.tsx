@@ -1,8 +1,8 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { OrganizationReadService } from '@/lib/services/organization/organization-read.service';
 import { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
+import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 import MembersTable from './members-table';
@@ -20,8 +20,7 @@ const OrganizationMembersDataLoader = async ({ searchParams }: SearchParamsPageP
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new OrganizationReadService();
-	const result = await service.getPaginatedOrganizationMembersTableView(user.id, tableQuery);
+	const result = await services.read.organization.getPaginatedOrganizationMembersTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: OrganizationMemberTableViewRow[] = result.success ? result.data.tableRows : [];

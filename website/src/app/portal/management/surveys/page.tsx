@@ -1,7 +1,7 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { SurveyReadService } from '@/lib/services/survey/survey-read.service';
+import { services } from '@/lib/services/services';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -20,8 +20,7 @@ const SurveysDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new SurveyReadService();
-	const result = await service.getPaginatedTableView(user.id, tableQuery);
+	const result = await services.read.survey.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: SurveyTableViewRow[] = result.success ? result.data.tableRows : [];

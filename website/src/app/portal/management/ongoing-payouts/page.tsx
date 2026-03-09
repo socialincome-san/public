@@ -4,7 +4,7 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import type { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutReadService } from '@/lib/services/payout/payout-read.service';
+import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 
@@ -21,8 +21,7 @@ const OngoingPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps)
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new PayoutReadService();
-	const result = await service.getPaginatedOngoingPayoutTableView(user.id, tableQuery);
+	const result = await services.read.payout.getPaginatedOngoingPayoutTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

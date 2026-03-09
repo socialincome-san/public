@@ -1,4 +1,5 @@
-import { Contribution, ContributionStatus, PaymentEvent } from '@/generated/prisma/client';
+import { Contribution, ContributionStatus, PaymentEvent, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -13,7 +14,13 @@ import {
 } from './contribution.types';
 
 export class ContributionWriteService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
+	constructor(
+		db: PrismaClient,
+		private readonly organizationAccessService: OrganizationAccessService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async update(userId: string, contribution: ContributionUpdateInput): Promise<ServiceResult<ContributionPayload>> {
 		try {

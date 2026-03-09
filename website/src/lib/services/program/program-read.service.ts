@@ -1,4 +1,5 @@
-import { PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { PayoutStatus, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -7,8 +8,14 @@ import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { ProgramOption, ProgramWallet, ProgramWallets, PublicProgramDetails } from './program.types';
 
 export class ProgramReadService extends BaseService {
-	private programAccessService = new ProgramAccessReadService();
-	private programStatsService = new ProgramStatsService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly programStatsService: ProgramStatsService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {

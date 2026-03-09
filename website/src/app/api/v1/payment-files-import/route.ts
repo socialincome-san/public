@@ -1,4 +1,4 @@
-import { PaymentFileImportService } from '@/lib/services/payment-file-import/payment-file-import.service';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -15,7 +15,7 @@ export const POST = async (request: NextRequest) => {
 		return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
 	}
 
-	const service = new PaymentFileImportService(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
+	const service = services.createPaymentFileImport(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
 
 	try {
 		const result = await service.importPaymentFiles();

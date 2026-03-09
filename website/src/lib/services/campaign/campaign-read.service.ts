@@ -1,5 +1,6 @@
-import { Campaign, Prisma } from '@/generated/prisma/client';
+import { Campaign, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
+import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -16,8 +17,14 @@ import {
 } from './campaign.types';
 
 export class CampaignReadService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
-	private exchangeRateService = new ExchangeRateReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly exchangeRateService: ExchangeRateReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildCampaignOrderBy(query: CampaignTableQuery): Prisma.CampaignOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

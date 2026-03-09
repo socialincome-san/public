@@ -1,4 +1,5 @@
-import { PayoutStatus, Prisma, ProgramPermission } from '@/generated/prisma/client';
+import { PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
@@ -27,9 +28,15 @@ import {
 } from './payout.types';
 
 export class PayoutReadService extends BaseService {
-	private programAccessService = new ProgramAccessReadService();
-	private exchangeRateService = new ExchangeRateReadService();
-	private programStatsService = new ProgramStatsService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly exchangeRateService: ExchangeRateReadService,
+		private readonly programStatsService: ProgramStatsService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildPayoutOrderBy(query: PayoutTableQuery): Prisma.PayoutOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

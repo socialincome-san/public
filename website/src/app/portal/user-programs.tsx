@@ -2,7 +2,7 @@ import { Badge } from '@/components/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { ProgramReadService } from '@/lib/services/program/program-read.service';
+import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
@@ -10,8 +10,7 @@ type Props = {
 };
 
 export const UserPrograms = async ({ userId }: Props) => {
-	const service = new ProgramReadService();
-	const result = await service.getProgramWallets(userId);
+	const result = await services.read.program.getProgramWallets(userId);
 
 	if (!result.success) {
 		return <div>{result.error}</div>;
@@ -45,11 +44,9 @@ export const UserPrograms = async ({ userId }: Props) => {
 							}}
 						/>
 					))}
-
 					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
 				</div>
 			</div>
-
 			{ownedPrograms.length > 0 && (
 				<div>
 					<h2 className="py-6 text-3xl font-medium">Owned Programs</h2>

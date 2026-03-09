@@ -1,4 +1,12 @@
-import { ContributionStatus, Currency, PaymentEventType, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
+import {
+	ContributionStatus,
+	Currency,
+	PaymentEventType,
+	PayoutStatus,
+	PrismaClient,
+	SurveyStatus,
+} from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
@@ -12,7 +20,13 @@ import {
 } from './program-stats.types';
 
 export class ProgramStatsService extends BaseService {
-	private exchangeRateService = new ExchangeRateReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly exchangeRateService: ExchangeRateReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
 		try {

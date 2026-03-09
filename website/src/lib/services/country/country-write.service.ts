@@ -1,11 +1,18 @@
-import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/client';
+import { NetworkTechnology, PrismaClient, SanctionRegime } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
 import { CountryCreateInput, CountryPayload, CountryUpdateInput } from './country.types';
 
 export class CountryWriteService extends BaseService {
-	private userService = new UserReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async create(userId: string, input: CountryCreateInput): Promise<ServiceResult<CountryPayload>> {
 		const isAdminResult = await this.userService.isAdmin(userId);

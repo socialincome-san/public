@@ -1,14 +1,12 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { ExchangeRateWriteService } from '@/lib/services/exchange-rate/exchange-rate-write.service';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
-
-const service = new ExchangeRateWriteService();
 
 export const importExchangeRatesAction = async () => {
 	const user = await getAuthenticatedUserOrThrow();
-	const result = await service.triggerImportAsAdmin(user.id);
+	const result = await services.write.exchangeRate.triggerImportAsAdmin(user.id);
 	revalidatePath('/portal/admin/exchange-rates');
 	return result;
 };

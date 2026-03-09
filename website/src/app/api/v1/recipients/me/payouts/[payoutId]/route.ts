@@ -1,6 +1,5 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { PayoutReadService } from '@/lib/services/payout/payout-read.service';
-import { RecipientReadService } from '@/lib/services/recipient/recipient-read.service';
+import { services } from '@/lib/services/services';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Params = Promise<{ payoutId: string }>;
@@ -16,15 +15,13 @@ type Params = Promise<{ payoutId: string }>;
 export const GET = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {
 	const { payoutId } = await params;
 
-	const recipientService = new RecipientReadService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
 	}
 
-	const payoutService = new PayoutReadService();
-	const payoutResult = await payoutService.getByRecipientAndId(recipientResult.data.id, payoutId);
+	const payoutResult = await services.read.payout.getByRecipientAndId(recipientResult.data.id, payoutId);
 
 	if (!payoutResult.success) {
 		return new Response(payoutResult.error, { status: 500 });

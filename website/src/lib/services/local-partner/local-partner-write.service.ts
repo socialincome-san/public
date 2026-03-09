@@ -1,5 +1,6 @@
-import { LocalPartner } from '@/generated/prisma/client';
+import { LocalPartner, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -7,8 +8,14 @@ import { UserReadService } from '../user/user-read.service';
 import { LocalPartnerCreateInput, LocalPartnerUpdateInput } from './local-partner.types';
 
 export class LocalPartnerWriteService extends BaseService {
-	private userService = new UserReadService();
-	private firebaseAdminService = new FirebaseAdminService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		private readonly firebaseAdminService: FirebaseAdminService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async create(userId: string, input: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
 		const isAdminResult = await this.userService.isAdmin(userId);

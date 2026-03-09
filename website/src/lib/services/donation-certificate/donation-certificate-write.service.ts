@@ -1,6 +1,8 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, LanguageCode } from '@/lib/types/language';
+import { logger } from '@/lib/utils/logger';
 import { withFile } from 'tmp-promise';
 import { ContributionReadService } from '../contribution/contribution-read.service';
 import { ContributorReadService } from '../contributor/contributor-read.service';
@@ -11,10 +13,17 @@ import { DonationCertificateWriter } from './donation-certificate-writer';
 import { DonationCertificateError } from './types';
 
 export class DonationCertificateWriteService extends BaseService {
-	private contributorService = new ContributorReadService();
-	private contributionService = new ContributionReadService();
-	private donationCertificateReadService = new DonationCertificateReadService();
 	private bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+
+	constructor(
+		db: PrismaClient,
+		private readonly contributorService: ContributorReadService,
+		private readonly contributionService: ContributionReadService,
+		private readonly donationCertificateReadService: DonationCertificateReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async createDonationCertificate(
 		year: number,

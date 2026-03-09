@@ -2,7 +2,8 @@ import { PayoutsTableClient } from '@/app/portal/delivery/make-payouts/payouts-t
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutReadService } from '@/lib/services/payout/payout-read.service';
+import { services } from '@/lib/services/services';
+
 import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -20,8 +21,7 @@ const PayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const payoutService = new PayoutReadService();
-	const result = await payoutService.getPaginatedTableView(user.id, tableQuery);
+	const result = await services.read.payout.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: PayoutTableViewRow[] = result.success ? result.data.tableRows : [];

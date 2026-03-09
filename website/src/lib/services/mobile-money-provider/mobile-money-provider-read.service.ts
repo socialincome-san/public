@@ -1,4 +1,5 @@
-import { Prisma } from '@/generated/prisma/client';
+import { Prisma, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -12,7 +13,13 @@ import {
 } from './mobile-money-provider.types';
 
 export class MobileMoneyProviderReadService extends BaseService {
-	private userService = new UserReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildMobileMoneyProviderOrderBy(
 		query: MobileMoneyProviderTableQuery,

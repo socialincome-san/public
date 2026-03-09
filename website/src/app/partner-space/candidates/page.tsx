@@ -2,8 +2,8 @@ import { CandidatesTableClient } from '@/app/portal/admin/candidates/candidates-
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
-import { CandidateReadService } from '@/lib/services/candidate/candidate-read.service';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
+import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 
@@ -20,8 +20,7 @@ const CandidatesDataLoader = async ({ searchParams }: SearchParamsPageProps) => 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const candidateService = new CandidateReadService();
-	const result = await candidateService.getPaginatedTableViewByLocalPartner(partner.id, tableQuery);
+	const result = await services.read.candidate.getPaginatedTableViewByLocalPartner(partner.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: CandidatesTableViewRow[] = result.success ? result.data.tableRows : [];

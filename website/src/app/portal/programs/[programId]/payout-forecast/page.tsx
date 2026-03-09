@@ -4,7 +4,7 @@ import { payoutForecastTableConfig } from '@/components/data-table/configs/payou
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutReadService } from '@/lib/services/payout/payout-read.service';
+import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 
@@ -27,8 +27,7 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const payoutService = new PayoutReadService();
-	const result = await payoutService.getPaginatedForecastTableView(user.id, programId, MONTHS_AHEAD, tableQuery);
+	const result = await services.read.payout.getPaginatedForecastTableView(user.id, programId, MONTHS_AHEAD, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
