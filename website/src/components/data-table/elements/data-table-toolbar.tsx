@@ -150,9 +150,17 @@ export const DataTableToolbar = ({
 							</div>
 							<div className="space-y-1">
 								{columns.map((column) => (
-									<label key={column.id} className="flex items-center justify-between gap-3 text-sm">
+									<label
+										key={column.id}
+										className="flex items-center justify-between gap-3 text-sm"
+										data-testid={`data-table-column-${column.id}-label`}
+									>
 										<span>{column.label}</span>
-										<Switch checked={column.visible} onCheckedChange={column.onToggle} />
+										<Switch
+											checked={column.visible}
+											onCheckedChange={column.onToggle}
+											data-testid={`data-table-column-${column.id}-toggle`}
+										/>
 									</label>
 								))}
 							</div>
