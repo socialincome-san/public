@@ -73,10 +73,15 @@ export class MobileMoneyProviderReadService extends BaseService {
 			const search = query.search.trim();
 			const where = search
 				? {
-						name: {
-							contains: search,
-							mode: 'insensitive' as const,
-						},
+						OR: [
+							{ id: { contains: search, mode: 'insensitive' as const } },
+							{
+								name: {
+									contains: search,
+									mode: 'insensitive' as const,
+								},
+							},
+						],
 					}
 				: undefined;
 			const [providers, totalCount] = await Promise.all([

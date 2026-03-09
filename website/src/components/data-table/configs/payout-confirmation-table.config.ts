@@ -15,7 +15,7 @@ export const payoutConfirmationTableConfig: DataTableConfig<PayoutConfirmationTa
 	id: 'payout-confirmation',
 	title: 'Payout confirmations',
 	emptyMessage: 'No payouts waiting for confirmation',
-	searchKeys: ['recipientFirstName', 'recipientLastName', 'programName', 'phoneNumber'],
+	searchKeys: ['id', 'recipientFirstName', 'recipientLastName', 'programName', 'phoneNumber'],
 	sortOptions: [
 		{ id: 'recipient', label: 'Recipient' },
 		{ id: 'programName', label: 'Program' },

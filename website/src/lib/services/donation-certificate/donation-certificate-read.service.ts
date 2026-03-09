@@ -84,6 +84,7 @@ export class DonationCertificateReadService extends BaseService {
 				...(search
 					? {
 							OR: [
+								{ id: { contains: search, mode: 'insensitive' as const } },
 								{
 									contributor: {
 										contact: {

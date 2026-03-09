@@ -6,7 +6,7 @@ export const countriesTableConfig: DataTableConfig<CountryTableViewRow> = {
 	id: 'admin-countries',
 	title: 'Countries',
 	emptyMessage: 'No countries found',
-	searchKeys: ['isoCode', 'networkTechnology'],
+	searchKeys: ['id', 'isoCode', 'networkTechnology'],
 	sortOptions: [
 		{ id: 'isoCode', label: 'Country' },
 		{ id: 'isActive', label: 'Active' },

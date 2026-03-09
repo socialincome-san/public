@@ -6,7 +6,7 @@ export const organizationMembersTableConfig: DataTableConfig<OrganizationMemberT
 	id: 'organization-members',
 	title: 'Organization Members',
 	emptyMessage: 'No members found',
-	searchKeys: ['firstName', 'lastName', 'email'],
+	searchKeys: ['id', 'firstName', 'lastName', 'email'],
 	sortOptions: [
 		{ id: 'member', label: 'Member' },
 		{ id: 'email', label: 'Email' },

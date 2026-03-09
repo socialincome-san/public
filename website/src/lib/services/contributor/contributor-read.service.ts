@@ -183,6 +183,7 @@ export class ContributorReadService extends BaseService {
 								: []),
 							{
 								OR: [
+									{ id: { contains: search, mode: 'insensitive' as const } },
 									{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { email: { contains: search, mode: 'insensitive' as const } } },

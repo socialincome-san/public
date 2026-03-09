@@ -6,7 +6,7 @@ export const campaignsTableConfig: DataTableConfig<CampaignTableViewRow> = {
 	id: 'campaigns',
 	title: 'Campaigns',
 	emptyMessage: 'No campaigns found',
-	searchKeys: ['title', 'description', 'programName', 'link'],
+	searchKeys: ['id', 'title', 'description', 'programName', 'link'],
 	sortOptions: [
 		{ id: 'title', label: 'Title' },
 		{ id: 'description', label: 'Description' },

@@ -15,7 +15,7 @@ export const exchangeRatesTableConfig: DataTableConfig<ExchangeRatesTableViewRow
 	id: 'admin-exchange-rates',
 	title: 'Exchange Rates for last month',
 	emptyMessage: 'No exchange rates found',
-	searchKeys: ['currency'],
+	searchKeys: ['id', 'currency'],
 	sortOptions: [
 		{ id: 'currency', label: 'Currency' },
 		{ id: 'rate', label: 'Rate' },

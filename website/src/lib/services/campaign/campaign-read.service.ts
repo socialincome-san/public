@@ -221,6 +221,7 @@ export class CampaignReadService extends BaseService {
 				...(search
 					? {
 							OR: [
+								{ id: { contains: search, mode: 'insensitive' as const } },
 								{ title: { contains: search, mode: 'insensitive' as const } },
 								{ description: { contains: search, mode: 'insensitive' as const } },
 								{ program: { name: { contains: search, mode: 'insensitive' as const } } },

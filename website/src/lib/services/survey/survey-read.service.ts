@@ -131,6 +131,7 @@ export class SurveyReadService extends BaseService {
 							{ recipient: { programId: { in: filteredProgramIds } } },
 							{
 								OR: [
+									{ id: { contains: search, mode: 'insensitive' as const } },
 									{ name: { contains: search, mode: 'insensitive' as const } },
 									{ recipient: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
 									{ recipient: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
@@ -269,6 +270,7 @@ export class SurveyReadService extends BaseService {
 							},
 							{
 								OR: [
+									{ id: { contains: search, mode: 'insensitive' as const } },
 									{ name: { contains: search, mode: 'insensitive' as const } },
 									{ recipient: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
 									{ recipient: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },

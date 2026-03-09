@@ -6,7 +6,7 @@ export const mobileMoneyProvidersTableConfig: DataTableConfig<MobileMoneyProvide
 	id: 'admin-mobile-money-providers',
 	title: 'Mobile Money Providers',
 	emptyMessage: 'No mobile money providers found',
-	searchKeys: ['name'],
+	searchKeys: ['id', 'name'],
 	sortOptions: [
 		{ id: 'name', label: 'Name' },
 		{ id: 'isSupported', label: 'Supported' },

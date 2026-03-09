@@ -6,7 +6,7 @@ export const usersTableConfig: DataTableConfig<UserTableViewRow> = {
 	id: 'admin-users',
 	title: 'Users',
 	emptyMessage: 'No users found',
-	searchKeys: ['firstName', 'lastName', 'email', 'organizationName'],
+	searchKeys: ['id', 'firstName', 'lastName', 'email', 'organizationName'],
 	sortOptions: [
 		{ id: 'user', label: 'User' },
 		{ id: 'email', label: 'Email' },

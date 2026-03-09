@@ -6,7 +6,7 @@ export const localPartnersTableConfig: DataTableConfig<LocalPartnerTableViewRow>
 	id: 'admin-local-partners',
 	title: 'All Local Partners',
 	emptyMessage: 'No local partners found',
-	searchKeys: ['name', 'contactPerson', 'contactNumber'],
+	searchKeys: ['id', 'name', 'contactPerson', 'contactNumber'],
 	sortOptions: [
 		{ id: 'name', label: 'Name' },
 		{ id: 'contactPerson', label: 'Contact person' },

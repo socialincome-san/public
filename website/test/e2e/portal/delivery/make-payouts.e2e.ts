@@ -16,9 +16,31 @@ const expected = {
 		'MobileNumber*,UniqueCode*,UserType*91234567,OM-SL-001,subscriber91234567,OM-SL-001,subscriber91234567,OM-SL-001,subscriber77111222,OM-SL-002,subscriber77111222,OM-SL-002,subscriber77111222,OM-SL-002,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber88765432,OM-SL-003,subscriber',
 
 	step2:
-		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Mariatu,Koroma,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,40,Combined,Tester,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber88765432,50,Abdul,Jalloh,OM-SL-003,SocialIncomeMarch2025,subscriber',
+		'MobileNumber*,Amount*,FirstName,LastName,IdNumber,Remarks*,UserType*91234567,50,Kumba,Sesay,OM-SL-001,SocialIncomeMarch2025,subscriber91234567,50,Rugiatu,Bangura,OM-SL-001,SocialIncomeMarch2025,subscriber91234567,50,Mariatu,Koroma,OM-SL-001,SocialIncomeMarch2025,subscriber77111222,40,Combined,Tester,OM-SL-002,SocialIncomeMarch2025,subscriber77111222,50,Sahr,Koroma,OM-SL-002,SocialIncomeMarch2025,subscriber77111222,50,Alimamy,Conteh,OM-SL-002,SocialIncomeMarch2025,subscriber88765432,50,Hindolo,Kamara,OM-SL-003,SocialIncomeMarch2025,subscriber88765432,50,Finda,Jalloh,OM-SL-003,SocialIncomeMarch2025,subscriber88765432,50,Isatu,Conteh,OM-SL-003,SocialIncomeMarch2025,subscriber88765432,50,Abdul,Jalloh,OM-SL-003,SocialIncomeMarch2025,subscriber',
 
 	step3: [
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Kumba',
+			lastName: 'Sesay',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+41791234567',
+			recipientId: 'recipient-11',
+			status: 'paid',
+		},
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Rugiatu',
+			lastName: 'Bangura',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+41791234567',
+			recipientId: 'recipient-14',
+			status: 'paid',
+		},
 		{
 			amount: 50,
 			amountChf: 2.0833333333333335,
@@ -45,6 +67,50 @@ const expected = {
 			amount: 50,
 			amountChf: 2.0833333333333335,
 			currency: 'SLE',
+			firstName: 'Sahr',
+			lastName: 'Koroma',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+23277111222',
+			recipientId: 'recipient-12',
+			status: 'paid',
+		},
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Alimamy',
+			lastName: 'Conteh',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+23277111222',
+			recipientId: 'recipient-15',
+			status: 'paid',
+		},
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Hindolo',
+			lastName: 'Kamara',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+23288765432',
+			recipientId: 'recipient-13',
+			status: 'paid',
+		},
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
+			firstName: 'Finda',
+			lastName: 'Jalloh',
+			paymentAt: '2025-03-12T11:00:00.000Z',
+			phoneNumber: '+23288765432',
+			recipientId: 'recipient-16',
+			status: 'paid',
+		},
+		{
+			amount: 50,
+			amountChf: 2.0833333333333335,
+			currency: 'SLE',
 			firstName: 'Isatu',
 			lastName: 'Conteh',
 			paymentAt: '2025-03-12T11:00:00.000Z',
@@ -65,7 +131,7 @@ const expected = {
 		},
 	],
 
-	step4: 'Created 4 payouts for 2025-03',
+	step4: 'Created 10 payouts for 2025-03',
 };
 
 test('Payout Process', async ({ page }) => {

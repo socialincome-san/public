@@ -6,7 +6,7 @@ export const ongoingPayoutsTableConfig: DataTableConfig<OngoingPayoutTableViewRo
 	id: 'ongoing-payouts',
 	title: 'Ongoing Payouts',
 	emptyMessage: 'No ongoing payouts found',
-	searchKeys: ['firstName', 'lastName', 'programName'],
+	searchKeys: ['id', 'firstName', 'lastName', 'programName'],
 	sortOptions: [
 		{ id: 'recipient', label: 'Recipient' },
 		{ id: 'programName', label: 'Program' },

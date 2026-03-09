@@ -114,6 +114,7 @@ export class LocalPartnerReadService extends BaseService {
 			const where = search
 				? {
 						OR: [
+							{ id: { contains: search, mode: 'insensitive' as const } },
 							{ name: { contains: search, mode: 'insensitive' as const } },
 							{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },

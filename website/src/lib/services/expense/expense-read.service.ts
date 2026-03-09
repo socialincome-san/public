@@ -84,6 +84,7 @@ export class ExpenseReadService extends BaseService {
 			const where = search
 				? {
 						OR: [
+							{ id: { contains: search, mode: 'insensitive' as const } },
 							...(matchedExpenseType ? [{ type: { equals: matchedExpenseType } }] : []),
 							{ organization: { name: { contains: search, mode: 'insensitive' as const } } },
 							...(hasYearFilter ? [{ year: parsedYear }] : []),

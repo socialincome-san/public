@@ -6,7 +6,7 @@ export const expensesTableConfig: DataTableConfig<ExpenseTableViewRow> = {
 	id: 'admin-expenses',
 	title: 'Expenses',
 	emptyMessage: 'No expenses found',
-	searchKeys: ['type', 'year', 'organizationName'],
+	searchKeys: ['id', 'type', 'year', 'organizationName'],
 	sortOptions: [
 		{ id: 'type', label: 'Type' },
 		{ id: 'year', label: 'Year' },

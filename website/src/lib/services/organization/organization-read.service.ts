@@ -87,13 +87,18 @@ export class OrganizationReadService extends BaseService {
 				...(search
 					? {
 							user: {
-								contact: {
-									OR: [
-										{ firstName: { contains: search, mode: 'insensitive' as const } },
-										{ lastName: { contains: search, mode: 'insensitive' as const } },
-										{ email: { contains: search, mode: 'insensitive' as const } },
-									],
-								},
+								OR: [
+									{ id: { contains: search, mode: 'insensitive' as const } },
+									{
+										contact: {
+											OR: [
+												{ firstName: { contains: search, mode: 'insensitive' as const } },
+												{ lastName: { contains: search, mode: 'insensitive' as const } },
+												{ email: { contains: search, mode: 'insensitive' as const } },
+											],
+										},
+									},
+								],
 							},
 						}
 					: {}),
@@ -163,7 +168,14 @@ export class OrganizationReadService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 			const search = query.search.trim();
-			const where = search ? { name: { contains: search, mode: 'insensitive' as const } } : undefined;
+			const where = search
+				? {
+						OR: [
+							{ id: { contains: search, mode: 'insensitive' as const } },
+							{ name: { contains: search, mode: 'insensitive' as const } },
+						],
+					}
+				: undefined;
 
 			const [organizations, totalCount] = await Promise.all([
 				this.db.organization.findMany({

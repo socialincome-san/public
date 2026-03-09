@@ -264,6 +264,7 @@ export class CandidateReadService extends BaseService {
 							...(countryScope ? [countryScope] : []),
 							{
 								OR: [
+									{ id: { contains: search, mode: 'insensitive' } },
 									{ contact: { firstName: { contains: search, mode: 'insensitive' } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' } } },
 									{ contact: { phone: { number: { contains: search, mode: 'insensitive' } } } },
@@ -448,6 +449,7 @@ export class CandidateReadService extends BaseService {
 							...(countryWhere ? [countryWhere] : []),
 							{
 								OR: [
+									{ id: { contains: search, mode: 'insensitive' } },
 									{ contact: { firstName: { contains: search, mode: 'insensitive' } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' } } },
 									{ contact: { phone: { number: { contains: search, mode: 'insensitive' } } } },

@@ -16,7 +16,7 @@ export const contributionsTableConfig: DataTableConfig<ContributionTableViewRow>
 	id: 'contributions',
 	title: 'Contributions',
 	emptyMessage: 'No contributions found',
-	searchKeys: ['firstName', 'lastName', 'email', 'campaignTitle', 'programName'],
+	searchKeys: ['id', 'firstName', 'lastName', 'email', 'campaignTitle', 'programName'],
 	sortOptions: [
 		{ id: 'contributor', label: 'Contributor' },
 		{ id: 'email', label: 'Email' },

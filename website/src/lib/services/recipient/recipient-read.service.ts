@@ -591,6 +591,7 @@ export class RecipientReadService extends BaseService {
 				search.length > 0
 					? {
 							OR: [
+								{ id: { contains: search, mode: 'insensitive' } },
 								{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
 								{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
 								{ localPartner: { is: { name: { contains: search, mode: 'insensitive' } } } },
@@ -760,6 +761,7 @@ export class RecipientReadService extends BaseService {
 							baseWhere,
 							{
 								OR: [
+									{ id: { contains: search, mode: 'insensitive' as const } },
 									{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 									{ program: { name: { contains: search, mode: 'insensitive' as const } } },

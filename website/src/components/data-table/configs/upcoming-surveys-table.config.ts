@@ -12,7 +12,7 @@ export const upcomingSurveysTableConfig: DataTableConfig<SurveyTableViewRow> = {
 	id: 'upcoming-surveys',
 	title: 'Upcoming Surveys',
 	emptyMessage: 'No upcoming surveys found',
-	searchKeys: ['name', 'recipientName', 'programName'],
+	searchKeys: ['id', 'name', 'recipientName', 'programName'],
 	sortOptions: [
 		{ id: 'name', label: 'Name' },
 		{ id: 'recipientName', label: 'Recipient' },

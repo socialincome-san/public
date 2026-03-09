@@ -6,7 +6,7 @@ export const organizationsTableConfig: DataTableConfig<OrganizationTableViewRow>
 	id: 'organizations-admin',
 	title: 'All Organizations',
 	emptyMessage: 'No organizations found',
-	searchKeys: ['name'],
+	searchKeys: ['id', 'name'],
 	sortOptions: [
 		{ id: 'name', label: 'Name' },
 		{ id: 'usersCount', label: 'Users' },

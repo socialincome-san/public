@@ -6,7 +6,7 @@ export const donationCertificatesTableConfig: DataTableConfig<DonationCertificat
 	id: 'donation-certificates',
 	title: 'Donation Certificates',
 	emptyMessage: 'No donation certificates found',
-	searchKeys: ['contributorFirstName', 'contributorLastName', 'email', 'storagePath', 'year'],
+	searchKeys: ['id', 'contributorFirstName', 'contributorLastName', 'email', 'storagePath', 'year'],
 	sortOptions: [
 		{ id: 'year', label: 'Year' },
 		{ id: 'contributor', label: 'Contributor' },

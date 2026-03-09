@@ -119,8 +119,21 @@ export class ExchangeRateReadService extends BaseService {
 					: [selectedCurrency]
 				: searchMatchingCurrencies;
 			const where = {
-				timestamp: { gte: oneMonthAgo },
-				...(effectiveCurrencies ? { currency: { in: effectiveCurrencies } } : {}),
+				AND: [
+					{ timestamp: { gte: oneMonthAgo } },
+					...(search
+						? [
+								{
+									OR: [
+										{ id: { contains: search, mode: 'insensitive' as const } },
+										...(effectiveCurrencies ? [{ currency: { in: effectiveCurrencies } }] : []),
+									],
+								},
+							]
+						: effectiveCurrencies
+							? [{ currency: { in: effectiveCurrencies } }]
+							: []),
+				],
 			};
 			const [rates, totalCount, currencySource] = await Promise.all([
 				this.db.exchangeRate.findMany({

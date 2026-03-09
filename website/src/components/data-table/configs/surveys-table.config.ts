@@ -13,7 +13,7 @@ export const surveysTableConfig: DataTableConfig<SurveyTableViewRow> = {
 	id: 'surveys',
 	title: 'Surveys',
 	emptyMessage: 'No surveys found',
-	searchKeys: ['name', 'recipientName', 'programName'],
+	searchKeys: ['id', 'name', 'recipientName', 'programName'],
 	sortOptions: [
 		{ id: 'name', label: 'Name' },
 		{ id: 'recipientName', label: 'Recipient' },

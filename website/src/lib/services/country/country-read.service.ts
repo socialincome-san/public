@@ -140,6 +140,7 @@ export class CountryReadService extends BaseService {
 			const where = search
 				? {
 						OR: [
+							{ id: { contains: search, mode: 'insensitive' as const } },
 							...(matchedIsoCode ? [{ isoCode: { equals: matchedIsoCode } }] : []),
 							...(matchedNetworkTechnology ? [{ networkTechnology: { equals: matchedNetworkTechnology } }] : []),
 						],

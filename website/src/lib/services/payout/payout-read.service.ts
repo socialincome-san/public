@@ -150,17 +150,19 @@ export class PayoutReadService extends BaseService {
 			const where = {
 				recipient: {
 					programId: { in: filteredProgramIds },
-					...(search
-						? {
-								OR: [
-									{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
-									{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
-									{ program: { name: { contains: search, mode: 'insensitive' as const } } },
-								],
-							}
-						: {}),
 				},
 				...(selectedStatus ? { status: selectedStatus } : {}),
+				...(search
+					? {
+							OR: [
+								{ id: { contains: search, mode: 'insensitive' as const } },
+								{ recipient: { id: { contains: search, mode: 'insensitive' as const } } },
+								{ recipient: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
+								{ recipient: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
+								{ recipient: { program: { name: { contains: search, mode: 'insensitive' as const } } } },
+							],
+						}
+					: {}),
 			};
 
 			const [payouts, totalCount] = await Promise.all([
@@ -248,6 +250,7 @@ export class PayoutReadService extends BaseService {
 				...(search
 					? {
 							OR: [
+								{ id: { contains: search, mode: 'insensitive' as const } },
 								{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 								{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 								{ program: { name: { contains: search, mode: 'insensitive' as const } } },
@@ -491,18 +494,20 @@ export class PayoutReadService extends BaseService {
 			const where = {
 				recipient: {
 					programId: { in: filteredProgramIds },
-					...(search
-						? {
-								OR: [
-									{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
-									{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
-									{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
-									{ program: { name: { contains: search, mode: 'insensitive' as const } } },
-								],
-							}
-						: {}),
 				},
 				...(selectedStatus ? { status: selectedStatus } : {}),
+				...(search
+					? {
+							OR: [
+								{ id: { contains: search, mode: 'insensitive' as const } },
+								{ recipient: { id: { contains: search, mode: 'insensitive' as const } } },
+								{ recipient: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
+								{ recipient: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
+								{ recipient: { contact: { email: { contains: search, mode: 'insensitive' as const } } } },
+								{ recipient: { program: { name: { contains: search, mode: 'insensitive' as const } } } },
+							],
+						}
+					: {}),
 			};
 
 			const [payouts, totalCount] = await Promise.all([

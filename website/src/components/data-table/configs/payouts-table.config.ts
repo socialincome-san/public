@@ -15,7 +15,7 @@ export const payoutsTableConfig: DataTableConfig<PayoutTableViewRow> = {
 	id: 'payouts',
 	title: 'Payouts',
 	emptyMessage: 'No payouts found',
-	searchKeys: ['recipientFirstName', 'recipientLastName', 'programName'],
+	searchKeys: ['id', 'recipientFirstName', 'recipientLastName', 'programName'],
 	sortOptions: [
 		{ id: 'recipient', label: 'Recipient' },
 		{ id: 'programName', label: 'Program' },
