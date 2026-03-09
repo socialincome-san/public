@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test.describe.configure({ mode: 'parallel' });
 
-
 test('portal home-page matches screenshot', async ({ page }) => {
 	await page.goto('/portal');
 	await expect(page).toHaveScreenshot({ fullPage: true });

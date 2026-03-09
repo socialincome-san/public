@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test.describe.configure({ mode: 'parallel' });
 
-
 test('admin mobile money providers page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/mobile-money-providers');
 	await expect(page.getByTestId('data-table')).toBeVisible();

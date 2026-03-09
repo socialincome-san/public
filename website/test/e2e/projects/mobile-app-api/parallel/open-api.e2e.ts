@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test.describe.configure({ mode: 'parallel' });
 
-
 test('OpenAPI JSON should match snapshot', async ({ page }) => {
 	const response = await page.goto('/openapi.json');
 	expect(response?.ok()).toBeTruthy();

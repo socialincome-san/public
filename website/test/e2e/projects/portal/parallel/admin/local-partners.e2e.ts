@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test.describe.configure({ mode: 'parallel' });
 
-
 test('admin local partners page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/local-partners');
 	await expect(page.getByTestId('data-table')).toBeVisible();
