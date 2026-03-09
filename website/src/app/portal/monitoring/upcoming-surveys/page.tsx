@@ -1,5 +1,4 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
-import { getServices } from '@/lib/services/services';
 import {
 	getUpcomingSurveysTableFilters,
 	upcomingSurveysTableConfig,
@@ -7,6 +6,7 @@ import {
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { getServices } from '@/lib/services/services';
 
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -24,7 +24,6 @@ const UpcomingSurveysDataLoader = async ({ searchParams }: SearchParamsPageProps
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	
 	const result = await getServices().surveyRead.getPaginatedUpcomingSurveyTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;

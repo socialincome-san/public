@@ -1,4 +1,11 @@
-import { ContributionStatus, Currency, PaymentEventType, PayoutStatus, PrismaClient, SurveyStatus } from '@/generated/prisma/client';
+import {
+	ContributionStatus,
+	Currency,
+	PaymentEventType,
+	PayoutStatus,
+	PrismaClient,
+	SurveyStatus,
+} from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';

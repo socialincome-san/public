@@ -21,7 +21,6 @@ const OngoingPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps)
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	
 	const result = await getServices().payoutRead.getPaginatedOngoingPayoutTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;

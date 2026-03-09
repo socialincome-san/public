@@ -47,4 +47,3 @@ export const getUserOptionsAction = async () => {
 	const session = await getAuthenticatedUserOrRedirect();
 	return getServices().userRead.getOptions(session.id);
 };
-

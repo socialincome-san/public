@@ -1,4 +1,3 @@
-
 import { getServices } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { slugify } from '@/lib/utils/string-utils';
@@ -13,9 +12,6 @@ type Props = { params: Promise<{ programId: string }> };
 
 export default async function OverviewProgramScopedDataLoader({ params }: Props) {
 	const { programId } = await params;
-
-	
-	
 
 	const programNameResult = await getServices().programRead.getProgramNameById(programId);
 

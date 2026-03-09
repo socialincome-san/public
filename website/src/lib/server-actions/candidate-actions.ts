@@ -21,9 +21,9 @@ export const createCandidateAction = async (data: CandidateCreateInput, sessionT
 };
 
 export const updateCandidateAction = async (
-updateInput: CandidateUpdateInput,
-nextPaymentPhoneNumber: string | null,
-sessionType: Session['type'] = 'user',
+	updateInput: CandidateUpdateInput,
+	nextPaymentPhoneNumber: string | null,
+	sessionType: Session['type'] = 'user',
 ) => {
 	const session = await getSessionByTypeOrThrow(sessionType);
 	const result = await getServices().candidateWrite.update(session, updateInput, nextPaymentPhoneNumber);

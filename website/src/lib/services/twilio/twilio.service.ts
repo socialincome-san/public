@@ -1,11 +1,11 @@
 import { PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { UserRecord } from 'firebase-admin/auth';
 import { Twilio } from 'twilio';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { logger } from '@/lib/utils/logger';
 import { VerifyOtpRequest, VerifyOtpResult } from './twilio.types';
 
 export class TwilioService extends BaseService {

@@ -1,8 +1,8 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { getServices } from '@/lib/services/services';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getServices } from '@/lib/services/services';
 
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStoryData } from '@storyblok/js';

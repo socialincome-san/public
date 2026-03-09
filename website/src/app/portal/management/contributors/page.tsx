@@ -1,8 +1,8 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { getServices } from '@/lib/services/services';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
+import { getServices } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 import ContributorsTableClient from './contributors-table-client';
@@ -20,7 +20,6 @@ const ContributorsDataLoader = async ({ searchParams }: SearchParamsPageProps) =
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	
 	const result = await getServices().contributorRead.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;

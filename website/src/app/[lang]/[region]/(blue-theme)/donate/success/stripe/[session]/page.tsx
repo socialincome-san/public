@@ -1,9 +1,9 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { getServices } from '@/lib/services/services';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
 import { CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getServices } from '@/lib/services/services';
 
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
@@ -21,7 +21,6 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: 'website-donate' });
 
-	
 	const sessionResult = await getServices().stripe.getCheckoutSession(session);
 	if (!sessionResult.success) {
 		throw new Error(sessionResult.error);

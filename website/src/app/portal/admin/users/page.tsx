@@ -21,7 +21,6 @@ const UsersDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	
 	const result = await getServices().userRead.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;

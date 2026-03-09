@@ -1,8 +1,8 @@
 'use server';
 
 import { getSessionByTypeOrThrow, type Session } from '@/lib/firebase/current-account';
-import { getServices } from '@/lib/services/services';
 import { RecipientCreateInput, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { getServices } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
 const PORTAL_RECIPIENTS_PATH = '/portal/management/recipients';
@@ -22,9 +22,9 @@ export const createRecipientAction = async (recipient: RecipientCreateInput, ses
 };
 
 export const updateRecipientAction = async (
-updateInput: RecipientUpdateInput,
-nextPaymentPhoneNumber: string | null,
-sessionType: Session['type'] = 'user',
+	updateInput: RecipientUpdateInput,
+	nextPaymentPhoneNumber: string | null,
+	sessionType: Session['type'] = 'user',
 ) => {
 	const session = await getSessionByTypeOrThrow(sessionType);
 	const result = await getServices().recipientWrite.update(session, updateInput, nextPaymentPhoneNumber);

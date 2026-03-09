@@ -1,5 +1,4 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
-import { getServices } from '@/lib/services/services';
 import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
@@ -7,6 +6,7 @@ import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorI
 import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getServices } from '@/lib/services/services';
 
 import {
 	formatStoryblokDate,

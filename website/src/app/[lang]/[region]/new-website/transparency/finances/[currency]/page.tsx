@@ -1,6 +1,6 @@
 import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
-import { getServices } from '@/lib/services/services';
 import { websiteCurrencies, WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getServices } from '@/lib/services/services';
 
 import { isValidCurrency } from '@/lib/types/currency';
 import { DateTime } from 'luxon';
@@ -15,9 +15,6 @@ type TransparencyFinancesParams = DefaultParams & { currency: string };
 
 export default async function Page({ params }: DefaultLayoutProps<TransparencyFinancesParams>) {
 	const { lang, currency } = await params;
-
-	
-	
 
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
 		const start = DateTime.now()

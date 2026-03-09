@@ -104,7 +104,14 @@ function buildServices(db: PrismaClient) {
 		donationCertificateRead,
 	);
 	const bankTransfer = new BankTransferService(db, contributorWrite, campaignRead, contributionWrite);
-	const stripe = new StripeService(db, contributorRead, contributorWrite, contributionWrite, campaignRead, programAccessRead);
+	const stripe = new StripeService(
+		db,
+		contributorRead,
+		contributorWrite,
+		contributionWrite,
+		campaignRead,
+		programAccessRead,
+	);
 
 	// Three levels of dependencies
 	const surveyRead = new SurveyReadService(db, programAccessRead, recipientRead, surveySchedule);

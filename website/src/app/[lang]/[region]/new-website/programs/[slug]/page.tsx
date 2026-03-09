@@ -1,6 +1,6 @@
 import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[region]';
-import { getServices } from '@/lib/services/services';
 import { StatsSection } from '@/app/portal/programs/[programId]/overview/components/stats-section';
+import { getServices } from '@/lib/services/services';
 
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -17,7 +17,6 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 	const { slug } = await params;
 	const query = await searchParams;
 
-	
 	const statsResult = await getServices().programStats.getProgramDashboardStatsBySlug(slug);
 
 	if (!statsResult.success || !statsResult.data) {
@@ -25,7 +24,7 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 	}
 
 	const stats = statsResult.data;
-	
+
 	const idResult = await getServices().programRead.getProgramIdBySlug(slug);
 	if (!idResult.success) {
 		return notFound();

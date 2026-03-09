@@ -14,8 +14,8 @@ export const createLocalPartnerAction = async (localPartner: LocalPartnerCreateI
 };
 
 export const updateLocalPartnerAction = async (
-updateInput: LocalPartnerUpdateInput,
-sessionType: Session['type'] = 'user',
+	updateInput: LocalPartnerUpdateInput,
+	sessionType: Session['type'] = 'user',
 ) => {
 	const session = await getSessionByTypeOrThrow(sessionType);
 	const result = await getServices().localPartnerWrite.update(session, updateInput);

@@ -1,9 +1,9 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { getServices } from '@/lib/services/services';
 import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getServices } from '@/lib/services/services';
 
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 

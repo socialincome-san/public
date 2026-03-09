@@ -9,7 +9,12 @@
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
-import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
+import {
+	ContributionStatus,
+	ContributorReferralSource,
+	PaymentEventType,
+	PrismaClient,
+} from '@/generated/prisma/client';
 import { isValidCurrency } from '@/lib/types/currency';
 import { logger } from '@/lib/utils/logger';
 import { titleCase } from '@/lib/utils/string-utils';

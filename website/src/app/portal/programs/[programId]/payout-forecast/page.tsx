@@ -27,8 +27,12 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 	const user = await getAuthenticatedUserOrRedirect();
 
-	
-	const result = await getServices().payoutRead.getPaginatedForecastTableView(user.id, programId, MONTHS_AHEAD, tableQuery);
+	const result = await getServices().payoutRead.getPaginatedForecastTableView(
+		user.id,
+		programId,
+		MONTHS_AHEAD,
+		tableQuery,
+	);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

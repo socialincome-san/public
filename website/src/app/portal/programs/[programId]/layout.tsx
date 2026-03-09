@@ -15,7 +15,6 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	
 	const result = await getServices().programRead.getProgramWalletsProgramScoped(user.id, programId);
 
 	if (!result.success) {

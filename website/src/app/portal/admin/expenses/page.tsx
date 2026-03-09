@@ -1,8 +1,8 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { getServices } from '@/lib/services/services';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
+import { getServices } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 import ExpensesTable from './expenses-table';
@@ -21,7 +21,6 @@ const ExpensesDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	
 	const result = await getServices().expenseRead.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;

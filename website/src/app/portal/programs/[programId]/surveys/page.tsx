@@ -27,7 +27,6 @@ const SurveysProgramScopedDataLoader = async ({ params, searchParams }: Props) =
 	const tableQuery = { ...baseQuery, programId };
 	const user = await getAuthenticatedUserOrRedirect();
 
-	
 	const surveysResult = await getServices().surveyRead.getPaginatedTableView(user.id, tableQuery);
 
 	const error = surveysResult.success ? null : surveysResult.error;
