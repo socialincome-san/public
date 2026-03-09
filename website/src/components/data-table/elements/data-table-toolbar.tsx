@@ -266,7 +266,7 @@ export const DataTableToolbar = ({
 											value={filter.value}
 											onValueChange={(value) => filter.onChange(value)}
 										>
-											<SelectTrigger className="h-9 w-full">
+											<SelectTrigger className="h-9 w-full" data-testid={`data-table-filter-${filter.id}-trigger`}>
 												<SelectValue placeholder={filter.placeholder} />
 											</SelectTrigger>
 											<SelectContent align="end">

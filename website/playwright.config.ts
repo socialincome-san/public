@@ -3,6 +3,13 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test', quiet: true });
 
+const parallelProjectNames = [
+	'portal-parallel',
+	'dashboard-parallel',
+	'partner-space-parallel',
+	'mobile-app-api-parallel',
+] as const;
+
 const publicWebsiteCookieConsentState = {
 	cookies: [],
 	origins: [
@@ -44,51 +51,77 @@ export default defineConfig({
 
 	projects: [
 		{
-			name: 'setup',
-			testMatch: /test-setup\.ts/,
+			name: 'setup-infra',
+			testMatch: /setup-infra\.ts/,
 		},
 		{
-			name: 'portal',
-			testMatch: /portal\/.*\.e2e\.ts/,
+			name: 'setup-portal',
+			testMatch: /setup-portal\.ts/,
+			dependencies: ['setup-infra'],
+		},
+		{
+			name: 'setup-dashboard',
+			testMatch: /setup-dashboard\.ts/,
+			dependencies: ['setup-infra'],
+		},
+		{
+			name: 'setup-partner-space',
+			testMatch: /setup-partner-space\.ts/,
+			dependencies: ['setup-infra'],
+		},
+		{
+			name: 'portal-parallel',
+			testMatch: /projects\/portal\/parallel\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/user.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-portal'],
 		},
 		{
-			name: 'dashboard',
-			testMatch: /dashboard\/.*\.e2e\.ts/,
+			name: 'dashboard-parallel',
+			testMatch: /projects\/dashboard\/parallel\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/contributor.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-dashboard'],
 		},
 		{
-			name: 'partner-space',
-			testMatch: /partner-space\/.*\.e2e\.ts/,
+			name: 'partner-space-parallel',
+			testMatch: /projects\/partner-space\/parallel\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/partner.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-partner-space'],
 		},
 		{
-			name: 'mobile-app-api',
-			testMatch: /mobile-app-api\/.*\.e2e\.ts/,
+			name: 'mobile-app-api-parallel',
+			testMatch: /projects\/mobile-app-api\/parallel\/.*\.e2e\.ts/,
+			dependencies: ['setup-infra'],
 		},
 		{
-			name: 'public-website-desktop',
-			testMatch: /public-website\/.*\.e2e\.ts/,
+			name: 'portal-serial',
+			testMatch: /projects\/portal\/serial\/.*\.e2e\.ts/,
+			use: {
+				storageState: 'playwright/.auth/user.json',
+			},
+			dependencies: ['setup-portal', ...parallelProjectNames],
+		},
+		{
+			name: 'public-website-desktop-serial',
+			testMatch: /projects\/public-website\/serial\/.*\.e2e\.ts/,
 			use: {
 				storageState: publicWebsiteCookieConsentState,
 			},
+			dependencies: ['setup-infra', ...parallelProjectNames],
 		},
 		{
-			name: 'public-website-mobile',
-			testMatch: /public-website\/.*\.e2e\.ts/,
+			name: 'public-website-mobile-serial',
+			testMatch: /projects\/public-website\/serial\/.*\.e2e\.ts/,
 			use: {
 				...devices['iPhone 15'],
 				storageState: publicWebsiteCookieConsentState,
 			},
+			dependencies: ['setup-infra', ...parallelProjectNames],
 		},
 	],
 	webServer: {
