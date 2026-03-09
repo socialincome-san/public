@@ -38,7 +38,7 @@ export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: 
 			>
 				{references.map((reference, index) => (
 					<div key={reference._uid}>
-						{showSeparator(index) && <Separator className="bg-foreground m-1 my-4 opacity-15" />}
+						{showSeparator(index) && <Separator className="bg-foreground m-0 my-4 opacity-15" />}
 						<div className="flex items-center gap-8">
 							{showThumbnails && <ThumbnailImage thumbnail={getThumbnailOrDefault(reference)} />}
 							<div className="flex flex-col justify-center">
