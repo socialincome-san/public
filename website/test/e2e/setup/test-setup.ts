@@ -1,18 +1,16 @@
 import 'dotenv/config';
 
-import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { saveStoryblokMock, setupStoryblokMock } from '../mock-server';
+import { assertContactExistsByEmail } from '../utils';
 import { loginAs } from './utils';
 
 test.describe.configure({ mode: 'serial' });
 
 test('seed database', async () => {
 	await seedDatabase();
-	await prisma.contact.findUniqueOrThrow({
-		where: { email: 'test@portal.org' },
-	});
+	await assertContactExistsByEmail('test@portal.org');
 });
 
 test('wait for emulators to be ready', async ({ page }) => {

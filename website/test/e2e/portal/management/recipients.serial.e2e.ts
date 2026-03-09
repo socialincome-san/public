@@ -1,6 +1,10 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { getFirebaseAdminService, getPrismaClient } from '../../utils';
+import {
+	getFirebaseAdminService,
+	getRecipientIdByName,
+	getRecipientProgramAndLocalPartnerByName,
+} from '../../utils';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -69,11 +73,7 @@ test('Add new recipient', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const prisma = await getPrismaClient();
-	const row = await prisma.recipient.findFirst({
-		where: { contact: { firstName: ADD_RECIPIENT.firstName, lastName: ADD_RECIPIENT.lastName } },
-		select: { program: { select: { name: true } }, localPartner: { select: { name: true } } },
-	});
+	const row = await getRecipientProgramAndLocalPartnerByName(ADD_RECIPIENT.firstName, ADD_RECIPIENT.lastName);
 
 	expect(row).toBeDefined();
 	expect(row?.program?.name).toBe(ADD_RECIPIENT.programName);
@@ -125,11 +125,7 @@ test('Edit existing recipient', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const prisma = await getPrismaClient();
-	const row = await prisma.recipient.findFirst({
-		where: { contact: { firstName: EDIT_RECIPIENT.firstName, lastName: EDIT_RECIPIENT.lastName } },
-		select: { program: { select: { name: true } }, localPartner: { select: { name: true } } },
-	});
+	const row = await getRecipientProgramAndLocalPartnerByName(EDIT_RECIPIENT.firstName, EDIT_RECIPIENT.lastName);
 
 	expect(row).toBeDefined();
 	expect(row?.program?.name).toBe(EDIT_RECIPIENT.programName);
@@ -155,11 +151,7 @@ test('Delete recipient', async ({ page }) => {
 	await page.getByRole('button', { name: 'Delete permanently' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const prisma = await getPrismaClient();
-	const deleted = await prisma.recipient.findFirst({
-		where: { contact: { firstName: 'Sahr', lastName: 'Koroma' } },
-		select: { id: true },
-	});
+	const deleted = await getRecipientIdByName('Sahr', 'Koroma');
 
 	expect(deleted).toBeNull();
 
@@ -176,12 +168,8 @@ test('CSV Upload', async ({ page }) => {
 	await page.getByTestId('import-button').click();
 	await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
 
-	const prisma = await getPrismaClient();
 	for (const expected of CSV_RECIPIENTS) {
-		const row = await prisma.recipient.findFirst({
-			where: { contact: { firstName: expected.firstName, lastName: expected.lastName } },
-			select: { program: { select: { name: true } }, localPartner: { select: { name: true } } },
-		});
+		const row = await getRecipientProgramAndLocalPartnerByName(expected.firstName, expected.lastName);
 		expect(row).toBeDefined();
 		expect(row?.program?.name).toBe(expected.programName);
 		expect(row?.localPartner?.name).toBe(expected.localPartnerName);
