@@ -4,7 +4,7 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 
 import { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
 import { CreditCardIcon, PlusIcon } from 'lucide-react';
@@ -26,7 +26,7 @@ export const SubscriptionsTable = async ({
 		emptyMessage: translator.t('subscriptions.no-subscriptions'),
 	});
 
-	const subscriptionsResult = await getServices().stripe.getPaginatedSubscriptionsTableView(
+	const subscriptionsResult = await services.stripe.getPaginatedSubscriptionsTableView(
 		contributor.stripeCustomerId,
 		tableQuery,
 	);
@@ -34,7 +34,7 @@ export const SubscriptionsTable = async ({
 	const rows: StripeSubscriptionRow[] = subscriptionsResult.success ? subscriptionsResult.data.rows : [];
 	const totalRows = subscriptionsResult.success ? subscriptionsResult.data.totalCount : 0;
 
-	const billingPortal = await getServices().stripe.createManageSubscriptionsSession(
+	const billingPortal = await services.stripe.createManageSubscriptionsSession(
 		contributor.stripeCustomerId,
 		contributor.language,
 	);

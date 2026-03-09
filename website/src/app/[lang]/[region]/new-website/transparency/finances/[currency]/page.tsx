@@ -1,6 +1,6 @@
 import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
 import { websiteCurrencies, WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 
 import { isValidCurrency } from '@/lib/types/currency';
 import { DateTime } from 'luxon';
@@ -27,8 +27,8 @@ export default async function Page({ params }: DefaultLayoutProps<TransparencyFi
 	const exchangeCurrency = isValidCurrency(requestedCurrency) ? requestedCurrency : 'USD';
 
 	const [dataResult, rateResult] = await Promise.all([
-		getServices().transparency.getTransparencyData(timeRanges),
-		getServices().exchangeRateRead.getLatestRateForCurrency(exchangeCurrency),
+		services.transparency.getTransparencyData(timeRanges),
+		services.read.exchangeRate.getLatestRateForCurrency(exchangeCurrency),
 	]);
 
 	if (!dataResult.success) {

@@ -17,7 +17,7 @@ const fixturePath = path.join(path.dirname(__filename), '__fixtures__', 'camt054
 
 describe('PaymentFileImportService.getContributionsFromPaymentFile', () => {
 	test('extracts two contributions with correct Ref and Amt per entry (real file)', () => {
-		const service = new PaymentFileImportService('test-bucket');
+		const service = new PaymentFileImportService('test-bucket', {} as never, {} as never, {} as never, {} as never);
 		const result = service.getContributionsFromPaymentFile(fixturePath);
 
 		expect(result).toHaveLength(2);

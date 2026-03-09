@@ -1,7 +1,7 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -21,7 +21,7 @@ const UsersDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await getServices().userRead.getPaginatedTableView(user.id, tableQuery);
+	const result = await services.read.user.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];

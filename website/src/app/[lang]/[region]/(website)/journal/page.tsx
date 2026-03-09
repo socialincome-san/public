@@ -4,7 +4,7 @@ import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArt
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 
 import { Badge, BaseContainer, Carousel, CarouselContent, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
@@ -20,9 +20,9 @@ export default async function Page({ params }: DefaultPageProps) {
 	});
 
 	const [articlesResult, authorsResult, tagsResult] = await Promise.all([
-		getServices().storyblok.getOverviewArticles(lang),
-		getServices().storyblok.getOverviewAuthors(lang),
-		getServices().storyblok.getOverviewTags(lang),
+		services.storyblok.getOverviewArticles(lang),
+		services.storyblok.getOverviewAuthors(lang),
+		services.storyblok.getOverviewTags(lang),
 	]);
 
 	const articles = articlesResult.success ? articlesResult.data : [];
@@ -32,7 +32,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	let totalArticlesInDefaultLang = articles.length;
 
 	if (lang !== defaultLanguage) {
-		const countRes = await getServices().storyblok.getOverviewArticlesCountForDefaultLang();
+		const countRes = await services.storyblok.getOverviewArticlesCountForDefaultLang();
 		if (countRes.success) {
 			totalArticlesInDefaultLang = countRes.data;
 		}

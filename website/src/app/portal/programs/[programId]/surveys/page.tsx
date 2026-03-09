@@ -3,7 +3,7 @@ import { Card } from '@/components/card';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -27,7 +27,7 @@ const SurveysProgramScopedDataLoader = async ({ params, searchParams }: Props) =
 	const tableQuery = { ...baseQuery, programId };
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const surveysResult = await getServices().surveyRead.getPaginatedTableView(user.id, tableQuery);
+	const surveysResult = await services.read.survey.getPaginatedTableView(user.id, tableQuery);
 
 	const error = surveysResult.success ? null : surveysResult.error;
 	const rows: SurveyTableViewRow[] = surveysResult.success ? surveysResult.data.tableRows : [];

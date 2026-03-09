@@ -1,14 +1,14 @@
 'use server';
 
 import { getCurrentSessions } from '../firebase/current-account';
-import { getServices } from '../services/services';
+import { services } from '../services/services';
 
 export const createSessionAction = async (idToken: string) => {
-	return getServices().firebaseSession.createSessionAndSetCookie(idToken);
+	return services.firebaseSession.createSessionAndSetCookie(idToken);
 };
 
 export const logoutAction = async () => {
-	return getServices().firebaseSession.clearSessionCookie();
+	return services.firebaseSession.clearSessionCookie();
 };
 
 export const getRedirectPathAfterLoginAction = async (): Promise<string> => {

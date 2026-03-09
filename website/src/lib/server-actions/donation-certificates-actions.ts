@@ -1,19 +1,19 @@
 'use server';
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { LanguageCode } from '@/lib/types/language';
 import { revalidatePath } from 'next/cache';
 import { getAuthenticatedContributorOrRedirect } from '../firebase/current-contributor';
 
 export const getContributorOptions = async () => {
 	await getAuthenticatedUserOrThrow();
-	return await getServices().contributorRead.getByIds();
+	return await services.read.contributor.getByIds();
 };
 
 export const generateDonationCertificates = async (year: number, contributorIds: string[], language?: LanguageCode) => {
 	await getAuthenticatedUserOrThrow();
-	const result = await getServices().donationCertificateWrite.createDonationCertificates(
+	const result = await services.write.donationCertificate.createDonationCertificates(
 		year,
 		contributorIds,
 		language,
@@ -24,7 +24,7 @@ export const generateDonationCertificates = async (year: number, contributorIds:
 
 export const generateDonationCertificateForCurrentUser = async (year: number, language?: LanguageCode) => {
 	const contributorSession = await getAuthenticatedContributorOrRedirect();
-	const result = await getServices().donationCertificateWrite.createDonationCertificate(
+	const result = await services.write.donationCertificate.createDonationCertificate(
 		year,
 		contributorSession.id,
 		language,

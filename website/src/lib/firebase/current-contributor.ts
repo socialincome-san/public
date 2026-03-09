@@ -1,20 +1,20 @@
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const loadCurrentContributor = async (): Promise<ContributorSession | null> => {
-	const cookie = await getServices().firebaseSession.readSessionCookie();
+	const cookie = await services.firebaseSession.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await getServices().firebaseSession.verifySessionCookie(cookie);
+	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
 
 	const authUserId = decodedTokenResult.data.uid;
-	const result = await getServices().contributorRead.getCurrentContributorSession(authUserId);
+	const result = await services.read.contributor.getCurrentContributorSession(authUserId);
 	return result.success ? result.data : null;
 };
 

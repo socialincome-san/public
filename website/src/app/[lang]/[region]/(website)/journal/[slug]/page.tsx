@@ -6,7 +6,7 @@ import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorI
 import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 
 import {
 	formatStoryblokDate,
@@ -38,7 +38,7 @@ export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 };
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
-	return await getServices().storyblok.getArticle(lang, slug);
+	return await services.storyblok.getArticle(lang, slug);
 });
 
 const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
@@ -63,7 +63,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 	const articleData = story.content;
 	const author = articleData.author as ISbStoryData<any>;
 
-	const relativeResult = await getServices().storyblok.getRelativeArticles(
+	const relativeResult = await services.storyblok.getRelativeArticles(
 		author.uuid,
 		story.id,
 		(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) => tag.uuid) ?? [],

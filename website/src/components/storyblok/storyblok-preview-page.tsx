@@ -2,7 +2,7 @@ import PageContentType from '@/components/content-types/page';
 import { StoryblokPreviewSyncer } from '@/components/storyblok/storyblok-preview-syncer';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
@@ -15,7 +15,7 @@ type Props = {
 
 export const StoryblokPreviewPage = async ({ storyPath, lang, region, searchParams }: Props) => {
 	const isVisualEditor = !!searchParams['_storyblok'];
-	const storyResult = await getServices().storyblok.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
+	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
 
 	if (!storyResult.success) {
 		return notFound();

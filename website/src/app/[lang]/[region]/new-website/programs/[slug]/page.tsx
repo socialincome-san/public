@@ -1,6 +1,6 @@
 import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[region]';
 import { StatsSection } from '@/app/portal/programs/[programId]/overview/components/stats-section';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -17,7 +17,7 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 	const { slug } = await params;
 	const query = await searchParams;
 
-	const statsResult = await getServices().programStats.getProgramDashboardStatsBySlug(slug);
+	const statsResult = await services.programStats.getProgramDashboardStatsBySlug(slug);
 
 	if (!statsResult.success || !statsResult.data) {
 		return notFound();
@@ -25,7 +25,7 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 
 	const stats = statsResult.data;
 
-	const idResult = await getServices().programRead.getProgramIdBySlug(slug);
+	const idResult = await services.read.program.getProgramIdBySlug(slug);
 	if (!idResult.success) {
 		return notFound();
 	}
@@ -33,7 +33,7 @@ const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPro
 
 	const isPreview = query.preview === 'true';
 	if (!isPreview) {
-		const readyResult = await getServices().programStats.isReadyForFirstPayoutInterval(programId);
+		const readyResult = await services.programStats.isReadyForFirstPayoutInterval(programId);
 		if (!readyResult.success || !readyResult.data) {
 			return notFound();
 		}

@@ -1,4 +1,4 @@
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -11,7 +11,7 @@ export const POST = async (request: NextRequest) => {
 	}
 
 	try {
-		const result = await getServices().exchangeRateImport.import();
+		const result = await services.exchangeRateImport.import();
 		if (!result.success) {
 			logger.alert(`Exchange rate import failed: ${result.error}`, { result }, { component: 'exchange-rate-import' });
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });

@@ -1,20 +1,20 @@
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { UserSession } from '@/lib/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const loadCurrentUser = async (): Promise<UserSession | null> => {
-	const cookie = await getServices().firebaseSession.readSessionCookie();
+	const cookie = await services.firebaseSession.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await getServices().firebaseSession.verifySessionCookie(cookie);
+	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
 
 	const authUserId = decodedTokenResult.data.uid;
-	const result = await getServices().userRead.getCurrentUserSession(authUserId);
+	const result = await services.read.user.getCurrentUserSession(authUserId);
 	return result.success ? result.data : null;
 };
 

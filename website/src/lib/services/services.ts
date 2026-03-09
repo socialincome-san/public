@@ -1,4 +1,3 @@
-import { PrismaClient } from '@/generated/prisma/client';
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankTransferService } from './bank-transfer/bank-transfer.service';
@@ -49,135 +48,142 @@ import { TwilioService } from './twilio/twilio.service';
 import { UserReadService } from './user/user-read.service';
 import { UserWriteService } from './user/user-write.service';
 
-function buildServices(db: PrismaClient) {
-	// Leaf services – no dependencies on other services
-	const appReviewMode = new AppReviewModeService(db);
-	const firebaseAdmin = new FirebaseAdminService(db);
-	const firebaseSession = new FirebaseSessionService(db);
-	const programAccessRead = new ProgramAccessReadService(db);
-	const programAccessWrite = new ProgramAccessWriteService(db);
-	const organizationAccess = new OrganizationAccessService(db);
-	const userRead = new UserReadService(db);
-	const exchangeRateImport = new ExchangeRateImportService(db);
-	const surveySchedule = new SurveyScheduleService(db);
-	const transparency = new TransparencyService(db);
-	const storyblok = new StoryblokService(db);
-	const sendgrid = new SendgridSubscriptionService();
+// ---------------------------------------------------------------------------
+// Leaf services – no dependencies on other services
+// ---------------------------------------------------------------------------
+const appReviewMode = new AppReviewModeService(prisma);
+const firebaseAdmin = new FirebaseAdminService(prisma);
+const firebaseSession = new FirebaseSessionService(prisma);
+const programAccessRead = new ProgramAccessReadService(prisma);
+const programAccessWrite = new ProgramAccessWriteService(prisma);
+const organizationAccess = new OrganizationAccessService(prisma);
+const userRead = new UserReadService(prisma);
+const exchangeRateImport = new ExchangeRateImportService(prisma);
+const surveySchedule = new SurveyScheduleService(prisma);
+const transparency = new TransparencyService(prisma);
+const storyblok = new StoryblokService(prisma);
+const sendgrid = new SendgridSubscriptionService();
 
-	// One level of dependencies
-	const exchangeRateRead = new ExchangeRateReadService(db, userRead);
-	const exchangeRateWrite = new ExchangeRateWriteService(db, userRead, exchangeRateImport);
-	const userWrite = new UserWriteService(db, firebaseAdmin, userRead);
-	const candidateRead = new CandidateReadService(db, userRead);
-	const candidateWrite = new CandidateWriteService(db, userRead, firebaseAdmin);
-	const recipientRead = new RecipientReadService(db, programAccessRead, firebaseAdmin, appReviewMode);
-	const recipientWrite = new RecipientWriteService(db, programAccessRead, firebaseAdmin);
-	const payoutWrite = new PayoutWriteService(db, programAccessRead);
-	const twilio = new TwilioService(db, firebaseAdmin, appReviewMode);
-	const contributionRead = new ContributionReadService(db, organizationAccess);
-	const contributionWrite = new ContributionWriteService(db, organizationAccess);
-	const organizationRead = new OrganizationReadService(db, userRead, organizationAccess);
-	const localPartnerRead = new LocalPartnerReadService(db, userRead);
-	const localPartnerWrite = new LocalPartnerWriteService(db, userRead, firebaseAdmin);
-	const mobileMoneyProviderRead = new MobileMoneyProviderReadService(db, userRead);
-	const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(db, userRead);
-	const countryRead = new CountryReadService(db, userRead);
-	const countryWrite = new CountryWriteService(db, userRead);
-	const expenseRead = new ExpenseReadService(db, userRead);
-	const expenseWrite = new ExpenseWriteService(db, userRead);
-	const contributorRead = new ContributorReadService(db, organizationAccess);
-	const contributorWrite = new ContributorWriteService(db, organizationAccess, firebaseAdmin, sendgrid);
-	const campaignWrite = new CampaignWriteService(db, organizationAccess);
-	const donationCertificateRead = new DonationCertificateReadService(db, organizationAccess);
+// ---------------------------------------------------------------------------
+// One level of dependencies
+// ---------------------------------------------------------------------------
+const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
+const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
+const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead);
+const candidateRead = new CandidateReadService(prisma, userRead);
+const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin);
+const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode);
+const recipientWrite = new RecipientWriteService(prisma, programAccessRead, firebaseAdmin);
+const payoutWrite = new PayoutWriteService(prisma, programAccessRead);
+const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
+const contributionRead = new ContributionReadService(prisma, organizationAccess);
+const contributionWrite = new ContributionWriteService(prisma, organizationAccess);
+const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
+const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
+const localPartnerWrite = new LocalPartnerWriteService(prisma, userRead, firebaseAdmin);
+const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
+const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead);
+const countryRead = new CountryReadService(prisma, userRead);
+const countryWrite = new CountryWriteService(prisma, userRead);
+const expenseRead = new ExpenseReadService(prisma, userRead);
+const expenseWrite = new ExpenseWriteService(prisma, userRead);
+const contributorRead = new ContributorReadService(prisma, organizationAccess);
+const contributorWrite = new ContributorWriteService(prisma, organizationAccess, firebaseAdmin, sendgrid);
+const campaignWrite = new CampaignWriteService(prisma, organizationAccess);
+const donationCertificateRead = new DonationCertificateReadService(prisma, organizationAccess);
 
-	// Two levels of dependencies
-	const programStats = new ProgramStatsService(db, exchangeRateRead);
-	const campaignRead = new CampaignReadService(db, organizationAccess, exchangeRateRead);
-	const programRead = new ProgramReadService(db, programAccessRead, programStats);
-	const programWrite = new ProgramWriteService(db, programAccessWrite, candidateWrite);
-	const payoutRead = new PayoutReadService(db, programAccessRead, exchangeRateRead, programStats);
-	const payoutProcess = new PayoutProcessService(db, programAccessRead, programStats, exchangeRateRead);
-	const donationCertificateWrite = new DonationCertificateWriteService(
-		db,
-		contributorRead,
-		contributionRead,
-		donationCertificateRead,
-	);
-	const bankTransfer = new BankTransferService(db, contributorWrite, campaignRead, contributionWrite);
-	const stripe = new StripeService(
-		db,
-		contributorRead,
-		contributorWrite,
-		contributionWrite,
-		campaignRead,
-		programAccessRead,
-	);
+// ---------------------------------------------------------------------------
+// Two levels of dependencies
+// ---------------------------------------------------------------------------
+const programStats = new ProgramStatsService(prisma, exchangeRateRead);
+const campaignRead = new CampaignReadService(prisma, organizationAccess, exchangeRateRead);
+const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
+const programWrite = new ProgramWriteService(prisma, programAccessWrite, candidateWrite);
+const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, programStats);
+const payoutProcess = new PayoutProcessService(prisma, programAccessRead, programStats, exchangeRateRead);
+const donationCertificateWrite = new DonationCertificateWriteService(
+	prisma,
+	contributorRead,
+	contributionRead,
+	donationCertificateRead,
+);
+const bankTransfer = new BankTransferService(prisma, contributorWrite, campaignRead, contributionWrite);
+const stripe = new StripeService(
+	prisma,
+	contributorRead,
+	contributorWrite,
+	contributionWrite,
+	campaignRead,
+	programAccessRead,
+);
 
-	// Three levels of dependencies
-	const surveyRead = new SurveyReadService(db, programAccessRead, recipientRead, surveySchedule);
-	const surveyWrite = new SurveyWriteService(db, programAccessRead, firebaseAdmin, surveyRead);
+// ---------------------------------------------------------------------------
+// Three levels of dependencies
+// ---------------------------------------------------------------------------
+const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
+const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead);
 
-	// PaymentFileImportService requires a runtime bucket name, so we expose a factory
-	const createPaymentFileImport = (bucketName: string) =>
-		new PaymentFileImportService(bucketName, db, contributorRead, contributionWrite, campaignRead);
+// ---------------------------------------------------------------------------
+// PaymentFileImportService requires a runtime bucket name – factory method
+// ---------------------------------------------------------------------------
+const createPaymentFileImport = (bucketName: string) =>
+	new PaymentFileImportService(bucketName, prisma, contributorRead, contributionWrite, campaignRead);
 
-	return {
-		appReviewMode,
-		firebaseAdmin,
-		firebaseSession,
-		programAccessRead,
-		programAccessWrite,
-		organizationAccess,
-		userRead,
-		userWrite,
-		exchangeRateImport,
-		exchangeRateRead,
-		exchangeRateWrite,
-		surveySchedule,
-		transparency,
-		storyblok,
-		sendgrid,
-		programStats,
-		programRead,
-		programWrite,
-		payoutRead,
-		payoutWrite,
-		payoutProcess,
-		twilio,
-		contributionRead,
-		contributionWrite,
-		organizationRead,
-		localPartnerRead,
-		localPartnerWrite,
-		mobileMoneyProviderRead,
-		mobileMoneyProviderWrite,
-		countryRead,
-		countryWrite,
-		expenseRead,
-		expenseWrite,
-		contributorRead,
-		contributorWrite,
-		campaignRead,
-		campaignWrite,
-		donationCertificateRead,
-		donationCertificateWrite,
-		surveyRead,
-		surveyWrite,
-		stripe,
-		bankTransfer,
-		candidateRead,
-		candidateWrite,
-		recipientRead,
-		recipientWrite,
-		createPaymentFileImport,
-	};
-}
-
-let _services: ReturnType<typeof buildServices> | undefined;
-
-export function getServices(): ReturnType<typeof buildServices> {
-	if (!_services) {
-		_services = buildServices(prisma);
-	}
-	return _services;
-}
+// ---------------------------------------------------------------------------
+// Exported service registry
+//
+// Read / write domain services are grouped under `services.read` and
+// `services.write` respectively.  Infrastructure services (firebase, stripe,
+// etc.) sit at the top level.
+// ---------------------------------------------------------------------------
+export const services = {
+	read: {
+		candidate: candidateRead,
+		campaign: campaignRead,
+		contribution: contributionRead,
+		contributor: contributorRead,
+		country: countryRead,
+		donationCertificate: donationCertificateRead,
+		exchangeRate: exchangeRateRead,
+		expense: expenseRead,
+		localPartner: localPartnerRead,
+		mobileMoneyProvider: mobileMoneyProviderRead,
+		organization: organizationRead,
+		payout: payoutRead,
+		program: programRead,
+		recipient: recipientRead,
+		survey: surveyRead,
+		user: userRead,
+	},
+	write: {
+		candidate: candidateWrite,
+		campaign: campaignWrite,
+		contribution: contributionWrite,
+		contributor: contributorWrite,
+		country: countryWrite,
+		donationCertificate: donationCertificateWrite,
+		exchangeRate: exchangeRateWrite,
+		expense: expenseWrite,
+		localPartner: localPartnerWrite,
+		mobileMoneyProvider: mobileMoneyProviderWrite,
+		payout: payoutWrite,
+		program: programWrite,
+		recipient: recipientWrite,
+		survey: surveyWrite,
+		user: userWrite,
+	},
+	// Infrastructure / cross-cutting services
+	appReviewMode,
+	bankTransfer,
+	createPaymentFileImport,
+	exchangeRateImport,
+	firebaseAdmin,
+	firebaseSession,
+	payoutProcess,
+	programStats,
+	sendgrid,
+	storyblok,
+	stripe,
+	transparency,
+	twilio,
+};

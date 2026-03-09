@@ -1,6 +1,6 @@
 import { ConfirmPayoutBody } from '@/app/api/v1/models';
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -18,7 +18,7 @@ type Params = Promise<{ payoutId: string }>;
 export const POST = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {
 	const { payoutId } = await params;
 
-	const recipientResult = await getServices().recipientRead.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		logger.warn('[POST /payouts/:id/confirm] Recipient resolution failed', {
@@ -46,7 +46,7 @@ export const POST = withAppCheck(async (request: NextRequest, { params }: { para
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const confirmResult = await getServices().payoutWrite.updateStatusByRecipient(
+	const confirmResult = await services.write.payout.updateStatusByRecipient(
 		recipientResult.data.id,
 		payoutId,
 		'confirmed',

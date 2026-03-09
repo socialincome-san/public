@@ -1,4 +1,4 @@
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -15,7 +15,7 @@ export const POST = async (request: NextRequest) => {
 		}
 
 		const body = await request.text();
-		const result = await getServices().stripe.handleWebhookEvent(body, signature, webhookSecret);
+		const result = await services.stripe.handleWebhookEvent(body, signature, webhookSecret);
 
 		if (!result.success) {
 			logger.alert(

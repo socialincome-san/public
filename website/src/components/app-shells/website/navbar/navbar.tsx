@@ -9,7 +9,7 @@ import { Layout } from '@/generated/storyblok/types/109655/storyblok-components'
 import type { Session } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { cn } from '@/lib/utils/cn';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ISbStoryData } from '@storyblok/js';
@@ -27,7 +27,7 @@ type Props = {
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	const session = displaySession(sessions, scope);
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
-	const result = await getServices().storyblok.getStoryWithFallback<ISbStoryData<Layout>>(
+	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(
 		`${NEW_WEBSITE_SLUG}/layout`,
 		lang,
 	);

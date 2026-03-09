@@ -1,6 +1,6 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
@@ -12,7 +12,7 @@ import { RecipientSelfUpdate } from '../../models';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientResult = await getServices().recipientRead.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		logger.warn('[GET /recipients/me] Failed', {
@@ -41,7 +41,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		contentType: request.headers.get('content-type'),
 	});
 
-	const recipientResult = await getServices().recipientRead.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		logger.warn('[PATCH /recipients/me] Recipient resolution failed', {
@@ -145,7 +145,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 				: undefined,
 	};
 
-	const updateResult = await getServices().recipientWrite.updateSelf(recipient.id, updateData, {
+	const updateResult = await services.write.recipient.updateSelf(recipient.id, updateData, {
 		oldPaymentPhone,
 		newPaymentPhone,
 	});

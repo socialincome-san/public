@@ -1,5 +1,5 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { RequestOtpRequest } from '../../models';
 
 /**
@@ -24,7 +24,7 @@ export const POST = withAppCheck(async (request: Request) => {
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const result = await getServices().twilio.requestOtp(parsed.data.phoneNumber);
+	const result = await services.twilio.requestOtp(parsed.data.phoneNumber);
 
 	if (!result.success) {
 		return new Response(result.error, { status: result.status ?? 400 });

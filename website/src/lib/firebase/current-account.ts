@@ -1,17 +1,17 @@
 import { redirect } from 'next/navigation';
 import { ContributorSession } from '../services/contributor/contributor.types';
 import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
-import { getServices } from '../services/services';
+import { services } from '../services/services';
 import { UserSession } from '../services/user/user.types';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
 const getAuthUserIdFromCookie = async (): Promise<string | null> => {
-	const cookie = await getServices().firebaseSession.readSessionCookie();
+	const cookie = await services.firebaseSession.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const result = await getServices().firebaseSession.verifySessionCookie(cookie);
+	const result = await services.firebaseSession.verifySessionCookie(cookie);
 	return result.success ? result.data.uid : null;
 };
 
@@ -22,15 +22,15 @@ export const getCurrentSessions = async (): Promise<Session[]> => {
 	}
 
 	const out: Session[] = [];
-	const contributorResult = await getServices().contributorRead.getCurrentContributorSession(authUserId);
+	const contributorResult = await services.read.contributor.getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
 		out.push(contributorResult.data);
 	}
-	const userResult = await getServices().userRead.getCurrentUserSession(authUserId);
+	const userResult = await services.read.user.getCurrentUserSession(authUserId);
 	if (userResult.success && userResult.data) {
 		out.push(userResult.data);
 	}
-	const partnerResult = await getServices().localPartnerRead.getCurrentLocalPartnerSession(authUserId);
+	const partnerResult = await services.read.localPartner.getCurrentLocalPartnerSession(authUserId);
 	if (partnerResult.success && partnerResult.data) {
 		out.push(partnerResult.data);
 	}

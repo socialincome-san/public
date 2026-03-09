@@ -1,13 +1,13 @@
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import { cache } from 'react';
 import { SurveyPayload } from '../services/survey/survey.types';
 
 const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
-	const cookie = await getServices().firebaseSession.readSessionCookie();
+	const cookie = await services.firebaseSession.readSessionCookie();
 	if (!cookie) {
 		return null;
 	}
-	const decodedTokenResult = await getServices().firebaseSession.verifySessionCookie(cookie);
+	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookie);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
@@ -16,7 +16,7 @@ const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
 	if (!email) {
 		return null;
 	}
-	const result = await getServices().surveyRead.getByAccessEmail(email);
+	const result = await services.read.survey.getByAccessEmail(email);
 	return result.success ? result.data : null;
 };
 

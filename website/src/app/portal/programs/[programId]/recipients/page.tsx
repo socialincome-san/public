@@ -5,7 +5,7 @@ import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton'
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 
@@ -28,7 +28,7 @@ const RecipientsProgramScopedDataLoader = async ({ params, searchParams }: Props
 	const tableQuery = { ...baseQuery, programId };
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const recipientsResult = await getServices().recipientRead.getPaginatedTableView(user.id, tableQuery);
+	const recipientsResult = await services.read.recipient.getPaginatedTableView(user.id, tableQuery);
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];

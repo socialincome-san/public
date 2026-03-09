@@ -2,7 +2,7 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
-import { getServices } from '@/lib/services/services';
+import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 import MobileMoneyProvidersTable from './mobile-money-providers-table';
@@ -21,7 +21,7 @@ const MobileMoneyProvidersDataLoader = async ({ searchParams }: SearchParamsPage
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await getServices().mobileMoneyProviderRead.getPaginatedTableView(user.id, tableQuery);
+	const result = await services.read.mobileMoneyProvider.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: MobileMoneyProviderTableViewRow[] = result.success ? result.data.tableRows : [];
