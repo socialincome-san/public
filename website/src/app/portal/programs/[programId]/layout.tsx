@@ -1,6 +1,6 @@
 import { TabNavigation } from '@/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ProgramReadService } from '@/lib/services/program/program-read.service';
+import { getServices } from '@/lib/services/services';
 
 import { CountryBadge } from '@/components/badges/country-badge';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
@@ -15,8 +15,8 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new ProgramReadService();
-	const result = await service.getProgramWalletsProgramScoped(user.id, programId);
+	
+	const result = await getServices().programRead.getProgramWalletsProgramScoped(user.id, programId);
 
 	if (!result.success) {
 		return <div className="p-4">Error loading the program</div>;

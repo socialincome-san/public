@@ -1,9 +1,10 @@
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
+import { getServices } from '@/lib/services/services';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { RecipientReadService } from '@/lib/services/recipient/recipient-read.service';
+
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -21,8 +22,8 @@ const RecipientsDataLoader = async ({ searchParams }: SearchParamsPageProps) => 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const recipientService = new RecipientReadService();
-	const result = await recipientService.getPaginatedTableView(user.id, tableQuery);
+	
+	const result = await getServices().recipientRead.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];

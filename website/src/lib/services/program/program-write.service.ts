@@ -1,4 +1,6 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { logger } from '@/lib/utils/logger';
 import { CandidateWriteService } from '../candidate/candidate-write.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -6,8 +8,14 @@ import { ProgramAccessWriteService } from '../program-access/program-access-writ
 import { CreateProgramInput } from './program.types';
 
 export class ProgramWriteService extends BaseService {
-	private programAccessService = new ProgramAccessWriteService();
-	private candidateService = new CandidateWriteService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessWriteService,
+		private readonly candidateService: CandidateWriteService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async create(userId: string, input: CreateProgramInput): Promise<ServiceResult<{ programId: string }>> {
 		try {

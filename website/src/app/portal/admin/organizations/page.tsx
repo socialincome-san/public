@@ -3,7 +3,7 @@ import { organizationsTableConfig } from '@/components/data-table/configs/organi
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { OrganizationReadService } from '@/lib/services/organization/organization-read.service';
+import { getServices } from '@/lib/services/services';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -22,8 +22,8 @@ const OrganizationsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new OrganizationReadService();
-	const result = await service.getPaginatedAdminTableView(user.id, tableQuery);
+	
+	const result = await getServices().organizationRead.getPaginatedAdminTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: OrganizationTableViewRow[] = result.success ? result.data.tableRows : [];

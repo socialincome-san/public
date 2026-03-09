@@ -1,10 +1,11 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { getServices } from '@/lib/services/services';
 import { getYourSubscriptionsTableConfig } from '@/components/data-table/configs/your-subscriptions-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { StripeService } from '@/lib/services/stripe/stripe.service';
+
 import { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
 import { CreditCardIcon, PlusIcon } from 'lucide-react';
 
@@ -25,9 +26,9 @@ export const SubscriptionsTable = async ({
 		emptyMessage: translator.t('subscriptions.no-subscriptions'),
 	});
 
-	const stripeService = new StripeService();
+	
 
-	const subscriptionsResult = await stripeService.getPaginatedSubscriptionsTableView(
+	const subscriptionsResult = await getServices().stripe.getPaginatedSubscriptionsTableView(
 		contributor.stripeCustomerId,
 		tableQuery,
 	);
@@ -35,7 +36,7 @@ export const SubscriptionsTable = async ({
 	const rows: StripeSubscriptionRow[] = subscriptionsResult.success ? subscriptionsResult.data.rows : [];
 	const totalRows = subscriptionsResult.success ? subscriptionsResult.data.totalCount : 0;
 
-	const billingPortal = await stripeService.createManageSubscriptionsSession(
+	const billingPortal = await getServices().stripe.createManageSubscriptionsSession(
 		contributor.stripeCustomerId,
 		contributor.language,
 	);

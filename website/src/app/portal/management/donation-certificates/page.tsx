@@ -1,7 +1,7 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { DonationCertificateReadService } from '@/lib/services/donation-certificate/donation-certificate-read.service';
+import { getServices } from '@/lib/services/services';
 import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -20,8 +20,8 @@ const DonationCertificatesDataLoader = async ({ searchParams }: SearchParamsPage
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new DonationCertificateReadService();
-	const certificatesResult = await service.getPaginatedTableView(user.id, tableQuery);
+	
+	const certificatesResult = await getServices().donationCertificateRead.getPaginatedTableView(user.id, tableQuery);
 
 	const error = certificatesResult.success ? null : certificatesResult.error;
 	const certificateRows: DonationCertificateTableViewRow[] = certificatesResult.success

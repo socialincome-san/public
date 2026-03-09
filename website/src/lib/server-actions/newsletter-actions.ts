@@ -2,22 +2,19 @@
 
 import { getAuthenticatedContributorOrThrow } from '../firebase/current-contributor';
 import { ServiceResult } from '../services/core/base.types';
-import { SendgridSubscriptionService } from '../services/sendgrid/sendgrid-subscription.service';
+import { getServices } from '../services/services';
 import { CreateNewsletterSubscription, SendgridContactType } from '../services/sendgrid/types';
 
 export const subscribeToNewsletterAction = async (subscription: CreateNewsletterSubscription) => {
-	const sendGridService = new SendgridSubscriptionService();
-	return sendGridService.subscribeToNewsletter(subscription);
+	return getServices().sendgrid.subscribeToNewsletter(subscription);
 };
 
 export const getActiveSubscriptionAction = async (): Promise<ServiceResult<SendgridContactType | null>> => {
 	const contributor = await getAuthenticatedContributorOrThrow();
-	const sendGridService = new SendgridSubscriptionService();
-	return sendGridService.getActiveSubscription(contributor);
+	return getServices().sendgrid.getActiveSubscription(contributor);
 };
 
 export const unsubscribeFromNewsletterAction = async () => {
 	const contributor = await getAuthenticatedContributorOrThrow();
-	const sendGridService = new SendgridSubscriptionService();
-	return sendGridService.unsubscribeFromNewsletter(contributor);
+	return getServices().sendgrid.unsubscribeFromNewsletter(contributor);
 };

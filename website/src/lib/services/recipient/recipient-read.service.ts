@@ -1,6 +1,7 @@
-import { Prisma, ProgramPermission } from '@/generated/prisma/client';
+import { Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
@@ -17,9 +18,15 @@ import {
 import { RecipientOption, RecipientPayload, RecipientWithPaymentInfo } from './recipient.types';
 
 export class RecipientReadService extends BaseService {
-	private programAccessService = new ProgramAccessReadService();
-	private firebaseAdminService = new FirebaseAdminService();
-	private appReviewModeService = new AppReviewModeService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly firebaseAdminService: FirebaseAdminService,
+		private readonly appReviewModeService: AppReviewModeService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildRecipientOrderBy(query: RecipientTableQuery): Prisma.RecipientOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

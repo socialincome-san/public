@@ -1,7 +1,7 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { LocalPartnerReadService } from '@/lib/services/local-partner/local-partner-read.service';
+import { getServices } from '@/lib/services/services';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -21,8 +21,8 @@ const LocalPartnersDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new LocalPartnerReadService();
-	const result = await service.getPaginatedTableView(user.id, tableQuery);
+	
+	const result = await getServices().localPartnerRead.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: LocalPartnerTableViewRow[] = result.success ? result.data.tableRows : [];

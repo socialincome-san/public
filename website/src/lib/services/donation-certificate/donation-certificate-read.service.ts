@@ -1,5 +1,6 @@
-import { DonationCertificate, Prisma } from '@/generated/prisma/client';
+import { DonationCertificate, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { LanguageCode } from '@/lib/types/language';
+import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -14,7 +15,13 @@ import {
 } from './donation-certificate.types';
 
 export class DonationCertificateReadService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
+	constructor(
+		db: PrismaClient,
+		private readonly organizationAccessService: OrganizationAccessService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildDonationCertificateOrderBy(
 		query: DonationCertificateTableQuery,

@@ -1,4 +1,5 @@
-import { Currency, PaymentEventType, Prisma } from '@/generated/prisma/client';
+import { Currency, PaymentEventType, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { endOfYear, startOfYear } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -15,7 +16,13 @@ import {
 } from './contribution.types';
 
 export class ContributionReadService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
+	constructor(
+		db: PrismaClient,
+		private readonly organizationAccessService: OrganizationAccessService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildContributionOrderBy(query: ContributionTableQuery): Prisma.ContributionOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

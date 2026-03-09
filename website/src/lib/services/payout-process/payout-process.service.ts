@@ -1,4 +1,5 @@
-import { PayoutStatus, Prisma } from '@/generated/prisma/client';
+import { PayoutStatus, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { format, isSameMonth, startOfMonth } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -9,9 +10,15 @@ import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 
 export class PayoutProcessService extends BaseService {
-	private programAccessService = new ProgramAccessReadService();
-	private programStatsService = new ProgramStatsService();
-	private exchangeRateService = new ExchangeRateReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly programStatsService: ProgramStatsService,
+		private readonly exchangeRateService: ExchangeRateReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async getRecipientsReadyForFirstPayout(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
 		try {

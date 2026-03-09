@@ -1,6 +1,7 @@
-import { Cause, CountryCode, Prisma } from '@/generated/prisma/client';
+import { Cause, CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -9,8 +10,14 @@ import { UserReadService } from '../user/user-read.service';
 import { CandidateCreateInput, CandidatePayload, CandidatePrismaUpdateInput, Profile } from './candidate.types';
 
 export class CandidateWriteService extends BaseService {
-	private userService = new UserReadService();
-	private firebaseAdminService = new FirebaseAdminService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		private readonly firebaseAdminService: FirebaseAdminService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private async deletePhoneIfOrphaned(phoneId: string): Promise<void> {
 		const phone = await this.db.phone.findUnique({

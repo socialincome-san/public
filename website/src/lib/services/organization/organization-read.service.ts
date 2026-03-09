@@ -1,4 +1,5 @@
-import { OrganizationPermission, Prisma, ProgramPermission } from '@/generated/prisma/client';
+import { OrganizationPermission, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -17,8 +18,14 @@ import {
 } from './organization.types';
 
 export class OrganizationReadService extends BaseService {
-	private userService = new UserReadService();
-	private organizationAccessService = new OrganizationAccessService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		private readonly organizationAccessService: OrganizationAccessService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildOrganizationOrderBy(query: OrganizationTableQuery): Prisma.OrganizationOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

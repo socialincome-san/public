@@ -1,7 +1,7 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { ExchangeRateReadService } from '@/lib/services/exchange-rate/exchange-rate-read.service';
+import { getServices } from '@/lib/services/services';
 import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
@@ -21,8 +21,8 @@ const ExchangeRatesDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new ExchangeRateReadService();
-	const result = await service.getPaginatedTableView(user.id, tableQuery);
+	
+	const result = await getServices().exchangeRateRead.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: ExchangeRatesTableViewRow[] = result.success ? result.data.tableRows : [];

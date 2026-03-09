@@ -1,4 +1,5 @@
-import { CountryCode, Prisma } from '@/generated/prisma/client';
+import { CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -15,7 +16,13 @@ import {
 } from './contributor.types';
 
 export class ContributorReadService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
+	constructor(
+		db: PrismaClient,
+		private readonly organizationAccessService: OrganizationAccessService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildContributorOrderBy(query: ContributorTableQuery): Prisma.ContributorOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

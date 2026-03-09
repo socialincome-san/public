@@ -1,10 +1,18 @@
+import { PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
 import { ExpenseCreateInput, ExpensePayload, ExpenseUpdateInput } from './expense.types';
 
 export class ExpenseWriteService extends BaseService {
-	private userService = new UserReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async create(userId: string, input: ExpenseCreateInput): Promise<ServiceResult<ExpensePayload>> {
 		const isAdminResult = await this.userService.isAdmin(userId);

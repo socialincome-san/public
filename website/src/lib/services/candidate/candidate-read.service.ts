@@ -1,6 +1,7 @@
-import { Cause, CountryCode, Gender, Prisma } from '@/generated/prisma/client';
+import { Cause, CountryCode, Gender, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -16,7 +17,13 @@ import {
 } from './candidate.types';
 
 export class CandidateReadService extends BaseService {
-	private userService = new UserReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildCandidateOrderBy(query: CandidatesTableQuery): Prisma.RecipientOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

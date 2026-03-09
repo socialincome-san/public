@@ -1,5 +1,5 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { TwilioService } from '@/lib/services/twilio/twilio.service';
+import { getServices } from '@/lib/services/services';
 import { RequestOtpRequest } from '../../models';
 
 /**
@@ -10,26 +10,25 @@ import { RequestOtpRequest } from '../../models';
  * @openapi
  */
 export const POST = withAppCheck(async (request: Request) => {
-	let body: unknown;
+let body: unknown;
 
-	try {
-		body = await request.json();
-	} catch {
-		return new Response('Invalid JSON body', { status: 400 });
-	}
+try {
+body = await request.json();
+} catch {
+return new Response('Invalid JSON body', { status: 400 });
+}
 
-	const parsed = RequestOtpRequest.safeParse(body);
+const parsed = RequestOtpRequest.safeParse(body);
 
-	if (!parsed.success) {
-		return new Response(parsed.error.message, { status: 400 });
-	}
+if (!parsed.success) {
+return new Response(parsed.error.message, { status: 400 });
+}
 
-	const service = new TwilioService();
-	const result = await service.requestOtp(parsed.data.phoneNumber);
+const result = await getServices().twilio.requestOtp(parsed.data.phoneNumber);
 
-	if (!result.success) {
-		return new Response(result.error, { status: result.status ?? 400 });
-	}
+if (!result.success) {
+return new Response(result.error, { status: result.status ?? 400 });
+}
 
-	return new Response(null, { status: 204 });
+return new Response(null, { status: 204 });
 });

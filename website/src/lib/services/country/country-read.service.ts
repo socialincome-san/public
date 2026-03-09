@@ -1,5 +1,6 @@
-import { CountryCode, NetworkTechnology, Prisma, SanctionRegime } from '@/generated/prisma/client';
+import { CountryCode, NetworkTechnology, Prisma, PrismaClient, SanctionRegime } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -17,7 +18,13 @@ import {
 } from './country.types';
 
 export class CountryReadService extends BaseService {
-	private userService = new UserReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildCountryOrderBy(query: CountryTableQuery): Prisma.CountryOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

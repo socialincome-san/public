@@ -1,11 +1,18 @@
-import { Campaign } from '@/generated/prisma/client';
+import { Campaign, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { CampaignsCreateInput, CampaignsUpdateInput } from './campaign.types';
 
 export class CampaignWriteService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
+	constructor(
+		db: PrismaClient,
+		private readonly organizationAccessService: OrganizationAccessService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async create(userId: string, campaign: CampaignsCreateInput): Promise<ServiceResult<Campaign>> {
 		const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);

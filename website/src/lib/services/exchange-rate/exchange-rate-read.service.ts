@@ -1,4 +1,5 @@
-import { Currency, Prisma } from '@/generated/prisma/client';
+import { Currency, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -13,7 +14,13 @@ import {
 } from './exchange-rate.types';
 
 export class ExchangeRateReadService extends BaseService {
-	private userService = new UserReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildExchangeRateOrderBy(query: ExchangeRateTableQuery): Prisma.ExchangeRateOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

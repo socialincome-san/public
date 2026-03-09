@@ -1,6 +1,7 @@
-import { ProgramPermission, Recipient } from '@/generated/prisma/client';
+import { PrismaClient, ProgramPermission, Recipient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -8,8 +9,14 @@ import { ProgramAccessReadService } from '../program-access/program-access-read.
 import { RecipientCreateInput, RecipientPrismaUpdateInput, RecipientWithPaymentInfo } from './recipient.types';
 
 export class RecipientWriteService extends BaseService {
-	private programAccessService = new ProgramAccessReadService();
-	private firebaseAdminService = new FirebaseAdminService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly firebaseAdminService: FirebaseAdminService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private async deletePhoneIfOrphaned(phoneId: string): Promise<void> {
 		const phone = await this.db.phone.findUnique({

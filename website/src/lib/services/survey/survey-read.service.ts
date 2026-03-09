@@ -1,4 +1,5 @@
-import { Prisma, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { Prisma, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import crypto from 'crypto';
@@ -20,9 +21,15 @@ import {
 } from './survey.types';
 
 export class SurveyReadService extends BaseService {
-	private programAccessService = new ProgramAccessReadService();
-	private recipientService = new RecipientReadService();
-	private surveyScheduleService = new SurveyScheduleService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly recipientService: RecipientReadService,
+		private readonly surveyScheduleService: SurveyScheduleService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildSurveyOrderBy(query: SurveyTableQuery): Prisma.SurveyOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

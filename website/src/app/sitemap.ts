@@ -1,6 +1,6 @@
 import type { Article, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
-import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { getServices } from '@/lib/services/services';
 import { toDateObject } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
 import type { MetadataRoute } from 'next';
@@ -84,7 +84,7 @@ const generateStaticPagesSitemap = (): MetadataRoute.Sitemap => {
 	);
 };
 
-const storyblokService = new StoryblokService();
+const storyblokService = getServices().storyblok;
 
 const getArticlesInAlternativeLanguages = async () => {
 	return Promise.all(

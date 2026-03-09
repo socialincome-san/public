@@ -1,4 +1,5 @@
-import { ExpenseType, Prisma } from '@/generated/prisma/client';
+import { ExpenseType, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -6,7 +7,13 @@ import { UserReadService } from '../user/user-read.service';
 import { ExpensePaginatedTableView, ExpensePayload, ExpenseTableQuery, ExpenseTableViewRow } from './expense.types';
 
 export class ExpenseReadService extends BaseService {
-	private userService = new UserReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly userService: UserReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private buildExpenseOrderBy(query: ExpenseTableQuery): Prisma.ExpenseOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

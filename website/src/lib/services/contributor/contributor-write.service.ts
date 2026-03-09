@@ -1,4 +1,5 @@
-import { Contributor, ContributorReferralSource, OrganizationPermission } from '@/generated/prisma/client';
+import { Contributor, ContributorReferralSource, OrganizationPermission, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -15,9 +16,15 @@ import {
 } from './contributor.types';
 
 export class ContributorWriteService extends BaseService {
-	private organizationAccessService = new OrganizationAccessService();
-	private firebaseAdminService = new FirebaseAdminService();
-	private sendGridService = new SendgridSubscriptionService();
+	constructor(
+		db: PrismaClient,
+		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly firebaseAdminService: FirebaseAdminService,
+		private readonly sendGridService: SendgridSubscriptionService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	private async applyContributorUpdate(
 		contributorId: string,

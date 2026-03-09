@@ -1,7 +1,7 @@
 import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
+import { getServices } from '@/lib/services/services';
 import { websiteCurrencies, WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { ExchangeRateReadService } from '@/lib/services/exchange-rate/exchange-rate-read.service';
-import { TransparencyService } from '@/lib/services/transparency/transparency.service';
+
 import { isValidCurrency } from '@/lib/types/currency';
 import { DateTime } from 'luxon';
 import { CountriesSection } from './(sections)/countries-section';
@@ -16,8 +16,8 @@ type TransparencyFinancesParams = DefaultParams & { currency: string };
 export default async function Page({ params }: DefaultLayoutProps<TransparencyFinancesParams>) {
 	const { lang, currency } = await params;
 
-	const transparencyService = new TransparencyService();
-	const exchangeRateService = new ExchangeRateReadService();
+	
+	
 
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
 		const start = DateTime.now()
@@ -30,8 +30,8 @@ export default async function Page({ params }: DefaultLayoutProps<TransparencyFi
 	const exchangeCurrency = isValidCurrency(requestedCurrency) ? requestedCurrency : 'USD';
 
 	const [dataResult, rateResult] = await Promise.all([
-		transparencyService.getTransparencyData(timeRanges),
-		exchangeRateService.getLatestRateForCurrency(exchangeCurrency),
+		getServices().transparency.getTransparencyData(timeRanges),
+		getServices().exchangeRateRead.getLatestRateForCurrency(exchangeCurrency),
 	]);
 
 	if (!dataResult.success) {

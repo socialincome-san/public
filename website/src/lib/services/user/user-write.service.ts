@@ -1,3 +1,5 @@
+import { PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -5,8 +7,14 @@ import { UserReadService } from './user-read.service';
 import { UserCreateInput, UserPayload, UserUpdateInput } from './user.types';
 
 export class UserWriteService extends BaseService {
-	private firebaseAdminService = new FirebaseAdminService();
-	private userReadService = new UserReadService();
+	constructor(
+		db: PrismaClient,
+		private readonly firebaseAdminService: FirebaseAdminService,
+		private readonly userReadService: UserReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async create(actorUserId: string, input: UserCreateInput): Promise<ServiceResult<UserPayload>> {
 		const isAdminResult = await this.userReadService.isAdmin(actorUserId);
