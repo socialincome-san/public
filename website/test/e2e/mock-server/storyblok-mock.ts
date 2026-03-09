@@ -4,6 +4,7 @@ import path from 'path';
 
 const BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCK = `${BASE}/mock`;
+const RECORDINGS_DIR = path.resolve(process.cwd(), 'test/e2e/mock-server/recordings');
 const STORYBLOK_ASSET_HOST_PATTERN = /^https?:\/\/(?:a|img2)\.storyblok\.com\//i;
 const STORYBLOK_VIDEO_EXTENSION_PATTERN = /\.(?:mov|mp4|webm|m4v|ogv)(?:\?.*)?$/i;
 const STORYBLOK_IMAGE_PLACEHOLDER = '/assets/test/storyblok-image-placeholder.svg';
@@ -19,8 +20,8 @@ const slug = (s: string) =>
 		.replace(/^-+|-+$/g, '');
 
 const filePath = (t: TestInfo) => {
-	const [file, name] = t.titlePath;
-	return path.resolve(process.cwd(), 'test/e2e/mock-server/recordings', normalize(file), `${slug(name)}.json`);
+	const fileName = normalize(t.file || t.titlePath[0] || 'unknown-test-file');
+	return path.resolve(RECORDINGS_DIR, fileName, `${slug(t.title)}.json`);
 };
 
 const sortKeys = (o: Record<string, any>) =>
