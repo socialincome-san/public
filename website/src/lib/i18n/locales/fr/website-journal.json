@@ -15,6 +15,9 @@
 		"keep-reading": "Lire la suite",
 		"from-original-language": "Traduit de"
 	},
+	"teasers": {
+		"goToJournal": "Aller au journal"
+	},
 	"reference-article": {
 		"show-more": "Afficher plus",
 		"show-less": "Afficher moins",
