@@ -4,6 +4,10 @@ import path from 'path';
 
 const BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCK = `${BASE}/mock`;
+const STORYBLOK_ASSET_HOST_PATTERN = /^https?:\/\/(?:a|img2)\.storyblok\.com\//i;
+const STORYBLOK_VIDEO_EXTENSION_PATTERN = /\.(?:mov|mp4|webm|m4v|ogv)(?:\?.*)?$/i;
+const STORYBLOK_IMAGE_PLACEHOLDER = '/assets/test/storyblok-image-placeholder.svg';
+const STORYBLOK_VIDEO_PLACEHOLDER = '/assets/test/storyblok-video-placeholder.svg';
 
 const normalize = (f: string) => path.basename(f).replace(/\.e2e\.ts$|\.ts$/, '');
 
@@ -40,6 +44,32 @@ const restoreToken = (json: string) =>
 		? json.replace(/([?&]token=)__TOKEN__/gi, `$1${process.env.STORYBLOK_PREVIEW_TOKEN}`)
 		: json;
 
+const replaceStoryblokAssetUrl = (url: string) => {
+	if (!STORYBLOK_ASSET_HOST_PATTERN.test(url)) {
+		return url;
+	}
+
+	return STORYBLOK_VIDEO_EXTENSION_PATTERN.test(url) ? STORYBLOK_VIDEO_PLACEHOLDER : STORYBLOK_IMAGE_PLACEHOLDER;
+};
+
+const sanitizeStoryblokAssets = <T>(value: T): T => {
+	if (typeof value === 'string') {
+		return replaceStoryblokAssetUrl(value) as T;
+	}
+
+	if (Array.isArray(value)) {
+		return value.map((entry) => sanitizeStoryblokAssets(entry)) as T;
+	}
+
+	if (value && typeof value === 'object') {
+		return Object.fromEntries(
+			Object.entries(value).map(([key, entry]) => [key, sanitizeStoryblokAssets(entry)]),
+		) as T;
+	}
+
+	return value;
+};
+
 export const setupStoryblokMock = async (testInfo: TestInfo) => {
 	const mode = process.env.STORYBLOK_MOCK_MODE;
 
@@ -56,10 +86,11 @@ export const setupStoryblokMock = async (testInfo: TestInfo) => {
 
 	if (mode === 'replay') {
 		const raw = fs.readFileSync(filePath(testInfo), 'utf-8');
+		const recordings = sanitizeStoryblokAssets(JSON.parse(restoreToken(raw)));
 
 		await post(`${MOCK}/recordings`, {
 			active: false,
-			recordings: JSON.parse(restoreToken(raw)),
+			recordings,
 		});
 	}
 };
@@ -71,10 +102,11 @@ export const saveStoryblokMock = async (testInfo: TestInfo) => {
 
 	const res = await fetch(`${MOCK}/recordings`);
 	const data = sortKeys(await res.json());
+	const sanitized = sanitizeStoryblokAssets(data);
 	const fp = filePath(testInfo);
 
 	fs.mkdirSync(path.dirname(fp), { recursive: true });
 
-	const json = JSON.stringify(data, null, 2);
+	const json = JSON.stringify(sanitized, null, 2);
 	fs.writeFileSync(fp, hideToken(json));
 };

@@ -52,33 +52,40 @@ test('exchange rates pagination updates URL and matches screenshot', async ({ pa
 
 	await page.getByTestId('data-table-page-size-trigger').click();
 	await page.getByRole('option', { name: '1000' }).click();
-	await expect(page).toHaveURL(/pageSize=1000/);
+	await expect(page).toHaveURL(/(?:[?&])pageSize=1000(?:&|$)/);
 
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1-1000 of');
 	await expect(page.getByTestId('data-table-pagination-next')).toBeEnabled();
 
-	await page.getByTestId('data-table-pagination-next').click();
-	await expect(page).toHaveURL(/page=2/);
+	await Promise.all([
+		page.waitForURL(/(?:[?&])page=2(?:&|$)/),
+		page.getByTestId('data-table-pagination-next').click(),
+	]);
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1001-');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 
-	await page.getByTestId('data-table-pagination-previous').click();
-	await expect(page).toHaveURL(/page=1/);
+	await Promise.all([
+		page.waitForURL(/(?:[?&])page=1(?:&|$)/),
+		page.getByTestId('data-table-pagination-previous').click(),
+	]);
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1-1000 of');
 });
 
 test('exchange rates columns can be hidden and matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/exchange-rates');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	const toolbar = page.getByTestId('data-table-toolbar');
 
 	await expect(page.getByRole('columnheader', { name: 'Rate' })).toBeVisible();
-	await page.getByTestId('data-table-columns-button').click();
-	await page.locator('label', { hasText: 'Rate' }).getByRole('switch').click();
+	await toolbar.getByTestId('data-table-columns-button').click();
+	await expect(page.getByText('Visible columns')).toBeVisible();
+	await toolbar.locator('label', { hasText: 'Rate' }).click();
 	await expect(page.getByRole('columnheader', { name: 'Rate' })).toHaveCount(0);
 	await expect(page).toHaveScreenshot({ fullPage: true });
 
-	await page.getByTestId('data-table-columns-button').click();
-	await page.locator('label', { hasText: 'Rate' }).getByRole('switch').click();
+	await toolbar.getByTestId('data-table-columns-button').click();
+	await expect(page.getByText('Visible columns')).toBeVisible();
+	await toolbar.locator('label', { hasText: 'Rate' }).click();
 	await expect(page.getByRole('columnheader', { name: 'Rate' })).toBeVisible();
 });
 
