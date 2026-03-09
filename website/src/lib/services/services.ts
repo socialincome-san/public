@@ -48,9 +48,6 @@ import { TwilioService } from './twilio/twilio.service';
 import { UserReadService } from './user/user-read.service';
 import { UserWriteService } from './user/user-write.service';
 
-// ---------------------------------------------------------------------------
-// Leaf services – no dependencies on other services
-// ---------------------------------------------------------------------------
 const appReviewMode = new AppReviewModeService(prisma);
 const firebaseAdmin = new FirebaseAdminService(prisma);
 const firebaseSession = new FirebaseSessionService(prisma);
@@ -64,9 +61,6 @@ const transparency = new TransparencyService(prisma);
 const storyblok = new StoryblokService(prisma);
 const sendgrid = new SendgridSubscriptionService();
 
-// ---------------------------------------------------------------------------
-// One level of dependencies
-// ---------------------------------------------------------------------------
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
 const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
 const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead);
@@ -92,9 +86,6 @@ const contributorWrite = new ContributorWriteService(prisma, organizationAccess,
 const campaignWrite = new CampaignWriteService(prisma, organizationAccess);
 const donationCertificateRead = new DonationCertificateReadService(prisma, organizationAccess);
 
-// ---------------------------------------------------------------------------
-// Two levels of dependencies
-// ---------------------------------------------------------------------------
 const programStats = new ProgramStatsService(prisma, exchangeRateRead);
 const campaignRead = new CampaignReadService(prisma, organizationAccess, exchangeRateRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
@@ -117,25 +108,11 @@ const stripe = new StripeService(
 	programAccessRead,
 );
 
-// ---------------------------------------------------------------------------
-// Three levels of dependencies
-// ---------------------------------------------------------------------------
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead);
 
-// ---------------------------------------------------------------------------
-// PaymentFileImportService requires a runtime bucket name – factory method
-// ---------------------------------------------------------------------------
 const createPaymentFileImport = (bucketName: string) =>
 	new PaymentFileImportService(bucketName, prisma, contributorRead, contributionWrite, campaignRead);
-
-// ---------------------------------------------------------------------------
-// Exported service registry
-//
-// Read / write domain services are grouped under `services.read` and
-// `services.write` respectively.  Infrastructure services (firebase, stripe,
-// etc.) sit at the top level.
-// ---------------------------------------------------------------------------
 export const services = {
 	read: {
 		candidate: candidateRead,
@@ -172,7 +149,6 @@ export const services = {
 		survey: surveyWrite,
 		user: userWrite,
 	},
-	// Infrastructure / cross-cutting services
 	appReviewMode,
 	bankTransfer,
 	createPaymentFileImport,
