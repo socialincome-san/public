@@ -26,10 +26,7 @@ export const ContributionsTable = async ({
 		emptyMessage: translator.t('contributions.no-contributions'),
 	});
 
-	const result = await services.read.contribution.getPaginatedYourContributionsTableView(
-		contributor.id,
-		tableQuery,
-	);
+	const result = await services.read.contribution.getPaginatedYourContributionsTableView(contributor.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: YourContributionsTableViewRow[] = result.success ? result.data.tableRows : [];

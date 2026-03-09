@@ -13,11 +13,7 @@ export const getContributorOptions = async () => {
 
 export const generateDonationCertificates = async (year: number, contributorIds: string[], language?: LanguageCode) => {
 	await getAuthenticatedUserOrThrow();
-	const result = await services.write.donationCertificate.createDonationCertificates(
-		year,
-		contributorIds,
-		language,
-	);
+	const result = await services.write.donationCertificate.createDonationCertificates(year, contributorIds, language);
 	revalidatePath('/portal/management/donation-certificates');
 	return result;
 };
