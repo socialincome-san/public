@@ -52,7 +52,13 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 
 		return (
 			<>
-				{token && <StoryblokPreviewSyncer previewToken={token} previewRoutePath={previewRoutePath} />}
+				{token && timestamp && (
+					<StoryblokPreviewSyncer
+						previewToken={token}
+						previewTimestamp={timestamp}
+						previewRoutePath={previewRoutePath}
+					/>
+				)}
 				<PageContentType blok={previewStory.content} lang={lang} region={region} />
 			</>
 		);

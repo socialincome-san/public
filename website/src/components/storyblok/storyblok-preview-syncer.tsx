@@ -8,12 +8,13 @@ import { startTransition, useEffect } from 'react';
 
 type Props = {
 	previewToken: string;
+	previewTimestamp: string;
 	previewRoutePath: string;
 };
 
-export const StoryblokPreviewSyncer = ({ previewToken, previewRoutePath }: Props) => {
+export const StoryblokPreviewSyncer = ({ previewToken, previewTimestamp, previewRoutePath }: Props) => {
 	useEffect(() => {
-		if (!previewToken || !previewRoutePath) {
+		if (!previewToken || !previewTimestamp || !previewRoutePath) {
 			return;
 		}
 
@@ -22,6 +23,7 @@ export const StoryblokPreviewSyncer = ({ previewToken, previewRoutePath }: Props
 				void updateStoryblokPreviewAction({
 					story,
 					previewToken,
+					previewTimestamp,
 					previewRoutePath,
 				});
 			});
@@ -40,7 +42,7 @@ export const StoryblokPreviewSyncer = ({ previewToken, previewRoutePath }: Props
 		return () => {
 			isMounted = false;
 		};
-	}, [previewRoutePath, previewToken]);
+	}, [previewRoutePath, previewTimestamp, previewToken]);
 
 	return null;
 };

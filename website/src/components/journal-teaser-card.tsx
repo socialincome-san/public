@@ -45,8 +45,9 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 	const articleLink = article.slug ? createLinkForArticle(article.slug, lang, region) : `/${lang}/${region}/journal`;
 	const imageWidth = isFeatured ? FEATURED_IMAGE_WIDTH : SECONDARY_IMAGE_WIDTH;
 	const imageHeight = isFeatured ? FEATURED_IMAGE_HEIGHT : SECONDARY_IMAGE_HEIGHT;
-	const imageSource = content.image.filename
-		? formatStoryblokUrl(content.image.filename, imageWidth, imageHeight, content.image.focus)
+	const image = content.image;
+	const imageSource = image?.filename
+		? formatStoryblokUrl(image.filename, imageWidth, imageHeight, image.focus)
 		: null;
 	const title = getArticleTitle(article);
 
@@ -59,7 +60,7 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 				{imageSource && (
 					<Image
 						src={imageSource}
-						alt={content.image.alt || content.title}
+						alt={image?.alt || content.title}
 						width={FEATURED_IMAGE_WIDTH}
 						height={FEATURED_IMAGE_HEIGHT}
 						sizes="(min-width: 1280px) 596px, 100vw"
@@ -89,7 +90,7 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 			{imageSource && (
 				<Image
 					src={imageSource}
-					alt={content.image.alt || content.title}
+					alt={image?.alt || content.title}
 					width={SECONDARY_IMAGE_WIDTH}
 					height={SECONDARY_IMAGE_HEIGHT}
 					sizes="281px"
