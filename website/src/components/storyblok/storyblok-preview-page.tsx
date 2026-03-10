@@ -18,7 +18,6 @@ type Props = {
 
 export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
 	const isVisualEditor = !!searchParams['_storyblok'];
-	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
 	let token: string | undefined;
 	let timestamp: string | undefined;
 	let cachedStory: ISbStoryData<Page> | undefined;
@@ -53,7 +52,7 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 		);
 	}
 
-	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
+	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
 
 	if (!storyResult.success) {
 		return notFound();
