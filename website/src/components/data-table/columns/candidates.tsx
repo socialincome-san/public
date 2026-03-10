@@ -32,16 +32,6 @@ export const makeCandidateColumns = (
 			cell: (ctx) => <GenderCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'gender',
-			header: (ctx) => <SortableHeader ctx={ctx}>Gender</SortableHeader>,
-			cell: (ctx) => <GenderCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'gender',
-			header: (ctx) => <SortableHeader ctx={ctx}>Gender</SortableHeader>,
-			cell: (ctx) => <GenderCell ctx={ctx} />,
-		},
-		{
 			accessorKey: 'dateOfBirth',
 			header: (ctx) => <SortableHeader ctx={ctx}>Age</SortableHeader>,
 			cell: (ctx) => <AgeCell ctx={ctx} />,
