@@ -1,6 +1,7 @@
-import { PrismaClient } from '@/generated/prisma/client';
+import { Currency, PrismaClient } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { logger } from '@/lib/utils/logger';
+import { now } from '@/lib/utils/now';
 import { CandidateWriteService } from '../candidate/candidate-write.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -55,6 +56,21 @@ export class ProgramWriteService extends BaseService {
 					payoutPerInterval: input.payoutPerInterval,
 					payoutInterval: input.payoutInterval,
 					targetCauses: input.targetCauses,
+				},
+			});
+
+			const defaultCampaignEndDate = now();
+			defaultCampaignEndDate.setFullYear(defaultCampaignEndDate.getFullYear() + 10);
+
+			await this.db.campaign.create({
+				data: {
+					title: `${program.name} - Default Campaign`,
+					description: `Default active campaign for ${program.name}.`,
+					currency: Currency.CHF,
+					endDate: defaultCampaignEndDate,
+					isActive: true,
+					program: { connect: { id: program.id } },
+					organization: { connect: { id: user.activeOrganizationId } },
 				},
 			});
 
