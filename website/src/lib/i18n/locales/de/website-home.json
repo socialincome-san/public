@@ -21,6 +21,16 @@
 		]
 	},
 	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/tEQo12YOEV00SFEKb006bK0100EPQ01Fcgzkp901ZRyxZZ9I4rxwmpNj01zGQ.vtt",
+	"video-controls": {
+		"play-video": "Video abspielen",
+		"pause-video": "Video pausieren",
+		"mute-video": "Video stummschalten",
+		"unmute-video": "Video-Ton einschalten",
+		"show-captions": "Untertitel anzeigen",
+		"hide-captions": "Untertitel ausblenden",
+		"expand-video-view": "Videoansicht vergrössern",
+		"exit-expanded-video-view": "Vergrösserte Videoansicht verlassen"
+	},
 	"section-2": {
 		"title-1": "Die Menschen in den ärmsten Regionen Sierra Leones kennen den Weg aus der Armut. ",
 		"title-2": [
