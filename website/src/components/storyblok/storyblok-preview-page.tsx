@@ -3,7 +3,6 @@ import { StoryblokPreviewSyncer } from '@/components/storyblok/storyblok-preview
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { buildPreviewCacheKey, getPreviewCache } from '@/lib/storyblok-preview/preview-cache';
 import { getStoryblokPreviewToken, verifyStoryblokPreviewToken } from '@/lib/storyblok-preview/preview-token';
 import type { ISbStoryData } from '@storyblok/js';
