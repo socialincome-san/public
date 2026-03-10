@@ -6,10 +6,12 @@ import { loginAs } from './utils';
 
 test.describe.configure({ mode: 'serial' });
 
-test('seed and login partner-space actor', async ({ browser }, testInfo) => {
-	await setupStoryblokMock(testInfo);
+const STORYBLOK_RECORDING = 'setup-partner-space/seed-and-login-partner-space-actor';
+
+test('seed and login partner-space actor', async ({ browser }) => {
+	await setupStoryblokMock(STORYBLOK_RECORDING);
 	await seedDatabase();
 	await assertContactExistsByEmail('test@partner.org');
 	await loginAs(browser, 'partner');
-	await saveStoryblokMock(testInfo);
+	await saveStoryblokMock(STORYBLOK_RECORDING);
 });

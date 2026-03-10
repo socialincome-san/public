@@ -141,12 +141,7 @@ export class PayoutReadService extends BaseService {
 			const programIds = accessiblePrograms.map((p) => p.programId);
 			const selectedProgramId = query.programId?.trim() || undefined;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
-			const statusValues = Object.values(PayoutStatus);
-			const selectedStatus = statusValues.find((status) => status === query.payoutStatus);
-			const statusFilterOptions = statusValues.map((status) => ({
-				value: status,
-				label: status.charAt(0).toUpperCase() + status.slice(1),
-			}));
+			const statusFilterOptions: { value: string; label: string }[] = [];
 			const programFilterOptions = Array.from(
 				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
 			);
@@ -158,7 +153,7 @@ export class PayoutReadService extends BaseService {
 				recipient: {
 					programId: { in: filteredProgramIds },
 				},
-				...(selectedStatus ? { status: selectedStatus } : {}),
+				status: PayoutStatus.paid,
 				...(search
 					? {
 							OR: [

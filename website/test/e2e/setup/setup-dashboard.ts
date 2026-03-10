@@ -6,10 +6,12 @@ import { loginAs } from './utils';
 
 test.describe.configure({ mode: 'serial' });
 
-test('seed and login dashboard actor', async ({ browser }, testInfo) => {
-	await setupStoryblokMock(testInfo);
+const STORYBLOK_RECORDING = 'setup-dashboard/seed-and-login-dashboard-actor';
+
+test('seed and login dashboard actor', async ({ browser }) => {
+	await setupStoryblokMock(STORYBLOK_RECORDING);
 	await seedDatabase();
 	await assertContactExistsByEmail('test@dashboard.org');
 	await loginAs(browser, 'contributor');
-	await saveStoryblokMock(testInfo);
+	await saveStoryblokMock(STORYBLOK_RECORDING);
 });

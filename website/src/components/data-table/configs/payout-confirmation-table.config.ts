@@ -7,7 +7,6 @@ type PayoutConfirmationFiltersArgs = {
 	query?: TableQueryState & { totalRows: number };
 	filterOptions: {
 		programs: { value: string; label: string }[];
-		statuses: { value: string; label: string }[];
 	};
 };
 
@@ -46,14 +45,6 @@ export const getPayoutConfirmationTableFilters = ({
 			placeholder: 'All programs',
 			value: query.programId,
 			options: filterOptions.programs,
-		},
-		{
-			id: 'payoutStatus',
-			queryKey: 'payoutStatus',
-			label: 'Status',
-			placeholder: 'All statuses',
-			value: query.payoutStatus,
-			options: filterOptions.statuses,
 		},
 	];
 };

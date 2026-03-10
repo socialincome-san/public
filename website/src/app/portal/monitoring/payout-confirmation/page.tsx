@@ -30,7 +30,6 @@ const ConfirmPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps)
 	const rows = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const programFilterOptions = result.success ? result.data.programFilterOptions : [];
-	const statusFilterOptions = result.success ? result.data.statusFilterOptions : [];
 
 	return (
 		<ConfiguredDataTableClient
@@ -42,7 +41,6 @@ const ConfirmPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps)
 				query: { ...tableQuery, totalRows },
 				filterOptions: {
 					programs: programFilterOptions.map((program) => ({ value: program.id, label: program.name })),
-					statuses: statusFilterOptions,
 				},
 			})}
 		/>

@@ -1,4 +1,3 @@
-import type { TestInfo } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 
@@ -10,33 +9,15 @@ const STORYBLOK_VIDEO_EXTENSION_PATTERN = /\.(?:mov|mp4|webm|m4v|ogv)(?:\?.*)?$/
 const STORYBLOK_IMAGE_PLACEHOLDER = '/assets/test/storyblok-image-placeholder.svg';
 const STORYBLOK_VIDEO_PLACEHOLDER = '/assets/test/storyblok-video-placeholder.svg';
 
-const normalize = (f: string) => path.basename(f).replace(/\.e2e\.ts$|\.ts$/, '');
-
-const slug = (s: string) =>
-	s
-		.toLowerCase()
-		.trim()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-+|-+$/g, '');
-
-const filePath = (t: TestInfo) => {
-	const fileName = normalize(t.file || t.titlePath[0] || 'unknown-test-file');
-	return path.resolve(RECORDINGS_DIR, fileName, `${slug(t.title)}.json`);
-};
-
-const sortKeys = (o: Record<string, any>) =>
-	Object.fromEntries(
-		Object.keys(o)
-			.sort()
-			.map((k) => [k, o[k]]),
-	);
-
 const post = (url: string, body?: unknown) =>
 	fetch(url, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: body ? JSON.stringify(body) : undefined,
 	});
+
+const recordingPath = (recordingKey: string) =>
+	path.resolve(RECORDINGS_DIR, recordingKey.endsWith('.json') ? recordingKey : `${recordingKey}.json`);
 
 const hideToken = (json: string) => json.replace(/([?&]token=)[^&"]+/gi, '$1__TOKEN__');
 
@@ -69,7 +50,26 @@ const sanitizeStoryblokAssets = <T>(value: T): T => {
 	return value;
 };
 
-export const setupStoryblokMock = async (testInfo: TestInfo) => {
+const sortKeys = (o: Record<string, any>) =>
+	Object.fromEntries(
+		Object.keys(o)
+			.sort()
+			.map((k) => [k, o[k]]),
+	);
+
+const readReplayRecordings = (recordingKey: string) => {
+	const raw = fs.readFileSync(recordingPath(recordingKey), 'utf-8');
+	return sanitizeStoryblokAssets(JSON.parse(restoreToken(raw)));
+};
+
+const writeRecordings = (recordingKey: string, recordings: unknown) => {
+	const fp = recordingPath(recordingKey);
+	fs.mkdirSync(path.dirname(fp), { recursive: true });
+	const json = JSON.stringify(recordings, null, 2);
+	fs.writeFileSync(fp, hideToken(json));
+};
+
+export const setupStoryblokMock = async (recordingKey: string) => {
 	const mode = process.env.STORYBLOK_MOCK_MODE;
 
 	if (!mode) {
@@ -84,9 +84,7 @@ export const setupStoryblokMock = async (testInfo: TestInfo) => {
 	}
 
 	if (mode === 'replay') {
-		const raw = fs.readFileSync(filePath(testInfo), 'utf-8');
-		const recordings = sanitizeStoryblokAssets(JSON.parse(restoreToken(raw)));
-
+		const recordings = readReplayRecordings(recordingKey);
 		await post(`${MOCK}/recordings`, {
 			active: false,
 			recordings,
@@ -94,18 +92,12 @@ export const setupStoryblokMock = async (testInfo: TestInfo) => {
 	}
 };
 
-export const saveStoryblokMock = async (testInfo: TestInfo) => {
+export const saveStoryblokMock = async (recordingKey: string) => {
 	if (process.env.STORYBLOK_MOCK_MODE !== 'record') {
 		return;
 	}
 
 	const res = await fetch(`${MOCK}/recordings`);
 	const data = sortKeys(await res.json());
-	const sanitized = sanitizeStoryblokAssets(data);
-	const fp = filePath(testInfo);
-
-	fs.mkdirSync(path.dirname(fp), { recursive: true });
-
-	const json = JSON.stringify(sanitized, null, 2);
-	fs.writeFileSync(fp, hideToken(json));
+	writeRecordings(recordingKey, sanitizeStoryblokAssets(data));
 };
