@@ -31,20 +31,6 @@ type CardContentProps = {
 	className: string;
 };
 
-const TeaserCardContent = ({ title, content, lang, region, className }: CardContentProps) => (
-	<div className={className}>
-		<Typography size="3xl" lineHeight="normal" className="line-clamp-3">
-			{title}
-		</Typography>
-		<div className="mt-auto flex items-center gap-2">
-			<StoryblokAuthorImage author={content.author} size="small" lang={lang} region={region} />
-			<Typography size="xs" weight="bold">
-				{`${content.author.content.firstName} ${content.author.content.lastName}`}
-			</Typography>
-		</div>
-	</div>
-);
-
 export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) => {
 	const { content } = article;
 	const articleLink = article.slug ? createLinkForArticle(article.slug, lang, region) : `/${lang}/${region}/journal`;
@@ -57,7 +43,10 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 
 	if (isFeatured) {
 		return (
-			<Link href={articleLink} className="bg-card flex h-full flex-col rounded-xl border border-black/5 p-3 shadow-sm">
+			<Link
+				href={articleLink}
+				className="bg-card flex flex-col rounded-xl border border-black/5 p-3 shadow-sm transition-transform hover:scale-101"
+			>
 				{imageSource && (
 					<Image
 						src={imageSource}
@@ -68,13 +57,15 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 						className="h-auto w-full rounded-xl object-cover"
 					/>
 				)}
-				<TeaserCardContent
-					title={title}
-					content={content}
-					lang={lang}
-					region={region}
-					className="flex h-full flex-col gap-5 pt-4 lg:p-6"
-				/>
+				<div className="flex grow flex-col justify-between gap-3 pt-4 lg:p-6">
+					<h3 className="text-2xl md:text-3xl">{title}</h3>
+					<div className="flex items-center gap-2">
+						<StoryblokAuthorImage author={content.author} size="small" lang={lang} region={region} />
+						<Typography size="xs" weight="bold">
+							{`${content.author.content.firstName} ${content.author.content.lastName}`}
+						</Typography>
+					</div>
+				</div>
 			</Link>
 		);
 	}
@@ -82,15 +73,17 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 	return (
 		<Link
 			href={articleLink}
-			className="bg-card flex h-full flex-col overflow-hidden rounded-xl border border-black/5 py-3 pr-3 shadow-sm md:flex-row lg:pl-0"
+			className="bg-card grid grid-cols-[50%_50%] overflow-hidden rounded-xl border border-black/5 p-3 shadow-sm transition-transform hover:scale-101"
 		>
-			<TeaserCardContent
-				title={title}
-				content={content}
-				lang={lang}
-				region={region}
-				className="order-2 flex h-full flex-1 grow-0 basis-1/2 flex-col justify-between px-6 py-6 md:order-1 xl:px-8"
-			/>
+			<div className="flex flex-col justify-between gap-3 py-3 lg:px-4 lg:py-6">
+				<h3 className="text-xl md:text-2xl lg:text-3xl">{title}</h3>
+				<div className="flex items-center gap-2">
+					<StoryblokAuthorImage author={content.author} size="small" lang={lang} region={region} />
+					<Typography size="xs" weight="bold">
+						{`${content.author.content.firstName} ${content.author.content.lastName}`}
+					</Typography>
+				</div>
+			</div>
 			{imageSource && (
 				<Image
 					src={imageSource}
@@ -98,7 +91,7 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 					width={SECONDARY_IMAGE_WIDTH}
 					height={SECONDARY_IMAGE_HEIGHT}
 					sizes="281px"
-					className="order-1 h-auto w-full grow-0 basis-1/2 rounded-xl md:order-2"
+					className="h-auto w-full rounded-xl"
 				/>
 			)}
 		</Link>
