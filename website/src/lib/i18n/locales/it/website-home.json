@@ -21,6 +21,16 @@
 		]
 	},
 	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/ugRzh7SCujZ9jda01Z7l025RBOKxwO51TObfKlgSAFOltwhey00QbF1gQ.vtt",
+	"video-controls": {
+		"play-video": "Riproduci video",
+		"pause-video": "Metti in pausa il video",
+		"mute-video": "Disattiva audio del video",
+		"unmute-video": "Attiva audio del video",
+		"show-captions": "Mostra sottotitoli",
+		"hide-captions": "Nascondi sottotitoli",
+		"expand-video-view": "Espandi visualizzazione video",
+		"exit-expanded-video-view": "Esci dalla visualizzazione video espansa"
+	},
 	"section-2": {
 		"title-1": "Le persone che vivono nelle comunità più povere della Sierra Leone sanno di cosa hanno bisogno per uscire dalla povertà.",
 		"title-2": [
