@@ -32,16 +32,6 @@ export const makeCandidateColumns = (
 			cell: (ctx) => <GenderCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'gender',
-			header: (ctx) => <SortableHeader ctx={ctx}>Gender</SortableHeader>,
-			cell: (ctx) => <GenderCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'gender',
-			header: (ctx) => <SortableHeader ctx={ctx}>Gender</SortableHeader>,
-			cell: (ctx) => <GenderCell ctx={ctx} />,
-		},
-		{
 			accessorKey: 'dateOfBirth',
 			header: (ctx) => <SortableHeader ctx={ctx}>Age</SortableHeader>,
 			cell: (ctx) => <AgeCell ctx={ctx} />,
@@ -57,6 +47,14 @@ export const makeCandidateColumns = (
 		columns.push({
 			accessorKey: 'localPartnerName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Local Partner</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		});
+	}
+
+	if (!hideProgramName) {
+		columns.push({
+			accessorKey: 'programName',
+			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		});
 	}
