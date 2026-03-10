@@ -9,8 +9,21 @@ export type ExpenseTableViewRow = {
 	createdAt: Date;
 };
 
-export type ExpenseTableView = {
+type ExpenseTableView = {
 	tableRows: ExpenseTableViewRow[];
+};
+
+export type ExpenseTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type ExpensePaginatedTableView = {
+	tableRows: ExpenseTableViewRow[];
+	totalCount: number;
 };
 
 export type ExpensePayload = {

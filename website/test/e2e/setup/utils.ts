@@ -33,6 +33,8 @@ type FirebaseOobCodesResponse = {
 };
 
 const EMULATOR_API = 'http://127.0.0.1:9099/emulator/v1/projects/demo-social-income-local/oobCodes';
+const COOKIE_CONSENT_KEY = 'cookie_consent';
+const COOKIE_CONSENT_VALUE = 'denied';
 
 export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => {
 	const context = await browser.newContext();
@@ -61,6 +63,12 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 	await page.getByTestId('confirm-login-button').click();
 
 	await expect(page.getByTestId(testId)).toBeVisible();
+	await page.evaluate(
+		({ key, value }) => {
+			window.localStorage.setItem(key, value);
+		},
+		{ key: COOKIE_CONSENT_KEY, value: COOKIE_CONSENT_VALUE },
+	);
 
 	await context.storageState({ path: state });
 

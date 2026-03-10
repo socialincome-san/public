@@ -13,8 +13,26 @@ export type ExchangeRate = {
 	rate: number;
 };
 
-export type ExchangeRatesTableView = {
+type ExchangeRatesTableView = {
 	tableRows: ExchangeRatesTableViewRow[];
+};
+
+export type ExchangeRateTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	currency?: string;
+};
+
+export type ExchangeRatesPaginatedTableView = {
+	tableRows: ExchangeRatesTableViewRow[];
+	totalCount: number;
+	currencyFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 /**

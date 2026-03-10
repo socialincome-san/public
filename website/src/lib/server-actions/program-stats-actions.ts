@@ -1,12 +1,13 @@
 'use server';
 
-import { ProgramStatsService } from '@/lib/services/program-stats/program-stats.service';
+import { getSessionByType } from '@/lib/firebase/current-account';
 import type { ProgramBudgetCalculationInput } from '@/lib/services/program-stats/program-stats.types';
-import { getAuthenticatedUserOrThrow } from '../firebase/current-user';
-
-const service = new ProgramStatsService();
+import { services } from '@/lib/services/services';
 
 export const calculateProgramBudgetAction = async (input: ProgramBudgetCalculationInput) => {
-	await getAuthenticatedUserOrThrow();
-	return service.calculateProgramBudget(input);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.programStats.calculateProgramBudget(input);
 };

@@ -45,8 +45,21 @@ export type UserTableViewRow = {
 	createdAt: Date;
 };
 
-export type UserTableView = {
+type UserTableView = {
 	tableRows: UserTableViewRow[];
+};
+
+export type UserTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type UserPaginatedTableView = {
+	tableRows: UserTableViewRow[];
+	totalCount: number;
 };
 
 export type UserSession = {

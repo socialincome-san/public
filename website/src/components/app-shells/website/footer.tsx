@@ -6,14 +6,12 @@ import { PaperPlaneIcon } from '@/components/svg/paper-plane';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { services } from '@/lib/services/services';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { now } from '@/lib/utils/now';
 import { ISbStoryData } from '@storyblok/js';
 import NextLink from 'next/link';
-
-const storyblokService = new StoryblokService();
 
 type Props = {
 	lang: WebsiteLanguage;
@@ -29,7 +27,10 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 };
 
 export const Footer = async ({ lang, region }: Props) => {
-	const result = await storyblokService.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(
+		`${NEW_WEBSITE_SLUG}/layout`,
+		lang,
+	);
 	const footerMenu = result.success ? result.data.content.footerMenu : [];
 	const copyrightNotice = result.success ? result.data.content.copyrightNotice : undefined;
 

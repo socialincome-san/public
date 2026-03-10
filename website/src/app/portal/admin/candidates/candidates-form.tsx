@@ -223,14 +223,14 @@ export const CandidateForm = ({
 
 	useEffect(() => {
 		startTransition(async () => {
-			const [{ localPartners }, supportedProviders] = await Promise.all([
+			const [candidateOptionsResult, supportedProviders] = await Promise.all([
 				getCandidateOptions(sessionType),
-				getSupportedMobileMoneyProviderOptionsAction(),
+				getSupportedMobileMoneyProviderOptionsAction(sessionType),
 			]);
-			if (!localPartners.success) {
+			if (!candidateOptionsResult.success) {
 				return;
 			}
-			setOptions(localPartners.data, supportedProviders.success ? supportedProviders.data : []);
+			setOptions(candidateOptionsResult.data.localPartners, supportedProviders.success ? supportedProviders.data : []);
 		});
 	}, [sessionType]);
 

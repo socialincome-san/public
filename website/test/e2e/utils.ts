@@ -1,24 +1,44 @@
-export const getRecipientService = async () => {
-	const { RecipientService } = await import('@/lib/services/recipient/recipient.service');
-	return new RecipientService();
-};
-
-export const getCandidateService = async () => {
-	const { CandidateService } = await import('@/lib/services/candidate/candidate.service');
-	return new CandidateService();
-};
+import { prisma } from '@/lib/database/prisma';
 
 export const getFirebaseAdminService = async () => {
 	const { FirebaseAdminService } = await import('@/lib/services/firebase/firebase-admin.service');
-	return new FirebaseAdminService();
+	const { prisma } = await import('@/lib/database/prisma');
+	return new FirebaseAdminService(prisma);
 };
 
-export const getCountryService = async () => {
-	const { CountryService } = await import('@/lib/services/country/country.service');
-	return new CountryService();
+export const getRecipientProgramAndLocalPartnerByName = async (firstName: string, lastName: string) => {
+	return prisma.recipient.findFirst({
+		where: {
+			contact: {
+				firstName,
+				lastName,
+			},
+		},
+		select: {
+			program: { select: { name: true } },
+			localPartner: { select: { name: true } },
+		},
+	});
 };
 
-export const getLocalPartnerService = async () => {
-	const { LocalPartnerService } = await import('@/lib/services/local-partner/local-partner.service');
-	return new LocalPartnerService();
+export const getRecipientIdByName = async (firstName: string, lastName: string) => {
+	return prisma.recipient.findFirst({
+		where: {
+			contact: {
+				firstName,
+				lastName,
+			},
+		},
+		select: {
+			id: true,
+		},
+	});
+};
+
+export const assertContactExistsByEmail = async (email: string) => {
+	await prisma.contact.findUniqueOrThrow({
+		where: {
+			email,
+		},
+	});
 };

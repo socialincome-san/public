@@ -56,7 +56,9 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 						<Button
 							onClick={() => {
 								setConfirmOpen(false);
-								startTransition(() => confirmPayoutAction(payout.id));
+								startTransition(() => {
+									void confirmPayoutAction(payout.id);
+								});
 							}}
 							disabled={isPending || !hasEditAccess}
 						>
@@ -80,7 +82,9 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 							variant="destructive"
 							onClick={() => {
 								setContestOpen(false);
-								startTransition(() => contestPayoutAction(payout.id));
+								startTransition(() => {
+									void contestPayoutAction(payout.id);
+								});
 							}}
 							disabled={isPending || !hasEditAccess}
 						>

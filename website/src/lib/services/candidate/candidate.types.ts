@@ -1,4 +1,4 @@
-import { Address, Gender, Phone, Prisma } from '@/generated/prisma/client';
+import { Address, CountryCode, Gender, Phone, Prisma } from '@/generated/prisma/client';
 
 export enum Profile {
 	male = 'male',
@@ -39,17 +39,47 @@ export type CandidatePayload = {
 
 export type CandidatesTableViewRow = {
 	id: string;
+	country: CountryCode | null;
 	firstName: string;
 	lastName: string;
 	dateOfBirth: Date | null;
+	contactNumber: string | null;
+	gender: Gender | null;
 	localPartnerName: string | null;
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
-	createdAt: Date;
 };
 
 export type CandidatesTableView = {
 	tableRows: CandidatesTableViewRow[];
+};
+
+export type CandidatesTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	country?: string;
+	gender?: string;
+	localPartnerId?: string;
+};
+
+export type CandidatesPaginatedTableView = {
+	tableRows: CandidatesTableViewRow[];
+	totalCount: number;
+	countryFilterOptions: {
+		value: string;
+		label: string;
+	}[];
+	genderFilterOptions: {
+		value: string;
+		label: string;
+	}[];
+	localPartnerFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 export type CandidateCreateInput = Prisma.RecipientCreateInput;

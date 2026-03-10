@@ -35,6 +35,19 @@ export type StripeSubscriptionTableView = {
 	rows: StripeSubscriptionRow[];
 };
 
+export type StripeSubscriptionTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type StripeSubscriptionPaginatedTableView = {
+	rows: StripeSubscriptionRow[];
+	totalCount: number;
+};
+
 export type UpdateContributorAfterCheckoutInput = {
 	stripeCheckoutSessionId: string;
 	user: {

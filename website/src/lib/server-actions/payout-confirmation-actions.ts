@@ -1,30 +1,34 @@
 'use server';
 
 import { PayoutStatus } from '@/generated/prisma/enums';
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { PayoutService } from '@/lib/services/payout/payout.service';
+import { getSessionByType } from '@/lib/firebase/current-account';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
 export const confirmPayoutAction = async (payoutId: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.updatePayoutStatus(user.id, payoutId, PayoutStatus.confirmed);
-	if (!result.success) {
-		throw new Error(result.error);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
 	}
-
+	const result = await services.write.payout.updatePayoutStatus(
+		sessionResult.data.id,
+		payoutId,
+		PayoutStatus.confirmed,
+	);
 	revalidatePath('/portal/monitoring/payout-confirmation');
+	return result;
 };
 
 export const contestPayoutAction = async (payoutId: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.updatePayoutStatus(user.id, payoutId, PayoutStatus.contested);
-	if (!result.success) {
-		throw new Error(result.error);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
 	}
-
+	const result = await services.write.payout.updatePayoutStatus(
+		sessionResult.data.id,
+		payoutId,
+		PayoutStatus.contested,
+	);
 	revalidatePath('/portal/monitoring/payout-confirmation');
+	return result;
 };

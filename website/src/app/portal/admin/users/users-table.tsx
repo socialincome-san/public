@@ -1,16 +1,25 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
-import { makeUserColumns } from '@/components/data-table/columns/users';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { usersTableConfig } from '@/components/data-table/configs/users-table.config';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import { logger } from '@/lib/utils/logger';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import UsersForm from './users-form';
 
-export default function UsersTable({ rows, error }: { rows: UserTableViewRow[]; error: string | null }) {
+export default function UsersTable({
+	rows,
+	error,
+	query,
+}: {
+	rows: UserTableViewRow[];
+	error: string | null;
+	query?: TableQueryState & { totalRows: number };
+}) {
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [userId, setUserId] = useState<string | undefined>(undefined);
@@ -34,13 +43,18 @@ export default function UsersTable({ rows, error }: { rows: UserTableViewRow[]; 
 
 	return (
 		<>
-			<DataTable
-				title="Users"
+			<ConfiguredDataTableClient
+				config={usersTableConfig}
+				rows={rows}
 				error={error}
-				emptyMessage="No users found"
-				data={rows}
-				makeColumns={makeUserColumns}
-				actions={<Button onClick={openEmptyForm}>Add user</Button>}
+				query={query}
+				actionMenuItems={[
+					{
+						label: 'Add user',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 			/>
 
