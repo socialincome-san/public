@@ -20,6 +20,40 @@ type Props = {
 
 export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
 	const isVisualEditor = !!searchParams['_storyblok'];
+	let token: string | undefined;
+	let timestamp: string | undefined;
+	let cachedStory: ISbStoryData<Page> | undefined;
+
+	if (isVisualEditor) {
+		const previewToken = getStoryblokPreviewToken(searchParams);
+		token = previewToken.token;
+		timestamp = previewToken.timestamp;
+
+		if (!verifyStoryblokPreviewToken(token, timestamp)) {
+			return notFound();
+		}
+
+		if (token) {
+			const cacheKey = buildPreviewCacheKey(token, previewRoutePath);
+			cachedStory = getPreviewCache<ISbStoryData<Page>>(cacheKey);
+		}
+	}
+
+	if (cachedStory) {
+		return (
+			<>
+				{token && timestamp && (
+					<StoryblokPreviewSyncer
+						previewToken={token}
+						previewTimestamp={timestamp}
+						previewRoutePath={previewRoutePath}
+					/>
+				)}
+				<PageContentType blok={cachedStory.content} lang={lang} region={region} />
+			</>
+		);
+	}
+
 	const storyResult = await storyblokService.getStoryWithFallback<ISbStoryData<Page>>(storyPath, lang);
 
 	if (!storyResult.success) {
@@ -33,23 +67,6 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 	}
 
 	if (isVisualEditor) {
-		const { token, timestamp } = getStoryblokPreviewToken(searchParams);
-
-		if (!verifyStoryblokPreviewToken(token, timestamp)) {
-			return notFound();
-		}
-
-		let previewStory = story;
-
-		if (token) {
-			const cacheKey = buildPreviewCacheKey(token, previewRoutePath);
-			const cachedStory = getPreviewCache<ISbStoryData<Page>>(cacheKey);
-
-			if (cachedStory) {
-				previewStory = cachedStory;
-			}
-		}
-
 		return (
 			<>
 				{token && timestamp && (
@@ -59,7 +76,7 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 						previewRoutePath={previewRoutePath}
 					/>
 				)}
-				<PageContentType blok={previewStory.content} lang={lang} region={region} />
+				<PageContentType blok={story.content} lang={lang} region={region} />
 			</>
 		);
 	}

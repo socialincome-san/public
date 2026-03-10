@@ -4,7 +4,7 @@ import { updateStoryblokPreviewAction } from '@/lib/server-actions/storyblok-pre
 import { registerStoryblokBridge } from '@/lib/storyblok-preview/register-bridge';
 import type { ISbStoryData } from '@storyblok/js';
 import { loadStoryblokBridge } from '@storyblok/js';
-import { startTransition, useEffect } from 'react';
+import { startTransition, useEffect, useRef } from 'react';
 
 type Props = {
 	previewToken: string;
@@ -13,20 +13,28 @@ type Props = {
 };
 
 export const StoryblokPreviewSyncer = ({ previewToken, previewTimestamp, previewRoutePath }: Props) => {
+	const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
 	useEffect(() => {
 		if (!previewToken || !previewTimestamp || !previewRoutePath) {
 			return;
 		}
 
 		const handleInput = (story: ISbStoryData) => {
-			startTransition(() => {
-				void updateStoryblokPreviewAction({
-					story,
-					previewToken,
-					previewTimestamp,
-					previewRoutePath,
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+			}
+
+			debounceTimerRef.current = setTimeout(() => {
+				startTransition(() => {
+					void updateStoryblokPreviewAction({
+						story,
+						previewToken,
+						previewTimestamp,
+						previewRoutePath,
+					});
 				});
-			});
+			}, 300);
 		};
 
 		let isMounted = true;
@@ -41,6 +49,10 @@ export const StoryblokPreviewSyncer = ({ previewToken, previewTimestamp, preview
 		})();
 		return () => {
 			isMounted = false;
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+				debounceTimerRef.current = null;
+			}
 		};
 	}, [previewRoutePath, previewTimestamp, previewToken]);
 
