@@ -4,6 +4,7 @@ import {
 	formatDate,
 	formatNumberLocale,
 	humanize,
+	humanizeIdentifier,
 	slugify,
 	titleCase,
 } from './string-utils';
@@ -41,6 +42,14 @@ describe('string-utils', () => {
 			expect(titleCase('visa')).toBe('Visa');
 			expect(titleCase('american_express')).toBe('American Express');
 			expect(titleCase('sepa_debit')).toBe('Sepa Debit');
+		});
+	});
+
+	describe('humanizeIdentifier', () => {
+		test('converts camelCase, snake_case and kebab-case to title words', () => {
+			expect(humanizeIdentifier('programName')).toBe('Program Name');
+			expect(humanizeIdentifier('local_partner_name')).toBe('Local Partner Name');
+			expect(humanizeIdentifier('created-at')).toBe('Created At');
 		});
 	});
 

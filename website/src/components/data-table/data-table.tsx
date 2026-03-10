@@ -1,19 +1,31 @@
 'use client';
 
+import { type ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import { BaseTable } from '@/components/data-table/elements/base-table';
+import { DataTableEmptyState } from '@/components/data-table/elements/data-table-empty-state';
+import {
+	DataTableToolbar,
+	type ToolbarFilter,
+	type ToolbarSortOption,
+} from '@/components/data-table/elements/data-table-toolbar';
+import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
+import { TableFilterConfig } from '@/components/data-table/table-config.types';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { ColumnDef, SortingState } from '@tanstack/react-table';
+import { humanizeIdentifier } from '@/lib/utils/string-utils';
+import { cn } from '@socialincome/ui';
+import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/react-table';
+import { functionalUpdate } from '@tanstack/react-table';
 import DOMPurify from 'isomorphic-dompurify';
-import { ReactNode, useEffect, useState } from 'react';
-import { Input } from '../input';
+import { ReactNode, useState } from 'react';
 
 type DataTableProps<Row> = {
 	title: ReactNode;
 	error?: string | null;
 	emptyMessage: string;
-	actions?: ReactNode;
+	actionMenuItems?: ActionMenuItem[];
 	data: Row[];
 	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
@@ -22,13 +34,37 @@ type DataTableProps<Row> = {
 	initialSorting?: SortingState;
 	lang?: WebsiteLanguage;
 	searchKeys?: (keyof Row)[];
+	sortOptions?: { id: string; label: string }[];
+	query?: TableQueryState & { totalRows: number };
+	onQueryChange?: (patch: Partial<TableQueryState>, options?: { debounceMs?: number }) => void;
+	pageSizeOptions?: number[];
+	showRowsPerPageSelector?: boolean;
+	showColumnVisibilitySelector?: boolean;
+	showEntityIdColumn?: boolean;
+	isLoading?: boolean;
+	toolbarFilters?: TableFilterConfig[];
+};
+
+const formatTableError = (error: string): string => {
+	const raw = error.replace(/^Could not fetch [^:]+:\s*/i, '').trim();
+	if (raw.startsWith('{') && raw.endsWith('}')) {
+		try {
+			const parsed = JSON.parse(raw) as { name?: string };
+			if (parsed.name === 'PrismaClientValidationError') {
+				return 'The current search or filter is invalid. Please adjust your query and try again.';
+			}
+		} catch {
+			// Keep fallback below.
+		}
+	}
+	return raw || 'Something went wrong while loading this table.';
 };
 
 export default function DataTable<Row>({
 	title,
 	error,
 	emptyMessage,
-	actions,
+	actionMenuItems,
 	data,
 	makeColumns,
 	hideProgramName = false,
@@ -37,55 +73,205 @@ export default function DataTable<Row>({
 	initialSorting,
 	lang,
 	searchKeys,
+	sortOptions = [],
+	query,
+	onQueryChange,
+	pageSizeOptions = [...TABLE_PAGE_SIZE_OPTIONS],
+	showRowsPerPageSelector = true,
+	showColumnVisibilitySelector = false,
+	showEntityIdColumn = true,
+	isLoading = false,
+	toolbarFilters = [],
 }: DataTableProps<Row>) {
+	const stableTableMinHeightClass = 'min-h-[680px] md:min-h-[760px]';
 	const translator = useTranslator(lang || 'en', 'website-me');
-	const columns = makeColumns(hideProgramName, hideLocalPartner, translator);
-	const [filteredData, setFilteredData] = useState(data);
-	const [searchFilter, setSearchFilter] = useState('');
-	const isEmpty = filteredData.length === 0;
+	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, translator);
+	const columns = showEntityIdColumn
+		? ([
+				{
+					id: 'id',
+					header: 'ID',
+					accessorFn: (row: Row) => {
+						const value = (row as { id?: unknown }).id;
+						return value == null ? '' : String(value);
+					},
+				},
+				...baseColumns,
+			] as ColumnDef<Row>[])
+		: baseColumns;
+	const activeQuery = query ?? null;
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+		showEntityIdColumn ? ({ id: false } as VisibilityState) : ({} as VisibilityState),
+	);
+	const displayedData = data;
+	const isDatasetEmpty = activeQuery ? activeQuery.totalRows === 0 : data.length === 0;
+	const isEmpty = displayedData.length === 0;
+	const resolvedSearchKeys = (searchKeys as string[] | undefined)?.filter(Boolean) ?? [];
+	const showControls = !error;
 
-	const filter = (search: string) => {
-		if (!search) {
-			setFilteredData(data);
+	const onSearchChange = (value: string) => {
+		if (!onQueryChange) {
 			return;
 		}
-		const filtered = data.filter((row) => {
-			return searchKeys?.some((key) =>
-				(row[key as keyof Row] as string)?.toString().toLowerCase().includes(search.toLowerCase()),
-			);
+		onQueryChange(
+			{
+				search: value.trim(),
+				page: 1,
+			},
+			{ debounceMs: 300 },
+		);
+	};
+	const serverSortingState: SortingState =
+		activeQuery?.sortBy && activeQuery.sortDirection
+			? [{ id: activeQuery.sortBy, desc: activeQuery.sortDirection === 'desc' }]
+			: [];
+	const onServerSortingChange = (next: SortingState | ((old: SortingState) => SortingState)) => {
+		if (!onQueryChange) {
+			return;
+		}
+		const resolved = functionalUpdate(next, serverSortingState);
+		const topSort = resolved[0];
+		onQueryChange({
+			page: 1,
+			sortBy: topSort?.id,
+			sortDirection: topSort ? (topSort.desc ? 'desc' : 'asc') : undefined,
 		});
-		setFilteredData(filtered);
 	};
 
-	useEffect(() => {
-		setFilteredData(data);
-		filter(searchFilter);
-	}, [data]);
-
-	useEffect(() => {
-		filter(searchFilter);
-	}, [searchFilter]);
+	const resolvedToolbarFilters: ToolbarFilter[] =
+		onQueryChange && toolbarFilters.length > 0
+			? toolbarFilters.map((filter) => ({
+					id: filter.id,
+					label: filter.label,
+					placeholder: filter.placeholder,
+					value: filter.value,
+					options: filter.options,
+					onChange: (value) => {
+						const patch: Partial<TableQueryState> = { page: 1 };
+						patch[filter.queryKey] = value as never;
+						onQueryChange(patch);
+					},
+				}))
+			: [];
+	const clearAllToolbarFilters =
+		onQueryChange && toolbarFilters.length > 0
+			? () => {
+					const patch: Partial<TableQueryState> = { page: 1 };
+					toolbarFilters.forEach((filter) => {
+						patch[filter.queryKey] = undefined;
+					});
+					onQueryChange(patch);
+				}
+			: undefined;
+	const toolbarColumns = showColumnVisibilitySelector
+		? columns
+				.map((column) => {
+					const hasAccessorKey = 'accessorKey' in column;
+					const fallbackId = hasAccessorKey && typeof column.accessorKey === 'string' ? column.accessorKey : column.id;
+					if (!fallbackId || column.enableHiding === false) {
+						return null;
+					}
+					const label = typeof column.header === 'string' ? column.header : humanizeIdentifier(String(fallbackId));
+					return {
+						id: String(fallbackId),
+						label,
+						visible: columnVisibility[String(fallbackId)] !== false,
+						onToggle: (visible: boolean) =>
+							setColumnVisibility((previous) => ({
+								...previous,
+								[String(fallbackId)]: visible,
+							})),
+					};
+				})
+				.filter((column): column is NonNullable<typeof column> => Boolean(column))
+		: [];
+	const toolbarSortOptions: ToolbarSortOption[] = sortOptions;
+	const onSortToolbarChange = (sortBy?: string, sortDirection?: 'asc' | 'desc') => {
+		if (!onQueryChange) {
+			return;
+		}
+		onQueryChange({
+			page: 1,
+			sortBy: sortBy || undefined,
+			sortDirection: sortBy ? (sortDirection ?? 'asc') : undefined,
+		});
+	};
 
 	return (
 		<div data-testid="data-table">
-			<div className="mb-4 flex flex-wrap items-center justify-between">
-				<h2 className="pb-4 text-3xl">
-					{title} <span className="text-lg text-gray-500">({filteredData.length})</span>
+			<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+				<h2 className="text-3xl">
+					{title}{' '}
+					<span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
 				</h2>
-				<div className="flex flex-wrap items-center gap-2">
-					{searchKeys?.length && (
-						<Input className="w-64" placeholder="Search..." onChange={(e) => setSearchFilter(e.target.value)} />
-					)}{' '}
-					{actions ?? null}
-				</div>
+				<DataTableToolbar
+					showControls={showControls}
+					searchKeys={onQueryChange ? resolvedSearchKeys : []}
+					searchValue={activeQuery?.search ?? ''}
+					onSearchChange={onSearchChange}
+					sortOptions={onQueryChange ? toolbarSortOptions : []}
+					sortBy={activeQuery?.sortBy}
+					sortDirection={activeQuery?.sortDirection}
+					onSortChange={onSortToolbarChange}
+					filters={resolvedToolbarFilters}
+					columns={toolbarColumns}
+					onClearFilters={clearAllToolbarFilters}
+					actionMenuItems={actionMenuItems}
+				/>
 			</div>
 
 			{error ? (
-				<div className="p-4 text-red-600">Error: {error}</div>
+				<div className={cn('flex items-center', stableTableMinHeightClass)}>
+					<div className="w-full rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
+						<p className="font-medium">Could not load table data.</p>
+						<p className="mt-1 text-sm">{formatTableError(error)}</p>
+					</div>
+				</div>
+			) : isLoading ? (
+				<AppLoadingSkeleton message="Loading..." />
+			) : isDatasetEmpty ? (
+				<div className={cn('flex items-start pt-2', stableTableMinHeightClass)}>
+					<div className="w-full">
+						<DataTableEmptyState emptyMessage={emptyMessage} />
+					</div>
+				</div>
 			) : isEmpty ? (
-				<div className="p-4 text-gray-500" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}></div>
+				<div className={cn('flex items-start pt-2', stableTableMinHeightClass)}>
+					<div
+						className="w-full p-4 text-gray-500"
+						dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}
+					></div>
+				</div>
 			) : (
-				<BaseTable data={filteredData} columns={columns} onRowClick={onRowClick} initialSorting={initialSorting} />
+				<BaseTable
+					data={displayedData}
+					columns={columns}
+					onRowClick={onRowClick}
+					initialSorting={initialSorting}
+					pageSizeOptions={pageSizeOptions}
+					showRowsPerPageSelector={showRowsPerPageSelector}
+					columnVisibility={columnVisibility}
+					onColumnVisibilityChange={setColumnVisibility}
+					serverSorting={
+						activeQuery && onQueryChange
+							? {
+									sorting: serverSortingState,
+									onSortingChange: onServerSortingChange,
+								}
+							: undefined
+					}
+					serverPagination={
+						activeQuery && onQueryChange
+							? {
+									page: activeQuery.page,
+									pageSize: activeQuery.pageSize,
+									totalRows: activeQuery.totalRows,
+									onPageChange: (page) => onQueryChange({ page }),
+									onPageSizeChange: (pageSize) => onQueryChange({ page: 1, pageSize }),
+								}
+							: undefined
+					}
+				/>
 			)}
 		</div>
 	);

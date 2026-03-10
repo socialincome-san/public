@@ -10,7 +10,7 @@ export const useContributorSession = () => {
 	useEffect(() => {
 		(async () => {
 			const result = await getOptionalContributorAction();
-			setContributorSession(result);
+			setContributorSession(result.success ? result.data : null);
 		})();
 	}, []);
 

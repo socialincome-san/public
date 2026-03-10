@@ -1,34 +1,30 @@
-import { makeOrganizationMemberColumns } from '@/components/data-table/columns/organization-members';
-import DataTable from '@/components/data-table/data-table';
+import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { OrganizationService } from '@/lib/services/organization/organization.service';
 import { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
+import { services } from '@/lib/services/services';
+import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
+import MembersTable from './members-table';
 
-export default function OrganizationMembersPage() {
+export default function OrganizationMembersPage({ searchParams }: SearchParamsPageProps) {
 	return (
-		<Suspense>
-			<OrganizationMembersDataLoader />
+		<Suspense fallback={<AppLoadingSkeleton />}>
+			<OrganizationMembersDataLoader searchParams={searchParams} />
 		</Suspense>
 	);
 }
 
-const OrganizationMembersDataLoader = async () => {
+const OrganizationMembersDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await getAuthenticatedUserOrRedirect();
+	const resolvedSearchParams = await searchParams;
+	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new OrganizationService();
-	const result = await service.getOrganizationMembersTableView(user.id);
+	const result = await services.read.organization.getPaginatedOrganizationMembersTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: OrganizationMemberTableViewRow[] = result.success ? result.data.tableRows : [];
+	const totalRows = result.success ? result.data.totalCount : 0;
 
-	return (
-		<DataTable
-			title="Organization Members"
-			error={error}
-			emptyMessage="No members found"
-			data={rows}
-			makeColumns={makeOrganizationMemberColumns}
-		/>
-	);
+	return <MembersTable rows={rows} error={error} query={{ ...tableQuery, totalRows }} />;
 };

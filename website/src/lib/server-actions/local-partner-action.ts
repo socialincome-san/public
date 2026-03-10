@@ -1,16 +1,16 @@
 'use server';
 
-import { getSessionByTypeOrThrow, type Session } from '@/lib/firebase/current-account';
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
+import { getSessionByType, type Session } from '@/lib/firebase/current-account';
 import { LocalPartnerCreateInput, LocalPartnerUpdateInput } from '@/lib/services/local-partner/local-partner.types';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-const localPartnerService = new LocalPartnerService();
-
 export const createLocalPartnerAction = async (localPartner: LocalPartnerCreateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const result = await localPartnerService.create(user.id, localPartner);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const result = await services.write.localPartner.create(sessionResult.data.id, localPartner);
 	revalidatePath('/portal/admin/local-partners');
 	return result;
 };
@@ -19,8 +19,12 @@ export const updateLocalPartnerAction = async (
 	updateInput: LocalPartnerUpdateInput,
 	sessionType: Session['type'] = 'user',
 ) => {
-	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await localPartnerService.update(session, updateInput);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.localPartner.update(session, updateInput);
 	if (session.type === 'user') {
 		revalidatePath('/portal/admin/local-partners');
 	} else if (session.type === 'local-partner') {
@@ -30,6 +34,9 @@ export const updateLocalPartnerAction = async (
 };
 
 export const getLocalPartnerAction = async (localPartnerId: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	return localPartnerService.get(user.id, localPartnerId);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.read.localPartner.get(sessionResult.data.id, localPartnerId);
 };

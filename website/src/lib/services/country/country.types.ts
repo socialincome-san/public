@@ -26,6 +26,19 @@ export type CountryTableView = {
 	tableRows: CountryTableViewRow[];
 };
 
+export type CountryTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type CountryPaginatedTableView = {
+	tableRows: CountryTableViewRow[];
+	totalCount: number;
+};
+
 export type CountryPayload = {
 	id: string;
 	isoCode: CountryCode;

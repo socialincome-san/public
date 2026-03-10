@@ -170,11 +170,12 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 		onSubmit(schema);
 	};
 
-	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
+	const [openAccordions, setOpenAccordions] = useState<string[]>([]);
 
 	const onValidationErrors = (e: Object) => {
 		console.warn('dynamic form validation errors: ', e);
-		setOpenAccordion('all');
+		const nestedOptions = getOptions().filter((option) => getType(option, zodSchema) === 'ZodObject');
+		setOpenAccordions(nestedOptions.map((option) => `accordion-${option}`));
 	};
 
 	return (
@@ -188,13 +189,20 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						<Accordion
 							key={option}
-							type="single"
-							collapsible
-							value={openAccordion ? (openAccordion === 'all' ? `accordion-${option}` : openAccordion) : 'closed'}
-							onValueChange={(value: string) => setOpenAccordion(value ? `accordion-${option}` : undefined)}
+							type="multiple"
+							value={openAccordions.includes(`accordion-${option}`) ? [`accordion-${option}`] : []}
+							onValueChange={(value: string[]) =>
+								setOpenAccordions((prev) =>
+									value.includes(`accordion-${option}`)
+										? Array.from(new Set([...prev, `accordion-${option}`]))
+										: prev.filter((item) => item !== `accordion-${option}`),
+								)
+							}
 						>
-							{/* TODO: find better solution to hide collapsed content */}
-							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">
+							<AccordionItem
+								value={`accordion-${option}`}
+								className="rounded-xl border border-slate-200 bg-slate-100 px-2 [&[data-state=closed]>div]:h-0"
+							>
 								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
 									{formSchema.fields[option].label}
 								</AccordionTrigger>

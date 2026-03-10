@@ -67,6 +67,16 @@ export const humanize = (value: string): string => {
 	return value.replace(/_/g, ' ');
 };
 
+export const humanizeIdentifier = (value: string): string => {
+	return value
+		.replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+		.replace(/[_-]+/g, ' ')
+		.trim()
+		.split(/\s+/)
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+};
+
 export const titleCase = (value: string): string => {
 	return value.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ' ' + d.toUpperCase()));
 };

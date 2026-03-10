@@ -20,6 +20,24 @@ export type SurveyTableView = {
 	tableRows: SurveyTableViewRow[];
 };
 
+export type SurveyTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+};
+
+export type SurveyPaginatedTableView = {
+	tableRows: SurveyTableViewRow[];
+	totalCount: number;
+	programFilterOptions: {
+		id: string;
+		name: string;
+	}[];
+};
+
 export type SurveyCreateInput = {
 	name: string;
 	recipient: { connect: { id: string } };
