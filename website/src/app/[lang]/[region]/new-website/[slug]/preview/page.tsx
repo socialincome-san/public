@@ -16,6 +16,7 @@ export default async function PreviewPage({ params, searchParams }: PreviewPageP
 			storyPath={`${NEW_WEBSITE_SLUG}/${slug}`}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
+			previewRoutePath={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}/preview`}
 			searchParams={resolvedSearchParams}
 		/>
 	);
