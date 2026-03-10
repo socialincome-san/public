@@ -549,7 +549,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 38
+      "durationMs": 76
     },
     {
       "body": {
@@ -1100,7 +1100,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 41
+      "durationMs": 67
     }
   ],
   "e4474cdc27f387f4c3faceaf99b74c13832755df0c5611a74c74b77b2d1d4f94": [
@@ -1326,7 +1326,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 43
+      "durationMs": 81
     }
   ]
 }

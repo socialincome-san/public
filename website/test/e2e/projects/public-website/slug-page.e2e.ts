@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { saveStoryblokMock, setupStoryblokMock } from '../../mock-server/storyblok-mock';
 
-const STORYBLOK_RECORDING = 'setup-portal/seed-and-login-portal-actor';
+const STORYBLOK_RECORDING = 'public-website-slug-page';
 
 test('new website slug page matches screenshot', async ({ page }) => {
 	await setupStoryblokMock(STORYBLOK_RECORDING);

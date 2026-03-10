@@ -7,18 +7,18 @@ import { loginAs } from './utils';
 test('seed and login all auth actors', async ({ browser }) => {
 	await seedDatabase();
 
-	await setupStoryblokMock('setup-portal/seed-and-login-portal-actor');
+	await setupStoryblokMock('portal-auth-login');
 	await assertContactExistsByEmail('test@portal.org');
 	await loginAs(browser, 'user');
-	await saveStoryblokMock('setup-portal/seed-and-login-portal-actor');
+	await saveStoryblokMock('portal-auth-login');
 
-	await setupStoryblokMock('setup-dashboard/seed-and-login-dashboard-actor');
+	await setupStoryblokMock('dashboard-auth-login');
 	await assertContactExistsByEmail('test@dashboard.org');
 	await loginAs(browser, 'contributor');
-	await saveStoryblokMock('setup-dashboard/seed-and-login-dashboard-actor');
+	await saveStoryblokMock('dashboard-auth-login');
 
-	await setupStoryblokMock('setup-partner-space/seed-and-login-partner-space-actor');
+	await setupStoryblokMock('partner-space-auth-login');
 	await assertContactExistsByEmail('test@partner.org');
 	await loginAs(browser, 'partner');
-	await saveStoryblokMock('setup-partner-space/seed-and-login-partner-space-actor');
+	await saveStoryblokMock('partner-space-auth-login');
 });
