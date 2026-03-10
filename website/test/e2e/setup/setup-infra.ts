@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-test.describe.configure({ mode: 'serial' });
-
 test('wait for emulators to be ready', async ({ page }) => {
 	for (let i = 0; i < 30; i++) {
 		try {
