@@ -4,6 +4,7 @@ import { JournalTeaserCard } from '@/components/journal-teaser-card';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
@@ -58,7 +59,7 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 	}
 
 	const [featuredArticle, ...secondaryArticles] = articles;
-	const secondaryLayoutClass = secondaryArticles.length > 1 ? 'xl:grid-rows-2' : '';
+	const hasSecondaryArticles = secondaryArticles.length > 0;
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
@@ -75,13 +76,17 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
+			<div className={cn('grid grid-cols-1 gap-4 lg:gap-8', hasSecondaryArticles && 'lg:grid-cols-2')}>
 				<JournalTeaserCard article={featuredArticle} lang={lang} region={region} isFeatured />
-				<div className={`grid h-full grid-cols-1 gap-4 lg:gap-8 ${secondaryLayoutClass}`}>
-					{secondaryArticles.map((article) => (
-						<JournalTeaserCard key={article.uuid} article={article} lang={lang} region={region} isFeatured={false} />
-					))}
-				</div>
+				{hasSecondaryArticles && (
+					<div
+						className={cn('grid h-full grid-cols-1 gap-4 lg:gap-8', secondaryArticles.length > 1 && 'lg:grid-rows-2')}
+					>
+						{secondaryArticles.map((article) => (
+							<JournalTeaserCard key={article.uuid} article={article} lang={lang} region={region} isFeatured={false} />
+						))}
+					</div>
+				)}
 			</div>
 		</BlockWrapper>
 	);

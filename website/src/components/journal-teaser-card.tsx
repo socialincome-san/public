@@ -7,6 +7,7 @@ import {
 	getArticleTitle,
 	ResolvedArticle,
 } from '@/lib/services/storyblok/storyblok.utils';
+import { cn } from '@/lib/utils/cn';
 import { Typography } from '@socialincome/ui';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
@@ -76,7 +77,10 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 	return (
 		<Link
 			href={articleLink}
-			className="bg-card grid grid-cols-[50%_50%] overflow-hidden rounded-xl border border-black/5 p-3 shadow-sm transition-transform hover:scale-101"
+			className={cn(
+				'bg-card grid overflow-hidden rounded-xl border border-black/5 p-3 shadow-sm transition-transform hover:scale-101',
+				imageSource ? 'grid-cols-[50%_50%]' : 'grid-cols-1',
+			)}
 		>
 			<div className="flex flex-col justify-between gap-3 py-3 lg:px-4 lg:py-6">
 				<h3 className="text-xl md:text-2xl lg:text-3xl">{title}</h3>
