@@ -1,4 +1,5 @@
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
+import { Author } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
 	createLinkForArticle,
@@ -23,13 +24,20 @@ type Props = {
 	isFeatured: boolean;
 };
 
-type CardContentProps = {
-	title: string;
-	content: ResolvedArticle;
+type AuthorProps = {
+	author: ISbStoryData<Author>;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	className: string;
 };
+
+const AuthorInfo = ({ author, lang, region }: AuthorProps) => (
+	<div className="flex items-center gap-2">
+		<StoryblokAuthorImage author={author} size="small" lang={lang} region={region} />
+		<Typography size="xs" weight="bold">
+			{`${author.content.firstName} ${author.content.lastName}`}
+		</Typography>
+	</div>
+);
 
 export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) => {
 	const { content } = article;
@@ -59,12 +67,7 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 				)}
 				<div className="flex grow flex-col justify-between gap-3 pt-4 lg:p-6">
 					<h3 className="text-2xl md:text-3xl">{title}</h3>
-					<div className="flex items-center gap-2">
-						<StoryblokAuthorImage author={content.author} size="small" lang={lang} region={region} />
-						<Typography size="xs" weight="bold">
-							{`${content.author.content.firstName} ${content.author.content.lastName}`}
-						</Typography>
-					</div>
+					<AuthorInfo author={content.author} lang={lang} region={region} />
 				</div>
 			</Link>
 		);
@@ -77,12 +80,7 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 		>
 			<div className="flex flex-col justify-between gap-3 py-3 lg:px-4 lg:py-6">
 				<h3 className="text-xl md:text-2xl lg:text-3xl">{title}</h3>
-				<div className="flex items-center gap-2">
-					<StoryblokAuthorImage author={content.author} size="small" lang={lang} region={region} />
-					<Typography size="xs" weight="bold">
-						{`${content.author.content.firstName} ${content.author.content.lastName}`}
-					</Typography>
-				</div>
+				<AuthorInfo author={content.author} lang={lang} region={region} />
 			</div>
 			{imageSource && (
 				<Image
