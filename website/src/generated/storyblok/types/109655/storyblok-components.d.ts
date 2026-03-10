@@ -122,6 +122,15 @@ export interface ImageWithCaption {
   [k: string]: unknown;
 }
 
+export interface JournalTeasers {
+  heading?: string;
+  articlesDisplayMode: "latest" | "selected";
+  selectedArticles?: (ISbStoryData<Article> | string)[];
+  component: "journalTeasers";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Layout {
   menu: (MenuItem | DropdownItem)[];
   footerMenu: MenuItemGroup[];
@@ -177,7 +186,7 @@ export interface NewsletterSignup {
 }
 
 export interface Page {
-  content: (HeroVideo | ImageText | ModalCards | Text)[];
+  content: (HeroVideo | ImageText | JournalTeasers | ModalCards | Text)[];
   component: "page";
   _uid: string;
   [k: string]: unknown;

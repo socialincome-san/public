@@ -5,8 +5,8 @@
         "story": {
           "name": "Home",
           "created_at": "2026-01-14T09:36:30.190Z",
-          "published_at": "2026-03-03T09:03:24.298Z",
-          "updated_at": "2026-03-03T09:03:24.314Z",
+          "published_at": "2026-03-09T15:05:22.367Z",
+          "updated_at": "2026-03-09T15:05:22.383Z",
           "id": 133913764645632,
           "uuid": "06cda40c-171b-4ff8-8b9b-c39230b57595",
           "content": {
@@ -119,13 +119,13 @@
                   {
                     "_uid": "a767e4db-0c9e-4485-83bc-4162c046c5e0",
                     "image": {
-                      "id": 150877926158651,
+                      "id": 151251599883143,
                       "alt": "",
                       "name": "",
                       "focus": "",
                       "title": "",
                       "source": "",
-                      "filename": "https://a.storyblok.com/f/109655/2731x4096/1e3e184e7d/e7b2622b4dfab76e6308c1acedf1c7d365d54088.jpg",
+                      "filename": "https://a.storyblok.com/f/109655/407x569/0ba0bd9891/howitworks2-2.png",
                       "copyright": "",
                       "fieldtype": "asset",
                       "meta_data": {},
@@ -179,13 +179,13 @@
                   {
                     "_uid": "5d808897-bd38-4217-8f1f-d10db2345a55",
                     "image": {
-                      "id": 150877926158651,
+                      "id": 151251599915912,
                       "alt": "",
                       "name": "",
                       "focus": "",
                       "title": "",
                       "source": "",
-                      "filename": "https://a.storyblok.com/f/109655/2731x4096/1e3e184e7d/e7b2622b4dfab76e6308c1acedf1c7d365d54088.jpg",
+                      "filename": "https://a.storyblok.com/f/109655/407x569/0501a7dfb8/howitworks3.png",
                       "copyright": "",
                       "fieldtype": "asset",
                       "meta_data": {},
@@ -390,6 +390,17 @@
                   ]
                 },
                 "component": "text"
+              },
+              {
+                "_uid": "86488eed-d22a-4f76-b868-05c5823dc774",
+                "heading": "Stories & Updates from **our journal**.",
+                "component": "journalTeasers",
+                "selectedArticles": [
+                  "7353362f-5574-4072-a2db-6095eeef4c79",
+                  "034ef9af-c6c3-4197-864a-29bb932ffb07",
+                  "5d8d1f9d-42e2-4c10-b730-42bf043d1caa"
+                ],
+                "articlesDisplayMode": "selected"
               }
             ],
             "component": "page"
@@ -430,13 +441,13 @@
             }
           ]
         },
-        "cv": 1772528604,
+        "cv": 1773074505,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=__TOKEN__&cv=1772528604",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=__TOKEN__&cv=1773074505",
         "body": {},
         "method": "GET",
         "headers": {
@@ -450,7 +461,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 39
+      "durationMs": 260
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -468,7 +479,7 @@
             "menu": [
               {
                 "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
-                "label": "text in header",
+                "label": "Programs",
                 "component": "dropdownItem",
                 "menuItemGroups": [
                   {
@@ -788,7 +799,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "text in footer",
+                "label": "Stay tuned",
                 "component": "menuItemGroup"
               },
               {
@@ -983,13 +994,13 @@
             }
           ]
         },
-        "cv": 1772528604,
+        "cv": 1773074505,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1772528604",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773074505",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1003,7 +1014,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 34
+      "durationMs": 227
     },
     {
       "body": {
@@ -1339,7 +1350,7 @@
                     "component": "menuItem"
                   }
                 ],
-                "label": "text in footer",
+                "label": "Stay tuned",
                 "component": "menuItemGroup"
               },
               {
@@ -1534,13 +1545,13 @@
             }
           ]
         },
-        "cv": 1772528604,
+        "cv": 1773074505,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1772528604",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773074505",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1554,7 +1565,890 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 34
+      "durationMs": 230
+    }
+  ],
+  "ec0561f679c6a8f878a0e1f99c9dfcaf42f977853551d13038bd29462040c9be": [
+    {
+      "body": {
+        "stories": [
+          {
+            "name": "Cash transfer in Liberia",
+            "created_at": "2025-08-31T15:47:40.419Z",
+            "published_at": "2025-08-31T16:06:39.851Z",
+            "updated_at": "2025-08-31T16:06:39.864Z",
+            "id": 85875345109365,
+            "uuid": "7353362f-5574-4072-a2db-6095eeef4c79",
+            "content": {
+              "_uid": "37489351-3276-46bb-abd0-2233876eab91",
+              "tags": [
+                "69bb997e-5606-4587-84ee-b616422e0f89",
+                "622524bd-20e9-43fb-9701-500404d793a0",
+                "cbc02197-fd41-4904-99d3-51873820fdf0",
+                "0f04e711-3441-4ebd-ad5f-e6b0e1dfd786"
+              ],
+              "type": "d5405677-f505-48e9-9dec-cfeffdc0ddc8",
+              "image": {
+                "id": 85866835993871,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/109655/3000x2001/30f709a3c9/keke-liberia.jpg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "title": "It’s not that hard.",
+              "author": "f9a6d2d9-4328-434f-8005-d88df53079e1",
+              "leadText": "Last month, Marc and I went on the biggest adventure of our lives – at least so far. We boarded a flight to Monrovia to help set up a new cash transfer program in Liberia, part of Social Income’s effort to reach more people in West Africa who are living in poverty.",
+              "subtitle": "Here are the basics of basic income. ",
+              "component": "article",
+              "footnotes": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              "originalLanguage": "en",
+              "showRelativeArticles": false,
+              "displayInOverviewPage": true,
+              "useImageOnlyForPreview": false
+            },
+            "slug": "cash-transfer-in-liberia",
+            "full_slug": "journal/cash-transfer-in-liberia",
+            "sort_by_date": null,
+            "position": -200,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 607594033,
+            "meta_data": null,
+            "group_id": "bdd9d746-001c-4de0-a4cc-7ca68c291232",
+            "first_published_at": "2025-08-31T15:49:02.908Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "journal/cash-transfer-in-liberia",
+            "translated_slugs": [
+              {
+                "path": "journal/cash-transfer-in-liberia",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "journal/cash-transfer-in-liberia",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "journal/cash-transfer-in-liberia",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Why Global Cash Matters",
+            "created_at": "2025-09-06T17:42:26.739Z",
+            "published_at": "2026-01-18T14:36:49.903Z",
+            "updated_at": "2026-01-18T14:36:49.917Z",
+            "id": 88026917870541,
+            "uuid": "034ef9af-c6c3-4197-864a-29bb932ffb07",
+            "content": {
+              "_uid": "ce7ca318-2ece-4d2b-b05e-09bbf97808b3",
+              "tags": [
+                "cbc02197-fd41-4904-99d3-51873820fdf0",
+                "69bb997e-5606-4587-84ee-b616422e0f89"
+              ],
+              "type": "ba254722-3830-42f1-aef4-25c91a002d70",
+              "image": {
+                "id": 88030635392167,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/109655/3000x2001/65c162ae0c/beach-sierra-leone.jpg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "title": "Why Global Cash Transfers Matter.",
+              "author": "7da3f4b9-1176-47f5-acc6-ae15f90e35f5",
+              "leadText": "The Swiss newspaper NZZ proposes a radical idea: a global basic income for the world's poorest people. The reasoning is pragmatic and highly compelling.",
+              "subtitle": "",
+              "component": "article",
+              "footnotes": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              "originalLanguage": "en",
+              "showRelativeArticles": false,
+              "displayInOverviewPage": true,
+              "useImageOnlyForPreview": false
+            },
+            "slug": "why-global-cash-matters",
+            "full_slug": "journal/why-global-cash-matters",
+            "sort_by_date": null,
+            "position": -210,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 607594033,
+            "meta_data": null,
+            "group_id": "1fbf521f-7884-4176-a6d4-5b3202137ecf",
+            "first_published_at": "2025-09-06T17:51:21.932Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "journal/why-global-cash-matters",
+            "translated_slugs": [
+              {
+                "path": "journal/why-global-cash-matters",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "journal/why-global-cash-matters",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "journal/why-global-cash-matters",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Why People Leave ",
+            "created_at": "2025-06-06T13:04:36.175Z",
+            "published_at": "2025-08-12T21:45:27.689Z",
+            "updated_at": "2025-08-12T21:45:27.703Z",
+            "id": 683982828,
+            "uuid": "5d8d1f9d-42e2-4c10-b730-42bf043d1caa",
+            "content": {
+              "_uid": "b6221cbf-34fa-49e5-a809-3b0dae728702",
+              "tags": [
+                "f393644c-42fe-4f44-a15f-99c9d41a6ba7",
+                "23d78757-1311-4303-9bf0-fc8aadfdb82b"
+              ],
+              "type": "ba254722-3830-42f1-aef4-25c91a002d70",
+              "image": {
+                "id": 23034433,
+                "alt": "A child in a red shirt walks a small goat on a leash near a storefront with colorful signs and a parked car.",
+                "name": "",
+                "focus": "2311x1093:2312x1094",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/109655/3000x2001/b1bbb76a20/dsc06221.jpg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "A child in a red shirt walks a small goat on a leash near a storefront with colorful signs and a parked car.",
+                  "title": "",
+                  "source": "",
+                  "copyright": ""
+                },
+                "is_external_url": false
+              },
+              "title": "Why People Leave .",
+              "author": "1dc9edb3-8741-413f-a86f-4c2dade51c83",
+              "leadText": "In a recent interview, ETH Zurich researcher Jan Freihardt challenged a familiar narrative: that people in the Global South are fleeing their homes en masse toward the Global North due to climate change. It’s an interesting perspective—and one that made me pause.",
+              "subtitle": "And How Cash Lets Them Stay",
+              "component": "article",
+              "footnotes": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              "originalLanguage": "en",
+              "showRelativeArticles": true,
+              "displayInOverviewPage": true,
+              "useImageOnlyForPreview": false
+            },
+            "slug": "why-people-leave",
+            "full_slug": "journal/why-people-leave",
+            "sort_by_date": null,
+            "position": -170,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 607594033,
+            "meta_data": null,
+            "group_id": "4ebca598-7c4a-4fe7-9f85-78b4f7eb4d4e",
+            "first_published_at": "2025-06-06T13:44:16.140Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "journal/why-people-leave",
+            "translated_slugs": [
+              {
+                "path": "journal/why-people-leave",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "journal/why-people-leave",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "journal/why-people-leave",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          }
+        ],
+        "cv": 1773074505,
+        "rels": [
+          {
+            "name": "Volunteering",
+            "created_at": "2025-04-14T13:22:38.615Z",
+            "published_at": "2025-07-21T20:14:12.120Z",
+            "updated_at": "2025-07-21T20:14:12.131Z",
+            "id": 655126847,
+            "uuid": "0f04e711-3441-4ebd-ad5f-e6b0e1dfd786",
+            "content": {
+              "_uid": "1f620770-0c11-458f-b55e-d407a60b88ff",
+              "value": "Volunteering",
+              "component": "topic",
+              "description": "At Social Income, committed volunteers give their time to help create lasting change.",
+              "displayInOverviewPage": false
+            },
+            "slug": "volunteering",
+            "full_slug": "tag/volunteering",
+            "sort_by_date": null,
+            "position": -50,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 619294930,
+            "meta_data": null,
+            "group_id": "dd7d6069-e4eb-4076-8255-937a39aa4920",
+            "first_published_at": "2025-04-14T13:24:36.348Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "tag/volunteering",
+            "translated_slugs": [
+              {
+                "path": "tag/volunteering",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "tag/volunteering",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "tag/volunteering",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Sandino Scheidegger",
+            "created_at": "2025-01-24T17:42:48.869Z",
+            "published_at": "2025-10-29T12:54:31.547Z",
+            "updated_at": "2025-10-29T12:54:31.562Z",
+            "id": 614843849,
+            "uuid": "1dc9edb3-8741-413f-a86f-4c2dade51c83",
+            "content": {
+              "bio": "Founder of Social Income",
+              "_uid": "d01f06e7-2c21-4f5e-8974-d4ade56bc1fe",
+              "avatar": {
+                "id": 20588029,
+                "alt": "Sandino Scheidegger Portrait",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/109655/400x500/bd37ba879d/sandino-scheidegger.jpg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "Sandino Scheidegger Portrait",
+                  "title": "",
+                  "source": "",
+                  "copyright": ""
+                },
+                "is_external_url": false
+              },
+              "fullName": "Sandino Scheidegger",
+              "lastName": "Scheidegger",
+              "component": "author",
+              "firstName": "Sandino",
+              "githubName": "ssandino",
+              "linkedinName": "sandino-scheidegger",
+              "displayInOverviewPage": true
+            },
+            "slug": "sandino-scheidegger",
+            "full_slug": "author/sandino-scheidegger",
+            "sort_by_date": null,
+            "position": 0,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 614838843,
+            "meta_data": null,
+            "group_id": "76a6ccda-1d76-4d18-8f1d-5ead023403f9",
+            "first_published_at": "2025-01-24T17:43:31.506Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "author/sandino-scheidegger",
+            "translated_slugs": [
+              {
+                "path": "author/sandino-scheidegger",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "author/sandino-scheidegger",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "author/sandino-scheidegger",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Migration",
+            "created_at": "2025-06-06T13:30:11.120Z",
+            "published_at": "2025-06-06T13:33:15.704Z",
+            "updated_at": "2025-06-06T13:33:15.718Z",
+            "id": 684010452,
+            "uuid": "23d78757-1311-4303-9bf0-fc8aadfdb82b",
+            "content": {
+              "_uid": "4d8697e3-d5cb-4c0b-86fa-2f61a98b43c4",
+              "value": "Migration",
+              "component": "topic",
+              "description": "",
+              "displayInOverviewPage": false
+            },
+            "slug": "migration",
+            "full_slug": "tag/migration",
+            "sort_by_date": null,
+            "position": -90,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 619294930,
+            "meta_data": null,
+            "group_id": "bf63ec23-4021-4c7e-b5d2-737253855495",
+            "first_published_at": "2025-06-06T13:33:15.704Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "tag/migration",
+            "translated_slugs": [
+              {
+                "path": "tag/migration",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "tag/migration",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "tag/migration",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Liberia",
+            "created_at": "2025-08-29T15:57:55.773Z",
+            "published_at": "2025-08-29T15:58:16.018Z",
+            "updated_at": "2025-08-29T15:58:16.029Z",
+            "id": 85170076785832,
+            "uuid": "622524bd-20e9-43fb-9701-500404d793a0",
+            "content": {
+              "_uid": "eb2209ae-d3f1-4396-ba5e-96e9a35c6283",
+              "value": "Liberia",
+              "component": "topic",
+              "description": "",
+              "displayInOverviewPage": false
+            },
+            "slug": "liberia",
+            "full_slug": "tag/liberia",
+            "sort_by_date": null,
+            "position": -70,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 619294930,
+            "meta_data": null,
+            "group_id": "9bab0788-aceb-4919-98b8-66183c2591cc",
+            "first_published_at": "2025-08-29T15:58:16.018Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "tag/liberia",
+            "translated_slugs": [
+              {
+                "path": "tag/liberia",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "tag/liberia",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "tag/liberia",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "UBI",
+            "created_at": "2025-02-02T11:58:07.250Z",
+            "published_at": "2025-08-31T15:21:29.656Z",
+            "updated_at": "2025-08-31T15:21:29.670Z",
+            "id": 619294935,
+            "uuid": "69bb997e-5606-4587-84ee-b616422e0f89",
+            "content": {
+              "_uid": "23fc48d2-4f92-4a29-a513-5105eab28650",
+              "value": "Universal Basic Income",
+              "component": "topic",
+              "description": "",
+              "displayInOverviewPage": true
+            },
+            "slug": "universal-basic-income",
+            "full_slug": "tag/universal-basic-income",
+            "sort_by_date": null,
+            "position": -10,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 619294930,
+            "meta_data": null,
+            "group_id": "18f5dd26-25b7-4f40-94c5-08792bdd1ae3",
+            "first_published_at": "2025-02-02T11:58:51.414Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "tag/universal-basic-income",
+            "translated_slugs": [
+              {
+                "path": "tag/universal-basic-income",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "tag/universal-basic-income",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "tag/universal-basic-income",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Willemijn de Gaay Fortman",
+            "created_at": "2025-09-06T17:32:44.255Z",
+            "published_at": "2025-09-17T07:44:14.263Z",
+            "updated_at": "2025-09-17T07:44:14.291Z",
+            "id": 88024532004930,
+            "uuid": "7da3f4b9-1176-47f5-acc6-ae15f90e35f5",
+            "content": {
+              "bio": "Willemijn is a Senior IT Business Analyst from the Netherlands, now based in Switzerland. She began her career in law and refugee support and holds master’s degrees in Private Law and in Philosophy of Law and Governance.",
+              "_uid": "4df1e330-2245-46c2-846f-b085092c4c3b",
+              "avatar": {
+                "id": 88024703519874,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/109655/400x500/650f2f34fd/willemijn-de-gaay-fortman.jpeg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "fullName": "Willemijn de Gaay Fortman",
+              "lastName": "de Gaay F.",
+              "component": "author",
+              "firstName": "Willemijn",
+              "githubName": "",
+              "linkedinName": "willemijn-de-gaay-fortman",
+              "displayInOverviewPage": true
+            },
+            "slug": "willemijn-de-gaay-fortman",
+            "full_slug": "author/willemijn-de-gaay-fortman",
+            "sort_by_date": null,
+            "position": -60,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 614838843,
+            "meta_data": null,
+            "group_id": "14f4ce77-83d2-4ab0-a4b2-77325c219bc2",
+            "first_published_at": "2025-09-06T17:41:11.699Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "author/willemijn-de-gaay-fortman",
+            "translated_slugs": [
+              {
+                "path": "author/willemijn-de-gaay-fortman",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "author/willemijn-de-gaay-fortman",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "author/willemijn-de-gaay-fortman",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "News Analysis",
+            "created_at": "2025-06-06T13:09:14.556Z",
+            "published_at": "2025-06-06T13:28:03.247Z",
+            "updated_at": "2025-06-06T13:28:03.261Z",
+            "id": 683993341,
+            "uuid": "ba254722-3830-42f1-aef4-25c91a002d70",
+            "content": {
+              "_uid": "8207c932-c25f-4cac-9aae-615555fd8cad",
+              "value": "News Analysis",
+              "component": "articleType"
+            },
+            "slug": "news-analysis",
+            "full_slug": "article-type/news-analysis",
+            "sort_by_date": null,
+            "position": -50,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 647341949,
+            "meta_data": null,
+            "group_id": "296695f4-53b2-4865-835f-9f5989c72856",
+            "first_published_at": "2025-06-06T13:28:03.247Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "article-type/news-analysis",
+            "translated_slugs": [
+              {
+                "path": "article-type/news-analysis",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "article-type/news-analysis",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "article-type/news-analysis",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Direct Cash",
+            "created_at": "2025-04-21T20:57:52.891Z",
+            "published_at": "2025-04-27T16:13:00.760Z",
+            "updated_at": "2025-05-30T21:42:46.375Z",
+            "id": 658291944,
+            "uuid": "cbc02197-fd41-4904-99d3-51873820fdf0",
+            "content": {
+              "_uid": "61a8e028-e84a-4a0b-a28a-bfb6e78535f1",
+              "value": "Direct Cash",
+              "component": "topic",
+              "description": "Direct cash programs give money directly to people in need, so they can decide how to use it",
+              "displayInOverviewPage": true
+            },
+            "slug": "direct-cash",
+            "full_slug": "tag/direct-cash",
+            "sort_by_date": null,
+            "position": -60,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 619294930,
+            "meta_data": null,
+            "group_id": "acbed6be-f3c8-4a7a-ba4b-fb152755015f",
+            "first_published_at": "2025-04-22T08:30:31.294Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "tag/direct-cash",
+            "translated_slugs": [
+              {
+                "path": "tag/direct-cash",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "tag/direct-cash",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "tag/direct-cash",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Field Notes",
+            "created_at": "2025-08-31T16:05:41.353Z",
+            "published_at": "2025-11-23T10:51:50.113Z",
+            "updated_at": "2025-11-23T10:51:50.127Z",
+            "id": 85879772602883,
+            "uuid": "d5405677-f505-48e9-9dec-cfeffdc0ddc8",
+            "content": {
+              "_uid": "8207c932-c25f-4cac-9aae-615555fd8cad",
+              "value": "Field Notes",
+              "component": "articleType",
+              "description": "",
+              "displayInOverviewPage": true
+            },
+            "slug": "field-notes",
+            "full_slug": "article-type/field-notes",
+            "sort_by_date": null,
+            "position": -40,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 647341949,
+            "meta_data": null,
+            "group_id": "90524a03-9cda-4d06-a0d6-e0e768933385",
+            "first_published_at": "2025-08-31T16:06:03.793Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "article-type/field-notes",
+            "translated_slugs": [
+              {
+                "path": "article-type/field-notes",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "article-type/field-notes",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "article-type/field-notes",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Poverty",
+            "created_at": "2025-02-02T11:56:27.308Z",
+            "published_at": "2025-04-27T16:13:13.850Z",
+            "updated_at": "2025-04-27T16:13:13.863Z",
+            "id": 619294931,
+            "uuid": "f393644c-42fe-4f44-a15f-99c9d41a6ba7",
+            "content": {
+              "_uid": "c037f101-d384-4b9f-ba98-4c6bc7b4f6a0",
+              "value": "Poverty",
+              "component": "topic",
+              "description": "Eliminating poverty is at the core of our approach",
+              "displayInOverviewPage": true
+            },
+            "slug": "poverty",
+            "full_slug": "tag/poverty",
+            "sort_by_date": null,
+            "position": 0,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 619294930,
+            "meta_data": null,
+            "group_id": "8eba91b3-8c01-436e-8f57-c713d89aaedc",
+            "first_published_at": "2025-02-02T11:56:47.537Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "tag/poverty",
+            "translated_slugs": [
+              {
+                "path": "tag/poverty",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "tag/poverty",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "tag/poverty",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Aurélie Schmiedlin",
+            "created_at": "2025-04-03T19:31:47.204Z",
+            "published_at": "2025-08-31T19:48:55.387Z",
+            "updated_at": "2025-08-31T19:48:55.399Z",
+            "id": 650276561,
+            "uuid": "f9a6d2d9-4328-434f-8005-d88df53079e1",
+            "content": {
+              "bio": "Aurélie writes from Geneva, where she studied international relations at the Graduate Institute. She’s in charge of our monthly newsletter and takes on special missions — like launching new pilots in new countries.",
+              "_uid": "4df1e330-2245-46c2-846f-b085092c4c3b",
+              "avatar": {
+                "id": 85880440866143,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/109655/5304x5304/5678cc8dbd/aurelie-schmiedlin-2025.jpeg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "fullName": "Aurélie Schmiedlin",
+              "lastName": "Schmiedlin",
+              "component": "author",
+              "firstName": "Aurélie",
+              "githubName": "aurelie221",
+              "linkedinName": "aurélie-schmiedlin",
+              "displayInOverviewPage": true
+            },
+            "slug": "aurelie-schmiedlin",
+            "full_slug": "author/aurelie-schmiedlin",
+            "sort_by_date": null,
+            "position": -70,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 614838843,
+            "meta_data": null,
+            "group_id": "fd7d14f9-eed7-4714-b929-f2395dca22f7",
+            "first_published_at": "2025-08-31T16:01:43.135Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "author/aurelie-schmiedlin",
+            "translated_slugs": [
+              {
+                "path": "author/aurelie-schmiedlin",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "author/aurelie-schmiedlin",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "author/aurelie-schmiedlin",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          }
+        ],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&per_page=3&excluding_fields=content&resolve_relations=article.author%2Carticle.tags%2Carticle.type&content_type=article&by_uuids_ordered=7353362f-5574-4072-a2db-6095eeef4c79%2C034ef9af-c6c3-4197-864a-29bb932ffb07%2C5d8d1f9d-42e2-4c10-b730-42bf043d1caa&token=__TOKEN__&cv=1773074505&resolve_level=2",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "ec0561f679c6a8f878a0e1f99c9dfcaf42f977853551d13038bd29462040c9be",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 21
     }
   ]
 }

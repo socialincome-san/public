@@ -241,6 +241,33 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getArticlesByUuids(
+		lang: string,
+		articleUuids: string[],
+	): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
+		try {
+			const uuids = [...new Set(articleUuids.filter(Boolean))];
+			if (!uuids.length) {
+				return this.resultOk([]);
+			}
+
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(lang)),
+				per_page: uuids.length,
+				excluding_fields: CONTENT,
+				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
+				content_type: StoryblokContentType.Article,
+			};
+			(params as ISbStoriesParams & { by_uuids_ordered: string }).by_uuids_ordered = uuids.join(',');
+
+			const res = await getStoryblokApi().get(STORIES_PATH, params);
+			return this.resultOk(res.data.stories as ISbStoryData<ResolvedArticle>[]);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultOk([]);
+		}
+	}
+
 	async getArticle(lang: string, slug: string): Promise<ServiceResult<ISbStoryData<ResolvedArticle>>> {
 		try {
 			const res = await this.withLanguageFallback(

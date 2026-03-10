@@ -1,39 +1,60 @@
 'use client';
 
-import PageContentType from '@/components/content-types/page';
-import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { storyblokComponents } from '@/lib/services/storyblok/storyblok.config';
+import { updateStoryblokPreviewAction } from '@/lib/server-actions/storyblok-preview-actions';
 import { registerStoryblokBridge } from '@/lib/storyblok-preview/register-bridge';
 import type { ISbStoryData } from '@storyblok/js';
 import { loadStoryblokBridge } from '@storyblok/js';
-import { apiPlugin, storyblokInit } from '@storyblok/react';
-import { useEffect, useState } from 'react';
-
-storyblokInit({
-	accessToken: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN,
-	use: [apiPlugin],
-	components: storyblokComponents,
-	enableFallbackComponent: true,
-});
+import { startTransition, useEffect, useRef } from 'react';
 
 type Props = {
-	initialStory: ISbStoryData<Page>;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	previewToken: string;
+	previewTimestamp: string;
+	previewRoutePath: string;
 };
 
-export const StoryblokPreviewSyncer = ({ initialStory, lang, region }: Props) => {
-	const [story, setStory] = useState(initialStory);
+export const StoryblokPreviewSyncer = ({ previewToken, previewTimestamp, previewRoutePath }: Props) => {
+	const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	useEffect(() => {
+		if (!previewToken || !previewTimestamp || !previewRoutePath) {
+			return;
+		}
+
+		const handleInput = (story: ISbStoryData) => {
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+			}
+
+			debounceTimerRef.current = setTimeout(() => {
+				startTransition(() => {
+					void updateStoryblokPreviewAction({
+						story,
+						previewToken,
+						previewTimestamp,
+						previewRoutePath,
+					});
+				});
+			}, 300);
+		};
+
+		let isMounted = true;
 		(async () => {
 			await loadStoryblokBridge();
+			if (!isMounted) {
+				return;
+			}
 			registerStoryblokBridge({
-				onInput: (updatedStory) => setStory(updatedStory as ISbStoryData<Page>),
+				onInput: handleInput,
 			});
 		})();
-	}, []);
+		return () => {
+			isMounted = false;
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+				debounceTimerRef.current = null;
+			}
+		};
+	}, [previewRoutePath, previewTimestamp, previewToken]);
 
-	return <PageContentType blok={story.content} lang={lang} region={region} />;
+	return null;
 };
