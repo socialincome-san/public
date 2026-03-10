@@ -18,7 +18,7 @@ export const candidatesTableConfig: DataTableConfig<CandidatesTableViewRow> = {
 	id: 'candidates',
 	title: 'Candidate Pool',
 	emptyMessage: 'No candidates found',
-	searchKeys: ['id', 'firstName', 'lastName', 'localPartnerName'],
+	searchKeys: ['id', 'firstName', 'lastName', 'contactNumber', 'localPartnerName'],
 	sortOptions: [
 		{ id: 'candidate', label: 'Candidate' },
 		{ id: 'country', label: 'Country' },

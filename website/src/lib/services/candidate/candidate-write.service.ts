@@ -80,11 +80,20 @@ export class CandidateWriteService extends BaseService {
 						{
 							AND: [
 								{
-									contact: {
-										address: {
-											country: null,
+									OR: [
+										{
+											contact: {
+												address: null,
+											},
 										},
-									},
+										{
+											contact: {
+												address: {
+													country: null,
+												},
+											},
+										},
+									],
 								},
 								{
 									localPartner: {

@@ -1,5 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import {
 	assertContactExistsByEmail,
 	getFirebaseAdminService,
@@ -51,6 +52,10 @@ const CSV_RECIPIENTS = [
 		localPartnerName: 'Bo Women Empowerment Group',
 	},
 ];
+
+const expectedCsvExport = {
+	snapshotFile: 'recipients-export.csv',
+};
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -177,4 +182,21 @@ test('CSV Upload', async ({ page }) => {
 		expect(row?.program?.name).toBe(expected.programName);
 		expect(row?.localPartner?.name).toBe(expected.localPartnerName);
 	}
+});
+
+test('CSV Export', async ({ page }) => {
+	await page.goto('/portal/management/recipients');
+	await page.getByTestId('data-table-actions-button').click();
+
+	const downloadPromise = page.waitForEvent('download');
+	await page.getByTestId('data-table-action-item-download-csv').click();
+	const download = await downloadPromise;
+
+	expect(download.suggestedFilename()).toMatch(/^recipients-export-\d{4}-\d{2}-\d{2}\.csv$/);
+
+	const downloadPath = await download.path();
+	expect(downloadPath).toBeTruthy();
+
+	const csvContent = await readFile(downloadPath!, 'utf8');
+	expect(csvContent).toMatchSnapshot(expectedCsvExport.snapshotFile);
 });
