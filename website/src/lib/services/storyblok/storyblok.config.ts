@@ -12,7 +12,7 @@ mockStoryblokIfTestMode();
 /**
  * Storyblok component registry mapping component names to React components.
  */
-export const storyblokComponents = {
+const storyblokComponents = {
 	page: PageContentType,
 	heroVideo: HeroVideoBlockServer,
 	text: TextBlock,
