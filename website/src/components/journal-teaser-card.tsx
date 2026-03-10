@@ -46,9 +46,7 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 	const imageWidth = isFeatured ? FEATURED_IMAGE_WIDTH : SECONDARY_IMAGE_WIDTH;
 	const imageHeight = isFeatured ? FEATURED_IMAGE_HEIGHT : SECONDARY_IMAGE_HEIGHT;
 	const image = content.image;
-	const imageSource = image?.filename
-		? formatStoryblokUrl(image.filename, imageWidth, imageHeight, image.focus)
-		: null;
+	const imageSource = image?.filename ? formatStoryblokUrl(image.filename, imageWidth, imageHeight, image.focus) : null;
 	const title = getArticleTitle(article);
 
 	if (isFeatured) {
