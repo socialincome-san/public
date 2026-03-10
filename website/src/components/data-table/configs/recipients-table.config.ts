@@ -13,10 +13,11 @@ export const recipientsTableConfig: DataTableConfig<RecipientTableViewRow> = {
 	id: 'recipients',
 	title: 'Recipients',
 	emptyMessage: 'No recipients found',
-	searchKeys: ['id', 'firstName', 'lastName', 'localPartnerName', 'programName'],
+	searchKeys: ['id', 'firstName', 'lastName', 'paymentCode', 'localPartnerName', 'programName'],
 	sortOptions: [
 		{ id: 'recipient', label: 'Recipient' },
 		{ id: 'country', label: 'Country' },
+		{ id: 'paymentCode', label: 'Payment code' },
 		{ id: 'dateOfBirth', label: 'Age' },
 		{ id: 'localPartnerName', label: 'Local partner' },
 		{ id: 'programName', label: 'Program' },

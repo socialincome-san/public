@@ -28,6 +28,11 @@ export const makeRecipientColumns = (
 			cell: ({ row }) => <CountryFlagCell country={row.original.country} />,
 		},
 		{
+			accessorKey: 'paymentCode',
+			header: (ctx) => <SortableHeader ctx={ctx}>Payment code</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			accessorKey: 'dateOfBirth',
 			header: (ctx) => <SortableHeader ctx={ctx}>Age</SortableHeader>,
 			cell: (ctx) => <AgeCell ctx={ctx} />,

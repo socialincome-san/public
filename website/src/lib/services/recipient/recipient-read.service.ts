@@ -34,6 +34,7 @@ export class RecipientReadService extends BaseService {
 			'id',
 			'recipient',
 			'country',
+			'paymentCode',
 			'dateOfBirth',
 			'localPartnerName',
 			'programName',
@@ -47,6 +48,8 @@ export class RecipientReadService extends BaseService {
 				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
 			case 'country':
 				return [{ contact: { address: { country: direction } } }];
+			case 'paymentCode':
+				return [{ paymentInformation: { code: direction } }];
 			case 'dateOfBirth':
 				return [{ contact: { dateOfBirth: direction } }];
 			case 'localPartnerName':
@@ -473,6 +476,11 @@ export class RecipientReadService extends BaseService {
 					startDate: true,
 					suspendedAt: true,
 					suspensionReason: true,
+					paymentInformation: {
+						select: {
+							code: true,
+						},
+					},
 					contact: {
 						select: {
 							firstName: true,
@@ -532,6 +540,7 @@ export class RecipientReadService extends BaseService {
 					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
+					paymentCode: recipient.paymentInformation?.code ?? null,
 					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
 					startDate: recipient.startDate ?? null,
 					localPartnerName: recipient.localPartner?.name ?? null,
@@ -601,6 +610,7 @@ export class RecipientReadService extends BaseService {
 								{ id: { contains: search, mode: 'insensitive' } },
 								{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
 								{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
+								{ paymentInformation: { is: { code: { contains: search, mode: 'insensitive' } } } },
 								{ localPartner: { is: { name: { contains: search, mode: 'insensitive' } } } },
 								{ program: { is: { name: { contains: search, mode: 'insensitive' } } } },
 							],
@@ -618,6 +628,11 @@ export class RecipientReadService extends BaseService {
 						startDate: true,
 						suspendedAt: true,
 						suspensionReason: true,
+						paymentInformation: {
+							select: {
+								code: true,
+							},
+						},
 						contact: {
 							select: {
 								firstName: true,
@@ -681,6 +696,7 @@ export class RecipientReadService extends BaseService {
 					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
+					paymentCode: recipient.paymentInformation?.code ?? null,
 					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
 					startDate: recipient.startDate ?? null,
 					localPartnerName: recipient.localPartner?.name ?? null,
@@ -771,6 +787,7 @@ export class RecipientReadService extends BaseService {
 									{ id: { contains: search, mode: 'insensitive' as const } },
 									{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
+									{ paymentInformation: { code: { contains: search, mode: 'insensitive' as const } } },
 									{ program: { name: { contains: search, mode: 'insensitive' as const } } },
 								],
 							},
@@ -786,6 +803,11 @@ export class RecipientReadService extends BaseService {
 						startDate: true,
 						suspendedAt: true,
 						suspensionReason: true,
+						paymentInformation: {
+							select: {
+								code: true,
+							},
+						},
 						contact: {
 							select: {
 								firstName: true,
@@ -854,6 +876,7 @@ export class RecipientReadService extends BaseService {
 					country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 					firstName: r.contact?.firstName ?? '',
 					lastName: r.contact?.lastName ?? '',
+					paymentCode: r.paymentInformation?.code ?? null,
 					dateOfBirth: r.contact?.dateOfBirth ?? null,
 					startDate: r.startDate ?? null,
 					localPartnerName: null,

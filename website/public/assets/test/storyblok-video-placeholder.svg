@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Video placeholder">
-  <rect width="1200" height="675" fill="#111827" />
-  <rect x="60" y="60" width="1080" height="555" fill="#1f2937" rx="24" />
-  <circle cx="600" cy="338" r="92" fill="#f9fafb" fill-opacity="0.92" />
-  <polygon points="568,286 568,390 658,338" fill="#111827" />
-  <text x="600" y="515" text-anchor="middle" fill="#d1d5db" font-family="Arial, sans-serif" font-size="42">
-    Mock Video
-  </text>
-</svg>

@@ -5,6 +5,7 @@ export type RecipientTableViewRow = {
 	country: CountryCode | null;
 	firstName: string;
 	lastName: string;
+	paymentCode: string | null;
 	dateOfBirth: Date | null;
 	startDate: Date | null;
 	localPartnerName: string | null;
