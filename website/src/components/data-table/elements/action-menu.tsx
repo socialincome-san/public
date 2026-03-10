@@ -3,6 +3,7 @@
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
 import { MoreHorizontalIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 export type ActionMenuItem = {
@@ -25,6 +26,8 @@ const toTestIdSlug = (label: string): string =>
 		.replace(/^-+|-+$/g, '');
 
 export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
+	const router = useRouter();
+
 	if (items.length === 0) {
 		return null;
 	}
@@ -35,7 +38,7 @@ export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 			return;
 		}
 		if (item.href) {
-			window.location.assign(item.href);
+			router.push(item.href);
 		}
 	};
 

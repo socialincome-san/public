@@ -26,6 +26,7 @@ const CandidatesDataLoader = async ({ searchParams }: SearchParamsPageProps) => 
 	const rows: CandidatesTableViewRow[] = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const countryFilterOptions = result.success ? result.data.countryFilterOptions : [];
+	const genderFilterOptions = result.success ? result.data.genderFilterOptions : [];
 	const localPartnerFilterOptions = result.success ? result.data.localPartnerFilterOptions : [];
 
 	return (
@@ -35,7 +36,9 @@ const CandidatesDataLoader = async ({ searchParams }: SearchParamsPageProps) => 
 			readOnly={false}
 			query={{ ...tableQuery, totalRows }}
 			countryFilterOptions={countryFilterOptions}
+			genderFilterOptions={genderFilterOptions}
 			localPartnerFilterOptions={localPartnerFilterOptions}
+			showGenderFilter
 		/>
 	);
 };
