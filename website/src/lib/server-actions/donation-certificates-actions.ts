@@ -1,9 +1,9 @@
 'use server';
 
+import { getSessionByType } from '@/lib/firebase/current-account';
 import { services } from '@/lib/services/services';
 import { LanguageCode } from '@/lib/types/language';
 import { revalidatePath } from 'next/cache';
-import { getSessionByType } from '@/lib/firebase/current-account';
 
 export const getContributorOptions = async () => {
 	const sessionResult = await getSessionByType('user');

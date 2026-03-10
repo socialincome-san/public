@@ -10,7 +10,11 @@ export const confirmPayoutAction = async (payoutId: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	const result = await services.write.payout.updatePayoutStatus(sessionResult.data.id, payoutId, PayoutStatus.confirmed);
+	const result = await services.write.payout.updatePayoutStatus(
+		sessionResult.data.id,
+		payoutId,
+		PayoutStatus.confirmed,
+	);
 	revalidatePath('/portal/monitoring/payout-confirmation');
 	return result;
 };
@@ -20,7 +24,11 @@ export const contestPayoutAction = async (payoutId: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	const result = await services.write.payout.updatePayoutStatus(sessionResult.data.id, payoutId, PayoutStatus.contested);
+	const result = await services.write.payout.updatePayoutStatus(
+		sessionResult.data.id,
+		payoutId,
+		PayoutStatus.contested,
+	);
 	revalidatePath('/portal/monitoring/payout-confirmation');
 	return result;
 };

@@ -309,8 +309,85 @@ export class CandidateWriteService extends BaseService {
 			const previousPaymentPhoneId = existing.paymentInformation?.phone?.id ?? null;
 			previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
 
-		if (!previousPaymentPhoneNumber && !nextPaymentPhoneNumber) {
+			if (!previousPaymentPhoneNumber && !nextPaymentPhoneNumber) {
+				try {
+					const updatedCandidate = await this.db.recipient.update({
+						where: { id: candidateId },
+						data: updateInput,
+						select: {
+							id: true,
+							suspendedAt: true,
+							suspensionReason: true,
+							successorName: true,
+							termsAccepted: true,
+							localPartner: { select: { id: true, name: true } },
+							contact: {
+								select: {
+									id: true,
+									firstName: true,
+									lastName: true,
+									callingName: true,
+									email: true,
+									gender: true,
+									language: true,
+									dateOfBirth: true,
+									profession: true,
+									phone: true,
+									address: true,
+								},
+							},
+							paymentInformation: {
+								select: {
+									id: true,
+									code: true,
+									mobileMoneyProvider: { select: { id: true, name: true } },
+									phone: true,
+								},
+							},
+						},
+					});
+
+					if (previousContactPhoneId) {
+						await this.deletePhoneIfOrphaned(previousContactPhoneId);
+					}
+
+					return this.resultOk(updatedCandidate);
+				} catch (error) {
+					this.logger.error(error);
+					return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
+				}
+			}
+
+			phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
+			phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
+			phoneChanged =
+				!!previousPaymentPhoneNumber &&
+				!!nextPaymentPhoneNumber &&
+				previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+
 			try {
+				if (phoneAdded) {
+					const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
+					if (!firebaseResult.success) {
+						return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+					}
+				}
+
+				if (phoneRemoved) {
+					await this.firebaseAdminService.deleteByPhoneNumberIfExists(previousPaymentPhoneNumber!);
+				}
+
+				if (phoneChanged) {
+					const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(
+						previousPaymentPhoneNumber!,
+						nextPaymentPhoneNumber!,
+					);
+
+					if (!firebaseResult.success) {
+						return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
+					}
+				}
+
 				const updatedCandidate = await this.db.recipient.update({
 					where: { id: candidateId },
 					data: updateInput,
@@ -351,88 +428,11 @@ export class CandidateWriteService extends BaseService {
 					await this.deletePhoneIfOrphaned(previousContactPhoneId);
 				}
 
+				if (previousPaymentPhoneId) {
+					await this.deletePhoneIfOrphaned(previousPaymentPhoneId);
+				}
+
 				return this.resultOk(updatedCandidate);
-			} catch (error) {
-				this.logger.error(error);
-				return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
-			}
-		}
-
-			phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
-			phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
-			phoneChanged =
-				!!previousPaymentPhoneNumber &&
-				!!nextPaymentPhoneNumber &&
-				previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
-
-			try {
-			if (phoneAdded) {
-				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
-				if (!firebaseResult.success) {
-					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
-				}
-			}
-
-			if (phoneRemoved) {
-				await this.firebaseAdminService.deleteByPhoneNumberIfExists(previousPaymentPhoneNumber!);
-			}
-
-			if (phoneChanged) {
-				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(
-					previousPaymentPhoneNumber!,
-					nextPaymentPhoneNumber!,
-				);
-
-				if (!firebaseResult.success) {
-					return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
-				}
-			}
-
-			const updatedCandidate = await this.db.recipient.update({
-				where: { id: candidateId },
-				data: updateInput,
-				select: {
-					id: true,
-					suspendedAt: true,
-					suspensionReason: true,
-					successorName: true,
-					termsAccepted: true,
-					localPartner: { select: { id: true, name: true } },
-					contact: {
-						select: {
-							id: true,
-							firstName: true,
-							lastName: true,
-							callingName: true,
-							email: true,
-							gender: true,
-							language: true,
-							dateOfBirth: true,
-							profession: true,
-							phone: true,
-							address: true,
-						},
-					},
-					paymentInformation: {
-						select: {
-							id: true,
-							code: true,
-							mobileMoneyProvider: { select: { id: true, name: true } },
-							phone: true,
-						},
-					},
-				},
-			});
-
-			if (previousContactPhoneId) {
-				await this.deletePhoneIfOrphaned(previousContactPhoneId);
-			}
-
-			if (previousPaymentPhoneId) {
-				await this.deletePhoneIfOrphaned(previousPaymentPhoneId);
-			}
-
-			return this.resultOk(updatedCandidate);
 			} catch (error) {
 				this.logger.error(error);
 

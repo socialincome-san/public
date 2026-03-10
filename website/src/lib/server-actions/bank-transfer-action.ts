@@ -1,9 +1,9 @@
 'use server';
 
 import { BankTransferPayment } from '@/lib/services/bank-transfer/bank-transfer.types';
+import { BankContributorData } from '@/lib/services/contributor/contributor.types';
 import { ServiceResult } from '@/lib/services/core/base.types';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
-import { BankContributorData } from '@/lib/services/contributor/contributor.types';
 import { services } from '@/lib/services/services';
 import { DateTime } from 'luxon';
 
