@@ -261,14 +261,18 @@ export const RecipientForm = ({
 	useEffect(() => {
 		// load options for program, local partners, and supported mobile money providers
 		startTransition(async () => {
-			const [{ programs, localPartner }, supportedProviders] = await Promise.all([
+			const [recipientOptionsResult, supportedProviders] = await Promise.all([
 				getRecipientOptions(sessionType),
 				getSupportedMobileMoneyProviderOptionsAction(sessionType),
 			]);
-			if (!programs.success || !localPartner.success) {
+			if (!recipientOptionsResult.success) {
 				return;
 			}
-			setOptions(localPartner.data, programs.data, supportedProviders.success ? supportedProviders.data : []);
+			setOptions(
+				recipientOptionsResult.data.localPartner,
+				recipientOptionsResult.data.programs,
+				supportedProviders.success ? supportedProviders.data : [],
+			);
 		});
 	}, [sessionType, programId]);
 

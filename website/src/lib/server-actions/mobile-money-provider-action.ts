@@ -1,51 +1,69 @@
 'use server';
 
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import type {
 	MobileMoneyProviderCreateInput,
 	MobileMoneyProviderUpdateInput,
 } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+import { getSessionByType, type Session } from '@/lib/firebase/current-account';
+import { resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
-import { Session } from '../firebase/current-account';
 
 const REVALIDATE_PATH = '/portal/admin/mobile-money-providers';
 
 export const createMobileMoneyProviderAction = async (input: MobileMoneyProviderCreateInput) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	const result = await services.write.mobileMoneyProvider.create(user.id, input);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const result = await services.write.mobileMoneyProvider.create(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
 	return result;
 };
 
 export const updateMobileMoneyProviderAction = async (input: MobileMoneyProviderUpdateInput) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	const result = await services.write.mobileMoneyProvider.update(user.id, input);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const result = await services.write.mobileMoneyProvider.update(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
 	return result;
 };
 
 export const getMobileMoneyProviderAction = async (id: string) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	return services.read.mobileMoneyProvider.get(user.id, id);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.read.mobileMoneyProvider.get(sessionResult.data.id, id);
 };
 
 export const deleteMobileMoneyProviderAction = async (id: string) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	const result = await services.write.mobileMoneyProvider.delete(user.id, id);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const result = await services.write.mobileMoneyProvider.delete(sessionResult.data.id, id);
 	revalidatePath(REVALIDATE_PATH);
 	return result;
 };
 
 export const getMobileMoneyProviderOptionsAction = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
-	return services.read.mobileMoneyProvider.getOptions(user.id);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.read.mobileMoneyProvider.getOptions(sessionResult.data.id);
 };
 
 export const getSupportedMobileMoneyProviderOptionsAction = async (sessionType: Session['type'] = 'user') => {
 	if (sessionType !== 'user') {
-		return { success: true, data: [] };
+		return resultOk([]);
 	}
-	await getAuthenticatedUserOrRedirect();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 	return services.read.mobileMoneyProvider.getSupportedOptions();
 };

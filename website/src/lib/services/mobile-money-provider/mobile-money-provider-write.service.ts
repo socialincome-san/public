@@ -22,12 +22,12 @@ export class MobileMoneyProviderWriteService extends BaseService {
 		userId: string,
 		input: MobileMoneyProviderCreateInput,
 	): Promise<ServiceResult<MobileMoneyProviderPayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const created = await this.db.mobileMoneyProvider.create({
 				data: {
 					name: input.name,
@@ -52,12 +52,12 @@ export class MobileMoneyProviderWriteService extends BaseService {
 		userId: string,
 		input: MobileMoneyProviderUpdateInput,
 	): Promise<ServiceResult<MobileMoneyProviderPayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const updated = await this.db.mobileMoneyProvider.update({
 				where: { id: input.id },
 				data: {
@@ -80,12 +80,12 @@ export class MobileMoneyProviderWriteService extends BaseService {
 	}
 
 	async delete(userId: string, providerId: string): Promise<ServiceResult<{ id: string }>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const provider = await this.db.mobileMoneyProvider.findUnique({
 				where: { id: providerId },
 				select: {

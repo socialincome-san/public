@@ -4,11 +4,11 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const loadCurrentContributor = async (): Promise<ContributorSession | null> => {
-	const cookie = await services.firebaseSession.readSessionCookie();
-	if (!cookie) {
+	const cookieResult = await services.firebaseSession.readSessionCookie();
+	if (!cookieResult.success || !cookieResult.data) {
 		return null;
 	}
-	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookie);
+	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookieResult.data);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
@@ -30,12 +30,4 @@ export const getAuthenticatedContributorOrRedirect = async (): Promise<Contribut
 
 export const getOptionalContributor = async (): Promise<ContributorSession | null> => {
 	return await getCurrentContributor();
-};
-
-export const getAuthenticatedContributorOrThrow = async (): Promise<ContributorSession> => {
-	const contributor = await getCurrentContributor();
-	if (!contributor) {
-		throw new Error('No authenticated contributor found');
-	}
-	return contributor;
 };

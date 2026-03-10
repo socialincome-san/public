@@ -7,6 +7,7 @@ import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import { ContributionDonationEntry } from '../contribution/contribution.types';
 import { ContributorDonationCertificate } from '../contributor/contributor.types';
+import { ServiceResult } from '../core/base.types';
 
 const ASSET_DIR = path.join(process.cwd(), 'public', 'assets');
 
@@ -32,13 +33,17 @@ export class DonationCertificateWriter {
 	 * This function creates a donation certificate.
 	 * The function terminates when the PDF file has been written to the file at the given path.
 	 */
-	writeDonationCertificatePDF = async (filePath: string, language: LanguageCode) => {
-		const contributionsByCurrency = await this.groupContributionsByCurrency(this.contributions, this.year);
+	writeDonationCertificatePDF = async (
+		filePath: string,
+		language: LanguageCode,
+	): Promise<ServiceResult<void>> => {
+		try {
+			const contributionsByCurrency = await this.groupContributionsByCurrency(this.contributions, this.year);
 
-		const translator = await Translator.getInstance({
-			language,
-			namespaces: ['donation-certificate', 'countries'],
-		});
+			const translator = await Translator.getInstance({
+				language,
+				namespaces: ['donation-certificate', 'countries'],
+			});
 
 		const header = translator.t('header');
 		const location = translator.t('location', { context: { date: now() } });
@@ -75,10 +80,10 @@ export class DonationCertificateWriter {
 		const footerRightLine2 = translator.t('footer-right-line-2');
 		const footerRightLine3 = translator.t('footer-right-line-3');
 
-		return new Promise<void>(async (resolve) => {
-			const pdfDocument = new PDFDocument({ size: 'A4' });
-			const writeStream = createWriteStream(filePath);
-			let yPosition;
+			return new Promise<ServiceResult<void>>(async (resolve) => {
+				const pdfDocument = new PDFDocument({ size: 'A4' });
+				const writeStream = createWriteStream(filePath);
+				let yPosition;
 
 			pdfDocument.registerFont('unica77', path.join(ASSET_DIR, 'fonts', '/Unica77LLTT-Regular.ttf'));
 			pdfDocument.registerFont('unica77-bold', path.join(ASSET_DIR, 'fonts', 'Unica77LLTT-Bold.ttf'));
@@ -157,9 +162,15 @@ export class DonationCertificateWriter {
 			pdfDocument.text(footerRightLine2, 405, pdfDocument.page.height - 55, { lineBreak: false });
 			pdfDocument.text(footerRightLine3, 405, pdfDocument.page.height - 40, { lineBreak: false });
 
-			pdfDocument.pipe(writeStream);
-			writeStream.on('finish', () => resolve());
-			pdfDocument.end();
-		});
+				pdfDocument.pipe(writeStream);
+				writeStream.on('finish', () => resolve({ success: true, data: undefined }));
+				writeStream.on('error', (error) =>
+					resolve({ success: false, error: `Failed to write donation certificate PDF: ${JSON.stringify(error)}` }),
+				);
+				pdfDocument.end();
+			});
+		} catch (error) {
+			return { success: false, error: `Failed to create donation certificate PDF: ${JSON.stringify(error)}` };
+		}
 	};
 }

@@ -1,9 +1,9 @@
 'use server';
 
+import { getSessionByType } from '@/lib/firebase/current-account';
 import { services } from '@/lib/services/services';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
 import { getOptionalContributor } from '../firebase/current-contributor';
-import { getAuthenticatedUserOrThrow } from '../firebase/current-user';
 
 export const createStripeCheckoutAction = async (input: {
 	amount: number;
@@ -27,8 +27,11 @@ export const createPortalProgramDonationCheckoutAction = async (input: {
 	intervalCount?: number;
 	recurring?: boolean;
 }) => {
-	const user = await getAuthenticatedUserOrThrow();
-	return services.stripe.createPortalProgramDonationCheckout(user.id, input);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.stripe.createPortalProgramDonationCheckout(sessionResult.data.id, input);
 };
 
 export const updateContributorAfterCheckoutAction = async (input: UpdateContributorAfterCheckoutInput) => {

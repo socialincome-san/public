@@ -66,116 +66,128 @@ export class RecipientReadService extends BaseService {
 	}
 
 	async get(session: Session, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
-		const recipient = await this.db.recipient.findUnique({
-			where: { id: recipientId },
-			select: {
-				id: true,
-				startDate: true,
-				suspendedAt: true,
-				suspensionReason: true,
-				successorName: true,
-				termsAccepted: true,
-				localPartner: {
-					select: {
-						id: true,
-						name: true,
+		try {
+			const recipient = await this.db.recipient.findUnique({
+				where: { id: recipientId },
+				select: {
+					id: true,
+					startDate: true,
+					suspendedAt: true,
+					suspensionReason: true,
+					successorName: true,
+					termsAccepted: true,
+					localPartner: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
+					program: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							callingName: true,
+							email: true,
+							gender: true,
+							language: true,
+							dateOfBirth: true,
+							profession: true,
+							phone: true,
+							address: true,
+						},
+					},
+					paymentInformation: {
+						select: {
+							id: true,
+							code: true,
+							mobileMoneyProvider: { select: { id: true, name: true } },
+							phone: true,
+						},
 					},
 				},
-				program: {
-					select: {
-						id: true,
-						name: true,
-					},
-				},
-				contact: {
-					select: {
-						id: true,
-						firstName: true,
-						lastName: true,
-						callingName: true,
-						email: true,
-						gender: true,
-						language: true,
-						dateOfBirth: true,
-						profession: true,
-						phone: true,
-						address: true,
-					},
-				},
-				paymentInformation: {
-					select: {
-						id: true,
-						code: true,
-						mobileMoneyProvider: { select: { id: true, name: true } },
-						phone: true,
-					},
-				},
-			},
-		});
+			});
 
-		if (!recipient) {
-			return this.resultFail('Recipient not found');
-		}
-
-		if (session.type === 'user') {
-			const userId = session.id;
-			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessResult.success) {
-				return this.resultFail(accessResult.error);
+			if (!recipient) {
+				return this.resultFail('Recipient not found');
 			}
-			const hasAccess = accessResult.data.some((a) => a.programId === recipient.program?.id);
-			if (!hasAccess) {
+
+			if (session.type === 'user') {
+				const userId = session.id;
+				const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+				if (!accessResult.success) {
+					return this.resultFail(accessResult.error);
+				}
+				const hasAccess = accessResult.data.some((a) => a.programId === recipient.program?.id);
+				if (!hasAccess) {
+					return this.resultFail('Permission denied');
+				}
+			}
+
+			if (session.type === 'local-partner') {
+				const partnerId = session.id;
+				if (recipient.localPartner?.id !== partnerId) {
+					return this.resultFail('Permission denied');
+				}
+			}
+
+			if (session.type === 'contributor') {
 				return this.resultFail('Permission denied');
 			}
-		}
 
-		if (session.type === 'local-partner') {
-			const partnerId = session.id;
-			if (recipient.localPartner?.id !== partnerId) {
-				return this.resultFail('Permission denied');
-			}
+			return this.resultOk(recipient as RecipientPayload);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch recipient: ${JSON.stringify(error)}`);
 		}
-
-		if (session.type === 'contributor') {
-			return this.resultFail('Permission denied');
-		}
-
-		return this.resultOk(recipient as RecipientPayload);
 	}
 
 	async getEditableRecipientOptions(userId: string): Promise<ServiceResult<RecipientOption[]>> {
-		const access = await this.programAccessService.getAccessiblePrograms(userId);
+		try {
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
 
-		if (!access.success) {
-			return this.resultFail(access.error);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
+
+			const editablePrograms = access.data
+				.filter((p) => p.permission === ProgramPermission.operator)
+				.map((p) => p.programId);
+
+			if (editablePrograms.length === 0) {
+				return this.resultOk([]);
+			}
+
+			const recipients = await this.db.recipient.findMany({
+				where: { programId: { in: editablePrograms } },
+				select: {
+					id: true,
+					contact: { select: { firstName: true, lastName: true } },
+				},
+				orderBy: [{ contact: { firstName: 'asc' } }],
+			});
+
+			const options = recipients.map((r) => ({
+				id: r.id,
+				fullName: `${r.contact.firstName} ${r.contact.lastName}`,
+			}));
+
+			return this.resultOk(options);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch editable recipient options: ${JSON.stringify(error)}`);
 		}
-
-		const editablePrograms = access.data
-			.filter((p) => p.permission === ProgramPermission.operator)
-			.map((p) => p.programId);
-
-		if (editablePrograms.length === 0) {
-			return this.resultOk([]);
-		}
-
-		const recipients = await this.db.recipient.findMany({
-			where: { programId: { in: editablePrograms } },
-			select: {
-				id: true,
-				contact: { select: { firstName: true, lastName: true } },
-			},
-			orderBy: [{ contact: { firstName: 'asc' } }],
-		});
-
-		const options = recipients.map((r) => ({
-			id: r.id,
-			fullName: `${r.contact.firstName} ${r.contact.lastName}`,
-		}));
-
-		return this.resultOk(options);
 	}
 
-	async getSurveyRecipients(programIds: string[]) {
+	async getSurveyRecipients(
+		programIds: string[],
+	): Promise<ServiceResult<Array<{ id: string; programId: string | null; startDate: Date | null }>>> {
 		try {
 			const recipients = await this.db.recipient.findMany({
 				where: {
@@ -259,34 +271,48 @@ export class RecipientReadService extends BaseService {
 	}
 
 	async getRecipientFromRequest(request: Request): Promise<ServiceResult<RecipientWithPaymentInfo>> {
-		const tokenResult = await this.firebaseAdminService.getDecodedTokenFromRequest(request);
-		if (!tokenResult.success) {
-			return this.resultFail(tokenResult.error, 401);
-		}
-
-		const phone = this.firebaseAdminService.getPhoneFromToken(tokenResult.data);
-		if (!phone) {
-			return this.resultFail('Phone number not present in token', 400);
-		}
-
-		if (this.appReviewModeService.shouldBypass(phone)) {
-			const mockResult = this.appReviewModeService.getMockRecipient(phone);
-			if (mockResult.success) {
-				return mockResult;
+		try {
+			const tokenResult = await this.firebaseAdminService.getDecodedTokenFromRequest(request);
+			if (!tokenResult.success) {
+				return this.resultFail(tokenResult.error, 401);
 			}
-			return this.resultFail(mockResult.error ?? 'Could not create mock recipient');
-		}
 
-		const recipientResult = await this.getByPaymentPhoneNumber(phone);
-		if (!recipientResult.success) {
-			return this.resultFail(recipientResult.error, 500);
-		}
+			const phoneResult = this.firebaseAdminService.getPhoneFromToken(tokenResult.data);
+			if (!phoneResult.success) {
+				return this.resultFail(phoneResult.error, 400);
+			}
+			const phone = phoneResult.data;
 
-		if (!recipientResult.data) {
-			return this.resultFail(`No recipient found for phone "${phone.slice(0, 2)}****${phone.slice(-2)}"`, 404);
-		}
+			if (!phone) {
+				return this.resultFail('Phone number not present in token', 400);
+			}
 
-		return this.resultOk(recipientResult.data);
+			const bypassResult = this.appReviewModeService.shouldBypass(phone);
+			if (!bypassResult.success) {
+				return this.resultFail(bypassResult.error);
+			}
+			if (bypassResult.data) {
+				const mockResult = this.appReviewModeService.getMockRecipient(phone);
+				if (mockResult.success) {
+					return mockResult;
+				}
+				return this.resultFail(mockResult.error ?? 'Could not create mock recipient');
+			}
+
+			const recipientResult = await this.getByPaymentPhoneNumber(phone);
+			if (!recipientResult.success) {
+				return this.resultFail(recipientResult.error, 500);
+			}
+
+			if (!recipientResult.data) {
+				return this.resultFail(`No recipient found for phone "${phone.slice(0, 2)}****${phone.slice(-2)}"`, 404);
+			}
+
+			return this.resultOk(recipientResult.data);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not resolve recipient from request: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async exportCsv(session: Session): Promise<ServiceResult<string>> {
@@ -727,43 +753,53 @@ export class RecipientReadService extends BaseService {
 	}
 
 	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<RecipientTableView>> {
-		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-		if (!accessResult.success) {
-			return this.resultFail(accessResult.error);
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const permission = accessResult.data.some(
+				(a) => a.programId === programId && a.permission === ProgramPermission.operator,
+			)
+				? ProgramPermission.operator
+				: ProgramPermission.owner;
+
+			const base = await this.getTableView(userId);
+			if (!base.success) {
+				return base;
+			}
+
+			const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+
+			return this.resultOk({
+				tableRows: filteredRows,
+				permission,
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch program scoped recipients: ${JSON.stringify(error)}`);
 		}
-
-		const permission = accessResult.data.some(
-			(a) => a.programId === programId && a.permission === ProgramPermission.operator,
-		)
-			? ProgramPermission.operator
-			: ProgramPermission.owner;
-
-		const base = await this.getTableView(userId);
-		if (!base.success) {
-			return base;
-		}
-
-		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
-
-		return this.resultOk({
-			tableRows: filteredRows,
-			permission,
-		});
 	}
 
 	async getTableViewByLocalPartnerId(localPartnerId: string): Promise<ServiceResult<RecipientTableView>> {
-		const paginated = await this.getPaginatedTableViewByLocalPartnerId(localPartnerId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedTableViewByLocalPartnerId(localPartnerId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({
+				tableRows: paginated.data.tableRows,
+				permission: paginated.data.permission,
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch local partner recipients table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({
-			tableRows: paginated.data.tableRows,
-			permission: paginated.data.permission,
-		});
 	}
 
 	async getPaginatedTableViewByLocalPartnerId(

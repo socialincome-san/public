@@ -61,13 +61,13 @@ export class CountryReadService extends BaseService {
 	}
 
 	async get(userId: string, countryId: string): Promise<ServiceResult<CountryPayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const country = await this.db.country.findUnique({
 				where: { id: countryId },
 				include: {
@@ -117,28 +117,33 @@ export class CountryReadService extends BaseService {
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<CountryTableView>> {
-		const paginated = await this.getPaginatedTableView(userId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedTableView(userId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({ tableRows: paginated.data.tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch country table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
 	async getPaginatedTableView(
 		userId: string,
 		query: CountryTableQuery,
 	): Promise<ServiceResult<CountryPaginatedTableView>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const search = query.search.trim();
 			const matchedIsoCode = Object.values(CountryCode).find((code) => code.toLowerCase() === search.toLowerCase());
 			const matchedNetworkTechnology = Object.values(NetworkTechnology).find(

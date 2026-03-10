@@ -2,7 +2,7 @@ import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
-import { getCurrentSessionsOrRedirect } from '@/lib/firebase/current-account';
+import { getSessionsOrRedirect } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { redirect } from 'next/navigation';
@@ -11,7 +11,7 @@ import { DefaultLayoutProps } from '..';
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang, region } = await params;
-	const sessions = await getCurrentSessionsOrRedirect();
+	const sessions = await getSessionsOrRedirect();
 	if (!sessions.find((s) => s.type === 'contributor')) {
 		redirect('/login');
 	}

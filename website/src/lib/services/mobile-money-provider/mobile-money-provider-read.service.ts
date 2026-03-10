@@ -41,12 +41,12 @@ export class MobileMoneyProviderReadService extends BaseService {
 	}
 
 	async get(userId: string, providerId: string): Promise<ServiceResult<MobileMoneyProviderPayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const provider = await this.db.mobileMoneyProvider.findUnique({
 				where: { id: providerId },
 			});
@@ -71,12 +71,12 @@ export class MobileMoneyProviderReadService extends BaseService {
 		userId: string,
 		query: MobileMoneyProviderTableQuery,
 	): Promise<ServiceResult<MobileMoneyProviderPaginatedTableView>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const search = query.search.trim();
 			const where = search
 				? {
@@ -115,12 +115,12 @@ export class MobileMoneyProviderReadService extends BaseService {
 	}
 
 	async getOptions(userId: string): Promise<ServiceResult<MobileMoneyProviderOption[]>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const providers = await this.db.mobileMoneyProvider.findMany({
 				select: { id: true, name: true },
 				orderBy: { name: 'asc' },

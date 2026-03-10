@@ -38,8 +38,11 @@ export const useSurvey = () => {
 
 	const loadSurvey = async (surveyId: string, recipientId: string) => {
 		try {
-			const survey = await getByIdAndRecipient(surveyId, recipientId);
-			setSurvey(survey);
+			const surveyResult = await getByIdAndRecipient(surveyId, recipientId);
+			if (!surveyResult.success) {
+				throw new Error(surveyResult.error);
+			}
+			setSurvey(surveyResult.data);
 			setHasError(false);
 		} catch (error) {
 			logger.error(`error loading survey: ${error}`);
@@ -53,11 +56,14 @@ export const useSurvey = () => {
 		const data = survey.data;
 		data.pageNo = survey.currentPageNo;
 		try {
-			await saveChanges(surveyId, {
+			const saveResult = await saveChanges(surveyId, {
 				data: data,
 				status: status,
 				completedAt: status == SurveyStatus.completed ? now() : null,
 			});
+			if (!saveResult.success) {
+				throw new Error(saveResult.error);
+			}
 		} catch (error) {
 			if (retryCount >= 2) {
 				setHasError(true);

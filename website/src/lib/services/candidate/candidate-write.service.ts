@@ -145,27 +145,27 @@ export class CandidateWriteService extends BaseService {
 	}
 
 	async create(session: Session, candidate: CandidateCreateInput): Promise<ServiceResult<CandidatePayload>> {
-		if (session.type === 'contributor') {
-			return this.resultFail('Permission denied');
-		}
-
-		if (session.type === 'user') {
-			const admin = await this.assertAdmin(session.id);
-			if (!admin.success) {
-				return this.resultFail(admin.error);
-			}
-		}
-
-		if (session.type === 'local-partner') {
-			candidate.localPartner = { connect: { id: session.id } };
-		}
-
-		candidate.program = undefined;
-
-		const paymentInfoCreate = candidate.paymentInformation?.create;
-		const paymentPhoneNumber = paymentInfoCreate?.phone?.create?.number;
-
 		try {
+			if (session.type === 'contributor') {
+				return this.resultFail('Permission denied');
+			}
+
+			if (session.type === 'user') {
+				const admin = await this.assertAdmin(session.id);
+				if (!admin.success) {
+					return this.resultFail(admin.error);
+				}
+			}
+
+			if (session.type === 'local-partner') {
+				candidate.localPartner = { connect: { id: session.id } };
+			}
+
+			candidate.program = undefined;
+
+			const paymentInfoCreate = candidate.paymentInformation?.create;
+			const paymentPhoneNumber = paymentInfoCreate?.phone?.create?.number;
+
 			return await this.db.$transaction(async (tx) => {
 				const data: CandidateCreateInput = {
 					startDate: candidate.startDate ?? null,
@@ -255,54 +255,59 @@ export class CandidateWriteService extends BaseService {
 			return this.resultFail('Permission denied');
 		}
 
-		const candidateId = updateInput.id as string;
+		let previousPaymentPhoneNumber: string | null = null;
+		let phoneAdded = false;
+		let phoneRemoved = false;
+		let phoneChanged = false;
 
-		const existing = await this.db.recipient.findUnique({
-			where: { id: candidateId },
-			select: {
-				localPartnerId: true,
-				programId: true,
-				contact: {
-					select: {
-						phone: { select: { id: true } },
+		try {
+			const candidateId = updateInput.id as string;
+			const existing = await this.db.recipient.findUnique({
+				where: { id: candidateId },
+				select: {
+					localPartnerId: true,
+					programId: true,
+					contact: {
+						select: {
+							phone: { select: { id: true } },
+						},
+					},
+					paymentInformation: {
+						select: {
+							phone: { select: { id: true, number: true } },
+						},
 					},
 				},
-				paymentInformation: {
-					select: {
-						phone: { select: { id: true, number: true } },
-					},
-				},
-			},
-		});
+			});
 
-		if (!existing) {
-			return this.resultFail('Candidate not found');
-		}
-
-		if (existing.programId !== null) {
-			return this.resultFail('Not a candidate');
-		}
-
-		if (session.type === 'user') {
-			const admin = await this.assertAdmin(session.id);
-			if (!admin.success) {
-				return this.resultFail(admin.error);
+			if (!existing) {
+				return this.resultFail('Candidate not found');
 			}
-		}
 
-		if (session.type === 'local-partner') {
-			const partnerId = session.id;
-			if (existing.localPartnerId !== partnerId) {
-				return this.resultFail('Permission denied');
+			if (existing.programId !== null) {
+				return this.resultFail('Not a candidate');
 			}
-			delete updateInput.localPartner;
-		}
 
-		updateInput.program = undefined;
+			if (session.type === 'user') {
+				const admin = await this.assertAdmin(session.id);
+				if (!admin.success) {
+					return this.resultFail(admin.error);
+				}
+			}
 
-		const previousContactPhoneId = existing.contact.phone?.id ?? null;
-		const previousPaymentPhoneId = existing.paymentInformation?.phone?.id ?? null;
-		const previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
+			if (session.type === 'local-partner') {
+				const partnerId = session.id;
+				if (existing.localPartnerId !== partnerId) {
+					return this.resultFail('Permission denied');
+				}
+				delete updateInput.localPartner;
+			}
+
+			updateInput.program = undefined;
+
+			const previousContactPhoneId = existing.contact.phone?.id ?? null;
+			const previousPaymentPhoneId = existing.paymentInformation?.phone?.id ?? null;
+			previousPaymentPhoneNumber = existing.paymentInformation?.phone?.number ?? null;
 
 		if (!previousPaymentPhoneNumber && !nextPaymentPhoneNumber) {
 			try {
@@ -353,12 +358,14 @@ export class CandidateWriteService extends BaseService {
 			}
 		}
 
-		const phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
-		const phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
-		const phoneChanged =
-			!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+			phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
+			phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
+			phoneChanged =
+				!!previousPaymentPhoneNumber &&
+				!!nextPaymentPhoneNumber &&
+				previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
-		try {
+			try {
 			if (phoneAdded) {
 				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
 				if (!firebaseResult.success) {
@@ -367,12 +374,12 @@ export class CandidateWriteService extends BaseService {
 			}
 
 			if (phoneRemoved) {
-				await this.firebaseAdminService.deleteByPhoneNumberIfExists(previousPaymentPhoneNumber);
+				await this.firebaseAdminService.deleteByPhoneNumberIfExists(previousPaymentPhoneNumber!);
 			}
 
 			if (phoneChanged) {
 				const firebaseResult = await this.firebaseAdminService.updateByPhoneNumber(
-					previousPaymentPhoneNumber,
+					previousPaymentPhoneNumber!,
 					nextPaymentPhoneNumber!,
 				);
 
@@ -426,71 +433,70 @@ export class CandidateWriteService extends BaseService {
 			}
 
 			return this.resultOk(updatedCandidate);
+			} catch (error) {
+				this.logger.error(error);
+
+				if (phoneAdded && nextPaymentPhoneNumber) {
+					await this.firebaseAdminService.deleteByPhoneNumberIfExists(nextPaymentPhoneNumber);
+				}
+
+				if (phoneRemoved && previousPaymentPhoneNumber) {
+					await this.firebaseAdminService.createByPhoneNumber(previousPaymentPhoneNumber);
+				}
+
+				if (phoneChanged && previousPaymentPhoneNumber && nextPaymentPhoneNumber) {
+					await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber!);
+				}
+
+				return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
+			}
 		} catch (error) {
 			this.logger.error(error);
-
-			if (phoneAdded && nextPaymentPhoneNumber) {
-				await this.firebaseAdminService.deleteByPhoneNumberIfExists(nextPaymentPhoneNumber);
-			}
-
-			if (phoneRemoved && previousPaymentPhoneNumber) {
-				await this.firebaseAdminService.createByPhoneNumber(previousPaymentPhoneNumber);
-			}
-
-			if (phoneChanged && previousPaymentPhoneNumber && nextPaymentPhoneNumber) {
-				await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber);
-			}
-
 			return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async delete(session: Session, candidateId: string): Promise<ServiceResult<{ id: string }>> {
-		const existing = await this.db.recipient.findUnique({
-			where: { id: candidateId },
-			select: {
-				id: true,
-				programId: true,
-				localPartnerId: true,
-				paymentInformation: {
-					select: {
-						phone: { select: { number: true } },
+		try {
+			const existing = await this.db.recipient.findUnique({
+				where: { id: candidateId },
+				select: {
+					id: true,
+					programId: true,
+					localPartnerId: true,
+					paymentInformation: {
+						select: {
+							phone: { select: { number: true } },
+						},
 					},
 				},
-			},
-		});
+			});
 
-		if (!existing) {
-			return this.resultFail('Candidate not found');
-		}
-
-		if (session.type === 'user') {
-			const admin = await this.assertAdmin(session.id);
-			if (!admin.success) {
-				return this.resultFail(admin.error);
+			if (!existing) {
+				return this.resultFail('Candidate not found');
 			}
-		}
 
-		if (session.type === 'local-partner') {
-			const partnerId = session.id;
-			if (existing.localPartnerId !== partnerId) {
+			if (session.type === 'user') {
+				const admin = await this.assertAdmin(session.id);
+				if (!admin.success) {
+					return this.resultFail(admin.error);
+				}
+			}
+
+			if (session.type === 'local-partner') {
+				const partnerId = session.id;
+				if (existing.localPartnerId !== partnerId) {
+					return this.resultFail('Permission denied');
+				}
+			}
+
+			if (session.type === 'contributor') {
 				return this.resultFail('Permission denied');
 			}
-		}
 
-		if (session.type === 'contributor') {
-			return this.resultFail('Permission denied');
-		}
-
-		console.log('Deleting candidate with ID:', candidateId);
-
-		try {
 			await this.db.$transaction(async (tx) => {
-				console.log('Transaction started for deleting candidate with ID:', candidateId);
 				const phone = existing.paymentInformation?.phone?.number;
-				console.log('Candidate payment phone number:', phone);
 				if (phone) {
-					console.log('Deleting Firebase user with phone number:', phone);
 					await this.firebaseAdminService.deleteByPhoneNumberIfExists(phone);
 				}
 
@@ -543,48 +549,46 @@ export class CandidateWriteService extends BaseService {
 	}
 
 	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {
-		let created = 0;
-
-		let rows;
 		try {
+			let created = 0;
+			let rows;
 			const text = await file.text();
 			rows = parseCsvText(text);
+			for (let i = 0; i < rows.length; i++) {
+				const row = rows[i];
+				const rowNumber = i + 1;
+
+				if (!row.firstName || !row.lastName) {
+					return this.resultFail(`Row ${rowNumber}: firstName and lastName are required`);
+				}
+
+				if (!row.localPartnerId) {
+					return this.resultFail(`Row ${rowNumber}: localPartnerId is required`);
+				}
+
+				const candidate: CandidateCreateInput = {
+					contact: {
+						create: {
+							firstName: row.firstName,
+							lastName: row.lastName,
+						},
+					},
+					localPartner: {
+						connect: { id: row.localPartnerId },
+					},
+				};
+
+				const result = await this.create(session, candidate);
+				if (!result.success) {
+					return this.resultFail(`Row ${rowNumber}: ${result.error}`);
+				}
+
+				created++;
+			}
+
+			return this.resultOk({ created });
 		} catch (error) {
 			return this.resultFail(error instanceof Error ? error.message : 'Failed to parse CSV file');
 		}
-
-		for (let i = 0; i < rows.length; i++) {
-			const row = rows[i];
-			const rowNumber = i + 1;
-
-			if (!row.firstName || !row.lastName) {
-				return this.resultFail(`Row ${rowNumber}: firstName and lastName are required`);
-			}
-
-			if (!row.localPartnerId) {
-				return this.resultFail(`Row ${rowNumber}: localPartnerId is required`);
-			}
-
-			const candidate: CandidateCreateInput = {
-				contact: {
-					create: {
-						firstName: row.firstName,
-						lastName: row.lastName,
-					},
-				},
-				localPartner: {
-					connect: { id: row.localPartnerId },
-				},
-			};
-
-			const result = await this.create(session, candidate);
-			if (!result.success) {
-				return this.resultFail(`Row ${rowNumber}: ${result.error}`);
-			}
-
-			created++;
-		}
-
-		return this.resultOk({ created });
 	}
 }

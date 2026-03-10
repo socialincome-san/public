@@ -1,7 +1,8 @@
 'use server';
 
 import { Cause } from '@/generated/prisma/enums';
-import { getSessionByTypeOrThrow, type Session } from '@/lib/firebase/current-account';
+import { getSessionByType, type Session } from '@/lib/firebase/current-account';
+import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { CandidateCreateInput, CandidateUpdateInput, Profile } from '@/lib/services/candidate/candidate.types';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
@@ -10,7 +11,11 @@ const ADMIN_CANDIDATES_PATH = '/admin/candidates';
 const PARTNER_CANDIDATES_PATH = '/partner-space/candidates';
 
 export const createCandidateAction = async (data: CandidateCreateInput, sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	const result = await services.write.candidate.create(session, data);
 	if (session.type === 'user') {
 		revalidatePath(ADMIN_CANDIDATES_PATH);
@@ -25,7 +30,11 @@ export const updateCandidateAction = async (
 	nextPaymentPhoneNumber: string | null,
 	sessionType: Session['type'] = 'user',
 ) => {
-	const session = await getSessionByTypeOrThrow(sessionType);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	const result = await services.write.candidate.update(session, updateInput, nextPaymentPhoneNumber);
 	if (session.type === 'user') {
 		revalidatePath(ADMIN_CANDIDATES_PATH);
@@ -36,7 +45,11 @@ export const updateCandidateAction = async (
 };
 
 export const deleteCandidateAction = async (candidateId: string, sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	const result = await services.write.candidate.delete(session, candidateId);
 	if (session.type === 'user') {
 		revalidatePath(ADMIN_CANDIDATES_PATH);
@@ -47,17 +60,27 @@ export const deleteCandidateAction = async (candidateId: string, sessionType: Se
 };
 
 export const getCandidateAction = async (candidateId: string, sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	return await services.read.candidate.get(session, candidateId);
 };
 
 export const getCandidateOptions = async (sessionType: Session['type'] = 'user') => {
 	if (sessionType !== 'user') {
-		return { localPartners: { success: true, data: [] } };
+		return resultOk({ localPartners: [] });
 	}
-	const session = await getSessionByTypeOrThrow('user');
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 	const localPartners = await services.read.localPartner.getOptions();
-	return { localPartners };
+	if (!localPartners.success) {
+		return resultFail(localPartners.error);
+	}
+	return resultOk({ localPartners: localPartners.data });
 };
 
 export const getCandidateCountAction = async (causes: Cause[], profiles: Profile[], countryId: string | null) => {
@@ -65,7 +88,11 @@ export const getCandidateCountAction = async (causes: Cause[], profiles: Profile
 };
 
 export const importCandidatesCsvAction = async (file: File, sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	const result = await services.write.candidate.importCsv(session, file);
 	if (session.type === 'user') {
 		revalidatePath(ADMIN_CANDIDATES_PATH);
@@ -76,6 +103,10 @@ export const importCandidatesCsvAction = async (file: File, sessionType: Session
 };
 
 export const downloadCandidatesCsvAction = async (sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	return services.read.candidate.exportCsv(session);
 };

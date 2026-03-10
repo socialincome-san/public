@@ -27,12 +27,12 @@ export class UserReadService extends BaseService {
 	}
 
 	async get(actorUserId: string, userId: string): Promise<ServiceResult<UserPayload>> {
-		const isAdminResult = await this.isAdmin(actorUserId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.isAdmin(actorUserId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const user = await this.db.user.findUnique({
 				where: { id: userId },
 				include: {
@@ -60,12 +60,12 @@ export class UserReadService extends BaseService {
 	}
 
 	async getOptions(actorUserId: string): Promise<ServiceResult<{ id: string; name: string }[]>> {
-		const isAdminResult = await this.isAdmin(actorUserId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.isAdmin(actorUserId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const organizations = await this.db.organization.findMany({
 				select: { id: true, name: true },
 				orderBy: { name: 'asc' },
@@ -79,13 +79,13 @@ export class UserReadService extends BaseService {
 	}
 
 	async getPaginatedTableView(userId: string, query: UserTableQuery): Promise<ServiceResult<UserPaginatedTableView>> {
-		const isAdminResult = await this.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const search = query.search.trim();
 			const where = search
 				? {

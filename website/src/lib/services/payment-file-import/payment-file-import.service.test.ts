@@ -19,14 +19,19 @@ describe('PaymentFileImportService.getContributionsFromPaymentFile', () => {
 	test('extracts two contributions with correct Ref and Amt per entry (real file)', () => {
 		const service = new PaymentFileImportService('test-bucket', {} as never, {} as never, {} as never, {} as never);
 		const result = service.getContributionsFromPaymentFile(fixturePath);
+		expect(result.success).toBe(true);
+		if (!result.success) {
+			throw new Error(result.error);
+		}
+		const contributions = result.data;
 
-		expect(result).toHaveLength(2);
-		expect(result[0]).toMatchObject({
+		expect(contributions).toHaveLength(2);
+		expect(contributions[0]).toMatchObject({
 			referenceId: '000000017368904740340000019',
 			amount: 30,
 			currency: 'CHF',
 		});
-		expect(result[1]).toMatchObject({
+		expect(contributions[1]).toMatchObject({
 			referenceId: '000176590200045017659021118',
 			amount: 2,
 			currency: 'CHF',

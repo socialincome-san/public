@@ -1,37 +1,50 @@
 'use server';
 
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
+import { getSessionByType } from '@/lib/firebase/current-account';
+import { resultOk } from '@/lib/services/core/service-result';
 import { ContributorFormCreateInput, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
-import { getAuthenticatedContributorOrThrow, getOptionalContributor } from '../firebase/current-contributor';
+import { getOptionalContributor } from '../firebase/current-contributor';
 
 export const createContributorAction = async (data: ContributorFormCreateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const res = await services.write.contributor.create(user.id, data);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.contributor.create(sessionResult.data.id, data);
 	revalidatePath('/portal/management/contributors');
 	return res;
 };
 
 export const updateContributorAction = async (contributor: ContributorUpdateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const res = await services.write.contributor.update(user.id, contributor);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.contributor.update(sessionResult.data.id, contributor);
 	revalidatePath('/portal/management/contributors');
 	return res;
 };
 
 export const getContributorAction = async (contributorId: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	return services.read.contributor.get(user.id, contributorId);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.read.contributor.get(sessionResult.data.id, contributorId);
 };
 
 export const getOptionalContributorAction = async () => {
-	return getOptionalContributor();
+	return resultOk(await getOptionalContributor());
 };
 
 export const updateSelfAction = async (data: ContributorUpdateInput) => {
-	const contributor = await getAuthenticatedContributorOrThrow();
-	const res = await services.write.contributor.updateSelf(contributor.id, data);
+	const sessionResult = await getSessionByType('contributor');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.contributor.updateSelf(sessionResult.data.id, data);
 	revalidatePath('/dashboard/profile');
 	return res;
 };

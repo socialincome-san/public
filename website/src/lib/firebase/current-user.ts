@@ -4,11 +4,11 @@ import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const loadCurrentUser = async (): Promise<UserSession | null> => {
-	const cookie = await services.firebaseSession.readSessionCookie();
-	if (!cookie) {
+	const cookieResult = await services.firebaseSession.readSessionCookie();
+	if (!cookieResult.success || !cookieResult.data) {
 		return null;
 	}
-	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookie);
+	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookieResult.data);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
@@ -24,14 +24,6 @@ export const getAuthenticatedUserOrRedirect = async (): Promise<UserSession> => 
 	const user = await getCurrentUser();
 	if (!user) {
 		redirect('/login');
-	}
-	return user;
-};
-
-export const getAuthenticatedUserOrThrow = async (): Promise<UserSession> => {
-	const user = await getCurrentUser();
-	if (!user) {
-		throw new Error('Not authenticated');
 	}
 	return user;
 };

@@ -102,13 +102,13 @@ export class ExchangeRateReadService extends BaseService {
 		userId: string,
 		query: ExchangeRateTableQuery,
 	): Promise<ServiceResult<ExchangeRatesPaginatedTableView>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const oneMonthAgo = now();
 			oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 			oneMonthAgo.setHours(0, 0, 0, 0);

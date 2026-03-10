@@ -96,15 +96,20 @@ export class SurveyReadService extends BaseService {
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
-		const paginated = await this.getPaginatedTableView(userId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedTableView(userId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({ tableRows: paginated.data.tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch survey table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
 	async getPaginatedTableView(
@@ -222,15 +227,20 @@ export class SurveyReadService extends BaseService {
 	}
 
 	async getUpcomingSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
-		const paginated = await this.getPaginatedUpcomingSurveyTableView(userId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedUpcomingSurveyTableView(userId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({ tableRows: paginated.data.tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch upcoming survey table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
 	async getPaginatedUpcomingSurveyTableView(
@@ -368,13 +378,18 @@ export class SurveyReadService extends BaseService {
 	}
 
 	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<SurveyTableView>> {
-		const base = await this.getTableView(userId);
-		if (!base.success) {
-			return base;
-		}
+		try {
+			const base = await this.getTableView(userId);
+			if (!base.success) {
+				return base;
+			}
 
-		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
-		return this.resultOk({ tableRows: filteredRows });
+			const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+			return this.resultOk({ tableRows: filteredRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch program scoped surveys: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async get(userId: string, surveyId: string): Promise<ServiceResult<SurveyPayload>> {

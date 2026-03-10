@@ -1,6 +1,8 @@
 'use server';
 
 import { getCurrentSessions } from '../firebase/current-account';
+import { ServiceResult } from '../services/core/base.types';
+import { resultOk } from '../services/core/service-result';
 import { services } from '../services/services';
 
 export const createSessionAction = async (idToken: string) => {
@@ -11,25 +13,25 @@ export const logoutAction = async () => {
 	return services.firebaseSession.clearSessionCookie();
 };
 
-export const getRedirectPathAfterLoginAction = async (): Promise<string> => {
+export const getRedirectPathAfterLoginAction = async (): Promise<ServiceResult<string>> => {
 	const sessions = await getCurrentSessions();
 	const session = sessions[0];
 
 	if (!session) {
-		return '/';
+		return resultOk('/');
 	}
 
 	if (session.type === 'user') {
-		return '/portal';
+		return resultOk('/portal');
 	}
 
 	if (session.type === 'contributor') {
-		return '/dashboard/contributions';
+		return resultOk('/dashboard/contributions');
 	}
 
 	if (session.type === 'local-partner') {
-		return '/partner-space/recipients';
+		return resultOk('/partner-space/recipients');
 	}
 
-	return '/';
+	return resultOk('/');
 };

@@ -44,13 +44,13 @@ export class ExpenseReadService extends BaseService {
 	}
 
 	async get(userId: string, expenseId: string): Promise<ServiceResult<ExpensePayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const expense = await this.db.expense.findUnique({
 				where: { id: expenseId },
 				include: { organization: { select: { id: true, name: true } } },
@@ -77,13 +77,13 @@ export class ExpenseReadService extends BaseService {
 		userId: string,
 		query: ExpenseTableQuery,
 	): Promise<ServiceResult<ExpensePaginatedTableView>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const search = query.search.trim();
 			const matchedExpenseType = Object.values(ExpenseType).find((type) => type.toLowerCase() === search.toLowerCase());
 			const parsedYear = Number(search);

@@ -1,12 +1,17 @@
 'use server';
 
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { getSessionByType } from '@/lib/firebase/current-account';
 import { services } from '@/lib/services/services';
+import { ServiceResult } from '@/lib/services/core/base.types';
 import { UserCreateInput, UserUpdateInput } from '@/lib/services/user/user.types';
 import { revalidatePath } from 'next/cache';
 
-export const createUserAction = async (input: UserCreateInput) => {
-	const session = await getAuthenticatedUserOrRedirect();
+export const createUserAction = async (input: UserCreateInput): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	const result = await services.write.user.create(session.id, input);
 
 	if (result.success) {
@@ -16,8 +21,12 @@ export const createUserAction = async (input: UserCreateInput) => {
 	return result;
 };
 
-export const updateUserAction = async (input: UserUpdateInput) => {
-	const session = await getAuthenticatedUserOrRedirect();
+export const updateUserAction = async (input: UserUpdateInput): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	const result = await services.write.user.update(session.id, input);
 
 	if (result.success) {
@@ -27,8 +36,12 @@ export const updateUserAction = async (input: UserUpdateInput) => {
 	return result;
 };
 
-export const updateUserSelfAction = async (input: UserUpdateInput) => {
-	const session = await getAuthenticatedUserOrRedirect();
+export const updateUserSelfAction = async (input: UserUpdateInput): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	const result = await services.write.user.updateSelf(session.id, input);
 
 	if (result.success) {
@@ -39,11 +52,19 @@ export const updateUserSelfAction = async (input: UserUpdateInput) => {
 };
 
 export const getUserAction = async (userId: string) => {
-	const session = await getAuthenticatedUserOrRedirect();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	return services.read.user.get(session.id, userId);
 };
 
 export const getUserOptionsAction = async () => {
-	const session = await getAuthenticatedUserOrRedirect();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
 	return services.read.user.getOptions(session.id);
 };

@@ -22,14 +22,14 @@ const STORIES_PATH = 'cdn/stories';
 const EXCLUDED_FIELDS_FOR_COUNTING = [CONTENT, LEAD_TEXT].join(',');
 
 export class StoryblokService extends BaseService {
-	async getStoryParams(language: string): Promise<ISbStoriesParams> {
+	private async getStoryParams(language: string): Promise<ISbStoriesParams> {
 		return {
 			language,
 			version: (await draftMode()).isEnabled ? 'draft' : 'published',
 		};
 	}
 
-	async withLanguageFallback<T>(
+	private async withLanguageFallback<T>(
 		loader: (lang: string, slug: string) => Promise<T>,
 		lang: string,
 		slug: string,

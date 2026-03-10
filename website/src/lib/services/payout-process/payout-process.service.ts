@@ -95,7 +95,7 @@ export class PayoutProcessService extends BaseService {
 					const paidCount = recipient.payouts.filter(
 						(p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed,
 					).length;
-					return this.programStatsService.isRecipientEligibleForPayout({
+					const isEligibleResult = this.programStatsService.isRecipientEligibleForPayout({
 						startDate: recipient.startDate,
 						suspendedAt: recipient.suspendedAt,
 						paidOrConfirmedCount: paidCount,
@@ -103,6 +103,7 @@ export class PayoutProcessService extends BaseService {
 						payoutInterval: program.payoutInterval,
 						nowDate,
 					});
+					return isEligibleResult.success && isEligibleResult.data;
 				})
 				.map((recipient) => ({
 					id: recipient.id,

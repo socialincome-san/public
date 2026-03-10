@@ -107,12 +107,12 @@ const stripe = new StripeService(
 	campaignRead,
 	programAccessRead,
 );
-
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead);
 
 const createPaymentFileImport = (bucketName: string) =>
 	new PaymentFileImportService(bucketName, prisma, contributorRead, contributionWrite, campaignRead);
+
 export const services = {
 	read: {
 		candidate: candidateRead,

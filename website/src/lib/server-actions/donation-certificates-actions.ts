@@ -1,25 +1,34 @@
 'use server';
 
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { services } from '@/lib/services/services';
 import { LanguageCode } from '@/lib/types/language';
 import { revalidatePath } from 'next/cache';
-import { getAuthenticatedContributorOrRedirect } from '../firebase/current-contributor';
+import { getSessionByType } from '@/lib/firebase/current-account';
 
 export const getContributorOptions = async () => {
-	await getAuthenticatedUserOrThrow();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 	return await services.read.contributor.getByIds();
 };
 
 export const generateDonationCertificates = async (year: number, contributorIds: string[], language?: LanguageCode) => {
-	await getAuthenticatedUserOrThrow();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 	const result = await services.write.donationCertificate.createDonationCertificates(year, contributorIds, language);
 	revalidatePath('/portal/management/donation-certificates');
 	return result;
 };
 
 export const generateDonationCertificateForCurrentUser = async (year: number, language?: LanguageCode) => {
-	const contributorSession = await getAuthenticatedContributorOrRedirect();
+	const sessionResult = await getSessionByType('contributor');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const contributorSession = sessionResult.data;
 	const result = await services.write.donationCertificate.createDonationCertificate(
 		year,
 		contributorSession.id,

@@ -15,13 +15,13 @@ export class ExpenseWriteService extends BaseService {
 	}
 
 	async create(userId: string, input: ExpenseCreateInput): Promise<ServiceResult<ExpensePayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const created = await this.db.expense.create({
 				data: input,
 				include: { organization: { select: { id: true, name: true } } },
@@ -41,13 +41,13 @@ export class ExpenseWriteService extends BaseService {
 	}
 
 	async update(userId: string, input: ExpenseUpdateInput): Promise<ServiceResult<ExpensePayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const updated = await this.db.expense.update({
 				where: { id: input.id },
 				data: input,

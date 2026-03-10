@@ -52,13 +52,13 @@ export class LocalPartnerReadService extends BaseService {
 	}
 
 	async get(userId: string, localPartnerId: string): Promise<ServiceResult<LocalPartnerPayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const partner = await this.db.localPartner.findUnique({
 				where: { id: localPartnerId },
 				select: {
@@ -95,28 +95,33 @@ export class LocalPartnerReadService extends BaseService {
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<LocalPartnerTableView>> {
-		const paginated = await this.getPaginatedTableView(userId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedTableView(userId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({ tableRows: paginated.data.tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch local partner table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
 	async getPaginatedTableView(
 		userId: string,
 		query: LocalPartnerTableQuery,
 	): Promise<ServiceResult<LocalPartnerPaginatedTableView>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const search = query.search.trim();
 			const where = search
 				? {

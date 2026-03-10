@@ -26,27 +26,31 @@ export class TwilioService extends BaseService {
 	private readonly twilioVerifyServiceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
 
 	async requestOtp(phoneNumber: string): Promise<ServiceResult<boolean>> {
-		const envCheck = this.requireTwilioEnvVars();
-		if (!envCheck.success) {
-			return envCheck;
-		}
-
-		const phoneResult = this.requireValidPhoneNumber(phoneNumber);
-		if (!phoneResult.success) {
-			return phoneResult;
-		}
-
-		if (this.appReviewModeService.shouldBypass(phoneResult.data)) {
-			this.logger.info('APP REVIEW MODE: Skipping Twilio OTP send for app review phone');
-			return this.resultOk(true);
-		}
-
-		const twilioClientResult = this.getTwilioClient();
-		if (!twilioClientResult.success) {
-			return twilioClientResult;
-		}
-
 		try {
+			const envCheck = this.requireTwilioEnvVars();
+			if (!envCheck.success) {
+				return envCheck;
+			}
+
+			const phoneResult = this.requireValidPhoneNumber(phoneNumber);
+			if (!phoneResult.success) {
+				return phoneResult;
+			}
+
+			const bypassResult = this.appReviewModeService.shouldBypass(phoneResult.data);
+			if (!bypassResult.success) {
+				return this.resultFail(bypassResult.error);
+			}
+			if (bypassResult.data) {
+				this.logger.info('APP REVIEW MODE: Skipping Twilio OTP send for app review phone');
+				return this.resultOk(true);
+			}
+
+			const twilioClientResult = this.getTwilioClient();
+			if (!twilioClientResult.success) {
+				return twilioClientResult;
+			}
+
 			this.logger.info('Twilio: Requesting OTP for phone');
 			await twilioClientResult.data.verify.v2.services(this.twilioVerifyServiceSid ?? '').verifications.create({
 				to: phoneResult.data,
@@ -61,32 +65,36 @@ export class TwilioService extends BaseService {
 	}
 
 	async verifyOtp(request: VerifyOtpRequest): Promise<ServiceResult<VerifyOtpResult>> {
-		const envCheck = this.requireTwilioEnvVars();
-		if (!envCheck.success) {
-			return envCheck;
-		}
-
-		if (!request.phoneNumber || !request.otp) {
-			this.logger.info('Missing phone number or OTP');
-			return this.resultFail('Phone number and OTP are required');
-		}
-
-		const phoneResult = this.requireValidPhoneNumber(request.phoneNumber);
-		if (!phoneResult.success) {
-			return phoneResult;
-		}
-
-		if (this.appReviewModeService.shouldBypass(phoneResult.data)) {
-			this.logger.info('APP REVIEW MODE: Skipping Twilio verify for app review phone');
-			return await this.finalizeOtpVerification(phoneResult.data);
-		}
-
-		const twilioClientResult = this.getTwilioClient();
-		if (!twilioClientResult.success) {
-			return twilioClientResult;
-		}
-
 		try {
+			const envCheck = this.requireTwilioEnvVars();
+			if (!envCheck.success) {
+				return envCheck;
+			}
+
+			if (!request.phoneNumber || !request.otp) {
+				this.logger.info('Missing phone number or OTP');
+				return this.resultFail('Phone number and OTP are required');
+			}
+
+			const phoneResult = this.requireValidPhoneNumber(request.phoneNumber);
+			if (!phoneResult.success) {
+				return phoneResult;
+			}
+
+			const bypassResult = this.appReviewModeService.shouldBypass(phoneResult.data);
+			if (!bypassResult.success) {
+				return this.resultFail(bypassResult.error);
+			}
+			if (bypassResult.data) {
+				this.logger.info('APP REVIEW MODE: Skipping Twilio verify for app review phone');
+				return await this.finalizeOtpVerification(phoneResult.data);
+			}
+
+			const twilioClientResult = this.getTwilioClient();
+			if (!twilioClientResult.success) {
+				return twilioClientResult;
+			}
+
 			this.logger.info('Twilio: Attempting to verify OTP for phone');
 			const verification = await twilioClientResult.data.verify.v2
 				.services(this.twilioVerifyServiceSid ?? '')
@@ -101,21 +109,18 @@ export class TwilioService extends BaseService {
 
 			if (verification.status !== 'approved') {
 				this.logger.info('OTP verification failed', { status: verification.status });
-				throw new Error('invalid-otp');
+				return this.resultFail('Invalid OTP provided');
 			}
+
+			return await this.finalizeOtpVerification(phoneResult.data);
 		} catch (error: any) {
 			if (error?.code === 20404) {
 				return this.resultFail('Verification resource not found for the provided phone number and OTP');
-			}
-			if (error?.message === 'invalid-otp') {
-				return this.resultFail('Invalid OTP provided');
 			}
 
 			this.logger.error(error);
 			return this.resultFail(`Failed to verify OTP: ${JSON.stringify(error)}`);
 		}
-
-		return await this.finalizeOtpVerification(phoneResult.data);
 	}
 
 	private async finalizeOtpVerification(phoneNumber: string): Promise<ServiceResult<VerifyOtpResult>> {

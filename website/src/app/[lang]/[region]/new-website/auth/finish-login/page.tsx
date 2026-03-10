@@ -51,8 +51,13 @@ export default function FinishLoginPage() {
 					return;
 				}
 
-				const redirectPath = await getRedirectPathAfterLoginAction();
-				router.replace(redirectPath);
+				const redirectPathResult = await getRedirectPathAfterLoginAction();
+				if (!redirectPathResult.success) {
+					await signOut(auth);
+					setStatus('error');
+					return;
+				}
+				router.replace(redirectPathResult.data);
 			} catch {
 				setStatus('error');
 			}

@@ -17,13 +17,13 @@ export class UserWriteService extends BaseService {
 	}
 
 	async create(actorUserId: string, input: UserCreateInput): Promise<ServiceResult<UserPayload>> {
-		const isAdminResult = await this.userReadService.isAdmin(actorUserId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userReadService.isAdmin(actorUserId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: input.email,
 				displayName: `${input.firstName} ${input.lastName}`,
@@ -81,26 +81,26 @@ export class UserWriteService extends BaseService {
 	}
 
 	async update(actorUserId: string, input: UserUpdateInput): Promise<ServiceResult<UserPayload>> {
-		const isAdminResult = await this.userReadService.isAdmin(actorUserId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
-		if (!input.id) {
-			return this.resultFail('User ID is required');
-		}
-		if (!input.email) {
-			return this.resultFail('User email is required');
-		}
-		if (!input.role) {
-			return this.resultFail('User role is required');
-		}
-		if (!input.organizationId) {
-			return this.resultFail('Organization ID is required');
-		}
-
 		try {
+			const isAdminResult = await this.userReadService.isAdmin(actorUserId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			if (!input.id) {
+				return this.resultFail('User ID is required');
+			}
+			if (!input.email) {
+				return this.resultFail('User email is required');
+			}
+			if (!input.role) {
+				return this.resultFail('User role is required');
+			}
+			if (!input.organizationId) {
+				return this.resultFail('Organization ID is required');
+			}
+
 			const existingUser = await this.db.user.findUnique({
 				where: { id: input.id },
 				include: { contact: true, account: true },

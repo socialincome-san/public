@@ -16,12 +16,17 @@ export class ExchangeRateWriteService extends BaseService {
 	}
 
 	async triggerImportAsAdmin(userId: string): Promise<ServiceResult<void>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
+		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
 
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			return await this.importService.import();
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not trigger exchange rate import: ${JSON.stringify(error)}`);
 		}
-
-		return await this.importService.import();
 	}
 }

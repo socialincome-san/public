@@ -61,30 +61,30 @@ export class PayoutWriteService extends BaseService {
 	}
 
 	async create(userId: string, input: PayoutCreateInput): Promise<ServiceResult<PayoutPayload>> {
-		const recipient = await this.db.recipient.findUnique({
-			where: { id: input.recipient.connect.id },
-			select: { programId: true },
-		});
-
-		if (!recipient) {
-			return this.resultFail('Recipient not found');
-		}
-
-		if (recipient.programId) {
-			const access = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!access.success) {
-				return this.resultFail(access.error);
-			}
-
-			const allowed = access.data.find(
-				(p) => p.programId === recipient.programId && p.permission === ProgramPermission.operator,
-			);
-			if (!allowed) {
-				return this.resultFail('No edit access for this program');
-			}
-		}
-
 		try {
+			const recipient = await this.db.recipient.findUnique({
+				where: { id: input.recipient.connect.id },
+				select: { programId: true },
+			});
+
+			if (!recipient) {
+				return this.resultFail('Recipient not found');
+			}
+
+			if (recipient.programId) {
+				const access = await this.programAccessService.getAccessiblePrograms(userId);
+				if (!access.success) {
+					return this.resultFail(access.error);
+				}
+
+				const allowed = access.data.find(
+					(p) => p.programId === recipient.programId && p.permission === ProgramPermission.operator,
+				);
+				if (!allowed) {
+					return this.resultFail('No edit access for this program');
+				}
+			}
+
 			const created = await this.db.payout.create({
 				data: input,
 				include: {
@@ -121,30 +121,30 @@ export class PayoutWriteService extends BaseService {
 	}
 
 	async update(userId: string, input: PayoutUpdateInput): Promise<ServiceResult<PayoutPayload>> {
-		const existing = await this.db.payout.findUnique({
-			where: { id: input.id },
-			select: { recipient: { select: { programId: true } } },
-		});
-
-		if (!existing) {
-			return this.resultFail('Payout not found');
-		}
-
-		if (existing.recipient.programId) {
-			const access = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!access.success) {
-				return this.resultFail(access.error);
-			}
-
-			const allowed = access.data.some(
-				(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.operator,
-			);
-			if (!allowed) {
-				return this.resultFail('No edit permission for this payout');
-			}
-		}
-
 		try {
+			const existing = await this.db.payout.findUnique({
+				where: { id: input.id },
+				select: { recipient: { select: { programId: true } } },
+			});
+
+			if (!existing) {
+				return this.resultFail('Payout not found');
+			}
+
+			if (existing.recipient.programId) {
+				const access = await this.programAccessService.getAccessiblePrograms(userId);
+				if (!access.success) {
+					return this.resultFail(access.error);
+				}
+
+				const allowed = access.data.some(
+					(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.operator,
+				);
+				if (!allowed) {
+					return this.resultFail('No edit permission for this payout');
+				}
+			}
+
 			const updated = await this.db.payout.update({
 				where: { id: input.id },
 				data: input,
@@ -181,31 +181,28 @@ export class PayoutWriteService extends BaseService {
 		}
 	}
 
-	updateStatusByRecipient(
+	async updateStatusByRecipient(
 		recipientId: string,
 		payoutId: string,
 		status: PayoutStatus,
 		comments?: string | null,
 	): Promise<ServiceResult<PayoutEntity>> {
-		return this.db.payout
-			.findFirst({ where: { id: payoutId, recipientId } })
-			.then((payout) => {
-				if (!payout) {
-					return this.resultFail(`Payout "${payoutId}" not found for recipient`);
-				}
-				return this.db.payout
-					.update({
-						where: { id: payout.id },
-						data: {
-							status,
-							comments,
-						},
-					})
-					.then((updated) => this.resultOk(updated));
-			})
-			.catch((error) => {
-				this.logger.error(error);
-				return this.resultFail(`Failed to update payout "${payoutId}": ${JSON.stringify(error)}`);
+		try {
+			const payout = await this.db.payout.findFirst({ where: { id: payoutId, recipientId } });
+			if (!payout) {
+				return this.resultFail(`Payout "${payoutId}" not found for recipient`);
+			}
+			const updated = await this.db.payout.update({
+				where: { id: payout.id },
+				data: {
+					status,
+					comments,
+				},
 			});
+			return this.resultOk(updated);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Failed to update payout "${payoutId}": ${JSON.stringify(error)}`);
+		}
 	}
 }

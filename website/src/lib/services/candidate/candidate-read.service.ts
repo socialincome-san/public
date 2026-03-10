@@ -158,90 +158,99 @@ export class CandidateReadService extends BaseService {
 		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
-
-		const candidate = await this.db.recipient.findUnique({
-			where: { id },
-			select: {
-				id: true,
-				suspendedAt: true,
-				suspensionReason: true,
-				successorName: true,
-				termsAccepted: true,
-				localPartner: { select: { id: true, name: true } },
-				contact: {
-					select: {
-						id: true,
-						firstName: true,
-						lastName: true,
-						callingName: true,
-						email: true,
-						gender: true,
-						language: true,
-						dateOfBirth: true,
-						profession: true,
-						phone: true,
-						address: true,
+		try {
+			const candidate = await this.db.recipient.findUnique({
+				where: { id },
+				select: {
+					id: true,
+					suspendedAt: true,
+					suspensionReason: true,
+					successorName: true,
+					termsAccepted: true,
+					localPartner: { select: { id: true, name: true } },
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							callingName: true,
+							email: true,
+							gender: true,
+							language: true,
+							dateOfBirth: true,
+							profession: true,
+							phone: true,
+							address: true,
+						},
 					},
-				},
-				paymentInformation: {
-					select: {
-						id: true,
-						code: true,
-						mobileMoneyProvider: { select: { id: true, name: true } },
-						phone: true,
+					paymentInformation: {
+						select: {
+							id: true,
+							code: true,
+							mobileMoneyProvider: { select: { id: true, name: true } },
+							phone: true,
+						},
 					},
+					programId: true,
+					localPartnerId: true,
 				},
-				programId: true,
-				localPartnerId: true,
-			},
-		});
+			});
 
-		if (!candidate) {
-			return this.resultFail('Candidate not found');
-		}
-
-		if (candidate.programId !== null) {
-			return this.resultFail('Not a candidate');
-		}
-
-		if (session.type === 'user') {
-			const admin = await this.assertAdmin(session.id);
-			if (!admin.success) {
-				return this.resultFail(admin.error);
+			if (!candidate) {
+				return this.resultFail('Candidate not found');
 			}
-		}
 
-		if (session.type === 'local-partner') {
-			if (candidate.localPartnerId !== session.id) {
-				return this.resultFail('Permission denied');
+			if (candidate.programId !== null) {
+				return this.resultFail('Not a candidate');
 			}
-		}
 
-		return this.resultOk(candidate);
+			if (session.type === 'user') {
+				const admin = await this.assertAdmin(session.id);
+				if (!admin.success) {
+					return this.resultFail(admin.error);
+				}
+			}
+
+			if (session.type === 'local-partner') {
+				if (candidate.localPartnerId !== session.id) {
+					return this.resultFail('Permission denied');
+				}
+			}
+
+			return this.resultOk(candidate);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch candidate: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<CandidatesTableView>> {
-		const paginated = await this.getPaginatedTableView(userId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedTableView(userId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({ tableRows: paginated.data.tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch candidates table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
 	async getPaginatedTableView(
 		userId: string,
 		query: CandidatesTableQuery,
 	): Promise<ServiceResult<CandidatesPaginatedTableView>> {
-		const admin = await this.assertAdmin(userId);
-		if (!admin.success) {
-			return this.resultFail(admin.error);
-		}
-
 		try {
+			const admin = await this.assertAdmin(userId);
+			if (!admin.success) {
+				return this.resultFail(admin.error);
+			}
+
 			const search = query.search.trim();
 			const selectedCountry = (query.country?.trim() || undefined) as CountryCode | undefined;
 			const selectedGender = (query.gender?.trim() || undefined) as Gender | undefined;
@@ -412,15 +421,20 @@ export class CandidateReadService extends BaseService {
 	}
 
 	async getTableViewByLocalPartner(localPartnerId: string): Promise<ServiceResult<CandidatesTableView>> {
-		const paginated = await this.getPaginatedTableViewByLocalPartner(localPartnerId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedTableViewByLocalPartner(localPartnerId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({ tableRows: paginated.data.tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch local partner candidates table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
 	async getPaginatedTableViewByLocalPartner(
@@ -615,18 +629,18 @@ export class CandidateReadService extends BaseService {
 	}
 
 	async exportCsv(session: Session): Promise<ServiceResult<string>> {
-		if (session.type === 'contributor') {
-			return this.resultFail('Permission denied');
-		}
-
-		if (session.type === 'user') {
-			const admin = await this.assertAdmin(session.id);
-			if (!admin.success) {
-				return this.resultFail(admin.error);
-			}
-		}
-
 		try {
+			if (session.type === 'contributor') {
+				return this.resultFail('Permission denied');
+			}
+
+			if (session.type === 'user') {
+				const admin = await this.assertAdmin(session.id);
+				if (!admin.success) {
+					return this.resultFail(admin.error);
+				}
+			}
+
 			const recipients = await this.db.recipient.findMany({
 				where:
 					session.type === 'local-partner'

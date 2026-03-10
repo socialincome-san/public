@@ -15,13 +15,13 @@ export class CountryWriteService extends BaseService {
 	}
 
 	async create(userId: string, input: CountryCreateInput): Promise<ServiceResult<CountryPayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const created = await this.db.country.create({
 				data: {
 					isoCode: input.isoCode,
@@ -88,13 +88,13 @@ export class CountryWriteService extends BaseService {
 	}
 
 	async update(userId: string, input: CountryUpdateInput): Promise<ServiceResult<CountryPayload>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const updated = await this.db.country.update({
 				where: { id: input.id },
 				data: {
@@ -173,12 +173,12 @@ export class CountryWriteService extends BaseService {
 	}
 
 	async delete(userId: string, countryId: string): Promise<ServiceResult<{ id: string }>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const country = await this.db.country.findUnique({
 				where: { id: countryId },
 				select: {

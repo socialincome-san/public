@@ -66,15 +66,20 @@ export class OrganizationReadService extends BaseService {
 	}
 
 	async getOrganizationMembersTableView(userId: string): Promise<ServiceResult<OrganizationMemberTableView>> {
-		const paginated = await this.getPaginatedOrganizationMembersTableView(userId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedOrganizationMembersTableView(userId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({ tableRows: paginated.data.tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch organization members table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
 	async getPaginatedOrganizationMembersTableView(
@@ -154,15 +159,20 @@ export class OrganizationReadService extends BaseService {
 	}
 
 	async getAdminTableView(userId: string): Promise<ServiceResult<OrganizationTableView>> {
-		const paginated = await this.getPaginatedAdminTableView(userId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return this.resultFail(paginated.error);
+		try {
+			const paginated = await this.getPaginatedAdminTableView(userId, {
+				page: 1,
+				pageSize: 10_000,
+				search: '',
+			});
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
+			return this.resultOk({ tableRows: paginated.data.tableRows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch organizations table view: ${JSON.stringify(error)}`);
 		}
-		return this.resultOk({ tableRows: paginated.data.tableRows });
 	}
 
 	async getPaginatedAdminTableView(
@@ -235,12 +245,12 @@ export class OrganizationReadService extends BaseService {
 	}
 
 	async getOptions(userId: string): Promise<ServiceResult<OrganizationOption[]>> {
-		const isAdminResult = await this.userService.isAdmin(userId);
-		if (!isAdminResult.success) {
-			return this.resultFail(isAdminResult.error);
-		}
-
 		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const organizations = await this.db.organization.findMany({
 				select: { id: true, name: true },
 				orderBy: { name: 'asc' },

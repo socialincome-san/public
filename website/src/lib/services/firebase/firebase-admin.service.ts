@@ -137,8 +137,8 @@ export class FirebaseAdminService extends BaseService {
 		}
 	}
 
-	getPhoneFromToken(decodedToken: DecodedIdToken): string | null {
-		return decodedToken.phone_number ?? null;
+	getPhoneFromToken(decodedToken: DecodedIdToken): ServiceResult<string | null> {
+		return this.resultOk(decodedToken.phone_number ?? null);
 	}
 
 	async getOrCreateUser(userData: { email: string; displayName: string }): Promise<ServiceResult<UserRecord>> {

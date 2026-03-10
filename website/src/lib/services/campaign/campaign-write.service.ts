@@ -15,19 +15,19 @@ export class CampaignWriteService extends BaseService {
 	}
 
 	async create(userId: string, campaign: CampaignsCreateInput): Promise<ServiceResult<Campaign>> {
-		const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-
-		if (!accessResult.success) {
-			return this.resultFail(accessResult.error);
-		}
-
-		if (accessResult.data.permission !== 'edit') {
-			return this.resultFail('No permissions to create campaign');
-		}
-
-		const { id: organizationId } = accessResult.data;
-
 		try {
+			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			if (accessResult.data.permission !== 'edit') {
+				return this.resultFail('No permissions to create campaign');
+			}
+
+			const { id: organizationId } = accessResult.data;
+
 			const newCampaign = await this.db.campaign.create({
 				data: {
 					...campaign,
@@ -43,17 +43,17 @@ export class CampaignWriteService extends BaseService {
 	}
 
 	async update(userId: string, campaign: CampaignsUpdateInput): Promise<ServiceResult<Campaign>> {
-		const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-
-		if (!accessResult.success) {
-			return this.resultFail(accessResult.error);
-		}
-
-		if (accessResult.data.permission !== 'edit') {
-			return this.resultFail('No permissions to create campaign');
-		}
-
 		try {
+			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			if (accessResult.data.permission !== 'edit') {
+				return this.resultFail('No permissions to create campaign');
+			}
+
 			const updatedCampaign = await this.db.campaign.update({
 				where: { id: campaign.id?.toString() },
 				data: campaign,

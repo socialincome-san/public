@@ -378,7 +378,7 @@ export class PayoutReadService extends BaseService {
 
 			for (const recipient of program.recipients) {
 				const paid = recipient.payouts.length;
-				const isEligibleNow = this.programStatsService.isRecipientEligibleForPayout({
+				const isEligibleNowResult = this.programStatsService.isRecipientEligibleForPayout({
 					startDate: recipient.startDate,
 					suspendedAt: recipient.suspendedAt,
 					paidOrConfirmedCount: paid,
@@ -386,7 +386,7 @@ export class PayoutReadService extends BaseService {
 					payoutInterval: program.payoutInterval,
 					nowDate: now(),
 				});
-				if (!isEligibleNow) {
+				if (!isEligibleNowResult.success || !isEligibleNowResult.data) {
 					continue;
 				}
 				const remaining = Math.max(0, program.programDurationInMonths - paid);
@@ -569,59 +569,64 @@ export class PayoutReadService extends BaseService {
 	}
 
 	async get(userId: string, payoutId: string): Promise<ServiceResult<PayoutPayload>> {
-		const payout = await this.db.payout.findUnique({
-			where: { id: payoutId },
-			select: {
-				id: true,
-				amount: true,
-				currency: true,
-				status: true,
-				paymentAt: true,
-				phoneNumber: true,
-				comments: true,
-				recipient: {
-					select: {
-						id: true,
-						contact: { select: { firstName: true, lastName: true } },
-						program: { select: { id: true, name: true } },
+		try {
+			const payout = await this.db.payout.findUnique({
+				where: { id: payoutId },
+				select: {
+					id: true,
+					amount: true,
+					currency: true,
+					status: true,
+					paymentAt: true,
+					phoneNumber: true,
+					comments: true,
+					recipient: {
+						select: {
+							id: true,
+							contact: { select: { firstName: true, lastName: true } },
+							program: { select: { id: true, name: true } },
+						},
 					},
 				},
-			},
-		});
+			});
 
-		if (!payout) {
-			return this.resultFail('Payout not found');
-		}
-
-		if (payout.recipient.program) {
-			const access = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!access.success) {
-				return this.resultFail(access.error);
+			if (!payout) {
+				return this.resultFail('Payout not found');
 			}
 
-			const allowed = access.data.some((p) => p.programId === payout.recipient.program!.id && p.permission != null);
+			if (payout.recipient.program) {
+				const access = await this.programAccessService.getAccessiblePrograms(userId);
+				if (!access.success) {
+					return this.resultFail(access.error);
+				}
 
-			if (!allowed) {
-				return this.resultFail('Access denied to this payout');
+				const allowed = access.data.some((p) => p.programId === payout.recipient.program!.id && p.permission != null);
+
+				if (!allowed) {
+					return this.resultFail('Access denied to this payout');
+				}
 			}
-		}
 
-		return this.resultOk({
-			id: payout.id,
-			amount: Number(payout.amount),
-			currency: payout.currency,
-			status: payout.status,
-			paymentAt: payout.paymentAt,
-			phoneNumber: payout.phoneNumber,
-			comments: payout.comments,
-			recipient: {
-				id: payout.recipient.id,
-				firstName: payout.recipient.contact.firstName,
-				lastName: payout.recipient.contact.lastName,
-				programId: payout.recipient.program && payout.recipient.program.id,
-				programName: payout.recipient.program && payout.recipient.program.name,
-			},
-		});
+			return this.resultOk({
+				id: payout.id,
+				amount: Number(payout.amount),
+				currency: payout.currency,
+				status: payout.status,
+				paymentAt: payout.paymentAt,
+				phoneNumber: payout.phoneNumber,
+				comments: payout.comments,
+				recipient: {
+					id: payout.recipient.id,
+					firstName: payout.recipient.contact.firstName,
+					lastName: payout.recipient.contact.lastName,
+					programId: payout.recipient.program && payout.recipient.program.id,
+					programName: payout.recipient.program && payout.recipient.program.name,
+				},
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch payout: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getByRecipientId(recipientId: string): Promise<ServiceResult<PayoutEntity[]>> {

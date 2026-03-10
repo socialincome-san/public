@@ -92,19 +92,24 @@ export class ProgramReadService extends BaseService {
 	}
 
 	async getProgramWalletsProgramScoped(userId: string, programId: string): Promise<ServiceResult<ProgramWallet>> {
-		const base = await this.getProgramWallets(userId);
+		try {
+			const base = await this.getProgramWallets(userId);
 
-		if (!base.success) {
-			return this.resultFail(base.error);
+			if (!base.success) {
+				return this.resultFail(base.error);
+			}
+
+			const wallet = base.data.wallets.find((w) => w.id === programId);
+
+			if (!wallet) {
+				return this.resultFail('Program not found or not accessible');
+			}
+
+			return this.resultOk(wallet);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not fetch program wallet: ${JSON.stringify(error)}`);
 		}
-
-		const wallet = base.data.wallets.find((w) => w.id === programId);
-
-		if (!wallet) {
-			return this.resultFail('Program not found or not accessible');
-		}
-
-		return this.resultOk(wallet);
 	}
 
 	async getOptions(userId: string): Promise<ServiceResult<ProgramOption[]>> {

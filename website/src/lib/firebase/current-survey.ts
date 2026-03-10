@@ -3,11 +3,11 @@ import { cache } from 'react';
 import { SurveyPayload } from '../services/survey/survey.types';
 
 const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
-	const cookie = await services.firebaseSession.readSessionCookie();
-	if (!cookie) {
+	const cookieResult = await services.firebaseSession.readSessionCookie();
+	if (!cookieResult.success || !cookieResult.data) {
 		return null;
 	}
-	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookie);
+	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookieResult.data);
 	if (!decodedTokenResult.success) {
 		return null;
 	}

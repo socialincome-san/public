@@ -387,18 +387,18 @@ export class ProgramStatsService extends BaseService {
 		programDurationInMonths: number;
 		payoutInterval: string;
 		nowDate: Date;
-	}): boolean {
+	}): ServiceResult<boolean> {
 		const hasStarted = this.isRecipientStartedNow(params.startDate, params.nowDate);
 		if (!hasStarted) {
-			return false;
+			return this.resultOk(false);
 		}
 
 		if (this.isRecipientSuspendedNow(params.suspendedAt, params.nowDate)) {
-			return false;
+			return this.resultOk(false);
 		}
 
 		const expectedIntervals = this.getExpectedIntervals(params.programDurationInMonths, params.payoutInterval);
-		return !this.isRecipientCompleted(params.paidOrConfirmedCount, expectedIntervals);
+		return this.resultOk(!this.isRecipientCompleted(params.paidOrConfirmedCount, expectedIntervals));
 	}
 
 	private async getLatestRatesOrUndefined(): Promise<Partial<Record<Currency, number>> | undefined> {

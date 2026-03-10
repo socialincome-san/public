@@ -66,15 +66,15 @@ export class CampaignReadService extends BaseService {
 	}
 
 	async get(userId: string, campaignId: string): Promise<ServiceResult<CampaignPayload>> {
-		const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-
-		if (!accessResult.success) {
-			return this.resultFail(accessResult.error);
-		}
-
-		const { id: organizationId } = accessResult.data;
-
 		try {
+			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const { id: organizationId } = accessResult.data;
+
 			const campaign = await this.db.campaign.findFirst({
 				where: { id: campaignId, organizationId },
 				select: {
