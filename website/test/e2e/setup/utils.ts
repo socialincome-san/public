@@ -5,16 +5,19 @@ const ACTORS = {
 	user: {
 		email: 'test@portal.org',
 		testId: 'welcome-message-portal',
+		expectedPath: '/portal',
 		state: 'playwright/.auth/user.json',
 	},
 	contributor: {
 		email: 'test@dashboard.org',
 		testId: 'welcome-message-dashboard',
+		expectedPath: '/dashboard',
 		state: 'playwright/.auth/contributor.json',
 	},
 	partner: {
 		email: 'test@partner.org',
 		testId: 'welcome-message-partner-space',
+		expectedPath: '/partner-space',
 		state: 'playwright/.auth/partner.json',
 	},
 } as const;
@@ -40,7 +43,7 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 	const context = await browser.newContext();
 	const page = await context.newPage();
 
-	const { email, testId, state } = ACTORS[actor];
+	const { email, testId, expectedPath, state } = ACTORS[actor];
 
 	await page.goto(`/en/int/${NEW_WEBSITE_SLUG}`);
 	await page.getByTestId('login-button').click();
@@ -60,9 +63,28 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 	}
 
 	await page.goto(latest.oobLink);
-	await page.getByTestId('confirm-login-button').click();
+	await page.waitForURL((url) => url.pathname.includes('/auth/confirm-login'));
 
+	const confirmButton = page.getByTestId('confirm-login-button');
+	await expect(
+		confirmButton,
+		`Expected confirm screen for "${actor}" (${email}) but confirm button was not found.`,
+	).toBeVisible();
+	await confirmButton.click();
+
+	await page.waitForURL(
+		(url) => {
+			return url.pathname.includes(expectedPath);
+		},
+	);
+
+	const currentPath = new URL(page.url()).pathname;
+	expect(
+		currentPath.includes(expectedPath),
+		`Expected actor "${actor}" to land on "${expectedPath}", but got "${currentPath}"`,
+	).toBeTruthy();
 	await expect(page.getByTestId(testId)).toBeVisible();
+
 	await page.evaluate(
 		({ key, value }) => {
 			window.localStorage.setItem(key, value);

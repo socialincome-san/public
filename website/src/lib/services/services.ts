@@ -9,6 +9,7 @@ import { ContributionReadService } from './contribution/contribution-read.servic
 import { ContributionWriteService } from './contribution/contribution-write.service';
 import { ContributorReadService } from './contributor/contributor-read.service';
 import { ContributorWriteService } from './contributor/contributor-write.service';
+import { ContactRelationsService } from './contact/contact-relations.service';
 import { CountryReadService } from './country/country-read.service';
 import { CountryWriteService } from './country/country-write.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
@@ -21,6 +22,7 @@ import { ExpenseWriteService } from './expense/expense-write.service';
 import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
+import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
 import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-money-provider-read.service';
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
@@ -72,9 +74,17 @@ const payoutWrite = new PayoutWriteService(prisma, programAccessRead);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
 const contributionRead = new ContributionReadService(prisma, organizationAccess);
 const contributionWrite = new ContributionWriteService(prisma, organizationAccess);
+const contactRelations = new ContactRelationsService(prisma);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
 const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
-const localPartnerWrite = new LocalPartnerWriteService(prisma, userRead, firebaseAdmin);
+const localPartnerValidation = new LocalPartnerValidationService(prisma);
+const localPartnerWrite = new LocalPartnerWriteService(
+	prisma,
+	userRead,
+	firebaseAdmin,
+	localPartnerValidation,
+	contactRelations,
+);
 const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
 const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead);
 const countryRead = new CountryReadService(prisma, userRead);

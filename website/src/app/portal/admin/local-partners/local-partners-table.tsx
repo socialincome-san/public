@@ -36,7 +36,13 @@ export default function LocalPartnersTable({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving local partner: ${error}`);
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: typeof error === 'string'
+					? error
+					: 'An unexpected error occurred while saving.';
+		setErrorMessage(`Error saving local partner: ${errorMessage}`);
 		logger.error('Local Partner Form Error', { error });
 	};
 
