@@ -27,6 +27,7 @@ import { LocalPartnerReadService } from './local-partner/local-partner-read.serv
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
 import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-money-provider-read.service';
+import { MobileMoneyProviderValidationService } from './mobile-money-provider/mobile-money-provider-validation.service';
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
 import { OrganizationAccessService } from './organization-access/organization-access.service';
 import { OrganizationReadService } from './organization/organization-read.service';
@@ -90,7 +91,12 @@ const localPartnerWrite = new LocalPartnerWriteService(
 	contactRelations,
 );
 const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
-const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead);
+const mobileMoneyProviderValidation = new MobileMoneyProviderValidationService(prisma);
+const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(
+	prisma,
+	userRead,
+	mobileMoneyProviderValidation,
+);
 const countryRead = new CountryReadService(prisma, userRead);
 const countryValidation = new CountryValidationService(prisma);
 const countryWrite = new CountryWriteService(prisma, userRead, countryValidation);

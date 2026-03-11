@@ -4,15 +4,19 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
 import {
-	MobileMoneyProviderCreateInput,
 	MobileMoneyProviderPayload,
-	MobileMoneyProviderUpdateInput,
 } from './mobile-money-provider.types';
+import {
+	MobileMoneyProviderFormCreateInput,
+	MobileMoneyProviderFormUpdateInput,
+} from './mobile-money-provider-form-input';
+import { MobileMoneyProviderValidationService } from './mobile-money-provider-validation.service';
 
 export class MobileMoneyProviderWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
+		private readonly validationService: MobileMoneyProviderValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -20,7 +24,7 @@ export class MobileMoneyProviderWriteService extends BaseService {
 
 	async create(
 		userId: string,
-		input: MobileMoneyProviderCreateInput,
+		input: MobileMoneyProviderFormCreateInput,
 	): Promise<ServiceResult<MobileMoneyProviderPayload>> {
 		try {
 			const isAdminResult = await this.userService.isAdmin(userId);
@@ -28,10 +32,21 @@ export class MobileMoneyProviderWriteService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 
+			const validatedInputResult = this.validationService.validateCreateInput(input);
+			if (!validatedInputResult.success) {
+				return this.resultFail(validatedInputResult.error);
+			}
+			const validatedInput = validatedInputResult.data;
+
+			const uniquenessResult = await this.validationService.validateCreateUniqueness(validatedInput);
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
 			const created = await this.db.mobileMoneyProvider.create({
 				data: {
-					name: input.name,
-					isSupported: input.isSupported,
+					name: validatedInput.name,
+					isSupported: validatedInput.isSupported,
 				},
 			});
 
@@ -44,13 +59,13 @@ export class MobileMoneyProviderWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create mobile money provider: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not create mobile money provider. Please try again later.');
 		}
 	}
 
 	async update(
 		userId: string,
-		input: MobileMoneyProviderUpdateInput,
+		input: MobileMoneyProviderFormUpdateInput,
 	): Promise<ServiceResult<MobileMoneyProviderPayload>> {
 		try {
 			const isAdminResult = await this.userService.isAdmin(userId);
@@ -58,11 +73,36 @@ export class MobileMoneyProviderWriteService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 
+			const validatedInputResult = this.validationService.validateUpdateInput(input);
+			if (!validatedInputResult.success) {
+				return this.resultFail(validatedInputResult.error);
+			}
+			const validatedInput = validatedInputResult.data;
+			if (!validatedInput.id) {
+				return this.resultFail('Mobile money provider id is required.');
+			}
+
+			const existing = await this.db.mobileMoneyProvider.findUnique({
+				where: { id: validatedInput.id },
+				select: { id: true, name: true },
+			});
+			if (!existing) {
+				return this.resultFail('Mobile money provider not found');
+			}
+
+			const uniquenessResult = await this.validationService.validateUpdateUniqueness(validatedInput, {
+				providerId: existing.id,
+				existingName: existing.name,
+			});
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
 			const updated = await this.db.mobileMoneyProvider.update({
-				where: { id: input.id },
+				where: { id: validatedInput.id },
 				data: {
-					...(input.name !== undefined && { name: input.name }),
-					...(input.isSupported !== undefined && { isSupported: input.isSupported }),
+					name: validatedInput.name,
+					isSupported: validatedInput.isSupported,
 				},
 			});
 
@@ -75,7 +115,7 @@ export class MobileMoneyProviderWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not update mobile money provider: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not update mobile money provider. Please try again later.');
 		}
 	}
 
