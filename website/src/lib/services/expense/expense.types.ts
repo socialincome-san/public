@@ -33,4 +33,3 @@ export type ExpensePayload = {
 	amountChf: number;
 	organization: { id: string; name: string };
 };
-
