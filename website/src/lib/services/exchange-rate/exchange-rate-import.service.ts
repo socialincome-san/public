@@ -45,7 +45,7 @@ export class ExchangeRateImportService extends BaseService {
 		if (!response.ok) {
 			throw new Error(`Exchange Rate Request Failure for ${day}: ${response.status} ${response.statusText}`);
 		}
-		const data = await response.json();
+		const data: ExchangeRateResponse = await response.json();
 		return data;
 	}
 

@@ -49,32 +49,46 @@ const buildZodSchema = (schemaDef: FormSchema): ZodObject<any> => {
 };
 
 // Typeguard
-const isFormField = (obj: any): obj is FormField => {
-	return obj && typeof obj === 'object' && !('fields' in obj);
+const isFormField = (obj: unknown): obj is FormField => {
+	return obj !== null && typeof obj === 'object' && !('fields' in obj);
 };
 
 // get first level or nested def object from Zod Schema
 const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string) => {
 	if (!parentKey) {
-		return zodSchema.shape[key]?._def;
+		return zodSchema.shape[key]?._def as unknown;
 	}
 	const nestedShapeFactory = zodSchema.shape[parentKey]?._def.shape as (() => Record<string, { _def?: unknown }>) | undefined;
 	const nestedShape = nestedShapeFactory ? nestedShapeFactory() : undefined;
 	return nestedShape?.[String(key)]?._def;
 };
 
+const getTypeName = (def: unknown): string | undefined => {
+	if (!def || typeof def !== 'object') {
+		return undefined;
+	}
+	const maybeTypeName = (def as { typeName?: unknown }).typeName;
+	return typeof maybeTypeName === 'string' ? maybeTypeName : undefined;
+};
+
 // get Zod Type by Form Schema key
 const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
 	const def = getDef(key, zodSchema, parentKey);
-	let type = def.typeName;
+	let type = getTypeName(def) ?? 'ZodUnknown';
 	if (isOptional(key, zodSchema, parentKey)) {
-		type = def.innerType._def.typeName;
+		const optionalType = getTypeName((def as { innerType?: { _def?: unknown } }).innerType?._def);
+		if (optionalType) {
+			type = optionalType;
+		}
 	}
 	if (type === 'ZodEffects') {
-		return def.innerType._def.schema._def.typeName;
+		return getTypeName((def as { innerType?: { _def?: { schema?: { _def?: unknown } } } }).innerType?._def?.schema?._def) ?? type;
 	}
 	if (type === 'ZodUnion') {
-		return def.innerType._def.options[0]._def.typeName;
+		const unionOptionType = getTypeName(
+			(def as { innerType?: { _def?: { options?: { _def?: unknown }[] } } }).innerType?._def?.options?.[0]?._def,
+		);
+		return unionOptionType ?? type;
 	}
 	if (type === 'ZodNativeEnum') {
 		return 'ZodEnum';
@@ -91,9 +105,10 @@ const isOptional = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject
 	return ['ZodOptional', 'ZodNullable'].includes(type);
 };
 
-const unwrapOptional = (def: any) => {
-	if (def?.typeName === 'ZodOptional' || def?.typeName === 'ZodNullable') {
-		return def.innerType?._def;
+const unwrapOptional = (def: unknown) => {
+	const type = getTypeName(def);
+	if (type === 'ZodOptional' || type === 'ZodNullable') {
+		return (def as { innerType?: { _def?: unknown } }).innerType?._def;
 	}
 	return def;
 };
@@ -103,14 +118,14 @@ const getEnumArrayValues = (
 	zodSchema: z.ZodObject<any>,
 	parentOption?: string,
 ): Record<string, string> => {
-	let def: any = getDef(key, zodSchema, parentOption);
+	let def: unknown = getDef(key, zodSchema, parentOption);
 	def = unwrapOptional(def);
 
-	if (def?.typeName !== 'ZodArray') {
+	if (getTypeName(def) !== 'ZodArray') {
 		return {};
 	}
 
-	return (def.type?._def?.values ?? {}) as Record<string, string>;
+	return (def as { type?: { _def?: { values?: Record<string, string> } } }).type?._def?.values ?? {};
 };
 
 type Props = {
@@ -282,20 +297,23 @@ const GenericFormField = ({
 	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): Record<string, string> => {
 		const def = getDef(key, zodSchema, parentOption);
 		if (isOptional(key, zodSchema, parentOption)) {
-			return def.innerType._def.values;
+			return (def as { innerType?: { _def?: { values?: Record<string, string> } } }).innerType?._def?.values ?? {};
 		}
-		return getType(key, zodSchema, parentOption) === 'ZodEnum' && def.values;
+		return getType(key, zodSchema, parentOption) === 'ZodEnum'
+			? ((def as { values?: Record<string, string> }).values ?? {})
+			: {};
 	};
 
 	const getDateMinMax = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { min?: Date; max?: Date } => {
 		let def = getDef(key, zodSchema, parentOption);
 		if (isOptional(key, zodSchema, parentOption)) {
-			def = def.innerType._def;
+			def = (def as { innerType?: { _def?: unknown } }).innerType?._def;
 		}
 		const dateConstraints: { min?: Date; max?: Date } = {};
+		const checks = (def as { checks?: { kind?: string; value?: string | number | Date }[] } | undefined)?.checks;
 
-		if (def.checks) {
-			for (const check of def.checks as { kind?: string; value?: string | number | Date }[]) {
+		if (checks) {
+			for (const check of checks) {
 				if (check.kind === 'min' && check.value !== undefined) {
 					dateConstraints.min = new Date(check.value);
 				} else if (check.kind === 'max' && check.value !== undefined) {

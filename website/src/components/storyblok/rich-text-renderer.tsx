@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
+import { ReactNode } from 'react';
 import {
 	MARK_LINK,
 	NODE_HEADING,
@@ -42,5 +43,5 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 		blokResolvers: {
 			// Todo: Add blocks as soon as we have them ready in the Storyblok schema
 		},
-	});
+	}) as ReactNode;
 };

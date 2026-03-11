@@ -31,7 +31,7 @@ const sortKeys = (o: Record<string, any>) =>
 
 const readReplayRecordings = (recordingKey: string) => {
 	const raw = fs.readFileSync(recordingPath(recordingKey), 'utf-8');
-	return JSON.parse(restoreToken(raw));
+	return JSON.parse(restoreToken(raw)) as unknown;
 };
 
 const writeRecordings = (recordingKey: string, recordings: unknown) => {

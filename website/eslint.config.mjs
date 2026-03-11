@@ -28,7 +28,6 @@ export default [
 			'@typescript-eslint/consistent-type-definitions': 'off',
 			'@typescript-eslint/no-unsafe-assignment': 'warn',
 			'@typescript-eslint/no-unsafe-member-access': 'warn',
-			'@typescript-eslint/no-unsafe-return': 'warn',
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
 			'react-hooks/set-state-in-effect': 'warn',

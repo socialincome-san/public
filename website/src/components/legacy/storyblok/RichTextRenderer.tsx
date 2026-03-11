@@ -9,6 +9,7 @@ import { WebsiteRegion } from '@/lib/i18n/utils';
 import { LanguageCode } from '@/lib/types/language';
 import { QuotedText, Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/ui';
 import Link from 'next/link';
+import { ReactNode } from 'react';
 import {
 	MARK_LINK,
 	NODE_LI,
@@ -82,5 +83,5 @@ export const RichTextRenderer = ({ richTextDocument, translator, lang, region }:
 				<StoryblokCampaignDonate lang={lang} {...props} translator={translator} region={region} />
 			),
 		},
-	});
+	}) as ReactNode;
 };
