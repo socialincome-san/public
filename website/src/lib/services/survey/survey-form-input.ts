@@ -15,12 +15,15 @@ const surveyLanguageSchema = z.enum(allWebsiteLanguages as [string, ...string[]]
 	errorMap: () => ({ message: 'Please select a valid language.' }),
 });
 
-const surveyDateSchema = z.preprocess((value) => {
-	if (value === '' || value == null) {
-		return undefined;
-	}
-	return value;
-}, z.coerce.date({ message: 'Please provide a valid due date.' }));
+const surveyDateSchema = z.preprocess(
+	(value) => {
+		if (value === '' || value == null) {
+			return undefined;
+		}
+		return value;
+	},
+	z.coerce.date({ message: 'Please provide a valid due date.' }),
+);
 
 export const surveyCreateInputSchema = z.object({
 	name: requiredTrimmedString,
