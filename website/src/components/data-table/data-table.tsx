@@ -17,10 +17,10 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/ui';
-import { InfoIcon } from 'lucide-react';
 import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
 import DOMPurify from 'isomorphic-dompurify';
+import { InfoIcon } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 
 type DataTableProps<Row> = {
@@ -207,7 +207,9 @@ export default function DataTable<Row>({
 				<div className="flex items-center gap-2">
 					<h2 className="text-3xl">
 						{title}{' '}
-						<span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
+						<span className="text-lg text-gray-500">
+							({activeQuery ? activeQuery.totalRows : displayedData.length})
+						</span>
 					</h2>
 					{titleInfoTooltip ? (
 						<Tooltip>
