@@ -14,10 +14,11 @@ type CookieConsentBannerClientProps = {
 
 export const CookieConsentBanner = ({ translations }: CookieConsentBannerClientProps) => {
 	const isSurveyPage = useIsPage('survey');
-	const hideBanner = isSurveyPage || Boolean(localStorage.getItem('cookie_consent'));
+	const hasConsent = typeof window !== 'undefined' && Boolean(window.localStorage.getItem('cookie_consent'));
+	const hideBanner = isSurveyPage || hasConsent;
 
 	const setCookieConsent = (mode: ConsentStatusString) => {
-		localStorage.setItem('cookie_consent', mode);
+		window.localStorage.setItem('cookie_consent', mode);
 		location.reload();
 	};
 	if (hideBanner) {

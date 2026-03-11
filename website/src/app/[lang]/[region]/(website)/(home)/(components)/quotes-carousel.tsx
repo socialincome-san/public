@@ -11,8 +11,12 @@ export type CarouselCardProps = {
 	author: string;
 }[];
 
-export const QuotesCarousel = (cardsObj: CarouselCardProps) => {
-	const cardsArr = [...cardsObj];
+type QuotesCarouselProps = {
+	cards: CarouselCardProps;
+};
+
+export const QuotesCarousel = ({ cards }: QuotesCarouselProps) => {
+	const cardsArr = [...cards];
 
 	// TODO: update carousel content
 	return (
