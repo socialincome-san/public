@@ -92,7 +92,7 @@ export class FirebaseSessionService extends BaseService {
 			return this.resultFail('Missing session cookie');
 		}
 
-		const match = cookieHeader.match(/session=([^;]+)/);
+		const match = /session=([^;]+)/.exec(cookieHeader);
 		if (!match) {
 			return this.resultFail('Missing session cookie');
 		}

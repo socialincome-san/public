@@ -97,7 +97,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 	switch (visibleSection) {
 		case 'about-us':
 		case 'our-work':
-		case 'transparency':
+		case 'transparency': {
 			const section = navigation!.find((section) => section.id === visibleSection);
 			content = (
 				<div className="flex flex-col space-y-8">
@@ -112,6 +112,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 				</div>
 			);
 			break;
+		}
 		case 'i18n':
 			content = (
 				<div className="flex flex-col space-y-8">
@@ -188,7 +189,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 			);
 			break;
 		case 'main':
-		default:
+		default: {
 			const ourWork = navigation![0];
 			const aboutUs = navigation![1];
 			const transparency = navigation![2];
@@ -239,6 +240,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 				</div>
 			);
 			break;
+		}
 	}
 
 	return (

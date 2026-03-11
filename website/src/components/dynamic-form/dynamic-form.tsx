@@ -118,6 +118,7 @@ type Props = {
 
 const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
+	const OPEN_ALL_ACCORDIONS = '__all__';
 
 	const form = useForm<z.infer<typeof zodSchema>>({
 		resolver: zodResolver(zodSchema),
@@ -170,11 +171,11 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 		onSubmit(schema);
 	};
 
-	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
+	const [openAccordion, setOpenAccordion] = useState<undefined | string>(undefined);
 
 	const onValidationErrors = (e: object) => {
 		console.warn('dynamic form validation errors: ', e);
-		setOpenAccordion('all');
+		setOpenAccordion(OPEN_ALL_ACCORDIONS);
 	};
 
 	return (
@@ -190,7 +191,13 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 							key={option}
 							type="single"
 							collapsible
-							value={openAccordion ? (openAccordion === 'all' ? `accordion-${option}` : openAccordion) : 'closed'}
+							value={
+								openAccordion
+									? openAccordion === OPEN_ALL_ACCORDIONS
+										? `accordion-${option}`
+										: openAccordion
+									: 'closed'
+							}
 							onValueChange={(value: string) => setOpenAccordion(value ? `accordion-${option}` : undefined)}
 						>
 							{/* TODO: find better solution to hide collapsed content */}

@@ -39,7 +39,7 @@ export const getCommits = async () => {
 	let totalCommits = 1;
 
 	if (linkHeader) {
-		const match = linkHeader.match(/&page=(\d+)>; rel="last"/);
+		const match = /&page=(\d+)>; rel="last"/.exec(linkHeader);
 		if (match) {
 			totalCommits = parseInt(match[1], 10);
 		} else {

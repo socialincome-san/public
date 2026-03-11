@@ -32,7 +32,7 @@ export const toggleNewsletter = async (
 			firstname: values.firstName,
 			lastname: values.lastName,
 			language,
-			country: session.country as CountryCode,
+			country: session.country! as CountryCode,
 			isContributor: true,
 		});
 	}

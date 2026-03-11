@@ -37,13 +37,13 @@ export const RichTextRenderer = ({ richTextDocument, translator, lang, region }:
 			),
 		},
 		nodeResolvers: {
-			// @ts-ignore
+			// @ts-expect-error Resolver prop typing from library is too broad.
 			[NODE_LI]: (children: any, props: any) => (
 				<li className="m-0.5 p-0.5 *:m-0 *:p-0 [&::marker]:text-black" {...props}>
 					{children}
 				</li>
 			),
-			// @ts-ignore
+			// @ts-expect-error Resolver prop typing from library is too broad.
 			[NODE_TABLE]: (children: any, props: any) => (
 				<Table className="text-foreground" {...props}>
 					<TableBody>{children}</TableBody>
@@ -54,7 +54,7 @@ export const RichTextRenderer = ({ richTextDocument, translator, lang, region }:
 					{children}
 				</TableHead>
 			),
-			// @ts-ignore
+			// @ts-expect-error Resolver prop typing from library is too broad.
 			[NODE_TABLE_ROW]: (children: any, props: any) => <TableRow {...props}>{children}</TableRow>,
 			[NODE_TABLE_CELL]: (children: any, props: any) => <TableCell {...props}>{children} </TableCell>,
 		},

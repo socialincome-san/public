@@ -52,31 +52,31 @@ export type ProgramForDashboard = {
 		currency: Currency;
 	};
 
-	recipients: Array<{
+	recipients: {
 		id: string;
 		startDate: Date | null;
 		suspendedAt: Date | null;
-		payouts: Array<{
+		payouts: {
 			paymentAt: Date;
 			amount: unknown;
-			amountChf: unknown | null;
+			amountChf: unknown;
 			status: PayoutStatus;
-		}>;
-		surveys: Array<{
+		}[];
+		surveys: {
 			id: string;
 			status: SurveyStatus;
-		}>;
-	}>;
+		}[];
+	}[];
 
-	campaigns: Array<{
-		contributions: Array<{
+	campaigns: {
+		contributions: {
 			amountChf: unknown;
 			contributorId: string;
 			paymentEvent: {
 				type: PaymentEventType;
 			} | null;
-		}>;
-	}>;
+		}[];
+	}[];
 };
 
 export type ProgramBudgetCalculationInput = {

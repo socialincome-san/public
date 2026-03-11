@@ -410,7 +410,7 @@ export class ProgramStatsService extends BaseService {
 		return activeRecipientsCount * payoutPerInterval;
 	}
 
-	private countPaidOrConfirmedPayouts(payouts: Array<{ status: PayoutStatus }>): number {
+	private countPaidOrConfirmedPayouts(payouts: { status: PayoutStatus }[]): number {
 		return payouts.filter((p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed).length;
 	}
 

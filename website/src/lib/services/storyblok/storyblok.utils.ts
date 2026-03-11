@@ -33,7 +33,7 @@ export const getDimensionsFromStoryblokImageUrl = (url: string): { width?: numbe
 	if (!url) {
 		return {};
 	}
-	const match = url.match(/\/f\/\d+\/(\d+)x(\d+)\//);
+	const match = /\/f\/\d+\/(\d+)x(\d+)\//.exec(url);
 
 	return match ? { width: Number(match[1]), height: Number(match[2]) } : {};
 };
