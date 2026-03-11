@@ -160,6 +160,9 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 
 	const onSubmit = (schema: ContributionFormSchema) => {
 		startTransition(async () => {
+			if (contributionId && (!contribution || contribution.id !== contributionId)) {
+				return onError?.('Contribution is still loading. Please try again.');
+			}
 			const response =
 				contributionId && contribution
 					? await updateContributionAction(buildUpdateContributionInput(schema, contribution))

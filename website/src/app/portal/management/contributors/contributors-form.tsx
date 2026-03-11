@@ -69,6 +69,9 @@ export default function ContributorsForm({
 
 	const onSubmit = async (schema: ContributorFormSchema) => {
 		startTransition(async () => {
+			if (contributorId && (!contributor || contributor.id !== contributorId)) {
+				return onError?.('Contributor is still loading. Please try again.');
+			}
 			const res =
 				contributorId && contributor
 					? await updateContributorAction(buildUpdateContributorsInput(schema, contributor))

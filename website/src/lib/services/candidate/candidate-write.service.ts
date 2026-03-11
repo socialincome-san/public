@@ -284,6 +284,53 @@ export class CandidateWriteService extends BaseService {
 			currentPhoneId: context.paymentPhoneId,
 			currentPhoneNumber: context.paymentPhoneNumber,
 		});
+		const hasPaymentPayload = Boolean(
+			input.paymentInformation.mobileMoneyProviderId || input.paymentInformation.code || input.paymentInformation.phone,
+		);
+		const paymentInformationWrite: Prisma.PaymentInformationUpdateOneWithoutRecipientsNestedInput | undefined =
+			context.paymentInformationId
+				? {
+						upsert: {
+							where: { id: context.paymentInformationId },
+							create: {
+								mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
+									? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
+									: undefined,
+								code: input.paymentInformation.code ?? null,
+								phone: input.paymentInformation.phone
+									? {
+											create: {
+												number: input.paymentInformation.phone,
+											},
+										}
+									: undefined,
+							},
+							update: {
+								mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
+									? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
+									: { disconnect: true },
+								code: input.paymentInformation.code ?? null,
+								phone: paymentPhoneWriteOperation,
+							},
+						},
+					}
+				: hasPaymentPayload
+					? {
+							create: {
+								mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
+									? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
+									: undefined,
+								code: input.paymentInformation.code ?? null,
+								phone: input.paymentInformation.phone
+									? {
+											create: {
+												number: input.paymentInformation.phone,
+											},
+										}
+									: undefined,
+							},
+						}
+					: undefined;
 
 		return {
 			program: undefined,
@@ -309,31 +356,7 @@ export class CandidateWriteService extends BaseService {
 					},
 				},
 			},
-			paymentInformation: {
-				upsert: {
-					where: { id: context.paymentInformationId },
-					create: {
-						mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
-							? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
-							: undefined,
-						code: input.paymentInformation.code ?? null,
-						phone: input.paymentInformation.phone
-							? {
-									create: {
-										number: input.paymentInformation.phone,
-									},
-								}
-							: undefined,
-					},
-					update: {
-						mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
-							? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
-							: { disconnect: true },
-						code: input.paymentInformation.code ?? null,
-						phone: paymentPhoneWriteOperation,
-					},
-				},
-			},
+			...(paymentInformationWrite ? { paymentInformation: paymentInformationWrite } : {}),
 		};
 	}
 
@@ -635,22 +658,54 @@ export class CandidateWriteService extends BaseService {
 			});
 
 			if (previousContactPhoneId) {
-				await this.contactRelationsService.deletePhoneIfUnused(previousContactPhoneId);
+				try {
+					await this.contactRelationsService.deletePhoneIfUnused(previousContactPhoneId);
+				} catch (cleanupError) {
+					this.logger.warn('Candidate deleted but contact phone cleanup failed', {
+						candidateId,
+						previousContactPhoneId,
+						error: cleanupError,
+					});
+				}
 			}
 			if (previousPaymentPhoneId) {
-				await this.contactRelationsService.deletePhoneIfUnused(previousPaymentPhoneId);
+				try {
+					await this.contactRelationsService.deletePhoneIfUnused(previousPaymentPhoneId);
+				} catch (cleanupError) {
+					this.logger.warn('Candidate deleted but payment phone cleanup failed', {
+						candidateId,
+						previousPaymentPhoneId,
+						error: cleanupError,
+					});
+				}
 			}
 			if (previousAddressId) {
-				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
+				try {
+					await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
+				} catch (cleanupError) {
+					this.logger.warn('Candidate deleted but address cleanup failed', {
+						candidateId,
+						previousAddressId,
+						error: cleanupError,
+					});
+				}
 			}
 
 			if (paymentPhoneNumber) {
-				const firebaseDeleteResult = await this.firebaseAdminService.deleteByPhoneNumberIfExists(paymentPhoneNumber);
-				if (!firebaseDeleteResult.success) {
-					this.logger.warn('Candidate deleted in DB but Firebase user deletion failed', {
+				try {
+					const firebaseDeleteResult = await this.firebaseAdminService.deleteByPhoneNumberIfExists(paymentPhoneNumber);
+					if (!firebaseDeleteResult.success) {
+						this.logger.warn('Candidate deleted in DB but Firebase user deletion failed', {
+							candidateId,
+							paymentPhoneNumber,
+							error: firebaseDeleteResult.error,
+						});
+					}
+				} catch (cleanupError) {
+					this.logger.warn('Candidate deleted in DB but Firebase cleanup threw', {
 						candidateId,
 						paymentPhoneNumber,
-						error: firebaseDeleteResult.error,
+						error: cleanupError,
 					});
 				}
 			}

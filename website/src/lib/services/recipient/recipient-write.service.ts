@@ -371,6 +371,53 @@ export class RecipientWriteService extends BaseService {
 			currentPhoneId: context.paymentPhoneId,
 			currentPhoneNumber: context.paymentPhoneNumber,
 		});
+		const hasPaymentPayload = Boolean(
+			input.paymentInformation.mobileMoneyProviderId || input.paymentInformation.code || input.paymentInformation.phone,
+		);
+		const paymentInformationWrite: Prisma.PaymentInformationUpdateOneWithoutRecipientsNestedInput | undefined =
+			context.paymentInformationId
+				? {
+						upsert: {
+							where: { id: context.paymentInformationId },
+							create: {
+								mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
+									? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
+									: undefined,
+								code: input.paymentInformation.code ?? null,
+								phone: input.paymentInformation.phone
+									? {
+											create: {
+												number: input.paymentInformation.phone,
+											},
+										}
+									: undefined,
+							},
+							update: {
+								mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
+									? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
+									: { disconnect: true },
+								code: input.paymentInformation.code ?? null,
+								phone: paymentPhoneWriteOperation,
+							},
+						},
+					}
+				: hasPaymentPayload
+					? {
+							create: {
+								mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
+									? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
+									: undefined,
+								code: input.paymentInformation.code ?? null,
+								phone: input.paymentInformation.phone
+									? {
+											create: {
+												number: input.paymentInformation.phone,
+											},
+										}
+									: undefined,
+							},
+						}
+					: undefined;
 
 		return {
 			startDate: input.startDate ?? null,
@@ -397,31 +444,7 @@ export class RecipientWriteService extends BaseService {
 					},
 				},
 			},
-			paymentInformation: {
-				upsert: {
-					where: { id: context.paymentInformationId },
-					create: {
-						mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
-							? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
-							: undefined,
-						code: input.paymentInformation.code ?? null,
-						phone: input.paymentInformation.phone
-							? {
-									create: {
-										number: input.paymentInformation.phone,
-									},
-								}
-							: undefined,
-					},
-					update: {
-						mobileMoneyProvider: input.paymentInformation.mobileMoneyProviderId
-							? { connect: { id: input.paymentInformation.mobileMoneyProviderId } }
-							: { disconnect: true },
-						code: input.paymentInformation.code ?? null,
-						phone: paymentPhoneWriteOperation,
-					},
-				},
-			},
+			...(paymentInformationWrite ? { paymentInformation: paymentInformationWrite } : {}),
 		};
 	}
 
@@ -626,22 +649,54 @@ export class RecipientWriteService extends BaseService {
 			});
 
 			if (previousContactPhoneId) {
-				await this.contactRelationsService.deletePhoneIfUnused(previousContactPhoneId);
+				try {
+					await this.contactRelationsService.deletePhoneIfUnused(previousContactPhoneId);
+				} catch (cleanupError) {
+					this.logger.warn('Recipient deleted but contact phone cleanup failed', {
+						recipientId,
+						previousContactPhoneId,
+						error: cleanupError,
+					});
+				}
 			}
 			if (previousPaymentPhoneId) {
-				await this.contactRelationsService.deletePhoneIfUnused(previousPaymentPhoneId);
+				try {
+					await this.contactRelationsService.deletePhoneIfUnused(previousPaymentPhoneId);
+				} catch (cleanupError) {
+					this.logger.warn('Recipient deleted but payment phone cleanup failed', {
+						recipientId,
+						previousPaymentPhoneId,
+						error: cleanupError,
+					});
+				}
 			}
 			if (previousAddressId) {
-				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
+				try {
+					await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
+				} catch (cleanupError) {
+					this.logger.warn('Recipient deleted but address cleanup failed', {
+						recipientId,
+						previousAddressId,
+						error: cleanupError,
+					});
+				}
 			}
 
 			if (paymentPhoneNumber) {
-				const firebaseDeleteResult = await this.firebaseAdminService.deleteByPhoneNumberIfExists(paymentPhoneNumber);
-				if (!firebaseDeleteResult.success) {
-					this.logger.warn('Recipient deleted in DB but Firebase user deletion failed', {
+				try {
+					const firebaseDeleteResult = await this.firebaseAdminService.deleteByPhoneNumberIfExists(paymentPhoneNumber);
+					if (!firebaseDeleteResult.success) {
+						this.logger.warn('Recipient deleted in DB but Firebase user deletion failed', {
+							recipientId,
+							paymentPhoneNumber,
+							error: firebaseDeleteResult.error,
+						});
+					}
+				} catch (cleanupError) {
+					this.logger.warn('Recipient deleted in DB but Firebase cleanup threw', {
 						recipientId,
 						paymentPhoneNumber,
-						error: firebaseDeleteResult.error,
+						error: cleanupError,
 					});
 				}
 			}

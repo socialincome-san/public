@@ -137,6 +137,9 @@ export const RecipientForm = ({
 
 	const onSubmit = (schema: RecipientFormSchema) => {
 		startTransition(async () => {
+			if (recipientId && (!recipient || recipient.id !== recipientId)) {
+				return onError?.('Recipient is still loading. Please try again.');
+			}
 			const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
 			const result =
 				recipientId && recipient

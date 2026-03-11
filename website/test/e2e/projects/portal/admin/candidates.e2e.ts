@@ -18,9 +18,10 @@ const ADD_CANDIDATE = {
 const PAYMENT_PHONE_ONE = '+23277000111';
 const PAYMENT_PHONE_TWO = '+23277000112';
 
-const openCandidateByName = async (page: Page, firstName: string) => {
-	await page.goto(`/portal/admin/candidates?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
-	await page.getByRole('cell', { name: firstName }).click();
+const openCandidateByName = async (page: Page, firstName: string, lastName: string) => {
+	const fullName = `${firstName} ${lastName}`;
+	await page.goto(`/portal/admin/candidates?page=1&pageSize=10&search=${encodeURIComponent(fullName)}`);
+	await page.getByRole('cell', { name: fullName }).click();
 };
 
 test.beforeEach(async () => {
@@ -71,13 +72,14 @@ test('candidate payment phone stays aligned in Firebase after phone changes', as
 			contact: {
 				select: {
 					firstName: true,
+					lastName: true,
 				},
 			},
 		},
 	});
 	expect(candidate).toBeTruthy();
 
-	await openCandidateByName(page, candidate!.contact.firstName);
+	await openCandidateByName(page, candidate!.contact.firstName, candidate!.contact.lastName);
 	await page.getByTestId('form-accordion-trigger-paymentInformation').click();
 	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(PAYMENT_PHONE_ONE);
 	await page.getByRole('button', { name: 'Save' }).click();
@@ -89,7 +91,7 @@ test('candidate payment phone stays aligned in Firebase after phone changes', as
 		.fill(PAYMENT_PHONE_ONE);
 	await expect(page.getByRole('cell', { name: PAYMENT_PHONE_ONE })).toBeVisible();
 
-	await openCandidateByName(page, candidate!.contact.firstName);
+	await openCandidateByName(page, candidate!.contact.firstName, candidate!.contact.lastName);
 	await page.getByTestId('form-accordion-trigger-paymentInformation').click();
 	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(PAYMENT_PHONE_TWO);
 	await page.getByRole('button', { name: 'Save' }).click();
@@ -181,7 +183,7 @@ test('delete candidate removes Firebase user for payment phone', async ({ page }
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
 	await expect(page.getByRole('cell', { name: paymentPhone })).toBeVisible();
 
-	await openCandidateByName(page, firstName);
+	await openCandidateByName(page, firstName, lastName);
 	await page.getByRole('button', { name: 'Delete' }).click();
 	await page.getByRole('button', { name: 'Delete permanently' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });

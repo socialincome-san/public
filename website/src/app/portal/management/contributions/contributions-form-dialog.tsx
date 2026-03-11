@@ -56,8 +56,8 @@ export const ContributionFormDialog = ({
 
 				<ContributionForm
 					contributionId={contributionId}
-					onSuccess={() => onOpenChange(false)}
-					onCancel={() => onOpenChange(false)}
+					onSuccess={() => handleOpenChange(false)}
+					onCancel={() => handleOpenChange(false)}
 					onError={onError}
 					readOnly={readOnly}
 				/>

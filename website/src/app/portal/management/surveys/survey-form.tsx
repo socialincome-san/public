@@ -13,7 +13,7 @@ import {
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';
 
@@ -80,7 +80,7 @@ const initialFormSchema: SurveyFormSchema = {
 		accessPw: {
 			placeholder: 'Access password',
 			label: 'Access password',
-			zodSchema: z.string().min(1),
+			zodSchema: z.string().optional(),
 		},
 	},
 };
@@ -89,6 +89,8 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(initialFormSchema);
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();
+	const onErrorRef = useRef(onError);
+	onErrorRef.current = onError;
 
 	useEffect(() => {
 		if (!surveyId) {
@@ -111,14 +113,13 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 							dueAt: { ...prev.fields.dueAt, value: data.dueAt },
 							status: { ...prev.fields.status, value: data.status },
 							accessEmail: { ...prev.fields.accessEmail, value: data.accessEmail },
-							accessPw: { ...prev.fields.accessPw, value: data.accessPw },
 						},
 					}));
 				},
-				onError: (error) => onError?.(error),
+				onError: (error) => onErrorRef.current?.(error),
 			});
 		});
-	}, [surveyId, onError]);
+	}, [surveyId]);
 
 	useEffect(() => {
 		startTransition(async () => {
@@ -137,20 +138,23 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 						},
 					}));
 				},
-				onError: (error) => onError?.(error),
+				onError: (error) => onErrorRef.current?.(error),
 			});
 		});
-	}, [onError]);
+	}, []);
 
 	const onSubmit = (schema: SurveyFormSchema) => {
 		startTransition(async () => {
+			if (surveyId && (!survey || survey.id !== surveyId)) {
+				return onErrorRef.current?.('Survey is still loading. Please try again.');
+			}
 			const result =
 				surveyId && survey
 					? await updateSurveyAction(buildUpdateSurveyInput(schema, survey))
 					: await createSurveyAction(buildCreateSurveyInput(schema));
 			handleServiceResult(result, {
 				onSuccess: () => onSuccess?.(),
-				onError: (error) => onError?.(error),
+				onError: (error) => onErrorRef.current?.(error),
 			});
 		});
 	};

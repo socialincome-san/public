@@ -35,9 +35,9 @@ const getEditableSurveys = async () => {
 	return surveys;
 };
 
-const openSurveyByName = async (page: Page, name: string) => {
-	await page.goto(`/portal/management/surveys?page=1&pageSize=10&search=${encodeURIComponent(name)}`);
-	await page.getByRole('cell', { name }).first().click();
+const openSurveyById = async (page: Page, surveyId: string) => {
+	await page.goto(`/portal/management/surveys?page=1&pageSize=10&search=${encodeURIComponent(surveyId)}`);
+	await page.locator('tbody tr').first().locator('td').first().click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'visible' });
 };
 
@@ -49,7 +49,7 @@ test('updates a survey access password', async ({ page }) => {
 	const [survey] = await getEditableSurveys();
 	const nextPassword = `pw-${Date.now()}-updated`;
 
-	await openSurveyByName(page, survey.name);
+	await openSurveyById(page, survey.id);
 	await page.getByTestId('form-item-accessPw').locator('input').fill(nextPassword);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
@@ -64,7 +64,7 @@ test('updates a survey access password', async ({ page }) => {
 test('shows uniqueness error when survey access email already exists', async ({ page }) => {
 	const [firstSurvey, secondSurvey] = await getEditableSurveys();
 
-	await openSurveyByName(page, firstSurvey.name);
+	await openSurveyById(page, firstSurvey.id);
 	await page.getByTestId('form-item-accessEmail').locator('input').fill(secondSurvey.accessEmail);
 	await page.getByRole('button', { name: 'Save' }).click();
 
@@ -76,7 +76,7 @@ test('shows uniqueness error when survey name already exists for recipient', asy
 	const secondRecipientName =
 		`${secondSurvey.recipient.contact?.firstName ?? ''} ${secondSurvey.recipient.contact?.lastName ?? ''}`.trim();
 
-	await openSurveyByName(page, firstSurvey.name);
+	await openSurveyById(page, firstSurvey.id);
 	await page.getByTestId('form-item-name').locator('input').fill(secondSurvey.name);
 	await selectOptionByTestId(page, 'recipientId', secondRecipientName);
 	await page.getByRole('button', { name: 'Save' }).click();

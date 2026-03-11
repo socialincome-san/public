@@ -11,11 +11,13 @@ export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyFormCrea
 		dueAt: new Date(schema.fields.dueAt.value),
 		status: schema.fields.status.value,
 		accessEmail: schema.fields.accessEmail.value,
-		accessPw: schema.fields.accessPw.value,
+		accessPw: `${schema.fields.accessPw.value ?? ''}`.trim(),
 	};
 };
 
 export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: SurveyPayload): SurveyFormUpdateInput => {
+	const nextAccessPassword = `${schema.fields.accessPw.value ?? ''}`.trim();
+
 	return {
 		id: existing.id,
 		name: schema.fields.name.value,
@@ -25,6 +27,6 @@ export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: Surve
 		dueAt: new Date(schema.fields.dueAt.value),
 		status: schema.fields.status.value,
 		accessEmail: schema.fields.accessEmail.value,
-		accessPw: schema.fields.accessPw.value,
+		accessPw: nextAccessPassword === '' ? undefined : nextAccessPassword,
 	};
 };

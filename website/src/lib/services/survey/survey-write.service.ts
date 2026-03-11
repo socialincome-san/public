@@ -55,6 +55,42 @@ export class SurveyWriteService extends BaseService {
 		};
 	}
 
+	private async syncSurveyAuthUser(input: {
+		nextEmail: string;
+		nextPassword: string;
+		previousEmail?: string;
+	}): Promise<ServiceResult<void>> {
+		const existingAtNextEmailResult = await this.firebaseAdminService.getByEmail(input.nextEmail);
+		if (!existingAtNextEmailResult.success) {
+			return this.resultFail(existingAtNextEmailResult.error);
+		}
+
+		if (existingAtNextEmailResult.data) {
+			const updateResult = await this.firebaseAdminService.updateByUid(existingAtNextEmailResult.data.uid, {
+				email: input.nextEmail,
+				password: input.nextPassword,
+				emailVerified: true,
+			});
+			if (!updateResult.success) {
+				return this.resultFail(updateResult.error);
+			}
+		} else {
+			const createResult = await this.firebaseAdminService.createSurveyUser(input.nextEmail, input.nextPassword);
+			if (!createResult.success) {
+				return this.resultFail(createResult.error);
+			}
+		}
+
+		if (input.previousEmail && input.previousEmail !== input.nextEmail) {
+			const deletePreviousResult = await this.firebaseAdminService.deleteByEmailIfExists(input.previousEmail);
+			if (!deletePreviousResult.success) {
+				return this.resultFail(deletePreviousResult.error);
+			}
+		}
+
+		return this.resultOk(undefined);
+	}
+
 	async create(userId: string, input: SurveyFormCreateInput): Promise<ServiceResult<SurveyPayload>> {
 		const validatedInputResult = this.surveyValidationService.validateCreateInput(input);
 		if (!validatedInputResult.success) {
@@ -98,6 +134,14 @@ export class SurveyWriteService extends BaseService {
 				accessEmail: validatedInput.accessEmail,
 				accessPw: validatedInput.accessPw,
 			};
+
+			const firebaseSyncResult = await this.syncSurveyAuthUser({
+				nextEmail: validatedInput.accessEmail,
+				nextPassword: validatedInput.accessPw,
+			});
+			if (!firebaseSyncResult.success) {
+				return this.resultFail(`Failed to sync survey auth user: ${firebaseSyncResult.error}`);
+			}
 
 			const survey = await this.db.survey.create({
 				data: createInput,
@@ -171,10 +215,23 @@ export class SurveyWriteService extends BaseService {
 				language: validatedInput.language,
 				dueAt: validatedInput.dueAt,
 				status: validatedInput.status,
-				data: {},
 				accessEmail: validatedInput.accessEmail,
-				accessPw: validatedInput.accessPw,
 			};
+			const emailChanged = validatedInput.accessEmail !== survey.accessEmail;
+			if (emailChanged && !validatedInput.accessPw) {
+				return this.resultFail('Access password is required when changing access email.');
+			}
+			if (validatedInput.accessPw) {
+				const firebaseSyncResult = await this.syncSurveyAuthUser({
+					previousEmail: survey.accessEmail,
+					nextEmail: validatedInput.accessEmail,
+					nextPassword: validatedInput.accessPw,
+				});
+				if (!firebaseSyncResult.success) {
+					return this.resultFail(`Failed to sync survey auth user: ${firebaseSyncResult.error}`);
+				}
+				updateInput.accessPw = validatedInput.accessPw;
+			}
 			if (validatedInput.recipientId !== survey.recipient.id) {
 				updateInput.recipient = { connect: { id: validatedInput.recipientId } };
 			}
