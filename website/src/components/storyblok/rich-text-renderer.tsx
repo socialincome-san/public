@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
 import { ReactNode } from 'react';
@@ -17,8 +18,8 @@ type RichTextRendererProps = {
 export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) => {
 	return render(richTextDocument, {
 		markResolvers: {
-			[MARK_LINK]: (children: any, props: any) => (
-				<NextLink href={(props as { href: string }).href} className="font-normal underline">
+			[MARK_LINK]: (children: ReactNode, props: { href?: string }) => (
+				<NextLink href={props.href ?? '#'} className="font-normal underline">
 					{children}
 				</NextLink>
 			),

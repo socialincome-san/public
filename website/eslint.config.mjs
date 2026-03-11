@@ -29,7 +29,6 @@ export default [
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
 			'newline-before-return': 'off',
-			'react/prop-types': 'warn',
 			'prettier/prettier': 'warn',
 		},
 	},

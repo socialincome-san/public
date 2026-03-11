@@ -99,9 +99,11 @@ const Calendar = ({
 				...classNames,
 			}}
 			components={{
+				// eslint-disable-next-line react/prop-types
 				Root: ({ className, rootRef, ...props }) => {
 					return <div data-slot="calendar" ref={rootRef} className={cn(className)} {...props} />;
 				},
+				// eslint-disable-next-line react/prop-types
 				Chevron: ({ className, orientation, ...props }) => {
 					if (orientation === 'left') {
 						return <ChevronLeftIcon className={cn('size-4', className)} {...props} />;
