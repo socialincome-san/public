@@ -57,7 +57,7 @@ export default function GenerateDonationCertificatesDialog({
 	};
 
 	useEffect(() => {
-		loadContributorsOption();
+		void loadContributorsOption();
 	}, []);
 
 	return (

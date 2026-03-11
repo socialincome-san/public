@@ -24,7 +24,7 @@ export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
 
 	useEffect(() => {
-		loadSurvey(surveyId, recipientId);
+		void loadSurvey(surveyId, recipientId);
 	}, [surveyId, recipientId]);
 
 	const translator = useTranslator(lang, 'website-survey');

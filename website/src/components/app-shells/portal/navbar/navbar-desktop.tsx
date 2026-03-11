@@ -104,7 +104,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 					<DropdownMenuItem
 						onSelect={(e: Event) => {
 							e.preventDefault();
-							logout();
+							void logout();
 						}}
 						className="text-destructive focus:text-destructive"
 					>

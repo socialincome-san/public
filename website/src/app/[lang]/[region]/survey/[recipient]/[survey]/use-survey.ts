@@ -48,7 +48,7 @@ export const useSurvey = () => {
 			logger.error(`error loading survey: ${String(error)}`);
 			setSurvey(null);
 			setHasError(true);
-			logout();
+			void logout();
 		}
 	};
 
@@ -67,7 +67,7 @@ export const useSurvey = () => {
 		} catch (error) {
 			if (retryCount >= 2) {
 				setHasError(true);
-				logout();
+				void logout();
 				logger.error(`error saving survey, abording: ${String(error)}`);
 				return;
 			}

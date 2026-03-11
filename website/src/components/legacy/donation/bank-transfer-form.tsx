@@ -55,7 +55,7 @@ export const BankTransferForm = ({
 		form.setValue('email', contributorSession.email ?? '');
 		form.setValue('firstName', contributorSession.firstName ?? '');
 		form.setValue('lastName', contributorSession.lastName ?? '');
-		form.trigger();
+		void form.trigger();
 	}, [contributorSession]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({

@@ -38,7 +38,7 @@ export const StoryblokPreviewSyncer = ({ previewToken, previewTimestamp, preview
 		};
 
 		let isMounted = true;
-		(async () => {
+		void (async () => {
 			await loadStoryblokBridge();
 			if (!isMounted) {
 				return;

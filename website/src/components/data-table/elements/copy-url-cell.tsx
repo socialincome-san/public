@@ -12,7 +12,7 @@ const useCopyToClipboard = (timeout = 1500) => {
 		if (!text) {
 			return;
 		}
-		navigator.clipboard.writeText(text).then(() => {
+		void navigator.clipboard.writeText(text).then(() => {
 			setCopied(true);
 			setTimeout(() => setCopied(false), timeout);
 		});

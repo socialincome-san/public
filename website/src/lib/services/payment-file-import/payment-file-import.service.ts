@@ -79,7 +79,7 @@ export class PaymentFileImportService extends BaseService {
 				});
 			}
 			const result = await this.createOrUpdateContributions(allContributions);
-			sftp.end();
+			void sftp.end();
 
 			if (!result.success) {
 				this.logger.error(`Error importing payment files: ${String(result.error)}`);
@@ -90,7 +90,7 @@ export class PaymentFileImportService extends BaseService {
 			this.logger.error(`Error importing payment files: ${String(error)}`);
 			return this.resultFail(`Error importing payment files: ${JSON.stringify(error)}`);
 		} finally {
-			sftp.end();
+			void sftp.end();
 		}
 	}
 

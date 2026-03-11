@@ -56,7 +56,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 			}
 		};
 		video.addEventListener('canplay', handleCanPlay);
-		video.play();
+		void video.play();
 		return () => video.removeEventListener('canplay', handleCanPlay);
 	}, [playing]);
 

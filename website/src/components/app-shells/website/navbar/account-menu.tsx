@@ -122,7 +122,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 				<DropdownMenuItem
 					onSelect={(e: Event) => {
 						e.preventDefault();
-						logout();
+						void logout();
 					}}
 					className="text-destructive focus:text-destructive"
 				>
