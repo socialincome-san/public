@@ -18,11 +18,13 @@ test('partner-space profile updates local partner contact info', async ({ page }
 	await page.locator('input[name="firstName"]').fill(updatedFirstName);
 	await page.locator('button[type="submit"]').click();
 
-	await expect.poll(async () => {
-		const localPartner = await prisma.localPartner.findFirst({
-			where: { contact: { email: 'test@partner.org' } },
-			select: { contact: { select: { firstName: true } } },
-		});
-		return localPartner?.contact.firstName ?? null;
-	}).toBe(updatedFirstName);
+	await expect
+		.poll(async () => {
+			const localPartner = await prisma.localPartner.findFirst({
+				where: { contact: { email: 'test@partner.org' } },
+				select: { contact: { select: { firstName: true } } },
+			});
+			return localPartner?.contact.firstName ?? null;
+		})
+		.toBe(updatedFirstName);
 });
