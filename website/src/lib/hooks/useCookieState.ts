@@ -12,9 +12,11 @@ export const useCookieState = <T extends string>(key: string, initialValue?: T, 
 		// same as the initial state of the client side rendered page.
 		const val = Cookies.get(key) as T;
 		if (val) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setValue(val);
 		} else if (initialValue) {
 			Cookies.set(key, initialValue, options);
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setValue(initialValue);
 		}
 	}, [key, initialValue, options]);
@@ -25,8 +27,8 @@ export const useCookieState = <T extends string>(key: string, initialValue?: T, 
 	};
 
 	const deleteCookie = () => {
-		setValue(undefined);
 		Cookies.remove(key);
+		setValue(undefined);
 	};
 
 	return { value, setCookie, deleteCookie };

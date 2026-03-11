@@ -25,14 +25,17 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	const [showControls, setShowControls] = useState(true);
 	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
 	const { setBackgroundColor } = useNavbarBackground();
+
 	useEffect(() => {
 		if (!entry) {
 			return;
 		}
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setPlaying(false);
 			setBackgroundColor('bg-background!');
 		} else {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setPlaying(true);
 			setBackgroundColor(null);
 		}

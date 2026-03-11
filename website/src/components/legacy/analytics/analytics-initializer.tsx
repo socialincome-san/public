@@ -40,6 +40,7 @@ export const AnalyticsInitializer = () => {
 			const cookieConsent = localStorage.getItem('cookie_consent');
 			if (cookieConsent === 'granted') {
 				setConsent(getAnalyticsCookieConsent('granted'));
+				// eslint-disable-next-line react-hooks/set-state-in-effect
 				setAllowTracking(true);
 			} else {
 				setConsent(getAnalyticsCookieConsent('denied'));

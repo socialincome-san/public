@@ -121,9 +121,6 @@ export default function ContributorsForm({
 			startTransition(() => {
 				loadContributor(contributorId);
 			});
-		} else {
-			setContributor(undefined);
-			setFormSchema(initialFormSchema);
 		}
 	}, [contributorId]);
 

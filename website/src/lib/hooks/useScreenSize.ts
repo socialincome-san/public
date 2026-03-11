@@ -32,6 +32,7 @@ export const useScreenSize = (): ScreenSize | null => {
 	const [currentScreenSize, setCurrentScreenSize] = useState<ScreenSize | null>(null);
 
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setCurrentScreenSize(determineScreenSize(window.innerWidth));
 		const handler = () => setCurrentScreenSize(determineScreenSize(window.innerWidth));
 		window.addEventListener('resize', handler);

@@ -6,7 +6,6 @@ import { useFirebaseApp } from './useFirebaseApp';
 
 const storageEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_HOST;
 const storageEmulatorPort = Number(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_PORT);
-
 export const useStorage = () => {
 	const connectStorageEmulatorCalled = useRef<true | null>(null);
 	const app = useFirebaseApp();
@@ -29,15 +28,20 @@ export const useStorageDownloadURL = (storageRef: StorageReference | undefined) 
 	const [error, setError] = useState<Error | undefined>(undefined);
 	useEffect(() => {
 		if (storageRef) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setLoading(true);
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setError(undefined);
 			getDownloadURL(storageRef)
 				.then(setUrl)
 				.catch(setError)
 				.finally(() => setLoading(false));
 		} else {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setLoading(false);
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setUrl(undefined);
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setError(undefined);
 		}
 	}, []);

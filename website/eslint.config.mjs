@@ -24,12 +24,11 @@ export default [
 			'react-hooks': reactHooksPlugin,
 		},
 		rules: {
-			'newline-before-return': 'off',
 			'@typescript-eslint/consistent-type-definitions': 'off',
 			'@typescript-eslint/no-unsafe-assignment': 'warn',
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
-			'react-hooks/set-state-in-effect': 'warn',
+			'newline-before-return': 'off',
 			'react/prop-types': 'warn',
 			'prettier/prettier': 'warn',
 		},
