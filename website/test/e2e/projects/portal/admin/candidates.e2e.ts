@@ -20,7 +20,7 @@ const PAYMENT_PHONE_TWO = '+23277000112';
 
 const openCandidateByName = async (page: Page, firstName: string, lastName: string) => {
 	const fullName = `${firstName} ${lastName}`;
-	await page.goto(`/portal/admin/candidates?page=1&pageSize=10&search=${encodeURIComponent(fullName)}`);
+	await page.goto(`/portal/admin/candidates?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	await page.getByRole('cell', { name: fullName }).click();
 };
 

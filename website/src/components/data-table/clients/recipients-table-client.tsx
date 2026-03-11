@@ -26,6 +26,7 @@ type Props = {
 	query?: TableQueryState & { totalRows: number };
 	programFilterOptions?: RecipientProgramFilterOption[];
 	showProgramFilter?: boolean;
+	hideProgramName?: boolean;
 };
 
 export const RecipientsTableClient = ({
@@ -37,6 +38,7 @@ export const RecipientsTableClient = ({
 	query,
 	programFilterOptions = [],
 	showProgramFilter = true,
+	hideProgramName = false,
 }: Props) => {
 	const canManageRecipients = sessionType === 'user';
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
@@ -113,6 +115,7 @@ export const RecipientsTableClient = ({
 				actionMenuItems={actionMenuItems}
 				query={query}
 				toolbarFilters={getRecipientsTableFilters({ query, programFilterOptions, showProgramFilter })}
+				hideProgramName={hideProgramName}
 				hideLocalPartner={sessionType === 'local-partner'}
 				showEntityIdColumn={sessionType !== 'local-partner'}
 				onRowClick={openEditRecipientDialog}

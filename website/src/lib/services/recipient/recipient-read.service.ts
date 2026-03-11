@@ -398,7 +398,7 @@ export class RecipientReadService extends BaseService {
 						},
 					},
 				},
-				orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+				orderBy: [{ id: 'asc' }],
 			});
 
 			const formatDate = (value: Date | null | undefined) => (value ? value.toISOString() : '');
