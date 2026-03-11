@@ -42,44 +42,6 @@ export const getContactValuesFromPayload = (
 	return contactFields;
 };
 
-export const buildAddressInput = (contactFields: { [key: string]: FormField }) => {
-	const country =
-		contactFields.country.value && contactFields.country.value !== '' ? contactFields.country.value : undefined;
-
-	const hasAnyValue =
-		contactFields.street.value ||
-		contactFields.number.value ||
-		contactFields.city.value ||
-		contactFields.zip.value ||
-		country;
-
-	if (!hasAnyValue) {
-		return undefined;
-	}
-
-	return {
-		street: contactFields.street.value ?? '',
-		number: contactFields.number.value ?? '',
-		city: contactFields.city.value ?? '',
-		zip: contactFields.zip.value ?? '',
-		country,
-	};
-};
-
-// Helper to build common contact fields for create/update
-export const buildCommonContactData = (contactFields: { [key: string]: FormField }) => {
-	return {
-		firstName: contactFields.firstName.value,
-		lastName: contactFields.lastName.value,
-		gender: contactFields.gender.value,
-		email: contactFields.email.value || null,
-		profession: contactFields.profession.value || null,
-		dateOfBirth: contactFields.dateOfBirth.value,
-		callingName: contactFields.callingName.value || null,
-		language: contactFields.language.value || null,
-	};
-};
-
 type DropdownItem = {
 	id: string;
 	label: string;

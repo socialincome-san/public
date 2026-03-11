@@ -17,11 +17,11 @@ type ContactFormInputBase = {
 	country: FormField['value'] | null;
 };
 
-export type ContactFormInputWithRequiredEmail = ContactFormInputBase & {
+type ContactFormInputWithRequiredEmail = ContactFormInputBase & {
 	email: string;
 };
 
-export type ContactFormInputWithNullableEmail = ContactFormInputBase & {
+type ContactFormInputWithNullableEmail = ContactFormInputBase & {
 	email: string | null;
 };
 
