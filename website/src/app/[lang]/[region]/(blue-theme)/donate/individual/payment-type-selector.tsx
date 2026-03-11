@@ -66,7 +66,8 @@ const PaymentTypeFormItem = ({
 	);
 };
 
-export const PaymentTypeSelector = ({ lang, translations, bankTransferForm }: PaymentTypeSelectorProps) => {
+export const PaymentTypeSelector = (props: PaymentTypeSelectorProps) => {
+	const { translations, bankTransferForm } = props;
 	const form = useFormContext();
 
 	return (

@@ -1,4 +1,3 @@
-import { CountryCode } from '@/generated/prisma/enums';
 import { Client } from '@sendgrid/client';
 import { ContributorSession } from '../contributor/contributor.types';
 import { ServiceResult } from '../core/base.types';
@@ -154,7 +153,7 @@ export class SendgridSubscriptionService extends Client {
 	};
 
 	private isSuppressed = async (email: string): Promise<boolean> => {
-		const [_, body] = await this.request({ url: `/v3/asm/suppressions/${email}`, method: 'GET' });
+		const [, body] = await this.request({ url: `/v3/asm/suppressions/${email}`, method: 'GET' });
 		const suppressions = (body as { suppressions?: Suppression[] }).suppressions ?? [];
 		return suppressions.some(
 			(suppression: Suppression) => suppression.id === this.suppressionListId && suppression.suppressed,

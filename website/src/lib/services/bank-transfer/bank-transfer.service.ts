@@ -1,6 +1,5 @@
 import {
 	ContributionStatus,
-	Currency,
 	DonationInterval,
 	PaymentEventType,
 	PrismaClient,

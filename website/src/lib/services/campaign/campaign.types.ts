@@ -13,10 +13,6 @@ export type CampaignTableViewRow = {
 	permission: OrganizationPermission;
 };
 
-type CampaignTableView = {
-	tableRows: CampaignTableViewRow[];
-};
-
 export type CampaignTableQuery = {
 	page: number;
 	pageSize: number;

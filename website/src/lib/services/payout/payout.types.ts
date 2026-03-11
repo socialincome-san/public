@@ -14,10 +14,6 @@ export type PayoutTableViewRow = {
 	permission: ProgramPermission;
 };
 
-type PayoutTableView = {
-	tableRows: PayoutTableViewRow[];
-};
-
 export type PayoutTableQuery = {
 	page: number;
 	pageSize: number;
@@ -52,10 +48,6 @@ export type PayoutConfirmationTableViewRow = {
 	paymentAt: Date;
 	phoneNumber: string | null;
 	permission: ProgramPermission;
-};
-
-type PayoutConfirmationTableView = {
-	tableRows: PayoutConfirmationTableViewRow[];
 };
 
 export type PayoutConfirmationTableQuery = {
@@ -97,10 +89,6 @@ export type OngoingPayoutTableViewRow = {
 	last3Months: PayoutMonth[];
 	createdAt: Date;
 	permission: ProgramPermission;
-};
-
-type OngoingPayoutTableView = {
-	tableRows: OngoingPayoutTableViewRow[];
 };
 
 export type OngoingPayoutTableQuery = {

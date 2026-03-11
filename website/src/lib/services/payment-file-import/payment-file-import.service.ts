@@ -206,7 +206,7 @@ export class PaymentFileImportService extends BaseService {
 					} else {
 						created.push(result.data);
 					}
-				} catch (error) {
+				} catch {
 					failedPaymentEvents.push(contributionReferenceId);
 				}
 			}

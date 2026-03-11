@@ -15,6 +15,8 @@ export const makeYourStripeSubscriptionsColumns = (
 	_hideLocalPartner = false,
 	translator?: Translator,
 ): ColumnDef<StripeSubscriptionRow>[] => {
+	void _hideProgramName;
+	void _hideLocalPartner;
 	return [
 		{
 			accessorKey: 'created',

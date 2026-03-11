@@ -13,6 +13,8 @@ export const makeYourContributionsColumns = (
 	_hideLocalPartner = false,
 	translator?: Translator,
 ): ColumnDef<YourContributionsTableViewRow>[] => {
+	void _hideProgramName;
+	void _hideLocalPartner;
 	return [
 		{
 			accessorKey: 'createdAt',

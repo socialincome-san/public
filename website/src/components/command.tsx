@@ -24,13 +24,11 @@ const CommandDialog = ({
 	description = 'Search for a command to run...',
 	children,
 	className,
-	showCloseButton = true,
 	...props
 }: React.ComponentProps<typeof Dialog> & {
 	title?: string;
 	description?: string;
 	className?: string;
-	showCloseButton?: boolean;
 }) => {
 	return (
 		<Dialog {...props}>
@@ -123,4 +121,4 @@ const CommandShortcut = ({ className, ...props }: React.ComponentProps<'span'>) 
 	);
 };
 
-export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator };
+export { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut };

@@ -9,10 +9,8 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export const makeCandidateColumns = (
-	_hideProgramName = false,
-	hideLocalPartner = false,
-): ColumnDef<CandidatesTableViewRow>[] => {
+export const makeCandidateColumns = (_hideProgramName = false, hideLocalPartner = false): ColumnDef<CandidatesTableViewRow>[] => {
+	void _hideProgramName;
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
 		{
 			id: 'country',

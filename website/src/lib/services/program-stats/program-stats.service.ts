@@ -328,8 +328,6 @@ export class ProgramStatsService extends BaseService {
 		let remainingIntervalsCount = 0;
 
 		for (const recipient of params.recipients) {
-			const hasStarted = this.isRecipientStartedNow(recipient.startDate, params.nowDate);
-			const isFuture = !hasStarted;
 			const isSuspended = this.isRecipientSuspendedNow(recipient.suspendedAt, params.nowDate);
 			const paidOrConfirmedCount = this.countPaidOrConfirmedPayouts(recipient.payouts);
 			const isCompleted = this.isRecipientCompleted(paidOrConfirmedCount, params.expectedIntervals);

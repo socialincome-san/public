@@ -64,7 +64,7 @@ export const RichTextRenderer = ({ richTextDocument, translator, lang, region }:
 			['embeddedVideo']: (props: any) => <StoryblokEmbeddedVideoPlayer {...props} />,
 			['referencesGroup']: (props: any) => <StoryblokReferencesGroup translator={translator} {...props} lang={lang} />,
 			['actionButton']: (props: any) => <StoryblokActionButton {...props} />,
-			['newsletterSignup']: (_) => (
+			['newsletterSignup']: () => (
 				<NewsletterGlowContainer
 					className="rounded-lg"
 					lang={lang}

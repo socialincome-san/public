@@ -36,7 +36,7 @@ const NewsletterForm = ({ t, lang, translations }: NewsletterFormProps) => {
 				toast.dismiss(t.id);
 			}
 			toast.success(translations.toastSuccess);
-		} catch (error) {
+		} catch {
 			toast.error(translations.toastFailure);
 		}
 	};

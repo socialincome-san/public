@@ -124,7 +124,6 @@ type Props = {
 
 const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
-	const OPEN_ALL_ACCORDIONS = '__all__';
 
 	const form = useForm<z.infer<typeof zodSchema>>({
 		resolver: zodResolver(zodSchema),
@@ -369,7 +368,7 @@ const GenericFormField = ({
 						control={form.control}
 						name={optionKey}
 						key={optionKey}
-						render={({ field }) => (
+						render={() => (
 							<FormItem>
 								<Label>{label}</Label>
 								<FormControl>
@@ -509,7 +508,7 @@ const GenericFormField = ({
 						control={form.control}
 						name={optionKey}
 						key={optionKey}
-						render={({ field }) => (
+						render={() => (
 							<FormItem>
 								<Label>{label}</Label>
 								<FormControl>

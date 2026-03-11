@@ -1,4 +1,3 @@
-import { CountryCode } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';

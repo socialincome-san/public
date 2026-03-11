@@ -20,11 +20,6 @@ export type ContributionTableViewRow = {
 	createdAt: Date;
 };
 
-type ContributionTableView = {
-	tableRows: ContributionTableViewRow[];
-	permission: OrganizationPermission;
-};
-
 export type ContributionTableQuery = {
 	page: number;
 	pageSize: number;
@@ -99,10 +94,6 @@ export type YourContributionsTableViewRow = {
 	amount: number;
 	currency: Currency;
 	campaignTitle: string;
-};
-
-type YourContributionsTableView = {
-	tableRows: YourContributionsTableViewRow[];
 };
 
 export type YourContributionsTableQuery = {

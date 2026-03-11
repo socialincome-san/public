@@ -37,10 +37,6 @@ export type UserTableViewRow = {
 	createdAt: Date;
 };
 
-type UserTableView = {
-	tableRows: UserTableViewRow[];
-};
-
 export type UserTableQuery = {
 	page: number;
 	pageSize: number;
