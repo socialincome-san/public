@@ -1,11 +1,12 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import type { CountryFormCreateInput, CountryFormUpdateInput } from '@/lib/services/country/country-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-const REVALIDATE_PATH = '/portal/admin/countries';
+const REVALIDATE_PATH = ROUTES.portalAdminCountries;
 
 export const createCountryAction = async (input: CountryFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');

@@ -1,20 +1,21 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('dashboard profile-page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/profile');
+	await page.goto(`${ROUTES.websiteHome}${ROUTES.dashboardProfile}`);
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('dashboard profile updates contributor personal info', async ({ page }) => {
 	const updatedFirstName = `Contributor-${Date.now()}`;
 
-	await page.goto('/en/int/dashboard/profile');
+	await page.goto(`${ROUTES.websiteHome}${ROUTES.dashboardProfile}`);
 	await page.locator('input[name="firstName"]').fill(updatedFirstName);
 	await page.locator('button[type="submit"]').click();
 

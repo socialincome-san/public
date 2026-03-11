@@ -1,6 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
+import { ROUTES } from '@/lib/constants/routes';
 
 import { ReactNode } from 'react';
 
@@ -11,13 +12,13 @@ type MonitoringLayoutProps = {
 export default async function MonitoringLayout({ children }: MonitoringLayoutProps) {
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: '/portal/monitoring', label: 'Monitoring' },
+		{ href: ROUTES.portal, label: 'Portal' },
+		{ href: ROUTES.portalMonitoring, label: 'Monitoring' },
 	];
 
 	const sections = [
-		{ href: `/portal/monitoring/payout-confirmation`, label: 'Payout Confirmation' },
-		{ href: `/portal/monitoring/upcoming-surveys`, label: 'Upcoming Surveys' },
+		{ href: ROUTES.portalMonitoringPayoutConfirmation, label: 'Payout Confirmation' },
+		{ href: ROUTES.portalMonitoringUpcomingSurveys, label: 'Upcoming Surveys' },
 	];
 
 	return (

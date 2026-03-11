@@ -1,23 +1,24 @@
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { ROUTE_FRAGMENTS, ROUTES } from '@/lib/constants/routes';
 import { APIResponse, Browser, expect } from '@playwright/test';
 
 const ACTORS = {
 	user: {
 		email: 'test@portal.org',
 		testId: 'welcome-message-portal',
-		expectedPath: '/portal',
+		expectedPath: ROUTES.portal,
 		state: 'playwright/.auth/user.json',
 	},
 	contributor: {
 		email: 'test@dashboard.org',
 		testId: 'welcome-message-dashboard',
-		expectedPath: '/dashboard',
+		expectedPath: ROUTES.dashboard,
 		state: 'playwright/.auth/contributor.json',
 	},
 	partner: {
 		email: 'test@partner.org',
 		testId: 'welcome-message-partner-space',
-		expectedPath: '/partner-space',
+		expectedPath: ROUTES.partnerSpace,
 		state: 'playwright/.auth/partner.json',
 	},
 } as const;
@@ -45,7 +46,7 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 
 	const { email, testId, expectedPath, state } = ACTORS[actor];
 
-	await page.goto(`/en/int/${NEW_WEBSITE_SLUG}`);
+	await page.goto(`${ROUTES.websiteHome}/${NEW_WEBSITE_SLUG}`);
 	await page.getByTestId('login-button').click();
 	await page.fill('input[type="email"]', email);
 	await page.click('button[type="submit"]');
@@ -63,7 +64,7 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 	}
 
 	await page.goto(latest.oobLink);
-	await page.waitForURL((url) => url.pathname.includes('/auth/confirm-login'));
+	await page.waitForURL((url) => url.pathname.includes(ROUTE_FRAGMENTS.authConfirmLogin));
 
 	const confirmButton = page.getByTestId('confirm-login-button');
 	await expect(

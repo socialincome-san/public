@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import { ServiceResult } from '@/lib/services/core/base.types';
 import { services } from '@/lib/services/services';
 import { UserFormCreateInput, UserFormUpdateInput } from '@/lib/services/user/user-form-input';
@@ -16,7 +17,7 @@ export const createUserAction = async (input: UserFormCreateInput): Promise<Serv
 	const result = await services.write.user.create(session.id, input);
 
 	if (result.success) {
-		revalidatePath('/portal/admin/users');
+		revalidatePath(ROUTES.portalAdminUsers);
 	}
 
 	return result;
@@ -31,7 +32,7 @@ export const updateUserAction = async (input: UserFormUpdateInput): Promise<Serv
 	const result = await services.write.user.update(session.id, input);
 
 	if (result.success) {
-		revalidatePath('/portal/admin/users');
+		revalidatePath(ROUTES.portalAdminUsers);
 	}
 
 	return result;
@@ -46,7 +47,7 @@ export const updateUserSelfAction = async (input: UserUpdateInput): Promise<Serv
 	const result = await services.write.user.updateSelf(session.id, input);
 
 	if (result.success) {
-		revalidatePath('/portal/profile');
+		revalidatePath(ROUTES.portalProfile);
 	}
 
 	return result;

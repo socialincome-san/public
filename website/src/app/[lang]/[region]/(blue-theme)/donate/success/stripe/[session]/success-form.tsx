@@ -1,5 +1,6 @@
 'use client';
 import { ContributorReferralSource, CountryCode } from '@/generated/prisma/enums';
+import { ROUTES } from '@/lib/constants/routes';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
@@ -140,7 +141,7 @@ export const SuccessForm = ({
 		} catch (error: unknown) {
 			if (error instanceof FirebaseError) {
 				if (error.code === 'auth/email-already-in-use') {
-					router.push('/login');
+					router.push(ROUTES.login);
 				} else {
 					toast.error(translations.updateUserError);
 				}

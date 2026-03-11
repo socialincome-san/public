@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
+import { ROUTES } from '@/lib/constants/routes';
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import {
@@ -20,7 +21,7 @@ const PAYMENT_PHONE_TWO = '+23277000112';
 
 const openCandidateByName = async (page: Page, firstName: string, lastName: string) => {
 	const fullName = `${firstName} ${lastName}`;
-	await page.goto(`/portal/admin/candidates?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	await page.goto(`${ROUTES.portalAdminCandidates}?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	await page.getByRole('cell', { name: fullName }).click();
 };
 
@@ -29,7 +30,7 @@ test.beforeEach(async () => {
 });
 
 test('add new candidate', async ({ page }) => {
-	await page.goto('/portal/admin/candidates');
+	await page.goto(ROUTES.portalAdminCandidates);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-candidate');
 	await selectOptionByTestId(page, 'localPartner', ADD_CANDIDATE.localPartnerName);
 	await page.getByTestId('form-accordion-trigger-contact').click();
@@ -50,7 +51,7 @@ test('shows uniqueness error when candidate email already exists', async ({ page
 	});
 	expect(existingContact?.email).toBeTruthy();
 
-	await page.goto('/portal/admin/candidates');
+	await page.goto(ROUTES.portalAdminCandidates);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-candidate');
 	await selectOptionByTestId(page, 'localPartner', ADD_CANDIDATE.localPartnerName);
 	await page.getByTestId('form-accordion-trigger-contact').click();
@@ -117,7 +118,7 @@ test('add candidate with payment phone keeps Firebase user in sync', async ({ pa
 
 	await firebaseService.deleteByPhoneNumberIfExists(paymentPhone);
 
-	await page.goto('/portal/admin/candidates');
+	await page.goto(ROUTES.portalAdminCandidates);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-candidate');
 	await selectOptionByTestId(page, 'localPartner', ADD_CANDIDATE.localPartnerName);
 	await page.getByTestId('form-accordion-trigger-contact').click();
@@ -249,7 +250,7 @@ test('edit candidate and remove contact phone and address', async ({ page }) => 
 	expect(created.contact.phoneId).toBeTruthy();
 	expect(created.contact.addressId).toBeTruthy();
 
-	await page.goto(`/portal/admin/candidates?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	await page.goto(`${ROUTES.portalAdminCandidates}?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	await page.getByRole('cell', { name: firstName }).click();
 	await page.getByTestId('form-accordion-trigger-contact').click();
 	await page.getByTestId('form-item-contact.phone').locator('input').clear();

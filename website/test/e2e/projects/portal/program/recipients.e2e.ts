@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test('program recipients page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/programs/program-1/recipients');
+	await page.goto(ROUTES.portalProgramRecipients('program-1'));
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

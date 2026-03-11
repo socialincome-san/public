@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import { services } from '@/lib/services/services';
 import { LanguageCode } from '@/lib/types/language';
 import { revalidatePath } from 'next/cache';
@@ -19,7 +20,7 @@ export const generateDonationCertificates = async (year: number, contributorIds:
 		return sessionResult;
 	}
 	const result = await services.write.donationCertificate.createDonationCertificates(year, contributorIds, language);
-	revalidatePath('/portal/management/donation-certificates');
+	revalidatePath(ROUTES.portalManagementDonationCertificates);
 	return result;
 };
 
@@ -34,6 +35,6 @@ export const generateDonationCertificateForCurrentUser = async (year: number, la
 		contributorSession.id,
 		language,
 	);
-	revalidatePath('/dashboard/donation-certificates');
+	revalidatePath(ROUTES.dashboardDonationCertificates);
 	return result;
 };

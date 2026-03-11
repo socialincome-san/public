@@ -1,5 +1,6 @@
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { ROUTES } from '@/lib/constants/routes';
 import _ from 'lodash';
 import { Metadata } from 'next';
 
@@ -29,11 +30,11 @@ export const getMetadata = async (
 		// https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 		metadataBase: null,
 		alternates: {
-			canonical: '/en/int',
+			canonical: ROUTES.websiteHome,
 			languages: {
-				en: '/en/int',
-				de: '/de/int',
-				'de-CH': '/de/ch/',
+				en: ROUTES.websiteHome,
+				de: ROUTES.websiteHomeDeInt,
+				'de-CH': ROUTES.websiteHomeDeCh,
 			},
 		},
 		openGraph: {

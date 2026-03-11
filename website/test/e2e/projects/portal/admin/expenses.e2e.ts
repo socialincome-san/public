@@ -3,25 +3,26 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('admin expenses page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/expenses');
+	await page.goto(ROUTES.portalAdminExpenses);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin expenses with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/expenses?page=1&pageSize=10&search=expense-2');
+	await page.goto(`${ROUTES.portalAdminExpenses}?page=1&pageSize=10&search=expense-2`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin expenses with direct URL sorting matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/expenses?page=1&pageSize=10&sortBy=amountChf&sortDirection=asc');
+	await page.goto(`${ROUTES.portalAdminExpenses}?page=1&pageSize=10&sortBy=amountChf&sortDirection=asc`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
@@ -39,7 +40,7 @@ test('add new expense', async ({ page }) => {
 		throw new Error('No organization found for expense test');
 	}
 
-	await page.goto('/portal/admin/expenses');
+	await page.goto(ROUTES.portalAdminExpenses);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-expense');
 	await selectOptionByTestId(page, 'type', ExpenseType.staff);
 	await page.getByTestId('form-item-year').locator('input').fill(`${year}`);
@@ -75,7 +76,7 @@ test('shows validation error when amount is negative', async ({ page }) => {
 		throw new Error('No organization found for expense test');
 	}
 
-	await page.goto('/portal/admin/expenses');
+	await page.goto(ROUTES.portalAdminExpenses);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-expense');
 	await selectOptionByTestId(page, 'type', ExpenseType.staff);
 	await page.getByTestId('form-item-year').locator('input').fill('2099');
@@ -118,7 +119,7 @@ test('update expense', async ({ page }) => {
 	expect(created.id).toBeTruthy();
 
 	const openExpenseByYear = async (searchYear: number) => {
-		await page.goto(`/portal/admin/expenses?page=1&pageSize=10&search=${searchYear}`);
+		await page.goto(`${ROUTES.portalAdminExpenses}?page=1&pageSize=10&search=${searchYear}`);
 		const row = page
 			.getByTestId('data-table')
 			.getByRole('row')

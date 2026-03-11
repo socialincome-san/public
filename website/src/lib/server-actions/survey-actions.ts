@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import { ServiceResult } from '@/lib/services/core/base.types';
 import { resultFail } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
@@ -15,7 +16,7 @@ export const createSurveyAction = async (input: SurveyFormCreateInput) => {
 		return sessionResult;
 	}
 	const result = await services.write.survey.create(sessionResult.data.id, input);
-	revalidatePath('/portal/management/surveys');
+	revalidatePath(ROUTES.portalManagementSurveys);
 	return result;
 };
 
@@ -33,7 +34,7 @@ export const updateSurveyAction = async (input: SurveyFormUpdateInput) => {
 		return sessionResult;
 	}
 	const result = await services.write.survey.update(sessionResult.data.id, input);
-	revalidatePath('/portal/management/surveys');
+	revalidatePath(ROUTES.portalManagementSurveys);
 	return result;
 };
 
@@ -59,7 +60,7 @@ export const generateSurveysAction = async () => {
 		return sessionResult;
 	}
 	const result = await services.write.survey.generateSurveys(sessionResult.data.id);
-	revalidatePath('/portal/management/surveys');
+	revalidatePath(ROUTES.portalManagementSurveys);
 	return result;
 };
 

@@ -2,6 +2,7 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem, getFirebaseAdminService } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -13,7 +14,7 @@ test('add new contributor', async ({ page }) => {
 	const lastName = 'Wayne';
 	const email = `contributors.e2e.${unique}@example.com`;
 
-	await page.goto('/portal/management/contributors');
+	await page.goto(ROUTES.portalManagementContributors);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-contributor');
 	await page.getByTestId('form-item-referral').locator('button').click();
 	await page.getByRole('option', { name: 'other' }).click();
@@ -56,7 +57,7 @@ test('shows uniqueness error when contributor email already exists', async ({ pa
 	});
 	expect(existingContact?.email).toBeTruthy();
 
-	await page.goto('/portal/management/contributors');
+	await page.goto(ROUTES.portalManagementContributors);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-contributor');
 	await page.getByTestId('form-item-referral').locator('button').click();
 	await page.getByRole('option', { name: 'other' }).click();
@@ -79,7 +80,7 @@ test('shows uniqueness error when contributor phone already exists', async ({ pa
 	});
 	expect(existingPhone?.number).toBeTruthy();
 
-	await page.goto('/portal/management/contributors');
+	await page.goto(ROUTES.portalManagementContributors);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-contributor');
 	await page.getByTestId('form-item-referral').locator('button').click();
 	await page.getByRole('option', { name: 'other' }).click();
@@ -145,7 +146,7 @@ test('edit contributor and remove phone and address', async ({ page }) => {
 	expect(created.contact.phoneId).toBeTruthy();
 	expect(created.contact.addressId).toBeTruthy();
 
-	await page.goto(`/portal/management/contributors?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	await page.goto(`${ROUTES.portalManagementContributors}?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	await page.getByRole('cell', { name: firstName }).click();
 	await page.getByTestId('form-accordion-trigger-contact').click();
 	await page.getByTestId('form-item-contact.phone').locator('input').clear();
@@ -193,11 +194,11 @@ test('contributor create and update keeps Firebase user in sync', async ({ page 
 	const updatedEmail = `e2e.contributor.firebase.updated.${unique}@example.com`;
 
 	const openContributorByEmail = async (email: string) => {
-		await page.goto(`/portal/management/contributors?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
+		await page.goto(`${ROUTES.portalManagementContributors}?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
 		await page.getByRole('cell', { name: email }).click();
 	};
 
-	await page.goto('/portal/management/contributors');
+	await page.goto(ROUTES.portalManagementContributors);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-contributor');
 	await page.getByTestId('form-item-referral').locator('button').click();
 	await page.getByRole('option', { name: 'other' }).click();

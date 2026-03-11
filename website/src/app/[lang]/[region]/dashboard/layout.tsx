@@ -2,6 +2,7 @@ import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
+import { ROUTES } from '@/lib/constants/routes';
 import { getSessionsOrRedirect } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -13,24 +14,24 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const { lang, region } = await params;
 	const sessions = await getSessionsOrRedirect();
 	if (!sessions.find((s) => s.type === 'contributor')) {
-		redirect('/login');
+		redirect(ROUTES.login);
 	}
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
 	const sections = [
-		{ href: '/dashboard/contributions', label: translator.t('sections.contributions.payments') },
-		{ href: '/dashboard/subscriptions', label: translator.t('sections.contributions.subscriptions') },
+		{ href: ROUTES.dashboardContributions, label: translator.t('sections.contributions.payments') },
+		{ href: ROUTES.dashboardSubscriptions, label: translator.t('sections.contributions.subscriptions') },
 		{
-			href: '/dashboard/donation-certificates',
+			href: ROUTES.dashboardDonationCertificates,
 			label: translator.t('sections.contributions.donation-certificates-long'),
 		},
-		{ href: '/dashboard/profile', label: translator.t('profile.link') },
+		{ href: ROUTES.dashboardProfile, label: translator.t('profile.link') },
 	];
 
 	const breadcrumbLinks = [
 		{ href: '/', label: translator.t('breadcrumb.website') },
-		{ href: '/dashboard', label: translator.t('breadcrumb.dashboard') },
+		{ href: ROUTES.dashboard, label: translator.t('breadcrumb.dashboard') },
 	];
 
 	return (

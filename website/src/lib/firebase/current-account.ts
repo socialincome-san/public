@@ -1,3 +1,4 @@
+import { ROUTES } from '../constants/routes';
 import { redirect } from 'next/navigation';
 import { ContributorSession } from '../services/contributor/contributor.types';
 import { ServiceResult } from '../services/core/base.types';
@@ -42,7 +43,7 @@ export const getCurrentSessions = async (): Promise<Session[]> => {
 export const getSessionsOrRedirect = async (): Promise<Session[]> => {
 	const sessions = await getCurrentSessions();
 	if (sessions.length === 0) {
-		redirect('/login');
+		redirect(ROUTES.login);
 	}
 	return sessions;
 };

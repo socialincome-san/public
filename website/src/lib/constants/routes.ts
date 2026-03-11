@@ -1,0 +1,80 @@
+export const ROUTE_FRAGMENTS = {
+	login: '/login',
+	authConfirmLogin: '/auth/confirm-login',
+	portal: '/portal',
+	portalAdmin: '/portal/admin',
+	portalManagement: '/portal/management',
+	portalMonitoring: '/portal/monitoring',
+	portalDelivery: '/portal/delivery',
+	portalPrograms: '/portal/programs',
+	portalProfile: '/portal/profile',
+	dashboard: '/dashboard',
+	dashboardContributions: '/dashboard/contributions',
+	dashboardSubscriptions: '/dashboard/subscriptions',
+	dashboardDonationCertificates: '/dashboard/donation-certificates',
+	dashboardProfile: '/dashboard/profile',
+	partnerSpace: '/partner-space',
+	partnerSpaceRecipients: '/partner-space/recipients',
+	partnerSpaceCandidates: '/partner-space/candidates',
+	partnerSpaceProfile: '/partner-space/profile',
+} as const;
+
+export const ROUTES = {
+	home: '/',
+	websiteHome: '/en/int',
+	websiteHomeDeInt: '/de/int',
+	websiteHomeDeCh: '/de/ch/',
+	websiteHomeByLocale: (lang: string, region: string) => `/${lang}/${region}`,
+
+	login: ROUTE_FRAGMENTS.login,
+
+	portal: ROUTE_FRAGMENTS.portal,
+	portalAdmin: ROUTE_FRAGMENTS.portalAdmin,
+	portalDelivery: ROUTE_FRAGMENTS.portalDelivery,
+	portalManagement: ROUTE_FRAGMENTS.portalManagement,
+	portalMonitoring: ROUTE_FRAGMENTS.portalMonitoring,
+	portalPrograms: ROUTE_FRAGMENTS.portalPrograms,
+	portalProfile: ROUTE_FRAGMENTS.portalProfile,
+	portalNotFoundFallback: ROUTE_FRAGMENTS.portal,
+
+	portalAdminOrganizations: '/portal/admin/organizations',
+	portalAdminUsers: '/portal/admin/users',
+	portalAdminCountries: '/portal/admin/countries',
+	portalAdminCandidates: '/portal/admin/candidates',
+	portalAdminExpenses: '/portal/admin/expenses',
+	portalAdminExchangeRates: '/portal/admin/exchange-rates',
+	portalAdminLocalPartners: '/portal/admin/local-partners',
+	portalAdminMobileMoneyProviders: '/portal/admin/mobile-money-providers',
+
+	portalManagementCampaigns: '/portal/management/campaigns',
+	portalManagementContributions: '/portal/management/contributions',
+	portalManagementContributors: '/portal/management/contributors',
+	portalManagementDonationCertificates: '/portal/management/donation-certificates',
+	portalManagementMembers: '/portal/management/members',
+	portalManagementOngoingPayouts: '/portal/management/ongoing-payouts',
+	portalManagementRecipients: '/portal/management/recipients',
+	portalManagementSurveys: '/portal/management/surveys',
+
+	portalMonitoringPayoutConfirmation: '/portal/monitoring/payout-confirmation',
+	portalMonitoringUpcomingSurveys: '/portal/monitoring/upcoming-surveys',
+
+	portalDeliveryMakePayouts: '/portal/delivery/make-payouts',
+
+	portalProgramRecipientsPattern: '/portal/programs/[programId]/recipients',
+	portalProgramRecipients: (programId: string) => `/portal/programs/${programId}/recipients`,
+	portalProgramOverview: (programId: string) => `/portal/programs/${programId}/overview`,
+	portalProgramPayoutForecast: (programId: string) => `/portal/programs/${programId}/payout-forecast`,
+	portalProgramSurveys: (programId: string) => `/portal/programs/${programId}/surveys`,
+
+	dashboard: ROUTE_FRAGMENTS.dashboard,
+	dashboardContributions: ROUTE_FRAGMENTS.dashboardContributions,
+	dashboardSubscriptions: ROUTE_FRAGMENTS.dashboardSubscriptions,
+	dashboardDonationCertificates: ROUTE_FRAGMENTS.dashboardDonationCertificates,
+	dashboardProfile: ROUTE_FRAGMENTS.dashboardProfile,
+
+	partnerSpace: ROUTE_FRAGMENTS.partnerSpace,
+	partnerSpaceRecipients: ROUTE_FRAGMENTS.partnerSpaceRecipients,
+	partnerSpaceCandidates: ROUTE_FRAGMENTS.partnerSpaceCandidates,
+	partnerSpaceProfile: ROUTE_FRAGMENTS.partnerSpaceProfile,
+} as const;
+

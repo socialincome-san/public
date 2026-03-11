@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
+import { ROUTES } from '@/lib/constants/routes';
 import { expect, Page, test } from '@playwright/test';
 import { selectOptionByTestId } from '../../../utils';
 
@@ -36,7 +37,7 @@ const getEditableSurveys = async () => {
 };
 
 const openSurveyById = async (page: Page, surveyId: string) => {
-	await page.goto(`/portal/management/surveys?page=1&pageSize=10&search=${encodeURIComponent(surveyId)}`);
+	await page.goto(`${ROUTES.portalManagementSurveys}?page=1&pageSize=10&search=${encodeURIComponent(surveyId)}`);
 	await page.locator('tbody tr').first().locator('td').first().click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'visible' });
 };

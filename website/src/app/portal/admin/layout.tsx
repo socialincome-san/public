@@ -3,6 +3,7 @@ import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
+import { ROUTES } from '@/lib/constants/routes';
 import { ReactNode } from 'react';
 
 type MonitoringLayoutProps = {
@@ -15,19 +16,19 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: '/portal/admin', label: 'Admin' },
+		{ href: ROUTES.portal, label: 'Portal' },
+		{ href: ROUTES.portalAdmin, label: 'Admin' },
 	];
 
 	const sections = [
-		{ href: `/portal/admin/organizations`, label: 'Organizations' },
-		{ href: `/portal/admin/users`, label: 'Users' },
-		{ href: `/portal/admin/local-partners`, label: 'Local Partners' },
-		{ href: `/portal/admin/candidates`, label: 'Candidate Pool' },
-		{ href: `/portal/admin/expenses`, label: 'Expenses' },
-		{ href: `/portal/admin/exchange-rates`, label: 'Exchange Rates' },
-		{ href: `/portal/admin/countries`, label: 'Countries' },
-		{ href: `/portal/admin/mobile-money-providers`, label: 'Mobile Money Providers' },
+		{ href: ROUTES.portalAdminOrganizations, label: 'Organizations' },
+		{ href: ROUTES.portalAdminUsers, label: 'Users' },
+		{ href: ROUTES.portalAdminLocalPartners, label: 'Local Partners' },
+		{ href: ROUTES.portalAdminCandidates, label: 'Candidate Pool' },
+		{ href: ROUTES.portalAdminExpenses, label: 'Expenses' },
+		{ href: ROUTES.portalAdminExchangeRates, label: 'Exchange Rates' },
+		{ href: ROUTES.portalAdminCountries, label: 'Countries' },
+		{ href: ROUTES.portalAdminMobileMoneyProviders, label: 'Mobile Money Providers' },
 	];
 
 	return (

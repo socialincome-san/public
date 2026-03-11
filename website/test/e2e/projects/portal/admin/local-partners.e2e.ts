@@ -2,25 +2,26 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { getFirebaseAdminService } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('admin local partners page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/local-partners');
+	await page.goto(ROUTES.portalAdminLocalPartners);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin local partners with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/local-partners?page=1&pageSize=10&search=local-partner-2');
+	await page.goto(`${ROUTES.portalAdminLocalPartners}?page=1&pageSize=10&search=local-partner-2`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin local partners with direct URL sorting matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/local-partners?page=1&pageSize=10&sortBy=name&sortDirection=asc');
+	await page.goto(`${ROUTES.portalAdminLocalPartners}?page=1&pageSize=10&sortBy=name&sortDirection=asc`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
@@ -30,7 +31,7 @@ test('add new local partner', async ({ page }) => {
 	const partnerName = `e2e-local-partner-${unique}`;
 	const email = `e2e.local.partner.${unique}@example.com`;
 
-	await page.goto('/portal/admin/local-partners');
+	await page.goto(ROUTES.portalAdminLocalPartners);
 	await page.getByTestId('data-table-actions-button').click();
 	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 
@@ -62,7 +63,7 @@ test('add new local partner', async ({ page }) => {
 });
 
 test('shows uniqueness error when email already exists', async ({ page }) => {
-	await page.goto('/portal/admin/local-partners');
+	await page.goto(ROUTES.portalAdminLocalPartners);
 	await page.getByTestId('data-table-actions-button').click();
 	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 
@@ -108,7 +109,7 @@ test('edit local partner and remove phone number', async ({ page }) => {
 		},
 	});
 
-	await page.goto('/portal/admin/local-partners');
+	await page.goto(ROUTES.portalAdminLocalPartners);
 	await page.getByRole('cell', { name: partnerName }).click();
 
 	await page.getByTestId('form-accordion-trigger-contact').click();
@@ -177,7 +178,7 @@ test('edit local partner and remove address', async ({ page }) => {
 	});
 	expect(created.contact.addressId).toBeTruthy();
 
-	await page.goto('/portal/admin/local-partners');
+	await page.goto(ROUTES.portalAdminLocalPartners);
 	await page.getByRole('cell', { name: partnerName }).click();
 	await page.getByTestId('form-accordion-trigger-contact').click();
 	await page.getByTestId('form-item-contact.street').locator('input').clear();
@@ -235,7 +236,7 @@ test('delete local partner from admin table', async ({ page }) => {
 		},
 	});
 
-	await page.goto('/portal/admin/local-partners');
+	await page.goto(ROUTES.portalAdminLocalPartners);
 	await page.getByRole('cell', { name: partnerName }).click();
 	await page.getByRole('button', { name: 'Delete' }).click();
 	await page.getByRole('button', { name: 'Delete permanently' }).click();
@@ -270,11 +271,11 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 	const updatedLastName = 'Updated';
 	const updatedEmail = `e2e.firebase.updated.${unique}@example.com`;
 	const openPartnerByName = async (name: string) => {
-		await page.goto(`/portal/admin/local-partners?page=1&pageSize=10&search=${encodeURIComponent(name)}`);
+		await page.goto(`${ROUTES.portalAdminLocalPartners}?page=1&pageSize=10&search=${encodeURIComponent(name)}`);
 		await page.getByRole('cell', { name }).click();
 	};
 
-	await page.goto('/portal/admin/local-partners');
+	await page.goto(ROUTES.portalAdminLocalPartners);
 	await page.getByTestId('data-table-actions-button').click();
 	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 	await page.getByTestId('form-item-name').locator('input').fill(partnerName);

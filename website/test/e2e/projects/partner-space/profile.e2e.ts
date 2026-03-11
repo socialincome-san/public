@@ -1,20 +1,21 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('partner-space profile-page matches screenshot', async ({ page }) => {
-	await page.goto('/partner-space/profile');
+	await page.goto(ROUTES.partnerSpaceProfile);
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('partner-space profile updates local partner contact info', async ({ page }) => {
 	const updatedFirstName = `Partner-${Date.now()}`;
 
-	await page.goto('/partner-space/profile');
+	await page.goto(ROUTES.partnerSpaceProfile);
 	await page.locator('input[name="firstName"]').fill(updatedFirstName);
 	await page.locator('button[type="submit"]').click();
 

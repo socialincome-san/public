@@ -1,6 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
+import { ROUTES } from '@/lib/constants/routes';
 
 import { ReactNode } from 'react';
 
@@ -11,22 +12,22 @@ type ManagementLayoutProps = {
 export default async function ManagementLayout({ children }: ManagementLayoutProps) {
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: '/portal/management', label: 'Management' },
+		{ href: ROUTES.portal, label: 'Portal' },
+		{ href: ROUTES.portalManagement, label: 'Management' },
 	];
 
 	const sections = [
 		// Program access–based
-		{ href: `/portal/management/recipients`, label: 'Recipients' },
-		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing Payouts' },
-		{ href: `/portal/management/surveys`, label: 'Surveys' },
+		{ href: ROUTES.portalManagementRecipients, label: 'Recipients' },
+		{ href: ROUTES.portalManagementOngoingPayouts, label: 'Ongoing Payouts' },
+		{ href: ROUTES.portalManagementSurveys, label: 'Surveys' },
 
 		// Organization access–based
-		{ href: `/portal/management/contributors`, label: 'Contributors' },
-		{ href: `/portal/management/contributions`, label: 'Contributions' },
-		{ href: `/portal/management/donation-certificates`, label: 'Donation Certificates' },
-		{ href: `/portal/management/campaigns`, label: 'Campaigns' },
-		{ href: `/portal/management/members`, label: 'Organization Members' },
+		{ href: ROUTES.portalManagementContributors, label: 'Contributors' },
+		{ href: ROUTES.portalManagementContributions, label: 'Contributions' },
+		{ href: ROUTES.portalManagementDonationCertificates, label: 'Donation Certificates' },
+		{ href: ROUTES.portalManagementCampaigns, label: 'Campaigns' },
+		{ href: ROUTES.portalManagementMembers, label: 'Organization Members' },
 	];
 
 	return (

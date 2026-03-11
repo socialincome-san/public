@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import { CampaignFormCreateInput, CampaignFormUpdateInput } from '@/lib/services/campaign/campaign-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
@@ -11,7 +12,7 @@ export const createCampaignsAction = async (campaigns: CampaignFormCreateInput) 
 		return sessionResult;
 	}
 	const res = await services.write.campaign.create(sessionResult.data.id, campaigns);
-	revalidatePath('/portal/management/campaigns');
+	revalidatePath(ROUTES.portalManagementCampaigns);
 	return res;
 };
 
@@ -21,7 +22,7 @@ export const updateCampaignsAction = async (campaigns: CampaignFormUpdateInput) 
 		return sessionResult;
 	}
 	const res = await services.write.campaign.update(sessionResult.data.id, campaigns);
-	revalidatePath('/portal/management/campaigns');
+	revalidatePath(ROUTES.portalManagementCampaigns);
 	return res;
 };
 

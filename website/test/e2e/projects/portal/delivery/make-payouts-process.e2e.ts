@@ -1,5 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -126,7 +127,7 @@ const expected = {
 };
 
 test('Payout Process', async ({ page }) => {
-	await page.goto('/portal/delivery/make-payouts');
+	await page.goto(ROUTES.portalDeliveryMakePayouts);
 	await page.getByTestId('data-table-actions-button').click();
 	await page.getByTestId('data-table-action-item-start-payout-process').click();
 

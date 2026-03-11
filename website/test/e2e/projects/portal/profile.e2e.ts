@@ -1,20 +1,21 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('portal profile-page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/profile');
+	await page.goto(ROUTES.portalProfile);
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('portal profile updates user personal info', async ({ page }) => {
 	const updatedFirstName = `Portal-${Date.now()}`;
 
-	await page.goto('/portal/profile');
+	await page.goto(ROUTES.portalProfile);
 	await page.locator('input[name="firstName"]').fill(updatedFirstName);
 	await page.locator('button[type="submit"]').click();
 

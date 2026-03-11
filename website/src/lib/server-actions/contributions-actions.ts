@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import {
 	ContributionFormCreateInput,
 	ContributionFormUpdateInput,
@@ -15,7 +16,7 @@ export const createContributionAction = async (contribution: ContributionFormCre
 		return sessionResult;
 	}
 	const res = await services.write.contribution.create(sessionResult.data.id, contribution);
-	revalidatePath('/portal/management/contributions');
+	revalidatePath(ROUTES.portalManagementContributions);
 	return res;
 };
 
@@ -25,7 +26,7 @@ export const updateContributionAction = async (contribution: ContributionFormUpd
 		return sessionResult;
 	}
 	const res = await services.write.contribution.update(sessionResult.data.id, contribution);
-	revalidatePath('/portal/management/contributions');
+	revalidatePath(ROUTES.portalManagementContributions);
 	return res;
 };
 

@@ -2,6 +2,7 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -38,7 +39,7 @@ test('add new contribution', async ({ page }) => {
 	const amountChf = 88.2;
 	const feesChf = 1.3;
 
-	await page.goto('/portal/management/contributions');
+	await page.goto(ROUTES.portalManagementContributions);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-contribution');
 	await selectOptionByTestId(page, 'contributor', contributorName);
 	await selectOptionByTestId(page, 'campaign', campaignTitle);
@@ -90,7 +91,7 @@ test('edit contribution', async ({ page }) => {
 	const updatedFeesChf = 2.22;
 
 	await page.goto(
-		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact!.email!)}`,
+		`${ROUTES.portalManagementContributions}?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact!.email!)}`,
 	);
 	await page.getByRole('cell', { name: existing!.contributor.contact!.email! }).click();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
@@ -140,7 +141,7 @@ test('shows validation error when contribution amount is invalid', async ({ page
 	const contributorName =
 		`${source!.contributor.contact?.firstName ?? ''} ${source!.contributor.contact?.lastName ?? ''}`.trim();
 
-	await page.goto('/portal/management/contributions');
+	await page.goto(ROUTES.portalManagementContributions);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-contribution');
 	await selectOptionByTestId(page, 'contributor', contributorName);
 	await selectOptionByTestId(page, 'campaign', source!.campaign.title);

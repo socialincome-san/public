@@ -1,4 +1,5 @@
 import { TabNavigation } from '@/components/tab-navigation';
+import { ROUTES } from '@/lib/constants/routes';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { services } from '@/lib/services/services';
 
@@ -24,16 +25,16 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const { programName, country } = result.data;
 
 	const sections = [
-		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
-		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
-		{ href: `/portal/programs/${programId}/payout-forecast`, label: 'Payout Forecast' },
-		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
+		{ href: ROUTES.portalProgramOverview(programId), label: 'Overview' },
+		{ href: ROUTES.portalProgramRecipients(programId), label: 'Recipients' },
+		{ href: ROUTES.portalProgramPayoutForecast(programId), label: 'Payout Forecast' },
+		{ href: ROUTES.portalProgramSurveys(programId), label: 'Surveys' },
 	];
 
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: `/portal/programs/${programId}/recipients`, label: programName },
+		{ href: ROUTES.portal, label: 'Portal' },
+		{ href: ROUTES.portalProgramRecipients(programId), label: programName },
 	];
 
 	return (

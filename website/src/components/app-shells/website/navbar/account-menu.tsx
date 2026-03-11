@@ -11,6 +11,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
+import { ROUTES } from '@/lib/constants/routes';
 import type { Session } from '@/lib/firebase/current-account';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -41,31 +42,31 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 	switch (scope) {
 		case 'website':
 			if (hasUser) {
-				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+				items.push({ href: ROUTES.portal, label: translator.t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasContributor) {
 				items.push({
-					href: '/dashboard/contributions',
+					href: ROUTES.dashboardContributions,
 					label: translator.t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
 			}
 			if (hasLocalPartner) {
 				items.push({
-					href: '/partner-space/recipients',
+					href: ROUTES.partnerSpaceRecipients,
 					label: translator.t('navigation.go-to-partner-space'),
 					icon: Building2,
 				});
 			}
 			break;
 		case 'partner-space':
-			items.push({ href: '/partner-space/profile', label: translator.t('profile.link'), icon: User });
+			items.push({ href: ROUTES.partnerSpaceProfile, label: translator.t('profile.link'), icon: User });
 			if (hasUser) {
-				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+				items.push({ href: ROUTES.portal, label: translator.t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasContributor) {
 				items.push({
-					href: '/dashboard/contributions',
+					href: ROUTES.dashboardContributions,
 					label: translator.t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
@@ -73,13 +74,13 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 			break;
 		case 'dashboard':
 		default:
-			items.push({ href: '/dashboard/profile', label: translator.t('profile.link'), icon: User });
+			items.push({ href: ROUTES.dashboardProfile, label: translator.t('profile.link'), icon: User });
 			if (hasUser) {
-				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+				items.push({ href: ROUTES.portal, label: translator.t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasLocalPartner) {
 				items.push({
-					href: '/partner-space/recipients',
+					href: ROUTES.partnerSpaceRecipients,
 					label: translator.t('navigation.go-to-partner-space'),
 					icon: Building2,
 				});

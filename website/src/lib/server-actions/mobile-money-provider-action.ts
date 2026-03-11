@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import { resultOk } from '@/lib/services/core/service-result';
 import type {
 	MobileMoneyProviderFormCreateInput,
@@ -9,7 +10,7 @@ import type {
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-const REVALIDATE_PATH = '/portal/admin/mobile-money-providers';
+const REVALIDATE_PATH = ROUTES.portalAdminMobileMoneyProviders;
 
 export const createMobileMoneyProviderAction = async (input: MobileMoneyProviderFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');

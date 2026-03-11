@@ -1,5 +1,6 @@
 'use client';
 
+import { ROUTE_FRAGMENTS, ROUTES } from '@/lib/constants/routes';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Button, Typography } from '@socialincome/ui';
@@ -18,7 +19,8 @@ export default function ConfirmLoginPage() {
 	const translator = useTranslator(lang, 'website-login');
 
 	const continueToLogin = () => {
-		const path = window.location.pathname.replace(/\/auth\/confirm-login\/?$/, '/login');
+		const escapedConfirmLogin = ROUTE_FRAGMENTS.authConfirmLogin.replaceAll('/', '\\/');
+		const path = window.location.pathname.replace(new RegExp(`${escapedConfirmLogin}\\/?$`), ROUTES.login);
 		const searchParams = new URLSearchParams(window.location.search);
 		searchParams.set('confirmed', 'true');
 		const queryString = searchParams.toString();

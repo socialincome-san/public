@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
@@ -34,6 +35,6 @@ export const generateCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 		return sessionResult;
 	}
 	const result = await services.payoutProcess.generateCurrentMonthPayouts(sessionResult.data.id, selectedDate);
-	revalidatePath('/portal/delivery/make-payouts');
+	revalidatePath(ROUTES.portalDeliveryMakePayouts);
 	return result;
 };

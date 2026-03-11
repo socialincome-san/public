@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import {
 	ContributorFormCreateInput,
 	ContributorFormUpdateInput,
@@ -17,7 +18,7 @@ export const createContributorAction = async (data: ContributorFormCreateInput) 
 		return sessionResult;
 	}
 	const res = await services.write.contributor.create(sessionResult.data.id, data);
-	revalidatePath('/portal/management/contributors');
+	revalidatePath(ROUTES.portalManagementContributors);
 	return res;
 };
 
@@ -27,7 +28,7 @@ export const updateContributorAction = async (contributor: ContributorFormUpdate
 		return sessionResult;
 	}
 	const res = await services.write.contributor.update(sessionResult.data.id, contributor);
-	revalidatePath('/portal/management/contributors');
+	revalidatePath(ROUTES.portalManagementContributors);
 	return res;
 };
 
@@ -49,6 +50,6 @@ export const updateSelfAction = async (data: ContributorUpdateInput) => {
 		return sessionResult;
 	}
 	const res = await services.write.contributor.updateSelf(sessionResult.data.id, data);
-	revalidatePath('/dashboard/profile');
+	revalidatePath(ROUTES.dashboardProfile);
 	return res;
 };

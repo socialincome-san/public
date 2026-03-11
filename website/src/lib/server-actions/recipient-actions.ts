@@ -1,14 +1,15 @@
 'use server';
 
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { RecipientFormCreateInput, RecipientFormUpdateInput } from '@/lib/services/recipient/recipient-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-const PORTAL_RECIPIENTS_PATH = '/portal/management/recipients';
-const PORTAL_PROGRAM_RECIPIENTS_PATH = '/portal/programs/[programId]/recipients';
-const PARTNER_RECIPIENTS_PATH = '/partner-space/recipients';
+const PORTAL_RECIPIENTS_PATH = ROUTES.portalManagementRecipients;
+const PORTAL_PROGRAM_RECIPIENTS_PATH = ROUTES.portalProgramRecipientsPattern;
+const PARTNER_RECIPIENTS_PATH = ROUTES.partnerSpaceRecipients;
 
 export const createRecipientAction = async (
 	recipient: RecipientFormCreateInput,

@@ -1,6 +1,7 @@
 'use server';
 
 import { getCurrentSessions } from '../firebase/current-account';
+import { ROUTES } from '../constants/routes';
 import { ServiceResult } from '../services/core/base.types';
 import { resultOk } from '../services/core/service-result';
 import { services } from '../services/services';
@@ -22,15 +23,15 @@ export const getRedirectPathAfterLoginAction = async (): Promise<ServiceResult<s
 	}
 
 	if (session.type === 'user') {
-		return resultOk('/portal');
+		return resultOk(ROUTES.portal);
 	}
 
 	if (session.type === 'contributor') {
-		return resultOk('/dashboard/contributions');
+		return resultOk(ROUTES.dashboardContributions);
 	}
 
 	if (session.type === 'local-partner') {
-		return resultOk('/partner-space/recipients');
+		return resultOk(ROUTES.partnerSpaceRecipients);
 	}
 
 	return resultOk('/');

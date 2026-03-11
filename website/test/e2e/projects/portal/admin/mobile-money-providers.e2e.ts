@@ -2,25 +2,26 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('admin mobile money providers page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/mobile-money-providers');
+	await page.goto(ROUTES.portalAdminMobileMoneyProviders);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin mobile money providers with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/mobile-money-providers?page=1&pageSize=10&search=mobile-money-provider-id-1');
+	await page.goto(`${ROUTES.portalAdminMobileMoneyProviders}?page=1&pageSize=10&search=mobile-money-provider-id-1`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin mobile money providers with direct URL sorting matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/mobile-money-providers?page=1&pageSize=10&sortBy=name&sortDirection=asc');
+	await page.goto(`${ROUTES.portalAdminMobileMoneyProviders}?page=1&pageSize=10&sortBy=name&sortDirection=asc`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
@@ -29,7 +30,7 @@ test('add new mobile money provider', async ({ page }) => {
 	const unique = Date.now();
 	const name = `e2e-mobile-money-provider-${unique}`;
 
-	await page.goto('/portal/admin/mobile-money-providers');
+	await page.goto(ROUTES.portalAdminMobileMoneyProviders);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-provider');
 	await page.getByTestId('form-item-name').locator('input').fill(name);
 	await page.getByTestId('form-item-isSupported').locator('button').click();
@@ -55,7 +56,7 @@ test('shows uniqueness error when provider name already exists', async ({ page }
 		throw new Error('No existing mobile money provider found for uniqueness test');
 	}
 
-	await page.goto('/portal/admin/mobile-money-providers');
+	await page.goto(ROUTES.portalAdminMobileMoneyProviders);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-provider');
 	await page.getByTestId('form-item-name').locator('input').fill(existing.name);
 	await page.getByRole('button', { name: 'Save' }).click();
@@ -78,7 +79,7 @@ test('update mobile money provider', async ({ page }) => {
 	});
 	expect(created.id).toBeTruthy();
 
-	await page.goto(`/portal/admin/mobile-money-providers?page=1&pageSize=10&search=${encodeURIComponent(initialName)}`);
+	await page.goto(`${ROUTES.portalAdminMobileMoneyProviders}?page=1&pageSize=10&search=${encodeURIComponent(initialName)}`);
 	const row = page
 		.getByTestId('data-table')
 		.getByRole('row')

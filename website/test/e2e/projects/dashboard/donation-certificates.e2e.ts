@@ -1,19 +1,20 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem } from '../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('dashboard donation certificates page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/donation-certificates');
+	await page.goto(`${ROUTES.websiteHome}${ROUTES.dashboardDonationCertificates}`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('dashboard donation certificates has downloadable PDF links', async ({ page }) => {
-	await page.goto('/en/int/dashboard/donation-certificates');
+	await page.goto(`${ROUTES.websiteHome}${ROUTES.dashboardDonationCertificates}`);
 	await clickDataTableActionItem(page, 'data-table-action-item-generate-donation-certificate');
 
 	const dialog = page.getByRole('dialog');
@@ -27,7 +28,7 @@ test('dashboard donation certificates has downloadable PDF links', async ({ page
 	await dialog.getByRole('button', { name: 'Close' }).first().click();
 	await expect(dialog).not.toBeVisible();
 
-	await page.goto('/en/int/dashboard/donation-certificates?page=1&pageSize=10&search=2025');
+	await page.goto(`${ROUTES.websiteHome}${ROUTES.dashboardDonationCertificates}?page=1&pageSize=10&search=2025`);
 	await expect(page.getByRole('cell', { name: '2025' }).first()).toBeVisible();
 	const downloadLink = page.getByRole('link', { name: 'Download' }).first();
 	await expect(downloadLink).toBeVisible();

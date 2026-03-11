@@ -1,5 +1,6 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
+import { ROUTES } from '@/lib/constants/routes';
 
 import { ReactNode } from 'react';
 
@@ -10,8 +11,8 @@ type ProfileLayoutProps = {
 export default async function ProfileLayout({ children }: ProfileLayoutProps) {
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: '/portal/profile', label: 'Profile' },
+		{ href: ROUTES.portal, label: 'Portal' },
+		{ href: ROUTES.portalProfile, label: 'Profile' },
 	];
 
 	return (

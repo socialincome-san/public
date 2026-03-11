@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test('portal home-page matches screenshot', async ({ page }) => {
-	await page.goto('/portal');
+	await page.goto(ROUTES.portal);
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('country list in create program wizard matches screenshot', async ({ page }) => {
-	await page.goto('/portal');
+	await page.goto(ROUTES.portal);
 
 	await page.getByTestId('create-program-modal-trigger').click();
 

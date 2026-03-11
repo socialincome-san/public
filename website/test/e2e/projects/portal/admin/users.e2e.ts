@@ -2,25 +2,26 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem, getFirebaseAdminService, selectOptionByTestId } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('admin users page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/users');
+	await page.goto(ROUTES.portalAdminUsers);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin users with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/users?page=1&pageSize=10&search=test%40portal.org');
+	await page.goto(`${ROUTES.portalAdminUsers}?page=1&pageSize=10&search=test%40portal.org`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin users with direct URL sorting matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/users?page=1&pageSize=10&sortBy=role&sortDirection=desc');
+	await page.goto(`${ROUTES.portalAdminUsers}?page=1&pageSize=10&sortBy=role&sortDirection=desc`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
@@ -32,7 +33,7 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 	const lastName = 'User';
 	const email = `e2e.user.create.${unique}@example.com`;
 
-	await page.goto('/portal/admin/users');
+	await page.goto(ROUTES.portalAdminUsers);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-user');
 	await page.getByTestId('form-item-firstName').locator('input').fill(firstName);
 	await page.getByTestId('form-item-lastName').locator('input').fill(lastName);
@@ -74,7 +75,7 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 });
 
 test('shows uniqueness error when user email already exists', async ({ page }) => {
-	await page.goto('/portal/admin/users');
+	await page.goto(ROUTES.portalAdminUsers);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-user');
 	await page.getByTestId('form-item-firstName').locator('input').fill('Dup');
 	await page.getByTestId('form-item-lastName').locator('input').fill('User');
@@ -98,11 +99,11 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	const updatedEmail = `e2e.user.firebase.updated.${unique}@example.com`;
 
 	const openUserByEmail = async (email: string) => {
-		await page.goto(`/portal/admin/users?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
+		await page.goto(`${ROUTES.portalAdminUsers}?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
 		await page.getByRole('cell', { name: email }).click();
 	};
 
-	await page.goto('/portal/admin/users');
+	await page.goto(ROUTES.portalAdminUsers);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-user');
 	await page.getByTestId('form-item-firstName').locator('input').fill(initialFirstName);
 	await page.getByTestId('form-item-lastName').locator('input').fill(initialLastName);

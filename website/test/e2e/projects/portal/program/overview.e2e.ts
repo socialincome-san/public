@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test('Program ready for payout overview page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/programs/program-1/overview');
+	await page.goto(ROUTES.portalProgramOverview('program-1'));
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('Program not ready for payout overview page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/programs/program-2/overview');
+	await page.goto(ROUTES.portalProgramOverview('program-2'));
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

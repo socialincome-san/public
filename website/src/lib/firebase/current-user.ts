@@ -1,4 +1,5 @@
 import { services } from '@/lib/services/services';
+import { ROUTES } from '@/lib/constants/routes';
 import { UserSession } from '@/lib/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -23,7 +24,7 @@ const getCurrentUser = cache(loadCurrentUser);
 export const getAuthenticatedUserOrRedirect = async (): Promise<UserSession> => {
 	const user = await getCurrentUser();
 	if (!user) {
-		redirect('/login');
+		redirect(ROUTES.login);
 	}
 	return user;
 };

@@ -1,5 +1,6 @@
 import { UserPrograms } from '@/app/portal/user-programs';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { ROUTES } from '@/lib/constants/routes';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { Suspense } from 'react';
 
@@ -16,7 +17,7 @@ const PortalDataLoader = async () => {
 
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
+		{ href: ROUTES.portal, label: 'Portal' },
 	];
 
 	return (

@@ -1,5 +1,6 @@
 'use client';
 
+import { ROUTES } from '@/lib/constants/routes';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { logoutAction } from '@/lib/server-actions/session-actions';
 import { logger } from '@/lib/utils/logger';
@@ -22,7 +23,7 @@ export const useLogout = () => {
 				logger.error('Firebase sign-out error', { error: err });
 			});
 
-			router.push('/login');
+			router.push(ROUTES.login);
 		} catch (error) {
 			logger.error('Logout error', { error });
 		}

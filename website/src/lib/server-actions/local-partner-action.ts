@@ -1,6 +1,7 @@
 'use server';
 
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import {
 	LocalPartnerFormCreateInput,
 	LocalPartnerFormUpdateInput,
@@ -15,7 +16,7 @@ export const createLocalPartnerAction = async (localPartner: LocalPartnerFormCre
 	}
 
 	const result = await services.write.localPartner.create(sessionResult.data.id, localPartner);
-	revalidatePath('/portal/admin/local-partners');
+	revalidatePath(ROUTES.portalAdminLocalPartners);
 	return result;
 };
 
@@ -30,9 +31,9 @@ export const updateLocalPartnerAction = async (
 	const session = sessionResult.data;
 	const result = await services.write.localPartner.update(session, updateInput);
 	if (session.type === 'user') {
-		revalidatePath('/portal/admin/local-partners');
+		revalidatePath(ROUTES.portalAdminLocalPartners);
 	} else if (session.type === 'local-partner') {
-		revalidatePath('/partner-space/profile');
+		revalidatePath(ROUTES.partnerSpaceProfile);
 	}
 	return result;
 };
@@ -52,6 +53,6 @@ export const deleteLocalPartnerAction = async (localPartnerId: string) => {
 	}
 
 	const result = await services.write.localPartner.delete(sessionResult.data.id, localPartnerId);
-	revalidatePath('/portal/admin/local-partners');
+	revalidatePath(ROUTES.portalAdminLocalPartners);
 	return result;
 };

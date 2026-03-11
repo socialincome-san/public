@@ -5,6 +5,7 @@ import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { bestGuessCurrency } from '@/lib/types/currency';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -28,19 +29,19 @@ const pickUnusedCountryOption = async (excludedCodes: string[] = []) => {
 };
 
 test('admin countries page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/countries');
+	await page.goto(ROUTES.portalAdminCountries);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin countries with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/countries?page=1&pageSize=10&search=country-liberia');
+	await page.goto(`${ROUTES.portalAdminCountries}?page=1&pageSize=10&search=country-liberia`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin countries with direct URL sorting matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/countries?page=1&pageSize=10&sortBy=isoCode&sortDirection=asc');
+	await page.goto(`${ROUTES.portalAdminCountries}?page=1&pageSize=10&sortBy=isoCode&sortDirection=asc`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
@@ -50,7 +51,7 @@ test('add new country', async ({ page }) => {
 	const defaultPayoutAmount = 123;
 	const currency = bestGuessCurrency(countryOption.code as CountryCode);
 
-	await page.goto('/portal/admin/countries');
+	await page.goto(ROUTES.portalAdminCountries);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-country');
 	await selectOptionByTestId(page, 'countrySettings.isoCode', countryOption.name);
 	await selectOptionByTestId(page, 'countrySettings.currency', currency);
@@ -81,7 +82,7 @@ test('shows validation error when default payout amount is invalid', async ({ pa
 	const countryOption = await pickUnusedCountryOption();
 	const currency = bestGuessCurrency(countryOption.code as CountryCode);
 
-	await page.goto('/portal/admin/countries');
+	await page.goto(ROUTES.portalAdminCountries);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-country');
 	await selectOptionByTestId(page, 'countrySettings.isoCode', countryOption.name);
 	await selectOptionByTestId(page, 'countrySettings.currency', currency);
@@ -109,7 +110,7 @@ test('update country', async ({ page }) => {
 	});
 	expect(created.id).toBeTruthy();
 
-	await page.goto(`/portal/admin/countries?page=1&pageSize=10&search=${countryOption.code}`);
+	await page.goto(`${ROUTES.portalAdminCountries}?page=1&pageSize=10&search=${countryOption.code}`);
 	await expect(page.getByRole('cell', { name: countryOption.code }).first()).toBeVisible();
 	await page.getByTestId('data-table').locator('tbody tr').first().click();
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();

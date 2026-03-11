@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
+import { ROUTES } from '@/lib/constants/routes';
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import {
@@ -89,7 +90,7 @@ test.beforeEach(async () => {
 test('Add new recipient', async ({ page }) => {
 	await assertContactExistsByEmail('test@portal.org');
 
-	await page.goto('/portal/management/recipients');
+	await page.goto(ROUTES.portalManagementRecipients);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
 
 	await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
@@ -116,7 +117,7 @@ test('add recipient with payment phone keeps Firebase user in sync', async ({ pa
 	const firstName = `Firebase-${Date.now()}`;
 	const lastName = 'Recipient';
 
-	await page.goto('/portal/management/recipients');
+	await page.goto(ROUTES.portalManagementRecipients);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
 	await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
 	await selectOptionByTestId(page, 'localPartner', ADD_RECIPIENT.localPartnerName);
@@ -139,7 +140,7 @@ test('Edit existing recipient', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
 
-	await page.goto('/portal/management/recipients');
+	await page.goto(ROUTES.portalManagementRecipients);
 	await page.getByRole('cell', { name: 'Sahr' }).click();
 
 	await page.getByTestId('form-item-startDate').locator('button').click();
@@ -192,7 +193,7 @@ test('shows uniqueness error when recipient email already exists', async ({ page
 	});
 	expect(existingContact?.email).toBeTruthy();
 
-	await page.goto('/portal/management/recipients');
+	await page.goto(ROUTES.portalManagementRecipients);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
 	await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
 	await selectOptionByTestId(page, 'localPartner', ADD_RECIPIENT.localPartnerName);
@@ -211,7 +212,7 @@ test('shows uniqueness error when recipient payment code already exists', async 
 	});
 	expect(existingPaymentInfo?.code).toBeTruthy();
 
-	await page.goto('/portal/management/recipients');
+	await page.goto(ROUTES.portalManagementRecipients);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
 	await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
 	await selectOptionByTestId(page, 'localPartner', ADD_RECIPIENT.localPartnerName);
@@ -286,7 +287,7 @@ test('edit recipient and remove contact phone and address', async ({ page }) => 
 	expect(created.contact.phoneId).toBeTruthy();
 	expect(created.contact.addressId).toBeTruthy();
 
-	await page.goto(`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	await page.goto(`${ROUTES.portalManagementRecipients}?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	await page.getByRole('cell', { name: firstName }).click();
 	await page.getByTestId('form-accordion-trigger-contact').click();
 	await page.getByTestId('form-item-contact.phone').locator('input').clear();
@@ -354,7 +355,7 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 	await firebaseService.createByPhoneNumber(existingRecipient!.paymentInformation!.phone!.number);
 
 	await page.goto(
-		`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(existingRecipient!.contact.firstName)}`,
+		`${ROUTES.portalManagementRecipients}?page=1&pageSize=10&search=${encodeURIComponent(existingRecipient!.contact.firstName)}`,
 	);
 	await page.getByRole('cell', { name: existingRecipient!.contact.firstName }).click();
 	await selectOptionByTestId(page, 'contact.language', 'en');
@@ -377,7 +378,7 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 	await expect(page.getByRole('cell', { name: unusedPhones.first })).toBeVisible();
 
 	await page.goto(
-		`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(existingRecipient!.contact.firstName)}`,
+		`${ROUTES.portalManagementRecipients}?page=1&pageSize=10&search=${encodeURIComponent(existingRecipient!.contact.firstName)}`,
 	);
 	await page.getByRole('cell', { name: existingRecipient!.contact.firstName }).click();
 	await selectOptionByTestId(page, 'contact.language', 'en');
@@ -413,7 +414,7 @@ test('Delete recipient', async ({ page }) => {
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(phone);
 	await expect(page.getByRole('cell', { name: phone })).toBeVisible();
 
-	await page.goto('/portal/management/recipients');
+	await page.goto(ROUTES.portalManagementRecipients);
 	await page.getByRole('cell', { name: 'Sahr' }).click();
 	await page.getByRole('button', { name: 'Delete' }).click();
 	await page.getByRole('button', { name: 'Delete permanently' }).click();
@@ -429,7 +430,7 @@ test('Delete recipient', async ({ page }) => {
 });
 
 test('CSV Upload', async ({ page }) => {
-	await page.goto('/portal/management/recipients');
+	await page.goto(ROUTES.portalManagementRecipients);
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
 	await page
 		.getByTestId('csv-dropzone-input')
@@ -446,7 +447,7 @@ test('CSV Upload', async ({ page }) => {
 });
 
 test('CSV Export', async ({ page }) => {
-	await page.goto('/portal/management/recipients');
+	await page.goto(ROUTES.portalManagementRecipients);
 
 	const downloadPromise = page.waitForEvent('download');
 	await clickDataTableActionItem(page, 'data-table-action-item-download-csv');

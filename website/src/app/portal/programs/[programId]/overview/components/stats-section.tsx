@@ -1,5 +1,6 @@
 import { Card } from '@/components/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
+import { ROUTES } from '@/lib/constants/routes';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { AlertCircle, CheckCircle, CircleHelp, TriangleAlert } from 'lucide-react';
@@ -126,7 +127,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 			<Card>
 				<div className="space-y-6">
 					<div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
-						<SectionBox href="/portal/management/contributions" className="h-full">
+						<SectionBox href={ROUTES.portalManagementContributions} className="h-full">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
 									<StatProgressCard
@@ -175,7 +176,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 							</div>
 						</SectionBox>
 
-						<SectionBox href="/portal/delivery/make-payouts" className="h-full">
+						<SectionBox href={ROUTES.portalDeliveryMakePayouts} className="h-full">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
 									<StatProgressCard
@@ -220,7 +221,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 							</div>
 						</SectionBox>
 
-						<SectionBox href={`/portal/programs/${programId}/payout-forecast`} className="h-full">
+						<SectionBox href={ROUTES.portalProgramPayoutForecast(programId)} className="h-full">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
 									<h2 className="text-lg font-semibold">Available Credits</h2>
@@ -292,7 +293,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 					</div>
 
 					<div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
-						<SectionBox href={`/portal/programs/${programId}/recipients`}>
+						<SectionBox href={ROUTES.portalProgramRecipients(programId)}>
 							<div className="space-y-6">
 								<h2 className="text-lg font-semibold">Recipient Status</h2>
 								<div className="flex items-center gap-2 text-xl font-semibold">
@@ -337,7 +338,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 							</div>
 						</SectionBox>
 
-						<SectionBox href={`/portal/programs/${programId}/surveys`}>
+						<SectionBox href={ROUTES.portalProgramSurveys(programId)}>
 							<StatProgressCard
 								title="Survey Progress"
 								leftLabel="Completed Surveys"

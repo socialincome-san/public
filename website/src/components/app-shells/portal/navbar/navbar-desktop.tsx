@@ -13,6 +13,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
 import { SILogo } from '@/components/svg/si-logo';
+import { ROUTES } from '@/lib/constants/routes';
 import type { Session } from '@/lib/firebase/current-account';
 import type { UserSession } from '@/lib/services/user/user.types';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
@@ -34,7 +35,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 
 	return (
 		<nav className="w-site-width max-w-content mx-auto flex h-20 items-center justify-between">
-			<Link href="/portal">
+			<Link href={ROUTES.portal}>
 				<SILogo />
 			</Link>
 

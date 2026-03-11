@@ -1,4 +1,5 @@
 import { getCurrentSessions } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/ui';
@@ -16,13 +17,13 @@ export const AccountRedirect = async ({ lang }: Props) => {
 	const sessionType = session?.type;
 
 	if (sessionType === 'contributor') {
-		redirect('/dashboard/contributions');
+		redirect(ROUTES.dashboardContributions);
 	}
 	if (sessionType === 'user') {
-		redirect('/portal');
+		redirect(ROUTES.portal);
 	}
 	if (sessionType === 'local-partner') {
-		redirect('/partner-space/recipients');
+		redirect(ROUTES.partnerSpaceRecipients);
 	}
 
 	return (

@@ -2,6 +2,7 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, Page, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -32,7 +33,7 @@ test('add new campaign', async ({ page }) => {
 	});
 	expect(program?.name).toBeTruthy();
 
-	await page.goto('/portal/management/campaigns');
+	await page.goto(ROUTES.portalManagementCampaigns);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-campaign');
 	await page.getByTestId('form-item-title').locator('input').fill(title);
 	await page.getByTestId('form-item-description').locator('input').fill('Campaign description');
@@ -58,7 +59,7 @@ test('edit campaign', async ({ page }) => {
 	expect(existing).toBeTruthy();
 	const updatedDescription = `Updated description ${Date.now()}`;
 
-	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(existing!.title)}`);
+	await page.goto(`${ROUTES.portalManagementCampaigns}?page=1&pageSize=10&search=${encodeURIComponent(existing!.title)}`);
 	await page.getByRole('cell', { name: existing!.title }).click();
 	await page.getByTestId('form-item-description').locator('input').fill(updatedDescription);
 	await selectOptionByTestId(page, 'program');
@@ -81,7 +82,7 @@ test('shows uniqueness error when campaign title already exists', async ({ page 
 	expect(existing?.title).toBeTruthy();
 	expect(program?.name).toBeTruthy();
 
-	await page.goto('/portal/management/campaigns');
+	await page.goto(ROUTES.portalManagementCampaigns);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-campaign');
 	await page.getByTestId('form-item-title').locator('input').fill(existing!.title);
 	await page.getByTestId('form-item-description').locator('input').fill('Duplicate title test');
@@ -105,7 +106,7 @@ test('shows uniqueness error when editing campaign title to an existing one', as
 	const sourceTitle = campaigns[0].title;
 	const targetTitle = campaigns[1].title;
 
-	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(sourceTitle)}`);
+	await page.goto(`${ROUTES.portalManagementCampaigns}?page=1&pageSize=10&search=${encodeURIComponent(sourceTitle)}`);
 	await page.getByRole('cell', { name: sourceTitle }).click();
 	await page.getByTestId('form-item-title').locator('input').fill(targetTitle);
 	await selectOptionByTestId(page, 'program');

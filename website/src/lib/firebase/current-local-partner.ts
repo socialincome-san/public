@@ -1,4 +1,5 @@
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
+import { ROUTES } from '@/lib/constants/routes';
 import { services } from '@/lib/services/services';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -24,7 +25,7 @@ const getCurrentLocalPartner = cache(loadCurrentLocalPartner);
 export const getAuthenticatedLocalPartnerOrRedirect = async (): Promise<LocalPartnerSession> => {
 	const partner = await getCurrentLocalPartner();
 	if (!partner) {
-		redirect('/login');
+		redirect(ROUTES.login);
 	}
 	return partner;
 };

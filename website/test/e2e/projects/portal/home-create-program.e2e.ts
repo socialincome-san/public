@@ -1,12 +1,13 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('create new program', async ({ page }) => {
-	await page.goto('/portal');
+	await page.goto(ROUTES.portal);
 
 	await page.getByTestId('create-program-modal-trigger').click();
 

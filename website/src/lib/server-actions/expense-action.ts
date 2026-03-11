@@ -1,11 +1,12 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ROUTES } from '@/lib/constants/routes';
 import type { ExpenseFormCreateInput, ExpenseFormUpdateInput } from '@/lib/services/expense/expense-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-const REVALIDATE_PATH = '/portal/admin/expenses';
+const REVALIDATE_PATH = ROUTES.portalAdminExpenses;
 
 export const createExpenseAction = async (input: ExpenseFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');

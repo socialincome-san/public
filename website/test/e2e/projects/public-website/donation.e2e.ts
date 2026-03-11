@@ -1,6 +1,7 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { getFirebaseAdminService } from '../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -12,7 +13,7 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 	const firebaseAdminService = await getFirebaseAdminService();
 	await firebaseAdminService.deleteByEmailIfExists(TEST_EMAIL);
 
-	await page.goto('/en/int/donate/one-time');
+	await page.goto(`${ROUTES.websiteHome}/donate/one-time`);
 
 	await page.getByRole('button', { name: 'Donate Now' }).click();
 
@@ -35,11 +36,11 @@ test('Stripe One Time Donation flow', async ({ page }) => {
 
 	await page.getByTestId('hosted-payment-submit-button').click();
 
-	await page.waitForURL(/\/en\/int\/donate\/success\/stripe\/.*/);
+	await page.waitForURL((url) => url.pathname.startsWith(`${ROUTES.websiteHome}/donate/success/stripe/`));
 	await page.getByTestId('terms-and-conditions').click();
 	await page.getByRole('button', { name: 'Confirm' }).click();
 
-	await page.waitForURL(/\/en\/int\/login.*/);
+	await page.waitForURL((url) => url.pathname.startsWith(`${ROUTES.websiteHome}${ROUTES.login}`));
 
 	// Check if the auth user was created
 	await page.goto('http://localhost:4000/auth');

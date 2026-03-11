@@ -1,3 +1,4 @@
+import { ROUTE_FRAGMENTS, ROUTES } from '@/lib/constants/routes';
 import type { Session } from '@/lib/firebase/current-account';
 import type { UserSession } from '@/lib/services/user/user.types';
 import { LayoutDashboard, LucideIcon, Settings, User } from 'lucide-react';
@@ -15,39 +16,39 @@ export const useNavbarLinks = (sessions: Session[]) => {
 	const hasContributor = sessions.some((s) => s.type === 'contributor');
 	const mainNavLinks: NavLink[] = [
 		{
-			href: '/portal/programs',
-			activeBase: '/portal/programs',
+			href: ROUTES.portalPrograms,
+			activeBase: ROUTE_FRAGMENTS.portalPrograms,
 			label: 'Programs',
 			isDropdown: true,
 		},
 		{
-			href: '/portal/monitoring/payout-confirmation',
-			activeBase: '/portal/monitoring',
+			href: ROUTES.portalMonitoringPayoutConfirmation,
+			activeBase: ROUTE_FRAGMENTS.portalMonitoring,
 			label: 'Monitoring',
 		},
 		{
-			href: '/portal/management/recipients',
-			activeBase: '/portal/management',
+			href: ROUTES.portalManagementRecipients,
+			activeBase: ROUTE_FRAGMENTS.portalManagement,
 			label: 'Management',
 		},
 		{
-			href: '/portal/delivery/make-payouts',
-			activeBase: '/portal/delivery',
+			href: ROUTES.portalDeliveryMakePayouts,
+			activeBase: ROUTE_FRAGMENTS.portalDelivery,
 			label: 'Delivery',
 		},
 	];
 
 	const userMenuNavLinks: NavLink[] = [
 		{
-			href: '/portal/profile',
-			activeBase: '/portal/profile',
+			href: ROUTES.portalProfile,
+			activeBase: ROUTE_FRAGMENTS.portalProfile,
 			label: 'Profile',
 			icon: User,
 		},
 		...(hasContributor
 			? [
 					{
-						href: '/dashboard/contributions',
+						href: ROUTES.dashboardContributions,
 						label: 'Switch to dashboard',
 						icon: LayoutDashboard,
 					},
@@ -56,8 +57,8 @@ export const useNavbarLinks = (sessions: Session[]) => {
 		...(user?.role === 'admin'
 			? [
 					{
-						href: '/portal/admin/organizations',
-						activeBase: '/portal/admin',
+						href: ROUTES.portalAdminOrganizations,
+						activeBase: ROUTE_FRAGMENTS.portalAdmin,
 						label: 'Admin',
 						icon: Settings,
 					},

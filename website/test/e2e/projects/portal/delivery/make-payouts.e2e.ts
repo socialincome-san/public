@@ -3,6 +3,7 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, Page, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
+import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -30,7 +31,7 @@ test('add manual payout', async ({ page }) => {
 	const amount = 77.7;
 	const phoneNumber = `+23277${String(unique).slice(-6)}`;
 
-	await page.goto('/portal/delivery/make-payouts');
+	await page.goto(ROUTES.portalDeliveryMakePayouts);
 	await clickDataTableActionItem(page, 'data-table-action-item-add-manually');
 	await selectOptionByTestId(page, 'recipientId');
 	await page.getByTestId('form-item-amount').locator('input').fill(`${amount}`);
@@ -102,7 +103,7 @@ test('edit payout', async ({ page }) => {
 
 	const updatedAmount = 123.4;
 
-	await page.goto(`/portal/delivery/make-payouts?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	await page.goto(`${ROUTES.portalDeliveryMakePayouts}?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	await page.locator('tbody tr').first().locator('td').first().click();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
 	await selectOptionByTestId(page, 'status', 'paid');

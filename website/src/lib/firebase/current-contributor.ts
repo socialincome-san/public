@@ -1,4 +1,5 @@
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { ROUTES } from '@/lib/constants/routes';
 import { services } from '@/lib/services/services';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -23,7 +24,7 @@ const getCurrentContributor = cache(loadCurrentContributor);
 export const getAuthenticatedContributorOrRedirect = async (): Promise<ContributorSession> => {
 	const contributor = await getCurrentContributor();
 	if (!contributor) {
-		redirect('/login');
+		redirect(ROUTES.login);
 	}
 	return contributor;
 };

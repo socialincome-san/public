@@ -1,13 +1,14 @@
 import { expect, test } from '@playwright/test';
+import { ROUTES } from '@/lib/constants/routes';
 
 test('admin exchange rates page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/exchange-rates');
+	await page.goto(ROUTES.portalAdminExchangeRates);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('exchange rates search sets URL and matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/exchange-rates');
+	await page.goto(ROUTES.portalAdminExchangeRates);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
 	await page.getByTestId('data-table-search-button').click();
@@ -18,7 +19,7 @@ test('exchange rates search sets URL and matches screenshot', async ({ page }) =
 });
 
 test('exchange rates filter sets URL and matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/exchange-rates');
+	await page.goto(ROUTES.portalAdminExchangeRates);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
 	await page.getByTestId('data-table-filters-button').click();
@@ -30,7 +31,7 @@ test('exchange rates filter sets URL and matches screenshot', async ({ page }) =
 });
 
 test('exchange rates search and filter combination sets URL and matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/exchange-rates');
+	await page.goto(ROUTES.portalAdminExchangeRates);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
 	await page.getByTestId('data-table-search-button').click();
@@ -45,7 +46,7 @@ test('exchange rates search and filter combination sets URL and matches screensh
 });
 
 test('exchange rates pagination updates URL and matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/exchange-rates');
+	await page.goto(ROUTES.portalAdminExchangeRates);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
 	await page.getByTestId('data-table-page-size-trigger').click();
@@ -67,7 +68,7 @@ test('exchange rates pagination updates URL and matches screenshot', async ({ pa
 });
 
 test('exchange rates columns can be hidden and matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/exchange-rates');
+	await page.goto(ROUTES.portalAdminExchangeRates);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	const toolbar = page.getByTestId('data-table-toolbar');
 
@@ -85,7 +86,7 @@ test('exchange rates columns can be hidden and matches screenshot', async ({ pag
 });
 
 test('exchange rates no-result search keeps URL and matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/exchange-rates');
+	await page.goto(ROUTES.portalAdminExchangeRates);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
 	await page.getByTestId('data-table-search-button').click();
