@@ -2,6 +2,7 @@ import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankTransferService } from './bank-transfer/bank-transfer.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
+import { CampaignValidationService } from './campaign/campaign-validation.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
 import { CandidateValidationService } from './candidate/candidate-validation.service';
@@ -129,7 +130,8 @@ const contributorWrite = new ContributorWriteService(
 	contributorValidation,
 	contactRelations,
 );
-const campaignWrite = new CampaignWriteService(prisma, organizationAccess);
+const campaignValidation = new CampaignValidationService(prisma);
+const campaignWrite = new CampaignWriteService(prisma, organizationAccess, campaignValidation);
 const donationCertificateRead = new DonationCertificateReadService(prisma, organizationAccess);
 
 const programStats = new ProgramStatsService(prisma, exchangeRateRead);

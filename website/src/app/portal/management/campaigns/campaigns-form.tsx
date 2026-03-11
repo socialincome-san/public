@@ -8,7 +8,7 @@ import {
 	getProgramsOptions,
 	updateCampaignsAction,
 } from '@/lib/server-actions/campaigns-actions';
-import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ProgramOption } from '@/lib/services/program/program.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -32,42 +32,58 @@ export default function CampaignsForm({
 
 	const loadCampaign = async (campaignId: string) => {
 		if (campaignId) {
-			try {
-				const result = await getCampaignsAction(campaignId);
-				if (result.success) {
-					const newSchema = { ...formSchema };
-					newSchema.fields.title.value = result.data.title;
-					newSchema.fields.description.value = result.data.description;
-					newSchema.fields.secondDescriptionTitle.value = result.data.secondDescriptionTitle;
-					newSchema.fields.secondDescription.value = result.data.secondDescription;
-					newSchema.fields.thirdDescriptionTitle.value = result.data.thirdDescriptionTitle;
-					newSchema.fields.thirdDescription.value = result.data.thirdDescription;
-					newSchema.fields.linkWebsite.value = result.data.linkWebsite;
-					newSchema.fields.linkInstagram.value = result.data.linkInstagram;
-					newSchema.fields.linkTiktok.value = result.data.linkTiktok;
-					newSchema.fields.linkFacebook.value = result.data.linkFacebook;
-					newSchema.fields.linkX.value = result.data.linkX;
-					newSchema.fields.goal.value = result.data.goal;
-					newSchema.fields.currency.value = result.data.currency;
-					newSchema.fields.additionalAmountChf.value = result.data.additionalAmountChf;
-					newSchema.fields.endDate.value = result.data.endDate ?? undefined;
-					newSchema.fields.isActive.value = result.data.isActive;
-					newSchema.fields.public.value = result.data.public;
-					newSchema.fields.featured.value = result.data.featured;
-					newSchema.fields.slug.value = result.data.slug;
-					newSchema.fields.metadataDescription.value = result.data.metadataDescription;
-					newSchema.fields.metadataOgImage.value = result.data.metadataOgImage;
-					newSchema.fields.metadataTwitterImage.value = result.data.metadataTwitterImage;
-					newSchema.fields.creatorName.value = result.data.creatorName;
-					newSchema.fields.creatorEmail.value = result.data.creatorEmail;
-					newSchema.fields.program.value = result.data.program?.id;
-					setFormSchema(newSchema);
-				} else {
-					onError?.(result.error);
-				}
-			} catch (error: unknown) {
-				onError?.(error);
-			}
+			const result = await getCampaignsAction(campaignId);
+			handleServiceResult(result, {
+				onSuccess: (data) => {
+					setFormSchema((previousSchema) => ({
+						...previousSchema,
+						fields: {
+							...previousSchema.fields,
+							title: { ...previousSchema.fields.title, value: data.title },
+							description: { ...previousSchema.fields.description, value: data.description },
+							secondDescriptionTitle: {
+								...previousSchema.fields.secondDescriptionTitle,
+								value: data.secondDescriptionTitle,
+							},
+							secondDescription: { ...previousSchema.fields.secondDescription, value: data.secondDescription },
+							thirdDescriptionTitle: {
+								...previousSchema.fields.thirdDescriptionTitle,
+								value: data.thirdDescriptionTitle,
+							},
+							thirdDescription: { ...previousSchema.fields.thirdDescription, value: data.thirdDescription },
+							linkWebsite: { ...previousSchema.fields.linkWebsite, value: data.linkWebsite },
+							linkInstagram: { ...previousSchema.fields.linkInstagram, value: data.linkInstagram },
+							linkTiktok: { ...previousSchema.fields.linkTiktok, value: data.linkTiktok },
+							linkFacebook: { ...previousSchema.fields.linkFacebook, value: data.linkFacebook },
+							linkX: { ...previousSchema.fields.linkX, value: data.linkX },
+							goal: { ...previousSchema.fields.goal, value: data.goal },
+							currency: { ...previousSchema.fields.currency, value: data.currency },
+							additionalAmountChf: {
+								...previousSchema.fields.additionalAmountChf,
+								value: data.additionalAmountChf,
+							},
+							endDate: { ...previousSchema.fields.endDate, value: data.endDate ?? undefined },
+							isActive: { ...previousSchema.fields.isActive, value: data.isActive },
+							public: { ...previousSchema.fields.public, value: data.public },
+							featured: { ...previousSchema.fields.featured, value: data.featured },
+							slug: { ...previousSchema.fields.slug, value: data.slug },
+							metadataDescription: {
+								...previousSchema.fields.metadataDescription,
+								value: data.metadataDescription,
+							},
+							metadataOgImage: { ...previousSchema.fields.metadataOgImage, value: data.metadataOgImage },
+							metadataTwitterImage: {
+								...previousSchema.fields.metadataTwitterImage,
+								value: data.metadataTwitterImage,
+							},
+							creatorName: { ...previousSchema.fields.creatorName, value: data.creatorName },
+							creatorEmail: { ...previousSchema.fields.creatorEmail, value: data.creatorEmail },
+							program: { ...previousSchema.fields.program, value: data.program?.id },
+						},
+					}));
+				},
+				onError: (error) => onError?.(error),
+			});
 		}
 	};
 
@@ -89,19 +105,13 @@ export default function CampaignsForm({
 
 	const onSubmit = async (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
-			try {
-				let res;
-				if (campaignId) {
-					const data: CampaignsUpdateInput = buildUpdateCampaignsInput(schema);
-					res = await updateCampaignsAction({ id: campaignId, ...data });
-				} else {
-					const data: CampaignsCreateInput = buildCreateCampaignsInput(schema);
-					res = await createCampaignsAction(data);
-				}
-				res.success ? onSuccess?.() : onError?.(res.error);
-			} catch (error: unknown) {
-				onError?.(error);
-			}
+			const res = campaignId
+				? await updateCampaignsAction(buildUpdateCampaignsInput(schema, campaignId))
+				: await createCampaignsAction(buildCreateCampaignsInput(schema));
+			handleServiceResult(res, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
