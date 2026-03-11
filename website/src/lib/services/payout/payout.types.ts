@@ -162,4 +162,3 @@ export type PayoutPayload = {
 	phoneNumber: string | null;
 	comments: string | null;
 };
-

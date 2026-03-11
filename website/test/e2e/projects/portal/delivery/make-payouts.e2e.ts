@@ -1,6 +1,6 @@
+import { PayoutStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { PayoutStatus } from '@/generated/prisma/enums';
 import { expect, Page, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
 
@@ -102,9 +102,7 @@ test('edit payout', async ({ page }) => {
 
 	const updatedAmount = 123.4;
 
-	await page.goto(
-		`/portal/delivery/make-payouts?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`,
-	);
+	await page.goto(`/portal/delivery/make-payouts?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	await page.locator('tbody tr').first().locator('td').first().click();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
 	await selectOptionByTestId(page, 'status', 'paid');

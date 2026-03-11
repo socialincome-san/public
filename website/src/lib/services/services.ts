@@ -37,8 +37,8 @@ import { OrganizationAccessService } from './organization-access/organization-ac
 import { OrganizationReadService } from './organization/organization-read.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
 import { PayoutProcessService } from './payout-process/payout-process.service';
-import { PayoutValidationService } from './payout/payout-validation.service';
 import { PayoutReadService } from './payout/payout-read.service';
+import { PayoutValidationService } from './payout/payout-validation.service';
 import { PayoutWriteService } from './payout/payout-write.service';
 import { ProgramAccessReadService } from './program-access/program-access-read.service';
 import { ProgramAccessWriteService } from './program-access/program-access-write.service';
