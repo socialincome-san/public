@@ -30,17 +30,6 @@ export type MobileMoneyProviderPayload = {
 	updatedAt: Date | null;
 };
 
-export type MobileMoneyProviderCreateInput = {
-	name: string;
-	isSupported: boolean;
-};
-
-export type MobileMoneyProviderUpdateInput = {
-	id: string;
-	name?: string;
-	isSupported?: boolean;
-};
-
 export type MobileMoneyProviderOption = {
 	id: string;
 	name: string;

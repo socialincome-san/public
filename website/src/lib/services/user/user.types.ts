@@ -9,14 +9,6 @@ export type UserPayload = {
 	organizationId: string | null;
 };
 
-export type UserCreateInput = {
-	firstName: string;
-	lastName: string;
-	email: string;
-	role: UserRole;
-	organizationId: string;
-};
-
 export type UserUpdateInput = {
 	id?: string;
 	firstName?: string;

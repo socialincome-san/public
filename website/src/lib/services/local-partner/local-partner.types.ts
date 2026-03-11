@@ -1,4 +1,4 @@
-import { Address, Cause, CountryCode, Gender, Phone, Prisma } from '@/generated/prisma/client';
+import { Address, Cause, CountryCode, Gender, Phone } from '@/generated/prisma/client';
 
 export type LocalPartnerTableViewRow = {
 	id: string;
@@ -51,9 +51,6 @@ export type LocalPartnerOption = {
 	id: string;
 	name: string;
 };
-
-export type LocalPartnerCreateInput = Omit<Prisma.LocalPartnerCreateInput, 'account' | 'accountId'>;
-export type LocalPartnerUpdateInput = Omit<Prisma.LocalPartnerUpdateInput, 'account' | 'accountId'>;
 
 export type LocalPartnerSession = {
 	type: 'local-partner';

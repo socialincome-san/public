@@ -57,41 +57,6 @@ export type CountryPayload = {
 	networkSourceLink?: { id: string; text: string; href: string } | null;
 };
 
-export type CountryCreateInput = {
-	isoCode: CountryCode;
-	isActive: boolean;
-	currency: Currency;
-	defaultPayoutAmount: number;
-	microfinanceIndex?: number | null;
-	cashConditionOverride: boolean;
-	populationCoverage?: number | null;
-	networkTechnology?: string | null;
-	latestSurveyDate?: Date | null;
-	mobileMoneyProviderIds?: string[];
-	mobileMoneyConditionOverride: boolean;
-	sanctions?: string[];
-	microfinanceSourceLink?: { text: string; href: string } | null;
-	networkSourceLink?: { text: string; href: string } | null;
-};
-
-export type CountryUpdateInput = {
-	id: string;
-	isoCode?: CountryCode;
-	isActive?: boolean;
-	currency: Currency;
-	defaultPayoutAmount: number;
-	microfinanceIndex?: number | null;
-	cashConditionOverride: boolean;
-	populationCoverage?: number | null;
-	networkTechnology?: string | null;
-	latestSurveyDate?: Date | null;
-	mobileMoneyProviderIds?: string[];
-	mobileMoneyConditionOverride: boolean;
-	sanctions?: string[];
-	microfinanceSourceLink?: { text: string; href: string } | null;
-	networkSourceLink?: { text: string; href: string } | null;
-};
-
 export enum CountryCondition {
 	MET = 'met',
 	NOT_MET = 'not_met',

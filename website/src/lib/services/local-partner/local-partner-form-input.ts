@@ -24,7 +24,7 @@ const optionalDate = z.preprocess((value) => {
 	return value;
 }, z.coerce.date().nullable());
 
-export const localPartnerContactInputSchema = z.object({
+const localPartnerContactInputSchema = z.object({
 	firstName: z.string().trim().min(2, 'First name must be at least 2 characters.'),
 	lastName: z.string().trim().min(2, 'Last name must be at least 2 characters.'),
 	callingName: nullableTrimmedString,
@@ -52,6 +52,5 @@ export const localPartnerUpdateInputSchema = localPartnerCreateInputSchema.exten
 	id: z.string().trim().min(1, 'Local partner id is required.').optional(),
 });
 
-export type LocalPartnerFormContactInput = z.infer<typeof localPartnerContactInputSchema>;
 export type LocalPartnerFormCreateInput = z.infer<typeof localPartnerCreateInputSchema>;
 export type LocalPartnerFormUpdateInput = z.infer<typeof localPartnerUpdateInputSchema>;
