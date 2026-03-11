@@ -385,7 +385,11 @@ export class CountryReadService extends BaseService {
 		return tech ? (map[tech] ?? tech) : '';
 	}
 
-	private getMobileNetworkDetailsText(countryIsoCode: CountryCode, populationCoverage: number | null, networkTechnology: NetworkTechnology | null,): string {
+	private getMobileNetworkDetailsText(
+		countryIsoCode: CountryCode,
+		populationCoverage: number | null,
+		networkTechnology: NetworkTechnology | null,
+	): string {
 		if (populationCoverage === null) {
 			return `No reliable mobile network coverage data available for ${getCountryNameByCode(countryIsoCode)}.`;
 		}
@@ -394,7 +398,6 @@ export class CountryReadService extends BaseService {
 		return populationCoverage >= 50
 			? `Mobile network coverage is considered sufficient, with ${populationCoverage}% population coverage${tech ? ` on ${tech}` : ''}.`
 			: `Mobile network coverage is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
-
 	}
 
 	private getSanctionsDetailsText(countryIsoCode: CountryCode, sanctions: SanctionRegime[] | null): string {
