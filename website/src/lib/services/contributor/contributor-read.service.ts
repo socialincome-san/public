@@ -43,6 +43,24 @@ export class ContributorReadService extends BaseService {
 		}
 	}
 
+	private async getContributionSumsByContributorId(contributorIds: string[]): Promise<Map<string, number>> {
+		if (contributorIds.length === 0) {
+			return new Map();
+		}
+
+		const grouped = await this.db.contribution.groupBy({
+			by: ['contributorId'],
+			where: {
+				contributorId: { in: contributorIds },
+			},
+			_sum: {
+				amountChf: true,
+			},
+		});
+
+		return new Map(grouped.map((row) => [row.contributorId, Number(row._sum.amountChf ?? 0)]));
+	}
+
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
 		try {
 			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
@@ -211,25 +229,28 @@ export class ContributorReadService extends BaseService {
 						}
 					: baseScope;
 
-			const [contributors, totalCount, countrySource] = await Promise.all([
-				this.db.contributor.findMany({
-					where,
+			const sortBy = toSortKey(query.sortBy, [
+				'id',
+				'contributor',
+				'email',
+				'country',
+				'totalContributedChf',
+				'createdAt',
+			] as const);
+			const contributorSelect = {
+				id: true,
+				createdAt: true,
+				contact: {
 					select: {
-						id: true,
-						createdAt: true,
-						contact: {
-							select: {
-								firstName: true,
-								lastName: true,
-								email: true,
-								address: { select: { country: true } },
-							},
-						},
+						firstName: true,
+						lastName: true,
+						email: true,
+						address: { select: { country: true } },
 					},
-					orderBy: this.buildContributorOrderBy(query),
-					skip: (query.page - 1) * query.pageSize,
-					take: query.pageSize,
-				}),
+				},
+			} as const;
+
+			const [totalCount, countrySource] = await Promise.all([
 				this.db.contributor.count({ where }),
 				this.db.contributor.findMany({
 					where: baseScope,
@@ -247,12 +268,66 @@ export class ContributorReadService extends BaseService {
 				}),
 			]);
 
+			let contributors: Array<
+				Prisma.ContributorGetPayload<{
+					select: {
+						id: true;
+						createdAt: true;
+						contact: {
+							select: {
+								firstName: true;
+								lastName: true;
+								email: true;
+								address: { select: { country: true } };
+							};
+						};
+					};
+				}>
+			>;
+
+			if (sortBy === 'totalContributedChf') {
+				const allContributors = await this.db.contributor.findMany({
+					where,
+					select: contributorSelect,
+				});
+				const sumsByContributorId = await this.getContributionSumsByContributorId(
+					allContributors.map((contributor) => contributor.id),
+				);
+				const directionMultiplier = query.sortDirection === 'asc' ? 1 : -1;
+
+				const sorted = [...allContributors].sort((left, right) => {
+					const leftValue = sumsByContributorId.get(left.id) ?? 0;
+					const rightValue = sumsByContributorId.get(right.id) ?? 0;
+					if (leftValue !== rightValue) {
+						return (leftValue - rightValue) * directionMultiplier;
+					}
+					return left.id.localeCompare(right.id);
+				});
+
+				const start = (query.page - 1) * query.pageSize;
+				const end = start + query.pageSize;
+				contributors = sorted.slice(start, end);
+			} else {
+				contributors = await this.db.contributor.findMany({
+					where,
+					select: contributorSelect,
+					orderBy: this.buildContributorOrderBy(query),
+					skip: (query.page - 1) * query.pageSize,
+					take: query.pageSize,
+				});
+			}
+
+			const sumsByContributorId = await this.getContributionSumsByContributorId(
+				contributors.map((contributor) => contributor.id),
+			);
+
 			const tableRows: ContributorTableViewRow[] = contributors.map((c) => ({
 				id: c.id,
 				firstName: c.contact?.firstName ?? '',
 				lastName: c.contact?.lastName ?? '',
 				email: c.contact?.email ?? '',
 				country: c.contact?.address?.country ?? null,
+				totalContributedChf: sumsByContributorId.get(c.id) ?? 0,
 				createdAt: c.createdAt,
 				permission,
 			}));

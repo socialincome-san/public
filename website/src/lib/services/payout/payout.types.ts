@@ -150,24 +150,3 @@ export type PayoutPayload = {
 	phoneNumber: string | null;
 	comments: string | null;
 };
-
-export type PayoutCreateInput = {
-	recipient: { connect: { id: string } };
-	amount: number;
-	currency: Currency;
-	status: PayoutStatus;
-	paymentAt: Date;
-	phoneNumber?: string | null;
-	comments?: string | null;
-};
-
-export type PayoutUpdateInput = {
-	id: string;
-	amount?: number;
-	currency?: Currency;
-	status?: PayoutStatus;
-	paymentAt?: Date;
-	phoneNumber?: string | null;
-	comments?: string | null;
-	recipient?: { connect: { id: string } };
-};

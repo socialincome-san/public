@@ -1,12 +1,11 @@
-import type { SurveyCreateInput, SurveyPayload, SurveyUpdateInput } from '@/lib/services/survey/survey.types';
+import type { SurveyFormCreateInput, SurveyFormUpdateInput } from '@/lib/services/survey/survey-form-input';
+import type { SurveyPayload } from '@/lib/services/survey/survey.types';
 import { SurveyFormSchema } from './survey-form';
 
-export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyCreateInput => {
-	const dueAtValue = schema.fields.dueAt.value;
-
+export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyFormCreateInput => {
 	return {
 		name: schema.fields.name.value,
-		recipient: { connect: { id: schema.fields.recipientId.value } },
+		recipientId: schema.fields.recipientId.value,
 		questionnaire: schema.fields.questionnaire.value,
 		language: schema.fields.language.value,
 		dueAt: new Date(
@@ -15,16 +14,18 @@ export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyCreateIn
 				: new Date(),
 		),
 		status: schema.fields.status.value,
-		data: {},
 		accessEmail: schema.fields.accessEmail.value,
-		accessPw: schema.fields.accessPw.value,
+		accessPw: `${schema.fields.accessPw.value ?? ''}`.trim(),
 	};
 };
 
-export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: SurveyPayload): SurveyUpdateInput => {
-	const dueAtValue = schema.fields.dueAt.value;
-	const data: SurveyUpdateInput = {
+export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: SurveyPayload): SurveyFormUpdateInput => {
+	const nextAccessPassword = `${schema.fields.accessPw.value ?? ''}`.trim();
+
+	return {
+		id: existing.id,
 		name: schema.fields.name.value,
+		recipientId: schema.fields.recipientId.value,
 		questionnaire: schema.fields.questionnaire.value,
 		language: schema.fields.language.value,
 		dueAt: new Date(
@@ -33,14 +34,7 @@ export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: Surve
 				: new Date(),
 		),
 		status: schema.fields.status.value,
-		data: {},
 		accessEmail: schema.fields.accessEmail.value,
-		accessPw: schema.fields.accessPw.value,
+		accessPw: nextAccessPassword === '' ? undefined : nextAccessPassword,
 	};
-
-	if (schema.fields.recipientId.value !== existing.recipientId) {
-		data.recipient = { connect: { id: schema.fields.recipientId.value } };
-	}
-
-	return data;
 };

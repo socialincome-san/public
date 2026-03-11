@@ -69,14 +69,17 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 		handleServiceResult(result, {
 			onSuccess: (data) => {
 				setUser(data);
-
-				const next = { ...formSchema };
-				next.fields.firstName.value = data.firstName;
-				next.fields.lastName.value = data.lastName;
-				next.fields.email.value = data.email;
-				next.fields.role.value = data.role;
-				next.fields.organizationId.value = data.organizationId;
-				setFormSchema(next);
+				setFormSchema((prev) => ({
+					...prev,
+					fields: {
+						...prev.fields,
+						firstName: { ...prev.fields.firstName, value: data.firstName },
+						lastName: { ...prev.fields.lastName, value: data.lastName },
+						email: { ...prev.fields.email, value: data.email },
+						role: { ...prev.fields.role, value: data.role },
+						organizationId: { ...prev.fields.organizationId, value: data.organizationId },
+					},
+				}));
 			},
 			onError: (error) => onError?.(error),
 		});
@@ -105,6 +108,9 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 	const onSubmit = (schema: UserFormSchema) => {
 		startTransition(async () => {
+			if (userId && (!user || user.id !== userId)) {
+				return onError?.('User is still loading. Please try again.');
+			}
 			const result =
 				userId && user
 					? await updateUserAction(buildUpdateUserInput(schema, user))

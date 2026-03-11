@@ -48,7 +48,13 @@ export default function ContributorsTableClient({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving contributor: ${String(error)}`);
+		const message =
+			error instanceof Error
+				? error.message
+				: typeof error === 'string'
+					? error
+					: 'An unexpected error occurred while saving.';
+		setErrorMessage(`Error saving contributor: ${message}`);
 		logger.error('Contributor Form Error', { error });
 	};
 

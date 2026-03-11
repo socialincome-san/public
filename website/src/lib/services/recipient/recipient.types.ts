@@ -63,8 +63,6 @@ export type RecipientPayload = {
 	} | null;
 };
 
-export type RecipientCreateInput = Prisma.RecipientCreateInput;
-export type RecipientUpdateInput = Prisma.RecipientUpdateInput;
 export type RecipientPrismaUpdateInput = Prisma.RecipientUpdateInput;
 
 export type RecipientOption = {

@@ -17,7 +17,8 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId, readOnly = fals
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {
-		setErrorMessage(`Error saving payout: ${String(error)}`);
+		const message = error instanceof Error ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+		setErrorMessage(`Error saving payout: ${message}`);
 		logger.error('Payout Form Error', { error });
 	};
 

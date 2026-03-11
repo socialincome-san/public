@@ -28,7 +28,13 @@ export const RecipientDialog = ({
 	onError,
 }: Props) => {
 	const handleError = (error: unknown) => {
-		onError(`Error saving recipient: ${String(error)}`);
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: typeof error === 'string'
+					? error
+					: 'An unexpected error occurred while saving.';
+		onError(`Error saving recipient: ${errorMessage}`);
 		logger.error('Recipient Form Error', { error });
 	};
 

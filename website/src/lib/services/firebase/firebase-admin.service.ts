@@ -265,21 +265,13 @@ export class FirebaseAdminService extends BaseService {
 
 	async deleteByUidIfExists(uid: string): Promise<ServiceResult<boolean>> {
 		try {
-			const userRecord = await authAdmin.auth.getUser(uid).catch((error: unknown) => {
-				if ((error as { code?: string })?.code === 'auth/user-not-found') {
-					return null;
-				}
-				throw error;
-			});
-
-			if (!userRecord) {
-				return this.resultOk(true);
-			}
-
 			await authAdmin.auth.deleteUser(uid);
 
 			return this.resultOk(true);
-		} catch (error) {
+		} catch (error: any) {
+			if (error?.code === 'auth/user-not-found') {
+				return this.resultOk(true);
+			}
 			this.logger.error('Error deleting auth user by uid:', { uid, error });
 
 			return this.resultFail(`Could not delete auth user by uid: ${JSON.stringify(error)}`);

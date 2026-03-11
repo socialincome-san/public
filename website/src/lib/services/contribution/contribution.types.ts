@@ -36,9 +36,6 @@ export type ContributionPaginatedTableView = {
 	};
 };
 
-export type ContributionUpdateInput = Prisma.ContributionUpdateInput;
-export type ContributionCreateInput = Prisma.ContributionCreateInput;
-
 export type ContributionPayload = {
 	id: string;
 	amount: number;

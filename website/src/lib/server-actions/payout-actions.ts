@@ -1,11 +1,11 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { type PayoutCreateInput, type PayoutUpdateInput } from '@/lib/services/payout/payout.types';
+import { type PayoutFormCreateInput, type PayoutFormUpdateInput } from '@/lib/services/payout/payout-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-export const createPayoutAction = async (input: PayoutCreateInput) => {
+export const createPayoutAction = async (input: PayoutFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -16,7 +16,7 @@ export const createPayoutAction = async (input: PayoutCreateInput) => {
 	return result;
 };
 
-export const updatePayoutAction = async (input: PayoutUpdateInput) => {
+export const updatePayoutAction = async (input: PayoutFormUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

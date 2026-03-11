@@ -9,6 +9,7 @@ import {
 	getPayoutRecipientOptionsAction,
 	updatePayoutAction,
 } from '@/lib/server-actions/payout-actions';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { PayoutPayload } from '@/lib/services/payout/payout.types';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import { allCurrencies } from '@/lib/types/currency';
@@ -83,67 +84,60 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 
 		startTransition(async () => {
 			const result = await getPayoutAction(payoutId);
-			if (!result.success) {
-				return onError?.(result.error);
-			}
-
-			setPayout(result.data);
-
-			const next = { ...formSchema };
-			next.fields.recipientId.value = result.data.recipient.id;
-			next.fields.amount.value = result.data.amount;
-			next.fields.currency.value = result.data.currency;
-			next.fields.phoneNumber.value = result.data.phoneNumber ?? undefined;
-			next.fields.paymentAt.value = new Date(result.data.paymentAt);
-			next.fields.status.value = result.data.status;
-
-			setFormSchema(next);
+			handleServiceResult(result, {
+				onSuccess: (data) => {
+					setPayout(data);
+					setFormSchema((prev) => ({
+						...prev,
+						fields: {
+							...prev.fields,
+							recipientId: { ...prev.fields.recipientId, value: data.recipient.id },
+							amount: { ...prev.fields.amount, value: data.amount },
+							currency: { ...prev.fields.currency, value: data.currency },
+							phoneNumber: { ...prev.fields.phoneNumber, value: data.phoneNumber ?? undefined },
+							paymentAt: { ...prev.fields.paymentAt, value: new Date(data.paymentAt) },
+							status: { ...prev.fields.status, value: data.status },
+						},
+					}));
+				},
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, [payoutId]);
+	}, [onError, payoutId]);
 
 	useEffect(() => {
 		startTransition(async () => {
 			const res = await getPayoutRecipientOptionsAction();
-			if (!res.success) {
-				return;
-			}
+			handleServiceResult(res, {
+				onSuccess: (data) => {
+					const recipientEnum = getZodEnum(data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
 
-			const recipientEnum = getZodEnum(res.data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
-
-			setFormSchema((prev) => ({
-				...prev,
-				fields: {
-					...prev.fields,
-					recipientId: {
-						...prev.fields.recipientId,
-						zodSchema: z.nativeEnum(recipientEnum),
-					},
+					setFormSchema((prev) => ({
+						...prev,
+						fields: {
+							...prev.fields,
+							recipientId: {
+								...prev.fields.recipientId,
+								zodSchema: z.nativeEnum(recipientEnum),
+							},
+						},
+					}));
 				},
-			}));
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, []);
+	}, [onError]);
 
 	const onSubmit = (schema: PayoutFormSchema) => {
 		startTransition(async () => {
-			try {
-				let res;
-
-				if (payoutId && payout) {
-					const data = buildUpdatePayoutInput(schema, payout);
-					res = await updatePayoutAction(data);
-				} else {
-					const data = buildCreatePayoutInput(schema);
-					res = await createPayoutAction(data);
-				}
-
-				if (res.success) {
-					onSuccess?.();
-				} else {
-					onError?.(res.error);
-				}
-			} catch (e) {
-				onError?.(e);
-			}
+			const res =
+				payoutId && payout
+					? await updatePayoutAction(buildUpdatePayoutInput(schema, payout))
+					: await createPayoutAction(buildCreatePayoutInput(schema));
+			handleServiceResult(res, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 

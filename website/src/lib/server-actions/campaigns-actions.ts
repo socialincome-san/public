@@ -1,11 +1,11 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { CampaignFormCreateInput, CampaignFormUpdateInput } from '@/lib/services/campaign/campaign-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-export const createCampaignsAction = async (campaigns: CampaignsCreateInput) => {
+export const createCampaignsAction = async (campaigns: CampaignFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -16,7 +16,7 @@ export const createCampaignsAction = async (campaigns: CampaignsCreateInput) => 
 	return res;
 };
 
-export const updateCampaignsAction = async (campaigns: CampaignsUpdateInput) => {
+export const updateCampaignsAction = async (campaigns: CampaignFormUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

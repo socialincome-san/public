@@ -2,15 +2,16 @@
 
 import { Cause } from '@/generated/prisma/enums';
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
-import { CandidateCreateInput, CandidateUpdateInput, Profile } from '@/lib/services/candidate/candidate.types';
+import { CandidateFormCreateInput, CandidateFormUpdateInput } from '@/lib/services/candidate/candidate-form-input';
+import { Profile } from '@/lib/services/candidate/candidate.types';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-const ADMIN_CANDIDATES_PATH = '/admin/candidates';
+const ADMIN_CANDIDATES_PATH = '/portal/admin/candidates';
 const PARTNER_CANDIDATES_PATH = '/partner-space/candidates';
 
-export const createCandidateAction = async (data: CandidateCreateInput, sessionType: Session['type'] = 'user') => {
+export const createCandidateAction = async (data: CandidateFormCreateInput, sessionType: Session['type'] = 'user') => {
 	const sessionResult = await getSessionByType(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -27,8 +28,7 @@ export const createCandidateAction = async (data: CandidateCreateInput, sessionT
 };
 
 export const updateCandidateAction = async (
-	updateInput: CandidateUpdateInput,
-	nextPaymentPhoneNumber: string | null,
+	updateInput: CandidateFormUpdateInput,
 	sessionType: Session['type'] = 'user',
 ) => {
 	const sessionResult = await getSessionByType(sessionType);
@@ -36,7 +36,7 @@ export const updateCandidateAction = async (
 		return sessionResult;
 	}
 	const session = sessionResult.data;
-	const result = await services.write.candidate.update(session, updateInput, nextPaymentPhoneNumber);
+	const result = await services.write.candidate.update(session, updateInput);
 	if (session.type === 'user') {
 		revalidatePath(ADMIN_CANDIDATES_PATH);
 	} else if (session.type === 'local-partner') {

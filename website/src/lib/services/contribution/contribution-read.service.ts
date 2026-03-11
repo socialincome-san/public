@@ -118,8 +118,8 @@ export class ContributionReadService extends BaseService {
 			return this.resultOk({
 				...contribution,
 				amount: Number(contribution.amount),
-				amountChf: Number(contribution.amount),
-				feesChf: Number(contribution.amount),
+				amountChf: Number(contribution.amountChf),
+				feesChf: Number(contribution.feesChf),
 			});
 		} catch (error) {
 			this.logger.error(error);

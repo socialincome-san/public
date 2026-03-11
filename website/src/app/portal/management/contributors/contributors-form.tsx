@@ -9,11 +9,8 @@ import {
 	getContributorAction,
 	updateContributorAction,
 } from '@/lib/server-actions/contributor-actions';
-import {
-	ContributorFormCreateInput,
-	ContributorPayload,
-	ContributorUpdateInput,
-} from '@/lib/services/contributor/contributor.types';
+import { ContributorPayload } from '@/lib/services/contributor/contributor.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateContributorInput, buildUpdateContributorsInput } from './contributors-form-helper';
@@ -70,59 +67,63 @@ export default function ContributorsForm({
 	const [contributor, setContributor] = useState<ContributorPayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	const loadContributor = (id: string) => {
+	const onSubmit = async (schema: ContributorFormSchema) => {
 		startTransition(async () => {
-			try {
-				const result = await getContributorAction(id);
-				if (!result.success) {
-					return onError?.(result.error);
-				}
-
-				setContributor(result.data);
-				const newSchema = { ...initialFormSchema };
-				const contactValues = getContactValuesFromPayload(result.data.contact, newSchema.fields.contact.fields);
-				newSchema.fields.referral.value = result.data.referral;
-				newSchema.fields.paymentReferenceId.value = result.data.paymentReferenceId;
-				newSchema.fields.stripeCustomerId.value = result.data.stripeCustomerId;
-				newSchema.fields.contact.fields = contactValues;
-				setFormSchema(newSchema);
-			} catch (error: unknown) {
-				onError?.(error);
+			if (contributorId && (!contributor || contributor.id !== contributorId)) {
+				return onError?.('Contributor is still loading. Please try again.');
 			}
-		});
-	};
-
-	const onSubmit = (schema: ContributorFormSchema) => {
-		startTransition(async () => {
-			try {
-				let res;
-
-				if (contributorId && contributor) {
-					const updateData: ContributorUpdateInput = buildUpdateContributorsInput(schema, contributor);
-					res = await updateContributorAction({ id: contributorId, ...updateData });
-				} else {
-					const createData: ContributorFormCreateInput = buildCreateContributorInput(schema);
-					res = await createContributorAction(createData);
-				}
-
-				if (res.success) {
-					onSuccess?.();
-				} else {
-					onError?.(res.error);
-				}
-			} catch (error: unknown) {
-				onError?.(error);
-			}
+			const res =
+				contributorId && contributor
+					? await updateContributorAction(buildUpdateContributorsInput(schema, contributor))
+					: await createContributorAction(buildCreateContributorInput(schema));
+			handleServiceResult(res, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
 	useEffect(() => {
 		if (contributorId) {
-			startTransition(() => {
-				loadContributor(contributorId);
+			startTransition(async () => {
+				const result = await getContributorAction(contributorId);
+				handleServiceResult(result, {
+					onSuccess: (data) => {
+						setContributor(data);
+						setFormSchema((previousSchema) => {
+							const contactFields = {
+								...(previousSchema.fields.contact as FormSchema).fields,
+							};
+							const contactValues = getContactValuesFromPayload(data.contact, contactFields);
+							return {
+								...previousSchema,
+								fields: {
+									...previousSchema.fields,
+									referral: {
+										...previousSchema.fields.referral,
+										value: data.referral,
+									},
+									paymentReferenceId: {
+										...previousSchema.fields.paymentReferenceId,
+										value: data.paymentReferenceId,
+									},
+									stripeCustomerId: {
+										...previousSchema.fields.stripeCustomerId,
+										value: data.stripeCustomerId,
+									},
+									contact: {
+										...(previousSchema.fields.contact as FormSchema),
+										fields: contactValues,
+									},
+								},
+							};
+						});
+					},
+					onError: (error) => onError?.(error),
+				});
 			});
 		}
-	}, [contributorId]);
+	}, [contributorId, onError]);
 
 	return (
 		<DynamicForm
@@ -130,7 +131,7 @@ export default function ContributorsForm({
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : 'edit'}
+			mode={readOnly ? 'readonly' : contributorId ? 'edit' : 'add'}
 		/>
 	);
 }

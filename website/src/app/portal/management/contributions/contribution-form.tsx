@@ -16,6 +16,7 @@ import {
 import { CampaignOption } from '@/lib/services/campaign/campaign.types';
 import { ContributionPayload } from '@/lib/services/contribution/contribution.types';
 import { ContributorOption } from '@/lib/services/contributor/contributor.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { allCurrencies } from '@/lib/types/currency';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 
@@ -90,43 +91,42 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 	useEffect(() => {
 		startTransition(async () => {
 			const optionsResult = await getContributionsOptionsAction();
-			if (!optionsResult.success) {
-				return;
-			}
-			const { contributorOptions, campaignOptions } = optionsResult.data;
+			handleServiceResult(optionsResult, {
+				onSuccess: (data) => {
+					const contributorEnum = getZodEnum(
+						data.contributorOptions.map((c: ContributorOption) => ({
+							id: c.id,
+							label: c.name,
+						})),
+					);
 
-			const contributorEnum = getZodEnum(
-				contributorOptions.map((c: ContributorOption) => ({
-					id: c.id,
-					label: c.name,
-				})),
-			);
+					const campaignEnum = getZodEnum(
+						data.campaignOptions.map((c: CampaignOption) => ({
+							id: c.id,
+							label: c.name,
+						})),
+					);
 
-			const campaignEnum = getZodEnum(
-				campaignOptions.map((c: CampaignOption) => ({
-					id: c.id,
-					label: c.name,
-				})),
-			);
-
-			setFormSchema((prev) => ({
-				...prev,
-				fields: {
-					...prev.fields,
-					contributor: {
-						...prev.fields.contributor,
-						zodSchema: z.nativeEnum(contributorEnum),
-					},
-					campaign: {
-						...prev.fields.campaign,
-						zodSchema: z.nativeEnum(campaignEnum),
-					},
+					setFormSchema((prev) => ({
+						...prev,
+						fields: {
+							...prev.fields,
+							contributor: {
+								...prev.fields.contributor,
+								zodSchema: z.nativeEnum(contributorEnum),
+							},
+							campaign: {
+								...prev.fields.campaign,
+								zodSchema: z.nativeEnum(campaignEnum),
+							},
+						},
+					}));
+					setOptionsLoaded(true);
 				},
-			}));
-
-			setOptionsLoaded(true);
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, []);
+	}, [onError]);
 
 	useEffect(() => {
 		if (!contributionId || !optionsLoaded) {
@@ -135,49 +135,42 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 
 		startTransition(async () => {
 			const result = await getContributionAction(contributionId);
-			if (!result.success) {
-				return onError?.(result.error);
-			}
+			handleServiceResult(result, {
+				onSuccess: (data) => {
+					setContribution(data);
 
-			setContribution(result.data);
-
-			setFormSchema((prev) => ({
-				...prev,
-				fields: {
-					...prev.fields,
-					amount: { ...prev.fields.amount, value: result.data.amount },
-					currency: { ...prev.fields.currency, value: result.data.currency },
-					amountChf: { ...prev.fields.amountChf, value: result.data.amountChf },
-					feesChf: { ...prev.fields.feesChf, value: result.data.feesChf },
-					status: { ...prev.fields.status, value: result.data.status },
-					contributor: { ...prev.fields.contributor, value: result.data.contributor.id },
-					campaign: { ...prev.fields.campaign, value: result.data.campaign.id },
+					setFormSchema((prev) => ({
+						...prev,
+						fields: {
+							...prev.fields,
+							amount: { ...prev.fields.amount, value: data.amount },
+							currency: { ...prev.fields.currency, value: data.currency },
+							amountChf: { ...prev.fields.amountChf, value: data.amountChf },
+							feesChf: { ...prev.fields.feesChf, value: data.feesChf },
+							status: { ...prev.fields.status, value: data.status },
+							contributor: { ...prev.fields.contributor, value: data.contributor.id },
+							campaign: { ...prev.fields.campaign, value: data.campaign.id },
+						},
+					}));
 				},
-			}));
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, [contributionId, optionsLoaded]);
+	}, [contributionId, onError, optionsLoaded]);
 
 	const onSubmit = (schema: ContributionFormSchema) => {
 		startTransition(async () => {
-			try {
-				let response;
-
-				if (contributionId && contribution) {
-					const data = buildUpdateContributionInput(schema, contribution);
-					response = await updateContributionAction(data);
-				} else {
-					const data = buildCreateContributionInput(schema);
-					response = await createContributionAction(data);
-				}
-
-				if (response.success) {
-					onSuccess?.();
-				} else {
-					onError?.(response.error);
-				}
-			} catch (e) {
-				onError?.(e);
+			if (contributionId && (!contribution || contribution.id !== contributionId)) {
+				return onError?.('Contribution is still loading. Please try again.');
 			}
+			const response =
+				contributionId && contribution
+					? await updateContributionAction(buildUpdateContributionInput(schema, contribution))
+					: await createContributionAction(buildCreateContributionInput(schema));
+			handleServiceResult(response, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
