@@ -41,7 +41,9 @@ const CurrencySelector = React.forwardRef<HTMLDivElement, CurrencySelectorProps>
 				<Select
 					value={currency}
 					onValueChange={(currency: WebsiteCurrency) => {
-						isValidCurrency(currency) && setCurrency(currency);
+						if (isValidCurrency(currency)) {
+							setCurrency(currency);
+						}
 					}}
 				>
 					<SelectTrigger className="h-full px-5">

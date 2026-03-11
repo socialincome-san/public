@@ -36,8 +36,10 @@ export class StoryblokService extends BaseService {
 	): Promise<T> {
 		try {
 			return await loader(lang, slug);
-		} catch (error: any) {
-			if (error?.status === 404) {
+		} catch (error: unknown) {
+			const errorStatus =
+				typeof error === 'object' && error !== null && 'status' in error ? error.status : undefined;
+			if (errorStatus === 404) {
 				if (lang === defaultLanguage) {
 					return notFound();
 				}
@@ -241,10 +243,7 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getArticlesByUuids(
-		lang: string,
-		articleUuids: string[],
-	): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
+	async getArticlesByUuids(lang: string, articleUuids: string[]): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
 		try {
 			const uuids = [...new Set(articleUuids.filter(Boolean))];
 			if (!uuids.length) {

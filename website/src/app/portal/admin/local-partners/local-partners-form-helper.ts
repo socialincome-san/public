@@ -9,7 +9,7 @@ import { LocalPartnerFormSchema } from './local-partners-form';
 export const buildUpdateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
 	localPartner: LocalPartnerPayload,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): LocalPartnerFormUpdateInput => {
 	return {
 		id: localPartner.id,
@@ -21,7 +21,7 @@ export const buildUpdateLocalPartnerInput = (
 
 export const buildCreateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): LocalPartnerFormCreateInput => {
 	return {
 		name: schema.fields.name.value,
@@ -30,7 +30,7 @@ export const buildCreateLocalPartnerInput = (
 	};
 };
 
-const mapContactFields = (contactFields: { [key: string]: FormField }) => ({
+const mapContactFields = (contactFields: Record<string, FormField>) => ({
 	firstName: `${contactFields.firstName.value ?? ''}`,
 	lastName: `${contactFields.lastName.value ?? ''}`,
 	callingName: asNullableString(contactFields.callingName.value),

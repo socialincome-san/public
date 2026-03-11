@@ -40,22 +40,12 @@ export class PayoutReadService extends BaseService {
 
 	private buildPayoutOrderBy(query: PayoutTableQuery): Prisma.PayoutOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, [
-			'id',
-			'recipient',
-			'programName',
-			'amount',
-			'status',
-			'paymentAt',
-		] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'recipient', 'programName', 'amount', 'status', 'paymentAt'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
 			case 'recipient':
-				return [
-					{ recipient: { contact: { firstName: direction } } },
-					{ recipient: { contact: { lastName: direction } } },
-				];
+				return [{ recipient: { contact: { firstName: direction } } }, { recipient: { contact: { lastName: direction } } }];
 			case 'programName':
 				return [{ recipient: { program: { name: direction } } }];
 			case 'amount':
@@ -123,10 +113,7 @@ export class PayoutReadService extends BaseService {
 		};
 	}
 
-	async getPaginatedTableView(
-		userId: string,
-		query: PayoutTableQuery,
-	): Promise<ServiceResult<PayoutPaginatedTableView>> {
+	async getPaginatedTableView(userId: string, query: PayoutTableQuery): Promise<ServiceResult<PayoutPaginatedTableView>> {
 		try {
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
@@ -601,8 +588,7 @@ export class PayoutReadService extends BaseService {
 				}
 
 				const allowed = access.data.some(
-					(p) =>
-						p.programId === payout.recipient.program!.id && p.permission !== null && p.permission !== undefined,
+					(p) => p.programId === payout.recipient.program!.id && p.permission !== null && p.permission !== undefined,
 				);
 
 				if (!allowed) {

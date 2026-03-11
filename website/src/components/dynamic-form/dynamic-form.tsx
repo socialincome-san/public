@@ -27,9 +27,7 @@ export type FormField = {
 
 export type FormSchema = {
 	label: string;
-	fields: {
-		[key: string]: FormField | FormSchema;
-	};
+	fields: Record<string, FormField | FormSchema>;
 };
 
 // recursively build Zod Schema from Form Schema
@@ -282,7 +280,7 @@ const GenericFormField = ({
 		? (formSchema.fields[parentOption] as FormSchema)?.fields[option]
 		: formSchema.fields[option];
 
-	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { [key: string]: string } => {
+	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): Record<string, string> => {
 		const def = getDef(key, zodSchema, parentOption);
 		if (isOptional(key, zodSchema, parentOption)) {
 			return def.innerType._def.values;

@@ -218,7 +218,7 @@ export const RecipientForm = ({
 		startTransition(async () => {
 			try {
 				let res: { success: boolean; error?: string };
-				const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
+				const contactFields = schema.fields.contact.fields as Record<string, FormField>;
 
 				if (recipientId && recipient) {
 					const data: RecipientUpdateInput = buildUpdateRecipientInput(schema, recipient, contactFields);
@@ -230,7 +230,11 @@ export const RecipientForm = ({
 					res = await createRecipientAction(data, sessionType);
 				}
 
-				res.success ? onSuccess?.() : onError?.(res.error);
+				if (res.success) {
+					onSuccess?.();
+				} else {
+					onError?.(res.error);
+				}
 			} catch (error: unknown) {
 				onError?.(error);
 			}
@@ -245,7 +249,11 @@ export const RecipientForm = ({
 		startTransition(async () => {
 			try {
 				const result = await deleteRecipientAction(recipientId, sessionType);
-				result.success ? onSuccess?.() : onError?.(result.error);
+				if (result.success) {
+					onSuccess?.();
+				} else {
+					onError?.(result.error);
+				}
 			} catch (error) {
 				onError?.(error);
 			}

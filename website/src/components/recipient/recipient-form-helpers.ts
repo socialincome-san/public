@@ -25,7 +25,7 @@ const toTrimmedStringOrNull = (value: unknown): string | null => {
 export const buildUpdateRecipientInput = (
 	schema: RecipientFormSchema,
 	recipient: RecipientPayload,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): RecipientUpdateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
@@ -193,7 +193,7 @@ export const buildUpdateRecipientInput = (
 
 export const buildCreateRecipientInput = (
 	schema: RecipientFormSchema,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): RecipientCreateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
