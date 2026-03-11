@@ -18,13 +18,15 @@ type BuildPhoneWriteOperationParams = {
 };
 
 type BuildAddressWriteOperationParams = {
-	addressInput: {
-		street: string;
-		number: string;
-		city: string;
-		zip: string;
-		country: CountryCode | null;
-	} | undefined;
+	addressInput:
+		| {
+				street: string;
+				number: string;
+				city: string;
+				zip: string;
+				country: CountryCode | null;
+		  }
+		| undefined;
 	currentAddressId: string | undefined;
 };
 

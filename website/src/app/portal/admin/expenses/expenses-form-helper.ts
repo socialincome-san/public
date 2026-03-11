@@ -11,7 +11,10 @@ export const buildCreateExpenseInput = (schema: ExpenseFormSchema): ExpenseFormC
 	};
 };
 
-export const buildUpdateExpenseInput = (schema: ExpenseFormSchema, existing: ExpensePayload): ExpenseFormUpdateInput => {
+export const buildUpdateExpenseInput = (
+	schema: ExpenseFormSchema,
+	existing: ExpensePayload,
+): ExpenseFormUpdateInput => {
 	return {
 		id: existing.id,
 		type: schema.fields.type.value,

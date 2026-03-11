@@ -22,7 +22,10 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryFormC
 		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
 		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
 		sanctions: sanctions.sanctions.value ?? [],
-		microfinanceSourceLink: buildOptionalSourceLink(cash.microfinanceSourceText.value, cash.microfinanceSourceHref.value),
+		microfinanceSourceLink: buildOptionalSourceLink(
+			cash.microfinanceSourceText.value,
+			cash.microfinanceSourceHref.value,
+		),
 		networkSourceLink: buildOptionalSourceLink(
 			mobileNetwork.networkSourceText.value,
 			mobileNetwork.networkSourceHref.value,
@@ -30,7 +33,10 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryFormC
 	};
 };
 
-export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryFormUpdateInput => {
+export const buildUpdateCountryInput = (
+	schema: CountryFormSchema,
+	existing: CountryPayload,
+): CountryFormUpdateInput => {
 	const countrySettings = schema.fields.countrySettings.fields;
 	const cash = schema.fields.suitabilityOfCash.fields;
 	const mobileMoney = schema.fields.mobileMoney.fields;
@@ -51,7 +57,10 @@ export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: Cou
 		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
 		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
 		sanctions: sanctions.sanctions.value ?? [],
-		microfinanceSourceLink: buildOptionalSourceLink(cash.microfinanceSourceText.value, cash.microfinanceSourceHref.value),
+		microfinanceSourceLink: buildOptionalSourceLink(
+			cash.microfinanceSourceText.value,
+			cash.microfinanceSourceHref.value,
+		),
 		networkSourceLink: buildOptionalSourceLink(
 			mobileNetwork.networkSourceText.value,
 			mobileNetwork.networkSourceHref.value,
@@ -59,10 +68,7 @@ export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: Cou
 	};
 };
 
-const buildOptionalSourceLink = (
-	rawText: unknown,
-	rawHref: unknown,
-): { text: string; href: string } | null => {
+const buildOptionalSourceLink = (rawText: unknown, rawHref: unknown): { text: string; href: string } | null => {
 	const text = `${rawText ?? ''}`.trim();
 	const href = `${rawHref ?? ''}`.trim();
 

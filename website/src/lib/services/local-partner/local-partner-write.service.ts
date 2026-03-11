@@ -1,9 +1,9 @@
 import { LocalPartner, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { logger } from '@/lib/utils/logger';
+import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ContactRelationsService } from '../contact/contact-relations.service';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { UserReadService } from '../user/user-read.service';
 import { LocalPartnerFormCreateInput, LocalPartnerFormUpdateInput } from './local-partner-form-input';
@@ -193,13 +193,15 @@ export class LocalPartnerWriteService extends BaseService {
 			const previousPhoneId = existing.contact.phone?.id;
 			const previousPhoneNumber = existing.contact.phone?.number ?? null;
 			const didRemovePhone = !validatedInput.contact.phone;
-			const didChangePhoneNumber = !!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
+			const didChangePhoneNumber =
+				!!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
 			if ((didRemovePhone || didChangePhoneNumber) && previousPhoneId) {
 				await this.contactRelationsService.deletePhoneIfUnused(previousPhoneId);
 			}
 
 			const previousAddressId = existing.contact.address?.id;
-			const didRemoveAddress = !!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
+			const didRemoveAddress =
+				!!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
 			if (didRemoveAddress && previousAddressId) {
 				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
 			}

@@ -5,11 +5,11 @@ import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
 import { CandidateWriteService } from './candidate/candidate-write.service';
+import { ContactRelationsService } from './contact/contact-relations.service';
 import { ContributionReadService } from './contribution/contribution-read.service';
 import { ContributionWriteService } from './contribution/contribution-write.service';
 import { ContributorReadService } from './contributor/contributor-read.service';
 import { ContributorWriteService } from './contributor/contributor-write.service';
-import { ContactRelationsService } from './contact/contact-relations.service';
 import { CountryReadService } from './country/country-read.service';
 import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
@@ -92,11 +92,7 @@ const localPartnerWrite = new LocalPartnerWriteService(
 );
 const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
 const mobileMoneyProviderValidation = new MobileMoneyProviderValidationService(prisma);
-const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(
-	prisma,
-	userRead,
-	mobileMoneyProviderValidation,
-);
+const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead, mobileMoneyProviderValidation);
 const countryRead = new CountryReadService(prisma, userRead);
 const countryValidation = new CountryValidationService(prisma);
 const countryWrite = new CountryWriteService(prisma, userRead, countryValidation);

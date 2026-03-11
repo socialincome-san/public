@@ -72,11 +72,9 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 	).toBeVisible();
 	await confirmButton.click();
 
-	await page.waitForURL(
-		(url) => {
-			return url.pathname.includes(expectedPath);
-		},
-	);
+	await page.waitForURL((url) => {
+		return url.pathname.includes(expectedPath);
+	});
 
 	const currentPath = new URL(page.url()).pathname;
 	expect(

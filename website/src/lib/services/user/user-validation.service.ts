@@ -2,7 +2,12 @@ import { PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserFormCreateInput, UserFormUpdateInput, userCreateInputSchema, userUpdateInputSchema } from './user-form-input';
+import {
+	UserFormCreateInput,
+	UserFormUpdateInput,
+	userCreateInputSchema,
+	userUpdateInputSchema,
+} from './user-form-input';
 
 type UpdateUniquenessContext = {
 	contactId: string;

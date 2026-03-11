@@ -5,8 +5,8 @@ import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { UserFormCreateInput, UserFormUpdateInput } from './user-form-input';
 import { UserReadService } from './user-read.service';
-import { UserPayload, UserUpdateInput } from './user.types';
 import { UserValidationService } from './user-validation.service';
+import { UserPayload, UserUpdateInput } from './user.types';
 
 export class UserWriteService extends BaseService {
 	constructor(
@@ -139,7 +139,8 @@ export class UserWriteService extends BaseService {
 
 			const newDisplayName = `${validatedInput.firstName} ${validatedInput.lastName}`.trim();
 			const oldDisplayName = `${existingUser.contact.firstName} ${existingUser.contact.lastName}`.trim();
-			const shouldSyncFirebaseUser = validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
+			const shouldSyncFirebaseUser =
+				validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
 			if (shouldSyncFirebaseUser) {
 				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
 					existingUser.account.firebaseAuthUserId,

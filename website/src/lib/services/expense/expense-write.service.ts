@@ -4,8 +4,8 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
 import { ExpenseFormCreateInput, ExpenseFormUpdateInput } from './expense-form-input';
-import { ExpensePayload } from './expense.types';
 import { ExpenseValidationService } from './expense-validation.service';
+import { ExpensePayload } from './expense.types';
 
 export class ExpenseWriteService extends BaseService {
 	constructor(

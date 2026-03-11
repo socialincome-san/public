@@ -4,13 +4,11 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
 import {
-	MobileMoneyProviderPayload,
-} from './mobile-money-provider.types';
-import {
 	MobileMoneyProviderFormCreateInput,
 	MobileMoneyProviderFormUpdateInput,
 } from './mobile-money-provider-form-input';
 import { MobileMoneyProviderValidationService } from './mobile-money-provider-validation.service';
+import { MobileMoneyProviderPayload } from './mobile-money-provider.types';
 
 export class MobileMoneyProviderWriteService extends BaseService {
 	constructor(

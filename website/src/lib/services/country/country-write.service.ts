@@ -4,8 +4,8 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
 import { CountryFormCreateInput, CountryFormUpdateInput } from './country-form-input';
-import { CountryPayload } from './country.types';
 import { CountryValidationService } from './country-validation.service';
+import { CountryPayload } from './country.types';
 
 export class CountryWriteService extends BaseService {
 	constructor(
@@ -55,7 +55,12 @@ export class CountryWriteService extends BaseService {
 					mobileMoneyConditionOverride: validatedInput.mobileMoneyConditionOverride,
 					sanctions: validatedInput.sanctions ? (validatedInput.sanctions as SanctionRegime[]) : undefined,
 					microfinanceSourceLink: validatedInput.microfinanceSourceLink
-						? { create: { text: validatedInput.microfinanceSourceLink.text, href: validatedInput.microfinanceSourceLink.href } }
+						? {
+								create: {
+									text: validatedInput.microfinanceSourceLink.text,
+									href: validatedInput.microfinanceSourceLink.href,
+								},
+							}
 						: undefined,
 					networkSourceLink: validatedInput.networkSourceLink
 						? { create: { text: validatedInput.networkSourceLink.text, href: validatedInput.networkSourceLink.href } }

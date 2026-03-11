@@ -110,7 +110,10 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 	const onSubmit = (schema: UserFormSchema) => {
 		startTransition(async () => {
-			const result = userId && user ? await updateUserAction(buildUpdateUserInput(schema, user)) : await createUserAction(buildCreateUserInput(schema));
+			const result =
+				userId && user
+					? await updateUserAction(buildUpdateUserInput(schema, user))
+					: await createUserAction(buildCreateUserInput(schema));
 			handleServiceResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),

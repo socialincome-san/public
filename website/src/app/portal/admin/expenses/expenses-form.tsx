@@ -44,7 +44,11 @@ const initialFormSchema: ExpenseFormSchema = {
 		year: {
 			placeholder: 'Year',
 			label: 'Year',
-			zodSchema: z.coerce.number().int().min(2000, 'Year must be between 2000 and 2100.').max(2100, 'Year must be between 2000 and 2100.'),
+			zodSchema: z.coerce
+				.number()
+				.int()
+				.min(2000, 'Year must be between 2000 and 2100.')
+				.max(2100, 'Year must be between 2000 and 2100.'),
 		},
 		amountChf: {
 			placeholder: 'Amount CHF',
