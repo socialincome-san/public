@@ -36,6 +36,7 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	return (
 		<ConfiguredDataTableClient
 			config={payoutForecastTableConfig}
+			titleInfoTooltip="Forecast is calculated from currently eligible recipients, remaining payout duration, and latest exchange rates."
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

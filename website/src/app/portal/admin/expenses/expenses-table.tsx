@@ -37,7 +37,13 @@ export default function ExpensesTable({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving expense: ${error}`);
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: typeof error === 'string'
+					? error
+					: 'An unexpected error occurred while saving.';
+		setErrorMessage(`Error saving expense: ${errorMessage}`);
 		logger.error('Expense Form Error', { error });
 	};
 
@@ -45,6 +51,7 @@ export default function ExpensesTable({
 		<>
 			<ConfiguredDataTableClient
 				config={expensesTableConfig}
+				titleInfoTooltip="Shows expense records across organizations in admin scope."
 				rows={rows}
 				error={error}
 				query={query}

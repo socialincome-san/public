@@ -38,6 +38,7 @@ export default function ExchangeRatesTable({
 	return (
 		<ConfiguredDataTableClient
 			config={exchangeRatesTableConfig}
+			titleInfoTooltip="Shows imported monthly exchange-rate snapshots."
 			rows={rows}
 			error={error || errorMessage}
 			query={query}

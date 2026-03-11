@@ -10,7 +10,7 @@ import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types
 import type { ColumnDef } from '@tanstack/react-table';
 
 export const makeCandidateColumns = (
-	hideProgramName = false,
+	_hideProgramName = false,
 	hideLocalPartner = false,
 ): ColumnDef<CandidatesTableViewRow>[] => {
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
@@ -51,18 +51,10 @@ export const makeCandidateColumns = (
 		});
 	}
 
-	if (!hideProgramName) {
-		columns.push({
-			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		});
-	}
-
 	columns.push({
 		id: 'actions',
 		header: '',
-		enableSorting: false,
+		enableHiding: false,
 		cell: (ctx) => <ActionCell ctx={ctx} />,
 	});
 

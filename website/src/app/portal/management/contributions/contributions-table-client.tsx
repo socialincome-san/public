@@ -52,6 +52,7 @@ export const ContributionsTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={contributionsTableConfig}
+				titleInfoTooltip="Shows contributions in your active organization scope."
 				rows={rows}
 				error={error}
 				query={query}

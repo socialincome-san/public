@@ -37,6 +37,7 @@ export default function CountriesTable({
 		<>
 			<ConfiguredDataTableClient
 				config={countriesTableConfig}
+				titleInfoTooltip="Shows countries and their operational readiness signals in admin scope."
 				rows={rows}
 				error={error}
 				query={query}

@@ -108,6 +108,7 @@ export const CandidatesTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={candidatesTableConfig}
+				titleInfoTooltip="Shows candidate records awaiting program assignment."
 				rows={rows}
 				error={error}
 				query={query}

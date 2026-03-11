@@ -5,11 +5,13 @@ import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
 import { CandidateWriteService } from './candidate/candidate-write.service';
+import { ContactRelationsService } from './contact/contact-relations.service';
 import { ContributionReadService } from './contribution/contribution-read.service';
 import { ContributionWriteService } from './contribution/contribution-write.service';
 import { ContributorReadService } from './contributor/contributor-read.service';
 import { ContributorWriteService } from './contributor/contributor-write.service';
 import { CountryReadService } from './country/country-read.service';
+import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
@@ -17,12 +19,15 @@ import { ExchangeRateImportService } from './exchange-rate/exchange-rate-import.
 import { ExchangeRateReadService } from './exchange-rate/exchange-rate-read.service';
 import { ExchangeRateWriteService } from './exchange-rate/exchange-rate-write.service';
 import { ExpenseReadService } from './expense/expense-read.service';
+import { ExpenseValidationService } from './expense/expense-validation.service';
 import { ExpenseWriteService } from './expense/expense-write.service';
 import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
+import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
 import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-money-provider-read.service';
+import { MobileMoneyProviderValidationService } from './mobile-money-provider/mobile-money-provider-validation.service';
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
 import { OrganizationAccessService } from './organization-access/organization-access.service';
 import { OrganizationReadService } from './organization/organization-read.service';
@@ -46,6 +51,7 @@ import { SurveyWriteService } from './survey/survey-write.service';
 import { TransparencyService } from './transparency/transparency.service';
 import { TwilioService } from './twilio/twilio.service';
 import { UserReadService } from './user/user-read.service';
+import { UserValidationService } from './user/user-validation.service';
 import { UserWriteService } from './user/user-write.service';
 
 const appReviewMode = new AppReviewModeService(prisma);
@@ -55,6 +61,7 @@ const programAccessRead = new ProgramAccessReadService(prisma);
 const programAccessWrite = new ProgramAccessWriteService(prisma);
 const organizationAccess = new OrganizationAccessService(prisma);
 const userRead = new UserReadService(prisma);
+const userValidation = new UserValidationService(prisma);
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma);
@@ -63,7 +70,7 @@ const sendgrid = new SendgridSubscriptionService();
 
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
 const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
-const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead);
+const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead, userValidation);
 const candidateRead = new CandidateReadService(prisma, userRead);
 const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin);
 const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode);
@@ -72,15 +79,26 @@ const payoutWrite = new PayoutWriteService(prisma, programAccessRead);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
 const contributionRead = new ContributionReadService(prisma, organizationAccess);
 const contributionWrite = new ContributionWriteService(prisma, organizationAccess);
+const contactRelations = new ContactRelationsService(prisma);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
 const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
-const localPartnerWrite = new LocalPartnerWriteService(prisma, userRead, firebaseAdmin);
+const localPartnerValidation = new LocalPartnerValidationService(prisma);
+const localPartnerWrite = new LocalPartnerWriteService(
+	prisma,
+	userRead,
+	firebaseAdmin,
+	localPartnerValidation,
+	contactRelations,
+);
 const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
-const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead);
+const mobileMoneyProviderValidation = new MobileMoneyProviderValidationService(prisma);
+const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead, mobileMoneyProviderValidation);
 const countryRead = new CountryReadService(prisma, userRead);
-const countryWrite = new CountryWriteService(prisma, userRead);
+const countryValidation = new CountryValidationService(prisma);
+const countryWrite = new CountryWriteService(prisma, userRead, countryValidation);
 const expenseRead = new ExpenseReadService(prisma, userRead);
-const expenseWrite = new ExpenseWriteService(prisma, userRead);
+const expenseValidation = new ExpenseValidationService(prisma);
+const expenseWrite = new ExpenseWriteService(prisma, userRead, expenseValidation);
 const contributorRead = new ContributorReadService(prisma, organizationAccess);
 const contributorWrite = new ContributorWriteService(prisma, organizationAccess, firebaseAdmin, sendgrid);
 const campaignWrite = new CampaignWriteService(prisma, organizationAccess);

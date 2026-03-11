@@ -3,15 +3,15 @@
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
 import { resultOk } from '@/lib/services/core/service-result';
 import type {
-	MobileMoneyProviderCreateInput,
-	MobileMoneyProviderUpdateInput,
-} from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+	MobileMoneyProviderFormCreateInput,
+	MobileMoneyProviderFormUpdateInput,
+} from '@/lib/services/mobile-money-provider/mobile-money-provider-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/mobile-money-providers';
 
-export const createMobileMoneyProviderAction = async (input: MobileMoneyProviderCreateInput) => {
+export const createMobileMoneyProviderAction = async (input: MobileMoneyProviderFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -21,7 +21,7 @@ export const createMobileMoneyProviderAction = async (input: MobileMoneyProvider
 	return result;
 };
 
-export const updateMobileMoneyProviderAction = async (input: MobileMoneyProviderUpdateInput) => {
+export const updateMobileMoneyProviderAction = async (input: MobileMoneyProviderFormUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

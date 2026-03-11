@@ -3,20 +3,23 @@ import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
+import { UserFormCreateInput, UserFormUpdateInput } from './user-form-input';
 import { UserReadService } from './user-read.service';
-import { UserCreateInput, UserPayload, UserUpdateInput } from './user.types';
+import { UserValidationService } from './user-validation.service';
+import { UserPayload, UserUpdateInput } from './user.types';
 
 export class UserWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly userReadService: UserReadService,
+		private readonly userValidationService: UserValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
 	}
 
-	async create(actorUserId: string, input: UserCreateInput): Promise<ServiceResult<UserPayload>> {
+	async create(actorUserId: string, input: UserFormCreateInput): Promise<ServiceResult<UserPayload>> {
 		try {
 			const isAdminResult = await this.userReadService.isAdmin(actorUserId);
 
@@ -24,28 +27,51 @@ export class UserWriteService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 
+			const validatedInputResult = this.userValidationService.validateCreateInput(input);
+			if (!validatedInputResult.success) {
+				return this.resultFail(validatedInputResult.error);
+			}
+			const validatedInput = validatedInputResult.data;
+
+			const uniquenessResult = await this.userValidationService.validateCreateUniqueness(validatedInput);
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const displayName = `${validatedInput.firstName} ${validatedInput.lastName}`.trim();
 			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
-				email: input.email,
-				displayName: `${input.firstName} ${input.lastName}`,
+				email: validatedInput.email,
+				displayName,
 			});
 
 			if (!firebaseResult.success) {
-				return this.resultFail(firebaseResult.error);
+				return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
 			}
 
 			const firebaseAuthUser = firebaseResult.data;
+			const firebaseSyncResult = await this.firebaseAdminService.updateByUid(firebaseAuthUser.uid, {
+				email: validatedInput.email,
+				displayName,
+				emailVerified: true,
+			});
+			if (!firebaseSyncResult.success) {
+				this.logger.warn('Could not fully sync Firebase Auth user on user creation', {
+					firebaseUid: firebaseAuthUser.uid,
+					error: firebaseSyncResult.error,
+				});
+			}
 
 			const createdUser = await this.db.user.create({
 				data: {
-					role: input.role,
+					role: validatedInput.role,
 					activeOrganization: {
-						connect: { id: input.organizationId },
+						connect: { id: validatedInput.organizationId },
 					},
 					contact: {
 						create: {
-							firstName: input.firstName,
-							lastName: input.lastName,
-							email: input.email,
+							firstName: validatedInput.firstName,
+							lastName: validatedInput.lastName,
+							email: validatedInput.email,
 						},
 					},
 					account: {
@@ -55,7 +81,7 @@ export class UserWriteService extends BaseService {
 					},
 					organizationAccesses: {
 						create: {
-							organizationId: input.organizationId,
+							organizationId: validatedInput.organizationId,
 							permission: 'edit',
 						},
 					},
@@ -76,11 +102,11 @@ export class UserWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create user: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not create user. Please try again later.');
 		}
 	}
 
-	async update(actorUserId: string, input: UserUpdateInput): Promise<ServiceResult<UserPayload>> {
+	async update(actorUserId: string, input: UserFormUpdateInput): Promise<ServiceResult<UserPayload>> {
 		try {
 			const isAdminResult = await this.userReadService.isAdmin(actorUserId);
 
@@ -88,21 +114,14 @@ export class UserWriteService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 
-			if (!input.id) {
-				return this.resultFail('User ID is required');
+			const validatedInputResult = this.userValidationService.validateUpdateInput(input);
+			if (!validatedInputResult.success) {
+				return this.resultFail(validatedInputResult.error);
 			}
-			if (!input.email) {
-				return this.resultFail('User email is required');
-			}
-			if (!input.role) {
-				return this.resultFail('User role is required');
-			}
-			if (!input.organizationId) {
-				return this.resultFail('Organization ID is required');
-			}
+			const validatedInput = validatedInputResult.data;
 
 			const existingUser = await this.db.user.findUnique({
-				where: { id: input.id },
+				where: { id: validatedInput.id },
 				include: { contact: true, account: true },
 			});
 
@@ -110,11 +129,24 @@ export class UserWriteService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
-			if (input.email !== existingUser.contact.email) {
+			const uniquenessResult = await this.userValidationService.validateUpdateUniqueness(validatedInput, {
+				contactId: existingUser.contact.id,
+				existingEmail: existingUser.contact.email ?? null,
+			});
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const newDisplayName = `${validatedInput.firstName} ${validatedInput.lastName}`.trim();
+			const oldDisplayName = `${existingUser.contact.firstName} ${existingUser.contact.lastName}`.trim();
+			const shouldSyncFirebaseUser =
+				validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
+			if (shouldSyncFirebaseUser) {
 				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
 					existingUser.account.firebaseAuthUserId,
 					{
-						email: input.email,
+						email: validatedInput.email,
+						displayName: newDisplayName,
 						emailVerified: true,
 					},
 				);
@@ -125,23 +157,23 @@ export class UserWriteService extends BaseService {
 			}
 
 			const updatedUser = await this.db.user.update({
-				where: { id: input.id },
+				where: { id: validatedInput.id },
 				data: {
-					role: input.role,
+					role: validatedInput.role,
 					activeOrganization: {
-						connect: { id: input.organizationId },
+						connect: { id: validatedInput.organizationId },
 					},
 					contact: {
 						update: {
-							firstName: input.firstName,
-							lastName: input.lastName,
-							email: input.email,
+							firstName: validatedInput.firstName,
+							lastName: validatedInput.lastName,
+							email: validatedInput.email,
 						},
 					},
 					organizationAccesses: {
-						deleteMany: { userId: input.id },
+						deleteMany: { userId: validatedInput.id },
 						create: {
-							organizationId: input.organizationId,
+							organizationId: validatedInput.organizationId,
 							permission: 'edit',
 						},
 					},
@@ -162,7 +194,7 @@ export class UserWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not update user. Please try again later.');
 		}
 	}
 

@@ -39,7 +39,7 @@ export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];

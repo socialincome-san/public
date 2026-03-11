@@ -56,6 +56,7 @@ export const SurveysTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={surveysTableConfig}
+				titleInfoTooltip="Shows surveys for programs you can access."
 				rows={rows}
 				error={error}
 				query={query}

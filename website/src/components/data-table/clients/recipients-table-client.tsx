@@ -107,6 +107,7 @@ export const RecipientsTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={recipientsTableConfig}
+				titleInfoTooltip="Shows recipients in programs you can access."
 				rows={rows}
 				error={error}
 				actionMenuItems={actionMenuItems}

@@ -9,6 +9,7 @@ import type { ActionMenuItem } from '../elements/action-menu';
 
 type ConfiguredDataTableClientProps<Row> = {
 	config: DataTableConfig<Row>;
+	titleInfoTooltip?: string;
 	rows: Row[];
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
@@ -24,6 +25,7 @@ type ConfiguredDataTableClientProps<Row> = {
 
 export const ConfiguredDataTableClient = <Row,>({
 	config,
+	titleInfoTooltip,
 	rows,
 	error,
 	query,
@@ -50,6 +52,7 @@ export const ConfiguredDataTableClient = <Row,>({
 	return (
 		<DataTable
 			title={config.title}
+			titleInfoTooltip={titleInfoTooltip}
 			error={error}
 			emptyMessage={config.emptyMessage}
 			data={rows}

@@ -1,72 +1,65 @@
 import { FormField } from '@/components/dynamic-form/dynamic-form';
-import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
 import {
-	LocalPartnerCreateInput,
-	LocalPartnerPayload,
-	LocalPartnerUpdateInput,
-} from '@/lib/services/local-partner/local-partner.types';
+	LocalPartnerFormCreateInput,
+	LocalPartnerFormUpdateInput,
+} from '@/lib/services/local-partner/local-partner-form-input';
+import { LocalPartnerPayload } from '@/lib/services/local-partner/local-partner.types';
 import { LocalPartnerFormSchema } from './local-partners-form';
 
 export const buildUpdateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
 	localPartner: LocalPartnerPayload,
 	contactFields: { [key: string]: FormField },
-): LocalPartnerUpdateInput => {
-	// Contact Phone Update Logic
-	const contactPhoneUpdate = contactFields.phone.value
-		? {
-				update: {
-					data: { number: contactFields.phone.value },
-					where: { id: localPartner.contact.phone?.id },
-				},
-			}
-		: undefined;
-
-	// Contact Address Upsert Logic
-	const addressUpdate = buildAddressInput(contactFields);
-
+): LocalPartnerFormUpdateInput => {
 	return {
 		id: localPartner.id,
 		name: schema.fields.name.value,
-		causes: schema.fields.causes.value,
-		contact: {
-			update: {
-				data: {
-					...buildCommonContactData(contactFields),
-					phone: contactPhoneUpdate,
-					...(addressUpdate && {
-						address: {
-							upsert: {
-								update: addressUpdate,
-								create: addressUpdate,
-								where: { id: localPartner.contact.address?.id },
-							},
-						},
-					}),
-				},
-				where: { id: localPartner.contact.id },
-			},
-		},
+		causes: schema.fields.causes.value ?? [],
+		contact: mapContactFields(contactFields),
 	};
 };
 
 export const buildCreateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
 	contactFields: { [key: string]: FormField },
-): LocalPartnerCreateInput => {
-	const addressInput = buildAddressInput(contactFields);
-
+): LocalPartnerFormCreateInput => {
 	return {
 		name: schema.fields.name.value,
-		causes: schema.fields.causes.value,
-		contact: {
-			create: {
-				...buildCommonContactData(contactFields),
-				phone: contactFields.phone.value ? { create: { number: contactFields.phone.value } } : undefined,
-				...(addressInput && {
-					address: { create: addressInput },
-				}),
-			},
-		},
+		causes: schema.fields.causes.value ?? [],
+		contact: mapContactFields(contactFields),
 	};
+};
+
+const mapContactFields = (contactFields: { [key: string]: FormField }) => ({
+	firstName: `${contactFields.firstName.value ?? ''}`,
+	lastName: `${contactFields.lastName.value ?? ''}`,
+	callingName: asNullableString(contactFields.callingName.value),
+	email: `${contactFields.email.value ?? ''}`,
+	gender: contactFields.gender.value ?? null,
+	language: asNullableString(contactFields.language.value),
+	dateOfBirth: contactFields.dateOfBirth.value ?? null,
+	profession: asNullableString(contactFields.profession.value),
+	phone: asOptionalString(contactFields.phone.value),
+	hasWhatsApp: !!contactFields.hasWhatsApp.value,
+	street: asNullableString(contactFields.street.value),
+	number: asNullableString(contactFields.number.value),
+	city: asNullableString(contactFields.city.value),
+	zip: asNullableString(contactFields.zip.value),
+	country: contactFields.country.value ?? null,
+});
+
+const asNullableString = (value: unknown): string | null => {
+	if (typeof value !== 'string') {
+		return value == null ? null : String(value);
+	}
+	const trimmedValue = value.trim();
+	return trimmedValue === '' ? null : trimmedValue;
+};
+
+const asOptionalString = (value: unknown): string | undefined => {
+	if (typeof value !== 'string') {
+		return value == null ? undefined : String(value);
+	}
+	const trimmedValue = value.trim();
+	return trimmedValue === '' ? undefined : trimmedValue;
 };

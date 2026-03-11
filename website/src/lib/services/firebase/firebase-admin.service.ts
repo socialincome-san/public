@@ -239,4 +239,25 @@ export class FirebaseAdminService extends BaseService {
 			return this.resultFail(`Could not delete auth user by email: ${JSON.stringify(error)}`);
 		}
 	}
+
+	async deleteByUidIfExists(uid: string): Promise<ServiceResult<boolean>> {
+		try {
+			const userRecord = await authAdmin.auth.getUser(uid).catch((error: any) => {
+				if (error?.code === 'auth/user-not-found') {
+					return null;
+				}
+				throw error;
+			});
+
+			if (!userRecord) {
+				return this.resultOk(true);
+			}
+
+			await authAdmin.auth.deleteUser(uid);
+			return this.resultOk(true);
+		} catch (error) {
+			this.logger.error('Error deleting auth user by uid:', { uid, error });
+			return this.resultFail(`Could not delete auth user by uid: ${JSON.stringify(error)}`);
+		}
+	}
 }

@@ -35,6 +35,7 @@ export const ContributionsTable = async ({
 	return (
 		<ConfiguredDataTableClient
 			config={config}
+			titleInfoTooltip="Shows your contribution history."
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

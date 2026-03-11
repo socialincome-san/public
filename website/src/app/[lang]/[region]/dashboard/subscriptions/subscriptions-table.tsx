@@ -44,6 +44,7 @@ export const SubscriptionsTable = async ({
 	return (
 		<ConfiguredDataTableClient
 			config={config}
+			titleInfoTooltip="Shows your recurring donation subscriptions."
 			rows={rows}
 			error={subscriptionsResult.success ? null : subscriptionsResult.error}
 			query={{ ...tableQuery, totalRows }}

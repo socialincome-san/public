@@ -59,6 +59,7 @@ export const PayoutsTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={payoutsTableConfig}
+				titleInfoTooltip="Shows all payouts across all payout statuses."
 				rows={rows}
 				error={error}
 				query={query}

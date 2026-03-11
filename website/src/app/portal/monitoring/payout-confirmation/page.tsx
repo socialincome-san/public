@@ -34,6 +34,7 @@ const ConfirmPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps)
 	return (
 		<ConfiguredDataTableClient
 			config={payoutConfirmationTableConfig}
+			titleInfoTooltip="Inbox view: only payouts with status paid are shown until confirmed or contested."
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

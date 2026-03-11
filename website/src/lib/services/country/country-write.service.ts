@@ -3,18 +3,21 @@ import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
-import { CountryCreateInput, CountryPayload, CountryUpdateInput } from './country.types';
+import { CountryFormCreateInput, CountryFormUpdateInput } from './country-form-input';
+import { CountryValidationService } from './country-validation.service';
+import { CountryPayload } from './country.types';
 
 export class CountryWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
+		private readonly countryValidationService: CountryValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
 	}
 
-	async create(userId: string, input: CountryCreateInput): Promise<ServiceResult<CountryPayload>> {
+	async create(userId: string, input: CountryFormCreateInput): Promise<ServiceResult<CountryPayload>> {
 		try {
 			const isAdminResult = await this.userService.isAdmin(userId);
 
@@ -22,27 +25,45 @@ export class CountryWriteService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 
+			const validatedInputResult = this.countryValidationService.validateCreateInput(input);
+			if (!validatedInputResult.success) {
+				return this.resultFail(validatedInputResult.error);
+			}
+			const validatedInput = validatedInputResult.data;
+
+			const uniquenessResult = await this.countryValidationService.validateCreateUniqueness(validatedInput);
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
 			const created = await this.db.country.create({
 				data: {
-					isoCode: input.isoCode,
-					isActive: input.isActive,
-					currency: input.currency,
-					defaultPayoutAmount: input.defaultPayoutAmount,
-					microfinanceIndex: input.microfinanceIndex ?? undefined,
-					cashConditionOverride: input.cashConditionOverride,
-					populationCoverage: input.populationCoverage ?? undefined,
-					latestSurveyDate: input.latestSurveyDate ?? undefined,
-					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
-					mobileMoneyProviders: input.mobileMoneyProviderIds?.length
-						? { connect: input.mobileMoneyProviderIds.map((id) => ({ id })) }
+					isoCode: validatedInput.isoCode,
+					isActive: validatedInput.isActive,
+					currency: validatedInput.currency,
+					defaultPayoutAmount: validatedInput.defaultPayoutAmount,
+					microfinanceIndex: validatedInput.microfinanceIndex ?? undefined,
+					cashConditionOverride: validatedInput.cashConditionOverride,
+					populationCoverage: validatedInput.populationCoverage ?? undefined,
+					latestSurveyDate: validatedInput.latestSurveyDate ?? undefined,
+					networkTechnology: validatedInput.networkTechnology
+						? (validatedInput.networkTechnology as NetworkTechnology)
 						: undefined,
-					mobileMoneyConditionOverride: input.mobileMoneyConditionOverride,
-					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
-					microfinanceSourceLink: input.microfinanceSourceLink
-						? { create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href } }
+					mobileMoneyProviders: validatedInput.mobileMoneyProviderIds?.length
+						? { connect: validatedInput.mobileMoneyProviderIds.map((id) => ({ id })) }
 						: undefined,
-					networkSourceLink: input.networkSourceLink
-						? { create: { text: input.networkSourceLink.text, href: input.networkSourceLink.href } }
+					mobileMoneyConditionOverride: validatedInput.mobileMoneyConditionOverride,
+					sanctions: validatedInput.sanctions ? (validatedInput.sanctions as SanctionRegime[]) : undefined,
+					microfinanceSourceLink: validatedInput.microfinanceSourceLink
+						? {
+								create: {
+									text: validatedInput.microfinanceSourceLink.text,
+									href: validatedInput.microfinanceSourceLink.href,
+								},
+							}
+						: undefined,
+					networkSourceLink: validatedInput.networkSourceLink
+						? { create: { text: validatedInput.networkSourceLink.text, href: validatedInput.networkSourceLink.href } }
 						: undefined,
 				},
 				include: {
@@ -83,11 +104,11 @@ export class CountryWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create country: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not create country. Please try again later.');
 		}
 	}
 
-	async update(userId: string, input: CountryUpdateInput): Promise<ServiceResult<CountryPayload>> {
+	async update(userId: string, input: CountryFormUpdateInput): Promise<ServiceResult<CountryPayload>> {
 		try {
 			const isAdminResult = await this.userService.isAdmin(userId);
 
@@ -95,37 +116,70 @@ export class CountryWriteService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 
+			const validatedInputResult = this.countryValidationService.validateUpdateInput(input);
+			if (!validatedInputResult.success) {
+				return this.resultFail(validatedInputResult.error);
+			}
+			const validatedInput = validatedInputResult.data;
+			if (!validatedInput.id) {
+				return this.resultFail('Country id is required.');
+			}
+
+			const existingCountry = await this.db.country.findUnique({
+				where: { id: validatedInput.id },
+				select: { id: true, isoCode: true },
+			});
+			if (!existingCountry) {
+				return this.resultFail('Country not found');
+			}
+
+			const uniquenessResult = await this.countryValidationService.validateUpdateUniqueness(validatedInput, {
+				countryId: existingCountry.id,
+				existingIsoCode: existingCountry.isoCode,
+			});
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
 			const updated = await this.db.country.update({
-				where: { id: input.id },
+				where: { id: validatedInput.id },
 				data: {
-					isoCode: input.isoCode,
-					isActive: input.isActive,
-					currency: input.currency,
-					defaultPayoutAmount: input.defaultPayoutAmount,
-					microfinanceIndex: input.microfinanceIndex,
-					cashConditionOverride: input.cashConditionOverride,
-					populationCoverage: input.populationCoverage,
-					latestSurveyDate: input.latestSurveyDate,
-					networkTechnology: input.networkTechnology ? (input.networkTechnology as NetworkTechnology) : undefined,
+					isoCode: validatedInput.isoCode,
+					isActive: validatedInput.isActive,
+					currency: validatedInput.currency,
+					defaultPayoutAmount: validatedInput.defaultPayoutAmount,
+					microfinanceIndex: validatedInput.microfinanceIndex,
+					cashConditionOverride: validatedInput.cashConditionOverride,
+					populationCoverage: validatedInput.populationCoverage,
+					latestSurveyDate: validatedInput.latestSurveyDate,
+					networkTechnology: validatedInput.networkTechnology
+						? (validatedInput.networkTechnology as NetworkTechnology)
+						: undefined,
 					mobileMoneyProviders:
-						input.mobileMoneyProviderIds !== undefined
-							? { set: input.mobileMoneyProviderIds.map((id) => ({ id })) }
+						validatedInput.mobileMoneyProviderIds !== undefined
+							? { set: validatedInput.mobileMoneyProviderIds.map((id) => ({ id })) }
 							: undefined,
-					mobileMoneyConditionOverride: input.mobileMoneyConditionOverride,
-					sanctions: input.sanctions ? (input.sanctions as SanctionRegime[]) : undefined,
-					microfinanceSourceLink: input.microfinanceSourceLink
+					mobileMoneyConditionOverride: validatedInput.mobileMoneyConditionOverride,
+					sanctions: validatedInput.sanctions ? (validatedInput.sanctions as SanctionRegime[]) : undefined,
+					microfinanceSourceLink: validatedInput.microfinanceSourceLink
 						? {
 								upsert: {
-									create: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href },
-									update: { text: input.microfinanceSourceLink.text, href: input.microfinanceSourceLink.href },
+									create: {
+										text: validatedInput.microfinanceSourceLink.text,
+										href: validatedInput.microfinanceSourceLink.href,
+									},
+									update: {
+										text: validatedInput.microfinanceSourceLink.text,
+										href: validatedInput.microfinanceSourceLink.href,
+									},
 								},
 							}
 						: undefined,
-					networkSourceLink: input.networkSourceLink
+					networkSourceLink: validatedInput.networkSourceLink
 						? {
 								upsert: {
-									create: { text: input.networkSourceLink.text, href: input.networkSourceLink.href },
-									update: { text: input.networkSourceLink.text, href: input.networkSourceLink.href },
+									create: { text: validatedInput.networkSourceLink.text, href: validatedInput.networkSourceLink.href },
+									update: { text: validatedInput.networkSourceLink.text, href: validatedInput.networkSourceLink.href },
 								},
 							}
 						: undefined,
@@ -168,7 +222,7 @@ export class CountryWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not update country: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not update country. Please try again later.');
 		}
 	}
 

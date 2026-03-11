@@ -46,6 +46,7 @@ export default function CampaignsTable({
 		<>
 			<ConfiguredDataTableClient
 				config={campaignsTableConfig}
+				titleInfoTooltip="Shows campaigns belonging to your active organization."
 				rows={rows}
 				error={error}
 				query={query}
