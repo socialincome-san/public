@@ -31,10 +31,10 @@ export const buildCreateLocalPartnerInput = (
 };
 
 const mapContactFields = (contactFields: Record<string, FormField>) => ({
-	firstName: `${contactFields.firstName.value ?? ''}`,
-	lastName: `${contactFields.lastName.value ?? ''}`,
+	firstName: asString(contactFields.firstName.value),
+	lastName: asString(contactFields.lastName.value),
 	callingName: asNullableString(contactFields.callingName.value),
-	email: `${contactFields.email.value ?? ''}`,
+	email: asString(contactFields.email.value),
 	gender: contactFields.gender.value ?? null,
 	language: asNullableString(contactFields.language.value),
 	dateOfBirth: contactFields.dateOfBirth.value ?? null,
@@ -47,6 +47,8 @@ const mapContactFields = (contactFields: Record<string, FormField>) => ({
 	zip: asNullableString(contactFields.zip.value),
 	country: contactFields.country.value ?? null,
 });
+
+const asString = (value: unknown): string => (typeof value === 'string' ? value : '');
 
 const asNullableString = (value: unknown): string | null => {
 	if (typeof value !== 'string') {

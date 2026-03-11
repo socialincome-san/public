@@ -148,7 +148,7 @@ export const DonationForm = ({ amount, translations, lang, region }: DonationFor
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			donationInterval: '1',
-			monthlyIncome: amount || ('' as any),
+			monthlyIncome: amount ?? undefined,
 			paymentType: PaymentTypes.CREDIT_CARD,
 			email: '',
 			firstName: '',

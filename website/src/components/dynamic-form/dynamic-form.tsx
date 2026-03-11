@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion';
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';

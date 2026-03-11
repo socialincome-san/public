@@ -1,7 +1,7 @@
 export interface Question {
 	type: QuestionInputType;
 	name: string;
-	choices: any[];
+	choices: (string | boolean)[];
 	choicesTranslationKey?: string;
 	translationKey: string;
 	descriptionTranslationKey?: string;

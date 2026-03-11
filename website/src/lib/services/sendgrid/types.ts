@@ -26,7 +26,7 @@ export type SendgridContactType = {
 	line?: string;
 	facebook?: string;
 	unique_name?: string;
-	_metadata: any[];
+	_metadata: unknown[];
 	custom_fields: {
 		language: string;
 		contributor: string;

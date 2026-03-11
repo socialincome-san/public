@@ -18,7 +18,7 @@ import { CH, EU } from 'country-flag-icons/react/1x1';
 import { SL, US } from 'country-flag-icons/react/3x2';
 import React from 'react';
 
-const FLAG_COMPONENTS: Record<WebsiteCurrency, React.ComponentType<any>> = {
+const FLAG_COMPONENTS: Record<WebsiteCurrency, React.ComponentType<{ className?: string }>> = {
 	USD: US,
 	CHF: CH,
 	EUR: EU,

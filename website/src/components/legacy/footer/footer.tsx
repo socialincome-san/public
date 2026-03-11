@@ -8,7 +8,7 @@ import { ComponentType, HTMLAttributeAnchorTarget } from 'react';
 type FooterLinkProps = {
 	label: string;
 	url: string;
-	Icon?: ComponentType<any>;
+	Icon?: ComponentType<{ className?: string }>;
 	target?: HTMLAttributeAnchorTarget;
 };
 

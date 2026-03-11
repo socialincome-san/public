@@ -14,7 +14,7 @@ const SURVEY_STATUS_UI: Record<
 	{
 		variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'secondary' | 'default';
 		label: string;
-		Icon: ComponentType<any>;
+		Icon: ComponentType<{ className?: string }>;
 	}
 > = {
 	new: { variant: 'outline', label: 'New', Icon: CirclePlusIcon },

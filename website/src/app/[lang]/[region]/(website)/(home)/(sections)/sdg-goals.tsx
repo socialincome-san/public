@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Town from '../(assets)/sdg-town.jpg';
 
 export const SDGGoals = async ({ lang }: DefaultParams) => {
-	const townSrc = (Town as { src: string }).src;
+	const townSrc = Town.src;
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home'],

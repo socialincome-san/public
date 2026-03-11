@@ -22,7 +22,7 @@ const restoreToken = (json: string) =>
 		? json.replace(/([?&]token=)__TOKEN__/gi, `$1${process.env.STORYBLOK_PREVIEW_TOKEN}`)
 		: json;
 
-const sortKeys = (o: Record<string, any>) =>
+const sortKeys = (o: Record<string, unknown>) =>
 	Object.fromEntries(
 		Object.keys(o)
 			.sort()
@@ -70,6 +70,6 @@ export const saveStoryblokMock = async (recordingKey: string) => {
 	}
 
 	const res = await fetch(`${MOCK}/recordings`);
-	const data = sortKeys((await res.json()) as Record<string, any>);
+	const data = sortKeys((await res.json()) as Record<string, unknown>);
 	writeRecordings(recordingKey, data);
 };

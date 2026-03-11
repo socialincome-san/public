@@ -14,7 +14,7 @@ const RECIPIENT_STATUS_UI: Record<
 	{
 		variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'secondary' | 'default';
 		label: string;
-		Icon: ComponentType<any>;
+		Icon: ComponentType<{ className?: string }>;
 	}
 > = {
 	failed: { variant: 'destructive', label: 'Failed', Icon: UserXIcon },

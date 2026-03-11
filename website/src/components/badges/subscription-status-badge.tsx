@@ -19,7 +19,7 @@ type SubscriptionStatusBadgeProps = {
 
 const SUBSCRIPTION_STATUS_UI: Record<
 	SubscriptionStatusBadgeProps['status'],
-	{ variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'default'; Icon: ComponentType<any> | null }
+	{ variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'default'; Icon: ComponentType<{ className?: string }> | null }
 > = {
 	active: { variant: 'verified', Icon: RefreshCcw },
 	paused: { variant: 'outline', Icon: HourglassIcon },

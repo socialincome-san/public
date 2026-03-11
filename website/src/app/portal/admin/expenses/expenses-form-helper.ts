@@ -2,12 +2,14 @@ import { ExpenseFormCreateInput, ExpenseFormUpdateInput } from '@/lib/services/e
 import { ExpensePayload } from '@/lib/services/expense/expense.types';
 import { ExpenseFormSchema } from './expenses-form';
 
+const asString = (value: unknown): string => (typeof value === 'string' ? value : '');
+
 export const buildCreateExpenseInput = (schema: ExpenseFormSchema): ExpenseFormCreateInput => {
 	return {
 		type: schema.fields.type.value,
 		year: Number(schema.fields.year.value),
 		amountChf: Number(schema.fields.amountChf.value),
-		organizationId: `${schema.fields.organization.value ?? ''}`.trim(),
+		organizationId: asString(schema.fields.organization.value).trim(),
 	};
 };
 
@@ -20,6 +22,6 @@ export const buildUpdateExpenseInput = (
 		type: schema.fields.type.value,
 		year: Number(schema.fields.year.value),
 		amountChf: Number(schema.fields.amountChf.value),
-		organizationId: `${schema.fields.organization.value ?? ''}`.trim(),
+		organizationId: asString(schema.fields.organization.value).trim(),
 	};
 };
