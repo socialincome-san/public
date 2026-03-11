@@ -1,4 +1,4 @@
-import { Country, Currency, NetworkTechnology, SanctionRegime, Prisma } from '@/generated/prisma/client';
+import { Country, Currency, NetworkTechnology, Prisma, SanctionRegime } from '@/generated/prisma/client';
 
 export const countriesData: Country[] = [
 	{

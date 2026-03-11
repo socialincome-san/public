@@ -114,7 +114,7 @@ export class CampaignWriteService extends BaseService {
 				where: { id: validatedInput.id },
 				select: { id: true, title: true, organizationId: true, programId: true },
 			});
-			if (!existing || existing.organizationId !== accessResult.data.id) {
+			if (existing?.organizationId !== accessResult.data.id) {
 				return this.resultFail('Permission denied');
 			}
 

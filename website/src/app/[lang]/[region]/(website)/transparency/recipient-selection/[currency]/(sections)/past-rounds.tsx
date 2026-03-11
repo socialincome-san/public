@@ -5,8 +5,6 @@ import { BaseContainer, FontColor, Typography } from '@socialincome/ui';
 import { DrawCard } from '../(components)/draw-card';
 import { loadPastDraws } from './state';
 
-export const revalidate = 3600 * 24; // update once a day
-
 export const PastRounds = async ({ lang }: DefaultParams) => {
 	const pastDraws = await loadPastDraws();
 	const translator = await Translator.getInstance({

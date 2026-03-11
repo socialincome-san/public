@@ -1,5 +1,5 @@
-import { seedDatabase } from './run-seed';
 import { prisma } from '../prisma';
+import { seedDatabase } from './run-seed';
 
 const main = async () => {
 	try {

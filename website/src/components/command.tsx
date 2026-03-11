@@ -1,6 +1,5 @@
 'use client';
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/dialog';
 import { cn } from '@/lib/utils/cn';
 import { Command as CommandPrimitive } from 'cmdk';
 import { SearchIcon } from 'lucide-react';
@@ -13,32 +12,6 @@ const Command = ({ className, ...props }: React.ComponentProps<typeof CommandPri
 			className={cn('bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md', className)}
 			{...props}
 		/>
-	);
-};
-
-const CommandDialog = ({
-	title = 'Command Palette',
-	description = 'Search for a command to run...',
-	children,
-	className,
-	...props
-}: React.ComponentProps<typeof Dialog> & {
-	title?: string;
-	description?: string;
-	className?: string;
-}) => {
-	return (
-		<Dialog {...props}>
-			<DialogHeader className="sr-only">
-				<DialogTitle>{title}</DialogTitle>
-				<DialogDescription>{description}</DialogDescription>
-			</DialogHeader>
-			<DialogContent className={cn('overflow-hidden p-0', className)}>
-				<Command className="**:[[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group]]:px-2 **:[[cmdk-input]]:h-12 **:[[cmdk-item]]:px-2 **:[[cmdk-item]]:py-3">
-					{children}
-				</Command>
-			</DialogContent>
-		</Dialog>
 	);
 };
 
@@ -104,24 +77,4 @@ const CommandItem = ({ className, ...props }: React.ComponentProps<typeof Comman
 	);
 };
 
-const CommandShortcut = ({ className, ...props }: React.ComponentProps<'span'>) => {
-	return (
-		<span
-			data-slot="command-shortcut"
-			className={cn('text-muted-foreground ml-auto text-xs tracking-widest', className)}
-			{...props}
-		/>
-	);
-};
-
-export {
-	Command,
-	CommandDialog,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-	CommandSeparator,
-	CommandShortcut,
-};
+export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator };

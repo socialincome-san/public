@@ -49,7 +49,7 @@ export class ContributionWriteService extends BaseService {
 				},
 			});
 
-			if (!existing || existing.campaign.organizationId !== accessResult.data.id) {
+			if (existing?.campaign.organizationId !== accessResult.data.id) {
 				return this.resultFail('Permission denied');
 			}
 
@@ -65,7 +65,7 @@ export class ContributionWriteService extends BaseService {
 				where: { id: validatedInput.campaignId },
 				select: { organizationId: true },
 			});
-			if (!campaign || campaign.organizationId !== accessResult.data.id) {
+			if (campaign?.organizationId !== accessResult.data.id) {
 				return this.resultFail('Permission denied');
 			}
 
@@ -141,7 +141,7 @@ export class ContributionWriteService extends BaseService {
 				where: { id: validatedInput.campaignId },
 				select: { organizationId: true },
 			});
-			if (!campaign || campaign.organizationId !== accessResult.data.id) {
+			if (campaign?.organizationId !== accessResult.data.id) {
 				return this.resultFail('Permission denied');
 			}
 
