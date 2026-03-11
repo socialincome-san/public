@@ -35,7 +35,6 @@ export default [
 			'@typescript-eslint/no-unused-expressions': 'warn',
 			'@typescript-eslint/no-unused-vars': 'warn',
 			'@typescript-eslint/consistent-indexed-object-style': 'warn',
-			'@typescript-eslint/prefer-optional-chain': 'warn',
 			'react-hooks/set-state-in-effect': 'warn',
 			'react-hooks/static-components': 'warn',
 			'react-hooks/refs': 'warn',

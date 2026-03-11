@@ -324,7 +324,7 @@ export class StoryblokService extends BaseService {
 	}
 
 	private createRelativeArticlesFilter(tags: string[], authorId: string) {
-		return tags && tags.length
+		return tags.length
 			? { __or: [{ author: { in: authorId } }, { tags: { in_array: tags.join(',') } }] }
 			: { author: { in: authorId } };
 	}

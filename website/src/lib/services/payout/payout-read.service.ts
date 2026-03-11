@@ -622,8 +622,8 @@ export class PayoutReadService extends BaseService {
 					id: payout.recipient.id,
 					firstName: payout.recipient.contact.firstName,
 					lastName: payout.recipient.contact.lastName,
-					programId: payout.recipient.program && payout.recipient.program.id,
-					programName: payout.recipient.program && payout.recipient.program.name,
+					programId: payout.recipient.program?.id ?? null,
+					programName: payout.recipient.program?.name ?? null,
 				},
 			});
 		} catch (error) {
