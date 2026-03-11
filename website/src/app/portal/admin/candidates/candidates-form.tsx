@@ -12,7 +12,8 @@ import {
 	updateCandidateAction,
 } from '@/lib/server-actions/candidate-actions';
 import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
-import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { CandidatePayload } from '@/lib/services/candidate/candidate.types';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -120,34 +121,6 @@ export const CandidateForm = ({
 	const [candidate, setCandidate] = useState<CandidatePayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	const loadCandidate = async (candidateId: string) => {
-		try {
-			const result = await getCandidateAction(candidateId, sessionType);
-			if (result.success) {
-				setCandidate(result.data);
-				const newSchema = { ...formSchema };
-				const contactValues = getContactValuesFromPayload(result.data.contact, newSchema.fields.contact.fields);
-				newSchema.fields.suspendedAt.value = result.data.suspendedAt;
-				newSchema.fields.suspensionReason.value = result.data.suspensionReason;
-				newSchema.fields.successorName.value = result.data.successorName;
-				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
-				if (newSchema.fields.localPartner) {
-					newSchema.fields.localPartner.value = result.data.localPartner.id;
-				}
-				newSchema.fields.paymentInformation.fields.provider.value =
-					result.data.paymentInformation?.mobileMoneyProvider?.id;
-				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
-				newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
-				newSchema.fields.contact.fields = contactValues;
-				setFormSchema(newSchema);
-			} else {
-				onError?.(result.error);
-			}
-		} catch (error: unknown) {
-			onError?.(error);
-		}
-	};
-
 	const setOptions = (localPartner: LocalPartnerOption[], mobileMoneyProviders: { id: string; name: string }[]) => {
 		const partnersObj = getZodEnum(localPartner.map(({ id, name }) => ({ id, label: name })));
 		const providerOptions = mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name }));
@@ -180,23 +153,15 @@ export const CandidateForm = ({
 
 	const onSubmit = (schema: CandidateFormSchema) => {
 		startTransition(async () => {
-			try {
-				let result: { success: boolean; error?: string };
-				const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
-
-				if (candidateId && candidate) {
-					const data: CandidateUpdateInput = buildUpdateCandidateInput(schema, candidate, contactFields);
-					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
-					result = await updateCandidateAction(data, nextPaymentPhoneNumber, sessionType);
-				} else {
-					const data: CandidateCreateInput = buildCreateCandidateInput(schema, contactFields);
-					result = await createCandidateAction(data, sessionType);
-				}
-
-				result.success ? onSuccess?.() : onError?.(result.error);
-			} catch (error: unknown) {
-				onError?.(error);
-			}
+			const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
+			const result =
+				candidateId && candidate
+					? await updateCandidateAction(buildUpdateCandidateInput(schema, candidate, contactFields), sessionType)
+					: await createCandidateAction(buildCreateCandidateInput(schema, contactFields), sessionType);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
@@ -206,20 +171,72 @@ export const CandidateForm = ({
 		}
 
 		startTransition(async () => {
-			try {
-				const result = await deleteCandidateAction(candidateId, sessionType);
-				result.success ? onSuccess?.() : onError?.(result.error);
-			} catch (error) {
-				onError?.(error);
-			}
+			const result = await deleteCandidateAction(candidateId, sessionType);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
 	useEffect(() => {
 		if (candidateId) {
-			startTransition(async () => await loadCandidate(candidateId));
+			startTransition(async () => {
+				const result = await getCandidateAction(candidateId, sessionType);
+				handleServiceResult(result, {
+					onSuccess: (data) => {
+						setCandidate(data);
+						setFormSchema((previousSchema) => {
+							const clonedContactFields = Object.fromEntries(
+								Object.entries(previousSchema.fields.contact.fields).map(([key, field]) => [key, { ...field }]),
+							);
+							const contactValues = getContactValuesFromPayload(data.contact, clonedContactFields);
+							const updatedSchema: CandidateFormSchema = {
+								...previousSchema,
+								fields: {
+									...previousSchema.fields,
+									suspendedAt: { ...previousSchema.fields.suspendedAt, value: data.suspendedAt },
+									suspensionReason: { ...previousSchema.fields.suspensionReason, value: data.suspensionReason },
+									successorName: { ...previousSchema.fields.successorName, value: data.successorName },
+									termsAccepted: { ...previousSchema.fields.termsAccepted, value: data.termsAccepted },
+									contact: {
+										...previousSchema.fields.contact,
+										fields: contactValues,
+									},
+									paymentInformation: {
+										...previousSchema.fields.paymentInformation,
+										fields: {
+											...previousSchema.fields.paymentInformation.fields,
+											provider: {
+												...previousSchema.fields.paymentInformation.fields.provider,
+												value: data.paymentInformation?.mobileMoneyProvider?.id,
+											},
+											code: {
+												...previousSchema.fields.paymentInformation.fields.code,
+												value: data.paymentInformation?.code,
+											},
+											phone: {
+												...previousSchema.fields.paymentInformation.fields.phone,
+												value: data.paymentInformation?.phone?.number,
+											},
+										},
+									},
+								},
+							};
+							if (updatedSchema.fields.localPartner) {
+								updatedSchema.fields.localPartner = {
+									...updatedSchema.fields.localPartner,
+									value: data.localPartner.id,
+								};
+							}
+							return updatedSchema;
+						});
+					},
+					onError: (error) => onError?.(error),
+				});
+			});
 		}
-	}, [candidateId]);
+	}, [candidateId, sessionType, onError]);
 
 	useEffect(() => {
 		startTransition(async () => {

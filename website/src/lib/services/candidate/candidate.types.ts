@@ -1,4 +1,4 @@
-import { Address, CountryCode, Gender, Phone, Prisma } from '@/generated/prisma/client';
+import { Address, CountryCode, Gender, Phone } from '@/generated/prisma/client';
 
 export enum Profile {
 	male = 'male',
@@ -82,6 +82,3 @@ export type CandidatesPaginatedTableView = {
 	}[];
 };
 
-export type CandidateCreateInput = Prisma.RecipientCreateInput;
-export type CandidateUpdateInput = Prisma.RecipientUpdateInput;
-export type CandidatePrismaUpdateInput = Prisma.RecipientUpdateInput;

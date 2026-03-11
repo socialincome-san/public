@@ -4,6 +4,7 @@ import { BankTransferService } from './bank-transfer/bank-transfer.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
+import { CandidateValidationService } from './candidate/candidate-validation.service';
 import { CandidateWriteService } from './candidate/candidate-write.service';
 import { ContactRelationsService } from './contact/contact-relations.service';
 import { ContributionReadService } from './contribution/contribution-read.service';
@@ -41,6 +42,7 @@ import { ProgramStatsService } from './program-stats/program-stats.service';
 import { ProgramReadService } from './program/program-read.service';
 import { ProgramWriteService } from './program/program-write.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
+import { RecipientValidationService } from './recipient/recipient-validation.service';
 import { RecipientWriteService } from './recipient/recipient-write.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokService } from './storyblok/storyblok.service';
@@ -72,14 +74,28 @@ const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
 const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
 const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead, userValidation);
 const candidateRead = new CandidateReadService(prisma, userRead);
-const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin);
+const contactRelations = new ContactRelationsService(prisma);
+const candidateValidation = new CandidateValidationService(prisma);
+const candidateWrite = new CandidateWriteService(
+	prisma,
+	userRead,
+	firebaseAdmin,
+	candidateValidation,
+	contactRelations,
+);
 const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode);
-const recipientWrite = new RecipientWriteService(prisma, programAccessRead, firebaseAdmin);
+const recipientValidation = new RecipientValidationService(prisma);
+const recipientWrite = new RecipientWriteService(
+	prisma,
+	programAccessRead,
+	firebaseAdmin,
+	recipientValidation,
+	contactRelations,
+);
 const payoutWrite = new PayoutWriteService(prisma, programAccessRead);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
 const contributionRead = new ContributionReadService(prisma, organizationAccess);
 const contributionWrite = new ContributionWriteService(prisma, organizationAccess);
-const contactRelations = new ContactRelationsService(prisma);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
 const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
 const localPartnerValidation = new LocalPartnerValidationService(prisma);
