@@ -19,7 +19,8 @@ export const config = {
  * Checks if a valid country is set as a cookie and set it based on the request header if available.
  */
 const countryMiddleware = (request: NextRequest, response: NextResponse) => {
-	if (request.cookies.has(COUNTRY_COOKIE) && isValidCountryCode(request.cookies.get(COUNTRY_COOKIE)?.value!)) {
+	const countryCookie = request.cookies.get(COUNTRY_COOKIE);
+	if (countryCookie && isValidCountryCode(countryCookie.value)) {
 		return response;
 	}
 

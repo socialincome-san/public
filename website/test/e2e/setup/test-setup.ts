@@ -21,7 +21,9 @@ test('wait for emulators to be ready', async ({ page }) => {
 			await page.getByRole('button', { name: 'Apply' }).click();
 			await expect(page.getByText('All emulators ready! It is now safe to connect your app.')).toBeVisible();
 			return;
-		} catch {}
+		} catch {
+			// Keep polling until the emulator startup log line appears.
+		}
 		await page.waitForTimeout(1000);
 	}
 

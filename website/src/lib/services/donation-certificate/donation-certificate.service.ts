@@ -109,10 +109,7 @@ export class DonationCertificateService extends BaseService {
 		}
 	}
 
-	async findByYearAndContributor(
-		year: number,
-		contributorsIds: string[],
-	): Promise<ServiceResult<DonationCertificate[]>> {
+	async findByYearAndContributor(year: number, contributorsIds: string[]): Promise<ServiceResult<DonationCertificate[]>> {
 		try {
 			const existingCertificates = await this.db.donationCertificate.findMany({
 				where: {
@@ -177,7 +174,7 @@ export class DonationCertificateService extends BaseService {
 		}
 
 		// check if there are contributions to generate a certificate for
-		let contributions = await this.contributionService.getSucceededForContributorAndYear(contributorsId, year);
+		const contributions = await this.contributionService.getSucceededForContributorAndYear(contributorsId, year);
 		if (!contributions.success) {
 			this.logger.info(`Could not load contributions for contributor ${contributorsId}`);
 			return this.resultFail(DonationCertificateError.technicalError);
@@ -242,11 +239,13 @@ export class DonationCertificateService extends BaseService {
 					switch (result.error) {
 						case DonationCertificateError.alreadyExists:
 							skippedExists.push(contributorsId);
+							break;
 						case DonationCertificateError.noContributions:
 							skippedNoContributions.push(contributorsId);
-
+							break;
 						default:
 							creationWithFailures.push(contributorsId);
+							break;
 					}
 				} else {
 					successCount++;
@@ -259,13 +258,12 @@ export class DonationCertificateService extends BaseService {
 				Skipped, because certificate already exists (${skippedExists.length}): ${skippedExists.join(', ')}
 				Skipped, because no contributions available for contributor (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
 				Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`);
-		} else {
-			const success = `Successfully created ${successCount} donation certificates for ${year}.
+		}
+		const success = `Successfully created ${successCount} donation certificates for ${year}.
 				Skipped, because certificate already exists (${skippedExists.length}): ${skippedExists.join(', ')}
 				Skipped, because no contributions available for contribot (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
 				Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`;
-			this.logger.info(success);
-			return this.resultOk(success);
-		}
+		this.logger.info(success);
+		return this.resultOk(success);
 	}
 }

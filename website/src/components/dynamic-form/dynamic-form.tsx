@@ -172,7 +172,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 
 	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
 
-	const onValidationErrors = (e: Object) => {
+	const onValidationErrors = (e: object) => {
 		console.warn('dynamic form validation errors: ', e);
 		setOpenAccordion('all');
 	};

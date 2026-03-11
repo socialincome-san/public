@@ -12,10 +12,7 @@ export type CarouselCardProps = {
 }[];
 
 export const QuotesCarousel = (cardsObj: CarouselCardProps) => {
-	let cardsArr = [];
-	for (const index in cardsObj) {
-		cardsArr.push(cardsObj[index]);
-	}
+	const cardsArr = [...cardsObj];
 
 	// TODO: update carousel content
 	return (

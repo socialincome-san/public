@@ -1,11 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import NgoCard from '@/app/[lang]/[region]/(website)/partners/(sections)/ngocard';
 import { CountryBadgeType, SdgBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
-import {
-	NgoCardProps,
-	NgoEntryJSON,
-	NgoHoverCardType,
-} from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { NgoCardProps, NgoEntryJSON, NgoHoverCardType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { CH, SL } from 'country-flag-icons/react/1x1';
@@ -33,11 +29,11 @@ export const NgoList = async ({ lang, region }: DefaultParams) => {
 	const ngoArray: NgoEntryJSON[] = ngos.map((slug: string) => translator.t(slug));
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
-	for (let i = 0; i < ngoArray.length; ++i) {
+	for (const ngo of ngoArray) {
 		const sdgBadges: SdgBadgeType[] = [];
-		ngoArray[i]['org-focus-sdg-numbers'].forEach((sdgNumber) => {
+		ngo['org-focus-sdg-numbers'].forEach((sdgNumber) => {
 			sdgBadges.push({
-				hoverCardOrgName: ngoArray[i]['org-short-name'],
+				hoverCardOrgName: ngo['org-short-name'],
 				sdgNumber: sdgNumber,
 				translatorSdg: '',
 				translatorSdgTitle: '',
@@ -47,31 +43,31 @@ export const NgoList = async ({ lang, region }: DefaultParams) => {
 		});
 
 		const countryBadge: CountryBadgeType = {
-			countryAbbreviation: ngoArray[i]['org-country'],
-			countryFlagComponent: getFlag(ngoArray[i]['org-country']),
+			countryAbbreviation: ngo['org-country'],
+			countryFlagComponent: getFlag(ngo['org-country']),
 		};
 		const ngoHoverCard: NgoHoverCardType = {
-			orgImage: image_base_path.concat(ngoArray[i]['org-image']),
-			orgLongName: ngoArray[i]['org-long-name'],
-			partnershipStart: ngoArray[i]['partnership-start'],
-			orgDescriptionParagraphs: ngoArray[i]['org-description-paragraphs'],
-			quote: ngoArray[i]['org-quote'] ?? null,
-			quoteAuthor: ngoArray[i]['org-quote-author'] ?? null,
-			quotePhoto: ngoArray[i]['org-quote-photo'] ? image_base_path.concat(ngoArray[i]['org-quote-photo']) : null,
-			orgFoundation: ngoArray[i]['org-foundation'],
-			orgHeadquarter: ngoArray[i]['org-headquarter'],
-			orgWebsite: ngoArray[i]['org-website'] ?? null,
-			orgFacebook: ngoArray[i]['org-facebook'] ?? null,
-			orgInstagram: ngoArray[i]['org-instagram'] ?? null,
-			orgLinkedIn: ngoArray[i]['org-linkedin'] ?? null,
-			orgYoutube: ngoArray[i]['org-youtube'] ?? null,
-			orgFundRaiserText: ngoArray[i]['org-fundraiser-text'] ?? null,
-			orgSlug: ngoArray[i]['org-slug'],
+			orgImage: image_base_path.concat(ngo['org-image']),
+			orgLongName: ngo['org-long-name'],
+			partnershipStart: ngo['partnership-start'],
+			orgDescriptionParagraphs: ngo['org-description-paragraphs'],
+			quote: ngo['org-quote'] ?? null,
+			quoteAuthor: ngo['org-quote-author'] ?? null,
+			quotePhoto: ngo['org-quote-photo'] ? image_base_path.concat(ngo['org-quote-photo']) : null,
+			orgFoundation: ngo['org-foundation'],
+			orgHeadquarter: ngo['org-headquarter'],
+			orgWebsite: ngo['org-website'] ?? null,
+			orgFacebook: ngo['org-facebook'] ?? null,
+			orgInstagram: ngo['org-instagram'] ?? null,
+			orgLinkedIn: ngo['org-linkedin'] ?? null,
+			orgYoutube: ngo['org-youtube'] ?? null,
+			orgFundRaiserText: ngo['org-fundraiser-text'] ?? null,
+			orgSlug: ngo['org-slug'],
 		};
 
 		const ngoCardProps: NgoCardProps = {
-			orgShortName: ngoArray[i]['org-short-name'],
-			orgMission: ngoArray[i]['org-mission'],
+			orgShortName: ngo['org-short-name'],
+			orgMission: ngo['org-mission'],
 			countryBadge: countryBadge,
 			sdgBadges: sdgBadges,
 			ngoHoverCard: ngoHoverCard,

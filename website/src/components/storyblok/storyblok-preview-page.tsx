@@ -19,7 +19,7 @@ type Props = {
 };
 
 export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
-	const isVisualEditor = !!searchParams['_storyblok'];
+	const isVisualEditor = !!searchParams._storyblok;
 	let token: string | undefined;
 	let timestamp: string | undefined;
 	let cachedStory: ISbStoryData<Page> | undefined;

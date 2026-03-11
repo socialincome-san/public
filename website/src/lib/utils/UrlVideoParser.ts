@@ -3,7 +3,7 @@ interface VideoMatchAndExtract {
 }
 
 export class VimeoVideoMatchAndExtract implements VideoMatchAndExtract {
-	regex = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|)(\d+)(?:|\/\?)/i;
+	regex = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^/]*)\/videos\/|)(\d+)(?:|\/\?)/i;
 	urlCreate = (videoId: string) => `https://player.vimeo.com/video/${videoId}`;
 
 	parseUrl(url: string): string | null {

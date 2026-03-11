@@ -67,7 +67,9 @@ export const useSurvey = () => {
 			}
 			logger.error('error saving survey, retrying');
 			retryCount++;
-			globalThis.setTimeout(() => saveSurvey(surveyId, survey, status, retryCount), 2000);
+			globalThis.setTimeout(() => {
+				void saveSurvey(surveyId, survey, status, retryCount);
+			}, 2000);
 		}
 	};
 

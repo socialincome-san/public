@@ -43,20 +43,21 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 
 	useEffect(() => {
 		const video = videoElementRef.current;
-		if (playing && video) {
-			// Hide poster when video is ready
-			const handleCanPlay = () => {
-				if (posterRef.current) {
-					posterRef.current.style.opacity = '0';
-					posterRef.current.style.transition = 'opacity 0.5s ease';
-				}
-			};
-			video.addEventListener('canplay', handleCanPlay);
-			video.play();
-			return () => video.removeEventListener('canplay', handleCanPlay);
-		} else {
+		if (!playing || !video) {
 			videoElementRef.current?.pause();
+			return;
 		}
+
+		// Hide poster when video is ready
+		const handleCanPlay = () => {
+			if (posterRef.current) {
+				posterRef.current.style.opacity = '0';
+				posterRef.current.style.transition = 'opacity 0.5s ease';
+			}
+		};
+		video.addEventListener('canplay', handleCanPlay);
+		video.play();
+		return () => video.removeEventListener('canplay', handleCanPlay);
 	}, [playing]);
 
 	const handleShowControls = () => {

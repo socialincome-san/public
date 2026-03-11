@@ -1,6 +1,6 @@
 import { Currency, PayoutStatus, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
-export type PayoutEntity = Prisma.PayoutGetPayload<{}>;
+export type PayoutEntity = Prisma.PayoutGetPayload<Prisma.PayoutDefaultArgs>;
 
 export type PayoutTableViewRow = {
 	id: string;

@@ -91,7 +91,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 			const ok = await setServerSession();
 			if (!ok) {
-				await signOut(auth).catch(() => {});
+				await signOut(auth).catch(() => undefined);
 				translator && toast.error(translator.t('error.unknown'));
 				return;
 			}

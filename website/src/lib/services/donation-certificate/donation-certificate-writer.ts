@@ -75,7 +75,7 @@ export class DonationCertificateWriter {
 		const footerRightLine2 = translator.t('footer-right-line-2');
 		const footerRightLine3 = translator.t('footer-right-line-3');
 
-		return new Promise<void>(async (resolve) => {
+		return new Promise<void>((resolve) => {
 			const pdfDocument = new PDFDocument({ size: 'A4' });
 			const writeStream = createWriteStream(filePath);
 			let yPosition;

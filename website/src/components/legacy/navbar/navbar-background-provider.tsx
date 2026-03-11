@@ -7,7 +7,7 @@ export const NavbarBackgroundContext = createContext<{
 	setBackgroundColor: (background: string | null) => void;
 }>({
 	backgroundColor: null,
-	setBackgroundColor: () => {},
+	setBackgroundColor: (_background) => undefined,
 });
 
 export const NavbarBackgroundProvider = ({ children }: PropsWithChildren) => {
