@@ -90,7 +90,7 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 		{ key: COOKIE_CONSENT_KEY, value: COOKIE_CONSENT_VALUE },
 	);
 
-	await context.storageState({ path: state });
+	await context.storageState({ path: state, indexedDB: true });
 
 	await context.close();
 };
