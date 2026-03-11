@@ -3,17 +3,17 @@ import { fetchData } from './fetch-data';
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface Issue {
+type Issue = {
 	id: number;
 	url: string;
 	title: string;
 	labels: string[];
-}
+};
 
-interface IssuesResponse {
+type IssuesResponse = {
 	issues: Issue[];
 	labels: string[];
-}
+};
 
 type GithubIssue = {
 	id: number;

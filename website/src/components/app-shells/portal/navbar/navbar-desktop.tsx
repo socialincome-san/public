@@ -20,7 +20,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
-type NavbarDesktopProps = { sessions: Session[] };
+type NavbarDesktopProps = {
+	sessions: Session[];
+};
 
 export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 	const pathname = usePathname();

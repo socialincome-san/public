@@ -14,7 +14,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-type NavbarMobileProps = { sessions: Session[] };
+type NavbarMobileProps = {
+	sessions: Session[];
+};
 
 export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);

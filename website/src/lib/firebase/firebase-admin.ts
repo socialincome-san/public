@@ -21,11 +21,11 @@ const getOrInitializeFirebaseAdmin = (options?: AppOptions, name?: string): App 
 	return apps.find((app) => app.options.projectId === options?.projectId) || apps.at(0) || initializeApp(options);
 };
 
-interface UploadProps {
+type UploadProps = {
 	bucket?: Bucket;
 	sourceFilePath: string;
 	destinationFilePath: string;
-}
+};
 
 class StorageAdmin {
 	readonly storage: Storage;

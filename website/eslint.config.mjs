@@ -24,7 +24,7 @@ export default [
 			'react-hooks': reactHooksPlugin,
 		},
 		rules: {
-			'@typescript-eslint/consistent-type-definitions': 'off',
+			'@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 			'@typescript-eslint/no-unsafe-assignment': 'warn',
 			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
 			'prettier/prettier': 'warn',

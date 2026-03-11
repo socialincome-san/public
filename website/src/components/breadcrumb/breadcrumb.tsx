@@ -7,10 +7,10 @@ import {
 } from '@/components/breadcrumb/breadcrumb-elements';
 import React from 'react';
 
-interface BreadcrumbLinkType {
+type BreadcrumbLinkType = {
 	label: string;
 	href: string;
-}
+};
 
 export const Breadcrumb = ({ links }: { links: BreadcrumbLinkType[] }) => {
 	return (

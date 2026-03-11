@@ -9,7 +9,10 @@ import { SectionTitle } from './section-title';
 import { Stat } from './stat';
 import { StatProgressCard } from './stat-progress-card';
 
-type StatsSectionProps = { programId: string; stats: ProgramDashboardStats };
+type StatsSectionProps = {
+	programId: string;
+	stats: ProgramDashboardStats;
+};
 
 export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const getCreditStatusLabel = (creditsInIntervals: number, totalExpected: number) => {

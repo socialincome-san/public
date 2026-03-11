@@ -68,4 +68,7 @@ export type CampaignPage = CampaignPayload & {
 // campaign will be created using current users organization ID
 export type CampaignsCreateInput = Omit<Prisma.CampaignCreateInput, 'organization'>;
 export type CampaignsUpdateInput = Prisma.CampaignUpdateInput;
-export type CampaignOption = { id: string; name: string };
+export type CampaignOption = {
+	id: string;
+	name: string;
+};

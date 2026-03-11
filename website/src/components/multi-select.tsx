@@ -14,7 +14,7 @@ import { Separator } from './separator';
 /**
  * Animation types and configurations
  */
-interface AnimationConfig {
+type AnimationConfig = {
 	/** Badge animation type */
 	badgeAnimation?: 'bounce' | 'pulse' | 'wiggle' | 'fade' | 'slide' | 'none';
 	/** Popover animation type */
@@ -25,7 +25,7 @@ interface AnimationConfig {
 	duration?: number;
 	/** Animation delay in seconds */
 	delay?: number;
-}
+};
 
 /**
  * Variants for the multi-select component to handle different styles.
@@ -57,7 +57,7 @@ const multiSelectVariants = cva('m-1 transition-all duration-300 ease-in-out', {
 /**
  * Option interface for MultiSelect component
  */
-interface MultiSelectOption {
+type MultiSelectOption = {
 	/** The text to display for the option. */
 	label: string;
 	/** The unique value associated with the option. */
@@ -75,23 +75,22 @@ interface MultiSelectOption {
 		/** Gradient background for badge */
 		gradient?: string;
 	};
-}
+};
 
 /**
  * Group interface for organizing options
  */
-interface MultiSelectGroup {
+type MultiSelectGroup = {
 	/** Group heading */
 	heading: string;
 	/** Options in this group */
 	options: MultiSelectOption[];
-}
+};
 
 /**
  * Props for MultiSelect component
  */
-interface MultiSelectProps
-	extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'>, VariantProps<typeof multiSelectVariants> {
+type MultiSelectProps = {
 	/**
 	 * An array of option objects or groups to be displayed in the multi-select component.
 	 */
@@ -254,12 +253,13 @@ interface MultiSelectProps
 	 * Optional, defaults to false.
 	 */
 	closeOnSelect?: boolean;
-}
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'> &
+	VariantProps<typeof multiSelectVariants>;
 
 /**
  * Imperative methods exposed through ref
  */
-interface MultiSelectRef {
+type MultiSelectRef = {
 	/**
 	 * Programmatically reset the component to its default value
 	 */
@@ -280,7 +280,7 @@ interface MultiSelectRef {
 	 * Focus the component
 	 */
 	focus: () => void;
-}
+};
 
 export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 	(

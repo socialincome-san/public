@@ -4,13 +4,13 @@ import { fetchData } from './fetch-data';
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface GitHubFork {
+type GitHubFork = {
 	id: number;
 	created_at: string;
-}
-interface RepoForksResponse {
+};
+type RepoForksResponse = {
 	forks_count: number;
-}
+};
 
 export const getForkCount = async (): Promise<{ totalForks: number; newForks: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;

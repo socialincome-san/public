@@ -1,16 +1,17 @@
 import type { ISbStoryData } from '@storyblok/js';
 
-interface StoryblokBridgeEvent {
+type StoryblokBridgeEvent = {
 	story?: ISbStoryData;
-}
+};
 
-interface StoryblokBridgeInstance {
+type StoryblokBridgeInstance = {
 	on: (events: string | string[], handler: (event: StoryblokBridgeEvent) => void) => void;
-}
+};
 
 type StoryblokBridgeConstructor = new () => StoryblokBridgeInstance;
 
 declare global {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Window {
 		StoryblokBridge: StoryblokBridgeConstructor;
 		storyblokRegisterEvent: (cb: () => void) => void;

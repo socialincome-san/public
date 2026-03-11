@@ -4,7 +4,7 @@ import { fetchData } from './fetch-data';
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface GitHubCommit {
+type GitHubCommit = {
 	author: {
 		id: number;
 		login: string;
@@ -15,7 +15,7 @@ interface GitHubCommit {
 			date: string;
 		};
 	};
-}
+};
 
 export const getCommits = async () => {
 	// Calculate the date 30 days ago from today

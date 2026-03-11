@@ -1,11 +1,11 @@
-export interface Question {
+export type Question = {
 	type: QuestionInputType;
 	name: string;
 	choices: (string | boolean)[];
 	choicesTranslationKey?: string;
 	translationKey: string;
 	descriptionTranslationKey?: string;
-}
+};
 
 enum QuestionInputType {
 	RADIO_GROUP = 'radiogroup',

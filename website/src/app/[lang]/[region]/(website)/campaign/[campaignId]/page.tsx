@@ -26,9 +26,9 @@ import {
 } from '@socialincome/ui';
 import Link from 'next/link';
 
-interface CampaignPageParams extends DefaultParams {
+type CampaignPageParams = {
 	campaignId: string;
-}
+} & DefaultParams;
 
 export type CampaignPageProps = {
 	params: Promise<CampaignPageParams>;

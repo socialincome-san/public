@@ -3,19 +3,19 @@ import { fetchData } from './fetch-data';
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface Contributor {
+type Contributor = {
 	id: number;
 	name: string;
 	commits: number;
 	avatarUrl: string;
-}
+};
 
-interface GitHubContributor {
+type GitHubContributor = {
 	id: number;
 	login: string;
 	avatar_url: string;
 	contributions: number;
-}
+};
 
 export const getContributors = async () => {
 	const url = `https://api.github.com/repos/${owner}/${repo}/contributors`;

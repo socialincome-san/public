@@ -6,7 +6,10 @@ import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';
 import { StatProgressCard } from './stat-progress-card';
 
-type FirstIntervalFundingSectionProps = { programId: string; stats: ProgramDashboardStats };
+type FirstIntervalFundingSectionProps = {
+	programId: string;
+	stats: ProgramDashboardStats;
+};
 
 export const FirstIntervalFundingSection = ({ programId, stats }: FirstIntervalFundingSectionProps) => {
 	const percent =

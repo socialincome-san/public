@@ -4,16 +4,16 @@ import { fetchData } from './fetch-data';
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface GitHubStar {
+type GitHubStar = {
 	user: {
 		id: number;
 		login: string;
 	};
 	starred_at: string;
-}
-interface RepoStarsResponse {
+};
+type RepoStarsResponse = {
 	stargazers_count: number;
-}
+};
 
 export const getStarCount = async (): Promise<{ totalStars: number; newStars: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;

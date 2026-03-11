@@ -19,13 +19,13 @@ const getNGOTranslations = (translator: Translator, slug: string): { translation
 	return { translation: currentNgo };
 };
 
-interface PartnerPageParams extends DefaultParams {
+type PartnerPageParams = {
 	slug: string;
-}
+} & DefaultParams;
 
-interface PartnerPageProps {
+type PartnerPageProps = {
 	params: Promise<PartnerPageParams>;
-}
+};
 
 export default async function Page({ params }: PartnerPageProps) {
 	const { lang, region, slug } = await params;

@@ -9,13 +9,13 @@ import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
 
-interface PageParams extends DefaultParams {
+type PageParams = {
 	slug: string;
-}
+} & DefaultParams;
 
-interface PageProps {
+type PageProps = {
 	params: Promise<PageParams>;
-}
+};
 
 const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArticlesInSelectedLanguage: number) => {
 	if (lang === defaultLanguage) {
