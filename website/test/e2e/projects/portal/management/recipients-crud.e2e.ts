@@ -197,6 +197,105 @@ test('shows uniqueness error when recipient payment code already exists', async 
 	await expect(page.getByText('A payment code with this value already exists.')).toBeVisible();
 });
 
+test('edit recipient and remove contact phone and address', async ({ page }) => {
+	const unique = Date.now();
+	const firstName = `Edge-${unique}`;
+	const lastName = 'Recipient';
+	const contactPhone = `+23277${String(unique).slice(-6)}`;
+
+	const localPartner = await prisma.localPartner.findFirst({
+		select: { id: true },
+	});
+	const program = await prisma.program.findFirst({
+		select: { id: true },
+	});
+	expect(localPartner?.id).toBeTruthy();
+	expect(program?.id).toBeTruthy();
+
+	const created = await prisma.recipient.create({
+		data: {
+			localPartner: {
+				connect: {
+					id: localPartner!.id,
+				},
+			},
+			program: {
+				connect: {
+					id: program!.id,
+				},
+			},
+			contact: {
+				create: {
+					firstName,
+					lastName,
+					email: `edge.recipient.${unique}@example.com`,
+					phone: {
+						create: {
+							number: contactPhone,
+							hasWhatsApp: false,
+						},
+					},
+					address: {
+						create: {
+							street: 'Edge Street',
+							number: '12',
+							city: 'Freetown',
+							zip: '1000',
+						},
+					},
+				},
+			},
+		},
+		select: {
+			id: true,
+			contact: {
+				select: {
+					phoneId: true,
+					addressId: true,
+				},
+			},
+		},
+	});
+	expect(created.contact.phoneId).toBeTruthy();
+	expect(created.contact.addressId).toBeTruthy();
+
+	await page.goto(`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	await page.getByRole('cell', { name: firstName }).click();
+	await page.getByTestId('form-accordion-trigger-contact').click();
+	await page.getByTestId('form-item-contact.phone').locator('input').clear();
+	await page.getByTestId('form-item-contact.street').locator('input').clear();
+	await page.getByTestId('form-item-contact.number').locator('input').clear();
+	await page.getByTestId('form-item-contact.city').locator('input').clear();
+	await page.getByTestId('form-item-contact.zip').locator('input').clear();
+	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const updated = await prisma.recipient.findUniqueOrThrow({
+		where: { id: created.id },
+		select: {
+			contact: {
+				select: {
+					phoneId: true,
+					addressId: true,
+				},
+			},
+		},
+	});
+	expect(updated.contact.phoneId).toBeNull();
+	expect(updated.contact.addressId).toBeNull();
+
+	const deletedPhone = await prisma.phone.findUnique({
+		where: { id: created.contact.phoneId! },
+		select: { id: true },
+	});
+	const deletedAddress = await prisma.address.findUnique({
+		where: { id: created.contact.addressId! },
+		select: { id: true },
+	});
+	expect(deletedPhone).toBeNull();
+	expect(deletedAddress).toBeNull();
+});
+
 test('recipient payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
 	const unusedPhones = await buildUnusedPaymentPhoneNumbers();
 	const firebaseService = await getFirebaseAdminService();

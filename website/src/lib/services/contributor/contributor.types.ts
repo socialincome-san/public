@@ -114,21 +114,3 @@ export type ContributorSession = {
 	stripeCustomerId: string | null;
 };
 
-export type ContributorFormCreateInput = {
-	firstName: string;
-	lastName: string;
-	email: string;
-	referral: ContributorReferralSource;
-	gender?: Gender | null;
-	language?: string | null;
-	dateOfBirth?: Date | null;
-	profession?: string | null;
-	callingName?: string | null;
-	address?: {
-		street: string;
-		number: string;
-		city: string;
-		zip: string;
-		country: CountryCode;
-	} | null;
-};

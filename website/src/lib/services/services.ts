@@ -10,6 +10,7 @@ import { ContactRelationsService } from './contact/contact-relations.service';
 import { ContributionReadService } from './contribution/contribution-read.service';
 import { ContributionWriteService } from './contribution/contribution-write.service';
 import { ContributorReadService } from './contributor/contributor-read.service';
+import { ContributorValidationService } from './contributor/contributor-validation.service';
 import { ContributorWriteService } from './contributor/contributor-write.service';
 import { CountryReadService } from './country/country-read.service';
 import { CountryValidationService } from './country/country-validation.service';
@@ -117,7 +118,15 @@ const expenseRead = new ExpenseReadService(prisma, userRead);
 const expenseValidation = new ExpenseValidationService(prisma);
 const expenseWrite = new ExpenseWriteService(prisma, userRead, expenseValidation);
 const contributorRead = new ContributorReadService(prisma, organizationAccess);
-const contributorWrite = new ContributorWriteService(prisma, organizationAccess, firebaseAdmin, sendgrid);
+const contributorValidation = new ContributorValidationService(prisma);
+const contributorWrite = new ContributorWriteService(
+	prisma,
+	organizationAccess,
+	firebaseAdmin,
+	sendgrid,
+	contributorValidation,
+	contactRelations,
+);
 const campaignWrite = new CampaignWriteService(prisma, organizationAccess);
 const donationCertificateRead = new DonationCertificateReadService(prisma, organizationAccess);
 
