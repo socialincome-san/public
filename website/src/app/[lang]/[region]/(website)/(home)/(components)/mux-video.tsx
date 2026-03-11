@@ -69,7 +69,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	useEventListener('scroll', handleShowControls);
 
 	useEffect(() => {
-		let id;
+		let id: ReturnType<typeof setTimeout> | undefined;
 		if (showControls) {
 			id = setTimeout(() => setShowControls(false), OVERLAY_FADE_OUT_DELAY);
 		}
@@ -79,7 +79,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	}, [showControls, setShowControls]);
 
 	useEffect(() => {
-		let id;
+		let id: ReturnType<typeof setTimeout> | undefined;
 		if (!showCaptions) {
 			id = setTimeout(() => setShowCaptions(true), OVERLAY_FADE_OUT_DELAY);
 		}

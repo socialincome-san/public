@@ -6,10 +6,7 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { redirect } from 'next/navigation';
 import { ngos } from '../(sections)/ngolist';
 
-const getNGOTranslations = (
-	translator: Translator,
-	slug: string,
-): { translation: NgoEntryJSON | undefined } => {
+const getNGOTranslations = (translator: Translator, slug: string): { translation: NgoEntryJSON | undefined } => {
 	let currentNgo: NgoEntryJSON | undefined = undefined;
 	for (const ngo of ngos) {
 		const ngoTranslation = translator.t(ngo) as NgoEntryJSON;

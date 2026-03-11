@@ -87,7 +87,7 @@ const initialFormSchema: CountryFormSchema = {
 						label: c.name,
 					})),
 					onChange: (value, form) => {
-						if (!isValidCountryCode(value)) {
+						if (typeof value !== 'string' || !isValidCountryCode(value)) {
 							return;
 						}
 						form.setValue('countrySettings.currency', bestGuessCurrency(value), {

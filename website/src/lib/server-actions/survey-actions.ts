@@ -72,18 +72,15 @@ export const getByIdAndRecipient = async (
 	recipientId: string,
 ): Promise<ServiceResult<SurveyWithRecipient>> => {
 	const survey = await getCurrentSurvey();
-	if (!survey || survey.id !== surveyId || survey.recipientId !== recipientId) {
+	if (survey?.id !== surveyId || survey.recipientId !== recipientId) {
 		return resultFail('Unauthorized');
 	}
 	return services.read.survey.getByIdAndRecipient(surveyId, recipientId);
 };
 
-export const saveChanges = async (
-	surveyId: string,
-	input: SurveyUpdateInput,
-): Promise<ServiceResult<SurveyPayload>> => {
+export const saveChanges = async (surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> => {
 	const survey = await getCurrentSurvey();
-	if (!survey || survey.id !== surveyId) {
+	if (survey?.id !== surveyId) {
 		return resultFail('Unauthorized');
 	}
 	return services.write.survey.saveChanges(surveyId, input);

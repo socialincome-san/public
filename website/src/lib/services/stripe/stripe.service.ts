@@ -9,12 +9,7 @@
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
-import {
-	ContributionStatus,
-	ContributorReferralSource,
-	PaymentEventType,
-	PrismaClient,
-} from '@/generated/prisma/client';
+import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { isValidCurrency } from '@/lib/types/currency';
 import { logger } from '@/lib/utils/logger';
 import { titleCase } from '@/lib/utils/string-utils';
@@ -25,11 +20,7 @@ import { ContributionWriteService } from '../contribution/contribution-write.ser
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
 import { ContributorReadService } from '../contributor/contributor-read.service';
 import { ContributorWriteService } from '../contributor/contributor-write.service';
-import {
-	ContributorUpdateInput,
-	ContributorWithContact,
-	StripeContributorData,
-} from '../contributor/contributor.types';
+import { ContributorUpdateInput, ContributorWithContact, StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -322,10 +313,7 @@ export class StripeService extends BaseService {
 		return { firstName, lastName };
 	}
 
-	private sortSubscriptionRows(
-		rows: StripeSubscriptionRow[],
-		query: StripeSubscriptionTableQuery,
-	): StripeSubscriptionRow[] {
+	private sortSubscriptionRows(rows: StripeSubscriptionRow[], query: StripeSubscriptionTableQuery): StripeSubscriptionRow[] {
 		const direction = query.sortDirection === 'asc' ? 1 : -1;
 		const sortedRows = [...rows];
 		const sortBy = toSortKey(query.sortBy, ['created', 'status', 'interval', 'paymentMethod', 'amount'] as const);
@@ -348,9 +336,7 @@ export class StripeService extends BaseService {
 		return sortedRows;
 	}
 
-	async getSubscriptionsTableView(
-		stripeCustomerId: string | null,
-	): Promise<ServiceResult<StripeSubscriptionTableView>> {
+	async getSubscriptionsTableView(stripeCustomerId: string | null): Promise<ServiceResult<StripeSubscriptionTableView>> {
 		const paginated = await this.getPaginatedSubscriptionsTableView(stripeCustomerId, {
 			page: 1,
 			pageSize: 10_000,

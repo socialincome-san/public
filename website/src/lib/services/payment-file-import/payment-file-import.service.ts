@@ -8,10 +8,7 @@ import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
 import xpath from 'xpath';
-import {
-	CONTRIBUTION_REFERENCE_ID_LENGTH,
-	CONTRIBUTOR_REFERENCE_ID_LENGTH,
-} from '../bank-transfer/bank-transfer-config';
+import { CONTRIBUTION_REFERENCE_ID_LENGTH, CONTRIBUTOR_REFERENCE_ID_LENGTH } from '../bank-transfer/bank-transfer-config';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';

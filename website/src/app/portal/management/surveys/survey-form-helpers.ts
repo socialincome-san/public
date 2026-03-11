@@ -2,12 +2,15 @@ import type { SurveyCreateInput, SurveyPayload, SurveyUpdateInput } from '@/lib/
 import { SurveyFormSchema } from './survey-form';
 
 export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyCreateInput => {
+	const dueAtValue = schema.fields.dueAt.value;
 	return {
 		name: schema.fields.name.value,
 		recipient: { connect: { id: schema.fields.recipientId.value } },
 		questionnaire: schema.fields.questionnaire.value,
 		language: schema.fields.language.value,
-		dueAt: new Date(schema.fields.dueAt.value),
+		dueAt: new Date(
+			typeof dueAtValue === 'string' || typeof dueAtValue === 'number' || dueAtValue instanceof Date ? dueAtValue : new Date(),
+		),
 		status: schema.fields.status.value,
 		data: {},
 		accessEmail: schema.fields.accessEmail.value,
@@ -16,11 +19,14 @@ export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyCreateIn
 };
 
 export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: SurveyPayload): SurveyUpdateInput => {
+	const dueAtValue = schema.fields.dueAt.value;
 	const data: SurveyUpdateInput = {
 		name: schema.fields.name.value,
 		questionnaire: schema.fields.questionnaire.value,
 		language: schema.fields.language.value,
-		dueAt: new Date(schema.fields.dueAt.value),
+		dueAt: new Date(
+			typeof dueAtValue === 'string' || typeof dueAtValue === 'number' || dueAtValue instanceof Date ? dueAtValue : new Date(),
+		),
 		status: schema.fields.status.value,
 		data: {},
 		accessEmail: schema.fields.accessEmail.value,

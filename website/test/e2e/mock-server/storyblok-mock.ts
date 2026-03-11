@@ -70,6 +70,6 @@ export const saveStoryblokMock = async (recordingKey: string) => {
 	}
 
 	const res = await fetch(`${MOCK}/recordings`);
-	const data = sortKeys(await res.json());
+	const data = sortKeys((await res.json()) as Record<string, any>);
 	writeRecordings(recordingKey, data);
 };

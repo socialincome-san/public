@@ -1,5 +1,5 @@
 import { Bucket } from '@google-cloud/storage';
-import admin from 'firebase-admin';
+import admin, { ServiceAccount } from 'firebase-admin';
 import { App, AppOptions, getApps, initializeApp } from 'firebase-admin/app';
 import { Auth, getAuth } from 'firebase-admin/auth';
 import { getStorage, Storage } from 'firebase-admin/storage';
@@ -55,7 +55,9 @@ const { FIREBASE_SERVICE_ACCOUNT_JSON, FIREBASE_DATABASE_URL } = process.env;
 const credentials =
 	FIREBASE_SERVICE_ACCOUNT_JSON && FIREBASE_DATABASE_URL
 		? {
-				credential: credential.cert(JSON.parse(Buffer.from(FIREBASE_SERVICE_ACCOUNT_JSON, 'base64').toString('utf-8'))),
+				credential: credential.cert(
+					JSON.parse(Buffer.from(FIREBASE_SERVICE_ACCOUNT_JSON, 'base64').toString('utf-8')) as string | ServiceAccount,
+				),
 				databaseURL: FIREBASE_DATABASE_URL,
 			}
 		: undefined;

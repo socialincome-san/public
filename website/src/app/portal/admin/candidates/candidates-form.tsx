@@ -185,7 +185,8 @@ export const CandidateForm = ({
 
 				if (candidateId && candidate) {
 					const data: CandidateUpdateInput = buildUpdateCandidateInput(schema, candidate, contactFields);
-					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
+					const rawPhone = schema.fields.paymentInformation.fields.phone.value;
+					const nextPaymentPhoneNumber = typeof rawPhone === 'string' ? rawPhone : null;
 					result = await updateCandidateAction(data, nextPaymentPhoneNumber, sessionType);
 				} else {
 					const data: CandidateCreateInput = buildCreateCandidateInput(schema, contactFields);

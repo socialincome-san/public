@@ -103,7 +103,7 @@ export default function LocalPartnersForm({
 	};
 
 	const submitLocalPartner = async (schema: typeof initialFormSchema): Promise<ServiceResult<unknown>> => {
-		const contactFields: { [key: string]: FormField } = schema.fields.contact.fields;
+		const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 
 		if (localPartnerId && localPartner) {
 			const data = buildUpdateLocalPartnerInput(schema, localPartner, contactFields);

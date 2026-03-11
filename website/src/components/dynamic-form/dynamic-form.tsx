@@ -86,7 +86,10 @@ const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<an
 
 const isOptional = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentOption?: string) => {
 	const def = getDef(key, zodSchema, parentOption);
-	const type = def.typeName;
+	const type = (def as { typeName?: string })?.typeName;
+	if (typeof type !== 'string') {
+		return false;
+	}
 	return ['ZodOptional', 'ZodNullable'].includes(type);
 };
 
@@ -295,10 +298,10 @@ const GenericFormField = ({
 		const dateConstraints: { min?: Date; max?: Date } = {};
 
 		if (def.checks) {
-			for (const check of def.checks) {
-				if (check.kind === 'min') {
+			for (const check of def.checks as { kind?: string; value?: string | number | Date }[]) {
+				if (check.kind === 'min' && check.value !== undefined) {
 					dateConstraints.min = new Date(check.value);
-				} else if (check.kind === 'max') {
+				} else if (check.kind === 'max' && check.value !== undefined) {
 					dateConstraints.max = new Date(check.value);
 				}
 			}
@@ -517,7 +520,7 @@ const GenericFormField = ({
 										step="any"
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey, {
-											setValueAs: (v) => (v === '' ? null : parseFloat(v)),
+											setValueAs: (v) => (typeof v === 'string' && v !== '' ? parseFloat(v) : null),
 										})}
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>

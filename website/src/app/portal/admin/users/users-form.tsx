@@ -3,12 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
-import {
-	createUserAction,
-	getUserAction,
-	getUserOptionsAction,
-	updateUserAction,
-} from '@/lib/server-actions/user-actions';
+import { createUserAction, getUserAction, getUserOptionsAction, updateUserAction } from '@/lib/server-actions/user-actions';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { UserPayload } from '@/lib/services/user/user.types';
 import { useEffect, useState, useTransition } from 'react';

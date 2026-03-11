@@ -68,7 +68,9 @@ export const BankTransferForm = ({
 
 	const handleGenerateQRCode = () => {
 		const { email, firstName, lastName } = form.getValues();
-		generateQRCode(email, firstName, lastName, lang);
+		if (typeof email === 'string' && typeof firstName === 'string' && typeof lastName === 'string') {
+			generateQRCode(email, firstName, lastName, lang);
+		}
 	};
 
 	return (

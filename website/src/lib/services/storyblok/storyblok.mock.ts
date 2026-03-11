@@ -19,16 +19,14 @@ export const mockStoryblokIfTestMode = () => {
 		url.searchParams.delete('token'); // remove unstable params
 		url.searchParams.delete('cv');
 
-		const buf = await crypto.subtle.digest(
-			'SHA-256',
-			new TextEncoder().encode(`${method}:${url.pathname}?${url.search}`),
-		);
+		const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${method}:${url.pathname}?${url.search}`));
 
 		return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 	};
 
-	globalThis.fetch = (async (input: any, init?: RequestInit) => {
-		const url = new URL(typeof input === 'string' ? input : input.url);
+	globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+		const requestUrl = typeof input === 'string' || input instanceof URL ? input.toString() : input.url;
+		const url = new URL(requestUrl);
 
 		return url.protocol === 'https:' && url.hostname === HOST
 			? (async () => {

@@ -20,9 +20,14 @@ interface GitHubContributor {
 export const getContributors = async () => {
 	const url = `https://api.github.com/repos/${owner}/${repo}/contributors`;
 	const contributorsRes = await fetchData(owner, repo, url);
-	const contributors = await contributorsRes.json();
+	const contributors: unknown = await contributorsRes.json();
 
-	if (Object.keys(contributors).length === 0) {
+	if (
+		contributors &&
+		typeof contributors === 'object' &&
+		!Array.isArray(contributors) &&
+		Object.keys(contributors).length === 0
+	) {
 		console.warn('No contributor data available. The API returned an empty object.');
 		return [];
 	}

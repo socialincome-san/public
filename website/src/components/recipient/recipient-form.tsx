@@ -222,7 +222,8 @@ export const RecipientForm = ({
 
 				if (recipientId && recipient) {
 					const data: RecipientUpdateInput = buildUpdateRecipientInput(schema, recipient, contactFields);
-					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
+					const rawPhone = schema.fields.paymentInformation.fields.phone.value;
+					const nextPaymentPhoneNumber = typeof rawPhone === 'string' ? rawPhone : null;
 					res = await updateRecipientAction(data, nextPaymentPhoneNumber, sessionType);
 				} else {
 					const data: RecipientCreateInput = buildCreateRecipientInput(schema, contactFields);
