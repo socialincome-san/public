@@ -127,7 +127,8 @@ export class SendgridSubscriptionService extends Client {
 
 	private isSuppressed = async (email: string): Promise<boolean> => {
 		const [_, body] = await this.request({ url: `/v3/asm/suppressions/${email}`, method: 'GET' });
-		return body.suppressions.some(
+		const suppressions = (body as { suppressions?: Suppression[] }).suppressions ?? [];
+		return suppressions.some(
 			(suppression: Suppression) => suppression.id === this.suppressionListId && suppression.suppressed,
 		);
 	};

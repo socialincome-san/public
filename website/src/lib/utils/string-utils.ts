@@ -68,7 +68,7 @@ export const humanize = (value: string): string => {
 };
 
 export const titleCase = (value: string): string => {
-	return value.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ' ' + d.toUpperCase()));
+	return value.replace(/^_*(.)|_+(.)/g, (_s: string, c?: string, d?: string) => (c ? c.toUpperCase() : ` ${d?.toUpperCase() ?? ''}`));
 };
 
 export const formatNumberLocale = (

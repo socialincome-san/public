@@ -18,6 +18,10 @@ import { Prisma } from '@/generated/prisma/client';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { RecipientFormSchema } from './recipient-form';
 
+const toTrimmedStringOrNull = (value: unknown): string | null => {
+	return typeof value === 'string' && value.trim() ? value.trim() : null;
+};
+
 export const buildUpdateRecipientInput = (
 	schema: RecipientFormSchema,
 	recipient: RecipientPayload,
@@ -27,12 +31,12 @@ export const buildUpdateRecipientInput = (
 
 	const mobileMoneyProviderId = paymentInfoFields.provider.value as string | undefined;
 	const basePaymentInformation = {
-		code: paymentInfoFields.code.value?.trim() || null,
+		code: toTrimmedStringOrNull(paymentInfoFields.code.value),
 		mobileMoneyProvider: mobileMoneyProviderId ? { connect: { id: mobileMoneyProviderId } } : { disconnect: true },
 	};
 
-	const nextPaymentPhoneNumber = paymentInfoFields.phone.value?.trim() || null;
-	const nextContactPhoneNumber = contactFields.phone.value?.trim() || null;
+	const nextPaymentPhoneNumber = toTrimmedStringOrNull(paymentInfoFields.phone.value);
+	const nextContactPhoneNumber = toTrimmedStringOrNull(contactFields.phone.value);
 
 	const previousPaymentPhone = recipient.paymentInformation?.phone;
 	const previousContactPhone = recipient.contact.phone;
@@ -206,9 +210,9 @@ export const buildCreateRecipientInput = (
 				...(paymentInfoFields.provider.value && {
 					mobileMoneyProvider: { connect: { id: paymentInfoFields.provider.value as string } },
 				}),
-				code: paymentInfoFields.code.value?.trim() || null,
-				...(paymentInfoFields.phone.value?.trim() && {
-					phone: { create: { number: paymentInfoFields.phone.value!.trim() } },
+				code: toTrimmedStringOrNull(paymentInfoFields.code.value),
+				...(toTrimmedStringOrNull(paymentInfoFields.phone.value) && {
+					phone: { create: { number: toTrimmedStringOrNull(paymentInfoFields.phone.value)! } },
 				}),
 			},
 		},

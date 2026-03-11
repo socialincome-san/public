@@ -18,6 +18,10 @@ import { Prisma } from '@/generated/prisma/client';
 import { CandidateCreateInput, CandidatePayload, CandidateUpdateInput } from '@/lib/services/candidate/candidate.types';
 import { CandidateFormSchema } from './candidates-form';
 
+const toTrimmedStringOrNull = (value: unknown): string | null => {
+	return typeof value === 'string' && value.trim() ? value.trim() : null;
+};
+
 export const buildUpdateCandidateInput = (
 	schema: CandidateFormSchema,
 	candidate: CandidatePayload,
@@ -27,7 +31,7 @@ export const buildUpdateCandidateInput = (
 
 	const mobileMoneyProviderId = paymentInfoFields.provider.value as string | undefined;
 	const basePaymentInformation = {
-		code: paymentInfoFields.code.value?.trim() || null,
+		code: toTrimmedStringOrNull(paymentInfoFields.code.value),
 	};
 	const createPaymentInformation = {
 		...basePaymentInformation,
@@ -40,8 +44,8 @@ export const buildUpdateCandidateInput = (
 		mobileMoneyProvider: mobileMoneyProviderId ? { connect: { id: mobileMoneyProviderId } } : { disconnect: true },
 	};
 
-	const nextPaymentPhoneNumber = paymentInfoFields.phone.value?.trim() || null;
-	const nextContactPhoneNumber = contactFields.phone.value?.trim() || null;
+	const nextPaymentPhoneNumber = toTrimmedStringOrNull(paymentInfoFields.phone.value);
+	const nextContactPhoneNumber = toTrimmedStringOrNull(contactFields.phone.value);
 
 	const previousPaymentPhone = candidate.paymentInformation?.phone;
 	const previousContactPhone = candidate.contact.phone;
@@ -209,9 +213,9 @@ export const buildCreateCandidateInput = (
 				...(paymentInfoFields.provider.value && {
 					mobileMoneyProvider: { connect: { id: paymentInfoFields.provider.value } },
 				}),
-				code: paymentInfoFields.code.value?.trim() || null,
-				...(paymentInfoFields.phone.value?.trim() && {
-					phone: { create: { number: paymentInfoFields.phone.value.trim() } },
+				code: toTrimmedStringOrNull(paymentInfoFields.code.value),
+				...(toTrimmedStringOrNull(paymentInfoFields.phone.value) && {
+					phone: { create: { number: toTrimmedStringOrNull(paymentInfoFields.phone.value)! } },
 				}),
 			},
 		},

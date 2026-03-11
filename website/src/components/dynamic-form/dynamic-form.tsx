@@ -57,7 +57,12 @@ const isFormField = (obj: any): obj is FormField => {
 
 // get first level or nested def object from Zod Schema
 const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string) => {
-	return parentKey ? zodSchema.shape[parentKey]?._def.shape()[key]?._def : zodSchema.shape[key]?._def;
+	if (!parentKey) {
+		return zodSchema.shape[key]?._def;
+	}
+	const nestedShapeFactory = zodSchema.shape[parentKey]?._def.shape as (() => Record<string, { _def?: unknown }>) | undefined;
+	const nestedShape = nestedShapeFactory ? nestedShapeFactory() : undefined;
+	return nestedShape?.[String(key)]?._def;
 };
 
 // get Zod Type by Form Schema key
@@ -144,7 +149,11 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 
 	// get options from Zod Object
 	const getOptions = (nestedKey?: string): string[] => {
-		return nestedKey ? zodSchema.shape[nestedKey]?.keyof().options : zodSchema.keyof().options;
+		if (!nestedKey) {
+			return zodSchema.keyof().options;
+		}
+		const nestedSchema = zodSchema.shape[nestedKey] as z.ZodObject<any> | undefined;
+		return nestedSchema ? nestedSchema.keyof().options : [];
 	};
 
 	// TODO: move to recursive function
