@@ -8,6 +8,7 @@ import { CandidateValidationService } from './candidate/candidate-validation.ser
 import { CandidateWriteService } from './candidate/candidate-write.service';
 import { ContactRelationsService } from './contact/contact-relations.service';
 import { ContributionReadService } from './contribution/contribution-read.service';
+import { ContributionValidationService } from './contribution/contribution-validation.service';
 import { ContributionWriteService } from './contribution/contribution-write.service';
 import { ContributorReadService } from './contributor/contributor-read.service';
 import { ContributorValidationService } from './contributor/contributor-validation.service';
@@ -97,7 +98,8 @@ const recipientWrite = new RecipientWriteService(
 const payoutWrite = new PayoutWriteService(prisma, programAccessRead);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
 const contributionRead = new ContributionReadService(prisma, organizationAccess);
-const contributionWrite = new ContributionWriteService(prisma, organizationAccess);
+const contributionValidation = new ContributionValidationService(prisma);
+const contributionWrite = new ContributionWriteService(prisma, organizationAccess, contributionValidation);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
 const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
 const localPartnerValidation = new LocalPartnerValidationService(prisma);

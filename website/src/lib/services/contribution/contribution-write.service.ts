@@ -1,28 +1,35 @@
-import { Contribution, ContributionStatus, PaymentEvent, PrismaClient } from '@/generated/prisma/client';
+import { Contribution, ContributionStatus, PaymentEvent, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ContributionFormCreateInput, ContributionFormUpdateInput } from './contribution-form-input';
 import {
-	ContributionCreateInput,
 	ContributionPayload,
-	ContributionUpdateInput,
 	PaymentEventCreateData,
 	PaymentEventCreateInput,
 	StripeContributionCreateData,
 } from './contribution.types';
+import { ContributionValidationService } from './contribution-validation.service';
 
 export class ContributionWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly contributionValidationService: ContributionValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
 	}
 
-	async update(userId: string, contribution: ContributionUpdateInput): Promise<ServiceResult<ContributionPayload>> {
+	async update(userId: string, input: ContributionFormUpdateInput): Promise<ServiceResult<ContributionPayload>> {
+		const validatedInputResult = this.contributionValidationService.validateUpdateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
 		try {
 			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
 
@@ -35,9 +42,10 @@ export class ContributionWriteService extends BaseService {
 			}
 
 			const existing = await this.db.contribution.findUnique({
-				where: { id: contribution.id?.toString() },
+				where: { id: validatedInput.id },
 				select: {
-					campaign: { select: { organizationId: true } },
+					campaign: { select: { id: true, organizationId: true } },
+					contributor: { select: { id: true } },
 				},
 			});
 
@@ -45,9 +53,39 @@ export class ContributionWriteService extends BaseService {
 				return this.resultFail('Permission denied');
 			}
 
+			const referencesResult = await this.contributionValidationService.validateReferencesExist({
+				contributorId: validatedInput.contributorId,
+				campaignId: validatedInput.campaignId,
+			});
+			if (!referencesResult.success) {
+				return this.resultFail(referencesResult.error);
+			}
+
+			const campaign = await this.db.campaign.findUnique({
+				where: { id: validatedInput.campaignId },
+				select: { organizationId: true },
+			});
+			if (!campaign || campaign.organizationId !== accessResult.data.id) {
+				return this.resultFail('Permission denied');
+			}
+
+			const updateData: Prisma.ContributionUpdateInput = {
+				amount: validatedInput.amount,
+				currency: validatedInput.currency,
+				amountChf: validatedInput.amountChf,
+				feesChf: validatedInput.feesChf,
+				status: validatedInput.status,
+			};
+			if (validatedInput.contributorId !== existing.contributor.id) {
+				updateData.contributor = { connect: { id: validatedInput.contributorId } };
+			}
+			if (validatedInput.campaignId !== existing.campaign.id) {
+				updateData.campaign = { connect: { id: validatedInput.campaignId } };
+			}
+
 			const updatedContribution = await this.db.contribution.update({
-				where: { id: contribution.id?.toString() },
-				data: contribution,
+				where: { id: validatedInput.id },
+				data: updateData,
 				select: {
 					id: true,
 					amount: true,
@@ -68,11 +106,17 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not update contribution: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not update contribution. Please try again later.');
 		}
 	}
 
-	async create(userId: string, contribution: ContributionCreateInput): Promise<ServiceResult<ContributionPayload>> {
+	async create(userId: string, input: ContributionFormCreateInput): Promise<ServiceResult<ContributionPayload>> {
+		const validatedInputResult = this.contributionValidationService.validateCreateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
 		try {
 			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
 
@@ -84,8 +128,34 @@ export class ContributionWriteService extends BaseService {
 				return this.resultFail('No permissions to create contribution');
 			}
 
+			const referencesResult = await this.contributionValidationService.validateReferencesExist({
+				contributorId: validatedInput.contributorId,
+				campaignId: validatedInput.campaignId,
+			});
+			if (!referencesResult.success) {
+				return this.resultFail(referencesResult.error);
+			}
+
+			const campaign = await this.db.campaign.findUnique({
+				where: { id: validatedInput.campaignId },
+				select: { organizationId: true },
+			});
+			if (!campaign || campaign.organizationId !== accessResult.data.id) {
+				return this.resultFail('Permission denied');
+			}
+
+			const createData: Prisma.ContributionCreateInput = {
+				amount: validatedInput.amount,
+				currency: validatedInput.currency,
+				amountChf: validatedInput.amountChf,
+				feesChf: validatedInput.feesChf,
+				status: validatedInput.status,
+				contributor: { connect: { id: validatedInput.contributorId } },
+				campaign: { connect: { id: validatedInput.campaignId } },
+			};
+
 			const created = await this.db.contribution.create({
-				data: contribution,
+				data: createData,
 				select: {
 					id: true,
 					amount: true,
@@ -106,7 +176,7 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create contribution: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not create contribution. Please try again later.');
 		}
 	}
 
