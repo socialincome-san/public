@@ -18,6 +18,7 @@ import { ExchangeRateImportService } from './exchange-rate/exchange-rate-import.
 import { ExchangeRateReadService } from './exchange-rate/exchange-rate-read.service';
 import { ExchangeRateWriteService } from './exchange-rate/exchange-rate-write.service';
 import { ExpenseReadService } from './expense/expense-read.service';
+import { ExpenseValidationService } from './expense/expense-validation.service';
 import { ExpenseWriteService } from './expense/expense-write.service';
 import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
@@ -92,7 +93,8 @@ const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, use
 const countryRead = new CountryReadService(prisma, userRead);
 const countryWrite = new CountryWriteService(prisma, userRead);
 const expenseRead = new ExpenseReadService(prisma, userRead);
-const expenseWrite = new ExpenseWriteService(prisma, userRead);
+const expenseValidation = new ExpenseValidationService(prisma);
+const expenseWrite = new ExpenseWriteService(prisma, userRead, expenseValidation);
 const contributorRead = new ContributorReadService(prisma, organizationAccess);
 const contributorWrite = new ContributorWriteService(prisma, organizationAccess, firebaseAdmin, sendgrid);
 const campaignWrite = new CampaignWriteService(prisma, organizationAccess);

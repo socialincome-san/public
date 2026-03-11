@@ -1,13 +1,13 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import type { ExpenseCreateInput, ExpenseUpdateInput } from '@/lib/services/expense/expense.types';
+import type { ExpenseFormCreateInput, ExpenseFormUpdateInput } from '@/lib/services/expense/expense-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/expenses';
 
-export const createExpenseAction = async (input: ExpenseCreateInput) => {
+export const createExpenseAction = async (input: ExpenseFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -17,7 +17,7 @@ export const createExpenseAction = async (input: ExpenseCreateInput) => {
 	return res;
 };
 
-export const updateExpenseAction = async (input: ExpenseUpdateInput) => {
+export const updateExpenseAction = async (input: ExpenseFormUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

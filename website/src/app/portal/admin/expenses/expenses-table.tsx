@@ -37,7 +37,13 @@ export default function ExpensesTable({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving expense: ${error}`);
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: typeof error === 'string'
+					? error
+					: 'An unexpected error occurred while saving.';
+		setErrorMessage(`Error saving expense: ${errorMessage}`);
 		logger.error('Expense Form Error', { error });
 	};
 
