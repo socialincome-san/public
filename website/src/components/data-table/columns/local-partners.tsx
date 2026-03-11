@@ -20,8 +20,19 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
+			accessorKey: 'email',
+			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			accessorKey: 'contactNumber',
 			header: (ctx) => <SortableHeader ctx={ctx}>Contact Number</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'causes',
+			header: (ctx) => <SortableHeader ctx={ctx}>Causes</SortableHeader>,
+			enableSorting: false,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -38,6 +49,7 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 			id: 'actions',
 			header: '',
 			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];

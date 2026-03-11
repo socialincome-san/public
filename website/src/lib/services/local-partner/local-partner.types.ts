@@ -4,7 +4,9 @@ export type LocalPartnerTableViewRow = {
 	id: string;
 	name: string;
 	contactPerson: string;
+	email: string | null;
 	contactNumber: string | null;
+	causes: string;
 	recipientsCount: number;
 	createdAt: Date;
 };

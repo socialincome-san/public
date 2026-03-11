@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@/generated/prisma/client';
+import { Cause, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -29,6 +29,7 @@ export class LocalPartnerReadService extends BaseService {
 			'id',
 			'name',
 			'contactPerson',
+			'email',
 			'contactNumber',
 			'recipientsCount',
 			'createdAt',
@@ -40,6 +41,8 @@ export class LocalPartnerReadService extends BaseService {
 				return [{ name: direction }];
 			case 'contactPerson':
 				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
+			case 'email':
+				return [{ contact: { email: direction } }];
 			case 'contactNumber':
 				return [{ contact: { phone: { number: direction } } }];
 			case 'recipientsCount':
@@ -123,6 +126,7 @@ export class LocalPartnerReadService extends BaseService {
 			}
 
 			const search = query.search.trim();
+			const matchingCauses = Object.values(Cause).filter((cause) => cause.toLowerCase().includes(search.toLowerCase()));
 			const where = search
 				? {
 						OR: [
@@ -130,7 +134,9 @@ export class LocalPartnerReadService extends BaseService {
 							{ name: { contains: search, mode: 'insensitive' as const } },
 							{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
+							{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { phone: { number: { contains: search, mode: 'insensitive' as const } } } },
+							...(matchingCauses.length > 0 ? [{ causes: { hasSome: matchingCauses } }] : []),
 						],
 					}
 				: undefined;
@@ -146,9 +152,11 @@ export class LocalPartnerReadService extends BaseService {
 							select: {
 								firstName: true,
 								lastName: true,
+								email: true,
 								phone: { select: { number: true } },
 							},
 						},
+						causes: true,
 						_count: { select: { recipients: true } },
 					},
 					orderBy: this.buildLocalPartnerOrderBy(query),
@@ -162,7 +170,9 @@ export class LocalPartnerReadService extends BaseService {
 				id: partner.id,
 				name: partner.name,
 				contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
+				email: partner.contact?.email ?? null,
 				contactNumber: partner.contact?.phone?.number ?? null,
+				causes: partner.causes.map((cause) => cause.replace(/_/g, ' ')).join(', '),
 				recipientsCount: partner._count.recipients,
 				createdAt: partner.createdAt,
 			}));

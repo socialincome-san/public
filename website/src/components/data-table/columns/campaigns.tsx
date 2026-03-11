@@ -55,6 +55,7 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			id: 'actions',
 			header: '',
 			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
