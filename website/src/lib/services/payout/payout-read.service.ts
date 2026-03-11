@@ -600,7 +600,10 @@ export class PayoutReadService extends BaseService {
 					return this.resultFail(access.error);
 				}
 
-				const allowed = access.data.some((p) => p.programId === payout.recipient.program!.id && p.permission != null);
+				const allowed = access.data.some(
+					(p) =>
+						p.programId === payout.recipient.program!.id && p.permission !== null && p.permission !== undefined,
+				);
 
 				if (!allowed) {
 					return this.resultFail('Access denied to this payout');

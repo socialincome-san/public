@@ -110,11 +110,12 @@ export class PaymentFileImportService extends BaseService {
 
 			const contributions: BankContribution[] = [];
 
-			for (let node of nodes) {
+			for (const node of nodes) {
 				const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
+				const rawNode = new xmldom.XMLSerializer().serializeToString(node);
 				if (!referenceId) {
-					this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
+					this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${rawNode}`);
 					continue;
 				}
 
@@ -125,7 +126,7 @@ export class PaymentFileImportService extends BaseService {
 					referenceId,
 					amount: parseFloat(amountStr),
 					currency: (currencyStr || 'CHF').toUpperCase() as Currency,
-					rawContent: node.toString(),
+					rawContent: rawNode,
 				});
 			}
 

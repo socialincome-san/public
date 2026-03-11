@@ -84,7 +84,9 @@ export const CandidatesTableClient = ({
 			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading,
-			onSelect: handleDownloadCsv,
+			onSelect: () => {
+				void handleDownloadCsv();
+			},
 		},
 		...(canManageCandidates
 			? [

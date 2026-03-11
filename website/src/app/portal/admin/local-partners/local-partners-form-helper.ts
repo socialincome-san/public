@@ -50,7 +50,7 @@ const mapContactFields = (contactFields: { [key: string]: FormField }) => ({
 
 const asNullableString = (value: unknown): string | null => {
 	if (typeof value !== 'string') {
-		return value == null ? null : String(value);
+		return value === null || value === undefined ? null : null;
 	}
 	const trimmedValue = value.trim();
 	return trimmedValue === '' ? null : trimmedValue;
@@ -58,7 +58,7 @@ const asNullableString = (value: unknown): string | null => {
 
 const asOptionalString = (value: unknown): string | undefined => {
 	if (typeof value !== 'string') {
-		return value == null ? undefined : String(value);
+		return value === null || value === undefined ? undefined : undefined;
 	}
 	const trimmedValue = value.trim();
 	return trimmedValue === '' ? undefined : trimmedValue;

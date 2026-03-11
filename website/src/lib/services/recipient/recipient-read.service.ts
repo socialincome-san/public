@@ -187,7 +187,7 @@ export class RecipientReadService extends BaseService {
 
 	async getSurveyRecipients(
 		programIds: string[],
-	): Promise<ServiceResult<Array<{ id: string; programId: string | null; startDate: Date | null }>>> {
+	): Promise<ServiceResult<{ id: string; programId: string | null; startDate: Date | null }[]>> {
 		try {
 			const recipients = await this.db.recipient.findMany({
 				where: {

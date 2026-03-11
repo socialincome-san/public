@@ -83,7 +83,9 @@ export const RecipientsTableClient = ({
 			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading,
-			onSelect: handleDownloadCsv,
+			onSelect: () => {
+				void handleDownloadCsv();
+			},
 		},
 		...(canManageRecipients
 			? [

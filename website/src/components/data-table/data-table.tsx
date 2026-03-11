@@ -97,7 +97,10 @@ export default function DataTable<Row>({
 					header: 'ID',
 					accessorFn: (row: Row) => {
 						const value = (row as { id?: unknown }).id;
-						return value == null ? '' : String(value);
+						if (typeof value === 'string' || typeof value === 'number') {
+							return String(value);
+						}
+						return '';
 					},
 				},
 				...baseColumns,

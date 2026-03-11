@@ -53,7 +53,13 @@ const takeFirst = (value: QueryValue): string | undefined => {
 	return String(value);
 };
 
-const stripControlChars = (value: string): string => value.replace(/[\u0000-\u001F\u007F]/g, '');
+const stripControlChars = (value: string): string =>
+	Array.from(value)
+		.filter((char) => {
+			const code = char.charCodeAt(0);
+			return !(code <= 31 || code === 127);
+		})
+		.join('');
 
 const normalizeToken = (value: QueryValue, maxLength: number): string => {
 	const token = takeFirst(value);

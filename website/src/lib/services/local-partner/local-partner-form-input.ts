@@ -18,7 +18,7 @@ const optionalTrimmedString = z.preprocess((value) => {
 }, z.string().optional());
 
 const optionalDate = z.preprocess((value) => {
-	if (value === '' || value == null) {
+	if (value === '' || value === null || value === undefined) {
 		return null;
 	}
 	return value;

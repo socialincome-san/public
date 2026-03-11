@@ -12,6 +12,10 @@ import { DonationCertificateReadService } from './donation-certificate-read.serv
 import { DonationCertificateWriter } from './donation-certificate-writer';
 import { DonationCertificateError } from './types';
 
+const isDonationCertificateError = (value: string): value is DonationCertificateError => {
+	return Object.values(DonationCertificateError).includes(value as DonationCertificateError);
+};
+
 export class DonationCertificateWriteService extends BaseService {
 	private bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
 
@@ -94,7 +98,7 @@ export class DonationCertificateWriteService extends BaseService {
 				},
 			});
 		} catch (e) {
-			this.logger.error(`Error while generating Donation Certificate file: ${e}`);
+			this.logger.error(`Error while generating Donation Certificate file: ${String(e)}`);
 			return this.resultFail(DonationCertificateError.technicalError);
 		}
 		return this.resultOk(undefined);
@@ -106,25 +110,30 @@ export class DonationCertificateWriteService extends BaseService {
 		language?: LanguageCode,
 	): Promise<ServiceResult<string>> {
 		try {
-			let [successCount, creationWithFailures, skippedExists, skippedNoContributions] = [
-				0,
-				[] as string[],
-				[] as string[],
-				[] as string[],
-			];
+			let successCount = 0;
+			const creationWithFailures: string[] = [];
+			const skippedExists: string[] = [];
+			const skippedNoContributions: string[] = [];
 
 			await Promise.all(
 				contributorsIds.map(async (contributorsId) => {
 					const result = await this.createDonationCertificate(year, contributorsId, language);
 					if (!result.success) {
+						if (!isDonationCertificateError(result.error)) {
+							creationWithFailures.push(contributorsId);
+							return;
+						}
 						switch (result.error) {
 							case DonationCertificateError.alreadyExists:
 								skippedExists.push(contributorsId);
+								break;
 							case DonationCertificateError.noContributions:
 								skippedNoContributions.push(contributorsId);
+								break;
 
 							default:
 								creationWithFailures.push(contributorsId);
+								break;
 						}
 					} else {
 						successCount++;

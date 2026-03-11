@@ -560,9 +560,8 @@ export class CandidateWriteService extends BaseService {
 	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {
 		try {
 			let created = 0;
-			let rows;
 			const text = await file.text();
-			rows = parseCsvText(text);
+			const rows = parseCsvText(text);
 			for (let i = 0; i < rows.length; i++) {
 				const row = rows[i];
 				const rowNumber = i + 1;

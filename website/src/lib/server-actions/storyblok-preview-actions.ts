@@ -19,7 +19,7 @@ export const updateStoryblokPreviewAction = ({
 	previewToken,
 	previewTimestamp,
 	previewRoutePath,
-}: UpdateStoryblokPreviewActionParams): Promise<ServiceResult<void>> => {
+}: UpdateStoryblokPreviewActionParams): ServiceResult<void> => {
 	if (!story || !previewToken || !previewTimestamp || !previewRoutePath) {
 		return resultFail('Missing required preview parameters');
 	}

@@ -69,8 +69,8 @@ export const buildUpdateCountryInput = (
 };
 
 const buildOptionalSourceLink = (rawText: unknown, rawHref: unknown): { text: string; href: string } | null => {
-	const text = `${rawText ?? ''}`.trim();
-	const href = `${rawHref ?? ''}`.trim();
+	const text = typeof rawText === 'string' ? rawText.trim() : '';
+	const href = typeof rawHref === 'string' ? rawHref.trim() : '';
 
 	if (!text || !href) {
 		return null;
