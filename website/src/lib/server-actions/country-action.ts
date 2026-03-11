@@ -1,13 +1,13 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import type { CountryCreateInput, CountryUpdateInput } from '@/lib/services/country/country.types';
+import type { CountryFormCreateInput, CountryFormUpdateInput } from '@/lib/services/country/country-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/countries';
 
-export const createCountryAction = async (input: CountryCreateInput) => {
+export const createCountryAction = async (input: CountryFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -17,7 +17,7 @@ export const createCountryAction = async (input: CountryCreateInput) => {
 	return res;
 };
 
-export const updateCountryAction = async (input: CountryUpdateInput) => {
+export const updateCountryAction = async (input: CountryFormUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

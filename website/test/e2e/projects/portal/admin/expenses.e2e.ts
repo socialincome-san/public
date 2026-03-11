@@ -26,7 +26,7 @@ test('admin expenses with direct URL sorting matches screenshot', async ({ page 
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test.only('add new expense', async ({ page }) => {
+test('add new expense', async ({ page }) => {
 	const unique = Date.now();
 	const year = 2099;
 	const amountChf = Number(`1${String(unique).slice(-5)}`);
@@ -65,7 +65,7 @@ test.only('add new expense', async ({ page }) => {
 	expect(created?.organizationId).toBe(organization.id);
 });
 
-test.only('shows validation error when amount is negative', async ({ page }) => {
+test('shows validation error when amount is negative', async ({ page }) => {
 	const organization = await prisma.organization.findFirst({
 		orderBy: { name: 'asc' },
 		select: { name: true },
@@ -87,7 +87,7 @@ test.only('shows validation error when amount is negative', async ({ page }) => 
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 });
 
-test.only('update expense', async ({ page }) => {
+test('update expense', async ({ page }) => {
 	const organizations = await prisma.organization.findMany({
 		orderBy: { name: 'asc' },
 		select: { id: true, name: true },
@@ -119,8 +119,17 @@ test.only('update expense', async ({ page }) => {
 
 	const openExpenseByYear = async (searchYear: number) => {
 		await page.goto(`/portal/admin/expenses?page=1&pageSize=10&search=${searchYear}`);
-		await expect(page.getByRole('cell', { name: `${searchYear}` }).first()).toBeVisible();
-		await page.getByTestId('data-table').locator('tbody tr').first().click();
+		const row = page
+			.getByTestId('data-table')
+			.getByRole('row')
+			.filter({ has: page.getByRole('cell', { name: `${searchYear}` }) })
+			.first();
+		await expect(row).toBeVisible();
+		await row.click();
+		if (await page.getByTestId('dynamic-form').isVisible()) {
+			return;
+		}
+		await row.click({ force: true });
 		await expect(page.getByTestId('dynamic-form')).toBeVisible();
 	};
 

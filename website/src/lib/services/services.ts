@@ -11,6 +11,7 @@ import { ContributorReadService } from './contributor/contributor-read.service';
 import { ContributorWriteService } from './contributor/contributor-write.service';
 import { ContactRelationsService } from './contact/contact-relations.service';
 import { CountryReadService } from './country/country-read.service';
+import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
@@ -91,7 +92,8 @@ const localPartnerWrite = new LocalPartnerWriteService(
 const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
 const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead);
 const countryRead = new CountryReadService(prisma, userRead);
-const countryWrite = new CountryWriteService(prisma, userRead);
+const countryValidation = new CountryValidationService(prisma);
+const countryWrite = new CountryWriteService(prisma, userRead, countryValidation);
 const expenseRead = new ExpenseReadService(prisma, userRead);
 const expenseValidation = new ExpenseValidationService(prisma);
 const expenseWrite = new ExpenseWriteService(prisma, userRead, expenseValidation);

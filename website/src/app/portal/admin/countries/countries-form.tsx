@@ -9,6 +9,7 @@ import {
 	getCountryAction,
 	updateCountryAction,
 } from '@/lib/server-actions/country-action';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { getMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { CountryPayload, NETWORK_TECH_LABELS } from '@/lib/services/country/country.types';
 import { COUNTRY_OPTIONS, isValidCountryCode } from '@/lib/types/country';
@@ -109,7 +110,7 @@ const initialFormSchema: CountryFormSchema = {
 				defaultPayoutAmount: {
 					placeholder: '100',
 					label: 'Default payout amount',
-					zodSchema: z.coerce.number().positive(),
+					zodSchema: z.coerce.number().positive('Default payout amount must be greater than 0.'),
 				},
 			},
 		},
@@ -205,20 +206,14 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 
 	const onSubmit = (schema: CountryFormSchema) => {
 		startTransition(async () => {
-			try {
-				let result: { success: boolean; error?: string };
-				if (countryId && country) {
-					const data = buildUpdateCountryInput(schema, country);
-					result = await updateCountryAction(data);
-				} else {
-					const data = buildCreateCountryInput(schema);
-					result = await createCountryAction(data);
-				}
-
-				result.success ? onSuccess?.() : onError?.(result.error);
-			} catch (e) {
-				onError?.(e);
-			}
+			const result =
+				countryId && country
+					? await updateCountryAction(buildUpdateCountryInput(schema, country))
+					: await createCountryAction(buildCreateCountryInput(schema));
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
@@ -228,12 +223,11 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 		}
 
 		startTransition(async () => {
-			try {
-				const result = await deleteCountryAction(countryId);
-				result.success ? onSuccess?.() : onError?.(result.error);
-			} catch (e) {
-				onError?.(e);
-			}
+			const result = await deleteCountryAction(countryId);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 

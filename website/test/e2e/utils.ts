@@ -45,6 +45,17 @@ export const assertContactExistsByEmail = async (email: string) => {
 };
 
 export const selectOptionByTestId = async (page: Page, fieldName: string, optionName?: string) => {
+	const sectionName = fieldName.includes('.') ? fieldName.split('.')[0] : null;
+	if (sectionName) {
+		const accordionTrigger = page.getByTestId(`form-accordion-trigger-${sectionName}`);
+		if ((await accordionTrigger.count()) > 0) {
+			const isExpanded = await accordionTrigger.getAttribute('aria-expanded');
+			if (isExpanded !== 'true') {
+				await accordionTrigger.click();
+			}
+		}
+	}
+
 	const trigger = page.getByTestId(`form-item-${fieldName}`).locator('button').first();
 	await page.getByTestId(`form-item-${fieldName}`).waitFor({ state: 'visible' });
 	await trigger.click();

@@ -1,7 +1,8 @@
-import { CountryCreateInput, CountryPayload, CountryUpdateInput } from '@/lib/services/country/country.types';
+import { CountryFormCreateInput, CountryFormUpdateInput } from '@/lib/services/country/country-form-input';
+import { CountryPayload } from '@/lib/services/country/country.types';
 import { CountryFormSchema } from './countries-form';
 
-export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreateInput => {
+export const buildCreateCountryInput = (schema: CountryFormSchema): CountryFormCreateInput => {
 	const countrySettings = schema.fields.countrySettings.fields;
 	const cash = schema.fields.suitabilityOfCash.fields;
 	const mobileMoney = schema.fields.mobileMoney.fields;
@@ -21,24 +22,15 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreat
 		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
 		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
 		sanctions: sanctions.sanctions.value ?? [],
-		microfinanceSourceLink:
-			cash.microfinanceSourceText.value || cash.microfinanceSourceHref.value
-				? {
-						text: cash.microfinanceSourceText.value ?? '',
-						href: cash.microfinanceSourceHref.value ?? '',
-					}
-				: null,
-		networkSourceLink:
-			mobileNetwork.networkSourceText.value || mobileNetwork.networkSourceHref.value
-				? {
-						text: mobileNetwork.networkSourceText.value ?? '',
-						href: mobileNetwork.networkSourceHref.value ?? '',
-					}
-				: null,
+		microfinanceSourceLink: buildOptionalSourceLink(cash.microfinanceSourceText.value, cash.microfinanceSourceHref.value),
+		networkSourceLink: buildOptionalSourceLink(
+			mobileNetwork.networkSourceText.value,
+			mobileNetwork.networkSourceHref.value,
+		),
 	};
 };
 
-export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryUpdateInput => {
+export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryFormUpdateInput => {
 	const countrySettings = schema.fields.countrySettings.fields;
 	const cash = schema.fields.suitabilityOfCash.fields;
 	const mobileMoney = schema.fields.mobileMoney.fields;
@@ -59,19 +51,24 @@ export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: Cou
 		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
 		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
 		sanctions: sanctions.sanctions.value ?? [],
-		microfinanceSourceLink:
-			cash.microfinanceSourceText.value || cash.microfinanceSourceHref.value
-				? {
-						text: cash.microfinanceSourceText.value ?? '',
-						href: cash.microfinanceSourceHref.value ?? '',
-					}
-				: null,
-		networkSourceLink:
-			mobileNetwork.networkSourceText.value || mobileNetwork.networkSourceHref.value
-				? {
-						text: mobileNetwork.networkSourceText.value ?? '',
-						href: mobileNetwork.networkSourceHref.value ?? '',
-					}
-				: null,
+		microfinanceSourceLink: buildOptionalSourceLink(cash.microfinanceSourceText.value, cash.microfinanceSourceHref.value),
+		networkSourceLink: buildOptionalSourceLink(
+			mobileNetwork.networkSourceText.value,
+			mobileNetwork.networkSourceHref.value,
+		),
 	};
+};
+
+const buildOptionalSourceLink = (
+	rawText: unknown,
+	rawHref: unknown,
+): { text: string; href: string } | null => {
+	const text = `${rawText ?? ''}`.trim();
+	const href = `${rawHref ?? ''}`.trim();
+
+	if (!text || !href) {
+		return null;
+	}
+
+	return { text, href };
 };
