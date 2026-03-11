@@ -1,9 +1,6 @@
 import { mapContactFormFields, normalizeNullableString } from '@/components/dynamic-form/contact-form-input-mapper';
 import { FormField } from '@/components/dynamic-form/dynamic-form';
-import {
-	ContributorFormCreateInput,
-	ContributorFormUpdateInput,
-} from '@/lib/services/contributor/contributor-form-input';
+import { ContributorFormCreateInput, ContributorFormUpdateInput } from '@/lib/services/contributor/contributor-form-input';
 import { ContributorPayload } from '@/lib/services/contributor/contributor.types';
 import { ContributorFormSchema } from './contributors-form';
 

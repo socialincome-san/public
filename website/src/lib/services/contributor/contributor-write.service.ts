@@ -169,15 +169,13 @@ export class ContributorWriteService extends BaseService {
 			const previousPhoneId = existing.contact.phone?.id;
 			const previousPhoneNumber = existing.contact.phone?.number ?? null;
 			const didRemovePhone = !validatedInput.contact.phone;
-			const didChangePhoneNumber =
-				!!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
+			const didChangePhoneNumber = !!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
 			if ((didRemovePhone || didChangePhoneNumber) && previousPhoneId) {
 				await this.contactRelationsService.deletePhoneIfUnused(previousPhoneId);
 			}
 
 			const previousAddressId = existing.contact.address?.id;
-			const didRemoveAddress =
-				!!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
+			const didRemoveAddress = !!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
 			if (didRemoveAddress && previousAddressId) {
 				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
 			}

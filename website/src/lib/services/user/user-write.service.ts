@@ -209,14 +209,11 @@ export class UserWriteService extends BaseService {
 			});
 
 			if (shouldSyncFirebaseUser) {
-				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
-					existingUser.account.firebaseAuthUserId,
-					{
-						email: validatedInput.email,
-						displayName: newDisplayName,
-						emailVerified: true,
-					},
-				);
+				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(existingUser.account.firebaseAuthUserId, {
+					email: validatedInput.email,
+					displayName: newDisplayName,
+					emailVerified: true,
+				});
 
 				if (!firebaseUpdateResult.success) {
 					this.logger.warn('Could not fully sync Firebase Auth user on user update', {

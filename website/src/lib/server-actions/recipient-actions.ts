@@ -10,10 +10,7 @@ const PORTAL_RECIPIENTS_PATH = '/portal/management/recipients';
 const PORTAL_PROGRAM_RECIPIENTS_PATH = '/portal/programs/[programId]/recipients';
 const PARTNER_RECIPIENTS_PATH = '/partner-space/recipients';
 
-export const createRecipientAction = async (
-	recipient: RecipientFormCreateInput,
-	sessionType: Session['type'] = 'user',
-) => {
+export const createRecipientAction = async (recipient: RecipientFormCreateInput, sessionType: Session['type'] = 'user') => {
 	const sessionResult = await getSessionByType(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;

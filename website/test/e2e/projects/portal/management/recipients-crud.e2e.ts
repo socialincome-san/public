@@ -129,9 +129,7 @@ test('add recipient with payment phone keeps Firebase user in sync', async ({ pa
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
 	await page.goto('http://localhost:4000/auth');
-	await page
-		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
-		.fill(unusedPhones.first);
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.first);
 	await expect(page.getByRole('cell', { name: unusedPhones.first })).toBeVisible();
 });
 
@@ -371,9 +369,7 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 	}
 
 	await page.goto('http://localhost:4000/auth');
-	await page
-		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
-		.fill(unusedPhones.first);
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.first);
 	await expect(page.getByRole('cell', { name: unusedPhones.first })).toBeVisible();
 
 	await page.goto(
@@ -394,13 +390,9 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 	}
 
 	await page.goto('http://localhost:4000/auth');
-	await page
-		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
-		.fill(unusedPhones.second);
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.second);
 	await expect(page.getByRole('cell', { name: unusedPhones.second })).toBeVisible();
-	await page
-		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
-		.fill(unusedPhones.first);
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.first);
 	await expect(page.getByRole('cell', { name: unusedPhones.first })).toHaveCount(0);
 });
 
@@ -431,9 +423,7 @@ test('Delete recipient', async ({ page }) => {
 test('CSV Upload', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
-	await page
-		.getByTestId('csv-dropzone-input')
-		.setInputFiles('./test/e2e/projects/portal/management/upload-example.csv');
+	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-example.csv');
 	await page.getByTestId('import-button').click();
 	await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
 

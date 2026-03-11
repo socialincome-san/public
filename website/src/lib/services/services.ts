@@ -81,13 +81,7 @@ const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead, userVali
 const candidateRead = new CandidateReadService(prisma, userRead);
 const contactRelations = new ContactRelationsService(prisma);
 const candidateValidation = new CandidateValidationService(prisma);
-const candidateWrite = new CandidateWriteService(
-	prisma,
-	userRead,
-	firebaseAdmin,
-	candidateValidation,
-	contactRelations,
-);
+const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin, candidateValidation, contactRelations);
 const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode);
 const recipientValidation = new RecipientValidationService(prisma);
 const recipientWrite = new RecipientWriteService(

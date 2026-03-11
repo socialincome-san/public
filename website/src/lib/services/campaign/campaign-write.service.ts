@@ -162,9 +162,7 @@ export class CampaignWriteService extends BaseService {
 				creatorEmail: validatedInput.creatorEmail,
 			};
 			if (validatedInput.programId !== existing.programId) {
-				updateData.program = validatedInput.programId
-					? { connect: { id: validatedInput.programId } }
-					: { disconnect: true };
+				updateData.program = validatedInput.programId ? { connect: { id: validatedInput.programId } } : { disconnect: true };
 			}
 
 			const campaignId = typeof campaign.id === 'string' ? campaign.id : undefined;

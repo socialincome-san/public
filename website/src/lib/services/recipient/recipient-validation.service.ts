@@ -42,11 +42,7 @@ export class RecipientValidationService extends BaseService {
 	}
 
 	async validateCreateUniqueness(input: RecipientFormCreateInput): Promise<ServiceResult<void>> {
-		if (
-			input.contact.phone &&
-			input.paymentInformation.phone &&
-			input.contact.phone === input.paymentInformation.phone
-		) {
+		if (input.contact.phone && input.paymentInformation.phone && input.contact.phone === input.paymentInformation.phone) {
 			return this.resultFail('Contact phone and payment phone must be different.');
 		}
 
@@ -97,11 +93,7 @@ export class RecipientValidationService extends BaseService {
 		input: RecipientFormUpdateInput,
 		context: RecipientUpdateUniquenessContext,
 	): Promise<ServiceResult<void>> {
-		if (
-			input.contact.phone &&
-			input.paymentInformation.phone &&
-			input.contact.phone === input.paymentInformation.phone
-		) {
+		if (input.contact.phone && input.paymentInformation.phone && input.contact.phone === input.paymentInformation.phone) {
 			return this.resultFail('Contact phone and payment phone must be different.');
 		}
 

@@ -2,12 +2,7 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
-import {
-	clickDataTableActionItem,
-	getCandidateByName,
-	getFirebaseAdminService,
-	selectOptionByTestId,
-} from '../../../utils';
+import { clickDataTableActionItem, getCandidateByName, getFirebaseAdminService, selectOptionByTestId } from '../../../utils';
 
 const ADD_CANDIDATE = {
 	firstName: 'Clark',
@@ -86,9 +81,7 @@ test('candidate payment phone stays aligned in Firebase after phone changes', as
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
 	await page.goto('http://localhost:4000/auth');
-	await page
-		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
-		.fill(PAYMENT_PHONE_ONE);
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_ONE);
 	await expect(page.getByRole('cell', { name: PAYMENT_PHONE_ONE })).toBeVisible();
 
 	await openCandidateByName(page, candidate!.contact.firstName, candidate!.contact.lastName);
@@ -98,13 +91,9 @@ test('candidate payment phone stays aligned in Firebase after phone changes', as
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
 	await page.goto('http://localhost:4000/auth');
-	await page
-		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
-		.fill(PAYMENT_PHONE_TWO);
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_TWO);
 	await expect(page.getByRole('cell', { name: PAYMENT_PHONE_TWO })).toBeVisible();
-	await page
-		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
-		.fill(PAYMENT_PHONE_ONE);
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_ONE);
 	await expect(page.getByRole('cell', { name: PAYMENT_PHONE_ONE })).toHaveCount(0);
 });
 
