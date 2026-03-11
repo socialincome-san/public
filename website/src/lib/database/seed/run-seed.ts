@@ -79,4 +79,4 @@ export const seedDatabase = async () => {
 		await tx.expense.createMany({ data: expensesData, skipDuplicates: true });
 		await tx.exchangeRate.createMany({ data: exchangeRatesData, skipDuplicates: true });
 	});
-}
+};

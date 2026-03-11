@@ -33,6 +33,7 @@ const countryMiddleware = (request: NextRequest, response: NextResponse) => {
 			maxAge: 60 * 60 * 24 * 7,
 		});
 	} // 1 week
+
 	return response;
 };
 
@@ -50,6 +51,7 @@ const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
 	const currency = bestGuessCurrency(country);
 
 	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 7 }); // 1 week
+
 	return response;
 };
 
@@ -128,5 +130,6 @@ export const proxy = (request: NextRequest) => {
 	response = NextResponse.next();
 	response = countryMiddleware(request, response);
 	response = currencyMiddleware(request, response);
+
 	return response;
 };

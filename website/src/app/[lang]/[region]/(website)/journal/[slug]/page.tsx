@@ -34,6 +34,7 @@ export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 	}
 	const story = articleResponse.data;
 	const url = `https://socialincome.org/${lang}/journal/${story.slug}`;
+
 	return generateMetaDataForArticle(story, url);
 };
 
@@ -208,9 +209,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 					)}
 
 					<div className="mt-4 flex flex-wrap justify-start gap-2">
-						{articleData.tags?.map((tag) =>
-							badgeWithLink(lang, region, tag, 'foreground'),
-						)}
+						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'foreground'))}
 					</div>
 
 					<Link href={`/${lang}/${region}/journal/author/${author.slug}`} className="no-underline">

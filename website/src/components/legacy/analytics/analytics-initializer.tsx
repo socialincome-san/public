@@ -57,5 +57,6 @@ export const AnalyticsInitializer = () => {
 			</>
 		);
 	}
+
 	return null;
 };

@@ -8,7 +8,7 @@ const latestExchangeRatesData: ExchangeRate[] = [
 		rate: new Prisma.Decimal(1.0),
 		timestamp: new Date('2025-01-01T00:00:00Z'),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'exchange-rate-2',
@@ -17,7 +17,7 @@ const latestExchangeRatesData: ExchangeRate[] = [
 		rate: new Prisma.Decimal(0.85),
 		timestamp: new Date('2025-01-01T00:00:00Z'),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'exchange-rate-3',
@@ -26,7 +26,7 @@ const latestExchangeRatesData: ExchangeRate[] = [
 		rate: new Prisma.Decimal(0.95),
 		timestamp: new Date('2025-01-01T00:00:00Z'),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'exchange-rate-4',
@@ -35,7 +35,7 @@ const latestExchangeRatesData: ExchangeRate[] = [
 		rate: new Prisma.Decimal(24.0),
 		timestamp: new Date('2025-01-01T00:00:00Z'),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'exchange-rate-5',
@@ -44,8 +44,8 @@ const latestExchangeRatesData: ExchangeRate[] = [
 		rate: new Prisma.Decimal(203.0),
 		timestamp: new Date('2025-01-01T00:00:00Z'),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];
 
 export const exchangeRatesData: ExchangeRate[] = [...latestExchangeRatesData];

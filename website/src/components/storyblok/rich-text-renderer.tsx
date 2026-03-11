@@ -36,6 +36,7 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 					5: 'text-lg font-medium',
 					6: 'text-base font-medium',
 				};
+
 				return <Tag className={cn(styles[level], 'my-4')}>{children}</Tag>;
 			},
 			[NODE_LI]: (children) => <li className="m-0.5 p-0.5 *:m-0 *:p-0 [&::marker]:text-black">{children}</li>,

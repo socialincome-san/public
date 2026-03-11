@@ -15,6 +15,7 @@ const matchesSearch = (row: ProgramCountryFeasibilityRow, search: string) => {
 
 	const q = search.toLowerCase();
 	const countryName = getCountryNameByCode(row.country.isoCode)?.toLowerCase() ?? '';
+
 	return row.country.isoCode.toLowerCase().includes(q) || countryName.includes(q);
 };
 

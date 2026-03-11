@@ -15,6 +15,7 @@ export const makeYourCertificatesColumns = (
 ): ColumnDef<YourDonationCertificateTableViewRow>[] => {
 	void _hideProgramName;
 	void _hideLocalPartner;
+
 	return [
 		{
 			accessorKey: 'createdAt',

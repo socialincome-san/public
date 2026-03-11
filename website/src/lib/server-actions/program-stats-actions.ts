@@ -9,5 +9,6 @@ export const calculateProgramBudgetAction = async (input: ProgramBudgetCalculati
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.programStats.calculateProgramBudget(input);
 };

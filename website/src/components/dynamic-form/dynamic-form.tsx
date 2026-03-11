@@ -55,11 +55,7 @@ const isFormField = (obj: unknown): obj is FormField => {
 };
 
 // get first level or nested def object from Zod Schema
-const getDef = (
-	key: string,
-	zodSchema: z.ZodObject<any>,
-	parentKey?: string,
-) => {
+const getDef = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string) => {
 	const zodShape = zodSchema.shape as Record<string, { _def?: unknown }>;
 	if (!parentKey) {
 		return zodShape[String(key)]?._def;
@@ -68,6 +64,7 @@ const getDef = (
 		| (() => Record<string, { _def?: unknown }>)
 		| undefined;
 	const nestedShape = nestedShapeFactory ? nestedShapeFactory() : undefined;
+
 	return nestedShape?.[String(key)]?._def;
 };
 
@@ -76,15 +73,12 @@ const getTypeName = (def: unknown): string | undefined => {
 		return undefined;
 	}
 	const maybeTypeName = (def as { typeName?: unknown }).typeName;
+
 	return typeof maybeTypeName === 'string' ? maybeTypeName : undefined;
 };
 
 // get Zod Type by Form Schema key
-const getType = (
-	key: string,
-	zodSchema: z.ZodObject<any>,
-	parentKey?: string,
-): string => {
+const getType = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
 	const def = getDef(key, zodSchema, parentKey);
 	let type = getTypeName(def) ?? 'ZodUnknown';
 	if (isOptional(key, zodSchema, parentKey)) {
@@ -94,30 +88,31 @@ const getType = (
 		}
 	}
 	if (type === 'ZodEffects') {
-		return getTypeName((def as { innerType?: { _def?: { schema?: { _def?: unknown } } } }).innerType?._def?.schema?._def) ?? type;
+		return (
+			getTypeName((def as { innerType?: { _def?: { schema?: { _def?: unknown } } } }).innerType?._def?.schema?._def) ?? type
+		);
 	}
 	if (type === 'ZodUnion') {
 		const unionOptionType = getTypeName(
 			(def as { innerType?: { _def?: { options?: { _def?: unknown }[] } } }).innerType?._def?.options?.[0]?._def,
 		);
+
 		return unionOptionType ?? type;
 	}
 	if (type === 'ZodNativeEnum') {
 		return 'ZodEnum';
 	}
+
 	return type;
 };
 
-const isOptional = (
-	key: string,
-	zodSchema: z.ZodObject<any>,
-	parentOption?: string,
-) => {
+const isOptional = (key: string, zodSchema: z.ZodObject<any>, parentOption?: string) => {
 	const def = getDef(key, zodSchema, parentOption);
 	const type = (def as { typeName?: string })?.typeName;
 	if (typeof type !== 'string') {
 		return false;
 	}
+
 	return ['ZodOptional', 'ZodNullable'].includes(type);
 };
 
@@ -126,14 +121,11 @@ const unwrapOptional = (def: unknown) => {
 	if (type === 'ZodOptional' || type === 'ZodNullable') {
 		return (def as { innerType?: { _def?: unknown } }).innerType?._def;
 	}
+
 	return def;
 };
 
-const getEnumArrayValues = (
-	key: string,
-	zodSchema: z.ZodObject<any>,
-	parentOption?: string,
-): Record<string, string> => {
+const getEnumArrayValues = (key: string, zodSchema: z.ZodObject<any>, parentOption?: string): Record<string, string> => {
 	let def: unknown = getDef(key, zodSchema, parentOption);
 	def = unwrapOptional(def);
 
@@ -184,6 +176,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 			return zodSchema.keyof().options;
 		}
 		const nestedSchema = (zodSchema.shape as Record<string, z.ZodObject<Record<string, z.ZodTypeAny>>>)[nestedKey];
+
 		return nestedSchema ? nestedSchema.keyof().options : [];
 	};
 
@@ -199,14 +192,14 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 			if (isFormField(fields)) {
 				fields.value = v[key];
 			} else {
-					const nestedValues = v[key];
+				const nestedValues = v[key];
 				for (const k in fields.fields) {
 					const nestedField = fields.fields[k];
 					if (isFormField(nestedField)) {
-							nestedField.value =
-								typeof nestedValues === 'object' && nestedValues !== null
-									? (nestedValues as Record<string, unknown>)[k]
-									: undefined;
+						nestedField.value =
+							typeof nestedValues === 'object' && nestedValues !== null
+								? (nestedValues as Record<string, unknown>)[k]
+								: undefined;
 					}
 				}
 			}
@@ -225,11 +218,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 
 	return (
 		<Form {...form}>
-			<form
-				data-testid="dynamic-form"
-				onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)}
-				className="space-y-8"
-			>
+			<form data-testid="dynamic-form" onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)} className="space-y-8">
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						<Accordion
@@ -319,6 +308,7 @@ const GenericFormField = ({
 		if (isOptional(key, zodSchema, parentOption)) {
 			return (def as { innerType?: { _def?: { values?: Record<string, string> } } }).innerType?._def?.values ?? {};
 		}
+
 		return getType(key, zodSchema, parentOption) === 'ZodEnum'
 			? ((def as { values?: Record<string, string> }).values ?? {})
 			: {};

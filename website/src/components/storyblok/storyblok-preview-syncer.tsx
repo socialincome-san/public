@@ -47,6 +47,7 @@ export const StoryblokPreviewSyncer = ({ previewToken, previewTimestamp, preview
 				onInput: handleInput,
 			});
 		})();
+
 		return () => {
 			isMounted = false;
 			if (debounceTimerRef.current) {

@@ -23,6 +23,7 @@ const getTotalArticlesInDefault = async (lang: string, tagId: string, totalArtic
 	}
 
 	const res = await services.storyblok.getArticleCountByTagForDefaultLang(tagId);
+
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
 };
 

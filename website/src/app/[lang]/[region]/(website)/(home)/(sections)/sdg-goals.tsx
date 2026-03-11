@@ -18,12 +18,7 @@ export const SDGGoals = async ({ lang }: DefaultParams) => {
 			className="flex flex-col bg-cover bg-center pt-20 pb-64 md:pb-80"
 			style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.0)), url(${townSrc})` }}
 		>
-			<Typography
-				color="primary-foreground"
-				className="mx-auto mt-8 w-3/4 text-center md:mt-16"
-				size="4xl"
-				weight="medium"
-			>
+			<Typography color="primary-foreground" className="mx-auto mt-8 w-3/4 text-center md:mt-16" size="4xl" weight="medium">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-10.title-1').map((title, index) => (
 					<Typography as="span" key={index} color={title.color}>
 						{title.text}{' '}

@@ -24,6 +24,7 @@ const RECIPIENT_STATUS_UI: Record<
 
 export const ContributionStatusBadge = ({ status }: ContributionStatusBadgeProps) => {
 	const { variant, label, Icon } = RECIPIENT_STATUS_UI[status];
+
 	return (
 		<Badge variant={variant}>
 			<Icon className="mr-1 h-4 w-4" />

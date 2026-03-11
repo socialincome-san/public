@@ -8,6 +8,7 @@ type Props = {
 
 export const LoginStep = ({ onSuccess }: Props) => {
 	void onSuccess;
+
 	return (
 		<div className="flex flex-col items-center justify-center py-10">
 			<Typography weight="bold" size="xl">

@@ -55,9 +55,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 					className="relative -ml-2 flex h-9 w-9 items-center justify-center [&_svg]:size-5"
 				>
 					<span
-						className={`absolute transition-all duration-300 ${
-							isMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
-						}`}
+						className={`absolute transition-all duration-300 ${isMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'}`}
 					>
 						<Menu />
 					</span>

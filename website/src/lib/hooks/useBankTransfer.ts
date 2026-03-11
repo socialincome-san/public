@@ -28,6 +28,7 @@ export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, t
 	const generateQRCode = (email: string, firstName: string, lastName: string, language: string) => {
 		if (!currency) {
 			toast.error(translations.errors.qrBillError);
+
 			return;
 		}
 
@@ -35,6 +36,7 @@ export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, t
 			const result = await getReferenceIds(email);
 			if (!result.success) {
 				toast.error(translations.errors.qrBillError);
+
 				return;
 			}
 
@@ -64,6 +66,7 @@ export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, t
 	const confirmPayment = () => {
 		if (!userData || !contributionReference) {
 			toast.error(translations.errors.paymentFailed);
+
 			return;
 		}
 
@@ -79,6 +82,7 @@ export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, t
 
 			if (!pendingContribution.success) {
 				toast.error(translations.errors.paymentFailed);
+
 				return;
 			}
 

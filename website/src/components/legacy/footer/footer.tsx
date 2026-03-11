@@ -57,24 +57,15 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						<Typography size="sm" weight="medium" color="muted-foreground">
 							{translator.t('navigation.our-work')}
 						</Typography>
-						<FooterLink
-							label={translator.t('navigation.how-it-works')}
-							url={`/${lang}/${region}/our-work#how-it-works`}
-						/>
-						<FooterLink
-							label={translator.t('navigation.contributors')}
-							url={`/${lang}/${region}/our-work#contributors`}
-						/>
+						<FooterLink label={translator.t('navigation.how-it-works')} url={`/${lang}/${region}/our-work#how-it-works`} />
+						<FooterLink label={translator.t('navigation.contributors')} url={`/${lang}/${region}/our-work#contributors`} />
 						<FooterLink label={translator.t('navigation.recipients')} url={`/${lang}/${region}/our-work#recipients`} />
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography size="sm" weight="medium" color="muted-foreground">
 							{translator.t('navigation.about-us')}
 						</Typography>
-						<FooterLink
-							label={translator.t('navigation.our-mission')}
-							url={`/${lang}/${region}/about-us#our-mission`}
-						/>
+						<FooterLink label={translator.t('navigation.our-mission')} url={`/${lang}/${region}/about-us#our-mission`} />
 						<FooterLink label={translator.t('navigation.team')} url={`/${lang}/${region}/about-us#team`} />
 					</div>
 				</div>

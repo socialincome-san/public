@@ -12,6 +12,7 @@ export const createCampaignsAction = async (campaigns: CampaignsCreateInput) => 
 	}
 	const res = await services.write.campaign.create(sessionResult.data.id, campaigns);
 	revalidatePath('/portal/management/campaigns');
+
 	return res;
 };
 
@@ -22,6 +23,7 @@ export const updateCampaignsAction = async (campaigns: CampaignsUpdateInput) => 
 	}
 	const res = await services.write.campaign.update(sessionResult.data.id, campaigns);
 	revalidatePath('/portal/management/campaigns');
+
 	return res;
 };
 
@@ -30,6 +32,7 @@ export const getCampaignsAction = async (campaignsId: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return await services.read.campaign.get(sessionResult.data.id, campaignsId);
 };
 
@@ -38,6 +41,7 @@ export const getProgramsOptions = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.program.getOptions(sessionResult.data.id);
 };
 

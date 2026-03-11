@@ -71,6 +71,7 @@ export const BaseTable = <TData, TValue>({
 			const resolved = functionalUpdate(next, resolvedSorting);
 			if (isServerSorting) {
 				activeServerSorting.onSortingChange(resolved);
+
 				return;
 			}
 			setSorting(resolved);
@@ -103,6 +104,7 @@ export const BaseTable = <TData, TValue>({
 		const nextPageSize = Number(value);
 		if (isServerPagination) {
 			activeServerPagination.onPageSizeChange(nextPageSize);
+
 			return;
 		}
 		table.setPageSize(nextPageSize);
@@ -111,6 +113,7 @@ export const BaseTable = <TData, TValue>({
 	const goToPreviousPage = () => {
 		if (isServerPagination) {
 			activeServerPagination.onPageChange(activeServerPagination.page - 1);
+
 			return;
 		}
 		table.previousPage();
@@ -119,6 +122,7 @@ export const BaseTable = <TData, TValue>({
 	const goToNextPage = () => {
 		if (isServerPagination) {
 			activeServerPagination.onPageChange(activeServerPagination.page + 1);
+
 			return;
 		}
 		table.nextPage();

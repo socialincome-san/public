@@ -75,9 +75,11 @@ export class OrganizationReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organization members table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -154,6 +156,7 @@ export class OrganizationReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organization members: ${JSON.stringify(error)}`);
 		}
 	}
@@ -168,9 +171,11 @@ export class OrganizationReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organizations table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -240,6 +245,7 @@ export class OrganizationReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organizations: ${JSON.stringify(error)}`);
 		}
 	}
@@ -255,9 +261,11 @@ export class OrganizationReadService extends BaseService {
 				select: { id: true, name: true },
 				orderBy: { name: 'asc' },
 			});
+
 			return this.resultOk(organizations);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organizations: ${JSON.stringify(error)}`);
 		}
 	}

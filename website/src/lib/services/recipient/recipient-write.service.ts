@@ -121,6 +121,7 @@ export class RecipientWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create recipient: ${JSON.stringify(error)}`);
 		}
 	}
@@ -213,9 +214,7 @@ export class RecipientWriteService extends BaseService {
 			phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
 			phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
 			phoneChanged =
-				!!previousPaymentPhoneNumber &&
-				!!nextPaymentPhoneNumber &&
-				previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+				!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
 			if (phoneAdded) {
 				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
@@ -353,6 +352,7 @@ export class RecipientWriteService extends BaseService {
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to update recipient: ${JSON.stringify(error)}`);
 		}
 	}
@@ -416,6 +416,7 @@ export class RecipientWriteService extends BaseService {
 			return this.resultOk({ id: recipientId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not delete recipient: ${JSON.stringify(error)}`);
 		}
 	}

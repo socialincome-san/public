@@ -54,6 +54,7 @@ export class CandidateWriteService extends BaseService {
 		if (!isAdmin.data) {
 			return this.resultFail('Permission denied');
 		}
+
 		return this.resultOk(true);
 	}
 
@@ -251,6 +252,7 @@ export class CandidateWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create candidate: ${JSON.stringify(error)}`);
 		}
 	}
@@ -363,6 +365,7 @@ export class CandidateWriteService extends BaseService {
 					return this.resultOk(updatedCandidate);
 				} catch (error) {
 					this.logger.error(error);
+
 					return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
 				}
 			}
@@ -370,9 +373,7 @@ export class CandidateWriteService extends BaseService {
 			phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
 			phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
 			phoneChanged =
-				!!previousPaymentPhoneNumber &&
-				!!nextPaymentPhoneNumber &&
-				previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+				!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
 			try {
 				if (phoneAdded) {
@@ -461,6 +462,7 @@ export class CandidateWriteService extends BaseService {
 			}
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);
 		}
 	}
@@ -517,6 +519,7 @@ export class CandidateWriteService extends BaseService {
 			return this.resultOk({ id: candidateId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not delete candidate: ${JSON.stringify(error)}`);
 		}
 	}
@@ -553,6 +556,7 @@ export class CandidateWriteService extends BaseService {
 			return this.resultOk({ assigned: selectedIds.length });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not assign candidates: ${JSON.stringify(error)}`);
 		}
 	}

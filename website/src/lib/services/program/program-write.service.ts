@@ -100,6 +100,7 @@ export class ProgramWriteService extends BaseService {
 			return this.resultOk({ programId: program.id });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create program: ${JSON.stringify(error)}`);
 		}
 	}

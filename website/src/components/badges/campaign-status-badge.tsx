@@ -23,6 +23,7 @@ const CAMPAIGN_STATUS_UI: Record<
 export const CampaignStatusBadge = ({ status }: CampaignStatusBadgeProps) => {
 	const key = status ? 'active' : 'inactive';
 	const { variant, label, Icon } = CAMPAIGN_STATUS_UI[key];
+
 	return (
 		<Badge variant={variant}>
 			<Icon className="mr-1 h-4 w-4" />

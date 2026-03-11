@@ -8,13 +8,10 @@ import Link from 'next/link';
 const ARTICLE_IMAGE_TARGET_WIDTH = 1920;
 const ARTICLE_IMAGE_TARGET_HEIGHT = 1080;
 
-export const StoryblokArticleCard = (props: {
-	lang: string;
-	region: string;
-	article: ISbStoryData<ResolvedArticle>;
-}) => {
+export const StoryblokArticleCard = (props: { lang: string; region: string; article: ISbStoryData<ResolvedArticle> }) => {
 	const { region, lang, article } = props;
 	const author = article.content.author;
+
 	return (
 		<Link href={`/${props.lang}/${props.region}/journal/${article.slug}`}>
 			<div className="mb-4 overflow-hidden transition-transform duration-200 hover:scale-[101%]">

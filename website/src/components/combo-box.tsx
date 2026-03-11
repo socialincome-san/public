@@ -37,10 +37,7 @@ export const Combobox = ({
 				</Button>
 			</PopoverTrigger>
 
-			<PopoverContent
-				className="bg-popover pointer-events-auto w-[260px] rounded-md border p-0 shadow-md"
-				align="start"
-			>
+			<PopoverContent className="bg-popover pointer-events-auto w-[260px] rounded-md border p-0 shadow-md" align="start">
 				<Command>
 					<CommandInput
 						placeholder="Search..."

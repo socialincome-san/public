@@ -81,9 +81,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 							<p className="text-sm font-medium">
 								{user.firstName} {user.lastName}
 							</p>
-							<p className="text-muted-foreground text-xs">
-								{user.activeOrganization?.name ?? 'No active organization'}
-							</p>
+							<p className="text-muted-foreground text-xs">{user.activeOrganization?.name ?? 'No active organization'}</p>
 						</div>
 						<ChevronsUpDown className="h-4 w-4 opacity-50" />
 					</Button>

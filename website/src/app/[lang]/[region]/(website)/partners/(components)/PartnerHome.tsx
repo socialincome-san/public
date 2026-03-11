@@ -55,6 +55,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 	);
 
 	const showFundRaiser = !!ngoHoverCard.orgFundRaiserText;
+
 	return (
 		<div className="flex items-center justify-center">
 			<div className="sm:w-3/4">

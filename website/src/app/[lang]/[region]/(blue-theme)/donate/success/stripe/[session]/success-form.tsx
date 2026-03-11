@@ -133,6 +133,7 @@ export const SuccessForm = ({
 			if (!result.success) {
 				toast.error(translations.updateUserError);
 				setSubmitting(false);
+
 				return;
 			}
 

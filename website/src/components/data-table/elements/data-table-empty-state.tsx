@@ -28,6 +28,7 @@ export const DataTableEmptyState = ({ emptyMessage, actions = [] }: DataTableEmp
 					onClick={() => {
 						if (singleAction.onSelect) {
 							singleAction.onSelect();
+
 							return;
 						}
 						if (singleAction.href) {

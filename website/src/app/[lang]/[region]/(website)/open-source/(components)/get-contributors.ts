@@ -29,6 +29,7 @@ export const getContributors = async () => {
 		Object.keys(contributors).length === 0
 	) {
 		console.warn('No contributor data available. The API returned an empty object.');
+
 		return [];
 	}
 

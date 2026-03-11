@@ -27,6 +27,7 @@ const SURVEY_STATUS_UI: Record<
 
 export const SurveyStatusBadge = ({ status }: SurveyStatusBadgeProps) => {
 	const { variant, label, Icon } = SURVEY_STATUS_UI[status];
+
 	return (
 		<Badge variant={variant}>
 			<Icon className="mr-1 h-4 w-4" />

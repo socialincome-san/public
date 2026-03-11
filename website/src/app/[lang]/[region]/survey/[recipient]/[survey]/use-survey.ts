@@ -22,12 +22,15 @@ export const useSurvey = () => {
 			const result = await createSessionAction(idToken);
 			if (!result.success) {
 				setHasError(true);
+
 				return false;
 			}
+
 			return result.success;
 		} catch (error) {
 			logger.error(`error during survey login: ${String(error)}`);
 			setHasError(true);
+
 			return false;
 		}
 	};
@@ -69,6 +72,7 @@ export const useSurvey = () => {
 				setHasError(true);
 				void logout();
 				logger.error(`error saving survey, abording: ${String(error)}`);
+
 				return;
 			}
 			logger.error('error saving survey, retrying');

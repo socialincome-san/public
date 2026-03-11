@@ -9,7 +9,7 @@ export const localPartnersData: LocalPartner[] = [
 		contactId: 'contact-13',
 		accountId: 'account-10',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'local-partner-2',
@@ -19,7 +19,7 @@ export const localPartnersData: LocalPartner[] = [
 		contactId: 'contact-14',
 		accountId: 'account-11',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'local-partner-3',
@@ -29,6 +29,6 @@ export const localPartnersData: LocalPartner[] = [
 		contactId: 'contact-15',
 		accountId: 'account-12',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

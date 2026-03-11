@@ -37,6 +37,7 @@ class StorageAdmin {
 
 	uploadFile = async ({ bucket, sourceFilePath, destinationFilePath }: UploadProps) => {
 		const destinationBucket = bucket || this.storage.bucket();
+
 		return await destinationBucket.upload(sourceFilePath, { destination: destinationFilePath });
 	};
 }

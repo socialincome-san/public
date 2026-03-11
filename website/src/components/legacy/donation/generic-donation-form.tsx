@@ -107,6 +107,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 
 		if (!result.success) {
 			console.error(result.error);
+
 			return;
 		}
 

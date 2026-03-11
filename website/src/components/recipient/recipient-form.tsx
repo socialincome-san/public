@@ -154,8 +154,7 @@ export const RecipientForm = ({
 					newSchema.fields.localPartner.value = result.data.localPartner.id;
 				}
 
-				newSchema.fields.paymentInformation.fields.provider.value =
-					result.data.paymentInformation?.mobileMoneyProvider?.id;
+				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.mobileMoneyProvider?.id;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
 				newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
 				newSchema.fields.contact.fields = contactValues;

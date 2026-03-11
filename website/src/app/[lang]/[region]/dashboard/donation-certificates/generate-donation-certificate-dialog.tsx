@@ -50,6 +50,7 @@ export default function GenerateDonationCertificateDialog({
 		if (errorCode === 'alreadyExists') {
 			return translator?.t('donation-certificates.already-exists');
 		}
+
 		return translator?.t('donation-certificates.technical-error');
 	};
 

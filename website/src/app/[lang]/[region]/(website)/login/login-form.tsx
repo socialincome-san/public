@@ -42,6 +42,7 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 		lang: lang as WebsiteLanguage,
 		onLoginSuccess: () => {
 			router.push(`/${lang}/${region}/me`);
+
 			return Promise.resolve();
 		},
 	});

@@ -7,7 +7,7 @@ export const programAccessesData: ProgramAccess[] = [
 		programId: 'program-1',
 		permission: ProgramPermission.operator,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'program-access-2',
@@ -15,7 +15,7 @@ export const programAccessesData: ProgramAccess[] = [
 		programId: 'program-2',
 		permission: ProgramPermission.operator,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'program-access-3',
@@ -23,7 +23,7 @@ export const programAccessesData: ProgramAccess[] = [
 		programId: 'program-4',
 		permission: ProgramPermission.owner,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'program-access-4',
@@ -31,6 +31,6 @@ export const programAccessesData: ProgramAccess[] = [
 		programId: 'program-5',
 		permission: ProgramPermission.owner,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

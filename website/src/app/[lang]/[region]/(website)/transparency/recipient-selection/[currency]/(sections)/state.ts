@@ -32,6 +32,7 @@ export const loadPastDraws = async (): Promise<CompletedDraw[]> => {
 				.map((file) => {
 					const drawContents = readFileSync(`${DRAWS_PATH}/${file}`);
 					const drawFile: DrawFile = JSON.parse(drawContents.toString());
+
 					return {
 						time: drawFile.time,
 						name: extractDrawName(file),
@@ -47,6 +48,7 @@ export const loadPastDraws = async (): Promise<CompletedDraw[]> => {
 		);
 	} catch (e) {
 		console.error(e);
+
 		return [];
 	}
 };
@@ -59,5 +61,6 @@ const extractDrawName = (filename: string): string => {
 	}
 	const unsanitisedName = drawNameMatch[1];
 	const withSpaces = unsanitisedName.replaceAll('-', ' ');
+
 	return withSpaces.slice(0, 1).toUpperCase() + withSpaces.slice(1).toLowerCase();
 };

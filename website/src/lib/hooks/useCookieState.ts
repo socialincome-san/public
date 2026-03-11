@@ -16,7 +16,7 @@ export const useCookieState = <T extends string>(key: string, initialValue?: T, 
 			setValue(val);
 		} else if (initialValue) {
 			Cookies.set(key, initialValue, options);
-			// eslint-disable-next-line react-hooks/set-state-in-effect
+
 			setValue(initialValue);
 		}
 	}, [key, initialValue, options]);

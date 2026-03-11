@@ -35,10 +35,10 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 			setPlaying(false);
 			setBackgroundColor('bg-background!');
 		} else {
-			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setPlaying(true);
 			setBackgroundColor(null);
 		}
+
 		return () => {
 			setBackgroundColor(null);
 		};
@@ -48,6 +48,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		const video = videoElementRef.current;
 		if (!playing || !video) {
 			videoElementRef.current?.pause();
+
 			return;
 		}
 
@@ -60,6 +61,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		};
 		video.addEventListener('canplay', handleCanPlay);
 		void video.play();
+
 		return () => video.removeEventListener('canplay', handleCanPlay);
 	}, [playing]);
 

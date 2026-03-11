@@ -89,10 +89,7 @@ const Calendar = ({
 				range_start: cn('rounded-l-md bg-accent', defaultClassNames.range_start),
 				range_middle: cn('rounded-none', defaultClassNames.range_middle),
 				range_end: cn('rounded-r-md bg-accent', defaultClassNames.range_end),
-				today: cn(
-					'bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none',
-					defaultClassNames.today,
-				),
+				today: cn('bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none', defaultClassNames.today),
 				outside: cn('text-muted-foreground aria-selected:text-muted-foreground', defaultClassNames.outside),
 				disabled: cn('text-muted-foreground opacity-50', defaultClassNames.disabled),
 				hidden: cn('invisible', defaultClassNames.hidden),
@@ -146,9 +143,7 @@ const CalendarDayButton = ({ className, day, modifiers, ...props }: React.Compon
 			variant="ghost"
 			size="icon"
 			data-day={day.date.toLocaleDateString()}
-			data-selected-single={
-				modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle
-			}
+			data-selected-single={modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle}
 			data-range-start={modifiers.range_start}
 			data-range-end={modifiers.range_end}
 			data-range-middle={modifiers.range_middle}

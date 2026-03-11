@@ -17,6 +17,7 @@ export const makeYourStripeSubscriptionsColumns = (
 ): ColumnDef<StripeSubscriptionRow>[] => {
 	void _hideProgramName;
 	void _hideLocalPartner;
+
 	return [
 		{
 			accessorKey: 'created',
@@ -29,6 +30,7 @@ export const makeYourStripeSubscriptionsColumns = (
 			cell: (ctx) => {
 				const translateKey = `subscriptions.status.${ctx.row.original.status}`;
 				const label = translator?.t(translateKey);
+
 				return (
 					<StatusCell ctx={ctx} variant="subscription" label={label === translateKey ? ctx.row.original.status : label} />
 				);
@@ -52,6 +54,7 @@ export const makeYourStripeSubscriptionsColumns = (
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.amount')}</SortableHeader>,
 			cell: (ctx) => {
 				const currency = ctx.row.original.currency;
+
 				return <CurrencyCell ctx={ctx} currency={currency} />;
 			},
 		},

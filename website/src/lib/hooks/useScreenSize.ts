@@ -36,6 +36,7 @@ export const useScreenSize = (): ScreenSize | null => {
 		setCurrentScreenSize(determineScreenSize(window.innerWidth));
 		const handler = () => setCurrentScreenSize(determineScreenSize(window.innerWidth));
 		window.addEventListener('resize', handler);
+
 		return () => window.removeEventListener('resize', handler);
 	}, []);
 

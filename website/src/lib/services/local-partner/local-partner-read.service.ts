@@ -93,6 +93,7 @@ export class LocalPartnerReadService extends BaseService {
 			return this.resultOk(partner);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get local partner: ${JSON.stringify(error)}`);
 		}
 	}
@@ -107,9 +108,11 @@ export class LocalPartnerReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch local partner table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -180,6 +183,7 @@ export class LocalPartnerReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch local partners: ${JSON.stringify(error)}`);
 		}
 	}
@@ -197,6 +201,7 @@ export class LocalPartnerReadService extends BaseService {
 			return this.resultOk(partners);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch local partners: ${JSON.stringify(error)}`);
 		}
 	}
@@ -254,6 +259,7 @@ export class LocalPartnerReadService extends BaseService {
 			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch local partner session: ${JSON.stringify(error)}`);
 		}
 	}

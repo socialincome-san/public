@@ -28,6 +28,7 @@ const getTotalArticlesInDefaultLanguage = async (
 	}
 
 	const res = await services.storyblok.getArticleCountByAuthorForDefaultLang(authorId);
+
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
 };
 

@@ -103,6 +103,7 @@ export class PayoutProcessService extends BaseService {
 						payoutInterval: program.payoutInterval,
 						nowDate,
 					});
+
 					return isEligibleResult.success && isEligibleResult.data;
 				})
 				.map((recipient) => ({
@@ -120,6 +121,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(mapped);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -143,6 +145,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate registration CSV: ${JSON.stringify(error)}`);
 		}
 	}
@@ -182,6 +185,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate payout CSV: ${JSON.stringify(error)}`);
 		}
 	}
@@ -231,6 +235,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(toCreate);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not preview payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -263,6 +268,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(`Created ${dbPayload.length} payouts for ${format(selectedDate, 'yyyy-MM')}.`);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate payouts: ${JSON.stringify(error)}`);
 		}
 	}

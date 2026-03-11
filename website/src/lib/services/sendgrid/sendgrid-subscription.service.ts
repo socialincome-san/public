@@ -27,9 +27,7 @@ export class SendgridSubscriptionService extends Client {
 		super();
 	}
 
-	getActiveSubscription = async (
-		contributor: ContributorSession,
-	): Promise<ServiceResult<SendgridContactType | null>> => {
+	getActiveSubscription = async (contributor: ContributorSession): Promise<ServiceResult<SendgridContactType | null>> => {
 		try {
 			const configResult = this.ensureConfigured();
 			if (!configResult.success) {
@@ -39,6 +37,7 @@ export class SendgridSubscriptionService extends Client {
 				return this.resultFail('Email missing in contributor');
 			}
 			const subscriber = await this.getContact(contributor.email);
+
 			return this.resultOk(subscriber);
 		} catch (error) {
 			return this.resultFail(`Unable to get active subscription: ${JSON.stringify(error)}`);
@@ -52,6 +51,7 @@ export class SendgridSubscriptionService extends Client {
 				return configResult;
 			}
 			await this.upsertSubscription({ ...subscription, status: 'subscribed' });
+
 			return this.resultOk(undefined);
 		} catch (error) {
 			return this.resultFail(`Unable to subscribe to newsletter: ${JSON.stringify(error)}`);
@@ -75,6 +75,7 @@ export class SendgridSubscriptionService extends Client {
 				language: (contributor.language || 'de') as SupportedLanguage,
 				country: contributor.country || 'CH',
 			});
+
 			return this.resultOk(undefined);
 		} catch (error) {
 			return this.resultFail(`Unable to unsubscribe from newsletter: ${JSON.stringify(error)}`);
@@ -95,6 +96,7 @@ export class SendgridSubscriptionService extends Client {
 		this.listId = envResult.data.SENDGRID_LIST_ID;
 		this.suppressionListId = envResult.data.SENDGRID_SUPPRESSION_LIST_ID;
 		this.initialized = true;
+
 		return this.resultOk(undefined);
 	}
 
@@ -117,6 +119,7 @@ export class SendgridSubscriptionService extends Client {
 			SENDGRID_LIST_ID: sendgridListId,
 			SENDGRID_SUPPRESSION_LIST_ID: suppressionListId,
 		};
+
 		return this.resultOk(sendgridClientProps);
 	};
 
@@ -133,11 +136,13 @@ export class SendgridSubscriptionService extends Client {
 				return null;
 			}
 			const isSuppressed = await this.isSuppressed(email);
+
 			return { ...contact, status: isSuppressed ? 'unsubscribed' : 'subscribed' } as SendgridContactType;
 		} catch (e: unknown) {
 			if ((e as { code?: number })?.code !== 404) {
 				console.error('Unable to get contact', e);
 			}
+
 			return null;
 		}
 	};
@@ -159,6 +164,7 @@ export class SendgridSubscriptionService extends Client {
 	private isSuppressed = async (email: string): Promise<boolean> => {
 		const [, body] = await this.request({ url: `/v3/asm/suppressions/${email}`, method: 'GET' });
 		const suppressions = (body as { suppressions?: Suppression[] }).suppressions ?? [];
+
 		return suppressions.some(
 			(suppression: Suppression) => suppression.id === this.suppressionListId && suppression.suppressed,
 		);

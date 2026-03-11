@@ -98,6 +98,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get contributor: ${JSON.stringify(error)}`);
 		}
 	}
@@ -146,6 +147,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor options: ${JSON.stringify(error)}`);
 		}
 	}
@@ -267,6 +269,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, countryFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributors: ${JSON.stringify(error)}`);
 		}
 	}
@@ -304,6 +307,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor IDs for certificates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -335,6 +339,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
 	}
@@ -392,6 +397,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -410,6 +416,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor by Payment Reference ID: ${JSON.stringify(error)}`);
 		}
 	}

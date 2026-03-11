@@ -56,9 +56,9 @@ type NavbarProps = {
 } & DefaultParams;
 
 const MobileNavigation = ({ lang, region, languages, regions, currencies, navigation, translations }: NavbarProps) => {
-	const [visibleSection, setVisibleSection] = useState<
-		'main' | 'our-work' | 'about-us' | 'transparency' | 'i18n' | null
-	>(null);
+	const [visibleSection, setVisibleSection] = useState<'main' | 'our-work' | 'about-us' | 'transparency' | 'i18n' | null>(
+		null,
+	);
 	const { country, language, setLanguage, setRegion, currency, setCurrency } = useI18n();
 	const isIntRegion = region === 'int';
 
@@ -250,10 +250,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 						<SILogo className="mr-auto h-6" />
 					</Link>
 				) : (
-					<ChevronLeftIcon
-						className="text-accent h-6 cursor-pointer stroke-3"
-						onClick={() => setVisibleSection('main')}
-					/>
+					<ChevronLeftIcon className="text-accent h-6 cursor-pointer stroke-3" onClick={() => setVisibleSection('main')} />
 				)}
 				<XMarkIcon className="text-accent h-6 cursor-pointer stroke-3" onClick={() => setVisibleSection(null)} />
 			</div>

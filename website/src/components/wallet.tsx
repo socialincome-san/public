@@ -20,6 +20,7 @@ const formatAmount = (amount?: number): string => {
 	if (amount === null || amount === undefined || isNaN(amount)) {
 		return '';
 	}
+
 	return new Intl.NumberFormat('de-CH', {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
@@ -32,28 +33,29 @@ export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft
 		<Card
 			variant="noPadding"
 			className="flex min-h-full max-w-full cursor-pointer flex-col overflow-hidden transition hover:shadow-xs"
-			style={{
-				'--slant-shift': '50px',
-				'--slant-width': '40px',
-				'--slant-height': '14px',
-				'--slant-position': 'calc(var(--slant-shift) + var(--slant-width))',
-				'--gradient':
-					'linear-gradient(to right, hsl(var(--gradient-card-from)), hsl(var(--gradient-card-to)))',
-				'--shadow-size': '11px',
-				'--stack-height': '28px',
-				'--wallet-front-bg': variant === 'default' ? 'var(--gradient)' : 'hsl(var(--card))',
-				'--wallet-front-box-shadow':
-					variant === 'default'
-						? 'none'
-						: '0 0 0 var(--shadow-size) rgba(255,255,255,0.5), 0 0 0 calc(2* var(--shadow-size)) rgba(255,255,255,0.3)',
-				'--wallet-back-bg': variant === 'default' ? 'var(--gradient)' : 'hsl(var(--secondary))',
-				'--wallet-cards-background': variant === 'default' ? 'hsl(var(--card))' : 'none',
-				'--wallet-cards-box-shadow':
-					variant === 'default'
-						? '0 0 0 var(--shadow-size) rgba(255,255,255,0.5), 0 0 0 calc(2* var(--shadow-size)) rgba(255,255,255,0.3)'
-						: 'none',
-				'--text-color': variant === 'default' ? 'hsl(var(--card))' : 'inherit',
-			} as WalletStyle}
+			style={
+				{
+					'--slant-shift': '50px',
+					'--slant-width': '40px',
+					'--slant-height': '14px',
+					'--slant-position': 'calc(var(--slant-shift) + var(--slant-width))',
+					'--gradient': 'linear-gradient(to right, hsl(var(--gradient-card-from)), hsl(var(--gradient-card-to)))',
+					'--shadow-size': '11px',
+					'--stack-height': '28px',
+					'--wallet-front-bg': variant === 'default' ? 'var(--gradient)' : 'hsl(var(--card))',
+					'--wallet-front-box-shadow':
+						variant === 'default'
+							? 'none'
+							: '0 0 0 var(--shadow-size) rgba(255,255,255,0.5), 0 0 0 calc(2* var(--shadow-size)) rgba(255,255,255,0.3)',
+					'--wallet-back-bg': variant === 'default' ? 'var(--gradient)' : 'hsl(var(--secondary))',
+					'--wallet-cards-background': variant === 'default' ? 'hsl(var(--card))' : 'none',
+					'--wallet-cards-box-shadow':
+						variant === 'default'
+							? '0 0 0 var(--shadow-size) rgba(255,255,255,0.5), 0 0 0 calc(2* var(--shadow-size)) rgba(255,255,255,0.3)'
+							: 'none',
+					'--text-color': variant === 'default' ? 'hsl(var(--card))' : 'inherit',
+				} as WalletStyle
+			}
 		>
 			<div className="-mb-(--slant-height) flex flex-col" style={{ background: 'var(--wallet-back-bg)' }}>
 				<div

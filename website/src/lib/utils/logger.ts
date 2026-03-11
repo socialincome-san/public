@@ -12,6 +12,7 @@ const formatMessage = (msg: unknown): string => {
 	if (msg instanceof Error) {
 		return msg.message;
 	}
+
 	return typeof msg === 'string' ? msg : JSON.stringify(msg);
 };
 

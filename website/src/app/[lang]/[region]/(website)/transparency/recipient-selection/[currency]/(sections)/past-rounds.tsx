@@ -18,13 +18,7 @@ export const PastRounds = async ({ lang }: DefaultParams) => {
 		<BaseContainer className="bg-background mx-auto mt-28 mb-16 flex flex-col items-center justify-center md:mb-28">
 			<div className="mx-auto mb-4 max-w-2xl">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-4.title').map((title, index) => (
-					<Typography
-						key={index}
-						as="span"
-						weight="medium"
-						color={title.color}
-						className="text-3xl sm:text-4xl md:text-4xl"
-					>
+					<Typography key={index} as="span" weight="medium" color={title.color} className="text-3xl sm:text-4xl md:text-4xl">
 						{title.text}
 					</Typography>
 				))}

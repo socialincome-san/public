@@ -84,6 +84,7 @@ type DropdownItem = {
 export const getZodEnum = (items: DropdownItem[]) => {
 	const object = items.reduce<Record<string, string>>((acc, item) => {
 		acc[item.label] = item.id;
+
 		return acc;
 	}, {});
 

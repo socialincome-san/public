@@ -23,6 +23,7 @@ export const createRecipientAction = async (recipient: RecipientCreateInput, ses
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
+
 	return result;
 };
 
@@ -43,6 +44,7 @@ export const updateRecipientAction = async (
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
+
 	return result;
 };
 
@@ -59,6 +61,7 @@ export const deleteRecipientAction = async (recipientId: string, sessionType: Se
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
+
 	return result;
 };
 
@@ -68,6 +71,7 @@ export const getRecipientAction = async (recipientId: string, sessionType: Sessi
 		return sessionResult;
 	}
 	const session = sessionResult.data;
+
 	return await services.read.recipient.get(session, recipientId);
 };
 
@@ -88,6 +92,7 @@ export const getRecipientOptions = async (sessionType: Session['type'] = 'user')
 	if (!localPartner.success) {
 		return resultFail(localPartner.error);
 	}
+
 	return resultOk({ programs: programs.data, localPartner: localPartner.data });
 };
 
@@ -104,6 +109,7 @@ export const importRecipientsCsvAction = async (file: File, sessionType: Session
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
+
 	return result;
 };
 
@@ -113,5 +119,6 @@ export const downloadRecipientsCsvAction = async (sessionType: Session['type'] =
 		return sessionResult;
 	}
 	const session = sessionResult.data;
+
 	return services.read.recipient.exportCsv(session);
 };

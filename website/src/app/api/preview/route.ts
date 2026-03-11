@@ -16,6 +16,7 @@ const getLanguage = (slug: string | null) => {
 			}
 		}
 	}
+
 	return DEFAULT_LANGUAGE;
 };
 
@@ -36,6 +37,7 @@ const removeLanguagePrefix = (slug: string | null, language: string) => {
 	if (lowerSlug === lowerLang || lowerSlug.startsWith(`${lowerLang}/`)) {
 		return slug.replace(new RegExp(`^${language}(/|$)`, 'i'), '');
 	}
+
 	return slug;
 };
 

@@ -4,6 +4,7 @@ import Section2 from './section-2';
 
 export default async function Page(props: DefaultPageProps) {
 	const { lang, region } = await props.params;
+
 	return (
 		<>
 			<Section1 lang={lang} region={region} />

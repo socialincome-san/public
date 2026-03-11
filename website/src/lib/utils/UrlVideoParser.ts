@@ -11,6 +11,7 @@ export class VimeoVideoMatchAndExtract implements VideoMatchAndExtract {
 		if (match?.[4]) {
 			return this.urlCreate(match[4]);
 		}
+
 		return null;
 	}
 }
@@ -25,6 +26,7 @@ export class YouTubeVideoMatchAndExtract implements VideoMatchAndExtract {
 		if (match?.[1]) {
 			return this.urlCreate(match[1]);
 		}
+
 		return null;
 	}
 }

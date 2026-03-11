@@ -10,9 +10,7 @@ type FirstIntervalFundingSectionProps = { programId: string; stats: ProgramDashb
 
 export const FirstIntervalFundingSection = ({ programId, stats }: FirstIntervalFundingSectionProps) => {
 	const percent =
-		stats.costPerIntervalChf > 0
-			? Math.min(100, (stats.contributedToProgramSoFarChf / stats.costPerIntervalChf) * 100)
-			: 0;
+		stats.costPerIntervalChf > 0 ? Math.min(100, (stats.contributedToProgramSoFarChf / stats.costPerIntervalChf) * 100) : 0;
 
 	return (
 		<div className="space-y-4">

@@ -30,20 +30,20 @@ export const useStorageDownloadURL = (storageRef: StorageReference | undefined) 
 		if (storageRef) {
 			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setLoading(true);
-			// eslint-disable-next-line react-hooks/set-state-in-effect
+
 			setError(undefined);
 			getDownloadURL(storageRef)
 				.then(setUrl)
 				.catch(setError)
 				.finally(() => setLoading(false));
 		} else {
-			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setLoading(false);
-			// eslint-disable-next-line react-hooks/set-state-in-effect
+
 			setUrl(undefined);
-			// eslint-disable-next-line react-hooks/set-state-in-effect
+
 			setError(undefined);
 		}
 	}, []);
+
 	return { data: url, loading, error };
 };

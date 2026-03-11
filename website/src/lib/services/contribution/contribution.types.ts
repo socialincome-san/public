@@ -1,10 +1,4 @@
-import {
-	ContributionStatus,
-	Currency,
-	OrganizationPermission,
-	PaymentEventType,
-	Prisma,
-} from '@/generated/prisma/client';
+import { ContributionStatus, Currency, OrganizationPermission, PaymentEventType, Prisma } from '@/generated/prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;

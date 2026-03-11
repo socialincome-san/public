@@ -87,6 +87,7 @@ export class ProgramReadService extends BaseService {
 			return this.resultOk({ wallets });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch programs: ${JSON.stringify(error)}`);
 		}
 	}
@@ -108,6 +109,7 @@ export class ProgramReadService extends BaseService {
 			return this.resultOk(wallet);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch program wallet: ${JSON.stringify(error)}`);
 		}
 	}
@@ -128,6 +130,7 @@ export class ProgramReadService extends BaseService {
 			return this.resultOk(programs);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch program options: ${JSON.stringify(error)}`);
 		}
 	}
@@ -220,6 +223,7 @@ export class ProgramReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not load public program: ${JSON.stringify(error)}`);
 		}
 	}
@@ -231,9 +235,11 @@ export class ProgramReadService extends BaseService {
 			if (!match) {
 				return this.resultFail('Program not found');
 			}
+
 			return this.resultOk(match.id);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not resolve programId by slug: ${JSON.stringify(error)}`);
 		}
 	}
@@ -252,6 +258,7 @@ export class ProgramReadService extends BaseService {
 			return this.resultOk(program.name);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch program name: ${JSON.stringify(error)}`);
 		}
 	}

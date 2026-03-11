@@ -58,6 +58,7 @@ export const getUserAction = async (userId: string) => {
 		return sessionResult;
 	}
 	const session = sessionResult.data;
+
 	return services.read.user.get(session.id, userId);
 };
 
@@ -67,5 +68,6 @@ export const getUserOptionsAction = async () => {
 		return sessionResult;
 	}
 	const session = sessionResult.data;
+
 	return services.read.user.getOptions(session.id);
 };

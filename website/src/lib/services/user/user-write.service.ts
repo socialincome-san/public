@@ -102,6 +102,7 @@ export class UserWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create user. Please try again later.');
 		}
 	}
@@ -142,14 +143,11 @@ export class UserWriteService extends BaseService {
 			const shouldSyncFirebaseUser =
 				validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
 			if (shouldSyncFirebaseUser) {
-				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
-					existingUser.account.firebaseAuthUserId,
-					{
-						email: validatedInput.email,
-						displayName: newDisplayName,
-						emailVerified: true,
-					},
-				);
+				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(existingUser.account.firebaseAuthUserId, {
+					email: validatedInput.email,
+					displayName: newDisplayName,
+					emailVerified: true,
+				});
 
 				if (!firebaseUpdateResult.success) {
 					return this.resultFail(firebaseUpdateResult.error);
@@ -194,6 +192,7 @@ export class UserWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update user. Please try again later.');
 		}
 	}
@@ -271,6 +270,7 @@ export class UserWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
 		}
 	}

@@ -51,6 +51,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 					nextParams.set('continueUrl', continueUrl);
 					interstitialUrl.search = nextParams.toString();
 					window.location.href = interstitialUrl.toString();
+
 					return;
 				}
 			}
@@ -77,6 +78,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			const idToken = await user.getIdToken(true);
 
 			const result = await createSessionAction(idToken);
+
 			return result.success;
 		} catch {
 			return false;
@@ -95,6 +97,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 				if (translator) {
 					toast.error(translator.t('error.unknown'));
 				}
+
 				return;
 			}
 

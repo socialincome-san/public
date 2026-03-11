@@ -39,6 +39,7 @@ const generateStoryblokArticlesSitemap = (
 	const alternativeArticles = Object.fromEntries(
 		articlesAlternativeLanguages.map(({ lang, stories }) => [lang, stories.map((it) => it.slug)]),
 	) as Record<string, string[]>;
+
 	return articles.map((article) => ({
 		url: articleUrl(article.slug, defaultLanguage),
 		alternates: {
@@ -90,6 +91,7 @@ const getArticlesInAlternativeLanguages = async () => {
 	return Promise.all(
 		SUPPORTED_LANGUAGES.map(async (lang) => {
 			const res = await storyblokService.getOverviewArticles(lang);
+
 			return { lang, stories: res.success ? res.data : [] };
 		}),
 	);
@@ -117,6 +119,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		);
 	} catch (error) {
 		console.error('Failed to generate full sitemap', error);
+
 		return STATIC_SITEMAP;
 	}
 }

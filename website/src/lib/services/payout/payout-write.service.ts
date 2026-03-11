@@ -56,6 +56,7 @@ export class PayoutWriteService extends BaseService {
 			return this.resultOk(`Payout updated to "${newStatus}"`);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -116,6 +117,7 @@ export class PayoutWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -177,6 +179,7 @@ export class PayoutWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -199,9 +202,11 @@ export class PayoutWriteService extends BaseService {
 					comments,
 				},
 			});
+
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to update payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}

@@ -26,6 +26,7 @@ export class ExchangeRateWriteService extends BaseService {
 			return await this.importService.import();
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not trigger exchange rate import: ${JSON.stringify(error)}`);
 		}
 	}

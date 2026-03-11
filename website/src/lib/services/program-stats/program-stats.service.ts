@@ -59,6 +59,7 @@ export class ProgramStatsService extends BaseService {
 			return this.resultOk(totalContributionsChf >= costPerIntervalChf);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not check program readiness: ${JSON.stringify(error)}`);
 		}
 	}
@@ -67,9 +68,11 @@ export class ProgramStatsService extends BaseService {
 		try {
 			const rates = await this.getLatestRatesOrUndefined();
 			const calculation = this.calculateProgramBudgetWithRates(input, rates);
+
 			return this.resultOk(calculation);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not calculate program budget preview: ${JSON.stringify(error)}`);
 		}
 	}
@@ -171,6 +174,7 @@ export class ProgramStatsService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not load program dashboard stats: ${JSON.stringify(error)}`);
 		}
 	}
@@ -186,6 +190,7 @@ export class ProgramStatsService extends BaseService {
 			return this.getProgramDashboardStats(match.id);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not load dashboard stats by slug: ${JSON.stringify(error)}`);
 		}
 	}
@@ -352,6 +357,7 @@ export class ProgramStatsService extends BaseService {
 	) {
 		const availableCreditsChf = contributedToProgramSoFarChf - paidOutSoFarChf;
 		const availableCreditsInIntervals = costPerIntervalChf > 0 ? availableCreditsChf / costPerIntervalChf : 0;
+
 		return { availableCreditsChf, availableCreditsInIntervals, totalExpectedIntervals };
 	}
 
@@ -369,6 +375,7 @@ export class ProgramStatsService extends BaseService {
 		}
 
 		const surveyCompletionPercent = totalSurveysCount > 0 ? (completedSurveysCount / totalSurveysCount) * 100 : 0;
+
 		return { completedSurveysCount, totalSurveysCount, surveyCompletionPercent };
 	}
 
@@ -390,11 +397,13 @@ export class ProgramStatsService extends BaseService {
 		}
 
 		const expectedIntervals = this.getExpectedIntervals(params.programDurationInMonths, params.payoutInterval);
+
 		return this.resultOk(!this.isRecipientCompleted(params.paidOrConfirmedCount, expectedIntervals));
 	}
 
 	private async getLatestRatesOrUndefined(): Promise<Partial<Record<Currency, number>> | undefined> {
 		const latestRatesResult = await this.exchangeRateService.getLatestRates();
+
 		return latestRatesResult.success ? latestRatesResult.data : undefined;
 	}
 
@@ -405,6 +414,7 @@ export class ProgramStatsService extends BaseService {
 		if (interval === 'yearly') {
 			return Math.ceil(programDurationInMonths / 12);
 		}
+
 		return programDurationInMonths;
 	}
 
@@ -427,6 +437,7 @@ export class ProgramStatsService extends BaseService {
 		interval: string,
 	): number {
 		const numberOfIntervals = this.getNumberOfIntervals(durationMonths, interval);
+
 		return recipients * payoutPerInterval * numberOfIntervals;
 	}
 
@@ -437,6 +448,7 @@ export class ProgramStatsService extends BaseService {
 		if (interval === 'yearly') {
 			return (recipients * payoutPerInterval) / 12;
 		}
+
 		return recipients * payoutPerInterval;
 	}
 
@@ -457,6 +469,7 @@ export class ProgramStatsService extends BaseService {
 		if (!fromRate || !toRate) {
 			return undefined;
 		}
+
 		return amount * (toRate / fromRate);
 	}
 
@@ -469,6 +482,7 @@ export class ProgramStatsService extends BaseService {
 		if (converted === undefined) {
 			return undefined;
 		}
+
 		return `1 ${fromCurrency} = ${Number(converted.toFixed(4))} ${toCurrency}`;
 	}
 

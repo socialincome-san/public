@@ -9,5 +9,6 @@ export const createProgramAction = async (input: CreateProgramInput) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.write.program.create(sessionResult.data.id, input);
 };

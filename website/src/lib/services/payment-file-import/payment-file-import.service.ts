@@ -83,11 +83,14 @@ export class PaymentFileImportService extends BaseService {
 
 			if (!result.success) {
 				this.logger.error(`Error importing payment files: ${String(result.error)}`);
+
 				return this.resultFail(`Error importing payment files: ${String(result.error)}`);
 			}
+
 			return this.resultOk(result.data);
 		} catch (error) {
 			this.logger.error(`Error importing payment files: ${String(error)}`);
+
 			return this.resultFail(`Error importing payment files: ${JSON.stringify(error)}`);
 		} finally {
 			void sftp.end();
@@ -130,6 +133,7 @@ export class PaymentFileImportService extends BaseService {
 			return this.resultOk(contributions);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not parse payment file: ${JSON.stringify(error)}`);
 		}
 	}
@@ -215,6 +219,7 @@ export class PaymentFileImportService extends BaseService {
 				this.logger.alert(
 					`Failed to create payment events with contributions in payment file imports. Failed transaction IDs: ${failedPaymentEvents.join(', ')}`,
 				);
+
 				return this.resultFail(
 					`Failed to create payment events with contributions. Failed transaction IDs: ${failedPaymentEvents.join(', ')}`,
 				);
@@ -223,6 +228,7 @@ export class PaymentFileImportService extends BaseService {
 			return this.resultOk(created);
 		} catch (error) {
 			this.logger.error(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
+
 			return this.resultFail(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
 		}
 	}

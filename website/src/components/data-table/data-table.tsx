@@ -60,6 +60,7 @@ const formatTableError = (error: string): string => {
 			// Keep fallback below.
 		}
 	}
+
 	return raw || 'Something went wrong while loading this table.';
 };
 
@@ -100,6 +101,7 @@ export default function DataTable<Row>({
 						if (typeof value === 'string' || typeof value === 'number') {
 							return String(value);
 						}
+
 						return '';
 					},
 				},
@@ -179,6 +181,7 @@ export default function DataTable<Row>({
 						return null;
 					}
 					const label = typeof column.header === 'string' ? column.header : humanizeIdentifier(String(fallbackId));
+
 					return {
 						id: String(fallbackId),
 						label,
@@ -210,9 +213,7 @@ export default function DataTable<Row>({
 				<div className="flex items-center gap-2">
 					<h2 className="text-3xl">
 						{title}{' '}
-						<span className="text-lg text-gray-500">
-							({activeQuery ? activeQuery.totalRows : displayedData.length})
-						</span>
+						<span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
 					</h2>
 					{titleInfoTooltip ? (
 						<Tooltip>

@@ -107,10 +107,12 @@ export default function LocalPartnersForm({
 
 		if (localPartnerId && localPartner) {
 			const data = buildUpdateLocalPartnerInput(schema, localPartner, contactFields);
+
 			return updateLocalPartnerAction({ id: localPartnerId, ...data }, 'user');
 		}
 
 		const data = buildCreateLocalPartnerInput(schema, contactFields);
+
 		return createLocalPartnerAction(data);
 	};
 

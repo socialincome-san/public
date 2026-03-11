@@ -100,6 +100,7 @@ export class PayoutReadService extends BaseService {
 					return a.period.localeCompare(b.period);
 			}
 		});
+
 		return sortedRows;
 	}
 
@@ -209,6 +210,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, programFilterOptions, statusFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -287,6 +289,7 @@ export class PayoutReadService extends BaseService {
 
 					const last3Months: PayoutMonth[] = [months.current, months.last, months.twoAgo].map(({ start, end }) => {
 						const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt <= end);
+
 						return {
 							monthLabel: format(start, 'yyyy-MM'),
 							status: payout?.status ?? null,
@@ -310,6 +313,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, programFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch ongoing payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -360,6 +364,7 @@ export class PayoutReadService extends BaseService {
 
 			const forecastMonths = Array.from({ length: monthsAhead + 1 }, (_, i) => {
 				const start = startOfMonth(addMonths(now(), i));
+
 				return format(start, 'yyyy-MM');
 			});
 
@@ -417,6 +422,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate payout forecast: ${JSON.stringify(error)}`);
 		}
 	}
@@ -551,6 +557,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, programFilterOptions, statusFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout confirmation inbox: ${JSON.stringify(error)}`);
 		}
 	}
@@ -614,6 +621,7 @@ export class PayoutReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -624,9 +632,11 @@ export class PayoutReadService extends BaseService {
 				where: { recipientId },
 				orderBy: { paymentAt: 'desc' },
 			});
+
 			return this.resultOk(payouts);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -644,6 +654,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk(payout);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}

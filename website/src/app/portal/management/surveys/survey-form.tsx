@@ -99,6 +99,7 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 				const surveyResult = await getSurveyAction(surveyId);
 				if (!surveyResult.success) {
 					onError?.(surveyResult.error);
+
 					return;
 				}
 

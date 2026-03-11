@@ -3,13 +3,16 @@ import { SurveyFormSchema } from './survey-form';
 
 export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyCreateInput => {
 	const dueAtValue = schema.fields.dueAt.value;
+
 	return {
 		name: schema.fields.name.value,
 		recipient: { connect: { id: schema.fields.recipientId.value } },
 		questionnaire: schema.fields.questionnaire.value,
 		language: schema.fields.language.value,
 		dueAt: new Date(
-			typeof dueAtValue === 'string' || typeof dueAtValue === 'number' || dueAtValue instanceof Date ? dueAtValue : new Date(),
+			typeof dueAtValue === 'string' || typeof dueAtValue === 'number' || dueAtValue instanceof Date
+				? dueAtValue
+				: new Date(),
 		),
 		status: schema.fields.status.value,
 		data: {},
@@ -25,7 +28,9 @@ export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: Surve
 		questionnaire: schema.fields.questionnaire.value,
 		language: schema.fields.language.value,
 		dueAt: new Date(
-			typeof dueAtValue === 'string' || typeof dueAtValue === 'number' || dueAtValue instanceof Date ? dueAtValue : new Date(),
+			typeof dueAtValue === 'string' || typeof dueAtValue === 'number' || dueAtValue instanceof Date
+				? dueAtValue
+				: new Date(),
 		),
 		status: schema.fields.status.value,
 		data: {},

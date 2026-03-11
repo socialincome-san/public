@@ -29,10 +29,7 @@ export const contributionsTableConfig: DataTableConfig<ContributionTableViewRow>
 	showColumnVisibilitySelector: true,
 };
 
-export const getContributionsTableFilters = ({
-	query,
-	filterOptions,
-}: ContributionFiltersArgs): TableFilterConfig[] => {
+export const getContributionsTableFilters = ({ query, filterOptions }: ContributionFiltersArgs): TableFilterConfig[] => {
 	if (!query) {
 		return [];
 	}

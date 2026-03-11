@@ -15,6 +15,7 @@ const getNGOTranslations = (translator: Translator, slug: string): { translation
 			break;
 		}
 	}
+
 	return { translation: currentNgo };
 };
 

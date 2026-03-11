@@ -10,10 +10,7 @@ const Command = ({ className, ...props }: React.ComponentProps<typeof CommandPri
 	return (
 		<CommandPrimitive
 			data-slot="command"
-			className={cn(
-				'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
-				className,
-			)}
+			className={cn('bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md', className)}
 			{...props}
 		/>
 	);
@@ -90,11 +87,7 @@ const CommandGroup = ({ className, ...props }: React.ComponentProps<typeof Comma
 
 const CommandSeparator = ({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Separator>) => {
 	return (
-		<CommandPrimitive.Separator
-			data-slot="command-separator"
-			className={cn('bg-border -mx-1 h-px', className)}
-			{...props}
-		/>
+		<CommandPrimitive.Separator data-slot="command-separator" className={cn('bg-border -mx-1 h-px', className)} {...props} />
 	);
 };
 
@@ -121,4 +114,14 @@ const CommandShortcut = ({ className, ...props }: React.ComponentProps<'span'>) 
 	);
 };
 
-export { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut };
+export {
+	Command,
+	CommandDialog,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+	CommandSeparator,
+	CommandShortcut,
+};

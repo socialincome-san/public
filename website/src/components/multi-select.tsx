@@ -7,15 +7,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils/cn';
 import { Badge } from './badge';
 import { Button } from './button';
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-	CommandSeparator,
-} from './command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Separator } from './separator';
 
@@ -99,8 +91,7 @@ interface MultiSelectGroup {
  * Props for MultiSelect component
  */
 interface MultiSelectProps
-	extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'>,
-		VariantProps<typeof multiSelectVariants> {
+	extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'>, VariantProps<typeof multiSelectVariants> {
 	/**
 	 * An array of option objects or groups to be displayed in the multi-select component.
 	 */
@@ -303,7 +294,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			animationConfig,
 			maxCount = 3,
 			modalPopover = false,
-				className,
+			className,
 			hideSelectAll = false,
 			searchable = true,
 			emptyIndicator,
@@ -362,6 +353,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			}
 			const sortedA = [...a].sort();
 			const sortedB = [...b].sort();
+
 			return sortedA.every((val, index) => val === sortedB[index]);
 		}, []);
 
@@ -424,6 +416,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			};
 			handleResize();
 			window.addEventListener('resize', handleResize);
+
 			return () => {
 				if (typeof window !== 'undefined') {
 					window.removeEventListener('resize', handleResize);
@@ -446,6 +439,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 					desktop: { maxCount: 6, hideIcons: false, compactMode: false },
 				};
 				const currentSettings = defaultResponsive[screenSize];
+
 				return {
 					maxCount: currentSettings?.maxCount ?? maxCount,
 					hideIcons: currentSettings?.hideIcons ?? false,
@@ -453,6 +447,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 				};
 			}
 			const currentSettings = responsive[screenSize];
+
 			return {
 				maxCount: currentSettings?.maxCount ?? maxCount,
 				hideIcons: currentSettings?.hideIcons ?? false,
@@ -481,6 +476,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						return '';
 				}
 			}
+
 			return isAnimating ? 'animate-bounce' : '';
 		};
 
@@ -501,6 +497,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						return '';
 				}
 			}
+
 			return '';
 		};
 
@@ -539,6 +536,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						}`,
 				);
 			}
+
 			return deduplicateOptions ? uniqueOptions : allOptions;
 		}, [options, deduplicateOptions, isGroupedOptions]);
 
@@ -548,6 +546,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 				if (!option && process.env.NODE_ENV === 'development') {
 					console.warn(`MultiSelect: Option with value "${value}" not found in options list`);
 				}
+
 				return option;
 			},
 			[getAllOptions],
@@ -572,6 +571,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 					}))
 					.filter((group) => group.options.length > 0);
 			}
+
 			return options.filter(
 				(option) =>
 					option.label.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -667,6 +667,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			const defaultMinWidth = screenSize === 'mobile' ? '0px' : '200px';
 			const effectiveMinWidth = minWidth || defaultMinWidth;
 			const effectiveMaxWidth = maxWidth || '100%';
+
 			return {
 				minWidth: effectiveMinWidth,
 				maxWidth: effectiveMaxWidth,
@@ -815,6 +816,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 														color: 'white',
 													}),
 												};
+
 												return (
 													<Badge
 														key={value}
@@ -886,10 +888,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 											>
 												{`+ ${selectedValues.length - responsiveSettings.maxCount} more`}
 												<XCircle
-													className={cn(
-														'ml-2 h-4 w-4 cursor-pointer',
-														responsiveSettings.compactMode && 'ml-1 h-3 w-3',
-													)}
+													className={cn('ml-2 h-4 w-4 cursor-pointer', responsiveSettings.compactMode && 'ml-1 h-3 w-3')}
 													onClick={(event: React.MouseEvent<HTMLOrSVGElement>) => {
 														event.stopPropagation();
 														clearExtraOptions();
@@ -1010,6 +1009,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 										<CommandGroup key={group.heading} heading={group.heading}>
 											{group.options.map((option) => {
 												const isSelected = selectedValues.includes(option.value);
+
 												return (
 													<CommandItem
 														key={option.value}
@@ -1045,6 +1045,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 									<CommandGroup>
 										{filteredOptions.map((option) => {
 											const isSelected = selectedValues.includes(option.value);
+
 											return (
 												<CommandItem
 													key={option.value}
@@ -1067,9 +1068,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 													>
 														<CheckIcon className="h-4 w-4" />
 													</div>
-													{option.icon && (
-														<option.icon className="text-muted-foreground mr-2 h-4 w-4" aria-hidden="true" />
-													)}
+													{option.icon && <option.icon className="text-muted-foreground mr-2 h-4 w-4" aria-hidden="true" />}
 													<span>{option.label}</span>
 												</CommandItem>
 											);

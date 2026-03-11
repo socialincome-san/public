@@ -15,6 +15,7 @@ export const makeYourContributionsColumns = (
 ): ColumnDef<YourContributionsTableViewRow>[] => {
 	void _hideProgramName;
 	void _hideLocalPartner;
+
 	return [
 		{
 			accessorKey: 'createdAt',
@@ -26,6 +27,7 @@ export const makeYourContributionsColumns = (
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.amount')}</SortableHeader>,
 			cell: (ctx) => {
 				const currency = ctx.row.original.currency;
+
 				return <CurrencyCell ctx={ctx} currency={currency} />;
 			},
 		},

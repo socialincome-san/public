@@ -32,6 +32,7 @@ type DonationInterval = (typeof DONATION_INTERVALS)[number];
 const getTextOption = (amount: number) => {
 	const thresholds = [10, 15, 30, 60, 90, 120, 150, 300, Infinity];
 	const index = thresholds.findIndex((threshold) => amount < threshold);
+
 	return index === -1 ? 0 : index;
 };
 
@@ -113,9 +114,7 @@ export const DonationForm = ({ amount, translations, lang, region }: DonationFor
 			monthlyIncome: z.coerce.number().min(1),
 			donationInterval: z.enum(DONATION_INTERVALS),
 			paymentType:
-				region === 'ch'
-					? z.enum(Object.values(PaymentTypes) as [string, ...string[]])
-					: z.literal(PaymentTypes.CREDIT_CARD),
+				region === 'ch' ? z.enum(Object.values(PaymentTypes) as [string, ...string[]]) : z.literal(PaymentTypes.CREDIT_CARD),
 			email: z.string().email().optional(),
 			firstName: z.string().optional(),
 			lastName: z.string().optional(),

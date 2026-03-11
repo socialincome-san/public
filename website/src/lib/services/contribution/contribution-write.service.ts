@@ -73,6 +73,7 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contribution: ${JSON.stringify(error)}`);
 		}
 	}
@@ -111,6 +112,7 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create contribution: ${JSON.stringify(error)}`);
 		}
 	}
@@ -144,6 +146,7 @@ export class ContributionWriteService extends BaseService {
 			return this.resultOk(paymentEvent.contribution);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create or update contribution from Stripe event: ${JSON.stringify(error)}`);
 		}
 	}
@@ -184,6 +187,7 @@ export class ContributionWriteService extends BaseService {
 			return this.resultOk(result);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create payment events with contributions: ${JSON.stringify(error)}`);
 		}
 	}

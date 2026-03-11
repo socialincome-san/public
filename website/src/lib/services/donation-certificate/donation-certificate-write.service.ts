@@ -37,12 +37,14 @@ export class DonationCertificateWriteService extends BaseService {
 		try {
 			if (!this.bucketName) {
 				this.logger.error('Firebase Storage bucket name missing');
+
 				return this.resultFail(DonationCertificateError.bucketMissing);
 			}
 
 			const result = await this.contributorService.getByIds([contributorsId]);
 			if (!result.success || !result.data?.length) {
 				this.logger.info(`Could not load contributor for contributor ID ${contributorsId}`);
+
 				return this.resultFail(DonationCertificateError.technicalError);
 			}
 			const contributor = result.data[0];
@@ -59,20 +61,24 @@ export class DonationCertificateWriteService extends BaseService {
 			);
 			if (!existingCertificate.success) {
 				this.logger.info(`Could not load existing certificates for contributor ${contributorsId}`);
+
 				return this.resultFail(DonationCertificateError.technicalError);
 			}
 			if (existingCertificate.data) {
 				this.logger.info(`Donation certificates already exists for contributor ${contributorsId}`);
+
 				return this.resultFail(DonationCertificateError.alreadyExists);
 			}
 
 			const contributions = await this.contributionService.getSucceededForContributorAndYear(contributorsId, year);
 			if (!contributions.success) {
 				this.logger.info(`Could not load contributions for contributor ${contributorsId}`);
+
 				return this.resultFail(DonationCertificateError.technicalError);
 			}
 			if (!contributions.data.length) {
 				this.logger.info(`Contributor ${contributorsId} has no contributions`);
+
 				return this.resultFail(DonationCertificateError.noContributions);
 			}
 
@@ -99,8 +105,10 @@ export class DonationCertificateWriteService extends BaseService {
 			});
 		} catch (e) {
 			this.logger.error(`Error while generating Donation Certificate file: ${String(e)}`);
+
 			return this.resultFail(DonationCertificateError.technicalError);
 		}
+
 		return this.resultOk(undefined);
 	}
 
@@ -121,6 +129,7 @@ export class DonationCertificateWriteService extends BaseService {
 					if (!result.success) {
 						if (!isDonationCertificateError(result.error)) {
 							creationWithFailures.push(contributorsId);
+
 							return;
 						}
 						switch (result.error) {
@@ -153,9 +162,11 @@ export class DonationCertificateWriteService extends BaseService {
 					Skipped, because no contributions available for contribot (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
 					Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`;
 			this.logger.info(success);
+
 			return this.resultOk(success);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Error while creating donation certificates for ${year}: ${JSON.stringify(error)}`);
 		}
 	}

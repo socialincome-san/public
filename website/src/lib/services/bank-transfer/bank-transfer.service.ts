@@ -1,9 +1,4 @@
-import {
-	ContributionStatus,
-	DonationInterval,
-	PaymentEventType,
-	PrismaClient,
-} from '@/generated/prisma/client';
+import { ContributionStatus, DonationInterval, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
@@ -44,9 +39,11 @@ export class BankTransferService extends BaseService {
 			if (!createdContribution.success) {
 				return this.resultFail(`Could not generate pending contribution for reference id ${payment.referenceId}`);
 			}
+
 			return this.resultOk('Contribution created');
 		} catch (error) {
 			console.error('Failed to store charge', error);
+
 			return this.resultFail(`Failed to store contribution: ${JSON.stringify(error)}`);
 		}
 	}

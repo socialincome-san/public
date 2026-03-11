@@ -27,7 +27,6 @@ export default [
 			'@typescript-eslint/consistent-type-definitions': 'off',
 			'@typescript-eslint/no-unsafe-assignment': 'warn',
 			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
-			'newline-before-return': 'off',
 			'prettier/prettier': 'warn',
 		},
 	},

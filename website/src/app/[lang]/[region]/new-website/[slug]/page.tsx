@@ -13,10 +13,7 @@ export const revalidate = 900;
 export default async function ContentPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = await params;
 
-	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(
-		`${NEW_WEBSITE_SLUG}/${slug}`,
-		lang,
-	);
+	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(`${NEW_WEBSITE_SLUG}/${slug}`, lang);
 
 	if (!storyResult.success) {
 		return notFound();

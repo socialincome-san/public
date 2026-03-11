@@ -15,6 +15,7 @@ const loadCurrentContributor = async (): Promise<ContributorSession | null> => {
 
 	const authUserId = decodedTokenResult.data.uid;
 	const result = await services.read.contributor.getCurrentContributorSession(authUserId);
+
 	return result.success ? result.data : null;
 };
 
@@ -25,6 +26,7 @@ export const getAuthenticatedContributorOrRedirect = async (): Promise<Contribut
 	if (!contributor) {
 		redirect('/login');
 	}
+
 	return contributor;
 };
 

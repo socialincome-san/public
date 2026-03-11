@@ -170,9 +170,7 @@ test('CSV Upload', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 	await page.getByTestId('data-table-actions-button').click();
 	await page.getByTestId('data-table-action-item-upload-csv').click();
-	await page
-		.getByTestId('csv-dropzone-input')
-		.setInputFiles('./test/e2e/projects/portal/management/upload-example.csv');
+	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-example.csv');
 	await page.getByTestId('import-button').click();
 	await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
 

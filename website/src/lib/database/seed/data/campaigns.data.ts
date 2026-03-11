@@ -165,5 +165,5 @@ export const campaignsData: Campaign[] = [
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null,
 		isFallback: false,
-	}
+	},
 ];

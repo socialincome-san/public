@@ -4,6 +4,7 @@ import { Page } from '@playwright/test';
 export const getFirebaseAdminService = async () => {
 	const { FirebaseAdminService } = await import('@/lib/services/firebase/firebase-admin.service');
 	const { prisma } = await import('@/lib/database/prisma');
+
 	return new FirebaseAdminService(prisma);
 };
 
@@ -61,6 +62,7 @@ export const selectOptionByTestId = async (page: Page, fieldName: string, option
 	await trigger.click();
 	if (optionName) {
 		await page.getByRole('option', { name: optionName }).click();
+
 		return;
 	}
 	await page.getByRole('option').first().click();

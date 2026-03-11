@@ -31,6 +31,7 @@ const sortKeys = (o: Record<string, unknown>) =>
 
 const readReplayRecordings = (recordingKey: string) => {
 	const raw = fs.readFileSync(recordingPath(recordingKey), 'utf-8');
+
 	return JSON.parse(restoreToken(raw)) as unknown;
 };
 
@@ -52,6 +53,7 @@ export const setupStoryblokMock = async (recordingKey: string) => {
 
 	if (mode === 'record') {
 		await post(`${MOCK}/recordings`, { active: true });
+
 		return;
 	}
 

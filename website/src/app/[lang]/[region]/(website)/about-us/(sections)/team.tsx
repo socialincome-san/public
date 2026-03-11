@@ -152,6 +152,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 		language: lang,
 		namespaces: ['countries', 'website-about-us'],
 	});
+
 	return (
 		<BaseContainer id="team" className="scroll-mt-36">
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">

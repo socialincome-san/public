@@ -35,9 +35,11 @@ export class CampaignWriteService extends BaseService {
 				},
 				include: { program: { select: { id: true, name: true } } },
 			});
+
 			return this.resultOk(newCampaign);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create campaign: ${JSON.stringify(error)}`);
 		}
 	}
@@ -67,6 +69,7 @@ export class CampaignWriteService extends BaseService {
 			return this.resultOk(updatedCampaign);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update campaign: ${JSON.stringify(error)}`);
 		}
 	}

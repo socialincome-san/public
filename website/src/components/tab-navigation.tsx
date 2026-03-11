@@ -21,6 +21,7 @@ export const TabNavigation = ({ sections }: TabNavigationProps) => {
 		<nav className="mb-9 flex gap-6 overflow-x-auto">
 			{sections.map((section) => {
 				const active = isActive(section.href);
+
 				return (
 					<Link
 						key={section.href}

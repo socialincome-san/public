@@ -13,6 +13,7 @@ const getFirstValue = (searchParams: PreviewSearchParams, keys: readonly string[
 			return value;
 		}
 	}
+
 	return undefined;
 };
 

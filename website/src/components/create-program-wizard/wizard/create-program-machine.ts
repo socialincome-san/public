@@ -53,7 +53,7 @@ export const createProgramWizardMachine = setup({
 		};
 
 		events: // step 1
-		| { type: 'SELECT_COUNTRY'; id: string }
+			| { type: 'SELECT_COUNTRY'; id: string }
 			| { type: 'TOGGLE_COUNTRY_ROW'; id: string }
 
 			// step 2
@@ -91,6 +91,7 @@ export const createProgramWizardMachine = setup({
 			if (!result.success) {
 				throw new Error(result.error);
 			}
+
 			return result.data.rows;
 		}),
 
@@ -99,6 +100,7 @@ export const createProgramWizardMachine = setup({
 			if (!result.success) {
 				throw new Error(result.error);
 			}
+
 			return result.data.programId;
 		}),
 
@@ -149,6 +151,7 @@ export const createProgramWizardMachine = setup({
 				if (!result.success) {
 					throw new Error(result.error);
 				}
+
 				return result.data;
 			},
 		),
@@ -162,18 +165,14 @@ export const createProgramWizardMachine = setup({
 		programSetupValid: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
-			(context.recipientApproach === 'universal' ||
-				context.targetCauses.length > 0 ||
-				context.targetProfiles.length > 0),
+			(context.recipientApproach === 'universal' || context.targetCauses.length > 0 || context.targetProfiles.length > 0),
 
 		// step 2 → step 3
 		programSetupValidWithRecipients: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
 			context.filteredRecipients > 0 &&
-			(context.recipientApproach === 'universal' ||
-				context.targetCauses.length > 0 ||
-				context.targetProfiles.length > 0),
+			(context.recipientApproach === 'universal' || context.targetCauses.length > 0 || context.targetProfiles.length > 0),
 
 		// step 3
 		budgetConfigValid: ({ context }) =>
@@ -281,6 +280,7 @@ export const createProgramWizardMachine = setup({
 						const filteredRecipients = event.output.filtered;
 						const amountOfRecipients =
 							context.amountOfRecipients > filteredRecipients ? filteredRecipients : context.amountOfRecipients;
+
 						return {
 							totalRecipients,
 							filteredRecipients,

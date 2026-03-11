@@ -23,6 +23,7 @@ const getStaticPages = (startPath: string): string[] => {
 		}
 	};
 	traverse(startPath);
+
 	return routes;
 };
 

@@ -32,6 +32,7 @@ export const mockStoryblokIfTestMode = () => {
 			? (async () => {
 					const proxiedUrl = `${MOCK}/${url.hostname}${url.pathname}${url.search}`;
 					console.info('[storyblok-mock] fetch ->', proxiedUrl);
+
 					return original(proxiedUrl, {
 						...init,
 						headers: {

@@ -4,11 +4,7 @@ import { ContributorSession } from '@/lib/services/contributor/contributor.types
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { ProfileFormOutput } from './schemas';
 
-export const toggleNewsletter = async (
-	values: ProfileFormOutput,
-	session: ContributorSession,
-	isSubscribed: boolean,
-) => {
+export const toggleNewsletter = async (values: ProfileFormOutput, session: ContributorSession, isSubscribed: boolean) => {
 	if (values.type !== 'contributor') {
 		return { success: true };
 	}

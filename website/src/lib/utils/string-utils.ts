@@ -59,6 +59,7 @@ export const formatCurrencyLocale = (
 		}).format(amount);
 	} catch {
 		const num = new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(amount);
+
 		return `${num} ${currency}`;
 	}
 };
@@ -78,7 +79,9 @@ export const humanizeIdentifier = (value: string): string => {
 };
 
 export const titleCase = (value: string): string => {
-	return value.replace(/^_*(.)|_+(.)/g, (_s: string, c?: string, d?: string) => (c ? c.toUpperCase() : ` ${d?.toUpperCase() ?? ''}`));
+	return value.replace(/^_*(.)|_+(.)/g, (_s: string, c?: string, d?: string) =>
+		c ? c.toUpperCase() : ` ${d?.toUpperCase() ?? ''}`,
+	);
 };
 
 export const formatNumberLocale = (

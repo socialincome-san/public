@@ -65,10 +65,7 @@ const DonationIntervalFormItem = ({
 							</Typography>
 						</div>
 					</div>
-					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')}
-						aria-hidden="true"
-					/>
+					<CheckCircleIcon className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')} aria-hidden="true" />
 				</div>
 			</FormControl>
 		</FormItem>

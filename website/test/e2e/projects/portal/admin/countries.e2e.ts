@@ -53,10 +53,7 @@ test('add new country', async ({ page }) => {
 	await clickDataTableActionItem(page, 'data-table-action-item-add-country');
 	await selectOptionByTestId(page, 'countrySettings.isoCode', countryOption.name);
 	await selectOptionByTestId(page, 'countrySettings.currency', currency);
-	await page
-		.getByTestId('form-item-countrySettings.defaultPayoutAmount')
-		.locator('input')
-		.fill(`${defaultPayoutAmount}`);
+	await page.getByTestId('form-item-countrySettings.defaultPayoutAmount').locator('input').fill(`${defaultPayoutAmount}`);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -113,10 +110,7 @@ test('update country', async ({ page }) => {
 	await page.getByTestId('data-table').locator('tbody tr').first().click();
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 
-	await page
-		.getByTestId('form-item-countrySettings.defaultPayoutAmount')
-		.locator('input')
-		.fill(`${updatedPayoutAmount}`);
+	await page.getByTestId('form-item-countrySettings.defaultPayoutAmount').locator('input').fill(`${updatedPayoutAmount}`);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 

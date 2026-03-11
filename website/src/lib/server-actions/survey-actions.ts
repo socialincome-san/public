@@ -20,6 +20,7 @@ export const createSurveyAction = async (input: SurveyCreateInput) => {
 	}
 	const result = await services.write.survey.create(sessionResult.data.id, input);
 	revalidatePath('/portal/management/surveys');
+
 	return result;
 };
 
@@ -28,6 +29,7 @@ export const getSurveyAction = async (surveyId: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.survey.get(sessionResult.data.id, surveyId);
 };
 
@@ -38,6 +40,7 @@ export const updateSurveyAction = async (surveyId: string, input: SurveyUpdateIn
 	}
 	const result = await services.write.survey.update(sessionResult.data.id, surveyId, input);
 	revalidatePath('/portal/management/surveys');
+
 	return result;
 };
 
@@ -46,6 +49,7 @@ export const getSurveyRecipientOptionsAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.recipient.getEditableRecipientOptions(sessionResult.data.id);
 };
 
@@ -54,6 +58,7 @@ export const previewSurveyGenerationAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.survey.previewSurveyGeneration(sessionResult.data.id);
 };
 
@@ -64,6 +69,7 @@ export const generateSurveysAction = async () => {
 	}
 	const result = await services.write.survey.generateSurveys(sessionResult.data.id);
 	revalidatePath('/portal/management/surveys');
+
 	return result;
 };
 
@@ -75,6 +81,7 @@ export const getByIdAndRecipient = async (
 	if (survey?.id !== surveyId || survey.recipientId !== recipientId) {
 		return resultFail('Unauthorized');
 	}
+
 	return services.read.survey.getByIdAndRecipient(surveyId, recipientId);
 };
 
@@ -83,5 +90,6 @@ export const saveChanges = async (surveyId: string, input: SurveyUpdateInput): P
 	if (survey?.id !== surveyId) {
 		return resultFail('Unauthorized');
 	}
+
 	return services.write.survey.saveChanges(surveyId, input);
 };

@@ -5,10 +5,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { MultiSelect, MultiSelectOption } from '@/components/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
-import {
-	generateDonationCertificates,
-	getContributorOptions,
-} from '@/lib/server-actions/donation-certificates-actions';
+import { generateDonationCertificates, getContributorOptions } from '@/lib/server-actions/donation-certificates-actions';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
 import _ from 'lodash';
 import { useRef, useState, useTransition } from 'react';
@@ -117,9 +114,7 @@ export default function GenerateDonationCertificatesDialog({
 					</div>
 					<div className="flex flex-col gap-2">
 						<p className="font-medium">Contributors</p>
-						<p className="text-muted-foreground mb-1 text-xs">
-							Select Contributors certificates should be generated for
-						</p>
+						<p className="text-muted-foreground mb-1 text-xs">Select Contributors certificates should be generated for</p>
 						<MultiSelect
 							modalPopover
 							hideSelectAll
