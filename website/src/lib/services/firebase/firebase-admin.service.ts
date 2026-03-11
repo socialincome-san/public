@@ -15,7 +15,7 @@ export class FirebaseAdminService extends BaseService {
 			}
 
 			if (existingUserResult.data) {
-				console.log('User already exists for phone number:', phoneNumber);
+				this.logger.info('User already exists for phone number', { phoneNumber });
 				return this.resultFail('User already exists for phone number');
 			}
 

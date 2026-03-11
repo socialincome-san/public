@@ -10,7 +10,7 @@ const DEFAULT_REGION = 'int';
 
 const getLanguage = (slug: string | null) => {
 	if (slug) {
-		for (let lang of ALLOWED_LANGUAGES) {
+		for (const lang of ALLOWED_LANGUAGES) {
 			if (slug.toLowerCase().startsWith(lang.toLowerCase())) {
 				return lang;
 			}

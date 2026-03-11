@@ -225,12 +225,10 @@ export class DonationCertificateService extends BaseService {
 		contributorsIds: string[],
 		language?: LanguageCode,
 	): Promise<ServiceResult<string>> {
-		let [successCount, creationWithFailures, skippedExists, skippedNoContributions] = [
-			0,
-			[] as string[],
-			[] as string[],
-			[] as string[],
-		];
+		let successCount = 0;
+		const creationWithFailures: string[] = [];
+		const skippedExists: string[] = [];
+		const skippedNoContributions: string[] = [];
 
 		await Promise.all(
 			contributorsIds.map(async (contributorsId) => {

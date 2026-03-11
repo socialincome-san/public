@@ -53,7 +53,7 @@ export class PaymentFileImportService extends BaseService {
 			});
 			const sftpFiles = await sftp.list('/yellow-net-reports');
 
-			for (let file of sftpFiles) {
+			for (const file of sftpFiles) {
 				if (bucketFiles.includes(file.name)) {
 					this.logger.info(`Skipped copying file ${file.name} because it already exists in ${this.bucketName} bucket`);
 					continue;
@@ -101,7 +101,7 @@ export class PaymentFileImportService extends BaseService {
 
 		const contributions: BankContribution[] = [];
 
-		for (let node of nodes) {
+		for (const node of nodes) {
 			const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
 			if (!referenceId) {
@@ -148,7 +148,7 @@ export class PaymentFileImportService extends BaseService {
 
 			const created = [];
 
-			for (let c of bankContributions) {
+			for (const c of bankContributions) {
 				const contributor = contributors.data.find(
 					(contributor) =>
 						contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,

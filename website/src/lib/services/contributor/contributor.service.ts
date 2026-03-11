@@ -406,12 +406,11 @@ export class ContributorService extends BaseService {
 
 	async getOrCreateReferenceIdByEmail(email: string): Promise<ServiceResult<string>> {
 		try {
-			let referenceId: string;
 			const existingContributor = await this.db.contributor.findFirst({
 				where: { contact: { email: email } },
 				select: { id: true, contact: { select: { email: true } }, paymentReferenceId: true },
 			});
-			referenceId = existingContributor?.paymentReferenceId || DateTime.now().toMillis().toString();
+			const referenceId = existingContributor?.paymentReferenceId || DateTime.now().toMillis().toString();
 			if (existingContributor && !existingContributor?.paymentReferenceId) {
 				const res = await this.updateSelf(existingContributor.id, {
 					paymentReferenceId: referenceId,

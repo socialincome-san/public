@@ -47,11 +47,9 @@ export default [
 			'react-hooks/static-components': 'warn',
 			'react-hooks/refs': 'warn',
 			'react/prop-types': 'warn',
-			'prefer-const': 'warn',
 			'@typescript-eslint/no-base-to-string': 'warn',
 			'@typescript-eslint/no-inferrable-types': 'warn',
 			'prettier/prettier': 'warn',
-			'no-console': 'warn',
 		},
 	},
 	{

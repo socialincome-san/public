@@ -4,7 +4,7 @@ import { prisma } from '../prisma';
 const main = async () => {
 	try {
 		await seedDatabase();
-		console.log('✅ Seed completed');
+		console.info('✅ Seed completed');
 	} catch (error) {
 		console.error('❌ Seed failed', error);
 		process.exitCode = 1;

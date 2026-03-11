@@ -101,7 +101,7 @@ export const formatStoryblokDate = (date: string | null | undefined, lang: strin
 	if (!date) {
 		return '';
 	}
-	let dateObject = toDateObject(date, lang);
+	const dateObject = toDateObject(date, lang);
 
 	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
 };
@@ -113,7 +113,7 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
 	if (!date) {
 		return '';
 	}
-	let dateObject = toDateObject(date, defaultLanguage);
+	const dateObject = toDateObject(date, defaultLanguage);
 
 	return dateObject.isValid ? dateObject.toISO() : '';
 };
