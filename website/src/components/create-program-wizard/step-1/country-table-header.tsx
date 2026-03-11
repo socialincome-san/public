@@ -14,7 +14,7 @@ type Props = {
 export const CountryTableHeader = ({ search, onSearchChange, onlyAllMet, onOnlyAllMetChange }: Props) => {
 	return (
 		<div className="flex items-center justify-between">
-			<p className="text-sm font-medium">Check cash program feasibility</p>
+			<p className="text-sm font-medium">Review eligibility for any country in Africa</p>
 
 			<div className="flex items-center gap-3">
 				<div className="flex items-center gap-2">

@@ -26,10 +26,10 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 				<TableHeader className="bg-muted/40">
 					<TableRow>
 						<TableHead className="w-10" />
-						<TableHead>Country</TableHead>
+						<TableHead></TableHead>
 						<TableHead>Suitability of cash</TableHead>
 						<TableHead>Mobile money</TableHead>
-						<TableHead>Mobile network</TableHead>
+						<TableHead>Network coverage</TableHead>
 						<TableHead>No sanctions</TableHead>
 						<TableHead className="w-10" />
 					</TableRow>
