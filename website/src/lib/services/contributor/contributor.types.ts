@@ -14,6 +14,7 @@ export type ContributorTableViewRow = {
 	lastName: string;
 	email: string;
 	country: CountryCode | null;
+	totalContributedChf: number;
 	createdAt: Date;
 	permission: OrganizationPermission;
 };
