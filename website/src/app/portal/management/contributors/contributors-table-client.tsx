@@ -56,6 +56,7 @@ export default function ContributorsTableClient({
 		<>
 			<ConfiguredDataTableClient
 				config={contributorsTableConfig}
+				titleInfoTooltip="Shows contributors in your active organization scope."
 				rows={rows}
 				error={error}
 				query={query}

@@ -31,6 +31,7 @@ const OrganizationsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	return (
 		<ConfiguredDataTableClient
 			config={organizationsTableConfig}
+			titleInfoTooltip="Shows all organizations visible in admin scope."
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

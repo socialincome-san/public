@@ -41,6 +41,7 @@ const OngoingPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps)
 	return (
 		<ConfiguredDataTableClient
 			config={ongoingPayoutsTableConfig}
+			titleInfoTooltip="Shows ongoing payout progress for recipients in programs you can access."
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

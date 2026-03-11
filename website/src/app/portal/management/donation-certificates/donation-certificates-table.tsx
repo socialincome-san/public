@@ -23,6 +23,7 @@ export const DonationCertificateTable = ({
 			<GenerateDonationCertificatesDialog open={open} setOpen={setOpen} />
 			<ConfiguredDataTableClient
 				config={donationCertificatesTableConfig}
+				titleInfoTooltip="Shows donation certificates available for contributors in your active organization."
 				rows={rows}
 				error={error}
 				query={query}

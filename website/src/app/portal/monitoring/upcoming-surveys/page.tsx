@@ -34,6 +34,7 @@ const UpcomingSurveysDataLoader = async ({ searchParams }: SearchParamsPageProps
 	return (
 		<ConfiguredDataTableClient
 			config={upcomingSurveysTableConfig}
+			titleInfoTooltip="Shows upcoming surveys for accessible programs that are due around the current period."
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

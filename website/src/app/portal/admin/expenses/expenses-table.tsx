@@ -45,6 +45,7 @@ export default function ExpensesTable({
 		<>
 			<ConfiguredDataTableClient
 				config={expensesTableConfig}
+				titleInfoTooltip="Shows expense records across organizations in admin scope."
 				rows={rows}
 				error={error}
 				query={query}

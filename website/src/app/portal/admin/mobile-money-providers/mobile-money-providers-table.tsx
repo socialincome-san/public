@@ -37,6 +37,7 @@ export default function MobileMoneyProvidersTable({
 		<>
 			<ConfiguredDataTableClient
 				config={mobileMoneyProvidersTableConfig}
+				titleInfoTooltip="Shows all configured mobile money providers."
 				rows={rows}
 				error={error}
 				query={query}

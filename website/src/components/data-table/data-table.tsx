@@ -11,11 +11,13 @@ import {
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
 import { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/ui';
+import { InfoIcon } from 'lucide-react';
 import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
 import DOMPurify from 'isomorphic-dompurify';
@@ -23,6 +25,7 @@ import { ReactNode, useState } from 'react';
 
 type DataTableProps<Row> = {
 	title: ReactNode;
+	titleInfoTooltip?: string;
 	error?: string | null;
 	emptyMessage: string;
 	actionMenuItems?: ActionMenuItem[];
@@ -62,6 +65,7 @@ const formatTableError = (error: string): string => {
 
 export default function DataTable<Row>({
 	title,
+	titleInfoTooltip,
 	error,
 	emptyMessage,
 	actionMenuItems,
@@ -200,10 +204,28 @@ export default function DataTable<Row>({
 	return (
 		<div data-testid="data-table">
 			<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-				<h2 className="text-3xl">
-					{title}{' '}
-					<span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
-				</h2>
+				<div className="flex items-center gap-2">
+					<h2 className="text-3xl">
+						{title}{' '}
+						<span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
+					</h2>
+					{titleInfoTooltip ? (
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<button
+									type="button"
+									className="inline-flex items-center rounded-full p-1 text-gray-500 hover:text-gray-700"
+									aria-label="Table information"
+								>
+									<InfoIcon className="size-4" />
+								</button>
+							</TooltipTrigger>
+							<TooltipContent side="right" sideOffset={8}>
+								{titleInfoTooltip}
+							</TooltipContent>
+						</Tooltip>
+					) : null}
+				</div>
 				<DataTableToolbar
 					showControls={showControls}
 					searchKeys={onQueryChange ? resolvedSearchKeys : []}

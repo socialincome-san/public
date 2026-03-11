@@ -12,5 +12,13 @@ type MembersTableProps = {
 };
 
 export default function MembersTable({ rows, error, query }: MembersTableProps) {
-	return <ConfiguredDataTableClient config={organizationMembersTableConfig} rows={rows} error={error} query={query} />;
+	return (
+		<ConfiguredDataTableClient
+			config={organizationMembersTableConfig}
+			titleInfoTooltip="Shows members of your active organization."
+			rows={rows}
+			error={error}
+			query={query}
+		/>
+	);
 }

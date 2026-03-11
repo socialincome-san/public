@@ -45,6 +45,7 @@ export default function UsersTable({
 		<>
 			<ConfiguredDataTableClient
 				config={usersTableConfig}
+				titleInfoTooltip="Shows all user accounts in admin scope."
 				rows={rows}
 				error={error}
 				query={query}

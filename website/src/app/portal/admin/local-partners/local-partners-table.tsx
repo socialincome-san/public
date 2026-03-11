@@ -44,6 +44,7 @@ export default function LocalPartnersTable({
 		<>
 			<ConfiguredDataTableClient
 				config={localPartnersTableConfig}
+				titleInfoTooltip="Shows all local partners in admin scope."
 				rows={rows}
 				error={error}
 				query={query}
