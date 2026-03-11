@@ -18,7 +18,7 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 	return render(richTextDocument, {
 		markResolvers: {
 			[MARK_LINK]: (children: any, props: any) => (
-				<NextLink href={props.href} className="font-normal underline">
+				<NextLink href={(props as { href: string }).href} className="font-normal underline">
 					{children}
 				</NextLink>
 			),

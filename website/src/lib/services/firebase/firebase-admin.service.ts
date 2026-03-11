@@ -62,8 +62,8 @@ export class FirebaseAdminService extends BaseService {
 		try {
 			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
 			return this.resultOk(userRecord);
-		} catch (error: any) {
-			if (error?.code === 'auth/user-not-found') {
+		} catch (error: unknown) {
+			if ((error as { code?: string })?.code === 'auth/user-not-found') {
 				return this.resultOk(null);
 			}
 			this.logger.error('Error getting user by phone number:', { phoneNumber, error });
@@ -129,8 +129,8 @@ export class FirebaseAdminService extends BaseService {
 		try {
 			const userRecord = await authAdmin.auth.getUserByEmail(email);
 			return this.resultOk(userRecord);
-		} catch (error: any) {
-			if (error?.code === 'auth/user-not-found') {
+		} catch (error: unknown) {
+			if ((error as { code?: string })?.code === 'auth/user-not-found') {
 				return this.resultOk(null);
 			}
 			return this.resultFail('Could not check existing Firebase Auth user');
@@ -242,8 +242,8 @@ export class FirebaseAdminService extends BaseService {
 
 	async deleteByUidIfExists(uid: string): Promise<ServiceResult<boolean>> {
 		try {
-			const userRecord = await authAdmin.auth.getUser(uid).catch((error: any) => {
-				if (error?.code === 'auth/user-not-found') {
+			const userRecord = await authAdmin.auth.getUser(uid).catch((error: unknown) => {
+				if ((error as { code?: string })?.code === 'auth/user-not-found') {
 					return null;
 				}
 				throw error;

@@ -54,7 +54,8 @@ export class StoryblokService extends BaseService {
 			const data = await this.withLanguageFallback(
 				async (language: string) => {
 					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, await this.getStoryParams(language));
-					return response.data.story as T;
+					const responseData = response.data as { story: T };
+					return responseData.story;
 				},
 				lang,
 				slug,
@@ -154,7 +155,7 @@ export class StoryblokService extends BaseService {
 				lang,
 				slug,
 			);
-			return this.resultOk(res.data.story);
+			return this.resultOk((res.data as { story: ISbStoryData<Topic> }).story);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Failed to fetch tag: ${JSON.stringify(error)}`);
@@ -168,7 +169,7 @@ export class StoryblokService extends BaseService {
 				lang,
 				slug,
 			);
-			return this.resultOk(res.data.story);
+			return this.resultOk((res.data as { story: ISbStoryData<Author> }).story);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Failed to fetch author: ${JSON.stringify(error)}`);
@@ -232,7 +233,7 @@ export class StoryblokService extends BaseService {
 
 			if (limit) {
 				const res = await getStoryblokApi().get(STORIES_PATH, params);
-				return this.resultOk(res.data.stories);
+				return this.resultOk((res.data as { stories: ISbStoryData<ResolvedArticle>[] }).stories);
 			}
 
 			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
@@ -260,7 +261,7 @@ export class StoryblokService extends BaseService {
 			(params as ISbStoriesParams & { by_uuids_ordered: string }).by_uuids_ordered = uuids.join(',');
 
 			const res = await getStoryblokApi().get(STORIES_PATH, params);
-			return this.resultOk(res.data.stories as ISbStoryData<ResolvedArticle>[]);
+			return this.resultOk((res.data as { stories: ISbStoryData<ResolvedArticle>[] }).stories);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultOk([]);
@@ -280,7 +281,7 @@ export class StoryblokService extends BaseService {
 				lang,
 				slug,
 			);
-			return this.resultOk(res.data.story);
+			return this.resultOk((res.data as { story: ISbStoryData<ResolvedArticle> }).story);
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail(`Failed to fetch article: ${JSON.stringify(error)}`);

@@ -54,11 +54,18 @@ const isFormField = (obj: unknown): obj is FormField => {
 };
 
 // get first level or nested def object from Zod Schema
-const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string) => {
+const getDef = (
+	key: string,
+	zodSchema: z.ZodObject<any>,
+	parentKey?: string,
+) => {
+	const zodShape = zodSchema.shape as Record<string, { _def?: unknown }>;
 	if (!parentKey) {
-		return zodSchema.shape[key]?._def as unknown;
+		return zodShape[String(key)]?._def;
 	}
-	const nestedShapeFactory = zodSchema.shape[parentKey]?._def.shape as (() => Record<string, { _def?: unknown }>) | undefined;
+	const nestedShapeFactory = (zodShape[parentKey]?._def as { shape?: unknown })?.shape as
+		| (() => Record<string, { _def?: unknown }>)
+		| undefined;
 	const nestedShape = nestedShapeFactory ? nestedShapeFactory() : undefined;
 	return nestedShape?.[String(key)]?._def;
 };
@@ -72,7 +79,11 @@ const getTypeName = (def: unknown): string | undefined => {
 };
 
 // get Zod Type by Form Schema key
-const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
+const getType = (
+	key: string,
+	zodSchema: z.ZodObject<any>,
+	parentKey?: string,
+): string => {
 	const def = getDef(key, zodSchema, parentKey);
 	let type = getTypeName(def) ?? 'ZodUnknown';
 	if (isOptional(key, zodSchema, parentKey)) {
@@ -96,7 +107,11 @@ const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<an
 	return type;
 };
 
-const isOptional = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentOption?: string) => {
+const isOptional = (
+	key: string,
+	zodSchema: z.ZodObject<any>,
+	parentOption?: string,
+) => {
 	const def = getDef(key, zodSchema, parentOption);
 	const type = (def as { typeName?: string })?.typeName;
 	if (typeof type !== 'string') {
@@ -114,7 +129,7 @@ const unwrapOptional = (def: unknown) => {
 };
 
 const getEnumArrayValues = (
-	key: keyof z.infer<typeof zodSchema>,
+	key: string,
 	zodSchema: z.ZodObject<any>,
 	parentOption?: string,
 ): Record<string, string> => {
@@ -167,15 +182,15 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 		if (!nestedKey) {
 			return zodSchema.keyof().options;
 		}
-		const nestedSchema = zodSchema.shape[nestedKey] as z.ZodObject<any> | undefined;
+		const nestedSchema = (zodSchema.shape as Record<string, z.ZodObject<Record<string, z.ZodTypeAny>>>)[nestedKey];
 		return nestedSchema ? nestedSchema.keyof().options : [];
 	};
 
 	// TODO: move to recursive function
 	// get values from Zod Schema and map back to form schema
 	const beforeSubmit = (values: z.infer<typeof zodSchema>) => {
-		const v = values as Record<string, any>;
-		const schema = JSON.parse(JSON.stringify(formSchema));
+		const v = values as Record<string, unknown>;
+		const schema = JSON.parse(JSON.stringify(formSchema)) as FormSchema;
 
 		for (const key in schema.fields) {
 			const fields = schema.fields[key];
@@ -183,10 +198,14 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 			if (isFormField(fields)) {
 				fields.value = v[key];
 			} else {
+					const nestedValues = v[key];
 				for (const k in fields.fields) {
 					const nestedField = fields.fields[k];
 					if (isFormField(nestedField)) {
-						nestedField.value = v[key]?.[k];
+							nestedField.value =
+								typeof nestedValues === 'object' && nestedValues !== null
+									? (nestedValues as Record<string, unknown>)[k]
+									: undefined;
 					}
 				}
 			}
@@ -294,7 +313,7 @@ const GenericFormField = ({
 		? (formSchema.fields[parentOption] as FormSchema)?.fields[option]
 		: formSchema.fields[option];
 
-	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): Record<string, string> => {
+	const getEnumValues = (key: string, parentOption?: string): Record<string, string> => {
 		const def = getDef(key, zodSchema, parentOption);
 		if (isOptional(key, zodSchema, parentOption)) {
 			return (def as { innerType?: { _def?: { values?: Record<string, string> } } }).innerType?._def?.values ?? {};
@@ -304,7 +323,7 @@ const GenericFormField = ({
 			: {};
 	};
 
-	const getDateMinMax = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { min?: Date; max?: Date } => {
+	const getDateMinMax = (key: string, parentOption?: string): { min?: Date; max?: Date } => {
 		let def = getDef(key, zodSchema, parentOption);
 		if (isOptional(key, zodSchema, parentOption)) {
 			def = (def as { innerType?: { _def?: unknown } }).innerType?._def;

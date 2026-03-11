@@ -53,11 +53,11 @@ export const useSurvey = () => {
 	};
 
 	const saveSurvey = async (surveyId: string, survey: Model, status: SurveyStatus, retryCount = 0) => {
-		const data = survey.data;
+		const data = survey.data as Record<string, unknown> & { pageNo?: number };
 		data.pageNo = survey.currentPageNo;
 		try {
 			const saveResult = await saveChanges(surveyId, {
-				data: data,
+				data: data as typeof survey.data,
 				status: status,
 				completedAt: status === SurveyStatus.completed ? now() : null,
 			});

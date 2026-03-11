@@ -8,11 +8,14 @@ interface GitHubFork {
 	id: number;
 	created_at: string;
 }
+interface RepoForksResponse {
+	forks_count: number;
+}
 
 export const getForkCount = async (): Promise<{ totalForks: number; newForks: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
 	const repoDataRes = await fetchData(owner, repo, repoUrl);
-	const repoData = await repoDataRes.json();
+	const repoData = (await repoDataRes.json()) as RepoForksResponse;
 	const totalForks = repoData.forks_count;
 
 	// Calculate the date 30 days ago from today

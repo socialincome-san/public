@@ -113,8 +113,8 @@ export class TwilioService extends BaseService {
 			}
 
 			return await this.finalizeOtpVerification(phoneResult.data);
-		} catch (error: any) {
-			if (error?.code === 20404) {
+		} catch (error: unknown) {
+			if ((error as { code?: number })?.code === 20404) {
 				return this.resultFail('Verification resource not found for the provided phone number and OTP');
 			}
 

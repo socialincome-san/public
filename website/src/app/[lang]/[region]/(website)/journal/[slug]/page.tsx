@@ -61,7 +61,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 	const story = articleResponse.data;
 	const articleData = story.content;
-	const author = articleData.author as ISbStoryData<any>;
+	const author = articleData.author;
 
 	const relativeResult = await services.storyblok.getRelativeArticles(
 		author.uuid,

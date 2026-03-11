@@ -127,11 +127,15 @@ export class SendgridSubscriptionService extends Client {
 				url: '/v3/marketing/contacts/search/emails',
 				body: { emails: [email] },
 			});
-			const contact = body.result[email].contact as SendgridContactType;
+			const searchResponse = body as { result: Record<string, { contact: SendgridContactType }> };
+			const contact = searchResponse.result[email]?.contact;
+			if (!contact) {
+				return null;
+			}
 			const isSuppressed = await this.isSuppressed(email);
 			return { ...contact, status: isSuppressed ? 'unsubscribed' : 'subscribed' } as SendgridContactType;
-		} catch (e: any) {
-			if (e.code !== 404) {
+		} catch (e: unknown) {
+			if ((e as { code?: number })?.code !== 404) {
 				console.error('Unable to get contact', e);
 			}
 			return null;

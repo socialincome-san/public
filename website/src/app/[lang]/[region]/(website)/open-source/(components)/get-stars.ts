@@ -11,12 +11,15 @@ interface GitHubStar {
 	};
 	starred_at: string;
 }
+interface RepoStarsResponse {
+	stargazers_count: number;
+}
 
 export const getStarCount = async (): Promise<{ totalStars: number; newStars: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
 	const repoRes = await fetchData(owner, repo, repoUrl);
 
-	const repoData = await repoRes.json();
+	const repoData = (await repoRes.json()) as RepoStarsResponse;
 	const totalStars = repoData.stargazers_count;
 
 	// Calculate the date 30 days ago from today

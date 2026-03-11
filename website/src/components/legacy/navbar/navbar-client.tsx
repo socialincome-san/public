@@ -308,7 +308,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 						{ourWork.title}
 					</NavbarLink>
 					<div className="absolute top-full left-2 mt-0 hidden flex-col overflow-visible pt-2 whitespace-nowrap opacity-0 group-hover/our-work:flex group-hover/our-work:opacity-100">
-						{ourWork.links?.map((link: any, index: number) => (
+						{ourWork.links?.map((link: { href: string; title: string }, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
@@ -332,7 +332,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 						{transparency.title}
 					</NavbarLink>
 					<div className="absolute top-full left-2 mt-0 hidden flex-col overflow-visible pt-2 whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
-						{transparency.links?.map((link: any, index: number) => (
+						{transparency.links?.map((link: { href: string; title: string }, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
