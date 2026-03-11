@@ -1,9 +1,9 @@
 import { ExpenseType } from '@/generated/prisma/enums';
+import { ROUTES } from '@/lib/constants/routes';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
-import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();

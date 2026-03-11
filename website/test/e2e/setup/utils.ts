@@ -1,5 +1,5 @@
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ROUTE_FRAGMENTS, ROUTES } from '@/lib/constants/routes';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { APIResponse, Browser, expect } from '@playwright/test';
 
 const ACTORS = {

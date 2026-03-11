@@ -1,6 +1,6 @@
+import { ROUTES } from '@/lib/constants/routes';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { ROUTES } from '@/lib/constants/routes';
 import _ from 'lodash';
 import { Metadata } from 'next';
 

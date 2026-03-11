@@ -1,7 +1,7 @@
 'use server';
 
-import { getCurrentSessions } from '../firebase/current-account';
 import { ROUTES } from '../constants/routes';
+import { getCurrentSessions } from '../firebase/current-account';
 import { ServiceResult } from '../services/core/base.types';
 import { resultOk } from '../services/core/service-result';
 import { services } from '../services/services';

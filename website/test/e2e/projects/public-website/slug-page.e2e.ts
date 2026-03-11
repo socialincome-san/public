@@ -1,6 +1,6 @@
+import { ROUTES } from '@/lib/constants/routes';
 import { expect, test } from '@playwright/test';
 import { saveStoryblokMock, setupStoryblokMock } from '../../mock-server/storyblok-mock';
-import { ROUTES } from '@/lib/constants/routes';
 
 const STORYBLOK_RECORDING = 'public-website-slug-page';
 

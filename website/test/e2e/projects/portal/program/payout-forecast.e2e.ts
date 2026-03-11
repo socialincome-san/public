@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test';
 import { ROUTES } from '@/lib/constants/routes';
+import { expect, test } from '@playwright/test';
 
 test('program payout forecast page matches screenshot', async ({ page }) => {
 	await page.goto(ROUTES.portalProgramPayoutForecast('program-1'));

@@ -1,7 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { ROUTES } from '@/lib/constants/routes';
+import { getSessionByType } from '@/lib/firebase/current-account';
 import { ServiceResult } from '@/lib/services/core/base.types';
 import { resultFail } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';

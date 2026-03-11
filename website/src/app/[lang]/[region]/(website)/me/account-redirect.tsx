@@ -1,5 +1,5 @@
-import { getCurrentSessions } from '@/lib/firebase/current-account';
 import { ROUTES } from '@/lib/constants/routes';
+import { getCurrentSessions } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/ui';

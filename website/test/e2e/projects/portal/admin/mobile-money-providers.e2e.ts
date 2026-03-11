@@ -1,8 +1,8 @@
+import { ROUTES } from '@/lib/constants/routes';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem } from '../../../utils';
-import { ROUTES } from '@/lib/constants/routes';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -79,7 +79,9 @@ test('update mobile money provider', async ({ page }) => {
 	});
 	expect(created.id).toBeTruthy();
 
-	await page.goto(`${ROUTES.portalAdminMobileMoneyProviders}?page=1&pageSize=10&search=${encodeURIComponent(initialName)}`);
+	await page.goto(
+		`${ROUTES.portalAdminMobileMoneyProviders}?page=1&pageSize=10&search=${encodeURIComponent(initialName)}`,
+	);
 	const row = page
 		.getByTestId('data-table')
 		.getByRole('row')

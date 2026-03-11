@@ -1,6 +1,6 @@
+import { ROUTES } from '@/lib/constants/routes';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { ROUTES } from '@/lib/constants/routes';
 import { expect, Page, test } from '@playwright/test';
 import { selectOptionByTestId } from '../../../utils';
 

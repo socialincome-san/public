@@ -2,8 +2,8 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { ROUTES } from '@/lib/constants/routes';
+import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { ReactNode } from 'react';
 
 type MonitoringLayoutProps = {

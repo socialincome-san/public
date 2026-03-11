@@ -1,6 +1,6 @@
+import { ROUTES } from '@/lib/constants/routes';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { ROUTES } from '@/lib/constants/routes';
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import {

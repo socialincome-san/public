@@ -1,5 +1,5 @@
-import { ROUTES } from '../constants/routes';
 import { redirect } from 'next/navigation';
+import { ROUTES } from '../constants/routes';
 import { ContributorSession } from '../services/contributor/contributor.types';
 import { ServiceResult } from '../services/core/base.types';
 import { resultFail, resultOk } from '../services/core/service-result';

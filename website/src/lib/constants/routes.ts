@@ -77,4 +77,3 @@ export const ROUTES = {
 	partnerSpaceCandidates: ROUTE_FRAGMENTS.partnerSpaceCandidates,
 	partnerSpaceProfile: ROUTE_FRAGMENTS.partnerSpaceProfile,
 } as const;
-
