@@ -10,13 +10,9 @@ import type { ColumnDef } from '@tanstack/react-table';
 export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 	return [
 		{
-			accessorKey: 'firstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'lastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
+			id: 'user',
+			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>User</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -42,7 +38,7 @@ export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];

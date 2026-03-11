@@ -1,4 +1,4 @@
-import { StripeService } from '@/lib/services/stripe/stripe.service';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -15,8 +15,7 @@ export const POST = async (request: NextRequest) => {
 		}
 
 		const body = await request.text();
-		const stripeService = new StripeService();
-		const result = await stripeService.handleWebhookEvent(body, signature, webhookSecret);
+		const result = await services.stripe.handleWebhookEvent(body, signature, webhookSecret);
 
 		if (!result.success) {
 			logger.alert(

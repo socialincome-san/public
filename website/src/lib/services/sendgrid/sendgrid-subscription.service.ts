@@ -12,8 +12,9 @@ import {
 } from './types';
 
 export class SendgridSubscriptionService extends Client {
-	listId: string;
-	suppressionListId: number; // unsubscribe group id
+	listId = '';
+	suppressionListId = 0; // unsubscribe group id
+	private initialized = false;
 
 	protected resultOk<T>(data: T, status?: number): ServiceResult<T> {
 		return { success: true, data, status };
@@ -25,16 +26,16 @@ export class SendgridSubscriptionService extends Client {
 
 	constructor() {
 		super();
-		const env: SendgridClientProps = this.validateSendgridEnvVars();
-		this.setApiKey(env.SENDGRID_API_KEY);
-		this.listId = env.SENDGRID_LIST_ID;
-		this.suppressionListId = env.SENDGRID_SUPPRESSION_LIST_ID;
 	}
 
 	getActiveSubscription = async (
 		contributor: ContributorSession,
 	): Promise<ServiceResult<SendgridContactType | null>> => {
 		try {
+			const configResult = this.ensureConfigured();
+			if (!configResult.success) {
+				return configResult;
+			}
 			if (!contributor.email) {
 				return this.resultFail('Email missing in contributor');
 			}
@@ -47,6 +48,10 @@ export class SendgridSubscriptionService extends Client {
 
 	subscribeToNewsletter = async (subscription: CreateNewsletterSubscription): Promise<ServiceResult<void>> => {
 		try {
+			const configResult = this.ensureConfigured();
+			if (!configResult.success) {
+				return configResult;
+			}
 			await this.upsertSubscription({ ...subscription, status: 'subscribed' });
 			return this.resultOk(undefined);
 		} catch (error) {
@@ -56,6 +61,10 @@ export class SendgridSubscriptionService extends Client {
 
 	unsubscribeFromNewsletter = async (contributor: ContributorSession): Promise<ServiceResult<void>> => {
 		try {
+			const configResult = this.ensureConfigured();
+			if (!configResult.success) {
+				return configResult;
+			}
 			if (!contributor.email) {
 				return this.resultFail('Email missing contributor');
 			}
@@ -73,24 +82,43 @@ export class SendgridSubscriptionService extends Client {
 		}
 	};
 
-	private validateSendgridEnvVars = (): SendgridClientProps => {
-		const suppressionListId = parseInt(process.env.SENDGRID_SUPPRESSION_LIST_ID!);
+	private ensureConfigured(): ServiceResult<void> {
+		if (this.initialized) {
+			return this.resultOk(undefined);
+		}
+
+		const envResult = this.validateSendgridEnvVars();
+		if (!envResult.success) {
+			return envResult;
+		}
+
+		this.setApiKey(envResult.data.SENDGRID_API_KEY);
+		this.listId = envResult.data.SENDGRID_LIST_ID;
+		this.suppressionListId = envResult.data.SENDGRID_SUPPRESSION_LIST_ID;
+		this.initialized = true;
+		return this.resultOk(undefined);
+	}
+
+	private validateSendgridEnvVars = (): ServiceResult<SendgridClientProps> => {
+		const suppressionListIdRaw = process.env.SENDGRID_SUPPRESSION_LIST_ID;
+		const sendgridApiKey = process.env.SENDGRID_API_KEY;
+		const sendgridListId = process.env.SENDGRID_LIST_ID;
+
+		if (!suppressionListIdRaw || !sendgridApiKey || !sendgridListId) {
+			return this.resultFail('Missing required Sendgrid environment variables');
+		}
+
+		const suppressionListId = parseInt(suppressionListIdRaw, 10);
 		if (isNaN(suppressionListId)) {
-			throw new Error('SENDGRID_SUPPRESSION_LIST_ID must be a valid number');
+			return this.resultFail('SENDGRID_SUPPRESSION_LIST_ID must be a valid number');
 		}
 
 		const sendgridClientProps: SendgridClientProps = {
-			SENDGRID_API_KEY: process.env.SENDGRID_API_KEY!,
-			SENDGRID_LIST_ID: process.env.SENDGRID_LIST_ID!,
+			SENDGRID_API_KEY: sendgridApiKey,
+			SENDGRID_LIST_ID: sendgridListId,
 			SENDGRID_SUPPRESSION_LIST_ID: suppressionListId,
 		};
-
-		Object.entries(sendgridClientProps).forEach(([key, value]) => {
-			if (!value) {
-				throw new Error(`Missing required environment variable: ${key}`);
-			}
-		});
-		return sendgridClientProps;
+		return this.resultOk(sendgridClientProps);
 	};
 
 	private getContact = async (email: string): Promise<SendgridContactType | null> => {

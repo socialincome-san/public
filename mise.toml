@@ -15,13 +15,12 @@ run = "npm run mockserver:up"
 run = "npm run firebase:serve"
 depends = ["install"]
 
+[tasks.build-paths]
+run = "npm run website:build-paths"
+
 [tasks.website]
 run = "npm run website:serve"
-depends = ["install", "db", "mockserver"]
+depends = ["install", "db", "mockserver", "build-paths"]
 
 [tasks.dev]
-run = [{ tasks = ["firebase", "website"] }]
-depends_post = ["stop"]
-
-[tasks.stop]
-run = "npm run mockserver:down && npm run db:down"
+depends = ["firebase", "website"]

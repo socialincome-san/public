@@ -6,9 +6,12 @@ import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { Cause } from '@/generated/prisma/enums';
 import {
 	createLocalPartnerAction,
+	deleteLocalPartnerAction,
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
 } from '@/lib/server-actions/local-partner-action';
+import { ServiceResult } from '@/lib/services/core/base.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { LocalPartnerPayload } from '@/lib/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -29,7 +32,7 @@ const initialFormSchema: LocalPartnerFormSchema = {
 		name: {
 			placeholder: 'Name',
 			label: 'Name',
-			zodSchema: z.string(),
+			zodSchema: z.string().trim().min(1, 'Name is required.'),
 		},
 		causes: {
 			placeholder: 'Causes',
@@ -37,7 +40,7 @@ const initialFormSchema: LocalPartnerFormSchema = {
 			zodSchema: z.array(z.nativeEnum(Cause)).optional(),
 		},
 		contact: {
-			...getContactFormSchema(),
+			...getContactFormSchema({ isEmailRequired: true }),
 		},
 	},
 };
@@ -57,52 +60,66 @@ export default function LocalPartnersForm({
 	const [localPartner, setLocalPartner] = useState<LocalPartnerPayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	const loadLocalPartner = async (localPartnerId: string) => {
-		try {
-			const partner = await getLocalPartnerAction(localPartnerId);
-			if (partner.success) {
-				setLocalPartner(partner.data);
-				const newSchema = { ...formSchema };
-				const contactValues = getContactValuesFromPayload(partner.data.contact, newSchema.fields.contact.fields);
-				newSchema.fields.name.value = partner.data.name;
-				newSchema.fields.contact.fields = contactValues;
-				newSchema.fields.causes.value = partner.data.causes ?? [];
-				setFormSchema(newSchema);
-			} else {
-				onError?.(partner.error);
-			}
-		} catch (error: unknown) {
-			onError?.(error);
-		}
+	const applyPartnerToSchema = (partner: LocalPartnerPayload) => {
+		setLocalPartner(partner);
+		const newSchema = { ...formSchema };
+		const contactValues = getContactValuesFromPayload(partner.contact, newSchema.fields.contact.fields);
+		newSchema.fields.name.value = partner.name;
+		newSchema.fields.contact.fields = contactValues;
+		newSchema.fields.causes.value = partner.causes ?? [];
+		setFormSchema(newSchema);
+	};
+
+	const loadLocalPartner = async (partnerId: string) => {
+		const partnerResult = await getLocalPartnerAction(partnerId);
+		handleServiceResult(partnerResult, {
+			onSuccess: applyPartnerToSchema,
+			onError: (error) => onError?.(error),
+		});
 	};
 
 	const onSubmit = (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
-			try {
-				let res: { success: boolean; error?: string };
-				const contactFields: Record<string, FormField> = schema.fields.contact.fields;
-				if (localPartnerId && localPartner) {
-					const data = buildUpdateLocalPartnerInput(schema, localPartner, contactFields);
-					res = await updateLocalPartnerAction({ id: localPartnerId, ...data }, 'user');
-				} else {
-					const data = buildCreateLocalPartnerInput(schema, contactFields);
-					res = await createLocalPartnerAction(data);
-				}
-				if (res.success) {
-					onSuccess?.();
-				} else {
-					onError?.(res.error);
-				}
-			} catch (error: unknown) {
-				onError?.(error);
-			}
+			const result = await submitLocalPartner(schema);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
+	};
+
+	const onDelete = () => {
+		if (!localPartnerId) {
+			return;
+		}
+
+		startTransition(async () => {
+			const result = await deleteLocalPartnerAction(localPartnerId);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
+		});
+	};
+
+	const submitLocalPartner = async (schema: typeof initialFormSchema): Promise<ServiceResult<unknown>> => {
+		const contactFields: { [key: string]: FormField } = schema.fields.contact.fields;
+
+		if (localPartnerId && localPartner) {
+			const data = buildUpdateLocalPartnerInput(schema, localPartner, contactFields);
+			return updateLocalPartnerAction({ id: localPartnerId, ...data }, 'user');
+		}
+
+		const data = buildCreateLocalPartnerInput(schema, contactFields);
+		return createLocalPartnerAction(data);
 	};
 
 	useEffect(() => {
 		if (localPartnerId) {
 			// Load local partner in edit mode
-			startTransition(async () => await loadLocalPartner(localPartnerId));
+			startTransition(async () => {
+				await loadLocalPartner(localPartnerId);
+			});
 		}
 	}, [localPartnerId]);
 
@@ -112,6 +129,7 @@ export default function LocalPartnersForm({
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={localPartnerId ? 'edit' : 'add'}
 		/>
 	);

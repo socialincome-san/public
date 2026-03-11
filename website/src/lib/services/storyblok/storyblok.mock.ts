@@ -31,16 +31,17 @@ export const mockStoryblokIfTestMode = () => {
 		const url = new URL(typeof input === 'string' ? input : input.url);
 
 		return url.protocol === 'https:' && url.hostname === HOST
-			? original(
-					`${MOCK}/${url.hostname}${url.pathname}${url.search}`, // proxy to mockserver
-					{
+			? (async () => {
+					const proxiedUrl = `${MOCK}/${url.hostname}${url.pathname}${url.search}`;
+					console.info('[storyblok-mock] fetch ->', proxiedUrl);
+					return original(proxiedUrl, {
 						...init,
 						headers: {
 							...(init?.headers ?? {}),
 							'x-mock-hash': await hash(new URL(url.toString()), init?.method ?? 'GET'),
 						},
-					},
-				)
+					});
+				})()
 			: original(input, init); // normal fetch
 	}) as typeof fetch;
 };

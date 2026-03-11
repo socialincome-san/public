@@ -1,24 +1,79 @@
-export const getRecipientService = async () => {
-	const { RecipientService } = await import('@/lib/services/recipient/recipient.service');
-	return new RecipientService();
-};
-
-export const getCandidateService = async () => {
-	const { CandidateService } = await import('@/lib/services/candidate/candidate.service');
-	return new CandidateService();
-};
+import { prisma } from '@/lib/database/prisma';
+import { Page } from '@playwright/test';
 
 export const getFirebaseAdminService = async () => {
 	const { FirebaseAdminService } = await import('@/lib/services/firebase/firebase-admin.service');
-	return new FirebaseAdminService();
+	const { prisma } = await import('@/lib/database/prisma');
+	return new FirebaseAdminService(prisma);
 };
 
-export const getCountryService = async () => {
-	const { CountryService } = await import('@/lib/services/country/country.service');
-	return new CountryService();
+export const getRecipientProgramAndLocalPartnerByName = async (firstName: string, lastName: string) => {
+	return prisma.recipient.findFirst({
+		where: {
+			contact: {
+				firstName,
+				lastName,
+			},
+		},
+		select: {
+			program: { select: { name: true } },
+			localPartner: { select: { name: true } },
+		},
+	});
 };
 
-export const getLocalPartnerService = async () => {
-	const { LocalPartnerService } = await import('@/lib/services/local-partner/local-partner.service');
-	return new LocalPartnerService();
+export const getRecipientIdByName = async (firstName: string, lastName: string) => {
+	return prisma.recipient.findFirst({
+		where: {
+			contact: {
+				firstName,
+				lastName,
+			},
+		},
+		select: {
+			id: true,
+		},
+	});
+};
+
+export const assertContactExistsByEmail = async (email: string) => {
+	await prisma.contact.findUniqueOrThrow({
+		where: {
+			email,
+		},
+	});
+};
+
+export const selectOptionByTestId = async (page: Page, fieldName: string, optionName?: string) => {
+	const sectionName = fieldName.includes('.') ? fieldName.split('.')[0] : null;
+	if (sectionName) {
+		const accordionTrigger = page.getByTestId(`form-accordion-trigger-${sectionName}`);
+		if ((await accordionTrigger.count()) > 0) {
+			const isExpanded = await accordionTrigger.getAttribute('aria-expanded');
+			if (isExpanded !== 'true') {
+				await accordionTrigger.click();
+			}
+		}
+	}
+
+	const trigger = page.getByTestId(`form-item-${fieldName}`).locator('button').first();
+	await page.getByTestId(`form-item-${fieldName}`).waitFor({ state: 'visible' });
+	await trigger.click();
+	if (optionName) {
+		await page.getByRole('option', { name: optionName }).click();
+		return;
+	}
+	await page.getByRole('option').first().click();
+};
+
+export const clickDataTableActionItem = async (page: Page, actionItemTestId: string) => {
+	const actionButton = page.getByTestId('data-table-actions-button');
+
+	await actionButton.click();
+	try {
+		await page.getByTestId(actionItemTestId).click({ timeout: 3000 });
+	} catch {
+		await actionButton.click({ force: true });
+		await page.getByTestId(actionItemTestId).click();
+	}
 };

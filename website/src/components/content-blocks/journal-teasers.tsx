@@ -4,6 +4,7 @@ import { JournalTeaserCard } from '@/components/journal-teaser-card';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { services } from '@/lib/services/services';
 import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Link from 'next/link';
@@ -28,19 +29,16 @@ const getSelectedArticleUuids = (selectedArticles: JournalTeasers['selectedArtic
 };
 
 const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
-	const { StoryblokService } = await import('@/lib/services/storyblok/storyblok.service');
-	const storyblokService = new StoryblokService();
-
 	if (blok.articlesDisplayMode === 'selected') {
 		const articleUuids = getSelectedArticleUuids(blok.selectedArticles);
 		if (!articleUuids.length) {
 			return [];
 		}
-		const selectedResult = await storyblokService.getArticlesByUuids(lang, articleUuids);
+		const selectedResult = await services.storyblok.getArticlesByUuids(lang, articleUuids);
 		return selectedResult.success ? selectedResult.data.slice(0, MAX_ARTICLES) : [];
 	}
 
-	const latestResult = await storyblokService.getOverviewArticles(lang, undefined, MAX_ARTICLES);
+	const latestResult = await services.storyblok.getOverviewArticles(lang, undefined, MAX_ARTICLES);
 	return latestResult.success ? latestResult.data.slice(0, MAX_ARTICLES) : [];
 };
 

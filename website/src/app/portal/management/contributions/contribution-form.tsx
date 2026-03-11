@@ -89,21 +89,21 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 
 	useEffect(() => {
 		startTransition(async () => {
-			const { contributorOptions, campaignOptions } = await getContributionsOptionsAction();
-
-			if (!contributorOptions.success || !campaignOptions.success) {
+			const optionsResult = await getContributionsOptionsAction();
+			if (!optionsResult.success) {
 				return;
 			}
+			const { contributorOptions, campaignOptions } = optionsResult.data;
 
 			const contributorEnum = getZodEnum(
-				contributorOptions.data.map((c: ContributorOption) => ({
+				contributorOptions.map((c: ContributorOption) => ({
 					id: c.id,
 					label: c.name,
 				})),
 			);
 
 			const campaignEnum = getZodEnum(
-				campaignOptions.data.map((c: CampaignOption) => ({
+				campaignOptions.map((c: CampaignOption) => ({
 					id: c.id,
 					label: c.name,
 				})),

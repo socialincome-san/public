@@ -1,5 +1,7 @@
 'use server';
 
+import type { ServiceResult } from '@/lib/services/core/base.types';
+import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { buildPreviewCacheKey, setPreviewCache } from '@/lib/storyblok-preview/preview-cache';
 import { verifyStoryblokPreviewToken } from '@/lib/storyblok-preview/preview-token';
 import type { ISbStoryData } from '@storyblok/js';
@@ -17,16 +19,17 @@ export const updateStoryblokPreviewAction = ({
 	previewToken,
 	previewTimestamp,
 	previewRoutePath,
-}: UpdateStoryblokPreviewActionParams) => {
+}: UpdateStoryblokPreviewActionParams): Promise<ServiceResult<void>> => {
 	if (!story || !previewToken || !previewTimestamp || !previewRoutePath) {
-		return;
+		return resultFail('Missing required preview parameters');
 	}
 
 	if (!verifyStoryblokPreviewToken(previewToken, previewTimestamp)) {
-		return;
+		return resultFail('Invalid preview token');
 	}
 
 	const cacheKey = buildPreviewCacheKey(previewToken, previewRoutePath);
 	setPreviewCache(cacheKey, story);
 	revalidatePath(previewRoutePath);
+	return resultOk(undefined);
 };

@@ -137,8 +137,8 @@ export class FirebaseAdminService extends BaseService {
 		}
 	}
 
-	getPhoneFromToken(decodedToken: DecodedIdToken): string | null {
-		return decodedToken.phone_number ?? null;
+	getPhoneFromToken(decodedToken: DecodedIdToken): ServiceResult<string | null> {
+		return this.resultOk(decodedToken.phone_number ?? null);
 	}
 
 	async getOrCreateUser(userData: { email: string; displayName: string }): Promise<ServiceResult<UserRecord>> {
@@ -237,6 +237,27 @@ export class FirebaseAdminService extends BaseService {
 				error,
 			});
 			return this.resultFail(`Could not delete auth user by email: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async deleteByUidIfExists(uid: string): Promise<ServiceResult<boolean>> {
+		try {
+			const userRecord = await authAdmin.auth.getUser(uid).catch((error: any) => {
+				if (error?.code === 'auth/user-not-found') {
+					return null;
+				}
+				throw error;
+			});
+
+			if (!userRecord) {
+				return this.resultOk(true);
+			}
+
+			await authAdmin.auth.deleteUser(uid);
+			return this.resultOk(true);
+		} catch (error) {
+			this.logger.error('Error deleting auth user by uid:', { uid, error });
+			return this.resultFail(`Could not delete auth user by uid: ${JSON.stringify(error)}`);
 		}
 	}
 }

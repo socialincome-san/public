@@ -5,11 +5,11 @@ import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
 
 export class AppReviewModeService extends BaseService {
-	isEnabled(): boolean {
+	private isEnabled(): boolean {
 		return process.env.APP_REVIEW_MODE_ENABLED === 'true';
 	}
 
-	isReviewPhone(phone: string): boolean {
+	private isReviewPhone(phone: string): boolean {
 		const reviewPhone = process.env.APP_REVIEW_PHONE_NUMBER;
 		if (!reviewPhone) {
 			return false;
@@ -17,12 +17,13 @@ export class AppReviewModeService extends BaseService {
 		return phone === reviewPhone || `+${phone}` === reviewPhone;
 	}
 
-	shouldBypass(phone: string): boolean {
-		return this.isEnabled() && this.isReviewPhone(phone);
+	shouldBypass(phone: string): ServiceResult<boolean> {
+		return this.resultOk(this.isEnabled() && this.isReviewPhone(phone));
 	}
 
 	getMockRecipient(phone: string): ServiceResult<RecipientWithPaymentInfo> {
-		if (!this.shouldBypass(phone)) {
+		const bypassResult = this.shouldBypass(phone);
+		if (!bypassResult.success || !bypassResult.data) {
 			return this.resultFail('App review mode not active for this phone');
 		}
 

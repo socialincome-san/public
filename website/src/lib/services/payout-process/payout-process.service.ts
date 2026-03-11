@@ -1,17 +1,24 @@
-import { PayoutStatus, Prisma } from '@/generated/prisma/client';
+import { PayoutStatus, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { format, isSameMonth, startOfMonth } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
-import { ProgramAccessService } from '../program-access/program-access.service';
+import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 
 export class PayoutProcessService extends BaseService {
-	private programAccessService = new ProgramAccessService();
-	private programStatsService = new ProgramStatsService();
-	private exchangeRateService = new ExchangeRateService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly programStatsService: ProgramStatsService,
+		private readonly exchangeRateService: ExchangeRateReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async getRecipientsReadyForFirstPayout(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
 		try {
@@ -88,7 +95,7 @@ export class PayoutProcessService extends BaseService {
 					const paidCount = recipient.payouts.filter(
 						(p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed,
 					).length;
-					return this.programStatsService.isRecipientEligibleForPayout({
+					const isEligibleResult = this.programStatsService.isRecipientEligibleForPayout({
 						startDate: recipient.startDate,
 						suspendedAt: recipient.suspendedAt,
 						paidOrConfirmedCount: paidCount,
@@ -96,6 +103,7 @@ export class PayoutProcessService extends BaseService {
 						payoutInterval: program.payoutInterval,
 						nowDate,
 					});
+					return isEligibleResult.success && isEligibleResult.data;
 				})
 				.map((recipient) => ({
 					id: recipient.id,

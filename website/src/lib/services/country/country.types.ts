@@ -26,6 +26,19 @@ export type CountryTableView = {
 	tableRows: CountryTableViewRow[];
 };
 
+export type CountryTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type CountryPaginatedTableView = {
+	tableRows: CountryTableViewRow[];
+	totalCount: number;
+};
+
 export type CountryPayload = {
 	id: string;
 	isoCode: CountryCode;
@@ -42,41 +55,6 @@ export type CountryPayload = {
 	sanctions?: string[] | null;
 	microfinanceSourceLink?: { id: string; text: string; href: string } | null;
 	networkSourceLink?: { id: string; text: string; href: string } | null;
-};
-
-export type CountryCreateInput = {
-	isoCode: CountryCode;
-	isActive: boolean;
-	currency: Currency;
-	defaultPayoutAmount: number;
-	microfinanceIndex?: number | null;
-	cashConditionOverride: boolean;
-	populationCoverage?: number | null;
-	networkTechnology?: string | null;
-	latestSurveyDate?: Date | null;
-	mobileMoneyProviderIds?: string[];
-	mobileMoneyConditionOverride: boolean;
-	sanctions?: string[];
-	microfinanceSourceLink?: { text: string; href: string } | null;
-	networkSourceLink?: { text: string; href: string } | null;
-};
-
-export type CountryUpdateInput = {
-	id: string;
-	isoCode?: CountryCode;
-	isActive?: boolean;
-	currency: Currency;
-	defaultPayoutAmount: number;
-	microfinanceIndex?: number | null;
-	cashConditionOverride: boolean;
-	populationCoverage?: number | null;
-	networkTechnology?: string | null;
-	latestSurveyDate?: Date | null;
-	mobileMoneyProviderIds?: string[];
-	mobileMoneyConditionOverride: boolean;
-	sanctions?: string[];
-	microfinanceSourceLink?: { text: string; href: string } | null;
-	networkSourceLink?: { text: string; href: string } | null;
 };
 
 export enum CountryCondition {

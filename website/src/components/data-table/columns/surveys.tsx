@@ -53,7 +53,6 @@ export const makeSurveyColumns = (hideProgramName = false): ColumnDef<SurveyTabl
 		{
 			accessorKey: 'surveyUrl',
 			header: 'Copy URL',
-			enableSorting: false,
 			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
 		},
 	];

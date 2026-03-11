@@ -3,7 +3,13 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
-import { createUserAction, getUserAction, getUserOptionsAction, updateUserAction } from '@/lib/server-actions/user-actions';
+import {
+	createUserAction,
+	getUserAction,
+	getUserOptionsAction,
+	updateUserAction,
+} from '@/lib/server-actions/user-actions';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { UserPayload } from '@/lib/services/user/user.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -33,22 +39,23 @@ const initialFormSchema: UserFormSchema = {
 		firstName: {
 			placeholder: 'First name',
 			label: 'First name',
-			zodSchema: z.string().min(1),
+			zodSchema: z.string().trim().min(1, 'First name is required.'),
 		},
 		lastName: {
 			placeholder: 'Last name',
 			label: 'Last name',
-			zodSchema: z.string().min(1),
+			zodSchema: z.string().trim().min(1, 'Last name is required.'),
 		},
 		email: {
 			placeholder: 'Email',
 			label: 'Email',
-			zodSchema: z.string().email(),
+			zodSchema: z.string().trim().email('Please provide a valid email address.'),
 		},
 		role: {
 			placeholder: 'Role',
 			label: 'Role',
 			zodSchema: z.nativeEnum(UserRole),
+			value: UserRole.user,
 		},
 		organizationId: {
 			placeholder: 'Organization',
@@ -63,24 +70,21 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 	const [isLoading, startTransition] = useTransition();
 
 	const loadUser = async (id: string) => {
-		try {
-			const result = await getUserAction(id);
-			if (result.success) {
-				setUser(result.data);
+		const result = await getUserAction(id);
+		handleServiceResult(result, {
+			onSuccess: (data) => {
+				setUser(data);
 
 				const next = { ...formSchema };
-				next.fields.firstName.value = result.data.firstName;
-				next.fields.lastName.value = result.data.lastName;
-				next.fields.email.value = result.data.email;
-				next.fields.role.value = result.data.role;
-				next.fields.organizationId.value = result.data.organizationId;
+				next.fields.firstName.value = data.firstName;
+				next.fields.lastName.value = data.lastName;
+				next.fields.email.value = data.email;
+				next.fields.role.value = data.role;
+				next.fields.organizationId.value = data.organizationId;
 				setFormSchema(next);
-			} else {
-				onError?.(result.error);
-			}
-		} catch (e) {
-			onError?.(e);
-		}
+			},
+			onError: (error) => onError?.(error),
+		});
 	};
 
 	const setOptions = (organizations: { id: string; name: string }[]) => {
@@ -96,6 +100,9 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 				organizationId: {
 					...prev.fields.organizationId,
 					zodSchema: z.nativeEnum(orgEnum),
+					value:
+						prev.fields.organizationId.value ??
+						(organizations.length > 0 ? organizations[0].id : prev.fields.organizationId.value),
 				},
 			},
 		}));
@@ -103,24 +110,14 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 	const onSubmit = (schema: UserFormSchema) => {
 		startTransition(async () => {
-			try {
-				let res: { success: boolean; error?: string };
-				if (userId && user) {
-					const data = buildUpdateUserInput(schema, user);
-					res = await updateUserAction(data);
-				} else {
-					const data = buildCreateUserInput(schema);
-					res = await createUserAction(data);
-				}
-
-				if (res.success) {
-					onSuccess?.();
-				} else {
-					onError?.(res.error);
-				}
-			} catch (e) {
-				onError?.(e);
-			}
+			const result =
+				userId && user
+					? await updateUserAction(buildUpdateUserInput(schema, user))
+					: await createUserAction(buildCreateUserInput(schema));
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 

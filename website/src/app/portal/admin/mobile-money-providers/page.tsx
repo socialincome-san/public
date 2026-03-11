@@ -1,26 +1,31 @@
+import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { MobileMoneyProviderService } from '@/lib/services/mobile-money-provider/mobile-money-provider.service';
 import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+import { services } from '@/lib/services/services';
+import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 import MobileMoneyProvidersTable from './mobile-money-providers-table';
 
-export default function MobileMoneyProvidersPage() {
+export default function MobileMoneyProvidersPage({ searchParams }: SearchParamsPageProps) {
 	return (
-		<Suspense>
-			<MobileMoneyProvidersDataLoader />
+		<Suspense fallback={<AppLoadingSkeleton />}>
+			<MobileMoneyProvidersDataLoader searchParams={searchParams} />
 		</Suspense>
 	);
 }
 
-const MobileMoneyProvidersDataLoader = async () => {
+const MobileMoneyProvidersDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	await requireAdmin(user);
+	const resolvedSearchParams = await searchParams;
+	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new MobileMoneyProviderService();
-	const result = await service.getTableView(user.id);
+	const result = await services.read.mobileMoneyProvider.getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: MobileMoneyProviderTableViewRow[] = result.success ? result.data.tableRows : [];
+	const totalRows = result.success ? result.data.totalCount : 0;
 
-	return <MobileMoneyProvidersTable rows={rows} error={error} />;
+	return <MobileMoneyProvidersTable rows={rows} error={error} query={{ ...tableQuery, totalRows }} />;
 };

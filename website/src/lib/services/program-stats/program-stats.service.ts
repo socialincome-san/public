@@ -1,9 +1,17 @@
-import { ContributionStatus, Currency, PaymentEventType, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
+import {
+	ContributionStatus,
+	Currency,
+	PaymentEventType,
+	PayoutStatus,
+	PrismaClient,
+	SurveyStatus,
+} from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
+import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import {
 	ProgramBudgetCalculation,
 	ProgramBudgetCalculationInput,
@@ -12,7 +20,13 @@ import {
 } from './program-stats.types';
 
 export class ProgramStatsService extends BaseService {
-	private exchangeRateService = new ExchangeRateService();
+	constructor(
+		db: PrismaClient,
+		private readonly exchangeRateService: ExchangeRateReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
 		try {
@@ -367,18 +381,18 @@ export class ProgramStatsService extends BaseService {
 		programDurationInMonths: number;
 		payoutInterval: string;
 		nowDate: Date;
-	}): boolean {
+	}): ServiceResult<boolean> {
 		const hasStarted = this.isRecipientStartedNow(params.startDate, params.nowDate);
 		if (!hasStarted) {
-			return false;
+			return this.resultOk(false);
 		}
 
 		if (this.isRecipientSuspendedNow(params.suspendedAt, params.nowDate)) {
-			return false;
+			return this.resultOk(false);
 		}
 
 		const expectedIntervals = this.getExpectedIntervals(params.programDurationInMonths, params.payoutInterval);
-		return !this.isRecipientCompleted(params.paidOrConfirmedCount, expectedIntervals);
+		return this.resultOk(!this.isRecipientCompleted(params.paidOrConfirmedCount, expectedIntervals));
 	}
 
 	private async getLatestRatesOrUndefined(): Promise<Partial<Record<Currency, number>> | undefined> {

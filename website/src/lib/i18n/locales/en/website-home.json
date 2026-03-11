@@ -21,6 +21,16 @@
 		]
 	},
 	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/e4IuMXCAcXeGaFiskrAlXSEXIvAZXkugk3UweHfU9thkgNjaAGtdlw.vtt",
+	"video-controls": {
+		"play-video": "Play video",
+		"pause-video": "Pause video",
+		"mute-video": "Mute video",
+		"unmute-video": "Unmute video",
+		"show-captions": "Show captions",
+		"hide-captions": "Hide captions",
+		"expand-video-view": "Expand video view",
+		"exit-expanded-video-view": "Exit expanded video view"
+	},
 	"section-2": {
 		"title-1": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty.",
 		"title-2": [
