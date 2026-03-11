@@ -266,27 +266,38 @@ export const DataTableToolbar = ({
 								</Button>
 							</div>
 							<div className="space-y-2">
-								{filters.map((filter) => (
-									<div key={filter.id} className="space-y-1">
-										<label className="text-muted-foreground text-xs">{filter.label}</label>
-										<Select
-											key={`${filter.id}-${filter.value ?? 'none'}`}
-											value={filter.value}
-											onValueChange={(value) => filter.onChange(value)}
-										>
-											<SelectTrigger className="h-9 w-full" data-testid={`data-table-filter-${filter.id}-trigger`}>
-												<SelectValue placeholder={filter.placeholder} />
-											</SelectTrigger>
-											<SelectContent align="end">
-												{filter.options.map((option) => (
-													<SelectItem key={option.value} value={option.value}>
-														{option.label}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</div>
-								))}
+								{filters.map((filter) => {
+									const hasOptions = filter.options.length > 0;
+
+									return (
+										<div key={filter.id} className="space-y-1">
+											<label className="text-muted-foreground text-xs">{filter.label}</label>
+											<Select
+												key={`${filter.id}-${filter.value ?? 'none'}`}
+												value={hasOptions ? filter.value : undefined}
+												onValueChange={(value) => filter.onChange(value)}
+												disabled={!hasOptions}
+											>
+												<SelectTrigger className="h-9 w-full" data-testid={`data-table-filter-${filter.id}-trigger`}>
+													<SelectValue placeholder={hasOptions ? filter.placeholder : 'No options available'} />
+												</SelectTrigger>
+												<SelectContent align="end">
+													{hasOptions ? (
+														filter.options.map((option) => (
+															<SelectItem key={option.value} value={option.value}>
+																{option.label}
+															</SelectItem>
+														))
+													) : (
+														<SelectItem value="no-options-available" disabled>
+															No options available
+														</SelectItem>
+													)}
+												</SelectContent>
+											</Select>
+										</div>
+									);
+								})}
 							</div>
 						</PopoverContent>
 					</Popover>
