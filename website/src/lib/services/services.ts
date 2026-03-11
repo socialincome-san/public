@@ -48,6 +48,7 @@ import { SurveyWriteService } from './survey/survey-write.service';
 import { TransparencyService } from './transparency/transparency.service';
 import { TwilioService } from './twilio/twilio.service';
 import { UserReadService } from './user/user-read.service';
+import { UserValidationService } from './user/user-validation.service';
 import { UserWriteService } from './user/user-write.service';
 
 const appReviewMode = new AppReviewModeService(prisma);
@@ -57,6 +58,7 @@ const programAccessRead = new ProgramAccessReadService(prisma);
 const programAccessWrite = new ProgramAccessWriteService(prisma);
 const organizationAccess = new OrganizationAccessService(prisma);
 const userRead = new UserReadService(prisma);
+const userValidation = new UserValidationService(prisma);
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma);
@@ -65,7 +67,7 @@ const sendgrid = new SendgridSubscriptionService();
 
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
 const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
-const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead);
+const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead, userValidation);
 const candidateRead = new CandidateReadService(prisma, userRead);
 const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin);
 const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode);

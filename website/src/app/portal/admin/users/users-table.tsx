@@ -36,8 +36,14 @@ export default function UsersTable({
 		setOpen(true);
 	};
 
-	const onError = (error?: unknown) => {
-		setErrorMessage(`Error saving user: ${error}`);
+	const onError = (error: unknown) => {
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: typeof error === 'string'
+					? error
+					: 'An unexpected error occurred while saving.';
+		setErrorMessage(`Error saving user: ${errorMessage}`);
 		logger.error('User Form Error', { error });
 	};
 

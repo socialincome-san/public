@@ -25,7 +25,7 @@ test('admin local partners with direct URL sorting matches screenshot', async ({
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test.only('add new local partner', async ({ page }) => {
+test('add new local partner', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-local-partner-${unique}`;
 	const email = `e2e.local.partner.${unique}@example.com`;
@@ -61,7 +61,7 @@ test.only('add new local partner', async ({ page }) => {
 	expect(created?.contact.phone?.number).toBe('+41791230001');
 });
 
-test.only('shows uniqueness error when email already exists', async ({ page }) => {
+test('shows uniqueness error when email already exists', async ({ page }) => {
 	await page.goto('/portal/admin/local-partners');
 	await page.getByTestId('data-table-actions-button').click();
 	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
@@ -77,7 +77,7 @@ test.only('shows uniqueness error when email already exists', async ({ page }) =
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 });
 
-test.only('edit local partner and remove phone number', async ({ page }) => {
+test('edit local partner and remove phone number', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-remove-phone-${unique}`;
 	const email = `e2e.remove.phone.${unique}@example.com`;
@@ -136,7 +136,7 @@ test.only('edit local partner and remove phone number', async ({ page }) => {
 	expect(removedPhone).toBeNull();
 });
 
-test.only('delete local partner from admin table', async ({ page }) => {
+test('delete local partner from admin table', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-delete-partner-${unique}`;
 	const email = `e2e.delete.partner.${unique}@example.com`;
@@ -189,7 +189,7 @@ test.only('delete local partner from admin table', async ({ page }) => {
 	expect(deletedAccount).toBeNull();
 });
 
-test.only('local partner create update delete keeps Firebase user in sync', async ({ page }) => {
+test('local partner create update delete keeps Firebase user in sync', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const partnerName = `e2e-firebase-partner-${unique}`;

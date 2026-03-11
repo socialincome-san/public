@@ -3,10 +3,11 @@
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { ServiceResult } from '@/lib/services/core/base.types';
 import { services } from '@/lib/services/services';
-import { UserCreateInput, UserUpdateInput } from '@/lib/services/user/user.types';
+import { UserFormCreateInput, UserFormUpdateInput } from '@/lib/services/user/user-form-input';
+import { UserUpdateInput } from '@/lib/services/user/user.types';
 import { revalidatePath } from 'next/cache';
 
-export const createUserAction = async (input: UserCreateInput): Promise<ServiceResult<unknown>> => {
+export const createUserAction = async (input: UserFormCreateInput): Promise<ServiceResult<unknown>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -21,7 +22,7 @@ export const createUserAction = async (input: UserCreateInput): Promise<ServiceR
 	return result;
 };
 
-export const updateUserAction = async (input: UserUpdateInput): Promise<ServiceResult<unknown>> => {
+export const updateUserAction = async (input: UserFormUpdateInput): Promise<ServiceResult<unknown>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
