@@ -193,3 +193,94 @@ test('delete candidate removes Firebase user for payment phone', async ({ page }
 	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
 	await expect(page.getByRole('cell', { name: paymentPhone })).toHaveCount(0);
 });
+
+test('edit candidate and remove contact phone and address', async ({ page }) => {
+	const unique = Date.now();
+	const firstName = `Edge-${unique}`;
+	const lastName = 'Candidate';
+	const contactPhone = `+23277${String(unique).slice(-6)}`;
+
+	const localPartner = await prisma.localPartner.findFirst({
+		select: { id: true },
+	});
+	expect(localPartner?.id).toBeTruthy();
+
+	const created = await prisma.recipient.create({
+		data: {
+			localPartner: {
+				connect: {
+					id: localPartner!.id,
+				},
+			},
+			contact: {
+				create: {
+					firstName,
+					lastName,
+					email: `edge.candidate.${unique}@example.com`,
+					phone: {
+						create: {
+							number: contactPhone,
+							hasWhatsApp: false,
+						},
+					},
+					address: {
+						create: {
+							street: 'Edge Street',
+							number: '12',
+							city: 'Freetown',
+							zip: '1000',
+						},
+					},
+				},
+			},
+		},
+		select: {
+			id: true,
+			contact: {
+				select: {
+					phoneId: true,
+					addressId: true,
+				},
+			},
+		},
+	});
+	expect(created.contact.phoneId).toBeTruthy();
+	expect(created.contact.addressId).toBeTruthy();
+
+	await page.goto(`/portal/admin/candidates?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	await page.getByRole('cell', { name: firstName }).click();
+	await page.getByTestId('form-accordion-trigger-contact').click();
+	await page.getByTestId('form-item-contact.phone').locator('input').clear();
+	await page.getByTestId('form-item-contact.street').locator('input').clear();
+	await page.getByTestId('form-item-contact.number').locator('input').clear();
+	await page.getByTestId('form-item-contact.city').locator('input').clear();
+	await page.getByTestId('form-item-contact.zip').locator('input').clear();
+	await selectOptionByTestId(page, 'contact.language', 'en');
+	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const updated = await prisma.recipient.findUniqueOrThrow({
+		where: { id: created.id },
+		select: {
+			contact: {
+				select: {
+					phoneId: true,
+					addressId: true,
+				},
+			},
+		},
+	});
+	expect(updated.contact.phoneId).toBeNull();
+	expect(updated.contact.addressId).toBeNull();
+
+	const deletedPhone = await prisma.phone.findUnique({
+		where: { id: created.contact.phoneId! },
+		select: { id: true },
+	});
+	const deletedAddress = await prisma.address.findUnique({
+		where: { id: created.contact.addressId! },
+		select: { id: true },
+	});
+	expect(deletedPhone).toBeNull();
+	expect(deletedAddress).toBeNull();
+});

@@ -114,3 +114,43 @@ test('edit contribution', async ({ page }) => {
 	expect(Number(updated.feesChf)).toBe(updatedFeesChf);
 	expect(updated.status).toBe('pending');
 });
+
+test('shows validation error when contribution amount is invalid', async ({ page }) => {
+	const source = await prisma.contribution.findFirst({
+		select: {
+			contributor: {
+				select: {
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+				},
+			},
+			campaign: {
+				select: {
+					title: true,
+				},
+			},
+		},
+	});
+	expect(source).toBeTruthy();
+
+	const contributorName =
+		`${source!.contributor.contact?.firstName ?? ''} ${source!.contributor.contact?.lastName ?? ''}`.trim();
+
+	await page.goto('/portal/management/contributions');
+	await clickDataTableActionItem(page, 'data-table-action-item-add-contribution');
+	await selectOptionByTestId(page, 'contributor', contributorName);
+	await selectOptionByTestId(page, 'campaign', source!.campaign.title);
+	await page.getByTestId('form-item-amount').locator('input').fill('-1');
+	await selectOptionByTestId(page, 'currency', 'USD');
+	await page.getByTestId('form-item-amountChf').locator('input').fill('1');
+	await page.getByTestId('form-item-feesChf').locator('input').fill('1');
+	await selectOptionByTestId(page, 'status', 'succeeded');
+	await page.getByRole('button', { name: 'Save' }).click();
+
+	await expect(page.getByText('Amount must be positive')).toBeVisible();
+	await expect(page.getByTestId('dynamic-form')).toBeVisible();
+});
