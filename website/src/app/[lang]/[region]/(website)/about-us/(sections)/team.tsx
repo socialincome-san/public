@@ -149,7 +149,7 @@ const groups: Group[] = [
 
 export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
+		language: lang,
 		namespaces: ['countries', 'website-about-us'],
 	});
 	return (
@@ -195,7 +195,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 									'grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5': group.size === 'md',
 								},
 								{
-									'grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': group.size == 'lg',
+									'grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': group.size === 'lg',
 								},
 							)}
 						>

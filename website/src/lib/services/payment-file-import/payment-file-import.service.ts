@@ -7,10 +7,7 @@ import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
 import xpath from 'xpath';
-import {
-	CONTRIBUTION_REFERENCE_ID_LENGTH,
-	CONTRIBUTOR_REFERENCE_ID_LENGTH,
-} from '../bank-transfer/bank-transfer-config';
+import { CONTRIBUTION_REFERENCE_ID_LENGTH, CONTRIBUTOR_REFERENCE_ID_LENGTH } from '../bank-transfer/bank-transfer-config';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
@@ -127,9 +124,7 @@ export class PaymentFileImportService extends BaseService {
 	 * @param bankContributions contributions from payment files
 	 */
 	// TODO: create or update
-	private async createOrUpdateContributions(
-		bankContributions: BankContribution[],
-	): Promise<ServiceResult<PaymentEvent[]>> {
+	private async createOrUpdateContributions(bankContributions: BankContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
 		try {
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 			if (!fallbackCampaignResult.success) {
@@ -150,8 +145,7 @@ export class PaymentFileImportService extends BaseService {
 
 			for (const c of bankContributions) {
 				const contributor = contributors.data.find(
-					(contributor) =>
-						contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
+					(contributor) => contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
 				);
 				if (!contributor) {
 					this.logger.alert(

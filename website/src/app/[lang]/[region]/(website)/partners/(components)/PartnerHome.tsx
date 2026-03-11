@@ -46,7 +46,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 		orgFundRaiserText: currentNgo!['org-fundraiser-text'] ?? null,
 		orgSlug: currentNgo!['org-slug'],
 	};
-	const showVisitOnline: boolean = !!(
+	const showVisitOnline = !!(
 		ngoHoverCard.orgInstagram ||
 		ngoHoverCard.orgFacebook ||
 		ngoHoverCard.orgWebsite ||
@@ -54,7 +54,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 		ngoHoverCard.orgYoutube
 	);
 
-	const showFundRaiser: boolean = !!ngoHoverCard.orgFundRaiserText;
+	const showFundRaiser = !!ngoHoverCard.orgFundRaiserText;
 	return (
 		<div className="flex items-center justify-center">
 			<div className="sm:w-3/4">

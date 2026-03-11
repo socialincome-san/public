@@ -66,11 +66,7 @@ export const OpenSourceContributorsClient = ({
 
 			{!showAllContributors && totalContributors > 16 && (
 				<div className="mt-12 flex justify-center">
-					<Button
-						variant="link"
-						onClick={() => setShowAllContributors(true)}
-						className="text-card-foreground mr-20 text-xl"
-					>
+					<Button variant="link" onClick={() => setShowAllContributors(true)} className="text-card-foreground mr-20 text-xl">
 						{`Show all ${totalContributors} contributors`}
 					</Button>
 				</div>

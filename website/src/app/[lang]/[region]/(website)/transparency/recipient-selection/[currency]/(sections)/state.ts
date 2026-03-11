@@ -54,7 +54,7 @@ export const loadPastDraws = async (): Promise<CompletedDraw[]> => {
 // extracts the name from a file of format `{count}-{name}-{date}.txt` and capitalises the first letter
 const extractDrawName = (filename: string): string => {
 	const drawNameMatch = /\d-([A-Za-z -]+)-.*\.txt/.exec(filename);
-	if (drawNameMatch == null || drawNameMatch.length < 2) {
+	if (drawNameMatch === null || drawNameMatch.length < 2) {
 		return '';
 	}
 	const unsanitisedName = drawNameMatch[1];

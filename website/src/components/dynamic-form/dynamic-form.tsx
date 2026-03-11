@@ -131,11 +131,11 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 				if (!isFormField(field)) {
 					//nested
 					for (const [nestedName, nestedField] of Object.entries(field.fields)) {
-						if (isFormField(nestedField) && nestedField.value != null) {
+						if (isFormField(nestedField) && nestedField.value !== null && nestedField.value !== undefined) {
 							form.setValue(`${name}.${nestedName}` as any, nestedField.value);
 						}
 					}
-				} else if (field.value != null) {
+				} else if (field.value !== null && field.value !== undefined) {
 					form.setValue(name, field.value);
 				}
 			}

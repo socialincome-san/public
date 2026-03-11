@@ -17,7 +17,7 @@ type WalletProps = {
 };
 
 const formatAmount = (amount?: number): string => {
-	if (amount == null || isNaN(amount)) {
+	if (amount === null || amount === undefined || isNaN(amount)) {
 		return '';
 	}
 	return new Intl.NumberFormat('de-CH', {

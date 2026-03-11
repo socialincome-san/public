@@ -12,14 +12,8 @@ const getStaticPages = (startPath: string): string[] => {
 			const fullPath = path.join(currentPath, directoryEntry.name);
 			if (!excludedPrefixes.some((char) => directoryEntry.name.startsWith(char))) {
 				if (directoryEntry.isDirectory()) {
-					traverse(
-						fullPath,
-						directoryEntry.name.startsWith('(') ? currentRoute : `${currentRoute}/${directoryEntry.name}`,
-					);
-				} else if (
-					(directoryEntry.isFile() && directoryEntry.name === 'page.tsx') ||
-					directoryEntry.name === 'page.ts'
-				) {
+					traverse(fullPath, directoryEntry.name.startsWith('(') ? currentRoute : `${currentRoute}/${directoryEntry.name}`);
+				} else if ((directoryEntry.isFile() && directoryEntry.name === 'page.tsx') || directoryEntry.name === 'page.ts') {
 					const route = `${currentRoute}/${directoryEntry.name.replace(/page\.(tsx|ts)$/, '')}`
 						.replace(/^\//, '')
 						.replace(/\/+$/, '');

@@ -30,7 +30,7 @@ export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 	const translator = useTranslator(lang, 'website-survey');
 
 	if (!hasError && survey && translator) {
-		if (survey.status == SurveyStatus.completed) {
+		if (survey.status === SurveyStatus.completed) {
 			return <div>Survey already completed</div>;
 		}
 

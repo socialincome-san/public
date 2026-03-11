@@ -29,10 +29,7 @@ export class ProgramStatsService extends BaseService {
 			}
 
 			const payoutPerInterval = Number(program.payoutPerInterval);
-			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(
-				cohorts.activeRecipientsCount,
-				payoutPerInterval,
-			);
+			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(cohorts.activeRecipientsCount, payoutPerInterval);
 			const rates = await this.getLatestRatesOrUndefined();
 			const costPerIntervalChf =
 				this.convertCurrencyAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
@@ -78,10 +75,7 @@ export class ProgramStatsService extends BaseService {
 
 			const rates = await this.getLatestRatesOrUndefined();
 
-			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(
-				cohorts.activeRecipientsCount,
-				payoutPerInterval,
-			);
+			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(cohorts.activeRecipientsCount, payoutPerInterval);
 			const costPerIntervalChf =
 				this.convertCurrencyAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
 				costPerIntervalProgramCurrency;
@@ -476,11 +470,7 @@ export class ProgramStatsService extends BaseService {
 			input.payoutPerInterval,
 			input.payoutInterval,
 		);
-		const monthlyCost = this.calculateMonthlyCost(
-			input.amountOfRecipients,
-			input.payoutPerInterval,
-			input.payoutInterval,
-		);
+		const monthlyCost = this.calculateMonthlyCost(input.amountOfRecipients, input.payoutPerInterval, input.payoutInterval);
 		const numberOfIntervals = this.getNumberOfIntervals(input.programDuration, input.payoutInterval);
 
 		let calculatedTotalBudget = totalBudget;
@@ -488,18 +478,8 @@ export class ProgramStatsService extends BaseService {
 		let exchangeRateText: string | undefined = `1 ${input.payoutCurrency} = 1 ${input.displayCurrency}`;
 
 		if (input.displayCurrency !== input.payoutCurrency) {
-			const convertedTotal = this.convertCurrencyAmount(
-				totalBudget,
-				input.payoutCurrency,
-				input.displayCurrency,
-				rates,
-			);
-			const convertedMonthly = this.convertCurrencyAmount(
-				monthlyCost,
-				input.payoutCurrency,
-				input.displayCurrency,
-				rates,
-			);
+			const convertedTotal = this.convertCurrencyAmount(totalBudget, input.payoutCurrency, input.displayCurrency, rates);
+			const convertedMonthly = this.convertCurrencyAmount(monthlyCost, input.payoutCurrency, input.displayCurrency, rates);
 			exchangeRateText = this.getExchangeRateText(input.payoutCurrency, input.displayCurrency, rates);
 			if (convertedTotal !== undefined && convertedMonthly !== undefined && exchangeRateText) {
 				calculatedTotalBudget = convertedTotal;

@@ -38,7 +38,7 @@ export default async function NgoCard({
 		namespaces: ['website-common', 'countries', 'website-partners'],
 	});
 
-	const showVisitOnline: boolean = !!(
+	const showVisitOnline = !!(
 		ngoHoverCard.orgInstagram ||
 		ngoHoverCard.orgFacebook ||
 		ngoHoverCard.orgWebsite ||
@@ -46,7 +46,7 @@ export default async function NgoCard({
 		ngoHoverCard.orgYoutube
 	);
 
-	const showFundRaiser: boolean = !!ngoHoverCard.orgFundRaiserText;
+	const showFundRaiser = !!ngoHoverCard.orgFundRaiserText;
 
 	const SL_flag = SL as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
 

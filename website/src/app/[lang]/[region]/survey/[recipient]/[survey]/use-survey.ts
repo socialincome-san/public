@@ -56,7 +56,7 @@ export const useSurvey = () => {
 			await saveChanges(surveyId, {
 				data: data,
 				status: status,
-				completedAt: status == SurveyStatus.completed ? now() : null,
+				completedAt: status === SurveyStatus.completed ? now() : null,
 			});
 		} catch (error) {
 			if (retryCount >= 2) {
