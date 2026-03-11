@@ -262,7 +262,7 @@ export class CountryReadService extends BaseService {
 										href: country.microfinanceSourceLink.href,
 									}
 								: cashIsOverridden
-									? { text: 'Source: SI Research' }
+									? { text: 'SI research' }
 									: undefined,
 						},
 					},
@@ -271,14 +271,14 @@ export class CountryReadService extends BaseService {
 						details: {
 							text: this.getMobileMoneyDetailsText(country.isoCode, country.mobileMoneyProviders, mobileMoneyCondition),
 							source: {
-								text: 'Source: SI Research',
+								text: 'SI research',
 							},
 						},
 					},
 					mobileNetwork: {
 						condition: this.getMobileNetworkCondition(populationCoverage),
 						details: {
-							text: this.getMobileNetworkDetailsText(country.isoCode, populationCoverage),
+							text: this.getMobileNetworkDetailsText(country.isoCode, populationCoverage, country.networkTechnology),
 							source: country.networkSourceLink
 								? {
 										text: country.networkSourceLink.text,
@@ -291,10 +291,10 @@ export class CountryReadService extends BaseService {
 						condition: this.getSanctionsCondition(country.sanctions),
 						details: {
 							text: this.getSanctionsDetailsText(country.isoCode, country.sanctions),
-							source:
-								country.sanctions && country.sanctions.length > 0
-									? { text: 'Source: EU Sanctions Map & US Sanctions List' }
-									: undefined,
+							source: {
+								text: 'Open Sanctions',
+								href: 'https://www.opensanctions.org/search/',
+							},
 						},
 					},
 				};
@@ -346,7 +346,7 @@ export class CountryReadService extends BaseService {
 		condition: CountryCondition,
 	): string {
 		if (condition === CountryCondition.MET) {
-			return microfinanceIndex === null
+			return microfinanceIndex === null || microfinanceIndex === 0
 				? `Market functionality in ${getCountryNameByCode(countryIsoCode)} appears intact.`
 				: `Market functionality in ${getCountryNameByCode(countryIsoCode)} appears intact (MFI ${microfinanceIndex}).`;
 		}
@@ -362,34 +362,45 @@ export class CountryReadService extends BaseService {
 		condition: CountryCondition,
 	): string {
 		if (condition !== CountryCondition.MET) {
-			return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is not sufficient.`;
+			return `Mobile money infrastructure appears not sufficient.`;
 		}
 
 		if (!mobileMoneyProviders || mobileMoneyProviders.length === 0) {
-			return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is considered sufficient.`;
+			return `Mobile money infrastructure appears sufficient.`;
 		}
 
 		const providers = mobileMoneyProviders.map((p) => p.name).join(', ');
 
-		return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is considered sufficient. Following ${
+		return `Mobile money infrastructure appears sufficient. ${
 			mobileMoneyProviders.length
-		} provider${mobileMoneyProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
+		} active provider${mobileMoneyProviders.length > 1 ? 's' : ' is'}: ${providers}.`;
 	}
 
-	private getMobileNetworkDetailsText(countryIsoCode: CountryCode, populationCoverage: number | null): string {
+	private formatNetworkTechnology(tech: NetworkTechnology | null): string {
+		const map: Partial<Record<NetworkTechnology, string>> = {
+			[NetworkTechnology.g3]: '3G',
+			[NetworkTechnology.g4]: '4G',
+			[NetworkTechnology.g5]: '5G',
+		};
+		return tech ? (map[tech] ?? tech) : '';
+	}
+
+	private getMobileNetworkDetailsText(countryIsoCode: CountryCode, populationCoverage: number | null, networkTechnology: NetworkTechnology | null,): string {
 		if (populationCoverage === null) {
 			return `No reliable mobile network coverage data available for ${getCountryNameByCode(countryIsoCode)}.`;
 		}
+		const tech = this.formatNetworkTechnology(networkTechnology);
 
 		return populationCoverage >= 50
-			? `Mobile network coverage of ${getCountryNameByCode(countryIsoCode)} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
-			: `Mobile network coverage of ${getCountryNameByCode(countryIsoCode)} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
+			? `Mobile network coverage is considered sufficient, with ${populationCoverage}% population coverage${tech ? ` on ${tech}` : ''}.`
+			: `Mobile network coverage is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
+
 	}
 
 	private getSanctionsDetailsText(countryIsoCode: CountryCode, sanctions: SanctionRegime[] | null): string {
 		return sanctions && sanctions.length > 0
-			? `${getCountryNameByCode(countryIsoCode)} is subject to international sanctions or restrictions.`
-			: `${getCountryNameByCode(countryIsoCode)} is not on the UN, US or EU sanctioned list.`;
+			? `${getCountryNameByCode(countryIsoCode)} is subject to international sanctions.`
+			: `${getCountryNameByCode(countryIsoCode)} is not subject to international sanctions.`;
 	}
 
 	private toNumber(value: Prisma.Decimal | null): number | null {
