@@ -2,7 +2,7 @@
 
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
-import { createContext, PropsWithChildren, useRef } from 'react';
+import { createContext, PropsWithChildren, useEffect, useRef } from 'react';
 
 const DEFAULT_REGION = 'europe-west6';
 
@@ -11,7 +11,7 @@ const functionsEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATO
 const functionsEmulatorPort = Number(process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_PORT);
 
 export const FirebaseAppProvider = ({ children }: PropsWithChildren) => {
-	const connectFunctionsEmulatorCalled = useRef(false);
+	const connectFunctionsEmulatorCalled = useRef<true | null>(null);
 	const firebaseConfig = {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
 		appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
@@ -25,11 +25,13 @@ export const FirebaseAppProvider = ({ children }: PropsWithChildren) => {
 	const app = initializeApp(firebaseConfig);
 	const functions = getFunctions(app, DEFAULT_REGION);
 
-	if (functionsEmulatorHost && functionsEmulatorPort && !connectFunctionsEmulatorCalled.current) {
-		console.debug('Using functions emulator');
-		connectFunctionsEmulator(functions, functionsEmulatorHost, functionsEmulatorPort);
-		connectFunctionsEmulatorCalled.current = true;
-	}
+	useEffect(() => {
+		if (functionsEmulatorHost && functionsEmulatorPort && connectFunctionsEmulatorCalled.current === null) {
+			console.debug('Using functions emulator');
+			connectFunctionsEmulator(functions, functionsEmulatorHost, functionsEmulatorPort);
+			connectFunctionsEmulatorCalled.current = true;
+		}
+	}, [functions]);
 
 	return <FirebaseAppContext.Provider value={app}>{children}</FirebaseAppContext.Provider>;
 };

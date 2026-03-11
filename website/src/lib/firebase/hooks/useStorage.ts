@@ -8,15 +8,17 @@ const storageEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_HO
 const storageEmulatorPort = Number(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_PORT);
 
 export const useStorage = () => {
-	const connectStorageEmulatorCalled = useRef(false);
+	const connectStorageEmulatorCalled = useRef<true | null>(null);
 	const app = useFirebaseApp();
 	const storage = getStorage(app);
 
-	if (storageEmulatorHost && storageEmulatorPort && !connectStorageEmulatorCalled.current) {
-		console.debug('Using storage emulator');
-		connectStorageEmulator(storage, storageEmulatorHost, storageEmulatorPort);
-		connectStorageEmulatorCalled.current = true;
-	}
+	useEffect(() => {
+		if (storageEmulatorHost && storageEmulatorPort && connectStorageEmulatorCalled.current === null) {
+			console.debug('Using storage emulator');
+			connectStorageEmulator(storage, storageEmulatorHost, storageEmulatorPort);
+			connectStorageEmulatorCalled.current = true;
+		}
+	}, [storage]);
 
 	return storage;
 };

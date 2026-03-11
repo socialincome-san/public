@@ -31,7 +31,6 @@ export default [
 			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
 			'react-hooks/set-state-in-effect': 'warn',
 			'react-hooks/static-components': 'warn',
-			'react-hooks/refs': 'warn',
 			'react/prop-types': 'warn',
 			'prettier/prettier': 'warn',
 		},
