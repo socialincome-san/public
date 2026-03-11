@@ -63,10 +63,7 @@ const getSimpleMapping = (question: Question, t: TranslateFunction): object => {
 		name: question.name,
 		title: t(question.translationKey),
 		description: question.descriptionTranslationKey && t(question.descriptionTranslationKey),
-		choices:
-			question.choices && question.choices.length
-				? translateChoices(t, question.choices, question.choicesTranslationKey!)
-				: undefined,
+		choices: question.choices?.length ? translateChoices(t, question.choices, question.choicesTranslationKey!) : undefined,
 	};
 };
 

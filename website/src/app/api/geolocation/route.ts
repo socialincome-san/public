@@ -1,4 +1,4 @@
-export const GET = async (request: Request) => {
+export const GET = (request: Request) => {
 	try {
 		const country = request.headers.get('cf-ipcountry') || 'Unknown';
 		const ip = request.headers.get('cf-connecting-ip') || 'Unknown';
@@ -11,7 +11,7 @@ export const GET = async (request: Request) => {
 			city,
 			ip,
 		});
-	} catch (error: any) {
-		return new Response(null, { status: 500, statusText: error.message });
+	} catch (error: unknown) {
+		return new Response(null, { status: 500, statusText: String(error) });
 	}
 };

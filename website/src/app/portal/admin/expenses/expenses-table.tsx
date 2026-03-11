@@ -28,7 +28,7 @@ export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewR
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving expense: ${error}`);
+		setErrorMessage(`Error saving expense: ${String(error)}`);
 		logger.error('Expense Form Error', { error });
 	};
 

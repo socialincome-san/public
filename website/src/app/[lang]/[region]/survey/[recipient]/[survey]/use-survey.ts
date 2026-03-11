@@ -26,7 +26,7 @@ export const useSurvey = () => {
 			}
 			return result.success;
 		} catch (error) {
-			logger.error(`error during survey login: ${error}`);
+			logger.error(`error during survey login: ${String(error)}`);
 			setHasError(true);
 			return false;
 		}
@@ -42,7 +42,7 @@ export const useSurvey = () => {
 			setSurvey(survey);
 			setHasError(false);
 		} catch (error) {
-			logger.error(`error loading survey: ${error}`);
+			logger.error(`error loading survey: ${String(error)}`);
 			setSurvey(null);
 			setHasError(true);
 			logout();
@@ -62,7 +62,7 @@ export const useSurvey = () => {
 			if (retryCount >= 2) {
 				setHasError(true);
 				logout();
-				logger.error(`error saving survey, abording: ${error}`);
+				logger.error(`error saving survey, abording: ${String(error)}`);
 				return;
 			}
 			logger.error('error saving survey, retrying');

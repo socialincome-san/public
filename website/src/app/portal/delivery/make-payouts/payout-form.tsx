@@ -136,7 +136,11 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 					res = await createPayoutAction(data);
 				}
 
-				res.success ? onSuccess?.() : onError?.(res.error);
+				if (res.success) {
+					onSuccess?.();
+				} else {
+					onError?.(res.error);
+				}
 			} catch (e) {
 				onError?.(e);
 			}

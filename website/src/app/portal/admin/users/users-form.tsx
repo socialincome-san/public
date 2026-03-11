@@ -3,12 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
-import {
-	createUserAction,
-	getUserAction,
-	getUserOptionsAction,
-	updateUserAction,
-} from '@/lib/server-actions/user-actions';
+import { createUserAction, getUserAction, getUserOptionsAction, updateUserAction } from '@/lib/server-actions/user-actions';
 import type { UserPayload } from '@/lib/services/user/user.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -118,7 +113,11 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 					res = await createUserAction(data);
 				}
 
-				res.success ? onSuccess?.() : onError?.(res.error);
+				if (res.success) {
+					onSuccess?.();
+				} else {
+					onError?.(res.error);
+				}
 			} catch (e) {
 				onError?.(e);
 			}

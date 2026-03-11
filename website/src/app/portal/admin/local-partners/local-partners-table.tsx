@@ -10,13 +10,7 @@ import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import LocalPartnersForm from './local-partners-form';
 
-export default function LocalPartnersTable({
-	rows,
-	error,
-}: {
-	rows: LocalPartnerTableViewRow[];
-	error: string | null;
-}) {
+export default function LocalPartnersTable({ rows, error }: { rows: LocalPartnerTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [partnerId, setPartnerId] = useState<string | undefined>(undefined);
@@ -33,7 +27,7 @@ export default function LocalPartnersTable({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving local partner: ${error}`);
+		setErrorMessage(`Error saving local partner: ${String(error)}`);
 		logger.error('Local Partner Form Error', { error });
 	};
 

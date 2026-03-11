@@ -134,8 +134,7 @@ export const CandidateForm = ({
 				if (newSchema.fields.localPartner) {
 					newSchema.fields.localPartner.value = result.data.localPartner.id;
 				}
-				newSchema.fields.paymentInformation.fields.provider.value =
-					result.data.paymentInformation?.mobileMoneyProvider?.id;
+				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.mobileMoneyProvider?.id;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
 				newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
 				newSchema.fields.contact.fields = contactValues;
@@ -182,7 +181,7 @@ export const CandidateForm = ({
 		startTransition(async () => {
 			try {
 				let result: { success: boolean; error?: string };
-				const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
+				const contactFields = schema.fields.contact.fields as Record<string, FormField>;
 
 				if (candidateId && candidate) {
 					const data: CandidateUpdateInput = buildUpdateCandidateInput(schema, candidate, contactFields);
@@ -193,7 +192,11 @@ export const CandidateForm = ({
 					result = await createCandidateAction(data, sessionType);
 				}
 
-				result.success ? onSuccess?.() : onError?.(result.error);
+				if (result.success) {
+					onSuccess?.();
+				} else {
+					onError?.(result.error);
+				}
 			} catch (error: unknown) {
 				onError?.(error);
 			}
@@ -208,7 +211,11 @@ export const CandidateForm = ({
 		startTransition(async () => {
 			try {
 				const result = await deleteCandidateAction(candidateId, sessionType);
-				result.success ? onSuccess?.() : onError?.(result.error);
+				if (result.success) {
+					onSuccess?.();
+				} else {
+					onError?.(result.error);
+				}
 			} catch (error) {
 				onError?.(error);
 			}

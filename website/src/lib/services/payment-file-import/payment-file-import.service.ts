@@ -74,12 +74,12 @@ export class PaymentFileImportService extends BaseService {
 			sftp.end();
 
 			if (!result.success) {
-				this.logger.error(`Error importing payment files: ${result.error}`);
-				return this.resultFail(`Error importing payment files: ${result.error}`);
+				this.logger.error(`Error importing payment files: ${String(result.error)}`);
+				return this.resultFail(`Error importing payment files: ${String(result.error)}`);
 			}
 			return this.resultOk(result.data);
 		} catch (error) {
-			this.logger.error(`Error importing payment files: ${error}`);
+			this.logger.error(`Error importing payment files: ${String(error)}`);
 			return this.resultFail(`Error importing payment files: ${JSON.stringify(error)}`);
 		} finally {
 			sftp.end();

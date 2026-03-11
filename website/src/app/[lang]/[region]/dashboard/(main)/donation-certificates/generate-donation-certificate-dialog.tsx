@@ -93,9 +93,7 @@ export default function GenerateDonationCertificateDialog({
 						</p>
 						<Select value={language} disabled={!language} onValueChange={(l: string) => setLanguage(l as LanguageCode)}>
 							<SelectTrigger>
-								<SelectValue
-									placeholder={translator?.t('donation-certificates.generate-dialog.placeholder_language')}
-								/>
+								<SelectValue placeholder={translator?.t('donation-certificates.generate-dialog.placeholder_language')} />
 							</SelectTrigger>
 							<SelectContent>
 								{LANGUAGES.map((langCode) => (

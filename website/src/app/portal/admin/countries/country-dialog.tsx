@@ -16,7 +16,7 @@ type Props = {
 export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onError }: Props) => {
 	const handleError = (error: unknown) => {
 		const action = countryId ? 'updating/deleting' : 'creating';
-		onError(`Error ${action} country: ${error}`);
+		onError(`Error ${action} country: ${String(error)}`);
 		logger.error('Country Form Error', { error });
 	};
 

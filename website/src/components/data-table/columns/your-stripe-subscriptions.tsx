@@ -28,18 +28,16 @@ export const makeYourStripeSubscriptionsColumns = (
 				const translateKey = `subscriptions.status.${ctx.row.original.status}`;
 				const label = translator?.t(translateKey);
 				return (
-					<StatusCell
-						ctx={ctx}
-						variant="subscription"
-						label={label === translateKey ? ctx.row.original.status : label}
-					/>
+					<StatusCell ctx={ctx} variant="subscription" label={label === translateKey ? ctx.row.original.status : label} />
 				);
 			},
 		},
 		{
 			accessorKey: 'interval',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.interval')}</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} translatedValue={translator?.t(`subscriptions.interval-${ctx.getValue()}`)} />,
+			cell: (ctx) => (
+				<TextCell ctx={ctx} translatedValue={translator?.t(`subscriptions.interval-${String(ctx.getValue())}`)} />
+			),
 		},
 		{
 			id: 'paymentMethod',

@@ -66,9 +66,9 @@ export const BankTransferForm = ({
 		translations,
 	});
 
-	const handleGenerateQRCode = async () => {
+	const handleGenerateQRCode = () => {
 		const { email, firstName, lastName } = form.getValues();
-		await generateQRCode(email, firstName, lastName, lang);
+		generateQRCode(email, firstName, lastName, lang);
 	};
 
 	return (
@@ -156,8 +156,8 @@ export const BankTransferForm = ({
 						size="lg"
 						type="submit"
 						className="w-full"
-						onClick={async () => {
-							await handleGenerateQRCode();
+						onClick={() => {
+							handleGenerateQRCode();
 						}}
 						disabled={isLoading || !form.formState.isValid}
 					>

@@ -14,7 +14,7 @@ export default function ExchangeRatesPage() {
 
 const ExchangeRatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const service = new ExchangeRateService();
 	const result = await service.getTableView(user.id);

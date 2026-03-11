@@ -14,7 +14,7 @@ export default function CandidatesPage() {
 
 const CandidatesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const candidateService = new CandidateService();
 	const result = await candidateService.getTableView(user.id);

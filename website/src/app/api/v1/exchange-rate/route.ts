@@ -15,12 +15,12 @@ export const POST = async (request: NextRequest) => {
 	try {
 		const result = await service.import();
 		if (!result.success) {
-			logger.alert(`Exchange rate import failed: ${result.error}`, { result }, { component: 'exchange-rate-import' });
+			logger.alert(`Exchange rate import failed: ${String(result.error)}`, { result }, { component: 'exchange-rate-import' });
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 		return NextResponse.json({}, { status: 201 });
 	} catch (error) {
-		logger.alert(`Exchange rate import failed: ${error}`, { error }, { component: 'exchange-rate-import' });
+		logger.alert(`Exchange rate import failed: ${String(error)}`, { error }, { component: 'exchange-rate-import' });
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 };

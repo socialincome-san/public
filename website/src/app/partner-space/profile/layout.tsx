@@ -1,7 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { ReactNode } from 'react';
 
-export default async function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
 		{ href: '/partner-space/recipients', label: 'Partner Space' },

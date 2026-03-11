@@ -29,7 +29,7 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving campaign: ${error}`);
+		setErrorMessage(`Error saving campaign: ${String(error)}`);
 		logger.error('Campaigns Form Error', { error });
 	};
 

@@ -17,11 +17,7 @@ import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
 import { ContributorService } from '../contributor/contributor.service';
-import {
-	ContributorUpdateInput,
-	ContributorWithContact,
-	StripeContributorData,
-} from '../contributor/contributor.types';
+import { ContributorUpdateInput, ContributorWithContact, StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
@@ -41,11 +37,7 @@ export class StripeService extends BaseService {
 	private readonly campaignService = new CampaignService();
 	private readonly programAccessService = new ProgramAccessService();
 
-	async handleWebhookEvent(
-		body: string,
-		signature: string,
-		webhookSecret: string,
-	): Promise<ServiceResult<WebhookResult>> {
+	async handleWebhookEvent(body: string, signature: string, webhookSecret: string): Promise<ServiceResult<WebhookResult>> {
 		try {
 			// Verify webhook signature and parse event
 			const event = this.stripe.webhooks.constructEvent(body, signature, webhookSecret);
@@ -54,7 +46,7 @@ export class StripeService extends BaseService {
 				case 'charge.succeeded':
 				case 'charge.updated': // For final balance_transaction updates
 				case 'charge.failed': {
-					const charge = event.data.object as Stripe.Charge;
+					const charge = event.data.object;
 					this.logger.info('Processing charge event', { eventType: event.type, chargeId: charge.id });
 
 					const result = await this.processChargeEvent(charge);
@@ -94,7 +86,7 @@ export class StripeService extends BaseService {
 			let isNewContributor = false;
 
 			// Portal flow: metadata has accountId (logged-in user donating from portal)
-			const accountId = checkoutMetadata?.accountId as string | undefined;
+			const accountId = checkoutMetadata?.accountId;
 			if (accountId) {
 				const user = await this.db.user.findUnique({
 					where: { accountId },
@@ -131,8 +123,7 @@ export class StripeService extends BaseService {
 						referral: ContributorReferralSource.other,
 					};
 
-					const contributorResult =
-						await this.contributorService.getOrCreateContributorWithFirebaseAuth(contributorData);
+					const contributorResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth(contributorData);
 					if (!contributorResult.success) {
 						this.logger.error(contributorResult.error);
 						return this.resultFail(contributorResult.error);
@@ -207,10 +198,7 @@ export class StripeService extends BaseService {
 			};
 
 			// Create or update contribution with associated payment event (upsert based on transactionId)
-			const contributionResult = await this.contributionService.upsertFromStripeEvent(
-				contributionData,
-				paymentEventData,
-			);
+			const contributionResult = await this.contributionService.upsertFromStripeEvent(contributionData, paymentEventData);
 
 			if (!contributionResult.success) {
 				this.logger.error(contributionResult.error);
@@ -294,9 +282,7 @@ export class StripeService extends BaseService {
 		return { firstName, lastName };
 	}
 
-	async getSubscriptionsTableView(
-		stripeCustomerId: string | null,
-	): Promise<ServiceResult<StripeSubscriptionTableView>> {
+	async getSubscriptionsTableView(stripeCustomerId: string | null): Promise<ServiceResult<StripeSubscriptionTableView>> {
 		try {
 			if (!stripeCustomerId) {
 				return this.resultOk({ rows: [] });
@@ -629,10 +615,7 @@ export class StripeService extends BaseService {
 				return this.resultFail('A contributor email is required');
 			}
 
-			const existingResult = await this.contributorService.findByStripeCustomerOrEmail(
-				stripeCustomer.id,
-				contributorEmail,
-			);
+			const existingResult = await this.contributorService.findByStripeCustomerOrEmail(stripeCustomer.id, contributorEmail);
 
 			if (!existingResult.success) {
 				return existingResult;

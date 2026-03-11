@@ -36,27 +36,41 @@ export const logger = {
 
 	info(message: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(message);
-		attributes ? console.info({ message: msg, ...attributes }) : console.info({ message: msg });
+		if (attributes) {
+			console.info({ message: msg, ...attributes });
+		} else {
+			console.info({ message: msg });
+		}
 		sendToSentry('info', msg, attributes);
 	},
 
 	warn(message: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(message);
-		attributes ? console.warn({ message: msg, ...attributes }) : console.warn({ message: msg });
+		if (attributes) {
+			console.warn({ message: msg, ...attributes });
+		} else {
+			console.warn({ message: msg });
+		}
 		sendToSentry('warning', msg, attributes);
 	},
 
 	error(error: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(error);
-		attributes ? console.error({ message: msg, ...attributes }) : console.error({ message: msg });
+		if (attributes) {
+			console.error({ message: msg, ...attributes });
+		} else {
+			console.error({ message: msg });
+		}
 		sendExceptionToSentry(error, attributes);
 	},
 
 	alert(error: unknown, attributes?: LogAttributes, alertOptions?: AlertOptions) {
 		const exception = error instanceof Error ? error : new Error(String(error));
-		attributes
-			? console.error({ message: exception.message, ...attributes })
-			: console.error({ message: exception.message });
+		if (attributes) {
+			console.error({ message: exception.message, ...attributes });
+		} else {
+			console.error({ message: exception.message });
+		}
 
 		Sentry.captureException(exception, {
 			tags: {

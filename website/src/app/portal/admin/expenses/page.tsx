@@ -14,7 +14,7 @@ export default function ExpensesPage() {
 
 const ExpensesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const service = new ExpenseService();
 	const result = await service.getTableView(user.id);

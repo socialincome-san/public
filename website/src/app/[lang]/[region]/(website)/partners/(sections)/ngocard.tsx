@@ -34,7 +34,7 @@ export default async function NgoCard({
 	region,
 }: NgoCardProps) {
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
+		language: lang,
 		namespaces: ['website-common', 'countries', 'website-partners'],
 	});
 

@@ -68,7 +68,11 @@ export default function MobileMoneyProvidersForm({
 					result = await createMobileMoneyProviderAction(data);
 				}
 
-				result.success ? onSuccess?.() : onError?.(result.error);
+				if (result.success) {
+					onSuccess?.();
+				} else {
+					onError?.(result.error);
+				}
 			} catch (e) {
 				onError?.(e);
 			}
@@ -83,7 +87,11 @@ export default function MobileMoneyProvidersForm({
 		startTransition(async () => {
 			try {
 				const result = await deleteMobileMoneyProviderAction(providerId);
-				result.success ? onSuccess?.() : onError?.(result.error);
+				if (result.success) {
+					onSuccess?.();
+				} else {
+					onError?.(result.error);
+				}
 			} catch (e) {
 				onError?.(e);
 			}

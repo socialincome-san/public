@@ -72,8 +72,7 @@ export default function CampaignsForm({
 	};
 
 	const setOptions = (programs: ProgramOption[]) => {
-		const optionsToZodEnum = (options: ProgramOption[]) =>
-			getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
+		const optionsToZodEnum = (options: ProgramOption[]) => getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
 
 		setFormSchema((prevSchema) => ({
 			...prevSchema,
@@ -87,7 +86,7 @@ export default function CampaignsForm({
 		}));
 	};
 
-	const onSubmit = async (schema: typeof initialFormSchema) => {
+	const onSubmit = (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res;
@@ -98,7 +97,11 @@ export default function CampaignsForm({
 					const data: CampaignsCreateInput = buildCreateCampaignsInput(schema);
 					res = await createCampaignsAction(data);
 				}
-				res.success ? onSuccess?.() : onError?.(res.error);
+				if (res.success) {
+					onSuccess?.();
+				} else {
+					onError?.(res.error);
+				}
 			} catch (error: unknown) {
 				onError?.(error);
 			}

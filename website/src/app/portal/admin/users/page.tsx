@@ -14,7 +14,7 @@ export default function UsersPage() {
 
 const UsersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const service = new UserService();
 	const result = await service.getTableView(user.id);

@@ -21,7 +21,7 @@ import { CandidateFormSchema } from './candidates-form';
 export const buildUpdateCandidateInput = (
 	schema: CandidateFormSchema,
 	candidate: CandidatePayload,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): CandidateUpdateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
@@ -193,7 +193,7 @@ export const buildUpdateCandidateInput = (
 
 export const buildCreateCandidateInput = (
 	schema: CandidateFormSchema,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): CandidateCreateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 	const addressInput = buildAddressInput(contactFields);
@@ -207,11 +207,11 @@ export const buildCreateCandidateInput = (
 		paymentInformation: {
 			create: {
 				...(paymentInfoFields.provider.value && {
-					mobileMoneyProvider: { connect: { id: paymentInfoFields.provider.value as string } },
+					mobileMoneyProvider: { connect: { id: paymentInfoFields.provider.value } },
 				}),
 				code: paymentInfoFields.code.value?.trim() || null,
 				...(paymentInfoFields.phone.value?.trim() && {
-					phone: { create: { number: paymentInfoFields.phone.value!.trim() } },
+					phone: { create: { number: paymentInfoFields.phone.value.trim() } },
 				}),
 			},
 		},

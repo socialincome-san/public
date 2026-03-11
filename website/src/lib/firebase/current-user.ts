@@ -44,7 +44,7 @@ export const getAuthenticatedUserOrThrow = async (): Promise<UserSession> => {
 	return user;
 };
 
-export const requireAdmin = async (user: UserSession): Promise<UserSession> => {
+export const requireAdmin = (user: UserSession): UserSession => {
 	if (user.role !== 'admin') {
 		notFound();
 	}

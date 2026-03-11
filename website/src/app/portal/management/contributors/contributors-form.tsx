@@ -70,7 +70,7 @@ export default function ContributorsForm({
 	const [contributor, setContributor] = useState<ContributorPayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	const loadContributor = async (id: string) => {
+	const loadContributor = (id: string) => {
 		startTransition(async () => {
 			try {
 				const result = await getContributorAction(id);
@@ -92,7 +92,7 @@ export default function ContributorsForm({
 		});
 	};
 
-	const onSubmit = async (schema: ContributorFormSchema) => {
+	const onSubmit = (schema: ContributorFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res;
@@ -105,7 +105,11 @@ export default function ContributorsForm({
 					res = await createContributorAction(createData);
 				}
 
-				res.success ? onSuccess?.() : onError?.(res.error);
+				if (res.success) {
+					onSuccess?.();
+				} else {
+					onError?.(res.error);
+				}
 			} catch (error: unknown) {
 				onError?.(error);
 			}
@@ -114,7 +118,7 @@ export default function ContributorsForm({
 
 	useEffect(() => {
 		if (contributorId) {
-			startTransition(async () => {
+			startTransition(() => {
 				loadContributor(contributorId);
 			});
 		} else {

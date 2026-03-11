@@ -12,7 +12,7 @@ type UpdateStoryblokPreviewActionParams = {
 	previewRoutePath: string;
 };
 
-export const updateStoryblokPreviewAction = async ({
+export const updateStoryblokPreviewAction = ({
 	story,
 	previewToken,
 	previewTimestamp,

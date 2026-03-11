@@ -215,7 +215,11 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 					result = await createCountryAction(data);
 				}
 
-				result.success ? onSuccess?.() : onError?.(result.error);
+				if (result.success) {
+					onSuccess?.();
+				} else {
+					onError?.(result.error);
+				}
 			} catch (e) {
 				onError?.(e);
 			}
@@ -230,7 +234,11 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 		startTransition(async () => {
 			try {
 				const result = await deleteCountryAction(countryId);
-				result.success ? onSuccess?.() : onError?.(result.error);
+				if (result.success) {
+					onSuccess?.();
+				} else {
+					onError?.(result.error);
+				}
 			} catch (e) {
 				onError?.(e);
 			}
@@ -264,18 +272,14 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 						next.fields.countrySettings.fields.defaultPayoutAmount.value = countryResult.data.defaultPayoutAmount;
 						next.fields.suitabilityOfCash.fields.cashConditionOverride.value =
 							countryResult.data.cashConditionOverride ?? false;
-						next.fields.suitabilityOfCash.fields.microfinanceIndex.value =
-							countryResult.data.microfinanceIndex ?? undefined;
-						next.fields.suitabilityOfCash.fields.latestSurveyDate.value =
-							countryResult.data.latestSurveyDate ?? undefined;
+						next.fields.suitabilityOfCash.fields.microfinanceIndex.value = countryResult.data.microfinanceIndex ?? undefined;
+						next.fields.suitabilityOfCash.fields.latestSurveyDate.value = countryResult.data.latestSurveyDate ?? undefined;
 						next.fields.suitabilityOfCash.fields.microfinanceSourceText.value =
 							countryResult.data.microfinanceSourceLink?.text ?? undefined;
 						next.fields.suitabilityOfCash.fields.microfinanceSourceHref.value =
 							countryResult.data.microfinanceSourceLink?.href ?? undefined;
-						next.fields.mobileNetwork.fields.populationCoverage.value =
-							countryResult.data.populationCoverage ?? undefined;
-						next.fields.mobileNetwork.fields.networkTechnology.value =
-							countryResult.data.networkTechnology ?? undefined;
+						next.fields.mobileNetwork.fields.populationCoverage.value = countryResult.data.populationCoverage ?? undefined;
+						next.fields.mobileNetwork.fields.networkTechnology.value = countryResult.data.networkTechnology ?? undefined;
 						next.fields.mobileNetwork.fields.networkSourceText.value =
 							countryResult.data.networkSourceLink?.text ?? undefined;
 						next.fields.mobileNetwork.fields.networkSourceHref.value =

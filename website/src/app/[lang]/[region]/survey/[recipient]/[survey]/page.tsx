@@ -13,9 +13,9 @@ export default function Page({ params }: SurveyPageProps) {
 	const searchParams = useSearchParams();
 	const { hasError, login } = useSurvey();
 
-	const tryLogin = async (email: string | null, password: string | null) => {
+	const tryLogin = (email: string | null, password: string | null) => {
 		if (email && password) {
-			login(email, password).then((loggedIn) => {
+			void login(email, password).then((loggedIn) => {
 				setIsLoggedIn(loggedIn);
 			});
 		}

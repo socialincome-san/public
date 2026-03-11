@@ -76,13 +76,11 @@ export default function LocalPartnersForm({
 		}
 	};
 
-	const onSubmit = async (schema: typeof initialFormSchema) => {
+	const onSubmit = (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res: { success: boolean; error?: string };
-				const contactFields: {
-					[key: string]: FormField;
-				} = schema.fields.contact.fields;
+				const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 				if (localPartnerId && localPartner) {
 					const data = buildUpdateLocalPartnerInput(schema, localPartner, contactFields);
 					res = await updateLocalPartnerAction({ id: localPartnerId, ...data }, 'user');
@@ -90,7 +88,11 @@ export default function LocalPartnersForm({
 					const data = buildCreateLocalPartnerInput(schema, contactFields);
 					res = await createLocalPartnerAction(data);
 				}
-				res.success ? onSuccess?.() : onError?.(res.error);
+				if (res.success) {
+					onSuccess?.();
+				} else {
+					onError?.(res.error);
+				}
 			} catch (error: unknown) {
 				onError?.(error);
 			}

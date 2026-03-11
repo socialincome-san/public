@@ -40,7 +40,7 @@ export default function ContributorsTableClient({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving contributor: ${error}`);
+		setErrorMessage(`Error saving contributor: ${String(error)}`);
 		logger.error('Contributor Form Error', { error });
 	};
 

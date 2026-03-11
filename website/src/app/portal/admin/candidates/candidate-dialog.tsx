@@ -26,7 +26,7 @@ export const CandidateDialog = ({
 	onError,
 }: Props) => {
 	const handleError = (error: unknown) => {
-		onError(`Error saving candidate: ${error}`);
+		onError(`Error saving candidate: ${String(error)}`);
 		logger.error('Candidate Form Error', { error });
 	};
 

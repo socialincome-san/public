@@ -3,7 +3,7 @@ import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import type { ReactNode } from 'react';
 
-export default async function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
 	const sections = [
 		{ href: '/partner-space/recipients', label: 'Recipients' },
 		{ href: '/partner-space/candidates', label: 'Candidate Pool' },

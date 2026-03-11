@@ -170,7 +170,11 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 					response = await createContributionAction(data);
 				}
 
-				response.success ? onSuccess?.() : onError?.(response.error);
+				if (response.success) {
+					onSuccess?.();
+				} else {
+					onError?.(response.error);
+				}
 			} catch (e) {
 				onError?.(e);
 			}

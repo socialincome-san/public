@@ -109,7 +109,11 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 					const data = buildCreateExpenseInput(schema);
 					res = await createExpenseAction(data);
 				}
-				res.success ? onSuccess?.() : onError?.(res.error);
+				if (res.success) {
+					onSuccess?.();
+				} else {
+					onError?.(res.error);
+				}
 			} catch (e) {
 				onError?.(e);
 			}

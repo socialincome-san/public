@@ -15,7 +15,7 @@ export default function OrganizationsPage() {
 
 const OrganizationsDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const service = new OrganizationService();
 	const result = await service.getAdminTableView(user.id);

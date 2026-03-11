@@ -28,7 +28,7 @@ export default function UsersTable({ rows, error }: { rows: UserTableViewRow[]; 
 	};
 
 	const onError = (error?: unknown) => {
-		setErrorMessage(`Error saving user: ${error}`);
+		setErrorMessage(`Error saving user: ${String(error)}`);
 		logger.error('User Form Error', { error });
 	};
 
@@ -57,12 +57,7 @@ export default function UsersTable({ rows, error }: { rows: UserTableViewRow[]; 
 						</Alert>
 					)}
 
-					<UsersForm
-						userId={userId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
+					<UsersForm userId={userId} onSuccess={() => setOpen(false)} onCancel={() => setOpen(false)} onError={onError} />
 				</DialogContent>
 			</Dialog>
 		</>

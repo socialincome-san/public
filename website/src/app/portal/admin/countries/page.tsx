@@ -14,7 +14,7 @@ export default function CountriesPage() {
 
 const CountriesDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const service = new CountryService();
 	const result = await service.getTableView(user.id);

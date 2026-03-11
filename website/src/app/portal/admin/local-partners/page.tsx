@@ -14,7 +14,7 @@ export default function LocalPartnersPage() {
 
 const LocalPartnersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const service = new LocalPartnerService();
 	const result = await service.getTableView(user.id);

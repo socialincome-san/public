@@ -17,7 +17,7 @@ export const SurveyFormDialog = ({ open, onOpenChange, surveyId, readOnly = fals
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {
-		setErrorMessage(`Error saving survey: ${error}`);
+		setErrorMessage(`Error saving survey: ${String(error)}`);
 		logger.error('Survey Form Error', { error });
 	};
 

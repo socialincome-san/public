@@ -16,7 +16,7 @@ type Props = {
 export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId, errorMessage, onError }: Props) => {
 	const handleError = (error: unknown) => {
 		const action = providerId ? 'updating/deleting' : 'creating';
-		onError(`Error ${action} mobile money provider: ${error}`);
+		onError(`Error ${action} mobile money provider: ${String(error)}`);
 		logger.error('Mobile Money Provider Form Error', { error });
 	};
 

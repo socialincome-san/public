@@ -59,8 +59,8 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 			if (email) {
 				void signIn(email);
-			} else {
-				translator && toast.error(translator.t('error.invalid-email'));
+			} else if (translator) {
+				toast.error(translator.t('error.invalid-email'));
 			}
 		});
 
@@ -92,7 +92,9 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			const ok = await setServerSession();
 			if (!ok) {
 				await signOut(auth).catch(() => undefined);
-				translator && toast.error(translator.t('error.unknown'));
+				if (translator) {
+					toast.error(translator.t('error.unknown'));
+				}
 				return;
 			}
 
@@ -103,16 +105,24 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			if (error instanceof FirebaseError) {
 				switch (error.code) {
 					case 'auth/user-not-found':
-						translator && toast.error(translator.t('error.user-not-found'));
+						if (translator) {
+							toast.error(translator.t('error.user-not-found'));
+						}
 						break;
 					case 'auth/invalid-email':
-						translator && toast.error(translator.t('error.invalid-email'));
+						if (translator) {
+							toast.error(translator.t('error.invalid-email'));
+						}
 						break;
 					default:
-						translator && toast.error(translator.t('error.unknown'));
+						if (translator) {
+							toast.error(translator.t('error.unknown'));
+						}
 				}
 			} else {
-				translator && toast.error(translator.t('error.unknown'));
+				if (translator) {
+					toast.error(translator.t('error.unknown'));
+				}
 			}
 		}
 	};
@@ -133,7 +143,9 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			setEmailSent(true);
 		} catch (error) {
 			logger.error('Error sending sign-in email', { error });
-			translator && toast.error(translator.t('error.unknown'));
+			if (translator) {
+				toast.error(translator.t('error.unknown'));
+			}
 		} finally {
 			setSendingEmail(false);
 		}

@@ -218,7 +218,7 @@ export class DonationCertificateService extends BaseService {
 				},
 			});
 		} catch (e) {
-			this.logger.error(`Error while generating Donation Certificate file: ${e}`);
+			this.logger.error(`Error while generating Donation Certificate file: ${String(e)}`);
 			return this.resultFail(DonationCertificateError.technicalError);
 		}
 		return this.resultOk(undefined);

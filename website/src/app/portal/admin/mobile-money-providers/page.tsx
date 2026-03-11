@@ -14,7 +14,7 @@ export default function MobileMoneyProvidersPage() {
 
 const MobileMoneyProvidersDataLoader = async () => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const service = new MobileMoneyProviderService();
 	const result = await service.getTableView(user.id);
