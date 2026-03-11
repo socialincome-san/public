@@ -4,9 +4,10 @@ import z from 'zod';
 const requiredId = z.string().trim().min(1, 'This field is required.');
 
 const payoutDate = z.preprocess((value) => {
-	if (value === '' || value == null) {
+	if (value === '' || value === null || value === undefined) {
 		return value;
 	}
+
 	return value;
 }, z.coerce.date());
 
@@ -21,6 +22,7 @@ export const payoutCreateInputSchema = z.object({
 			return value ?? null;
 		}
 		const trimmedValue = value.trim();
+
 		return trimmedValue === '' ? null : trimmedValue;
 	}, z.string().nullable()),
 	comments: z.preprocess((value) => {
@@ -28,6 +30,7 @@ export const payoutCreateInputSchema = z.object({
 			return value ?? null;
 		}
 		const trimmedValue = value.trim();
+
 		return trimmedValue === '' ? null : trimmedValue;
 	}, z.string().nullable()),
 });

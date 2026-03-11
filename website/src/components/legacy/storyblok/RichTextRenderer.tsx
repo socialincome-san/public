@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
 import { StoryblokActionButton } from '@/components/legacy/storyblok/StoryblokActionButton';
 import { StoryblokCampaignDonate } from '@/components/legacy/storyblok/StoryblokCampaignDonate';

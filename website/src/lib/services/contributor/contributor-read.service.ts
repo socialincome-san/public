@@ -268,22 +268,20 @@ export class ContributorReadService extends BaseService {
 				}),
 			]);
 
-			let contributors: Array<
-				Prisma.ContributorGetPayload<{
-					select: {
-						id: true;
-						createdAt: true;
-						contact: {
-							select: {
-								firstName: true;
-								lastName: true;
-								email: true;
-								address: { select: { country: true } };
-							};
+			let contributors: Prisma.ContributorGetPayload<{
+				select: {
+					id: true;
+					createdAt: true;
+					contact: {
+						select: {
+							firstName: true;
+							lastName: true;
+							email: true;
+							address: { select: { country: true } };
 						};
 					};
-				}>
-			>;
+				};
+			}>[];
 
 			if (sortBy === 'totalContributedChf') {
 				const allContributors = await this.db.contributor.findMany({
@@ -301,6 +299,7 @@ export class ContributorReadService extends BaseService {
 					if (leftValue !== rightValue) {
 						return (leftValue - rightValue) * directionMultiplier;
 					}
+
 					return left.id.localeCompare(right.id);
 				});
 

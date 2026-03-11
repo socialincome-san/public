@@ -6,6 +6,7 @@ const nullableTrimmedString = z.preprocess((value) => {
 		return value;
 	}
 	const trimmedValue = value.trim();
+
 	return trimmedValue === '' ? null : trimmedValue;
 }, z.string().nullable());
 
@@ -14,13 +15,15 @@ const optionalTrimmedString = z.preprocess((value) => {
 		return value;
 	}
 	const trimmedValue = value.trim();
+
 	return trimmedValue === '' ? undefined : trimmedValue;
 }, z.string().optional());
 
 const optionalDate = z.preprocess((value) => {
-	if (value === '' || value == null) {
+	if (value === '' || value === null || value === undefined) {
 		return null;
 	}
+
 	return value;
 }, z.coerce.date().nullable());
 

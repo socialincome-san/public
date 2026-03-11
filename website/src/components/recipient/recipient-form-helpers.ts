@@ -8,14 +8,10 @@ import { RecipientFormCreateInput, RecipientFormUpdateInput } from '@/lib/servic
 import { RecipientPayload } from '@/lib/services/recipient/recipient.types';
 import { RecipientFormSchema } from './recipient-form';
 
-const toTrimmedStringOrNull = (value: unknown): string | null => {
-	return typeof value === 'string' && value.trim() ? value.trim() : null;
-};
-
 export const buildUpdateRecipientInput = (
 	schema: RecipientFormSchema,
 	recipient: RecipientPayload,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): RecipientFormUpdateInput => {
 	return {
 		id: recipient.id,
@@ -37,7 +33,7 @@ export const buildUpdateRecipientInput = (
 
 export const buildCreateRecipientInput = (
 	schema: RecipientFormSchema,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): RecipientFormCreateInput => {
 	return {
 		startDate: schema.fields.startDate.value ?? null,

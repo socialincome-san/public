@@ -268,8 +268,13 @@ export class FirebaseAdminService extends BaseService {
 			await authAdmin.auth.deleteUser(uid);
 
 			return this.resultOk(true);
-		} catch (error: any) {
-			if (error?.code === 'auth/user-not-found') {
+		} catch (error: unknown) {
+			if (
+				typeof error === 'object' &&
+				error !== null &&
+				'code' in error &&
+				(error as { code?: unknown }).code === 'auth/user-not-found'
+			) {
 				return this.resultOk(true);
 			}
 			this.logger.error('Error deleting auth user by uid:', { uid, error });

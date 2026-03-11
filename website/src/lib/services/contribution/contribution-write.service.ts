@@ -41,11 +41,6 @@ export class ContributionWriteService extends BaseService {
 				return this.resultFail('No permissions to update contribution');
 			}
 
-			const contributionId = typeof contribution.id === 'string' ? contribution.id : undefined;
-			if (!contributionId) {
-				return this.resultFail('Contribution ID is required');
-			}
-
 			const existing = await this.db.contribution.findUnique({
 				where: { id: validatedInput.id },
 				select: {
@@ -111,6 +106,7 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update contribution. Please try again later.');
 		}
 	}
@@ -181,6 +177,7 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create contribution. Please try again later.');
 		}
 	}

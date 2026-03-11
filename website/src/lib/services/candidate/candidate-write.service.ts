@@ -247,6 +247,7 @@ export class CandidateWriteService extends BaseService {
 					},
 				};
 			}
+
 			return { create: { number: nextPhoneNumber } };
 		}
 
@@ -412,6 +413,7 @@ export class CandidateWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create candidate. Please try again later.');
 		}
 	}
@@ -524,6 +526,7 @@ export class CandidateWriteService extends BaseService {
 				if (previousContactPhoneId) {
 					await this.deletePhoneIfOrphaned(previousContactPhoneId);
 				}
+
 				return this.resultOk(updatedCandidate);
 			}
 
@@ -585,6 +588,7 @@ export class CandidateWriteService extends BaseService {
 			if (phoneChanged && previousPaymentPhoneNumber && nextPaymentPhoneNumber) {
 				await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber);
 			}
+
 			return this.resultFail('Could not update candidate. Please try again later.');
 		}
 	}
@@ -711,6 +715,7 @@ export class CandidateWriteService extends BaseService {
 			return this.resultOk({ id: candidateId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not delete candidate. Please try again later.');
 		}
 	}

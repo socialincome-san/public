@@ -13,7 +13,7 @@ import {
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';
 
@@ -89,8 +89,6 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(initialFormSchema);
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();
-	const onErrorRef = useRef(onError);
-	onErrorRef.current = onError;
 
 	useEffect(() => {
 		if (!surveyId) {
@@ -116,10 +114,10 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 						},
 					}));
 				},
-				onError: (error) => onErrorRef.current?.(error),
+				onError: (error) => onError?.(error),
 			});
 		});
-	}, [surveyId]);
+	}, [onError, surveyId]);
 
 	useEffect(() => {
 		startTransition(async () => {
@@ -138,15 +136,15 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 						},
 					}));
 				},
-				onError: (error) => onErrorRef.current?.(error),
+				onError: (error) => onError?.(error),
 			});
 		});
-	}, []);
+	}, [onError]);
 
 	const onSubmit = (schema: SurveyFormSchema) => {
 		startTransition(async () => {
-			if (surveyId && (!survey || survey.id !== surveyId)) {
-				return onErrorRef.current?.('Survey is still loading. Please try again.');
+			if (surveyId && survey?.id !== surveyId) {
+				return onError?.('Survey is still loading. Please try again.');
 			}
 			const result =
 				surveyId && survey
@@ -154,7 +152,7 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 					: await createSurveyAction(buildCreateSurveyInput(schema));
 			handleServiceResult(result, {
 				onSuccess: () => onSuccess?.(),
-				onError: (error) => onErrorRef.current?.(error),
+				onError: (error) => onError?.(error),
 			});
 		});
 	};

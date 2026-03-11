@@ -137,10 +137,10 @@ export const RecipientForm = ({
 
 	const onSubmit = (schema: RecipientFormSchema) => {
 		startTransition(async () => {
-			if (recipientId && (!recipient || recipient.id !== recipientId)) {
+			if (recipientId && recipient?.id !== recipientId) {
 				return onError?.('Recipient is still loading. Please try again.');
 			}
-			const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
+			const contactFields = schema.fields.contact.fields as Record<string, FormField>;
 			const result =
 				recipientId && recipient
 					? await updateRecipientAction(buildUpdateRecipientInput(schema, recipient, contactFields), sessionType)

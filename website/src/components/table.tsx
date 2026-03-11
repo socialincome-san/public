@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { cn } from '@socialincome/ui';
 import * as React from 'react';
 

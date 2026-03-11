@@ -108,7 +108,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 	const onSubmit = (schema: UserFormSchema) => {
 		startTransition(async () => {
-			if (userId && (!user || user.id !== userId)) {
+			if (userId && user?.id !== userId) {
 				return onError?.('User is still loading. Please try again.');
 			}
 			const result =

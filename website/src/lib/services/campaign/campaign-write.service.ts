@@ -87,6 +87,7 @@ export class CampaignWriteService extends BaseService {
 			return this.resultOk(newCampaign);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create campaign. Please try again later.');
 		}
 	}
@@ -165,11 +166,6 @@ export class CampaignWriteService extends BaseService {
 				updateData.program = validatedInput.programId ? { connect: { id: validatedInput.programId } } : { disconnect: true };
 			}
 
-			const campaignId = typeof campaign.id === 'string' ? campaign.id : undefined;
-			if (!campaignId) {
-				return this.resultFail('Campaign ID is required');
-			}
-
 			const updatedCampaign = await this.db.campaign.update({
 				where: { id: validatedInput.id },
 				data: updateData,
@@ -178,6 +174,7 @@ export class CampaignWriteService extends BaseService {
 			return this.resultOk(updatedCampaign);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update campaign. Please try again later.');
 		}
 	}

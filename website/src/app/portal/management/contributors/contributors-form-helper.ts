@@ -19,9 +19,7 @@ export const buildUpdateContributorsInput = (
 	schema: ContributorFormSchema,
 	contributor: ContributorPayload,
 ): ContributorFormUpdateInput => {
-	const contactFields: {
-		[key: string]: FormField;
-	} = schema.fields.contact.fields;
+	const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 
 	return {
 		id: contributor.id,

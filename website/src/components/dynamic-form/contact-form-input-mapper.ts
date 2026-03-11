@@ -1,10 +1,11 @@
+import { CountryCode, Gender } from '@/generated/prisma/enums';
 import { FormField } from './dynamic-form';
 
 type ContactFormInputBase = {
 	firstName: string;
 	lastName: string;
 	callingName: string | null;
-	gender: FormField['value'] | null;
+	gender: Gender | null;
 	language: string | null;
 	dateOfBirth: Date | null;
 	profession: string | null;
@@ -14,7 +15,7 @@ type ContactFormInputBase = {
 	number: string | null;
 	city: string | null;
 	zip: string | null;
-	country: FormField['value'] | null;
+	country: CountryCode | null;
 };
 
 type ContactFormInputWithRequiredEmail = ContactFormInputBase & {
@@ -27,32 +28,36 @@ type ContactFormInputWithNullableEmail = ContactFormInputBase & {
 
 export const normalizeNullableString = (value: unknown): string | null => {
 	if (typeof value !== 'string') {
-		return value == null ? null : String(value);
+		return value === null || value === undefined ? null : null;
 	}
 	const trimmedValue = value.trim();
+
 	return trimmedValue === '' ? null : trimmedValue;
 };
 
 export const normalizeOptionalString = (value: unknown): string | undefined => {
 	if (typeof value !== 'string') {
-		return value == null ? undefined : String(value);
+		return value === null || value === undefined ? undefined : undefined;
 	}
 	const trimmedValue = value.trim();
+
 	return trimmedValue === '' ? undefined : trimmedValue;
 };
 
 type MapContactFormFields = {
-	(contactFields: { [key: string]: FormField }, options: { email: 'required' }): ContactFormInputWithRequiredEmail;
-	(contactFields: { [key: string]: FormField }, options: { email: 'nullable' }): ContactFormInputWithNullableEmail;
+	(contactFields: Record<string, FormField>, options: { email: 'required' }): ContactFormInputWithRequiredEmail;
+	(contactFields: Record<string, FormField>, options: { email: 'nullable' }): ContactFormInputWithNullableEmail;
 };
 
 const mapContactFormFieldsImpl = (
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 	options: { email: 'required' | 'nullable' },
 ): ContactFormInputWithRequiredEmail | ContactFormInputWithNullableEmail => {
+	const toString = (value: unknown) => (typeof value === 'string' ? value : '');
+
 	const base: ContactFormInputBase = {
-		firstName: `${contactFields.firstName.value ?? ''}`,
-		lastName: `${contactFields.lastName.value ?? ''}`,
+		firstName: toString(contactFields.firstName.value),
+		lastName: toString(contactFields.lastName.value),
 		callingName: normalizeNullableString(contactFields.callingName.value),
 		gender: contactFields.gender.value ?? null,
 		language: normalizeNullableString(contactFields.language.value),
@@ -70,7 +75,7 @@ const mapContactFormFieldsImpl = (
 	if (options.email === 'required') {
 		return {
 			...base,
-			email: `${contactFields.email.value ?? ''}`,
+			email: toString(contactFields.email.value),
 		};
 	}
 

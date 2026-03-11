@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
 import { ReactNode } from 'react';

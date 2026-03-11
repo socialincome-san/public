@@ -24,6 +24,7 @@ test('portal profile updates user personal info', async ({ page }) => {
 				where: { contact: { email: 'test@portal.org' } },
 				select: { contact: { select: { firstName: true } } },
 			});
+
 			return user?.contact.firstName ?? null;
 		})
 		.toBe(updatedFirstName);

@@ -153,7 +153,7 @@ export const CandidateForm = ({
 
 	const onSubmit = (schema: CandidateFormSchema) => {
 		startTransition(async () => {
-			const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
+			const contactFields = schema.fields.contact.fields as Record<string, FormField>;
 			const result =
 				candidateId && candidate
 					? await updateCandidateAction(buildUpdateCandidateInput(schema, candidate, contactFields), sessionType)
@@ -229,6 +229,7 @@ export const CandidateForm = ({
 									value: data.localPartner.id,
 								};
 							}
+
 							return updatedSchema;
 						});
 					},

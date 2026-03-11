@@ -24,6 +24,7 @@ test('partner-space profile updates local partner contact info', async ({ page }
 				where: { contact: { email: 'test@partner.org' } },
 				select: { contact: { select: { firstName: true } } },
 			});
+
 			return localPartner?.contact.firstName ?? null;
 		})
 		.toBe(updatedFirstName);
