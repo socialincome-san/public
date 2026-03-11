@@ -29,7 +29,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
 
-	const ProfileName = () => (
+	const profileName = (
 		<div className="flex items-center space-x-3">
 			<Avatar>
 				<AvatarFallback className="bg-primary text-background">
@@ -105,7 +105,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 						<Separator />
 
 						<div className="p-2">
-							<ProfileName />
+							{profileName}
 
 							<div className="mt-3 grid gap-1 p-2">
 								{userMenuNavLinks.map(({ href, label }) => (

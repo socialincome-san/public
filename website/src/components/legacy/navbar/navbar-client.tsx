@@ -83,7 +83,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 		);
 	}
 
-	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
+	const navbarLink = (href: string, children: string, className?: string) => (
 		<Link
 			href={href}
 			className={twMerge('hover:active:text-accent text-4xl font-medium', className)}
@@ -105,9 +105,14 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 						{section!.title}
 					</Typography>
 					{section?.links?.map((link, index) => (
-						<NavbarLink href={link.href} key={index}>
+						<Link
+							key={index}
+							href={link.href}
+							className="hover:active:text-accent text-4xl font-medium"
+							onClick={() => setVisibleSection(null)}
+						>
 							{link.title}
-						</NavbarLink>
+						</Link>
 					))}
 				</div>
 			);
@@ -208,9 +213,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 						</Typography>
 					</div>
 					<div className="flex flex-col items-start space-y-4">
-						<NavbarLink href="/me" className="ml-12 text-2xl">
-							{translations.myProfile}
-						</NavbarLink>
+						{navbarLink('/me', translations.myProfile, 'ml-12 text-2xl')}
 						<div className="flex-inline flex items-center">
 							{(!isIntRegion || (isIntRegion && country)) && (
 								<Image
@@ -229,13 +232,9 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 						</div>
 						<div className="flex-inline flex items-center">
 							<DonateIcon className="mx-3 h-6 w-6" />
-							<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent text-2xl">
-								{translations.donate}
-							</NavbarLink>
+							{navbarLink(`/${lang}/${region}/donate/individual`, translations.donate, 'text-accent text-2xl')}
 						</div>
-						<NavbarLink className="ml-12 text-2xl" href={`/${lang}/${region}/journal`}>
-							{translations.journal}
-						</NavbarLink>
+						{navbarLink(`/${lang}/${region}/journal`, translations.journal, 'ml-12 text-2xl')}
 					</div>
 				</div>
 			);
@@ -269,7 +268,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 	const { country, currency, setCurrency, setLanguage, setRegion } = useI18n();
 	const isIntRegion = region === 'int';
 
-	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
+	const navbarLink = (href: string, children: string, className?: string) => (
 		<Link href={href} className={twMerge('hover:text-accent text-lg', className)}>
 			{children}
 		</Link>
@@ -292,50 +291,42 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					<SIIcon className="-mb-2.5 block h-9 pr-20 lg:hidden" />
 				</Link>
 				<div className="absolute left-0 mt-[50px] hidden flex-col justify-start overflow-visible whitespace-nowrap group-hover/navbar:flex group-active/navbar:flex">
-					<NavbarLink href="/me">{translations.myProfile}</NavbarLink>
+					{navbarLink('/me', translations.myProfile)}
 					<div className="flex-inline mt-auto flex items-center space-x-2">
 						<DonateIcon className="h-4 w-4" />
-						<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent">
-							{translations.donate}
-						</NavbarLink>
+						{navbarLink(`/${lang}/${region}/donate/individual`, translations.donate, 'text-accent')}
 					</div>
-					<NavbarLink href={`/${lang}/${region}/journal`}>{translations.journal}</NavbarLink>
+					{navbarLink(`/${lang}/${region}/journal`, translations.journal)}
 				</div>
 			</div>
 			<div className="flex flex-row items-center justify-evenly gap-x-10 overflow-visible">
 				<div className="group/our-work relative flex flex-1 justify-end">
-					<NavbarLink className="px-2 whitespace-nowrap" href={ourWork.href}>
-						{ourWork.title}
-					</NavbarLink>
+					{navbarLink(ourWork.href, ourWork.title, 'px-2 whitespace-nowrap')}
 					<div className="absolute top-full left-2 mt-0 hidden flex-col overflow-visible pt-2 whitespace-nowrap opacity-0 group-hover/our-work:flex group-hover/our-work:opacity-100">
 						{ourWork.links?.map((link: { href: string; title: string }, index: number) => (
-							<NavbarLink key={index} href={link.href}>
+							<Link key={index} href={link.href} className="hover:text-accent text-lg">
 								{link.title}
-							</NavbarLink>
+							</Link>
 						))}
 					</div>
 				</div>
 				<div className="group/about-us relative flex flex-1 justify-center">
-					<NavbarLink className="px-2 whitespace-nowrap" href={aboutUs.href}>
-						{aboutUs.title}
-					</NavbarLink>
+					{navbarLink(aboutUs.href, aboutUs.title, 'px-2 whitespace-nowrap')}
 					<div className="absolute top-full left-2 mt-0 hidden flex-col overflow-visible pt-2 whitespace-nowrap opacity-0 group-hover/about-us:opacity-100 group-hover/navbar:flex">
 						{aboutUs.links?.map((link, index) => (
-							<NavbarLink key={index} href={link.href}>
+							<Link key={index} href={link.href} className="hover:text-accent text-lg">
 								{link.title}
-							</NavbarLink>
+							</Link>
 						))}
 					</div>
 				</div>
 				<div className="group/transparency relative flex flex-1 justify-start">
-					<NavbarLink className="px-2 whitespace-nowrap" href={transparency.href}>
-						{transparency.title}
-					</NavbarLink>
+					{navbarLink(transparency.href, transparency.title, 'px-2 whitespace-nowrap')}
 					<div className="absolute top-full left-2 mt-0 hidden flex-col overflow-visible pt-2 whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
 						{transparency.links?.map((link: { href: string; title: string }, index: number) => (
-							<NavbarLink key={index} href={link.href}>
+							<Link key={index} href={link.href} className="hover:text-accent text-lg">
 								{link.title}
-							</NavbarLink>
+							</Link>
 						))}
 					</div>
 				</div>
