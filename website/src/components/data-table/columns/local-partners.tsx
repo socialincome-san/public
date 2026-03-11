@@ -32,7 +32,6 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 		{
 			accessorKey: 'causes',
 			header: (ctx) => <SortableHeader ctx={ctx}>Causes</SortableHeader>,
-			enableSorting: false,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -48,7 +47,6 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
 			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},

@@ -41,7 +41,6 @@ export const makePayoutConfirmationColumns = (): ColumnDef<PayoutConfirmationTab
 		id: 'actions',
 		header: 'Actions',
 		cell: ({ row }) => <PayoutConfirmationActionsCell payout={row.original} />,
-		enableSorting: false,
 		enableHiding: false,
 	},
 ];

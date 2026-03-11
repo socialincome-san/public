@@ -38,7 +38,6 @@ export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
 			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},

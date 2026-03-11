@@ -28,7 +28,6 @@ export const makeMobileMoneyProviderColumns = (): ColumnDef<MobileMoneyProviderT
 	{
 		id: 'actions',
 		header: '',
-		enableSorting: false,
 		enableHiding: false,
 		cell: (ctx) => <ActionCell ctx={ctx} />,
 	},
