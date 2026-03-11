@@ -26,7 +26,7 @@ type Props = {
 export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }: Props) => {
 	return (
 		<div className="space-y-3">
-			<p className="text-sm font-medium">Choose a country</p>
+			<p className="text-sm font-medium">Select a country we operate in</p>
 
 			{rows.length > 0 && (
 				<RadioCardGroup value={selectedCountryId ?? ''} onChange={onSelectCountry} layout="grid">
