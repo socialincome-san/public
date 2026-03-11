@@ -12,8 +12,8 @@ import {
 	updateCandidateAction,
 } from '@/lib/server-actions/candidate-actions';
 import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { CandidatePayload } from '@/lib/services/candidate/candidate.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';

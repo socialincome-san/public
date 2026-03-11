@@ -140,10 +140,7 @@ export const RecipientForm = ({
 			const contactFields = schema.fields.contact.fields as { [key: string]: FormField };
 			const result =
 				recipientId && recipient
-					? await updateRecipientAction(
-							buildUpdateRecipientInput(schema, recipient, contactFields),
-							sessionType,
-						)
+					? await updateRecipientAction(buildUpdateRecipientInput(schema, recipient, contactFields), sessionType)
 					: await createRecipientAction(buildCreateRecipientInput(schema, contactFields), sessionType);
 
 			handleServiceResult(result, {

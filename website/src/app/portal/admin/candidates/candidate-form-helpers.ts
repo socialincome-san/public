@@ -1,13 +1,10 @@
-import { FormField } from '@/components/dynamic-form/dynamic-form';
 import {
 	mapContactFormFields,
 	normalizeNullableString,
 	normalizeOptionalString,
 } from '@/components/dynamic-form/contact-form-input-mapper';
-import {
-	CandidateFormCreateInput,
-	CandidateFormUpdateInput,
-} from '@/lib/services/candidate/candidate-form-input';
+import { FormField } from '@/components/dynamic-form/dynamic-form';
+import { CandidateFormCreateInput, CandidateFormUpdateInput } from '@/lib/services/candidate/candidate-form-input';
 import { CandidatePayload } from '@/lib/services/candidate/candidate.types';
 import { CandidateFormSchema } from './candidates-form';
 

@@ -13,10 +13,10 @@ import {
 	getContributionsOptionsAction,
 	updateContributionAction,
 } from '@/lib/server-actions/contributions-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { CampaignOption } from '@/lib/services/campaign/campaign.types';
 import { ContributionPayload } from '@/lib/services/contribution/contribution.types';
 import { ContributorOption } from '@/lib/services/contributor/contributor.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { allCurrencies } from '@/lib/types/currency';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 

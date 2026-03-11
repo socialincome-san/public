@@ -1,13 +1,10 @@
-import { FormField } from '@/components/dynamic-form/dynamic-form';
 import {
 	mapContactFormFields,
 	normalizeNullableString,
 	normalizeOptionalString,
 } from '@/components/dynamic-form/contact-form-input-mapper';
-import {
-	RecipientFormCreateInput,
-	RecipientFormUpdateInput,
-} from '@/lib/services/recipient/recipient-form-input';
+import { FormField } from '@/components/dynamic-form/dynamic-form';
+import { RecipientFormCreateInput, RecipientFormUpdateInput } from '@/lib/services/recipient/recipient-form-input';
 import { RecipientPayload } from '@/lib/services/recipient/recipient.types';
 import { RecipientFormSchema } from './recipient-form';
 

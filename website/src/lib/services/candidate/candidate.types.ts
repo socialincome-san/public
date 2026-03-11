@@ -81,4 +81,3 @@ export type CandidatesPaginatedTableView = {
 		label: string;
 	}[];
 };
-

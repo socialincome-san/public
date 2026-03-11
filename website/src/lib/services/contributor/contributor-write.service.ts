@@ -15,13 +15,13 @@ import { OrganizationAccessService } from '../organization-access/organization-a
 import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
 import { SupportedLanguage } from '../sendgrid/types';
 import { ContributorFormCreateInput, ContributorFormUpdateInput } from './contributor-form-input';
+import { ContributorValidationService } from './contributor-validation.service';
 import {
 	BankContributorData,
 	ContributorUpdateInput,
 	ContributorWithContact,
 	StripeContributorData,
 } from './contributor.types';
-import { ContributorValidationService } from './contributor-validation.service';
 
 export class ContributorWriteService extends BaseService {
 	constructor(

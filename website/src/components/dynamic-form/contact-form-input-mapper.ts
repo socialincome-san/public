@@ -42,14 +42,8 @@ export const normalizeOptionalString = (value: unknown): string | undefined => {
 };
 
 type MapContactFormFields = {
-	(
-		contactFields: { [key: string]: FormField },
-		options: { email: 'required' },
-	): ContactFormInputWithRequiredEmail;
-	(
-		contactFields: { [key: string]: FormField },
-		options: { email: 'nullable' },
-	): ContactFormInputWithNullableEmail;
+	(contactFields: { [key: string]: FormField }, options: { email: 'required' }): ContactFormInputWithRequiredEmail;
+	(contactFields: { [key: string]: FormField }, options: { email: 'nullable' }): ContactFormInputWithNullableEmail;
 };
 
 const mapContactFormFieldsImpl = (

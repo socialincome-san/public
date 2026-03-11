@@ -2,8 +2,8 @@
 
 import { Cause } from '@/generated/prisma/enums';
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
-import { Profile } from '@/lib/services/candidate/candidate.types';
 import { CandidateFormCreateInput, CandidateFormUpdateInput } from '@/lib/services/candidate/candidate-form-input';
+import { Profile } from '@/lib/services/candidate/candidate.types';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';

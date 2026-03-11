@@ -30,10 +30,7 @@ export class ContributionValidationService extends BaseService {
 		return this.resultOk(parsed.data);
 	}
 
-	async validateReferencesExist(input: {
-		contributorId: string;
-		campaignId: string;
-	}): Promise<ServiceResult<void>> {
+	async validateReferencesExist(input: { contributorId: string; campaignId: string }): Promise<ServiceResult<void>> {
 		const [contributor, campaign] = await Promise.all([
 			this.db.contributor.findUnique({
 				where: { id: input.contributorId },

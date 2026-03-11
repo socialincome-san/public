@@ -114,4 +114,3 @@ export type ContributorSession = {
 	country: CountryCode | null;
 	stripeCustomerId: string | null;
 };
-

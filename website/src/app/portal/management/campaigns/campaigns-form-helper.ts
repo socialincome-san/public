@@ -1,9 +1,6 @@
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import {
-	CampaignFormCreateInput,
-	CampaignFormUpdateInput,
-} from '@/lib/services/campaign/campaign-form-input';
+import { CampaignFormCreateInput, CampaignFormUpdateInput } from '@/lib/services/campaign/campaign-form-input';
 import { allCurrencies } from '@/lib/types/currency';
 import z from 'zod';
 

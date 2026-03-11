@@ -392,10 +392,7 @@ export class CandidateWriteService extends BaseService {
 		}
 	}
 
-	async update(
-		session: Session,
-		input: CandidateFormUpdateInput,
-	): Promise<ServiceResult<CandidatePayload>> {
+	async update(session: Session, input: CandidateFormUpdateInput): Promise<ServiceResult<CandidatePayload>> {
 		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}

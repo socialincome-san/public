@@ -1,5 +1,5 @@
-import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { mapContactFormFields, normalizeNullableString } from '@/components/dynamic-form/contact-form-input-mapper';
+import { FormField } from '@/components/dynamic-form/dynamic-form';
 import {
 	ContributorFormCreateInput,
 	ContributorFormUpdateInput,

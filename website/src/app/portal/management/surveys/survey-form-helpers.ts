@@ -1,5 +1,5 @@
-import type { SurveyPayload } from '@/lib/services/survey/survey.types';
 import type { SurveyFormCreateInput, SurveyFormUpdateInput } from '@/lib/services/survey/survey-form-input';
+import type { SurveyPayload } from '@/lib/services/survey/survey.types';
 import { SurveyFormSchema } from './survey-form';
 
 export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyFormCreateInput => {

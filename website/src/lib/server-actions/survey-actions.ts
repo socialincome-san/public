@@ -5,11 +5,7 @@ import { ServiceResult } from '@/lib/services/core/base.types';
 import { resultFail } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import { SurveyFormCreateInput, SurveyFormUpdateInput } from '@/lib/services/survey/survey-form-input';
-import type {
-	SurveyPayload,
-	SurveyUpdateInput,
-	SurveyWithRecipient,
-} from '@/lib/services/survey/survey.types';
+import type { SurveyPayload, SurveyUpdateInput, SurveyWithRecipient } from '@/lib/services/survey/survey.types';
 import { revalidatePath } from 'next/cache';
 import { getCurrentSurvey } from '../firebase/current-survey';
 

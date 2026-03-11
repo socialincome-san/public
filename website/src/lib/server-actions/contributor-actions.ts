@@ -1,7 +1,10 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { ContributorFormCreateInput, ContributorFormUpdateInput } from '@/lib/services/contributor/contributor-form-input';
+import {
+	ContributorFormCreateInput,
+	ContributorFormUpdateInput,
+} from '@/lib/services/contributor/contributor-form-input';
 import { ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';

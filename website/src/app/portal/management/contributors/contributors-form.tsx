@@ -9,8 +9,8 @@ import {
 	getContributorAction,
 	updateContributorAction,
 } from '@/lib/server-actions/contributor-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ContributorPayload } from '@/lib/services/contributor/contributor.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateContributorInput, buildUpdateContributorsInput } from './contributors-form-helper';

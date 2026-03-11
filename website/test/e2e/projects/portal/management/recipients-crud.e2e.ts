@@ -129,7 +129,9 @@ test('add recipient with payment phone keeps Firebase user in sync', async ({ pa
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
 	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.first);
+	await page
+		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
+		.fill(unusedPhones.first);
 	await expect(page.getByRole('cell', { name: unusedPhones.first })).toBeVisible();
 });
 
@@ -369,7 +371,9 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 	}
 
 	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.first);
+	await page
+		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
+		.fill(unusedPhones.first);
 	await expect(page.getByRole('cell', { name: unusedPhones.first })).toBeVisible();
 
 	await page.goto(
@@ -390,9 +394,13 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 	}
 
 	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.second);
+	await page
+		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
+		.fill(unusedPhones.second);
 	await expect(page.getByRole('cell', { name: unusedPhones.second })).toBeVisible();
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.first);
+	await page
+		.getByPlaceholder('Search by user UID, email address, phone number, or display name')
+		.fill(unusedPhones.first);
 	await expect(page.getByRole('cell', { name: unusedPhones.first })).toHaveCount(0);
 });
 

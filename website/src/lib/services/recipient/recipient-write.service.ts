@@ -8,8 +8,8 @@ import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { RecipientFormCreateInput, RecipientFormUpdateInput } from './recipient-form-input';
-import { RecipientWithPaymentInfo } from './recipient.types';
 import { RecipientValidationService } from './recipient-validation.service';
+import { RecipientWithPaymentInfo } from './recipient.types';
 
 export class RecipientWriteService extends BaseService {
 	constructor(
@@ -109,10 +109,7 @@ export class RecipientWriteService extends BaseService {
 		}
 	}
 
-	async update(
-		session: Session,
-		input: RecipientFormUpdateInput,
-	): Promise<ServiceResult<Recipient>> {
+	async update(session: Session, input: RecipientFormUpdateInput): Promise<ServiceResult<Recipient>> {
 		if (session.type === 'contributor') {
 			return this.resultFail('Permission denied');
 		}
