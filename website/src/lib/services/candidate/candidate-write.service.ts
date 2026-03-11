@@ -454,7 +454,7 @@ export class CandidateWriteService extends BaseService {
 				}
 
 				if (phoneChanged && previousPaymentPhoneNumber && nextPaymentPhoneNumber) {
-					await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber!);
+					await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber);
 				}
 
 				return this.resultFail(`Could not update candidate: ${JSON.stringify(error)}`);

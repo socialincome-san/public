@@ -197,6 +197,6 @@ test('CSV Export', async ({ page }) => {
 	const downloadPath = await download.path();
 	expect(downloadPath).toBeTruthy();
 
-	const csvContent = await readFile(downloadPath!, 'utf8');
+	const csvContent = await readFile(downloadPath, 'utf8');
 	expect(csvContent).toMatchSnapshot(expectedCsvExport.snapshotFile);
 });

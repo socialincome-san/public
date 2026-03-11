@@ -48,7 +48,7 @@ test('admin countries with direct URL sorting matches screenshot', async ({ page
 test('add new country', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
 	const defaultPayoutAmount = 123;
-	const currency = bestGuessCurrency(countryOption.code as CountryCode);
+	const currency = bestGuessCurrency(countryOption.code);
 
 	await page.goto('/portal/admin/countries');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-country');
@@ -79,7 +79,7 @@ test('add new country', async ({ page }) => {
 
 test('shows validation error when default payout amount is invalid', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
-	const currency = bestGuessCurrency(countryOption.code as CountryCode);
+	const currency = bestGuessCurrency(countryOption.code);
 
 	await page.goto('/portal/admin/countries');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-country');
@@ -94,7 +94,7 @@ test('shows validation error when default payout amount is invalid', async ({ pa
 
 test('update country', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
-	const currency = bestGuessCurrency(countryOption.code as CountryCode);
+	const currency = bestGuessCurrency(countryOption.code);
 	const initialPayoutAmount = 80;
 	const updatedPayoutAmount = 95;
 

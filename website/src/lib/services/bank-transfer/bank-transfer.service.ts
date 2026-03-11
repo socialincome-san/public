@@ -70,7 +70,7 @@ export class BankTransferService extends BaseService {
 			contribution: {
 				create: {
 					amount: payment.amount,
-					currency: payment.currency as Currency,
+					currency: payment.currency,
 					amountChf: payment.amount,
 					feesChf: 0,
 					interval: this.getDonationInterval(payment.interval),

@@ -38,7 +38,7 @@ const buildZodSchema = (schemaDef: FormSchema): ZodObject<any> => {
 		const value = schemaDef.fields[key];
 
 		if (isFormField(value) && value.zodSchema) {
-			result[key] = value.zodSchema as ZodTypeAny;
+			result[key] = value.zodSchema;
 		} else {
 			// nested object
 			result[key] = buildZodSchema(value as FormSchema);

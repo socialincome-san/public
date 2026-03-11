@@ -74,7 +74,7 @@ export class SendgridSubscriptionService extends Client {
 				email: contributor.email,
 				status: 'unsubscribed',
 				language: (contributor.language || 'de') as SupportedLanguage,
-				country: (contributor.country || 'CH') as CountryCode,
+				country: contributor.country || 'CH',
 			});
 			return this.resultOk(undefined);
 		} catch (error) {

@@ -9,7 +9,7 @@ import { ngos } from '../(sections)/ngolist';
 const getNGOTranslations = (translator: Translator, slug: string): { translation: NgoEntryJSON | undefined } => {
 	let currentNgo: NgoEntryJSON | undefined = undefined;
 	for (const ngo of ngos) {
-		const ngoTranslation = translator.t(ngo) as NgoEntryJSON;
+		const ngoTranslation: NgoEntryJSON = translator.t(ngo);
 		if (ngoTranslation['org-slug'] === slug) {
 			currentNgo = ngoTranslation;
 			break;

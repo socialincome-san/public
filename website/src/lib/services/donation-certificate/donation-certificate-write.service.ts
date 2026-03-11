@@ -84,7 +84,7 @@ export class DonationCertificateWriteService extends BaseService {
 				if (!writeResult.success) {
 					throw new Error(writeResult.error);
 				}
-				const bucket = storageAdmin.storage.bucket(this.bucketName!);
+				const bucket = storageAdmin.storage.bucket(this.bucketName);
 				await storageAdmin.uploadFile({ bucket, sourceFilePath: path, destinationFilePath });
 
 				this.logger.info(`Donation certificate document written for user ${contributor.id}`);

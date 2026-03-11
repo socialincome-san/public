@@ -30,7 +30,6 @@ export default [
 			'@typescript-eslint/no-unsafe-member-access': 'warn',
 			'@typescript-eslint/no-unsafe-return': 'warn',
 			'@typescript-eslint/no-explicit-any': 'warn',
-			'@typescript-eslint/no-unnecessary-type-assertion': 'warn',
 			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
 			'@typescript-eslint/no-unused-vars': 'warn',
 			'react-hooks/set-state-in-effect': 'warn',
