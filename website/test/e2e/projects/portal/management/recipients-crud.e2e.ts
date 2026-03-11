@@ -108,6 +108,31 @@ test('Add new recipient', async ({ page }) => {
 	expect(row?.localPartner?.name).toBe(ADD_RECIPIENT.localPartnerName);
 });
 
+test('add recipient with payment phone keeps Firebase user in sync', async ({ page }) => {
+	const unusedPhones = await buildUnusedPaymentPhoneNumbers();
+	const firebaseService = await getFirebaseAdminService();
+	await firebaseService.deleteByPhoneNumberIfExists(unusedPhones.first);
+
+	const firstName = `Firebase-${Date.now()}`;
+	const lastName = 'Recipient';
+
+	await page.goto('/portal/management/recipients');
+	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
+	await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
+	await selectOptionByTestId(page, 'localPartner', ADD_RECIPIENT.localPartnerName);
+	await page.getByTestId('form-accordion-trigger-contact').click();
+	await page.getByTestId('form-item-contact.firstName').locator('input').fill(firstName);
+	await page.getByTestId('form-item-contact.lastName').locator('input').fill(lastName);
+	await page.getByTestId('form-accordion-trigger-paymentInformation').click();
+	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(unusedPhones.first);
+	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	await page.goto('http://localhost:4000/auth');
+	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.first);
+	await expect(page.getByRole('cell', { name: unusedPhones.first })).toBeVisible();
+});
+
 test('Edit existing recipient', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
