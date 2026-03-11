@@ -5,6 +5,8 @@ import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { SurveyReadService } from './survey-read.service';
+import { SurveyFormCreateInput, SurveyFormUpdateInput } from './survey-form-input';
+import { SurveyValidationService } from './survey-validation.service';
 import { SurveyCreateInput, SurveyGenerationResult, SurveyPayload, SurveyUpdateInput } from './survey.types';
 
 export class SurveyWriteService extends BaseService {
@@ -13,6 +15,7 @@ export class SurveyWriteService extends BaseService {
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly surveyReadService: SurveyReadService,
+		private readonly surveyValidationService: SurveyValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -52,14 +55,16 @@ export class SurveyWriteService extends BaseService {
 		};
 	}
 
-	async create(userId: string, input: SurveyCreateInput): Promise<ServiceResult<SurveyPayload>> {
-		try {
-			if (!input.recipient?.connect?.id) {
-				return this.resultFail('Recipient is required');
-			}
+	async create(userId: string, input: SurveyFormCreateInput): Promise<ServiceResult<SurveyPayload>> {
+		const validatedInputResult = this.surveyValidationService.validateCreateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
 
+		try {
 			const recipient = await this.db.recipient.findUnique({
-				where: { id: input.recipient.connect.id },
+				where: { id: validatedInput.recipientId },
 				select: { program: { select: { id: true } } },
 			});
 
@@ -77,22 +82,50 @@ export class SurveyWriteService extends BaseService {
 				return this.resultFail('Access denied');
 			}
 
+			const uniquenessResult = await this.surveyValidationService.validateCreateUniqueness(validatedInput);
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const createInput: SurveyCreateInput = {
+				name: validatedInput.name,
+				recipient: { connect: { id: validatedInput.recipientId } },
+				questionnaire: validatedInput.questionnaire,
+				language: validatedInput.language,
+				dueAt: validatedInput.dueAt,
+				status: validatedInput.status,
+				data: {},
+				accessEmail: validatedInput.accessEmail,
+				accessPw: validatedInput.accessPw,
+			};
+
 			const survey = await this.db.survey.create({
-				data: input,
+				data: createInput,
 			});
 
 			return this.resultOk(this.toPayload(survey));
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to create survey: ${JSON.stringify(error)}`);
+			return this.resultFail('Failed to create survey. Please try again later.');
 		}
 	}
 
-	async update(userId: string, surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> {
+	async update(userId: string, input: SurveyFormUpdateInput): Promise<ServiceResult<SurveyPayload>> {
+		const validatedInputResult = this.surveyValidationService.validateUpdateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+		const surveyId = validatedInput.id;
+
 		try {
 			const survey = await this.db.survey.findUnique({
 				where: { id: surveyId },
-				select: { recipient: { select: { program: { select: { id: true } } } } },
+				select: {
+					recipient: { select: { id: true, program: { select: { id: true } } } },
+					name: true,
+					accessEmail: true,
+				},
 			});
 
 			if (!survey) {
@@ -109,15 +142,52 @@ export class SurveyWriteService extends BaseService {
 				return this.resultFail('Access denied');
 			}
 
+			const targetRecipient = await this.db.recipient.findUnique({
+				where: { id: validatedInput.recipientId },
+				select: { id: true, program: { select: { id: true } } },
+			});
+			if (!targetRecipient) {
+				return this.resultFail('Recipient not found');
+			}
+			const targetProgramAccess = accessibleProgramsResult.data.find(
+				(p) => p.programId === targetRecipient.program?.id && p.permission !== ProgramPermission.owner,
+			);
+			if (!targetProgramAccess) {
+				return this.resultFail('Access denied');
+			}
+
+			const uniquenessResult = await this.surveyValidationService.validateUpdateUniqueness(validatedInput, {
+				existingRecipientId: survey.recipient.id,
+				existingName: survey.name,
+				existingAccessEmail: survey.accessEmail,
+			});
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const updateInput: SurveyUpdateInput = {
+				name: validatedInput.name,
+				questionnaire: validatedInput.questionnaire,
+				language: validatedInput.language,
+				dueAt: validatedInput.dueAt,
+				status: validatedInput.status,
+				data: {},
+				accessEmail: validatedInput.accessEmail,
+				accessPw: validatedInput.accessPw,
+			};
+			if (validatedInput.recipientId !== survey.recipient.id) {
+				updateInput.recipient = { connect: { id: validatedInput.recipientId } };
+			}
+
 			const updatedSurvey = await this.db.survey.update({
 				where: { id: surveyId },
-				data: input,
+				data: updateInput,
 			});
 
 			return this.resultOk(this.toPayload(updatedSurvey));
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
+			return this.resultFail('Failed to update survey. Please try again later.');
 		}
 	}
 

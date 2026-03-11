@@ -4,8 +4,8 @@ import { getSessionByType } from '@/lib/firebase/current-account';
 import { ServiceResult } from '@/lib/services/core/base.types';
 import { resultFail } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
+import { SurveyFormCreateInput, SurveyFormUpdateInput } from '@/lib/services/survey/survey-form-input';
 import type {
-	SurveyCreateInput,
 	SurveyPayload,
 	SurveyUpdateInput,
 	SurveyWithRecipient,
@@ -13,7 +13,7 @@ import type {
 import { revalidatePath } from 'next/cache';
 import { getCurrentSurvey } from '../firebase/current-survey';
 
-export const createSurveyAction = async (input: SurveyCreateInput) => {
+export const createSurveyAction = async (input: SurveyFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -31,12 +31,12 @@ export const getSurveyAction = async (surveyId: string) => {
 	return services.read.survey.get(sessionResult.data.id, surveyId);
 };
 
-export const updateSurveyAction = async (surveyId: string, input: SurveyUpdateInput) => {
+export const updateSurveyAction = async (input: SurveyFormUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	const result = await services.write.survey.update(sessionResult.data.id, surveyId, input);
+	const result = await services.write.survey.update(sessionResult.data.id, input);
 	revalidatePath('/portal/management/surveys');
 	return result;
 };

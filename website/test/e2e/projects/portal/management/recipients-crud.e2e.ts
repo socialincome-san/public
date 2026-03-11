@@ -197,7 +197,7 @@ test('shows uniqueness error when recipient payment code already exists', async 
 	await expect(page.getByText('A payment code with this value already exists.')).toBeVisible();
 });
 
-test.only('recipient payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
+test('recipient payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
 	const unusedPhones = await buildUnusedPaymentPhoneNumbers();
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists(unusedPhones.first);

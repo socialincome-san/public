@@ -49,6 +49,7 @@ import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyReadService } from './survey/survey-read.service';
+import { SurveyValidationService } from './survey/survey-validation.service';
 import { SurveyWriteService } from './survey/survey-write.service';
 import { TransparencyService } from './transparency/transparency.service';
 import { TwilioService } from './twilio/twilio.service';
@@ -142,7 +143,8 @@ const stripe = new StripeService(
 	programAccessRead,
 );
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
-const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead);
+const surveyValidation = new SurveyValidationService(prisma);
+const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead, surveyValidation);
 
 const createPaymentFileImport = (bucketName: string) =>
 	new PaymentFileImportService(bucketName, prisma, contributorRead, contributionWrite, campaignRead);
