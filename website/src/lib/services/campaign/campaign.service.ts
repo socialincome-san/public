@@ -121,9 +121,14 @@ export class CampaignService extends BaseService {
 			return this.resultFail('No permissions to create campaign');
 		}
 
+		const campaignId = typeof campaign.id === 'string' ? campaign.id : undefined;
+		if (!campaignId) {
+			return this.resultFail('Campaign ID is required');
+		}
+
 		try {
 			const updatedCampaign = await this.db.campaign.update({
-				where: { id: campaign.id?.toString() },
+				where: { id: campaignId },
 				data: campaign,
 			});
 

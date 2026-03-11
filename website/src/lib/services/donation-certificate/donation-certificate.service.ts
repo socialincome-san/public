@@ -17,6 +17,10 @@ import {
 } from './donation-certificate.types';
 import { DonationCertificateError } from './types';
 
+const isDonationCertificateError = (value: string): value is DonationCertificateError => {
+	return Object.values(DonationCertificateError).includes(value as DonationCertificateError);
+};
+
 export class DonationCertificateService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
 	private contributorService = new ContributorService();
@@ -234,6 +238,10 @@ export class DonationCertificateService extends BaseService {
 			contributorsIds.map(async (contributorsId) => {
 				const result = await this.createDonationCertificate(year, contributorsId, language);
 				if (!result.success) {
+					if (!isDonationCertificateError(result.error)) {
+						creationWithFailures.push(contributorsId);
+						return;
+					}
 					switch (result.error) {
 						case DonationCertificateError.alreadyExists:
 							skippedExists.push(contributorsId);

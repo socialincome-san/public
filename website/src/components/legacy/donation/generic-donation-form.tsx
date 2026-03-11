@@ -55,7 +55,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 
 	const formSchema = z
 		.object({
-			interval: z.coerce.string(),
+			interval: z.nativeEnum(DonationInterval),
 			paymentType: z.enum(Object.values(PaymentTypes) as [string, ...string[]]).default(PaymentTypes.CREDIT_CARD),
 			amount: z.coerce.number().min(1),
 			email: z.string().optional(),
@@ -127,7 +127,11 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 										type="single"
 										className={'bg-popover mb-4 inline-flex rounded-full'}
 										value={field.value}
-										onValueChange={(v: string) => form.setValue('interval', v)}
+										onValueChange={(v: string) => {
+											if (v === 'one-time' || v === 'monthly') {
+												form.setValue('interval', v as DonationInterval);
+											}
+										}}
 									>
 										<ToggleGroupItem
 											key={DonationInterval.OneTime}

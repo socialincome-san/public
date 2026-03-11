@@ -66,7 +66,7 @@ export class LocalPartnerService extends BaseService {
 		if (session.type === 'local-partner') {
 			input.id = session.id;
 		}
-		const partnerId = input.id?.toString();
+		const partnerId = typeof input.id === 'string' ? input.id : undefined;
 		if (!partnerId) {
 			return this.resultFail('Local partner ID is required');
 		}
@@ -102,7 +102,8 @@ export class LocalPartnerService extends BaseService {
 			}
 		}
 
-		const newEmail = input.contact?.update?.data?.email?.toString() ?? null;
+		const emailInput = input.contact?.update?.data?.email;
+		const newEmail = typeof emailInput === 'string' ? emailInput : null;
 		const oldEmail = existing.contact?.email ?? null;
 		const firebaseUid = existing.account.firebaseAuthUserId;
 

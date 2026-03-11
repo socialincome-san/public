@@ -251,13 +251,14 @@ export class StripeService extends BaseService {
 
 	private async getCheckoutMetadata(charge: Stripe.Charge): Promise<CheckoutMetadata | null> {
 		// Retrieve campaign ID and other metadata from the original checkout session
-		const paymentIntentId = charge.payment_intent;
-		if (!paymentIntentId) {
+		const paymentIntent = charge.payment_intent;
+		if (!paymentIntent) {
 			return null;
 		}
+		const paymentIntentId = typeof paymentIntent === 'string' ? paymentIntent : paymentIntent.id;
 
 		const sessions = await this.stripe.checkout.sessions.list({
-			payment_intent: paymentIntentId.toString(),
+			payment_intent: paymentIntentId,
 		});
 
 		const session = sessions.data.length > 0 ? sessions.data[0] : null;
@@ -588,11 +589,11 @@ export class StripeService extends BaseService {
 
 	async getContributorFromCheckoutSession(session: Stripe.Checkout.Session) {
 		try {
-			if (!session.customer) {
+			const customer = session.customer;
+			if (!customer) {
 				return this.resultFail('Checkout session has no Stripe customer');
 			}
-
-			const stripeCustomerId = session.customer.toString();
+			const stripeCustomerId = typeof customer === 'string' ? customer : customer.id;
 			const email = session.customer_details?.email ?? undefined;
 
 			const contributorResult = await this.contributorService.findByStripeCustomerOrEmail(stripeCustomerId, email);

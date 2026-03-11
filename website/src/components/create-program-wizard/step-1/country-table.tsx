@@ -2,6 +2,7 @@
 
 import { RadioGroup } from '@/components/radio-group';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import { CountryCondition } from '@/lib/services/country/country.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { useState } from 'react';
 import { CountryTableBody } from './country-table-body';
@@ -19,10 +20,10 @@ const matchesSearch = (row: ProgramCountryFeasibilityRow, search: string) => {
 
 const meetsAllConditions = (row: ProgramCountryFeasibilityRow) => {
 	return (
-		row.cash.condition === 'met' &&
-		row.mobileMoney.condition === 'met' &&
-		row.mobileNetwork.condition === 'met' &&
-		row.sanctions.condition === 'met'
+		row.cash.condition === CountryCondition.MET &&
+		row.mobileMoney.condition === CountryCondition.MET &&
+		row.mobileNetwork.condition === CountryCondition.MET &&
+		row.sanctions.condition === CountryCondition.MET
 	);
 };
 

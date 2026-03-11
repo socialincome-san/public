@@ -85,8 +85,13 @@ export class ContributionService extends BaseService {
 				return this.resultFail('No permissions to update contribution');
 			}
 
+			const contributionId = typeof contribution.id === 'string' ? contribution.id : undefined;
+			if (!contributionId) {
+				return this.resultFail('Contribution ID is required');
+			}
+
 			const existing = await this.db.contribution.findUnique({
-				where: { id: contribution.id?.toString() },
+				where: { id: contributionId },
 				select: {
 					campaign: { select: { organizationId: true } },
 				},
@@ -97,7 +102,7 @@ export class ContributionService extends BaseService {
 			}
 
 			const updatedContribution = await this.db.contribution.update({
-				where: { id: contribution.id?.toString() },
+				where: { id: contributionId },
 				data: contribution,
 				select: {
 					id: true,

@@ -101,7 +101,8 @@ export class ContributorService extends BaseService {
 				return this.resultFail('Contributor not found');
 			}
 
-			const newEmail = data.contact?.update?.data?.email?.toString();
+			const emailInput = data.contact?.update?.data?.email;
+			const newEmail = typeof emailInput === 'string' ? emailInput : undefined;
 			const oldEmail = existing.contact?.email ?? null;
 
 			if (!newEmail) {
@@ -143,7 +144,7 @@ export class ContributorService extends BaseService {
 				return this.resultFail('No permissions to update contributor');
 			}
 
-			const contributorId = contributor.id?.toString();
+			const contributorId = typeof contributor.id === 'string' ? contributor.id : undefined;
 			if (!contributorId) {
 				return this.resultFail('Contributor ID is required');
 			}

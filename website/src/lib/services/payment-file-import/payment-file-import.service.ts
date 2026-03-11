@@ -95,14 +95,16 @@ export class PaymentFileImportService extends BaseService {
 		const xmlDoc = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
 		const select = xpath.useNamespaces({ ns: 'urn:iso:std:iso:20022:tech:xsd:camt.054.001.08' });
 		const nodes = select(this.xmlSelectExpression, xmlDoc) as Node[];
+		const serializer = new xmldom.XMLSerializer();
 
 		const contributions: BankContribution[] = [];
 
 		for (const node of nodes) {
 			const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
+			const rawContent = serializer.serializeToString(node);
 
 			if (!referenceId) {
-				this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
+				this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${rawContent}`);
 				continue;
 			}
 
@@ -113,7 +115,7 @@ export class PaymentFileImportService extends BaseService {
 				referenceId,
 				amount: parseFloat(amountStr),
 				currency: (currencyStr || 'CHF').toUpperCase() as Currency,
-				rawContent: node.toString(),
+				rawContent,
 			});
 		}
 		return contributions;
