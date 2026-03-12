@@ -21,10 +21,12 @@ export const ExpansionRow = ({ row, bgClass }: Props) => {
 					href={source.href}
 					target="_blank"
 					rel="noreferrer"
-					className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition"
+					className="text-muted-foreground hover:text-foreground transition"
 				>
 					{source.text}
-					<span aria-hidden>↗</span>
+					<span aria-hidden className="ml-1 inline">
+						↗
+					</span>
 				</Link>
 			);
 		}
