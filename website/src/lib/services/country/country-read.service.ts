@@ -362,7 +362,7 @@ export class CountryReadService extends BaseService {
 		condition: CountryCondition,
 	): string {
 		if (condition !== CountryCondition.MET) {
-			return `Mobile money infrastructure appears not sufficient.`;
+			return `Mobile money infrastructure appears insufficient.`;
 		}
 
 		if (!mobileMoneyProviders || mobileMoneyProviders.length === 0) {
@@ -373,7 +373,7 @@ export class CountryReadService extends BaseService {
 
 		return `Mobile money infrastructure appears sufficient. ${
 			mobileMoneyProviders.length
-		} active provider${mobileMoneyProviders.length > 1 ? 's' : ' is'}: ${providers}.`;
+		} active provider${mobileMoneyProviders.length > 1 ? 's' : ''}: ${providers}.`;
 	}
 
 	private formatNetworkTechnology(tech: NetworkTechnology | null): string {
