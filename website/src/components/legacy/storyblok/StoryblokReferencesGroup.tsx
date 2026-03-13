@@ -6,8 +6,8 @@ import { Translator } from '@/lib/i18n/translator';
 import { formatStoryblokDate } from '@/lib/services/storyblok/storyblok.utils';
 import { LanguageCode } from '@/lib/types/language';
 import { linkCn, Separator, Typography } from '@socialincome/ui';
-import Link from 'next/link';
 import cn from 'classnames';
+import Link from 'next/link';
 
 const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };
 

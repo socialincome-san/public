@@ -44,7 +44,7 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
-			<Badge variant={variant} className="px-3 py-1 text-sm font-medium capitalize" >
+			<Badge variant={variant} className="px-3 py-1 text-sm font-medium capitalize">
 				{tag.content?.value}
 			</Badge>
 		</Link>
