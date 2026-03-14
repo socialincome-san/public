@@ -1,5 +1,7 @@
 import "package:app/core/cubits/payment/payouts_cubit.dart";
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/enums/payout_ui_status.dart";
+import "package:app/data/models/offline_exception.dart";
 import "package:app/data/models/payment/mapped_payout.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
@@ -24,42 +26,57 @@ class PaymentTileBottomAction extends StatelessWidget {
 
     return Container(
       color: _getBackgroundColor(mappedPayment.uiStatus),
-      child: Padding(
-        padding: AppSpacings.a16,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                isContested ? context.l10n.underInvestigation : context.l10n.didYouGetSocialIncome,
-                style: TextStyle(color: foregroundColor),
-              ),
-            ),
-            Row(
-              children: [
-                ButtonSmall(
-                  onPressed: () => context.read<PayoutsCubit>().confirmPayment(mappedPayment.payout),
-                  label: isContested ? context.l10n.resolved : context.l10n.yes,
-                  buttonType: ButtonSmallType.outlined,
-                  color: foregroundColor,
-                  fontColor: foregroundColor,
+      child: BlocListener<PayoutsCubit, PayoutsState>(
+        listener: (context, state) {
+          if (state.status == PayoutsStatus.failure && state.exception.runtimeType == OfflineMutationException) {
+            FlushbarHelper.showFlushbar(
+              context,
+              message: context.l10n.offlineMutationError,
+              type: FlushbarType.error,
+            );
+          }
+        },
+        child: Padding(
+          padding: AppSpacings.a16,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  isContested ? context.l10n.underInvestigation : context.l10n.didYouGetSocialIncome,
+                  style: TextStyle(color: foregroundColor),
                 ),
-                if (!isContested) ...[
-                  const SizedBox(width: 8),
+              ),
+              Row(
+                children: [
                   ButtonSmall(
-                    onPressed: () => _onPressedNo(context),
-                    label: context.l10n.no,
+                    onPressed: () => _onPressedYes(context),
+                    label: isContested ? context.l10n.resolved : context.l10n.yes,
                     buttonType: ButtonSmallType.outlined,
                     color: foregroundColor,
                     fontColor: foregroundColor,
                   ),
+                  if (!isContested) ...[
+                    const SizedBox(width: 8),
+                    ButtonSmall(
+                      onPressed: () => _onPressedNo(context),
+                      label: context.l10n.no,
+                      buttonType: ButtonSmallType.outlined,
+                      color: foregroundColor,
+                      fontColor: foregroundColor,
+                    ),
+                  ],
                 ],
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _onPressedYes(BuildContext context) {
+    context.read<PayoutsCubit>().confirmPayment(mappedPayment.payout);
   }
 
   void _onPressedNo(BuildContext context) {
