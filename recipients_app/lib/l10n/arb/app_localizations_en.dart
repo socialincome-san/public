@@ -166,9 +166,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payments => 'Payments';
 
   @override
-  String get orangeMoneyNumber => 'Orange Money Number';
-
-  @override
   String get pastPayments => 'Past Payments';
 
   @override
@@ -749,4 +746,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get recipientNotFound =>
       'No recipient account found for this phone number. Please check your phone number or contact your local partner.';
+
+  @override
+  String get unknownPaymentPhoneNumber => 'Unknown payment phone number';
 }

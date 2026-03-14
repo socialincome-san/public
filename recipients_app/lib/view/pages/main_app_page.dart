@@ -64,7 +64,7 @@ class _MainAppPageState extends State<MainAppPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      recipient?.paymentInformation?.phone.number ?? "Unknown payment phone number",
+                      recipient?.paymentInformation?.phone.number ?? context.l10n.unknownPaymentPhoneNumber,
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: AppColors.primaryColor,
                       ),

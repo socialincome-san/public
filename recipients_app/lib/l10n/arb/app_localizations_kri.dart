@@ -166,9 +166,6 @@ class AppLocalizationsKri extends AppLocalizations {
   String get payments => 'Pemɛnt dɛm';
 
   @override
-  String get orangeMoneyNumber => 'Ɔrenj Mɔni Nɔmba';
-
-  @override
   String get pastPayments => 'Pemɛnt dɛm we dɛn dɔn mek';
 
   @override
@@ -749,4 +746,7 @@ class AppLocalizationsKri extends AppLocalizations {
   @override
   String get recipientNotFound =>
       'No risipiɛnt akɔn nɔ fɛn fɔ dis fon nɔmba. Duya chɛk yu fon nɔmba ɔ kɔntak yu lokal patna.';
+
+  @override
+  String get unknownPaymentPhoneNumber => 'Di fon nɔmba we yu nɔ no bɔt fɔ pe';
 }

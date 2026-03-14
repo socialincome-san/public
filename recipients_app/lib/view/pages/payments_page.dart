@@ -49,12 +49,12 @@ class _PaymentsPageState extends State<PaymentsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        context.l10n.orangeMoneyNumber,
+                        context.l10n.paymentNumber,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        recipient?.contact.phone?.number ?? "",
+                        recipient?.paymentInformation?.phone.number ?? context.l10n.unknownPaymentPhoneNumber,
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,

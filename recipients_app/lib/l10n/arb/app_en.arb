@@ -52,7 +52,6 @@
     "nextPayment": "Next Payment",
     "review": "Review",
     "payments": "Payments",
-    "orangeMoneyNumber": "Orange Money Number",
     "pastPayments": "Past Payments",
     "futurePayments": "Future Payments",
     "paymentsSuspended": "Suspended",
@@ -298,5 +297,6 @@
     "appUpdateWidgetMessage": "Please update to continue using the app.",
     "appUpdateWidgetErrorLaunchingStore": "We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income.",
     "country": "Country",
-    "recipientNotFound": "No recipient account found for this phone number. Please check your phone number or contact your local partner."
+    "recipientNotFound": "No recipient account found for this phone number. Please check your phone number or contact your local partner.",
+	"unknownPaymentPhoneNumber": "Unknown payment phone number"
 }

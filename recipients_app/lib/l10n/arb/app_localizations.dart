@@ -404,12 +404,6 @@ abstract class AppLocalizations {
   /// **'Payments'**
   String get payments;
 
-  /// No description provided for @orangeMoneyNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Orange Money Number'**
-  String get orangeMoneyNumber;
-
   /// No description provided for @pastPayments.
   ///
   /// In en, this message translates to:
@@ -1537,6 +1531,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No recipient account found for this phone number. Please check your phone number or contact your local partner.'**
   String get recipientNotFound;
+
+  /// No description provided for @unknownPaymentPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown payment phone number'**
+  String get unknownPaymentPhoneNumber;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

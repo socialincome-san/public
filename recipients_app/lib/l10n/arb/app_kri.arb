@@ -52,7 +52,6 @@
     "nextPayment": "Nɛks pemɛnt",
     "review": "Pemɛnt fɔ luk oba",
     "payments": "Pemɛnt dɛm",
-    "orangeMoneyNumber": "Ɔrenj Mɔni Nɔmba",
     "pastPayments": "Pemɛnt dɛm we dɛn dɔn mek",
     "futurePayments": "Pemɛnt dɛm we yu nɔ gɛt yet",
     "paymentsSuspended": "Dɛn ɔl am fɔs",
@@ -304,5 +303,6 @@
     "appUpdateWidgetMessage": "Duya ɔpdet fɔ kɔntinyu fɔ yuz di ap.",
     "appUpdateWidgetErrorLaunchingStore": "Wi nɔ bin ebul fɔ gayd yu fɔ go na di Stɔ fɔ ɔpdet di ap. Duya opin di Ple Stɔ ap na Andrɔyd ɔ Ap Stɔ ap na iOS ɛn ɔpdet Sɔshial Inkam.",
     "country": "Kɔntri",
-    "recipientNotFound": "No risipiɛnt akɔn nɔ fɛn fɔ dis fon nɔmba. Duya chɛk yu fon nɔmba ɔ kɔntak yu lokal patna."
+    "recipientNotFound": "No risipiɛnt akɔn nɔ fɛn fɔ dis fon nɔmba. Duya chɛk yu fon nɔmba ɔ kɔntak yu lokal patna.",
+	"unknownPaymentPhoneNumber": "Di fon nɔmba we yu nɔ no bɔt fɔ pe"
 }
