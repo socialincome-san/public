@@ -1,9 +1,17 @@
 import "package:app/core/cubits/survey/survey_cubit.dart";
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
 import "package:app/l10n/l10n.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:webview_flutter/webview_flutter.dart";
+
+const _networkErrorTypes = {
+  WebResourceErrorType.connect,
+  WebResourceErrorType.timeout,
+  WebResourceErrorType.hostLookup,
+  WebResourceErrorType.io,
+};
 
 class SurveyPage extends StatefulWidget {
   final MappedSurvey mappedSurvey;
@@ -16,6 +24,7 @@ class SurveyPage extends StatefulWidget {
 
 class SurveyPageState extends State<SurveyPage> {
   bool isLoading = true;
+  bool hasNetworkError = false;
   late final WebViewController _webViewController;
 
   @override
@@ -32,7 +41,19 @@ class SurveyPageState extends State<SurveyPage> {
               isLoading = false;
             });
           },
-          onWebResourceError: (WebResourceError error) {},
+          onWebResourceError: (WebResourceError error) {
+            if (_networkErrorTypes.contains(error.errorType)) {
+              setState(() {
+                isLoading = false;
+                hasNetworkError = true;
+              });
+              FlushbarHelper.showFlushbar(
+                context,
+                message: context.l10n.offlineMutationError,
+                type: FlushbarType.error,
+              );
+            }
+          },
           onNavigationRequest: (NavigationRequest request) => NavigationDecision.navigate,
         ),
       )
@@ -59,6 +80,22 @@ class SurveyPageState extends State<SurveyPage> {
           if (isLoading) ...[
             const Center(
               child: CircularProgressIndicator(),
+            ),
+          ],
+          if (hasNetworkError) ...[
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.cloud_off,
+                    size: 48,
+                    color: Colors.black,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(context.l10n.offlineBanner),
+                ],
+              ),
             ),
           ],
         ],
