@@ -13,6 +13,7 @@ import "package:app/data/services/connectivity_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
+import "package:connectivity_plus/connectivity_plus.dart";
 import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
@@ -90,7 +91,10 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   final cacheDatabase = AppCacheDatabase();
 
-  final connectivityService = ConnectivityService();
+  final connectivityService = ConnectivityService(
+    connectivity: Connectivity(),
+    reachabilityUrl: Uri.parse("https://www.google.com"),
+  );
   await connectivityService.initialize();
 
   final packageInfo = await PackageInfo.fromPlatform();
