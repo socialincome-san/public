@@ -5,6 +5,7 @@ import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cu
 import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
+import "package:app/data/models/offline_exception.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
@@ -125,17 +126,25 @@ class _DashboardViewState extends State<_DashboardView> {
               BlocListener<PayoutsCubit, PayoutsState>(
                 listener: (context, state) {
                   if (state.status == PayoutsStatus.failure) {
-                    state.exception is SocketException
-                        ? FlushbarHelper.showFlushbar(
-                            context,
-                            message: context.l10n.noInternetConnection,
-                            type: FlushbarType.error,
-                          )
-                        : FlushbarHelper.showFlushbar(
-                            context,
-                            message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
-                            type: FlushbarType.error,
-                          );
+                    if (state.exception is SocketException) {
+                      FlushbarHelper.showFlushbar(
+                        context,
+                        message: context.l10n.noInternetConnection,
+                        type: FlushbarType.error,
+                      );
+                    } else if (state.exception is OfflineMutationException) {
+                      FlushbarHelper.showFlushbar(
+                        context,
+                        message: context.l10n.offlineMutationError,
+                        type: FlushbarType.error,
+                      );
+                    } else {
+                      FlushbarHelper.showFlushbar(
+                        context,
+                        message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
+                        type: FlushbarType.error,
+                      );
+                    }
                   }
                 },
               ),
