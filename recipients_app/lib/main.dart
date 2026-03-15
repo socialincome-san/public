@@ -86,9 +86,6 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   );
   final surveyDemoDataSource = SurveyDemoDataSource();
 
-  // final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
-  // final organizationDemoDataSource = OrganizationDemoDataSource();
-
   final packageInfo = await PackageInfo.fromPlatform();
 
   const crashReportingRepository = CrashReportingRepository();
@@ -123,8 +120,6 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
         paymentDemoDataSource: paymentDemoDataSource,
         surveyRemoteDataSource: surveyRemoteDataSource,
         surveyDemoDataSource: surveyDemoDataSource,
-        // organizationRemoteDataSource: organizationRemoteDataSource,
-        // organizationDemoDataSource: organizationDemoDataSource,
         authService: authService,
         firebaseRemoteConfigService: firebaseRemoteConfigService,
         crashReportingRepository: crashReportingRepository,

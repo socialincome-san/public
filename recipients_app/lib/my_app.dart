@@ -57,8 +57,6 @@ class MyApp extends StatelessWidget {
     required this.paymentDemoDataSource,
     required this.surveyRemoteDataSource,
     required this.surveyDemoDataSource,
-    // required this.organizationRemoteDataSource,
-    // required this.organizationDemoDataSource,
     required this.authService,
     required this.firebaseRemoteConfigService,
     required this.crashReportingRepository,

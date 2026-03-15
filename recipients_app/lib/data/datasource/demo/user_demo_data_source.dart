@@ -73,7 +73,6 @@ class UserDemoDataSource implements UserDataSource {
     ),
     createdAt: DateTime.now().toIso8601String(),
     program: Program(
-      // ownerOrganizationId: "demo",
       id: "demo",
       name: "Demo",
       countryId: "SL",
