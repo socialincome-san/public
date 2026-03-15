@@ -1,4 +1,4 @@
-// TODO(Verena): move to dart_mappable hook
+// TODO(migration): move to dart_mappable hook
 /* import "package:cloud_firestore/cloud_firestore.dart";
 import "package:json_annotation/json_annotation.dart";
 

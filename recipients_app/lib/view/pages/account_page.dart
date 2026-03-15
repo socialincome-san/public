@@ -382,10 +382,9 @@ class AccountPageState extends State<AccountPage> {
                 //   label: "${context.l10n.mobilePaymentProvider}*",
                 //   items: const [
                 //     DropdownMenuItem(
-                //       value: MobileMoneyProvider(id: "orange-money", name: "Orange Money SL"), // TODO(migration): update when we have more providers
+                //       value: MobileMoneyProvider(id: "orange-money", name: "Orange Money SL"),
                 //       child: Text("Orange Money SL"),
                 //     ),
-                //     // TODO(migration): raphi said currently theres only orange money
                 //     /* DropdownMenuItem(
                 //       value: PaymentProvider.africellMoney,
                 //       child: Text("Africell Money"),
@@ -445,26 +444,6 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 24),
-
-                /// CONTACT PREFERENCE
-                // TODO add later
-                /*const SizedBox(height: 8),
-                     DropdownButtonFormField<String>(
-                      hint: const Text("Contact Preference*"),
-                      onChanged: (value) => context
-                          .read<AccountCubit>()
-                          .updateRecipient(
-                              currentUser.copyWith(contactPreference: value)),
-                      items: [
-                        const DropdownMenuItem(
-                          child: Text("WhatsApp"),
-                          value: "whatsapp",
-                        ),
-                      ],
-                      validator: (value) => value!.isEmpty
-                          ? "Please select a contact preference"
-                          : null,
-                    ), */
 
                 /// SUCCESSOR IN THE CASE OF DEATH
                 Text(

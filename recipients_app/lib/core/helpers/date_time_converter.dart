@@ -1,4 +1,4 @@
-// TODO(Verena): move to dart_mappable hook
+// TODO(migration): move to dart_mappable hook
 /* import "package:json_annotation/json_annotation.dart";
 
 class DateTimeConverter implements JsonConverter<DateTime, String> {
