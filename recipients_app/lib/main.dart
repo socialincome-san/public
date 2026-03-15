@@ -95,6 +95,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
     (options) {
       options.dsn = const String.fromEnvironment("SENTRY_URL");
       options.tracesSampleRate = 1.0;
+      // ignore: experimental_member_use
       options.profilesSampleRate = 1.0;
       options.environment = appFlavor;
     },
