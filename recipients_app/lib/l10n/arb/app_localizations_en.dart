@@ -196,7 +196,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get acceptAndContinueDemo => 'Enter demo';
 
   @override
-  String get recommendingOrganization => 'Recommending Organization';
+  String get localPartner => 'Local Partner';
 
   @override
   String get programInformation => 'Program Information';

@@ -464,11 +464,11 @@ abstract class AppLocalizations {
   /// **'Enter demo'**
   String get acceptAndContinueDemo;
 
-  /// No description provided for @recommendingOrganization.
+  /// No description provided for @localPartner.
   ///
   /// In en, this message translates to:
-  /// **'Recommending Organization'**
-  String get recommendingOrganization;
+  /// **'Local Partner'**
+  String get localPartner;
 
   /// No description provided for @programInformation.
   ///

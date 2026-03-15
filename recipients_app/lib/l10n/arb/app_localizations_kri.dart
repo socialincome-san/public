@@ -197,7 +197,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get acceptAndContinueDemo => 'Go insay demo';
 
   @override
-  String get recommendingOrganization => 'Ɔganizeshɔn we go tɔk fɔ yu';
+  String get localPartner => 'Lokal Patna';
 
   @override
   String get programInformation => 'Program Infɔmeshɔn';
