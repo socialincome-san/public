@@ -12,11 +12,28 @@
 	"submit-button": "Envoyer le lien de connexion",
 	"check-email": "Tu devrais avoir reçu un e-mail avec un lien pour te connecter.",
 	"confirm-email-title": "Confirmez votre adresse e-mail",
+	"confirm-login": {
+		"title": "Terminer la connexion",
+		"body": "Clique sur le bouton ci-dessous pour terminer la connexion.",
+		"cta": "Terminer la connexion",
+		"return-home": "Retour à l'accueil"
+	},
 	"error": {
 		"user-not-found": "Utilisateur non trouvé",
 		"invalid-email": "Adresse e-mail incorrecte",
 		"unknown": "Connexion impossible"
 	},
 	"detect-account-type": "Détection du type de compte...",
-	"invalid-account-type": "Type de compte invalide, veuillez réessayer ou contacter le support."
+	"invalid-account-type": "Type de compte invalide, veuillez réessayer ou contacter le support.",
+	"flyout": {
+		"login-button": "Connexion",
+		"title": "Se connecter",
+		"magic-link-description": "Nous t’enverrons un lien magique pour te connecter.",
+		"sending": "Envoi en cours...",
+		"sent-message": "Si un compte existe pour {{ email }}, tu recevras bientôt un lien de connexion.",
+		"retry": "Réessayer",
+		"support-prefix": "Si tu ne le reçois pas, contacte",
+		"no-account": "Tu n’as pas de compte ?",
+		"get-started": "Découvre comment commencer"
+	}
 }

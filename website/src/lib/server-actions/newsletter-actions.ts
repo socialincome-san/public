@@ -1,23 +1,26 @@
 'use server';
 
-import { getAuthenticatedContributorOrThrow } from '../firebase/current-contributor';
+import { getSessionByType } from '@/lib/firebase/current-account';
 import { ServiceResult } from '../services/core/base.types';
-import { SendgridSubscriptionService } from '../services/sendgrid/sendgrid-subscription.service';
 import { CreateNewsletterSubscription, SendgridContactType } from '../services/sendgrid/types';
+import { services } from '../services/services';
 
-export async function subscribeToNewsletterAction(subscription: CreateNewsletterSubscription) {
-	const sendGridService = new SendgridSubscriptionService();
-	return sendGridService.subscribeToNewsletter(subscription);
-}
+export const subscribeToNewsletterAction = async (subscription: CreateNewsletterSubscription) => {
+	return services.sendgrid.subscribeToNewsletter(subscription);
+};
 
-export async function getActiveSubscriptionAction(): Promise<ServiceResult<SendgridContactType | null>> {
-	const contributor = await getAuthenticatedContributorOrThrow();
-	const sendGridService = new SendgridSubscriptionService();
-	return sendGridService.getActiveSubscription(contributor);
-}
+export const getActiveSubscriptionAction = async (): Promise<ServiceResult<SendgridContactType | null>> => {
+	const sessionResult = await getSessionByType('contributor');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.sendgrid.getActiveSubscription(sessionResult.data);
+};
 
-export async function unsubscribeFromNewsletterAction() {
-	const contributor = await getAuthenticatedContributorOrThrow();
-	const sendGridService = new SendgridSubscriptionService();
-	return sendGridService.unsubscribeFromNewsletter(contributor);
-}
+export const unsubscribeFromNewsletterAction = async () => {
+	const sessionResult = await getSessionByType('contributor');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.sendgrid.unsubscribeFromNewsletter(sessionResult.data);
+};

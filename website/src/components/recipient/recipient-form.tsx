@@ -3,9 +3,11 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
-import { Actor } from '@/lib/firebase/current-account';
+import type { Session } from '@/lib/firebase/current-account';
+import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import {
 	createRecipientAction,
+	deleteRecipientAction,
 	getRecipientAction,
 	getRecipientOptions,
 	updateRecipientAction,
@@ -13,7 +15,6 @@ import {
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
 import { ProgramOption } from '@/lib/services/program/program.types';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
-import { PaymentProvider, RecipientStatus } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateRecipientInput, buildUpdateRecipientInput } from './recipient-form-helpers';
@@ -25,14 +26,15 @@ type RecipientFormProps = {
 	readOnly?: boolean;
 	recipientId?: string;
 	programId?: string;
-	actorKind?: Actor['kind'];
+	sessionType?: Session['type'];
 };
 
 export type RecipientFormSchema = {
 	label: string;
 	fields: {
 		startDate: FormField;
-		status: FormField;
+		suspendedAt: FormField;
+		suspensionReason: FormField;
 		successorName: FormField;
 		termsAccepted: FormField;
 		paymentInformation: {
@@ -49,7 +51,7 @@ export type RecipientFormSchema = {
 	};
 };
 
-function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormSchema {
+const getInitialFormSchema = (sessionType: Session['type'] = 'user'): RecipientFormSchema => {
 	const base: RecipientFormSchema = {
 		label: 'Recipients',
 		fields: {
@@ -57,10 +59,13 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormS
 				label: 'Start Date',
 				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
 			},
-			status: {
-				placeholder: 'Status',
-				label: 'Status',
-				zodSchema: z.nativeEnum(RecipientStatus),
+			suspendedAt: {
+				label: 'Suspended At',
+				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
+			},
+			suspensionReason: {
+				label: 'Suspension Reason',
+				zodSchema: z.string().optional(),
 			},
 			successorName: {
 				placeholder: 'Successor',
@@ -85,7 +90,7 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormS
 					provider: {
 						placeholder: 'Provider',
 						label: 'Provider',
-						zodSchema: z.nativeEnum(PaymentProvider).optional(),
+						zodSchema: z.string().optional(),
 					},
 					code: {
 						placeholder: 'Code',
@@ -108,36 +113,37 @@ function getInitialFormSchema(actorKind: Actor['kind'] = 'user'): RecipientFormS
 		},
 	};
 
-	if (actorKind === 'local-partner') {
+	if (sessionType === 'local-partner') {
 		delete base.fields.program;
 		delete base.fields.localPartner;
 	}
 
 	return base;
-}
+};
 
-export function RecipientForm({
+export const RecipientForm = ({
 	onSuccess,
 	onError,
 	onCancel,
 	recipientId,
 	readOnly,
 	programId,
-	actorKind = 'user',
-}: RecipientFormProps) {
-	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(actorKind));
+	sessionType = 'user',
+}: RecipientFormProps) => {
+	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(sessionType));
 	const [recipient, setRecipient] = useState<RecipientPayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	const loadRecipient = async (recipientId: string) => {
 		try {
-			const result = await getRecipientAction(recipientId);
+			const result = await getRecipientAction(recipientId, sessionType);
 			if (result.success) {
 				setRecipient(result.data);
 				const newSchema = { ...formSchema };
 				const contactValues = getContactValuesFromPayload(result.data.contact, newSchema.fields.contact.fields);
 				newSchema.fields.startDate.value = result.data.startDate ?? undefined;
-				newSchema.fields.status.value = result.data.status;
+				newSchema.fields.suspendedAt.value = result.data.suspendedAt;
+				newSchema.fields.suspensionReason.value = result.data.suspensionReason;
 				newSchema.fields.successorName.value = result.data.successorName;
 				newSchema.fields.termsAccepted.value = result.data.termsAccepted;
 
@@ -148,7 +154,8 @@ export function RecipientForm({
 					newSchema.fields.localPartner.value = result.data.localPartner.id;
 				}
 
-				newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
+				newSchema.fields.paymentInformation.fields.provider.value =
+					result.data.paymentInformation?.mobileMoneyProvider?.id;
 				newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
 				newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
 				newSchema.fields.contact.fields = contactValues;
@@ -161,21 +168,20 @@ export function RecipientForm({
 		}
 	};
 
-	const setOptions = (localPartner: LocalPartnerOption[], programs: ProgramOption[]) => {
-		if (actorKind === 'local-partner') {
-			return;
-		}
-
+	const setOptions = (
+		localPartner: LocalPartnerOption[],
+		programs: ProgramOption[],
+		mobileMoneyProviders: { id: string; name: string }[],
+	) => {
 		const optionsToZodEnum = (options: LocalPartnerOption[] | ProgramOption[]) =>
 			getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
 
 		const partnersObj = optionsToZodEnum(localPartner);
-
-		const programsToFilter = programs
-			// filter by program id if in program scope
-			.filter((p) => !programId || p.id === programId);
-
+		const programsToFilter = programs.filter((p) => !programId || p.id === programId);
 		const programsObj = optionsToZodEnum(programsToFilter);
+
+		const providerOptions = mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name }));
+		const providerEnum = getZodEnum(providerOptions);
 
 		setFormSchema((prevSchema) => {
 			const updated = { ...prevSchema, fields: { ...prevSchema.fields } };
@@ -186,13 +192,23 @@ export function RecipientForm({
 					zodSchema: z.nativeEnum(partnersObj),
 				};
 			}
-
 			if (updated.fields.program) {
 				updated.fields.program = {
 					...updated.fields.program,
 					zodSchema: z.nativeEnum(programsObj),
 				};
 			}
+			updated.fields.paymentInformation = {
+				...updated.fields.paymentInformation,
+				fields: {
+					...updated.fields.paymentInformation.fields,
+					provider: {
+						...updated.fields.paymentInformation.fields.provider,
+						options: providerOptions,
+						zodSchema: providerOptions.length > 0 ? z.nativeEnum(providerEnum) : z.string().optional(),
+					},
+				},
+			};
 
 			return updated;
 		});
@@ -207,14 +223,29 @@ export function RecipientForm({
 				if (recipientId && recipient) {
 					const data: RecipientUpdateInput = buildUpdateRecipientInput(schema, recipient, contactFields);
 					const nextPaymentPhoneNumber = schema.fields.paymentInformation.fields.phone.value ?? null;
-					res = await updateRecipientAction(data, nextPaymentPhoneNumber);
+					res = await updateRecipientAction(data, nextPaymentPhoneNumber, sessionType);
 				} else {
 					const data: RecipientCreateInput = buildCreateRecipientInput(schema, contactFields);
-					res = await createRecipientAction(data);
+					res = await createRecipientAction(data, sessionType);
 				}
 
 				res.success ? onSuccess?.() : onError?.(res.error);
 			} catch (error: unknown) {
+				onError?.(error);
+			}
+		});
+	};
+
+	const onDelete = () => {
+		if (!recipientId) {
+			return;
+		}
+
+		startTransition(async () => {
+			try {
+				const result = await deleteRecipientAction(recipientId, sessionType);
+				result.success ? onSuccess?.() : onError?.(result.error);
+			} catch (error) {
 				onError?.(error);
 			}
 		});
@@ -228,20 +259,31 @@ export function RecipientForm({
 	}, [recipientId]);
 
 	useEffect(() => {
-		// load options for program and local partners
+		// load options for program, local partners, and supported mobile money providers
 		startTransition(async () => {
-			const { programs, localPartner } = await getRecipientOptions();
-			if (!programs.success || !localPartner.success) return;
-			setOptions(localPartner.data, programs.data);
+			const [recipientOptionsResult, supportedProviders] = await Promise.all([
+				getRecipientOptions(sessionType),
+				getSupportedMobileMoneyProviderOptionsAction(sessionType),
+			]);
+			if (!recipientOptionsResult.success) {
+				return;
+			}
+			setOptions(
+				recipientOptionsResult.data.localPartner,
+				recipientOptionsResult.data.programs,
+				supportedProviders.success ? supportedProviders.data : [],
+			);
 		});
-	}, []);
+	}, [sessionType, programId]);
+
 	return (
 		<DynamicForm
 			formSchema={formSchema}
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={readOnly ? 'readonly' : recipientId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

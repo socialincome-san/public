@@ -158,5 +158,10 @@
 			"title": "Vuoi uscire dal tuo account?",
 			"button": "Effettua il log out"
 		}
+	},
+	"navigation": {
+		"go-to-portal": "Vai al portale",
+		"go-to-dashboard": "Vai alla dashboard",
+		"go-to-partner-space": "Vai all'area partner"
 	}
 }

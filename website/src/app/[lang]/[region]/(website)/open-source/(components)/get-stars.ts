@@ -1,3 +1,4 @@
+import { now } from '@/lib/utils/now';
 import { fetchData } from './fetch-data';
 
 const owner = 'socialincome-san';
@@ -11,7 +12,7 @@ interface GitHubStar {
 	starred_at: string;
 }
 
-export async function getStarCount(): Promise<{ totalStars: number; newStars: number }> {
+export const getStarCount = async (): Promise<{ totalStars: number; newStars: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
 	const repoRes = await fetchData(owner, repo, repoUrl);
 
@@ -19,7 +20,7 @@ export async function getStarCount(): Promise<{ totalStars: number; newStars: nu
 	const totalStars = repoData.stargazers_count;
 
 	// Calculate the date 30 days ago from today
-	const startDate = new Date();
+	const startDate = now();
 	startDate.setDate(startDate.getDate() - 30);
 	const startDateISO = startDate.toISOString();
 
@@ -42,9 +43,11 @@ export async function getStarCount(): Promise<{ totalStars: number; newStars: nu
 		}
 
 		// No more pages if we got fewer than 100 stars
-		if (stars.length < 100) hasMore = false;
+		if (stars.length < 100) {
+			hasMore = false;
+		}
 		page++;
 	}
 
 	return { totalStars, newStars };
-}
+};

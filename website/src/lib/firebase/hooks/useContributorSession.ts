@@ -4,13 +4,13 @@ import { getOptionalContributorAction } from '@/lib/server-actions/contributor-a
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { useEffect, useState } from 'react';
 
-export function useContributorSession() {
+export const useContributorSession = () => {
 	const [contributorSession, setContributorSession] = useState<ContributorSession | null | undefined>(undefined);
 
 	useEffect(() => {
 		(async () => {
 			const result = await getOptionalContributorAction();
-			setContributorSession(result);
+			setContributorSession(result.success ? result.data : null);
 		})();
 	}, []);
 
@@ -18,4 +18,4 @@ export function useContributorSession() {
 		contributorSession,
 		loading: contributorSession === undefined,
 	};
-}
+};

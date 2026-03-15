@@ -30,7 +30,7 @@ type PersonalInfoFormProps = {
 	};
 } & DefaultParams;
 
-export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
+export const SubscriptionInfoForm = ({ lang, translations }: PersonalInfoFormProps) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const formSchema = z.object({
@@ -107,4 +107,4 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 			</form>
 		</Form>
 	);
-}
+};

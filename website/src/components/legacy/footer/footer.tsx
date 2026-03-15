@@ -12,7 +12,7 @@ type FooterLinkProps = {
 	target?: HTMLAttributeAnchorTarget;
 };
 
-function FooterLink({ label, url, Icon, target = '_self' }: FooterLinkProps) {
+const FooterLink = ({ label, url, Icon, target = '_self' }: FooterLinkProps) => {
 	return (
 		<Link href={url} className="group inline-flex items-center space-x-3" target={target}>
 			{Icon && <Icon className="group-hover:fill-base-content fill-muted-foreground h-4 w-4" />}
@@ -21,7 +21,7 @@ function FooterLink({ label, url, Icon, target = '_self' }: FooterLinkProps) {
 			</Typography>
 		</Link>
 	);
-}
+};
 
 export default async function Footer({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -30,7 +30,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer baseClassNames="theme-blue" className="pb-8 pt-10">
+		<BaseContainer baseClassNames="theme-blue" className="pt-10 pb-8">
 			<div className="space-y-4">
 				<div className="grid grid-cols-2 gap-8 md:grid-cols-4">
 					<div className="flex flex-col space-y-1">

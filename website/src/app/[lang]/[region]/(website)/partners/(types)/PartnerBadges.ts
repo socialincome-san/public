@@ -1,4 +1,4 @@
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor } from '@socialincome/ui';
 import { ReactElement } from 'react';
 
 type QuoteType = {

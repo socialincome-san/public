@@ -1,4 +1,4 @@
-import { Gender, UserRole } from '@prisma/client';
+import { CountryCode, Gender, UserRole } from '@/generated/prisma/client';
 
 export type UserPayload = {
 	id: string;
@@ -7,14 +7,6 @@ export type UserPayload = {
 	email: string | null;
 	role: UserRole;
 	organizationId: string | null;
-};
-
-export type UserCreateInput = {
-	firstName: string;
-	lastName: string;
-	email: string;
-	role: UserRole;
-	organizationId: string;
 };
 
 export type UserUpdateInput = {
@@ -31,7 +23,7 @@ export type UserUpdateInput = {
 		number: string;
 		city: string;
 		zip: string;
-		country: string;
+		country: CountryCode;
 	} | null;
 };
 
@@ -45,8 +37,21 @@ export type UserTableViewRow = {
 	createdAt: Date;
 };
 
-export type UserTableView = {
+type UserTableView = {
 	tableRows: UserTableViewRow[];
+};
+
+export type UserTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type UserPaginatedTableView = {
+	tableRows: UserTableViewRow[];
+	totalCount: number;
 };
 
 export type UserSession = {
@@ -61,7 +66,7 @@ export type UserSession = {
 	number: string | null;
 	city: string | null;
 	zip: string | null;
-	country: string | null;
+	country: CountryCode | null;
 
 	role: UserRole;
 	activeOrganization: {

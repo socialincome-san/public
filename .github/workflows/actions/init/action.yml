@@ -21,9 +21,9 @@ runs:
         gpg --keyserver keyserver.ubuntu.com --recv-keys 5BE8A3F6C8A5C01D106C0AD820B1A390B168D356
 
     - name: Setup Node.js
-      uses: jdx/mise-action@v2
+      uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
       with:
-        version: 2025.6.0
+        version: 2026.2.13
         install: ${{ inputs.installDependencies == 'true' }}
         cache: true
 
@@ -43,7 +43,7 @@ runs:
 
     - name: Create credentials JSON file
       if: inputs.firebaseServiceAccountJSON
-      uses: jsdaniell/create-json@v1.2.2
+      uses: jsdaniell/create-json@b8e77fa01397ca39cc4a6198cc29a3be5481afef # v1.2.3
       with:
         name: credentials.json
         json: ${{ inputs.firebaseServiceAccountJSON }}

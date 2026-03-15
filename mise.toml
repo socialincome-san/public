@@ -1,5 +1,5 @@
 [tools]
-node = "22"
+node = "24"
 java = "23"
 
 [tasks.install]
@@ -7,6 +7,9 @@ run = "npm install"
 
 [tasks.db]
 run = "npm run db:up"
+
+[tasks.mockserver]
+run = "npm run mockserver:up"
 
 [tasks.firebase]
 run = "npm run firebase:serve"
@@ -17,7 +20,7 @@ run = "npm run website:build-paths"
 
 [tasks.website]
 run = "npm run website:serve"
-depends = ["install", "db", "build-paths"]
+depends = ["install", "db", "mockserver", "build-paths"]
 
 [tasks.dev]
 depends = ["firebase", "website"]

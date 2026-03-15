@@ -1,4 +1,4 @@
-import { Account } from '@prisma/client';
+import { Account } from '@/generated/prisma/client';
 
 export const accountsData: Account[] = [
 	{
@@ -58,6 +58,24 @@ export const accountsData: Account[] = [
 	{
 		id: 'account-10',
 		firebaseAuthUserId: 'a80doqpnw1lgeFoepbSBdl2sj2AP',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'account-11',
+		firebaseAuthUserId: 'firebase-auth-user-11',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'account-12',
+		firebaseAuthUserId: 'firebase-auth-user-12',
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null
+	},
+	{
+		id: 'account-13',
+		firebaseAuthUserId: 'c43IydQbr8lgeGeevbSBoP9ui3WX',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null
 	}

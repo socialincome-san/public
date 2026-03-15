@@ -7,12 +7,24 @@ import { ref } from 'firebase/storage';
 import { Download } from 'lucide-react';
 import Link from 'next/link';
 
-export function DownloadCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
+export const DownloadCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const storagePath = String(ctx.getValue() ?? '');
 	const storage = useStorage();
-	const { data, loading } = useStorageDownloadURL(ref(storage, storagePath));
+	const isDownloadablePath = storagePath.startsWith('users/');
+	const storageRef = storagePath && isDownloadablePath ? ref(storage, storagePath) : undefined;
+	const { data, loading } = useStorageDownloadURL(storageRef);
 
-	if (!storagePath || !data || loading) return null;
+	if (!storagePath) {
+		return null;
+	}
+
+	if (!isDownloadablePath) {
+		return <span className="text-muted-foreground text-sm">Download unavailable</span>;
+	}
+
+	if (!data || loading) {
+		return null;
+	}
 
 	return (
 		<Link className={linkCn()} href={data} target="_blank" rel="noopener noreferrer">
@@ -20,4 +32,4 @@ export function DownloadCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
 			Download
 		</Link>
 	);
-}
+};

@@ -1,8 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { BaseContainer, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { BaseContainer, FontColor, Typography } from '@socialincome/ui';
 
 export default async function Section1({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-arts'] });

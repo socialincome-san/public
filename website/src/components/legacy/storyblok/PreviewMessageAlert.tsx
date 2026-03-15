@@ -4,13 +4,15 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 import { Typography } from '@socialincome/ui';
 import { useState } from 'react';
 
-export function PreviewMessage() {
+export const PreviewMessage = () => {
 	const [visible, setVisible] = useState(true);
 
-	if (!visible) return null;
+	if (!visible) {
+		return null;
+	}
 
 	return (
-		<span className="text-shadow-md bg-accent fixed left-5 top-72 z-[10000] w-[150px] rounded-md p-2 shadow-lg">
+		<span className="bg-accent fixed top-72 left-5 z-10000 w-[150px] rounded-md p-2 shadow-lg text-shadow-md">
 			<Typography as="span" weight="bold">
 				Preview Mode
 			</Typography>
@@ -26,4 +28,4 @@ export function PreviewMessage() {
 			</Typography>
 		</span>
 	);
-}
+};

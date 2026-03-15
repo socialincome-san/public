@@ -6,10 +6,10 @@ import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer } from '@socialincome/ui';
 import { PropsWithChildren } from 'react';
 
-export async function generateMetadata(props: DefaultLayoutProps) {
+export const generateMetadata = async (props: DefaultLayoutProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-legal');
-}
+};
 
 export default async function Layout({ children, ...props }: PropsWithChildren<DefaultLayoutProps>) {
 	const params = await props.params;

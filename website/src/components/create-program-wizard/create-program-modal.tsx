@@ -13,7 +13,7 @@ type Props = {
 	isAuthenticated?: boolean;
 };
 
-export function CreateProgramModal({ trigger, isAuthenticated = false }: Props) {
+export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) => {
 	const [state, send] = useMachine(createProgramWizardMachine, {
 		input: { isAuthenticated },
 	});
@@ -34,6 +34,7 @@ export function CreateProgramModal({ trigger, isAuthenticated = false }: Props) 
 	return (
 		<>
 			<div
+				data-testid="create-program-modal-trigger"
 				role="button"
 				tabIndex={0}
 				aria-haspopup="dialog"
@@ -44,7 +45,7 @@ export function CreateProgramModal({ trigger, isAuthenticated = false }: Props) 
 			</div>
 
 			<Dialog open={isOpen} onOpenChange={(open) => send({ type: open ? 'OPEN' : 'CLOSE' })}>
-				<DialogContent variant="large">
+				<DialogContent variant="large" className="max-h-[90dvh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle>Initiate New Program</DialogTitle>
 					</DialogHeader>
@@ -54,4 +55,4 @@ export function CreateProgramModal({ trigger, isAuthenticated = false }: Props) 
 			</Dialog>
 		</>
 	);
-}
+};

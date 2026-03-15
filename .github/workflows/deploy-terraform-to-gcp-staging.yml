@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: deploy-terraform-gcp-staging
+  cancel-in-progress: false
+
 env:
   ENVIRONMENT: staging
   APP_NAME: website
@@ -21,10 +25,10 @@ jobs:
 
     steps:
       - name: 📦 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: 🔐 Authenticate with Google Cloud
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
           credentials_json: ${{ secrets.TF_STAGING_TERRAFORM_DEPLOYER_CREDENTIALS }}
 
@@ -34,7 +38,7 @@ jobs:
           gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
 
       - name: 🧰 Set up Terraform CLI
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
           terraform_version: 1.6.6
 

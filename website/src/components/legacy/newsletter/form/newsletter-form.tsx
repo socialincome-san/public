@@ -59,7 +59,7 @@ const NewsletterForm = ({ t, lang, translations }: NewsletterFormProps) => {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="w-full sm:w-full sm:max-w-[10rem]">
+				<Button type="submit" className="w-full sm:w-full sm:max-w-40">
 					{translations.buttonAddSubscriber}
 				</Button>
 			</form>

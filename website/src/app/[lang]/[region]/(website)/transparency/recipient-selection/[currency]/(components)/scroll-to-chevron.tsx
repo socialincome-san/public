@@ -9,7 +9,7 @@ type ScrollToChevronProps = {
 	bounce?: boolean;
 };
 
-function ScrollToChevron({ elementId, bounce }: ScrollToChevronProps) {
+const ScrollToChevron = ({ elementId, bounce }: ScrollToChevronProps) => {
 	return (
 		<Button
 			variant="ghost"
@@ -27,6 +27,6 @@ function ScrollToChevron({ elementId, bounce }: ScrollToChevronProps) {
 			/>
 		</Button>
 	);
-}
+};
 
 export default ScrollToChevron;

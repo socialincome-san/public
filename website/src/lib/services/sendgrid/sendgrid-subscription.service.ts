@@ -1,4 +1,4 @@
-import { CountryCode } from '@/lib/types/country';
+import { CountryCode } from '@/generated/prisma/enums';
 import { Client } from '@sendgrid/client';
 import { ContributorSession } from '../contributor/contributor.types';
 import { ServiceResult } from '../core/base.types';
@@ -12,8 +12,9 @@ import {
 } from './types';
 
 export class SendgridSubscriptionService extends Client {
-	listId: string;
-	suppressionListId: number; // unsubscribe group id
+	listId = '';
+	suppressionListId = 0; // unsubscribe group id
+	private initialized = false;
 
 	protected resultOk<T>(data: T, status?: number): ServiceResult<T> {
 		return { success: true, data, status };
@@ -25,37 +26,45 @@ export class SendgridSubscriptionService extends Client {
 
 	constructor() {
 		super();
-		const env: SendgridClientProps = this.validateSendgridEnvVars();
-		this.setApiKey(env.SENDGRID_API_KEY);
-		this.listId = env.SENDGRID_LIST_ID;
-		this.suppressionListId = env.SENDGRID_SUPPRESSION_LIST_ID;
 	}
 
 	getActiveSubscription = async (
 		contributor: ContributorSession,
 	): Promise<ServiceResult<SendgridContactType | null>> => {
 		try {
+			const configResult = this.ensureConfigured();
+			if (!configResult.success) {
+				return configResult;
+			}
 			if (!contributor.email) {
 				return this.resultFail('Email missing in contributor');
 			}
 			const subscriber = await this.getContact(contributor.email);
 			return this.resultOk(subscriber);
-		} catch (error: any) {
-			return this.resultFail(error);
+		} catch (error) {
+			return this.resultFail(`Unable to get active subscription: ${JSON.stringify(error)}`);
 		}
 	};
 
 	subscribeToNewsletter = async (subscription: CreateNewsletterSubscription): Promise<ServiceResult<void>> => {
 		try {
+			const configResult = this.ensureConfigured();
+			if (!configResult.success) {
+				return configResult;
+			}
 			await this.upsertSubscription({ ...subscription, status: 'subscribed' });
 			return this.resultOk(undefined);
-		} catch (error: any) {
-			return this.resultFail(error);
+		} catch (error) {
+			return this.resultFail(`Unable to subscribe to newsletter: ${JSON.stringify(error)}`);
 		}
 	};
 
 	unsubscribeFromNewsletter = async (contributor: ContributorSession): Promise<ServiceResult<void>> => {
 		try {
+			const configResult = this.ensureConfigured();
+			if (!configResult.success) {
+				return configResult;
+			}
 			if (!contributor.email) {
 				return this.resultFail('Email missing contributor');
 			}
@@ -68,27 +77,48 @@ export class SendgridSubscriptionService extends Client {
 				country: (contributor.country || 'CH') as CountryCode,
 			});
 			return this.resultOk(undefined);
-		} catch (error: any) {
-			return this.resultFail(error);
+		} catch (error) {
+			return this.resultFail(`Unable to unsubscribe from newsletter: ${JSON.stringify(error)}`);
 		}
 	};
 
-	private validateSendgridEnvVars = (): SendgridClientProps => {
-		const suppressionListId = parseInt(process.env.SENDGRID_SUPPRESSION_LIST_ID!);
+	private ensureConfigured(): ServiceResult<void> {
+		if (this.initialized) {
+			return this.resultOk(undefined);
+		}
+
+		const envResult = this.validateSendgridEnvVars();
+		if (!envResult.success) {
+			return envResult;
+		}
+
+		this.setApiKey(envResult.data.SENDGRID_API_KEY);
+		this.listId = envResult.data.SENDGRID_LIST_ID;
+		this.suppressionListId = envResult.data.SENDGRID_SUPPRESSION_LIST_ID;
+		this.initialized = true;
+		return this.resultOk(undefined);
+	}
+
+	private validateSendgridEnvVars = (): ServiceResult<SendgridClientProps> => {
+		const suppressionListIdRaw = process.env.SENDGRID_SUPPRESSION_LIST_ID;
+		const sendgridApiKey = process.env.SENDGRID_API_KEY;
+		const sendgridListId = process.env.SENDGRID_LIST_ID;
+
+		if (!suppressionListIdRaw || !sendgridApiKey || !sendgridListId) {
+			return this.resultFail('Missing required Sendgrid environment variables');
+		}
+
+		const suppressionListId = parseInt(suppressionListIdRaw, 10);
 		if (isNaN(suppressionListId)) {
-			throw new Error('SENDGRID_SUPPRESSION_LIST_ID must be a valid number');
+			return this.resultFail('SENDGRID_SUPPRESSION_LIST_ID must be a valid number');
 		}
 
 		const sendgridClientProps: SendgridClientProps = {
-			SENDGRID_API_KEY: process.env.SENDGRID_API_KEY!,
-			SENDGRID_LIST_ID: process.env.SENDGRID_LIST_ID!,
+			SENDGRID_API_KEY: sendgridApiKey,
+			SENDGRID_LIST_ID: sendgridListId,
 			SENDGRID_SUPPRESSION_LIST_ID: suppressionListId,
 		};
-
-		Object.entries(sendgridClientProps).forEach(([key, value]) => {
-			if (!value) throw new Error(`Missing required environment variable: ${key}`);
-		});
-		return sendgridClientProps;
+		return this.resultOk(sendgridClientProps);
 	};
 
 	private getContact = async (email: string): Promise<SendgridContactType | null> => {
@@ -102,7 +132,9 @@ export class SendgridSubscriptionService extends Client {
 			const isSuppressed = await this.isSuppressed(email);
 			return { ...contact, status: isSuppressed ? 'unsubscribed' : 'subscribed' } as SendgridContactType;
 		} catch (e: any) {
-			if (e.code !== 404) console.error('Unable to get contact', e);
+			if (e.code !== 404) {
+				console.error('Unable to get contact', e);
+			}
 			return null;
 		}
 	};

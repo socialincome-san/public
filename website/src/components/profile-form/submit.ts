@@ -1,18 +1,19 @@
+import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { updateSelfAction as updateContributorSelfAction } from '@/lib/server-actions/contributor-actions';
 import { updateLocalPartnerAction } from '@/lib/server-actions/local-partner-action';
 import { updateUserSelfAction } from '@/lib/server-actions/user-actions';
 import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerSession, LocalPartnerUpdateInput } from '@/lib/services/local-partner/local-partner.types';
+import { LocalPartnerFormUpdateInput } from '@/lib/services/local-partner/local-partner-form-input';
+import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
-import { ContributorReferralSource } from '@prisma/client';
 import { toggleNewsletter } from './newsletter';
-import { ProfileFormValues } from './schemas';
+import { ProfileFormOutput } from './schemas';
 
-export async function submitProfileForm(
-	values: ProfileFormValues,
+export const submitProfileForm = async (
+	values: ProfileFormOutput,
 	session: ContributorSession | LocalPartnerSession | UserSession,
 	isNewsletterSubscribed: boolean,
-) {
+) => {
 	if (values.type === 'contributor') {
 		const resultNewsletter = await toggleNewsletter(values, session as ContributorSession, isNewsletterSubscribed);
 		if (!resultNewsletter.success) {
@@ -32,24 +33,14 @@ export async function submitProfileForm(
 						email: values.email,
 						gender: values.gender ?? null,
 						language: values.language,
-						address: {
-							upsert: {
-								update: {
-									street: values.street,
-									number: values.number,
-									city: values.city,
-									zip: values.zip,
-									country: values.country ?? '',
-								},
-								create: {
-									street: values.street ?? '',
-									number: values.number ?? '',
-									city: values.city ?? '',
-									zip: values.zip ?? '',
-									country: values.country ?? '',
-								},
-							},
-						},
+						address: values.address
+							? {
+									upsert: {
+										update: values.address,
+										create: values.address,
+									},
+								}
+							: undefined,
 					},
 				},
 			},
@@ -59,41 +50,29 @@ export async function submitProfileForm(
 	}
 
 	if (values.type === 'local-partner') {
-		const update: LocalPartnerUpdateInput = {
+		const update: LocalPartnerFormUpdateInput = {
 			name: values.name,
 			causes: values.causes ?? [],
 			contact: {
-				update: {
-					data: {
-						firstName: values.firstName,
-						lastName: values.lastName,
-						email: values.email,
-						gender: values.gender ?? null,
-						language: values.language,
-						address: {
-							upsert: {
-								update: {
-									street: values.street,
-									number: values.number,
-									city: values.city,
-									zip: values.zip,
-									country: values.country ?? '',
-								},
-								create: {
-									street: values.street ?? '',
-									number: values.number ?? '',
-									city: values.city ?? '',
-									zip: values.zip ?? '',
-									country: values.country ?? '',
-								},
-							},
-						},
-					},
-				},
+				firstName: values.firstName,
+				lastName: values.lastName,
+				callingName: null,
+				email: values.email,
+				gender: values.gender ?? null,
+				language: values.language ?? null,
+				dateOfBirth: null,
+				profession: null,
+				phone: undefined,
+				hasWhatsApp: false,
+				street: values.address?.street ?? null,
+				number: values.address?.number ?? null,
+				city: values.address?.city ?? null,
+				zip: values.address?.zip ?? null,
+				country: values.address?.country ?? null,
 			},
 		};
 
-		return updateLocalPartnerAction(update);
+		return updateLocalPartnerAction(update, 'local-partner');
 	}
 
 	return updateUserSelfAction({
@@ -102,12 +81,6 @@ export async function submitProfileForm(
 		gender: values.gender ?? null,
 		language: values.language,
 		organizationId: values.organizationId,
-		address: {
-			street: values.street ?? '',
-			number: values.number ?? '',
-			city: values.city ?? '',
-			zip: values.zip ?? '',
-			country: values.country ?? '',
-		},
+		address: values.address ?? undefined,
 	});
-}
+};

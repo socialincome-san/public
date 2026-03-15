@@ -78,6 +78,14 @@ export interface CampaignDonate {
   [k: string]: unknown;
 }
 
+export interface DropdownItem {
+  label?: string;
+  menuItemGroups: MenuItemGroup[];
+  component: "dropdownItem";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface EmbeddedVideo {
   url?: string;
   muxPlaybackId?: string;
@@ -91,7 +99,7 @@ export interface HeroVideo {
   heading?: string;
   description?: string;
   button?: Button[];
-  backgroundVideo?: StoryblokAsset;
+  muxPlaybackId: string;
   component: "heroVideo";
   _uid: string;
   [k: string]: unknown;
@@ -114,6 +122,63 @@ export interface ImageWithCaption {
   [k: string]: unknown;
 }
 
+export interface JournalTeasers {
+  heading?: string;
+  articlesDisplayMode: "latest" | "selected";
+  selectedArticles?: (ISbStoryData<Article> | string)[];
+  component: "journalTeasers";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Layout {
+  menu: (MenuItem | DropdownItem)[];
+  footerMenu: MenuItemGroup[];
+  copyrightNotice?: string;
+  component: "layout";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface MenuItem {
+  label?: string;
+  link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter";
+  newTab?: boolean;
+  component: "menuItem";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface MenuItemGroup {
+  label: string;
+  items?: MenuItem[];
+  component: "menuItemGroup";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface ModalCard {
+  heading: string;
+  image: StoryblokAsset;
+  modalContent?: StoryblokRichtext;
+  component: "modalCard";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface ModalCards {
+  heading?: string;
+  explainerVideo?: unknown;
+  labelForExplainerVideo?: string;
+  linkToExplainerVideo?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  cards?: ModalCard[];
+  explainerVideoThumbnail?: StoryblokAsset;
+  component: "modalCards";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface NewsletterSignup {
   component: "newsletterSignup";
   _uid: string;
@@ -121,7 +186,7 @@ export interface NewsletterSignup {
 }
 
 export interface Page {
-  content: (HeroVideo | ImageText | Text)[];
+  content: (HeroVideo | ImageText | JournalTeasers | ModalCards | Text)[];
   component: "page";
   _uid: string;
   [k: string]: unknown;
@@ -172,4 +237,4 @@ export interface Topic {
   [k: string]: unknown;
 }
 
-export type ContentType = ActionButton | Article | ArticleType | Author | Page | ReferenceArticle | Topic;
+export type ContentType = ActionButton | Article | ArticleType | Author | Layout | Page | ReferenceArticle | Topic;

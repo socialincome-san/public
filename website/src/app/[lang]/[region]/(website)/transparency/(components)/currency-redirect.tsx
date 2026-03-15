@@ -5,7 +5,7 @@ import { WebsiteCurrency } from '@/lib/i18n/utils';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 
-export function CurrencyRedirect(props: { currency: WebsiteCurrency }) {
+export const CurrencyRedirect = (props: { currency: WebsiteCurrency }) => {
 	const { currency } = useI18n();
 
 	useEffect(() => {
@@ -15,4 +15,4 @@ export function CurrencyRedirect(props: { currency: WebsiteCurrency }) {
 	}, [currency, props.currency]);
 
 	return null;
-}
+};

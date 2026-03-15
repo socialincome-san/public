@@ -3,9 +3,8 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { RecipientForm } from '@/components/recipient/recipient-form';
-import { Actor } from '@/lib/firebase/current-account';
+import type { Session } from '@/lib/firebase/current-account';
 import { logger } from '@/lib/utils/logger';
-import { useState } from 'react';
 
 type Props = {
 	open: boolean;
@@ -13,14 +12,23 @@ type Props = {
 	recipientId?: string;
 	readOnly: boolean;
 	programId?: string;
-	actorKind: Actor['kind'];
+	sessionType: Session['type'];
+	errorMessage: string | null;
+	onError: (error: string) => void;
 };
 
-export function RecipientDialog({ open, onOpenChange, recipientId, readOnly, programId, actorKind }: Props) {
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving recipient: ${error}`);
+export const RecipientDialog = ({
+	open,
+	onOpenChange,
+	recipientId,
+	readOnly,
+	programId,
+	sessionType,
+	errorMessage,
+	onError,
+}: Props) => {
+	const handleError = (error: unknown) => {
+		onError(`Error saving recipient: ${error}`);
 		logger.error('Recipient Form Error', { error });
 	};
 
@@ -34,7 +42,7 @@ export function RecipientDialog({ open, onOpenChange, recipientId, readOnly, pro
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
+						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 
@@ -43,11 +51,11 @@ export function RecipientDialog({ open, onOpenChange, recipientId, readOnly, pro
 					readOnly={readOnly}
 					onSuccess={() => onOpenChange(false)}
 					onCancel={() => onOpenChange(false)}
-					onError={onError}
+					onError={handleError}
 					programId={programId}
-					actorKind={actorKind}
+					sessionType={sessionType}
 				/>
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

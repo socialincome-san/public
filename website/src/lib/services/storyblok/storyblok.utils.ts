@@ -1,5 +1,7 @@
 import type { Article, ArticleType, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import { Metadata } from 'next';
@@ -15,6 +17,11 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
 	tags?: ISbStoryData<Topic>[];
 };
 
+export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>) => {
+	const subtitle = article.content.subtitle?.trim();
+	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
+};
+
 // ==================== Image Utilities ====================
 
 /**
@@ -22,19 +29,19 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
  * Based on official documentation: https://www.storyblok.com/faq/image-dimensions-assets-js
  * Format example: https://a.storyblok.com/f/51376/664x488/f4f9d1769c/visual-editor-features.jpg
  */
-export function getDimensionsFromStoryblokImageUrl(url: string): { width?: number; height?: number } {
+export const getDimensionsFromStoryblokImageUrl = (url: string): { width?: number; height?: number } => {
 	if (!url) {
 		return {};
 	}
 	const match = url.match(/\/f\/\d+\/(\d+)x(\d+)\//);
 
 	return match ? { width: Number(match[1]), height: Number(match[2]) } : {};
-}
+};
 
 /**
  * Calculate scaled dimensions maintaining aspect ratio.
  */
-export function getScaledDimensions(url: string, maxWidth: number): { width: number; height: number } | null {
+export const getScaledDimensions = (url: string, maxWidth: number): { width: number; height: number } | null => {
 	const original = getDimensionsFromStoryblokImageUrl(url);
 	if (!original.width || !original.height) {
 		return null;
@@ -48,19 +55,29 @@ export function getScaledDimensions(url: string, maxWidth: number): { width: num
 		width: maxWidth,
 		height: Math.round((original.height / original.width) * maxWidth),
 	};
-}
+};
 
 /**
- * Format a Storyblok image URL with optional focal point.
- * Storyblok provides out of the box image resizing/cropping, which can be combined with a custom focal point.
- * If that's not defined, we use the smart feature, which recognizes faces and may resize accordingly.
+ * Annotates a Storyblok image URL with focal point or smart cropping metadata.
+ * The actual image transformation is handled by the custom image loader.
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
-export function formatStoryblokUrl(url: string, width: number, height: number, focus?: string | null) {
+export const formatStoryblokUrl = (url: string, width: number, height: number, focus?: string | null) => {
+	const crop = focus || 'smart';
+	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
+	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
+};
+
+/**
+ * Builds a complete Storyblok Image Service URL for direct usage (e.g., OG metadata).
+ * Unlike formatStoryblokUrl, this returns a URL that can be fetched directly without
+ * going through the Next.js image loader.
+ */
+const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 	return imageSource;
-}
+};
 
 // ==================== Date Utilities ====================
 
@@ -69,53 +86,76 @@ export function formatStoryblokUrl(url: string, width: number, height: number, f
  * Storyblok returns date fields in the following format "yyyy-MM-dd HH:mm" without timezone.
  * Nevertheless, the fields `first_published_at` and 'published_at' are returned in proper ISO8601 format.
  */
-export function toDateObject(date: string, lang: string) {
+export const toDateObject = (date: string, lang: string) => {
 	let dateObject = DateTime.fromISO(date).setLocale(lang);
 	if (!dateObject.isValid) {
 		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
 	}
 	return dateObject;
-}
+};
 
 /**
  * Format a Storyblok date for display.
  */
-export function formatStoryblokDate(date: string | null | undefined, lang: string) {
+export const formatStoryblokDate = (date: string | null | undefined, lang: string) => {
 	if (!date) {
 		return '';
 	}
 	let dateObject = toDateObject(date, lang);
 
 	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
-}
+};
 
 /**
  * Format a Storyblok date to ISO format.
  */
-function formatStoryblokDateToIso(date: string | null | undefined) {
+const formatStoryblokDateToIso = (date: string | null | undefined) => {
 	if (!date) {
 		return '';
 	}
 	let dateObject = toDateObject(date, defaultLanguage);
 
 	return dateObject.isValid ? dateObject.toISO() : '';
-}
+};
 
 // ==================== URL Utilities ====================
 
 /**
  * Create a link URL for a journal article.
  */
-export function createLinkForArticle(slug: string, lang: string, region: string) {
+export const createLinkForArticle = (slug: string, lang: string, region: string) => {
 	return `/${lang}/${region}/journal/${slug}`;
-}
+};
+
+/**
+ * Resolve a StoryblokMultilink to a URL string.
+ * Handles both external URLs (linktype 'url') and internal story links (linktype 'story').
+ */
+export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang: string, region: string): string => {
+	if (!link) {
+		return '#';
+	}
+
+	if (link.linktype === 'url') {
+		return link.url || '#';
+	}
+
+	if (link.linktype === 'story') {
+		// cached_url contains the full Storyblok slug, e.g. "new-website/about"
+		// Strip the "new-website/" prefix to get the page slug
+		const slug = link.cached_url?.replace(new RegExp(`^${NEW_WEBSITE_SLUG}/`), '') || '';
+		return `/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}`;
+	}
+
+	return '#';
+};
 
 // ==================== Metadata Utilities ====================
 
 /**
  * Generate Next.js Metadata for a Storyblok article.
  */
-export function generateMetaDataForArticle(storyblokStory: ISbStoryData<ResolvedArticle>, url: string): Metadata {
+export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<ResolvedArticle>, url: string): Metadata => {
 	const storyblokArticle = storyblokStory.content;
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;
@@ -127,7 +167,8 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Resolved
 	if (imageFilename) {
 		const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
 		if (dimensions.width && dimensions.height) {
-			const imageUrl = formatStoryblokUrl(
+			// Use direct URL for OG metadata since it doesn't go through the Next.js image loader
+			const imageUrl = formatStoryblokUrlDirect(
 				imageFilename,
 				dimensions.width,
 				dimensions.height,
@@ -169,4 +210,4 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Resolved
 			...(tags && { 'article:tag': tags }),
 		},
 	};
-}
+};

@@ -8,8 +8,17 @@ import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
-import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/src/components/toggle-group';
+import {
+	Button,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	Input,
+	ToggleGroup,
+	ToggleGroupItem,
+	Typography,
+} from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -22,6 +31,7 @@ type DonationFormProps = {
 		oneTime: string;
 		amount: string;
 		submit: string;
+		feeNotice: string;
 		paymentType: {
 			bankTransfer: string;
 			creditCard: string;
@@ -38,7 +48,7 @@ export const PaymentTypes = {
 
 export type PaymentType = (typeof PaymentTypes)[keyof typeof PaymentTypes];
 
-export function GenericDonationForm({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) {
+export const GenericDonationForm = ({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) => {
 	const router = useRouter();
 	const { currency } = useI18n();
 	const [submitting, setSubmitting] = useState(false);
@@ -160,10 +170,10 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 													interval === DonationInterval.Monthly ? [10, 30, 100, 150, 200] : [25, 50, 100, 500, 1000],
 												)}
 											</ToggleGroup>
-											<div className="flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">
+											<div className="flex flex-col sm:flex-row sm:space-y-0 sm:space-x-2 md:items-center">
 												<Input className="mb-4 h-12 text-lg sm:mb-0" {...field} />
 												<CurrencySelector
-													className="h-12 sm:basis-1/3 md:max-w-[12rem]"
+													className="h-12 sm:basis-1/3 md:max-w-48"
 													currencies={['USD', 'EUR', 'CHF']}
 													fontSize="md"
 												/>
@@ -175,23 +185,30 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 						/>
 					</div>
 					{region === 'ch' && ['CHF', 'EUR'].includes(currency || '') && (
-						<div className="flex flex-col space-y-4">
+						<div className="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<FormField
 								control={form.control}
 								name="paymentType"
 								render={({ field }) => (
-									<FormItem className="flex-1 sm:basis-2/3">
+									<FormItem className="w-full flex-1 sm:w-auto">
 										<FormControl>
 											<ToggleGroup
 												type="single"
-												className="bg-popover mb-4 inline-flex rounded-full"
+												className="bg-popover inline-flex rounded-full"
 												value={field.value}
 												onValueChange={(value: string) => form.setValue('paymentType', value)}
 											>
-												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.CREDIT_CARD}>
+												<ToggleGroupItem
+													className="text-md m-1 rounded-full px-6 whitespace-nowrap"
+													value={PaymentTypes.CREDIT_CARD}
+												>
 													{translations.paymentType.creditCard}
 												</ToggleGroupItem>
-												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.BANK_TRANSFER}>
+
+												<ToggleGroupItem
+													className="text-md m-1 rounded-full px-6 whitespace-nowrap"
+													value={PaymentTypes.BANK_TRANSFER}
+												>
 													{translations.paymentType.bankTransfer}
 												</ToggleGroupItem>
 											</ToggleGroup>
@@ -199,6 +216,11 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 									</FormItem>
 								)}
 							/>
+							<div className="flex w-full justify-center sm:justify-start">
+								<Typography size="md" className="mt-2 text-center text-blue-50 sm:text-left">
+									{translations.feeNotice}
+								</Typography>
+							</div>
 						</div>
 					)}
 					{form.watch('paymentType') === PaymentTypes.BANK_TRANSFER ? (
@@ -227,7 +249,7 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 			</Form>
 		</div>
 	);
-}
+};
 
 const createToggleGroupItems = (values: number[]) => {
 	return values.map((value) => (

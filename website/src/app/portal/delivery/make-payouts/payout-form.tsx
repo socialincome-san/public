@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import { websiteCurrencies } from '@/lib/i18n/utils';
+import { PayoutStatus } from '@/generated/prisma/enums';
 import {
 	createPayoutAction,
 	getPayoutAction,
@@ -11,7 +11,7 @@ import {
 } from '@/lib/server-actions/payout-actions';
 import type { PayoutPayload } from '@/lib/services/payout/payout.types';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
-import { PayoutStatus } from '@prisma/client';
+import { allCurrencies } from '@/lib/types/currency';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';
@@ -50,9 +50,10 @@ const initialFormSchema: PayoutFormSchema = {
 			zodSchema: z.coerce.number().nonnegative(),
 		},
 		currency: {
-			placeholder: 'USD, EUR, CHF',
+			placeholder: 'Select currency',
 			label: 'Currency Code',
-			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
+			useCombobox: true,
+			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		phoneNumber: {
 			placeholder: '+223...',
@@ -70,7 +71,7 @@ const initialFormSchema: PayoutFormSchema = {
 	},
 };
 
-export function PayoutForm({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) {
+export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) => {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [payout, setPayout] = useState<PayoutPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -151,4 +152,4 @@ export function PayoutForm({ onSuccess, onError, onCancel, payoutId, readOnly }:
 			mode={readOnly ? 'readonly' : payoutId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

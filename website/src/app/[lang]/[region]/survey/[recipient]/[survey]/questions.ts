@@ -57,7 +57,7 @@ export const welcomePage = (t: TranslateFunction, name: string) => {
 
 // Questions for onboarding survey (reused in other surveys)
 
-function getSimpleMapping(question: Question, t: TranslateFunction): Object {
+const getSimpleMapping = (question: Question, t: TranslateFunction): Object => {
 	return {
 		type: question.type,
 		name: question.name,
@@ -68,7 +68,7 @@ function getSimpleMapping(question: Question, t: TranslateFunction): Object {
 				? translateChoices(t, question.choices, question.choicesTranslationKey!)
 				: undefined,
 	};
-}
+};
 
 export const livingLocationPage = (t: TranslateFunction) => {
 	return {

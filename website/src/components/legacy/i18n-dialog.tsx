@@ -1,9 +1,9 @@
 'use client';
 
+import { Currency } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/useIsPage';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { Currency } from '@/lib/types/currency';
 import { LanguageCode } from '@/lib/types/language';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
@@ -42,13 +42,13 @@ type I18nDialogProps = {
 	};
 };
 
-export function I18nDialog({
+export const I18nDialog = ({
 	languages,
 	regions,
 	currencies,
 	translations,
 	children,
-}: PropsWithChildren<I18nDialogProps>) {
+}: PropsWithChildren<I18nDialogProps>) => {
 	const isSurveyPage = useIsPage('survey');
 	const [open, setOpen] = useState(false);
 	const { language, setLanguage, region, setRegion, currency, setCurrency } = useI18n();
@@ -122,4 +122,4 @@ export function I18nDialog({
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

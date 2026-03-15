@@ -141,11 +141,12 @@ Local Partner self‑service area:
 During development, three login roles can be tested directly from the
 login page:
 
-| Role          | Login Email          | Route            |
-| ------------- | -------------------- | ---------------- |
-| Contributor   | `test@dashboard.org` | `/dashboard`     |
-| User          | `test@portal.org`    | `/portal`        |
-| Local Partner | `test@partner.org`   | `/partner-space` |
+| Role               | Login Email          | Route                      |
+| ------------------ | -------------------- | -------------------------- |
+| Contributor        | `test@dashboard.org` | `/dashboard`               |
+| User               | `test@portal.org`    | `/portal`                  |
+| Local Partner      | `test@partner.org`   | `/partner-space`           |
+| User + Contributor | `test@combined.org`  | `/portal` and `/dashboard` |
 
 These are created automatically via seed data.
 
@@ -181,6 +182,46 @@ Shared backend modules using:
 - **PostgreSQL**
 - **Firebase Storage**
 - Misc. utilities and API integrations
+
+---
+
+### **9. E2E Testing**
+
+We use **Playwright** for end‑to‑end testing of the website.
+
+**Key principles**
+
+- Tests run against the real app in CI
+- Visual regression screenshots are automatically updated in the
+  pipeline and committed into the PR
+- External Storyblok requests are mocked using a
+  [mockserver](https://github.com/smartive/mockserver/tree/master)
+
+**Mock recording system**
+
+We use a record/replay mechanism for deterministic tests.
+
+**Record mode**
+
+1. Set STORYBLOK_MOCK_MODE in .env.development to 'record'
+2. Restart dev server `mise dev`
+3. run tests: `STORYBLOK_MOCK_MODE=record npm run test:e2e`
+
+This:
+
+- starts the mockserver as proxy
+- records all outgoing Storyblok API requests
+- stores them as JSON fixtures inside the repo
+
+These recordings should be committed.
+
+**Replay mode (CI default)**
+
+In CI the environment runs in replay mode:
+
+- mockserver serves recorded responses
+- no external API calls are made
+- tests are fully deterministic and fast
 
 ---
 

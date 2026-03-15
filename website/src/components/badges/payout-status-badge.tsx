@@ -1,8 +1,8 @@
 'use client';
 
 import { Badge } from '@/components/badge';
-import { PayoutStatus } from '@prisma/client';
-import { AlertTriangleIcon, CheckIcon, ClockIcon, HelpCircleIcon, MinusIcon, XCircleIcon } from 'lucide-react';
+import { PayoutStatus } from '@/generated/prisma/enums';
+import { AlertTriangleIcon, CheckIcon, MinusIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 
 type PayoutStatusBadgeProps = {
@@ -11,17 +11,19 @@ type PayoutStatusBadgeProps = {
 
 const PAYOUT_STATUS_UI: Record<
 	PayoutStatus,
-	{ variant: 'default' | 'verified' | 'destructive' | 'secondary' | 'outline'; label: string; Icon: ComponentType<any> }
+	{
+		variant: 'default' | 'verified' | 'destructive' | 'secondary' | 'outline' | 'outline-solid';
+		label: string;
+		Icon: ComponentType<any>;
+	}
 > = {
-	created: { variant: 'secondary', label: 'Created', Icon: ClockIcon },
 	paid: { variant: 'verified', label: 'Paid', Icon: CheckIcon },
 	confirmed: { variant: 'verified', label: 'Confirmed', Icon: CheckIcon },
 	contested: { variant: 'outline', label: 'Contested', Icon: AlertTriangleIcon },
 	failed: { variant: 'destructive', label: 'Failed', Icon: XCircleIcon },
-	other: { variant: 'default', label: 'Other', Icon: HelpCircleIcon },
 };
 
-export function PayoutStatusBadge({ status }: PayoutStatusBadgeProps) {
+export const PayoutStatusBadge = ({ status }: PayoutStatusBadgeProps) => {
 	if (!status) {
 		return (
 			<Badge variant="outline">
@@ -39,4 +41,4 @@ export function PayoutStatusBadge({ status }: PayoutStatusBadgeProps) {
 			{label}
 		</Badge>
 	);
-}
+};

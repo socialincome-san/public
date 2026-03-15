@@ -2,10 +2,10 @@
 
 import { COUNTRY_COOKIE, CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
 
+import { CountryCode } from '@/generated/prisma/enums';
 import { useCookieState } from '@/lib/hooks/useCookieState';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { CountryCode } from '@/lib/types/country';
 import _ from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createContext, PropsWithChildren, Suspense, useEffect } from 'react';
@@ -23,7 +23,7 @@ type I18nContextProps = {
 
 export const I18nContext = createContext<I18nContextProps>(undefined!);
 
-function I18nUrlUpdater() {
+const I18nUrlUpdater = () => {
 	// This component is used to watch the URL and update the language and region in the context if the URL changes.
 	// It's a separate component because it uses the useSearchParams hook, and needs to be wrapped in a Suspense
 	// boundary (https://nextjs.org/docs/messages/deopted-into-client-rendering).
@@ -55,9 +55,9 @@ function I18nUrlUpdater() {
 	}, [region, router, searchParamsString, setRegion]);
 
 	return null;
-}
+};
 
-export function I18nContextProvider({ children }: PropsWithChildren) {
+export const I18nContextProvider = ({ children }: PropsWithChildren) => {
 	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
 	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
 	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);
@@ -82,4 +82,4 @@ export function I18nContextProvider({ children }: PropsWithChildren) {
 			{children}
 		</I18nContext.Provider>
 	);
-}
+};

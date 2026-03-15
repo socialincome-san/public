@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/badge';
-import type { SurveyStatus } from '@prisma/client';
+import type { SurveyStatus } from '@/generated/prisma/enums';
 import { CalendarClockIcon, CheckIcon, CirclePlusIcon, CircleSlashIcon, HourglassIcon, SendIcon } from 'lucide-react';
 import type { ComponentType } from 'react';
 
@@ -12,7 +12,7 @@ type SurveyStatusBadgeProps = {
 const SURVEY_STATUS_UI: Record<
 	SurveyStatus,
 	{
-		variant: 'verified' | 'destructive' | 'outline' | 'secondary' | 'default';
+		variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'secondary' | 'default';
 		label: string;
 		Icon: ComponentType<any>;
 	}
@@ -25,7 +25,7 @@ const SURVEY_STATUS_UI: Record<
 	missed: { variant: 'destructive', label: 'Missed', Icon: CircleSlashIcon },
 };
 
-export function SurveyStatusBadge({ status }: SurveyStatusBadgeProps) {
+export const SurveyStatusBadge = ({ status }: SurveyStatusBadgeProps) => {
 	const { variant, label, Icon } = SURVEY_STATUS_UI[status];
 	return (
 		<Badge variant={variant}>
@@ -33,4 +33,4 @@ export function SurveyStatusBadge({ status }: SurveyStatusBadgeProps) {
 			{label}
 		</Badge>
 	);
-}
+};

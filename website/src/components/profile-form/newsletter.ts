@@ -1,11 +1,15 @@
+import { CountryCode } from '@/generated/prisma/enums';
 import { WebsiteLanguage, mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
-import { CountryCode } from '@/lib/types/country';
-import { ProfileFormValues } from './schemas';
+import { ProfileFormOutput } from './schemas';
 
-export async function toggleNewsletter(values: ProfileFormValues, session: ContributorSession, isSubscribed: boolean) {
+export const toggleNewsletter = async (
+	values: ProfileFormOutput,
+	session: ContributorSession,
+	isSubscribed: boolean,
+) => {
 	if (values.type !== 'contributor') {
 		return { success: true };
 	}
@@ -34,8 +38,8 @@ export async function toggleNewsletter(values: ProfileFormValues, session: Contr
 	}
 
 	return unsubscribeFromNewsletterAction();
-}
+};
 
-function formatNewsletterLanguage(lang?: string): SupportedLanguage {
+const formatNewsletterLanguage = (lang?: string): SupportedLanguage => {
 	return lang && mainWebsiteLanguages.includes(lang as WebsiteLanguage) ? (lang as SupportedLanguage) : 'en';
-}
+};

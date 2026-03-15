@@ -1,8 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor, Typography } from '@socialincome/ui';
 import ScrollToChevron from '../(components)/scroll-to-chevron';
 
 type ResourcePageProps = {
@@ -11,7 +10,7 @@ type ResourcePageProps = {
 
 const roundAmount = (amount: number) => (amount ? Math.round(amount / 10) * 10 : 0);
 
-export async function Resources({ lang, currency }: ResourcePageProps) {
+export const Resources = async ({ lang, currency }: ResourcePageProps) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-selection'],
@@ -19,7 +18,7 @@ export async function Resources({ lang, currency }: ResourcePageProps) {
 
 	return (
 		<div id="resources-section" className="flex h-[calc(100svh)] min-h-[600px] flex-col">
-			<div className="mt-[80px] flex flex-grow flex-col items-center justify-center p-6 text-center">
+			<div className="mt-[80px] flex grow flex-col items-center justify-center p-6 text-center">
 				<div className="pb-4">
 					<Typography size="xl">{translator.t('section-2.subtitle')}</Typography>
 				</div>
@@ -46,4 +45,4 @@ export async function Resources({ lang, currency }: ResourcePageProps) {
 			</div>
 		</div>
 	);
-}
+};

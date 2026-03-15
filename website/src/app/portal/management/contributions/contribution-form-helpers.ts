@@ -5,7 +5,7 @@ import {
 } from '@/lib/services/contribution/contribution.types';
 import { ContributionFormSchema } from './contribution-form';
 
-export function buildCreateContributionInput(schema: ContributionFormSchema): ContributionCreateInput {
+export const buildCreateContributionInput = (schema: ContributionFormSchema): ContributionCreateInput => {
 	return {
 		amount: schema.fields.amount.value,
 		currency: schema.fields.currency.value,
@@ -19,12 +19,12 @@ export function buildCreateContributionInput(schema: ContributionFormSchema): Co
 			connect: { id: schema.fields.campaign.value },
 		},
 	};
-}
+};
 
-export function buildUpdateContributionInput(
+export const buildUpdateContributionInput = (
 	schema: ContributionFormSchema,
 	existing: ContributionPayload,
-): ContributionUpdateInput {
+): ContributionUpdateInput => {
 	const data: ContributionUpdateInput = {
 		id: existing.id,
 		amount: schema.fields.amount.value ?? existing.amount,
@@ -43,4 +43,4 @@ export function buildUpdateContributionInput(
 	}
 
 	return data;
-}
+};

@@ -1,4 +1,4 @@
-import { SourceLink } from '@prisma/client';
+import { SourceLink } from '@/generated/prisma/client';
 
 export const sourceLinksData: SourceLink[] = [
   {

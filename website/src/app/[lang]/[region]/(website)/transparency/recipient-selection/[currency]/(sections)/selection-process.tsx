@@ -17,7 +17,7 @@ type BoxProps = {
 	onClick: () => void;
 };
 
-function Box({ active, number, title, subtitle, onClick }: BoxProps) {
+const Box = ({ active, number, title, subtitle, onClick }: BoxProps) => {
 	return (
 		<button
 			onClick={onClick}
@@ -27,13 +27,10 @@ function Box({ active, number, title, subtitle, onClick }: BoxProps) {
 			})}
 		>
 			<div
-				className={classNames(
-					'bg-primary flex h-8 w-8 items-center justify-center rounded-full bg-opacity-10 text-lg',
-					{
-						'text-primary bg-white bg-opacity-100': active,
-						'text-primary group-hover:bg-white': !active,
-					},
-				)}
+				className={classNames('bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full text-lg', {
+					'text-primary bg-white': active,
+					'text-primary group-hover:bg-white': !active,
+				})}
 			>
 				{number}
 			</div>
@@ -60,9 +57,9 @@ function Box({ active, number, title, subtitle, onClick }: BoxProps) {
 			</div>
 		</button>
 	);
-}
+};
 
-export function SelectionProcess({ lang }: DefaultParams) {
+export const SelectionProcess = ({ lang }: DefaultParams) => {
 	const translator = useTranslator(lang as WebsiteLanguage, 'website-selection');
 	const [activeBox, setActiveBox] = useState<'preselection' | 'selection'>('preselection');
 	const { ref, isIntersecting, entry } = useIntersectionObserver({ threshold: 0.2 });
@@ -186,4 +183,4 @@ export function SelectionProcess({ lang }: DefaultParams) {
 			</div>
 		</BaseContainer>
 	);
-}
+};

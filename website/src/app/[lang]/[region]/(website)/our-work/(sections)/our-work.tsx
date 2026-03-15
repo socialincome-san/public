@@ -7,7 +7,7 @@ import { Badge, BaseContainer, Dialog, DialogContent, DialogTrigger, Typography 
 import Image from 'next/image';
 import phonesGif from '../(assets)/phones-1.gif';
 
-export async function OurWork({ lang }: DefaultParams) {
+export const OurWork = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-our-work', 'website-videos'],
@@ -35,7 +35,7 @@ export async function OurWork({ lang }: DefaultParams) {
 								</Typography>
 							</Badge>
 						</DialogTrigger>
-						<DialogContent className="max-w-screen-lg overflow-hidden rounded p-0">
+						<DialogContent className="max-w-(--breakpoint-lg) overflow-hidden rounded p-0">
 							<VimeoVideo videoId={Number(translator.t('id.video-02'))} videoOptions={{ autoplay: true }} />
 						</DialogContent>
 					</Dialog>
@@ -50,4 +50,4 @@ export async function OurWork({ lang }: DefaultParams) {
 			/>
 		</BaseContainer>
 	);
-}
+};

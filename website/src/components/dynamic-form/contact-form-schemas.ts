@@ -1,5 +1,7 @@
+import { Gender } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
-import { Gender } from '@prisma/client';
+import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { now } from '@/lib/utils/now';
 import z from 'zod';
 import { FormSchema } from './dynamic-form';
 import { getZodEnum } from './helper';
@@ -39,7 +41,7 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 			},
 			dateOfBirth: {
 				label: 'Date of birth',
-				zodSchema: z.date().max(new Date(), { message: 'Too young!' }).optional(),
+				zodSchema: z.date().max(now(), { message: 'Too young!' }).optional(),
 			},
 			profession: {
 				placeholder: 'Profession',
@@ -56,9 +58,7 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 				label: 'Phone Number',
 				zodSchema: z
 					.string()
-					// TODO: chek regex and optional
-					.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
-					.or(z.literal(''))
+					.regex(/^$|^\+[1-9]\d{1,14}$/, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
 					.optional(),
 			},
 			hasWhatsApp: {
@@ -85,7 +85,21 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 				label: 'Address ZIP Code',
 				zodSchema: z.string().nullable(),
 			},
-			country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().nullable() },
+			country: {
+				placeholder: 'Country',
+				label: 'Address Country',
+				useCombobox: true,
+				zodSchema: z
+					.nativeEnum(
+						getZodEnum(
+							COUNTRY_OPTIONS.map((c) => ({
+								id: c.code,
+								label: c.name,
+							})),
+						),
+					)
+					.optional(),
+			},
 		},
 	};
 };

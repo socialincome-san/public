@@ -6,7 +6,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeDonationCertificateColumns(): ColumnDef<DonationCertificateTableViewRow>[] {
+export const makeDonationCertificateColumns = (): ColumnDef<DonationCertificateTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'year',
@@ -14,13 +14,9 @@ export function makeDonationCertificateColumns(): ColumnDef<DonationCertificateT
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'contributorFirstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First Name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'contributorLastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last Name</SortableHeader>,
+			id: 'contributor',
+			accessorFn: (row) => `${row.contributorFirstName} ${row.contributorLastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>Contributor</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -39,4 +35,4 @@ export function makeDonationCertificateColumns(): ColumnDef<DonationCertificateT
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 	];
-}
+};

@@ -1,27 +1,27 @@
 'use client';
 
-import { CountryFlag } from '@/components/country-flag';
 import { ActionCell } from '@/components/data-table/elements/action-cell';
+import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
-import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
+import { getCountryNameByCode } from '@/lib/types/country';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
+export const makeCountryColumns = (): ColumnDef<CountryTableViewRow>[] => {
 	return [
 		{
 			id: 'flag',
 			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
 			accessorFn: (row) => row.isoCode,
-			cell: ({ row }) => <CountryFlag isoCode={row.original.isoCode} />,
+			cell: ({ row }) => <CountryFlagCell country={row.original.isoCode} />,
 		},
 		{
 			accessorKey: 'name',
 			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
-			accessorFn: (row) => getCountryNameByIsoCode(row.isoCode),
+			accessorFn: (row) => getCountryNameByCode(row.isoCode),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -53,16 +53,16 @@ export function makeCountryColumns(): ColumnDef<CountryTableViewRow>[] {
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+			accessorKey: 'updatedAt',
+			header: (ctx) => <SortableHeader ctx={ctx}>Updated</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

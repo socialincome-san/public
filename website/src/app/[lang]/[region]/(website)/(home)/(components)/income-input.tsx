@@ -22,7 +22,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-export function IncomeInput({ translations }: { translations: { buttonText: string } }) {
+export const IncomeInput = ({ translations }: { translations: { buttonText: string } }) => {
 	const { currency, language, region, setCurrency } = useI18n();
 	const router = useRouter();
 
@@ -50,7 +50,7 @@ export function IncomeInput({ translations }: { translations: { buttonText: stri
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<div className="mx-auto flex max-w-72 items-center justify-center border-b border-white border-opacity-40 pb-3 text-white">
+				<div className="mx-auto flex max-w-72 items-center justify-center border-b border-white/40 pb-3 text-white">
 					<FormField
 						control={form.control}
 						name="value"
@@ -103,4 +103,4 @@ export function IncomeInput({ translations }: { translations: { buttonText: stri
 			</form>
 		</Form>
 	);
-}
+};

@@ -7,7 +7,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeLocalPartnerColumns(): ColumnDef<LocalPartnerTableViewRow>[] {
+export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[] => {
 	return [
 		{
 			accessorKey: 'name',
@@ -20,8 +20,18 @@ export function makeLocalPartnerColumns(): ColumnDef<LocalPartnerTableViewRow>[]
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
+			accessorKey: 'email',
+			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			accessorKey: 'contactNumber',
 			header: (ctx) => <SortableHeader ctx={ctx}>Contact Number</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'causes',
+			header: (ctx) => <SortableHeader ctx={ctx}>Causes</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -37,8 +47,8 @@ export function makeLocalPartnerColumns(): ColumnDef<LocalPartnerTableViewRow>[]
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

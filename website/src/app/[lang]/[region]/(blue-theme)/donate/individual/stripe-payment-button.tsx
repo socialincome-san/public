@@ -14,7 +14,7 @@ type StripePaymentButtonProps = {
 	buttonText: string;
 };
 
-export function StripePaymentButton({ amount, intervalCount, lang, region, buttonText }: StripePaymentButtonProps) {
+export const StripePaymentButton = ({ amount, intervalCount, lang, region, buttonText }: StripePaymentButtonProps) => {
 	const router = useRouter();
 	const { currency } = useI18n();
 	const [submitting, setSubmitting] = useState(false);
@@ -45,4 +45,4 @@ export function StripePaymentButton({ amount, intervalCount, lang, region, butto
 			{buttonText}
 		</Button>
 	);
-}
+};

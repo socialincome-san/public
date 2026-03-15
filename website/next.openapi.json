@@ -35,7 +35,7 @@
 	},
 	"defaultResponseSet": "common",
 	"responseSets": {
-		"common": ["401", "403", "404", "500"]
+		"common": ["400", "401", "403", "404", "500"]
 	},
 	"errorConfig": {
 		"template": {
@@ -99,10 +99,10 @@
 	"apiDir": "./src/app/api/v1",
 	"schemaDir": "./src/app/api/v1",
 	"schemaType": "zod",
-	"docsUrl": "api-docs",
+	"docsUrl": "/v1/api-docs",
 	"ui": "scalar",
 	"outputFile": "openapi.json",
 	"outputDir": "./public",
-	"includeOpenApiRoutes": false,
+	"includeOpenApiRoutes": true,
 	"debug": false
 }

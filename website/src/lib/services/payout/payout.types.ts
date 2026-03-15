@@ -1,4 +1,4 @@
-import { PayoutStatus, Prisma, ProgramPermission } from '@prisma/client';
+import { Currency, PayoutStatus, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
 export type PayoutEntity = Prisma.PayoutGetPayload<{}>;
 
@@ -8,14 +8,37 @@ export type PayoutTableViewRow = {
 	recipientLastName: string;
 	programName: string;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
 	permission: ProgramPermission;
 };
 
-export type PayoutTableView = {
+type PayoutTableView = {
 	tableRows: PayoutTableViewRow[];
+};
+
+export type PayoutTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+	payoutStatus?: string;
+};
+
+export type PayoutPaginatedTableView = {
+	tableRows: PayoutTableViewRow[];
+	totalCount: number;
+	programFilterOptions: {
+		id: string;
+		name: string;
+	}[];
+	statusFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 export type PayoutConfirmationTableViewRow = {
@@ -24,15 +47,38 @@ export type PayoutConfirmationTableViewRow = {
 	recipientLastName: string;
 	programName: string;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
 	phoneNumber: string | null;
 	permission: ProgramPermission;
 };
 
-export type PayoutConfirmationTableView = {
+type PayoutConfirmationTableView = {
 	tableRows: PayoutConfirmationTableViewRow[];
+};
+
+export type PayoutConfirmationTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+	payoutStatus?: string;
+};
+
+export type PayoutConfirmationPaginatedTableView = {
+	tableRows: PayoutConfirmationTableViewRow[];
+	totalCount: number;
+	programFilterOptions: {
+		id: string;
+		name: string;
+	}[];
+	statusFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 export type PayoutMonth = {
@@ -53,8 +99,26 @@ export type OngoingPayoutTableViewRow = {
 	permission: ProgramPermission;
 };
 
-export type OngoingPayoutTableView = {
+type OngoingPayoutTableView = {
 	tableRows: OngoingPayoutTableViewRow[];
+};
+
+export type OngoingPayoutTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+};
+
+export type OngoingPayoutPaginatedTableView = {
+	tableRows: OngoingPayoutTableViewRow[];
+	totalCount: number;
+	programFilterOptions: {
+		id: string;
+		name: string;
+	}[];
 };
 
 export type PayoutForecastTableViewRow = {
@@ -62,33 +126,24 @@ export type PayoutForecastTableViewRow = {
 	numberOfRecipients: number;
 	amountInProgramCurrency: number;
 	amountUsd: number;
-	programCurrency: string;
+	programCurrency: Currency;
 };
 
 export type PayoutForecastTableView = {
 	tableRows: PayoutForecastTableViewRow[];
 };
 
-export type PreviewPayout = {
-	recipientId: string;
-	firstName: string;
-	lastName: string;
-	phoneNumber: string | null;
-	currency: string;
-	amount: number;
-	amountChf: number | null;
-	paymentAt: Date;
-	status: PayoutStatus;
+export type PayoutForecastTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
 };
 
-export type RecipientCompletionPreview = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	paidCount: number;
-	programDurationInMonths: number;
-	remaining: number;
-	isCompleted: boolean;
+export type PayoutForecastPaginatedTableView = {
+	tableRows: PayoutForecastTableViewRow[];
+	totalCount: number;
 };
 
 export type PayoutPayload = {
@@ -101,7 +156,7 @@ export type PayoutPayload = {
 		programName: string | null;
 	};
 	amount: number;
-	currency: string;
+	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
 	phoneNumber: string | null;
@@ -111,7 +166,7 @@ export type PayoutPayload = {
 export type PayoutCreateInput = {
 	recipient: { connect: { id: string } };
 	amount: number;
-	currency: string;
+	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
 	phoneNumber?: string | null;
@@ -121,7 +176,7 @@ export type PayoutCreateInput = {
 export type PayoutUpdateInput = {
 	id: string;
 	amount?: number;
-	currency?: string;
+	currency?: Currency;
 	status?: PayoutStatus;
 	paymentAt?: Date;
 	phoneNumber?: string | null;

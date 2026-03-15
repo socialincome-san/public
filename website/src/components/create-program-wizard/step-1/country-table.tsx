@@ -2,29 +2,29 @@
 
 import { RadioGroup } from '@/components/radio-group';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
-import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
+import { getCountryNameByCode } from '@/lib/types/country';
 import { useState } from 'react';
 import { CountryTableBody } from './country-table-body';
 import { CountryTableHeader } from './country-table-header';
 
-function matchesSearch(row: ProgramCountryFeasibilityRow, search: string) {
+const matchesSearch = (row: ProgramCountryFeasibilityRow, search: string) => {
 	if (!search.trim()) {
 		return true;
 	}
 
 	const q = search.toLowerCase();
-	const countryName = getCountryNameByIsoCode(row.country.isoCode)?.toLowerCase() ?? '';
+	const countryName = getCountryNameByCode(row.country.isoCode)?.toLowerCase() ?? '';
 	return row.country.isoCode.toLowerCase().includes(q) || countryName.includes(q);
-}
+};
 
-function meetsAllConditions(row: ProgramCountryFeasibilityRow) {
+const meetsAllConditions = (row: ProgramCountryFeasibilityRow) => {
 	return (
 		row.cash.condition === 'met' &&
 		row.mobileMoney.condition === 'met' &&
 		row.mobileNetwork.condition === 'met' &&
 		row.sanctions.condition === 'met'
 	);
-}
+};
 
 type Props = {
 	rows: ProgramCountryFeasibilityRow[];
@@ -34,7 +34,7 @@ type Props = {
 	onToggleRow: (id: string) => void;
 };
 
-export function CountryTable({ rows, value, openIds, onValueChange, onToggleRow }: Props) {
+export const CountryTable = ({ rows, value, openIds, onValueChange, onToggleRow }: Props) => {
 	const [search, setSearch] = useState('');
 	const [onlyAllMet, setOnlyAllMet] = useState(false);
 
@@ -66,4 +66,4 @@ export function CountryTable({ rows, value, openIds, onValueChange, onToggleRow 
 			</div>
 		</RadioGroup>
 	);
-}
+};

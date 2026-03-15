@@ -6,10 +6,10 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { redirect } from 'next/navigation';
 import { ngos } from '../(sections)/ngolist';
 
-async function getNGOTranslations(
+const getNGOTranslations = async (
 	translator: Translator,
 	slug: string,
-): Promise<{ translation: NgoEntryJSON | undefined }> {
+): Promise<{ translation: NgoEntryJSON | undefined }> => {
 	let currentNgo: NgoEntryJSON | undefined = undefined;
 	for (const ngo of ngos) {
 		if ((translator.t(ngo) as NgoEntryJSON)['org-slug'] === slug) {
@@ -18,7 +18,7 @@ async function getNGOTranslations(
 		}
 	}
 	return { translation: currentNgo };
-}
+};
 
 interface PartnerPageParams extends DefaultParams {
 	slug: string;

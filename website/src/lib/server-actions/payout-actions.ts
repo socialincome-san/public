@@ -1,121 +1,42 @@
 'use server';
 
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { PayoutService } from '@/lib/services/payout/payout.service';
+import { getSessionByType } from '@/lib/firebase/current-account';
 import { type PayoutCreateInput, type PayoutUpdateInput } from '@/lib/services/payout/payout.types';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-export async function generateRegistrationCsvAction() {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.generateRegistrationCSV(user.id);
-
-	if (!result.success) {
-		throw new Error(result.error);
+export const createPayoutAction = async (input: PayoutCreateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
 	}
-
-	return result.data;
-}
-
-export async function generatePayoutCsvAction(selectedDate: Date) {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.generatePayoutCSV(user.id, selectedDate);
-
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	return result.data;
-}
-
-export async function previewCurrentMonthPayoutsAction(selectedDate: Date) {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.previewCurrentMonthPayouts(user.id, selectedDate);
-
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	return result.data;
-}
-
-export async function generateCurrentMonthPayoutsAction(selectedDate: Date) {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.generateCurrentMonthPayouts(user.id, selectedDate);
-
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	revalidatePath('/portal/delivery/make-payouts');
-
-	return result.data;
-}
-
-export async function previewCompletedRecipientsAction() {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.previewCompletedRecipients(user.id);
-
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	return result.data;
-}
-
-export async function markCompletedRecipientsAsFormerAction() {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.markCompletedRecipientsAsFormer(user.id);
-
-	if (!result.success) {
-		throw new Error(result.error);
-	}
-
-	return result.data;
-}
-
-export async function createPayoutAction(input: PayoutCreateInput) {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.create(user.id, input);
-
+	const result = await services.write.payout.create(sessionResult.data.id, input);
 	revalidatePath('/portal/delivery/make-payouts');
 	return result;
-}
+};
 
-export async function updatePayoutAction(input: PayoutUpdateInput) {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.update(user.id, input);
-
+export const updatePayoutAction = async (input: PayoutUpdateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const result = await services.write.payout.update(sessionResult.data.id, input);
 	revalidatePath('/portal/delivery/make-payouts');
 	return result;
-}
+};
 
-export async function getPayoutAction(id: string) {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
+export const getPayoutAction = async (id: string) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.read.payout.get(sessionResult.data.id, id);
+};
 
-	return service.get(user.id, id);
-}
-
-export async function getPayoutRecipientOptionsAction() {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new RecipientService();
-
-	return service.getEditableRecipientOptions(user.id);
-}
+export const getPayoutRecipientOptionsAction = async () => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.read.recipient.getEditableRecipientOptions(sessionResult.data.id);
+};

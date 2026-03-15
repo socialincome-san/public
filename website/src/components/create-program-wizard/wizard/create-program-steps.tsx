@@ -1,5 +1,6 @@
 'use client';
 
+import { Currency } from '@/generated/prisma/enums';
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
@@ -13,8 +14,8 @@ type Props = {
 	send: CreateProgramWizardSend;
 };
 
-export function CreateProgramSteps({ state, send }: Props) {
-	if (state.matches('loading') || state.matches('saving') || state.matches('loadingCandidates')) {
+export const CreateProgramSteps = ({ state, send }: Props) => {
+	if (state.matches('loading') || state.matches('saving')) {
 		return <WizardLoading />;
 	}
 
@@ -42,9 +43,14 @@ export function CreateProgramSteps({ state, send }: Props) {
 				programManagement={state.context.programManagement}
 				recipientApproach={state.context.recipientApproach}
 				targetCauses={state.context.targetCauses}
+				targetProfiles={state.context.targetProfiles}
+				totalRecipients={state.context.totalRecipients}
+				filteredRecipients={state.context.filteredRecipients}
+				isCountingRecipients={state.context.isCountingRecipients}
 				onSelectProgramManagement={(value) => send({ type: 'SELECT_PROGRAM_MANAGEMENT', value })}
 				onSelectRecipientApproach={(value) => send({ type: 'SELECT_RECIPIENT_APPROACH', value })}
 				onToggleCause={(cause) => send({ type: 'TOGGLE_TARGET_CAUSE', cause })}
+				onToggleProfile={(profile) => send({ type: 'TOGGLE_TARGET_PROFILE', profile })}
 			/>
 		);
 	}
@@ -53,17 +59,25 @@ export function CreateProgramSteps({ state, send }: Props) {
 		return (
 			<BudgetStep
 				amountOfRecipients={state.context.amountOfRecipients}
-				maxRecipients={state.context.maxRecipients}
+				filteredRecipients={state.context.filteredRecipients}
 				programDuration={state.context.programDuration}
+				payoutPerIntervalMin={state.context.payoutPerIntervalMin}
+				payoutPerIntervalMax={state.context.payoutPerIntervalMax}
 				payoutPerInterval={state.context.payoutPerInterval}
 				payoutInterval={state.context.payoutInterval}
-				currency={state.context.currency}
+				payoutCurrency={state.context.payoutCurrency}
+				displayCurrency={state.context.displayCurrency}
+				calculatedTotalBudget={state.context.calculatedTotalBudget}
+				displayMonthlyCost={state.context.displayMonthlyCost}
+				exchangeRateText={state.context.exchangeRateText}
+				totalBudgetTooltipText={state.context.totalBudgetTooltipText}
+				isCalculatingBudget={state.context.isCalculatingBudget}
 				customizePayouts={state.context.customizePayouts}
 				onRecipientsChange={(v) => send({ type: 'SET_AMOUNT_OF_RECIPIENTS', value: v })}
 				onDurationChange={(v) => send({ type: 'SET_PROGRAM_DURATION', value: v })}
 				onPayoutChange={(v) => send({ type: 'SET_PAYOUT_PER_INTERVAL', value: v })}
 				onIntervalChange={(v) => send({ type: 'SET_PAYOUT_INTERVAL', value: v })}
-				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v })}
+				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v as Currency })}
 				onToggleCustomizePayouts={() => send({ type: 'TOGGLE_CUSTOMIZE_PAYOUTS' })}
 			/>
 		);
@@ -74,4 +88,4 @@ export function CreateProgramSteps({ state, send }: Props) {
 	}
 
 	return null;
-}
+};

@@ -4,7 +4,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { IncomeInput } from '../(components)/income-input';
 
-export async function MonthlyIncome({ lang }: DefaultParams) {
+export const MonthlyIncome = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'common'],
@@ -21,4 +21,4 @@ export async function MonthlyIncome({ lang }: DefaultParams) {
 			<IncomeInput translations={{ buttonText: translator.t('section-3.cta') }} />
 		</BaseContainer>
 	);
-}
+};

@@ -34,7 +34,7 @@ type Props = {
 	condition: CountryCondition;
 };
 
-export function CountryConditionBadge({ condition }: Props) {
+export const CountryConditionBadge = ({ condition }: Props) => {
 	const { variant, label, Icon } = CONDITION_UI[condition];
 
 	return (
@@ -43,4 +43,4 @@ export function CountryConditionBadge({ condition }: Props) {
 			{label}
 		</Badge>
 	);
-}
+};

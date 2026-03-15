@@ -9,7 +9,9 @@ const useCopyToClipboard = (timeout = 1500) => {
 	const [copied, setCopied] = useState(false);
 
 	const copy = (text: string) => {
-		if (!text) return;
+		if (!text) {
+			return;
+		}
 		navigator.clipboard.writeText(text).then(() => {
 			setCopied(true);
 			setTimeout(() => setCopied(false), timeout);
@@ -19,11 +21,13 @@ const useCopyToClipboard = (timeout = 1500) => {
 	return { copied, copy };
 };
 
-export function CopyUrlCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
+export const CopyUrlCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const url = String(ctx.getValue() ?? '');
 	const { copied, copy } = useCopyToClipboard();
 
-	if (!url) return null;
+	if (!url) {
+		return null;
+	}
 
 	const handleCopy = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -45,4 +49,4 @@ export function CopyUrlCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
 			)}
 		</Button>
 	);
-}
+};

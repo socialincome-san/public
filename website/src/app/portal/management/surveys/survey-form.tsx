@@ -2,6 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
+import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import {
 	createSurveyAction,
@@ -11,7 +12,6 @@ import {
 } from '@/lib/server-actions/survey-actions';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
-import { SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';
@@ -35,7 +35,6 @@ export type SurveyFormSchema = {
 		status: FormField;
 		accessEmail: FormField;
 		accessPw: FormField;
-		accessToken: FormField;
 	};
 };
 
@@ -82,15 +81,10 @@ const initialFormSchema: SurveyFormSchema = {
 			label: 'Access password',
 			zodSchema: z.string().min(1),
 		},
-		accessToken: {
-			placeholder: 'Access token',
-			label: 'Access token',
-			zodSchema: z.string().min(1),
-		},
 	},
 };
 
-export function SurveyForm({ onSuccess, onError, onCancel, surveyId, readOnly }: SurveyFormProps) {
+export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }: SurveyFormProps) => {
 	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(initialFormSchema);
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();
@@ -145,10 +139,6 @@ export function SurveyForm({ onSuccess, onError, onCancel, surveyId, readOnly }:
 						accessPw: {
 							...prev.fields.accessPw,
 							value: surveyResult.data.accessPw,
-						},
-						accessToken: {
-							...prev.fields.accessToken,
-							value: surveyResult.data.accessToken,
 						},
 					},
 				}));
@@ -217,4 +207,4 @@ export function SurveyForm({ onSuccess, onError, onCancel, surveyId, readOnly }:
 			mode={readOnly ? 'readonly' : surveyId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

@@ -1,5 +1,5 @@
 # -------- Base Layer --------
-FROM node:22-alpine AS base
+FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS base
 WORKDIR /app
 
 # This secrets are used during build time. All others are provided at runtime.
@@ -39,11 +39,12 @@ COPY --from=deps /app/recipients_selection ../recipients_selection
 COPY --from=base /app/.env /app/.env
 
 RUN set -a && . /app/.env && set +a && \
-    npx prisma generate --schema=./src/lib/database/schema.prisma && \
+    npx prisma generate \
+      --schema=./src/lib/database/schema.prisma \
+      --config=./prisma.config.ts && \
     npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
-
 # -------- Runtime Layer --------
-FROM node:22-alpine AS runner
+FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -56,14 +57,15 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder /app/website/.next/standalone ./
 COPY --from=builder /app/website/src ./src
+COPY --from=builder /app/website/prisma.config.ts ./prisma.config.ts
 COPY --from=base /app/.env .env
 
 USER nextjs
 
 CMD ["sh", "-c", "\
-  set -a && \
-  . .env && \
-  set +a && \
-  npx prisma migrate deploy --schema=./src/lib/database/schema.prisma && \
+  set -a && . .env && set +a && \
+  npx prisma migrate deploy \
+    --schema=./src/lib/database/schema.prisma \
+    --config=./prisma.config.ts && \
   node website/server.js \
 "]

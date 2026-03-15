@@ -3,7 +3,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CardContent, CardHeader, GlowHoverCard, Typography } from '@socialincome/ui';
 
-export async function UspCards({ lang }: DefaultParams) {
+export const UspCards = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-partnership'],
@@ -16,7 +16,7 @@ export async function UspCards({ lang }: DefaultParams) {
 			</Typography>
 			<div className="grid w-full max-w-7xl grid-cols-1 gap-6 md:grid-cols-2">
 				<GlowHoverCard className="theme-blue overflow-hidden rounded-2xl border-none">
-					<CardHeader className="ml-4 mt-3">
+					<CardHeader className="mt-3 ml-4">
 						<Typography size="2xl" weight="medium" color="accent">
 							{translator.t('usp.reason-title-1')}
 						</Typography>
@@ -29,7 +29,7 @@ export async function UspCards({ lang }: DefaultParams) {
 				</GlowHoverCard>
 
 				<GlowHoverCard className="theme-blue overflow-hidden rounded-2xl border-none">
-					<CardHeader className="ml-4 mt-3">
+					<CardHeader className="mt-3 ml-4">
 						<Typography size="2xl" weight="medium" color="accent">
 							{translator.t('usp.reason-title-2')}
 						</Typography>
@@ -42,7 +42,7 @@ export async function UspCards({ lang }: DefaultParams) {
 				</GlowHoverCard>
 
 				<GlowHoverCard className="theme-blue overflow-hidden rounded-2xl border-none">
-					<CardHeader className="ml-4 mt-3">
+					<CardHeader className="mt-3 ml-4">
 						<Typography size="2xl" weight="medium" color="accent">
 							{translator.t('usp.reason-title-3')}
 						</Typography>
@@ -55,7 +55,7 @@ export async function UspCards({ lang }: DefaultParams) {
 				</GlowHoverCard>
 
 				<GlowHoverCard className="theme-blue overflow-hidden rounded-2xl border-none">
-					<CardHeader className="ml-4 mt-3">
+					<CardHeader className="mt-3 ml-4">
 						<Typography size="2xl" weight="medium" color="accent">
 							{translator.t('usp.reason-title-4')}
 						</Typography>
@@ -69,4 +69,4 @@ export async function UspCards({ lang }: DefaultParams) {
 			</div>
 		</div>
 	);
-}
+};

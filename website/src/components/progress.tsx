@@ -1,7 +1,7 @@
 'use client';
 
 import * as ProgressPrimitive from '@radix-ui/react-progress';
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn } from '@socialincome/ui';
 import * as React from 'react';
 
 type ProgressVariant = 'default' | 'urgent';
@@ -11,8 +11,11 @@ type ProgressProps = React.ComponentProps<typeof ProgressPrimitive.Root> & {
 	variant?: ProgressVariant;
 };
 
-function Progress({ className, value, variant = 'default', ...props }: ProgressProps) {
-	const indicatorClass = variant === 'urgent' ? 'bg-rose-400' : 'bg-primary';
+const Progress = ({ className, value = 0, variant = 'default', ...props }: ProgressProps) => {
+	const indicatorClass =
+		variant === 'urgent'
+			? 'bg-rose-400'
+			: 'bg-[linear-gradient(to_right,hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to)))]';
 
 	return (
 		<ProgressPrimitive.Root
@@ -22,11 +25,11 @@ function Progress({ className, value, variant = 'default', ...props }: ProgressP
 		>
 			<ProgressPrimitive.Indicator
 				data-slot="progress-indicator"
-				className={cn('h-full w-full flex-1 transition-all', indicatorClass)}
-				style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+				className={cn('h-full transition-all', indicatorClass)}
+				style={{ width: `${value}%` }}
 			/>
 		</ProgressPrimitive.Root>
 	);
-}
+};
 
 export { Progress };

@@ -18,7 +18,13 @@ type UseBankTransferProps = {
 	};
 };
 
-export function useBankTransfer({ amount, intervalCount, currency, qrBillType, translations }: UseBankTransferProps) {
+export const useBankTransfer = ({
+	amount,
+	intervalCount,
+	currency,
+	qrBillType,
+	translations,
+}: UseBankTransferProps) => {
 	const [userData, setUserData] = useState<BankContributorData | null>(null);
 	const [contributionReference, setContributionReference] = useState<string | null>(null);
 	const [qrBillSvg, setQrBillSvg] = useState<string | null>(null);
@@ -33,12 +39,12 @@ export function useBankTransfer({ amount, intervalCount, currency, qrBillType, t
 
 		startTransition(async () => {
 			const result = await getReferenceIds(email);
-			if (!result) {
+			if (!result.success) {
 				toast.error(translations.errors.qrBillError);
 				return;
 			}
 
-			const { contributorReferenceId, contributionReferenceId } = result;
+			const { contributorReferenceId, contributionReferenceId } = result.data;
 
 			setUserData({
 				email,
@@ -93,4 +99,4 @@ export function useBankTransfer({ amount, intervalCount, currency, qrBillType, t
 		generateQRCode,
 		confirmPayment,
 	};
-}
+};

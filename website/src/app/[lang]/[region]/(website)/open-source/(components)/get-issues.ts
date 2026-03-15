@@ -15,7 +15,7 @@ interface IssuesResponse {
 	labels: string[];
 }
 
-export async function getIssuesData(): Promise<IssuesResponse> {
+export const getIssuesData = async (): Promise<IssuesResponse> => {
 	const issues: Issue[] = [];
 	const labels: string[] = [];
 	let page = 1;
@@ -27,7 +27,9 @@ export async function getIssuesData(): Promise<IssuesResponse> {
 		const data = await res.json();
 
 		// Break if no more issues
-		if (data.length === 0) break;
+		if (data.length === 0) {
+			break;
+		}
 
 		// Exclude pull requests and map response to Issue interface
 		const filteredIssues = data
@@ -57,4 +59,4 @@ export async function getIssuesData(): Promise<IssuesResponse> {
 	}
 
 	return { issues, labels };
-}
+};

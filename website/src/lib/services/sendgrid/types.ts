@@ -1,4 +1,4 @@
-import { CountryCode } from '@/lib/types/country';
+import { CountryCode } from '@/generated/prisma/enums';
 
 export type Suppression = {
 	name: string;

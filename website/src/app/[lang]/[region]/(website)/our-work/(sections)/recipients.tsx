@@ -14,7 +14,7 @@ import laminImg from '../(assets)/lamin.jpeg';
 import nenehImg from '../(assets)/neneh.jpeg';
 import onikehImg from '../(assets)/onikeh.jpeg';
 
-export async function Recipients({ lang }: DefaultParams) {
+export const Recipients = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['countries', 'website-our-work'],
@@ -109,4 +109,4 @@ export async function Recipients({ lang }: DefaultParams) {
 			</div>
 		</BaseContainer>
 	);
-}
+};

@@ -1,4 +1,4 @@
-import { OrganizationPermission, UserRole } from '@prisma/client';
+import { OrganizationPermission, UserRole } from '@/generated/prisma/client';
 
 export type OrganizationMemberTableViewRow = {
 	id: string;
@@ -13,6 +13,19 @@ export type OrganizationMemberTableView = {
 	tableRows: OrganizationMemberTableViewRow[];
 };
 
+export type OrganizationMemberTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type OrganizationMemberPaginatedTableView = {
+	tableRows: OrganizationMemberTableViewRow[];
+	totalCount: number;
+};
+
 export type OrganizationTableViewRow = {
 	id: string;
 	name: string;
@@ -24,6 +37,19 @@ export type OrganizationTableViewRow = {
 
 export type OrganizationTableView = {
 	tableRows: OrganizationTableViewRow[];
+};
+
+export type OrganizationTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type OrganizationPaginatedTableView = {
+	tableRows: OrganizationTableViewRow[];
+	totalCount: number;
 };
 
 export type OrganizationOption = {

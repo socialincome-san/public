@@ -3,7 +3,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function generateMetadata({ params }: DefaultPageProps) {
+export const generateMetadata = async ({ params }: DefaultPageProps) => {
 	const { lang } = await params;
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: DefaultPageProps) {
 	});
 
 	return { title: translator.t('metadata.title') };
-}
+};
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;

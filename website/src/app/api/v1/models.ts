@@ -1,4 +1,7 @@
+import { Currency } from '@/generated/prisma/enums';
 import { z } from 'zod';
+
+const currencyEnum = z.enum(Object.values(Currency) as [string, ...string[]]);
 
 const Phone = z.object({
 	id: z.string(),
@@ -10,8 +13,9 @@ const Phone = z.object({
 
 const PaymentInformation = z.object({
 	id: z.string(),
-	provider: z.string(),
-	code: z.string(),
+	mobileMoneyProvider: z.object({ id: z.string(), name: z.string() }).nullable(),
+	mobileMoneyProviderId: z.string().nullable().optional(),
+	code: z.string().nullable(),
 	phoneId: z.string(),
 	phone: Phone,
 	createdAt: z.string(),
@@ -27,7 +31,7 @@ const Contact = z.object({
 	phoneId: z.string().nullable(),
 	phone: Phone.nullable(),
 	email: z.string().nullable(),
-	gender: z.string().nullable(),
+	gender: z.enum(['male', 'female', 'other', 'private']).nullable(),
 	language: z.string().nullable(),
 	dateOfBirth: z.string().nullable(),
 	profession: z.string().nullable(),
@@ -53,8 +57,7 @@ const Program = z.object({
 	name: z.string(),
 	countryId: z.string(),
 	country: Country,
-	payoutPerInterval: z.number(),
-	payoutCurrency: z.string(),
+	payoutPerInterval: z.union([z.number(), z.string()]),
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
 	programDurationInMonths: z.number(),
 	createdAt: z.string(),
@@ -64,7 +67,8 @@ const Program = z.object({
 const Recipient = z.object({
 	id: z.string(),
 	contactId: z.string(),
-	status: z.string(),
+	suspendedAt: z.string().nullable(),
+	suspensionReason: z.string().nullable(),
 	startDate: z.string().nullable(),
 	successorName: z.string().nullable(),
 	termsAccepted: z.boolean(),
@@ -81,11 +85,11 @@ const Recipient = z.object({
 
 const Payout = z.object({
 	id: z.string(),
-	amount: z.number(),
-	amountChf: z.number().nullable(),
-	currency: z.string(),
+	amount: z.union([z.number(), z.string()]),
+	amountChf: z.union([z.number(), z.string()]).nullable(),
+	currency: currencyEnum,
 	paymentAt: z.string(),
-	status: z.string(),
+	status: z.enum(['paid', 'confirmed', 'contested', 'failed']),
 	phoneNumber: z.string().nullable(),
 	comments: z.string().nullable(),
 	recipientId: z.string(),
@@ -99,15 +103,14 @@ const Survey = z.object({
 	id: z.string(),
 	name: z.string(),
 	recipientId: z.string(),
-	questionnaire: z.string(),
+	questionnaire: z.enum(['onboarding', 'checkin', 'offboarding', 'offboarded_checkin']),
 	language: z.string(),
 	dueAt: z.string(),
 	completedAt: z.string().nullable(),
-	status: z.string(),
+	status: z.enum(['new', 'sent', 'scheduled', 'in_progress', 'completed', 'missed']),
 	data: z.any(),
 	accessEmail: z.string(),
 	accessPw: z.string(),
-	accessToken: z.string(),
 	surveyScheduleId: z.string().nullable(),
 	createdAt: z.string(),
 	updatedAt: z.string().nullable(),
@@ -126,7 +129,7 @@ export const RecipientSelfUpdate = z.object({
 	termsAccepted: z.boolean().optional(),
 	contactPhone: z.string().nullable().optional(),
 	paymentPhone: z.string().optional(),
-	paymentProvider: z.enum(['orange_money']).optional(),
+	paymentProvider: z.string().optional(),
 	successorName: z.string().optional(),
 });
 
@@ -155,33 +158,4 @@ const VerifyOtpResponse = z.object({
 	customToken: z.string(),
 	isNewUser: z.boolean(),
 	uid: z.string(),
-});
-
-const StripeWebhookResponse = z.object({
-	received: z.literal(true),
-	data: z
-		.object({
-			contributionId: z.string().optional(),
-			contributorId: z.string().optional(),
-			isNewContributor: z.boolean().optional(),
-		})
-		.optional(),
-});
-
-const ErrorResponse = z.object({
-	error: z.string(),
-});
-
-const PaymentFilesImportResult = z.object({
-	id: z.string(),
-	contributionId: z.string(),
-	type: z.string(),
-	transactionId: z.string(),
-	metadata: z.string().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date().nullable(),
-});
-
-const ExchangeRatesImportSuccess = z.object({
-	success: z.literal(true),
 });

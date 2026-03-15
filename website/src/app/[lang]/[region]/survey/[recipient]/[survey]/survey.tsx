@@ -1,8 +1,8 @@
 'use client';
 
+import { SurveyStatus } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { SurveyStatus } from '@prisma/client';
 import { useEffect } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/defaultV2.min.css';
@@ -14,13 +14,13 @@ import { useSurvey } from './use-survey';
 
 export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
 
-interface SurveyProps {
+type SurveyProps = {
 	surveyId: string;
 	recipientId: string;
 	lang: SurveyLanguage;
-}
+};
 
-export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
+export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
 
 	useEffect(() => {
@@ -30,7 +30,9 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	const translator = useTranslator(lang, 'website-survey');
 
 	if (!hasError && survey && translator) {
-		if (survey.status == SurveyStatus.completed) return <div>Survey already completed</div>;
+		if (survey.status == SurveyStatus.completed) {
+			return <div>Survey already completed</div>;
+		}
 
 		const model = new Model({
 			...settings(translator.t),
@@ -47,4 +49,4 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	}
 
 	return <div>Loading...</div>;
-}
+};

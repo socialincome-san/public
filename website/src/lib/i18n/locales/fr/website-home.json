@@ -21,6 +21,16 @@
 		]
 	},
 	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/P5NvG8n9pzG6BgZQrjarFedZ9hNkuYpy2R47XrmsAepuPFam9aEymA.vtt",
+	"video-controls": {
+		"play-video": "Lire la vidéo",
+		"pause-video": "Mettre la vidéo en pause",
+		"mute-video": "Couper le son de la vidéo",
+		"unmute-video": "Activer le son de la vidéo",
+		"show-captions": "Afficher les sous-titres",
+		"hide-captions": "Masquer les sous-titres",
+		"expand-video-view": "Agrandir la vue vidéo",
+		"exit-expanded-video-view": "Quitter la vue vidéo agrandie"
+	},
 	"section-2": {
 		"title-1": "Dans les communautés les plus pauvres de Sierra Leone, les gens savent très bien ce qu’il faut faire pour sortir de la pauvreté.",
 		"title-2": [
@@ -39,7 +49,7 @@
 		"text-3.1": "Identifier les personnes dans le besoin : Nous collaborons avec des ONG locales en Sierra Leone pour cibler les personnes vivant dans la pauvreté qui pourraient bénéficier d’un revenu prévisible sur trois ans et investir ainsi dans leur avenir.",
 		"text-3.2": "Sélection par tirage au sort : Notre processus de sélection par tirage au sort est transparent et peut être publiquement vérifié. Ceci écarte tout préjugé ou favoritisme et garantit l’égalité de traitement.",
 		"title-4": "Don direct, résultats directs",
-		"text-4": "Nous transférons directement ta contribution sur les téléphones portables des personnes dans le besoin, qui sont les mieux à même de décider où porter leurs efforts pour surmonter la pauvreté.",
+		"text-4": "Nous transférons directement ta contribution sur les téléphones portables des personnes dans le besoin, qui sont les mieux à même de décider où porter leurs efforts pour surmonter la pauvreté. Nous mesurons l’impact des paiements mensuels au moyen d’enquêtes régulières.",
 		"title-5": "Un soutien durable",
 		"text-5": "Nos bénéficiaires reçoivent un soutien régulier de la part de nos partenaires locaux tout au long du programme et même au-delà, afin qu’ils en tirent le meilleur parti possible. La troisième année est axée sur une transition en douceur vers la fin du programme."
 	},

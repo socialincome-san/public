@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export function SILogo({ className, ...props }: HTMLAttributes<SVGElement>) {
+export const SILogo = ({ className, ...props }: HTMLAttributes<SVGElement>) => {
 	return (
 		<svg
 			version="1.1"
@@ -20,4 +20,4 @@ export function SILogo({ className, ...props }: HTMLAttributes<SVGElement>) {
 			</g>
 		</svg>
 	);
-}
+};

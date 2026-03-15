@@ -1,15 +1,8 @@
-import { StripeService } from '@/lib/services/stripe/stripe.service';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
-/**
- * Process Stripe webhook events
- * @description Handles multiple Stripe webhook events including charge.succeeded, charge.updated, and charge.failed to create/update contributions and contributors.
- * @response StripeWebhookResponse
- * @response ErrorResponse
- * @openapi
- */
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
 	try {
 		const signature = request.headers.get('stripe-signature');
 		if (!signature) {
@@ -22,8 +15,7 @@ export async function POST(request: NextRequest) {
 		}
 
 		const body = await request.text();
-		const stripeService = new StripeService();
-		const result = await stripeService.handleWebhookEvent(body, signature, webhookSecret);
+		const result = await services.stripe.handleWebhookEvent(body, signature, webhookSecret);
 
 		if (!result.success) {
 			logger.alert(
@@ -39,4 +31,4 @@ export async function POST(request: NextRequest) {
 		logger.alert('Stripe webhook error', { error }, { component: 'stripe-webhook' });
 		return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
 	}
-}
+};

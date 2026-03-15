@@ -1,13 +1,37 @@
 'use server';
 
-import { FirebaseService } from '../services/firebase/firebase.service';
+import { getCurrentSessions } from '../firebase/current-account';
+import { ServiceResult } from '../services/core/base.types';
+import { resultOk } from '../services/core/service-result';
+import { services } from '../services/services';
 
-const firebaseService = new FirebaseService();
+export const createSessionAction = async (idToken: string) => {
+	return services.firebaseSession.createSessionAndSetCookie(idToken);
+};
 
-export async function createSessionAction(idToken: string) {
-	return firebaseService.createSessionAndSetCookie(idToken);
-}
+export const logoutAction = async () => {
+	return services.firebaseSession.clearSessionCookie();
+};
 
-export async function logoutAction() {
-	return firebaseService.clearSessionCookie();
-}
+export const getRedirectPathAfterLoginAction = async (): Promise<ServiceResult<string>> => {
+	const sessions = await getCurrentSessions();
+	const session = sessions[0];
+
+	if (!session) {
+		return resultOk('/');
+	}
+
+	if (session.type === 'user') {
+		return resultOk('/portal');
+	}
+
+	if (session.type === 'contributor') {
+		return resultOk('/dashboard/contributions');
+	}
+
+	if (session.type === 'local-partner') {
+		return resultOk('/partner-space/recipients');
+	}
+
+	return resultOk('/');
+};

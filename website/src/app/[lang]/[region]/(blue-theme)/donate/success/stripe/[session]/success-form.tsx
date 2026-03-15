@@ -1,14 +1,14 @@
 'use client';
+import { ContributorReferralSource, CountryCode } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
-import { COUNTRY_CODES, CountryCode } from '@/lib/types/country';
+import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ContributorReferralSource } from '@prisma/client';
 import {
 	Button,
 	Checkbox,
@@ -62,7 +62,7 @@ type SuccessFormProps = {
 	country?: CountryCode;
 };
 
-export function SuccessForm({
+export const SuccessForm = ({
 	lang,
 	stripeCheckoutSessionId,
 	translations,
@@ -71,7 +71,7 @@ export function SuccessForm({
 	email,
 	country,
 	onSuccessURL,
-}: SuccessFormProps) {
+}: SuccessFormProps) => {
 	const router = useRouter();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
@@ -206,7 +206,7 @@ export function SuccessForm({
 										<SelectValue placeholder={field.value && countryTranslator?.t(field.value)} />
 									</SelectTrigger>
 								</FormControl>
-								<SelectContent className="max-h-[16rem] overflow-y-auto">
+								<SelectContent className="max-h-64 overflow-y-auto">
 									<SelectGroup>
 										{COUNTRY_CODES.map((country: CountryCode) => (
 											<SelectItem key={country} value={country}>
@@ -256,9 +256,9 @@ export function SuccessForm({
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									<SelectItem value="familyfriends">{translations.referrals.familyfriends}</SelectItem>
+									<SelectItem value="family_and_friends">{translations.referrals.familyfriends}</SelectItem>
 									<SelectItem value="work">{translations.referrals.work}</SelectItem>
-									<SelectItem value="socialmedia">{translations.referrals.socialmedia}</SelectItem>
+									<SelectItem value="social_media">{translations.referrals.socialmedia}</SelectItem>
 									<SelectItem value="media">{translations.referrals.media}</SelectItem>
 									<SelectItem value="presentation">{translations.referrals.presentation}</SelectItem>
 									<SelectItem value="other">{translations.referrals.other}</SelectItem>
@@ -272,9 +272,9 @@ export function SuccessForm({
 					control={form.control}
 					name="termsAndConditions"
 					render={({ field }) => (
-						<FormItem className="col-span-2 flex flex-row items-start space-x-3 space-y-0 px-2 py-4">
+						<FormItem className="col-span-2 flex flex-row items-start space-y-0 space-x-3 px-2 py-4">
 							<FormControl>
-								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+								<Checkbox data-testid="terms-and-conditions" checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>
 							<div className="space-y-1 leading-none">
 								<FormLabel dangerouslySetInnerHTML={{ __html: translations.acceptTermsAndConditions }} />
@@ -293,4 +293,4 @@ export function SuccessForm({
 			</form>
 		</Form>
 	);
-}
+};

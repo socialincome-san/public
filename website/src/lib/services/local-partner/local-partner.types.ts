@@ -1,10 +1,12 @@
-import { Address, Cause, Gender, Phone, Prisma } from '@prisma/client';
+import { Address, Cause, CountryCode, Gender, Phone } from '@/generated/prisma/client';
 
 export type LocalPartnerTableViewRow = {
 	id: string;
 	name: string;
 	contactPerson: string;
+	email: string | null;
 	contactNumber: string | null;
+	causes: string;
 	recipientsCount: number;
 	createdAt: Date;
 };
@@ -13,9 +15,23 @@ export type LocalPartnerTableView = {
 	tableRows: LocalPartnerTableViewRow[];
 };
 
+export type LocalPartnerTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type LocalPartnerPaginatedTableView = {
+	tableRows: LocalPartnerTableViewRow[];
+	totalCount: number;
+};
+
 export type LocalPartnerPayload = {
 	id: string;
 	name: string;
+	causes: Cause[];
 	contact: {
 		id: string;
 		firstName: string;
@@ -36,9 +52,6 @@ export type LocalPartnerOption = {
 	name: string;
 };
 
-export type LocalPartnerCreateInput = Omit<Prisma.LocalPartnerCreateInput, 'account' | 'accountId'>;
-export type LocalPartnerUpdateInput = Omit<Prisma.LocalPartnerUpdateInput, 'account' | 'accountId'>;
-
 export type LocalPartnerSession = {
 	type: 'local-partner';
 	id: string;
@@ -53,5 +66,5 @@ export type LocalPartnerSession = {
 	number: string | null;
 	city: string | null;
 	zip: string | null;
-	country: string | null;
+	country: CountryCode | null;
 };

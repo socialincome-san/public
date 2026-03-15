@@ -1,37 +1,50 @@
 'use server';
 
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { CountryService } from '@/lib/services/country/country.service';
-import type { CountryCreateInput, CountryUpdateInput } from '@/lib/services/country/country.types';
+import { getSessionByType } from '@/lib/firebase/current-account';
+import type { CountryFormCreateInput, CountryFormUpdateInput } from '@/lib/services/country/country-form-input';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/countries';
-const service = new CountryService();
 
-export async function createCountryAction(input: CountryCreateInput) {
-	const user = await getAuthenticatedUserOrRedirect();
-
-	const res = await service.create(user.id, input);
-
+export const createCountryAction = async (input: CountryFormCreateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.country.create(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
 	return res;
-}
+};
 
-export async function updateCountryAction(input: CountryUpdateInput) {
-	const user = await getAuthenticatedUserOrRedirect();
-
-	const res = await service.update(user.id, input);
-
+export const updateCountryAction = async (input: CountryFormUpdateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.country.update(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
 	return res;
-}
+};
 
-export async function getCountryAction(id: string) {
-	const user = await getAuthenticatedUserOrRedirect();
+export const deleteCountryAction = async (id: string) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.country.delete(sessionResult.data.id, id);
+	revalidatePath(REVALIDATE_PATH);
+	return res;
+};
 
-	return service.get(user.id, id);
-}
+export const getCountryAction = async (id: string) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.read.country.get(sessionResult.data.id, id);
+};
 
-export async function getProgramCountryFeasibilityAction() {
-	return service.getProgramCountryFeasibility();
-}
+export const getProgramCountryFeasibilityAction = async () => {
+	return services.read.country.getProgramCountryFeasibility();
+};

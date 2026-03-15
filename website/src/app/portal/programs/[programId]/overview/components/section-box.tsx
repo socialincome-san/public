@@ -1,0 +1,29 @@
+import { cn } from '@socialincome/ui';
+import { ChevronRightIcon } from 'lucide-react';
+import Link from 'next/link';
+import * as React from 'react';
+
+type SectionBoxProps = {
+	className?: string;
+	children: React.ReactNode;
+	href?: string;
+};
+
+export const SectionBox = ({ className, children, href }: SectionBoxProps) => {
+	const content = (
+		<div className={cn('relative h-full space-y-4 rounded-2xl bg-slate-100 p-4', className)}>
+			{href ? <ChevronRightIcon className="text-muted-foreground absolute top-4 right-4 h-4 w-4" /> : null}
+			{children}
+		</div>
+	);
+
+	if (href) {
+		return (
+			<Link href={href} className="block transition-transform hover:-translate-y-[5px] hover:shadow-xs">
+				{content}
+			</Link>
+		);
+	}
+
+	return content;
+};

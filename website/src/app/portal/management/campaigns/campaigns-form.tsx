@@ -87,7 +87,7 @@ export default function CampaignsForm({
 		}));
 	};
 
-	async function onSubmit(schema: typeof initialFormSchema) {
+	const onSubmit = async (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
 			try {
 				let res;
@@ -103,7 +103,7 @@ export default function CampaignsForm({
 				onError?.(error);
 			}
 		});
-	}
+	};
 
 	useEffect(() => {
 		if (campaignId) {
@@ -116,7 +116,9 @@ export default function CampaignsForm({
 		// load options for program
 		startTransition(async () => {
 			const programs = await getProgramsOptions();
-			if (!programs.success) return;
+			if (!programs.success) {
+				return;
+			}
 			setOptions(programs.data);
 		});
 	}, []);

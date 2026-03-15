@@ -8,10 +8,10 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export async function generateMetadata(props: DefaultPageProps) {
+export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-newsletter');
-}
+};
 
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;

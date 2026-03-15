@@ -14,9 +14,10 @@ type Props = {
 	children?: ReactNode;
 };
 
-export function RadioCard({ value, checked, disabled, label, description, badge, children }: Props) {
+export const RadioCard = ({ value, checked, disabled, label, description, badge, children }: Props) => {
 	return (
 		<label
+			data-testid={`radio-card-${value}`}
 			className={cn(
 				'relative flex items-start gap-3 rounded-lg border p-4 transition-colors',
 				!disabled && 'hover:bg-muted/40 cursor-pointer',
@@ -24,7 +25,7 @@ export function RadioCard({ value, checked, disabled, label, description, badge,
 				disabled && 'cursor-not-allowed opacity-60',
 			)}
 		>
-			<RadioGroupItem value={value} disabled={disabled} className="absolute right-3 top-3" />
+			<RadioGroupItem value={value} disabled={disabled} className="absolute top-3 right-3" />
 
 			<div className="flex-1 space-y-1 pr-6">
 				<div className="flex items-center gap-2">
@@ -47,4 +48,4 @@ export function RadioCard({ value, checked, disabled, label, description, badge,
 			</div>
 		</label>
 	);
-}
+};

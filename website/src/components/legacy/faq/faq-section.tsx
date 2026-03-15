@@ -15,7 +15,7 @@ type FAQSectionProps = {
 	questions: FaqQuestion[];
 };
 
-export function FAQSection({ title, questions }: FAQSectionProps) {
+export const FAQSection = ({ title, questions }: FAQSectionProps) => {
 	return (
 		<div className="flex flex-col space-y-8">
 			{title && (
@@ -58,4 +58,4 @@ export function FAQSection({ title, questions }: FAQSectionProps) {
 			</Accordion>
 		</div>
 	);
-}
+};

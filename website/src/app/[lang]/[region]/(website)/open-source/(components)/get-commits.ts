@@ -1,3 +1,4 @@
+import { now } from '@/lib/utils/now';
 import { fetchData } from './fetch-data';
 
 const owner = 'socialincome-san';
@@ -16,10 +17,10 @@ interface GitHubCommit {
 	};
 }
 
-export async function getCommits() {
+export const getCommits = async () => {
 	// Calculate the date 30 days ago from today
-	const endDate = new Date().toISOString();
-	const startDate = new Date();
+	const endDate = now().toISOString();
+	const startDate = now();
 	startDate.setDate(startDate.getDate() - 30);
 	const startDateISO = startDate.toISOString();
 
@@ -52,4 +53,4 @@ export async function getCommits() {
 		totalCommits,
 		newCommits: recentCommits.length,
 	};
-}
+};

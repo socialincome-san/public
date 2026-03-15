@@ -9,14 +9,14 @@ import { useState } from 'react';
 
 type StepResult = string | object | string[] | null;
 
-export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
+export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 
 	const iconClass = 'h-4 w-4';
 
-	function setResult(step: number, value: StepResult) {
+	const setResult = (step: number, value: StepResult) => {
 		setResults((prev) => ({ ...prev, [step]: value }));
-	}
+	};
 
 	const steps = [
 		{
@@ -52,14 +52,14 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 		},
 	];
 
-	async function run(step: (typeof steps)[number]) {
+	const run = async (step: (typeof steps)[number]) => {
 		try {
 			const result = await step.action();
 			setResult(step.id, result);
 		} catch (e) {
 			setResult(step.id, e instanceof Error ? e.message : 'Unknown error');
 		}
-	}
+	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -70,13 +70,14 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 
 				<div className="flex flex-col gap-5">
 					{steps.map((step) => (
-						<div key={step.id} className="border-border bg-muted/40 flex flex-col gap-2 rounded-xl border p-3">
+						<div key={step.id} className="flex flex-col gap-2 rounded-2xl bg-slate-100 p-4">
 							<p className="font-medium">
 								Step {step.id}: {step.title}
 							</p>
 							<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
 
 							<Button
+								data-testid={`survey-step-${step.id}-button`}
 								className="flex w-full items-center justify-center gap-2"
 								variant={step.variant ?? 'default'}
 								onClick={() => run(step)}
@@ -86,6 +87,7 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 							</Button>
 
 							<StepResultBox
+								id={step.id}
 								value={results[step.id]}
 								filename={step.filename()}
 								onClear={() => setResult(step.id, null)}
@@ -102,4 +104,4 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

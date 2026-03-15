@@ -10,25 +10,25 @@ import Link from 'next/link';
 
 const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };
 
-function getThumbnailOrDefault(referenceArticle: ReferenceArticle): StoryblokAsset {
+const getThumbnailOrDefault = (referenceArticle: ReferenceArticle): StoryblokAsset => {
 	return referenceArticle.thumbnail?.filename ? referenceArticle.thumbnail : (defaultThumbnail as StoryblokAsset);
-}
+};
 
-export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: Translator; lang: LanguageCode }) {
+export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: Translator; lang: LanguageCode }) => {
 	const translator = props.translator;
 	const lang = props.lang;
 	const references = props.references ?? [];
 	const hasContextInfo = !!props.context;
 	const showThumbnails = references.some((it) => !!it.thumbnail?.filename);
 
-	function showSeparator(index: number) {
+	const showSeparator = (index: number) => {
 		return index > 0 || hasContextInfo;
-	}
+	};
 
 	return (
-		<div className="bg-primary mt-2 w-full rounded-md bg-opacity-10 p-6">
+		<div className="bg-primary/10 mt-2 mb-6 w-full rounded-md p-6">
 			{hasContextInfo && (
-				<Typography color="foreground" className="m-0 mb-2 p-0">
+				<Typography color="foreground" className="m-0! mb-2 p-0">
 					{translator.t('reference-article.context.' + props.context)}
 				</Typography>
 			)}
@@ -38,8 +38,8 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 			>
 				{references.map((reference, index) => (
 					<div key={reference._uid}>
-						{showSeparator(index) && <Separator className="bg-foreground m-0 mb-4 mt-4 opacity-15" />}
-						<div className="flex items-start gap-8">
+						{showSeparator(index) && <Separator className="bg-foreground m-0 my-4 opacity-15" />}
+						<div className="flex items-center gap-8">
 							{showThumbnails && <ThumbnailImage thumbnail={getThumbnailOrDefault(reference)} />}
 							<div className="flex flex-col justify-center">
 								<Link
@@ -49,7 +49,7 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 									target="_blank"
 									rel="noopener noreferrer"
 								>
-									<Typography weight="semibold" className="m-0 p-0">
+									<Typography weight="semibold" className="m-0! p-0 leading-none">
 										{reference.title}
 									</Typography>
 								</Link>
@@ -84,4 +84,4 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 			</ShowMoreToggle>
 		</div>
 	);
-}
+};

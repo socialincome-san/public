@@ -3,11 +3,10 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 
-import { ContributionStatus } from '@prisma/client';
+import { ContributionStatus } from '@/generated/prisma/enums';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
-import { websiteCurrencies } from '@/lib/i18n/utils';
 import {
 	createContributionAction,
 	getContributionAction,
@@ -17,6 +16,7 @@ import {
 import { CampaignOption } from '@/lib/services/campaign/campaign.types';
 import { ContributionPayload } from '@/lib/services/contribution/contribution.types';
 import { ContributorOption } from '@/lib/services/contributor/contributor.types';
+import { allCurrencies } from '@/lib/types/currency';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 
 type ContributionFormProps = {
@@ -49,9 +49,10 @@ const initialFormSchema: ContributionFormSchema = {
 			zodSchema: z.number().positive('Amount must be positive'),
 		},
 		currency: {
-			placeholder: 'USD, EUR, CHF',
+			placeholder: 'Select currency',
 			label: 'Currency Code',
-			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
+			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
+			useCombobox: true,
 		},
 		amountChf: {
 			placeholder: 'Contribution Amount in CHF',
@@ -80,7 +81,7 @@ const initialFormSchema: ContributionFormSchema = {
 	},
 };
 
-export function ContributionForm({ onSuccess, onError, onCancel, contributionId, readOnly }: ContributionFormProps) {
+export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId, readOnly }: ContributionFormProps) => {
 	const [formSchema, setFormSchema] = useState(initialFormSchema);
 	const [contribution, setContribution] = useState<ContributionPayload>();
 	const [optionsLoaded, setOptionsLoaded] = useState(false);
@@ -88,19 +89,21 @@ export function ContributionForm({ onSuccess, onError, onCancel, contributionId,
 
 	useEffect(() => {
 		startTransition(async () => {
-			const { contributorOptions, campaignOptions } = await getContributionsOptionsAction();
-
-			if (!contributorOptions.success || !campaignOptions.success) return;
+			const optionsResult = await getContributionsOptionsAction();
+			if (!optionsResult.success) {
+				return;
+			}
+			const { contributorOptions, campaignOptions } = optionsResult.data;
 
 			const contributorEnum = getZodEnum(
-				contributorOptions.data.map((c: ContributorOption) => ({
+				contributorOptions.map((c: ContributorOption) => ({
 					id: c.id,
 					label: c.name,
 				})),
 			);
 
 			const campaignEnum = getZodEnum(
-				campaignOptions.data.map((c: CampaignOption) => ({
+				campaignOptions.map((c: CampaignOption) => ({
 					id: c.id,
 					label: c.name,
 				})),
@@ -126,11 +129,15 @@ export function ContributionForm({ onSuccess, onError, onCancel, contributionId,
 	}, []);
 
 	useEffect(() => {
-		if (!contributionId || !optionsLoaded) return;
+		if (!contributionId || !optionsLoaded) {
+			return;
+		}
 
 		startTransition(async () => {
 			const result = await getContributionAction(contributionId);
-			if (!result.success) return onError?.(result.error);
+			if (!result.success) {
+				return onError?.(result.error);
+			}
 
 			setContribution(result.data);
 
@@ -179,4 +186,4 @@ export function ContributionForm({ onSuccess, onError, onCancel, contributionId,
 			mode={readOnly ? 'readonly' : contributionId ? 'edit' : 'add'}
 		/>
 	);
-}
+};

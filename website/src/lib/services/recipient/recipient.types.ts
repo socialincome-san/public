@@ -1,13 +1,5 @@
-import {
-	Address,
-	Gender,
-	PaymentProvider,
-	PayoutStatus,
-	Phone,
-	Prisma,
-	ProgramPermission,
-	RecipientStatus,
-} from '@prisma/client';
+import { Address, Gender, Phone, Prisma } from '@/generated/prisma/client';
+export type { RecipientProgramFilterOption, RecipientTableViewRow } from './recipient-table.types';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {
@@ -19,6 +11,7 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 		paymentInformation: {
 			include: {
 				phone: true;
+				mobileMoneyProvider: true;
 			};
 		};
 		program: {
@@ -37,7 +30,8 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 export type RecipientPayload = {
 	id: string;
 	startDate: Date | null;
-	status: RecipientStatus;
+	suspendedAt: Date | null;
+	suspensionReason: string | null;
 	successorName: string | null;
 	termsAccepted: boolean;
 	localPartner: {
@@ -64,48 +58,9 @@ export type RecipientPayload = {
 	paymentInformation: {
 		id: string;
 		code: string | null;
-		provider: PaymentProvider | null;
+		mobileMoneyProvider: { id: string; name: string } | null;
 		phone: Phone | null;
 	} | null;
-};
-
-export type RecipientTableViewRow = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	dateOfBirth: Date | null;
-	localPartnerName: string | null;
-	status: RecipientStatus;
-	programId: string | null;
-	programName: string | null;
-	payoutsReceived: number;
-	payoutsTotal: number;
-	payoutsProgressPercent: number;
-	createdAt: Date;
-	permission: ProgramPermission;
-};
-
-export type RecipientTableView = {
-	tableRows: RecipientTableViewRow[];
-	permission: ProgramPermission;
-};
-
-export type PayoutRecipient = {
-	id: string;
-	contact: { firstName: string; lastName: string };
-	paymentInformation: {
-		code: string | null;
-		phone: { number: string } | null;
-	} | null;
-	program: {
-		payoutPerInterval: number;
-		payoutCurrency: string;
-		programDurationInMonths: number;
-	};
-	payouts: {
-		paymentAt: Date;
-		status: PayoutStatus;
-	}[];
 };
 
 export type RecipientCreateInput = Prisma.RecipientCreateInput;

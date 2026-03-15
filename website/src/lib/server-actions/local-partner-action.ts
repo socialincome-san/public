@@ -1,36 +1,57 @@
 'use server';
 
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
-import { LocalPartnerCreateInput, LocalPartnerUpdateInput } from '@/lib/services/local-partner/local-partner.types';
+import { getSessionByType, type Session } from '@/lib/firebase/current-account';
+import {
+	LocalPartnerFormCreateInput,
+	LocalPartnerFormUpdateInput,
+} from '@/lib/services/local-partner/local-partner-form-input';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
-import { getActorOrThrow } from '../firebase/current-account';
 
-const localPartnerService = new LocalPartnerService();
-
-export async function createLocalPartnerAction(localPartner: LocalPartnerCreateInput) {
-	const user = await getAuthenticatedUserOrThrow();
-	const result = await localPartnerService.create(user.id, localPartner);
-
-	revalidatePath('/portal/admin/local-partners');
-	return result;
-}
-
-export async function updateLocalPartnerAction(updateInput: LocalPartnerUpdateInput) {
-	const actor = await getActorOrThrow();
-
-	const result = await localPartnerService.update(actor, updateInput);
-
-	if (actor.kind === 'user') {
-		revalidatePath('/portal/admin/local-partners');
-	} else if (actor.kind === 'local-partner') {
-		revalidatePath('/partner-space/profile');
+export const createLocalPartnerAction = async (localPartner: LocalPartnerFormCreateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
 	}
 
+	const result = await services.write.localPartner.create(sessionResult.data.id, localPartner);
+	revalidatePath('/portal/admin/local-partners');
 	return result;
-}
+};
 
-export async function getLocalPartnerAction(localPartnerId: string) {
-	const user = await getAuthenticatedUserOrThrow();
-	return localPartnerService.get(user.id, localPartnerId);
-}
+export const updateLocalPartnerAction = async (
+	updateInput: LocalPartnerFormUpdateInput,
+	sessionType: Session['type'] = 'user',
+) => {
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.localPartner.update(session, updateInput);
+	if (session.type === 'user') {
+		revalidatePath('/portal/admin/local-partners');
+	} else if (session.type === 'local-partner') {
+		revalidatePath('/partner-space/profile');
+	}
+	return result;
+};
+
+export const getLocalPartnerAction = async (localPartnerId: string) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return services.read.localPartner.get(sessionResult.data.id, localPartnerId);
+};
+
+export const deleteLocalPartnerAction = async (localPartnerId: string) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const result = await services.write.localPartner.delete(sessionResult.data.id, localPartnerId);
+	revalidatePath('/portal/admin/local-partners');
+	return result;
+};

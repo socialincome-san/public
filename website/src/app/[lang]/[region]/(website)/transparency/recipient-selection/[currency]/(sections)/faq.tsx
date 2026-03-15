@@ -2,11 +2,10 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { FaqQuestion, FAQSection } from '@/components/legacy/faq/faq-section';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { BaseContainer, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { BaseContainer, FontColor, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
-export async function SelectionFaq({ lang }: DefaultParams) {
+export const SelectionFaq = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'website-faq', 'website-selection'],
@@ -14,7 +13,7 @@ export async function SelectionFaq({ lang }: DefaultParams) {
 
 	return (
 		<BaseContainer className="my-10 flex flex-col space-y-8">
-			<div className="mx-auto mb-4 mt-20 max-w-2xl">
+			<div className="mx-auto mt-20 mb-4 max-w-2xl">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-5.title').map((title, index) => (
 					<Typography
 						key={index}
@@ -35,4 +34,4 @@ export async function SelectionFaq({ lang }: DefaultParams) {
 			</Link>
 		</BaseContainer>
 	);
-}
+};

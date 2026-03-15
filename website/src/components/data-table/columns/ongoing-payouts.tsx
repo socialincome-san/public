@@ -7,21 +7,17 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { OngoingPayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef, HeaderContext } from '@tanstack/react-table';
 
-function getMonthLabelFromData(ctx: HeaderContext<OngoingPayoutTableViewRow, unknown>, index: number): string {
+const getMonthLabelFromData = (ctx: HeaderContext<OngoingPayoutTableViewRow, unknown>, index: number): string => {
 	const firstRow = ctx.table.options.data[0] as OngoingPayoutTableViewRow | undefined;
 	return firstRow?.last3Months[index]?.monthLabel ?? '–';
-}
+};
 
-export function makeOngoingPayoutColumns(): ColumnDef<OngoingPayoutTableViewRow>[] {
+export const makeOngoingPayoutColumns = (): ColumnDef<OngoingPayoutTableViewRow>[] => {
 	return [
 		{
-			accessorKey: 'firstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'lastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
+			id: 'recipient',
+			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -53,4 +49,4 @@ export function makeOngoingPayoutColumns(): ColumnDef<OngoingPayoutTableViewRow>
 			cell: (ctx) => <StatusCell ctx={ctx} variant="payout" />,
 		},
 	];
-}
+};

@@ -3,14 +3,14 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function generateMetadata(props: DefaultPageProps) {
+export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	const translator = await Translator.getInstance({
 		language: params.lang as WebsiteLanguage,
 		namespaces: ['website-fundraisers'],
 	});
 	return { title: translator.t('metadata.title') };
-}
+};
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;
 	const translator = await Translator.getInstance({

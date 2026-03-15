@@ -1,16 +1,16 @@
+import { Badge } from '@/components/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet';
-import { getCountryNameByIsoCode } from '@/lib/services/country/iso-countries';
-import { ProgramService } from '@/lib/services/program/program.service';
-import { ProgramPermission } from '@prisma/client';
+import { ProgramPermission } from '@/generated/prisma/enums';
+import { services } from '@/lib/services/services';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
 	userId: string;
 };
 
-export async function UserPrograms({ userId }: Props) {
-	const service = new ProgramService();
-	const result = await service.getProgramWallets(userId);
+export const UserPrograms = async ({ userId }: Props) => {
+	const result = await services.read.program.getProgramWallets(userId);
 
 	if (!result.success) {
 		return <div>{result.error}</div>;
@@ -31,7 +31,8 @@ export async function UserPrograms({ userId }: Props) {
 							key={program.id}
 							href={`/portal/programs/${program.id}/overview`}
 							title={program.programName}
-							subtitle={getCountryNameByIsoCode(program.country)}
+							subtitle={getCountryNameByCode(program.country)}
+							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 							footerLeft={{
 								label: 'Paid out',
 								currency: program.payoutCurrency,
@@ -43,11 +44,9 @@ export async function UserPrograms({ userId }: Props) {
 							}}
 						/>
 					))}
-
 					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
 				</div>
 			</div>
-
 			{ownedPrograms.length > 0 && (
 				<div>
 					<h2 className="py-6 text-3xl font-medium">Owned Programs</h2>
@@ -57,7 +56,8 @@ export async function UserPrograms({ userId }: Props) {
 								key={program.id}
 								href={`/portal/programs/${program.id}/overview`}
 								title={program.programName}
-								subtitle={getCountryNameByIsoCode(program.country)}
+								subtitle={getCountryNameByCode(program.country)}
+								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 								footerLeft={{
 									label: 'Paid out',
 									currency: program.payoutCurrency,
@@ -74,4 +74,4 @@ export async function UserPrograms({ userId }: Props) {
 			)}
 		</section>
 	);
-}
+};

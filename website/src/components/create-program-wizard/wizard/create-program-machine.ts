@@ -1,9 +1,11 @@
+import { Cause, Currency, PayoutInterval } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
+import { calculateProgramBudgetAction } from '@/lib/server-actions/program-stats-actions';
+import { Profile } from '@/lib/services/candidate/candidate.types';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput } from '@/lib/services/program/program.types';
-import { Cause, PayoutInterval } from '@prisma/client';
 import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 
@@ -19,14 +21,27 @@ export const createProgramWizardMachine = setup({
 			programManagement: ProgramManagementType | null;
 			recipientApproach: RecipientApproachType | null;
 			targetCauses: Cause[];
+			targetProfiles: Profile[];
 
 			// step 3
 			amountOfRecipients: number;
-			maxRecipients: number;
+			totalRecipients: number;
+			filteredRecipients: number;
+			isCountingRecipients: boolean;
+
 			programDuration: number;
+			defaultPayoutPerInterval: number;
 			payoutPerInterval: number;
 			payoutInterval: PayoutInterval;
-			currency: string;
+			payoutCurrency: Currency;
+			displayCurrency: Currency;
+			calculatedTotalBudget: number;
+			displayMonthlyCost: number;
+			exchangeRateText?: string;
+			totalBudgetTooltipText: string;
+			payoutPerIntervalMin: number;
+			payoutPerIntervalMax: number;
+			isCalculatingBudget: boolean;
 			customizePayouts: boolean;
 
 			// step 4
@@ -45,13 +60,14 @@ export const createProgramWizardMachine = setup({
 			| { type: 'SELECT_PROGRAM_MANAGEMENT'; value: ProgramManagementType }
 			| { type: 'SELECT_RECIPIENT_APPROACH'; value: RecipientApproachType }
 			| { type: 'TOGGLE_TARGET_CAUSE'; cause: Cause }
+			| { type: 'TOGGLE_TARGET_PROFILE'; profile: Profile }
 
 			// step 3
 			| { type: 'SET_AMOUNT_OF_RECIPIENTS'; value: number }
 			| { type: 'SET_PROGRAM_DURATION'; value: number }
 			| { type: 'SET_PAYOUT_PER_INTERVAL'; value: number }
 			| { type: 'SET_PAYOUT_INTERVAL'; value: PayoutInterval }
-			| { type: 'SET_CURRENCY'; value: string }
+			| { type: 'SET_CURRENCY'; value: Currency }
 			| { type: 'TOGGLE_CUSTOMIZE_PAYOUTS' }
 			| { type: 'NEXT' }
 			| { type: 'BACK' }
@@ -86,13 +102,56 @@ export const createProgramWizardMachine = setup({
 			return result.data.programId;
 		}),
 
-		loadCandidateCount: fromPromise(async ({ input }: { input: { causes?: Cause[] } }) => {
-			const result = await getCandidateCountAction(input?.causes);
-			if (!result.success) {
-				throw new Error(result.error);
-			}
-			return result.data.count;
-		}),
+		loadCandidateCounts: fromPromise(
+			async ({
+				input,
+			}: {
+				input: {
+					countryId: string | null;
+					causes?: Cause[];
+					profiles?: Profile[];
+				};
+			}) => {
+				const [total, filtered] = await Promise.all([
+					getCandidateCountAction([], [], input.countryId),
+					getCandidateCountAction(input.causes ?? [], input.profiles ?? [], input.countryId),
+				]);
+
+				if (!total.success) {
+					throw new Error(total.error);
+				}
+
+				if (!filtered.success) {
+					throw new Error(filtered.error);
+				}
+
+				return {
+					total: total.data.count,
+					filtered: filtered.data.count,
+				};
+			},
+		),
+		loadBudgetPreview: fromPromise(
+			async ({
+				input,
+			}: {
+				input: {
+					amountOfRecipients: number;
+					programDuration: number;
+					defaultPayoutPerInterval: number;
+					payoutPerInterval: number;
+					payoutInterval: PayoutInterval;
+					payoutCurrency: Currency;
+					displayCurrency: Currency;
+				};
+			}) => {
+				const result = await calculateProgramBudgetAction(input);
+				if (!result.success) {
+					throw new Error(result.error);
+				}
+				return result.data;
+			},
+		),
 	},
 
 	guards: {
@@ -103,7 +162,18 @@ export const createProgramWizardMachine = setup({
 		programSetupValid: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
-			(context.recipientApproach === 'universal' || context.targetCauses.length > 0),
+			(context.recipientApproach === 'universal' ||
+				context.targetCauses.length > 0 ||
+				context.targetProfiles.length > 0),
+
+		// step 2 → step 3
+		programSetupValidWithRecipients: ({ context }) =>
+			Boolean(context.programManagement) &&
+			Boolean(context.recipientApproach) &&
+			context.filteredRecipients > 0 &&
+			(context.recipientApproach === 'universal' ||
+				context.targetCauses.length > 0 ||
+				context.targetProfiles.length > 0),
 
 		// step 3
 		budgetConfigValid: ({ context }) =>
@@ -130,14 +200,28 @@ export const createProgramWizardMachine = setup({
 		programManagement: 'social_income',
 		recipientApproach: null,
 		targetCauses: [],
+		targetProfiles: [],
 
 		// step 3
 		amountOfRecipients: 20,
-		maxRecipients: 0,
+
+		totalRecipients: 0,
+		filteredRecipients: 0,
+		isCountingRecipients: false,
+
 		programDuration: 36,
+		defaultPayoutPerInterval: 32,
 		payoutPerInterval: 32,
 		payoutInterval: 'monthly',
-		currency: 'USD',
+		payoutCurrency: 'USD',
+		displayCurrency: 'CHF',
+		calculatedTotalBudget: 23040,
+		displayMonthlyCost: 640,
+		exchangeRateText: undefined,
+		totalBudgetTooltipText: "20 recipients x 32 USD payout per interval x 36 monthly intervals = 23'040 USD",
+		payoutPerIntervalMin: 16,
+		payoutPerIntervalMax: 64,
+		isCalculatingBudget: false,
 		customizePayouts: false,
 
 		// step 4
@@ -153,8 +237,20 @@ export const createProgramWizardMachine = setup({
 		countrySelection: {
 			on: {
 				SELECT_COUNTRY: {
-					actions: assign({
-						selectedCountryId: ({ event }) => event.id,
+					actions: assign(({ context, event }) => {
+						const selectedCountryId = event.id;
+						const selectedCountry = context.countries.find((country) => country.id === selectedCountryId);
+						const payoutPerInterval = selectedCountry?.country.defaultPayoutAmount ?? context.payoutPerInterval;
+						const defaultPayoutPerInterval =
+							selectedCountry?.country.defaultPayoutAmount ?? context.defaultPayoutPerInterval;
+						const payoutCurrency = selectedCountry?.country.currency ?? context.payoutCurrency;
+
+						return {
+							selectedCountryId,
+							payoutPerInterval,
+							defaultPayoutPerInterval,
+							payoutCurrency,
+						};
 					}),
 				},
 				TOGGLE_COUNTRY_ROW: {
@@ -172,6 +268,32 @@ export const createProgramWizardMachine = setup({
 
 		// Step 2
 		programSetup: {
+			invoke: {
+				src: 'loadCandidateCounts',
+				input: ({ context }) => ({
+					countryId: context.selectedCountryId,
+					causes: context.targetCauses,
+					profiles: context.targetProfiles,
+				}),
+				onDone: {
+					actions: assign(({ context, event }) => {
+						const totalRecipients = event.output.total;
+						const filteredRecipients = event.output.filtered;
+						const amountOfRecipients =
+							context.amountOfRecipients > filteredRecipients ? filteredRecipients : context.amountOfRecipients;
+						return {
+							totalRecipients,
+							filteredRecipients,
+							amountOfRecipients,
+							isCountingRecipients: false,
+						};
+					}),
+				},
+				onError: {
+					target: 'error',
+				},
+			},
+			entry: assign({ isCountingRecipients: () => true }),
 			on: {
 				SELECT_PROGRAM_MANAGEMENT: {
 					actions: assign({
@@ -182,7 +304,10 @@ export const createProgramWizardMachine = setup({
 					actions: assign({
 						recipientApproach: ({ event }) => event.value,
 						targetCauses: () => [],
+						targetProfiles: () => [],
 					}),
+					target: 'programSetup',
+					reenter: true,
 				},
 				TOGGLE_TARGET_CAUSE: {
 					actions: assign({
@@ -191,64 +316,86 @@ export const createProgramWizardMachine = setup({
 								? context.targetCauses.filter((c) => c !== event.cause)
 								: [...context.targetCauses, event.cause],
 					}),
+					target: 'programSetup',
+					reenter: true,
+				},
+				TOGGLE_TARGET_PROFILE: {
+					actions: assign({
+						targetProfiles: ({ context, event }) =>
+							context.targetProfiles.includes(event.profile)
+								? context.targetProfiles.filter((p) => p !== event.profile)
+								: [...context.targetProfiles, event.profile],
+					}),
+					target: 'programSetup',
+					reenter: true,
 				},
 				BACK: 'countrySelection',
-				NEXT: { guard: 'programSetupValid', target: 'loadingCandidates' },
+				NEXT: { guard: 'programSetupValidWithRecipients', target: 'budget' },
 				CLOSE: 'closed',
 			},
 		},
 
-		loadingCandidates: {
+		// Step 3
+		budget: {
+			entry: assign({ isCalculatingBudget: () => true }),
 			invoke: {
-				src: 'loadCandidateCount',
-				input: ({ context }) => ({ causes: context.targetCauses }),
+				src: 'loadBudgetPreview',
+				input: ({ context }) => ({
+					amountOfRecipients: context.amountOfRecipients,
+					programDuration: context.programDuration,
+					defaultPayoutPerInterval: context.defaultPayoutPerInterval,
+					payoutPerInterval: context.payoutPerInterval,
+					payoutInterval: context.payoutInterval,
+					payoutCurrency: context.payoutCurrency,
+					displayCurrency: context.displayCurrency,
+				}),
 				onDone: {
-					target: 'budget',
-					actions: assign({
-						maxRecipients: ({ event }) => event.output,
-						amountOfRecipients: ({ context, event }) =>
-							Math.min(context.amountOfRecipients, event.output || context.amountOfRecipients),
-					}),
+					actions: assign(({ event }) => ({
+						calculatedTotalBudget: event.output.calculatedTotalBudget,
+						displayMonthlyCost: event.output.displayMonthlyCost,
+						exchangeRateText: event.output.exchangeRateText,
+						totalBudgetTooltipText: event.output.totalBudgetTooltipText,
+						payoutPerIntervalMin: event.output.payoutPerIntervalMin,
+						payoutPerIntervalMax: event.output.payoutPerIntervalMax,
+						isCalculatingBudget: false,
+					})),
 				},
 				onError: {
 					target: 'error',
+					actions: assign({
+						error: ({ event }) => (event.error instanceof Error ? event.error.message : 'Failed to calculate budget'),
+					}),
 				},
 			},
-		},
-		// Step 3
-		budget: {
 			on: {
 				SET_AMOUNT_OF_RECIPIENTS: {
-					actions: assign({
-						amountOfRecipients: ({ event }) => event.value,
-					}),
+					actions: assign({ amountOfRecipients: ({ event }) => event.value }),
+					target: 'budget',
+					reenter: true,
 				},
 				TOGGLE_CUSTOMIZE_PAYOUTS: {
-					actions: assign({
-						customizePayouts: ({ context }) => !context.customizePayouts,
-					}),
+					actions: assign({ customizePayouts: ({ context }) => !context.customizePayouts }),
 				},
 				SET_PROGRAM_DURATION: {
-					actions: assign({
-						programDuration: ({ event }) => event.value,
-					}),
+					actions: assign({ programDuration: ({ event }) => event.value }),
+					target: 'budget',
+					reenter: true,
 				},
 				SET_PAYOUT_PER_INTERVAL: {
-					actions: assign({
-						payoutPerInterval: ({ event }) => event.value,
-					}),
+					actions: assign({ payoutPerInterval: ({ event }) => event.value }),
+					target: 'budget',
+					reenter: true,
 				},
 				SET_PAYOUT_INTERVAL: {
-					actions: assign({
-						payoutInterval: ({ event }) => event.value,
-					}),
+					actions: assign({ payoutInterval: ({ event }) => event.value }),
+					target: 'budget',
+					reenter: true,
 				},
 				SET_CURRENCY: {
-					actions: assign({
-						currency: ({ event }) => event.value,
-					}),
+					actions: assign({ displayCurrency: ({ event }) => event.value }),
+					target: 'budget',
+					reenter: true,
 				},
-
 				BACK: 'programSetup',
 				NEXT: [
 					{ guard: 'budgetConfigValidAndUnauthenticated', target: 'auth' },
@@ -262,9 +409,7 @@ export const createProgramWizardMachine = setup({
 		auth: {
 			on: {
 				AUTH_SUCCESS: {
-					actions: assign({
-						isAuthenticated: () => true,
-					}),
+					actions: assign({ isAuthenticated: () => true }),
 					target: 'saving',
 				},
 				BACK: 'budget',
@@ -304,14 +449,12 @@ export const createProgramWizardMachine = setup({
 					amountOfRecipientsForStart: context.amountOfRecipients,
 					programDurationInMonths: context.programDuration,
 					payoutPerInterval: context.payoutPerInterval,
-					payoutCurrency: context.currency,
 					payoutInterval: context.payoutInterval,
 					targetCauses: context.targetCauses,
+					targetProfiles: context.targetProfiles,
 				}),
 				onDone: {
-					actions: assign({
-						createdProgramId: ({ event }) => event.output,
-					}),
+					actions: assign({ createdProgramId: ({ event }) => event.output }),
 					target: 'closed',
 				},
 				onError: {

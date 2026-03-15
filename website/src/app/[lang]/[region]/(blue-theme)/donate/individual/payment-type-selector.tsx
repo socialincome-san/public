@@ -23,7 +23,7 @@ type PaymentTypeSelectorProps = {
 	hasContent?: boolean;
 };
 
-function PaymentTypeFormItem({
+const PaymentTypeFormItem = ({
 	active,
 	title,
 	description,
@@ -35,18 +35,18 @@ function PaymentTypeFormItem({
 	description: string;
 	paymentType: PaymentType;
 	hasContent?: boolean;
-}) {
+}) => {
 	const { setValue } = useFormContext();
 
 	return (
 		<FormItem>
 			<FormControl
 				className={classNames(
-					'flex flex-1 cursor-pointer flex-row border-2 p-4 focus:outline-none',
-					{ 'shadow-sm': !active },
+					'flex flex-1 cursor-pointer flex-row border-2 p-4 focus:outline-hidden',
+					{ 'shadow-xs': !active },
 					{ 'border-accent bg-card-muted': active },
 					{ 'rounded-lg': !hasContent },
-					{ 'rounded-b-none rounded-t-lg border-b-0 pb-8': hasContent },
+					{ 'rounded-t-lg rounded-b-none border-b-0 pb-8': hasContent },
 				)}
 			>
 				<div onClick={() => setValue('paymentType', paymentType)}>
@@ -64,9 +64,9 @@ function PaymentTypeFormItem({
 			</FormControl>
 		</FormItem>
 	);
-}
+};
 
-export function PaymentTypeSelector({ lang, translations, bankTransferForm }: PaymentTypeSelectorProps) {
+export const PaymentTypeSelector = ({ lang, translations, bankTransferForm }: PaymentTypeSelectorProps) => {
 	const form = useFormContext();
 
 	return (
@@ -111,4 +111,4 @@ export function PaymentTypeSelector({ lang, translations, bankTransferForm }: Pa
 			/>
 		</div>
 	);
-}
+};

@@ -8,7 +8,11 @@ import Link from 'next/link';
 const ARTICLE_IMAGE_TARGET_WIDTH = 1920;
 const ARTICLE_IMAGE_TARGET_HEIGHT = 1080;
 
-export function StoryblokArticleCard(props: { lang: string; region: string; article: ISbStoryData<ResolvedArticle> }) {
+export const StoryblokArticleCard = (props: {
+	lang: string;
+	region: string;
+	article: ISbStoryData<ResolvedArticle>;
+}) => {
 	const { region, lang, article } = props;
 	const author = article.content.author;
 	return (
@@ -39,11 +43,11 @@ export function StoryblokArticleCard(props: { lang: string; region: string; arti
 					</Typography>
 				</div>
 
-				<div className="mt-2 flex flex-grow flex-col">
+				<div className="mt-2 flex grow flex-col">
 					<Typography
 						aria-label={article.content.title}
 						size="xl"
-						className="md:h-18 my-4 line-clamp-2 h-14 w-auto overflow-hidden break-words md:line-clamp-3"
+						className="my-4 line-clamp-2 h-14 w-auto overflow-hidden wrap-break-word md:line-clamp-3"
 						weight="medium"
 					>
 						{`${article.content.title}${article.content.subtitle ? ' ' + article.content.subtitle : ''}`}
@@ -63,4 +67,4 @@ export function StoryblokArticleCard(props: { lang: string; region: string; arti
 			</div>
 		</Link>
 	);
-}
+};

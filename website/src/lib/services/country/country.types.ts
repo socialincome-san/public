@@ -1,65 +1,60 @@
-import { NetworkTechnology, PaymentProvider } from '@prisma/client';
+import { Currency, MobileMoneyProvider } from '@/generated/prisma/client';
+import { CountryCode, NetworkTechnology } from '@/generated/prisma/enums';
+
+export type MobileMoneyProviderRef = Pick<MobileMoneyProvider, 'id' | 'name'>;
 
 export type CountryTableViewRow = {
 	id: string;
-	isoCode: string;
+	isoCode: CountryCode;
 	isActive: boolean;
+	currency?: Currency | null;
+	defaultPayoutAmount?: number | null;
 	microfinanceIndex?: number | null;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
-	paymentProviders?: string[] | null;
+	mobileMoneyProviders?: MobileMoneyProviderRef[] | null;
 	sanctions?: string[] | null;
 	microfinanceSourceText?: string | null;
 	microfinanceSourceHref?: string | null;
 	networkSourceText?: string | null;
 	networkSourceHref?: string | null;
-	createdAt: Date;
+	updatedAt: Date;
 };
 
 export type CountryTableView = {
 	tableRows: CountryTableViewRow[];
 };
 
+export type CountryTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type CountryPaginatedTableView = {
+	tableRows: CountryTableViewRow[];
+	totalCount: number;
+};
+
 export type CountryPayload = {
 	id: string;
-	isoCode: string;
+	isoCode: CountryCode;
 	isActive: boolean;
+	currency: Currency;
+	defaultPayoutAmount: number;
 	microfinanceIndex?: number | null;
+	cashConditionOverride: boolean;
 	populationCoverage?: number | null;
 	networkTechnology?: string | null;
 	latestSurveyDate?: Date | null;
-	paymentProviders?: string[] | null;
+	mobileMoneyProviders?: MobileMoneyProviderRef[] | null;
+	mobileMoneyConditionOverride: boolean;
 	sanctions?: string[] | null;
 	microfinanceSourceLink?: { id: string; text: string; href: string } | null;
 	networkSourceLink?: { id: string; text: string; href: string } | null;
-};
-
-export type CountryCreateInput = {
-	isoCode: string;
-	isActive: boolean;
-	microfinanceIndex?: number | null;
-	populationCoverage?: number | null;
-	networkTechnology?: string | null;
-	latestSurveyDate?: Date | null;
-	paymentProviders?: string[];
-	sanctions?: string[];
-	microfinanceSourceLink?: { text: string; href: string } | null;
-	networkSourceLink?: { text: string; href: string } | null;
-};
-
-export type CountryUpdateInput = {
-	id: string;
-	isoCode?: string;
-	isActive?: boolean;
-	microfinanceIndex?: number | null;
-	populationCoverage?: number | null;
-	networkTechnology?: string | null;
-	latestSurveyDate?: Date | null;
-	paymentProviders?: string[];
-	sanctions?: string[];
-	microfinanceSourceLink?: { text: string; href: string } | null;
-	networkSourceLink?: { text: string; href: string } | null;
 };
 
 export enum CountryCondition {
@@ -85,8 +80,10 @@ export type ProgramCountryFeasibilityRow = {
 	id: string;
 
 	country: {
-		isoCode: string;
+		isoCode: CountryCode;
 		isActive: boolean;
+		currency: Currency;
+		defaultPayoutAmount: number;
 	};
 
 	stats: {
@@ -110,8 +107,4 @@ export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
 	[NetworkTechnology.g5]: '5G',
 	[NetworkTechnology.satellite]: 'Satellite',
 	[NetworkTechnology.unknown]: 'Unknown',
-};
-
-export const PAYMENT_PROVIDER_LABELS: Record<PaymentProvider, string> = {
-	[PaymentProvider.orange_money]: 'Orange Money',
 };

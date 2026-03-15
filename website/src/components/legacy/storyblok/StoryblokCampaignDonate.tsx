@@ -4,17 +4,17 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Typography } from '@socialincome/ui';
 
-export function StoryblokCampaignDonate(props: {
+export const StoryblokCampaignDonate = (props: {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	translator: Translator;
 	campaignId?: string;
-}) {
+}) => {
 	const { translator, region, lang } = props;
 	const donationInterval = DonationInterval.Monthly;
 	return (
 		<div className="bg-primary my-4 rounded-lg p-10">
-			<Typography size="3xl" weight="semibold" color="primary-foreground" className="mb-8 mt-0 align-middle">
+			<Typography size="3xl" weight="semibold" color="primary-foreground" className="mt-0 mb-8 align-middle">
 				<Typography as="span">{translator.t('donate.text-1')}</Typography>
 				<Typography className="ml-2" as="span" color="accent">
 					{translator.t('donate.text-2')}
@@ -36,6 +36,7 @@ export function StoryblokCampaignDonate(props: {
 						bankTransfer: translator.t('payment-type.bank-transfer'),
 						creditCard: translator.t('payment-type.credit-card'),
 					},
+					feeNotice: translator.t('fee-notice'),
 					bankTransfer: {
 						firstName: translator.t('success.user-form.firstname'),
 						lastName: translator.t('success.user-form.lastname'),
@@ -60,4 +61,4 @@ export function StoryblokCampaignDonate(props: {
 			/>
 		</div>
 	);
-}
+};

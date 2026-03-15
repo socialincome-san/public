@@ -4,6 +4,7 @@ on:
   pull_request:
     paths-ignore:
       - "recipients_app/**"
+  merge_group:
   push:
     branches:
       - main
@@ -11,14 +12,59 @@ on:
       - "recipients_app/**"
 
 jobs:
+  safe-chain:
+    name: "🔒 Safe Chain Dependency Check"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install Safe Chain (CI)
+        run: |
+          curl -fsSL https://github.com/AikidoSec/safe-chain/releases/latest/download/install-safe-chain.sh \
+            | sh -s -- --ci
+
+          echo "$HOME/.safe-chain/shims" >> $GITHUB_PATH
+          echo "$HOME/.safe-chain/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies (protected by Safe Chain)
+        run: npm ci --no-audit --no-fund
+
+  aikido-scan:
+    name: "🛡️ Aikido Security Scan"
+    runs-on: ubuntu-latest
+
+    container:
+      image: aikidosecurity/local-scanner:latest@sha256:9a2d70020c613b6795514528eccd930c239594547950e932ab63873440a4e8ed
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
+      # PR: gating mode compares base vs head and fails only on new high/critical issues.
+      # Push/merge_group: full scan, fails on any high/critical. Existing issues do not fail PRs.
+      - name: Run Aikido scan
+        run: |
+          aikido-local-scanner scan ./ \
+            --apikey ${{ secrets.AIKIDO_API_KEY }} \
+            --repositoryname socialincome-public \
+            --branchname ${{ github.head_ref || github.ref_name }} \
+            --fail-on high \
+            ${{ github.event_name == 'pull_request' && format('--gating-mode pr --base-commit-id {0} --head-commit-id {1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || '' }}
+
   lint:
     name: "✨ Lint"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run website:lint
@@ -27,10 +73,10 @@ jobs:
     name: "✂️ Check unused Code"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run website:check:unused
@@ -39,10 +85,10 @@ jobs:
     name: "🔍 Type Check"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run website:build-paths
@@ -52,10 +98,10 @@ jobs:
     name: "🧪 Unit Tests"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run website:test:unit
@@ -64,8 +110,8 @@ jobs:
     name: "📐 Terraform Validation"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
           terraform_version: 1.6.6
       - run: terraform -chdir=website/infra init -backend=false
@@ -75,14 +121,21 @@ jobs:
   e2e:
     name: "🏗️ Build & 📸 E2E Tests"
     runs-on: ubuntu-latest
-    needs: [lint, check-unused, typecheck, unit-test, terraform]
+    needs:
+      - aikido-scan
+      - safe-chain
+      - lint
+      - check-unused
+      - typecheck
+      - unit-test
+      - terraform
 
     container:
-      image: mcr.microsoft.com/playwright:v1.57.0-jammy
+      image: mcr.microsoft.com/playwright:v1.58.2-jammy@sha256:4698a73749c5848d3f5fcd42a2174d172fcad2b2283e087843b115424303a565
 
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:18-alpine@sha256:035b9ab53cfa147d7202b61f5f7782b939ae815b7d6bc81c96b7b42ff1fca950
         env:
           POSTGRES_USER: social-income
           POSTGRES_PASSWORD: social-income
@@ -96,14 +149,25 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
+      mockserver:
+        image: smartive/mockserver:v2.18.2@sha256:072af1580dc44bf28730702f813eef0e142d595de9e48ccba4245343b0fd191c
+        ports:
+          - 1080:1080
+
     env:
       DATABASE_URL: postgresql://social-income:social-income@postgres:5432/social-income
       STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
       STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.TF_STAGING_STRIPE_WEBHOOK_SECRET }}
+      STRIPE_SECRET_KEY: ${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}
+      STRIPE_PRODUCT_RECURRING: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}
+      STRIPE_PRODUCT_ONETIME: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}
+      MOCKSERVER_URL: http://mockserver:1080
+      STORYBLOK_MOCK_MODE: replay
       HOME: /root
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           ref: ${{ github.head_ref }}
           persist-credentials: true
@@ -119,7 +183,7 @@ jobs:
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Commit and push updated snapshots
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7
         with:
           commit_message: "chore: update snapshots (CI auto-commit)"
           branch: ${{ github.head_ref }}
@@ -131,7 +195,7 @@ jobs:
 
       - name: Upload Test Report (only if failure)
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: playwright-report-${{ github.sha }}
           path: |

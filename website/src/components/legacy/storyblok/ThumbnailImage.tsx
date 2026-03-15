@@ -6,8 +6,10 @@ const DEFAULT_HEIGHT = 15;
 
 const DEFAULT_WIDTH = 25;
 
-export function ThumbnailImage({ thumbnail }: { thumbnail?: StoryblokAsset }) {
-	if (!thumbnail || !thumbnail.filename) return null;
+export const ThumbnailImage = ({ thumbnail }: { thumbnail?: StoryblokAsset }) => {
+	if (!thumbnail || !thumbnail.filename) {
+		return null;
+	}
 
 	const imageDimensions = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
 	return (
@@ -21,4 +23,4 @@ export function ThumbnailImage({ thumbnail }: { thumbnail?: StoryblokAsset }) {
 			/>
 		</div>
 	);
-}
+};

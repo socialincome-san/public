@@ -10,7 +10,7 @@ export const FirebaseAppContext = createContext<FirebaseApp | undefined>(undefin
 const functionsEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_HOST;
 const functionsEmulatorPort = Number(process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_PORT);
 
-export function FirebaseAppProvider({ children }: PropsWithChildren) {
+export const FirebaseAppProvider = ({ children }: PropsWithChildren) => {
 	const connectFunctionsEmulatorCalled = useRef(false);
 	const firebaseConfig = {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -32,4 +32,4 @@ export function FirebaseAppProvider({ children }: PropsWithChildren) {
 	}
 
 	return <FirebaseAppContext.Provider value={app}>{children}</FirebaseAppContext.Provider>;
-}
+};

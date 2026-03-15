@@ -8,10 +8,10 @@ import OurMission from './(sections)/our-mission';
 import OurPromise from './(sections)/our-promise';
 import Team from './(sections)/team';
 
-export async function generateMetadata(props: DefaultPageProps) {
+export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-about-us');
-}
+};
 
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;

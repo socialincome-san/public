@@ -1,6 +1,6 @@
 export type CsvRow = Record<string, string>;
 
-export function parseCsvText(text: string): CsvRow[] {
+export const parseCsvText = (text: string): CsvRow[] => {
 	const lines = text
 		.split('\n')
 		.map((line) => line.trim())
@@ -26,9 +26,33 @@ export function parseCsvText(text: string): CsvRow[] {
 
 		return Object.fromEntries(headers.map((header, i) => [header, values[i]?.trim() ?? '']));
 	});
-}
+};
 
-export async function parseCsvFile(file: File): Promise<CsvRow[]> {
+export const parseCsvFile = async (file: File): Promise<CsvRow[]> => {
 	const text = await file.text();
 	return parseCsvText(text);
-}
+};
+
+const escapeCsvValue = (value: string): string => {
+	const escaped = value.replace(/"/g, '""');
+	return /[",\n]/.test(escaped) ? `"${escaped}"` : escaped;
+};
+
+export const stringifyCsv = (rows: CsvRow[], headers?: string[]): string => {
+	const resolvedHeaders = headers ?? (rows.length > 0 ? Object.keys(rows[0]) : []);
+	const headerLine = resolvedHeaders.map((header) => escapeCsvValue(header)).join(',');
+
+	const dataLines = rows.map((row) => resolvedHeaders.map((header) => escapeCsvValue(row[header] ?? '')).join(','));
+
+	return [headerLine, ...dataLines].join('\n');
+};
+
+export const downloadCsv = (content: string, filename: string): void => {
+	const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = filename;
+	link.click();
+	URL.revokeObjectURL(url);
+};

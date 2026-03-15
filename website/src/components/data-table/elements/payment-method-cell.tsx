@@ -5,7 +5,7 @@ type Props<TData, TValue> = CellType<TData, TValue> & {
 	variant: 'card' | 'other';
 };
 
-export function PaymentMethodCell<TData, TValue>({ ctx, variant }: Props<TData, TValue>) {
+export const PaymentMethodCell = <TData, TValue>({ ctx, variant }: Props<TData, TValue>) => {
 	const value = ctx.getValue();
 
 	return (
@@ -14,4 +14,4 @@ export function PaymentMethodCell<TData, TValue>({ ctx, variant }: Props<TData, 
 			{String(value)}
 		</span>
 	);
-}
+};

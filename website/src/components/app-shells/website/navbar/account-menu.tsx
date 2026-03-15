@@ -1,5 +1,7 @@
 'use client';
 
+import { useLogout } from '@/components/app-shells/use-logout';
+import { displaySession, Scope } from '@/components/app-shells/website/navbar/utils';
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Button } from '@/components/button';
 import {
@@ -9,44 +11,79 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
-import { Session } from '@/lib/firebase/current-account';
-import { LogOut, User } from 'lucide-react';
+import type { Session } from '@/lib/firebase/current-account';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
-import { useLogout } from '../../use-logout';
-
-export type Scope = 'website' | 'dashboard' | 'partner-space';
 
 type Props = {
-	session: Session;
+	sessions: Session[];
 	scope: Scope;
+	lang: WebsiteLanguage;
 };
 
-export const AccountMenu = ({ session, scope }: Props) => {
+export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 	const { logout } = useLogout();
+	const translator = useTranslator(lang, 'website-me');
+	const session = displaySession(sessions, scope);
 
-	let linkInDropdown: { href: string; label: string };
+	if (!session || !translator) {
+		return null;
+	}
+
+	const hasUser = sessions.some((s) => s.type === 'user');
+	const hasContributor = sessions.some((s) => s.type === 'contributor');
+	const hasLocalPartner = sessions.some((s) => s.type === 'local-partner');
+
+	const items: { href: string; label: string; icon: typeof User }[] = [];
 
 	switch (scope) {
 		case 'website':
-			linkInDropdown = {
-				href: '/new-website/auth/my-account',
-				label: 'My Account',
-			};
+			if (hasUser) {
+				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+			}
+			if (hasContributor) {
+				items.push({
+					href: '/dashboard/contributions',
+					label: translator.t('navigation.go-to-dashboard'),
+					icon: LayoutDashboard,
+				});
+			}
+			if (hasLocalPartner) {
+				items.push({
+					href: '/partner-space/recipients',
+					label: translator.t('navigation.go-to-partner-space'),
+					icon: Building2,
+				});
+			}
 			break;
-
 		case 'partner-space':
-			linkInDropdown = {
-				href: '/partner-space/profile',
-				label: 'Profile',
-			};
+			items.push({ href: '/partner-space/profile', label: translator.t('profile.link'), icon: User });
+			if (hasUser) {
+				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+			}
+			if (hasContributor) {
+				items.push({
+					href: '/dashboard/contributions',
+					label: translator.t('navigation.go-to-dashboard'),
+					icon: LayoutDashboard,
+				});
+			}
 			break;
-
 		case 'dashboard':
 		default:
-			linkInDropdown = {
-				href: '/dashboard/profile',
-				label: 'Profile',
-			};
+			items.push({ href: '/dashboard/profile', label: translator.t('profile.link'), icon: User });
+			if (hasUser) {
+				items.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+			}
+			if (hasLocalPartner) {
+				items.push({
+					href: '/partner-space/recipients',
+					label: translator.t('navigation.go-to-partner-space'),
+					icon: Building2,
+				});
+			}
 			break;
 	}
 
@@ -68,12 +105,17 @@ export const AccountMenu = ({ session, scope }: Props) => {
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent align="end" className="w-64">
-				<DropdownMenuItem asChild>
-					<Link href={linkInDropdown.href} className="flex items-center gap-2">
-						<User className="h-4 w-4" />
-						<span>{linkInDropdown.label}</span>
-					</Link>
-				</DropdownMenuItem>
+				{items.map((item) => {
+					const Icon = item.icon;
+					return (
+						<DropdownMenuItem key={item.href} asChild>
+							<Link href={item.href} className="flex items-center gap-2">
+								<Icon className="h-4 w-4" />
+								<span>{item.label}</span>
+							</Link>
+						</DropdownMenuItem>
+					);
+				})}
 
 				<DropdownMenuSeparator />
 
@@ -85,7 +127,7 @@ export const AccountMenu = ({ session, scope }: Props) => {
 					className="text-destructive focus:text-destructive"
 				>
 					<LogOut className="mr-2 h-4 w-4" />
-					<span>Logout</span>
+					<span>{translator.t('security.sign-out.button')}</span>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

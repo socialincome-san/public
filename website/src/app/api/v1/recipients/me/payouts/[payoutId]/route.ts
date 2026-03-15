@@ -1,6 +1,5 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { PayoutService } from '@/lib/services/payout/payout.service';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { services } from '@/lib/services/services';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Params = Promise<{ payoutId: string }>;
@@ -10,21 +9,19 @@ type Params = Promise<{ payoutId: string }>;
  * @description Returns a specific payout belonging to the authenticated recipient. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @pathParams PayoutParams
- * @response Payout
+ * @response 200:Payout
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {
 	const { payoutId } = await params;
 
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
 	}
 
-	const payoutService = new PayoutService();
-	const payoutResult = await payoutService.getByRecipientAndId(recipientResult.data.id, payoutId);
+	const payoutResult = await services.read.payout.getByRecipientAndId(recipientResult.data.id, payoutId);
 
 	if (!payoutResult.success) {
 		return new Response(payoutResult.error, { status: 500 });

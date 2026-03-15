@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { createSessionAction } from '@/lib/server-actions/session-actions';
+import { createSessionAction, getRedirectPathAfterLoginAction } from '@/lib/server-actions/session-actions';
 import { isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -38,7 +38,9 @@ export default function FinishLoginPage() {
 				localStorage.removeItem('loginEmail');
 
 				const user = auth.currentUser;
-				if (!user) throw new Error('No user after login');
+				if (!user) {
+					throw new Error('No user after login');
+				}
 
 				const idToken = await user.getIdToken(true);
 				const result = await createSessionAction(idToken);
@@ -49,7 +51,13 @@ export default function FinishLoginPage() {
 					return;
 				}
 
-				router.replace('/new-website/auth/my-account');
+				const redirectPathResult = await getRedirectPathAfterLoginAction();
+				if (!redirectPathResult.success) {
+					await signOut(auth);
+					setStatus('error');
+					return;
+				}
+				router.replace(redirectPathResult.data);
 			} catch {
 				setStatus('error');
 			}

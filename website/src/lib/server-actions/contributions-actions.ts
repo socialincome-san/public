@@ -1,44 +1,51 @@
 'use server';
 
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { CampaignService } from '@/lib/services/campaign/campaign.service';
-import { ContributionService } from '@/lib/services/contribution/contribution.service';
+import { getSessionByType } from '@/lib/firebase/current-account';
 import { ContributionCreateInput, ContributionUpdateInput } from '@/lib/services/contribution/contribution.types';
-import { ContributorService } from '@/lib/services/contributor/contributor.service';
+import { resultFail, resultOk } from '@/lib/services/core/service-result';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-export async function createContributionAction(contribution: ContributionCreateInput) {
-	const user = await getAuthenticatedUserOrThrow();
-	const contributionService = new ContributionService();
-
-	const res = await contributionService.create(user.id, contribution);
-
+export const createContributionAction = async (contribution: ContributionCreateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.contribution.create(sessionResult.data.id, contribution);
 	revalidatePath('/portal/management/contributions');
 	return res;
-}
+};
 
-export async function updateContributionAction(contribution: ContributionUpdateInput) {
-	const user = await getAuthenticatedUserOrThrow();
-	const contributionService = new ContributionService();
-
-	const res = await contributionService.update(user.id, contribution);
+export const updateContributionAction = async (contribution: ContributionUpdateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.contribution.update(sessionResult.data.id, contribution);
 	revalidatePath('/portal/management/contributions');
 	return res;
-}
+};
 
-export async function getContributionAction(contributionId: string) {
-	const user = await getAuthenticatedUserOrThrow();
-	const contributionService = new ContributionService();
+export const getContributionAction = async (contributionId: string) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	return await services.read.contribution.get(sessionResult.data.id, contributionId);
+};
 
-	return await contributionService.get(user.id, contributionId);
-}
-
-export async function getContributionsOptionsAction() {
-	const user = await getAuthenticatedUserOrThrow();
-	const contributorService = new ContributorService();
-	const campaignService = new CampaignService();
-	const contributorOptions = await contributorService.getOptions(user.id);
-	const campaignOptions = await campaignService.getOptions(user.id);
-
-	return { contributorOptions, campaignOptions };
-}
+export const getContributionsOptionsAction = async () => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const contributorOptions = await services.read.contributor.getOptions(sessionResult.data.id);
+	if (!contributorOptions.success) {
+		return resultFail(contributorOptions.error);
+	}
+	const campaignOptions = await services.read.campaign.getOptions(sessionResult.data.id);
+	if (!campaignOptions.success) {
+		return resultFail(campaignOptions.error);
+	}
+	return resultOk({ contributorOptions: contributorOptions.data, campaignOptions: campaignOptions.data });
+};

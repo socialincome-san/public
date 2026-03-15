@@ -10,7 +10,7 @@ type Props = {
 	onChange: (value: ProgramManagementType) => void;
 };
 
-export function ProgramManagementSection({ value, onChange }: Props) {
+export const ProgramManagementSection = ({ value, onChange }: Props) => {
 	return (
 		<div className="space-y-4">
 			<div className="text-lg font-medium">Program management</div>
@@ -33,4 +33,4 @@ export function ProgramManagementSection({ value, onChange }: Props) {
 			</RadioCardGroup>
 		</div>
 	);
-}
+};

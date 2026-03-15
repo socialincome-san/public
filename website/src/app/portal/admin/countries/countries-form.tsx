@@ -1,10 +1,19 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { createCountryAction, getCountryAction, updateCountryAction } from '@/lib/server-actions/country-action';
-import { CountryPayload, NETWORK_TECH_LABELS, PAYMENT_PROVIDER_LABELS } from '@/lib/services/country/country.types';
-import { isoCountries } from '@/lib/services/country/iso-countries';
-import { NetworkTechnology, PaymentProvider, SanctionRegime } from '@prisma/client';
+import { getZodEnum } from '@/components/dynamic-form/helper';
+import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
+import {
+	createCountryAction,
+	deleteCountryAction,
+	getCountryAction,
+	updateCountryAction,
+} from '@/lib/server-actions/country-action';
+import { getMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { CountryPayload, NETWORK_TECH_LABELS } from '@/lib/services/country/country.types';
+import { COUNTRY_OPTIONS, isValidCountryCode } from '@/lib/types/country';
+import { allCurrencies, bestGuessCurrency } from '@/lib/types/currency';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCountryInput, buildUpdateCountryInput } from './countries-form-helper';
@@ -19,94 +28,173 @@ type CountryFormProps = {
 export type CountryFormSchema = {
 	label: string;
 	fields: {
-		isoCode: FormField;
-		isActive: FormField;
-		microfinanceIndex: FormField;
-		microfinanceSourceText: FormField;
-		microfinanceSourceHref: FormField;
-		populationCoverage: FormField;
-		latestSurveyDate: FormField;
-		networkTechnology: FormField;
-		networkSourceText: FormField;
-		networkSourceHref: FormField;
-		paymentProviders: FormField;
-		sanctions: FormField;
+		countrySettings: {
+			label: string;
+			fields: {
+				isoCode: FormField;
+				isActive: FormField;
+				currency: FormField;
+				defaultPayoutAmount: FormField;
+			};
+		};
+		suitabilityOfCash: {
+			label: string;
+			fields: {
+				cashConditionOverride: FormField;
+				microfinanceIndex: FormField;
+				latestSurveyDate: FormField;
+				microfinanceSourceText: FormField;
+				microfinanceSourceHref: FormField;
+			};
+		};
+		mobileMoney: {
+			label: string;
+			fields: {
+				mobileMoneyConditionOverride: FormField;
+				mobileMoneyProviders: FormField;
+			};
+		};
+		mobileNetwork: {
+			label: string;
+			fields: {
+				populationCoverage: FormField;
+				networkTechnology: FormField;
+				networkSourceText: FormField;
+				networkSourceHref: FormField;
+			};
+		};
+		noSanctions: {
+			label: string;
+			fields: {
+				sanctions: FormField;
+			};
+		};
 	};
 };
 
 const initialFormSchema: CountryFormSchema = {
 	label: 'Country',
 	fields: {
-		isoCode: {
-			label: 'Country',
-			zodSchema: z.enum(isoCountries.map((c) => c.isoCode) as [string, ...string[]]),
-			useCombobox: true,
-			options: isoCountries.map((c) => ({
-				id: c.isoCode,
-				label: c.name,
-			})),
+		countrySettings: {
+			label: 'Country setup',
+			fields: {
+				isoCode: {
+					label: 'Country',
+					zodSchema: z.enum(COUNTRY_OPTIONS.map((c) => c.code) as [string, ...string[]]),
+					useCombobox: true,
+					options: COUNTRY_OPTIONS.map((c) => ({
+						id: c.code,
+						label: c.name,
+					})),
+					onChange: (value, form) => {
+						if (!isValidCountryCode(value)) {
+							return;
+						}
+						form.setValue('countrySettings.currency', bestGuessCurrency(value), {
+							shouldValidate: true,
+							shouldDirty: true,
+						});
+					},
+				},
+				isActive: {
+					placeholder: 'Active',
+					label: 'Is Active',
+					zodSchema: z.boolean().optional(),
+				},
+				currency: {
+					label: 'Currency',
+					placeholder: 'Select currency',
+					useCombobox: true,
+					zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((currency) => ({ id: currency, label: currency })))),
+				},
+				defaultPayoutAmount: {
+					placeholder: '100',
+					label: 'Default payout amount',
+					zodSchema: z.coerce.number().positive('Default payout amount must be greater than 0.'),
+				},
+			},
 		},
-		isActive: {
-			placeholder: 'Active',
-			label: 'Is Active',
-			zodSchema: z.boolean().optional(),
+		suitabilityOfCash: {
+			label: 'Suitability of cash',
+			fields: {
+				cashConditionOverride: {
+					label: 'Override automated result (set as met)',
+					zodSchema: z.boolean().optional(),
+				},
+				microfinanceIndex: {
+					placeholder: '4.92',
+					label: 'MFI',
+					zodSchema: z.coerce.number().min(0).max(10).optional(),
+				},
+				latestSurveyDate: {
+					label: 'Most recent survey date',
+					zodSchema: z.coerce.date().optional(),
+				},
+				microfinanceSourceText: {
+					placeholder: 'WFP',
+					label: 'MFI source text',
+					zodSchema: z.string().optional(),
+				},
+				microfinanceSourceHref: {
+					placeholder: 'https://www.wfp.org',
+					label: 'MFI source URL',
+					zodSchema: z.string().optional(),
+				},
+			},
 		},
-		microfinanceIndex: {
-			placeholder: '4.92',
-			label: 'MFI',
-			zodSchema: z.coerce.number().min(0).max(10).optional(),
+		mobileMoney: {
+			label: 'Mobile money',
+			fields: {
+				mobileMoneyConditionOverride: {
+					label: 'Override automated result (set as met)',
+					zodSchema: z.boolean().optional(),
+				},
+				mobileMoneyProviders: {
+					label: 'Mobile money providers',
+					placeholder: 'Select mobile money providers',
+					zodSchema: z.array(z.string()).optional(),
+					options: [],
+				},
+			},
 		},
-		microfinanceSourceText: {
-			placeholder: 'WFP',
-			label: 'MFI source text',
-			zodSchema: z.string().optional(),
+		mobileNetwork: {
+			label: 'Mobile network',
+			fields: {
+				populationCoverage: {
+					placeholder: '85',
+					label: 'Population coverage %',
+					zodSchema: z.coerce.number().min(0).max(100).optional(),
+				},
+				networkTechnology: {
+					placeholder: '3G',
+					label: 'Technology',
+					zodSchema: z.nativeEnum(NetworkTechnology).optional(),
+					options: Object.entries(NETWORK_TECH_LABELS).map(([value, label]) => ({
+						id: value,
+						label,
+					})),
+				},
+				networkSourceText: {
+					placeholder: 'ITU',
+					label: 'Technology source text',
+					zodSchema: z.string().optional(),
+				},
+				networkSourceHref: {
+					placeholder: 'https://www.itu.int',
+					label: 'Technology source URL',
+					zodSchema: z.string().optional(),
+				},
+			},
 		},
-		microfinanceSourceHref: {
-			placeholder: 'https://www.wfp.org',
-			label: 'MFI source URL',
-			zodSchema: z.string().optional(),
-		},
-		populationCoverage: {
-			placeholder: '85',
-			label: 'Population coverage %',
-			zodSchema: z.coerce.number().min(0).max(100).optional(),
-		},
-		latestSurveyDate: {
-			label: 'Most recent survey date',
-			zodSchema: z.coerce.date().optional(),
-		},
-		networkTechnology: {
-			placeholder: '3G',
-			label: 'Technology',
-			zodSchema: z.nativeEnum(NetworkTechnology).optional(),
-			options: Object.entries(NETWORK_TECH_LABELS).map(([value, label]) => ({
-				id: value,
-				label,
-			})),
-		},
-		networkSourceText: {
-			placeholder: 'ITU',
-			label: 'Technology source text',
-			zodSchema: z.string().optional(),
-		},
-		networkSourceHref: {
-			placeholder: 'https://www.itu.int',
-			label: 'Technology source URL',
-			zodSchema: z.string().optional(),
-		},
-		paymentProviders: {
-			label: 'Payment providers',
-			placeholder: 'Select payment providers',
-			zodSchema: z.array(z.nativeEnum(PaymentProvider)).optional(),
-			options: Object.entries(PAYMENT_PROVIDER_LABELS).map(([value, label]) => ({
-				id: value,
-				label,
-			})),
-		},
-		sanctions: {
+		noSanctions: {
 			label: 'Sanctions',
-			placeholder: 'Select sanctions',
-			zodSchema: z.array(z.nativeEnum(SanctionRegime)).optional(),
+			fields: {
+				sanctions: {
+					label: 'Sanctions',
+					placeholder: 'Select sanctions',
+					zodSchema: z.array(z.nativeEnum(SanctionRegime)).optional(),
+				},
+			},
 		},
 	},
 };
@@ -118,49 +206,86 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 
 	const onSubmit = (schema: CountryFormSchema) => {
 		startTransition(async () => {
-			try {
-				let res: { success: boolean; error?: string };
-				if (countryId && country) {
-					const data = buildUpdateCountryInput(schema, country);
-					res = await updateCountryAction(data);
-				} else {
-					const data = buildCreateCountryInput(schema);
-					res = await createCountryAction(data);
-				}
-				res.success ? onSuccess?.() : onError?.(res.error);
-			} catch (e) {
-				onError?.(e);
-			}
+			const result =
+				countryId && country
+					? await updateCountryAction(buildUpdateCountryInput(schema, country))
+					: await createCountryAction(buildCreateCountryInput(schema));
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
+		});
+	};
+
+	const onDelete = () => {
+		if (!countryId) {
+			return;
+		}
+
+		startTransition(async () => {
+			const result = await deleteCountryAction(countryId);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
 	useEffect(() => {
-		if (!countryId) {
-			return;
-		}
 		startTransition(async () => {
 			try {
-				const result = await getCountryAction(countryId);
-				if (result.success) {
-					setCountry(result.data);
-					setFormSchema((prev) => {
-						const next = { ...prev };
-						next.fields.isoCode.value = result.data.isoCode;
-						next.fields.isActive.value = result.data.isActive;
-						next.fields.microfinanceIndex.value = result.data.microfinanceIndex ?? undefined;
-						next.fields.microfinanceSourceText.value = result.data.microfinanceSourceLink?.text ?? undefined;
-						next.fields.microfinanceSourceHref.value = result.data.microfinanceSourceLink?.href ?? undefined;
-						next.fields.populationCoverage.value = result.data.populationCoverage ?? undefined;
-						next.fields.latestSurveyDate.value = result.data.latestSurveyDate ?? undefined;
-						next.fields.networkTechnology.value = result.data.networkTechnology ?? undefined;
-						next.fields.networkSourceText.value = result.data.networkSourceLink?.text ?? undefined;
-						next.fields.networkSourceHref.value = result.data.networkSourceLink?.href ?? undefined;
-						next.fields.paymentProviders.value = result.data.paymentProviders ?? [];
-						next.fields.sanctions.value = result.data.sanctions ?? [];
-						return next;
-					});
-				} else {
-					onError?.(result.error);
+				const [countryResult, optionsResult] = await Promise.all([
+					countryId ? getCountryAction(countryId) : Promise.resolve(null),
+					getMobileMoneyProviderOptionsAction(),
+				]);
+
+				if (countryId && countryResult?.success) {
+					setCountry(countryResult.data);
+				}
+
+				setFormSchema((prev) => {
+					const next = { ...prev, fields: { ...prev.fields } };
+					if (optionsResult.success && optionsResult.data.length > 0) {
+						next.fields.mobileMoney.fields.mobileMoneyProviders = {
+							...next.fields.mobileMoney.fields.mobileMoneyProviders,
+							options: optionsResult.data.map((p) => ({ id: p.id, label: p.name })),
+						};
+					}
+					if (countryId && countryResult?.success) {
+						next.fields.countrySettings.fields.isoCode.value = countryResult.data.isoCode;
+						next.fields.countrySettings.fields.isActive.value = countryResult.data.isActive;
+						next.fields.countrySettings.fields.currency.value = countryResult.data.currency;
+						next.fields.countrySettings.fields.defaultPayoutAmount.value = countryResult.data.defaultPayoutAmount;
+						next.fields.suitabilityOfCash.fields.cashConditionOverride.value =
+							countryResult.data.cashConditionOverride ?? false;
+						next.fields.suitabilityOfCash.fields.microfinanceIndex.value =
+							countryResult.data.microfinanceIndex ?? undefined;
+						next.fields.suitabilityOfCash.fields.latestSurveyDate.value =
+							countryResult.data.latestSurveyDate ?? undefined;
+						next.fields.suitabilityOfCash.fields.microfinanceSourceText.value =
+							countryResult.data.microfinanceSourceLink?.text ?? undefined;
+						next.fields.suitabilityOfCash.fields.microfinanceSourceHref.value =
+							countryResult.data.microfinanceSourceLink?.href ?? undefined;
+						next.fields.mobileNetwork.fields.populationCoverage.value =
+							countryResult.data.populationCoverage ?? undefined;
+						next.fields.mobileNetwork.fields.networkTechnology.value =
+							countryResult.data.networkTechnology ?? undefined;
+						next.fields.mobileNetwork.fields.networkSourceText.value =
+							countryResult.data.networkSourceLink?.text ?? undefined;
+						next.fields.mobileNetwork.fields.networkSourceHref.value =
+							countryResult.data.networkSourceLink?.href ?? undefined;
+						next.fields.mobileMoney.fields.mobileMoneyProviders.value =
+							countryResult.data.mobileMoneyProviders?.map((p) => p.id) ?? [];
+						next.fields.mobileMoney.fields.mobileMoneyConditionOverride.value =
+							countryResult.data.mobileMoneyConditionOverride ?? false;
+						next.fields.noSanctions.fields.sanctions.value = countryResult.data.sanctions ?? [];
+					}
+
+					return next;
+				});
+
+				if (countryId && countryResult && !countryResult.success) {
+					onError?.(countryResult.error);
 				}
 			} catch (e) {
 				onError?.(e);
@@ -174,6 +299,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={countryId ? 'edit' : 'add'}
 		/>
 	);

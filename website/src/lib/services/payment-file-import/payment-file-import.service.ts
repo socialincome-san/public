@@ -1,6 +1,7 @@
+import { ContributionStatus, PaymentEvent, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
+import { Currency } from '@/generated/prisma/enums';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
-import { Currency } from '@/lib/types/currency';
-import { ContributionStatus, PaymentEvent, PaymentEventType } from '@prisma/client';
+import { logger } from '@/lib/utils/logger';
 import xmldom from '@xmldom/xmldom';
 import { DateTime } from 'luxon';
 import fs from 'node:fs';
@@ -11,10 +12,10 @@ import {
 	CONTRIBUTION_REFERENCE_ID_LENGTH,
 	CONTRIBUTOR_REFERENCE_ID_LENGTH,
 } from '../bank-transfer/bank-transfer-config';
-import { CampaignService } from '../campaign/campaign.service';
-import { ContributionService } from '../contribution/contribution.service';
+import { CampaignReadService } from '../campaign/campaign-read.service';
+import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
-import { ContributorService } from '../contributor/contributor.service';
+import { ContributorReadService } from '../contributor/contributor-read.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';
@@ -25,14 +26,18 @@ const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
 
 export class PaymentFileImportService extends BaseService {
-	private contributorService = new ContributorService();
-	private contributionService = new ContributionService();
-	private readonly campaignService = new CampaignService();
 	private readonly bucketName;
 	private readonly xmlSelectExpression = '//ns:BkToCstmrDbtCdtNtfctn/ns:Ntfctn/ns:Ntry/ns:NtryDtls/ns:TxDtls';
 
-	constructor(bucketName: string) {
-		super();
+	constructor(
+		bucketName: string,
+		db: PrismaClient,
+		private readonly contributorService: ContributorReadService,
+		private readonly contributionService: ContributionWriteService,
+		private readonly campaignService: CampaignReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
 		this.bucketName = bucketName;
 	}
 
@@ -41,10 +46,10 @@ export class PaymentFileImportService extends BaseService {
 	 */
 	async importPaymentFiles(): Promise<ServiceResult<PaymentEvent[]>> {
 		const sftp = new SFTPClient();
-		const bucket = storageAdmin.storage.bucket(this.bucketName);
-		const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
 		const allContributions: BankContribution[] = [];
 		try {
+			const bucket = storageAdmin.storage.bucket(this.bucketName);
+			const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
 			await sftp.connect({
 				host: POSTFINANCE_FTP_HOST,
 				port: Number(POSTFINANCE_FTP_PORT),
@@ -67,8 +72,11 @@ export class PaymentFileImportService extends BaseService {
 						);
 					} else {
 						this.logger.info(`Importing contributions from file ${file.name}.`);
-						const contributions = this.getContributionsFromPaymentFile(tmpPath);
-						allContributions.push(...contributions);
+						const contributionsResult = this.getContributionsFromPaymentFile(tmpPath);
+						if (!contributionsResult.success) {
+							throw new Error(contributionsResult.error);
+						}
+						allContributions.push(...contributionsResult.data);
 					}
 					await storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
 				});
@@ -93,30 +101,39 @@ export class PaymentFileImportService extends BaseService {
 	 * gets the contributions information from the payment file
 	 * @param file The path of the file to process
 	 */
-	private getContributionsFromPaymentFile(file: string): BankContribution[] {
-		const xml = fs.readFileSync(file, 'utf8');
-		const xmlDoc = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
-		const select = xpath.useNamespaces({ ns: 'urn:iso:std:iso:20022:tech:xsd:camt.054.001.08' });
-		const nodes = select(this.xmlSelectExpression, xmlDoc) as Node[];
+	getContributionsFromPaymentFile(file: string): ServiceResult<BankContribution[]> {
+		try {
+			const xml = fs.readFileSync(file, 'utf8');
+			const xmlDoc = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
+			const select = xpath.useNamespaces({ ns: 'urn:iso:std:iso:20022:tech:xsd:camt.054.001.08' });
+			const nodes = select(this.xmlSelectExpression, xmlDoc) as Node[];
 
-		const contributions: BankContribution[] = [];
+			const contributions: BankContribution[] = [];
 
-		for (let node of nodes) {
-			const referenceId = select('string(//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
+			for (let node of nodes) {
+				const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
-			if (!referenceId) {
-				this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
-				continue;
+				if (!referenceId) {
+					this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
+					continue;
+				}
+
+				const amountStr = select('string(ancestor::ns:Ntry/ns:Amt)', node) as string;
+				const currencyStr = select('string(ancestor::ns:Ntry/ns:Amt/@Ccy)', node) as string;
+
+				contributions.push({
+					referenceId,
+					amount: parseFloat(amountStr),
+					currency: (currencyStr || 'CHF').toUpperCase() as Currency,
+					rawContent: node.toString(),
+				});
 			}
 
-			contributions.push({
-				referenceId,
-				amount: parseFloat(select('string(//ns:Amt)', node) as string),
-				currency: (select('string(//ns:Amt/@Ccy)', node) as string).toUpperCase() as Currency,
-				rawContent: node.toString(),
-			});
+			return this.resultOk(contributions);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail(`Could not parse payment file: ${JSON.stringify(error)}`);
 		}
-		return contributions;
 	}
 
 	/**
@@ -189,8 +206,11 @@ export class PaymentFileImportService extends BaseService {
 				};
 				try {
 					const result = await this.contributionService.upsertFromBankTransfer(paymentEvent);
-					if (!result.success) failedPaymentEvents.push(contributionReferenceId);
-					else created.push(result.data);
+					if (!result.success) {
+						failedPaymentEvents.push(contributionReferenceId);
+					} else {
+						created.push(result.data);
+					}
 				} catch (error) {
 					failedPaymentEvents.push(contributionReferenceId);
 				}

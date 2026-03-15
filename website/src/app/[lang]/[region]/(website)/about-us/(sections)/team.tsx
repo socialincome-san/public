@@ -51,8 +51,7 @@ import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/wi
 
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { BaseContainer, FontColor, FontSize, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
@@ -109,10 +108,10 @@ const groups: Group[] = [
 		name: 'board',
 		size: 'md',
 		people: [
-			{ name: 'Kabelo Ruffo', role: 'co-president', image: kabeloImage },
+			{ name: 'Kabelo Ruffo', role: 'board-member', image: kabeloImage },
 			{ name: 'Flavien Meyer', role: 'co-president', image: flavienImage },
 			{ name: 'Fabio Hurni', role: 'board-member', image: fabioImage },
-			{ name: 'Nina Limacher', role: 'board-member', image: ninaImage },
+			{ name: 'Nina Limacher', role: 'co-president', image: ninaImage },
 			{ name: 'Marion Quartier', role: 'board-member', image: marionImage },
 		],
 	},
@@ -176,9 +175,13 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 								{translator.t(`team.groups.${group.name}.subtitle`)}
 							</Typography>
 							<div className="md:col-span-2">
-								<Typography size="lg" className="mb-8">
-									{translator.t(`team.groups.${group.name}.description`)}
-								</Typography>
+								<Typography
+									size="lg"
+									className="mb-8 [&_a]:underline"
+									dangerouslySetInnerHTML={{
+										__html: translator.t(`team.groups.${group.name}.description`),
+									}}
+								/>
 							</div>
 						</div>
 						<ul
@@ -199,7 +202,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 							{_.sortBy(group.people, 'name').map((person: Person, index2) => (
 								<li key={index2} className="flex flex-col">
 									<Image
-										className="aspect-[5/6] w-full rounded-2xl object-cover transition-transform duration-300 hover:scale-105"
+										className="aspect-5/6 w-full rounded-2xl object-cover transition-transform duration-300 hover:scale-105"
 										src={person.image}
 										alt={`${person.name} image`}
 									/>
@@ -209,7 +212,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 									<Typography
 										color="muted-foreground"
 										size={{ sm: 'xs', md: 'sm', lg: 'md' }[group.size] as FontSize}
-										className="hyphens-auto break-words"
+										className="wrap-break-word hyphens-auto"
 									>
 										{translator.t(`team.roles.${person.role}`)}
 									</Typography>

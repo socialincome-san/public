@@ -17,7 +17,7 @@ type SectionCardProps = {
 	card: CardTranslation;
 };
 
-export function SectionCard({ card }: SectionCardProps) {
+export const SectionCard = ({ card }: SectionCardProps) => {
 	return (
 		<div className="flex flex-col space-y-2">
 			<Typography size="3xl" weight="bold">
@@ -42,4 +42,4 @@ export function SectionCard({ card }: SectionCardProps) {
 			})}
 		</div>
 	);
-}
+};

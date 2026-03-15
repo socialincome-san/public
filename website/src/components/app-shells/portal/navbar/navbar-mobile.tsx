@@ -1,23 +1,31 @@
 'use client';
 
+import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
+import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
+import { useLogout } from '@/components/app-shells/use-logout';
 import { Avatar, AvatarFallback } from '@/components/avatar';
 import { Separator } from '@/components/breadcrumb/separator';
 import { Button } from '@/components/button';
-import { UserSession } from '@/lib/services/user/user.types';
+import { SILogo } from '@/components/svg/si-logo';
+import type { Session } from '@/lib/firebase/current-account';
+import type { UserSession } from '@/lib/services/user/user.types';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { useLogout } from '../../use-logout';
-import { useNavbarLinks } from './hooks/use-navbar-links';
-import { Logo } from './logo';
-import { ProgramDropdown } from './program-dropdown';
 
-export const NavbarMobile = ({ user }: { user: UserSession }) => {
+type NavbarMobileProps = { sessions: Session[] };
+
+export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
-	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(user);
+	const user = sessions.find((s): s is UserSession => s.type === 'user');
+	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(sessions);
 	const { logout } = useLogout();
+
+	if (!user) {
+		return null;
+	}
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
 
@@ -62,18 +70,18 @@ export const NavbarMobile = ({ user }: { user: UserSession }) => {
 					</span>
 				</Button>
 
-				<Logo className="absolute left-1/2 -translate-x-1/2 transform" />
+				<SILogo className="absolute left-1/2 -translate-x-1/2 transform" />
 			</div>
 
 			{isMenuOpen && (
 				<div className="border-border border-b">
 					<div className="flex flex-col">
-						<div className="flex-grow space-y-1 overflow-y-auto p-2">
+						<div className="grow space-y-1 overflow-y-auto p-2">
 							{mainNavLinks.map(({ href, label, isDropdown, activeBase }) =>
 								isDropdown ? (
 									<ProgramDropdown
 										key={href}
-										user={user}
+										sessions={sessions}
 										active={isActiveLink(pathname, href, activeBase)}
 										className="w-full justify-start px-3 py-2 text-base font-medium"
 									/>

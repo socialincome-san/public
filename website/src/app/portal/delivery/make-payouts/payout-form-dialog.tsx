@@ -13,7 +13,7 @@ type PayoutFormDialogProps = {
 	readOnly?: boolean;
 };
 
-export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = false }: PayoutFormDialogProps) {
+export const PayoutFormDialog = ({ open, onOpenChange, payoutId, readOnly = false }: PayoutFormDialogProps) => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {
@@ -38,7 +38,7 @@ export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = fals
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
+						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 
@@ -52,4 +52,4 @@ export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = fals
 			</DialogContent>
 		</Dialog>
 	);
-}
+};

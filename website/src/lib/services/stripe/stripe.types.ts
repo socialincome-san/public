@@ -1,11 +1,11 @@
-import { ContributorReferralSource, Gender } from '@prisma/client';
+import { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/client';
 
 export type StripeCustomerData = {
 	id: string;
 	email: string;
 	name?: string;
 	address?: {
-		country?: string;
+		country?: CountryCode;
 	};
 };
 
@@ -35,6 +35,19 @@ export type StripeSubscriptionTableView = {
 	rows: StripeSubscriptionRow[];
 };
 
+export type StripeSubscriptionTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type StripeSubscriptionPaginatedTableView = {
+	rows: StripeSubscriptionRow[];
+	totalCount: number;
+};
+
 export type UpdateContributorAfterCheckoutInput = {
 	stripeCheckoutSessionId: string;
 	user: {
@@ -47,7 +60,7 @@ export type UpdateContributorAfterCheckoutInput = {
 			referral?: ContributorReferralSource;
 		};
 		address: {
-			country: string;
+			country: CountryCode;
 		};
 	};
 };

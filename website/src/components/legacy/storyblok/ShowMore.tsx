@@ -9,7 +9,7 @@ type ShowMoreToggleProps = {
 	showLessLabel?: string;
 };
 
-export function ShowMoreToggle({ children, initialCount = 3, showMoreLabel, showLessLabel }: ShowMoreToggleProps) {
+export const ShowMoreToggle = ({ children, initialCount = 3, showMoreLabel, showLessLabel }: ShowMoreToggleProps) => {
 	const [expanded, setExpanded] = useState(false);
 
 	const showMore = showMoreLabel ?? 'Show more';
@@ -27,4 +27,4 @@ export function ShowMoreToggle({ children, initialCount = 3, showMoreLabel, show
 			)}
 		</div>
 	);
-}
+};

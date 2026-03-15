@@ -1,18 +1,25 @@
 'use client';
 
-import { PayoutInterval } from '@prisma/client';
+import { Currency, PayoutInterval } from '@/generated/prisma/enums';
 import { PayoutBox } from './payout-box';
 import { ProgramCostsHeader } from './program-costs-header';
 import { RecipientsBox } from './recipients-box';
-import { calculateMonthlyCost, calculateTotalBudget } from './utils';
 
 type Props = {
 	amountOfRecipients: number;
-	maxRecipients: number;
+	filteredRecipients: number;
 	programDuration: number;
+	payoutPerIntervalMin: number;
+	payoutPerIntervalMax: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
-	currency: string;
+	payoutCurrency: Currency;
+	displayCurrency: Currency;
+	calculatedTotalBudget: number;
+	displayMonthlyCost: number;
+	exchangeRateText?: string;
+	totalBudgetTooltipText: string;
+	isCalculatingBudget: boolean;
 	customizePayouts: boolean;
 
 	onRecipientsChange: (value: number) => void;
@@ -23,13 +30,21 @@ type Props = {
 	onToggleCustomizePayouts: () => void;
 };
 
-export function BudgetStep({
+export const BudgetStep = ({
 	amountOfRecipients,
-	maxRecipients,
+	filteredRecipients,
 	programDuration,
+	payoutPerIntervalMin,
+	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
-	currency,
+	payoutCurrency,
+	displayCurrency,
+	calculatedTotalBudget,
+	displayMonthlyCost,
+	exchangeRateText,
+	totalBudgetTooltipText,
+	isCalculatingBudget,
 	customizePayouts,
 	onRecipientsChange,
 	onDurationChange,
@@ -37,38 +52,38 @@ export function BudgetStep({
 	onIntervalChange,
 	onCurrencyChange,
 	onToggleCustomizePayouts,
-}: Props) {
-	const totalBudget = calculateTotalBudget(amountOfRecipients, programDuration, payoutPerInterval, payoutInterval);
-	const monthlyCost = calculateMonthlyCost(amountOfRecipients, payoutPerInterval, payoutInterval);
+}: Props) => (
+	<div className="space-y-8">
+		<ProgramCostsHeader
+			totalBudget={calculatedTotalBudget}
+			monthlyCost={displayMonthlyCost}
+			currency={displayCurrency}
+			exchangeRateText={exchangeRateText}
+			totalBudgetTooltipText={totalBudgetTooltipText}
+			isCalculatingBudget={isCalculatingBudget}
+			onCurrencyChange={onCurrencyChange}
+		/>
 
-	return (
-		<div className="space-y-8">
-			<ProgramCostsHeader
-				totalBudget={totalBudget}
-				monthlyCost={monthlyCost}
-				currency={currency}
-				onCurrencyChange={onCurrencyChange}
+		<div className="grid gap-6 md:grid-cols-2">
+			<RecipientsBox
+				amountOfRecipients={amountOfRecipients}
+				filteredRecipients={filteredRecipients}
+				onChange={onRecipientsChange}
 			/>
 
-			<div className="grid gap-6 md:grid-cols-2">
-				<RecipientsBox
-					amountOfRecipients={amountOfRecipients}
-					maxRecipients={maxRecipients}
-					onChange={onRecipientsChange}
-				/>
-
-				<PayoutBox
-					programDuration={programDuration}
-					payoutPerInterval={payoutPerInterval}
-					payoutInterval={payoutInterval}
-					currency={currency}
-					customizePayouts={customizePayouts}
-					onDurationChange={onDurationChange}
-					onPayoutChange={onPayoutChange}
-					onIntervalChange={onIntervalChange}
-					onToggleCustomizePayouts={onToggleCustomizePayouts}
-				/>
-			</div>
+			<PayoutBox
+				programDuration={programDuration}
+				payoutPerIntervalMin={payoutPerIntervalMin}
+				payoutPerIntervalMax={payoutPerIntervalMax}
+				payoutPerInterval={payoutPerInterval}
+				payoutInterval={payoutInterval}
+				currency={payoutCurrency}
+				customizePayouts={customizePayouts}
+				onDurationChange={onDurationChange}
+				onPayoutChange={onPayoutChange}
+				onIntervalChange={onIntervalChange}
+				onToggleCustomizePayouts={onToggleCustomizePayouts}
+			/>
 		</div>
-	);
-}
+	</div>
+);

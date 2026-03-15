@@ -1,7 +1,17 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: '.env.development', quiet: true });
+dotenv.config({ path: '.env.test', quiet: true });
+
+const cookieConsentState = {
+	cookies: [],
+	origins: [
+		{
+			origin: 'http://localhost:3000',
+			localStorage: [{ name: 'cookie_consent', value: 'denied' }],
+		},
+	],
+};
 
 export default defineConfig({
 	testDir: './test',
@@ -20,7 +30,9 @@ export default defineConfig({
 
 	use: {
 		baseURL: 'http://localhost:3000',
-		trace: 'on-first-retry',
+		screenshot: 'only-on-failure',
+		trace: 'retain-on-failure',
+		video: 'retain-on-failure',
 	},
 
 	expect: {
@@ -32,39 +44,70 @@ export default defineConfig({
 
 	projects: [
 		{
-			name: 'setup',
-			testMatch: /test-setup\.ts/,
+			name: 'setup-infra',
+			testMatch: /setup-infra\.ts/,
+			use: {
+				storageState: cookieConsentState,
+			},
+		},
+		{
+			name: 'setup-auth',
+			testMatch: /setup-auth\.ts/,
+			use: {
+				storageState: cookieConsentState,
+			},
+			dependencies: ['setup-infra'],
 		},
 		{
 			name: 'portal',
-			testMatch: /portal\/.*\.e2e\.ts/,
+			testMatch: /projects\/portal\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/user.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-auth'],
 		},
 		{
 			name: 'dashboard',
-			testMatch: /dashboard\/.*\.e2e\.ts/,
+			testMatch: /projects\/dashboard\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/contributor.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-auth'],
 		},
 		{
 			name: 'partner-space',
-			testMatch: /partner-space\/.*\.e2e\.ts/,
+			testMatch: /projects\/partner-space\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/partner.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-auth'],
 		},
 		{
 			name: 'mobile-app-api',
-			testMatch: /mobile-app-api\/.*\.e2e\.ts/,
+			testMatch: /projects\/mobile-app-api\/.*\.e2e\.ts/,
+			use: {
+				storageState: cookieConsentState,
+			},
+			dependencies: ['setup-infra'],
+		},
+		{
+			name: 'public-website-desktop',
+			testMatch: /projects\/public-website\/.*\.e2e\.ts/,
+			use: {
+				storageState: cookieConsentState,
+			},
+			dependencies: ['setup-infra'],
+		},
+		{
+			name: 'public-website-mobile',
+			testMatch: /projects\/public-website\/.*\.e2e\.ts/,
+			use: {
+				...devices['iPhone 15'],
+				storageState: cookieConsentState,
+			},
+			dependencies: ['setup-infra'],
 		},
 	],
-
 	webServer: {
 		command: 'npm run build && npm run start',
 		url: 'http://localhost:3000',

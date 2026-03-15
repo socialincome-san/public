@@ -21,6 +21,16 @@
 		]
 	},
 	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/tEQo12YOEV00SFEKb006bK0100EPQ01Fcgzkp901ZRyxZZ9I4rxwmpNj01zGQ.vtt",
+	"video-controls": {
+		"play-video": "Video abspielen",
+		"pause-video": "Video pausieren",
+		"mute-video": "Video stummschalten",
+		"unmute-video": "Video-Ton einschalten",
+		"show-captions": "Untertitel anzeigen",
+		"hide-captions": "Untertitel ausblenden",
+		"expand-video-view": "Videoansicht vergrössern",
+		"exit-expanded-video-view": "Vergrösserte Videoansicht verlassen"
+	},
 	"section-2": {
 		"title-1": "Die Menschen in den ärmsten Regionen Sierra Leones kennen den Weg aus der Armut. ",
 		"title-2": [
@@ -39,7 +49,7 @@
 		"text-3.1": "Bedürftige identifizieren: In Zusammenarbeit mit lokalen NGOs in Sierra Leone erreichen wir gezielt Menschen in Armut, die von einem dreijährigen, verlässlichen Einkommen profitieren und in ihre Zukunft investieren können.",
 		"text-3.2": "Zufallsprinzip: Unser transparentes Losverfahren wählt unter den zuvor als bedürftig Identifizierten zufällig und vorurteilsfrei, damit alle die gleiche Chance haben.",
 		"title-4": "Direkte Hilfe, direkte Wirkung",
-		"text-4": "Deine Spende wird direkt auf die Mobil\u00ADtelefone der Menschen in Not über\u00ADwiesen und gibt ihnen so die Möglich\u00ADkeit, mit ihren eigenen Entscheidungen und An\u00ADstreng\u00ADungen die Armut zu über\u00ADwinden.",
+		"text-4": "Deine Spende wird direkt auf die Mobil\u00ADtelefone der Menschen in Not über\u00ADwiesen und gibt ihnen so die Möglich\u00ADkeit, mit ihren eigenen Entscheidungen und An\u00ADstreng\u00ADungen die Armut zu über\u00ADwinden. Wir messen die Wirkung der monatlichen Zahlungen durch regelmässige Umfragen.",
 		"title-5": "Langfristige Begleitung",
 		"text-5": "Während und nach dem Programm be\u00ADgleiten unsere lokalen NGO-Partner die Empfänger:innen, um ihre ökonomische Eigen\u00ADständig\u00ADkeit zu fördern. Im dritten Jahr liegt der Schwer\u00ADpunkt auf einem naht\u00ADlosen Über\u00ADgang in ein selbst\u00ADbestimmtes Leben."
 	},

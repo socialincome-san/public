@@ -25,12 +25,12 @@ export default function Page({ params }: SurveyPageProps) {
 		tryLogin(searchParams.get('email'), searchParams.get('pw'));
 	}, []);
 
-	function handleSubmit(e: FormEvent<HTMLFormElement>) {
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		// Prevent the browser from reloading the page
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 		tryLogin(formData.get('email') as string, formData.get('password') as string);
-	}
+	};
 
 	if (isLoggedIn && !hasError) {
 		return <Survey surveyId={survey} recipientId={recipient} lang={lang as SurveyLanguage} />;

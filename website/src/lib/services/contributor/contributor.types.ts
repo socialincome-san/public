@@ -1,17 +1,43 @@
-import { Address, ContributorReferralSource, Gender, OrganizationPermission, Phone, Prisma } from '@prisma/client';
+import {
+	Address,
+	ContributorReferralSource,
+	CountryCode,
+	Gender,
+	OrganizationPermission,
+	Phone,
+	Prisma,
+} from '@/generated/prisma/client';
 
 export type ContributorTableViewRow = {
 	id: string;
 	firstName: string;
 	lastName: string;
 	email: string;
-	country: string | null;
+	country: CountryCode | null;
 	createdAt: Date;
 	permission: OrganizationPermission;
 };
 
-export type ContributorTableView = {
+type ContributorTableView = {
 	tableRows: ContributorTableViewRow[];
+};
+
+export type ContributorTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	country?: string;
+};
+
+export type ContributorPaginatedTableView = {
+	tableRows: ContributorTableViewRow[];
+	totalCount: number;
+	countryFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 export type ContributorPayload = {
@@ -84,7 +110,7 @@ export type ContributorSession = {
 	number: string | null;
 	city: string | null;
 	zip: string | null;
-	country: string | null;
+	country: CountryCode | null;
 	stripeCustomerId: string | null;
 };
 
@@ -103,6 +129,6 @@ export type ContributorFormCreateInput = {
 		number: string;
 		city: string;
 		zip: string;
-		country: string;
+		country: CountryCode;
 	} | null;
 };

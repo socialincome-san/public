@@ -1,6 +1,6 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
@@ -8,12 +8,11 @@ import { RecipientSelfUpdate } from '../../models';
 /**
  * Get recipient
  * @description Returns the authenticated recipient with all related data. Requires a valid Firebase App Check token.
- * @response Recipient
+ * @response 200:Recipient
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		logger.warn('[GET /recipients/me] Failed', {
@@ -34,17 +33,15 @@ export const GET = withAppCheck(async (request: NextRequest) => {
  * @description Updates the authenticated recipient’s personal information, contact details, and mobile money payment information. Requires a valid Firebase App Check token.
  * @auth BearerAuth
  * @body RecipientSelfUpdate
- * @response Recipient
+ * @response 200:Recipient
  * @openapi
  */
 export const PATCH = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
-
 	logger.info('[PATCH /recipients/me] Incoming request', {
 		contentType: request.headers.get('content-type'),
 	});
 
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		logger.warn('[PATCH /recipients/me] Recipient resolution failed', {
@@ -121,7 +118,9 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 				? {
 						upsert: {
 							update: {
-								provider: data.paymentProvider,
+								mobileMoneyProvider: data.paymentProvider
+									? { connect: { id: data.paymentProvider } }
+									: { disconnect: true },
 								phone: data.paymentPhone
 									? {
 											connectOrCreate: {
@@ -132,7 +131,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 									: undefined,
 							},
 							create: {
-								provider: data.paymentProvider!,
+								mobileMoneyProvider: data.paymentProvider ? { connect: { id: data.paymentProvider } } : undefined,
 								code: recipient.paymentInformation?.code ?? '',
 								phone: {
 									connectOrCreate: {
@@ -146,7 +145,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 				: undefined,
 	};
 
-	const updateResult = await recipientService.updateSelf(recipient.id, updateData, {
+	const updateResult = await services.write.recipient.updateSelf(recipient.id, updateData, {
 		oldPaymentPhone,
 		newPaymentPhone,
 	});

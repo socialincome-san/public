@@ -1,12 +1,14 @@
 'use client';
 
 import { Switch } from '@/components/switch';
-import { PayoutInterval } from '@prisma/client';
+import { PayoutInterval } from '@/generated/prisma/enums';
 import { PayoutControls } from './payout-controls';
 import { PayoutSummary } from './payout-summary';
 
-export function PayoutBox({
+export const PayoutBox = ({
 	programDuration,
+	payoutPerIntervalMin,
+	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
 	currency,
@@ -17,6 +19,8 @@ export function PayoutBox({
 	onToggleCustomizePayouts,
 }: {
 	programDuration: number;
+	payoutPerIntervalMin: number;
+	payoutPerIntervalMax: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
 	currency: string;
@@ -25,7 +29,7 @@ export function PayoutBox({
 	onPayoutChange: (value: number) => void;
 	onIntervalChange: (value: PayoutInterval) => void;
 	onToggleCustomizePayouts: () => void;
-}) {
+}) => {
 	return (
 		<div className="flex h-full flex-col rounded-xl border p-8">
 			<h3 className="font-medium">Payouts</h3>
@@ -34,6 +38,8 @@ export function PayoutBox({
 				{customizePayouts ? (
 					<PayoutControls
 						programDuration={programDuration}
+						payoutPerIntervalMin={payoutPerIntervalMin}
+						payoutPerIntervalMax={payoutPerIntervalMax}
 						payoutPerInterval={payoutPerInterval}
 						payoutInterval={payoutInterval}
 						currency={currency}
@@ -52,9 +58,13 @@ export function PayoutBox({
 			</div>
 
 			<div className="flex items-center gap-3 pt-6">
-				<Switch checked={customizePayouts} onCheckedChange={onToggleCustomizePayouts} />
+				<Switch
+					data-testid="customize-payouts-switch"
+					checked={customizePayouts}
+					onCheckedChange={onToggleCustomizePayouts}
+				/>
 				<span className="text-sm font-medium">Customize</span>
 			</div>
 		</div>
 	);
-}
+};

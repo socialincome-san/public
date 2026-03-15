@@ -17,13 +17,13 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
+	Progress,
 	Table,
 	TableBody,
 	TableCell,
 	TableRow,
 	Typography,
 } from '@socialincome/ui';
-import { Progress } from '@socialincome/ui/src/components/progress';
 import Link from 'next/link';
 
 interface CampaignPageParams extends DefaultParams {
@@ -34,7 +34,7 @@ export type CampaignPageProps = {
 	params: Promise<CampaignPageParams>;
 };
 
-export async function generateMetadata({ params }: CampaignPageProps) {
+export const generateMetadata = async ({ params }: CampaignPageProps) => {
 	const { campaignId, lang } = await params;
 	const result = await getCampaignByIdAction(campaignId);
 	if (!result.success) {
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 				}
 			: undefined;
 	return getMetadata(lang as WebsiteLanguage, 'website-campaign', campaignMetadata);
-}
+};
 
 export default async function Page({ params }: CampaignPageProps) {
 	const { lang, campaignId, region } = await params;
@@ -198,6 +198,7 @@ export default async function Page({ params }: CampaignPageProps) {
 														bankTransfer: translator.t('payment-type.bank-transfer'),
 														creditCard: translator.t('payment-type.credit-card'),
 													},
+													feeNotice: translator.t('fee-notice'),
 													bankTransfer: {
 														firstName: translator.t('success.user-form.firstname'),
 														lastName: translator.t('success.user-form.lastname'),

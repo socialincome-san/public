@@ -1,4 +1,4 @@
-import { Address, Gender, Phone } from '@prisma/client';
+import { Address, Gender, Phone } from '@/generated/prisma/client';
 import { FormField } from './dynamic-form';
 
 type Contact = {
@@ -42,19 +42,32 @@ export const getContactValuesFromPayload = (
 	return contactFields;
 };
 
-// Helper to structure contact address for Prisma upsert/create
-export function buildAddressInput(contactFields: { [key: string]: FormField }) {
+export const buildAddressInput = (contactFields: { [key: string]: FormField }) => {
+	const country =
+		contactFields.country.value && contactFields.country.value !== '' ? contactFields.country.value : undefined;
+
+	const hasAnyValue =
+		contactFields.street.value ||
+		contactFields.number.value ||
+		contactFields.city.value ||
+		contactFields.zip.value ||
+		country;
+
+	if (!hasAnyValue) {
+		return undefined;
+	}
+
 	return {
-		street: contactFields.street.value || '',
-		number: contactFields.number.value || '',
-		city: contactFields.city.value || '',
-		zip: contactFields.zip.value || '',
-		country: contactFields.country.value || '',
+		street: contactFields.street.value ?? '',
+		number: contactFields.number.value ?? '',
+		city: contactFields.city.value ?? '',
+		zip: contactFields.zip.value ?? '',
+		country,
 	};
-}
+};
 
 // Helper to build common contact fields for create/update
-export function buildCommonContactData(contactFields: { [key: string]: FormField }) {
+export const buildCommonContactData = (contactFields: { [key: string]: FormField }) => {
 	return {
 		firstName: contactFields.firstName.value,
 		lastName: contactFields.lastName.value,
@@ -65,18 +78,18 @@ export function buildCommonContactData(contactFields: { [key: string]: FormField
 		callingName: contactFields.callingName.value || null,
 		language: contactFields.language.value || null,
 	};
-}
+};
 
 type DropdownItem = {
 	id: string;
 	label: string;
 };
 
-export function getZodEnum(items: DropdownItem[]) {
+export const getZodEnum = (items: DropdownItem[]) => {
 	const object = items.reduce<Record<string, string>>((acc, item) => {
 		acc[item.label] = item.id;
 		return acc;
 	}, {});
 
 	return object;
-}
+};

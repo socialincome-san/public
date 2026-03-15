@@ -4,10 +4,10 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function generateMetadata(props: DefaultPageProps) {
+export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
 	return getMetadata(params.lang as WebsiteLanguage, 'website-survey');
-}
+};
 
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;
@@ -20,7 +20,7 @@ export default async function Page(props: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-10 pb-16 pt-8">
+		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-10 pt-8 pb-16">
 			<Typography size="5xl" weight="bold">
 				{translator.t('titleOnboarding')}
 			</Typography>

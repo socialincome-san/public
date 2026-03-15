@@ -1,13 +1,15 @@
-import { Cause, PayoutInterval, ProgramPermission } from '@prisma/client';
+import { Cause, CountryCode, Currency, PayoutInterval, ProgramPermission } from '@/generated/prisma/client';
+import { Profile } from '../candidate/candidate.types';
 
 export type ProgramWallet = {
 	id: string;
 	programName: string;
-	country: string;
-	payoutCurrency: string;
+	country: CountryCode;
+	payoutCurrency: Currency;
 	recipientsCount: number;
 	totalPayoutsSum: number;
 	permission: ProgramPermission;
+	isReadyForFirstPayouts: boolean;
 };
 
 export type ProgramWallets = {
@@ -24,9 +26,9 @@ export type CreateProgramInput = {
 	amountOfRecipientsForStart: number;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
-	payoutCurrency: string;
 	payoutInterval: PayoutInterval;
 	targetCauses: Cause[];
+	targetProfiles: Profile[];
 };
 
 export type PublicProgramDetails = {
@@ -39,7 +41,7 @@ export type PublicProgramDetails = {
 	amountOfRecipientsForStart: number | null;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
-	payoutCurrency: string;
+	payoutCurrency: Currency;
 	payoutInterval: PayoutInterval;
 	recipientsCount: number;
 	totalPayoutsCount: number;

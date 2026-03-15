@@ -1,71 +1,70 @@
-import { ContributorService } from '../services/contributor/contributor.service';
+import { redirect } from 'next/navigation';
 import { ContributorSession } from '../services/contributor/contributor.types';
-import { FirebaseService } from '../services/firebase/firebase.service';
-import { LocalPartnerService } from '../services/local-partner/local-partner.service';
+import { ServiceResult } from '../services/core/base.types';
+import { resultFail, resultOk } from '../services/core/service-result';
 import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
-import { UserService } from '../services/user/user.service';
+import { services } from '../services/services';
 import { UserSession } from '../services/user/user.types';
-import { getAuthenticatedContributorOrThrow } from './current-contributor';
-import { getAuthenticatedLocalPartnerOrThrow } from './current-local-partner';
-import { getAuthenticatedUserOrThrow } from './current-user';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
-export type Actor =
-	| { kind: 'user'; session: UserSession }
-	| { kind: 'contributor'; session: ContributorSession }
-	| { kind: 'local-partner'; session: LocalPartnerSession }
-	| never;
-
-export async function getCurrentSession(): Promise<Session | null> {
-	const firebaseService = new FirebaseService();
-	const cookie = await firebaseService.readSessionCookie();
-	if (!cookie) {
+const getAuthUserIdFromCookie = async (): Promise<string | null> => {
+	const cookieResult = await services.firebaseSession.readSessionCookie();
+	if (!cookieResult.success || !cookieResult.data) {
 		return null;
 	}
+	const result = await services.firebaseSession.verifySessionCookie(cookieResult.data);
+	return result.success ? result.data.uid : null;
+};
 
-	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
-	if (!decodedTokenResult.success) {
-		return null;
+export const getCurrentSessions = async (): Promise<Session[]> => {
+	const authUserId = await getAuthUserIdFromCookie();
+	if (!authUserId) {
+		return [];
 	}
 
-	const authUserId = decodedTokenResult.data.uid;
-
-	const contributorService = new ContributorService();
-	const contributorResult = await contributorService.getCurrentContributorSession(authUserId);
+	const out: Session[] = [];
+	const contributorResult = await services.read.contributor.getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
-		return contributorResult.data;
+		out.push(contributorResult.data);
 	}
-
-	const partnerService = new LocalPartnerService();
-	const partnerResult = await partnerService.getCurrentLocalPartnerSession(authUserId);
-	if (partnerResult.success && partnerResult.data) {
-		return partnerResult.data;
-	}
-
-	const userService = new UserService();
-	const userResult = await userService.getCurrentUserSession(authUserId);
+	const userResult = await services.read.user.getCurrentUserSession(authUserId);
 	if (userResult.success && userResult.data) {
-		return userResult.data;
+		out.push(userResult.data);
 	}
-
-	return null;
-}
-
-export async function getActorOrThrow(): Promise<Actor> {
-	const session = await getCurrentSession();
-
-	switch (session?.type) {
-		case 'user':
-			return { kind: 'user', session: await getAuthenticatedUserOrThrow() };
-
-		case 'contributor':
-			return { kind: 'contributor', session: await getAuthenticatedContributorOrThrow() };
-
-		case 'local-partner':
-			return { kind: 'local-partner', session: await getAuthenticatedLocalPartnerOrThrow() };
-
-		default:
-			throw new Error('Not authenticated');
+	const partnerResult = await services.read.localPartner.getCurrentLocalPartnerSession(authUserId);
+	if (partnerResult.success && partnerResult.data) {
+		out.push(partnerResult.data);
 	}
-}
+	return out;
+};
+
+export const getSessionsOrRedirect = async (): Promise<Session[]> => {
+	const sessions = await getCurrentSessions();
+	if (sessions.length === 0) {
+		redirect('/login');
+	}
+	return sessions;
+};
+
+type SessionByType<T extends Session['type']> = Extract<Session, { type: T }>;
+
+export const getSessionByType = async <T extends Session['type']>(
+	type: T,
+): Promise<ServiceResult<SessionByType<T>>> => {
+	try {
+		const sessions = await getCurrentSessions();
+		if (sessions.length === 0) {
+			return resultFail('Not authenticated');
+		}
+
+		const session = sessions.find((s): s is SessionByType<T> => s.type === type);
+		if (!session) {
+			return resultFail(`No ${type} session`);
+		}
+
+		return resultOk(session);
+	} catch (error) {
+		return resultFail(`Could not resolve session: ${JSON.stringify(error)}`);
+	}
+};

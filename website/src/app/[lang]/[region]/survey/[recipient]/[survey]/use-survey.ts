@@ -1,14 +1,15 @@
+import { SurveyStatus } from '@/generated/prisma/enums';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { createSessionAction, logoutAction } from '@/lib/server-actions/session-actions';
 import { getByIdAndRecipient, saveChanges } from '@/lib/server-actions/survey-actions';
 import { SurveyWithRecipient } from '@/lib/services/survey/survey.types';
 import { logger } from '@/lib/utils/logger';
-import { SurveyStatus } from '@prisma/client';
+import { now } from '@/lib/utils/now';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { Model } from 'survey-core';
 
-export function useSurvey() {
+export const useSurvey = () => {
 	const { auth } = useAuth();
 	const [survey, setSurvey] = useState<SurveyWithRecipient | null>(null);
 	const [hasError, setHasError] = useState<boolean>(false);
@@ -37,8 +38,11 @@ export function useSurvey() {
 
 	const loadSurvey = async (surveyId: string, recipientId: string) => {
 		try {
-			const survey = await getByIdAndRecipient(surveyId, recipientId);
-			setSurvey(survey);
+			const surveyResult = await getByIdAndRecipient(surveyId, recipientId);
+			if (!surveyResult.success) {
+				throw new Error(surveyResult.error);
+			}
+			setSurvey(surveyResult.data);
 			setHasError(false);
 		} catch (error) {
 			logger.error(`error loading survey: ${error}`);
@@ -52,11 +56,14 @@ export function useSurvey() {
 		const data = survey.data;
 		data.pageNo = survey.currentPageNo;
 		try {
-			await saveChanges(surveyId, {
+			const saveResult = await saveChanges(surveyId, {
 				data: data,
 				status: status,
-				completedAt: status == SurveyStatus.completed ? new Date(Date.now()) : null,
+				completedAt: status == SurveyStatus.completed ? now() : null,
 			});
+			if (!saveResult.success) {
+				throw new Error(saveResult.error);
+			}
 		} catch (error) {
 			if (retryCount >= 2) {
 				setHasError(true);
@@ -66,9 +73,9 @@ export function useSurvey() {
 			}
 			logger.error('error saving survey, retrying');
 			retryCount++;
-			window.setTimeout(() => saveSurvey(surveyId, survey, status, retryCount), 2000);
+			globalThis.setTimeout(() => saveSurvey(surveyId, survey, status, retryCount), 2000);
 		}
 	};
 
 	return { survey, hasError, login, logout, loadSurvey, saveSurvey };
-}
+};

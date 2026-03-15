@@ -1,14 +1,12 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { TwilioService } from '@/lib/services/twilio/twilio.service';
+import { services } from '@/lib/services/services';
 import { RequestOtpRequest } from '../../models';
 
 /**
  * Request OTP
  * @description Requests an OTP via Twilio SMS for the given phone number. Requires a valid Firebase App Check token.
  * @body RequestOtpRequest
- * @response 204: No Content
- * @response 400: ErrorResponse
- * @response 401: Unauthorized
+ * @response 204:No Content
  * @openapi
  */
 export const POST = withAppCheck(async (request: Request) => {
@@ -26,8 +24,7 @@ export const POST = withAppCheck(async (request: Request) => {
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const service = new TwilioService();
-	const result = await service.requestOtp(parsed.data.phoneNumber);
+	const result = await services.twilio.requestOtp(parsed.data.phoneNumber);
 
 	if (!result.success) {
 		return new Response(result.error, { status: result.status ?? 400 });

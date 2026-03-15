@@ -7,16 +7,12 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeUserColumns(): ColumnDef<UserTableViewRow>[] {
+export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 	return [
 		{
-			accessorKey: 'firstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'lastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
+			id: 'user',
+			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>User</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -42,8 +38,8 @@ export function makeUserColumns(): ColumnDef<UserTableViewRow>[] {
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

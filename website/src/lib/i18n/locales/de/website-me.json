@@ -160,6 +160,11 @@
 			"button": "Abmelden"
 		}
 	},
+	"navigation": {
+		"go-to-portal": "Zum Portal",
+		"go-to-dashboard": "Zum Dashboard",
+		"go-to-partner-space": "Zum Partnerbereich"
+	},
 	"work-info": {
 		"work": "Arbeiten",
 		"add-employer": "Neuen Arbeitgeber hinzufügen",

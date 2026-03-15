@@ -1,7 +1,6 @@
 import { ContestPayoutBody } from '@/app/api/v1/models';
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { PayoutService } from '@/lib/services/payout/payout.service';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -13,14 +12,13 @@ type Params = Promise<{ payoutId: string }>;
  * @auth BearerAuth
  * @pathParams PayoutParams
  * @body ContestPayoutBody
- * @response Payout
+ * @response 200:Payout
  * @openapi
  */
 export const POST = withAppCheck(async (request: NextRequest, { params }: { params: Params }) => {
 	const { payoutId } = await params;
 
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		logger.warn('[POST /payouts/:id/contest] Recipient resolution failed', {
@@ -48,8 +46,7 @@ export const POST = withAppCheck(async (request: NextRequest, { params }: { para
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const payoutService = new PayoutService();
-	const contestResult = await payoutService.updateStatusByRecipient(
+	const contestResult = await services.write.payout.updateStatusByRecipient(
 		recipientResult.data.id,
 		payoutId,
 		'contested',

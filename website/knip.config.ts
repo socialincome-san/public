@@ -1,12 +1,7 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-	ignoreFiles: [
-		'src/lib/database/schema.prisma',
-		'test/e2e/setup/test-setup.ts',
-		'test/e2e/setup/utils.ts',
-		'src/lib/utils/storyblock-image-loader.ts',
-	],
+	ignoreFiles: ['test/e2e/setup/*.ts', 'src/lib/utils/storyblock-image-loader.ts'],
 	ignoreDependencies: [
 		'react',
 		'react-hook-form',
@@ -15,7 +10,7 @@ const config: KnipConfig = {
 		'jest',
 		'@sendgrid/mail',
 		'dotenv-cli',
-		'prisma',
+		'@prisma/client',
 		'next-openapi-gen',
 		'tsx',
 		'dotenv',
@@ -29,6 +24,7 @@ const config: KnipConfig = {
 		'@radix-ui/react-slider',
 		'@radix-ui/react-tabs',
 		'@radix-ui/react-tooltip',
+		'@radix-ui/react-toggle-group',
 		'@firebase/analytics',
 		'@sendgrid/client',
 		'@google-cloud/storage',

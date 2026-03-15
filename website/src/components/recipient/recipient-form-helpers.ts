@@ -14,24 +14,25 @@
 
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
+import { Prisma } from '@/generated/prisma/client';
 import { RecipientCreateInput, RecipientPayload, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
-import { Prisma } from '@prisma/client';
 import { RecipientFormSchema } from './recipient-form';
 
-export function buildUpdateRecipientInput(
+export const buildUpdateRecipientInput = (
 	schema: RecipientFormSchema,
 	recipient: RecipientPayload,
 	contactFields: { [key: string]: FormField },
-): RecipientUpdateInput {
+): RecipientUpdateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
+	const mobileMoneyProviderId = paymentInfoFields.provider.value as string | undefined;
 	const basePaymentInformation = {
-		provider: paymentInfoFields.provider.value,
-		code: paymentInfoFields.code.value,
+		code: paymentInfoFields.code.value?.trim() || null,
+		mobileMoneyProvider: mobileMoneyProviderId ? { connect: { id: mobileMoneyProviderId } } : { disconnect: true },
 	};
 
-	const nextPaymentPhoneNumber = paymentInfoFields.phone.value ?? null;
-	const nextContactPhoneNumber = contactFields.phone.value ?? null;
+	const nextPaymentPhoneNumber = paymentInfoFields.phone.value?.trim() || null;
+	const nextContactPhoneNumber = contactFields.phone.value?.trim() || null;
 
 	const previousPaymentPhone = recipient.paymentInformation?.phone;
 	const previousContactPhone = recipient.contact.phone;
@@ -39,14 +40,13 @@ export function buildUpdateRecipientInput(
 	const previousPaymentPhoneNumber = previousPaymentPhone?.number ?? null;
 	const previousContactPhoneNumber = previousContactPhone?.number ?? null;
 
-	const paymentPhoneHasChanged = !!(nextPaymentPhoneNumber && nextPaymentPhoneNumber !== previousPaymentPhoneNumber);
-	const contactPhoneHasChanged = !!(nextContactPhoneNumber && nextContactPhoneNumber !== previousContactPhoneNumber);
+	const paymentPhoneHasChanged = (nextPaymentPhoneNumber ?? '') !== (previousPaymentPhoneNumber ?? '');
+	const contactPhoneHasChanged = (nextContactPhoneNumber ?? '') !== (previousContactPhoneNumber ?? '');
 
 	const previouslySharedPhoneRecord =
 		previousPaymentPhone?.id && previousContactPhone?.id && previousPaymentPhone.id === previousContactPhone.id;
 
-	let paymentPhoneWriteOperation: Prisma.PhoneUpdateOneRequiredWithoutPaymentInformationsNestedInput | undefined =
-		undefined;
+	let paymentPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutPaymentInformationsNestedInput | undefined = undefined;
 
 	let contactPhoneWriteOperation: Prisma.PhoneUpdateOneWithoutContactsNestedInput | undefined = undefined;
 
@@ -84,8 +84,9 @@ export function buildUpdateRecipientInput(
 
 		if (contactPhoneHasChanged) {
 			contactPhoneWriteOperation = {
-				update: {
-					data: { number: nextContactPhoneNumber! },
+				upsert: {
+					update: { number: nextContactPhoneNumber! },
+					create: { number: nextContactPhoneNumber! },
 					where: { id: previousContactPhone?.id },
 				},
 			};
@@ -125,12 +126,21 @@ export function buildUpdateRecipientInput(
 		}
 	}
 
+	if (contactPhoneHasChanged && !nextContactPhoneNumber) {
+		contactPhoneWriteOperation = { disconnect: true };
+	}
+
+	if (paymentPhoneHasChanged && !nextPaymentPhoneNumber) {
+		paymentPhoneWriteOperation = { disconnect: true };
+	}
+
 	const addressUpdateOperation = buildAddressInput(contactFields);
 
 	return {
 		id: recipient.id,
 		startDate: schema.fields.startDate.value,
-		status: schema.fields.status.value,
+		suspendedAt: schema.fields.suspendedAt.value,
+		suspensionReason: schema.fields.suspensionReason.value,
 		successorName: schema.fields.successorName.value || null,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner?.value } },
@@ -140,11 +150,13 @@ export function buildUpdateRecipientInput(
 			upsert: {
 				create: {
 					...basePaymentInformation,
-					phone: {
-						create: {
-							number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
+					...((nextPaymentPhoneNumber ?? previousPaymentPhoneNumber) && {
+						phone: {
+							create: {
+								number: nextPaymentPhoneNumber ?? previousPaymentPhoneNumber!,
+							},
 						},
-					},
+					}),
 				},
 				update: {
 					...basePaymentInformation,
@@ -159,38 +171,45 @@ export function buildUpdateRecipientInput(
 				data: {
 					...buildCommonContactData(contactFields),
 					phone: contactPhoneWriteOperation,
-					address: {
-						upsert: {
-							update: addressUpdateOperation,
-							create: addressUpdateOperation,
-							where: { id: recipient.contact.address?.id },
+					...(addressUpdateOperation && {
+						address: {
+							upsert: {
+								update: addressUpdateOperation,
+								create: addressUpdateOperation,
+								where: { id: recipient.contact.address?.id },
+							},
 						},
-					},
+					}),
 				},
 				where: { id: recipient.contact.id },
 			},
 		},
 	};
-}
+};
 
-export function buildCreateRecipientInput(
+export const buildCreateRecipientInput = (
 	schema: RecipientFormSchema,
 	contactFields: { [key: string]: FormField },
-): RecipientCreateInput {
+): RecipientCreateInput => {
 	const paymentInfoFields = schema.fields.paymentInformation.fields;
 
 	return {
 		startDate: schema.fields.startDate.value,
-		status: schema.fields.status.value,
+		suspendedAt: schema.fields.suspendedAt.value,
+		suspensionReason: schema.fields.suspensionReason.value,
 		successorName: schema.fields.successorName.value,
 		termsAccepted: schema.fields.termsAccepted.value ?? false,
 		localPartner: { connect: { id: schema.fields.localPartner?.value } },
 		program: { connect: { id: schema.fields.program?.value } },
 		paymentInformation: {
 			create: {
-				provider: paymentInfoFields.provider.value,
-				code: paymentInfoFields.code.value,
-				phone: { create: { number: paymentInfoFields.phone.value } },
+				...(paymentInfoFields.provider.value && {
+					mobileMoneyProvider: { connect: { id: paymentInfoFields.provider.value as string } },
+				}),
+				code: paymentInfoFields.code.value?.trim() || null,
+				...(paymentInfoFields.phone.value?.trim() && {
+					phone: { create: { number: paymentInfoFields.phone.value!.trim() } },
+				}),
 			},
 		},
 		contact: {
@@ -201,4 +220,4 @@ export function buildCreateRecipientInput(
 			},
 		},
 	};
-}
+};

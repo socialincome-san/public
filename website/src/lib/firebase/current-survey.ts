@@ -1,22 +1,13 @@
-import { FirebaseService } from '@/lib/services/firebase/firebase.service';
+import { services } from '@/lib/services/services';
 import { cache } from 'react';
-import { SurveyService } from '../services/survey/survey.service';
 import { SurveyPayload } from '../services/survey/survey.types';
 
-const firebaseService = new FirebaseService();
-
-async function findSurveyByEmail(email: string): Promise<SurveyPayload | null> {
-	const service = new SurveyService();
-	const result = await service.getByAccessEmail(email);
-	return result.success ? result.data : null;
-}
-
-async function loadCurrentSurvey(): Promise<SurveyPayload | null> {
-	const cookie = await firebaseService.readSessionCookie();
-	if (!cookie) {
+const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
+	const cookieResult = await services.firebaseSession.readSessionCookie();
+	if (!cookieResult.success || !cookieResult.data) {
 		return null;
 	}
-	const decodedTokenResult = await firebaseService.verifySessionCookie(cookie);
+	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookieResult.data);
 	if (!decodedTokenResult.success) {
 		return null;
 	}
@@ -25,7 +16,8 @@ async function loadCurrentSurvey(): Promise<SurveyPayload | null> {
 	if (!email) {
 		return null;
 	}
-	return findSurveyByEmail(email);
-}
+	const result = await services.read.survey.getByAccessEmail(email);
+	return result.success ? result.data : null;
+};
 
 export const getCurrentSurvey = cache(loadCurrentSurvey);

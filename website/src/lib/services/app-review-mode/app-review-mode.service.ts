@@ -1,14 +1,15 @@
-import { Gender, PaymentProvider, PayoutInterval, Prisma, RecipientStatus } from '@prisma/client';
+import { Gender, PayoutInterval, Prisma } from '@/generated/prisma/client';
+import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
 
 export class AppReviewModeService extends BaseService {
-	isEnabled(): boolean {
+	private isEnabled(): boolean {
 		return process.env.APP_REVIEW_MODE_ENABLED === 'true';
 	}
 
-	isReviewPhone(phone: string): boolean {
+	private isReviewPhone(phone: string): boolean {
 		const reviewPhone = process.env.APP_REVIEW_PHONE_NUMBER;
 		if (!reviewPhone) {
 			return false;
@@ -16,12 +17,13 @@ export class AppReviewModeService extends BaseService {
 		return phone === reviewPhone || `+${phone}` === reviewPhone;
 	}
 
-	shouldBypass(phone: string): boolean {
-		return this.isEnabled() && this.isReviewPhone(phone);
+	shouldBypass(phone: string): ServiceResult<boolean> {
+		return this.resultOk(this.isEnabled() && this.isReviewPhone(phone));
 	}
 
 	getMockRecipient(phone: string): ServiceResult<RecipientWithPaymentInfo> {
-		if (!this.shouldBypass(phone)) {
+		const bypassResult = this.shouldBypass(phone);
+		if (!bypassResult.success || !bypassResult.data) {
 			return this.resultFail('App review mode not active for this phone');
 		}
 
@@ -30,14 +32,15 @@ export class AppReviewModeService extends BaseService {
 			legacyFirestoreId: null,
 			contactId: 'tony-stark-contact',
 			startDate: new Date('1970-05-29T00:00:00.000Z'),
-			status: RecipientStatus.active,
+			suspendedAt: null,
+			suspensionReason: null,
 			successorName: 'Pepper Potts',
 			termsAccepted: true,
 			paymentInformationId: 'stark-payment-info',
 			programId: 'avengers-program',
 			localPartnerId: 'stark-industries-partner',
-			createdAt: new Date(),
-			updatedAt: new Date(),
+			createdAt: now(),
+			updatedAt: now(),
 
 			localPartner: {
 				id: 'stark-industries-partner',
@@ -46,8 +49,8 @@ export class AppReviewModeService extends BaseService {
 				name: 'Stark Industries',
 				causes: [],
 				contactId: 'stark-industries-contact',
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: now(),
+				updatedAt: now(),
 			},
 
 			program: {
@@ -56,15 +59,14 @@ export class AppReviewModeService extends BaseService {
 				amountOfRecipientsForStart: 6,
 				programDurationInMonths: 60,
 				payoutPerInterval: new Prisma.Decimal(5000000),
-				payoutCurrency: 'USD',
 				payoutInterval: PayoutInterval.monthly,
 				targetCauses: [],
 				countryId: 'usa',
 				country: {
 					isoCode: 'US',
 				},
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: now(),
+				updatedAt: now(),
 			},
 
 			contact: {
@@ -80,30 +82,37 @@ export class AppReviewModeService extends BaseService {
 				addressId: 'stark-tower-address',
 				phoneId: 'tony-stark-phone',
 				isInstitution: false,
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: now(),
+				updatedAt: now(),
 				phone: {
 					id: 'tony-stark-phone',
 					number: phone,
 					hasWhatsApp: true,
-					createdAt: new Date(),
-					updatedAt: new Date(),
+					createdAt: now(),
+					updatedAt: now(),
 				},
 			},
 
 			paymentInformation: {
 				id: 'stark-payment-info',
 				code: 'IRONMAN',
-				provider: PaymentProvider.orange_money,
+				mobileMoneyProviderId: 'mobile-money-provider-id-1',
+				mobileMoneyProvider: {
+					id: 'mobile-money-provider-id-1',
+					name: 'Orange Money',
+					isSupported: true,
+					createdAt: now(),
+					updatedAt: now(),
+				},
 				phoneId: 'ironman-payment-phone',
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: now(),
+				updatedAt: now(),
 				phone: {
 					id: 'ironman-payment-phone',
 					number: phone,
 					hasWhatsApp: true,
-					createdAt: new Date(),
-					updatedAt: new Date(),
+					createdAt: now(),
+					updatedAt: now(),
 				},
 			},
 		};

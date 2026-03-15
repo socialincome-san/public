@@ -6,9 +6,9 @@ import { useFirebaseApp } from './useFirebaseApp';
 
 const authEmulatorUrl = process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL;
 
-export function useAuth(): {
+export const useAuth = (): {
 	auth: Auth;
-} {
+} => {
 	const connectAuthEmulatorCalled = useRef(false);
 	const app = useFirebaseApp();
 	const auth = getAuth(app);
@@ -20,4 +20,4 @@ export function useAuth(): {
 	}
 
 	return { auth };
-}
+};

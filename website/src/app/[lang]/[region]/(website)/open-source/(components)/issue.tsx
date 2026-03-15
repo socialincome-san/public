@@ -1,8 +1,7 @@
 'use client';
 
 import { buttonVariants } from '@/components/button';
-import { TableCell, TableRow } from '@socialincome/ui';
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { cn, TableCell, TableRow } from '@socialincome/ui';
 import Link from 'next/link';
 
 interface Issue {
@@ -16,7 +15,7 @@ interface IssueProps extends Pick<Issue, 'title' | 'url'> {
 	text: string;
 }
 
-export function Issue({ title, url, text }: IssueProps) {
+export const Issue = ({ title, url, text }: IssueProps) => {
 	return (
 		<TableRow className="p-5 hover:bg-transparent">
 			<TableCell className="text-xl">{title}</TableCell>
@@ -32,4 +31,4 @@ export function Issue({ title, url, text }: IssueProps) {
 			</TableCell>
 		</TableRow>
 	);
-}
+};

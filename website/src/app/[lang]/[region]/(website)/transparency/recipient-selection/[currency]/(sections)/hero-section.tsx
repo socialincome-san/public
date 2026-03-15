@@ -1,13 +1,12 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import globeRotating from '../(assets)/globe.svg';
 import ScrollToChevron from '../(components)/scroll-to-chevron';
 
-export async function HeroSection({ lang }: DefaultParams) {
+export const HeroSection = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-selection'],
@@ -15,7 +14,7 @@ export async function HeroSection({ lang }: DefaultParams) {
 
 	return (
 		<div className="theme-blue flex h-[calc(100svh)] min-h-[600px] flex-col">
-			<div className="mt-[80px] flex flex-grow flex-col items-center justify-center p-6 text-center">
+			<div className="mt-[80px] flex grow flex-col items-center justify-center p-6 text-center">
 				<div className="pb-4">
 					<Typography size="xl" className="opacity-60">
 						{translator.t('section-1.subtitle')}
@@ -36,10 +35,10 @@ export async function HeroSection({ lang }: DefaultParams) {
 				</div>
 			</div>
 
-			<div className="flex flex-grow items-start justify-center">
+			<div className="flex grow items-start justify-center">
 				<div className="flex flex-col items-center sm:flex-row sm:space-x-4">
 					<Image className="h-12 w-12 md:h-20 md:w-20" src={globeRotating} alt="Globe Icon" />
-					<div className="mx-auto my-4 max-w-4xl whitespace-pre text-center sm:text-left">
+					<div className="mx-auto my-4 max-w-4xl text-center whitespace-pre sm:text-left">
 						<Typography as="span" color="accent" className="inline-block text-xl sm:text-2xl">
 							{translator.t('section-1.population')} {translator.t('section-1.potential')}
 						</Typography>
@@ -58,4 +57,4 @@ export async function HeroSection({ lang }: DefaultParams) {
 			</div>
 		</div>
 	);
-}
+};

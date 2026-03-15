@@ -11,10 +11,10 @@ type ContributorProp = {
 };
 const GITHUB_BASE_URL = 'https://github.com';
 
-function Contributor({ name, commits, avatarUrl }: ContributorProp) {
+const Contributor = ({ name, commits, avatarUrl }: ContributorProp) => {
 	return (
 		<article className="flex min-w-60 flex-row items-center py-2">
-			<Avatar className="h-12 w-12 flex-shrink-0">
+			<Avatar className="h-12 w-12 shrink-0">
 				<AvatarImage src={avatarUrl} alt={`${name}'s avatar`} />
 				<AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
 			</Avatar>
@@ -30,9 +30,9 @@ function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 			</div>
 		</article>
 	);
-}
+};
 
-export function OpenSourceContributorsClient({
+export const OpenSourceContributorsClient = ({
 	contributors,
 	heading,
 	totalContributors,
@@ -40,7 +40,7 @@ export function OpenSourceContributorsClient({
 	contributors: Array<{ name: string; commits: number; avatarUrl: string; id: number }>;
 	heading: string;
 	totalContributors: number;
-}) {
+}) => {
 	const [showAllContributors, setShowAllContributors] = useState(false);
 
 	const displayedContributors = showAllContributors ? contributors : contributors.slice(0, 16);
@@ -77,4 +77,4 @@ export function OpenSourceContributorsClient({
 			)}
 		</section>
 	);
-}
+};

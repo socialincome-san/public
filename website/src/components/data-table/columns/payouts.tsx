@@ -9,16 +9,12 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makePayoutColumns(): ColumnDef<PayoutTableViewRow>[] {
+export const makePayoutColumns = (): ColumnDef<PayoutTableViewRow>[] => {
 	return [
 		{
-			accessorKey: 'recipientFirstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First Name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'recipientLastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last Name</SortableHeader>,
+			id: 'recipient',
+			accessorFn: (row) => `${row.recipientFirstName} ${row.recipientLastName}`.trim(),
+			header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -45,8 +41,8 @@ export function makePayoutColumns(): ColumnDef<PayoutTableViewRow>[] {
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
-}
+};

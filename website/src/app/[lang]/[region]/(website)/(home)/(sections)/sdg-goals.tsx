@@ -2,12 +2,11 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import sdgLogo from '@/app/[lang]/[region]/(website)/(home)/(assets)/sdg-logo.svg';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { FontColor, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Town from '../(assets)/sdg-town.jpg';
 
-export async function SDGGoals({ lang }: DefaultParams) {
+export const SDGGoals = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home'],
@@ -15,7 +14,7 @@ export async function SDGGoals({ lang }: DefaultParams) {
 
 	return (
 		<div
-			className="flex flex-col bg-cover bg-center pb-64 pt-20 md:pb-80"
+			className="flex flex-col bg-cover bg-center pt-20 pb-64 md:pb-80"
 			style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.0)), url(${Town.src})` }}
 		>
 			<Typography
@@ -39,7 +38,7 @@ export async function SDGGoals({ lang }: DefaultParams) {
 					</Typography>
 					<Typography size="sm">{translator.t('section-10.sdg-1')}</Typography>
 				</div>
-				<div className="bg-accent -ml-6 mt-12 flex h-72 flex-1 rotate-2 flex-col items-center justify-between py-4 md:h-96">
+				<div className="bg-accent mt-12 -ml-6 flex h-72 flex-1 rotate-2 flex-col items-center justify-between py-4 md:h-96">
 					<div />
 					<Typography weight="medium" className="w-3/4">
 						{translator.t('section-10.sdg-10-title')}
@@ -49,4 +48,4 @@ export async function SDGGoals({ lang }: DefaultParams) {
 			</div>
 		</div>
 	);
-}
+};

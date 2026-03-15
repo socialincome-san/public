@@ -1,4 +1,4 @@
-import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
+import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
 
 export type SurveyTableViewRow = {
 	id: string;
@@ -20,6 +20,24 @@ export type SurveyTableView = {
 	tableRows: SurveyTableViewRow[];
 };
 
+export type SurveyTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+};
+
+export type SurveyPaginatedTableView = {
+	tableRows: SurveyTableViewRow[];
+	totalCount: number;
+	programFilterOptions: {
+		id: string;
+		name: string;
+	}[];
+};
+
 export type SurveyCreateInput = {
 	name: string;
 	recipient: { connect: { id: string } };
@@ -30,7 +48,6 @@ export type SurveyCreateInput = {
 	data: Prisma.InputJsonValue;
 	accessEmail: string;
 	accessPw: string;
-	accessToken: string;
 	surveySchedule?: { connect: { id: string } };
 };
 
@@ -43,7 +60,6 @@ export type SurveyUpdateInput = {
 	data?: Prisma.InputJsonValue;
 	accessEmail?: string;
 	accessPw?: string;
-	accessToken?: string;
 	completedAt?: Date | null;
 	recipient?: { connect: { id: string } };
 	surveySchedule?: { connect: { id: string } };
@@ -60,7 +76,6 @@ export type SurveyPayload = {
 	data: Prisma.JsonValue;
 	accessEmail: string;
 	accessPw: string;
-	accessToken: string;
 	recipientId: string;
 	surveyScheduleId: string | null;
 	createdAt: Date;

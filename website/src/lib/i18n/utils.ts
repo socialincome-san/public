@@ -1,7 +1,7 @@
 import { LANGUAGE_COOKIE, REGION_COOKIE } from '@socialincome/website/src/app/[lang]/[region]';
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
-import { Currency } from '../types/currency';
+import { CountryCode, Currency } from '../../generated/prisma/enums';
 import { LanguageCode } from '../types/language';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
@@ -15,6 +15,12 @@ export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];
 
 export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
 export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
+
+/**
+ * We use the files from GitHub instead of the package so that donations from new countries are automatically supported.
+ */
+export const getFlagImageURL = (country: CountryCode | Exclude<WebsiteRegion, 'int'>) =>
+	`https://raw.githubusercontent.com/lipis/flag-icons/a87d8b256743c9b0df05f20de2c76a7975119045/flags/1x1/${country.toLowerCase()}.svg`;
 
 /**
  * Check if the user has set a language and region cookie, and if they are valid. If so, return them.

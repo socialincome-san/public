@@ -1,7 +1,7 @@
 import type { SurveyCreateInput, SurveyPayload, SurveyUpdateInput } from '@/lib/services/survey/survey.types';
 import { SurveyFormSchema } from './survey-form';
 
-export function buildCreateSurveyInput(schema: SurveyFormSchema): SurveyCreateInput {
+export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyCreateInput => {
 	return {
 		name: schema.fields.name.value,
 		recipient: { connect: { id: schema.fields.recipientId.value } },
@@ -12,11 +12,10 @@ export function buildCreateSurveyInput(schema: SurveyFormSchema): SurveyCreateIn
 		data: {},
 		accessEmail: schema.fields.accessEmail.value,
 		accessPw: schema.fields.accessPw.value,
-		accessToken: schema.fields.accessToken.value,
 	};
-}
+};
 
-export function buildUpdateSurveyInput(schema: SurveyFormSchema, existing: SurveyPayload): SurveyUpdateInput {
+export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: SurveyPayload): SurveyUpdateInput => {
 	const data: SurveyUpdateInput = {
 		name: schema.fields.name.value,
 		questionnaire: schema.fields.questionnaire.value,
@@ -26,7 +25,6 @@ export function buildUpdateSurveyInput(schema: SurveyFormSchema, existing: Surve
 		data: {},
 		accessEmail: schema.fields.accessEmail.value,
 		accessPw: schema.fields.accessPw.value,
-		accessToken: schema.fields.accessToken.value,
 	};
 
 	if (schema.fields.recipientId.value !== existing.recipientId) {
@@ -34,4 +32,4 @@ export function buildUpdateSurveyInput(schema: SurveyFormSchema, existing: Surve
 	}
 
 	return data;
-}
+};

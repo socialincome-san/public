@@ -2,10 +2,9 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { BaseContainer, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { BaseContainer, FontColor, Typography } from '@socialincome/ui';
 
-export async function ExplainerVideo({ lang }: DefaultParams) {
+export const ExplainerVideo = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-home', 'website-videos'],
@@ -20,9 +19,9 @@ export async function ExplainerVideo({ lang }: DefaultParams) {
 					</Typography>
 				))}
 			</Typography>
-			<div className="mx-auto mt-16 aspect-video w-96 max-w-full md:mt-24 md:w-[32rem]">
+			<div className="mx-auto mt-16 aspect-video w-96 max-w-full md:mt-24 md:w-lg">
 				<VimeoVideo videoId={Number(translator.t('id.video-02'))} />
 			</div>
 		</BaseContainer>
 	);
-}
+};

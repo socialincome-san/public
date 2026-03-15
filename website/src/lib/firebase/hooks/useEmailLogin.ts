@@ -26,15 +26,34 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	useEffect(() => {
 		const url = new URL(window.location.href);
 		const continueUrl = url.searchParams.get('continueUrl');
+		const confirmed = url.searchParams.get('confirmed') === 'true';
 
 		setSigningIn(continueUrl !== null || url.searchParams.get('email') !== null);
 
-		if (authListenerRegistered) return;
+		if (authListenerRegistered) {
+			return;
+		}
 
 		const unsubscribe = auth.onAuthStateChanged(() => {
 			setAuthListenerRegistered(true);
 
-			if (!isSignInWithEmailLink(auth, url.toString())) return;
+			if (!isSignInWithEmailLink(auth, url.toString())) {
+				return;
+			}
+
+			if (continueUrl) {
+				const interstitialUrl = new URL(continueUrl);
+				const isConfirmLoginPath = /\/auth\/confirm-login\/?$/.test(interstitialUrl.pathname);
+
+				if (isConfirmLoginPath && !confirmed) {
+					// Prevent auto-consumption of one-time links; require explicit user click first.
+					const nextParams = new URLSearchParams(url.search);
+					nextParams.set('continueUrl', continueUrl);
+					interstitialUrl.search = nextParams.toString();
+					window.location.href = interstitialUrl.toString();
+					return;
+				}
+			}
 
 			const email = new URL(continueUrl ?? window.location.href).searchParams.get('email');
 
@@ -50,7 +69,9 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 	const setServerSession = async (): Promise<boolean> => {
 		const user = auth.currentUser;
-		if (!user) return false;
+		if (!user) {
+			return false;
+		}
 
 		try {
 			const idToken = await user.getIdToken(true);

@@ -1,5 +1,4 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion';
-import { Button } from '@/components/button';
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
@@ -8,11 +7,12 @@ import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
+import { SpinnerIcon } from '@socialincome/ui';
 import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
 import { MultiSelect } from '../multi-select';
+import { FormActions } from './form-actions';
 
 export type FormField = {
 	label: string;
@@ -22,6 +22,7 @@ export type FormField = {
 	useCombobox?: boolean;
 	disabled?: boolean;
 	options?: { id: string; label: string }[];
+	onChange?: (value: any, form: UseFormReturn) => void;
 };
 
 export type FormSchema = {
@@ -63,10 +64,18 @@ const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any
 const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
 	const def = getDef(key, zodSchema, parentKey);
 	let type = def.typeName;
-	if (isOptional(key, zodSchema, parentKey)) type = def.innerType._def.typeName;
-	if (type === 'ZodEffects') return def.innerType._def.schema._def.typeName;
-	if (type === 'ZodUnion') return def.innerType._def.options[0]._def.typeName;
-	if (type === 'ZodNativeEnum') return 'ZodEnum';
+	if (isOptional(key, zodSchema, parentKey)) {
+		type = def.innerType._def.typeName;
+	}
+	if (type === 'ZodEffects') {
+		return def.innerType._def.schema._def.typeName;
+	}
+	if (type === 'ZodUnion') {
+		return def.innerType._def.options[0]._def.typeName;
+	}
+	if (type === 'ZodNativeEnum') {
+		return 'ZodEnum';
+	}
 	return type;
 };
 
@@ -98,13 +107,16 @@ const getEnumArrayValues = (
 	return (def.type?._def?.values ?? {}) as Record<string, string>;
 };
 
-const DynamicForm: FC<{
+type Props = {
 	formSchema: FormSchema;
 	isLoading: boolean;
 	onSubmit: (values: any) => void;
-	onCancel?: (values: any) => void;
+	onCancel?: () => void;
+	onDelete?: () => void;
 	mode: 'add' | 'edit' | 'readonly';
-}> = ({ formSchema, isLoading, onSubmit, onCancel, mode }) => {
+};
+
+const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -118,8 +130,9 @@ const DynamicForm: FC<{
 				if (!isFormField(field)) {
 					//nested
 					for (const [nestedName, nestedField] of Object.entries(field.fields)) {
-						if (isFormField(nestedField) && nestedField.value != null)
+						if (isFormField(nestedField) && nestedField.value != null) {
 							form.setValue(`${name}.${nestedName}` as any, nestedField.value);
+						}
 					}
 				} else if (field.value != null) {
 					form.setValue(name, field.value);
@@ -157,11 +170,12 @@ const DynamicForm: FC<{
 		onSubmit(schema);
 	};
 
-	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
+	const [openAccordions, setOpenAccordions] = useState<string[]>([]);
 
 	const onValidationErrors = (e: Object) => {
 		console.warn('dynamic form validation errors: ', e);
-		setOpenAccordion('all');
+		const nestedOptions = getOptions().filter((option) => getType(option, zodSchema) === 'ZodObject');
+		setOpenAccordions(nestedOptions.map((option) => `accordion-${option}`));
 	};
 
 	return (
@@ -175,17 +189,24 @@ const DynamicForm: FC<{
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						<Accordion
 							key={option}
-							type="single"
-							collapsible
-							value={openAccordion ? (openAccordion === 'all' ? `accordion-${option}` : openAccordion) : 'closed'}
-							onValueChange={(value: string) => setOpenAccordion(value ? `accordion-${option}` : undefined)}
+							type="multiple"
+							value={openAccordions.includes(`accordion-${option}`) ? [`accordion-${option}`] : []}
+							onValueChange={(value: string[]) =>
+								setOpenAccordions((prev) =>
+									value.includes(`accordion-${option}`)
+										? Array.from(new Set([...prev, `accordion-${option}`]))
+										: prev.filter((item) => item !== `accordion-${option}`),
+								)
+							}
 						>
-							{/* TODO: find better solution to hide collapsed content */}
-							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">
+							<AccordionItem
+								value={`accordion-${option}`}
+								className="rounded-xl border border-slate-200 bg-slate-100 px-2 [&[data-state=closed]>div]:h-0"
+							>
 								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
 									{formSchema.fields[option].label}
 								</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:!h-0" forceMount>
+								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:h-0!" forceMount>
 									{getOptions(option).map((nestedOption) => (
 										<GenericFormField
 											option={nestedOption}
@@ -213,22 +234,11 @@ const DynamicForm: FC<{
 						/>
 					);
 				})}
-				<div className="flex gap-2">
-					{mode !== 'readonly' && (
-						<Button disabled={isLoading} type="submit">
-							Save
-						</Button>
-					)}
-					{onCancel && (
-						<Button type="button" variant="outline" onClick={onCancel}>
-							{mode === 'readonly' ? 'Close' : 'Cancel'}
-						</Button>
-					)}
-				</div>
+				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} />
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (
-				<div className="space-0 absolute right-0 top-0 flex h-full w-full items-center justify-center bg-white opacity-80">
+				<div className="absolute top-0 right-0 flex h-full w-full items-center justify-center bg-white opacity-80">
 					<SpinnerIcon />
 				</div>
 			)}
@@ -261,13 +271,17 @@ const GenericFormField = ({
 
 	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { [key: string]: string } => {
 		const def = getDef(key, zodSchema, parentOption);
-		if (isOptional(key, zodSchema, parentOption)) return def.innerType._def.values;
+		if (isOptional(key, zodSchema, parentOption)) {
+			return def.innerType._def.values;
+		}
 		return getType(key, zodSchema, parentOption) === 'ZodEnum' && def.values;
 	};
 
 	const getDateMinMax = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { min?: Date; max?: Date } => {
 		let def = getDef(key, zodSchema, parentOption);
-		if (isOptional(key, zodSchema, parentOption)) def = def.innerType._def;
+		if (isOptional(key, zodSchema, parentOption)) {
+			def = def.innerType._def;
+		}
 		const dateConstraints: { min?: Date; max?: Date } = {};
 
 		if (def.checks) {
@@ -296,6 +310,10 @@ const GenericFormField = ({
 	});
 
 	if (isFormField(formFieldSchema)) {
+		const emitChange = (value: any) => {
+			formFieldSchema.onChange?.(value, form);
+		};
+
 		switch (getType(option, zodSchema, parentOption)) {
 			case 'ZodArray': {
 				const values = getEnumArrayValues(option, zodSchema, parentOption);
@@ -320,7 +338,10 @@ const GenericFormField = ({
 										modalPopover
 										options={options}
 										defaultValue={field.value ?? []}
-										onValueChange={field.onChange}
+										onValueChange={(value) => {
+											field.onChange(value);
+											emitChange(value);
+										}}
 										placeholder={formFieldSchema.placeholder}
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>
@@ -365,7 +386,10 @@ const GenericFormField = ({
 									<DatePicker
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 										{...form.register(optionKey)}
-										onSelect={field.onChange}
+										onSelect={(value) => {
+											field.onChange(value);
+											emitChange(value);
+										}}
 										selected={field.value}
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										startMonth={getDateMinMax(option, parentOption).min}
@@ -394,7 +418,10 @@ const GenericFormField = ({
 										<Combobox
 											options={items}
 											value={field.value ?? ''}
-											onChange={field.onChange}
+											onChange={(value) => {
+												field.onChange(value);
+												emitChange(value);
+											}}
 											placeholder={formFieldSchema.placeholder}
 											disabled={formFieldSchema.disabled || isLoading || readOnly}
 										/>
@@ -416,7 +443,10 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<Select
 									value={field.value}
-									onValueChange={field.onChange}
+									onValueChange={(value) => {
+										field.onChange(value);
+										emitChange(value);
+									}}
 									disabled={formFieldSchema.disabled || isLoading || readOnly}
 								>
 									<FormControl>
@@ -450,7 +480,10 @@ const GenericFormField = ({
 								<Switch
 									id={optionKey}
 									disabled={formFieldSchema.disabled || isLoading || readOnly}
-									onCheckedChange={field.onChange}
+									onCheckedChange={(value) => {
+										field.onChange(value);
+										emitChange(value);
+									}}
 									checked={field.value}
 								/>
 								<FormMessage />

@@ -2,7 +2,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { LanguageCode } from '@/lib/types/language';
 import { useEffect, useState } from 'react';
 
-export function useTranslator(language: LanguageCode, namespace: string) {
+export const useTranslator = (language: LanguageCode, namespace: string) => {
 	const [translators, setTranslators] = useState<Map<string, Translator>>(new Map());
 
 	useEffect(() => {
@@ -15,4 +15,4 @@ export function useTranslator(language: LanguageCode, namespace: string) {
 	}, [language, namespace, translators]);
 
 	return translators.get(namespace);
-}
+};

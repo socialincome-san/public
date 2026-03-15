@@ -1,14 +1,13 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { BaseContainer, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { BaseContainer, FontColor, Typography } from '@socialincome/ui';
 import { DrawCard } from '../(components)/draw-card';
 import { loadPastDraws } from './state';
 
 const revalidate = 3600 * 24; // update once a day
 
-export async function PastRounds({ lang }: DefaultParams) {
+export const PastRounds = async ({ lang }: DefaultParams) => {
 	const pastDraws = await loadPastDraws();
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
@@ -16,7 +15,7 @@ export async function PastRounds({ lang }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="bg-background mx-auto mb-16 mt-28 flex flex-col items-center justify-center md:mb-28">
+		<BaseContainer className="bg-background mx-auto mt-28 mb-16 flex flex-col items-center justify-center md:mb-28">
 			<div className="mx-auto mb-4 max-w-2xl">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-4.title').map((title, index) => (
 					<Typography
@@ -58,4 +57,4 @@ export async function PastRounds({ lang }: DefaultParams) {
 			</div>
 		</BaseContainer>
 	);
-}
+};

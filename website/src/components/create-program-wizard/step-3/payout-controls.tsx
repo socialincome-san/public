@@ -2,10 +2,12 @@
 
 import { Slider } from '@/components/slider';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
-import { PayoutInterval } from '@prisma/client';
+import { PayoutInterval } from '@/generated/prisma/enums';
 
 type Props = {
 	programDuration: number;
+	payoutPerIntervalMin: number;
+	payoutPerIntervalMax: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
 	currency: string;
@@ -14,15 +16,17 @@ type Props = {
 	onIntervalChange: (value: PayoutInterval) => void;
 };
 
-export function PayoutControls({
+export const PayoutControls = ({
 	programDuration,
+	payoutPerIntervalMin,
+	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
 	currency,
 	onDurationChange,
 	onPayoutChange,
 	onIntervalChange,
-}: Props) {
+}: Props) => {
 	return (
 		<div className="space-y-6">
 			<div className="space-y-2">
@@ -31,7 +35,14 @@ export function PayoutControls({
 					<span className="font-medium">{programDuration} months</span>
 				</div>
 
-				<Slider min={6} max={60} step={1} value={[programDuration]} onValueChange={([v]) => onDurationChange(v)} />
+				<Slider
+					data-testid="program-duration-slider"
+					min={6}
+					max={60}
+					step={1}
+					value={[programDuration]}
+					onValueChange={([v]) => onDurationChange(v)}
+				/>
 			</div>
 
 			<div className="space-y-2">
@@ -42,7 +53,14 @@ export function PayoutControls({
 					</span>
 				</div>
 
-				<Slider min={5} max={100} step={1} value={[payoutPerInterval]} onValueChange={([v]) => onPayoutChange(v)} />
+				<Slider
+					data-testid="payout-per-interval-slider"
+					min={payoutPerIntervalMin}
+					max={payoutPerIntervalMax}
+					step={1}
+					value={[payoutPerInterval]}
+					onValueChange={([v]) => onPayoutChange(v)}
+				/>
 			</div>
 
 			<div className="space-y-2">
@@ -58,4 +76,4 @@ export function PayoutControls({
 			</div>
 		</div>
 	);
-}
+};

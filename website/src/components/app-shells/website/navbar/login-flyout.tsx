@@ -6,6 +6,9 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { UserRound } from 'lucide-react';
@@ -22,8 +25,13 @@ type FormValues = z.infer<typeof formSchema>;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const LoginFlyout = () => {
+type Props = {
+	lang: WebsiteLanguage;
+};
+
+export const LoginFlyout = ({ lang }: Props) => {
 	const { auth } = useAuth();
+	const translator = useTranslator(lang, 'website-login');
 
 	const [open, setOpen] = useState(false);
 	const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
@@ -42,7 +50,7 @@ export const LoginFlyout = () => {
 			localStorage.setItem('loginEmail', email);
 
 			const actionCodeSettings = {
-				url: `${window.location.origin}/new-website/auth/finish-login`,
+				url: `${window.location.origin}/${NEW_WEBSITE_SLUG}/auth/confirm-login`,
 				handleCodeInApp: true,
 			};
 
@@ -64,19 +72,15 @@ export const LoginFlyout = () => {
 
 	return (
 		<>
-			<button
-				data-testid="login-button"
-				onClick={() => setOpen(true)}
-				className="flex items-center gap-2 text-base font-medium"
-			>
-				<UserRound className="h-4 w-4" />
-				Login
-			</button>
+			<Button data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
+				<UserRound />
+				{translator?.t('flyout.login-button')}
+			</Button>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
+				<DialogContent className="z-200" overlayClassName="z-200">
 					<DialogHeader>
-						<DialogTitle>Sign in</DialogTitle>
+						<DialogTitle>{translator?.t('flyout.title')}</DialogTitle>
 					</DialogHeader>
 
 					{status === 'idle' && (
@@ -87,7 +91,7 @@ export const LoginFlyout = () => {
 									name="email"
 									render={({ field }) => (
 										<FormItem>
-											<Label>Email</Label>
+											<Label>{translator?.t('email')}</Label>
 											<FormControl>
 												<Input type="email" placeholder="you@example.org" {...field} />
 											</FormControl>
@@ -97,29 +101,28 @@ export const LoginFlyout = () => {
 								/>
 
 								<Button type="submit" className="w-full">
-									Send login link
+									{translator?.t('submit-button')}
 								</Button>
 
-								<p className="text-muted-foreground text-center text-xs">We’ll send you a magic link to sign in.</p>
+								<p className="text-muted-foreground text-center text-xs">
+									{translator?.t('flyout.magic-link-description')}
+								</p>
 							</form>
 						</Form>
 					)}
 
-					{status === 'sending' && <div className="mt-4 text-center text-sm">Sending…</div>}
+					{status === 'sending' && <div className="mt-4 text-center text-sm">{translator?.t('flyout.sending')}</div>}
 
 					{status === 'sent' && (
 						<div className="mt-4 space-y-4 text-center">
-							<p className="text-sm">
-								If an account exists for <span className="font-medium">{submittedEmail}</span>, you’ll receive a login
-								link shortly.
-							</p>
+							<p className="text-sm">{translator?.t('flyout.sent-message', { context: { email: submittedEmail } })}</p>
 
 							<Button variant="outline" onClick={retry} className="w-full">
-								Retry
+								{translator?.t('flyout.retry')}
 							</Button>
 
 							<p className="text-muted-foreground text-xs">
-								If it doesn’t arrive, contact{' '}
+								{translator?.t('flyout.support-prefix')}{' '}
 								<a className="underline" href="mailto:support@socialincome.org">
 									support@socialincome.org
 								</a>
@@ -129,9 +132,9 @@ export const LoginFlyout = () => {
 
 					<div className="mt-6 border-t pt-4 text-center">
 						<p className="text-sm">
-							Don’t have an account?{' '}
+							{translator?.t('flyout.no-account')}{' '}
 							<Link href="/get-started" className="underline">
-								Learn how to get started
+								{translator?.t('flyout.get-started')}
 							</Link>
 						</p>
 					</div>
