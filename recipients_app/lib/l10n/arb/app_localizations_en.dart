@@ -181,7 +181,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get survey => 'Survey';
 
   @override
-  String get createAccountInfo => 'Before proceeding, you must accept our ';
+  String get acceptAndContinueInfo => 'Before proceeding, you must accept our ';
 
   @override
   String get privacyPolicy => 'Privacy Policy';
@@ -190,7 +190,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyPolicyError => 'Can\'t open privacy policy right now. Copied website address to the clipboard.';
 
   @override
-  String get createAccount => 'Accept and Continue';
+  String get acceptAndContinue => 'Accept and Continue';
+
+  @override
+  String get acceptAndContinueDemo => 'Enter demo';
 
   @override
   String get recommendingOrganization => 'Recommending Organization';
@@ -708,9 +711,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get demoCta => 'Demo';
-
-  @override
-  String get createAccountDemo => 'Enter demo';
 
   @override
   String get contestReason_phoneStolen => 'Phone stolen';

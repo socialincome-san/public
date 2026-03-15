@@ -44,7 +44,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: context.l10n.createAccountInfo,
+                          text: context.l10n.acceptAndContinueInfo,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,
@@ -98,7 +98,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                       selfUpdate: const RecipientSelfUpdate(termsAccepted: true),
                     );
                   },
-                  label: demoManager.isDemoEnabled ? context.l10n.createAccountDemo : context.l10n.createAccount, // TODO: change label to "Accept and Continue" or similar
+                  label: demoManager.isDemoEnabled ? context.l10n.acceptAndContinueDemo : context.l10n.acceptAndContinue,
                 ),
               ],
             ),

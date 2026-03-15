@@ -434,11 +434,11 @@ abstract class AppLocalizations {
   /// **'Survey'**
   String get survey;
 
-  /// No description provided for @createAccountInfo.
+  /// No description provided for @acceptAndContinueInfo.
   ///
   /// In en, this message translates to:
   /// **'Before proceeding, you must accept our '**
-  String get createAccountInfo;
+  String get acceptAndContinueInfo;
 
   /// No description provided for @privacyPolicy.
   ///
@@ -452,11 +452,17 @@ abstract class AppLocalizations {
   /// **'Can\'t open privacy policy right now. Copied website address to the clipboard.'**
   String get privacyPolicyError;
 
-  /// No description provided for @createAccount.
+  /// No description provided for @acceptAndContinue.
   ///
   /// In en, this message translates to:
   /// **'Accept and Continue'**
-  String get createAccount;
+  String get acceptAndContinue;
+
+  /// No description provided for @acceptAndContinueDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter demo'**
+  String get acceptAndContinueDemo;
 
   /// No description provided for @recommendingOrganization.
   ///
@@ -1459,12 +1465,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Demo'**
   String get demoCta;
-
-  /// No description provided for @createAccountDemo.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter demo'**
-  String get createAccountDemo;
 
   /// No description provided for @contestReason_phoneStolen.
   ///

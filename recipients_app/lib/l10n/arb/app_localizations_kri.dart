@@ -181,7 +181,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get survey => 'Sɔve';
 
   @override
-  String get createAccountInfo => 'Bifo yu go bifo, yu fɔ aksept wi ';
+  String get acceptAndContinueInfo => 'Bifo yu go bifo, yu fɔ aksept wi ';
 
   @override
   String get privacyPolicy => 'Wi de kip sikrit';
@@ -191,7 +191,10 @@ class AppLocalizationsKri extends AppLocalizations {
       'Nɔ ebul opin usay wi de kip sikrit rayt naw. Kɔpi di wɛbsayt adrɛs put am na di klipbod.';
 
   @override
-  String get createAccount => 'Aksept ɛn Kɔntinyu';
+  String get acceptAndContinue => 'Aksept ɛn Kɔntinyu';
+
+  @override
+  String get acceptAndContinueDemo => 'Go insay demo';
 
   @override
   String get recommendingOrganization => 'Ɔganizeshɔn we go tɔk fɔ yu';
@@ -708,9 +711,6 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get demoCta => 'Demo';
-
-  @override
-  String get createAccountDemo => 'Go insay demo';
 
   @override
   String get contestReason_phoneStolen => 'Dɛn tif fon';
