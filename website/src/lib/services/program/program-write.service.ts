@@ -182,6 +182,7 @@ export class ProgramWriteService extends BaseService {
 					data: {
 						name: parsedInput.name,
 						countryId: parsedInput.countryId,
+						coveredByReserves: parsedInput.coveredByReserves,
 						programDurationInMonths: parsedInput.programDurationInMonths,
 						payoutPerInterval: parsedInput.payoutPerInterval,
 						payoutInterval: parsedInput.payoutInterval,

@@ -76,6 +76,7 @@ export type ProgramSettingsUpdateInput = {
 	id: string;
 	name: string;
 	countryId: string;
+	coveredByReserves: boolean;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;

@@ -81,7 +81,7 @@ const getTypeName = (def: unknown): string | undefined => {
 const getType = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
 	const def = getDef(key, zodSchema, parentKey);
 	const unwrappedDef = unwrapOptional(def);
-	let type = getTypeName(unwrappedDef) ?? 'ZodUnknown';
+	const type = getTypeName(unwrappedDef) ?? 'ZodUnknown';
 	if (type === 'ZodEffects') {
 		return (
 			getTypeName(

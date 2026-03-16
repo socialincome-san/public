@@ -24,6 +24,7 @@ export const programSettingsUpdateInputSchema = z.object({
 	id: z.string().trim().min(1, 'Program id is required.'),
 	name: z.string().trim().min(2, 'Program name must be at least 2 characters.'),
 	countryId: z.string().trim().min(1, 'Country is required.'),
+	coveredByReserves: z.boolean().default(false),
 	programDurationInMonths: positiveInteger,
 	payoutPerInterval: positiveNumber,
 	payoutInterval: z.nativeEnum(PayoutInterval),

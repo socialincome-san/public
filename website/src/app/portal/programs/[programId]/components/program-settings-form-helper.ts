@@ -40,6 +40,7 @@ const toStringArray = (value: FormField['value']): string[] =>
 type ProgramSettingsFormFields = {
 	name: FormField;
 	country: FormField;
+	coveredByReserves: FormField;
 	programDurationInMonths: FormField;
 	payoutPerInterval: FormField;
 	payoutInterval: FormField;
@@ -63,6 +64,7 @@ export const buildUpdateProgramSettingsInput = (
 		id: programId,
 		name: typeof fields.name.value === 'string' ? fields.name.value : '',
 		countryId: typeof fields.country.value === 'string' ? fields.country.value : '',
+		coveredByReserves: fields.coveredByReserves.value === true,
 		programDurationInMonths: toNumber(fields.programDurationInMonths.value),
 		payoutPerInterval: toNumber(fields.payoutPerInterval.value),
 		payoutInterval: toPayoutInterval(fields.payoutInterval.value),

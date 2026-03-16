@@ -32,6 +32,7 @@ type ProgramSettingsFormSchema = {
 		id: FormField;
 		name: FormField;
 		country: FormField;
+		coveredByReserves: FormField;
 		programDurationInMonths: FormField;
 		payoutPerInterval: FormField;
 		payoutInterval: FormField;
@@ -62,6 +63,10 @@ const initialFormSchema: ProgramSettingsFormSchema = {
 			useCombobox: true,
 			zodSchema: z.string().optional(),
 			options: [],
+		},
+		coveredByReserves: {
+			label: 'Covered by reserves',
+			zodSchema: z.boolean().optional(),
 		},
 		programDurationInMonths: {
 			label: 'Program duration in months',
@@ -139,6 +144,7 @@ const fillFormSchema = (
 			id: { ...formSchema.fields.id },
 			name: { ...formSchema.fields.name },
 			country: { ...formSchema.fields.country },
+			coveredByReserves: { ...formSchema.fields.coveredByReserves },
 			programDurationInMonths: { ...formSchema.fields.programDurationInMonths },
 			payoutPerInterval: { ...formSchema.fields.payoutPerInterval },
 			payoutInterval: { ...formSchema.fields.payoutInterval },
@@ -155,6 +161,7 @@ const fillFormSchema = (
 	nextSchema.fields.id.disabled = true;
 	nextSchema.fields.name.value = settings.name;
 	nextSchema.fields.country.value = settings.countryId;
+	nextSchema.fields.coveredByReserves.value = settings.coveredByReserves;
 	nextSchema.fields.country.options = countryOptions;
 	nextSchema.fields.country.zodSchema =
 		countryOptions.length > 0 ? z.nativeEnum(countryEnum) : z.string().trim().min(1, 'Country is required.');
@@ -170,6 +177,7 @@ const fillFormSchema = (
 
 	nextSchema.fields.name.disabled = readOnlyFields;
 	nextSchema.fields.country.disabled = readOnlyFields;
+	nextSchema.fields.coveredByReserves.disabled = readOnlyFields;
 	nextSchema.fields.programDurationInMonths.disabled = readOnlyFields;
 	nextSchema.fields.payoutPerInterval.disabled = readOnlyFields;
 	nextSchema.fields.payoutInterval.disabled = readOnlyFields;

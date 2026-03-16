@@ -37,6 +37,7 @@ test('program settings dialog for program-1 updates all editable values and save
 	await selectOptionByTestId(page, 'country', 'Angola (AOA)');
 	await dialog.getByTestId('form-item-programDurationInMonths').locator('input').fill(updatedDuration);
 	await dialog.getByTestId('form-item-payoutPerInterval').locator('input').fill(updatedPayoutPerInterval);
+	await dialog.getByTestId('form-item-coveredByReserves').getByRole('switch').click();
 	await selectOptionByTestId(page, 'payoutInterval', 'Quarterly');
 	await selectMultiOptionsByTestId(page, 'targetCauses', ['poverty']);
 	await selectMultiOptionsByTestId(page, 'targetProfiles', ['female']);
@@ -50,6 +51,10 @@ test('program settings dialog for program-1 updates all editable values and save
 	await expect(dialog.getByTestId('form-item-country')).toContainText('Angola');
 	await expect(dialog.getByTestId('form-item-programDurationInMonths').locator('input')).toHaveValue(updatedDuration);
 	await expect(dialog.getByTestId('form-item-payoutPerInterval').locator('input')).toHaveValue(updatedPayoutPerInterval);
+	await expect(dialog.getByTestId('form-item-coveredByReserves').getByRole('switch')).toHaveAttribute(
+		'aria-checked',
+		'true',
+	);
 	await expect(dialog.getByTestId('form-item-payoutInterval')).toContainText('Quarterly');
 	await expect(dialog.getByTestId('form-item-targetCauses')).toContainText('poverty');
 	await expect(dialog.getByTestId('form-item-targetProfiles')).toContainText('female');
