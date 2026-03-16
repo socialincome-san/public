@@ -19,6 +19,7 @@ export class ContributionValidationService extends BaseService {
 		if (!parsed.success) {
 			return this.resultFail(parsed.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsed.data);
 	}
 
@@ -27,6 +28,7 @@ export class ContributionValidationService extends BaseService {
 		if (!parsed.success) {
 			return this.resultFail(parsed.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsed.data);
 	}
 
@@ -48,6 +50,7 @@ export class ContributionValidationService extends BaseService {
 		if (!campaign) {
 			return this.resultFail('Campaign not found.');
 		}
+
 		return this.resultOk(undefined);
 	}
 }

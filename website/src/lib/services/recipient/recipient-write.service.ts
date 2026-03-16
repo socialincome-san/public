@@ -105,6 +105,7 @@ export class RecipientWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create recipient. Please try again later.');
 		}
 	}
@@ -702,6 +703,7 @@ export class RecipientWriteService extends BaseService {
 			return this.resultOk({ id: recipientId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not delete recipient. Please try again later.');
 		}
 	}

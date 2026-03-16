@@ -6,6 +6,7 @@ const nullableTrimmedString = z.preprocess((value) => {
 		return value;
 	}
 	const trimmedValue = value.trim();
+
 	return trimmedValue === '' ? null : trimmedValue;
 }, z.string().nullable());
 
@@ -14,6 +15,7 @@ const optionalTrimmedString = z.preprocess((value) => {
 		return value;
 	}
 	const trimmedValue = value.trim();
+
 	return trimmedValue === '' ? undefined : trimmedValue;
 }, z.string().optional());
 
@@ -30,6 +32,7 @@ const nullableEmail = z.preprocess((value) => {
 		return value;
 	}
 	const trimmedValue = value.trim();
+
 	return trimmedValue === '' ? null : trimmedValue;
 }, z.string().email('Must be a valid email address.').nullable());
 

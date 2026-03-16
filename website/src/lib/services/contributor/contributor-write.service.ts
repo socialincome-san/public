@@ -183,6 +183,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update contributor. Please try again later.');
 		}
 	}
@@ -406,6 +407,7 @@ export class ContributorWriteService extends BaseService {
 
 	private buildContactCreateData(input: ContributorFormCreateInput): Prisma.ContactCreateWithoutContributorInput {
 		const addressInput = this.contactRelationsService.getAddressInput(input.contact);
+
 		return {
 			firstName: input.contact.firstName,
 			lastName: input.contact.lastName,
@@ -434,6 +436,7 @@ export class ContributorWriteService extends BaseService {
 		currentAddressId: string | undefined,
 	): Prisma.ContactUpdateWithoutContributorInput {
 		const addressInput = this.contactRelationsService.getAddressInput(input.contact);
+
 		return {
 			firstName: input.contact.firstName,
 			lastName: input.contact.lastName,
@@ -507,6 +510,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create contributor. Please try again later.');
 		}
 	}
