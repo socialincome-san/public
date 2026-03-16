@@ -92,15 +92,15 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 
 						return {
 							...next,
-						fields: {
-							...next.fields,
-							recipientId: { ...next.fields.recipientId, value: data.recipient.id },
-							amount: { ...next.fields.amount, value: data.amount },
-							currency: { ...next.fields.currency, value: data.currency },
-							phoneNumber: { ...next.fields.phoneNumber, value: data.phoneNumber ?? undefined },
-							paymentAt: { ...next.fields.paymentAt, value: new Date(data.paymentAt) },
-							status: { ...next.fields.status, value: data.status },
-						},
+							fields: {
+								...next.fields,
+								recipientId: { ...next.fields.recipientId, value: data.recipient.id },
+								amount: { ...next.fields.amount, value: data.amount },
+								currency: { ...next.fields.currency, value: data.currency },
+								phoneNumber: { ...next.fields.phoneNumber, value: data.phoneNumber ?? undefined },
+								paymentAt: { ...next.fields.paymentAt, value: new Date(data.paymentAt) },
+								status: { ...next.fields.status, value: data.status },
+							},
 						};
 					});
 				},

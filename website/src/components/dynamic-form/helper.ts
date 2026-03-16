@@ -55,10 +55,7 @@ export const getZodEnum = (items: DropdownItem[]) => {
 
 export const cloneFormSchema = <TSchema extends FormSchema>(schema: TSchema): TSchema => {
 	const clonedFields = Object.fromEntries(
-		Object.entries(schema.fields).map(([key, field]) => [
-			key,
-			'fields' in field ? cloneFormSchema(field) : { ...field },
-		]),
+		Object.entries(schema.fields).map(([key, field]) => [key, 'fields' in field ? cloneFormSchema(field) : { ...field }]),
 	) as TSchema['fields'];
 
 	return {

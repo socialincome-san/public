@@ -77,13 +77,13 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 
 					return {
 						...next,
-					fields: {
-						...next.fields,
-						type: { ...next.fields.type, value: data.type },
-						year: { ...next.fields.year, value: data.year },
-						amountChf: { ...next.fields.amountChf, value: data.amountChf },
-						organization: { ...next.fields.organization, value: data.organization.id },
-					},
+						fields: {
+							...next.fields,
+							type: { ...next.fields.type, value: data.type },
+							year: { ...next.fields.year, value: data.year },
+							amountChf: { ...next.fields.amountChf, value: data.amountChf },
+							organization: { ...next.fields.organization, value: data.organization.id },
+						},
 					};
 				});
 			},

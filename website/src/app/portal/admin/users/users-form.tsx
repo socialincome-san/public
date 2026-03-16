@@ -74,14 +74,14 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 					return {
 						...next,
-					fields: {
-						...next.fields,
-						firstName: { ...next.fields.firstName, value: data.firstName },
-						lastName: { ...next.fields.lastName, value: data.lastName },
-						email: { ...next.fields.email, value: data.email },
-						role: { ...next.fields.role, value: data.role },
-						organizationId: { ...next.fields.organizationId, value: data.organizationId },
-					},
+						fields: {
+							...next.fields,
+							firstName: { ...next.fields.firstName, value: data.firstName },
+							lastName: { ...next.fields.lastName, value: data.lastName },
+							email: { ...next.fields.email, value: data.email },
+							role: { ...next.fields.role, value: data.role },
+							organizationId: { ...next.fields.organizationId, value: data.organizationId },
+						},
 					};
 				});
 			},

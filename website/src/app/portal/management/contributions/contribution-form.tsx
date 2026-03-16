@@ -144,16 +144,16 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 
 						return {
 							...next,
-						fields: {
-							...next.fields,
-							amount: { ...next.fields.amount, value: data.amount },
-							currency: { ...next.fields.currency, value: data.currency },
-							amountChf: { ...next.fields.amountChf, value: data.amountChf },
-							feesChf: { ...next.fields.feesChf, value: data.feesChf },
-							status: { ...next.fields.status, value: data.status },
-							contributor: { ...next.fields.contributor, value: data.contributor.id },
-							campaign: { ...next.fields.campaign, value: data.campaign.id },
-						},
+							fields: {
+								...next.fields,
+								amount: { ...next.fields.amount, value: data.amount },
+								currency: { ...next.fields.currency, value: data.currency },
+								amountChf: { ...next.fields.amountChf, value: data.amountChf },
+								feesChf: { ...next.fields.feesChf, value: data.feesChf },
+								status: { ...next.fields.status, value: data.status },
+								contributor: { ...next.fields.contributor, value: data.contributor.id },
+								campaign: { ...next.fields.campaign, value: data.campaign.id },
+							},
 						};
 					});
 				},

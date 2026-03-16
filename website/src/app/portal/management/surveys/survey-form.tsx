@@ -105,16 +105,16 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 
 						return {
 							...next,
-						fields: {
-							...next.fields,
-							name: { ...next.fields.name, value: data.name },
-							recipientId: { ...next.fields.recipientId, value: data.recipientId },
-							questionnaire: { ...next.fields.questionnaire, value: data.questionnaire },
-							language: { ...next.fields.language, value: data.language },
-							dueAt: { ...next.fields.dueAt, value: data.dueAt },
-							status: { ...next.fields.status, value: data.status },
-							accessEmail: { ...next.fields.accessEmail, value: data.accessEmail },
-						},
+							fields: {
+								...next.fields,
+								name: { ...next.fields.name, value: data.name },
+								recipientId: { ...next.fields.recipientId, value: data.recipientId },
+								questionnaire: { ...next.fields.questionnaire, value: data.questionnaire },
+								language: { ...next.fields.language, value: data.language },
+								dueAt: { ...next.fields.dueAt, value: data.dueAt },
+								status: { ...next.fields.status, value: data.status },
+								accessEmail: { ...next.fields.accessEmail, value: data.accessEmail },
+							},
 						};
 					});
 				},
