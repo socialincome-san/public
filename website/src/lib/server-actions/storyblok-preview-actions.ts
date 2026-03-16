@@ -14,12 +14,12 @@ type UpdateStoryblokPreviewActionParams = {
 	previewRoutePath: string;
 };
 
-export const updateStoryblokPreviewAction = ({
+export const updateStoryblokPreviewAction = async ({
 	story,
 	previewToken,
 	previewTimestamp,
 	previewRoutePath,
-}: UpdateStoryblokPreviewActionParams): ServiceResult<void> => {
+}: UpdateStoryblokPreviewActionParams): Promise<ServiceResult<void>> => {
 	if (!story || !previewToken || !previewTimestamp || !previewRoutePath) {
 		return resultFail('Missing required preview parameters');
 	}
@@ -31,6 +31,7 @@ export const updateStoryblokPreviewAction = ({
 	const cacheKey = buildPreviewCacheKey(previewToken, previewRoutePath);
 	setPreviewCache(cacheKey, story);
 	revalidatePath(previewRoutePath);
+	await Promise.resolve();
 
 	return resultOk(undefined);
 };
