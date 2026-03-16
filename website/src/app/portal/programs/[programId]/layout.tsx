@@ -1,9 +1,9 @@
+import { CountryBadge } from '@/components/badges/country-badge';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { services } from '@/lib/services/services';
-import { CountryBadge } from '@/components/badges/country-badge';
-import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { ReactNode } from 'react';
 import { ProgramSettingsDialog } from './components/program-settings-dialog';
 
