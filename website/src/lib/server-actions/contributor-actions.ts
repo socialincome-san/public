@@ -1,7 +1,11 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { ContributorFormCreateInput, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
+import {
+	ContributorFormCreateInput,
+	ContributorFormUpdateInput,
+} from '@/lib/services/contributor/contributor-form-input';
+import { ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
@@ -17,7 +21,7 @@ export const createContributorAction = async (data: ContributorFormCreateInput) 
 	return res;
 };
 
-export const updateContributorAction = async (contributor: ContributorUpdateInput) => {
+export const updateContributorAction = async (contributor: ContributorFormUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

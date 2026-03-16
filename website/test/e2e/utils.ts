@@ -36,6 +36,28 @@ export const getRecipientIdByName = async (firstName: string, lastName: string) 
 	});
 };
 
+export const getCandidateByName = async (firstName: string, lastName: string) => {
+	return prisma.recipient.findFirst({
+		where: {
+			programId: null,
+			contact: {
+				firstName,
+				lastName,
+			},
+		},
+		select: {
+			id: true,
+			localPartner: { select: { name: true } },
+			paymentInformation: {
+				select: {
+					code: true,
+					phone: { select: { number: true } },
+				},
+			},
+		},
+	});
+};
+
 export const assertContactExistsByEmail = async (email: string) => {
 	await prisma.contact.findUniqueOrThrow({
 		where: {

@@ -12,7 +12,7 @@ export const userCreateInputSchema = z.object({
 });
 
 export const userUpdateInputSchema = userCreateInputSchema.extend({
-	id: requiredTrimmedString('User id').optional(),
+	id: requiredTrimmedString('User id'),
 });
 
 export type UserFormCreateInput = z.infer<typeof userCreateInputSchema>;

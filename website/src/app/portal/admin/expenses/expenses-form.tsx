@@ -72,12 +72,16 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 		handleServiceResult(result, {
 			onSuccess: (data) => {
 				setExpense(data);
-				const next = { ...formSchema };
-				next.fields.type.value = data.type;
-				next.fields.year.value = data.year;
-				next.fields.amountChf.value = data.amountChf;
-				next.fields.organization.value = data.organization.id;
-				setFormSchema(next);
+				setFormSchema((prev) => ({
+					...prev,
+					fields: {
+						...prev.fields,
+						type: { ...prev.fields.type, value: data.type },
+						year: { ...prev.fields.year, value: data.year },
+						amountChf: { ...prev.fields.amountChf, value: data.amountChf },
+						organization: { ...prev.fields.organization, value: data.organization.id },
+					},
+				}));
 			},
 			onError: (error) => onError?.(error),
 		});
@@ -106,6 +110,9 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 
 	const onSubmit = (schema: ExpenseFormSchema) => {
 		startTransition(async () => {
+			if (expenseId && (!expense || expense.id !== expenseId)) {
+				return onError?.('Expense is still loading. Please try again.');
+			}
 			const result =
 				expenseId && expense
 					? await updateExpenseAction(buildUpdateExpenseInput(schema, expense))

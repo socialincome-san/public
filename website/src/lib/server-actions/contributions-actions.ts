@@ -1,12 +1,15 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { ContributionCreateInput, ContributionUpdateInput } from '@/lib/services/contribution/contribution.types';
+import {
+	ContributionFormCreateInput,
+	ContributionFormUpdateInput,
+} from '@/lib/services/contribution/contribution-form-input';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-export const createContributionAction = async (contribution: ContributionCreateInput) => {
+export const createContributionAction = async (contribution: ContributionFormCreateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -16,7 +19,7 @@ export const createContributionAction = async (contribution: ContributionCreateI
 	return res;
 };
 
-export const updateContributionAction = async (contribution: ContributionUpdateInput) => {
+export const updateContributionAction = async (contribution: ContributionFormUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

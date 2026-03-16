@@ -38,7 +38,13 @@ export default function CampaignsTable({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving campaign: ${error}`);
+		const message =
+			error instanceof Error
+				? error.message
+				: typeof error === 'string'
+					? error
+					: 'An unexpected error occurred while saving.';
+		setErrorMessage(`Error saving campaign: ${message}`);
 		logger.error('Campaigns Form Error', { error });
 	};
 

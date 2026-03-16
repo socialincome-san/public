@@ -4,12 +4,15 @@ import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
-import { PayoutCreateInput, PayoutEntity, PayoutPayload, PayoutUpdateInput } from './payout.types';
+import { PayoutFormCreateInput, PayoutFormUpdateInput } from './payout-form-input';
+import { PayoutValidationService } from './payout-validation.service';
+import { PayoutEntity, PayoutPayload } from './payout.types';
 
 export class PayoutWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
+		private readonly payoutValidationService: PayoutValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -60,10 +63,16 @@ export class PayoutWriteService extends BaseService {
 		}
 	}
 
-	async create(userId: string, input: PayoutCreateInput): Promise<ServiceResult<PayoutPayload>> {
+	async create(userId: string, input: PayoutFormCreateInput): Promise<ServiceResult<PayoutPayload>> {
+		const validatedInputResult = this.payoutValidationService.validateCreateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
 		try {
 			const recipient = await this.db.recipient.findUnique({
-				where: { id: input.recipient.connect.id },
+				where: { id: validatedInput.recipientId },
 				select: { programId: true },
 			});
 
@@ -86,7 +95,15 @@ export class PayoutWriteService extends BaseService {
 			}
 
 			const created = await this.db.payout.create({
-				data: input,
+				data: {
+					recipient: { connect: { id: validatedInput.recipientId } },
+					amount: validatedInput.amount,
+					currency: validatedInput.currency,
+					status: validatedInput.status,
+					paymentAt: validatedInput.paymentAt,
+					phoneNumber: validatedInput.phoneNumber,
+					comments: validatedInput.comments,
+				},
 				include: {
 					recipient: {
 						select: {
@@ -120,10 +137,16 @@ export class PayoutWriteService extends BaseService {
 		}
 	}
 
-	async update(userId: string, input: PayoutUpdateInput): Promise<ServiceResult<PayoutPayload>> {
+	async update(userId: string, input: PayoutFormUpdateInput): Promise<ServiceResult<PayoutPayload>> {
+		const validatedInputResult = this.payoutValidationService.validateUpdateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
 		try {
 			const existing = await this.db.payout.findUnique({
-				where: { id: input.id },
+				where: { id: validatedInput.id },
 				select: { recipient: { select: { programId: true } } },
 			});
 
@@ -145,9 +168,37 @@ export class PayoutWriteService extends BaseService {
 				}
 			}
 
+			const targetRecipient = await this.db.recipient.findUnique({
+				where: { id: validatedInput.recipientId },
+				select: { programId: true },
+			});
+			if (!targetRecipient) {
+				return this.resultFail('Recipient not found');
+			}
+			if (targetRecipient.programId) {
+				const access = await this.programAccessService.getAccessiblePrograms(userId);
+				if (!access.success) {
+					return this.resultFail(access.error);
+				}
+				const canEditTarget = access.data.some(
+					(p) => p.programId === targetRecipient.programId && p.permission === ProgramPermission.operator,
+				);
+				if (!canEditTarget) {
+					return this.resultFail('No edit access for selected recipient');
+				}
+			}
+
 			const updated = await this.db.payout.update({
-				where: { id: input.id },
-				data: input,
+				where: { id: validatedInput.id },
+				data: {
+					amount: validatedInput.amount,
+					currency: validatedInput.currency,
+					status: validatedInput.status,
+					paymentAt: validatedInput.paymentAt,
+					phoneNumber: validatedInput.phoneNumber,
+					comments: validatedInput.comments,
+					recipient: { connect: { id: validatedInput.recipientId } },
+				},
 				include: {
 					recipient: {
 						select: {

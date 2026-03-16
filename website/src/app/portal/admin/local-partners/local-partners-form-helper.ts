@@ -1,3 +1,4 @@
+import { mapContactFormFields } from '@/components/dynamic-form/contact-form-input-mapper';
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import {
 	LocalPartnerFormCreateInput,
@@ -15,7 +16,7 @@ export const buildUpdateLocalPartnerInput = (
 		id: localPartner.id,
 		name: schema.fields.name.value,
 		causes: schema.fields.causes.value ?? [],
-		contact: mapContactFields(contactFields),
+		contact: mapContactFormFields(contactFields, { email: 'required' }),
 	};
 };
 
@@ -26,7 +27,7 @@ export const buildCreateLocalPartnerInput = (
 	return {
 		name: schema.fields.name.value,
 		causes: schema.fields.causes.value ?? [],
-		contact: mapContactFields(contactFields),
+		contact: mapContactFormFields(contactFields, { email: 'required' }),
 	};
 };
 
