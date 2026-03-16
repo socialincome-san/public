@@ -1,7 +1,10 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import type { OrganizationFormCreateInput, OrganizationFormUpdateInput } from '@/lib/services/organization/organization-form-input';
+import type {
+	OrganizationFormCreateInput,
+	OrganizationFormUpdateInput,
+} from '@/lib/services/organization/organization-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 

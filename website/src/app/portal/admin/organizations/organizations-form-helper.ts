@@ -1,5 +1,8 @@
 import type { FormField } from '@/components/dynamic-form/dynamic-form';
-import type { OrganizationFormCreateInput, OrganizationFormUpdateInput } from '@/lib/services/organization/organization-form-input';
+import type {
+	OrganizationFormCreateInput,
+	OrganizationFormUpdateInput,
+} from '@/lib/services/organization/organization-form-input';
 import type { OrganizationFormSchema } from './organizations-form';
 
 const toStringArray = (value: FormField['value']): string[] =>

@@ -4,8 +4,8 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
 import { OrganizationFormCreateInput, OrganizationFormUpdateInput } from './organization-form-input';
-import { OrganizationPayload } from './organization.types';
 import { OrganizationValidationService } from './organization-validation.service';
+import { OrganizationPayload } from './organization.types';
 
 const buildOrganizationAccessRows = (
 	organizationId: string,
