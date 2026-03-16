@@ -1,9 +1,8 @@
-import { Cause, Currency, PayoutInterval } from '@/generated/prisma/enums';
+import { Cause, Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import { calculateProgramBudgetAction } from '@/lib/server-actions/program-stats-actions';
-import { Profile } from '@/lib/services/candidate/candidate.types';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput } from '@/lib/services/program/program.types';
 import { assign, fromPromise, setup } from 'xstate';
@@ -271,8 +270,8 @@ export const createProgramWizardMachine = setup({
 				src: 'loadCandidateCounts',
 				input: ({ context }) => ({
 					countryId: context.selectedCountryId,
-					causes: context.targetCauses,
-					profiles: context.targetProfiles,
+					causes: context.recipientApproach === 'targeted' ? context.targetCauses : [],
+					profiles: context.recipientApproach === 'targeted' ? context.targetProfiles : [],
 				}),
 				onDone: {
 					actions: assign(({ context, event }) => {

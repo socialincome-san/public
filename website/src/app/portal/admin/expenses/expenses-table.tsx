@@ -6,6 +6,7 @@ import { expensesTableConfig } from '@/components/data-table/configs/expenses-ta
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
+import { getErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -37,12 +38,7 @@ export default function ExpensesTable({
 	};
 
 	const onError = (error: unknown) => {
-		const errorMessage =
-			error instanceof Error
-				? error.message
-				: typeof error === 'string'
-					? error
-					: 'An unexpected error occurred while saving.';
+		const errorMessage = getErrorMessage(error);
 		setErrorMessage(`Error saving expense: ${errorMessage}`);
 		logger.error('Expense Form Error', { error });
 	};

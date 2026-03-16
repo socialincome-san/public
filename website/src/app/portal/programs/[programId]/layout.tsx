@@ -1,10 +1,11 @@
 import { TabNavigation } from '@/components/tab-navigation';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { services } from '@/lib/services/services';
-
 import { CountryBadge } from '@/components/badges/country-badge';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { ReactNode } from 'react';
+import { ProgramSettingsDialog } from './components/program-settings-dialog';
 
 type ProgramLayoutProps = {
 	children: ReactNode;
@@ -43,6 +44,10 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 				<h1 className="py-8 text-5xl">{programName}</h1>
 
 				<CountryBadge country={country} />
+
+				<div className="ml-auto">
+					<ProgramSettingsDialog programId={programId} readOnly={result.data.permission === ProgramPermission.owner} />
+				</div>
 			</div>
 
 			<TabNavigation sections={sections} />

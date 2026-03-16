@@ -44,6 +44,7 @@ import { ProgramAccessReadService } from './program-access/program-access-read.s
 import { ProgramAccessWriteService } from './program-access/program-access-write.service';
 import { ProgramStatsService } from './program-stats/program-stats.service';
 import { ProgramReadService } from './program/program-read.service';
+import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
 import { RecipientValidationService } from './recipient/recipient-validation.service';
@@ -133,7 +134,14 @@ const donationCertificateRead = new DonationCertificateReadService(prisma, organ
 const programStats = new ProgramStatsService(prisma, exchangeRateRead);
 const campaignRead = new CampaignReadService(prisma, organizationAccess, exchangeRateRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
-const programWrite = new ProgramWriteService(prisma, programAccessWrite, candidateWrite);
+const programValidation = new ProgramValidationService(prisma);
+const programWrite = new ProgramWriteService(
+	prisma,
+	programAccessRead,
+	programAccessWrite,
+	candidateWrite,
+	programValidation,
+);
 const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, programStats);
 const payoutProcess = new PayoutProcessService(prisma, programAccessRead, programStats, exchangeRateRead);
 const donationCertificateWrite = new DonationCertificateWriteService(

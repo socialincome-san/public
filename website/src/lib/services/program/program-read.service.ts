@@ -5,7 +5,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
-import { ProgramOption, ProgramWallet, ProgramWallets, PublicProgramDetails } from './program.types';
+import { ProgramOption, ProgramSettingsPayload, ProgramWallet, ProgramWallets, PublicProgramDetails } from './program.types';
 
 export class ProgramReadService extends BaseService {
 	constructor(
@@ -260,6 +260,73 @@ export class ProgramReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch program name: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getSettings(userId: string, programId: string): Promise<ServiceResult<ProgramSettingsPayload>> {
+		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const programAccesses = accessibleProgramsResult.data.filter((program) => program.programId === programId);
+			if (programAccesses.length === 0) {
+				return this.resultFail('Permission denied');
+			}
+			const permission = programAccesses.some((access) => access.permission === ProgramPermission.operator)
+				? ProgramPermission.operator
+				: ProgramPermission.owner;
+
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: {
+					id: true,
+					name: true,
+					countryId: true,
+					country: {
+						select: {
+							isoCode: true,
+							currency: true,
+						},
+					},
+					amountOfRecipientsForStart: true,
+					coveredByReserves: true,
+					programDurationInMonths: true,
+					payoutPerInterval: true,
+					payoutInterval: true,
+					targetCauses: true,
+					targetProfiles: true,
+					createdAt: true,
+					updatedAt: true,
+				},
+			});
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			return this.resultOk({
+				id: program.id,
+				name: program.name,
+				countryId: program.countryId,
+				country: program.country,
+				amountOfRecipientsForStart: program.amountOfRecipientsForStart,
+				coveredByReserves: program.coveredByReserves,
+				programDurationInMonths: program.programDurationInMonths,
+				payoutPerInterval: Number(program.payoutPerInterval),
+				payoutInterval: program.payoutInterval,
+				targetCauses: program.targetCauses,
+				targetProfiles: program.targetProfiles,
+				createdAt: program.createdAt,
+				updatedAt: program.updatedAt,
+				permission,
+				canEdit: permission === ProgramPermission.operator,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load program settings: ${JSON.stringify(error)}`);
 		}
 	}
 }

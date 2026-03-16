@@ -1,18 +1,22 @@
-import { Currency, PrismaClient } from '@/generated/prisma/client';
+import { Currency, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { CandidateWriteService } from '../candidate/candidate-write.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramAccessWriteService } from '../program-access/program-access-write.service';
-import { CreateProgramInput } from './program.types';
+import { ProgramValidationService } from './program-validation.service';
+import { CreateProgramInput, ProgramSettingsUpdateInput } from './program.types';
 
 export class ProgramWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
+		private readonly programAccessReadService: ProgramAccessReadService,
 		private readonly programAccessService: ProgramAccessWriteService,
 		private readonly candidateService: CandidateWriteService,
+		private readonly programValidationService: ProgramValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -57,6 +61,7 @@ export class ProgramWriteService extends BaseService {
 					payoutPerInterval: input.payoutPerInterval,
 					payoutInterval: input.payoutInterval,
 					targetCauses: input.targetCauses,
+					targetProfiles: input.targetProfiles,
 				},
 			});
 
@@ -91,6 +96,7 @@ export class ProgramWriteService extends BaseService {
 					input.amountOfRecipientsForStart,
 					country.isoCode,
 					input.targetCauses,
+					input.targetProfiles,
 				);
 
 				if (!assignResult.success) {
@@ -103,6 +109,68 @@ export class ProgramWriteService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not create program: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async updateSettings(userId: string, input: ProgramSettingsUpdateInput): Promise<ServiceResult<{ id: string }>> {
+		try {
+			const parsedInputResult = this.programValidationService.validateSettingsUpdateInput(input);
+			if (!parsedInputResult.success) {
+				return this.resultFail(parsedInputResult.error);
+			}
+			const parsedInput = parsedInputResult.data;
+			const uniquenessResult = await this.programValidationService.validateUpdateUniqueness(parsedInput);
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const accessibleProgramsResult = await this.programAccessReadService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const access = accessibleProgramsResult.data.find((program) => program.programId === parsedInput.id);
+			if (!access) {
+				return this.resultFail('Permission denied');
+			}
+			if (access.permission !== ProgramPermission.operator) {
+				return this.resultFail('Permission denied');
+			}
+
+			const existingProgram = await this.db.program.findUnique({
+				where: { id: parsedInput.id },
+				select: { id: true },
+			});
+			if (!existingProgram) {
+				return this.resultFail('Program not found');
+			}
+
+			const existingCountry = await this.db.country.findUnique({
+				where: { id: parsedInput.countryId },
+				select: { id: true },
+			});
+			if (!existingCountry) {
+				return this.resultFail('Country not found');
+			}
+
+			await this.db.program.update({
+				where: { id: parsedInput.id },
+				data: {
+					name: parsedInput.name,
+					countryId: parsedInput.countryId,
+					programDurationInMonths: parsedInput.programDurationInMonths,
+					payoutPerInterval: parsedInput.payoutPerInterval,
+					payoutInterval: parsedInput.payoutInterval,
+					targetCauses: parsedInput.targetCauses,
+					targetProfiles: parsedInput.targetProfiles,
+				},
+			});
+
+			return this.resultOk({ id: parsedInput.id });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not update program settings: ${JSON.stringify(error)}`);
 		}
 	}
 }

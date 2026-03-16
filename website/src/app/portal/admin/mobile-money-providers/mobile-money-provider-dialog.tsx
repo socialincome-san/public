@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { getErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import MobileMoneyProvidersForm from './mobile-money-providers-form';
 
@@ -16,12 +17,7 @@ type Props = {
 export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId, errorMessage, onError }: Props) => {
 	const handleError = (error: unknown) => {
 		const action = providerId ? 'updating/deleting' : 'creating';
-		const errorMessage =
-			error instanceof Error
-				? error.message
-				: typeof error === 'string'
-					? error
-					: 'An unexpected error occurred while saving.';
+		const errorMessage = getErrorMessage(error);
 		onError(`Error ${action} mobile money provider: ${errorMessage}`);
 		logger.error('Mobile Money Provider Form Error', { error });
 	};
