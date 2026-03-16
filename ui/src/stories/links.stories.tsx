@@ -267,8 +267,7 @@ export const WithControls: StoryObj<WithControlsProps> = {
 		},
 		icon: {
 			control: 'boolean',
-			description:
-				'Whether to show an icon before the text (adds gap-2 for proper spacing, use h-4 w-4 classes for icons)',
+			description: 'Whether to show an icon before the text (adds gap-2 for proper spacing, use h-4 w-4 classes for icons)',
 		},
 		arrow: {
 			control: 'select',

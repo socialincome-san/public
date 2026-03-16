@@ -90,9 +90,9 @@ test('edit contribution', async ({ page }) => {
 	const updatedFeesChf = 2.22;
 
 	await page.goto(
-		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact!.email!)}`,
+		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact.email!)}`,
 	);
-	await page.getByRole('cell', { name: existing!.contributor.contact!.email! }).click();
+	await page.getByRole('cell', { name: existing!.contributor.contact.email! }).click();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
 	await page.getByTestId('form-item-amountChf').locator('input').fill(`${updatedAmountChf}`);
 	await page.getByTestId('form-item-feesChf').locator('input').fill(`${updatedFeesChf}`);

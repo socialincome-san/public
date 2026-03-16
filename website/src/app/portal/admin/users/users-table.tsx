@@ -78,12 +78,7 @@ export default function UsersTable({
 						</Alert>
 					)}
 
-					<UsersForm
-						userId={userId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
+					<UsersForm userId={userId} onSuccess={() => setOpen(false)} onCancel={() => setOpen(false)} onError={onError} />
 				</DialogContent>
 			</Dialog>
 		</>

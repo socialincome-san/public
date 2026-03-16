@@ -62,6 +62,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		body = await request.json();
 	} catch {
 		logger.warn('[PATCH /recipients/me] Invalid JSON body');
+
 		return new Response('Invalid JSON body', { status: 400 });
 	}
 
@@ -118,9 +119,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 				? {
 						upsert: {
 							update: {
-								mobileMoneyProvider: data.paymentProvider
-									? { connect: { id: data.paymentProvider } }
-									: { disconnect: true },
+								mobileMoneyProvider: data.paymentProvider ? { connect: { id: data.paymentProvider } } : { disconnect: true },
 								phone: data.paymentPhone
 									? {
 											connectOrCreate: {

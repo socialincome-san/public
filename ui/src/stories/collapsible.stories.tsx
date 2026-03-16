@@ -44,9 +44,7 @@ export const MultipleSections: Story = {
 		const [openSections, setOpenSections] = React.useState<number[]>([]);
 
 		const toggleSection = (index: number) => {
-			setOpenSections((current) =>
-				current.includes(index) ? current.filter((i) => i !== index) : [...current, index],
-			);
+			setOpenSections((current) => (current.includes(index) ? current.filter((i) => i !== index) : [...current, index]));
 		};
 
 		return (

@@ -1,10 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import {
-	ContributorFormCreateInput,
-	ContributorFormUpdateInput,
-} from '@/lib/services/contributor/contributor-form-input';
+import { ContributorFormCreateInput, ContributorFormUpdateInput } from '@/lib/services/contributor/contributor-form-input';
 import { ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
@@ -18,6 +15,7 @@ export const createContributorAction = async (data: ContributorFormCreateInput) 
 	}
 	const res = await services.write.contributor.create(sessionResult.data.id, data);
 	revalidatePath('/portal/management/contributors');
+
 	return res;
 };
 
@@ -28,6 +26,7 @@ export const updateContributorAction = async (contributor: ContributorFormUpdate
 	}
 	const res = await services.write.contributor.update(sessionResult.data.id, contributor);
 	revalidatePath('/portal/management/contributors');
+
 	return res;
 };
 
@@ -36,6 +35,7 @@ export const getContributorAction = async (contributorId: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.contributor.get(sessionResult.data.id, contributorId);
 };
 
@@ -50,5 +50,6 @@ export const updateSelfAction = async (data: ContributorUpdateInput) => {
 	}
 	const res = await services.write.contributor.updateSelf(sessionResult.data.id, data);
 	revalidatePath('/dashboard/profile');
+
 	return res;
 };

@@ -20,7 +20,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
-type NavbarDesktopProps = { sessions: Session[] };
+type NavbarDesktopProps = {
+	sessions: Session[];
+};
 
 export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 	const pathname = usePathname();
@@ -81,9 +83,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 							<p className="text-sm font-medium">
 								{user.firstName} {user.lastName}
 							</p>
-							<p className="text-muted-foreground text-xs">
-								{user.activeOrganization?.name ?? 'No active organization'}
-							</p>
+							<p className="text-muted-foreground text-xs">{user.activeOrganization?.name ?? 'No active organization'}</p>
 						</div>
 						<ChevronsUpDown className="h-4 w-4 opacity-50" />
 					</Button>
@@ -104,7 +104,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 					<DropdownMenuItem
 						onSelect={(e: Event) => {
 							e.preventDefault();
-							logout();
+							void logout();
 						}}
 						className="text-destructive focus:text-destructive"
 					>

@@ -11,7 +11,7 @@ type CurrencyCellProps<TData, TValue> = {
 export const CurrencyCell = <TData, TValue>({ ctx, currency = 'CHF' }: CurrencyCellProps<TData, TValue>) => {
 	const value = ctx.getValue() as number | null;
 
-	if (value == null || isNaN(value)) {
+	if (value === null || isNaN(value)) {
 		return <span className="text-muted-foreground">–</span>;
 	}
 

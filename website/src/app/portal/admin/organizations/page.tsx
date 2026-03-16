@@ -18,7 +18,7 @@ export default function OrganizationsPage({ searchParams }: SearchParamsPageProp
 
 const OrganizationsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

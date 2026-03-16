@@ -14,6 +14,7 @@ export class AppReviewModeService extends BaseService {
 		if (!reviewPhone) {
 			return false;
 		}
+
 		return phone === reviewPhone || `+${phone}` === reviewPhone;
 	}
 

@@ -15,16 +15,19 @@ export class FirebaseAdminService extends BaseService {
 			}
 
 			if (existingUserResult.data) {
-				console.log('User already exists for phone number:', phoneNumber);
+				this.logger.info('User already exists for phone number', { phoneNumber });
+
 				return this.resultFail('User already exists for phone number');
 			}
 
 			const userRecord = await authAdmin.auth.createUser({
 				phoneNumber,
 			});
+
 			return this.resultOk(userRecord);
 		} catch (error) {
 			this.logger.error('Error creating user by phone number:', { error });
+
 			return this.resultFail(`Could not create auth user by phone number: ${JSON.stringify(error)}`);
 		}
 	}
@@ -45,15 +48,18 @@ export class FirebaseAdminService extends BaseService {
 				const created = await authAdmin.auth.createUser({
 					phoneNumber: newPhoneNumber,
 				});
+
 				return this.resultOk(created);
 			}
 
 			const updatedUser = await authAdmin.auth.updateUser(existingUserResult.data.uid, {
 				phoneNumber: newPhoneNumber,
 			});
+
 			return this.resultOk(updatedUser);
 		} catch (error) {
 			this.logger.error('Error updating user by phone number:', { oldPhoneNumber, newPhoneNumber, error });
+
 			return this.resultFail(`Could not update auth user by phone number: ${JSON.stringify(error)}`);
 		}
 	}
@@ -61,12 +67,14 @@ export class FirebaseAdminService extends BaseService {
 	async getByPhoneNumber(phoneNumber: string): Promise<ServiceResult<UserRecord | null>> {
 		try {
 			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
+
 			return this.resultOk(userRecord);
-		} catch (error: any) {
-			if (error?.code === 'auth/user-not-found') {
+		} catch (error: unknown) {
+			if ((error as { code?: string })?.code === 'auth/user-not-found') {
 				return this.resultOk(null);
 			}
 			this.logger.error('Error getting user by phone number:', { phoneNumber, error });
+
 			return this.resultFail('Auth user not found by phone number');
 		}
 	}
@@ -78,9 +86,11 @@ export class FirebaseAdminService extends BaseService {
 				return this.resultFail('Auth user not found');
 			}
 			const updatedUser = await authAdmin.auth.updateUser(uid, updates);
+
 			return this.resultOk(updatedUser);
 		} catch (error) {
 			this.logger.error(`Error updating user by UID ${uid}:`, { uid, updates, error });
+
 			return this.resultFail(`Could not update auth user by UID: ${JSON.stringify(error)}`);
 		}
 	}
@@ -92,9 +102,11 @@ export class FirebaseAdminService extends BaseService {
 				password,
 				emailVerified: true,
 			});
+
 			return this.resultOk(userRecord);
 		} catch (error) {
 			this.logger.error('Error creating survey user:', { email, error });
+
 			return this.resultFail(`Could not create survey auth user: ${JSON.stringify(error)}`);
 		}
 	}
@@ -102,9 +114,11 @@ export class FirebaseAdminService extends BaseService {
 	async createCustomToken(uid: string): Promise<ServiceResult<string>> {
 		try {
 			const token = await authAdmin.auth.createCustomToken(uid);
+
 			return this.resultOk(token);
 		} catch (error) {
 			this.logger.error('Error creating custom token:', { uid, error });
+
 			return this.resultFail(`Could not create custom token: ${JSON.stringify(error)}`);
 		}
 	}
@@ -118,9 +132,11 @@ export class FirebaseAdminService extends BaseService {
 		const token = header.slice('Bearer '.length);
 		try {
 			const decodedToken = await authAdmin.auth.verifyIdToken(token);
+
 			return this.resultOk(decodedToken);
 		} catch (error) {
 			this.logger.error('Error verifying ID token:', { error });
+
 			return this.resultFail(`Invalid or expired token: ${JSON.stringify(error)}`);
 		}
 	}
@@ -128,11 +144,13 @@ export class FirebaseAdminService extends BaseService {
 	async getByEmail(email: string): Promise<ServiceResult<UserRecord | null>> {
 		try {
 			const userRecord = await authAdmin.auth.getUserByEmail(email);
+
 			return this.resultOk(userRecord);
-		} catch (error: any) {
-			if (error?.code === 'auth/user-not-found') {
+		} catch (error: unknown) {
+			if ((error as { code?: string })?.code === 'auth/user-not-found') {
 				return this.resultOk(null);
 			}
+
 			return this.resultFail('Could not check existing Firebase Auth user');
 		}
 	}
@@ -156,6 +174,7 @@ export class FirebaseAdminService extends BaseService {
 				email: userData.email,
 				displayName: userData.displayName,
 			});
+
 			return this.resultOk(userRecord);
 		} catch (error) {
 			return this.resultFail(`Could not get or create Firebase Auth user: ${JSON.stringify(error)}`);
@@ -207,12 +226,14 @@ export class FirebaseAdminService extends BaseService {
 			}
 
 			await authAdmin.auth.deleteUser(existingUserResult.data.uid);
+
 			return this.resultOk(true);
 		} catch (error) {
 			this.logger.error('Error deleting auth user by phone number:', {
 				phoneNumber,
 				error,
 			});
+
 			return this.resultFail(`Could not delete auth user by phone number: ${JSON.stringify(error)}`);
 		}
 	}
@@ -230,12 +251,14 @@ export class FirebaseAdminService extends BaseService {
 			}
 
 			await authAdmin.auth.deleteUser(existingUserResult.data.uid);
+
 			return this.resultOk(true);
 		} catch (error) {
 			this.logger.error('Error deleting auth user by email:', {
 				email,
 				error,
 			});
+
 			return this.resultFail(`Could not delete auth user by email: ${JSON.stringify(error)}`);
 		}
 	}
@@ -243,12 +266,19 @@ export class FirebaseAdminService extends BaseService {
 	async deleteByUidIfExists(uid: string): Promise<ServiceResult<boolean>> {
 		try {
 			await authAdmin.auth.deleteUser(uid);
+
 			return this.resultOk(true);
-		} catch (error: any) {
-			if (error?.code === 'auth/user-not-found') {
+		} catch (error: unknown) {
+			if (
+				typeof error === 'object' &&
+				error !== null &&
+				'code' in error &&
+				(error as { code?: unknown }).code === 'auth/user-not-found'
+			) {
 				return this.resultOk(true);
 			}
 			this.logger.error('Error deleting auth user by uid:', { uid, error });
+
 			return this.resultFail(`Could not delete auth user by uid: ${JSON.stringify(error)}`);
 		}
 	}

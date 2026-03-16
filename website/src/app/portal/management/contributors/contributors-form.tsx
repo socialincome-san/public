@@ -67,9 +67,9 @@ export default function ContributorsForm({
 	const [contributor, setContributor] = useState<ContributorPayload>();
 	const [isLoading, startTransition] = useTransition();
 
-	const onSubmit = async (schema: ContributorFormSchema) => {
+	const onSubmit = (schema: ContributorFormSchema) => {
 		startTransition(async () => {
-			if (contributorId && (!contributor || contributor.id !== contributorId)) {
+			if (contributorId && contributor?.id !== contributorId) {
 				return onError?.('Contributor is still loading. Please try again.');
 			}
 			const res =
@@ -92,9 +92,10 @@ export default function ContributorsForm({
 						setContributor(data);
 						setFormSchema((previousSchema) => {
 							const contactFields = {
-								...(previousSchema.fields.contact as FormSchema).fields,
+								...previousSchema.fields.contact.fields,
 							};
 							const contactValues = getContactValuesFromPayload(data.contact, contactFields);
+
 							return {
 								...previousSchema,
 								fields: {
@@ -112,7 +113,7 @@ export default function ContributorsForm({
 										value: data.stripeCustomerId,
 									},
 									contact: {
-										...(previousSchema.fields.contact as FormSchema),
+										...previousSchema.fields.contact,
 										fields: contactValues,
 									},
 								},
@@ -122,9 +123,6 @@ export default function ContributorsForm({
 					onError: (error) => onError?.(error),
 				});
 			});
-		} else {
-			setContributor(undefined);
-			setFormSchema(initialFormSchema);
 		}
 	}, [contributorId, onError]);
 

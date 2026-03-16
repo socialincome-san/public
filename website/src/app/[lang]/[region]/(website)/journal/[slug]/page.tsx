@@ -34,6 +34,7 @@ export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 	}
 	const story = articleResponse.data;
 	const url = `https://socialincome.org/${lang}/journal/${story.slug}`;
+
 	return generateMetaDataForArticle(story, url);
 };
 
@@ -61,12 +62,12 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 	const story = articleResponse.data;
 	const articleData = story.content;
-	const author = articleData.author as ISbStoryData<any>;
+	const author = articleData.author;
 
 	const relativeResult = await services.storyblok.getRelativeArticles(
 		author.uuid,
 		story.id,
-		(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) => tag.uuid) ?? [],
+		articleData.tags?.map((tag) => tag.uuid) ?? [],
 		lang,
 		NUMBER_OF_RELATIVE_ARTICLES,
 	);
@@ -75,7 +76,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 	const articleWithImageStyling = !articleData.useImageOnlyForPreview;
 
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
+		language: lang,
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
 	});
 
@@ -164,7 +165,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						</Link>
 
 						<div className="mt-4 flex flex-wrap justify-start gap-2">
-							{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
+							{articleData.tags?.map((tag) =>
 								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
 							)}
 						</div>
@@ -208,9 +209,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 					)}
 
 					<div className="mt-4 flex flex-wrap justify-start gap-2">
-						{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
-							badgeWithLink(lang, region, tag, 'foreground'),
-						)}
+						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'foreground'))}
 					</div>
 
 					<Link href={`/${lang}/${region}/journal/author/${author.slug}`} className="no-underline">

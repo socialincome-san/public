@@ -11,7 +11,7 @@ export const programsData: Program[] = [
 		targetCauses: [],
 		countryId: 'country-sierra-leone',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'program-2',
@@ -23,7 +23,7 @@ export const programsData: Program[] = [
 		targetCauses: [],
 		countryId: 'country-sierra-leone',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'program-3',
@@ -35,7 +35,7 @@ export const programsData: Program[] = [
 		targetCauses: [],
 		countryId: 'country-sierra-leone',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'program-4',
@@ -47,7 +47,7 @@ export const programsData: Program[] = [
 		targetCauses: [],
 		countryId: 'country-sierra-leone',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'program-5',
@@ -59,6 +59,6 @@ export const programsData: Program[] = [
 		targetCauses: [],
 		countryId: 'country-angola',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

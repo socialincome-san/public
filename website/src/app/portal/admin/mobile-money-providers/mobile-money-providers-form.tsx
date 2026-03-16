@@ -97,6 +97,7 @@ export default function MobileMoneyProvidersForm({
 						const next = { ...prev };
 						next.fields.name.value = data.name;
 						next.fields.isSupported.value = data.isSupported;
+
 						return next;
 					});
 				},

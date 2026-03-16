@@ -12,6 +12,7 @@ export const createPayoutAction = async (input: PayoutFormCreateInput) => {
 	}
 	const result = await services.write.payout.create(sessionResult.data.id, input);
 	revalidatePath('/portal/delivery/make-payouts');
+
 	return result;
 };
 
@@ -22,6 +23,7 @@ export const updatePayoutAction = async (input: PayoutFormUpdateInput) => {
 	}
 	const result = await services.write.payout.update(sessionResult.data.id, input);
 	revalidatePath('/portal/delivery/make-payouts');
+
 	return result;
 };
 
@@ -30,6 +32,7 @@ export const getPayoutAction = async (id: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.payout.get(sessionResult.data.id, id);
 };
 
@@ -38,5 +41,6 @@ export const getPayoutRecipientOptionsAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.recipient.getEditableRecipientOptions(sessionResult.data.id);
 };

@@ -79,6 +79,7 @@ export class LocalPartnerWriteService extends BaseService {
 			return this.resultOk(partner);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create local partner. Please try again later.');
 		}
 	}
@@ -193,15 +194,13 @@ export class LocalPartnerWriteService extends BaseService {
 			const previousPhoneId = existing.contact.phone?.id;
 			const previousPhoneNumber = existing.contact.phone?.number ?? null;
 			const didRemovePhone = !validatedInput.contact.phone;
-			const didChangePhoneNumber =
-				!!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
+			const didChangePhoneNumber = !!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
 			if ((didRemovePhone || didChangePhoneNumber) && previousPhoneId) {
 				await this.contactRelationsService.deletePhoneIfUnused(previousPhoneId);
 			}
 
 			const previousAddressId = existing.contact.address?.id;
-			const didRemoveAddress =
-				!!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
+			const didRemoveAddress = !!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
 			if (didRemoveAddress && previousAddressId) {
 				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
 			}
@@ -209,6 +208,7 @@ export class LocalPartnerWriteService extends BaseService {
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update local partner. Please try again later.');
 		}
 	}
@@ -296,6 +296,7 @@ export class LocalPartnerWriteService extends BaseService {
 			return this.resultOk({ id: localPartnerId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not delete local partner. Please try again later.');
 		}
 	}

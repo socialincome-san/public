@@ -22,7 +22,7 @@ const restoreToken = (json: string) =>
 		? json.replace(/([?&]token=)__TOKEN__/gi, `$1${process.env.STORYBLOK_PREVIEW_TOKEN}`)
 		: json;
 
-const sortKeys = (o: Record<string, any>) =>
+const sortKeys = (o: Record<string, unknown>) =>
 	Object.fromEntries(
 		Object.keys(o)
 			.sort()
@@ -31,7 +31,8 @@ const sortKeys = (o: Record<string, any>) =>
 
 const readReplayRecordings = (recordingKey: string) => {
 	const raw = fs.readFileSync(recordingPath(recordingKey), 'utf-8');
-	return JSON.parse(restoreToken(raw));
+
+	return JSON.parse(restoreToken(raw)) as unknown;
 };
 
 const writeRecordings = (recordingKey: string, recordings: unknown) => {
@@ -52,6 +53,7 @@ export const setupStoryblokMock = async (recordingKey: string) => {
 
 	if (mode === 'record') {
 		await post(`${MOCK}/recordings`, { active: true });
+
 		return;
 	}
 
@@ -70,6 +72,6 @@ export const saveStoryblokMock = async (recordingKey: string) => {
 	}
 
 	const res = await fetch(`${MOCK}/recordings`);
-	const data = sortKeys(await res.json());
+	const data = sortKeys((await res.json()) as Record<string, unknown>);
 	writeRecordings(recordingKey, data);
 };

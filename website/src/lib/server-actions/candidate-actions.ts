@@ -23,6 +23,7 @@ export const createCandidateAction = async (data: CandidateFormCreateInput, sess
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_CANDIDATES_PATH);
 	}
+
 	return result;
 };
 
@@ -41,6 +42,7 @@ export const updateCandidateAction = async (
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_CANDIDATES_PATH);
 	}
+
 	return result;
 };
 
@@ -56,6 +58,7 @@ export const deleteCandidateAction = async (candidateId: string, sessionType: Se
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_CANDIDATES_PATH);
 	}
+
 	return result;
 };
 
@@ -65,6 +68,7 @@ export const getCandidateAction = async (candidateId: string, sessionType: Sessi
 		return sessionResult;
 	}
 	const session = sessionResult.data;
+
 	return await services.read.candidate.get(session, candidateId);
 };
 
@@ -80,6 +84,7 @@ export const getCandidateOptions = async (sessionType: Session['type'] = 'user')
 	if (!localPartners.success) {
 		return resultFail(localPartners.error);
 	}
+
 	return resultOk({ localPartners: localPartners.data });
 };
 
@@ -99,6 +104,7 @@ export const importCandidatesCsvAction = async (file: File, sessionType: Session
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_CANDIDATES_PATH);
 	}
+
 	return result;
 };
 
@@ -108,5 +114,6 @@ export const downloadCandidatesCsvAction = async (sessionType: Session['type'] =
 		return sessionResult;
 	}
 	const session = sessionResult.data;
+
 	return services.read.candidate.exportCsv(session);
 };

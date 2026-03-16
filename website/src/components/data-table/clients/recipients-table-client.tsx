@@ -1,10 +1,7 @@
 'use client';
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
-import {
-	getRecipientsTableFilters,
-	recipientsTableConfig,
-} from '@/components/data-table/configs/recipients-table.config';
+import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
@@ -74,6 +71,7 @@ export const RecipientsTableClient = ({
 
 		if (!result.success) {
 			console.error(result.error);
+
 			return;
 		}
 
@@ -85,7 +83,9 @@ export const RecipientsTableClient = ({
 			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading,
-			onSelect: handleDownloadCsv,
+			onSelect: () => {
+				void handleDownloadCsv();
+			},
 		},
 		...(canManageRecipients
 			? [

@@ -23,10 +23,7 @@ export const Carousel = ({
 	showControls = false,
 	...props
 }: CarouselProps) => {
-	const [emblaRef, emblaApi] = useEmblaCarousel(
-		options,
-		options?.autoPlay?.enabled ? [Autoplay(options.autoPlay)] : [],
-	);
+	const [emblaRef, emblaApi] = useEmblaCarousel(options, options?.autoPlay?.enabled ? [Autoplay(options.autoPlay)] : []);
 	const [emblaOptions, setEmblaOptions] = React.useState<EmblaOptionsType>(options);
 	const [selectedIndex, setSelectedIndex] = React.useState(0);
 	const slidesCount = React.Children.count(children);

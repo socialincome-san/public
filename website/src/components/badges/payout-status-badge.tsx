@@ -14,7 +14,7 @@ const PAYOUT_STATUS_UI: Record<
 	{
 		variant: 'default' | 'verified' | 'destructive' | 'secondary' | 'outline' | 'outline-solid';
 		label: string;
-		Icon: ComponentType<any>;
+		Icon: ComponentType<{ className?: string }>;
 	}
 > = {
 	paid: { variant: 'verified', label: 'Paid', Icon: CheckIcon },

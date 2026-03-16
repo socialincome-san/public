@@ -93,8 +93,7 @@ export const RecipientSelectionSection = ({
 								<>
 									<span>
 										<strong>{filteredRecipients.toLocaleString()}</strong> of{' '}
-										<strong>{totalRecipients.toLocaleString()}</strong> recipients match the selected country and
-										filters
+										<strong>{totalRecipients.toLocaleString()}</strong> recipients match the selected country and filters
 									</span>
 
 									{noTargetedRecipients && (

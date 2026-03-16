@@ -9,10 +9,13 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { DownloadCell } from '../elements/download-cell';
 
 export const makeYourCertificatesColumns = (
-	hideProgramName: boolean = false,
-	hideLocalPartner: boolean = false,
+	_hideProgramName = false,
+	_hideLocalPartner = false,
 	translator?: Translator,
 ): ColumnDef<YourDonationCertificateTableViewRow>[] => {
+	void _hideProgramName;
+	void _hideLocalPartner;
+
 	return [
 		{
 			accessorKey: 'createdAt',

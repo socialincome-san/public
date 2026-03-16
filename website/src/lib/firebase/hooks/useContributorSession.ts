@@ -8,7 +8,7 @@ export const useContributorSession = () => {
 	const [contributorSession, setContributorSession] = useState<ContributorSession | null | undefined>(undefined);
 
 	useEffect(() => {
-		(async () => {
+		void (async () => {
 			const result = await getOptionalContributorAction();
 			setContributorSession(result.success ? result.data : null);
 		})();

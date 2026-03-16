@@ -7,6 +7,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 
 export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
+
 	return getMetadata(params.lang as WebsiteLanguage, 'website-faq');
 };
 
@@ -19,14 +20,8 @@ export default async function Page({ params }: DefaultPageProps) {
 			<Typography size="5xl" weight="bold">
 				{translator.t('title')}
 			</Typography>
-			<FAQSection
-				title={translator.t('fighting-poverty.title')}
-				questions={translator.t('fighting-poverty.questions')}
-			/>
-			<FAQSection
-				title={translator.t('striving-equality.title')}
-				questions={translator.t('striving-equality.questions')}
-			/>
+			<FAQSection title={translator.t('fighting-poverty.title')} questions={translator.t('fighting-poverty.questions')} />
+			<FAQSection title={translator.t('striving-equality.title')} questions={translator.t('striving-equality.questions')} />
 			<FAQSection title={translator.t('solidarity.title')} questions={translator.t('solidarity.questions')} />
 			<FAQSection title={translator.t('ubi.title')} questions={translator.t('ubi.questions')} />
 			<FAQSection title={translator.t('contributors.title')} questions={translator.t('contributors.questions')} />

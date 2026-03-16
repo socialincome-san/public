@@ -14,6 +14,7 @@ export const createCountryAction = async (input: CountryFormCreateInput) => {
 	}
 	const res = await services.write.country.create(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
+
 	return res;
 };
 
@@ -24,6 +25,7 @@ export const updateCountryAction = async (input: CountryFormUpdateInput) => {
 	}
 	const res = await services.write.country.update(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
+
 	return res;
 };
 
@@ -34,6 +36,7 @@ export const deleteCountryAction = async (id: string) => {
 	}
 	const res = await services.write.country.delete(sessionResult.data.id, id);
 	revalidatePath(REVALIDATE_PATH);
+
 	return res;
 };
 
@@ -42,6 +45,7 @@ export const getCountryAction = async (id: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.country.get(sessionResult.data.id, id);
 };
 

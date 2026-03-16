@@ -78,6 +78,7 @@ export const DataTableToolbar = ({
 	const clearAllFilters = () => {
 		if (onClearFilters) {
 			onClearFilters();
+
 			return;
 		}
 		filters.forEach((filter) => filter.onChange(undefined));
@@ -138,13 +139,7 @@ export const DataTableToolbar = ({
 						<PopoverContent align="end" className="w-[260px] space-y-3 p-3">
 							<div className="flex items-center justify-between">
 								<p className="text-sm font-medium">Visible columns</p>
-								<Button
-									type="button"
-									variant="ghost"
-									size="sm"
-									onClick={clearAllColumns}
-									disabled={hiddenColumnCount === 0}
-								>
+								<Button type="button" variant="ghost" size="sm" onClick={clearAllColumns} disabled={hiddenColumnCount === 0}>
 									Clear
 								</Button>
 							</div>
@@ -255,13 +250,7 @@ export const DataTableToolbar = ({
 						<PopoverContent align="end" className="w-[280px] space-y-3 p-3">
 							<div className="flex items-center justify-between">
 								<p className="text-sm font-medium">Filter results</p>
-								<Button
-									type="button"
-									variant="ghost"
-									size="sm"
-									onClick={clearAllFilters}
-									disabled={activeFilterCount === 0}
-								>
+								<Button type="button" variant="ghost" size="sm" onClick={clearAllFilters} disabled={activeFilterCount === 0}>
 									Clear
 								</Button>
 							</div>

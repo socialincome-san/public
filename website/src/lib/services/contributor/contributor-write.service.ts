@@ -53,7 +53,8 @@ export class ContributorWriteService extends BaseService {
 				return this.resultFail('Contributor not found');
 			}
 
-			const newEmail = data.contact?.update?.data?.email?.toString();
+			const emailInput = data.contact?.update?.data?.email;
+			const newEmail = typeof emailInput === 'string' ? emailInput : undefined;
 			const oldEmail = existing.contact?.email ?? null;
 
 			if (!newEmail) {
@@ -80,6 +81,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(updatedContributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contributor: ${JSON.stringify(error)}`);
 		}
 	}
@@ -167,15 +169,13 @@ export class ContributorWriteService extends BaseService {
 			const previousPhoneId = existing.contact.phone?.id;
 			const previousPhoneNumber = existing.contact.phone?.number ?? null;
 			const didRemovePhone = !validatedInput.contact.phone;
-			const didChangePhoneNumber =
-				!!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
+			const didChangePhoneNumber = !!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
 			if ((didRemovePhone || didChangePhoneNumber) && previousPhoneId) {
 				await this.contactRelationsService.deletePhoneIfUnused(previousPhoneId);
 			}
 
 			const previousAddressId = existing.contact.address?.id;
-			const didRemoveAddress =
-				!!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
+			const didRemoveAddress = !!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
 			if (didRemoveAddress && previousAddressId) {
 				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
 			}
@@ -183,6 +183,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update contributor. Please try again later.');
 		}
 	}
@@ -192,6 +193,7 @@ export class ContributorWriteService extends BaseService {
 			return this.applyContributorUpdate(contributorId, data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contributor (self): ${JSON.stringify(error)}`);
 		}
 	}
@@ -213,6 +215,7 @@ export class ContributorWriteService extends BaseService {
 				if (!existingResult.data.stripeCustomerId) {
 					await this.updateStripeCustomerId(existingResult.data.id, contributorData.stripeCustomerId);
 				}
+
 				return this.resultOk({ contributor: existingResult.data, isNewContributor: false });
 			}
 
@@ -224,6 +227,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get or create contributor from Stripe customer: ${JSON.stringify(error)}`);
 		}
 	}
@@ -247,8 +251,10 @@ export class ContributorWriteService extends BaseService {
 						include: { contact: true },
 					});
 					const contributor = updated ?? { ...existing, stripeCustomerId };
+
 					return this.resultOk({ contributor, isNewContributor: false });
 				}
+
 				return this.resultOk({ contributor: existing, isNewContributor: false });
 			}
 
@@ -266,18 +272,18 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk({ contributor, isNewContributor: true });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get or create contributor for account: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getOrCreateReferenceIdByEmail(email: string): Promise<ServiceResult<string>> {
 		try {
-			let referenceId: string;
 			const existingContributor = await this.db.contributor.findFirst({
 				where: { contact: { email: email } },
 				select: { id: true, contact: { select: { email: true } }, paymentReferenceId: true },
 			});
-			referenceId = existingContributor?.paymentReferenceId || DateTime.now().toMillis().toString();
+			const referenceId = existingContributor?.paymentReferenceId || DateTime.now().toMillis().toString();
 			if (existingContributor && !existingContributor?.paymentReferenceId) {
 				const res = await this.updateSelf(existingContributor.id, {
 					paymentReferenceId: referenceId,
@@ -291,6 +297,7 @@ export class ContributorWriteService extends BaseService {
 				});
 				if (!res.success) {
 					this.logger.error(res.error);
+
 					return this.resultFail('Could not udate existing contributor with newly created reference ID');
 				}
 			}
@@ -298,6 +305,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(referenceId);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get or generate contributor reference ID: ${JSON.stringify(error)}`);
 		}
 	}
@@ -351,6 +359,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(newContributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get or create contributor by reference ID: ${JSON.stringify(error)}`);
 		}
 	}
@@ -391,12 +400,14 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create contributor with Firebase Auth user: ${JSON.stringify(error)}`);
 		}
 	}
 
 	private buildContactCreateData(input: ContributorFormCreateInput): Prisma.ContactCreateWithoutContributorInput {
 		const addressInput = this.contactRelationsService.getAddressInput(input.contact);
+
 		return {
 			firstName: input.contact.firstName,
 			lastName: input.contact.lastName,
@@ -425,6 +436,7 @@ export class ContributorWriteService extends BaseService {
 		currentAddressId: string | undefined,
 	): Prisma.ContactUpdateWithoutContributorInput {
 		const addressInput = this.contactRelationsService.getAddressInput(input.contact);
+
 		return {
 			firstName: input.contact.firstName,
 			lastName: input.contact.lastName,
@@ -498,6 +510,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create contributor. Please try again later.');
 		}
 	}
@@ -512,6 +525,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(undefined);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contributor Stripe customer ID: ${JSON.stringify(error)}`);
 		}
 	}
@@ -536,6 +550,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
 	}

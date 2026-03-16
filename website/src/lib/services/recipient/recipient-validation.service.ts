@@ -30,6 +30,7 @@ export class RecipientValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -38,15 +39,12 @@ export class RecipientValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
 	async validateCreateUniqueness(input: RecipientFormCreateInput): Promise<ServiceResult<void>> {
-		if (
-			input.contact.phone &&
-			input.paymentInformation.phone &&
-			input.contact.phone === input.paymentInformation.phone
-		) {
+		if (input.contact.phone && input.paymentInformation.phone && input.contact.phone === input.paymentInformation.phone) {
 			return this.resultFail('Contact phone and payment phone must be different.');
 		}
 
@@ -97,11 +95,7 @@ export class RecipientValidationService extends BaseService {
 		input: RecipientFormUpdateInput,
 		context: RecipientUpdateUniquenessContext,
 	): Promise<ServiceResult<void>> {
-		if (
-			input.contact.phone &&
-			input.paymentInformation.phone &&
-			input.contact.phone === input.paymentInformation.phone
-		) {
+		if (input.contact.phone && input.paymentInformation.phone && input.contact.phone === input.paymentInformation.phone) {
 			return this.resultFail('Contact phone and payment phone must be different.');
 		}
 

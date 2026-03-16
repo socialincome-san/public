@@ -64,6 +64,7 @@ export class CandidateReadService extends BaseService {
 		if (!isAdmin.data) {
 			return this.resultFail('Permission denied');
 		}
+
 		return this.resultOk(true);
 	}
 
@@ -229,6 +230,7 @@ export class CandidateReadService extends BaseService {
 			return this.resultOk(candidate);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch candidate: ${JSON.stringify(error)}`);
 		}
 	}
@@ -243,9 +245,11 @@ export class CandidateReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch candidates table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -425,6 +429,7 @@ export class CandidateReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch candidates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -439,9 +444,11 @@ export class CandidateReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch local partner candidates table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -602,6 +609,7 @@ export class CandidateReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch candidates for local partner: ${JSON.stringify(error)}`);
 		}
 	}
@@ -633,6 +641,7 @@ export class CandidateReadService extends BaseService {
 			return this.resultOk({ count });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not count candidates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -793,6 +802,7 @@ export class CandidateReadService extends BaseService {
 			return this.resultOk(stringifyCsv(rows, headers));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not export candidates CSV: ${JSON.stringify(error)}`);
 		}
 	}

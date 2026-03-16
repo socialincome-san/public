@@ -20,7 +20,7 @@ export const SubscriptionsTable = async ({
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
 	const config = getYourSubscriptionsTableConfig({
 		title: translator.t('sections.contributions.subscriptions'),
 		emptyMessage: translator.t('subscriptions.no-subscriptions'),

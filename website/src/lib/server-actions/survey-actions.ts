@@ -16,6 +16,7 @@ export const createSurveyAction = async (input: SurveyFormCreateInput) => {
 	}
 	const result = await services.write.survey.create(sessionResult.data.id, input);
 	revalidatePath('/portal/management/surveys');
+
 	return result;
 };
 
@@ -24,6 +25,7 @@ export const getSurveyAction = async (surveyId: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.survey.get(sessionResult.data.id, surveyId);
 };
 
@@ -34,6 +36,7 @@ export const updateSurveyAction = async (input: SurveyFormUpdateInput) => {
 	}
 	const result = await services.write.survey.update(sessionResult.data.id, input);
 	revalidatePath('/portal/management/surveys');
+
 	return result;
 };
 
@@ -42,6 +45,7 @@ export const getSurveyRecipientOptionsAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.recipient.getEditableRecipientOptions(sessionResult.data.id);
 };
 
@@ -50,6 +54,7 @@ export const previewSurveyGenerationAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.survey.previewSurveyGeneration(sessionResult.data.id);
 };
 
@@ -60,6 +65,7 @@ export const generateSurveysAction = async () => {
 	}
 	const result = await services.write.survey.generateSurveys(sessionResult.data.id);
 	revalidatePath('/portal/management/surveys');
+
 	return result;
 };
 
@@ -68,19 +74,18 @@ export const getByIdAndRecipient = async (
 	recipientId: string,
 ): Promise<ServiceResult<SurveyWithRecipient>> => {
 	const survey = await getCurrentSurvey();
-	if (!survey || survey.id !== surveyId || survey.recipientId !== recipientId) {
+	if (survey?.id !== surveyId || survey.recipientId !== recipientId) {
 		return resultFail('Unauthorized');
 	}
+
 	return services.read.survey.getByIdAndRecipient(surveyId, recipientId);
 };
 
-export const saveChanges = async (
-	surveyId: string,
-	input: SurveyUpdateInput,
-): Promise<ServiceResult<SurveyPayload>> => {
+export const saveChanges = async (surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> => {
 	const survey = await getCurrentSurvey();
-	if (!survey || survey.id !== surveyId) {
+	if (survey?.id !== surveyId) {
 		return resultFail('Unauthorized');
 	}
+
 	return services.write.survey.saveChanges(surveyId, input);
 };

@@ -4,16 +4,16 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 
 const FALLBACK_LANGUAGE = 'en';
 
-interface TranslateProps {
+type TranslateProps = {
 	namespace?: string;
 	language?: string;
 	context?: Record<string, unknown> & Partial<Intl.ResolvedNumberFormatOptions>;
-}
+};
 
-interface TranslatorProps {
+type TranslatorProps = {
 	language: LanguageCode;
 	namespaces: string[] | string;
-}
+};
 
 export type TranslateFunction = <T = string>(key: string, translateProps?: TranslateProps) => T;
 

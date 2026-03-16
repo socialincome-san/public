@@ -11,6 +11,7 @@ export default async function Page(props: DefaultPageProps) {
 	const { lang, region } = params;
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: 'website-donate' });
+
 	return (
 		<BaseContainer className="mx-auto flex max-w-3xl flex-col py-8 md:py-16">
 			<div className="flex flex-col items-center">

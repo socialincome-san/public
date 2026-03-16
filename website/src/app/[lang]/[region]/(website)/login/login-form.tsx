@@ -40,8 +40,10 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 	const router = useRouter();
 	const { sendSignInEmail, sendingEmail, signingIn, emailSent } = useEmailLogin({
 		lang: lang as WebsiteLanguage,
-		onLoginSuccess: async () => {
+		onLoginSuccess: () => {
 			router.push(`/${lang}/${region}/me`);
+
+			return Promise.resolve();
 		},
 	});
 

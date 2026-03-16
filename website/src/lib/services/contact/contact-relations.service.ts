@@ -193,6 +193,7 @@ export class ContactRelationsService extends BaseService {
 		if ((Object.values(CountryCode) as string[]).includes(country)) {
 			return country as CountryCode;
 		}
+
 		return null;
 	}
 }

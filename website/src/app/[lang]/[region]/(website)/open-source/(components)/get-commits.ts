@@ -4,7 +4,7 @@ import { fetchData } from './fetch-data';
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface GitHubCommit {
+type GitHubCommit = {
 	author: {
 		id: number;
 		login: string;
@@ -15,7 +15,7 @@ interface GitHubCommit {
 			date: string;
 		};
 	};
-}
+};
 
 export const getCommits = async () => {
 	// Calculate the date 30 days ago from today
@@ -39,7 +39,7 @@ export const getCommits = async () => {
 	let totalCommits = 1;
 
 	if (linkHeader) {
-		const match = linkHeader.match(/&page=(\d+)>; rel="last"/);
+		const match = /&page=(\d+)>; rel="last"/.exec(linkHeader);
 		if (match) {
 			totalCommits = parseInt(match[1], 10);
 		} else {

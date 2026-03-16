@@ -83,9 +83,11 @@ export class CampaignWriteService extends BaseService {
 				data: createData,
 				include: { program: { select: { id: true, name: true } } },
 			});
+
 			return this.resultOk(newCampaign);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create campaign. Please try again later.');
 		}
 	}
@@ -112,7 +114,7 @@ export class CampaignWriteService extends BaseService {
 				where: { id: validatedInput.id },
 				select: { id: true, title: true, organizationId: true, programId: true },
 			});
-			if (!existing || existing.organizationId !== accessResult.data.id) {
+			if (existing?.organizationId !== accessResult.data.id) {
 				return this.resultFail('Permission denied');
 			}
 
@@ -161,9 +163,7 @@ export class CampaignWriteService extends BaseService {
 				creatorEmail: validatedInput.creatorEmail,
 			};
 			if (validatedInput.programId !== existing.programId) {
-				updateData.program = validatedInput.programId
-					? { connect: { id: validatedInput.programId } }
-					: { disconnect: true };
+				updateData.program = validatedInput.programId ? { connect: { id: validatedInput.programId } } : { disconnect: true };
 			}
 
 			const updatedCampaign = await this.db.campaign.update({
@@ -174,6 +174,7 @@ export class CampaignWriteService extends BaseService {
 			return this.resultOk(updatedCampaign);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update campaign. Please try again later.');
 		}
 	}

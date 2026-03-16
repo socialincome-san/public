@@ -49,7 +49,7 @@ export class ContributionWriteService extends BaseService {
 				},
 			});
 
-			if (!existing || existing.campaign.organizationId !== accessResult.data.id) {
+			if (existing?.campaign.organizationId !== accessResult.data.id) {
 				return this.resultFail('Permission denied');
 			}
 
@@ -65,7 +65,7 @@ export class ContributionWriteService extends BaseService {
 				where: { id: validatedInput.campaignId },
 				select: { organizationId: true },
 			});
-			if (!campaign || campaign.organizationId !== accessResult.data.id) {
+			if (campaign?.organizationId !== accessResult.data.id) {
 				return this.resultFail('Permission denied');
 			}
 
@@ -106,6 +106,7 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update contribution. Please try again later.');
 		}
 	}
@@ -140,7 +141,7 @@ export class ContributionWriteService extends BaseService {
 				where: { id: validatedInput.campaignId },
 				select: { organizationId: true },
 			});
-			if (!campaign || campaign.organizationId !== accessResult.data.id) {
+			if (campaign?.organizationId !== accessResult.data.id) {
 				return this.resultFail('Permission denied');
 			}
 
@@ -176,6 +177,7 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create contribution. Please try again later.');
 		}
 	}
@@ -209,6 +211,7 @@ export class ContributionWriteService extends BaseService {
 			return this.resultOk(paymentEvent.contribution);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create or update contribution from Stripe event: ${JSON.stringify(error)}`);
 		}
 	}
@@ -249,6 +252,7 @@ export class ContributionWriteService extends BaseService {
 			return this.resultOk(result);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create payment events with contributions: ${JSON.stringify(error)}`);
 		}
 	}

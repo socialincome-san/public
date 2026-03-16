@@ -8,7 +8,7 @@ type MonitoringLayoutProps = {
 	children: ReactNode;
 };
 
-export default async function DeliveryLayout({ children }: MonitoringLayoutProps) {
+export default function DeliveryLayout({ children }: MonitoringLayoutProps) {
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
 		{ href: '/portal', label: 'Portal' },

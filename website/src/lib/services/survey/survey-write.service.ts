@@ -150,6 +150,7 @@ export class SurveyWriteService extends BaseService {
 			return this.resultOk(this.toPayload(survey));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Failed to create survey. Please try again later.');
 		}
 	}
@@ -244,6 +245,7 @@ export class SurveyWriteService extends BaseService {
 			return this.resultOk(this.toPayload(updatedSurvey));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Failed to update survey. Please try again later.');
 		}
 	}
@@ -283,6 +285,7 @@ export class SurveyWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to generate surveys: ${JSON.stringify(error)}`);
 		}
 	}
@@ -305,6 +308,7 @@ export class SurveyWriteService extends BaseService {
 			return this.resultOk(this.toPayload(updatedSurvey));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
 		}
 	}

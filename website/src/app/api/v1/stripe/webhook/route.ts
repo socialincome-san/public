@@ -23,12 +23,14 @@ export const POST = async (request: NextRequest) => {
 				{ error: result.error, signature: signature?.slice(0, 20) + '...' },
 				{ component: 'stripe-webhook' },
 			);
+
 			return NextResponse.json({ error: result.error }, { status: 400 });
 		}
 
 		return NextResponse.json({ received: true, data: result.data });
 	} catch (error) {
 		logger.alert('Stripe webhook error', { error }, { component: 'stripe-webhook' });
+
 		return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
 	}
 };

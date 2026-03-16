@@ -51,6 +51,7 @@ export class FirebaseSessionService extends BaseService {
 			}
 
 			await this.setSessionCookie(result.data);
+
 			return this.resultOk(true);
 		} catch (error) {
 			return this.resultFail(`Could not create session cookie: ${JSON.stringify(error)}`);
@@ -69,6 +70,7 @@ export class FirebaseSessionService extends BaseService {
 				path: '/',
 				maxAge: 0,
 			});
+
 			return this.resultOk(true);
 		} catch {
 			return this.resultFail('logout-failed');
@@ -78,6 +80,7 @@ export class FirebaseSessionService extends BaseService {
 	async readSessionCookie(): Promise<ServiceResult<string | null>> {
 		try {
 			const store = await cookies();
+
 			return this.resultOk(store.get(SESSION_COOKIE_NAME)?.value ?? null);
 		} catch (error) {
 			return this.resultFail(`Could not read session cookie: ${JSON.stringify(error)}`);
@@ -87,6 +90,7 @@ export class FirebaseSessionService extends BaseService {
 	async verifySessionCookie(cookie: string): Promise<ServiceResult<DecodedIdToken>> {
 		try {
 			const decoded = await authAdmin.auth.verifySessionCookie(cookie, true);
+
 			return this.resultOk(decoded);
 		} catch (error) {
 			return this.resultFail(`Invalid or expired session cookie: ${JSON.stringify(error)}`);
@@ -99,12 +103,13 @@ export class FirebaseSessionService extends BaseService {
 			return this.resultFail('Missing session cookie');
 		}
 
-		const match = cookieHeader.match(/session=([^;]+)/);
+		const match = /session=([^;]+)/.exec(cookieHeader);
 		if (!match) {
 			return this.resultFail('Missing session cookie');
 		}
 
 		const cookie = match[1];
+
 		return this.verifySessionCookie(cookie);
 	}
 }

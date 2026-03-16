@@ -17,12 +17,8 @@ type Contact = {
 
 export const getContactValuesFromPayload = (
 	contact: Contact,
-	contactFields: {
-		[key: string]: FormField;
-	},
-): {
-	[key: string]: FormField;
-} => {
+	contactFields: Record<string, FormField>,
+): Record<string, FormField> => {
 	contactFields.firstName.value = contact.firstName;
 	contactFields.lastName.value = contact.lastName;
 	contactFields.callingName.value = contact.callingName;
@@ -50,6 +46,7 @@ type DropdownItem = {
 export const getZodEnum = (items: DropdownItem[]) => {
 	const object = items.reduce<Record<string, string>>((acc, item) => {
 		acc[item.label] = item.id;
+
 		return acc;
 	}, {});
 

@@ -105,6 +105,7 @@ export class RecipientWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create recipient. Please try again later.');
 		}
 	}
@@ -236,9 +237,7 @@ export class RecipientWriteService extends BaseService {
 			phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
 			phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
 			phoneChanged =
-				!!previousPaymentPhoneNumber &&
-				!!nextPaymentPhoneNumber &&
-				previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+				!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
 			if (phoneAdded) {
 				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
@@ -268,8 +267,7 @@ export class RecipientWriteService extends BaseService {
 			});
 
 			const previousAddressId = existing.contact.address?.id;
-			const didRemoveAddress =
-				!!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
+			const didRemoveAddress = !!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
 			if (didRemoveAddress && previousAddressId) {
 				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
 			}
@@ -295,7 +293,7 @@ export class RecipientWriteService extends BaseService {
 			}
 
 			if (phoneChanged && previousPaymentPhoneNumber && nextPaymentPhoneNumber) {
-				await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber!);
+				await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber);
 			}
 
 			return this.resultFail('Could not update recipient. Please try again later.');
@@ -570,6 +568,7 @@ export class RecipientWriteService extends BaseService {
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to update recipient: ${JSON.stringify(error)}`);
 		}
 	}
@@ -704,6 +703,7 @@ export class RecipientWriteService extends BaseService {
 			return this.resultOk({ id: recipientId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not delete recipient. Please try again later.');
 		}
 	}
@@ -711,9 +711,8 @@ export class RecipientWriteService extends BaseService {
 	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {
 		try {
 			let created = 0;
-			let rows;
 			const text = await file.text();
-			rows = parseCsvText(text);
+			const rows = parseCsvText(text);
 			for (let i = 0; i < rows.length; i++) {
 				const row = rows[i];
 				const rowNumber = i + 1;

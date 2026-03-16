@@ -110,7 +110,7 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 
 	const onSubmit = (schema: ExpenseFormSchema) => {
 		startTransition(async () => {
-			if (expenseId && (!expense || expense.id !== expenseId)) {
+			if (expenseId && expense?.id !== expenseId) {
 				return onError?.('Expense is still loading. Please try again.');
 			}
 			const result =

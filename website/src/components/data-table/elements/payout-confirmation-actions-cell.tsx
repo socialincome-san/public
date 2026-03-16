@@ -32,12 +32,7 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 					Confirm
 				</Button>
 
-				<Button
-					size="sm"
-					variant="destructive"
-					onClick={() => setContestOpen(true)}
-					disabled={isPending || !hasEditAccess}
-				>
+				<Button size="sm" variant="destructive" onClick={() => setContestOpen(true)} disabled={isPending || !hasEditAccess}>
 					<XIcon className="h-4 w-4" />
 					Contest
 				</Button>

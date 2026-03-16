@@ -88,8 +88,7 @@ export default function CampaignsForm({
 	};
 
 	const setOptions = (programs: ProgramOption[]) => {
-		const optionsToZodEnum = (options: ProgramOption[]) =>
-			getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
+		const optionsToZodEnum = (options: ProgramOption[]) => getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
 
 		setFormSchema((prevSchema) => ({
 			...prevSchema,
@@ -103,7 +102,7 @@ export default function CampaignsForm({
 		}));
 	};
 
-	const onSubmit = async (schema: typeof initialFormSchema) => {
+	const onSubmit = (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
 			const res = campaignId
 				? await updateCampaignsAction(buildUpdateCampaignsInput(schema, campaignId))

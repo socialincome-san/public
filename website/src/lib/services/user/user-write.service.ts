@@ -139,6 +139,7 @@ export class UserWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create user. Please try again later.');
 		}
 	}
@@ -208,14 +209,11 @@ export class UserWriteService extends BaseService {
 			});
 
 			if (shouldSyncFirebaseUser) {
-				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
-					existingUser.account.firebaseAuthUserId,
-					{
-						email: validatedInput.email,
-						displayName: newDisplayName,
-						emailVerified: true,
-					},
-				);
+				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(existingUser.account.firebaseAuthUserId, {
+					email: validatedInput.email,
+					displayName: newDisplayName,
+					emailVerified: true,
+				});
 
 				if (!firebaseUpdateResult.success) {
 					this.logger.warn('Could not fully sync Firebase Auth user on user update', {
@@ -235,6 +233,7 @@ export class UserWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update user. Please try again later.');
 		}
 	}
@@ -312,6 +311,7 @@ export class UserWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
 		}
 	}

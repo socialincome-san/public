@@ -24,12 +24,7 @@ export const CountryTableHeader = ({ search, onSearchChange, onlyAllMet, onOnlyA
 					</Label>
 				</div>
 
-				<Input
-					placeholder="Search"
-					value={search}
-					onChange={(e) => onSearchChange(e.target.value)}
-					className="h-8 w-40"
-				/>
+				<Input placeholder="Search" value={search} onChange={(e) => onSearchChange(e.target.value)} className="h-8 w-40" />
 			</div>
 		</div>
 	);

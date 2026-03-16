@@ -11,7 +11,7 @@ import { CandidateFormSchema } from './candidates-form';
 export const buildUpdateCandidateInput = (
 	schema: CandidateFormSchema,
 	candidate: CandidatePayload,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): CandidateFormUpdateInput => {
 	return {
 		id: candidate.id,
@@ -31,7 +31,7 @@ export const buildUpdateCandidateInput = (
 
 export const buildCreateCandidateInput = (
 	schema: CandidateFormSchema,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): CandidateFormCreateInput => {
 	return {
 		suspendedAt: schema.fields.suspendedAt.value ?? null,

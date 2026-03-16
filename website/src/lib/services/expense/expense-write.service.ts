@@ -59,6 +59,7 @@ export class ExpenseWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create expense. Please try again later.');
 		}
 	}
@@ -110,6 +111,7 @@ export class ExpenseWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update expense. Please try again later.');
 		}
 	}

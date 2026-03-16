@@ -13,6 +13,7 @@ export const StoryblokImageWithCaption = ({
 		return null;
 	}
 	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(image.filename);
+
 	return (
 		<div className="w-full px-0 py-8">
 			<Image

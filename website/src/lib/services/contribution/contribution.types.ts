@@ -1,10 +1,4 @@
-import {
-	ContributionStatus,
-	Currency,
-	OrganizationPermission,
-	PaymentEventType,
-	Prisma,
-} from '@/generated/prisma/client';
+import { ContributionStatus, Currency, OrganizationPermission, PaymentEventType, Prisma } from '@/generated/prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;
@@ -18,11 +12,6 @@ export type ContributionTableViewRow = {
 	paymentEventType: PaymentEventType | null;
 	programName: string | null;
 	createdAt: Date;
-};
-
-type ContributionTableView = {
-	tableRows: ContributionTableViewRow[];
-	permission: OrganizationPermission;
 };
 
 export type ContributionTableQuery = {
@@ -96,10 +85,6 @@ export type YourContributionsTableViewRow = {
 	amount: number;
 	currency: Currency;
 	campaignTitle: string;
-};
-
-type YourContributionsTableView = {
-	tableRows: YourContributionsTableViewRow[];
 };
 
 export type YourContributionsTableQuery = {

@@ -89,9 +89,7 @@ test('shows uniqueness error when contributor phone already exists', async ({ pa
 	await page.getByTestId('form-item-contact.email').locator('input').fill(`dup.phone.${Date.now()}@example.com`);
 	await page.getByTestId('form-item-contact.phone').locator('input').fill(existingPhone!.number);
 	await page.getByRole('button', { name: 'Save' }).click();
-	await expect(
-		page.getByText('Error saving contributor: A contact with this phone number already exists.'),
-	).toBeVisible();
+	await expect(page.getByText('Error saving contributor: A contact with this phone number already exists.')).toBeVisible();
 });
 
 test('edit contributor and remove phone and address', async ({ page }) => {

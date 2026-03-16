@@ -34,6 +34,7 @@ export const StripePaymentButton = ({ amount, intervalCount, lang, region, butto
 
 		if (!result.success) {
 			console.error(result.error);
+
 			return;
 		}
 

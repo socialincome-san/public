@@ -116,6 +116,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get contributor: ${JSON.stringify(error)}`);
 		}
 	}
@@ -164,6 +165,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor options: ${JSON.stringify(error)}`);
 		}
 	}
@@ -266,22 +268,20 @@ export class ContributorReadService extends BaseService {
 				}),
 			]);
 
-			let contributors: Array<
-				Prisma.ContributorGetPayload<{
-					select: {
-						id: true;
-						createdAt: true;
-						contact: {
-							select: {
-								firstName: true;
-								lastName: true;
-								email: true;
-								address: { select: { country: true } };
-							};
+			let contributors: Prisma.ContributorGetPayload<{
+				select: {
+					id: true;
+					createdAt: true;
+					contact: {
+						select: {
+							firstName: true;
+							lastName: true;
+							email: true;
+							address: { select: { country: true } };
 						};
 					};
-				}>
-			>;
+				};
+			}>[];
 
 			if (sortBy === 'totalContributedChf') {
 				const allContributors = await this.db.contributor.findMany({
@@ -299,6 +299,7 @@ export class ContributorReadService extends BaseService {
 					if (leftValue !== rightValue) {
 						return (leftValue - rightValue) * directionMultiplier;
 					}
+
 					return left.id.localeCompare(right.id);
 				});
 
@@ -342,6 +343,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, countryFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributors: ${JSON.stringify(error)}`);
 		}
 	}
@@ -379,6 +381,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor IDs for certificates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -410,6 +413,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
 	}
@@ -467,6 +471,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -485,6 +490,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor by Payment Reference ID: ${JSON.stringify(error)}`);
 		}
 	}

@@ -107,6 +107,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 			<DropdownMenuContent align="end" className="w-64">
 				{items.map((item) => {
 					const Icon = item.icon;
+
 					return (
 						<DropdownMenuItem key={item.href} asChild>
 							<Link href={item.href} className="flex items-center gap-2">
@@ -122,7 +123,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 				<DropdownMenuItem
 					onSelect={(e: Event) => {
 						e.preventDefault();
-						logout();
+						void logout();
 					}}
 					className="text-destructive focus:text-destructive"
 				>

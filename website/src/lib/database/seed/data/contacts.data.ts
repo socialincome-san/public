@@ -15,7 +15,7 @@ export const contactsData: Contact[] = [
 		profession: 'Teacher',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-2',
@@ -31,7 +31,7 @@ export const contactsData: Contact[] = [
 		profession: 'Software Engineer',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-3',
@@ -47,7 +47,7 @@ export const contactsData: Contact[] = [
 		profession: 'Nurse',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-4',
@@ -63,7 +63,7 @@ export const contactsData: Contact[] = [
 		profession: 'Community Organizer',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-5',
@@ -79,7 +79,7 @@ export const contactsData: Contact[] = [
 		profession: 'Local Coordinator',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		isInstitution: false,
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-6',
@@ -95,7 +95,7 @@ export const contactsData: Contact[] = [
 		profession: 'Field Officer',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		isInstitution: false,
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-7',
@@ -111,7 +111,7 @@ export const contactsData: Contact[] = [
 		profession: 'Aid Worker',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-8',
@@ -127,7 +127,7 @@ export const contactsData: Contact[] = [
 		profession: 'Social Worker',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-9',
@@ -143,7 +143,7 @@ export const contactsData: Contact[] = [
 		profession: 'Logistics Coordinator',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-10',
@@ -159,7 +159,7 @@ export const contactsData: Contact[] = [
 		profession: 'Health Assistant',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-11',
@@ -175,7 +175,7 @@ export const contactsData: Contact[] = [
 		profession: 'Field Technician',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-12',
@@ -191,7 +191,7 @@ export const contactsData: Contact[] = [
 		profession: 'Project Assistant',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-13',
@@ -207,7 +207,7 @@ export const contactsData: Contact[] = [
 		profession: 'Country Coordinator',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-14',
@@ -223,7 +223,7 @@ export const contactsData: Contact[] = [
 		profession: 'Regional Director',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-15',
@@ -239,8 +239,9 @@ export const contactsData: Contact[] = [
 		profession: 'Operations Manager',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}, 	{
+		updatedAt: null,
+	},
+	{
 		id: 'contact-16',
 		firstName: 'Portal',
 		lastName: 'Tester',
@@ -254,7 +255,7 @@ export const contactsData: Contact[] = [
 		profession: 'Portal Administrator',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-17',
@@ -270,7 +271,7 @@ export const contactsData: Contact[] = [
 		profession: 'Program Manager',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-18',
@@ -286,9 +287,9 @@ export const contactsData: Contact[] = [
 		profession: 'Communications Officer',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
-		{
+	{
 		id: 'contact-19',
 		firstName: 'Ibrahim',
 		lastName: 'Sesay',
@@ -302,7 +303,7 @@ export const contactsData: Contact[] = [
 		profession: 'Farmer',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-20',
@@ -318,7 +319,7 @@ export const contactsData: Contact[] = [
 		profession: 'Tailor',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-21',
@@ -334,7 +335,7 @@ export const contactsData: Contact[] = [
 		profession: 'Driver',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-22',
@@ -350,7 +351,7 @@ export const contactsData: Contact[] = [
 		profession: 'Market Vendor',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-23',
@@ -366,7 +367,7 @@ export const contactsData: Contact[] = [
 		profession: 'Carpenter',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-24',
@@ -382,7 +383,7 @@ export const contactsData: Contact[] = [
 		profession: 'Student',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-25',
@@ -398,7 +399,7 @@ export const contactsData: Contact[] = [
 		profession: 'Mechanic',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-26',
@@ -414,7 +415,7 @@ export const contactsData: Contact[] = [
 		profession: 'Shop Assistant',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-27',
@@ -430,7 +431,7 @@ export const contactsData: Contact[] = [
 		profession: 'Trader',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-28',
@@ -446,9 +447,9 @@ export const contactsData: Contact[] = [
 		profession: 'Hairdresser',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
-		{
+	{
 		id: 'contact-29',
 		firstName: 'Musa',
 		lastName: 'Kamara',
@@ -462,7 +463,7 @@ export const contactsData: Contact[] = [
 		profession: 'Farmer',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-30',
@@ -478,7 +479,7 @@ export const contactsData: Contact[] = [
 		profession: 'Tailor',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-31',
@@ -494,7 +495,7 @@ export const contactsData: Contact[] = [
 		profession: 'Test Account',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-32',
@@ -510,7 +511,7 @@ export const contactsData: Contact[] = [
 		profession: 'Teacher',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-33',
@@ -526,7 +527,7 @@ export const contactsData: Contact[] = [
 		profession: 'Farmer',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-34',
@@ -542,7 +543,7 @@ export const contactsData: Contact[] = [
 		profession: 'Driver',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-35',
@@ -558,7 +559,7 @@ export const contactsData: Contact[] = [
 		profession: 'Trader',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-36',
@@ -574,7 +575,7 @@ export const contactsData: Contact[] = [
 		profession: 'Carpenter',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contact-37',
@@ -590,6 +591,6 @@ export const contactsData: Contact[] = [
 		profession: 'Nurse',
 		isInstitution: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 ];

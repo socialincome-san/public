@@ -17,6 +17,7 @@ import Link from 'next/link';
 
 export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
+
 	return getMetadata(params.lang as WebsiteLanguage, 'website-reporting');
 };
 

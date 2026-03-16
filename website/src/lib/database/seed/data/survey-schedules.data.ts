@@ -1,4 +1,4 @@
-import { SurveySchedule, SurveyQuestionnaire } from '@/generated/prisma/client';
+import { SurveyQuestionnaire, SurveySchedule } from '@/generated/prisma/client';
 
 export const surveySchedulesData: SurveySchedule[] = [
 	{
@@ -8,7 +8,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		dueInMonthsAfterStart: 0,
 		programId: 'program-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'survey-schedule-2',
@@ -17,7 +17,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		dueInMonthsAfterStart: 6,
 		programId: 'program-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'survey-schedule-3',
@@ -26,7 +26,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		dueInMonthsAfterStart: 12,
 		programId: 'program-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'survey-schedule-4',
@@ -35,7 +35,7 @@ export const surveySchedulesData: SurveySchedule[] = [
 		dueInMonthsAfterStart: 18,
 		programId: 'program-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'survey-schedule-5',
@@ -44,6 +44,6 @@ export const surveySchedulesData: SurveySchedule[] = [
 		dueInMonthsAfterStart: 24,
 		programId: 'program-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 ];

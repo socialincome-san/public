@@ -8,7 +8,9 @@ import { ProgramSetupSection } from './components/program-setup-section';
 import { SectionTitle } from './components/section-title';
 import { StatsSection } from './components/stats-section';
 
-type Props = { params: Promise<{ programId: string }> };
+type Props = {
+	params: Promise<{ programId: string }>;
+};
 
 export default async function OverviewProgramScopedDataLoader({ params }: Props) {
 	const { programId } = await params;

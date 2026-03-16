@@ -16,6 +16,7 @@ export const createContributionAction = async (contribution: ContributionFormCre
 	}
 	const res = await services.write.contribution.create(sessionResult.data.id, contribution);
 	revalidatePath('/portal/management/contributions');
+
 	return res;
 };
 
@@ -26,6 +27,7 @@ export const updateContributionAction = async (contribution: ContributionFormUpd
 	}
 	const res = await services.write.contribution.update(sessionResult.data.id, contribution);
 	revalidatePath('/portal/management/contributions');
+
 	return res;
 };
 
@@ -34,6 +36,7 @@ export const getContributionAction = async (contributionId: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return await services.read.contribution.get(sessionResult.data.id, contributionId);
 };
 
@@ -50,5 +53,6 @@ export const getContributionsOptionsAction = async () => {
 	if (!campaignOptions.success) {
 		return resultFail(campaignOptions.error);
 	}
+
 	return resultOk({ contributorOptions: contributorOptions.data, campaignOptions: campaignOptions.data });
 };

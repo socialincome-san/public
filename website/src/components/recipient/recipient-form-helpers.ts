@@ -11,7 +11,7 @@ import { RecipientFormSchema } from './recipient-form';
 export const buildUpdateRecipientInput = (
 	schema: RecipientFormSchema,
 	recipient: RecipientPayload,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): RecipientFormUpdateInput => {
 	return {
 		id: recipient.id,
@@ -33,7 +33,7 @@ export const buildUpdateRecipientInput = (
 
 export const buildCreateRecipientInput = (
 	schema: RecipientFormSchema,
-	contactFields: { [key: string]: FormField },
+	contactFields: Record<string, FormField>,
 ): RecipientFormCreateInput => {
 	return {
 		startDate: schema.fields.startDate.value ?? null,

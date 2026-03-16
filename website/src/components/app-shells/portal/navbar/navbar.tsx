@@ -4,7 +4,9 @@ import type { Session } from '@/lib/firebase/current-account';
 import { NavbarDesktop } from './navbar-desktop';
 import { NavbarMobile } from './navbar-mobile';
 
-type NavbarProps = { sessions: Session[] };
+type NavbarProps = {
+	sessions: Session[];
+};
 
 export const Navbar = ({ sessions }: NavbarProps) => {
 	return (

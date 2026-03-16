@@ -68,6 +68,7 @@ export class CandidateWriteService extends BaseService {
 		if (!isAdmin.data) {
 			return this.resultFail('Permission denied');
 		}
+
 		return this.resultOk(true);
 	}
 
@@ -246,6 +247,7 @@ export class CandidateWriteService extends BaseService {
 					},
 				};
 			}
+
 			return { create: { number: nextPhoneNumber } };
 		}
 
@@ -411,6 +413,7 @@ export class CandidateWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create candidate. Please try again later.');
 		}
 	}
@@ -523,15 +526,14 @@ export class CandidateWriteService extends BaseService {
 				if (previousContactPhoneId) {
 					await this.deletePhoneIfOrphaned(previousContactPhoneId);
 				}
+
 				return this.resultOk(updatedCandidate);
 			}
 
 			phoneAdded = !previousPaymentPhoneNumber && !!nextPaymentPhoneNumber;
 			phoneRemoved = !!previousPaymentPhoneNumber && !nextPaymentPhoneNumber;
 			phoneChanged =
-				!!previousPaymentPhoneNumber &&
-				!!nextPaymentPhoneNumber &&
-				previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
+				!!previousPaymentPhoneNumber && !!nextPaymentPhoneNumber && previousPaymentPhoneNumber !== nextPaymentPhoneNumber;
 
 			if (phoneAdded) {
 				const firebaseResult = await this.firebaseAdminService.createByPhoneNumber(nextPaymentPhoneNumber!);
@@ -561,8 +563,7 @@ export class CandidateWriteService extends BaseService {
 			});
 
 			const previousAddressId = existing.contact.address?.id;
-			const didRemoveAddress =
-				!!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
+			const didRemoveAddress = !!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
 			if (didRemoveAddress && previousAddressId) {
 				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
 			}
@@ -587,6 +588,7 @@ export class CandidateWriteService extends BaseService {
 			if (phoneChanged && previousPaymentPhoneNumber && nextPaymentPhoneNumber) {
 				await this.firebaseAdminService.updateByPhoneNumber(nextPaymentPhoneNumber, previousPaymentPhoneNumber);
 			}
+
 			return this.resultFail('Could not update candidate. Please try again later.');
 		}
 	}
@@ -713,6 +715,7 @@ export class CandidateWriteService extends BaseService {
 			return this.resultOk({ id: candidateId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not delete candidate. Please try again later.');
 		}
 	}
@@ -749,6 +752,7 @@ export class CandidateWriteService extends BaseService {
 			return this.resultOk({ assigned: selectedIds.length });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not assign candidates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -756,9 +760,8 @@ export class CandidateWriteService extends BaseService {
 	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {
 		try {
 			let created = 0;
-			let rows;
 			const text = await file.text();
-			rows = parseCsvText(text);
+			const rows = parseCsvText(text);
 			for (let i = 0; i < rows.length; i++) {
 				const row = rows[i];
 				const rowNumber = i + 1;

@@ -19,10 +19,6 @@ export type ContributorTableViewRow = {
 	permission: OrganizationPermission;
 };
 
-type ContributorTableView = {
-	tableRows: ContributorTableViewRow[];
-};
-
 export type ContributorTableQuery = {
 	page: number;
 	pageSize: number;

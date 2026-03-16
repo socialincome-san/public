@@ -59,6 +59,7 @@ export class PayoutWriteService extends BaseService {
 			return this.resultOk(`Payout updated to "${newStatus}"`);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -127,12 +128,13 @@ export class PayoutWriteService extends BaseService {
 					id: created.recipient.id,
 					firstName: created.recipient.contact.firstName,
 					lastName: created.recipient.contact.lastName,
-					programId: created.recipient.program && created.recipient.program.id,
-					programName: created.recipient.program && created.recipient.program.name,
+					programId: created.recipient.program?.id ?? null,
+					programName: created.recipient.program?.name ?? null,
 				},
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -222,12 +224,13 @@ export class PayoutWriteService extends BaseService {
 					id: updated.recipient.id,
 					firstName: updated.recipient.contact.firstName,
 					lastName: updated.recipient.contact.lastName,
-					programId: updated.recipient.program && updated.recipient.program.id,
-					programName: updated.recipient.program && updated.recipient.program.name,
+					programId: updated.recipient.program?.id ?? null,
+					programName: updated.recipient.program?.name ?? null,
 				},
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -250,9 +253,11 @@ export class PayoutWriteService extends BaseService {
 					comments,
 				},
 			});
+
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to update payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}

@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import { ChevronDownIcon } from 'lucide-react';
-import { useEffect } from 'react';
 import { Button } from './button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -24,7 +23,6 @@ export const DatePicker = ({
 	placeholder?: string;
 }) => {
 	const [open, setOpen] = React.useState(false);
-	const [date, setDate] = React.useState<Date | undefined>(selected);
 	const formatter = new Intl.DateTimeFormat('de-CH', {
 		year: 'numeric',
 		month: '2-digit',
@@ -35,12 +33,7 @@ export const DatePicker = ({
 	const normalizeToNoon = (date: Date) => {
 		return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0);
 	};
-
-	useEffect(() => {
-		if (selected) {
-			setDate(normalizeToNoon(selected));
-		}
-	}, [selected]);
+	const date = selected ? normalizeToNoon(selected) : undefined;
 
 	return (
 		<div className="flex w-full flex-col gap-3">
@@ -72,7 +65,6 @@ export const DatePicker = ({
 							}
 							const normalized = normalizeToNoon(date);
 							onSelect(normalized);
-							setDate(normalized);
 							setOpen(false);
 						}}
 					/>
