@@ -1,4 +1,4 @@
-import { Gender, PayoutInterval, Prisma } from '@/generated/prisma/client';
+import { Currency, Gender, PayoutInterval, Prisma } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -58,6 +58,7 @@ export class AppReviewModeService extends BaseService {
 				id: 'avengers-program',
 				name: 'Avengers Initiative',
 				amountOfRecipientsForStart: 6,
+				coveredByReserves: false,
 				programDurationInMonths: 60,
 				payoutPerInterval: new Prisma.Decimal(5000000),
 				payoutInterval: PayoutInterval.monthly,
@@ -65,6 +66,7 @@ export class AppReviewModeService extends BaseService {
 				countryId: 'usa',
 				country: {
 					isoCode: 'US',
+					currency: Currency.USD,
 				},
 				createdAt: now(),
 				updatedAt: now(),

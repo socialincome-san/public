@@ -250,6 +250,7 @@ export class RecipientReadService extends BaseService {
 							country: {
 								select: {
 									isoCode: true,
+									currency: true,
 								},
 							},
 						},

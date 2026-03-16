@@ -52,6 +52,7 @@ export class ProgramWriteService extends BaseService {
 					name: `${getCountryNameByCode(country.isoCode)} Program ${Math.floor(10000 + Math.random() * 90000)}`,
 					countryId: input.countryId,
 					amountOfRecipientsForStart: input.amountOfRecipientsForStart ?? null,
+					coveredByReserves: false,
 					programDurationInMonths: input.programDurationInMonths,
 					payoutPerInterval: input.payoutPerInterval,
 					payoutInterval: input.payoutInterval,
