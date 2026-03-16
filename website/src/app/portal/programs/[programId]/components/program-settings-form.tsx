@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { Cause, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { getProgramSettingsAction, updateProgramSettingsAction } from '@/lib/server-actions/program-actions';
@@ -149,12 +149,11 @@ const fillFormSchema = (
 
 export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, onError }: ProgramSettingsFormProps) => {
 	const [isLoading, startTransition] = useTransition();
-	const [formSchema, setFormSchema] = useState<ProgramSettingsFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<ProgramSettingsFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [loadedSettings, setLoadedSettings] = useState<ProgramSettingsPayload | null>(null);
-	const [isFormReady, setIsFormReady] = useState(false);
 
 	const onSubmit = (schema: ProgramSettingsFormSchema) => {
-		if (loadedSettings?.id !== programId) {
+		if (loadedSettings && loadedSettings.id !== programId) {
 			onError?.('Program is still loading. Please try again.');
 
 			return;
@@ -177,8 +176,10 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 	};
 
 	useEffect(() => {
+		if (!programId) {
+			return;
+		}
 		startTransition(async () => {
-			setIsFormReady(false);
 			const [settingsResult, countryOptionsResult] = await Promise.all([
 				getProgramSettingsAction(programId),
 				getProgramCountryFeasibilityAction(),
@@ -187,23 +188,21 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 			handleServiceResult(settingsResult, {
 				onSuccess: (settings) => {
 					setLoadedSettings(settings);
-					const options: CountryOption[] = countryOptionsResult.success
-						? countryOptionsResult.data.rows.map((row) => ({
-								id: row.id,
-								label: `${getCountryNameByCode(row.country.isoCode)} (${row.country.currency})`,
-							}))
-						: [];
-					setFormSchema((previousSchema) => fillFormSchema(previousSchema, settings, options, readOnly));
-					setIsFormReady(true);
+					setFormSchema((previousSchema) => {
+						const options: CountryOption[] = countryOptionsResult.success
+							? countryOptionsResult.data.rows.map((row) => ({
+									id: row.id,
+									label: `${getCountryNameByCode(row.country.isoCode)} (${row.country.currency})`,
+								}))
+							: [];
+
+						return fillFormSchema(previousSchema, settings, options, readOnly);
+					});
 				},
 				onError: (error) => onError?.(error),
 			});
 		});
 	}, [programId, readOnly, onError]);
-
-	if (!isFormReady) {
-		return <div className="text-muted-foreground p-4 text-sm">Loading program settings...</div>;
-	}
 
 	return (
 		<DynamicForm

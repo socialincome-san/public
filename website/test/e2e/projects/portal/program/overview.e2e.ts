@@ -37,8 +37,8 @@ test('Program not ready for payout overview page matches screenshot', async ({ p
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test('program settings dialog for program-1 updates all editable values and saves', async ({ page }, testInfo) => {
-	const updatedName = `Program One Updated ${Date.now()}`;
+test('program settings dialog for program-1 updates all editable values and saves', async ({ page }) => {
+	const updatedName = 'Program One Updated E2E';
 	const updatedDuration = '24';
 	const updatedPayoutPerInterval = '77';
 
@@ -62,8 +62,5 @@ test('program settings dialog for program-1 updates all editable values and save
 	await expect(dialog.getByTestId('form-item-targetCauses')).toContainText('poverty');
 	await expect(dialog.getByTestId('form-item-targetProfiles')).toContainText('female');
 
-	await page.screenshot({
-		path: testInfo.outputPath('program-1-settings-after-save.png'),
-		fullPage: true,
-	});
+	await expect(page).toHaveScreenshot({ fullPage: true });
 });

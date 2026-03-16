@@ -152,23 +152,26 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 		resolver: zodResolver(zodSchema),
 	});
 
-	// set form values if available
-	useEffect(() => {
-		if (mode !== 'add') {
-			for (const [name, field] of Object.entries(formSchema.fields)) {
-				if (!isFormField(field)) {
-					//nested
-					for (const [nestedName, nestedField] of Object.entries(field.fields)) {
-						if (isFormField(nestedField) && nestedField.value !== null && nestedField.value !== undefined) {
-							form.setValue(`${name}.${nestedName}` as any, nestedField.value);
-						}
-					}
-				} else if (field.value !== null && field.value !== undefined) {
-					form.setValue(name, field.value);
-				}
+	const getFormValuesFromSchema = (schema: FormSchema): Record<string, unknown> => {
+		const values: Record<string, unknown> = {};
+
+		for (const [name, field] of Object.entries(schema.fields)) {
+			if (isFormField(field)) {
+				values[name] = field.value;
+				continue;
 			}
+
+			values[name] = getFormValuesFromSchema(field as FormSchema);
 		}
-	}, [formSchema]);
+
+		return values;
+	};
+
+	// reset form values on schema/entity changes to avoid stale values
+	useEffect(() => {
+		const values = mode === 'add' ? {} : getFormValuesFromSchema(formSchema);
+		form.reset(values as z.infer<typeof zodSchema>);
+	}, [form, formSchema, mode]);
 
 	// get options from Zod Object
 	const getOptions = (nestedKey?: string): string[] => {
@@ -545,7 +548,19 @@ const GenericFormField = ({
 										step="any"
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey, {
-											setValueAs: (v) => (typeof v === 'string' && v !== '' ? parseFloat(v) : null),
+											setValueAs: (v) => {
+												if (v === '' || v === null || v === undefined) {
+													return undefined;
+												}
+
+												if (typeof v === 'number') {
+													return Number.isNaN(v) ? undefined : v;
+												}
+
+												const parsed = Number(v);
+
+												return Number.isNaN(parsed) ? undefined : parsed;
+											},
 										})}
 										disabled={formFieldSchema.disabled || isLoading || readOnly}
 									/>

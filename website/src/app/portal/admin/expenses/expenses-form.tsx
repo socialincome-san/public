@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { ExpenseType } from '@/generated/prisma/enums';
 import {
 	createExpenseAction,
@@ -63,7 +63,7 @@ const initialFormSchema: ExpenseFormSchema = {
 };
 
 export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }: ExpenseFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [expense, setExpense] = useState<ExpensePayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -72,16 +72,20 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 		handleServiceResult(result, {
 			onSuccess: (data) => {
 				setExpense(data);
-				setFormSchema((prev) => ({
-					...prev,
+				setFormSchema((prev) => {
+					const next = clearFormSchemaValues(prev);
+
+					return {
+						...next,
 					fields: {
-						...prev.fields,
-						type: { ...prev.fields.type, value: data.type },
-						year: { ...prev.fields.year, value: data.year },
-						amountChf: { ...prev.fields.amountChf, value: data.amountChf },
-						organization: { ...prev.fields.organization, value: data.organization.id },
+						...next.fields,
+						type: { ...next.fields.type, value: data.type },
+						year: { ...next.fields.year, value: data.year },
+						amountChf: { ...next.fields.amountChf, value: data.amountChf },
+						organization: { ...next.fields.organization, value: data.organization.id },
 					},
-				}));
+					};
+				});
 			},
 			onError: (error) => onError?.(error),
 		});

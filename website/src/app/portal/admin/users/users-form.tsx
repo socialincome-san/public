@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
 import { createUserAction, getUserAction, getUserOptionsAction, updateUserAction } from '@/lib/server-actions/user-actions';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
@@ -60,7 +60,7 @@ const initialFormSchema: UserFormSchema = {
 };
 
 export default function UsersForm({ onSuccess, onError, onCancel, userId }: UserFormProps) {
-	const [formSchema, setFormSchema] = useState(initialFormSchema);
+	const [formSchema, setFormSchema] = useState(() => cloneFormSchema(initialFormSchema));
 	const [user, setUser] = useState<UserPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -69,17 +69,21 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 		handleServiceResult(result, {
 			onSuccess: (data) => {
 				setUser(data);
-				setFormSchema((prev) => ({
-					...prev,
+				setFormSchema((prev) => {
+					const next = clearFormSchemaValues(prev);
+
+					return {
+						...next,
 					fields: {
-						...prev.fields,
-						firstName: { ...prev.fields.firstName, value: data.firstName },
-						lastName: { ...prev.fields.lastName, value: data.lastName },
-						email: { ...prev.fields.email, value: data.email },
-						role: { ...prev.fields.role, value: data.role },
-						organizationId: { ...prev.fields.organizationId, value: data.organizationId },
+						...next.fields,
+						firstName: { ...next.fields.firstName, value: data.firstName },
+						lastName: { ...next.fields.lastName, value: data.lastName },
+						email: { ...next.fields.email, value: data.email },
+						role: { ...next.fields.role, value: data.role },
+						organizationId: { ...next.fields.organizationId, value: data.organizationId },
 					},
-				}));
+					};
+				});
 			},
 			onError: (error) => onError?.(error),
 		});

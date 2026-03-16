@@ -1,5 +1,5 @@
 import { Address, Gender, Phone } from '@/generated/prisma/client';
-import { FormField } from './dynamic-form';
+import { FormField, FormSchema } from './dynamic-form';
 
 type Contact = {
 	id: string;
@@ -51,4 +51,32 @@ export const getZodEnum = (items: DropdownItem[]) => {
 	}, {});
 
 	return object;
+};
+
+export const cloneFormSchema = <TSchema extends FormSchema>(schema: TSchema): TSchema => {
+	const clonedFields = Object.fromEntries(
+		Object.entries(schema.fields).map(([key, field]) => [
+			key,
+			'fields' in field ? cloneFormSchema(field) : { ...field },
+		]),
+	) as TSchema['fields'];
+
+	return {
+		...schema,
+		fields: clonedFields,
+	};
+};
+
+export const clearFormSchemaValues = <TSchema extends FormSchema>(schema: TSchema): TSchema => {
+	const clearedFields = Object.fromEntries(
+		Object.entries(schema.fields).map(([key, field]) => [
+			key,
+			'fields' in field ? clearFormSchemaValues(field) : { ...field, value: undefined },
+		]),
+	) as TSchema['fields'];
+
+	return {
+		...schema,
+		fields: clearedFields,
+	};
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import {
@@ -86,7 +86,7 @@ const initialFormSchema: SurveyFormSchema = {
 };
 
 export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }: SurveyFormProps) => {
-	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();
 
@@ -100,19 +100,23 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 			handleServiceResult(surveyResult, {
 				onSuccess: (data) => {
 					setSurvey(data);
-					setFormSchema((prev) => ({
-						...prev,
+					setFormSchema((prev) => {
+						const next = clearFormSchemaValues(prev);
+
+						return {
+							...next,
 						fields: {
-							...prev.fields,
-							name: { ...prev.fields.name, value: data.name },
-							recipientId: { ...prev.fields.recipientId, value: data.recipientId },
-							questionnaire: { ...prev.fields.questionnaire, value: data.questionnaire },
-							language: { ...prev.fields.language, value: data.language },
-							dueAt: { ...prev.fields.dueAt, value: data.dueAt },
-							status: { ...prev.fields.status, value: data.status },
-							accessEmail: { ...prev.fields.accessEmail, value: data.accessEmail },
+							...next.fields,
+							name: { ...next.fields.name, value: data.name },
+							recipientId: { ...next.fields.recipientId, value: data.recipientId },
+							questionnaire: { ...next.fields.questionnaire, value: data.questionnaire },
+							language: { ...next.fields.language, value: data.language },
+							dueAt: { ...next.fields.dueAt, value: data.dueAt },
+							status: { ...next.fields.status, value: data.status },
+							accessEmail: { ...next.fields.accessEmail, value: data.accessEmail },
 						},
-					}));
+						};
+					});
 				},
 				onError: (error) => onError?.(error),
 			});

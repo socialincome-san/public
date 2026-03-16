@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@/generated/prisma/enums';
 import {
 	createPayoutAction,
@@ -73,7 +73,7 @@ const initialFormSchema: PayoutFormSchema = {
 };
 
 export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) => {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [payout, setPayout] = useState<PayoutPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -87,18 +87,22 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 			handleServiceResult(result, {
 				onSuccess: (data) => {
 					setPayout(data);
-					setFormSchema((prev) => ({
-						...prev,
+					setFormSchema((prev) => {
+						const next = clearFormSchemaValues(prev);
+
+						return {
+							...next,
 						fields: {
-							...prev.fields,
-							recipientId: { ...prev.fields.recipientId, value: data.recipient.id },
-							amount: { ...prev.fields.amount, value: data.amount },
-							currency: { ...prev.fields.currency, value: data.currency },
-							phoneNumber: { ...prev.fields.phoneNumber, value: data.phoneNumber ?? undefined },
-							paymentAt: { ...prev.fields.paymentAt, value: new Date(data.paymentAt) },
-							status: { ...prev.fields.status, value: data.status },
+							...next.fields,
+							recipientId: { ...next.fields.recipientId, value: data.recipient.id },
+							amount: { ...next.fields.amount, value: data.amount },
+							currency: { ...next.fields.currency, value: data.currency },
+							phoneNumber: { ...next.fields.phoneNumber, value: data.phoneNumber ?? undefined },
+							paymentAt: { ...next.fields.paymentAt, value: new Date(data.paymentAt) },
+							status: { ...next.fields.status, value: data.status },
 						},
-					}));
+						};
+					});
 				},
 				onError: (error) => onError?.(error),
 			});

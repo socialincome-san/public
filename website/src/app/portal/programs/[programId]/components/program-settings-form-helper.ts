@@ -3,8 +3,19 @@ import { Cause, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { ProgramSettingsUpdateInput } from '@/lib/services/program/program.types';
 import { ProgramSettingsFormSchema } from './program-settings-form';
 
-const toNumber = (value: FormField['value'], fallback = 0): number =>
-	typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+const toNumber = (value: FormField['value'], fallback = 0): number => {
+	if (typeof value === 'number' && Number.isFinite(value)) {
+		return value;
+	}
+	if (typeof value === 'string' && value.trim() !== '') {
+		const parsedValue = Number(value);
+		if (Number.isFinite(parsedValue)) {
+			return parsedValue;
+		}
+	}
+
+	return fallback;
+};
 
 const PAYOUT_INTERVAL_VALUES: readonly string[] = Object.values(PayoutInterval);
 const CAUSE_VALUES: readonly string[] = Object.values(Cause);
