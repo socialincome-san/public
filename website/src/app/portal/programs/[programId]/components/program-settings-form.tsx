@@ -5,6 +5,7 @@ import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { Cause, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import {
+	deleteProgramAction,
 	getProgramOrganizationOptionsAction,
 	getProgramSettingsAction,
 	updateProgramSettingsAction,
@@ -12,6 +13,7 @@ import {
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ProgramSettingsPayload } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildUpdateProgramSettingsInput } from './program-settings-form-helper';
@@ -24,7 +26,7 @@ type ProgramSettingsFormProps = {
 	onError?: (error?: unknown) => void;
 };
 
-export type ProgramSettingsFormSchema = {
+type ProgramSettingsFormSchema = {
 	label: string;
 	fields: {
 		id: FormField;
@@ -180,6 +182,7 @@ const fillFormSchema = (
 };
 
 export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, onError }: ProgramSettingsFormProps) => {
+	const router = useRouter();
 	const [isLoading, startTransition] = useTransition();
 	const [formSchema, setFormSchema] = useState<ProgramSettingsFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [loadedSettings, setLoadedSettings] = useState<ProgramSettingsPayload | null>(null);
@@ -202,6 +205,22 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 
 			handleServiceResult(result, {
 				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
+		});
+	};
+
+	const onDelete = () => {
+		if (readOnly) {
+			return;
+		}
+		startTransition(async () => {
+			const result = await deleteProgramAction(programId);
+			handleServiceResult(result, {
+				onSuccess: () => {
+					onSuccess?.();
+					router.push('/portal');
+				},
 				onError: (error) => onError?.(error),
 			});
 		});
@@ -249,6 +268,7 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={readOnly || loadedSettings?.canEdit === false ? 'readonly' : 'edit'}
 		/>
 	);

@@ -2,8 +2,8 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, Page, test } from '@playwright/test';
 import { selectOptionByTestId } from '../../../utils';
 
-const openProgramSettingsDialog = async (page: Page) => {
-	await page.goto('/portal/programs/program-1/overview');
+const openProgramSettingsDialog = async (page: Page, programId = 'program-1') => {
+	await page.goto(`/portal/programs/${programId}/overview`);
 	await page.getByRole('button', { name: 'Program settings' }).click();
 	const dialog = page.getByRole('dialog');
 	await expect(dialog).toBeVisible();
@@ -69,4 +69,31 @@ test('program settings dialog for program-1 updates all editable values and save
 	await expect(dialog.getByTestId('form-item-operatorOrganizations')).toContainText('Swiss Red Cross');
 
 	await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
+test('program settings dialog can delete a newly created program and redirects to portal', async ({ page }) => {
+	await page.goto('/portal');
+	await page.getByTestId('create-program-modal-trigger').click();
+
+	await page.getByTestId('radio-card-country-sierra-leone').click();
+	await page.getByRole('button', { name: 'Continue' }).click();
+	await page.getByTestId('radio-card-targeted').click();
+	await page.getByTestId('pill-multi-select-poverty').click();
+	await page.getByTestId('pill-multi-select-health').click();
+	await page.getByTestId('pill-multi-select-female').click();
+	await expect(page.getByText('2 of 7 recipients match the selected country and filters')).toBeVisible();
+	await page.getByRole('button', { name: 'Continue' }).click();
+	await page.getByRole('button', { name: 'Continue' }).click();
+
+	await expect(page.getByText('Great! You initiated a new program')).toBeVisible();
+
+	const createdProgramPath = new URL(page.url()).pathname;
+	const createdProgramId = createdProgramPath.split('/')[3];
+	expect(createdProgramId).toBeTruthy();
+
+	const dialog = await openProgramSettingsDialog(page, createdProgramId);
+	await dialog.getByRole('button', { name: 'Delete' }).click();
+	await page.getByRole('button', { name: 'Delete permanently' }).click();
+
+	await expect(page).toHaveURL('/portal');
 });

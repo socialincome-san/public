@@ -20,7 +20,7 @@ export const ProgramSettingsDialog = ({ programId, readOnly }: ProgramSettingsDi
 
 	const handleError = (error: unknown) => {
 		const message = getErrorMessage(error);
-		setErrorMessage(`Error saving program settings: ${message}`);
+		setErrorMessage(`Error updating program settings: ${message}`);
 		logger.error('Program Settings Form Error', { error });
 	};
 

@@ -45,3 +45,18 @@ export const updateProgramSettingsAction = async (input: ProgramSettingsUpdateIn
 
 	return result;
 };
+
+export const deleteProgramAction = async (programId: string) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const result = await services.write.program.delete(sessionResult.data.id, programId);
+	if (result.success) {
+		revalidatePath('/portal');
+		revalidatePath('/portal/programs/[programId]', 'layout');
+	}
+
+	return result;
+};

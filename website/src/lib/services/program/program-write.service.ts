@@ -129,11 +129,10 @@ export class ProgramWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const access = accessibleProgramsResult.data.find((program) => program.programId === parsedInput.id);
-			if (!access) {
-				return this.resultFail('Permission denied');
-			}
-			if (access.permission !== ProgramPermission.operator) {
+			const hasOperatorAccess = accessibleProgramsResult.data.some(
+				(program) => program.programId === parsedInput.id && program.permission === ProgramPermission.operator,
+			);
+			if (!hasOperatorAccess) {
 				return this.resultFail('Permission denied');
 			}
 
@@ -208,6 +207,92 @@ export class ProgramWriteService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not update program settings: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async delete(userId: string, programId: string): Promise<ServiceResult<void>> {
+		try {
+			const accessibleProgramsResult = await this.programAccessReadService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const hasOperatorAccess = accessibleProgramsResult.data.some(
+				(program) => program.programId === programId && program.permission === ProgramPermission.operator,
+			);
+			if (!hasOperatorAccess) {
+				return this.resultFail('Permission denied');
+			}
+
+			const existingProgram = await this.db.program.findUnique({
+				where: { id: programId },
+				select: { id: true },
+			});
+			if (!existingProgram) {
+				return this.resultFail('Program not found');
+			}
+
+			const payoutExists = await this.db.payout.findFirst({
+				where: {
+					recipient: {
+						programId,
+					},
+				},
+				select: { id: true },
+			});
+			if (payoutExists) {
+				return this.resultFail('Program cannot be deleted because recipients already have payouts.');
+			}
+
+			const contributionExists = await this.db.contribution.findFirst({
+				where: {
+					campaign: {
+						programId,
+					},
+				},
+				select: { id: true },
+			});
+			if (contributionExists) {
+				return this.resultFail('Program cannot be deleted because related campaigns already have contributions.');
+			}
+
+			await this.db.$transaction(async (tx) => {
+				await tx.recipient.updateMany({
+					where: { programId },
+					data: { programId: null },
+				});
+
+				await tx.survey.updateMany({
+					where: {
+						surveySchedule: {
+							programId,
+						},
+					},
+					data: { surveyScheduleId: null },
+				});
+
+				await tx.campaign.deleteMany({
+					where: { programId },
+				});
+
+				await tx.surveySchedule.deleteMany({
+					where: { programId },
+				});
+
+				await tx.programAccess.deleteMany({
+					where: { programId },
+				});
+
+				await tx.program.delete({
+					where: { id: programId },
+				});
+			});
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not delete program: ${JSON.stringify(error)}`);
 		}
 	}
 }
