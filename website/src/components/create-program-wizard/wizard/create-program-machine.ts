@@ -53,8 +53,8 @@ export const createProgramWizardMachine = setup({
 		};
 
 		events: // step 1
-			// prettier-ignore
-			| { type: 'SELECT_COUNTRY'; id: string }
+		// prettier-ignore
+		| { type: 'SELECT_COUNTRY'; id: string }
 			| { type: 'TOGGLE_COUNTRY_ROW'; id: string }
 
 			// step 2
