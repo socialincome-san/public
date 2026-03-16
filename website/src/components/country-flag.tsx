@@ -2,11 +2,12 @@
 
 import { CountryCode } from '@/generated/prisma/enums';
 import { cn } from '@/lib/utils/cn';
+import { WHITESPACE_REGEX } from '@/lib/utils/regex';
 import Image from 'next/image';
 import { useState } from 'react';
 
 const slugifyCountry = (name: string): string => {
-	return name.toLowerCase().replace(/\s+/g, '_');
+	return name.toLowerCase().replace(WHITESPACE_REGEX, '_');
 };
 
 type CountryFlagProps = {

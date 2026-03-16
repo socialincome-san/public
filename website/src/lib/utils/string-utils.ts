@@ -1,11 +1,16 @@
 import { format } from 'date-fns';
+import {
+	CAMEL_CASE_BOUNDARY_REGEX,
+	LEADING_TRAILING_DASHES_REGEX,
+	NON_ALPHANUMERIC_DASH_REGEX,
+	TITLE_CASE_UNDERSCORE_REGEX,
+	UNDERSCORE_DASH_SEQUENCE_REGEX,
+	UNDERSCORE_REGEX,
+	WHITESPACE_SPLIT_REGEX,
+} from './regex';
 
 export const slugify = (value: string): string => {
-	return value
-		.toLowerCase()
-		.trim()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-+|-+$/g, '');
+	return value.toLowerCase().trim().replace(NON_ALPHANUMERIC_DASH_REGEX, '-').replace(LEADING_TRAILING_DASHES_REGEX, '');
 };
 
 export const formatCurrency = (value: number): string => {
@@ -65,21 +70,21 @@ export const formatCurrencyLocale = (
 };
 
 export const humanize = (value: string): string => {
-	return value.replace(/_/g, ' ');
+	return value.replace(UNDERSCORE_REGEX, ' ');
 };
 
 export const humanizeIdentifier = (value: string): string => {
 	return value
-		.replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-		.replace(/[_-]+/g, ' ')
+		.replace(CAMEL_CASE_BOUNDARY_REGEX, '$1 $2')
+		.replace(UNDERSCORE_DASH_SEQUENCE_REGEX, ' ')
 		.trim()
-		.split(/\s+/)
+		.split(WHITESPACE_SPLIT_REGEX)
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(' ');
 };
 
 export const titleCase = (value: string): string => {
-	return value.replace(/^_*(.)|_+(.)/g, (_s: string, c?: string, d?: string) =>
+	return value.replace(TITLE_CASE_UNDERSCORE_REGEX, (_s: string, c?: string, d?: string) =>
 		c ? c.toUpperCase() : ` ${d?.toUpperCase() ?? ''}`,
 	);
 };

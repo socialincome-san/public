@@ -2,13 +2,17 @@
 
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { services } from '@/lib/services/services';
-import type { CreateProgramInput } from '../services/program/program.types';
+import type { CreateProgramInput, PublicOnboardingUserDetails } from '../services/program/program.types';
 
-export const createProgramAction = async (input: CreateProgramInput) => {
+export const createProgramAction = async (input: CreateProgramInput, userDetails?: PublicOnboardingUserDetails) => {
 	const sessionResult = await getSessionByType('user');
-	if (!sessionResult.success) {
-		return sessionResult;
+	if (sessionResult.success) {
+		return services.write.program.create(input, { userId: sessionResult.data.id });
 	}
 
-	return services.write.program.create(sessionResult.data.id, input);
+	if (userDetails) {
+		return services.write.program.create(input, userDetails);
+	}
+
+	return sessionResult;
 };

@@ -5,6 +5,7 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { createSessionAction } from '@/lib/server-actions/session-actions';
 import { logger } from '@/lib/utils/logger';
+import { WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX } from '@/lib/utils/regex';
 import { FirebaseError } from 'firebase/app';
 import { isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
@@ -43,7 +44,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 			if (continueUrl) {
 				const interstitialUrl = new URL(continueUrl);
-				const isConfirmLoginPath = /\/auth\/confirm-login\/?$/.test(interstitialUrl.pathname);
+				const isConfirmLoginPath = WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX.test(interstitialUrl.pathname);
 
 				if (isConfirmLoginPath && !confirmed) {
 					// Prevent auto-consumption of one-time links; require explicit user click first.

@@ -12,6 +12,7 @@ import { ContributorSession } from '@/lib/services/contributor/contributor.types
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
@@ -57,7 +58,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 
 	const causeOptions: MultiSelectOption[] = Object.values(Cause).map((c) => ({
 		value: c,
-		label: c.replace(/_/g, ' ').toLowerCase(),
+		label: c.replace(UNDERSCORE_REGEX, ' ').toLowerCase(),
 	}));
 
 	return (

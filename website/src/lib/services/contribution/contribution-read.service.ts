@@ -1,5 +1,6 @@
 import { Currency, PaymentEventType, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
+import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { endOfYear, startOfYear } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -166,7 +167,10 @@ export class ContributionReadService extends BaseService {
 				campaigns: campaigns.map((campaign) => ({ value: campaign.id, label: campaign.title })),
 				paymentEventTypes: (Object.values(PaymentEventType) as PaymentEventType[]).map((type) => ({
 					value: type,
-					label: type === 'bank_transfer' ? 'Wire transfer' : type.replace(/_/g, ' ').replace(/^./, (s) => s.toUpperCase()),
+					label:
+						type === 'bank_transfer'
+							? 'Wire transfer'
+							: type.replace(UNDERSCORE_REGEX, ' ').replace(START_CHARACTER_REGEX, (s) => s.toUpperCase()),
 				})),
 			};
 

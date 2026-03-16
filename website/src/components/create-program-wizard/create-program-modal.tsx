@@ -28,8 +28,14 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 			return;
 		}
 
+		if (!isAuthenticated) {
+			router.replace('/login');
+
+			return;
+		}
+
 		router.replace(`/portal/programs/${createdProgramId}/overview`);
-	}, [createdProgramId, router]);
+	}, [createdProgramId, isAuthenticated, router]);
 
 	return (
 		<>

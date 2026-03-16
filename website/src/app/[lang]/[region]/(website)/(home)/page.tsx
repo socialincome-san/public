@@ -1,5 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Approach } from '@/app/[lang]/[region]/(website)/(home)/(sections)/approach';
+import { CreateProgram } from '@/app/[lang]/[region]/(website)/(home)/(sections)/create-program';
 import { FAQ } from '@/app/[lang]/[region]/(website)/(home)/(sections)/faq';
 import { Quotes } from '@/app/[lang]/[region]/(website)/(home)/(sections)/quotes';
 import { SDGGoals } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg-goals';
@@ -21,6 +22,7 @@ export default async function Page(props: DefaultPageProps) {
 			<MonthlyIncome lang={lang} region={region} />
 			<ExplainerVideo lang={lang} region={region} />
 			<MobileIllustration lang={lang} region={region} />
+			<CreateProgram lang={lang} region={region} />
 			<FAQ lang={lang} region={region} />
 			<Approach lang={lang} region={region} />
 			<Quotes lang={lang} region={region} />

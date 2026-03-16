@@ -1,5 +1,6 @@
 import { Cause, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
+import { UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -175,7 +176,7 @@ export class LocalPartnerReadService extends BaseService {
 				contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
 				email: partner.contact?.email ?? null,
 				contactNumber: partner.contact?.phone?.number ?? null,
-				causes: partner.causes.map((cause) => cause.replace(/_/g, ' ')).join(', '),
+				causes: partner.causes.map((cause) => cause.replace(UNDERSCORE_REGEX, ' ')).join(', '),
 				recipientsCount: partner._count.recipients,
 				createdAt: partner.createdAt,
 			}));

@@ -2,6 +2,7 @@ import type { Article, ArticleType, Author, Topic } from '@/generated/storyblok/
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { makeNewWebsiteSlugPrefixRegex } from '@/lib/utils/regex';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import { Metadata } from 'next';
@@ -147,7 +148,7 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 	if (link.linktype === 'story') {
 		// cached_url contains the full Storyblok slug, e.g. "new-website/about"
 		// Strip the "new-website/" prefix to get the page slug
-		const slug = link.cached_url?.replace(new RegExp(`^${NEW_WEBSITE_SLUG}/`), '') || '';
+		const slug = link.cached_url?.replace(makeNewWebsiteSlugPrefixRegex(NEW_WEBSITE_SLUG), '') || '';
 
 		return `/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}`;
 	}

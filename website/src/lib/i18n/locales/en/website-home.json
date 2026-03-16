@@ -85,6 +85,11 @@
 		],
 		"subtitle-1": "Social Income is a new way to fight poverty in the Global South. Digital, efficient and mobile."
 	},
+	"section-create-program": {
+		"title": "Start your own program",
+		"description": "Create a program in a few minutes. We will set up your account and organization, and you can log in right after.",
+		"cta": "Create new program"
+	},
 	"section-faq": {
 		"title": "This sounds good, but ... ",
 		"cta": "All FAQ"

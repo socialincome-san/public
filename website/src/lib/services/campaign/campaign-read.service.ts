@@ -2,6 +2,7 @@ import { Campaign, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
+import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -326,7 +327,7 @@ export class CampaignReadService extends BaseService {
 	}
 
 	private getCampaignLink(id: string, legacyFirestoreId: string | null): string {
-		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+		const base = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
 
 		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${legacyFirestoreId || id}`;
 	}

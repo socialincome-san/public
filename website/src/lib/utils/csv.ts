@@ -1,3 +1,5 @@
+import { CSV_DOUBLE_QUOTES_REGEX, CSV_NEEDS_QUOTES_REGEX } from './regex';
+
 export type CsvRow = Record<string, string>;
 
 export const parseCsvText = (text: string): CsvRow[] => {
@@ -35,9 +37,9 @@ export const parseCsvFile = async (file: File): Promise<CsvRow[]> => {
 };
 
 const escapeCsvValue = (value: string): string => {
-	const escaped = value.replace(/"/g, '""');
+	const escaped = value.replace(CSV_DOUBLE_QUOTES_REGEX, '""');
 
-	return /[",\n]/.test(escaped) ? `"${escaped}"` : escaped;
+	return CSV_NEEDS_QUOTES_REGEX.test(escaped) ? `"${escaped}"` : escaped;
 };
 
 export const stringifyCsv = (rows: CsvRow[], headers?: string[]): string => {

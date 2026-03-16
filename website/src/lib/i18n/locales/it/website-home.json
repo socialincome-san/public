@@ -85,6 +85,11 @@
 		],
 		"subtitle-1": "Social Income è un nuovo modo per combattere la povertà nel Sud del mondo. Digitale, efficiente e mobile."
 	},
+	"section-create-program": {
+		"title": "Avvia il tuo programma",
+		"description": "Crea un programma in pochi minuti. Creiamo il tuo account e la tua organizzazione, poi puoi accedere subito.",
+		"cta": "Crea un nuovo programma"
+	},
 	"section-faq": {
 		"title": "Tutto questo sembra fantastico, ma ... ",
 		"cta": "Tutte le  FAQ"

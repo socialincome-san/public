@@ -35,6 +35,7 @@ import { MobileMoneyProviderValidationService } from './mobile-money-provider/mo
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
 import { OrganizationAccessService } from './organization-access/organization-access.service';
 import { OrganizationReadService } from './organization/organization-read.service';
+import { OrganizationWriteService } from './organization/organization-write.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
 import { PayoutProcessService } from './payout-process/payout-process.service';
 import { PayoutReadService } from './payout/payout-read.service';
@@ -98,6 +99,7 @@ const contributionRead = new ContributionReadService(prisma, organizationAccess)
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, organizationAccess, contributionValidation);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
+const organizationWrite = new OrganizationWriteService(prisma);
 const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
 const localPartnerValidation = new LocalPartnerValidationService(prisma);
 const localPartnerWrite = new LocalPartnerWriteService(
@@ -133,7 +135,7 @@ const donationCertificateRead = new DonationCertificateReadService(prisma, organ
 const programStats = new ProgramStatsService(prisma, exchangeRateRead);
 const campaignRead = new CampaignReadService(prisma, organizationAccess, exchangeRateRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
-const programWrite = new ProgramWriteService(prisma, programAccessWrite, candidateWrite);
+const programWrite = new ProgramWriteService(prisma, programAccessWrite, candidateWrite, firebaseAdmin, organizationWrite);
 const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, programStats);
 const payoutProcess = new PayoutProcessService(prisma, programAccessRead, programStats, exchangeRateRead);
 const donationCertificateWrite = new DonationCertificateWriteService(
@@ -188,6 +190,7 @@ export const services = {
 		expense: expenseWrite,
 		localPartner: localPartnerWrite,
 		mobileMoneyProvider: mobileMoneyProviderWrite,
+		organization: organizationWrite,
 		payout: payoutWrite,
 		program: programWrite,
 		recipient: recipientWrite,

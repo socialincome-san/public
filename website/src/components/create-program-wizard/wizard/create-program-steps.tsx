@@ -4,7 +4,7 @@ import { Currency } from '@/generated/prisma/enums';
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
-import { LoginStep } from '../step-4/login-step';
+import { AccountDetailsStep } from '../step-4/account-details-step';
 import { WizardError } from './create-program-wizard-error';
 import { WizardLoading } from './create-program-wizard-loading';
 import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
@@ -81,8 +81,17 @@ export const CreateProgramSteps = ({ state, send }: Props) => {
 		);
 	}
 
-	if (state.matches('auth')) {
-		return <LoginStep onSuccess={() => send({ type: 'AUTH_SUCCESS' })} />;
+	if (state.matches('accountDetails')) {
+		return (
+			<AccountDetailsStep
+				email={state.context.contactEmail}
+				firstName={state.context.contactFirstName}
+				lastName={state.context.contactLastName}
+				onEmailChange={(value) => send({ type: 'SET_CONTACT_EMAIL', value })}
+				onFirstNameChange={(value) => send({ type: 'SET_CONTACT_FIRST_NAME', value })}
+				onLastNameChange={(value) => send({ type: 'SET_CONTACT_LAST_NAME', value })}
+			/>
+		);
 	}
 
 	return null;

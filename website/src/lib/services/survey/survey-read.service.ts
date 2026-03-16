@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
+import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import crypto from 'crypto';
 import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns';
@@ -82,7 +83,7 @@ export class SurveyReadService extends BaseService {
 		accessEmail: string;
 		accessPw: string;
 	}): string {
-		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+		const base = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
 		const url = new URL([base, 'survey', recipientId, surveyId].join('/'));
 		url.search = new URLSearchParams({ email: accessEmail, pw: accessPw }).toString();
 

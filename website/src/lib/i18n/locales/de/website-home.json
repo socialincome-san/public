@@ -85,6 +85,11 @@
 		],
 		"subtitle-1": "Social Income ist ein neuer Weg, Armut im Globalen Süden zu bekämpfen – digital, effizient und zeitgemäss."
 	},
+	"section-create-program": {
+		"title": "Starte dein eigenes Programm",
+		"description": "Erstelle in wenigen Minuten ein Programm. Wir richten dein Konto und deine Organisation ein, danach kannst du dich direkt einloggen.",
+		"cta": "Neues Programm erstellen"
+	},
 	"section-faq": {
 		"title": "Das klingt gut, aber ... ",
 		"cta": "Alle Fragen"

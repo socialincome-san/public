@@ -3,6 +3,7 @@
 import { Button } from '@/components/button';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX } from '@/lib/utils/regex';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -19,7 +20,7 @@ export default function ConfirmLoginPage() {
 	const translator = useTranslator(lang, 'website-login');
 
 	const continueToFinish = () => {
-		const path = window.location.pathname.replace(/\/confirm-login\/?$/, '/finish-login');
+		const path = window.location.pathname.replace(NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX, '/finish-login');
 		window.location.href = path + window.location.search;
 	};
 
