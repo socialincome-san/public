@@ -153,17 +153,54 @@ export class ProgramWriteService extends BaseService {
 				return this.resultFail('Country not found');
 			}
 
-			await this.db.program.update({
-				where: { id: parsedInput.id },
-				data: {
-					name: parsedInput.name,
-					countryId: parsedInput.countryId,
-					programDurationInMonths: parsedInput.programDurationInMonths,
-					payoutPerInterval: parsedInput.payoutPerInterval,
-					payoutInterval: parsedInput.payoutInterval,
-					targetCauses: parsedInput.targetCauses,
-					targetProfiles: parsedInput.targetProfiles,
-				},
+			const ownerOrganizationIds = Array.from(new Set(parsedInput.ownerOrganizationIds));
+			const operatorOrganizationIds = Array.from(new Set(parsedInput.operatorOrganizationIds));
+			const organizationIdsToValidate = Array.from(new Set([...ownerOrganizationIds, ...operatorOrganizationIds]));
+			const existingOrganizations = await this.db.organization.findMany({
+				where: { id: { in: organizationIdsToValidate } },
+				select: { id: true },
+			});
+			if (existingOrganizations.length !== organizationIdsToValidate.length) {
+				return this.resultFail('One or more selected organizations do not exist.');
+			}
+
+			const programAccessesToCreate = [
+				...ownerOrganizationIds.map((organizationId) => ({
+					programId: parsedInput.id,
+					organizationId,
+					permission: ProgramPermission.owner,
+				})),
+				...operatorOrganizationIds.map((organizationId) => ({
+					programId: parsedInput.id,
+					organizationId,
+					permission: ProgramPermission.operator,
+				})),
+			];
+
+			await this.db.$transaction(async (tx) => {
+				await tx.program.update({
+					where: { id: parsedInput.id },
+					data: {
+						name: parsedInput.name,
+						countryId: parsedInput.countryId,
+						programDurationInMonths: parsedInput.programDurationInMonths,
+						payoutPerInterval: parsedInput.payoutPerInterval,
+						payoutInterval: parsedInput.payoutInterval,
+						targetCauses: parsedInput.targetCauses,
+						targetProfiles: parsedInput.targetProfiles,
+					},
+				});
+
+				await tx.programAccess.deleteMany({
+					where: {
+						programId: parsedInput.id,
+						permission: { in: [ProgramPermission.owner, ProgramPermission.operator] },
+					},
+				});
+
+				if (programAccessesToCreate.length > 0) {
+					await tx.programAccess.createMany({ data: programAccessesToCreate });
+				}
 			});
 
 			return this.resultOk({ id: parsedInput.id });

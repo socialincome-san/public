@@ -297,6 +297,12 @@ export class ProgramReadService extends BaseService {
 					payoutInterval: true,
 					targetCauses: true,
 					targetProfiles: true,
+					programAccesses: {
+						select: {
+							organizationId: true,
+							permission: true,
+						},
+					},
 					createdAt: true,
 					updatedAt: true,
 				},
@@ -318,6 +324,12 @@ export class ProgramReadService extends BaseService {
 				payoutInterval: program.payoutInterval,
 				targetCauses: program.targetCauses,
 				targetProfiles: program.targetProfiles,
+				ownerOrganizationIds: program.programAccesses
+					.filter((access) => access.permission === ProgramPermission.owner)
+					.map((access) => access.organizationId),
+				operatorOrganizationIds: program.programAccesses
+					.filter((access) => access.permission === ProgramPermission.operator)
+					.map((access) => access.organizationId),
 				createdAt: program.createdAt,
 				updatedAt: program.updatedAt,
 				permission,
@@ -327,6 +339,39 @@ export class ProgramReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not load program settings: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getSettingsOrganizationOptions(
+		userId: string,
+		programId: string,
+	): Promise<ServiceResult<{ id: string; name: string }[]>> {
+		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const hasOperatorAccess = accessibleProgramsResult.data.some(
+				(access) => access.programId === programId && access.permission === ProgramPermission.operator,
+			);
+			if (!hasOperatorAccess) {
+				return this.resultFail('Permission denied');
+			}
+
+			const organizations = await this.db.organization.findMany({
+				select: {
+					id: true,
+					name: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(organizations);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load organization options: ${JSON.stringify(error)}`);
 		}
 	}
 }

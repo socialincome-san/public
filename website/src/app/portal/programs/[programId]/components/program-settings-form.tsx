@@ -4,7 +4,11 @@ import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { Cause, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
-import { getProgramSettingsAction, updateProgramSettingsAction } from '@/lib/server-actions/program-actions';
+import {
+	getProgramOrganizationOptionsAction,
+	getProgramSettingsAction,
+	updateProgramSettingsAction,
+} from '@/lib/server-actions/program-actions';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ProgramSettingsPayload } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
@@ -31,6 +35,8 @@ export type ProgramSettingsFormSchema = {
 		payoutInterval: FormField;
 		targetCauses: FormField;
 		targetProfiles: FormField;
+		ownerOrganizations: FormField;
+		operatorOrganizations: FormField;
 	};
 };
 
@@ -93,6 +99,18 @@ const initialFormSchema: ProgramSettingsFormSchema = {
 				label: profile.replaceAll('_', ' '),
 			})),
 		},
+		ownerOrganizations: {
+			label: 'Owner organizations (readonly)',
+			placeholder: 'Select owner organizations',
+			zodSchema: z.array(z.string()).optional(),
+			options: [],
+		},
+		operatorOrganizations: {
+			label: 'Operator organizations (read/write)',
+			placeholder: 'Select operator organizations',
+			zodSchema: z.array(z.string()).min(1, 'At least one operator organization is required.'),
+			options: [],
+		},
 	},
 };
 
@@ -101,10 +119,16 @@ type CountryOption = {
 	label: string;
 };
 
+type OrganizationOption = {
+	id: string;
+	label: string;
+};
+
 const fillFormSchema = (
 	formSchema: ProgramSettingsFormSchema,
 	settings: ProgramSettingsPayload,
 	countryOptions: CountryOption[],
+	organizationOptions: OrganizationOption[],
 	readOnly: boolean,
 ): ProgramSettingsFormSchema => {
 	const nextSchema: ProgramSettingsFormSchema = {
@@ -118,6 +142,8 @@ const fillFormSchema = (
 			payoutInterval: { ...formSchema.fields.payoutInterval },
 			targetCauses: { ...formSchema.fields.targetCauses },
 			targetProfiles: { ...formSchema.fields.targetProfiles },
+			ownerOrganizations: { ...formSchema.fields.ownerOrganizations },
+			operatorOrganizations: { ...formSchema.fields.operatorOrganizations },
 		},
 	};
 	const readOnlyFields = readOnly || !settings.canEdit;
@@ -135,6 +161,10 @@ const fillFormSchema = (
 	nextSchema.fields.payoutInterval.value = settings.payoutInterval;
 	nextSchema.fields.targetCauses.value = settings.targetCauses;
 	nextSchema.fields.targetProfiles.value = settings.targetProfiles;
+	nextSchema.fields.ownerOrganizations.options = organizationOptions;
+	nextSchema.fields.ownerOrganizations.value = settings.ownerOrganizationIds;
+	nextSchema.fields.operatorOrganizations.options = organizationOptions;
+	nextSchema.fields.operatorOrganizations.value = settings.operatorOrganizationIds;
 
 	nextSchema.fields.name.disabled = readOnlyFields;
 	nextSchema.fields.country.disabled = readOnlyFields;
@@ -143,6 +173,8 @@ const fillFormSchema = (
 	nextSchema.fields.payoutInterval.disabled = readOnlyFields;
 	nextSchema.fields.targetCauses.disabled = readOnlyFields;
 	nextSchema.fields.targetProfiles.disabled = readOnlyFields;
+	nextSchema.fields.ownerOrganizations.disabled = readOnlyFields;
+	nextSchema.fields.operatorOrganizations.disabled = readOnlyFields;
 
 	return nextSchema;
 };
@@ -180,9 +212,10 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 			return;
 		}
 		startTransition(async () => {
-			const [settingsResult, countryOptionsResult] = await Promise.all([
+			const [settingsResult, countryOptionsResult, organizationOptionsResult] = await Promise.all([
 				getProgramSettingsAction(programId),
 				getProgramCountryFeasibilityAction(),
+				getProgramOrganizationOptionsAction(programId),
 			]);
 
 			handleServiceResult(settingsResult, {
@@ -195,8 +228,14 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 									label: `${getCountryNameByCode(row.country.isoCode)} (${row.country.currency})`,
 								}))
 							: [];
+						const organizationOptions: OrganizationOption[] = organizationOptionsResult.success
+							? organizationOptionsResult.data.map((organization) => ({
+									id: organization.id,
+									label: organization.name,
+								}))
+							: [];
 
-						return fillFormSchema(previousSchema, settings, options, readOnly);
+						return fillFormSchema(previousSchema, settings, options, organizationOptions, readOnly);
 					});
 				},
 				onError: (error) => onError?.(error),

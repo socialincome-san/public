@@ -64,6 +64,8 @@ export type ProgramSettingsPayload = {
 	payoutInterval: PayoutInterval;
 	targetCauses: Cause[];
 	targetProfiles: Profile[];
+	ownerOrganizationIds: string[];
+	operatorOrganizationIds: string[];
 	createdAt: Date;
 	updatedAt: Date | null;
 	permission: ProgramPermission;
@@ -79,4 +81,6 @@ export type ProgramSettingsUpdateInput = {
 	payoutInterval: PayoutInterval;
 	targetCauses: Cause[];
 	targetProfiles: Profile[];
+	ownerOrganizationIds: string[];
+	operatorOrganizationIds: string[];
 };

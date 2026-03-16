@@ -161,7 +161,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 				continue;
 			}
 
-			values[name] = getFormValuesFromSchema(field as FormSchema);
+			values[name] = getFormValuesFromSchema(field);
 		}
 
 		return values;

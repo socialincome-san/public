@@ -23,6 +23,15 @@ export const getProgramSettingsAction = async (programId: string) => {
 	return services.read.program.getSettings(sessionResult.data.id, programId);
 };
 
+export const getProgramOrganizationOptionsAction = async (programId: string) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	return services.read.program.getSettingsOrganizationOptions(sessionResult.data.id, programId);
+};
+
 export const updateProgramSettingsAction = async (input: ProgramSettingsUpdateInput) => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {

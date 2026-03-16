@@ -41,6 +41,8 @@ test('program settings dialog for program-1 updates all editable values and save
 	const updatedName = 'Program One Updated E2E';
 	const updatedDuration = '24';
 	const updatedPayoutPerInterval = '77';
+	const updatedOwnerOrganizations = ['Coop'];
+	const updatedOperatorOrganizations = ['Swiss Red Cross'];
 
 	let dialog = await openProgramSettingsDialog(page);
 	await dialog.getByTestId('form-item-name').locator('input').fill(updatedName);
@@ -50,6 +52,8 @@ test('program settings dialog for program-1 updates all editable values and save
 	await selectOptionByTestId(page, 'payoutInterval', 'Quarterly');
 	await selectMultiOptionsByTestId(page, 'targetCauses', ['poverty']);
 	await selectMultiOptionsByTestId(page, 'targetProfiles', ['female']);
+	await selectMultiOptionsByTestId(page, 'ownerOrganizations', updatedOwnerOrganizations);
+	await selectMultiOptionsByTestId(page, 'operatorOrganizations', updatedOperatorOrganizations);
 	await dialog.getByRole('button', { name: 'Save' }).click();
 	await expect(dialog).not.toBeVisible();
 
@@ -61,6 +65,8 @@ test('program settings dialog for program-1 updates all editable values and save
 	await expect(dialog.getByTestId('form-item-payoutInterval')).toContainText('Quarterly');
 	await expect(dialog.getByTestId('form-item-targetCauses')).toContainText('poverty');
 	await expect(dialog.getByTestId('form-item-targetProfiles')).toContainText('female');
+	await expect(dialog.getByTestId('form-item-ownerOrganizations')).toContainText('Coop');
+	await expect(dialog.getByTestId('form-item-operatorOrganizations')).toContainText('Swiss Red Cross');
 
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

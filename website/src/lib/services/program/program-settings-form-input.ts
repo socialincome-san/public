@@ -29,6 +29,8 @@ export const programSettingsUpdateInputSchema = z.object({
 	payoutInterval: z.nativeEnum(PayoutInterval),
 	targetCauses: z.array(z.nativeEnum(Cause)).default([]),
 	targetProfiles: z.array(z.nativeEnum(Profile)).default([]),
+	ownerOrganizationIds: z.array(z.string().trim().min(1)).default([]),
+	operatorOrganizationIds: z.array(z.string().trim().min(1)).min(1, 'At least one operator organization is required.'),
 });
 
 export type ProgramSettingsFormUpdateInput = z.infer<typeof programSettingsUpdateInputSchema>;

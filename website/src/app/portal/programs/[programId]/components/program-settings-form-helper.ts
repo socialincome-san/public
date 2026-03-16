@@ -1,7 +1,6 @@
 import type { FormField } from '@/components/dynamic-form/dynamic-form';
 import { Cause, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { ProgramSettingsUpdateInput } from '@/lib/services/program/program.types';
-import { ProgramSettingsFormSchema } from './program-settings-form';
 
 const toNumber = (value: FormField['value'], fallback = 0): number => {
 	if (typeof value === 'number' && Number.isFinite(value)) {
@@ -35,9 +34,28 @@ const toCauses = (value: FormField['value']): Cause[] =>
 const toProfiles = (value: FormField['value']): Profile[] =>
 	Array.isArray(value) ? value.filter((item): item is Profile => typeof item === 'string' && isProfile(item)) : [];
 
+const toStringArray = (value: FormField['value']): string[] =>
+	Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0) : [];
+
+type ProgramSettingsFormFields = {
+	name: FormField;
+	country: FormField;
+	programDurationInMonths: FormField;
+	payoutPerInterval: FormField;
+	payoutInterval: FormField;
+	targetCauses: FormField;
+	targetProfiles: FormField;
+	ownerOrganizations: FormField;
+	operatorOrganizations: FormField;
+};
+
+type ProgramSettingsFormInput = {
+	fields: ProgramSettingsFormFields;
+};
+
 export const buildUpdateProgramSettingsInput = (
 	programId: string,
-	formSchema: ProgramSettingsFormSchema,
+	formSchema: ProgramSettingsFormInput,
 ): ProgramSettingsUpdateInput => {
 	const fields = formSchema.fields;
 
@@ -50,5 +68,7 @@ export const buildUpdateProgramSettingsInput = (
 		payoutInterval: toPayoutInterval(fields.payoutInterval.value),
 		targetCauses: toCauses(fields.targetCauses.value),
 		targetProfiles: toProfiles(fields.targetProfiles.value),
+		ownerOrganizationIds: toStringArray(fields.ownerOrganizations.value),
+		operatorOrganizationIds: toStringArray(fields.operatorOrganizations.value),
 	};
 };
