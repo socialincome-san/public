@@ -3,6 +3,7 @@
 import { useIsPage } from '@/lib/hooks/useIsPage';
 import { Button, Card, CardContent, Typography } from '@socialincome/ui';
 import { ConsentStatusString } from 'firebase/analytics';
+import { useEffect, useState } from 'react';
 
 type CookieConsentBannerClientProps = {
 	translations: {
@@ -14,11 +15,16 @@ type CookieConsentBannerClientProps = {
 
 export const CookieConsentBanner = ({ translations }: CookieConsentBannerClientProps) => {
 	const isSurveyPage = useIsPage('survey');
-	const hasConsent = typeof window !== 'undefined' && Boolean(window.localStorage.getItem('cookie_consent'));
-	const hideBanner = isSurveyPage || hasConsent;
+	const [hideBanner, setHideBanner] = useState(true);
+
+	useEffect(() => {
+		const cookieConsent = localStorage.getItem('cookie_consent');
+		// eslint-disable-next-line react-hooks/set-state-in-effect
+		setHideBanner(Boolean(cookieConsent) || isSurveyPage);
+	}, [isSurveyPage, setHideBanner]);
 
 	const setCookieConsent = (mode: ConsentStatusString) => {
-		window.localStorage.setItem('cookie_consent', mode);
+		localStorage.setItem('cookie_consent', mode);
 		location.reload();
 	};
 	if (hideBanner) {
