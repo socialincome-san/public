@@ -26,8 +26,13 @@ export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'organizationName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Organization</SortableHeader>,
+			accessorKey: 'readonlyOrganizationNames',
+			header: 'Organizations (read only)',
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'editOrganizationNames',
+			header: 'Organizations (write)',
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

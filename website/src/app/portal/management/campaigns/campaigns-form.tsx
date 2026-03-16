@@ -29,6 +29,7 @@ export default function CampaignsForm({
 }) {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [isLoading, startTransition] = useTransition();
+	const asOptionalString = (value: string | null | undefined) => value ?? undefined;
 
 	const loadCampaign = async (campaignId: string) => {
 		if (campaignId) {
@@ -46,19 +47,25 @@ export default function CampaignsForm({
 								description: { ...nextSchema.fields.description, value: data.description },
 								secondDescriptionTitle: {
 									...nextSchema.fields.secondDescriptionTitle,
-									value: data.secondDescriptionTitle,
+									value: asOptionalString(data.secondDescriptionTitle),
 								},
-								secondDescription: { ...nextSchema.fields.secondDescription, value: data.secondDescription },
+								secondDescription: {
+									...nextSchema.fields.secondDescription,
+									value: asOptionalString(data.secondDescription),
+								},
 								thirdDescriptionTitle: {
 									...nextSchema.fields.thirdDescriptionTitle,
-									value: data.thirdDescriptionTitle,
+									value: asOptionalString(data.thirdDescriptionTitle),
 								},
-								thirdDescription: { ...nextSchema.fields.thirdDescription, value: data.thirdDescription },
-								linkWebsite: { ...nextSchema.fields.linkWebsite, value: data.linkWebsite },
-								linkInstagram: { ...nextSchema.fields.linkInstagram, value: data.linkInstagram },
-								linkTiktok: { ...nextSchema.fields.linkTiktok, value: data.linkTiktok },
-								linkFacebook: { ...nextSchema.fields.linkFacebook, value: data.linkFacebook },
-								linkX: { ...nextSchema.fields.linkX, value: data.linkX },
+								thirdDescription: {
+									...nextSchema.fields.thirdDescription,
+									value: asOptionalString(data.thirdDescription),
+								},
+								linkWebsite: { ...nextSchema.fields.linkWebsite, value: asOptionalString(data.linkWebsite) },
+								linkInstagram: { ...nextSchema.fields.linkInstagram, value: asOptionalString(data.linkInstagram) },
+								linkTiktok: { ...nextSchema.fields.linkTiktok, value: asOptionalString(data.linkTiktok) },
+								linkFacebook: { ...nextSchema.fields.linkFacebook, value: asOptionalString(data.linkFacebook) },
+								linkX: { ...nextSchema.fields.linkX, value: asOptionalString(data.linkX) },
 								goal: { ...nextSchema.fields.goal, value: data.goal },
 								currency: { ...nextSchema.fields.currency, value: data.currency },
 								additionalAmountChf: {
@@ -69,18 +76,21 @@ export default function CampaignsForm({
 								isActive: { ...nextSchema.fields.isActive, value: data.isActive },
 								public: { ...nextSchema.fields.public, value: data.public },
 								featured: { ...nextSchema.fields.featured, value: data.featured },
-								slug: { ...nextSchema.fields.slug, value: data.slug },
+								slug: { ...nextSchema.fields.slug, value: asOptionalString(data.slug) },
 								metadataDescription: {
 									...nextSchema.fields.metadataDescription,
-									value: data.metadataDescription,
+									value: asOptionalString(data.metadataDescription),
 								},
-								metadataOgImage: { ...nextSchema.fields.metadataOgImage, value: data.metadataOgImage },
+								metadataOgImage: {
+									...nextSchema.fields.metadataOgImage,
+									value: asOptionalString(data.metadataOgImage),
+								},
 								metadataTwitterImage: {
 									...nextSchema.fields.metadataTwitterImage,
-									value: data.metadataTwitterImage,
+									value: asOptionalString(data.metadataTwitterImage),
 								},
-								creatorName: { ...nextSchema.fields.creatorName, value: data.creatorName },
-								creatorEmail: { ...nextSchema.fields.creatorEmail, value: data.creatorEmail },
+								creatorName: { ...nextSchema.fields.creatorName, value: asOptionalString(data.creatorName) },
+								creatorEmail: { ...nextSchema.fields.creatorEmail, value: asOptionalString(data.creatorEmail) },
 								program: { ...nextSchema.fields.program, value: data.program?.id },
 							},
 						};

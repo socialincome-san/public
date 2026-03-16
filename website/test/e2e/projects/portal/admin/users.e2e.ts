@@ -1,7 +1,12 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, getFirebaseAdminService, selectOptionByTestId } from '../../../utils';
+import {
+	clickDataTableActionItem,
+	getFirebaseAdminService,
+	selectMultiOptionsByTestId,
+	selectOptionByTestId,
+} from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -38,7 +43,8 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-lastName').locator('input').fill(lastName);
 	await page.getByTestId('form-item-email').locator('input').fill(email);
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectOptionByTestId(page, 'organizationId');
+	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Social Income']);
+	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', ['Sahar Education']);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -80,7 +86,7 @@ test('shows uniqueness error when user email already exists', async ({ page }) =
 	await page.getByTestId('form-item-lastName').locator('input').fill('User');
 	await page.getByTestId('form-item-email').locator('input').fill('test@portal.org');
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectOptionByTestId(page, 'organizationId');
+	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Social Income']);
 	await page.getByRole('button', { name: 'Save' }).click();
 
 	await expect(page.getByText('A user with this email already exists.')).toBeVisible();
@@ -108,7 +114,8 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-lastName').locator('input').fill(initialLastName);
 	await page.getByTestId('form-item-email').locator('input').fill(initialEmail);
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectOptionByTestId(page, 'organizationId');
+	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Social Income']);
+	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', ['Sahar Education']);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 

@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
 import { createUserAction, getUserAction, getUserOptionsAction, updateUserAction } from '@/lib/server-actions/user-actions';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
@@ -24,7 +24,8 @@ export type UserFormSchema = {
 		lastName: FormField;
 		email: FormField;
 		role: FormField;
-		organizationId: FormField;
+		editOrganizations: FormField;
+		readonlyOrganizations: FormField;
 	};
 };
 
@@ -52,9 +53,17 @@ const initialFormSchema: UserFormSchema = {
 			zodSchema: z.nativeEnum(UserRole),
 			value: UserRole.user,
 		},
-		organizationId: {
-			placeholder: 'Organization',
-			label: 'Organization',
+		editOrganizations: {
+			placeholder: 'Select organizations',
+			label: 'Organizations with edit permission',
+			zodSchema: z.array(z.string()).optional(),
+			options: [],
+		},
+		readonlyOrganizations: {
+			placeholder: 'Select organizations',
+			label: 'Organizations with read permission',
+			zodSchema: z.array(z.string()).optional(),
+			options: [],
 		},
 	},
 };
@@ -80,7 +89,11 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 							lastName: { ...next.fields.lastName, value: data.lastName },
 							email: { ...next.fields.email, value: data.email },
 							role: { ...next.fields.role, value: data.role },
-							organizationId: { ...next.fields.organizationId, value: data.organizationId },
+							editOrganizations: { ...next.fields.editOrganizations, value: data.editOrganizationIds },
+							readonlyOrganizations: {
+								...next.fields.readonlyOrganizations,
+								value: data.readonlyOrganizationIds,
+							},
 						},
 					};
 				});
@@ -90,21 +103,18 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 	};
 
 	const setOptions = (organizations: { id: string; name: string }[]) => {
-		const optionsToZodEnum = (opts: { id: string; name: string }[]) =>
-			getZodEnum(opts.map(({ id, name }) => ({ id, label: name })));
-
-		const orgEnum = optionsToZodEnum(organizations);
-
+		const options = organizations.map(({ id, name }) => ({ id, label: name }));
 		setFormSchema((prev) => ({
 			...prev,
 			fields: {
 				...prev.fields,
-				organizationId: {
-					...prev.fields.organizationId,
-					zodSchema: z.nativeEnum(orgEnum),
-					value:
-						prev.fields.organizationId.value ??
-						(organizations.length > 0 ? organizations[0].id : prev.fields.organizationId.value),
+				editOrganizations: {
+					...prev.fields.editOrganizations,
+					options,
+				},
+				readonlyOrganizations: {
+					...prev.fields.readonlyOrganizations,
+					options,
 				},
 			},
 		}));

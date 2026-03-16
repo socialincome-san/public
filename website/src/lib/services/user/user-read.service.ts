@@ -7,7 +7,16 @@ import { UserPaginatedTableView, UserPayload, UserSession, UserTableQuery, UserT
 export class UserReadService extends BaseService {
 	private buildUserOrderBy(query: UserTableQuery): Prisma.UserOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'user', 'email', 'role', 'organizationName', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'user',
+			'email',
+			'role',
+			'organizationName',
+			'readonlyOrganizationNames',
+			'editOrganizationNames',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
@@ -18,6 +27,8 @@ export class UserReadService extends BaseService {
 			case 'role':
 				return [{ role: direction }];
 			case 'organizationName':
+			case 'readonlyOrganizationNames':
+			case 'editOrganizationNames':
 				return [{ activeOrganization: { name: direction } }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
@@ -38,12 +49,25 @@ export class UserReadService extends BaseService {
 				include: {
 					contact: true,
 					activeOrganization: true,
+					organizationAccesses: {
+						select: {
+							organizationId: true,
+							permission: true,
+						},
+					},
 				},
 			});
 
 			if (!user) {
 				return this.resultFail('User not found');
 			}
+
+			const editOrganizationIds = user.organizationAccesses
+				.filter((access) => access.permission === 'edit')
+				.map((access) => access.organizationId);
+			const readonlyOrganizationIds = user.organizationAccesses
+				.filter((access) => access.permission === 'readonly')
+				.map((access) => access.organizationId);
 
 			return this.resultOk({
 				id: user.id,
@@ -52,6 +76,8 @@ export class UserReadService extends BaseService {
 				email: user.contact.email,
 				role: user.role,
 				organizationId: user.activeOrganization?.id ?? null,
+				editOrganizationIds,
+				readonlyOrganizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -97,6 +123,7 @@ export class UserReadService extends BaseService {
 							{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
 							{ activeOrganization: { name: { contains: search, mode: 'insensitive' as const } } },
+							{ organizationAccesses: { some: { organization: { name: { contains: search, mode: 'insensitive' as const } } } } },
 						],
 					}
 				: undefined;
@@ -120,6 +147,16 @@ export class UserReadService extends BaseService {
 								name: true,
 							},
 						},
+						organizationAccesses: {
+							select: {
+								permission: true,
+								organization: {
+									select: {
+										name: true,
+									},
+								},
+							},
+						},
 					},
 					orderBy: this.buildUserOrderBy(query),
 					skip: (query.page - 1) * query.pageSize,
@@ -128,15 +165,30 @@ export class UserReadService extends BaseService {
 				this.db.user.count({ where }),
 			]);
 
-			const tableRows: UserTableViewRow[] = users.map((user) => ({
-				id: user.id,
-				firstName: user.contact?.firstName ?? null,
-				lastName: user.contact?.lastName ?? null,
-				email: user.contact?.email ?? null,
-				role: user.role,
-				organizationName: user.activeOrganization?.name ?? null,
-				createdAt: user.createdAt,
-			}));
+			const tableRows: UserTableViewRow[] = users.map((user) => {
+				const readonlyOrganizationNames = user.organizationAccesses
+					.filter((access) => access.permission === 'readonly')
+					.map((access) => access.organization.name)
+					.sort((a, b) => a.localeCompare(b))
+					.join(', ');
+				const editOrganizationNames = user.organizationAccesses
+					.filter((access) => access.permission === 'edit')
+					.map((access) => access.organization.name)
+					.sort((a, b) => a.localeCompare(b))
+					.join(', ');
+
+				return {
+					id: user.id,
+					firstName: user.contact?.firstName ?? null,
+					lastName: user.contact?.lastName ?? null,
+					email: user.contact?.email ?? null,
+					role: user.role,
+					organizationName: user.activeOrganization?.name ?? null,
+					readonlyOrganizationNames,
+					editOrganizationNames,
+					createdAt: user.createdAt,
+				};
+			});
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {

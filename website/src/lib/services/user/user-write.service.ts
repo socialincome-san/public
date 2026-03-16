@@ -8,6 +8,30 @@ import { UserReadService } from './user-read.service';
 import { UserValidationService } from './user-validation.service';
 import { UserPayload, UserUpdateInput } from './user.types';
 
+const getAccessRows = (editOrganizationIds: string[], readonlyOrganizationIds: string[]) => [
+	...editOrganizationIds.map((organizationId) => ({
+		organizationId,
+		permission: 'edit' as const,
+	})),
+	...readonlyOrganizationIds.map((organizationId) => ({
+		organizationId,
+		permission: 'readonly' as const,
+	})),
+];
+
+const getPreferredActiveOrganizationId = (
+	editOrganizationIds: string[],
+	readonlyOrganizationIds: string[],
+	currentActiveOrganizationId?: string | null,
+) => {
+	const allowedOrganizationIds = new Set([...editOrganizationIds, ...readonlyOrganizationIds]);
+	if (currentActiveOrganizationId && allowedOrganizationIds.has(currentActiveOrganizationId)) {
+		return currentActiveOrganizationId;
+	}
+
+	return editOrganizationIds[0] ?? readonlyOrganizationIds[0] ?? null;
+};
+
 export class UserWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
@@ -69,12 +93,22 @@ export class UserWriteService extends BaseService {
 						} | null;
 				  }
 				| undefined;
+			const activeOrganizationId = getPreferredActiveOrganizationId(
+				validatedInput.editOrganizationIds,
+				validatedInput.readonlyOrganizationIds,
+			);
+			if (!activeOrganizationId) {
+				return this.resultFail('At least one organization permission is required.');
+			}
+
 			try {
 				createdUser = await this.db.user.create({
 					data: {
 						role: validatedInput.role,
 						activeOrganization: {
-							connect: { id: validatedInput.organizationId },
+							connect: {
+								id: activeOrganizationId,
+							},
 						},
 						contact: {
 							create: {
@@ -89,9 +123,8 @@ export class UserWriteService extends BaseService {
 							},
 						},
 						organizationAccesses: {
-							create: {
-								organizationId: validatedInput.organizationId,
-								permission: 'edit',
+							createMany: {
+								data: getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
 							},
 						},
 					},
@@ -136,6 +169,8 @@ export class UserWriteService extends BaseService {
 				email: createdUser.contact.email,
 				role: createdUser.role,
 				organizationId: createdUser.activeOrganization?.id ?? null,
+				editOrganizationIds: validatedInput.editOrganizationIds,
+				readonlyOrganizationIds: validatedInput.readonlyOrganizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -180,13 +215,17 @@ export class UserWriteService extends BaseService {
 			const shouldSyncFirebaseUser =
 				validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
 
+			const activeOrganizationId = getPreferredActiveOrganizationId(
+				validatedInput.editOrganizationIds,
+				validatedInput.readonlyOrganizationIds,
+				existingUser.activeOrganizationId,
+			);
+
 			const updatedUser = await this.db.user.update({
 				where: { id: validatedInput.id },
 				data: {
 					role: validatedInput.role,
-					activeOrganization: {
-						connect: { id: validatedInput.organizationId },
-					},
+					activeOrganization: activeOrganizationId ? { connect: { id: activeOrganizationId } } : undefined,
 					contact: {
 						update: {
 							firstName: validatedInput.firstName,
@@ -196,9 +235,8 @@ export class UserWriteService extends BaseService {
 					},
 					organizationAccesses: {
 						deleteMany: { userId: validatedInput.id },
-						create: {
-							organizationId: validatedInput.organizationId,
-							permission: 'edit',
+						createMany: {
+							data: getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
 						},
 					},
 				},
@@ -230,6 +268,8 @@ export class UserWriteService extends BaseService {
 				email: updatedUser.contact.email,
 				role: updatedUser.role,
 				organizationId: updatedUser.activeOrganization?.id ?? null,
+				editOrganizationIds: validatedInput.editOrganizationIds,
+				readonlyOrganizationIds: validatedInput.readonlyOrganizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -298,8 +338,21 @@ export class UserWriteService extends BaseService {
 				include: {
 					contact: { include: { address: true } },
 					activeOrganization: true,
+					organizationAccesses: {
+						select: {
+							organizationId: true,
+							permission: true,
+						},
+					},
 				},
 			});
+
+			const editOrganizationIds = updatedUser.organizationAccesses
+				.filter((access) => access.permission === 'edit')
+				.map((access) => access.organizationId);
+			const readonlyOrganizationIds = updatedUser.organizationAccesses
+				.filter((access) => access.permission === 'readonly')
+				.map((access) => access.organizationId);
 
 			return this.resultOk({
 				id: updatedUser.id,
@@ -308,6 +361,8 @@ export class UserWriteService extends BaseService {
 				email: updatedUser.contact.email,
 				role: updatedUser.role,
 				organizationId: updatedUser.activeOrganization?.id ?? null,
+				editOrganizationIds,
+				readonlyOrganizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
