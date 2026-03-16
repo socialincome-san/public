@@ -54,11 +54,11 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): CandidateF
 		fields: {
 			suspendedAt: {
 				label: 'Suspended At',
-				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
+				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).nullable().optional(),
 			},
 			suspensionReason: {
 				label: 'Suspension Reason',
-				zodSchema: z.string().optional(),
+				zodSchema: z.string().nullable().optional(),
 			},
 			successorName: {
 				placeholder: 'Successor',

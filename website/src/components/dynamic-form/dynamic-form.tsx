@@ -80,21 +80,18 @@ const getTypeName = (def: unknown): string | undefined => {
 // get Zod Type by Form Schema key
 const getType = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
 	const def = getDef(key, zodSchema, parentKey);
-	let type = getTypeName(def) ?? 'ZodUnknown';
-	if (isOptional(key, zodSchema, parentKey)) {
-		const optionalType = getTypeName((def as { innerType?: { _def?: unknown } }).innerType?._def);
-		if (optionalType) {
-			type = optionalType;
-		}
-	}
+	const unwrappedDef = unwrapOptional(def);
+	let type = getTypeName(unwrappedDef) ?? 'ZodUnknown';
 	if (type === 'ZodEffects') {
 		return (
-			getTypeName((def as { innerType?: { _def?: { schema?: { _def?: unknown } } } }).innerType?._def?.schema?._def) ?? type
+			getTypeName(
+				(unwrappedDef as { innerType?: { _def?: { schema?: { _def?: unknown } } } }).innerType?._def?.schema?._def,
+			) ?? type
 		);
 	}
 	if (type === 'ZodUnion') {
 		const unionOptionType = getTypeName(
-			(def as { innerType?: { _def?: { options?: { _def?: unknown }[] } } }).innerType?._def?.options?.[0]?._def,
+			(unwrappedDef as { innerType?: { _def?: { options?: { _def?: unknown }[] } } }).innerType?._def?.options?.[0]?._def,
 		);
 
 		return unionOptionType ?? type;
@@ -107,22 +104,33 @@ const getType = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string): 
 };
 
 const isOptional = (key: string, zodSchema: z.ZodObject<any>, parentOption?: string) => {
-	const def = getDef(key, zodSchema, parentOption);
-	const type = (def as { typeName?: string })?.typeName;
-	if (typeof type !== 'string') {
-		return false;
+	let def: unknown = getDef(key, zodSchema, parentOption);
+	while (def && typeof def === 'object') {
+		const type = getTypeName(def);
+		if (type === 'ZodOptional' || type === 'ZodNullable') {
+			return true;
+		}
+		if (type !== 'ZodDefault') {
+			break;
+		}
+		def = (def as { innerType?: { _def?: unknown } }).innerType?._def;
 	}
 
-	return ['ZodOptional', 'ZodNullable'].includes(type);
+	return false;
 };
 
 const unwrapOptional = (def: unknown) => {
-	const type = getTypeName(def);
-	if (type === 'ZodOptional' || type === 'ZodNullable') {
-		return (def as { innerType?: { _def?: unknown } }).innerType?._def;
+	let current = def;
+	while (current && typeof current === 'object') {
+		const type = getTypeName(current);
+		if (type === 'ZodOptional' || type === 'ZodNullable' || type === 'ZodDefault') {
+			current = (current as { innerType?: { _def?: unknown } }).innerType?._def;
+			continue;
+		}
+		break;
 	}
 
-	return def;
+	return current;
 };
 
 const getEnumArrayValues = (key: string, zodSchema: z.ZodObject<any>, parentOption?: string): Record<string, string> => {

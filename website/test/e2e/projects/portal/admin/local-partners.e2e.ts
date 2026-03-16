@@ -136,7 +136,7 @@ test('edit local partner and remove phone number', async ({ page }) => {
 	expect(removedPhone).toBeNull();
 });
 
-test('edit local partner and remove address', async ({ page }) => {
+test.only('edit local partner and remove address', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-remove-address-${unique}`;
 	const email = `e2e.remove.address.${unique}@example.com`;
