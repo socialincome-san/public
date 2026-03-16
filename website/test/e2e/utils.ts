@@ -108,7 +108,7 @@ export const selectMultiOptionsByTestId = async (page: Page, fieldName: string, 
 	await field.locator('button[role="combobox"]').click();
 
 	for (const optionLabel of optionLabels) {
-		await page.getByRole('option', { name: optionLabel }).click();
+		await page.getByRole('option', { name: `${optionLabel}, not selected`, exact: true }).click();
 	}
 
 	await page.keyboard.press('Escape');

@@ -3,7 +3,13 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
-import { createUserAction, getUserAction, getUserOptionsAction, updateUserAction } from '@/lib/server-actions/user-actions';
+import {
+	createUserAction,
+	deleteUserAction,
+	getUserAction,
+	getUserOptionsAction,
+	updateUserAction,
+} from '@/lib/server-actions/user-actions';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { UserPayload } from '@/lib/services/user/user.types';
 import { useEffect, useState, useTransition } from 'react';
@@ -136,6 +142,20 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 		});
 	};
 
+	const onDelete = () => {
+		if (!userId) {
+			return;
+		}
+
+		startTransition(async () => {
+			const result = await deleteUserAction(userId);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
+		});
+	};
+
 	useEffect(() => {
 		if (!userId) {
 			return;
@@ -159,6 +179,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={userId ? 'edit' : 'add'}
 		/>
 	);

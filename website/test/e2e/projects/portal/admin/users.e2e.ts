@@ -36,6 +36,8 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 	const firstName = 'E2E';
 	const lastName = 'User';
 	const email = `e2e.user.create.${unique}@example.com`;
+	const editOrganizationName = 'Migros';
+	const readonlyOrganizationName = 'Coop';
 
 	await page.goto('/portal/admin/users');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-user');
@@ -43,8 +45,8 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-lastName').locator('input').fill(lastName);
 	await page.getByTestId('form-item-email').locator('input').fill(email);
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Social Income']);
-	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', ['Sahar Education']);
+	await selectMultiOptionsByTestId(page, 'editOrganizations', [editOrganizationName]);
+	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', [readonlyOrganizationName]);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -54,6 +56,16 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 			id: true,
 			role: true,
 			activeOrganizationId: true,
+			organizationAccesses: {
+				select: {
+					permission: true,
+					organization: {
+						select: {
+							name: true,
+						},
+					},
+				},
+			},
 			contact: {
 				select: {
 					firstName: true,
@@ -69,6 +81,15 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 	expect(created?.contact.lastName).toBe(lastName);
 	expect(created?.contact.email).toBe(email);
 	expect(created?.activeOrganizationId).toBeTruthy();
+	expect(created?.organizationAccesses).toEqual(
+		expect.arrayContaining([
+			expect.objectContaining({ permission: 'edit', organization: expect.objectContaining({ name: editOrganizationName }) }),
+			expect.objectContaining({
+				permission: 'readonly',
+				organization: expect.objectContaining({ name: readonlyOrganizationName }),
+			}),
+		]),
+	);
 
 	const firebaseCreatedResult = await firebaseService.getByEmail(email);
 	expect(firebaseCreatedResult.success).toBeTruthy();
@@ -86,7 +107,7 @@ test('shows uniqueness error when user email already exists', async ({ page }) =
 	await page.getByTestId('form-item-lastName').locator('input').fill('User');
 	await page.getByTestId('form-item-email').locator('input').fill('test@portal.org');
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Social Income']);
+	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Migros']);
 	await page.getByRole('button', { name: 'Save' }).click();
 
 	await expect(page.getByText('A user with this email already exists.')).toBeVisible();
@@ -102,6 +123,10 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	const updatedFirstName = 'Updated';
 	const updatedLastName = 'User';
 	const updatedEmail = `e2e.user.firebase.updated.${unique}@example.com`;
+	const initialEditOrganizationName = 'Migros';
+	const initialReadonlyOrganizationName = 'Coop';
+	const updatedEditOrganizationName = 'Coop';
+	const updatedReadonlyOrganizationName = 'Migros';
 
 	const openUserByEmail = async (email: string) => {
 		await page.goto(`/portal/admin/users?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
@@ -114,8 +139,8 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-lastName').locator('input').fill(initialLastName);
 	await page.getByTestId('form-item-email').locator('input').fill(initialEmail);
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Social Income']);
-	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', ['Sahar Education']);
+	await selectMultiOptionsByTestId(page, 'editOrganizations', [initialEditOrganizationName]);
+	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', [initialReadonlyOrganizationName]);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -131,6 +156,11 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-firstName').locator('input').fill(updatedFirstName);
 	await page.getByTestId('form-item-lastName').locator('input').fill(updatedLastName);
 	await page.getByTestId('form-item-email').locator('input').fill(updatedEmail);
+	await selectMultiOptionsByTestId(page, 'editOrganizations', [initialEditOrganizationName, updatedEditOrganizationName]);
+	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', [
+		initialReadonlyOrganizationName,
+		updatedReadonlyOrganizationName,
+	]);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -148,4 +178,86 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	}
 	expect(firebaseUpdatedResult.data).toBeTruthy();
 	expect(firebaseUpdatedResult.data?.displayName).toBe(`${updatedFirstName} ${updatedLastName}`);
+
+	const updatedUser = await prisma.user.findFirst({
+		where: { contact: { email: updatedEmail } },
+		select: {
+			organizationAccesses: {
+				select: {
+					permission: true,
+					organization: {
+						select: {
+							name: true,
+						},
+					},
+				},
+			},
+		},
+	});
+	expect(updatedUser?.organizationAccesses).toEqual(
+		expect.arrayContaining([
+			expect.objectContaining({
+				permission: 'edit',
+				organization: expect.objectContaining({ name: updatedEditOrganizationName }),
+			}),
+			expect.objectContaining({
+				permission: 'readonly',
+				organization: expect.objectContaining({ name: updatedReadonlyOrganizationName }),
+			}),
+		]),
+	);
+});
+
+test('delete user removes database and Firebase entries', async ({ page }) => {
+	const firebaseService = await getFirebaseAdminService();
+	const unique = Date.now();
+	const firstName = 'Delete';
+	const lastName = 'Me';
+	const email = `e2e.user.delete.${unique}@example.com`;
+
+	const openUserByEmail = async (searchEmail: string) => {
+		await page.goto(`/portal/admin/users?page=1&pageSize=10&search=${encodeURIComponent(searchEmail)}`);
+		await page.getByRole('cell', { name: searchEmail }).click();
+	};
+
+	await page.goto('/portal/admin/users');
+	await clickDataTableActionItem(page, 'data-table-action-item-add-user');
+	await page.getByTestId('form-item-firstName').locator('input').fill(firstName);
+	await page.getByTestId('form-item-lastName').locator('input').fill(lastName);
+	await page.getByTestId('form-item-email').locator('input').fill(email);
+	await selectOptionByTestId(page, 'role', 'user');
+	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Migros']);
+	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const createdUser = await prisma.user.findFirst({
+		where: { contact: { email } },
+		select: {
+			id: true,
+			account: {
+				select: {
+					firebaseAuthUserId: true,
+				},
+			},
+		},
+	});
+	expect(createdUser).toBeDefined();
+
+	await openUserByEmail(email);
+	await page.getByRole('button', { name: 'Delete' }).click();
+	await page.getByRole('button', { name: 'Delete permanently' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const deletedUser = await prisma.user.findFirst({
+		where: { contact: { email } },
+		select: { id: true },
+	});
+	expect(deletedUser).toBeNull();
+
+	const firebaseUserResult = await firebaseService.getByEmail(email);
+	expect(firebaseUserResult.success).toBeTruthy();
+	if (!firebaseUserResult.success) {
+		throw new Error(firebaseUserResult.error);
+	}
+	expect(firebaseUserResult.data).toBeNull();
 });

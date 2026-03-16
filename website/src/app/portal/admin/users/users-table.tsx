@@ -39,7 +39,7 @@ export default function UsersTable({
 
 	const onError = (error: unknown) => {
 		const errorMessage = getErrorMessage(error);
-		setErrorMessage(`Error saving user: ${errorMessage}`);
+		setErrorMessage(`Error updating user: ${errorMessage}`);
 		logger.error('User Form Error', { error });
 	};
 

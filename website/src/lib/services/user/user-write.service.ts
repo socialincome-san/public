@@ -370,4 +370,67 @@ export class UserWriteService extends BaseService {
 			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
 		}
 	}
+
+	async delete(actorUserId: string, targetUserId: string): Promise<ServiceResult<void>> {
+		try {
+			const isAdminResult = await this.userReadService.isAdmin(actorUserId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			if (actorUserId === targetUserId) {
+				return this.resultFail('You cannot delete your own user account.');
+			}
+
+			const existingUser = await this.db.user.findUnique({
+				where: { id: targetUserId },
+				select: {
+					id: true,
+					accountId: true,
+					contactId: true,
+					account: {
+						select: {
+							firebaseAuthUserId: true,
+						},
+					},
+				},
+			});
+
+			if (!existingUser) {
+				return this.resultFail('User not found');
+			}
+
+			await this.db.$transaction(async (tx) => {
+				await tx.organizationAccess.deleteMany({
+					where: { userId: targetUserId },
+				});
+				await tx.user.delete({
+					where: { id: targetUserId },
+				});
+				await tx.contact.delete({
+					where: { id: existingUser.contactId },
+				});
+				await tx.account.delete({
+					where: { id: existingUser.accountId },
+				});
+			});
+
+			const firebaseDeleteResult = await this.firebaseAdminService.deleteByUidIfExists(
+				existingUser.account.firebaseAuthUserId,
+			);
+			if (!firebaseDeleteResult.success) {
+				this.logger.warn('User deleted in DB but Firebase user deletion failed', {
+					userId: targetUserId,
+					firebaseUid: existingUser.account.firebaseAuthUserId,
+					error: firebaseDeleteResult.error,
+				});
+			}
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not delete user. Please try again later.');
+		}
+	}
 }
