@@ -35,6 +35,8 @@ import { MobileMoneyProviderValidationService } from './mobile-money-provider/mo
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
 import { OrganizationAccessService } from './organization-access/organization-access.service';
 import { OrganizationReadService } from './organization/organization-read.service';
+import { OrganizationValidationService } from './organization/organization-validation.service';
+import { OrganizationWriteService } from './organization/organization-write.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
 import { PayoutProcessService } from './payout-process/payout-process.service';
 import { PayoutReadService } from './payout/payout-read.service';
@@ -99,6 +101,8 @@ const contributionRead = new ContributionReadService(prisma, organizationAccess)
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, organizationAccess, contributionValidation);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
+const organizationValidation = new OrganizationValidationService(prisma);
+const organizationWrite = new OrganizationWriteService(prisma, userRead, organizationValidation);
 const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
 const localPartnerValidation = new LocalPartnerValidationService(prisma);
 const localPartnerWrite = new LocalPartnerWriteService(
@@ -196,6 +200,7 @@ export const services = {
 		expense: expenseWrite,
 		localPartner: localPartnerWrite,
 		mobileMoneyProvider: mobileMoneyProviderWrite,
+		organization: organizationWrite,
 		payout: payoutWrite,
 		program: programWrite,
 		recipient: recipientWrite,

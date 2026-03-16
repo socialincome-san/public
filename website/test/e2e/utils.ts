@@ -101,3 +101,15 @@ export const clickDataTableActionItem = async (page: Page, actionItemTestId: str
 		await page.getByTestId(actionItemTestId).click();
 	}
 };
+
+export const selectMultiOptionsByTestId = async (page: Page, fieldName: string, optionLabels: string[]) => {
+	const field = page.getByTestId(`form-item-${fieldName}`);
+	await field.waitFor({ state: 'visible' });
+	await field.locator('button[role="combobox"]').click();
+
+	for (const optionLabel of optionLabels) {
+		await page.getByRole('option', { name: optionLabel }).click();
+	}
+
+	await page.keyboard.press('Escape');
+};

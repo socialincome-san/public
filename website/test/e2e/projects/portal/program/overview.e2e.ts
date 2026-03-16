@@ -1,6 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, Page, test } from '@playwright/test';
-import { selectOptionByTestId } from '../../../utils';
+import { selectMultiOptionsByTestId, selectOptionByTestId } from '../../../utils';
 
 const openProgramSettingsDialog = async (page: Page, programId = 'program-1') => {
 	await page.goto(`/portal/programs/${programId}/overview`);
@@ -9,18 +9,6 @@ const openProgramSettingsDialog = async (page: Page, programId = 'program-1') =>
 	await expect(dialog).toBeVisible();
 
 	return dialog;
-};
-
-const selectMultiOptionsByTestId = async (page: Page, fieldName: string, optionLabels: string[]) => {
-	const field = page.getByTestId(`form-item-${fieldName}`);
-	await field.waitFor({ state: 'visible' });
-	await field.locator('button[role="combobox"]').click();
-
-	for (const optionLabel of optionLabels) {
-		await page.getByRole('option', { name: optionLabel }).click();
-	}
-
-	await page.keyboard.press('Escape');
 };
 
 test.beforeEach(async () => {
