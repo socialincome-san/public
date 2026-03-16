@@ -25,7 +25,6 @@ export class SurveyValidationService extends BaseService {
 		if (!parsed.success) {
 			return this.resultFail(parsed.error.issues[0]?.message ?? 'Invalid input.');
 		}
-
 		return this.resultOk(parsed.data);
 	}
 
@@ -34,7 +33,6 @@ export class SurveyValidationService extends BaseService {
 		if (!parsed.success) {
 			return this.resultFail(parsed.error.issues[0]?.message ?? 'Invalid input.');
 		}
-
 		return this.resultOk(parsed.data);
 	}
 

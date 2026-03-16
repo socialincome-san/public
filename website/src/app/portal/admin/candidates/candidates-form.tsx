@@ -229,7 +229,6 @@ export const CandidateForm = ({
 									value: data.localPartner.id,
 								};
 							}
-
 							return updatedSchema;
 						});
 					},

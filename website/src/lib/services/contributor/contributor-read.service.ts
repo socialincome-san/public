@@ -299,7 +299,6 @@ export class ContributorReadService extends BaseService {
 					if (leftValue !== rightValue) {
 						return (leftValue - rightValue) * directionMultiplier;
 					}
-
 					return left.id.localeCompare(right.id);
 				});
 

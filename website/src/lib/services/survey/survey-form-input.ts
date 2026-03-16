@@ -8,7 +8,6 @@ const optionalTrimmedString = z.preprocess((value) => {
 		return value;
 	}
 	const trimmedValue = value.trim();
-
 	return trimmedValue === '' ? undefined : trimmedValue;
 }, z.string().trim().min(1, 'This field is required.').optional());
 

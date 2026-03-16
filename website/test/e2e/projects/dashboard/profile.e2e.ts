@@ -24,7 +24,6 @@ test('dashboard profile updates contributor personal info', async ({ page }) => 
 				where: { contact: { email: 'test@dashboard.org' } },
 				select: { contact: { select: { firstName: true } } },
 			});
-
 			return contributor?.contact.firstName ?? null;
 		})
 		.toBe(updatedFirstName);

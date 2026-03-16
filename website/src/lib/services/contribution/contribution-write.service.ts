@@ -106,7 +106,6 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-
 			return this.resultFail('Could not update contribution. Please try again later.');
 		}
 	}
@@ -177,7 +176,6 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-
 			return this.resultFail('Could not create contribution. Please try again later.');
 		}
 	}

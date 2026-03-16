@@ -22,7 +22,6 @@ export const payoutCreateInputSchema = z.object({
 			return value ?? null;
 		}
 		const trimmedValue = value.trim();
-
 		return trimmedValue === '' ? null : trimmedValue;
 	}, z.string().nullable()),
 	comments: z.preprocess((value) => {
@@ -30,7 +29,6 @@ export const payoutCreateInputSchema = z.object({
 			return value ?? null;
 		}
 		const trimmedValue = value.trim();
-
 		return trimmedValue === '' ? null : trimmedValue;
 	}, z.string().nullable()),
 });

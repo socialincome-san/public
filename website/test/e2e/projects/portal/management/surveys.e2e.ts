@@ -32,7 +32,6 @@ const getEditableSurveys = async () => {
 	if (surveys.length < 2) {
 		throw new Error('Expected at least two surveys in seed data.');
 	}
-
 	return surveys;
 };
 

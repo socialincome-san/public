@@ -13,7 +13,7 @@ import {
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';
 
@@ -89,6 +89,8 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(initialFormSchema);
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();
+	const onErrorRef = useRef(onError);
+	onErrorRef.current = onError;
 
 	useEffect(() => {
 		if (!surveyId) {
@@ -139,7 +141,7 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 				onError: (error) => onError?.(error),
 			});
 		});
-	}, [onError]);
+	}, []);
 
 	const onSubmit = (schema: SurveyFormSchema) => {
 		startTransition(async () => {

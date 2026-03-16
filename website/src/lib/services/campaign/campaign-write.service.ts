@@ -87,7 +87,6 @@ export class CampaignWriteService extends BaseService {
 			return this.resultOk(newCampaign);
 		} catch (error) {
 			this.logger.error(error);
-
 			return this.resultFail('Could not create campaign. Please try again later.');
 		}
 	}
@@ -174,7 +173,6 @@ export class CampaignWriteService extends BaseService {
 			return this.resultOk(updatedCampaign);
 		} catch (error) {
 			this.logger.error(error);
-
 			return this.resultFail('Could not update campaign. Please try again later.');
 		}
 	}

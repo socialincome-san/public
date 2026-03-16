@@ -26,7 +26,6 @@ export class ContributorValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
-
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -35,7 +34,6 @@ export class ContributorValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
-
 		return this.resultOk(parsedInput.data);
 	}
 
