@@ -123,7 +123,11 @@ export class UserReadService extends BaseService {
 							{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
 							{ activeOrganization: { name: { contains: search, mode: 'insensitive' as const } } },
-							{ organizationAccesses: { some: { organization: { name: { contains: search, mode: 'insensitive' as const } } } } },
+							{
+								organizationAccesses: {
+									some: { organization: { name: { contains: search, mode: 'insensitive' as const } } },
+								},
+							},
 						],
 					}
 				: undefined;
