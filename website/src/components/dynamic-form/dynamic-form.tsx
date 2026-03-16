@@ -90,9 +90,7 @@ const getType = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string): 
 		);
 	}
 	if (type === 'ZodUnion') {
-		const unionOptionType = getTypeName(
-			(unwrappedDef as { innerType?: { _def?: { options?: { _def?: unknown }[] } } }).innerType?._def?.options?.[0]?._def,
-		);
+		const unionOptionType = getTypeName((unwrappedDef as { options?: { _def?: unknown }[] }).options?.[0]?._def);
 
 		return unionOptionType ?? type;
 	}
