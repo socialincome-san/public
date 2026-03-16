@@ -20,6 +20,7 @@ export default [
 			'@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 			'@typescript-eslint/no-unsafe-assignment': 'warn',
 			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
+			'react/forbid-component-props': 'off',
 		},
 	},
 	{

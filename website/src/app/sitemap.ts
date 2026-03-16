@@ -4,12 +4,22 @@ import { services } from '@/lib/services/services';
 import { toDateObject } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
 import type { MetadataRoute } from 'next';
-import staticRoutes from './static-pages.json';
+import rawStaticRoutes from './static-pages.json';
 
 export const revalidate = 86400; // per day
 const url = 'https://socialincome.org';
 
 const SUPPORTED_LANGUAGES: WebsiteLanguage[] = ['de', 'fr', 'it'];
+
+const parseStaticRoutes = (input: unknown): string[] => {
+	if (!Array.isArray(input)) {
+		return [];
+	}
+
+	return input.filter((route): route is string => typeof route === 'string');
+};
+
+const staticRoutes = parseStaticRoutes(rawStaticRoutes);
 
 const articleUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
 	return `${url}/${lang}/${region}/journal/${slug}`;
@@ -46,7 +56,7 @@ const generateStoryblokArticlesSitemap = (
 			languages: generateAlternativeLanguages(alternativeArticles, article.slug),
 		},
 		changeFrequency: 'monthly',
-		lastModified: toDateObject(article.updated_at || article.created_at, defaultLanguage).toString(),
+		lastModified: toDateObject(article.updated_at ?? article.created_at, defaultLanguage).toString(),
 	}));
 };
 
