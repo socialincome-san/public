@@ -115,7 +115,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 	};
 
 	return (
-		<div className="flex flex-col space-y-8 text-center sm:text-left">
+		<div className="flex flex-col space-y-8 text-center text-[0.9575rem] sm:text-left">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
 					<FormField
