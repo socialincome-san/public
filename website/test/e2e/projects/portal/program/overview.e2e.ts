@@ -15,22 +15,22 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test('Program ready for payout overview page matches screenshot', async ({ page }) => {
+test.only('Program ready for payout overview page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/programs/program-1/overview');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test('Program not ready for payout overview page matches screenshot', async ({ page }) => {
+test.only('Program not ready for payout overview page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/programs/program-2/overview');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test('program settings dialog for program-1 updates all editable values and saves', async ({ page }) => {
+test.only('program settings dialog for program-1 updates all editable values and saves', async ({ page }) => {
 	const updatedName = 'Program One Updated E2E';
 	const updatedDuration = '24';
 	const updatedPayoutPerInterval = '77';
 	const updatedOwnerOrganizations = ['Coop'];
-	const updatedOperatorOrganizations = ['Swiss Red Cross'];
+	const updatedOperatorOrganizations = ['Migros', 'Swiss Red Cross'];
 
 	let dialog = await openProgramSettingsDialog(page);
 	await dialog.getByTestId('form-item-name').locator('input').fill(updatedName);
@@ -64,7 +64,7 @@ test('program settings dialog for program-1 updates all editable values and save
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test('program settings dialog can delete a newly created program and redirects to portal', async ({ page }) => {
+test.only('program settings dialog can delete a newly created program and redirects to portal', async ({ page }) => {
 	await page.goto('/portal');
 	await page.getByTestId('create-program-modal-trigger').click();
 

@@ -3,6 +3,7 @@
 import { type ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import { BaseTable } from '@/components/data-table/elements/base-table';
 import { DataTableEmptyState } from '@/components/data-table/elements/data-table-empty-state';
+import { IdCell } from '@/components/data-table/elements/id-cell';
 import {
 	DataTableToolbar,
 	type ToolbarFilter,
@@ -104,6 +105,7 @@ export default function DataTable<Row>({
 
 						return '';
 					},
+					cell: (ctx) => <IdCell ctx={ctx} />,
 				},
 				...baseColumns,
 			] as ColumnDef<Row>[])
