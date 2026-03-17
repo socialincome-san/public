@@ -18,7 +18,11 @@ export const useRouteTranslator = ({ namespace, fallbackLanguage = 'en' }: Props
 	const translator = useTranslator(language, namespace);
 
 	const t = (key: string, context?: TranslateContext): string => {
-		return translator?.t<string>(key, { context }) as string;
+		if (!translator) {
+			return key;
+		}
+
+		return translator.t<string>(key, { context });
 	};
 
 	return { t, translator, language };

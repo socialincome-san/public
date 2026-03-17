@@ -19,6 +19,7 @@ const Slider = ({
 		if (Array.isArray(defaultValue)) {
 			return defaultValue;
 		}
+
 		return [min, max];
 	}, [value, defaultValue, min, max]);
 
