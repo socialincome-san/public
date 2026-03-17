@@ -194,6 +194,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 
 		lastResetIdentityRef.current = nextIdentity;
 		form.reset(values);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [form, formSchema, mode]);
 
 	// get options from Zod Object

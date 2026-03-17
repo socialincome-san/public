@@ -1,5 +1,4 @@
 'use client';
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
