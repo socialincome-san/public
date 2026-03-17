@@ -44,6 +44,7 @@ export const BudgetStep = ({
 	calculatedTotalBudget,
 	displayMonthlyCost,
 	exchangeRateText,
+	totalBudgetTooltipText,
 	isCalculatingBudget,
 	customizePayouts,
 	onRecipientsChange,
