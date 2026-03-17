@@ -11,7 +11,6 @@ type StoryblokBridgeInstance = {
 type StoryblokBridgeConstructor = new () => StoryblokBridgeInstance;
 
 declare global {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Window {
 		StoryblokBridge: StoryblokBridgeConstructor;
 		storyblokRegisterEvent: (cb: () => void) => void;

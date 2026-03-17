@@ -260,6 +260,7 @@ const createToggleGroupItems = (values: number[]) => {
 	return values.map((value) => (
 		<ToggleGroupItem
 			key={value}
+			// eslint-disable-next-line react/forbid-component-props
 			style={{ width: '100%' }}
 			className="text-md bg-popover rounded-full py-6"
 			value={value.toString()}

@@ -17,8 +17,7 @@ export default [
 			'react-hooks': reactHooksPlugin,
 		},
 		rules: {
-			'@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-			'react/forbid-component-props': 'off',
+			'react/forbid-component-props': ['error', { forbid: ['style'] }],
 		},
 	},
 	{

@@ -776,6 +776,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 								disabled && 'cursor-not-allowed opacity-50',
 								className,
 							)}
+							// eslint-disable-next-line react/forbid-component-props
 							style={{
 								...widthConstraints,
 								maxWidth: `min(${widthConstraints.maxWidth}, 100%)`,
@@ -829,6 +830,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 															singleLine && 'shrink-0 whitespace-nowrap',
 															'[&>svg]:pointer-events-auto',
 														)}
+														// eslint-disable-next-line react/forbid-component-props
 														style={{
 															...badgeStyle,
 															animationDuration: `${animationConfig?.duration ?? animation}s`,
@@ -881,6 +883,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 													singleLine && 'shrink-0 whitespace-nowrap',
 													'[&>svg]:pointer-events-auto',
 												)}
+												// eslint-disable-next-line react/forbid-component-props
 												style={{
 													animationDuration: `${animationConfig?.duration ?? animation}s`,
 													animationDelay: `${animationConfig?.delay ?? 0}s`,
@@ -942,6 +945,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 							screenSize === 'desktop' && 'min-w-[300px]',
 							popoverClassName,
 						)}
+						// eslint-disable-next-line react/forbid-component-props
 						style={{
 							animationDuration: `${animationConfig?.duration ?? animation}s`,
 							animationDelay: `${animationConfig?.delay ?? 0}s`,

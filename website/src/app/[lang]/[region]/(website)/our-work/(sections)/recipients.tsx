@@ -38,7 +38,13 @@ export const Recipients = async ({ lang }: DefaultParams) => {
 			</div>
 
 			<div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
-				<Image className="flex-1 px-16 py-4" src={mapAfrica} alt="Change animation" style={{ objectFit: 'cover' }} />
+				<Image
+					className="flex-1 px-16 py-4"
+					src={mapAfrica}
+					alt="Change animation"
+					// eslint-disable-next-line react/forbid-component-props
+					style={{ objectFit: 'cover' }}
+				/>
 				<div className="space-y-4 md:p-4">
 					<Typography as="h2" size="3xl" weight="bold">
 						{translator.t('recipients.our-criteria')}

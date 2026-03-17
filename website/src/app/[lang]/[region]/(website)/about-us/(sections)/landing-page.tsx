@@ -106,6 +106,7 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 				className="mx-auto w-full max-w-lg md:order-first md:col-span-2"
 				src={changeGif}
 				alt="Change animation"
+				// eslint-disable-next-line react/forbid-component-props
 				style={{ objectFit: 'cover' }}
 			/>
 		</BaseContainer>
