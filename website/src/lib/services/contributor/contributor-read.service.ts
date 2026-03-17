@@ -26,7 +26,14 @@ export class ContributorReadService extends BaseService {
 
 	private buildContributorOrderBy(query: ContributorTableQuery): Prisma.ContributorOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'contributor', 'email', 'country', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'contributor',
+			'email',
+			'firebaseAuthUserId',
+			'country',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
@@ -34,6 +41,8 @@ export class ContributorReadService extends BaseService {
 				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
 			case 'email':
 				return [{ contact: { email: direction } }];
+			case 'firebaseAuthUserId':
+				return [{ account: { firebaseAuthUserId: direction } }];
 			case 'country':
 				return [{ contact: { address: { country: direction } } }];
 			case 'createdAt':
@@ -41,6 +50,24 @@ export class ContributorReadService extends BaseService {
 			default:
 				return [{ createdAt: 'desc' }];
 		}
+	}
+
+	private async getContributionSumsByContributorId(contributorIds: string[]): Promise<Map<string, number>> {
+		if (contributorIds.length === 0) {
+			return new Map();
+		}
+
+		const grouped = await this.db.contribution.groupBy({
+			by: ['contributorId'],
+			where: {
+				contributorId: { in: contributorIds },
+			},
+			_sum: {
+				amountChf: true,
+			},
+		});
+
+		return new Map(grouped.map((row) => [row.contributorId, Number(row._sum.amountChf ?? 0)]));
 	}
 
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
@@ -98,6 +125,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get contributor: ${JSON.stringify(error)}`);
 		}
 	}
@@ -146,6 +174,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor options: ${JSON.stringify(error)}`);
 		}
 	}
@@ -194,6 +223,7 @@ export class ContributorReadService extends BaseService {
 									{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
+									{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' as const } } },
 								],
 							},
 						],
@@ -209,25 +239,33 @@ export class ContributorReadService extends BaseService {
 						}
 					: baseScope;
 
-			const [contributors, totalCount, countrySource] = await Promise.all([
-				this.db.contributor.findMany({
-					where,
+			const sortBy = toSortKey(query.sortBy, [
+				'id',
+				'contributor',
+				'email',
+				'country',
+				'totalContributedChf',
+				'createdAt',
+			] as const);
+			const contributorSelect = {
+				id: true,
+				createdAt: true,
+				account: {
 					select: {
-						id: true,
-						createdAt: true,
-						contact: {
-							select: {
-								firstName: true,
-								lastName: true,
-								email: true,
-								address: { select: { country: true } },
-							},
-						},
+						firebaseAuthUserId: true,
 					},
-					orderBy: this.buildContributorOrderBy(query),
-					skip: (query.page - 1) * query.pageSize,
-					take: query.pageSize,
-				}),
+				},
+				contact: {
+					select: {
+						firstName: true,
+						lastName: true,
+						email: true,
+						address: { select: { country: true } },
+					},
+				},
+			} as const;
+
+			const [totalCount, countrySource] = await Promise.all([
 				this.db.contributor.count({ where }),
 				this.db.contributor.findMany({
 					where: baseScope,
@@ -245,12 +283,55 @@ export class ContributorReadService extends BaseService {
 				}),
 			]);
 
+			let contributors: Prisma.ContributorGetPayload<{
+				select: typeof contributorSelect;
+			}>[];
+
+			if (sortBy === 'totalContributedChf') {
+				const allContributors = await this.db.contributor.findMany({
+					where,
+					select: contributorSelect,
+				});
+				const sumsByContributorId = await this.getContributionSumsByContributorId(
+					allContributors.map((contributor) => contributor.id),
+				);
+				const directionMultiplier = query.sortDirection === 'asc' ? 1 : -1;
+
+				const sorted = [...allContributors].sort((left, right) => {
+					const leftValue = sumsByContributorId.get(left.id) ?? 0;
+					const rightValue = sumsByContributorId.get(right.id) ?? 0;
+					if (leftValue !== rightValue) {
+						return (leftValue - rightValue) * directionMultiplier;
+					}
+
+					return left.id.localeCompare(right.id);
+				});
+
+				const start = (query.page - 1) * query.pageSize;
+				const end = start + query.pageSize;
+				contributors = sorted.slice(start, end);
+			} else {
+				contributors = await this.db.contributor.findMany({
+					where,
+					select: contributorSelect,
+					orderBy: this.buildContributorOrderBy(query),
+					skip: (query.page - 1) * query.pageSize,
+					take: query.pageSize,
+				});
+			}
+
+			const sumsByContributorId = await this.getContributionSumsByContributorId(
+				contributors.map((contributor) => contributor.id),
+			);
+
 			const tableRows: ContributorTableViewRow[] = contributors.map((c) => ({
 				id: c.id,
 				firstName: c.contact?.firstName ?? '',
 				lastName: c.contact?.lastName ?? '',
 				email: c.contact?.email ?? '',
+				firebaseAuthUserId: c.account.firebaseAuthUserId,
 				country: c.contact?.address?.country ?? null,
+				totalContributedChf: sumsByContributorId.get(c.id) ?? 0,
 				createdAt: c.createdAt,
 				permission,
 			}));
@@ -267,6 +348,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, countryFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributors: ${JSON.stringify(error)}`);
 		}
 	}
@@ -304,6 +386,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor IDs for certificates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -335,6 +418,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
 	}
@@ -392,6 +476,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -410,6 +495,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor by Payment Reference ID: ${JSON.stringify(error)}`);
 		}
 	}

@@ -8,13 +8,13 @@ import { services } from '@/lib/services/services';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
 
-interface StripeSuccessPageParams extends DefaultParams {
+type StripeSuccessPageParams = {
 	session: string;
-}
+} & DefaultParams;
 
-interface StripeSuccessPageProps {
+type StripeSuccessPageProps = {
 	params: Promise<StripeSuccessPageParams>;
-}
+};
 
 export default async function Page({ params }: StripeSuccessPageProps) {
 	const { lang, region, session } = await params;

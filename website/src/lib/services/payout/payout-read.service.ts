@@ -40,22 +40,12 @@ export class PayoutReadService extends BaseService {
 
 	private buildPayoutOrderBy(query: PayoutTableQuery): Prisma.PayoutOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, [
-			'id',
-			'recipient',
-			'programName',
-			'amount',
-			'status',
-			'paymentAt',
-		] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'recipient', 'programName', 'amount', 'status', 'paymentAt'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
 			case 'recipient':
-				return [
-					{ recipient: { contact: { firstName: direction } } },
-					{ recipient: { contact: { lastName: direction } } },
-				];
+				return [{ recipient: { contact: { firstName: direction } } }, { recipient: { contact: { lastName: direction } } }];
 			case 'programName':
 				return [{ recipient: { program: { name: direction } } }];
 			case 'amount':
@@ -110,6 +100,7 @@ export class PayoutReadService extends BaseService {
 					return a.period.localeCompare(b.period);
 			}
 		});
+
 		return sortedRows;
 	}
 
@@ -123,10 +114,7 @@ export class PayoutReadService extends BaseService {
 		};
 	}
 
-	async getPaginatedTableView(
-		userId: string,
-		query: PayoutTableQuery,
-	): Promise<ServiceResult<PayoutPaginatedTableView>> {
+	async getPaginatedTableView(userId: string, query: PayoutTableQuery): Promise<ServiceResult<PayoutPaginatedTableView>> {
 		try {
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
@@ -222,6 +210,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, programFilterOptions, statusFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -300,6 +289,7 @@ export class PayoutReadService extends BaseService {
 
 					const last3Months: PayoutMonth[] = [months.current, months.last, months.twoAgo].map(({ start, end }) => {
 						const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt <= end);
+
 						return {
 							monthLabel: format(start, 'yyyy-MM'),
 							status: payout?.status ?? null,
@@ -323,6 +313,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, programFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch ongoing payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -373,6 +364,7 @@ export class PayoutReadService extends BaseService {
 
 			const forecastMonths = Array.from({ length: monthsAhead + 1 }, (_, i) => {
 				const start = startOfMonth(addMonths(now(), i));
+
 				return format(start, 'yyyy-MM');
 			});
 
@@ -430,6 +422,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate payout forecast: ${JSON.stringify(error)}`);
 		}
 	}
@@ -564,6 +557,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, programFilterOptions, statusFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout confirmation inbox: ${JSON.stringify(error)}`);
 		}
 	}
@@ -600,7 +594,9 @@ export class PayoutReadService extends BaseService {
 					return this.resultFail(access.error);
 				}
 
-				const allowed = access.data.some((p) => p.programId === payout.recipient.program!.id && p.permission != null);
+				const allowed = access.data.some(
+					(p) => p.programId === payout.recipient.program!.id && p.permission !== null && p.permission !== undefined,
+				);
 
 				if (!allowed) {
 					return this.resultFail('Access denied to this payout');
@@ -619,12 +615,13 @@ export class PayoutReadService extends BaseService {
 					id: payout.recipient.id,
 					firstName: payout.recipient.contact.firstName,
 					lastName: payout.recipient.contact.lastName,
-					programId: payout.recipient.program && payout.recipient.program.id,
-					programName: payout.recipient.program && payout.recipient.program.name,
+					programId: payout.recipient.program?.id ?? null,
+					programName: payout.recipient.program?.name ?? null,
 				},
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -635,9 +632,11 @@ export class PayoutReadService extends BaseService {
 				where: { recipientId },
 				orderBy: { paymentAt: 'desc' },
 			});
+
 			return this.resultOk(payouts);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -655,6 +654,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk(payout);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}

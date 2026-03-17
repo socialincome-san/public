@@ -2,7 +2,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { CircleHelp } from 'lucide-react';
 import { ReactNode } from 'react';
 
-type StatProps = { label: string; value: ReactNode; tooltipText?: string };
+type StatProps = {
+	label: string;
+	value: ReactNode;
+	tooltipText?: string;
+};
 
 export const Stat = ({ label, value, tooltipText }: StatProps) => {
 	return (

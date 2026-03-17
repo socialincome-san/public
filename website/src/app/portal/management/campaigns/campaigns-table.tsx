@@ -6,6 +6,7 @@ import { campaignsTableConfig } from '@/components/data-table/configs/campaigns-
 import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -38,7 +39,8 @@ export default function CampaignsTable({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving campaign: ${error}`);
+		const message = retrieveErrorMessage(error);
+		setErrorMessage(`Error saving campaign: ${message}`);
 		logger.error('Campaigns Form Error', { error });
 	};
 

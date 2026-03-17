@@ -32,11 +32,11 @@ const NewsletterForm = ({ t, lang, translations }: NewsletterFormProps) => {
 
 		try {
 			await subscribeToNewsletterAction(data);
-			if (t && t.id) {
+			if (t?.id) {
 				toast.dismiss(t.id);
 			}
 			toast.success(translations.toastSuccess);
-		} catch (error) {
+		} catch {
 			toast.error(translations.toastFailure);
 		}
 	};

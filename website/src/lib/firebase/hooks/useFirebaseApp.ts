@@ -8,5 +8,6 @@ export const useFirebaseApp = () => {
 	if (!app) {
 		throw new Error('useFirebaseApp must be used within a FirebaseAppProvider');
 	}
+
 	return app;
 };

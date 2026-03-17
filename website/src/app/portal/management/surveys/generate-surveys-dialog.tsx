@@ -31,6 +31,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 				if (!result.success) {
 					throw new Error(result.error);
 				}
+
 				return result.data;
 			},
 			filename: () => `preview-surveys.json`,
@@ -46,6 +47,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 				if (!result.success) {
 					throw new Error(result.error);
 				}
+
 				return result.data;
 			},
 			filename: () => `generated-surveys.json`,

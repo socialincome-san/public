@@ -14,6 +14,7 @@ export const createStripeCheckoutAction = async (input: {
 	campaignId?: string;
 }) => {
 	const contributor = await getOptionalContributor();
+
 	return services.stripe.createCheckoutSession({
 		...input,
 		stripeCustomerId: contributor?.stripeCustomerId ?? null,
@@ -31,6 +32,7 @@ export const createPortalProgramDonationCheckoutAction = async (input: {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.stripe.createPortalProgramDonationCheckout(sessionResult.data.id, input);
 };
 

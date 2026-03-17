@@ -498,10 +498,7 @@
 	},
 	"section-4": {
 		"topic": "Well-being",
-		"title": [
-			{ "text": "How does Social Income contribute to " },
-			{ "text": "greater well-being?", "color": "secondary" }
-		],
+		"title": [{ "text": "How does Social Income contribute to " }, { "text": "greater well-being?", "color": "secondary" }],
 		"evidence": "Research shows that direct cash transfers programs like Social Income contribute to recipients’ well-being in three important ways.",
 		"cards": [
 			{

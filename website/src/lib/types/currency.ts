@@ -173,6 +173,7 @@ export const bestGuessCurrency = (country: CountryCode | undefined): Currency =>
 		return FALLBACK_CURRENCY;
 	}
 	const currency = countryToCurrency.get(country);
+
 	return currency || FALLBACK_CURRENCY;
 };
 

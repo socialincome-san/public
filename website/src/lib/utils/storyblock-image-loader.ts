@@ -1,12 +1,4 @@
-export default function storyblokImageLoader({
-	src,
-	width,
-	quality,
-}: {
-	src: string;
-	width: number;
-	quality?: number;
-}) {
+export default function storyblokImageLoader({ src, width, quality }: { src: string; width: number; quality?: number }) {
 	let url: URL;
 	try {
 		url = new URL(src);
@@ -34,5 +26,6 @@ export default function storyblokImageLoader({
 	if (crop === 'smart') {
 		return `${baseUrl}/m/${dimensions}/smart/filters:format(webp)${qualityParam}`;
 	}
+
 	return `${baseUrl}/m/${dimensions}/filters:format(webp)${qualityParam}`;
 }

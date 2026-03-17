@@ -8,9 +8,7 @@ type ResourcePageProps = {
 	currency: string;
 } & DefaultParams;
 
-const roundAmount = (amount: number) => (amount ? Math.round(amount / 10) * 10 : 0);
-
-export const Resources = async ({ lang, currency }: ResourcePageProps) => {
+export const Resources = async ({ lang }: ResourcePageProps) => {
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
 		namespaces: ['website-selection'],

@@ -144,6 +144,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(recipient as RecipientPayload);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch recipient: ${JSON.stringify(error)}`);
 		}
 	}
@@ -181,13 +182,14 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch editable recipient options: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getSurveyRecipients(
 		programIds: string[],
-	): Promise<ServiceResult<Array<{ id: string; programId: string | null; startDate: Date | null }>>> {
+	): Promise<ServiceResult<{ id: string; programId: string | null; startDate: Date | null }[]>> {
 		try {
 			const recipients = await this.db.recipient.findMany({
 				where: {
@@ -216,6 +218,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(recipients);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get survey recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -247,6 +250,7 @@ export class RecipientReadService extends BaseService {
 							country: {
 								select: {
 									isoCode: true,
+									currency: true,
 								},
 							},
 						},
@@ -266,6 +270,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(recipient);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find recipient by phone number: ${JSON.stringify(error)}`);
 		}
 	}
@@ -296,6 +301,7 @@ export class RecipientReadService extends BaseService {
 				if (mockResult.success) {
 					return mockResult;
 				}
+
 				return this.resultFail(mockResult.error ?? 'Could not create mock recipient');
 			}
 
@@ -311,6 +317,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(recipientResult.data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not resolve recipient from request: ${JSON.stringify(error)}`);
 		}
 	}
@@ -398,7 +405,7 @@ export class RecipientReadService extends BaseService {
 						},
 					},
 				},
-				orderBy: { createdAt: 'desc' },
+				orderBy: [{ id: 'asc' }],
 			});
 
 			const formatDate = (value: Date | null | undefined) => (value ? value.toISOString() : '');
@@ -475,6 +482,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(stringifyCsv(rows, headers));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not export recipients CSV: ${JSON.stringify(error)}`);
 		}
 	}
@@ -563,6 +571,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: recipient.id,
+					firebaseAuthUserId: '',
 					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
@@ -589,6 +598,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -719,6 +729,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: recipient.id,
+					firebaseAuthUserId: '',
 					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
@@ -748,6 +759,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, permission: globalPermission, programFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -778,6 +790,7 @@ export class RecipientReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch program scoped recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -792,12 +805,14 @@ export class RecipientReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({
 				tableRows: paginated.data.tableRows,
 				permission: paginated.data.permission,
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch local partner recipients table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -909,6 +924,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: r.id,
+					firebaseAuthUserId: '',
 					country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 					firstName: r.contact?.firstName ?? '',
 					lastName: r.contact?.lastName ?? '',
@@ -945,6 +961,7 @@ export class RecipientReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch recipients for local partner: ${JSON.stringify(error)}`);
 		}
 	}

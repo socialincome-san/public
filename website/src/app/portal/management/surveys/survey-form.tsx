@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import {
@@ -10,6 +10,7 @@ import {
 	getSurveyRecipientOptionsAction,
 	updateSurveyAction,
 } from '@/lib/server-actions/survey-actions';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
 import { useEffect, useState, useTransition } from 'react';
@@ -79,13 +80,13 @@ const initialFormSchema: SurveyFormSchema = {
 		accessPw: {
 			placeholder: 'Access password',
 			label: 'Access password',
-			zodSchema: z.string().min(1),
+			zodSchema: z.string().optional(),
 		},
 	},
 };
 
 export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }: SurveyFormProps) => {
-	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();
 
@@ -95,106 +96,68 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 		}
 
 		startTransition(async () => {
-			try {
-				const surveyResult = await getSurveyAction(surveyId);
-				if (!surveyResult.success) {
-					onError?.(surveyResult.error);
-					return;
-				}
+			const surveyResult = await getSurveyAction(surveyId);
+			handleServiceResult(surveyResult, {
+				onSuccess: (data) => {
+					setSurvey(data);
+					setFormSchema((prev) => {
+						const next = clearFormSchemaValues(prev);
 
-				setSurvey(surveyResult.data);
-
-				setFormSchema((prev) => ({
-					...prev,
-					fields: {
-						...prev.fields,
-						name: {
-							...prev.fields.name,
-							value: surveyResult.data.name,
-						},
-						recipientId: {
-							...prev.fields.recipientId,
-							value: surveyResult.data.recipientId,
-						},
-						questionnaire: {
-							...prev.fields.questionnaire,
-							value: surveyResult.data.questionnaire,
-						},
-						language: {
-							...prev.fields.language,
-							value: surveyResult.data.language,
-						},
-						dueAt: {
-							...prev.fields.dueAt,
-							value: surveyResult.data.dueAt,
-						},
-						status: {
-							...prev.fields.status,
-							value: surveyResult.data.status,
-						},
-						accessEmail: {
-							...prev.fields.accessEmail,
-							value: surveyResult.data.accessEmail,
-						},
-						accessPw: {
-							...prev.fields.accessPw,
-							value: surveyResult.data.accessPw,
-						},
-					},
-				}));
-			} catch (error) {
-				onError?.(error);
-			}
+						return {
+							...next,
+							fields: {
+								...next.fields,
+								name: { ...next.fields.name, value: data.name },
+								recipientId: { ...next.fields.recipientId, value: data.recipientId },
+								questionnaire: { ...next.fields.questionnaire, value: data.questionnaire },
+								language: { ...next.fields.language, value: data.language },
+								dueAt: { ...next.fields.dueAt, value: data.dueAt },
+								status: { ...next.fields.status, value: data.status },
+								accessEmail: { ...next.fields.accessEmail, value: data.accessEmail },
+							},
+						};
+					});
+				},
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, [surveyId, onError]);
+	}, [onError, surveyId]);
 
 	useEffect(() => {
 		startTransition(async () => {
-			try {
-				const res = await getSurveyRecipientOptionsAction();
-				if (!res.success) {
-					return;
-				}
-
-				const recipientEnum = getZodEnum(res.data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
-
-				setFormSchema((prev) => ({
-					...prev,
-					fields: {
-						...prev.fields,
-						recipientId: {
-							...prev.fields.recipientId,
-							zodSchema: z.nativeEnum(recipientEnum),
+			const res = await getSurveyRecipientOptionsAction();
+			handleServiceResult(res, {
+				onSuccess: (data) => {
+					const recipientEnum = getZodEnum(data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
+					setFormSchema((prev) => ({
+						...prev,
+						fields: {
+							...prev.fields,
+							recipientId: {
+								...prev.fields.recipientId,
+								zodSchema: z.nativeEnum(recipientEnum),
+							},
 						},
-					},
-				}));
-			} catch (error) {
-				onError?.(error);
-			}
+					}));
+				},
+				onError: (error) => onError?.(error),
+			});
 		});
 	}, [onError]);
 
 	const onSubmit = (schema: SurveyFormSchema) => {
 		startTransition(async () => {
-			try {
-				let result;
-
-				if (surveyId && survey) {
-					const data = buildUpdateSurveyInput(schema, survey);
-					result = await updateSurveyAction(surveyId, data);
-				} else {
-					const data = buildCreateSurveyInput(schema);
-					result = await createSurveyAction(data);
-				}
-
-				if (result.success) {
-					onSuccess?.();
-				} else {
-					onError?.(result.error);
-				}
-			} catch (e) {
-				onError?.(e);
+			if (surveyId && survey?.id !== surveyId) {
+				return onError?.('Survey is still loading. Please try again.');
 			}
+			const result =
+				surveyId && survey
+					? await updateSurveyAction(buildUpdateSurveyInput(schema, survey))
+					: await createSurveyAction(buildCreateSurveyInput(schema));
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 

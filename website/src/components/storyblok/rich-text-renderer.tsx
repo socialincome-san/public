@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
+import { ReactNode } from 'react';
 import {
 	MARK_LINK,
 	NODE_HEADING,
@@ -16,8 +17,8 @@ type RichTextRendererProps = {
 export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) => {
 	return render(richTextDocument, {
 		markResolvers: {
-			[MARK_LINK]: (children: any, props: any) => (
-				<NextLink href={props.href} className="font-normal underline">
+			[MARK_LINK]: (children: ReactNode, props: { href?: string }) => (
+				<NextLink href={props.href ?? '#'} className="font-normal underline">
 					{children}
 				</NextLink>
 			),
@@ -34,6 +35,7 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 					5: 'text-lg font-medium',
 					6: 'text-base font-medium',
 				};
+
 				return <Tag className={cn(styles[level], 'my-4')}>{children}</Tag>;
 			},
 			[NODE_LI]: (children) => <li className="m-0.5 p-0.5 *:m-0 *:p-0 [&::marker]:text-black">{children}</li>,
@@ -42,5 +44,5 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 		blokResolvers: {
 			// Todo: Add blocks as soon as we have them ready in the Storyblok schema
 		},
-	});
+	}) as ReactNode;
 };

@@ -14,6 +14,7 @@ const getAuthUserIdFromCookie = async (): Promise<string | null> => {
 		return null;
 	}
 	const result = await services.firebaseSession.verifySessionCookie(cookieResult.data);
+
 	return result.success ? result.data.uid : null;
 };
 
@@ -36,6 +37,7 @@ export const getCurrentSessions = async (): Promise<Session[]> => {
 	if (partnerResult.success && partnerResult.data) {
 		out.push(partnerResult.data);
 	}
+
 	return out;
 };
 
@@ -44,14 +46,13 @@ export const getSessionsOrRedirect = async (): Promise<Session[]> => {
 	if (sessions.length === 0) {
 		redirect('/login');
 	}
+
 	return sessions;
 };
 
 type SessionByType<T extends Session['type']> = Extract<Session, { type: T }>;
 
-export const getSessionByType = async <T extends Session['type']>(
-	type: T,
-): Promise<ServiceResult<SessionByType<T>>> => {
+export const getSessionByType = async <T extends Session['type']>(type: T): Promise<ServiceResult<SessionByType<T>>> => {
 	try {
 		const sessions = await getCurrentSessions();
 		if (sessions.length === 0) {

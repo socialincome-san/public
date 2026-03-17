@@ -12,6 +12,7 @@ export const StoryblokCampaignDonate = (props: {
 }) => {
 	const { translator, region, lang } = props;
 	const donationInterval = DonationInterval.Monthly;
+
 	return (
 		<div className="bg-primary my-4 rounded-lg p-10">
 			<Typography size="3xl" weight="semibold" color="primary-foreground" className="mt-0 mb-8 align-middle">

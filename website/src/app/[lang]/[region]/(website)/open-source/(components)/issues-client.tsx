@@ -5,21 +5,21 @@ import { useState } from 'react';
 import { FilterForm } from './filterForm';
 import { Issue } from './issue';
 
-interface Issue {
+type Issue = {
 	id: number;
 	title: string;
 	url: string;
 	labels: string[];
-}
+};
 
-interface IssueClientProps {
+type IssueClientProps = {
 	title: string;
 	issues: Issue[];
 	labels: string[];
 	tableHeader: string;
 	linkText: string;
 	filterText: string;
-}
+};
 
 export const IssueClient = ({ title, issues, labels, tableHeader, filterText, linkText }: IssueClientProps) => {
 	const [filteredLabel, setFilteredLabel] = useState('');

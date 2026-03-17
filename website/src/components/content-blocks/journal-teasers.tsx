@@ -25,6 +25,7 @@ const getSelectedArticleUuids = (selectedArticles: JournalTeasers['selectedArtic
 	const uuids = selectedArticles
 		.map((article) => (typeof article === 'string' ? article : article.uuid))
 		.filter((uuid): uuid is string => Boolean(uuid));
+
 	return [...new Set(uuids)].slice(0, MAX_ARTICLES);
 };
 
@@ -35,10 +36,12 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 			return [];
 		}
 		const selectedResult = await services.storyblok.getArticlesByUuids(lang, articleUuids);
+
 		return selectedResult.success ? selectedResult.data.slice(0, MAX_ARTICLES) : [];
 	}
 
 	const latestResult = await services.storyblok.getOverviewArticles(lang, undefined, MAX_ARTICLES);
+
 	return latestResult.success ? latestResult.data.slice(0, MAX_ARTICLES) : [];
 };
 
@@ -77,9 +80,7 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 			<div className={cn('grid grid-cols-1 gap-4 lg:gap-8', hasSecondaryArticles && 'lg:grid-cols-2')}>
 				<JournalTeaserCard article={featuredArticle} lang={lang} region={region} isFeatured />
 				{hasSecondaryArticles && (
-					<div
-						className={cn('grid h-full grid-cols-1 gap-4 lg:gap-8', secondaryArticles.length > 1 && 'lg:grid-rows-2')}
-					>
+					<div className={cn('grid h-full grid-cols-1 gap-4 lg:gap-8', secondaryArticles.length > 1 && 'lg:grid-rows-2')}>
 						{secondaryArticles.map((article) => (
 							<JournalTeaserCard key={article.uuid} article={article} lang={lang} region={region} isFeatured={false} />
 						))}

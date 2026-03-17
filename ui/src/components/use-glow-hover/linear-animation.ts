@@ -7,12 +7,7 @@ interface LinearAnimationParams {
 	initialProgress?: number;
 }
 
-export const linearAnimation = ({
-	onProgress,
-	onIdUpdate = () => {},
-	time,
-	initialProgress = 0,
-}: LinearAnimationParams) => {
+export const linearAnimation = ({ onProgress, onIdUpdate = () => {}, time, initialProgress = 0 }: LinearAnimationParams) => {
 	if (time === 0) {
 		onProgress(1);
 		onIdUpdate(undefined);

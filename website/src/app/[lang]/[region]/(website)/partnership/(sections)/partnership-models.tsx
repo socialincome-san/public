@@ -66,18 +66,10 @@ export const PartnershipModels = async ({ lang }: DefaultParams) => {
 							<table className="text-md w-full max-w-none min-w-[1000px] table-auto border-collapse text-left">
 								<thead>
 									<tr className="border-b">
-										<th className="px-4 py-2 font-semibold">
-											{translator.t('partnership-models.card-4-dialog-header-1')}
-										</th>
-										<th className="px-4 py-2 font-semibold">
-											{translator.t('partnership-models.card-4-dialog-header-2')}
-										</th>
-										<th className="px-4 py-2 font-semibold">
-											{translator.t('partnership-models.card-4-dialog-header-3')}
-										</th>
-										<th className="px-4 py-2 font-semibold">
-											{translator.t('partnership-models.card-4-dialog-header-4')}
-										</th>
+										<th className="px-4 py-2 font-semibold">{translator.t('partnership-models.card-4-dialog-header-1')}</th>
+										<th className="px-4 py-2 font-semibold">{translator.t('partnership-models.card-4-dialog-header-2')}</th>
+										<th className="px-4 py-2 font-semibold">{translator.t('partnership-models.card-4-dialog-header-3')}</th>
+										<th className="px-4 py-2 font-semibold">{translator.t('partnership-models.card-4-dialog-header-4')}</th>
 									</tr>
 								</thead>
 								<tbody>

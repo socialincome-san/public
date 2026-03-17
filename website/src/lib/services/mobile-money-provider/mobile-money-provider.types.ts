@@ -5,10 +5,6 @@ export type MobileMoneyProviderTableViewRow = {
 	createdAt: Date;
 };
 
-type MobileMoneyProviderTableView = {
-	tableRows: MobileMoneyProviderTableViewRow[];
-};
-
 export type MobileMoneyProviderTableQuery = {
 	page: number;
 	pageSize: number;

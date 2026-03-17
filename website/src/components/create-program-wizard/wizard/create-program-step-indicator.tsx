@@ -19,6 +19,7 @@ const getCurrentStepIndex = (state: CreateProgramWizardState): number => {
 	if (state.matches('auth')) {
 		return 3;
 	}
+
 	return 0;
 };
 

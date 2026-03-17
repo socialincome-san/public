@@ -7,11 +7,7 @@ import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-componen
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
-import {
-	ArrowsPointingInIcon,
-	ArrowsPointingOutIcon,
-	ChatBubbleBottomCenterTextIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowsPointingInIcon, ArrowsPointingOutIcon, ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -63,6 +59,7 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations }
 		if (video.paused) {
 			void video.play().catch(() => undefined);
 			setIsPlaying(true);
+
 			return;
 		}
 
@@ -161,6 +158,7 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations }
 								<div>
 									{button.map(({ _uid, label, link }) => {
 										const href = resolveStoryblokLink(link, lang, region);
+
 										return (
 											<Button key={_uid} variant="outline" size="lg" asChild>
 												<NextLink href={href}>{label}</NextLink>

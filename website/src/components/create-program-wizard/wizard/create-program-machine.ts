@@ -1,9 +1,8 @@
-import { Cause, Currency, PayoutInterval } from '@/generated/prisma/enums';
+import { Cause, Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import { calculateProgramBudgetAction } from '@/lib/server-actions/program-stats-actions';
-import { Profile } from '@/lib/services/candidate/candidate.types';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput } from '@/lib/services/program/program.types';
 import { assign, fromPromise, setup } from 'xstate';
@@ -52,8 +51,8 @@ export const createProgramWizardMachine = setup({
 			error?: string;
 		};
 
-		events: // step 1
-		| { type: 'SELECT_COUNTRY'; id: string }
+		events:
+			| { type: 'SELECT_COUNTRY'; id: string }
 			| { type: 'TOGGLE_COUNTRY_ROW'; id: string }
 
 			// step 2
@@ -91,6 +90,7 @@ export const createProgramWizardMachine = setup({
 			if (!result.success) {
 				throw new Error(result.error);
 			}
+
 			return result.data.rows;
 		}),
 
@@ -99,6 +99,7 @@ export const createProgramWizardMachine = setup({
 			if (!result.success) {
 				throw new Error(result.error);
 			}
+
 			return result.data.programId;
 		}),
 
@@ -149,6 +150,7 @@ export const createProgramWizardMachine = setup({
 				if (!result.success) {
 					throw new Error(result.error);
 				}
+
 				return result.data;
 			},
 		),
@@ -162,18 +164,14 @@ export const createProgramWizardMachine = setup({
 		programSetupValid: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
-			(context.recipientApproach === 'universal' ||
-				context.targetCauses.length > 0 ||
-				context.targetProfiles.length > 0),
+			(context.recipientApproach === 'universal' || context.targetCauses.length > 0 || context.targetProfiles.length > 0),
 
 		// step 2 → step 3
 		programSetupValidWithRecipients: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
 			context.filteredRecipients > 0 &&
-			(context.recipientApproach === 'universal' ||
-				context.targetCauses.length > 0 ||
-				context.targetProfiles.length > 0),
+			(context.recipientApproach === 'universal' || context.targetCauses.length > 0 || context.targetProfiles.length > 0),
 
 		// step 3
 		budgetConfigValid: ({ context }) =>
@@ -272,8 +270,8 @@ export const createProgramWizardMachine = setup({
 				src: 'loadCandidateCounts',
 				input: ({ context }) => ({
 					countryId: context.selectedCountryId,
-					causes: context.targetCauses,
-					profiles: context.targetProfiles,
+					causes: context.recipientApproach === 'targeted' ? context.targetCauses : [],
+					profiles: context.recipientApproach === 'targeted' ? context.targetProfiles : [],
 				}),
 				onDone: {
 					actions: assign(({ context, event }) => {
@@ -281,6 +279,7 @@ export const createProgramWizardMachine = setup({
 						const filteredRecipients = event.output.filtered;
 						const amountOfRecipients =
 							context.amountOfRecipients > filteredRecipients ? filteredRecipients : context.amountOfRecipients;
+
 						return {
 							totalRecipients,
 							filteredRecipients,

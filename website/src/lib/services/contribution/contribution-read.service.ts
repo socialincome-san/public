@@ -58,9 +58,7 @@ export class ContributionReadService extends BaseService {
 		}
 	}
 
-	private buildYourContributionOrderBy(
-		query: YourContributionsTableQuery,
-	): Prisma.ContributionOrderByWithRelationInput[] {
+	private buildYourContributionOrderBy(query: YourContributionsTableQuery): Prisma.ContributionOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, ['amount', 'currency', 'campaignTitle', 'createdAt'] as const);
 		switch (sortBy) {
@@ -120,11 +118,12 @@ export class ContributionReadService extends BaseService {
 			return this.resultOk({
 				...contribution,
 				amount: Number(contribution.amount),
-				amountChf: Number(contribution.amount),
-				feesChf: Number(contribution.amount),
+				amountChf: Number(contribution.amountChf),
+				feesChf: Number(contribution.feesChf),
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contribution: ${JSON.stringify(error)}`);
 		}
 	}
@@ -161,17 +160,13 @@ export class ContributionReadService extends BaseService {
 					new Map(
 						campaigns
 							.filter((campaign) => campaign.program?.id && campaign.program?.name)
-							.map((campaign) => [
-								campaign.program!.id,
-								{ value: campaign.program!.id, label: campaign.program!.name },
-							]),
+							.map((campaign) => [campaign.program!.id, { value: campaign.program!.id, label: campaign.program!.name }]),
 					).values(),
 				),
 				campaigns: campaigns.map((campaign) => ({ value: campaign.id, label: campaign.title })),
 				paymentEventTypes: (Object.values(PaymentEventType) as PaymentEventType[]).map((type) => ({
 					value: type,
-					label:
-						type === 'bank_transfer' ? 'Wire transfer' : type.replace(/_/g, ' ').replace(/^./, (s) => s.toUpperCase()),
+					label: type === 'bank_transfer' ? 'Wire transfer' : type.replace(/_/g, ' ').replace(/^./, (s) => s.toUpperCase()),
 				})),
 			};
 
@@ -259,6 +254,7 @@ export class ContributionReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, permission, filterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributions: ${JSON.stringify(error)}`);
 		}
 	}
@@ -300,6 +296,7 @@ export class ContributionReadService extends BaseService {
 			return this.resultOk(contributions);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributions for contributor ${contributorId}`);
 		}
 	}
@@ -310,9 +307,7 @@ export class ContributionReadService extends BaseService {
 	): Promise<ServiceResult<YourContributionsPaginatedTableView>> {
 		try {
 			const search = query.search.trim();
-			const matchedCurrency = Object.values(Currency).find(
-				(currency) => currency.toLowerCase() === search.toLowerCase(),
-			);
+			const matchedCurrency = Object.values(Currency).find((currency) => currency.toLowerCase() === search.toLowerCase());
 			const where = search
 				? {
 						AND: [
@@ -355,6 +350,7 @@ export class ContributionReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributions for contributor: ${JSON.stringify(error)}`);
 		}
 	}

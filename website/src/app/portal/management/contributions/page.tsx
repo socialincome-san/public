@@ -26,9 +26,7 @@ const ContributionsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];
 	const readOnly = result.success ? result.data.permission !== 'edit' : true;
 	const totalRows = result.success ? result.data.totalCount : 0;
-	const filterOptions = result.success
-		? result.data.filterOptions
-		: { programs: [], campaigns: [], paymentEventTypes: [] };
+	const filterOptions = result.success ? result.data.filterOptions : { programs: [], campaigns: [], paymentEventTypes: [] };
 
 	return (
 		<ContributionsTableClient

@@ -11,7 +11,7 @@ type MonitoringLayoutProps = {
 
 export default async function DeliveryLayout({ children }: MonitoringLayoutProps) {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },

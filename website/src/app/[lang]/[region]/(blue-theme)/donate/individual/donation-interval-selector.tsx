@@ -8,8 +8,7 @@ import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography }
 import classNames from 'classnames';
 import { useFormContext } from 'react-hook-form';
 
-const DONATION_INTERVALS = ['1', '3', '12'] as const;
-type DonationInterval = (typeof DONATION_INTERVALS)[number];
+type DonationInterval = '1' | '3' | '12';
 
 type DonationIntervalTranslations = {
 	title: string;
@@ -66,10 +65,7 @@ const DonationIntervalFormItem = ({
 							</Typography>
 						</div>
 					</div>
-					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')}
-						aria-hidden="true"
-					/>
+					<CheckCircleIcon className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')} aria-hidden="true" />
 				</div>
 			</FormControl>
 		</FormItem>

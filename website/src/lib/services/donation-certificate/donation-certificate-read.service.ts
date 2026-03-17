@@ -151,6 +151,7 @@ export class DonationCertificateReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch donation certificates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -205,14 +206,12 @@ export class DonationCertificateReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch donation certificates: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async findByYearAndContributor(
-		year: number,
-		contributorsIds: string[],
-	): Promise<ServiceResult<DonationCertificate[]>> {
+	async findByYearAndContributor(year: number, contributorsIds: string[]): Promise<ServiceResult<DonationCertificate[]>> {
 		try {
 			const existingCertificates = await this.db.donationCertificate.findMany({
 				where: {
@@ -224,6 +223,7 @@ export class DonationCertificateReadService extends BaseService {
 			return this.resultOk(existingCertificates);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch existing donation certificates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -245,6 +245,7 @@ export class DonationCertificateReadService extends BaseService {
 			return this.resultOk(existingCertificate);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch existing donation certificates: ${JSON.stringify(error)}`);
 		}
 	}

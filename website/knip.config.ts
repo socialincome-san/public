@@ -2,7 +2,12 @@ import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
 	ignoreFiles: ['test/e2e/setup/*.ts', 'src/lib/utils/storyblock-image-loader.ts'],
+	ignoreIssues: {
+		'src/app/api/v1/models.ts': ['exports'],
+	},
 	ignoreDependencies: [
+		'eslint',
+		'eslint-config-next',
 		'react',
 		'react-hook-form',
 		'zod',

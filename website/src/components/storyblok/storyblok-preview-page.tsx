@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
-	const isVisualEditor = !!searchParams['_storyblok'];
+	const isVisualEditor = !!searchParams._storyblok;
 	let token: string | undefined;
 	let timestamp: string | undefined;
 	let cachedStory: ISbStoryData<Page> | undefined;
@@ -41,11 +41,7 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 		return (
 			<>
 				{token && timestamp && (
-					<StoryblokPreviewSyncer
-						previewToken={token}
-						previewTimestamp={timestamp}
-						previewRoutePath={previewRoutePath}
-					/>
+					<StoryblokPreviewSyncer previewToken={token} previewTimestamp={timestamp} previewRoutePath={previewRoutePath} />
 				)}
 				<PageContentType blok={cachedStory.content} lang={lang} region={region} />
 			</>
@@ -68,11 +64,7 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 		return (
 			<>
 				{token && timestamp && (
-					<StoryblokPreviewSyncer
-						previewToken={token}
-						previewTimestamp={timestamp}
-						previewRoutePath={previewRoutePath}
-					/>
+					<StoryblokPreviewSyncer previewToken={token} previewTimestamp={timestamp} previewRoutePath={previewRoutePath} />
 				)}
 				<PageContentType blok={story.content} lang={lang} region={region} />
 			</>

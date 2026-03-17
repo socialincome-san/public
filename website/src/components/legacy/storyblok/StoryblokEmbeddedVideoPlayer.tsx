@@ -4,8 +4,7 @@ import { Typography } from '@socialincome/ui';
 
 const SUPPORTED_VIDEO_PROVIDERS_MATCHERS = [new YouTubeVideoMatchAndExtract(), new VimeoVideoMatchAndExtract()];
 
-const getMuxPlayerUrl = (muxPlaybackId: string | undefined) =>
-	muxPlaybackId && `https://player.mux.com/${muxPlaybackId}`;
+const getMuxPlayerUrl = (muxPlaybackId: string | undefined) => muxPlaybackId && `https://player.mux.com/${muxPlaybackId}`;
 
 export const StoryblokEmbeddedVideoPlayer = ({ caption, muxPlaybackId, url, _uid }: EmbeddedVideo) => {
 	const videoUrl = url
@@ -17,7 +16,7 @@ export const StoryblokEmbeddedVideoPlayer = ({ caption, muxPlaybackId, url, _uid
 			<div className="w-full px-0 py-4">
 				<iframe
 					key={`embeddedVideoPlayer${_uid}`}
-					src={videoUrl!}
+					src={videoUrl}
 					title="Video player"
 					sandbox="allow-scripts allow-same-origin allow-presentation "
 					allow="fullscreen"

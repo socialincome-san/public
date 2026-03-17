@@ -45,21 +45,31 @@ type TableQueryInput = {
 const takeFirst = (value: QueryValue): string | undefined => {
 	if (Array.isArray(value)) {
 		const first = value[0];
+
 		return first === undefined ? undefined : String(first);
 	}
 	if (value === null || value === undefined) {
 		return undefined;
 	}
+
 	return String(value);
 };
 
-const stripControlChars = (value: string): string => value.replace(/[\u0000-\u001F\u007F]/g, '');
+const stripControlChars = (value: string): string =>
+	Array.from(value)
+		.filter((char) => {
+			const code = char.charCodeAt(0);
+
+			return !(code <= 31 || code === 127);
+		})
+		.join('');
 
 const normalizeToken = (value: QueryValue, maxLength: number): string => {
 	const token = takeFirst(value);
 	if (!token) {
 		return '';
 	}
+
 	return stripControlChars(token).trim().slice(0, maxLength);
 };
 
@@ -68,6 +78,7 @@ const parsePositiveInt = (value: QueryValue, fallback: number) => {
 	if (!Number.isInteger(parsed) || parsed < 1) {
 		return fallback;
 	}
+
 	return parsed;
 };
 
@@ -107,9 +118,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	};
 };
 
-export const tableQueryFromSearchParams = (
-	searchParams: Record<string, string | string[] | undefined>,
-): TableQueryState => {
+export const tableQueryFromSearchParams = (searchParams: Record<string, string | string[] | undefined>): TableQueryState => {
 	return normalizeTableQuery({
 		page: searchParams.page,
 		pageSize: searchParams.pageSize,
@@ -145,9 +154,7 @@ export const applyTableQueryPatch = (
 		currency: hasPatchKey('currency') ? patch.currency : currentSearchParams.get('currency'),
 		gender: hasPatchKey('gender') ? patch.gender : currentSearchParams.get('gender'),
 		campaignId: hasPatchKey('campaignId') ? patch.campaignId : currentSearchParams.get('campaignId'),
-		paymentEventType: hasPatchKey('paymentEventType')
-			? patch.paymentEventType
-			: currentSearchParams.get('paymentEventType'),
+		paymentEventType: hasPatchKey('paymentEventType') ? patch.paymentEventType : currentSearchParams.get('paymentEventType'),
 		payoutStatus: hasPatchKey('payoutStatus') ? patch.payoutStatus : currentSearchParams.get('payoutStatus'),
 	});
 

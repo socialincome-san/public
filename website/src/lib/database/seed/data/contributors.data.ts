@@ -11,7 +11,7 @@ export const contributorsData: Contributor[] = [
 		stripeCustomerId: 'cus_U54Q6mWSPbVREN',
 		needsOnboarding: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contributor-2',
@@ -23,7 +23,7 @@ export const contributorsData: Contributor[] = [
 		stripeCustomerId: 'stripe-cust-002',
 		needsOnboarding: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contributor-3',
@@ -35,7 +35,7 @@ export const contributorsData: Contributor[] = [
 		stripeCustomerId: 'stripe-cust-003',
 		needsOnboarding: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contributor-4',
@@ -47,7 +47,7 @@ export const contributorsData: Contributor[] = [
 		stripeCustomerId: 'stripe-cust-004',
 		needsOnboarding: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contributor-5',
@@ -59,7 +59,7 @@ export const contributorsData: Contributor[] = [
 		stripeCustomerId: 'stripe-cust-005',
 		needsOnboarding: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contributor-6',
@@ -71,7 +71,7 @@ export const contributorsData: Contributor[] = [
 		stripeCustomerId: 'stripe-cust-006',
 		needsOnboarding: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'contributor-7',
@@ -83,6 +83,6 @@ export const contributorsData: Contributor[] = [
 		stripeCustomerId: 'stripe-cust-007',
 		needsOnboarding: false,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

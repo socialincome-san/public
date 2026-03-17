@@ -7,7 +7,7 @@ export const useTranslator = (language: LanguageCode, namespace: string) => {
 
 	useEffect(() => {
 		if (!translators.has(namespace)) {
-			Translator.getInstance({
+			void Translator.getInstance({
 				language,
 				namespaces: [namespace],
 			}).then((t) => setTranslators((prev) => new Map(prev.set(t.namespaces[0], t))));

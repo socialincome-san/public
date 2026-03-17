@@ -7,17 +7,21 @@ type ScreenSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 const determineScreenSize = (width: number): ScreenSize => {
 	if (width < 640) {
 		return 'xs';
-	} else if (width < 768) {
-		return 'sm';
-	} else if (width < 1024) {
-		return 'md';
-	} else if (width < 1280) {
-		return 'lg';
-	} else if (width < 1536) {
-		return 'xl';
-	} else {
-		return '2xl';
 	}
+	if (width < 768) {
+		return 'sm';
+	}
+	if (width < 1024) {
+		return 'md';
+	}
+	if (width < 1280) {
+		return 'lg';
+	}
+	if (width < 1536) {
+		return 'xl';
+	}
+
+	return '2xl';
 };
 
 /**
@@ -28,9 +32,11 @@ export const useScreenSize = (): ScreenSize | null => {
 	const [currentScreenSize, setCurrentScreenSize] = useState<ScreenSize | null>(null);
 
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setCurrentScreenSize(determineScreenSize(window.innerWidth));
 		const handler = () => setCurrentScreenSize(determineScreenSize(window.innerWidth));
 		window.addEventListener('resize', handler);
+
 		return () => window.removeEventListener('resize', handler);
 	}, []);
 

@@ -55,7 +55,7 @@ export const BankTransferForm = ({
 		form.setValue('email', contributorSession.email ?? '');
 		form.setValue('firstName', contributorSession.firstName ?? '');
 		form.setValue('lastName', contributorSession.lastName ?? '');
-		form.trigger();
+		void form.trigger();
 	}, [contributorSession]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
@@ -66,9 +66,11 @@ export const BankTransferForm = ({
 		translations,
 	});
 
-	const handleGenerateQRCode = async () => {
+	const handleGenerateQRCode = () => {
 		const { email, firstName, lastName } = form.getValues();
-		await generateQRCode(email, firstName, lastName, lang);
+		if (typeof email === 'string' && typeof firstName === 'string' && typeof lastName === 'string') {
+			generateQRCode(email, firstName, lastName, lang);
+		}
 	};
 
 	return (
@@ -156,8 +158,8 @@ export const BankTransferForm = ({
 						size="lg"
 						type="submit"
 						className="w-full"
-						onClick={async () => {
-							await handleGenerateQRCode();
+						onClick={() => {
+							handleGenerateQRCode();
 						}}
 						disabled={isLoading || !form.formState.isValid}
 					>

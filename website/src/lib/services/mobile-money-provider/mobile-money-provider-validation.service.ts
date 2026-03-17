@@ -24,6 +24,7 @@ export class MobileMoneyProviderValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -32,6 +33,7 @@ export class MobileMoneyProviderValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -43,6 +45,7 @@ export class MobileMoneyProviderValidationService extends BaseService {
 		if (nameConflict) {
 			return this.resultFail('A mobile money provider with this name already exists.');
 		}
+
 		return this.resultOk(undefined);
 	}
 
@@ -59,6 +62,7 @@ export class MobileMoneyProviderValidationService extends BaseService {
 				return this.resultFail('A mobile money provider with this name already exists.');
 			}
 		}
+
 		return this.resultOk(undefined);
 	}
 }

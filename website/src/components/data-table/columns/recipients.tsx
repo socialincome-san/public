@@ -4,6 +4,7 @@ import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { AgeCell } from '@/components/data-table/elements/age-cell';
 import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
+import { IdCell } from '@/components/data-table/elements/id-cell';
 import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
@@ -15,6 +16,11 @@ export const makeRecipientColumns = (
 	hideLocalPartner = false,
 ): ColumnDef<RecipientTableViewRow>[] => {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
+		{
+			accessorKey: 'firebaseAuthUserId',
+			header: 'Firebase Auth User ID',
+			cell: (ctx) => <IdCell ctx={ctx} />,
+		},
 		{
 			id: 'recipient',
 			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),

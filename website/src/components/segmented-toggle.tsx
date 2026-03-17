@@ -1,12 +1,15 @@
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { cn } from '@socialincome/ui';
 
-type Option = { value: string; label: string };
+type Option = {
+	value: string;
+	label: string;
+};
 
 type SegmentedToggleProps = {
 	value: string;
 	onValueChange: (value: string) => void;
-	options: ReadonlyArray<Option>;
+	options: readonly Option[];
 	className?: string;
 };
 
