@@ -164,7 +164,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						</Link>
 
 						<div className="mt-8 flex flex-wrap justify-start gap-2">
-							{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
+							{articleData.tags?.map((tag) =>
 								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
 							)}
 						</div>
