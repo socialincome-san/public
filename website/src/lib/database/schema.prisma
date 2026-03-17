@@ -105,6 +105,12 @@ enum Cause {
   climate
 }
 
+enum Profile {
+  male
+  female
+  youth
+}
+
 enum NetworkTechnology {
   g3
   g4
@@ -812,10 +818,12 @@ model Program {
   name String @unique @map("name")
 
   amountOfRecipientsForStart Int?           @map("amount_of_recipients_for_start")
+  coveredByReserves          Boolean        @default(false) @map("covered_by_reserves")
   programDurationInMonths    Int            @map("program_duration_in_months")
   payoutPerInterval          Decimal        @map("payout_per_interval") @db.Decimal(12, 4)
   payoutInterval             PayoutInterval @default(monthly) @map("payout_interval")
   targetCauses               Cause[]        @map("target_causes")
+  targetProfiles             Profile[]      @default([]) @map("target_profiles")
 
   countryId String  @map("country_id")
   country   Country @relation(fields: [countryId], references: [id])

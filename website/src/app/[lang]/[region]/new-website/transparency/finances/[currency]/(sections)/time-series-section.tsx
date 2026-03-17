@@ -24,6 +24,7 @@ export const TimeSeriesSection = ({ timeRanges, exchangeRate, currency, lang }: 
 
 	const convertedRanges = timeRanges.map((range) => {
 		const start = DateTime.fromISO(range.startIso, { setZone: true });
+
 		return {
 			startIso: range.startIso,
 			total: range.totalChf * exchangeRate,

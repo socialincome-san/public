@@ -25,6 +25,7 @@ export class ExchangeRateImportService extends BaseService {
 			return this.resultOk(result);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch exchange rates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -45,7 +46,8 @@ export class ExchangeRateImportService extends BaseService {
 		if (!response.ok) {
 			throw new Error(`Exchange Rate Request Failure for ${day}: ${response.status} ${response.statusText}`);
 		}
-		const data = await response.json();
+		const data: ExchangeRateResponse = await response.json();
+
 		return data;
 	}
 
@@ -63,9 +65,11 @@ export class ExchangeRateImportService extends BaseService {
 		}
 		try {
 			await this.db.exchangeRate.createMany({ data });
+
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not store exchange rates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -78,9 +82,11 @@ export class ExchangeRateImportService extends BaseService {
 				return this.resultFail(storeResult.error, storeResult.status);
 			}
 			this.logger.info('Ingested exchange rates for date', { date: dt.toISODate() });
+
 			return this.resultOk(rates);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not ingest exchange rates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -94,6 +100,7 @@ export class ExchangeRateImportService extends BaseService {
 
 			if (!existingExchangeRates.success) {
 				this.logger.error('Could not fetch existing exchange rates');
+
 				return this.resultFail('Could not fetch existing exchange rates');
 			}
 
@@ -125,17 +132,21 @@ export class ExchangeRateImportService extends BaseService {
 						const storedRates = await this.fetchAndStoreExchangeRates(DateTime.fromMillis(timestamp));
 						if (!storedRates.success) {
 							this.logger.error('Could not store exchange rates');
+
 							return this.resultFail(`Could not store exchange rates: ${storedRates.error}`);
 						}
 					} catch (error) {
 						this.logger.error(error);
+
 						return this.resultFail(`Could not fetch and store exchange rates: ${JSON.stringify(error)}`);
 					}
 				}
 			}
+
 			return this.resultOk(undefined);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not import exchange rates: ${JSON.stringify(error)}`);
 		}
 	}

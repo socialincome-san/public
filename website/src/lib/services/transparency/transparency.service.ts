@@ -22,6 +22,7 @@ export class TransparencyService extends BaseService {
 			return this.resultOk({ totals, timeRanges: timeRangeData, topCountries });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch transparency data: ${JSON.stringify(error)}`);
 		}
 	}
@@ -60,6 +61,7 @@ export class TransparencyService extends BaseService {
 					},
 					_sum: { amountChf: true },
 				});
+
 				return {
 					start: range.start,
 					end: range.end,

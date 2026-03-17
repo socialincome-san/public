@@ -1,5 +1,5 @@
 import { Address, Gender, Phone } from '@/generated/prisma/client';
-import { FormField } from './dynamic-form';
+import { FormField, FormSchema } from './dynamic-form';
 
 type Contact = {
 	id: string;
@@ -17,17 +17,13 @@ type Contact = {
 
 export const getContactValuesFromPayload = (
 	contact: Contact,
-	contactFields: {
-		[key: string]: FormField;
-	},
-): {
-	[key: string]: FormField;
-} => {
+	contactFields: Record<string, FormField>,
+): Record<string, FormField> => {
 	contactFields.firstName.value = contact.firstName;
 	contactFields.lastName.value = contact.lastName;
 	contactFields.callingName.value = contact.callingName;
 	contactFields.email.value = contact.email;
-	contactFields.language.value = contact.language || null;
+	contactFields.language.value = contact.language ?? undefined;
 	contactFields.profession.value = contact.profession;
 	contactFields.dateOfBirth.value = contact.dateOfBirth ?? undefined;
 	contactFields.phone.value = contact.phone?.number;
@@ -36,48 +32,10 @@ export const getContactValuesFromPayload = (
 	contactFields.street.value = contact.address?.street;
 	contactFields.zip.value = contact.address?.zip;
 	contactFields.city.value = contact.address?.city;
-	contactFields.country.value = contact.address?.country;
+	contactFields.country.value = contact.address?.country ?? undefined;
 	contactFields.number.value = contact.address?.number;
 
 	return contactFields;
-};
-
-export const buildAddressInput = (contactFields: { [key: string]: FormField }) => {
-	const country =
-		contactFields.country.value && contactFields.country.value !== '' ? contactFields.country.value : undefined;
-
-	const hasAnyValue =
-		contactFields.street.value ||
-		contactFields.number.value ||
-		contactFields.city.value ||
-		contactFields.zip.value ||
-		country;
-
-	if (!hasAnyValue) {
-		return undefined;
-	}
-
-	return {
-		street: contactFields.street.value ?? '',
-		number: contactFields.number.value ?? '',
-		city: contactFields.city.value ?? '',
-		zip: contactFields.zip.value ?? '',
-		country,
-	};
-};
-
-// Helper to build common contact fields for create/update
-export const buildCommonContactData = (contactFields: { [key: string]: FormField }) => {
-	return {
-		firstName: contactFields.firstName.value,
-		lastName: contactFields.lastName.value,
-		gender: contactFields.gender.value,
-		email: contactFields.email.value || null,
-		profession: contactFields.profession.value || null,
-		dateOfBirth: contactFields.dateOfBirth.value,
-		callingName: contactFields.callingName.value || null,
-		language: contactFields.language.value || null,
-	};
 };
 
 type DropdownItem = {
@@ -88,8 +46,34 @@ type DropdownItem = {
 export const getZodEnum = (items: DropdownItem[]) => {
 	const object = items.reduce<Record<string, string>>((acc, item) => {
 		acc[item.label] = item.id;
+
 		return acc;
 	}, {});
 
 	return object;
+};
+
+export const cloneFormSchema = <TSchema extends FormSchema>(schema: TSchema): TSchema => {
+	const clonedFields = Object.fromEntries(
+		Object.entries(schema.fields).map(([key, field]) => [key, 'fields' in field ? cloneFormSchema(field) : { ...field }]),
+	) as TSchema['fields'];
+
+	return {
+		...schema,
+		fields: clonedFields,
+	};
+};
+
+export const clearFormSchemaValues = <TSchema extends FormSchema>(schema: TSchema): TSchema => {
+	const clearedFields = Object.fromEntries(
+		Object.entries(schema.fields).map(([key, field]) => [
+			key,
+			'fields' in field ? clearFormSchemaValues(field) : { ...field, value: undefined },
+		]),
+	) as TSchema['fields'];
+
+	return {
+		...schema,
+		fields: clearedFields,
+	};
 };

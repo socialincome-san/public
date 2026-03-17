@@ -7,11 +7,12 @@ const DEFAULT_HEIGHT = 15;
 const DEFAULT_WIDTH = 25;
 
 export const ThumbnailImage = ({ thumbnail }: { thumbnail?: StoryblokAsset }) => {
-	if (!thumbnail || !thumbnail.filename) {
+	if (!thumbnail?.filename) {
 		return null;
 	}
 
 	const imageDimensions = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
+
 	return (
 		<div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden">
 			<Image

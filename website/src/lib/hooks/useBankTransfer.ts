@@ -18,22 +18,17 @@ type UseBankTransferProps = {
 	};
 };
 
-export const useBankTransfer = ({
-	amount,
-	intervalCount,
-	currency,
-	qrBillType,
-	translations,
-}: UseBankTransferProps) => {
+export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, translations }: UseBankTransferProps) => {
 	const [userData, setUserData] = useState<BankContributorData | null>(null);
 	const [contributionReference, setContributionReference] = useState<string | null>(null);
 	const [qrBillSvg, setQrBillSvg] = useState<string | null>(null);
 	const [isLoading, startTransition] = useTransition();
 	const [paid, setPaid] = useState(false);
 
-	const generateQRCode = async (email: string, firstName: string, lastName: string, language: string) => {
+	const generateQRCode = (email: string, firstName: string, lastName: string, language: string) => {
 		if (!currency) {
 			toast.error(translations.errors.qrBillError);
+
 			return;
 		}
 
@@ -41,6 +36,7 @@ export const useBankTransfer = ({
 			const result = await getReferenceIds(email);
 			if (!result.success) {
 				toast.error(translations.errors.qrBillError);
+
 				return;
 			}
 
@@ -67,9 +63,10 @@ export const useBankTransfer = ({
 		});
 	};
 
-	const confirmPayment = async () => {
+	const confirmPayment = () => {
 		if (!userData || !contributionReference) {
 			toast.error(translations.errors.paymentFailed);
+
 			return;
 		}
 
@@ -85,6 +82,7 @@ export const useBankTransfer = ({
 
 			if (!pendingContribution.success) {
 				toast.error(translations.errors.paymentFailed);
+
 				return;
 			}
 

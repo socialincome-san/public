@@ -57,7 +57,7 @@ describe('Vimeo Video ID Extraction', () => {
 	VIMEO_TEST_CASES.forEach(({ url, expectedId }) => {
 		test(`Extracts ID "${expectedId}" from "${url}"`, () => {
 			const match = matcher.parseUrl(url);
-			expect(match).toBe(expectedId == null ? null : matcher.urlCreate(expectedId));
+			expect(match).toBe(expectedId === null ? null : matcher.urlCreate(expectedId));
 		});
 	});
 });

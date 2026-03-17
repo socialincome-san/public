@@ -6,7 +6,6 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Badge, BaseContainer, Button, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { useIntersectionObserver } from 'usehooks-ts';
 
 type BoxProps = {
@@ -61,18 +60,8 @@ const Box = ({ active, number, title, subtitle, onClick }: BoxProps) => {
 
 export const SelectionProcess = ({ lang }: DefaultParams) => {
 	const translator = useTranslator(lang as WebsiteLanguage, 'website-selection');
-	const [activeBox, setActiveBox] = useState<'preselection' | 'selection'>('preselection');
 	const { ref, isIntersecting, entry } = useIntersectionObserver({ threshold: 0.2 });
-
-	useEffect(() => {
-		// if only 20% (threshold) of the box is visible, and the top of the box is above the viewport,
-		// set the active box to selection
-		if (!isIntersecting && entry && entry.boundingClientRect.top < 0) {
-			setActiveBox('selection');
-		} else {
-			setActiveBox('preselection');
-		}
-	}, [isIntersecting, entry]);
+	const activeBox = !isIntersecting && entry && entry.boundingClientRect.top < 0 ? 'selection' : 'preselection';
 
 	return (
 		<BaseContainer id="selection-process-section" className="mt-36 scroll-mt-36">
@@ -85,7 +74,6 @@ export const SelectionProcess = ({ lang }: DefaultParams) => {
 						subtitle={translator?.t('section-3.preselection-subtitle')}
 						onClick={() => {
 							document.getElementById('preselection-section')?.scrollIntoView({ behavior: 'smooth' });
-							setActiveBox('preselection');
 						}}
 					/>
 					<Box
@@ -95,7 +83,6 @@ export const SelectionProcess = ({ lang }: DefaultParams) => {
 						subtitle={translator?.t('section-3.selection-subtitle')}
 						onClick={() => {
 							document.getElementById('selection-section')?.scrollIntoView({ behavior: 'smooth' });
-							setActiveBox('selection');
 						}}
 					/>
 				</div>

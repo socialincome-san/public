@@ -7,14 +7,14 @@ import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
 import { BaseContainer, Button } from '@socialincome/ui';
 import { PropsWithChildren } from 'react';
 
-interface SurveyPageParams extends DefaultParams {
+type SurveyPageParams = {
 	recipient: string;
 	survey: string;
-}
+} & DefaultParams;
 
-export interface SurveyPageProps {
+export type SurveyPageProps = {
 	params: Promise<SurveyPageParams>;
-}
+};
 
 export default async function Layout({ children, params }: PropsWithChildren<SurveyPageProps>) {
 	const { lang } = await params;

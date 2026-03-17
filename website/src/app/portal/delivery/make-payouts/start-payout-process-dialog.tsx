@@ -77,6 +77,7 @@ export const StartPayoutProcessDialog = ({ open, setOpen }: { open: boolean; set
 		const result = (await step.action()) as ServiceResult<unknown>;
 		if (!result.success) {
 			setResult(step.id, result.error);
+
 			return;
 		}
 		setResult(step.id, (result.data as StepResult) ?? 'Done');

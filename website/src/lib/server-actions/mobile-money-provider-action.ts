@@ -18,6 +18,7 @@ export const createMobileMoneyProviderAction = async (input: MobileMoneyProvider
 	}
 	const result = await services.write.mobileMoneyProvider.create(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
+
 	return result;
 };
 
@@ -28,6 +29,7 @@ export const updateMobileMoneyProviderAction = async (input: MobileMoneyProvider
 	}
 	const result = await services.write.mobileMoneyProvider.update(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
+
 	return result;
 };
 
@@ -36,6 +38,7 @@ export const getMobileMoneyProviderAction = async (id: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.mobileMoneyProvider.get(sessionResult.data.id, id);
 };
 
@@ -46,6 +49,7 @@ export const deleteMobileMoneyProviderAction = async (id: string) => {
 	}
 	const result = await services.write.mobileMoneyProvider.delete(sessionResult.data.id, id);
 	revalidatePath(REVALIDATE_PATH);
+
 	return result;
 };
 
@@ -54,6 +58,7 @@ export const getMobileMoneyProviderOptionsAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.mobileMoneyProvider.getOptions(sessionResult.data.id);
 };
 
@@ -65,5 +70,6 @@ export const getSupportedMobileMoneyProviderOptionsAction = async (sessionType: 
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.mobileMoneyProvider.getSupportedOptions();
 };

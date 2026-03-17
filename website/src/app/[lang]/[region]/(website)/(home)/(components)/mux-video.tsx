@@ -25,17 +25,20 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	const [showControls, setShowControls] = useState(true);
 	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
 	const { setBackgroundColor } = useNavbarBackground();
+
 	useEffect(() => {
 		if (!entry) {
 			return;
 		}
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setPlaying(false);
 			setBackgroundColor('bg-background!');
 		} else {
 			setPlaying(true);
 			setBackgroundColor(null);
 		}
+
 		return () => {
 			setBackgroundColor(null);
 		};
@@ -43,20 +46,23 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 
 	useEffect(() => {
 		const video = videoElementRef.current;
-		if (playing && video) {
-			// Hide poster when video is ready
-			const handleCanPlay = () => {
-				if (posterRef.current) {
-					posterRef.current.style.opacity = '0';
-					posterRef.current.style.transition = 'opacity 0.5s ease';
-				}
-			};
-			video.addEventListener('canplay', handleCanPlay);
-			video.play();
-			return () => video.removeEventListener('canplay', handleCanPlay);
-		} else {
+		if (!playing || !video) {
 			videoElementRef.current?.pause();
+
+			return;
 		}
+
+		// Hide poster when video is ready
+		const handleCanPlay = () => {
+			if (posterRef.current) {
+				posterRef.current.style.opacity = '0';
+				posterRef.current.style.transition = 'opacity 0.5s ease';
+			}
+		};
+		video.addEventListener('canplay', handleCanPlay);
+		void video.play();
+
+		return () => video.removeEventListener('canplay', handleCanPlay);
 	}, [playing]);
 
 	const handleShowControls = () => {
@@ -68,7 +74,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	useEventListener('scroll', handleShowControls);
 
 	useEffect(() => {
-		let id;
+		let id: ReturnType<typeof setTimeout> | undefined;
 		if (showControls) {
 			id = setTimeout(() => setShowControls(false), OVERLAY_FADE_OUT_DELAY);
 		}
@@ -78,7 +84,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	}, [showControls, setShowControls]);
 
 	useEffect(() => {
-		let id;
+		let id: ReturnType<typeof setTimeout> | undefined;
 		if (!showCaptions) {
 			id = setTimeout(() => setShowCaptions(true), OVERLAY_FADE_OUT_DELAY);
 		}

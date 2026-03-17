@@ -1,8 +1,4 @@
-import {
-	CountryBadgeType,
-	QuoteType,
-	SdgBadgeType,
-} from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
+import { CountryBadgeType, QuoteType, SdgBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 
 type NgoHoverCardType = {

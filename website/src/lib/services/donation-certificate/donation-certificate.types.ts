@@ -11,10 +11,6 @@ export type DonationCertificateTableViewRow = {
 	permission: OrganizationPermission;
 };
 
-type DonationCertificateTableView = {
-	tableRows: DonationCertificateTableViewRow[];
-};
-
 export type DonationCertificateTableQuery = {
 	page: number;
 	pageSize: number;
@@ -34,10 +30,6 @@ export type YourDonationCertificateTableViewRow = {
 	language: string | null;
 	storagePath: string | null;
 	createdAt: Date;
-};
-
-type YourDonationCertificateTableView = {
-	tableRows: YourDonationCertificateTableViewRow[];
 };
 
 export type YourDonationCertificateTableQuery = {

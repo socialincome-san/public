@@ -31,6 +31,7 @@ export const useTableQueryNavigation = () => {
 
 		if (options?.debounceMs && options.debounceMs > 0) {
 			debounceTimeoutRef.current = setTimeout(execute, options.debounceMs);
+
 			return;
 		}
 

@@ -4,16 +4,16 @@ import { buttonVariants } from '@/components/button';
 import { cn, TableCell, TableRow } from '@socialincome/ui';
 import Link from 'next/link';
 
-interface Issue {
+type Issue = {
 	id: number;
 	title: string;
 	url: string;
 	labels: string[];
-}
+};
 
-interface IssueProps extends Pick<Issue, 'title' | 'url'> {
+type IssueProps = {
 	text: string;
-}
+} & Pick<Issue, 'title' | 'url'>;
 
 export const Issue = ({ title, url, text }: IssueProps) => {
 	return (

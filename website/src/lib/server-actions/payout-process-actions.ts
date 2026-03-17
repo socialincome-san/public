@@ -9,6 +9,7 @@ export const generateRegistrationCsvAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.payoutProcess.generateRegistrationCSV(sessionResult.data.id);
 };
 
@@ -17,6 +18,7 @@ export const generatePayoutCsvAction = async (selectedDate: Date) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.payoutProcess.generatePayoutCSV(sessionResult.data.id, selectedDate);
 };
 
@@ -25,6 +27,7 @@ export const previewCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.payoutProcess.previewCurrentMonthPayouts(sessionResult.data.id, selectedDate);
 };
 
@@ -35,5 +38,6 @@ export const generateCurrentMonthPayoutsAction = async (selectedDate: Date) => {
 	}
 	const result = await services.payoutProcess.generateCurrentMonthPayouts(sessionResult.data.id, selectedDate);
 	revalidatePath('/portal/delivery/make-payouts');
+
 	return result;
 };

@@ -136,6 +136,76 @@ test('edit local partner and remove phone number', async ({ page }) => {
 	expect(removedPhone).toBeNull();
 });
 
+test('edit local partner and remove address', async ({ page }) => {
+	const unique = Date.now();
+	const partnerName = `e2e-remove-address-${unique}`;
+	const email = `e2e.remove.address.${unique}@example.com`;
+
+	const created = await prisma.localPartner.create({
+		data: {
+			name: partnerName,
+			causes: [],
+			account: {
+				create: {
+					firebaseAuthUserId: `e2e-local-partner-uid-address-${unique}`,
+				},
+			},
+			contact: {
+				create: {
+					firstName: 'Address',
+					lastName: 'Removal',
+					email,
+					address: {
+						create: {
+							street: 'Address Street',
+							number: '7',
+							city: 'Zurich',
+							zip: '8000',
+						},
+					},
+				},
+			},
+		},
+		select: {
+			id: true,
+			contact: {
+				select: {
+					addressId: true,
+				},
+			},
+		},
+	});
+	expect(created.contact.addressId).toBeTruthy();
+
+	await page.goto('/portal/admin/local-partners');
+	await page.getByRole('cell', { name: partnerName }).click();
+	await page.getByTestId('form-accordion-trigger-contact').click();
+	await page.getByTestId('form-item-contact.street').locator('input').clear();
+	await page.getByTestId('form-item-contact.number').locator('input').clear();
+	await page.getByTestId('form-item-contact.city').locator('input').clear();
+	await page.getByTestId('form-item-contact.zip').locator('input').clear();
+	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const updated = await prisma.localPartner.findUniqueOrThrow({
+		where: { id: created.id },
+		select: {
+			contact: {
+				select: {
+					addressId: true,
+				},
+			},
+		},
+	});
+	expect(updated.contact.addressId).toBeNull();
+
+	const deletedAddress = await prisma.address.findUnique({
+		where: { id: created.contact.addressId! },
+		select: { id: true },
+	});
+	expect(deletedAddress).toBeNull();
+});
+
 test('delete local partner from admin table', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-delete-partner-${unique}`;

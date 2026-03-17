@@ -22,12 +22,15 @@ export const useSurvey = () => {
 			const result = await createSessionAction(idToken);
 			if (!result.success) {
 				setHasError(true);
+
 				return false;
 			}
+
 			return result.success;
 		} catch (error) {
-			logger.error(`error during survey login: ${error}`);
+			logger.error(`error during survey login: ${String(error)}`);
 			setHasError(true);
+
 			return false;
 		}
 	};
@@ -45,21 +48,21 @@ export const useSurvey = () => {
 			setSurvey(surveyResult.data);
 			setHasError(false);
 		} catch (error) {
-			logger.error(`error loading survey: ${error}`);
+			logger.error(`error loading survey: ${String(error)}`);
 			setSurvey(null);
 			setHasError(true);
-			logout();
+			void logout();
 		}
 	};
 
 	const saveSurvey = async (surveyId: string, survey: Model, status: SurveyStatus, retryCount = 0) => {
-		const data = survey.data;
+		const data = survey.data as Record<string, unknown> & { pageNo?: number };
 		data.pageNo = survey.currentPageNo;
 		try {
 			const saveResult = await saveChanges(surveyId, {
-				data: data,
+				data: data as typeof survey.data,
 				status: status,
-				completedAt: status == SurveyStatus.completed ? now() : null,
+				completedAt: status === SurveyStatus.completed ? now() : null,
 			});
 			if (!saveResult.success) {
 				throw new Error(saveResult.error);
@@ -67,13 +70,16 @@ export const useSurvey = () => {
 		} catch (error) {
 			if (retryCount >= 2) {
 				setHasError(true);
-				logout();
-				logger.error(`error saving survey, abording: ${error}`);
+				void logout();
+				logger.error(`error saving survey, abording: ${String(error)}`);
+
 				return;
 			}
 			logger.error('error saving survey, retrying');
 			retryCount++;
-			globalThis.setTimeout(() => saveSurvey(surveyId, survey, status, retryCount), 2000);
+			globalThis.setTimeout(() => {
+				void saveSurvey(surveyId, survey, status, retryCount);
+			}, 2000);
 		}
 	};
 

@@ -24,6 +24,7 @@ export const CountriesSection = ({ countries, exchangeRate, currency, lang }: Co
 				<div className="space-y-6">
 					{countries.map((country) => {
 						const totalConverted = country.totalChf * exchangeRate;
+
 						return (
 							<div key={country.countryCode} className="space-y-2">
 								<div className="flex items-center justify-between">

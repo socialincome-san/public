@@ -16,6 +16,7 @@ export const createLocalPartnerAction = async (localPartner: LocalPartnerFormCre
 
 	const result = await services.write.localPartner.create(sessionResult.data.id, localPartner);
 	revalidatePath('/portal/admin/local-partners');
+
 	return result;
 };
 
@@ -34,6 +35,7 @@ export const updateLocalPartnerAction = async (
 	} else if (session.type === 'local-partner') {
 		revalidatePath('/partner-space/profile');
 	}
+
 	return result;
 };
 
@@ -42,6 +44,7 @@ export const getLocalPartnerAction = async (localPartnerId: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.localPartner.get(sessionResult.data.id, localPartnerId);
 };
 
@@ -53,5 +56,6 @@ export const deleteLocalPartnerAction = async (localPartnerId: string) => {
 
 	const result = await services.write.localPartner.delete(sessionResult.data.id, localPartnerId);
 	revalidatePath('/portal/admin/local-partners');
+
 	return result;
 };

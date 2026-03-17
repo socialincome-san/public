@@ -8,7 +8,7 @@ export const usersData: User[] = [
 		role: UserRole.admin,
 		activeOrganizationId: 'organization-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'user-2',
@@ -17,7 +17,7 @@ export const usersData: User[] = [
 		role: UserRole.admin,
 		activeOrganizationId: 'organization-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'user-3',
@@ -26,7 +26,7 @@ export const usersData: User[] = [
 		role: UserRole.user,
 		activeOrganizationId: 'organization-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'user-4',
@@ -35,6 +35,6 @@ export const usersData: User[] = [
 		role: UserRole.admin,
 		activeOrganizationId: 'organization-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

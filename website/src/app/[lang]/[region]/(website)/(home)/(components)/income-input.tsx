@@ -28,21 +28,23 @@ export const IncomeInput = ({ translations }: { translations: { buttonText: stri
 
 	const formSchema = z.object({
 		value: z.string(),
-		currency: z.enum(websiteCurrencies as any),
+		currency: z.enum(['USD', 'EUR', 'CHF']),
 	});
 
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { value: '' as any, currency: '' as any },
+		defaultValues: { value: '', currency: 'CHF' },
 	});
 
 	useEffect(() => {
-		form.setValue('currency', currency);
-		form.setValue('value', currency === 'CHF' ? '5000' : '2000');
+		const activeCurrency: FormSchema['currency'] =
+			currency === 'USD' || currency === 'EUR' || currency === 'CHF' ? currency : 'CHF';
+		form.setValue('currency', activeCurrency);
+		form.setValue('value', activeCurrency === 'CHF' ? '5000' : '2000');
 	}, [form, currency]);
 
-	const onSubmit = async (values: FormSchema) => {
+	const onSubmit = (values: FormSchema) => {
 		setCurrency(values.currency);
 		router.push(`/${language}/${region}/donate/individual?amount=${values.value}`);
 	};

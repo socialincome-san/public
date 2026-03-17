@@ -4,7 +4,7 @@ import { BaseContainer, FontColor, Typography } from '@socialincome/ui';
 
 export default async function OurMission({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
+		language: lang,
 		namespaces: ['website-about-us'],
 	});
 

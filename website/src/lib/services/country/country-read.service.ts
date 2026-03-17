@@ -112,6 +112,7 @@ export class CountryReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get country: ${JSON.stringify(error)}`);
 		}
 	}
@@ -126,17 +127,16 @@ export class CountryReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch country table view: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getPaginatedTableView(
-		userId: string,
-		query: CountryTableQuery,
-	): Promise<ServiceResult<CountryPaginatedTableView>> {
+	async getPaginatedTableView(userId: string, query: CountryTableQuery): Promise<ServiceResult<CountryPaginatedTableView>> {
 		try {
 			const isAdminResult = await this.userService.isAdmin(userId);
 
@@ -197,6 +197,7 @@ export class CountryReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch countries: ${JSON.stringify(error)}`);
 		}
 	}
@@ -228,10 +229,7 @@ export class CountryReadService extends BaseService {
 				const cashIsOverridden = country.cashConditionOverride ?? false;
 				const mobileMoneyIsOverridden = country.mobileMoneyConditionOverride ?? false;
 				const cashCondition = this.getCashCondition(microfinanceIndex, cashIsOverridden);
-				const mobileMoneyCondition = this.getMobileMoneyCondition(
-					country.mobileMoneyProviders,
-					mobileMoneyIsOverridden,
-				);
+				const mobileMoneyCondition = this.getMobileMoneyCondition(country.mobileMoneyProviders, mobileMoneyIsOverridden);
 
 				const programCount = country._count.programs;
 
@@ -303,6 +301,7 @@ export class CountryReadService extends BaseService {
 			return this.resultOk({ rows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch program country feasibility: ${JSON.stringify(error)}`);
 		}
 	}
@@ -315,6 +314,7 @@ export class CountryReadService extends BaseService {
 		if (microfinanceIndex === null) {
 			return CountryCondition.NOT_MET;
 		}
+
 		return microfinanceIndex >= 3.5 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
@@ -333,6 +333,7 @@ export class CountryReadService extends BaseService {
 		if (populationCoverage === null) {
 			return CountryCondition.NOT_MET;
 		}
+
 		return populationCoverage >= 50 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 

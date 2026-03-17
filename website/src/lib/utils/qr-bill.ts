@@ -22,8 +22,8 @@ const calculateCheckDigit = (reference: string): number => {
 	const weights = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
 	let carry = 0;
 
-	for (let i = 0; i < reference.length; i++) {
-		const digit = parseInt(reference[i], 10);
+	for (const character of reference) {
+		const digit = parseInt(character, 10);
 		carry = weights[(carry + digit) % 10];
 	}
 

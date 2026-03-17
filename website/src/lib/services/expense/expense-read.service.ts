@@ -17,14 +17,7 @@ export class ExpenseReadService extends BaseService {
 
 	private buildExpenseOrderBy(query: ExpenseTableQuery): Prisma.ExpenseOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, [
-			'id',
-			'type',
-			'year',
-			'amountChf',
-			'organizationName',
-			'createdAt',
-		] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'type', 'year', 'amountChf', 'organizationName', 'createdAt'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
@@ -69,14 +62,12 @@ export class ExpenseReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get expense: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getPaginatedTableView(
-		userId: string,
-		query: ExpenseTableQuery,
-	): Promise<ServiceResult<ExpensePaginatedTableView>> {
+	async getPaginatedTableView(userId: string, query: ExpenseTableQuery): Promise<ServiceResult<ExpensePaginatedTableView>> {
 		try {
 			const isAdminResult = await this.userService.isAdmin(userId);
 
@@ -128,6 +119,7 @@ export class ExpenseReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch expenses: ${JSON.stringify(error)}`);
 		}
 	}

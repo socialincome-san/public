@@ -14,6 +14,7 @@ export const withAppCheck = <T>(handler: Handler<T>) => {
 				error: appCheckResult.error,
 				status: appCheckResult.status,
 			});
+
 			return new Response('Unauthorized', { status: 401 });
 		}
 

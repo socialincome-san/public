@@ -11,13 +11,13 @@ import { SelectionProcess } from './(sections)/selection-process';
 export const revalidate = 3600; // update once an hour
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
-interface TransparencyPageParams extends DefaultParams {
+type TransparencyPageParams = {
 	currency: Currency;
-}
+} & DefaultParams;
 
-interface TransparencyPageProps {
+type TransparencyPageProps = {
 	params: Promise<TransparencyPageParams>;
-}
+};
 
 export default async function Page({ params }: TransparencyPageProps) {
 	const { lang, region, currency } = await params;

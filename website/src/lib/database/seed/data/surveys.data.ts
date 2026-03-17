@@ -16,7 +16,7 @@ export const surveysData: Prisma.SurveyCreateManyInput[] = [
 		accessPw: 'onboard123',
 		surveyScheduleId: 'survey-schedule-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'survey-2',
@@ -33,7 +33,7 @@ export const surveysData: Prisma.SurveyCreateManyInput[] = [
 		accessPw: 'checkin123',
 		surveyScheduleId: 'survey-schedule-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'survey-3',
@@ -50,6 +50,6 @@ export const surveysData: Prisma.SurveyCreateManyInput[] = [
 		accessPw: 'exit123',
 		surveyScheduleId: 'survey-schedule-5',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

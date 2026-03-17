@@ -4,6 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import type { Session } from '@/lib/firebase/current-account';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 
 type Props = {
@@ -28,7 +29,8 @@ export const RecipientDialog = ({
 	onError,
 }: Props) => {
 	const handleError = (error: unknown) => {
-		onError(`Error saving recipient: ${error}`);
+		const errorMessage = retrieveErrorMessage(error);
+		onError(`Error saving recipient: ${errorMessage}`);
 		logger.error('Recipient Form Error', { error });
 	};
 

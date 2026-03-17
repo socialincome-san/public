@@ -77,12 +77,12 @@ export const LineHeights: Story = {
 				labore et dolore magna aliqua.
 			</Typography>
 			<Typography lineHeight="normal" className="bg-muted/20">
-				Line Height Normal - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
-				ut labore et dolore magna aliqua.
+				Line Height Normal - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua.
 			</Typography>
 			<Typography lineHeight="relaxed" className="bg-muted/20">
-				Line Height Relaxed - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
-				ut labore et dolore magna aliqua.
+				Line Height Relaxed - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua.
 			</Typography>
 			<Typography lineHeight="loose" className="bg-muted/20">
 				Line Height Loose - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
@@ -137,8 +137,8 @@ export const Combined: Story = {
 				Secondary Subheading
 			</Typography>
 			<Typography size="md" color="muted-foreground" lineHeight="relaxed">
-				Muted body text with relaxed line height. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-				eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Muted body text with relaxed line height. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua.
 			</Typography>
 		</div>
 	),

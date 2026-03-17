@@ -58,6 +58,7 @@ export const MakeDonationForm = ({ lang }: Props) => {
 				{amountOptions.map((option) => {
 					const isSelected = option.value === selectedAmount;
 					const label = t(option.labelKey);
+
 					return (
 						<button
 							key={option.value ?? 'other'}

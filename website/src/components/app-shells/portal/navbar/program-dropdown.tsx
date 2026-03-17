@@ -27,6 +27,7 @@ export const ProgramDropdown: FC<ProgramDropdownProps> = ({ sessions, active = f
 	if (!user) {
 		return null;
 	}
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>

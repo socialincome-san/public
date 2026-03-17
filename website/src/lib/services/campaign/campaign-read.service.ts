@@ -62,6 +62,7 @@ export class CampaignReadService extends BaseService {
 
 	private daysUntilTs(ts: Date): number {
 		const diffInMs = ts.getTime() - nowMs();
+
 		return Math.ceil(diffInMs / (24 * 60 * 60 * 1000));
 	}
 
@@ -118,6 +119,7 @@ export class CampaignReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
@@ -182,6 +184,7 @@ export class CampaignReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
@@ -207,6 +210,7 @@ export class CampaignReadService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaign options: ${JSON.stringify(error)}`);
 		}
 	}
@@ -274,6 +278,7 @@ export class CampaignReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaigns: ${JSON.stringify(error)}`);
 		}
 	}
@@ -294,6 +299,7 @@ export class CampaignReadService extends BaseService {
 			return this.resultOk(campaign);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch default campaign: ${JSON.stringify(error)}`);
 		}
 	}
@@ -314,12 +320,14 @@ export class CampaignReadService extends BaseService {
 			return this.getFallbackCampaign();
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaign for program: ${JSON.stringify(error)}`);
 		}
 	}
 
 	private getCampaignLink(id: string, legacyFirestoreId: string | null): string {
 		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+
 		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${legacyFirestoreId || id}`;
 	}
 }

@@ -9,10 +9,6 @@ export type ExpenseTableViewRow = {
 	createdAt: Date;
 };
 
-type ExpenseTableView = {
-	tableRows: ExpenseTableViewRow[];
-};
-
 export type ExpenseTableQuery = {
 	page: number;
 	pageSize: number;

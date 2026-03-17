@@ -30,11 +30,13 @@ export const parseCsvText = (text: string): CsvRow[] => {
 
 export const parseCsvFile = async (file: File): Promise<CsvRow[]> => {
 	const text = await file.text();
+
 	return parseCsvText(text);
 };
 
 const escapeCsvValue = (value: string): string => {
 	const escaped = value.replace(/"/g, '""');
+
 	return /[",\n]/.test(escaped) ? `"${escaped}"` : escaped;
 };
 

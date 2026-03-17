@@ -47,6 +47,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 
 		if (!result.success) {
 			setErrorMessage(result.error ?? translations.updateError);
+
 			return;
 		}
 

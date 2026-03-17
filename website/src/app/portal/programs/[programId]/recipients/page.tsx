@@ -43,6 +43,7 @@ const RecipientsProgramScopedDataLoader = async ({ params, searchParams }: Props
 			readOnly={readOnly}
 			query={{ ...tableQuery, totalRows }}
 			showProgramFilter={false}
+			hideProgramName
 		/>
 	);
 };

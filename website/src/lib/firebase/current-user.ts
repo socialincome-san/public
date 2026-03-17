@@ -15,6 +15,7 @@ const loadCurrentUser = async (): Promise<UserSession | null> => {
 
 	const authUserId = decodedTokenResult.data.uid;
 	const result = await services.read.user.getCurrentUserSession(authUserId);
+
 	return result.success ? result.data : null;
 };
 
@@ -25,12 +26,14 @@ export const getAuthenticatedUserOrRedirect = async (): Promise<UserSession> => 
 	if (!user) {
 		redirect('/login');
 	}
+
 	return user;
 };
 
-export const requireAdmin = async (user: UserSession): Promise<UserSession> => {
+export const requireAdmin = (user: UserSession): UserSession => {
 	if (user.role !== 'admin') {
 		notFound();
 	}
+
 	return user;
 };

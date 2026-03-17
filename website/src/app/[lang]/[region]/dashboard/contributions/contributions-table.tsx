@@ -20,7 +20,7 @@ export const ContributionsTable = async ({
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
 	const config = getYourContributionsTableConfig({
 		title: translator.t('sections.contributions.payments'),
 		emptyMessage: translator.t('contributions.no-contributions'),

@@ -7,11 +7,12 @@ export const contributorsTableConfig: DataTableConfig<ContributorTableViewRow> =
 	id: 'contributors',
 	title: 'Contributors',
 	emptyMessage: 'No contributors found',
-	searchKeys: ['id', 'firstName', 'lastName', 'email'],
+	searchKeys: ['id', 'firstName', 'lastName', 'email', 'firebaseAuthUserId'],
 	sortOptions: [
 		{ id: 'contributor', label: 'Contributor' },
 		{ id: 'email', label: 'Email' },
 		{ id: 'country', label: 'Country' },
+		{ id: 'totalContributedChf', label: 'Contributed (CHF)' },
 		{ id: 'createdAt', label: 'Created' },
 	],
 	makeColumns: makeContributorColumns,
