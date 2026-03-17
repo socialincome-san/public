@@ -18,18 +18,18 @@
 		}
 	},
 	"error": {
-		"generic": "Qualcosa e andato storto"
+		"generic": "Qualcosa è andato storto"
 	},
 	"step1": {
 		"choose_country": "Seleziona un paese in cui operiamo",
-		"feasibility_title": "Verifica l'idoneita per qualsiasi paese in Africa",
+		"feasibility_title": "Verifica la fattibilità del programma cash",
 		"all_conditions_met": "Tutte le condizioni soddisfatte",
 		"no_countries_match": "Nessun paese corrisponde ai filtri correnti",
 		"no_active_programs": "Nessun programma attivo",
 		"country_stats": "{{programCount}} programmi - {{recipientCount}} beneficiari",
 		"table": {
 			"country": "Paese",
-			"cash": "Idoneita del cash",
+			"cash": "Idoneità del cash",
 			"mobile_money": "Mobile money",
 			"mobile_network": "Copertura di rete",
 			"sanctions": "Nessuna sanzione"
@@ -41,22 +41,22 @@
 		},
 		"details": {
 			"cash": {
-				"met": "La funzionalita del mercato in {{country}} sembra integra.",
-				"not_met": "La funzionalita del mercato in {{country}} potrebbe essere compromessa."
+				"met": "La funzionalità del mercato in {{country}} sembra integra.",
+				"not_met": "La funzionalità del mercato in {{country}} potrebbe essere compromessa."
 			},
 			"mobile_money": {
 				"met": "L'infrastruttura mobile money sembra sufficiente. {{providerCount}} provider attivi: {{providers}}.",
 				"not_met": "L'infrastruttura mobile money sembra insufficiente."
 			},
 			"mobile_network": {
-				"met": "La copertura della rete mobile e considerata sufficiente, con una copertura della popolazione del {{populationCoverage}}%.",
-				"met_with_tech": "La copertura della rete mobile e considerata sufficiente, con una copertura della popolazione del {{populationCoverage}}% su {{tech}}.",
-				"not_met": "La copertura della rete mobile e considerata insufficiente. Solo il {{populationCoverage}}% della popolazione e coperto.",
-				"not_met_unknown": "La copertura della rete mobile e considerata insufficiente."
+				"met": "La copertura della rete mobile è considerata sufficiente, con una copertura della popolazione del {{populationCoverage}}%.",
+				"met_with_tech": "La copertura della rete mobile è considerata sufficiente, con una copertura della popolazione del {{populationCoverage}}% su {{tech}}.",
+				"not_met": "La copertura della rete mobile è considerata insufficiente. Solo il {{populationCoverage}}% della popolazione è coperto.",
+				"not_met_unknown": "La copertura della rete mobile è considerata insufficiente."
 			},
 			"sanctions": {
-				"met": "{{country}} non e soggetto a sanzioni internazionali.",
-				"restrictions_apply": "{{country}} e soggetto a sanzioni internazionali."
+				"met": "{{country}} non è soggetto a sanzioni internazionali.",
+				"restrictions_apply": "{{country}} è soggetto a sanzioni internazionali."
 			}
 		},
 		"source": {
@@ -82,11 +82,12 @@
 				"label": "Approccio universale",
 				"description": "Tutti i beneficiari idonei nel paese selezionato ricevono supporto.",
 				"available": "beneficiari pre-valutati disponibili in questo paese",
-				"empty_error": "E necessario almeno un beneficiario per continuare."
+				"empty_error": "È necessario almeno un beneficiario per continuare."
 			},
 			"targeted": {
 				"label": "Approccio mirato",
 				"description": "Il supporto viene fornito ai beneficiari che corrispondono a cause e profili selezionati.",
+				"matching_count": "{{matched}} su {{total}} beneficiari corrispondono al paese e ai filtri selezionati",
 				"matching": "beneficiari corrispondono al paese e ai filtri selezionati",
 				"empty_error": "Modifica i filtri in modo che almeno un beneficiario corrisponda."
 			},
@@ -98,7 +99,7 @@
 			}
 		},
 		"causes": {
-			"poverty": "Poverta",
+			"poverty": "Povertà",
 			"health": "Salute",
 			"gender_based_violence": "Violenza di genere",
 			"climate": "Clima"
@@ -113,13 +114,13 @@
 		"recipients": {
 			"title": "Beneficiari all'avvio del programma",
 			"no_candidates": "Al momento non ci sono candidati disponibili nel pool. Torna al passaggio 2 e modifica le cause selezionate oppure assicurati che ci siano candidati disponibili.",
-			"max_hint": "Il massimo e determinato dal numero di candidati attualmente disponibili per le cause selezionate."
+			"max_hint": "Il massimo è determinato dal numero di candidati attualmente disponibili per le cause selezionate."
 		},
 		"indirect_notice": {
 			"prefix": "{{recipients}} beneficiari traggono beneficio",
-			"indirect_people": "{{indirect}} persone indirettamente coinvolte in piu",
-			"tooltip": "In media, ogni beneficiario supportato ha un impatto positivo su circa altre cinque persone nel proprio nucleo familiare e nella comunita.",
-			"suffix": "dalla poverta."
+			"indirect_people": "{{indirect}} persone indirettamente coinvolte in più",
+			"tooltip": "In media, ogni beneficiario supportato ha un impatto positivo su circa altre cinque persone nel proprio nucleo familiare e nella comunità.",
+			"suffix": "dalla povertà."
 		},
 		"payouts": {
 			"title": "Pagamenti",
@@ -149,7 +150,7 @@
 	},
 	"step4": {
 		"title": "Quasi fatto",
-		"description": "Condividi i tuoi dati di contatto cosi possiamo creare il tuo account e un'organizzazione predefinita. Il tuo nuovo programma verra creato dalle impostazioni dei passaggi precedenti e potrai rivederlo subito dopo l'accesso.",
+		"description": "Condividi i tuoi dati di contatto così possiamo creare il tuo account e un'organizzazione predefinita. Il tuo nuovo programma verrà creato dalle impostazioni dei passaggi precedenti e potrai rivederlo subito dopo l'accesso.",
 		"first_name": {
 			"label": "Nome",
 			"placeholder": "Nome"
@@ -163,13 +164,13 @@
 			"placeholder": "name@example.com"
 		},
 		"validation": {
-			"first_name_required": "Il nome e obbligatorio.",
-			"last_name_required": "Il cognome e obbligatorio.",
+			"first_name_required": "Il nome è obbligatorio.",
+			"last_name_required": "Il cognome è obbligatorio.",
 			"email_invalid": "Inserisci un indirizzo email valido."
 		}
 	},
 	"step5": {
-		"title": "Il tuo programma e pronto",
+		"title": "Il tuo programma è pronto",
 		"description": "Abbiamo creato il tuo account, la tua organizzazione e la configurazione iniziale del programma. Ora accedi con la tua email per aprire la dashboard e iniziare a gestire il programma.",
 		"go_to_login": "Vai al login"
 	}

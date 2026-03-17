@@ -87,6 +87,7 @@
 			"targeted": {
 				"label": "Gezielter Ansatz",
 				"description": "Unterstützung erhalten Empfänger, die zu ausgewählten Ursachen und Profilen passen.",
+				"matching_count": "{{matched}} von {{total}} Empfängern entsprechen dem ausgewählten Land und den Filtern",
 				"matching": "Empfänger entsprechen dem ausgewählten Land und den Filtern",
 				"empty_error": "Bitte passen Sie die Filter an, damit mindestens ein Empfänger passt."
 			},

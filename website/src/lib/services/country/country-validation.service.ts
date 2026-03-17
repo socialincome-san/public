@@ -8,11 +8,7 @@ import {
 	countryCreateInputSchema,
 	countryUpdateInputSchema,
 } from './country-form-input';
-
-type UpdateUniquenessContext = {
-	countryId: string;
-	existingIsoCode: CountryFormUpdateInput['isoCode'];
-};
+import { CountryUpdateUniquenessContext } from './country-validation.types';
 
 export class CountryValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {
@@ -51,7 +47,7 @@ export class CountryValidationService extends BaseService {
 
 	async validateUpdateUniqueness(
 		input: CountryFormUpdateInput,
-		context: UpdateUniquenessContext,
+		context: CountryUpdateUniquenessContext,
 	): Promise<ServiceResult<void>> {
 		if (input.isoCode !== context.existingIsoCode) {
 			const isoCodeConflict = await this.db.country.findUnique({

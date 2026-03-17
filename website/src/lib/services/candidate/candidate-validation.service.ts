@@ -8,17 +8,7 @@ import {
 	candidateCreateInputSchema,
 	candidateUpdateInputSchema,
 } from './candidate-form-input';
-
-type CandidateUpdateUniquenessContext = {
-	existingContactId: string;
-	existingEmail: string | null;
-	existingContactPhoneId: string | null;
-	existingContactPhoneNumber: string | null;
-	existingPaymentInformationId: string | null;
-	existingPaymentCode: string | null;
-	existingPaymentPhoneId: string | null;
-	existingPaymentPhoneNumber: string | null;
-};
+import { CandidateUpdateUniquenessContext } from './candidate-validation.types';
 
 export class CandidateValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {

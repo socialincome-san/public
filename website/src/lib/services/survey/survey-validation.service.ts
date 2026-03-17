@@ -8,12 +8,7 @@ import {
 	surveyCreateInputSchema,
 	surveyUpdateInputSchema,
 } from './survey-form-input';
-
-type SurveyUpdateUniquenessContext = {
-	existingRecipientId: string;
-	existingName: string;
-	existingAccessEmail: string;
-};
+import { SurveyUpdateUniquenessContext } from './survey-validation.types';
 
 export class SurveyValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {

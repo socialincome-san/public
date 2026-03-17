@@ -87,6 +87,7 @@
 			"targeted": {
 				"label": "Targeted approach",
 				"description": "Support is provided to recipients who match selected causes and profiles.",
+				"matching_count": "{{matched}} of {{total}} recipients match the selected country and filters",
 				"matching": "recipients match the selected country and filters",
 				"empty_error": "Please adjust the filters so at least one recipient matches."
 			},

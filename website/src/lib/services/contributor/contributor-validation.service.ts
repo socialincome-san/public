@@ -8,13 +8,7 @@ import {
 	contributorCreateInputSchema,
 	contributorUpdateInputSchema,
 } from './contributor-form-input';
-
-type ContributorUpdateUniquenessContext = {
-	existingContactId: string;
-	existingEmail: string | null;
-	existingPhoneId: string | null;
-	existingPhoneNumber: string | null;
-};
+import { ContributorUpdateUniquenessContext } from './contributor-validation.types';
 
 export class ContributorValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {

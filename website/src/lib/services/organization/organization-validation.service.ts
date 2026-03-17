@@ -8,11 +8,7 @@ import {
 	organizationCreateInputSchema,
 	organizationUpdateInputSchema,
 } from './organization-form-input';
-
-type UpdateUniquenessContext = {
-	organizationId: string;
-	existingName: string;
-};
+import { OrganizationUpdateUniquenessContext } from './organization-validation.types';
 
 export class OrganizationValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {
@@ -51,7 +47,7 @@ export class OrganizationValidationService extends BaseService {
 
 	async validateUpdateUniqueness(
 		input: OrganizationFormUpdateInput,
-		context: UpdateUniquenessContext,
+		context: OrganizationUpdateUniquenessContext,
 	): Promise<ServiceResult<void>> {
 		if (input.name !== context.existingName) {
 			const existingByName = await this.db.organization.findUnique({
