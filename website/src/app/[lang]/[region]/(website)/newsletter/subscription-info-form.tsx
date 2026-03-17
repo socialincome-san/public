@@ -59,7 +59,7 @@ export const SubscriptionInfoForm = ({ lang, translations }: PersonalInfoFormPro
 			await subscribeToNewsletterAction(data);
 			toast.success(translations.toastMessage);
 			form.reset();
-		} catch (error) {
+		} catch {
 			toast.error(translations.toastErrorMessage);
 		} finally {
 			setIsSubmitting(false);

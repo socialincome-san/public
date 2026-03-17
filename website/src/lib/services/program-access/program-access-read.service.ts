@@ -36,6 +36,7 @@ export class ProgramAccessReadService extends BaseService {
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get accessible programs: ${JSON.stringify(error)}`);
 		}
 	}

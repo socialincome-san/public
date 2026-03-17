@@ -4,16 +4,23 @@ import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { AgeCell } from '@/components/data-table/elements/age-cell';
 import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
 import { GenderCell } from '@/components/data-table/elements/gender-cell';
+import { IdCell } from '@/components/data-table/elements/id-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export const makeCandidateColumns = (
-	_hideProgramName = false,
+	hideProgramName = false,
 	hideLocalPartner = false,
 ): ColumnDef<CandidatesTableViewRow>[] => {
+	void hideProgramName;
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
+		{
+			accessorKey: 'firebaseAuthUserId',
+			header: 'Firebase Auth User ID',
+			cell: (ctx) => <IdCell ctx={ctx} />,
+		},
 		{
 			id: 'country',
 			header: (ctx) => <SortableHeader ctx={ctx}>Country</SortableHeader>,

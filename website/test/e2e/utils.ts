@@ -4,6 +4,7 @@ import { Page } from '@playwright/test';
 export const getFirebaseAdminService = async () => {
 	const { FirebaseAdminService } = await import('@/lib/services/firebase/firebase-admin.service');
 	const { prisma } = await import('@/lib/database/prisma');
+
 	return new FirebaseAdminService(prisma);
 };
 
@@ -36,6 +37,28 @@ export const getRecipientIdByName = async (firstName: string, lastName: string) 
 	});
 };
 
+export const getCandidateByName = async (firstName: string, lastName: string) => {
+	return prisma.recipient.findFirst({
+		where: {
+			programId: null,
+			contact: {
+				firstName,
+				lastName,
+			},
+		},
+		select: {
+			id: true,
+			localPartner: { select: { name: true } },
+			paymentInformation: {
+				select: {
+					code: true,
+					phone: { select: { number: true } },
+				},
+			},
+		},
+	});
+};
+
 export const assertContactExistsByEmail = async (email: string) => {
 	await prisma.contact.findUniqueOrThrow({
 		where: {
@@ -61,6 +84,7 @@ export const selectOptionByTestId = async (page: Page, fieldName: string, option
 	await trigger.click();
 	if (optionName) {
 		await page.getByRole('option', { name: optionName }).click();
+
 		return;
 	}
 	await page.getByRole('option').first().click();
@@ -76,4 +100,42 @@ export const clickDataTableActionItem = async (page: Page, actionItemTestId: str
 		await actionButton.click({ force: true });
 		await page.getByTestId(actionItemTestId).click();
 	}
+};
+
+export const selectMultiOptionsByTestId = async (page: Page, fieldName: string, optionLabels: string[]) => {
+	const field = page.getByTestId(`form-item-${fieldName}`);
+	await field.waitFor({ state: 'visible' });
+	await field.locator('button[role="combobox"]').click();
+
+	const desiredLabels = new Set(optionLabels);
+	for (const optionLabel of optionLabels) {
+		const unselectedOption = page.getByRole('option', { name: `${optionLabel}, not selected`, exact: true });
+		if ((await unselectedOption.count()) > 0) {
+			await unselectedOption.first().click();
+			continue;
+		}
+
+		const selectedOption = page.getByRole('option', { name: `${optionLabel}, selected`, exact: true });
+		if ((await selectedOption.count()) > 0) {
+			continue;
+		}
+
+		await page.getByRole('option', { name: optionLabel, exact: true }).first().click();
+	}
+
+	const selectedLabels = await page.locator('[role="option"][aria-label$=", selected"]').evaluateAll((elements) =>
+		elements
+			.map((element) => element.getAttribute('aria-label'))
+			.filter((value): value is string => Boolean(value))
+			.map((value) => value.replace(/, selected$/, '')),
+	);
+
+	for (const selectedLabel of selectedLabels) {
+		if (desiredLabels.has(selectedLabel)) {
+			continue;
+		}
+		await page.getByRole('option', { name: `${selectedLabel}, selected`, exact: true }).click();
+	}
+
+	await page.keyboard.press('Escape');
 };

@@ -18,7 +18,7 @@ export const registerStoryblokBridge = ({ onInput }: RegisterBridgeParams) => {
 			if (!event?.story) {
 				return;
 			}
-			onInput(event.story);
+			onInput(event.story as ISbStoryData);
 		});
 	});
 };

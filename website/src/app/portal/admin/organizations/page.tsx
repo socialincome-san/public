@@ -1,5 +1,3 @@
-import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
-import { organizationsTableConfig } from '@/components/data-table/configs/organizations-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
@@ -7,6 +5,7 @@ import type { OrganizationTableViewRow } from '@/lib/services/organization/organ
 import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
+import OrganizationsTable from './organizations-table';
 
 export default function OrganizationsPage({ searchParams }: SearchParamsPageProps) {
 	return (
@@ -18,7 +17,7 @@ export default function OrganizationsPage({ searchParams }: SearchParamsPageProp
 
 const OrganizationsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireAdmin(user);
+	requireAdmin(user);
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
@@ -28,13 +27,5 @@ const OrganizationsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	const rows: OrganizationTableViewRow[] = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
 
-	return (
-		<ConfiguredDataTableClient
-			config={organizationsTableConfig}
-			titleInfoTooltip="Shows all organizations visible in admin scope."
-			rows={rows}
-			error={error}
-			query={{ ...tableQuery, totalRows }}
-		/>
-	);
+	return <OrganizationsTable rows={rows} error={error} query={{ ...tableQuery, totalRows }} />;
 };

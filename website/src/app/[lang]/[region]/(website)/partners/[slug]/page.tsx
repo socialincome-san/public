@@ -6,27 +6,26 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { redirect } from 'next/navigation';
 import { ngos } from '../(sections)/ngolist';
 
-const getNGOTranslations = async (
-	translator: Translator,
-	slug: string,
-): Promise<{ translation: NgoEntryJSON | undefined }> => {
+const getNGOTranslations = (translator: Translator, slug: string): { translation: NgoEntryJSON | undefined } => {
 	let currentNgo: NgoEntryJSON | undefined = undefined;
 	for (const ngo of ngos) {
-		if ((translator.t(ngo) as NgoEntryJSON)['org-slug'] === slug) {
-			currentNgo = translator.t(ngo);
+		const ngoTranslation: NgoEntryJSON = translator.t(ngo);
+		if (ngoTranslation['org-slug'] === slug) {
+			currentNgo = ngoTranslation;
 			break;
 		}
 	}
+
 	return { translation: currentNgo };
 };
 
-interface PartnerPageParams extends DefaultParams {
+type PartnerPageParams = {
 	slug: string;
-}
+} & DefaultParams;
 
-interface PartnerPageProps {
+type PartnerPageProps = {
 	params: Promise<PartnerPageParams>;
-}
+};
 
 export default async function Page({ params }: PartnerPageProps) {
 	const { lang, region, slug } = await params;
@@ -56,11 +55,11 @@ export default async function Page({ params }: PartnerPageProps) {
 		permalink: translator.t('ngo-generic.permalink'),
 	};
 
-	const { translation: currentNgo } = await getNGOTranslations(translator, slug.replaceAll('%26', '&'));
+	const { translation: currentNgo } = getNGOTranslations(translator, slug.replaceAll('%26', '&'));
 	if (!currentNgo) {
 		redirect('/not-found');
 	}
-	const currentNgoCountry = translator.t(currentNgo!['org-country'] || 'SL');
+	const currentNgoCountry = translator.t(currentNgo['org-country'] || 'SL');
 
 	return (
 		<PartnerHome

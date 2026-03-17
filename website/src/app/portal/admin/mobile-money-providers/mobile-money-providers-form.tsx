@@ -1,6 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
+import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
 import {
 	createMobileMoneyProviderAction,
 	deleteMobileMoneyProviderAction,
@@ -53,7 +54,7 @@ export default function MobileMoneyProvidersForm({
 	onCancel,
 	providerId,
 }: MobileMoneyProviderFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [provider, setProvider] = useState<MobileMoneyProviderPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -94,9 +95,10 @@ export default function MobileMoneyProvidersForm({
 				onSuccess: (data) => {
 					setProvider(data);
 					setFormSchema((prev) => {
-						const next = { ...prev };
+						const next = clearFormSchemaValues(prev);
 						next.fields.name.value = data.name;
 						next.fields.isSupported.value = data.isSupported;
+
 						return next;
 					});
 				},

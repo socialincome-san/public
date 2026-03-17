@@ -23,7 +23,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 const FALLBACK_BADGE_COUNT = 23;
 
@@ -43,11 +43,6 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 	const [activeDropdown, setActiveDropdown] = useState<DropdownItem | null>(null);
 	const pathname = usePathname();
 
-	useEffect(() => {
-		setOpen(false);
-		setActiveDropdown(null);
-	}, [pathname]);
-
 	const handleOpenChange = (nextOpen: boolean) => {
 		setOpen(nextOpen);
 		if (!nextOpen) {
@@ -56,7 +51,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 	};
 
 	return (
-		<Dialog.Root open={open} onOpenChange={handleOpenChange}>
+		<Dialog.Root key={pathname} open={open} onOpenChange={handleOpenChange}>
 			{open ? (
 				<Dialog.Close className="lg:hidden" aria-label={commonTranslator?.t('menu.close') ?? 'Close menu'}>
 					<X className="size-6" />

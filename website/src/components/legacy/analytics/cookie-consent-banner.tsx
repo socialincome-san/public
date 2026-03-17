@@ -19,6 +19,7 @@ export const CookieConsentBanner = ({ translations }: CookieConsentBannerClientP
 
 	useEffect(() => {
 		const cookieConsent = localStorage.getItem('cookie_consent');
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setHideBanner(Boolean(cookieConsent) || isSurveyPage);
 	}, [isSurveyPage, setHideBanner]);
 

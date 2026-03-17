@@ -13,7 +13,7 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-1',
 		createdAt: new Date('2025-01-05'),
 		updatedAt: null,
-		interval: DonationInterval.monthly
+		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-2',
@@ -27,7 +27,7 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-1',
 		createdAt: new Date('2025-02-12'),
 		updatedAt: null,
-		interval: DonationInterval.quarterly
+		interval: DonationInterval.quarterly,
 	},
 	{
 		id: 'contribution-3',
@@ -41,7 +41,7 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-2',
 		createdAt: new Date('2025-03-10'),
 		updatedAt: null,
-		interval: null
+		interval: null,
 	},
 	{
 		id: 'contribution-4',
@@ -55,7 +55,7 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-1',
 		createdAt: new Date('2025-04-15'),
 		updatedAt: null,
-		interval: DonationInterval.monthly
+		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-5',
@@ -69,7 +69,7 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-3',
 		createdAt: new Date('2025-05-20'),
 		updatedAt: null,
-		interval: DonationInterval.yearly
+		interval: DonationInterval.yearly,
 	},
 	{
 		id: 'contribution-6',
@@ -83,7 +83,7 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-2',
 		createdAt: new Date('2025-06-11'),
 		updatedAt: null,
-		interval: null
+		interval: null,
 	},
 	{
 		id: 'contribution-7',
@@ -97,6 +97,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-3',
 		createdAt: new Date('2025-07-22'),
 		updatedAt: null,
-		interval: DonationInterval.monthly
-	}
+		interval: DonationInterval.monthly,
+	},
 ];

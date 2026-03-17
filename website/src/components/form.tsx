@@ -60,19 +60,17 @@ type FormItemContextValue = {
 
 const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
-const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-	({ className, ...props }, ref) => {
-		const id = React.useId();
-		const { name } = useFormField();
-		const testId = `form-item-${name}`;
+const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => {
+	const id = React.useId();
+	const { name } = useFormField();
+	const testId = `form-item-${name}`;
 
-		return (
-			<FormItemContext.Provider value={{ id }}>
-				<div data-testid={testId} ref={ref} className={cn('space-y-1', className)} {...props} />
-			</FormItemContext.Provider>
-		);
-	},
-);
+	return (
+		<FormItemContext.Provider value={{ id }}>
+			<div data-testid={testId} ref={ref} className={cn('space-y-1', className)} {...props} />
+		</FormItemContext.Provider>
+	);
+});
 FormItem.displayName = 'FormItem';
 
 const FormLabel = React.forwardRef<
@@ -124,10 +122,7 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
 			<p
 				ref={ref}
 				id={formMessageId}
-				className={cn(
-					'text-destructive-foreground bg-destructive ml-1 rounded px-2 py-1 text-sm font-medium',
-					className,
-				)}
+				className={cn('text-destructive-foreground bg-destructive ml-1 rounded px-2 py-1 text-sm font-medium', className)}
 				{...props}
 			>
 				{body}

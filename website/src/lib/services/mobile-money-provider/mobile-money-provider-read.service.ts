@@ -63,6 +63,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get mobile money provider: ${JSON.stringify(error)}`);
 		}
 	}
@@ -110,6 +111,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch mobile money providers: ${JSON.stringify(error)}`);
 		}
 	}
@@ -129,6 +131,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 			return this.resultOk(providers);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch mobile money provider options: ${JSON.stringify(error)}`);
 		}
 	}
@@ -144,6 +147,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 			return this.resultOk(providers);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch supported mobile money providers: ${JSON.stringify(error)}`);
 		}
 	}

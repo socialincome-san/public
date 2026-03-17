@@ -11,5 +11,6 @@ export const importExchangeRatesAction = async () => {
 	}
 	const result = await services.write.exchangeRate.triggerImportAsAdmin(sessionResult.data.id);
 	revalidatePath('/portal/admin/exchange-rates');
+
 	return result;
 };

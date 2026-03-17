@@ -16,12 +16,7 @@ export const PreviewMessage = () => {
 			<Typography as="span" weight="bold">
 				Preview Mode
 			</Typography>
-			<XMarkIcon
-				width="15"
-				height="25"
-				className="ml-1 inline cursor-pointer underline"
-				onClick={() => setVisible(false)}
-			/>
+			<XMarkIcon width="15" height="25" className="ml-1 inline cursor-pointer underline" onClick={() => setVisible(false)} />
 
 			<Typography size="xs">
 				Published changes will take several minutes to be applied. Unpublished stories will be visible.

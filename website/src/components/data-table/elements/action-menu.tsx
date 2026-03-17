@@ -35,6 +35,7 @@ export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 	const runAction = (item: ActionMenuItem) => {
 		if (item.onSelect) {
 			item.onSelect();
+
 			return;
 		}
 		if (item.href) {

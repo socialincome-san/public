@@ -27,6 +27,7 @@ export class ProgramAccessWriteService extends BaseService {
 			return this.resultOk(undefined);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create program accesses: ${JSON.stringify(error)}`);
 		}
 	}

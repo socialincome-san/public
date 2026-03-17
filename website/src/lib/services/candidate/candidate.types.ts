@@ -1,10 +1,5 @@
-import { Address, CountryCode, Gender, Phone, Prisma } from '@/generated/prisma/client';
-
-export enum Profile {
-	male = 'male',
-	female = 'female',
-	youth = 'youth',
-}
+import { Address, CountryCode, Gender, Phone } from '@/generated/prisma/client';
+export { Profile } from '@/generated/prisma/enums';
 
 export type CandidatePayload = {
 	id: string;
@@ -39,6 +34,7 @@ export type CandidatePayload = {
 
 export type CandidatesTableViewRow = {
 	id: string;
+	firebaseAuthUserId: string;
 	country: CountryCode | null;
 	firstName: string;
 	lastName: string;
@@ -81,7 +77,3 @@ export type CandidatesPaginatedTableView = {
 		label: string;
 	}[];
 };
-
-export type CandidateCreateInput = Prisma.RecipientCreateInput;
-export type CandidateUpdateInput = Prisma.RecipientUpdateInput;
-export type CandidatePrismaUpdateInput = Prisma.RecipientUpdateInput;

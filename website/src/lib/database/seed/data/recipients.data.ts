@@ -14,7 +14,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-2',
@@ -29,7 +29,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-3',
@@ -44,7 +44,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-4',
@@ -59,7 +59,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-5',
@@ -74,7 +74,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-6',
@@ -89,7 +89,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-7',
@@ -104,7 +104,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-8',
@@ -119,7 +119,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-9',
@@ -134,7 +134,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-10',
@@ -149,7 +149,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-2',
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-11',
@@ -164,7 +164,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-04-01T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-12',
@@ -179,7 +179,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-04-02T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-13',
@@ -194,7 +194,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-04-03T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-14',
@@ -209,7 +209,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-04-04T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-15',
@@ -224,7 +224,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-04-05T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'recipient-16',
@@ -239,7 +239,7 @@ export const recipientsData: Recipient[] = [
 		programId: 'program-1',
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-04-06T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-1',
@@ -254,7 +254,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-2',
@@ -269,7 +269,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-3',
@@ -284,7 +284,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-4',
@@ -299,7 +299,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-5',
@@ -314,7 +314,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-6',
@@ -329,7 +329,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-7',
@@ -344,7 +344,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-8',
@@ -359,7 +359,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-9',
@@ -374,7 +374,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-10',
@@ -389,7 +389,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-2',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-11',
@@ -404,7 +404,7 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-3',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'candidate-12',
@@ -419,6 +419,6 @@ export const recipientsData: Recipient[] = [
 		programId: null,
 		localPartnerId: 'local-partner-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

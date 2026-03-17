@@ -13,10 +13,6 @@ export type ExchangeRate = {
 	rate: number;
 };
 
-type ExchangeRatesTableView = {
-	tableRows: ExchangeRatesTableViewRow[];
-};
-
 export type ExchangeRateTableQuery = {
 	page: number;
 	pageSize: number;

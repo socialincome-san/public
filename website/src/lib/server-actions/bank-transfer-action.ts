@@ -15,6 +15,7 @@ export const getReferenceIds = async (
 		return resultFail(contributorReferenceId.error);
 	}
 	const contributionReferenceId = Math.round(DateTime.now().toMillis() / 1000).toString();
+
 	return resultOk({ contributorReferenceId: contributorReferenceId.data, contributionReferenceId });
 };
 

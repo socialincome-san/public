@@ -1,4 +1,3 @@
-import { CountryCode } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
@@ -48,16 +47,13 @@ test('admin countries with direct URL sorting matches screenshot', async ({ page
 test('add new country', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
 	const defaultPayoutAmount = 123;
-	const currency = bestGuessCurrency(countryOption.code as CountryCode);
+	const currency = bestGuessCurrency(countryOption.code);
 
 	await page.goto('/portal/admin/countries');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-country');
 	await selectOptionByTestId(page, 'countrySettings.isoCode', countryOption.name);
 	await selectOptionByTestId(page, 'countrySettings.currency', currency);
-	await page
-		.getByTestId('form-item-countrySettings.defaultPayoutAmount')
-		.locator('input')
-		.fill(`${defaultPayoutAmount}`);
+	await page.getByTestId('form-item-countrySettings.defaultPayoutAmount').locator('input').fill(`${defaultPayoutAmount}`);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -79,7 +75,7 @@ test('add new country', async ({ page }) => {
 
 test('shows validation error when default payout amount is invalid', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
-	const currency = bestGuessCurrency(countryOption.code as CountryCode);
+	const currency = bestGuessCurrency(countryOption.code);
 
 	await page.goto('/portal/admin/countries');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-country');
@@ -94,7 +90,7 @@ test('shows validation error when default payout amount is invalid', async ({ pa
 
 test('update country', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
-	const currency = bestGuessCurrency(countryOption.code as CountryCode);
+	const currency = bestGuessCurrency(countryOption.code);
 	const initialPayoutAmount = 80;
 	const updatedPayoutAmount = 95;
 
@@ -114,10 +110,7 @@ test('update country', async ({ page }) => {
 	await page.getByTestId('data-table').locator('tbody tr').first().click();
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 
-	await page
-		.getByTestId('form-item-countrySettings.defaultPayoutAmount')
-		.locator('input')
-		.fill(`${updatedPayoutAmount}`);
+	await page.getByTestId('form-item-countrySettings.defaultPayoutAmount').locator('input').fill(`${updatedPayoutAmount}`);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 

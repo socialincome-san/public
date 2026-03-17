@@ -15,13 +15,11 @@ export default async function YourDonationCertificates({
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.donationCertificate.getPaginatedYourCertificatesTableView(
-		contributor.id,
-		tableQuery,
-	);
+	const result = await services.read.donationCertificate.getPaginatedYourCertificatesTableView(contributor.id, tableQuery);
 	const error = result.success ? null : result.error;
 	const rows: YourDonationCertificateTableViewRow[] = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
+
 	return (
 		<YourDonationCertificateTable
 			rows={rows}

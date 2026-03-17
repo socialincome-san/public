@@ -31,5 +31,7 @@ export const updateStoryblokPreviewAction = async ({
 	const cacheKey = buildPreviewCacheKey(previewToken, previewRoutePath);
 	setPreviewCache(cacheKey, story);
 	revalidatePath(previewRoutePath);
+	await Promise.resolve();
+
 	return resultOk(undefined);
 };

@@ -1,4 +1,9 @@
+import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+
+test.beforeEach(async () => {
+	await seedDatabase();
+});
 
 test('admin exchange rates page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/exchange-rates');
@@ -59,10 +64,7 @@ test('exchange rates pagination updates URL and matches screenshot', async ({ pa
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('101-200 of 3005');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 
-	await Promise.all([
-		page.waitForURL(/(?:[?&])page=1(?:&|$)/),
-		page.getByTestId('data-table-pagination-previous').click(),
-	]);
+	await Promise.all([page.waitForURL(/(?:[?&])page=1(?:&|$)/), page.getByTestId('data-table-pagination-previous').click()]);
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1-100 of');
 });
 

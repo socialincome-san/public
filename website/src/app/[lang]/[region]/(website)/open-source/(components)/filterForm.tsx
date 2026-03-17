@@ -3,11 +3,11 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/ui';
 import { useState } from 'react';
 
-interface FilterFormProps {
+type FilterFormProps = {
 	labels: string[];
 	handleLabel: (label: string) => void;
 	filterText: string;
-}
+};
 
 export const FilterForm = ({ labels, handleLabel, filterText }: FilterFormProps) => {
 	const [selectedLabel, setSelectedLabel] = useState('');

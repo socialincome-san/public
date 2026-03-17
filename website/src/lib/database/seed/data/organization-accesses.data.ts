@@ -7,7 +7,7 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		organizationId: 'organization-1',
 		permission: OrganizationPermission.edit,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'organization-access-2',
@@ -15,7 +15,7 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		organizationId: 'organization-1',
 		permission: OrganizationPermission.edit,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'organization-access-3',
@@ -23,7 +23,7 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		organizationId: 'organization-3',
 		permission: OrganizationPermission.edit,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'organization-access-4',
@@ -31,7 +31,7 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		organizationId: 'organization-5',
 		permission: OrganizationPermission.readonly,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'organization-access-5',
@@ -39,6 +39,6 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		organizationId: 'organization-1',
 		permission: OrganizationPermission.edit,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

@@ -2,7 +2,7 @@
 
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
-import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { Cause } from '@/generated/prisma/enums';
 import {
 	createLocalPartnerAction,
@@ -56,18 +56,21 @@ export default function LocalPartnersForm({
 	onCancel?: () => void;
 	localPartnerId?: string;
 }) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [localPartner, setLocalPartner] = useState<LocalPartnerPayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	const applyPartnerToSchema = (partner: LocalPartnerPayload) => {
 		setLocalPartner(partner);
-		const newSchema = { ...formSchema };
-		const contactValues = getContactValuesFromPayload(partner.contact, newSchema.fields.contact.fields);
-		newSchema.fields.name.value = partner.name;
-		newSchema.fields.contact.fields = contactValues;
-		newSchema.fields.causes.value = partner.causes ?? [];
-		setFormSchema(newSchema);
+		setFormSchema((prev) => {
+			const next = clearFormSchemaValues(prev);
+			const contactValues = getContactValuesFromPayload(partner.contact, next.fields.contact.fields);
+			next.fields.name.value = partner.name;
+			next.fields.contact.fields = contactValues;
+			next.fields.causes.value = partner.causes ?? [];
+
+			return next;
+		});
 	};
 
 	const loadLocalPartner = async (partnerId: string) => {
@@ -78,7 +81,7 @@ export default function LocalPartnersForm({
 		});
 	};
 
-	const onSubmit = async (schema: typeof initialFormSchema) => {
+	const onSubmit = (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
 			const result = await submitLocalPartner(schema);
 			handleServiceResult(result, {
@@ -103,14 +106,16 @@ export default function LocalPartnersForm({
 	};
 
 	const submitLocalPartner = async (schema: typeof initialFormSchema): Promise<ServiceResult<unknown>> => {
-		const contactFields: { [key: string]: FormField } = schema.fields.contact.fields;
+		const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 
 		if (localPartnerId && localPartner) {
 			const data = buildUpdateLocalPartnerInput(schema, localPartner, contactFields);
+
 			return updateLocalPartnerAction({ id: localPartnerId, ...data }, 'user');
 		}
 
 		const data = buildCreateLocalPartnerInput(schema, contactFields);
+
 		return createLocalPartnerAction(data);
 	};
 

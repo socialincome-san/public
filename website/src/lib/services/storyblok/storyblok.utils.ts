@@ -19,6 +19,7 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
 
 export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>) => {
 	const subtitle = article.content.subtitle?.trim();
+
 	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
 };
 
@@ -33,7 +34,7 @@ export const getDimensionsFromStoryblokImageUrl = (url: string): { width?: numbe
 	if (!url) {
 		return {};
 	}
-	const match = url.match(/\/f\/\d+\/(\d+)x(\d+)\//);
+	const match = /\/f\/\d+\/(\d+)x(\d+)\//.exec(url);
 
 	return match ? { width: Number(match[1]), height: Number(match[2]) } : {};
 };
@@ -65,6 +66,7 @@ export const getScaledDimensions = (url: string, maxWidth: number): { width: num
 export const formatStoryblokUrl = (url: string, width: number, height: number, focus?: string | null) => {
 	const crop = focus || 'smart';
 	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
+
 	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
 };
 
@@ -76,6 +78,7 @@ export const formatStoryblokUrl = (url: string, width: number, height: number, f
 const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
+
 	return imageSource;
 };
 
@@ -91,6 +94,7 @@ export const toDateObject = (date: string, lang: string) => {
 	if (!dateObject.isValid) {
 		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
 	}
+
 	return dateObject;
 };
 
@@ -101,7 +105,7 @@ export const formatStoryblokDate = (date: string | null | undefined, lang: strin
 	if (!date) {
 		return '';
 	}
-	let dateObject = toDateObject(date, lang);
+	const dateObject = toDateObject(date, lang);
 
 	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
 };
@@ -113,7 +117,7 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
 	if (!date) {
 		return '';
 	}
-	let dateObject = toDateObject(date, defaultLanguage);
+	const dateObject = toDateObject(date, defaultLanguage);
 
 	return dateObject.isValid ? dateObject.toISO() : '';
 };
@@ -144,6 +148,7 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 		// cached_url contains the full Storyblok slug, e.g. "new-website/about"
 		// Strip the "new-website/" prefix to get the page slug
 		const slug = link.cached_url?.replace(new RegExp(`^${NEW_WEBSITE_SLUG}/`), '') || '';
+
 		return `/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}`;
 	}
 

@@ -1,9 +1,10 @@
-import { PayoutCreateInput, PayoutPayload, PayoutUpdateInput } from '@/lib/services/payout/payout.types';
+import { PayoutFormCreateInput, PayoutFormUpdateInput } from '@/lib/services/payout/payout-form-input';
+import { PayoutPayload } from '@/lib/services/payout/payout.types';
 import { PayoutFormSchema } from './payout-form';
 
-export const buildCreatePayoutInput = (schema: PayoutFormSchema): PayoutCreateInput => {
+export const buildCreatePayoutInput = (schema: PayoutFormSchema): PayoutFormCreateInput => {
 	return {
-		recipient: { connect: { id: schema.fields.recipientId.value } },
+		recipientId: schema.fields.recipientId.value,
 		amount: schema.fields.amount.value,
 		currency: schema.fields.currency.value,
 		paymentAt: schema.fields.paymentAt.value,
@@ -13,9 +14,10 @@ export const buildCreatePayoutInput = (schema: PayoutFormSchema): PayoutCreateIn
 	};
 };
 
-export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: PayoutPayload): PayoutUpdateInput => {
-	const data: PayoutUpdateInput = {
+export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: PayoutPayload): PayoutFormUpdateInput => {
+	const data: PayoutFormUpdateInput = {
 		id: existing.id,
+		recipientId: existing.recipient.id,
 		amount: schema.fields.amount.value,
 		currency: schema.fields.currency.value,
 		paymentAt: schema.fields.paymentAt.value,
@@ -25,7 +27,7 @@ export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: Payou
 	};
 
 	if (schema.fields.recipientId.value !== existing.recipient.id) {
-		data.recipient = { connect: { id: schema.fields.recipientId.value } };
+		data.recipientId = schema.fields.recipientId.value;
 	}
 
 	return data;

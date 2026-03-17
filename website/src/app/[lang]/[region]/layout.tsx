@@ -11,6 +11,7 @@ export const generateStaticParams = () =>
 
 export const generateMetadata = async (props: DefaultLayoutProps) => {
 	const params = await props.params;
+
 	return getMetadata(params.lang as WebsiteLanguage, 'website-common');
 };
 

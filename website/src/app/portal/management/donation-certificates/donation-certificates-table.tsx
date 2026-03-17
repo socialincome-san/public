@@ -18,6 +18,7 @@ export const DonationCertificateTable = ({
 	query?: TableQueryState & { totalRows: number };
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
+
 	return (
 		<>
 			<GenerateDonationCertificatesDialog open={open} setOpen={setOpen} />

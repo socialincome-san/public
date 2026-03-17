@@ -20,9 +20,7 @@ export const CreateProgramSteps = ({ state, send }: Props) => {
 	}
 
 	if (state.matches('error')) {
-		return (
-			<WizardError message={state.context.error ?? 'Something went wrong'} onRetry={() => window.location.reload()} />
-		);
+		return <WizardError message={state.context.error ?? 'Something went wrong'} onRetry={() => window.location.reload()} />;
 	}
 
 	if (state.matches('countrySelection')) {

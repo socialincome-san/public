@@ -9,12 +9,7 @@
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
-import {
-	ContributionStatus,
-	ContributorReferralSource,
-	PaymentEventType,
-	PrismaClient,
-} from '@/generated/prisma/client';
+import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { isValidCurrency } from '@/lib/types/currency';
 import { logger } from '@/lib/utils/logger';
 import { titleCase } from '@/lib/utils/string-utils';
@@ -25,11 +20,7 @@ import { ContributionWriteService } from '../contribution/contribution-write.ser
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
 import { ContributorReadService } from '../contributor/contributor-read.service';
 import { ContributorWriteService } from '../contributor/contributor-write.service';
-import {
-	ContributorUpdateInput,
-	ContributorWithContact,
-	StripeContributorData,
-} from '../contributor/contributor.types';
+import { ContributorUpdateInput, ContributorWithContact, StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -73,14 +64,11 @@ export class StripeService extends BaseService {
 		}
 
 		this.stripeClient = new Stripe(this.stripeSecretKey, { typescript: true });
+
 		return this.stripeClient;
 	}
 
-	async handleWebhookEvent(
-		body: string,
-		signature: string,
-		webhookSecret: string,
-	): Promise<ServiceResult<WebhookResult>> {
+	async handleWebhookEvent(body: string, signature: string, webhookSecret: string): Promise<ServiceResult<WebhookResult>> {
 		try {
 			// Verify webhook signature and parse event
 			const event = this.getStripeClientOrThrow().webhooks.constructEvent(body, signature, webhookSecret);
@@ -89,19 +77,21 @@ export class StripeService extends BaseService {
 				case 'charge.succeeded':
 				case 'charge.updated': // For final balance_transaction updates
 				case 'charge.failed': {
-					const charge = event.data.object as Stripe.Charge;
+					const charge = event.data.object;
 					this.logger.info('Processing charge event', { eventType: event.type, chargeId: charge.id });
 
 					const result = await this.processChargeEvent(charge);
 
 					if (!result.success) {
 						this.logger.error(result.error);
+
 						return this.resultFail(result.error);
 					}
 
 					if (result.data.contributionId) {
 						this.logger.info('Successfully processed charge', { chargeId: charge.id });
 					}
+
 					return this.resultOk(result.data);
 				}
 				default:
@@ -109,6 +99,7 @@ export class StripeService extends BaseService {
 			}
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to handle webhook event: ${JSON.stringify(error)}`);
 		}
 	}
@@ -129,7 +120,7 @@ export class StripeService extends BaseService {
 			let isNewContributor = false;
 
 			// Portal flow: metadata has accountId (logged-in user donating from portal)
-			const accountId = checkoutMetadata?.accountId as string | undefined;
+			const accountId = checkoutMetadata?.accountId;
 			if (accountId) {
 				const user = await this.db.user.findUnique({
 					where: { accountId },
@@ -143,6 +134,7 @@ export class StripeService extends BaseService {
 					);
 					if (!portalResult.success) {
 						this.logger.error(portalResult.error);
+
 						return this.resultFail(portalResult.error);
 					}
 					contributor = portalResult.data.contributor;
@@ -170,6 +162,7 @@ export class StripeService extends BaseService {
 						await this.contributorWriteService.getOrCreateContributorWithFirebaseAuth(contributorData);
 					if (!contributorResult.success) {
 						this.logger.error(contributorResult.error);
+
 						return this.resultFail(contributorResult.error);
 					}
 
@@ -188,11 +181,13 @@ export class StripeService extends BaseService {
 
 					if (!existingContributorResult.success) {
 						this.logger.error(existingContributorResult.error);
+
 						return this.resultFail(existingContributorResult.error);
 					}
 
 					if (!existingContributorResult.data) {
 						this.logger.info(`Skipping non-successful charge for non-existent contributor`);
+
 						return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
 					}
 
@@ -207,6 +202,7 @@ export class StripeService extends BaseService {
 				const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 				if (!fallbackCampaignResult.success) {
 					this.logger.error(fallbackCampaignResult.error);
+
 					return this.resultFail(fallbackCampaignResult.error);
 				}
 				campaignId = fallbackCampaignResult.data.id;
@@ -242,17 +238,16 @@ export class StripeService extends BaseService {
 			};
 
 			// Create or update contribution with associated payment event (upsert based on transactionId)
-			const contributionResult = await this.contributionService.upsertFromStripeEvent(
-				contributionData,
-				paymentEventData,
-			);
+			const contributionResult = await this.contributionService.upsertFromStripeEvent(contributionData, paymentEventData);
 
 			if (!contributionResult.success) {
 				this.logger.error(contributionResult.error);
+
 				return this.resultFail(contributionResult.error);
 			}
 
 			this.logger.info('Created contribution', { contributionId: contributionResult.data.id });
+
 			return this.resultOk({
 				contributionId: contributionResult.data.id,
 				contributorId: contributor.id,
@@ -260,6 +255,7 @@ export class StripeService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to process charge: ${JSON.stringify(error)}`);
 		}
 	}
@@ -267,12 +263,14 @@ export class StripeService extends BaseService {
 	private extractAmountChf(charge: Stripe.Charge): number {
 		// Extract final settled amount in CHF from balance_transaction
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
+
 		return balanceTransaction?.amount ? balanceTransaction.amount / 100 : 0;
 	}
 
 	private extractFeesChf(charge: Stripe.Charge): number {
 		// Extract Stripe processing fees in CHF from balance_transaction
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
+
 		return balanceTransaction?.fee ? balanceTransaction.fee / 100 : 0;
 	}
 
@@ -281,21 +279,24 @@ export class StripeService extends BaseService {
 		if (customer.deleted) {
 			throw new Error(`Deleted Stripe customer: ${customerId}`);
 		}
+
 		return customer as StripeCustomerData;
 	}
 
 	private async getCheckoutMetadata(charge: Stripe.Charge): Promise<CheckoutMetadata | null> {
 		// Retrieve campaign ID and other metadata from the original checkout session
-		const paymentIntentId = charge.payment_intent;
-		if (!paymentIntentId) {
+		const paymentIntent = charge.payment_intent;
+		if (!paymentIntent) {
 			return null;
 		}
+		const paymentIntentId = typeof paymentIntent === 'string' ? paymentIntent : paymentIntent.id;
 
 		const sessions = await this.getStripeClientOrThrow().checkout.sessions.list({
 			payment_intent: paymentIntentId.toString(),
 		});
 
 		const session = sessions.data.length > 0 ? sessions.data[0] : null;
+
 		return session?.metadata || null;
 	}
 
@@ -325,13 +326,11 @@ export class StripeService extends BaseService {
 
 		const firstName = parts[0];
 		const lastName = parts.slice(1).join(' '); // Handle multiple middle/last names
+
 		return { firstName, lastName };
 	}
 
-	private sortSubscriptionRows(
-		rows: StripeSubscriptionRow[],
-		query: StripeSubscriptionTableQuery,
-	): StripeSubscriptionRow[] {
+	private sortSubscriptionRows(rows: StripeSubscriptionRow[], query: StripeSubscriptionTableQuery): StripeSubscriptionRow[] {
 		const direction = query.sortDirection === 'asc' ? 1 : -1;
 		const sortedRows = [...rows];
 		const sortBy = toSortKey(query.sortBy, ['created', 'status', 'interval', 'paymentMethod', 'amount'] as const);
@@ -351,12 +350,11 @@ export class StripeService extends BaseService {
 					return b.created.getTime() - a.created.getTime();
 			}
 		});
+
 		return sortedRows;
 	}
 
-	async getSubscriptionsTableView(
-		stripeCustomerId: string | null,
-	): Promise<ServiceResult<StripeSubscriptionTableView>> {
+	async getSubscriptionsTableView(stripeCustomerId: string | null): Promise<ServiceResult<StripeSubscriptionTableView>> {
 		const paginated = await this.getPaginatedSubscriptionsTableView(stripeCustomerId, {
 			page: 1,
 			pageSize: 10_000,
@@ -365,6 +363,7 @@ export class StripeService extends BaseService {
 		if (!paginated.success) {
 			return this.resultFail(paginated.error);
 		}
+
 		return this.resultOk({ rows: paginated.data.rows });
 	}
 
@@ -424,6 +423,7 @@ export class StripeService extends BaseService {
 			const sortedRows = this.sortSubscriptionRows(rows, query);
 			const offset = (query.page - 1) * query.pageSize;
 			const paginatedRows = sortedRows.slice(offset, offset + query.pageSize);
+
 			return this.resultOk({ rows: paginatedRows, totalCount: sortedRows.length });
 		} catch (error) {
 			const stripeError = error as { type?: string; code?: string; param?: string; message?: string };
@@ -435,10 +435,12 @@ export class StripeService extends BaseService {
 				this.logger.warn('Stripe customer not found in current mode; returning empty subscriptions', {
 					stripeCustomerId,
 				});
+
 				return this.resultOk({ rows: [], totalCount: 0 });
 			}
 
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
 		}
 	}
@@ -450,6 +452,7 @@ export class StripeService extends BaseService {
 				label: titleCase(paymentMethod.card.brand),
 			};
 		}
+
 		return {
 			type: 'other',
 			label: titleCase(paymentMethod.type),
@@ -478,6 +481,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(session.url);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create billing portal session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -552,6 +556,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(session.url ?? '');
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -638,6 +643,7 @@ export class StripeService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create portal donation checkout session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -648,9 +654,11 @@ export class StripeService extends BaseService {
 				email,
 				name: name || undefined,
 			});
+
 			return this.resultOk(customer.id);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create Stripe customer: ${JSON.stringify(error)}`);
 		}
 	}
@@ -666,6 +674,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(checkoutSession);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not load Stripe checkout session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -674,11 +683,11 @@ export class StripeService extends BaseService {
 		session: Stripe.Checkout.Session,
 	): Promise<ServiceResult<ContributorWithContact | null>> {
 		try {
-			if (!session.customer) {
+			const customer = session.customer;
+			if (!customer) {
 				return this.resultFail('Checkout session has no Stripe customer');
 			}
-
-			const stripeCustomerId = session.customer.toString();
+			const stripeCustomerId = typeof customer === 'string' ? customer : customer.id;
 			const email = session.customer_details?.email ?? undefined;
 
 			const contributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(stripeCustomerId, email);
@@ -690,6 +699,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(contributorResult.data ?? null);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not load contributor from checkout session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -775,6 +785,7 @@ export class StripeService extends BaseService {
 			return this.contributorWriteService.updateSelf(contributor.id, updateInput);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contributor after checkout: ${JSON.stringify(error)}`);
 		}
 	}

@@ -113,17 +113,13 @@ describe('string-utils', () => {
 	describe('formatNumberLocale', () => {
 		test('formats integer numbers', () => {
 			const value = 1234567;
-			const expected = new Intl.NumberFormat('de-CH', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(
-				value,
-			);
+			const expected = new Intl.NumberFormat('de-CH', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
 			expect(formatNumberLocale(value, 'de-CH')).toBe(expected);
 		});
 
 		test('formats with fraction digits', () => {
 			const value = 1234.5678;
-			const expected = new Intl.NumberFormat('de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-				value,
-			);
+			const expected = new Intl.NumberFormat('de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 			expect(formatNumberLocale(value, 'de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })).toBe(expected);
 		});
 
@@ -140,9 +136,7 @@ describe('string-utils', () => {
 
 		test('keeps regular number format when below compact threshold', () => {
 			const value = 999_999;
-			const expected = new Intl.NumberFormat('de-CH', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(
-				value,
-			);
+			const expected = new Intl.NumberFormat('de-CH', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
 
 			expect(formatNumberLocale(value, 'de-CH', { compactThreshold: 1_000_000 })).toBe(expected);
 		});

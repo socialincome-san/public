@@ -14,7 +14,7 @@ const SURVEY_STATUS_UI: Record<
 	{
 		variant: 'verified' | 'destructive' | 'outline' | 'outline-solid' | 'secondary' | 'default';
 		label: string;
-		Icon: ComponentType<any>;
+		Icon: ComponentType<{ className?: string }>;
 	}
 > = {
 	new: { variant: 'outline', label: 'New', Icon: CirclePlusIcon },
@@ -27,6 +27,7 @@ const SURVEY_STATUS_UI: Record<
 
 export const SurveyStatusBadge = ({ status }: SurveyStatusBadgeProps) => {
 	const { variant, label, Icon } = SURVEY_STATUS_UI[status];
+
 	return (
 		<Badge variant={variant}>
 			<Icon className="mr-1 h-4 w-4" />

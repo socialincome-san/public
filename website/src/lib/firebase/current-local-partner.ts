@@ -16,6 +16,7 @@ const loadCurrentLocalPartner = async (): Promise<LocalPartnerSession | null> =>
 
 	const authUserId = decodedTokenResult.data.uid;
 	const result = await services.read.localPartner.getCurrentLocalPartnerSession(authUserId);
+
 	return result.success ? result.data : null;
 };
 
@@ -26,5 +27,6 @@ export const getAuthenticatedLocalPartnerOrRedirect = async (): Promise<LocalPar
 	if (!partner) {
 		redirect('/login');
 	}
+
 	return partner;
 };

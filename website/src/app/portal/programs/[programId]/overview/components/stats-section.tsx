@@ -9,7 +9,10 @@ import { SectionTitle } from './section-title';
 import { Stat } from './stat';
 import { StatProgressCard } from './stat-progress-card';
 
-type StatsSectionProps = { programId: string; stats: ProgramDashboardStats };
+type StatsSectionProps = {
+	programId: string;
+	stats: ProgramDashboardStats;
+};
 
 export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const getCreditStatusLabel = (creditsInIntervals: number, totalExpected: number) => {
@@ -25,6 +28,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 		if (creditsInIntervals >= 1) {
 			return 'Low credits';
 		}
+
 		return '';
 	};
 
@@ -41,6 +45,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 		if (creditsInIntervals >= 1) {
 			return 'Credits cover only a small number of intervals. Consider adding funding to improve the buffer.';
 		}
+
 		return '';
 	};
 
@@ -57,6 +62,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 		if (creditsInIntervals >= 1) {
 			return { Icon: AlertCircle, color: 'text-amber-600' };
 		}
+
 		return { Icon: AlertCircle, color: 'text-muted-foreground' };
 	};
 
@@ -109,8 +115,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const remainingIntervalsExplanation =
 		'Remaining intervals is the highest remaining interval count across active and future recipients.';
 	const recipientsTotalExplanation = 'Recipients is the total number of recipients linked to this program.';
-	const futureRecipientsExplanation =
-		'Future recipients have a start date in the future and are not yet payout eligible.';
+	const futureRecipientsExplanation = 'Future recipients have a start date in the future and are not yet payout eligible.';
 	const activeRecipientsExplanation = 'Active recipients are started, not suspended, and not completed.';
 	const suspendedRecipientsExplanation =
 		'Suspended recipients have a suspension date at or before now and are not counted as active.';

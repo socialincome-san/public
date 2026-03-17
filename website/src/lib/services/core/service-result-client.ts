@@ -9,9 +9,11 @@ export const handleServiceResult = <T>(
 ): boolean => {
 	if (result.success) {
 		handlers.onSuccess?.(result.data);
+
 		return true;
 	}
 
 	handlers.onError?.(result.error);
+
 	return false;
 };

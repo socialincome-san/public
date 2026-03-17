@@ -3,17 +3,25 @@ import { fetchData } from './fetch-data';
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface Issue {
+type Issue = {
 	id: number;
 	url: string;
 	title: string;
 	labels: string[];
-}
+};
 
-interface IssuesResponse {
+type IssuesResponse = {
 	issues: Issue[];
 	labels: string[];
-}
+};
+
+type GithubIssue = {
+	id: number;
+	html_url: string;
+	title: string;
+	labels: { name: string }[];
+	pull_request?: unknown;
+};
 
 export const getIssuesData = async (): Promise<IssuesResponse> => {
 	const issues: Issue[] = [];
@@ -24,7 +32,7 @@ export const getIssuesData = async (): Promise<IssuesResponse> => {
 	while (hasMore) {
 		const url = `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100&page=${page}`;
 		const res = await fetchData(owner, repo, url);
-		const data = await res.json();
+		const data = (await res.json()) as GithubIssue[];
 
 		// Break if no more issues
 		if (data.length === 0) {
@@ -33,9 +41,9 @@ export const getIssuesData = async (): Promise<IssuesResponse> => {
 
 		// Exclude pull requests and map response to Issue interface
 		const filteredIssues = data
-			.filter((issue: any) => !issue.pull_request)
-			.map((issue: any) => {
-				const issueLabel = issue.labels.map((label: any) => label.name);
+			.filter((issue) => !issue.pull_request)
+			.map((issue) => {
+				const issueLabel = issue.labels.map((label) => label.name);
 
 				issueLabel.forEach((label: string) => {
 					if (!labels.includes(label)) {
