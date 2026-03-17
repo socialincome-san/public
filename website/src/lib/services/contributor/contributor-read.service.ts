@@ -283,11 +283,9 @@ export class ContributorReadService extends BaseService {
 				}),
 			]);
 
-			let contributors: Array<
-				Prisma.ContributorGetPayload<{
-					select: typeof contributorSelect;
-				}>
-			>;
+			let contributors: Prisma.ContributorGetPayload<{
+				select: typeof contributorSelect;
+			}>[];
 
 			if (sortBy === 'totalContributedChf') {
 				const allContributors = await this.db.contributor.findMany({

@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SpinnerIcon } from '@socialincome/ui';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
 import { MultiSelect } from '../multi-select';
@@ -173,10 +173,26 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 		return values;
 	};
 
+	const getValuesIdentity = (values: Record<string, unknown>): string => {
+		try {
+			return JSON.stringify(values);
+		} catch {
+			return '';
+		}
+	};
+
+	const lastResetIdentityRef = useRef<string>('');
+
 	// reset form values on schema/entity changes to avoid stale values
 	useEffect(() => {
 		const values = mode === 'add' ? {} : getFormValuesFromSchema(formSchema);
-		form.reset(values as z.infer<typeof zodSchema>);
+		const nextIdentity = `${mode}:${getValuesIdentity(values)}`;
+		if (lastResetIdentityRef.current === nextIdentity) {
+			return;
+		}
+
+		lastResetIdentityRef.current = nextIdentity;
+		form.reset(values);
 	}, [form, formSchema, mode]);
 
 	// get options from Zod Object

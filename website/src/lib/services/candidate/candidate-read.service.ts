@@ -30,7 +30,6 @@ export class CandidateReadService extends BaseService {
 		const sortBy = toSortKey(query.sortBy, [
 			'id',
 			'candidate',
-			'firebaseAuthUserId',
 			'country',
 			'gender',
 			'dateOfBirth',
@@ -42,8 +41,6 @@ export class CandidateReadService extends BaseService {
 				return [{ id: direction }];
 			case 'candidate':
 				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
-			case 'firebaseAuthUserId':
-				return [{ account: { firebaseAuthUserId: direction } }];
 			case 'country':
 				return [{ contact: { address: { country: direction } } }];
 			case 'gender':
@@ -297,7 +294,6 @@ export class CandidateReadService extends BaseService {
 							{
 								OR: [
 									{ id: { contains: search, mode: 'insensitive' } },
-									{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' } } },
 									{ contact: { firstName: { contains: search, mode: 'insensitive' } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' } } },
 									{ contact: { phone: { number: { contains: search, mode: 'insensitive' } } } },
@@ -315,11 +311,6 @@ export class CandidateReadService extends BaseService {
 					where,
 					select: {
 						id: true,
-						account: {
-							select: {
-								firebaseAuthUserId: true,
-							},
-						},
 						suspendedAt: true,
 						suspensionReason: true,
 						contact: {
@@ -395,7 +386,7 @@ export class CandidateReadService extends BaseService {
 
 			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
 				id: r.id,
-				firebaseAuthUserId: r.account.firebaseAuthUserId,
+				firebaseAuthUserId: '',
 				country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 				firstName: r.contact?.firstName ?? '',
 				lastName: r.contact?.lastName ?? '',
@@ -497,7 +488,6 @@ export class CandidateReadService extends BaseService {
 							{
 								OR: [
 									{ id: { contains: search, mode: 'insensitive' } },
-									{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' } } },
 									{ contact: { firstName: { contains: search, mode: 'insensitive' } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' } } },
 									{ contact: { phone: { number: { contains: search, mode: 'insensitive' } } } },
@@ -514,11 +504,6 @@ export class CandidateReadService extends BaseService {
 					where,
 					select: {
 						id: true,
-						account: {
-							select: {
-								firebaseAuthUserId: true,
-							},
-						},
 						suspendedAt: true,
 						suspensionReason: true,
 						contact: {
@@ -590,7 +575,7 @@ export class CandidateReadService extends BaseService {
 
 			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
 				id: r.id,
-				firebaseAuthUserId: r.account.firebaseAuthUserId,
+				firebaseAuthUserId: '',
 				country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 				firstName: r.contact?.firstName ?? '',
 				lastName: r.contact?.lastName ?? '',

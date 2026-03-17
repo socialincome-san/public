@@ -196,7 +196,7 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 	const [loadedSettings, setLoadedSettings] = useState<ProgramSettingsPayload | null>(null);
 
 	const onSubmit = (schema: ProgramSettingsFormSchema) => {
-		if (!loadedSettings || loadedSettings.id !== programId) {
+		if (loadedSettings?.id !== programId) {
 			onError?.('Program is still loading. Please try again.');
 
 			return;
