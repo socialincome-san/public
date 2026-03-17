@@ -244,7 +244,11 @@ export class StoryblokService extends BaseService {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
+<<<<<<< HEAD
 				per_page: limit ?? StoryblokService.defaultPageSize,
+=======
+				per_page: limit || StoryblokService.defaultPageSize,
+>>>>>>> b3dc3ca3 (feat: public create program flow (#1899))
 				excluding_fields: StoryblokService.contentField,
 				resolve_relations: StoryblokService.standardArticleRelationsToResolve,
 				sort_by: 'first_published_at:desc',
