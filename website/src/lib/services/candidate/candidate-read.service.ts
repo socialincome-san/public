@@ -389,6 +389,7 @@ export class CandidateReadService extends BaseService {
 
 			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
 				id: r.id,
+				firebaseAuthUserId: '',
 				country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 				firstName: r.contact?.firstName ?? '',
 				lastName: r.contact?.lastName ?? '',
@@ -579,6 +580,7 @@ export class CandidateReadService extends BaseService {
 
 			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
 				id: r.id,
+				firebaseAuthUserId: '',
 				country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 				firstName: r.contact?.firstName ?? '',
 				lastName: r.contact?.lastName ?? '',

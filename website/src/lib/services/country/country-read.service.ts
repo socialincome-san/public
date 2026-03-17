@@ -230,6 +230,29 @@ export class CountryReadService extends BaseService {
 				const mobileMoneyIsOverridden = country.mobileMoneyConditionOverride ?? false;
 				const cashCondition = this.getCashCondition(microfinanceIndex, cashIsOverridden);
 				const mobileMoneyCondition = this.getMobileMoneyCondition(country.mobileMoneyProviders, mobileMoneyIsOverridden);
+				const mobileMoneyProviders = country.mobileMoneyProviders ?? [];
+				const mobileMoneyProviderCount = mobileMoneyProviders.length;
+				const mobileMoneyProviderNames = mobileMoneyProviders.map((provider) => provider.name).join(', ');
+				const mobileNetworkCondition = this.getMobileNetworkCondition(populationCoverage);
+				const networkTechnologyLabel = this.getNetworkTechnologyLabel(country.networkTechnology);
+				const countryName = getCountryNameByCode(country.isoCode);
+				const mobileNetworkTranslationKey =
+					mobileNetworkCondition === CountryCondition.MET
+						? networkTechnologyLabel
+							? 'step1.details.mobile_network.met_with_tech'
+							: 'step1.details.mobile_network.met'
+						: populationCoverage === null
+							? 'step1.details.mobile_network.not_met_unknown'
+							: 'step1.details.mobile_network.not_met';
+				let mobileNetworkTranslationContext: Record<string, string | number> | undefined;
+				if (mobileNetworkCondition === CountryCondition.MET) {
+					mobileNetworkTranslationContext = { populationCoverage: populationCoverage ?? 0 };
+					if (networkTechnologyLabel) {
+						mobileNetworkTranslationContext.tech = networkTechnologyLabel;
+					}
+				} else if (populationCoverage !== null) {
+					mobileNetworkTranslationContext = { populationCoverage };
+				}
 
 				const programCount = country._count.programs;
 
@@ -253,30 +276,44 @@ export class CountryReadService extends BaseService {
 					cash: {
 						condition: cashCondition,
 						details: {
-							text: this.getCashDetailsText(country.isoCode, microfinanceIndex, cashCondition),
+							translationKey:
+								cashCondition === CountryCondition.MET ? 'step1.details.cash.met' : 'step1.details.cash.not_met',
+							translationContext: { country: countryName },
 							source: country.microfinanceSourceLink
 								? {
 										text: country.microfinanceSourceLink.text,
 										href: country.microfinanceSourceLink.href,
 									}
 								: cashIsOverridden
-									? { text: 'Source: SI Research' }
+									? { translationKey: 'step1.source.si_research' }
 									: undefined,
 						},
 					},
 					mobileMoney: {
 						condition: mobileMoneyCondition,
 						details: {
-							text: this.getMobileMoneyDetailsText(country.isoCode, country.mobileMoneyProviders, mobileMoneyCondition),
+							translationKey:
+								mobileMoneyCondition === CountryCondition.MET
+									? 'step1.details.mobile_money.met'
+									: 'step1.details.mobile_money.not_met',
+							translationContext:
+								mobileMoneyCondition === CountryCondition.MET
+									? {
+											providerCount: mobileMoneyProviderCount,
+											providerLabel: mobileMoneyProviderCount > 1 ? 'providers' : 'provider',
+											providers: mobileMoneyProviderNames,
+										}
+									: undefined,
 							source: {
-								text: 'Source: SI Research',
+								translationKey: 'step1.source.si_research',
 							},
 						},
 					},
 					mobileNetwork: {
-						condition: this.getMobileNetworkCondition(populationCoverage),
+						condition: mobileNetworkCondition,
 						details: {
-							text: this.getMobileNetworkDetailsText(country.isoCode, populationCoverage),
+							translationKey: mobileNetworkTranslationKey,
+							translationContext: mobileNetworkTranslationContext,
 							source: country.networkSourceLink
 								? {
 										text: country.networkSourceLink.text,
@@ -288,10 +325,14 @@ export class CountryReadService extends BaseService {
 					sanctions: {
 						condition: this.getSanctionsCondition(country.sanctions),
 						details: {
-							text: this.getSanctionsDetailsText(country.isoCode, country.sanctions),
+							translationKey:
+								this.getSanctionsCondition(country.sanctions) === CountryCondition.RESTRICTIONS_APPLY
+									? 'step1.details.sanctions.restrictions_apply'
+									: 'step1.details.sanctions.met',
+							translationContext: { country: countryName },
 							source:
 								country.sanctions && country.sanctions.length > 0
-									? { text: 'Source: EU Sanctions Map & US Sanctions List' }
+									? { translationKey: 'step1.source.sanctions_lists' }
 									: undefined,
 						},
 					},
@@ -311,7 +352,7 @@ export class CountryReadService extends BaseService {
 			return CountryCondition.MET;
 		}
 
-		if (microfinanceIndex === null) {
+		if (microfinanceIndex === null || microfinanceIndex === 0) {
 			return CountryCondition.NOT_MET;
 		}
 
@@ -337,60 +378,32 @@ export class CountryReadService extends BaseService {
 		return populationCoverage >= 50 ? CountryCondition.MET : CountryCondition.NOT_MET;
 	}
 
+	private getNetworkTechnologyLabel(networkTechnology: NetworkTechnology | null): string | undefined {
+		if (!networkTechnology) {
+			return undefined;
+		}
+
+		if (networkTechnology === NetworkTechnology.g3) {
+			return '3G';
+		}
+
+		if (networkTechnology === NetworkTechnology.g4) {
+			return '4G';
+		}
+
+		if (networkTechnology === NetworkTechnology.g5) {
+			return '5G';
+		}
+
+		if (networkTechnology === NetworkTechnology.satellite) {
+			return 'satellite';
+		}
+
+		return undefined;
+	}
+
 	private getSanctionsCondition(sanctions: SanctionRegime[] | null): CountryCondition {
 		return sanctions && sanctions.length > 0 ? CountryCondition.RESTRICTIONS_APPLY : CountryCondition.MET;
-	}
-
-	private getCashDetailsText(
-		countryIsoCode: CountryCode,
-		microfinanceIndex: number | null,
-		condition: CountryCondition,
-	): string {
-		if (condition === CountryCondition.MET) {
-			return microfinanceIndex === null
-				? `Market functionality in ${getCountryNameByCode(countryIsoCode)} appears intact.`
-				: `Market functionality in ${getCountryNameByCode(countryIsoCode)} appears intact (MFI ${microfinanceIndex}).`;
-		}
-
-		return microfinanceIndex === null
-			? `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired.`
-			: `Market functionality in ${getCountryNameByCode(countryIsoCode)} may be impaired (MFI ${microfinanceIndex}).`;
-	}
-
-	private getMobileMoneyDetailsText(
-		countryIsoCode: CountryCode,
-		mobileMoneyProviders: MobileMoneyProviderRef[] | null,
-		condition: CountryCondition,
-	): string {
-		if (condition !== CountryCondition.MET) {
-			return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is not sufficient.`;
-		}
-
-		if (!mobileMoneyProviders || mobileMoneyProviders.length === 0) {
-			return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is considered sufficient.`;
-		}
-
-		const providers = mobileMoneyProviders.map((p) => p.name).join(', ');
-
-		return `Mobile money infrastructure in ${getCountryNameByCode(countryIsoCode)} is considered sufficient. Following ${
-			mobileMoneyProviders.length
-		} provider${mobileMoneyProviders.length > 1 ? 's are' : ' is'} active: ${providers}.`;
-	}
-
-	private getMobileNetworkDetailsText(countryIsoCode: CountryCode, populationCoverage: number | null): string {
-		if (populationCoverage === null) {
-			return `No reliable mobile network coverage data available for ${getCountryNameByCode(countryIsoCode)}.`;
-		}
-
-		return populationCoverage >= 50
-			? `Mobile network coverage of ${getCountryNameByCode(countryIsoCode)} is considered sufficient. ${populationCoverage}% of the population is covered by the mobile network.`
-			: `Mobile network coverage of ${getCountryNameByCode(countryIsoCode)} is considered insufficient. Only ${populationCoverage}% of the population is covered.`;
-	}
-
-	private getSanctionsDetailsText(countryIsoCode: CountryCode, sanctions: SanctionRegime[] | null): string {
-		return sanctions && sanctions.length > 0
-			? `${getCountryNameByCode(countryIsoCode)} is subject to international sanctions or restrictions.`
-			: `${getCountryNameByCode(countryIsoCode)} is not on the UN, US or EU sanctioned list.`;
 	}
 
 	private toNumber(value: Prisma.Decimal | null): number | null {

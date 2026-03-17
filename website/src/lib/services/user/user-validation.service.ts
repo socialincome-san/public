@@ -3,11 +3,7 @@ import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserFormCreateInput, UserFormUpdateInput, userCreateInputSchema, userUpdateInputSchema } from './user-form-input';
-
-type UpdateUniquenessContext = {
-	contactId: string;
-	existingEmail: string | null;
-};
+import { UserUpdateUniquenessContext } from './user-validation.types';
 
 export class UserValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {
@@ -47,7 +43,7 @@ export class UserValidationService extends BaseService {
 
 	async validateUpdateUniqueness(
 		input: UserFormUpdateInput,
-		context: UpdateUniquenessContext,
+		context: UserUpdateUniquenessContext,
 	): Promise<ServiceResult<void>> {
 		if (input.email !== context.existingEmail) {
 			const emailConflict = await this.db.contact.findUnique({

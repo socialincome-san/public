@@ -2,13 +2,13 @@
 
 import { CellContext } from '@tanstack/react-table';
 
-type DateCellProps<TData, TValue> = {
-	ctx: CellContext<TData, TValue>;
+type DateCellProps<TData> = {
+	ctx: CellContext<TData, unknown>;
 	locale?: string;
 	options?: Intl.DateTimeFormatOptions;
 };
 
-export const DateCell = <TData, TValue extends Date | string | null>({
+export const DateCell = <TData,>({
 	ctx,
 	locale = 'de-CH',
 	options = {
@@ -16,14 +16,22 @@ export const DateCell = <TData, TValue extends Date | string | null>({
 		month: '2-digit',
 		day: '2-digit',
 	},
-}: DateCellProps<TData, TValue>) => {
+}: DateCellProps<TData>) => {
 	const value = ctx.getValue();
 
 	if (!value) {
 		return <span>-</span>;
 	}
 
-	const date = value instanceof Date ? value : new Date(value);
+	let date: Date | null = null;
+	if (value instanceof Date) {
+		date = value;
+	} else if (typeof value === 'string' || typeof value === 'number') {
+		date = new Date(value);
+	}
+	if (!date || Number.isNaN(date.getTime())) {
+		return <span>-</span>;
+	}
 	const formatted = new Intl.DateTimeFormat(locale, options).format(date);
 
 	return <span>{formatted}</span>;

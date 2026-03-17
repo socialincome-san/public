@@ -4,6 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import type { Session } from '@/lib/firebase/current-account';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 
 type Props = {
@@ -28,21 +29,23 @@ export const RecipientDialog = ({
 	onError,
 }: Props) => {
 	const handleError = (error: unknown) => {
-		const errorMessage =
-			error instanceof Error
-				? error.message
-				: typeof error === 'string'
-					? error
-					: 'An unexpected error occurred while saving.';
+		const errorMessage = retrieveErrorMessage(error);
 		onError(`Error saving recipient: ${errorMessage}`);
 		logger.error('Recipient Form Error', { error });
 	};
+
+	let dialogTitle = 'New Recipient';
+	if (readOnly) {
+		dialogTitle = 'View Recipient';
+	} else if (recipientId) {
+		dialogTitle = 'Edit Recipient';
+	}
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>{readOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}</DialogTitle>
+					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
 
 				{errorMessage && (

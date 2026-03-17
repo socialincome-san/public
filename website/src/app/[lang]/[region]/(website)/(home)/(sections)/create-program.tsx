@@ -1,9 +1,8 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { Button } from '@/components/button';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, Button, Typography } from '@socialincome/ui';
 
 export const CreateProgram = async ({ lang }: DefaultParams) => {
 	const translator = await Translator.getInstance({

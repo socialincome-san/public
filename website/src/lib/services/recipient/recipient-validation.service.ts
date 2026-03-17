@@ -8,17 +8,7 @@ import {
 	recipientCreateInputSchema,
 	recipientUpdateInputSchema,
 } from './recipient-form-input';
-
-type RecipientUpdateUniquenessContext = {
-	existingContactId: string;
-	existingEmail: string | null;
-	existingContactPhoneId: string | null;
-	existingContactPhoneNumber: string | null;
-	existingPaymentInformationId: string | null;
-	existingPaymentCode: string | null;
-	existingPaymentPhoneId: string | null;
-	existingPaymentPhoneNumber: string | null;
-};
+import { RecipientUpdateUniquenessContext } from './recipient-validation.types';
 
 export class RecipientValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {

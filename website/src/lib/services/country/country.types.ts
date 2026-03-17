@@ -64,14 +64,17 @@ export enum CountryCondition {
 }
 
 type CountryConditionSource = {
-	text: string;
+	translationKey?: string;
+	translationContext?: Record<string, string | number>;
+	text?: string;
 	href?: string;
 };
 
 type CountryFeasibility = {
 	condition: CountryCondition;
 	details: {
-		text: string;
+		translationKey: string;
+		translationContext?: Record<string, string | number>;
 		source?: CountryConditionSource;
 	};
 };

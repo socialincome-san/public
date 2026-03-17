@@ -9,6 +9,7 @@ import {
 import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -42,21 +43,27 @@ export default function ContributorsTableClient({
 
 	const openEditForm = (row: ContributorTableViewRow) => {
 		setContributorId(row.id);
-		setRowReadOnly(row.permission === 'readonly' ? true : (readOnly ?? false));
+		if (row.permission === 'readonly') {
+			setRowReadOnly(true);
+		} else {
+			setRowReadOnly(readOnly ?? false);
+		}
 		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const onError = (error: unknown) => {
-		const message =
-			error instanceof Error
-				? error.message
-				: typeof error === 'string'
-					? error
-					: 'An unexpected error occurred while saving.';
+		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving contributor: ${message}`);
 		logger.error('Contributor Form Error', { error });
 	};
+
+	let dialogTitle = 'New Contributor';
+	if (rowReadOnly) {
+		dialogTitle = 'View Contributor';
+	} else if (contributorId) {
+		dialogTitle = 'Edit Contributor';
+	}
 
 	return (
 		<>
@@ -81,9 +88,7 @@ export default function ContributorsTableClient({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>
-							{rowReadOnly ? 'View Contributor' : contributorId ? 'Edit Contributor' : 'New Contributor'}
-						</DialogTitle>
+						<DialogTitle>{dialogTitle}</DialogTitle>
 					</DialogHeader>
 
 					{errorMessage && (

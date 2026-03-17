@@ -36,6 +36,13 @@ test('public user can create a program and account', async ({ page }) => {
 	await page.getByLabel('Email').fill(email);
 	await page.getByRole('button', { name: 'Continue' }).click();
 
+	await expect(page.getByText('Your program is ready')).toBeVisible();
+	await expect(
+		page.getByText(
+			'We created your account, organization, and initial program setup. Next, log in with your email to open your dashboard and start managing your program.',
+		),
+	).toBeVisible();
+	await page.getByRole('button', { name: 'Go to login' }).click();
 	await page.waitForURL(/\/(en\/int\/)?login(\?.*)?$/);
 
 	const createdUser = await prisma.user.findFirst({

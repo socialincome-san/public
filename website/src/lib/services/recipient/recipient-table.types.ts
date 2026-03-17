@@ -2,6 +2,7 @@ import { CountryCode, ProgramPermission } from '@/generated/prisma/client';
 
 export type RecipientTableViewRow = {
 	id: string;
+	firebaseAuthUserId: string;
 	country: CountryCode | null;
 	firstName: string;
 	lastName: string;

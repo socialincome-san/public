@@ -9,6 +9,39 @@ import { UserValidationService } from './user-validation.service';
 import { UserPayload, UserUpdateInput } from './user.types';
 
 export class UserWriteService extends BaseService {
+	private getAccessRows(editOrganizationIds: string[], readonlyOrganizationIds: string[]) {
+		const accessByOrganizationId = new Map<string, { organizationId: string; permission: 'edit' | 'readonly' }>();
+
+		for (const organizationId of readonlyOrganizationIds) {
+			accessByOrganizationId.set(organizationId, {
+				organizationId,
+				permission: 'readonly',
+			});
+		}
+
+		for (const organizationId of editOrganizationIds) {
+			accessByOrganizationId.set(organizationId, {
+				organizationId,
+				permission: 'edit',
+			});
+		}
+
+		return Array.from(accessByOrganizationId.values());
+	}
+
+	private getPreferredActiveOrganizationId(
+		editOrganizationIds: string[],
+		readonlyOrganizationIds: string[],
+		currentActiveOrganizationId?: string | null,
+	) {
+		const allowedOrganizationIds = new Set([...editOrganizationIds, ...readonlyOrganizationIds]);
+		if (currentActiveOrganizationId && allowedOrganizationIds.has(currentActiveOrganizationId)) {
+			return currentActiveOrganizationId;
+		}
+
+		return editOrganizationIds[0] ?? readonlyOrganizationIds[0] ?? null;
+	}
+
 	constructor(
 		db: PrismaClient,
 		private readonly firebaseAdminService: FirebaseAdminService,
@@ -69,12 +102,22 @@ export class UserWriteService extends BaseService {
 						} | null;
 				  }
 				| undefined;
+			const activeOrganizationId = this.getPreferredActiveOrganizationId(
+				validatedInput.editOrganizationIds,
+				validatedInput.readonlyOrganizationIds,
+			);
+			if (!activeOrganizationId) {
+				return this.resultFail('At least one organization permission is required.');
+			}
+
 			try {
 				createdUser = await this.db.user.create({
 					data: {
 						role: validatedInput.role,
 						activeOrganization: {
-							connect: { id: validatedInput.organizationId },
+							connect: {
+								id: activeOrganizationId,
+							},
 						},
 						contact: {
 							create: {
@@ -89,9 +132,8 @@ export class UserWriteService extends BaseService {
 							},
 						},
 						organizationAccesses: {
-							create: {
-								organizationId: validatedInput.organizationId,
-								permission: 'edit',
+							createMany: {
+								data: this.getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
 							},
 						},
 					},
@@ -136,6 +178,8 @@ export class UserWriteService extends BaseService {
 				email: createdUser.contact.email,
 				role: createdUser.role,
 				organizationId: createdUser.activeOrganization?.id ?? null,
+				editOrganizationIds: validatedInput.editOrganizationIds,
+				readonlyOrganizationIds: validatedInput.readonlyOrganizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -180,13 +224,17 @@ export class UserWriteService extends BaseService {
 			const shouldSyncFirebaseUser =
 				validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
 
+			const activeOrganizationId = this.getPreferredActiveOrganizationId(
+				validatedInput.editOrganizationIds,
+				validatedInput.readonlyOrganizationIds,
+				existingUser.activeOrganizationId,
+			);
+
 			const updatedUser = await this.db.user.update({
 				where: { id: validatedInput.id },
 				data: {
 					role: validatedInput.role,
-					activeOrganization: {
-						connect: { id: validatedInput.organizationId },
-					},
+					activeOrganization: activeOrganizationId ? { connect: { id: activeOrganizationId } } : undefined,
 					contact: {
 						update: {
 							firstName: validatedInput.firstName,
@@ -196,9 +244,8 @@ export class UserWriteService extends BaseService {
 					},
 					organizationAccesses: {
 						deleteMany: { userId: validatedInput.id },
-						create: {
-							organizationId: validatedInput.organizationId,
-							permission: 'edit',
+						createMany: {
+							data: this.getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
 						},
 					},
 				},
@@ -230,6 +277,8 @@ export class UserWriteService extends BaseService {
 				email: updatedUser.contact.email,
 				role: updatedUser.role,
 				organizationId: updatedUser.activeOrganization?.id ?? null,
+				editOrganizationIds: validatedInput.editOrganizationIds,
+				readonlyOrganizationIds: validatedInput.readonlyOrganizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -298,8 +347,21 @@ export class UserWriteService extends BaseService {
 				include: {
 					contact: { include: { address: true } },
 					activeOrganization: true,
+					organizationAccesses: {
+						select: {
+							organizationId: true,
+							permission: true,
+						},
+					},
 				},
 			});
+
+			const editOrganizationIds = updatedUser.organizationAccesses
+				.filter((access) => access.permission === 'edit')
+				.map((access) => access.organizationId);
+			const readonlyOrganizationIds = updatedUser.organizationAccesses
+				.filter((access) => access.permission === 'readonly')
+				.map((access) => access.organizationId);
 
 			return this.resultOk({
 				id: updatedUser.id,
@@ -308,11 +370,76 @@ export class UserWriteService extends BaseService {
 				email: updatedUser.contact.email,
 				role: updatedUser.role,
 				organizationId: updatedUser.activeOrganization?.id ?? null,
+				editOrganizationIds,
+				readonlyOrganizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async delete(actorUserId: string, targetUserId: string): Promise<ServiceResult<void>> {
+		try {
+			const isAdminResult = await this.userReadService.isAdmin(actorUserId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			if (actorUserId === targetUserId) {
+				return this.resultFail('You cannot delete your own user account.');
+			}
+
+			const existingUser = await this.db.user.findUnique({
+				where: { id: targetUserId },
+				select: {
+					id: true,
+					accountId: true,
+					contactId: true,
+					account: {
+						select: {
+							firebaseAuthUserId: true,
+						},
+					},
+				},
+			});
+
+			if (!existingUser) {
+				return this.resultFail('User not found');
+			}
+
+			await this.db.$transaction(async (tx) => {
+				await tx.organizationAccess.deleteMany({
+					where: { userId: targetUserId },
+				});
+				await tx.user.delete({
+					where: { id: targetUserId },
+				});
+				await tx.contact.delete({
+					where: { id: existingUser.contactId },
+				});
+				await tx.account.delete({
+					where: { id: existingUser.accountId },
+				});
+			});
+
+			const firebaseDeleteResult = await this.firebaseAdminService.deleteByUidIfExists(
+				existingUser.account.firebaseAuthUserId,
+			);
+			if (!firebaseDeleteResult.success) {
+				this.logger.warn('User deleted in DB but Firebase user deletion failed', {
+					userId: targetUserId,
+					firebaseUid: existingUser.account.firebaseAuthUserId,
+					error: firebaseDeleteResult.error,
+				});
+			}
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not delete user. Please try again later.');
 		}
 	}
 }

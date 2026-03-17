@@ -31,7 +31,8 @@ export type OrganizationTableViewRow = {
 	name: string;
 	ownedProgramsCount: number;
 	operatedProgramsCount: number;
-	usersCount: number;
+	readonlyUsersCount: number;
+	writeUsersCount: number;
 	createdAt: Date;
 };
 
@@ -55,4 +56,13 @@ export type OrganizationPaginatedTableView = {
 export type OrganizationOption = {
 	id: string;
 	name: string;
+};
+
+export type OrganizationPayload = {
+	id: string;
+	name: string;
+	editUserIds: string[];
+	readonlyUserIds: string[];
+	ownedProgramIds: string[];
+	operatedProgramIds: string[];
 };

@@ -17,14 +17,13 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';
 
-const POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 = process.env.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64!;
-const POSTFINANCE_FTP_HOST = process.env.POSTFINANCE_FTP_HOST!;
-const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
-const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
-
 export class PaymentFileImportService extends BaseService {
 	private readonly bucketName;
 	private readonly xmlSelectExpression = '//ns:BkToCstmrDbtCdtNtfctn/ns:Ntfctn/ns:Ntry/ns:NtryDtls/ns:TxDtls';
+	private readonly postfinanceFtpRsaPrivateKeyBase64 = process.env.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64!;
+	private readonly postfinanceFtpHost = process.env.POSTFINANCE_FTP_HOST!;
+	private readonly postfinanceFtpPort = process.env.POSTFINANCE_FTP_PORT!;
+	private readonly postfinanceFtpUser = process.env.POSTFINANCE_FTP_USER!;
 
 	constructor(
 		bucketName: string,
@@ -48,10 +47,10 @@ export class PaymentFileImportService extends BaseService {
 			const bucket = storageAdmin.storage.bucket(this.bucketName);
 			const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
 			await sftp.connect({
-				host: POSTFINANCE_FTP_HOST,
-				port: Number(POSTFINANCE_FTP_PORT),
-				username: POSTFINANCE_FTP_USER,
-				privateKey: atob(POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64),
+				host: this.postfinanceFtpHost,
+				port: Number(this.postfinanceFtpPort),
+				username: this.postfinanceFtpUser,
+				privateKey: atob(this.postfinanceFtpRsaPrivateKeyBase64),
 			});
 			const sftpFiles = await sftp.list('/yellow-net-reports');
 
@@ -235,9 +234,10 @@ export class PaymentFileImportService extends BaseService {
 			return this.resultFail(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
 		}
 	}
-	private getReferenceIds = (
-		referenceId: string,
-	): { contributorReferenceId: string; contributionReferenceId: string | undefined } => {
+	private getReferenceIds(referenceId: string): {
+		contributorReferenceId: string;
+		contributionReferenceId: string | undefined;
+	} {
 		// Old reference IDs without contribution reference ID
 		const isLegacyReferenceId = referenceId.startsWith('0000000');
 
@@ -254,5 +254,5 @@ export class PaymentFileImportService extends BaseService {
 				startIndex + CONTRIBUTOR_REFERENCE_ID_LENGTH + CONTRIBUTION_REFERENCE_ID_LENGTH,
 			),
 		};
-	};
+	}
 }

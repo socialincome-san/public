@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import {
 	createCampaignsAction,
 	getCampaignsAction,
@@ -27,60 +27,74 @@ export default function CampaignsForm({
 	campaignId?: string;
 	readOnly?: boolean;
 }) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [isLoading, startTransition] = useTransition();
+	const asOptionalString = (value: string | null | undefined) => value ?? undefined;
 
 	const loadCampaign = async (campaignId: string) => {
 		if (campaignId) {
 			const result = await getCampaignsAction(campaignId);
 			handleServiceResult(result, {
 				onSuccess: (data) => {
-					setFormSchema((previousSchema) => ({
-						...previousSchema,
-						fields: {
-							...previousSchema.fields,
-							title: { ...previousSchema.fields.title, value: data.title },
-							description: { ...previousSchema.fields.description, value: data.description },
-							secondDescriptionTitle: {
-								...previousSchema.fields.secondDescriptionTitle,
-								value: data.secondDescriptionTitle,
+					setFormSchema((previousSchema) => {
+						const nextSchema = clearFormSchemaValues(previousSchema);
+
+						return {
+							...nextSchema,
+							fields: {
+								...nextSchema.fields,
+								title: { ...nextSchema.fields.title, value: data.title },
+								description: { ...nextSchema.fields.description, value: data.description },
+								secondDescriptionTitle: {
+									...nextSchema.fields.secondDescriptionTitle,
+									value: asOptionalString(data.secondDescriptionTitle),
+								},
+								secondDescription: {
+									...nextSchema.fields.secondDescription,
+									value: asOptionalString(data.secondDescription),
+								},
+								thirdDescriptionTitle: {
+									...nextSchema.fields.thirdDescriptionTitle,
+									value: asOptionalString(data.thirdDescriptionTitle),
+								},
+								thirdDescription: {
+									...nextSchema.fields.thirdDescription,
+									value: asOptionalString(data.thirdDescription),
+								},
+								linkWebsite: { ...nextSchema.fields.linkWebsite, value: asOptionalString(data.linkWebsite) },
+								linkInstagram: { ...nextSchema.fields.linkInstagram, value: asOptionalString(data.linkInstagram) },
+								linkTiktok: { ...nextSchema.fields.linkTiktok, value: asOptionalString(data.linkTiktok) },
+								linkFacebook: { ...nextSchema.fields.linkFacebook, value: asOptionalString(data.linkFacebook) },
+								linkX: { ...nextSchema.fields.linkX, value: asOptionalString(data.linkX) },
+								goal: { ...nextSchema.fields.goal, value: data.goal },
+								currency: { ...nextSchema.fields.currency, value: data.currency },
+								additionalAmountChf: {
+									...nextSchema.fields.additionalAmountChf,
+									value: data.additionalAmountChf,
+								},
+								endDate: { ...nextSchema.fields.endDate, value: data.endDate ?? undefined },
+								isActive: { ...nextSchema.fields.isActive, value: data.isActive },
+								public: { ...nextSchema.fields.public, value: data.public },
+								featured: { ...nextSchema.fields.featured, value: data.featured },
+								slug: { ...nextSchema.fields.slug, value: asOptionalString(data.slug) },
+								metadataDescription: {
+									...nextSchema.fields.metadataDescription,
+									value: asOptionalString(data.metadataDescription),
+								},
+								metadataOgImage: {
+									...nextSchema.fields.metadataOgImage,
+									value: asOptionalString(data.metadataOgImage),
+								},
+								metadataTwitterImage: {
+									...nextSchema.fields.metadataTwitterImage,
+									value: asOptionalString(data.metadataTwitterImage),
+								},
+								creatorName: { ...nextSchema.fields.creatorName, value: asOptionalString(data.creatorName) },
+								creatorEmail: { ...nextSchema.fields.creatorEmail, value: asOptionalString(data.creatorEmail) },
+								program: { ...nextSchema.fields.program, value: data.program?.id },
 							},
-							secondDescription: { ...previousSchema.fields.secondDescription, value: data.secondDescription },
-							thirdDescriptionTitle: {
-								...previousSchema.fields.thirdDescriptionTitle,
-								value: data.thirdDescriptionTitle,
-							},
-							thirdDescription: { ...previousSchema.fields.thirdDescription, value: data.thirdDescription },
-							linkWebsite: { ...previousSchema.fields.linkWebsite, value: data.linkWebsite },
-							linkInstagram: { ...previousSchema.fields.linkInstagram, value: data.linkInstagram },
-							linkTiktok: { ...previousSchema.fields.linkTiktok, value: data.linkTiktok },
-							linkFacebook: { ...previousSchema.fields.linkFacebook, value: data.linkFacebook },
-							linkX: { ...previousSchema.fields.linkX, value: data.linkX },
-							goal: { ...previousSchema.fields.goal, value: data.goal },
-							currency: { ...previousSchema.fields.currency, value: data.currency },
-							additionalAmountChf: {
-								...previousSchema.fields.additionalAmountChf,
-								value: data.additionalAmountChf,
-							},
-							endDate: { ...previousSchema.fields.endDate, value: data.endDate ?? undefined },
-							isActive: { ...previousSchema.fields.isActive, value: data.isActive },
-							public: { ...previousSchema.fields.public, value: data.public },
-							featured: { ...previousSchema.fields.featured, value: data.featured },
-							slug: { ...previousSchema.fields.slug, value: data.slug },
-							metadataDescription: {
-								...previousSchema.fields.metadataDescription,
-								value: data.metadataDescription,
-							},
-							metadataOgImage: { ...previousSchema.fields.metadataOgImage, value: data.metadataOgImage },
-							metadataTwitterImage: {
-								...previousSchema.fields.metadataTwitterImage,
-								value: data.metadataTwitterImage,
-							},
-							creatorName: { ...previousSchema.fields.creatorName, value: data.creatorName },
-							creatorEmail: { ...previousSchema.fields.creatorEmail, value: data.creatorEmail },
-							program: { ...previousSchema.fields.program, value: data.program?.id },
-						},
-					}));
+						};
+					});
 				},
 				onError: (error) => onError?.(error),
 			});
@@ -133,13 +147,12 @@ export default function CampaignsForm({
 		});
 	}, []);
 
-	return (
-		<DynamicForm
-			formSchema={formSchema}
-			isLoading={isLoading}
-			onSubmit={onSubmit}
-			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : campaignId ? 'edit' : 'add'}
-		/>
-	);
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (campaignId) {
+		mode = 'edit';
+	}
+
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 }

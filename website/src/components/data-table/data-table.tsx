@@ -8,6 +8,7 @@ import {
 	type ToolbarFilter,
 	type ToolbarSortOption,
 } from '@/components/data-table/elements/data-table-toolbar';
+import { IdCell } from '@/components/data-table/elements/id-cell';
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
 import { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
@@ -105,13 +106,21 @@ export default function DataTable<Row>({
 
 						return '';
 					},
+					cell: (ctx) => <IdCell ctx={ctx} />,
 				},
 				...baseColumns,
 			] as ColumnDef<Row>[])
 		: baseColumns;
 	const activeQuery = query ?? null;
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-		showEntityIdColumn ? ({ id: false } as VisibilityState) : ({} as VisibilityState),
+		showEntityIdColumn
+			? ({
+					id: false,
+					firebaseAuthUserId: false,
+				} as VisibilityState)
+			: ({
+					firebaseAuthUserId: false,
+				} as VisibilityState),
 	);
 	const displayedData = data;
 	const isDatasetEmpty = activeQuery ? activeQuery.totalRows === 0 : data.length === 0;

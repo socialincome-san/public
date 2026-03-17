@@ -45,6 +45,7 @@ export type ProgramDashboardStats = {
 };
 
 export type ProgramForDashboard = {
+	coveredByReserves: boolean;
 	programDurationInMonths: number;
 	payoutPerInterval: unknown;
 	payoutInterval: PayoutInterval;

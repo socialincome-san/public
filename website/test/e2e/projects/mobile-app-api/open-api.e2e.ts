@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+
+test.beforeEach(async () => {
+	await seedDatabase();
+});
 
 test('OpenAPI JSON should match snapshot', async ({ page }) => {
 	const response = await page.goto('/openapi.json');

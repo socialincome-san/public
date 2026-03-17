@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
@@ -15,9 +16,15 @@ type PayoutFormDialogProps = {
 
 export const PayoutFormDialog = ({ open, onOpenChange, payoutId, readOnly = false }: PayoutFormDialogProps) => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+	let dialogTitle = 'Add payout';
+	if (readOnly) {
+		dialogTitle = 'View payout';
+	} else if (payoutId) {
+		dialogTitle = 'Edit payout';
+	}
 
 	const onError = (error?: unknown) => {
-		const message = error instanceof Error ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving payout: ${message}`);
 		logger.error('Payout Form Error', { error });
 	};
@@ -33,7 +40,7 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId, readOnly = fals
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
 				<DialogHeader>
-					<DialogTitle>{readOnly ? 'View payout' : payoutId ? 'Edit payout' : 'Add payout'}</DialogTitle>
+					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
 
 				{errorMessage && (

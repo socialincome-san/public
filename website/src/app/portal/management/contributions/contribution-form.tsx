@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 
 import { ContributionStatus } from '@/generated/prisma/enums';
 import { useEffect, useState, useTransition } from 'react';
@@ -83,7 +83,7 @@ const initialFormSchema: ContributionFormSchema = {
 };
 
 export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId, readOnly }: ContributionFormProps) => {
-	const [formSchema, setFormSchema] = useState(initialFormSchema);
+	const [formSchema, setFormSchema] = useState(() => cloneFormSchema(initialFormSchema));
 	const [contribution, setContribution] = useState<ContributionPayload>();
 	const [optionsLoaded, setOptionsLoaded] = useState(false);
 	const [isLoading, startTransition] = useTransition();
@@ -139,19 +139,23 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 				onSuccess: (data) => {
 					setContribution(data);
 
-					setFormSchema((prev) => ({
-						...prev,
-						fields: {
-							...prev.fields,
-							amount: { ...prev.fields.amount, value: data.amount },
-							currency: { ...prev.fields.currency, value: data.currency },
-							amountChf: { ...prev.fields.amountChf, value: data.amountChf },
-							feesChf: { ...prev.fields.feesChf, value: data.feesChf },
-							status: { ...prev.fields.status, value: data.status },
-							contributor: { ...prev.fields.contributor, value: data.contributor.id },
-							campaign: { ...prev.fields.campaign, value: data.campaign.id },
-						},
-					}));
+					setFormSchema((prev) => {
+						const next = clearFormSchemaValues(prev);
+
+						return {
+							...next,
+							fields: {
+								...next.fields,
+								amount: { ...next.fields.amount, value: data.amount },
+								currency: { ...next.fields.currency, value: data.currency },
+								amountChf: { ...next.fields.amountChf, value: data.amountChf },
+								feesChf: { ...next.fields.feesChf, value: data.feesChf },
+								status: { ...next.fields.status, value: data.status },
+								contributor: { ...next.fields.contributor, value: data.contributor.id },
+								campaign: { ...next.fields.campaign, value: data.campaign.id },
+							},
+						};
+					});
 				},
 				onError: (error) => onError?.(error),
 			});
@@ -174,13 +178,12 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 		});
 	};
 
-	return (
-		<DynamicForm
-			formSchema={formSchema}
-			isLoading={isLoading}
-			onSubmit={onSubmit}
-			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : contributionId ? 'edit' : 'add'}
-		/>
-	);
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (contributionId) {
+		mode = 'edit';
+	}
+
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 };

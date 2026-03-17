@@ -1,6 +1,7 @@
 'use client';
 
 import { Slider } from '@/components/slider';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { IndirectImpactNotice } from './indirect-impact-notice';
 
 type Props = {
@@ -10,13 +11,14 @@ type Props = {
 };
 
 export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 	const noCandidates = filteredRecipients === 0;
 	const atMax = !noCandidates && amountOfRecipients === filteredRecipients;
 
 	return (
 		<div className="flex h-full flex-col overflow-hidden rounded-xl border">
 			<div className="space-y-6 p-8">
-				<h3 className="font-medium">Recipients for program start</h3>
+				<h3 className="font-medium">{t('step3.recipients.title')}</h3>
 
 				<div className="flex justify-center">
 					<div className="rounded-lg border px-5 py-2 text-3xl">{noCandidates ? 0 : amountOfRecipients}</div>
@@ -24,8 +26,7 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 
 				{noCandidates ? (
 					<div className="bg-destructive/10 text-destructive rounded-md px-4 py-3 text-sm">
-						No candidates are currently available in the candidate pool. Please go back to Step 2 and adjust the selected
-						causes or ensure candidates are available.
+						{t('step3.recipients.no_candidates')}
 					</div>
 				) : (
 					<>
@@ -43,11 +44,7 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 							<span>{filteredRecipients}</span>
 						</div>
 
-						{atMax && (
-							<p className="text-muted-foreground text-center text-xs">
-								The maximum is determined by the number of candidates currently available for your selected causes.
-							</p>
-						)}
+						{atMax && <p className="text-muted-foreground text-center text-xs">{t('step3.recipients.max_hint')}</p>}
 					</>
 				)}
 			</div>

@@ -9,6 +9,7 @@ type PillMultiSelectProps = {
 	values: string[];
 	selected?: string[];
 	onToggle: (value: string) => void;
+	getLabel?: (value: string) => string;
 };
 
 const pillClasses = {
@@ -25,7 +26,7 @@ const pillClasses = {
 	inactive: 'bg-background hover:bg-muted border',
 };
 
-export const PillMultiSelect = ({ label, values, selected = [], onToggle }: PillMultiSelectProps) => {
+export const PillMultiSelect = ({ label, values, selected = [], onToggle, getLabel }: PillMultiSelectProps) => {
 	return (
 		<div className="space-y-2">
 			<p className="text-sm font-medium">{label}</p>
@@ -43,7 +44,7 @@ export const PillMultiSelect = ({ label, values, selected = [], onToggle }: Pill
 							aria-pressed={isActive}
 							className={cn(pillClasses.base, isActive ? pillClasses.active : pillClasses.inactive)}
 						>
-							<span>{humanize(value)}</span>
+							<span>{getLabel ? getLabel(value) : humanize(value)}</span>
 							{isActive && <X className="h-3.5 w-3.5" aria-hidden />}
 						</button>
 					);

@@ -19,6 +19,7 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 				country: {
 					select: {
 						isoCode: true;
+						currency: true;
 					};
 				};
 			};
