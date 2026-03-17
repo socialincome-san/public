@@ -30,7 +30,7 @@ test('admin users with direct URL sorting matches screenshot', async ({ page }) 
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
-test.only('admin users can show and search by Firebase auth user ID', async ({ page }) => {
+test('admin users can show and search by Firebase auth user ID', async ({ page }) => {
 	const seededUser = await prisma.user.findFirst({
 		where: { contact: { email: 'test@portal.org' } },
 		select: {
