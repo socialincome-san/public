@@ -15,8 +15,8 @@ export const SuccessStep = ({ onGoToLogin }: Props) => {
 					Your program is ready
 				</Typography>
 				<Typography className="text-muted-foreground">
-					We created your account, organization, and initial program setup. Next, log in with your email to open your dashboard and
-					start managing your program.
+					We created your account, organization, and initial program setup. Next, log in with your email to open your
+					dashboard and start managing your program.
 				</Typography>
 			</div>
 

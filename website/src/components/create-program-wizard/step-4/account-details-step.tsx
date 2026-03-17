@@ -45,8 +45,8 @@ export const AccountDetailsStep = ({
 					Almost there
 				</Typography>
 				<Typography className="text-muted-foreground">
-					Share your contact details so we can create your account and a default organization for you. Your new program will be
-					created from the setup in the previous steps, and you can review it right after signing in.
+					Share your contact details so we can create your account and a default organization for you. Your new program will
+					be created from the setup in the previous steps, and you can review it right after signing in.
 				</Typography>
 			</div>
 
