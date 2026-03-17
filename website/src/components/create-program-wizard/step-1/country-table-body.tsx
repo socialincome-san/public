@@ -4,6 +4,7 @@ import { Button } from '@/components/button';
 import { CountryFlag } from '@/components/country-flag';
 import { RadioGroupItem } from '@/components/radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
@@ -20,17 +21,19 @@ type Props = {
 };
 
 export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+
 	return (
 		<div data-testid="country-table" className="max-h-96 overflow-auto rounded-xl border">
 			<Table className="table-fixed">
 				<TableHeader className="bg-muted/40">
 					<TableRow>
 						<TableHead className="w-10" />
-						<TableHead>Country</TableHead>
-						<TableHead>Suitability of cash</TableHead>
-						<TableHead>Mobile money</TableHead>
-						<TableHead>Mobile network</TableHead>
-						<TableHead>No sanctions</TableHead>
+						<TableHead>{t('step1.table.country')}</TableHead>
+						<TableHead>{t('step1.table.cash')}</TableHead>
+						<TableHead>{t('step1.table.mobile_money')}</TableHead>
+						<TableHead>{t('step1.table.mobile_network')}</TableHead>
+						<TableHead>{t('step1.table.sanctions')}</TableHead>
 						<TableHead className="w-10" />
 					</TableRow>
 				</TableHeader>
@@ -39,7 +42,12 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 					{rows.map((row, index) => {
 						const isOpen = openIds.includes(row.id);
 						const isSelected = value === row.id;
-						const bgClass = isSelected ? 'bg-muted' : isOpen ? 'bg-muted/50' : 'hover:bg-muted/40';
+						let bgClass = 'hover:bg-muted/40';
+						if (isSelected) {
+							bgClass = 'bg-muted';
+						} else if (isOpen) {
+							bgClass = 'bg-muted/50';
+						}
 
 						return (
 							<Fragment key={row.id}>

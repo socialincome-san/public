@@ -254,6 +254,13 @@ export const CandidateForm = ({
 		});
 	}, [sessionType]);
 
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (candidateId) {
+		mode = 'edit';
+	}
+
 	return (
 		<DynamicForm
 			formSchema={formSchema}
@@ -261,7 +268,7 @@ export const CandidateForm = ({
 			onSubmit={onSubmit}
 			onCancel={onCancel}
 			onDelete={onDelete}
-			mode={readOnly ? 'readonly' : candidateId ? 'edit' : 'add'}
+			mode={mode}
 		/>
 	);
 };

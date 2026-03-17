@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
@@ -17,6 +18,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	const [state, send] = useMachine(createProgramWizardMachine, {
 		input: { isAuthenticated },
 	});
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	const router = useRouter();
 
@@ -47,7 +49,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 			<Dialog open={isOpen} onOpenChange={(open) => send({ type: open ? 'OPEN' : 'CLOSE' })}>
 				<DialogContent variant="large" className="max-h-[90dvh] overflow-y-auto">
 					<DialogHeader>
-						<DialogTitle>Initiate New Program</DialogTitle>
+						<DialogTitle>{t('modal.title')}</DialogTitle>
 					</DialogHeader>
 
 					<CreateProgramWizard state={state} send={send} onGoToLogin={() => router.replace('/login')} />

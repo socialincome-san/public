@@ -1,0 +1,174 @@
+{
+	"modal": {
+		"title": "Avvia un nuovo programma"
+	},
+	"common": {
+		"back": "Indietro",
+		"continue": "Continua",
+		"retry": "Riprova",
+		"search": "Cerca",
+		"coming_soon": "Prossimamente",
+		"recommended": "Consigliato",
+		"months": "mesi",
+		"per_month": "/ mese",
+		"interval": {
+			"monthly": "Mensile",
+			"quarterly": "Trimestrale",
+			"yearly": "Annuale"
+		}
+	},
+	"error": {
+		"generic": "Qualcosa e andato storto"
+	},
+	"step1": {
+		"choose_country": "Scegli un paese",
+		"feasibility_title": "Verifica la fattibilita del programma cash",
+		"all_conditions_met": "Tutte le condizioni soddisfatte",
+		"no_countries_match": "Nessun paese corrisponde ai filtri correnti",
+		"no_active_programs": "Nessun programma attivo",
+		"country_stats": "{{programCount}} programmi - {{recipientCount}} beneficiari",
+		"table": {
+			"country": "Paese",
+			"cash": "Idoneita del cash",
+			"mobile_money": "Mobile money",
+			"mobile_network": "Rete mobile",
+			"sanctions": "Nessuna sanzione"
+		},
+		"condition": {
+			"met": "Condizione soddisfatta",
+			"not_met": "Condizioni non soddisfatte",
+			"restrictions_apply": "Si applicano restrizioni"
+		},
+		"details": {
+			"cash": {
+				"met": "La funzionalita del mercato in {{country}} sembra integra.",
+				"not_met": "La funzionalita del mercato in {{country}} potrebbe essere compromessa."
+			},
+			"mobile_money": {
+				"met": "L'infrastruttura mobile money in {{country}} e considerata sufficiente.",
+				"not_met": "L'infrastruttura mobile money in {{country}} non e sufficiente."
+			},
+			"mobile_network": {
+				"met": "La copertura della rete mobile in {{country}} e considerata sufficiente.",
+				"not_met": "La copertura della rete mobile in {{country}} e considerata insufficiente."
+			},
+			"sanctions": {
+				"met": "{{country}} non e presente nelle liste sanzionatorie ONU, USA o UE.",
+				"restrictions_apply": "{{country}} e soggetto a sanzioni o restrizioni internazionali."
+			}
+		},
+		"source": {
+			"si_research": "Fonte: SI Research",
+			"sanctions_lists": "Fonte: EU Sanctions Map & US Sanctions List"
+		}
+	},
+	"step2": {
+		"program_management": {
+			"title": "Gestione del programma",
+			"social_income": {
+				"label": "Programma gestito da Social Income",
+				"description": "Social Income gestisce beneficiari, pagamenti e operazioni."
+			},
+			"self_run": {
+				"label": "Gestisci il programma in autonomia",
+				"description": "Gestisci beneficiari e operazioni in modo indipendente."
+			}
+		},
+		"recipient_selection": {
+			"title": "Selezione beneficiari",
+			"universal": {
+				"label": "Approccio universale",
+				"description": "Tutti i beneficiari idonei nel paese selezionato ricevono supporto.",
+				"available": "beneficiari pre-valutati disponibili in questo paese",
+				"empty_error": "E necessario almeno un beneficiario per continuare."
+			},
+			"targeted": {
+				"label": "Approccio mirato",
+				"description": "Il supporto viene fornito ai beneficiari che corrispondono a cause e profili selezionati.",
+				"matching": "beneficiari corrispondono al paese e ai filtri selezionati",
+				"empty_error": "Modifica i filtri in modo che almeno un beneficiario corrisponda."
+			},
+			"causes": "Cause",
+			"profiles": "Profili",
+			"custom": {
+				"label": "Scegli i tuoi beneficiari",
+				"description": "Seleziona e gestisci manualmente i singoli beneficiari."
+			}
+		},
+		"causes": {
+			"poverty": "Poverta",
+			"health": "Salute",
+			"gender_based_violence": "Violenza di genere",
+			"climate": "Clima"
+		},
+		"profiles": {
+			"male": "Maschile",
+			"female": "Femminile",
+			"youth": "Giovani"
+		}
+	},
+	"step3": {
+		"recipients": {
+			"title": "Beneficiari all'avvio del programma",
+			"no_candidates": "Al momento non ci sono candidati disponibili nel pool. Torna al passaggio 2 e modifica le cause selezionate oppure assicurati che ci siano candidati disponibili.",
+			"max_hint": "Il massimo e determinato dal numero di candidati attualmente disponibili per le cause selezionate."
+		},
+		"indirect_notice": {
+			"prefix": "{{recipients}} beneficiari traggono beneficio",
+			"indirect_people": "{{indirect}} persone indirettamente coinvolte in piu",
+			"tooltip": "In media, ogni beneficiario supportato ha un impatto positivo su circa altre cinque persone nel proprio nucleo familiare e nella comunita.",
+			"suffix": "dalla poverta."
+		},
+		"payouts": {
+			"title": "Pagamenti",
+			"customize": "Personalizza"
+		},
+		"payout_controls": {
+			"program_duration": "Durata del programma",
+			"payout_per_interval": "Pagamento per intervallo",
+			"payout_interval": "Intervallo di pagamento"
+		},
+		"payout_summary": {
+			"program_duration": "Durata del programma",
+			"payout_per_interval": "Pagamento per intervallo",
+			"schedule": "Frequenza"
+		},
+		"total_costs": {
+			"title": "Costo totale del programma",
+			"aria": "Mostra il calcolo del costo totale del programma",
+			"updating": "Aggiornamento del costo totale...",
+			"tooltip": "{{recipients}} beneficiari x {{payoutPerInterval}} {{payoutCurrency}} pagamento per intervallo x {{numberOfIntervals}} {{intervalLabel}} = {{totalBudget}} {{displayCurrency}}",
+			"interval_label": {
+				"monthly": "intervalli mensili",
+				"quarterly": "intervalli trimestrali",
+				"yearly": "intervalli annuali"
+			}
+		}
+	},
+	"step4": {
+		"title": "Quasi fatto",
+		"description": "Condividi i tuoi dati di contatto cosi possiamo creare il tuo account e un'organizzazione predefinita. Il tuo nuovo programma verra creato dalle impostazioni dei passaggi precedenti e potrai rivederlo subito dopo l'accesso.",
+		"first_name": {
+			"label": "Nome",
+			"placeholder": "Nome"
+		},
+		"last_name": {
+			"label": "Cognome",
+			"placeholder": "Cognome"
+		},
+		"email": {
+			"label": "Email",
+			"placeholder": "name@example.com"
+		},
+		"validation": {
+			"first_name_required": "Il nome e obbligatorio.",
+			"last_name_required": "Il cognome e obbligatorio.",
+			"email_invalid": "Inserisci un indirizzo email valido."
+		}
+	},
+	"step5": {
+		"title": "Il tuo programma e pronto",
+		"description": "Abbiamo creato il tuo account, la tua organizzazione e la configurazione iniziale del programma. Ora accedi con la tua email per aprire la dashboard e iniziare a gestire il programma.",
+		"go_to_login": "Vai al login"
+	}
+}

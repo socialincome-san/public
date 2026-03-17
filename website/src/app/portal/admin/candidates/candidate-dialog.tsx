@@ -32,11 +32,18 @@ export const CandidateDialog = ({
 		logger.error('Candidate Form Error', { error });
 	};
 
+	let dialogTitle = 'New Candidate';
+	if (readOnly) {
+		dialogTitle = 'View Candidate';
+	} else if (candidateId) {
+		dialogTitle = 'Edit Candidate';
+	}
+
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>{readOnly ? 'View Candidate' : candidateId ? 'Edit Candidate' : 'New Candidate'}</DialogTitle>
+					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
 
 				{errorMessage && (

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { Typography } from '@socialincome/ui';
 
 type Props = {
@@ -8,20 +9,19 @@ type Props = {
 };
 
 export const SuccessStep = ({ onGoToLogin }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+
 	return (
 		<div className="mx-auto max-w-2xl space-y-5 py-2 text-center">
 			<div className="space-y-2">
 				<Typography size="xl" weight="bold">
-					Your program is ready
+					{t('step5.title')}
 				</Typography>
-				<Typography className="text-muted-foreground">
-					We created your account, organization, and initial program setup. Next, log in with your email to open your
-					dashboard and start managing your program.
-				</Typography>
+				<Typography className="text-muted-foreground">{t('step5.description')}</Typography>
 			</div>
 
 			<div className="flex justify-center">
-				<Button onClick={onGoToLogin}>Go to login</Button>
+				<Button onClick={onGoToLogin}>{t('step5.go_to_login')}</Button>
 			</div>
 		</div>
 	);

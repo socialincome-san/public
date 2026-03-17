@@ -534,7 +534,7 @@ export class StripeService extends BaseService {
 				mode: recurring ? 'subscription' : 'payment',
 
 				customer: stripeCustomerId || undefined,
-				customer_creation: stripeCustomerId ? undefined : recurring ? undefined : 'always',
+				customer_creation: !stripeCustomerId && !recurring ? 'always' : undefined,
 				line_items: [
 					{
 						price: price.id,

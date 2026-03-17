@@ -1,6 +1,7 @@
 'use client';
 
 import { Currency } from '@/generated/prisma/enums';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
@@ -17,12 +18,14 @@ type Props = {
 };
 
 export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+
 	if (state.matches('loading') || state.matches('saving')) {
 		return <WizardLoading />;
 	}
 
 	if (state.matches('error')) {
-		return <WizardError message={state.context.error ?? 'Something went wrong'} onRetry={() => window.location.reload()} />;
+		return <WizardError message={state.context.error ?? t('error.generic')} onRetry={() => window.location.reload()} />;
 	}
 
 	if (state.matches('countrySelection')) {

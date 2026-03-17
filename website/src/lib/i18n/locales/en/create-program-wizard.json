@@ -1,0 +1,174 @@
+{
+	"modal": {
+		"title": "Initiate New Program"
+	},
+	"common": {
+		"back": "Back",
+		"continue": "Continue",
+		"retry": "Retry",
+		"search": "Search",
+		"coming_soon": "Coming soon",
+		"recommended": "Recommended",
+		"months": "months",
+		"per_month": "/ month",
+		"interval": {
+			"monthly": "Monthly",
+			"quarterly": "Quarterly",
+			"yearly": "Yearly"
+		}
+	},
+	"error": {
+		"generic": "Something went wrong"
+	},
+	"step1": {
+		"choose_country": "Choose a country",
+		"feasibility_title": "Check cash program feasibility",
+		"all_conditions_met": "All conditions met",
+		"no_countries_match": "No countries match the current filters",
+		"no_active_programs": "No active programs",
+		"country_stats": "{{programCount}} programs - {{recipientCount}} recipients",
+		"table": {
+			"country": "Country",
+			"cash": "Suitability of cash",
+			"mobile_money": "Mobile money",
+			"mobile_network": "Mobile network",
+			"sanctions": "No sanctions"
+		},
+		"condition": {
+			"met": "Condition met",
+			"not_met": "Conditions not met",
+			"restrictions_apply": "Restrictions apply"
+		},
+		"details": {
+			"cash": {
+				"met": "Market functionality in {{country}} appears intact.",
+				"not_met": "Market functionality in {{country}} may be impaired."
+			},
+			"mobile_money": {
+				"met": "Mobile money infrastructure in {{country}} is considered sufficient.",
+				"not_met": "Mobile money infrastructure in {{country}} is not sufficient."
+			},
+			"mobile_network": {
+				"met": "Mobile network coverage in {{country}} is considered sufficient.",
+				"not_met": "Mobile network coverage in {{country}} is considered insufficient."
+			},
+			"sanctions": {
+				"met": "{{country}} is not on the UN, US or EU sanctioned list.",
+				"restrictions_apply": "{{country}} is subject to international sanctions or restrictions."
+			}
+		},
+		"source": {
+			"si_research": "Source: SI Research",
+			"sanctions_lists": "Source: EU Sanctions Map & US Sanctions List"
+		}
+	},
+	"step2": {
+		"program_management": {
+			"title": "Program management",
+			"social_income": {
+				"label": "Program run by Social Income",
+				"description": "Social Income manages recipients, payouts, and operations."
+			},
+			"self_run": {
+				"label": "Run the program yourself",
+				"description": "You manage recipients and operations independently."
+			}
+		},
+		"recipient_selection": {
+			"title": "Recipient selection",
+			"universal": {
+				"label": "Universal approach",
+				"description": "All eligible recipients in the selected country receive support.",
+				"available": "pre-assessed recipients available in this country",
+				"empty_error": "At least one recipient is required to continue."
+			},
+			"targeted": {
+				"label": "Targeted approach",
+				"description": "Support is provided to recipients who match selected causes and profiles.",
+				"matching": "recipients match the selected country and filters",
+				"empty_error": "Please adjust the filters so at least one recipient matches."
+			},
+			"causes": "Causes",
+			"profiles": "Profiles",
+			"custom": {
+				"label": "Choose your own recipients",
+				"description": "Manually select and manage individual recipients."
+			}
+		},
+		"causes": {
+			"poverty": "Poverty",
+			"health": "Health",
+			"gender_based_violence": "Gender based violence",
+			"climate": "Climate"
+		},
+		"profiles": {
+			"male": "Male",
+			"female": "Female",
+			"youth": "Youth"
+		}
+	},
+	"step3": {
+		"recipients": {
+			"title": "Recipients for program start",
+			"no_candidates": "No candidates are currently available in the candidate pool. Please go back to Step 2 and adjust the selected causes or ensure candidates are available.",
+			"max_hint": "The maximum is determined by the number of candidates currently available for your selected causes."
+		},
+		"indirect_notice": {
+			"prefix": "{{recipients}} recipients benefit",
+			"indirect_people": "{{indirect}} additional indirect people",
+			"tooltip": "On average, each supported recipient positively impacts around five additional people in their household and community.",
+			"suffix": "in poverty."
+		},
+		"payouts": {
+			"title": "Payouts",
+			"customize": "Customize"
+		},
+		"payout_controls": {
+			"program_duration": "Program duration",
+			"payout_per_interval": "Payout per interval",
+			"payout_interval": "Payout interval"
+		},
+		"payout_summary": {
+			"program_duration": "Program duration",
+			"payout_per_interval": "Payout per interval",
+			"schedule": "Schedule"
+		},
+		"total_costs": {
+			"title": "Total program costs",
+			"aria": "Show total program cost calculation",
+			"updating": "Updating total cost...",
+			"tooltip": "{{recipients}} recipients x {{payoutPerInterval}} {{payoutCurrency}} payout per interval x {{numberOfIntervals}} {{intervalLabel}} = {{totalBudget}} {{displayCurrency}}",
+			"interval_label": {
+				"monthly": "monthly intervals",
+				"quarterly": "quarterly intervals",
+				"yearly": "yearly intervals"
+			}
+		}
+	},
+	"step4": {
+		"title": "Almost there",
+		"description": "Share your contact details so we can create your account and a default organization for you. Your new program will be created from the setup in the previous steps, and you can review it right after signing in.",
+		"first_name": {
+			"label": "First name",
+			"placeholder": "First name"
+		},
+		"last_name": {
+			"label": "Last name",
+			"placeholder": "Last name"
+		},
+		"email": {
+			"label": "Email",
+			"placeholder": "name@example.com"
+		},
+		"validation": {
+			"first_name_required": "First name is required.",
+			"last_name_required": "Last name is required.",
+			"email_invalid": "Please enter a valid email address."
+		}
+	},
+	"step5": {
+		"title": "Your program is ready",
+		"description": "We created your account, organization, and initial program setup. Next, log in with your email to open your dashboard and start managing your program.",
+		"go_to_login": "Go to login"
+	}
+}

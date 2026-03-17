@@ -293,6 +293,13 @@ export const RecipientForm = ({
 		});
 	}, [sessionType, programId]);
 
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (recipientId) {
+		mode = 'edit';
+	}
+
 	return (
 		<DynamicForm
 			formSchema={formSchema}
@@ -300,7 +307,7 @@ export const RecipientForm = ({
 			onSubmit={onSubmit}
 			onCancel={onCancel}
 			onDelete={onDelete}
-			mode={readOnly ? 'readonly' : recipientId ? 'edit' : 'add'}
+			mode={mode}
 		/>
 	);
 };
