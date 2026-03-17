@@ -45,7 +45,7 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
-			<Badge variant={variant} className="mt-6">
+			<Badge variant={variant} className="px-3 py-1 text-sm font-medium capitalize">
 				{tag.content?.value}
 			</Badge>
 		</Link>
@@ -111,11 +111,10 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						<div className="flex flex-wrap justify-start gap-2">
 							{articleData.type && (
 								<Typography
-									weight="medium"
 									color={articleWithImageStyling ? 'popover' : 'foreground'}
 									size="lg"
 									key={articleData.type.id}
-									className="uppercase"
+									className="capitalize"
 								>
 									{articleData.type.content.value}
 								</Typography>
@@ -164,7 +163,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							</div>
 						</Link>
 
-						<div className="mt-4 flex flex-wrap justify-start gap-2">
+						<div className="mt-8 flex flex-wrap justify-start gap-2">
 							{articleData.tags?.map((tag) =>
 								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
 							)}
@@ -172,7 +171,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 					</div>
 				</div>
 
-				<div className="prose prose-headings:text-foreground prose-a:text-foreground mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
+				<div className="prose prose-headings:text-foreground prose-h1:font-medium prose-h1:text-4xl prose-a:text-foreground mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
 					<OriginalLanguageLink
 						originalLanguage={articleData.originalLanguage}
 						slug={slug}
@@ -182,11 +181,11 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						languageName={translator.t('language-name.' + articleData.originalLanguage)}
 					/>
 
-					<Typography weight="bold" size="2xl" color="foreground">
+					<Typography weight="medium" size="2xl" color="foreground" className="leading-snug">
 						{articleData.leadText}
 					</Typography>
 
-					<Typography as="div" size="lg" className="text-black">
+					<Typography as="div" size="xl" className="text-black">
 						<RichTextRenderer
 							richTextDocument={articleData.content as StoryblokRichtext}
 							translator={translator}
@@ -195,7 +194,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						/>
 					</Typography>
 
-					<Separator className="my-2" />
+					<Separator className="my-10" />
 
 					{articleData.footnotes && (
 						<Typography as="div" className="mt-5 text-black" size="md">
@@ -224,7 +223,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 				{articleData.showRelativeArticles && (
 					<div>
-						<Typography size="4xl" className="text-center" weight="semibold">
+						<Typography size="2xl" className="text-center" weight="medium">
 							{translator.t('article.keep-reading')}
 						</Typography>
 
