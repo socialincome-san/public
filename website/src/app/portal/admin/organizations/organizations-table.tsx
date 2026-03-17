@@ -6,7 +6,7 @@ import { organizationsTableConfig } from '@/components/data-table/configs/organi
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
-import { getErrorMessage } from '@/lib/utils/error-message';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -38,7 +38,7 @@ export default function OrganizationsTable({
 	};
 
 	const onError = (error: unknown) => {
-		const message = getErrorMessage(error);
+		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving organization: ${message}`);
 		logger.error('Organization Form Error', { error });
 	};

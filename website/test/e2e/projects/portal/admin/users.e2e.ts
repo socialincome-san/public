@@ -30,6 +30,44 @@ test('admin users with direct URL sorting matches screenshot', async ({ page }) 
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
+test.only('admin users can show and search by Firebase auth user ID', async ({ page }) => {
+	const seededUser = await prisma.user.findFirst({
+		where: { contact: { email: 'test@portal.org' } },
+		select: {
+			contact: {
+				select: {
+					email: true,
+				},
+			},
+			account: {
+				select: {
+					firebaseAuthUserId: true,
+				},
+			},
+		},
+	});
+	expect(seededUser).toBeDefined();
+	expect(seededUser?.contact.email).toBeTruthy();
+	expect(seededUser?.account.firebaseAuthUserId).toBeTruthy();
+
+	const seededEmail = seededUser?.contact.email ?? '';
+	const seededFirebaseAuthUserId = seededUser?.account.firebaseAuthUserId ?? '';
+
+	await page.goto('/portal/admin/users');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+
+	await expect(page.getByRole('cell', { name: seededFirebaseAuthUserId, exact: true })).toHaveCount(0);
+
+	await page.getByTestId('data-table-columns-button').click();
+	await page.getByTestId('data-table-column-firebaseAuthUserId-toggle').click();
+	await page.keyboard.press('Escape');
+
+	await expect(page.getByRole('cell', { name: seededFirebaseAuthUserId, exact: true })).toBeVisible();
+
+	await page.goto(`/portal/admin/users?page=1&pageSize=10&search=${encodeURIComponent(seededFirebaseAuthUserId)}`);
+	await expect(page.getByRole('cell', { name: seededEmail, exact: true })).toBeVisible();
+});
+
 test('add new user keeps Firebase user in sync', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();

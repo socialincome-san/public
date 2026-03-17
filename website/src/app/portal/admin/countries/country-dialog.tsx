@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { getErrorMessage } from '@/lib/utils/error-message';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import CountriesForm from './countries-form';
 
@@ -17,7 +17,7 @@ type Props = {
 export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onError }: Props) => {
 	const handleError = (error: unknown) => {
 		const action = countryId ? 'updating/deleting' : 'creating';
-		const errorMessage = getErrorMessage(error);
+		const errorMessage = retrieveErrorMessage(error);
 		onError(`Error ${action} country: ${errorMessage}`);
 		logger.error('Country Form Error', { error });
 	};

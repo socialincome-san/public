@@ -3,7 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { getErrorMessage } from '@/lib/utils/error-message';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { Settings } from 'lucide-react';
 import { useState } from 'react';
@@ -19,7 +19,7 @@ export const ProgramSettingsDialog = ({ programId, readOnly }: ProgramSettingsDi
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const handleError = (error: unknown) => {
-		const message = getErrorMessage(error);
+		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error updating program settings: ${message}`);
 		logger.error('Program Settings Form Error', { error });
 	};

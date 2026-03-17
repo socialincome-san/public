@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { getErrorMessage } from '@/lib/utils/error-message';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
@@ -18,7 +18,7 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId, readOnly = fals
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {
-		const message = getErrorMessage(error, { serializeUnknown: true });
+		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving payout: ${message}`);
 		logger.error('Payout Form Error', { error });
 	};

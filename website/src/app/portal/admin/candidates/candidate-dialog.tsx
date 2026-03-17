@@ -3,7 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { Session } from '@/lib/firebase/current-account';
-import { getErrorMessage } from '@/lib/utils/error-message';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { CandidateForm } from './candidates-form';
 
@@ -27,7 +27,7 @@ export const CandidateDialog = ({
 	onError,
 }: Props) => {
 	const handleError = (error: unknown) => {
-		const errorMessage = getErrorMessage(error);
+		const errorMessage = retrieveErrorMessage(error);
 		onError(`Error saving candidate: ${errorMessage}`);
 		logger.error('Candidate Form Error', { error });
 	};
