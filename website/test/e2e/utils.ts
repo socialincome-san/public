@@ -123,14 +123,12 @@ export const selectMultiOptionsByTestId = async (page: Page, fieldName: string, 
 		await page.getByRole('option', { name: optionLabel, exact: true }).first().click();
 	}
 
-	const selectedLabels = await page
-		.locator('[role="option"][aria-label$=", selected"]')
-		.evaluateAll((elements) =>
-			elements
-				.map((element) => element.getAttribute('aria-label'))
-				.filter((value): value is string => Boolean(value))
-				.map((value) => value.replace(/, selected$/, '')),
-		);
+	const selectedLabels = await page.locator('[role="option"][aria-label$=", selected"]').evaluateAll((elements) =>
+		elements
+			.map((element) => element.getAttribute('aria-label'))
+			.filter((value): value is string => Boolean(value))
+			.map((value) => value.replace(/, selected$/, '')),
+	);
 
 	for (const selectedLabel of selectedLabels) {
 		if (desiredLabels.has(selectedLabel)) {

@@ -26,7 +26,14 @@ export class ContributorReadService extends BaseService {
 
 	private buildContributorOrderBy(query: ContributorTableQuery): Prisma.ContributorOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'contributor', 'email', 'firebaseAuthUserId', 'country', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'contributor',
+			'email',
+			'firebaseAuthUserId',
+			'country',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
