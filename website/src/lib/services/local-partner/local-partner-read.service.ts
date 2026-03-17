@@ -31,6 +31,7 @@ export class LocalPartnerReadService extends BaseService {
 			'name',
 			'contactPerson',
 			'email',
+			'firebaseAuthUserId',
 			'contactNumber',
 			'recipientsCount',
 			'createdAt',
@@ -44,6 +45,8 @@ export class LocalPartnerReadService extends BaseService {
 				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
 			case 'email':
 				return [{ contact: { email: direction } }];
+			case 'firebaseAuthUserId':
+				return [{ account: { firebaseAuthUserId: direction } }];
 			case 'contactNumber':
 				return [{ contact: { phone: { number: direction } } }];
 			case 'recipientsCount':
@@ -139,6 +142,7 @@ export class LocalPartnerReadService extends BaseService {
 							{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
+							{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { phone: { number: { contains: search, mode: 'insensitive' as const } } } },
 							...(matchingCauses.length > 0 ? [{ causes: { hasSome: matchingCauses } }] : []),
 						],
@@ -160,6 +164,11 @@ export class LocalPartnerReadService extends BaseService {
 								phone: { select: { number: true } },
 							},
 						},
+						account: {
+							select: {
+								firebaseAuthUserId: true,
+							},
+						},
 						causes: true,
 						_count: { select: { recipients: true } },
 					},
@@ -175,6 +184,7 @@ export class LocalPartnerReadService extends BaseService {
 				name: partner.name,
 				contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
 				email: partner.contact?.email ?? null,
+				firebaseAuthUserId: partner.account.firebaseAuthUserId,
 				contactNumber: partner.contact?.phone?.number ?? null,
 				causes: partner.causes.map((cause) => cause.replace(UNDERSCORE_REGEX, ' ')).join(', '),
 				recipientsCount: partner._count.recipients,

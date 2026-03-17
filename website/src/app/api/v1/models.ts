@@ -50,6 +50,7 @@ const LocalPartner = z.object({
 
 const Country = z.object({
 	isoCode: z.string(),
+	currency: currencyEnum,
 });
 
 const Program = z.object({
@@ -59,6 +60,7 @@ const Program = z.object({
 	country: Country,
 	payoutPerInterval: z.union([z.number(), z.string()]),
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
+	coveredByReserves: z.boolean(),
 	programDurationInMonths: z.number(),
 	createdAt: z.string(),
 	updatedAt: z.string().nullable(),

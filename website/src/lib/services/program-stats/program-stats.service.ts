@@ -38,6 +38,9 @@ export class ProgramStatsService extends BaseService {
 			const nowDate = now();
 			const expectedIntervals = this.getExpectedIntervals(program.programDurationInMonths, program.payoutInterval);
 			const cohorts = this.splitRecipientCohorts(program, nowDate, expectedIntervals);
+			if (program.coveredByReserves) {
+				return this.resultOk(true);
+			}
 			if (cohorts.activeRecipientsCount === 0) {
 				return this.resultOk(false);
 			}
@@ -201,6 +204,7 @@ export class ProgramStatsService extends BaseService {
 			select: {
 				id: true,
 				name: true,
+				coveredByReserves: true,
 				programDurationInMonths: true,
 				payoutPerInterval: true,
 				country: {

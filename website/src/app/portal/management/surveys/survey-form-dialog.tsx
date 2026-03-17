@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import { SurveyForm } from './survey-form';
@@ -17,12 +18,7 @@ export const SurveyFormDialog = ({ open, onOpenChange, surveyId, readOnly = fals
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {
-		const message =
-			error instanceof Error
-				? error.message
-				: typeof error === 'string'
-					? error
-					: 'An unexpected error occurred while saving.';
+		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving survey: ${message}`);
 		logger.error('Survey Form Error', { error });
 	};

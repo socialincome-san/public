@@ -2,7 +2,7 @@
 
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
-import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
 import {
 	createCandidateAction,
@@ -55,11 +55,11 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): CandidateF
 		fields: {
 			suspendedAt: {
 				label: 'Suspended At',
-				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
+				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).nullable().optional(),
 			},
 			suspensionReason: {
 				label: 'Suspension Reason',
-				zodSchema: z.string().optional(),
+				zodSchema: z.string().nullable().optional(),
 			},
 			successorName: {
 				placeholder: 'Successor',
@@ -188,36 +188,37 @@ export const CandidateForm = ({
 					onSuccess: (data) => {
 						setCandidate(data);
 						setFormSchema((previousSchema) => {
+							const nextSchema = clearFormSchemaValues(previousSchema);
 							const clonedContactFields = Object.fromEntries(
-								Object.entries(previousSchema.fields.contact.fields).map(([key, field]) => [key, { ...field }]),
+								Object.entries(nextSchema.fields.contact.fields).map(([key, field]) => [key, { ...field }]),
 							);
 							const contactValues = getContactValuesFromPayload(data.contact, clonedContactFields);
 							const updatedSchema: CandidateFormSchema = {
-								...previousSchema,
+								...nextSchema,
 								fields: {
-									...previousSchema.fields,
-									suspendedAt: { ...previousSchema.fields.suspendedAt, value: data.suspendedAt },
-									suspensionReason: { ...previousSchema.fields.suspensionReason, value: data.suspensionReason },
-									successorName: { ...previousSchema.fields.successorName, value: data.successorName },
-									termsAccepted: { ...previousSchema.fields.termsAccepted, value: data.termsAccepted },
+									...nextSchema.fields,
+									suspendedAt: { ...nextSchema.fields.suspendedAt, value: data.suspendedAt },
+									suspensionReason: { ...nextSchema.fields.suspensionReason, value: data.suspensionReason },
+									successorName: { ...nextSchema.fields.successorName, value: data.successorName },
+									termsAccepted: { ...nextSchema.fields.termsAccepted, value: data.termsAccepted },
 									contact: {
-										...previousSchema.fields.contact,
+										...nextSchema.fields.contact,
 										fields: contactValues,
 									},
 									paymentInformation: {
-										...previousSchema.fields.paymentInformation,
+										...nextSchema.fields.paymentInformation,
 										fields: {
-											...previousSchema.fields.paymentInformation.fields,
+											...nextSchema.fields.paymentInformation.fields,
 											provider: {
-												...previousSchema.fields.paymentInformation.fields.provider,
+												...nextSchema.fields.paymentInformation.fields.provider,
 												value: data.paymentInformation?.mobileMoneyProvider?.id,
 											},
 											code: {
-												...previousSchema.fields.paymentInformation.fields.code,
+												...nextSchema.fields.paymentInformation.fields.code,
 												value: data.paymentInformation?.code,
 											},
 											phone: {
-												...previousSchema.fields.paymentInformation.fields.phone,
+												...nextSchema.fields.paymentInformation.fields.phone,
 												value: data.paymentInformation?.phone?.number,
 											},
 										},

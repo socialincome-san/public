@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
 import {
 	createCountryAction,
@@ -200,7 +200,7 @@ const initialFormSchema: CountryFormSchema = {
 };
 
 export default function CountriesForm({ onSuccess, onError, onCancel, countryId }: CountryFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [country, setCountry] = useState<CountryPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -243,8 +243,8 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 					setCountry(countryResult.data);
 				}
 
-				setFormSchema((prev) => {
-					const next = { ...prev, fields: { ...prev.fields } };
+				setFormSchema(() => {
+					const next = cloneFormSchema(initialFormSchema);
 					if (optionsResult.success && optionsResult.data.length > 0) {
 						next.fields.mobileMoney.fields.mobileMoneyProviders = {
 							...next.fields.mobileMoney.fields.mobileMoneyProviders,

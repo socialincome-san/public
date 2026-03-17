@@ -2,8 +2,7 @@
 
 import { Badge } from '@/components/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
-import { Cause } from '@/generated/prisma/enums';
-import { Profile } from '@/lib/services/candidate/candidate.types';
+import { Cause, Profile } from '@/generated/prisma/enums';
 import { cn } from '@/lib/utils/cn';
 import { SpinnerIcon } from '@socialincome/ui';
 import { RadioCard } from '../radio-card';
@@ -76,14 +75,14 @@ export const RecipientSelectionSection = ({
 							label="Causes"
 							values={Object.values(Cause)}
 							selected={targetCauses}
-							onToggle={(value) => onToggleCause(value as Cause)}
+							onToggle={(selectedCause) => onToggleCause(selectedCause as Cause)}
 						/>
 
 						<PillMultiSelect
 							label="Profiles"
 							values={Object.values(Profile)}
 							selected={targetProfiles}
-							onToggle={(value) => onToggleProfile(value as Profile)}
+							onToggle={(selectedProfile) => onToggleProfile(selectedProfile as Profile)}
 						/>
 
 						<div className={cn('text-sm', noTargetedRecipients ? 'text-destructive' : 'text-muted-foreground')}>
