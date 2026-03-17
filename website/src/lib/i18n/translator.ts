@@ -52,8 +52,8 @@ export class Translator {
 
 	public t: TranslateFunction = <T = string>(key: string, translateProps?: TranslateProps) => {
 		return this.instance.t(key, {
-			ns: translateProps?.namespace || this.namespaces,
-			lng: translateProps?.language || this.language,
+			ns: translateProps?.namespace ?? this.namespaces,
+			lng: translateProps?.language ?? this.language,
 			...translateProps?.context,
 		}) as T;
 	};

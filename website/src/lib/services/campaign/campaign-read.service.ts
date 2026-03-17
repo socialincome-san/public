@@ -329,6 +329,8 @@ export class CampaignReadService extends BaseService {
 	private getCampaignLink(id: string, legacyFirestoreId: string | null): string {
 		const base = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
 
-		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${legacyFirestoreId || id}`;
+		const campaignId = legacyFirestoreId && legacyFirestoreId.length > 0 ? legacyFirestoreId : id;
+
+		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${campaignId}`;
 	}
 }

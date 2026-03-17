@@ -5,7 +5,7 @@ export const baseSentryConfig = {
 	debug: false,
 	enableLogs: true,
 
-	release: process.env.NEXT_PUBLIC_APP_VERSION || undefined,
+	release: process.env.NEXT_PUBLIC_APP_VERSION ?? undefined,
 	environment: process.env.NEXT_PUBLIC_APP_ENVIRONMENT,
 
 	tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1,

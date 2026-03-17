@@ -18,7 +18,7 @@ const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
 };
 
 const getFlag = (abbreviation: string): ReactElement<unknown> => {
-	return country_abbreviations_to_flag_map[abbreviation] || <SL_Flag className="h-5 w-5 rounded-full" />;
+	return country_abbreviations_to_flag_map[abbreviation] ?? <SL_Flag className="h-5 w-5 rounded-full" />;
 };
 
 export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang, region }: NgoHomeProps) => {
@@ -46,12 +46,12 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 		orgFundRaiserText: currentNgo['org-fundraiser-text'] ?? null,
 		orgSlug: currentNgo['org-slug'],
 	};
-	const showVisitOnline = !!(
-		ngoHoverCard.orgInstagram ||
-		ngoHoverCard.orgFacebook ||
-		ngoHoverCard.orgWebsite ||
-		ngoHoverCard.orgLinkedIn ||
-		ngoHoverCard.orgYoutube
+	const showVisitOnline = Boolean(
+		ngoHoverCard.orgInstagram ??
+		ngoHoverCard.orgFacebook ??
+		ngoHoverCard.orgWebsite ??
+		ngoHoverCard.orgLinkedIn ??
+		ngoHoverCard.orgYoutube,
 	);
 
 	const showFundRaiser = !!ngoHoverCard.orgFundRaiserText;
@@ -85,7 +85,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
 							<Badge variant="interactive" size="md" className="space-x-2">
-								{countryBadge?.countryFlagComponent || <SL_Flag className="h-5 w-5 rounded-full" />}
+								{countryBadge?.countryFlagComponent ?? <SL_Flag className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
 									{currentNgoCountry}
 								</Typography>

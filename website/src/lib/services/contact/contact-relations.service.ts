@@ -51,7 +51,7 @@ export class ContactRelationsService extends BaseService {
 	}
 
 	hasAddressInput(contact: ContactAddressFields): boolean {
-		return !!(contact.street || contact.number || contact.city || contact.zip || contact.country);
+		return [contact.street, contact.number, contact.city, contact.zip, contact.country].some(Boolean);
 	}
 
 	buildPhoneWriteOperation({

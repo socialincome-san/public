@@ -189,7 +189,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 							)}
 						/>
 					</div>
-					{region === 'ch' && ['CHF', 'EUR'].includes(currency || '') && (
+					{region === 'ch' && ['CHF', 'EUR'].includes(currency ?? '') && (
 						<div className="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<FormField
 								control={form.control}

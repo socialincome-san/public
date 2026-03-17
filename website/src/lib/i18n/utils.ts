@@ -44,7 +44,7 @@ export const findBestLocale = (
 		};
 	}
 
-	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
+	const options = langParser.parse(request.headers.get('Accept-Language') ?? 'en');
 	const cfCountry = request.headers.get('cf-ipcountry')?.toLowerCase();
 
 	const bestOption = options.find(
@@ -55,11 +55,13 @@ export const findBestLocale = (
 			websiteRegions.includes(option.region.toLowerCase() as WebsiteRegion),
 	);
 
+	const language = (bestOption?.code as WebsiteLanguage) ?? defaultLanguage;
+	const regionFromCountry =
+		cfCountry && websiteRegions.includes(cfCountry as WebsiteRegion) ? (cfCountry as WebsiteRegion) : undefined;
+	const regionFromLanguage = bestOption?.region?.toLowerCase() as WebsiteRegion | undefined;
+
 	return {
-		language: (bestOption?.code as WebsiteLanguage) || defaultLanguage,
-		region:
-			(cfCountry && websiteRegions.includes(cfCountry as WebsiteRegion) && (cfCountry as WebsiteRegion)) ||
-			(bestOption?.region?.toLowerCase() as WebsiteRegion) ||
-			defaultRegion,
+		language,
+		region: regionFromCountry ?? regionFromLanguage ?? defaultRegion,
 	};
 };

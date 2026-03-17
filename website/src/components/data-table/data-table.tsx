@@ -62,7 +62,7 @@ const formatTableError = (error: string): string => {
 		}
 	}
 
-	return raw || 'Something went wrong while loading this table.';
+	return raw.length > 0 ? raw : 'Something went wrong while loading this table.';
 };
 
 export default function DataTable<Row>({
@@ -90,7 +90,7 @@ export default function DataTable<Row>({
 	toolbarFilters = [],
 }: DataTableProps<Row>) {
 	const stableTableMinHeightClass = 'min-h-[680px] md:min-h-[760px]';
-	const translator = useTranslator(lang || 'en', 'website-me');
+	const translator = useTranslator(lang ?? 'en', 'website-me');
 	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, translator);
 	const columns = showEntityIdColumn
 		? ([
@@ -203,7 +203,7 @@ export default function DataTable<Row>({
 		}
 		onQueryChange({
 			page: 1,
-			sortBy: sortBy || undefined,
+			sortBy: sortBy ?? undefined,
 			sortDirection: sortBy ? (sortDirection ?? 'asc') : undefined,
 		});
 	};

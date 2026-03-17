@@ -65,7 +65,7 @@ export const getScaledDimensions = (url: string, maxWidth: number): { width: num
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
 export const formatStoryblokUrl = (url: string, width: number, height: number, focus?: string | null) => {
-	const crop = focus || 'smart';
+	const crop = focus ?? 'smart';
 	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
 
 	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;

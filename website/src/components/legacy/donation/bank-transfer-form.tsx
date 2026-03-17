@@ -61,7 +61,7 @@ export const BankTransferForm = ({
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
 		amount,
 		intervalCount,
-		currency: currency || '',
+		currency: currency ?? '',
 		qrBillType,
 		translations,
 	});

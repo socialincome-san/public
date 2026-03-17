@@ -93,8 +93,8 @@ export const SuccessForm = ({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			email,
-			firstname: firstname || '',
-			lastname: lastname || '',
+			firstname: firstname ?? '',
+			lastname: lastname ?? '',
 			country,
 			termsAndConditions: false,
 		},

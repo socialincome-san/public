@@ -121,7 +121,7 @@ const i18nRedirectMiddleware = (request: NextRequest) => {
 };
 
 export const proxy = (request: NextRequest) => {
-	let response = redirectMiddleware(request) || i18nRedirectMiddleware(request);
+	let response = redirectMiddleware(request) ?? i18nRedirectMiddleware(request);
 	if (response) {
 		return response;
 	}

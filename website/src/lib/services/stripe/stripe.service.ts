@@ -298,7 +298,7 @@ export class StripeService extends BaseService {
 
 		const session = sessions.data.length > 0 ? sessions.data[0] : null;
 
-		return session?.metadata || null;
+		return session?.metadata ?? null;
 	}
 
 	private constructStatus(status: Stripe.Charge.Status): ContributionStatus {
@@ -533,7 +533,7 @@ export class StripeService extends BaseService {
 			const session = await this.getStripeClientOrThrow().checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
 
-				customer: stripeCustomerId || undefined,
+				customer: stripeCustomerId ?? undefined,
 				customer_creation: stripeCustomerId ? undefined : recurring ? undefined : 'always',
 				line_items: [
 					{
@@ -653,7 +653,7 @@ export class StripeService extends BaseService {
 		try {
 			const customer = await this.getStripeClientOrThrow().customers.create({
 				email,
-				name: name || undefined,
+				name: name ?? undefined,
 			});
 
 			return this.resultOk(customer.id);
@@ -719,7 +719,7 @@ export class StripeService extends BaseService {
 				return this.resultFail(`Stripe customer ${stripeCustomer.id} was deleted`);
 			}
 
-			const contributorEmail = user.email || stripeCustomer.email || null;
+			const contributorEmail = user.email ?? stripeCustomer.email ?? null;
 
 			if (!contributorEmail) {
 				return this.resultFail('A contributor email is required');

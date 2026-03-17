@@ -134,7 +134,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	const sendSignInEmail = async (email: string, targetUrl?: string) => {
 		setSendingEmail(true);
 
-		const url = new URL(targetUrl || window.location.href);
+		const url = new URL(targetUrl ?? window.location.href);
 		url.searchParams.set('email', email);
 
 		const actionCodeSettings = {

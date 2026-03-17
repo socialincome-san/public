@@ -68,12 +68,12 @@ export class SendgridSubscriptionService extends Client {
 				return this.resultFail('Email missing contributor');
 			}
 			await this.upsertSubscription({
-				firstname: contributor.firstName || '',
-				lastname: contributor.lastName || '',
+				firstname: contributor.firstName ?? '',
+				lastname: contributor.lastName ?? '',
 				email: contributor.email,
 				status: 'unsubscribed',
-				language: (contributor.language || 'de') as SupportedLanguage,
-				country: contributor.country || 'CH',
+				language: (contributor.language ?? 'de') as SupportedLanguage,
+				country: contributor.country ?? 'CH',
 			});
 
 			return this.resultOk(undefined);

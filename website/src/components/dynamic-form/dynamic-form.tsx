@@ -381,7 +381,7 @@ const GenericFormField = ({
 											emitChange(value);
 										}}
 										placeholder={formFieldSchema.placeholder}
-										disabled={formFieldSchema.disabled || isLoading || readOnly}
+										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -403,7 +403,7 @@ const GenericFormField = ({
 									<Input
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey)}
-										disabled={formFieldSchema.disabled || isLoading || readOnly}
+										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -422,7 +422,7 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<FormControl>
 									<DatePicker
-										disabled={formFieldSchema.disabled || isLoading || readOnly}
+										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 										{...form.register(optionKey)}
 										onSelect={(value) => {
 											field.onChange(value);
@@ -461,7 +461,7 @@ const GenericFormField = ({
 												emitChange(value);
 											}}
 											placeholder={formFieldSchema.placeholder}
-											disabled={formFieldSchema.disabled || isLoading || readOnly}
+											disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -485,7 +485,7 @@ const GenericFormField = ({
 										field.onChange(value);
 										emitChange(value);
 									}}
-									disabled={formFieldSchema.disabled || isLoading || readOnly}
+									disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 								>
 									<FormControl>
 										<SelectTrigger aria-placeholder={formFieldSchema.placeholder}>
@@ -517,7 +517,7 @@ const GenericFormField = ({
 								<Label htmlFor={optionKey}>{label}</Label>
 								<Switch
 									id={optionKey}
-									disabled={formFieldSchema.disabled || isLoading || readOnly}
+									disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									onCheckedChange={(value) => {
 										field.onChange(value);
 										emitChange(value);
@@ -547,7 +547,7 @@ const GenericFormField = ({
 										{...form.register(optionKey, {
 											setValueAs: (v) => (typeof v === 'string' && v !== '' ? parseFloat(v) : null),
 										})}
-										disabled={formFieldSchema.disabled || isLoading || readOnly}
+										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									/>
 								</FormControl>
 								<FormMessage />

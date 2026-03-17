@@ -50,8 +50,8 @@ export class DonationCertificateWriteService extends BaseService {
 			const contributor = result.data[0];
 
 			const lang =
-				LANGUAGE_CODES.find((l) => l === language) ||
-				LANGUAGE_CODES.find((l) => l === contributor.language) ||
+				LANGUAGE_CODES.find((l) => l === language) ??
+				LANGUAGE_CODES.find((l) => l === contributor.language) ??
 				DEFAULT_DONATION_CERTIFICATE_LANGUAGE;
 
 			const existingCertificate = await this.donationCertificateReadService.findByYearAndLanguage(
