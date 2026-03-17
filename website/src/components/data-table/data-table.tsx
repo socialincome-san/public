@@ -3,12 +3,12 @@
 import { type ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import { BaseTable } from '@/components/data-table/elements/base-table';
 import { DataTableEmptyState } from '@/components/data-table/elements/data-table-empty-state';
-import { IdCell } from '@/components/data-table/elements/id-cell';
 import {
 	DataTableToolbar,
 	type ToolbarFilter,
 	type ToolbarSortOption,
 } from '@/components/data-table/elements/data-table-toolbar';
+import { IdCell } from '@/components/data-table/elements/id-cell';
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
 import { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
