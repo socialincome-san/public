@@ -21,8 +21,8 @@
 		"generic": "Une erreur est survenue"
 	},
 	"step1": {
-		"choose_country": "Choisir un pays",
-		"feasibility_title": "Verifier la faisabilite du programme de cash",
+		"choose_country": "Sélectionnez un pays où nous opérons",
+		"feasibility_title": "Verifier l'eligibilite pour n'importe quel pays en Afrique",
 		"all_conditions_met": "Toutes les conditions sont remplies",
 		"no_countries_match": "Aucun pays ne correspond aux filtres actuels",
 		"no_active_programs": "Aucun programme actif",
@@ -31,13 +31,13 @@
 			"country": "Pays",
 			"cash": "Adequation du cash",
 			"mobile_money": "Mobile money",
-			"mobile_network": "Reseau mobile",
+			"mobile_network": "Couverture reseau",
 			"sanctions": "Aucune sanction"
 		},
 		"condition": {
 			"met": "Condition remplie",
 			"not_met": "Conditions non remplies",
-			"restrictions_apply": "Des restrictions s'appliquent"
+			"restrictions_apply": "Restrictions"
 		},
 		"details": {
 			"cash": {
@@ -45,20 +45,22 @@
 				"not_met": "Le fonctionnement du marche en {{country}} pourrait etre degrade."
 			},
 			"mobile_money": {
-				"met": "L'infrastructure mobile money en {{country}} est consideree comme suffisante.",
-				"not_met": "L'infrastructure mobile money en {{country}} n'est pas suffisante."
+				"met": "L'infrastructure mobile money semble suffisante. {{providerCount}} fournisseurs actifs : {{providers}}.",
+				"not_met": "L'infrastructure mobile money semble insuffisante."
 			},
 			"mobile_network": {
-				"met": "La couverture du reseau mobile en {{country}} est consideree comme suffisante.",
-				"not_met": "La couverture du reseau mobile en {{country}} est consideree comme insuffisante."
+				"met": "La couverture du reseau mobile est consideree comme suffisante, avec {{populationCoverage}}% de couverture de la population.",
+				"met_with_tech": "La couverture du reseau mobile est consideree comme suffisante, avec {{populationCoverage}}% de couverture de la population sur {{tech}}.",
+				"not_met": "La couverture du reseau mobile est consideree comme insuffisante. Seulement {{populationCoverage}}% de la population est couverte.",
+				"not_met_unknown": "La couverture du reseau mobile est consideree comme insuffisante."
 			},
 			"sanctions": {
-				"met": "{{country}} ne figure pas sur les listes de sanctions de l'ONU, des Etats-Unis ou de l'UE.",
-				"restrictions_apply": "{{country}} est soumis a des sanctions ou restrictions internationales."
+				"met": "{{country}} n'est pas soumis a des sanctions internationales.",
+				"restrictions_apply": "{{country}} est soumis a des sanctions internationales."
 			}
 		},
 		"source": {
-			"si_research": "Source: SI Research",
+			"si_research": "SI research",
 			"sanctions_lists": "Source: EU Sanctions Map & US Sanctions List"
 		}
 	},

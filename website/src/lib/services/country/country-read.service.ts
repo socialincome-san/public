@@ -230,7 +230,29 @@ export class CountryReadService extends BaseService {
 				const mobileMoneyIsOverridden = country.mobileMoneyConditionOverride ?? false;
 				const cashCondition = this.getCashCondition(microfinanceIndex, cashIsOverridden);
 				const mobileMoneyCondition = this.getMobileMoneyCondition(country.mobileMoneyProviders, mobileMoneyIsOverridden);
+				const mobileMoneyProviders = country.mobileMoneyProviders ?? [];
+				const mobileMoneyProviderCount = mobileMoneyProviders.length;
+				const mobileMoneyProviderNames = mobileMoneyProviders.map((provider) => provider.name).join(', ');
+				const mobileNetworkCondition = this.getMobileNetworkCondition(populationCoverage);
+				const networkTechnologyLabel = this.getNetworkTechnologyLabel(country.networkTechnology);
 				const countryName = getCountryNameByCode(country.isoCode);
+				const mobileNetworkTranslationKey =
+					mobileNetworkCondition === CountryCondition.MET
+						? networkTechnologyLabel
+							? 'step1.details.mobile_network.met_with_tech'
+							: 'step1.details.mobile_network.met'
+						: populationCoverage === null
+							? 'step1.details.mobile_network.not_met_unknown'
+							: 'step1.details.mobile_network.not_met';
+				let mobileNetworkTranslationContext: Record<string, string | number> | undefined;
+				if (mobileNetworkCondition === CountryCondition.MET) {
+					mobileNetworkTranslationContext = { populationCoverage: populationCoverage ?? 0 };
+					if (networkTechnologyLabel) {
+						mobileNetworkTranslationContext.tech = networkTechnologyLabel;
+					}
+				} else if (populationCoverage !== null) {
+					mobileNetworkTranslationContext = { populationCoverage };
+				}
 
 				const programCount = country._count.programs;
 
@@ -274,20 +296,24 @@ export class CountryReadService extends BaseService {
 								mobileMoneyCondition === CountryCondition.MET
 									? 'step1.details.mobile_money.met'
 									: 'step1.details.mobile_money.not_met',
-							translationContext: { country: countryName },
+							translationContext:
+								mobileMoneyCondition === CountryCondition.MET
+									? {
+											providerCount: mobileMoneyProviderCount,
+											providerLabel: mobileMoneyProviderCount > 1 ? 'providers' : 'provider',
+											providers: mobileMoneyProviderNames,
+										}
+									: undefined,
 							source: {
 								translationKey: 'step1.source.si_research',
 							},
 						},
 					},
 					mobileNetwork: {
-						condition: this.getMobileNetworkCondition(populationCoverage),
+						condition: mobileNetworkCondition,
 						details: {
-							translationKey:
-								this.getMobileNetworkCondition(populationCoverage) === CountryCondition.MET
-									? 'step1.details.mobile_network.met'
-									: 'step1.details.mobile_network.not_met',
-							translationContext: { country: countryName },
+							translationKey: mobileNetworkTranslationKey,
+							translationContext: mobileNetworkTranslationContext,
 							source: country.networkSourceLink
 								? {
 										text: country.networkSourceLink.text,
@@ -326,7 +352,7 @@ export class CountryReadService extends BaseService {
 			return CountryCondition.MET;
 		}
 
-		if (microfinanceIndex === null) {
+		if (microfinanceIndex === null || microfinanceIndex === 0) {
 			return CountryCondition.NOT_MET;
 		}
 
@@ -350,6 +376,30 @@ export class CountryReadService extends BaseService {
 		}
 
 		return populationCoverage >= 50 ? CountryCondition.MET : CountryCondition.NOT_MET;
+	}
+
+	private getNetworkTechnologyLabel(networkTechnology: NetworkTechnology | null): string | undefined {
+		if (!networkTechnology) {
+			return undefined;
+		}
+
+		if (networkTechnology === NetworkTechnology.g3) {
+			return '3G';
+		}
+
+		if (networkTechnology === NetworkTechnology.g4) {
+			return '4G';
+		}
+
+		if (networkTechnology === NetworkTechnology.g5) {
+			return '5G';
+		}
+
+		if (networkTechnology === NetworkTechnology.satellite) {
+			return 'satellite';
+		}
+
+		return undefined;
 	}
 
 	private getSanctionsCondition(sanctions: SanctionRegime[] | null): CountryCondition {

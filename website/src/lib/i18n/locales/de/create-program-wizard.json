@@ -21,8 +21,8 @@
 		"generic": "Etwas ist schiefgelaufen"
 	},
 	"step1": {
-		"choose_country": "Land auswählen",
-		"feasibility_title": "Eignung für Bargeldprogramm prüfen",
+		"choose_country": "Wähle ein Land, in dem wir tätig sind",
+		"feasibility_title": "Prüfe die Eignung für jedes Land in Afrika",
 		"all_conditions_met": "Alle Bedingungen erfüllt",
 		"no_countries_match": "Keine Länder entsprechen den aktuellen Filtern",
 		"no_active_programs": "Keine aktiven Programme",
@@ -31,13 +31,13 @@
 			"country": "Land",
 			"cash": "Eignung für Bargeld",
 			"mobile_money": "Mobile Money",
-			"mobile_network": "Mobilfunknetz",
+			"mobile_network": "Netzabdeckung",
 			"sanctions": "Keine Sanktionen"
 		},
 		"condition": {
 			"met": "Bedingung erfüllt",
 			"not_met": "Bedingungen nicht erfüllt",
-			"restrictions_apply": "Einschränkungen gelten"
+			"restrictions_apply": "Einschränkungen"
 		},
 		"details": {
 			"cash": {
@@ -45,20 +45,22 @@
 				"not_met": "Die Marktfunktionalität in {{country}} könnte eingeschränkt sein."
 			},
 			"mobile_money": {
-				"met": "Die Mobile-Money-Infrastruktur in {{country}} gilt als ausreichend.",
-				"not_met": "Die Mobile-Money-Infrastruktur in {{country}} ist nicht ausreichend."
+				"met": "Die Mobile-Money-Infrastruktur scheint ausreichend. {{providerCount}} aktive Anbieter: {{providers}}.",
+				"not_met": "Die Mobile-Money-Infrastruktur scheint unzureichend."
 			},
 			"mobile_network": {
-				"met": "Die Mobilfunkabdeckung in {{country}} gilt als ausreichend.",
-				"not_met": "Die Mobilfunkabdeckung in {{country}} gilt als unzureichend."
+				"met": "Die Mobilfunkabdeckung gilt als ausreichend, mit {{populationCoverage}}% Bevölkerungsabdeckung.",
+				"met_with_tech": "Die Mobilfunkabdeckung gilt als ausreichend, mit {{populationCoverage}}% Bevölkerungsabdeckung auf {{tech}}.",
+				"not_met": "Die Mobilfunkabdeckung gilt als unzureichend. Nur {{populationCoverage}}% der Bevölkerung sind abgedeckt.",
+				"not_met_unknown": "Die Mobilfunkabdeckung gilt als unzureichend."
 			},
 			"sanctions": {
-				"met": "{{country}} steht nicht auf der UN-, US- oder EU-Sanktionsliste.",
-				"restrictions_apply": "Für {{country}} gelten internationale Sanktionen oder Einschränkungen."
+				"met": "{{country}} unterliegt keinen internationalen Sanktionen.",
+				"restrictions_apply": "{{country}} unterliegt internationalen Sanktionen."
 			}
 		},
 		"source": {
-			"si_research": "Quelle: SI Research",
+			"si_research": "SI research",
 			"sanctions_lists": "Quelle: EU Sanctions Map & US Sanctions List"
 		}
 	},

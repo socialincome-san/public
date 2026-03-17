@@ -26,7 +26,7 @@ const CONDITION_UI: Record<
 	},
 	[CountryCondition.RESTRICTIONS_APPLY]: {
 		variant: 'secondary',
-		label: 'Restrictions apply',
+		label: 'Restrictions',
 		Icon: AlertTriangleIcon,
 	},
 };

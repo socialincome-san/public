@@ -21,8 +21,8 @@
 		"generic": "Something went wrong"
 	},
 	"step1": {
-		"choose_country": "Choose a country",
-		"feasibility_title": "Check cash program feasibility",
+		"choose_country": "Select a country we operate in",
+		"feasibility_title": "Review eligibility for any country in Africa",
 		"all_conditions_met": "All conditions met",
 		"no_countries_match": "No countries match the current filters",
 		"no_active_programs": "No active programs",
@@ -31,13 +31,13 @@
 			"country": "Country",
 			"cash": "Suitability of cash",
 			"mobile_money": "Mobile money",
-			"mobile_network": "Mobile network",
+			"mobile_network": "Network coverage",
 			"sanctions": "No sanctions"
 		},
 		"condition": {
 			"met": "Condition met",
 			"not_met": "Conditions not met",
-			"restrictions_apply": "Restrictions apply"
+			"restrictions_apply": "Restrictions"
 		},
 		"details": {
 			"cash": {
@@ -45,20 +45,22 @@
 				"not_met": "Market functionality in {{country}} may be impaired."
 			},
 			"mobile_money": {
-				"met": "Mobile money infrastructure in {{country}} is considered sufficient.",
-				"not_met": "Mobile money infrastructure in {{country}} is not sufficient."
+				"met": "Mobile money infrastructure appears sufficient. {{providerCount}} active {{providerLabel}}: {{providers}}.",
+				"not_met": "Mobile money infrastructure appears insufficient."
 			},
 			"mobile_network": {
-				"met": "Mobile network coverage in {{country}} is considered sufficient.",
-				"not_met": "Mobile network coverage in {{country}} is considered insufficient."
+				"met": "Mobile network coverage is considered sufficient, with {{populationCoverage}}% population coverage.",
+				"met_with_tech": "Mobile network coverage is considered sufficient, with {{populationCoverage}}% population coverage on {{tech}}.",
+				"not_met": "Mobile network coverage is considered insufficient. Only {{populationCoverage}}% of the population is covered.",
+				"not_met_unknown": "Mobile network coverage is considered insufficient."
 			},
 			"sanctions": {
-				"met": "{{country}} is not on the UN, US or EU sanctioned list.",
-				"restrictions_apply": "{{country}} is subject to international sanctions or restrictions."
+				"met": "{{country}} is not subject to international sanctions.",
+				"restrictions_apply": "{{country}} is subject to international sanctions."
 			}
 		},
 		"source": {
-			"si_research": "Source: SI Research",
+			"si_research": "SI research",
 			"sanctions_lists": "Source: EU Sanctions Map & US Sanctions List"
 		}
 	},

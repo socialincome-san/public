@@ -21,8 +21,8 @@
 		"generic": "Qualcosa e andato storto"
 	},
 	"step1": {
-		"choose_country": "Scegli un paese",
-		"feasibility_title": "Verifica la fattibilita del programma cash",
+		"choose_country": "Seleziona un paese in cui operiamo",
+		"feasibility_title": "Verifica l'idoneita per qualsiasi paese in Africa",
 		"all_conditions_met": "Tutte le condizioni soddisfatte",
 		"no_countries_match": "Nessun paese corrisponde ai filtri correnti",
 		"no_active_programs": "Nessun programma attivo",
@@ -31,13 +31,13 @@
 			"country": "Paese",
 			"cash": "Idoneita del cash",
 			"mobile_money": "Mobile money",
-			"mobile_network": "Rete mobile",
+			"mobile_network": "Copertura di rete",
 			"sanctions": "Nessuna sanzione"
 		},
 		"condition": {
 			"met": "Condizione soddisfatta",
 			"not_met": "Condizioni non soddisfatte",
-			"restrictions_apply": "Si applicano restrizioni"
+			"restrictions_apply": "Restrizioni"
 		},
 		"details": {
 			"cash": {
@@ -45,20 +45,22 @@
 				"not_met": "La funzionalita del mercato in {{country}} potrebbe essere compromessa."
 			},
 			"mobile_money": {
-				"met": "L'infrastruttura mobile money in {{country}} e considerata sufficiente.",
-				"not_met": "L'infrastruttura mobile money in {{country}} non e sufficiente."
+				"met": "L'infrastruttura mobile money sembra sufficiente. {{providerCount}} provider attivi: {{providers}}.",
+				"not_met": "L'infrastruttura mobile money sembra insufficiente."
 			},
 			"mobile_network": {
-				"met": "La copertura della rete mobile in {{country}} e considerata sufficiente.",
-				"not_met": "La copertura della rete mobile in {{country}} e considerata insufficiente."
+				"met": "La copertura della rete mobile e considerata sufficiente, con una copertura della popolazione del {{populationCoverage}}%.",
+				"met_with_tech": "La copertura della rete mobile e considerata sufficiente, con una copertura della popolazione del {{populationCoverage}}% su {{tech}}.",
+				"not_met": "La copertura della rete mobile e considerata insufficiente. Solo il {{populationCoverage}}% della popolazione e coperto.",
+				"not_met_unknown": "La copertura della rete mobile e considerata insufficiente."
 			},
 			"sanctions": {
-				"met": "{{country}} non e presente nelle liste sanzionatorie ONU, USA o UE.",
-				"restrictions_apply": "{{country}} e soggetto a sanzioni o restrizioni internazionali."
+				"met": "{{country}} non e soggetto a sanzioni internazionali.",
+				"restrictions_apply": "{{country}} e soggetto a sanzioni internazionali."
 			}
 		},
 		"source": {
-			"si_research": "Fonte: SI Research",
+			"si_research": "SI research",
 			"sanctions_lists": "Fonte: EU Sanctions Map & US Sanctions List"
 		}
 	},

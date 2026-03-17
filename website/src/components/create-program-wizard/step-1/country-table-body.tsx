@@ -29,7 +29,7 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 				<TableHeader className="bg-muted/40">
 					<TableRow>
 						<TableHead className="w-10" />
-						<TableHead>{t('step1.table.country')}</TableHead>
+						<TableHead />
 						<TableHead>{t('step1.table.cash')}</TableHead>
 						<TableHead>{t('step1.table.mobile_money')}</TableHead>
 						<TableHead>{t('step1.table.mobile_network')}</TableHead>
