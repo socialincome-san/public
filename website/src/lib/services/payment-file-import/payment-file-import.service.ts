@@ -180,7 +180,10 @@ export class PaymentFileImportService extends BaseService {
 
 				const paymentEvent: PaymentEventCreateInput = {
 					type: PaymentEventType.bank_transfer,
-					transactionId: contributionReferenceId || DateTime.now().toMillis().toString() + '-legacy',
+					transactionId:
+						contributionReferenceId && contributionReferenceId.length > 0
+							? contributionReferenceId
+							: DateTime.now().toMillis().toString() + '-legacy',
 					metadata: {
 						raw_content: c.rawContent,
 					},

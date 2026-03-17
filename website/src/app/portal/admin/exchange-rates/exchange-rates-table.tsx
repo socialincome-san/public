@@ -40,7 +40,7 @@ export default function ExchangeRatesTable({
 			config={exchangeRatesTableConfig}
 			titleInfoTooltip="Shows imported monthly exchange-rate snapshots."
 			rows={rows}
-			error={error || errorMessage}
+			error={error ?? errorMessage}
 			query={query}
 			toolbarFilters={getExchangeRatesTableFilters({ query, currencyFilterOptions })}
 			actionMenuItems={[

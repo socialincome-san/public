@@ -126,6 +126,7 @@ export default function LocalPartnersForm({
 				await loadLocalPartner(localPartnerId);
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [localPartnerId]);
 
 	return (

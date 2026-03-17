@@ -127,7 +127,8 @@ export class PayoutReadService extends BaseService {
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 			const statusValues = Object.values(PayoutStatus);
 			const selectedStatus = statusValues.find((status) => status === query.payoutStatus);
@@ -231,7 +232,8 @@ export class PayoutReadService extends BaseService {
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 			const programFilterOptions = Array.from(
 				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
@@ -476,7 +478,8 @@ export class PayoutReadService extends BaseService {
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 			const statusFilterOptions: { value: string; label: string }[] = [];
 			const programFilterOptions = Array.from(

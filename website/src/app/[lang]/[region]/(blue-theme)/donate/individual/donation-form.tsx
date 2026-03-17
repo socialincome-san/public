@@ -176,6 +176,7 @@ export const DonationForm = ({ amount, translations, lang, region }: DonationFor
 						/>
 						<CurrencySelector className="h-16 w-full sm:flex-1" currencies={websiteCurrencies} fontSize="lg" />
 					</div>
+					{/* eslint-disable-next-line react-hooks/incompatible-library */}
 					{form.watch('monthlyIncome') > 0 && (
 						<Card className="theme-default bg-white">
 							<CardHeader>

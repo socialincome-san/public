@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
@@ -133,6 +134,7 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 			return;
 		}
 		startTransition(async () => await loadExpense(expenseId));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [expenseId]);
 
 	useEffect(() => {

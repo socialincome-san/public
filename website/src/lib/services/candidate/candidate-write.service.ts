@@ -287,7 +287,7 @@ export class CandidateWriteService extends BaseService {
 			currentPhoneNumber: context.paymentPhoneNumber,
 		});
 		const hasPaymentPayload = Boolean(
-			input.paymentInformation.mobileMoneyProviderId || input.paymentInformation.code || input.paymentInformation.phone,
+			input.paymentInformation.mobileMoneyProviderId ?? input.paymentInformation.code ?? input.paymentInformation.phone,
 		);
 		const paymentInformationWrite: Prisma.PaymentInformationUpdateOneWithoutRecipientsNestedInput | undefined =
 			context.paymentInformationId

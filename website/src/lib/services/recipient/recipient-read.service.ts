@@ -630,7 +630,8 @@ export class RecipientReadService extends BaseService {
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
 			const search = query.search.trim();
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 			if (selectedProgramId && filteredProgramIds.length === 0) {
 				return this.resultOk({
@@ -832,7 +833,8 @@ export class RecipientReadService extends BaseService {
 		query: RecipientTableQuery,
 	): Promise<ServiceResult<RecipientPaginatedTableView>> {
 		try {
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const baseWhere = {
 				localPartnerId,
 				programId: { not: null },

@@ -58,7 +58,7 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 				{imageSource && (
 					<Image
 						src={imageSource}
-						alt={image?.alt || content.title}
+						alt={image?.alt ?? content.title}
 						width={FEATURED_IMAGE_WIDTH}
 						height={FEATURED_IMAGE_HEIGHT}
 						sizes="(min-width: 1280px) 596px, 100vw"
@@ -88,7 +88,7 @@ export const JournalTeaserCard = ({ article, lang, region, isFeatured }: Props) 
 			{imageSource && (
 				<Image
 					src={imageSource}
-					alt={image?.alt || content.title}
+					alt={image?.alt ?? content.title}
 					width={SECONDARY_IMAGE_WIDTH}
 					height={SECONDARY_IMAGE_HEIGHT}
 					sizes="281px"

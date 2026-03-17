@@ -191,7 +191,8 @@ export class ContributorReadService extends BaseService {
 
 			const { id: organizationId, permission } = activeOrgResult.data;
 			const search = query.search.trim();
-			const selectedCountry = (query.country?.trim() || undefined) as CountryCode | undefined;
+			const selectedCountryRaw = query.country?.trim();
+			const selectedCountry = (selectedCountryRaw === '' ? undefined : selectedCountryRaw) as CountryCode | undefined;
 			const baseScope = {
 				OR: [
 					{

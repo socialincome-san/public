@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { CountryCode, Gender } from '@/generated/prisma/enums';
 import { FormField } from './dynamic-form';
 

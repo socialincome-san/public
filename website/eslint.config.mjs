@@ -1,6 +1,5 @@
 import { config } from '@smartive/eslint-config';
 import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
 const smartiveNextConfig = config('nextjs');
@@ -14,13 +13,9 @@ export default [
 		plugins: {
 			'@typescript-eslint': tseslint.plugin,
 			react: reactPlugin,
-			'react-hooks': reactHooksPlugin,
 		},
 		rules: {
-			'@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-			'@typescript-eslint/no-unsafe-assignment': 'warn',
-			'@typescript-eslint/prefer-nullish-coalescing': 'warn',
-			'react/forbid-component-props': 'off',
+			'react/forbid-component-props': ['error', { forbid: ['style'] }],
 		},
 	},
 	{

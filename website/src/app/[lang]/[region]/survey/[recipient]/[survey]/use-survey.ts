@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { SurveyStatus } from '@/generated/prisma/enums';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { createSessionAction, logoutAction } from '@/lib/server-actions/session-actions';

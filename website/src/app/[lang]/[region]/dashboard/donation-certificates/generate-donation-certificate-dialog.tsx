@@ -116,7 +116,7 @@ export default function GenerateDonationCertificateDialog({
 							: translator?.t('donation-certificates.generate-dialog.button_generate')}
 					</Button>
 
-					{(success || error) && (
+					{Boolean(success ?? error) && (
 						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
 							{success && (
 								<p className="text-sm text-green-700">

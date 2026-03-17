@@ -90,6 +90,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 			lastName: '',
 		},
 	});
+	// eslint-disable-next-line react-hooks/incompatible-library
 	const interval = form.watch('interval');
 
 	const onSubmit = async (values: FormSchema) => {
@@ -189,7 +190,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 							)}
 						/>
 					</div>
-					{region === 'ch' && ['CHF', 'EUR'].includes(currency || '') && (
+					{region === 'ch' && ['CHF', 'EUR'].includes(currency ?? '') && (
 						<div className="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<FormField
 								control={form.control}
@@ -260,6 +261,7 @@ const createToggleGroupItems = (values: number[]) => {
 	return values.map((value) => (
 		<ToggleGroupItem
 			key={value}
+			// eslint-disable-next-line react/forbid-component-props
 			style={{ width: '100%' }}
 			className="text-md bg-popover rounded-full py-6"
 			value={value.toString()}

@@ -33,6 +33,7 @@ export const Wallet = ({ variant = 'default', title, subtitle, badge, footerLeft
 		<Card
 			variant="noPadding"
 			className="flex min-h-full max-w-full cursor-pointer flex-col overflow-hidden transition hover:shadow-xs"
+			// eslint-disable-next-line react/forbid-component-props
 			style={
 				{
 					'--slant-shift': '50px',

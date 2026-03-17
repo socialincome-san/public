@@ -174,7 +174,7 @@ export const bestGuessCurrency = (country: CountryCode | undefined): Currency =>
 	}
 	const currency = countryToCurrency.get(country);
 
-	return currency || FALLBACK_CURRENCY;
+	return currency ?? FALLBACK_CURRENCY;
 };
 
 export const isValidCurrency = (currency: string | undefined): currency is Currency => {

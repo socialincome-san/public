@@ -13,9 +13,7 @@ declare global {
 }
 
 const getStore = (): PreviewCacheStore => {
-	if (!globalThis.storyblokPreviewCacheStore) {
-		globalThis.storyblokPreviewCacheStore = new Map();
-	}
+	globalThis.storyblokPreviewCacheStore ??= new Map();
 
 	return globalThis.storyblokPreviewCacheStore;
 };

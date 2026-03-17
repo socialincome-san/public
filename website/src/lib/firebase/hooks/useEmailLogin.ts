@@ -67,6 +67,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		});
 
 		return () => unsubscribe();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth, authListenerRegistered, translator]);
 
 	const setServerSession = async (): Promise<boolean> => {
@@ -134,7 +135,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	const sendSignInEmail = async (email: string, targetUrl?: string) => {
 		setSendingEmail(true);
 
-		const url = new URL(targetUrl || window.location.href);
+		const url = new URL(targetUrl ?? window.location.href);
 		url.searchParams.set('email', email);
 
 		const actionCodeSettings = {

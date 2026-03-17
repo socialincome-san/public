@@ -665,8 +665,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 
 		const getWidthConstraints = () => {
 			const defaultMinWidth = screenSize === 'mobile' ? '0px' : '200px';
-			const effectiveMinWidth = minWidth || defaultMinWidth;
-			const effectiveMaxWidth = maxWidth || '100%';
+			const effectiveMinWidth = minWidth ?? defaultMinWidth;
+			const effectiveMaxWidth = maxWidth ?? '100%';
 
 			return {
 				minWidth: effectiveMinWidth,
@@ -776,6 +776,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 								disabled && 'cursor-not-allowed opacity-50',
 								className,
 							)}
+							// eslint-disable-next-line react/forbid-component-props
 							style={{
 								...widthConstraints,
 								maxWidth: `min(${widthConstraints.maxWidth}, 100%)`,
@@ -829,10 +830,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 															singleLine && 'shrink-0 whitespace-nowrap',
 															'[&>svg]:pointer-events-auto',
 														)}
+														// eslint-disable-next-line react/forbid-component-props
 														style={{
 															...badgeStyle,
-															animationDuration: `${animationConfig?.duration || animation}s`,
-															animationDelay: `${animationConfig?.delay || 0}s`,
+															animationDuration: `${animationConfig?.duration ?? animation}s`,
+															animationDelay: `${animationConfig?.delay ?? 0}s`,
 														}}
 													>
 														{IconComponent && !responsiveSettings.hideIcons && (
@@ -881,9 +883,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 													singleLine && 'shrink-0 whitespace-nowrap',
 													'[&>svg]:pointer-events-auto',
 												)}
+												// eslint-disable-next-line react/forbid-component-props
 												style={{
-													animationDuration: `${animationConfig?.duration || animation}s`,
-													animationDelay: `${animationConfig?.delay || 0}s`,
+													animationDuration: `${animationConfig?.duration ?? animation}s`,
+													animationDelay: `${animationConfig?.delay ?? 0}s`,
 												}}
 											>
 												{`+ ${selectedValues.length - responsiveSettings.maxCount} more`}
@@ -942,9 +945,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 							screenSize === 'desktop' && 'min-w-[300px]',
 							popoverClassName,
 						)}
+						// eslint-disable-next-line react/forbid-component-props
 						style={{
-							animationDuration: `${animationConfig?.duration || animation}s`,
-							animationDelay: `${animationConfig?.delay || 0}s`,
+							animationDuration: `${animationConfig?.duration ?? animation}s`,
+							animationDelay: `${animationConfig?.delay ?? 0}s`,
 							maxWidth: `min(${widthConstraints.maxWidth}, 85vw)`,
 							maxHeight: screenSize === 'mobile' ? '70vh' : '60vh',
 							touchAction: 'manipulation',
@@ -975,7 +979,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 									'overscroll-behavior-y-contain',
 								)}
 							>
-								<CommandEmpty>{emptyIndicator || 'No results found.'}</CommandEmpty>{' '}
+								<CommandEmpty>{emptyIndicator ?? 'No results found.'}</CommandEmpty>{' '}
 								{!hideSelectAll && !searchValue && (
 									<CommandGroup>
 										<CommandItem

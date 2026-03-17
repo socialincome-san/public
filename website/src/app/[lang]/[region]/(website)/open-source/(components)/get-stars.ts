@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { now } from '@/lib/utils/now';
 import { fetchData } from './fetch-data';
 

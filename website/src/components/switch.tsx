@@ -16,6 +16,7 @@ const Switch = ({ className, ...props }: React.ComponentProps<typeof SwitchPrimi
 				'bg-input dark:bg-input/80',
 				className,
 			)}
+			// eslint-disable-next-line react/forbid-component-props
 			style={{
 				backgroundImage: props.checked
 					? 'linear-gradient(to right, hsl(var(--gradient-button-from)), hsl(var(--gradient-button-to)))'

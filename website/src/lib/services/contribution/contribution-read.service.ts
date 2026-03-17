@@ -141,9 +141,12 @@ export class ContributionReadService extends BaseService {
 
 			const { id: organizationId, permission } = activeOrgResult.data;
 			const search = query.search.trim();
-			const selectedProgramId = query.programId?.trim() || undefined;
-			const selectedCampaignId = query.campaignId?.trim() || undefined;
-			const selectedPaymentEventType = query.paymentEventType?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedCampaignIdRaw = query.campaignId?.trim();
+			const selectedPaymentEventTypeRaw = query.paymentEventType?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+			const selectedCampaignId = selectedCampaignIdRaw === '' ? undefined : selectedCampaignIdRaw;
+			const selectedPaymentEventType = selectedPaymentEventTypeRaw === '' ? undefined : selectedPaymentEventTypeRaw;
 
 			const campaigns = await this.db.campaign.findMany({
 				where: { organizationId },

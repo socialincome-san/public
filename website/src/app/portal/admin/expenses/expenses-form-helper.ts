@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ExpenseFormCreateInput, ExpenseFormUpdateInput } from '@/lib/services/expense/expense-form-input';
 import { ExpensePayload } from '@/lib/services/expense/expense.types';
 import { ExpenseFormSchema } from './expenses-form';

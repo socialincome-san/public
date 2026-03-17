@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ExchangeRate } from '@/generated/prisma/client';
 import { isValidCurrency } from '@/lib/types/currency';
 import { now, nowMs } from '@/lib/utils/now';

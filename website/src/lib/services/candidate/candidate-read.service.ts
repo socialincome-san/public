@@ -265,9 +265,12 @@ export class CandidateReadService extends BaseService {
 			}
 
 			const search = query.search.trim();
-			const selectedCountry = (query.country?.trim() || undefined) as CountryCode | undefined;
-			const selectedGender = (query.gender?.trim() || undefined) as Gender | undefined;
-			const selectedLocalPartnerId = query.localPartnerId?.trim() || undefined;
+			const selectedCountryRaw = query.country?.trim();
+			const selectedGenderRaw = query.gender?.trim();
+			const selectedLocalPartnerIdRaw = query.localPartnerId?.trim();
+			const selectedCountry = (selectedCountryRaw === '' ? undefined : selectedCountryRaw) as CountryCode | undefined;
+			const selectedGender = (selectedGenderRaw === '' ? undefined : selectedGenderRaw) as Gender | undefined;
+			const selectedLocalPartnerId = selectedLocalPartnerIdRaw === '' ? undefined : selectedLocalPartnerIdRaw;
 			const baseScope: Prisma.RecipientWhereInput = {
 				programId: null,
 				...(selectedLocalPartnerId ? { localPartnerId: selectedLocalPartnerId } : {}),
@@ -460,8 +463,10 @@ export class CandidateReadService extends BaseService {
 	): Promise<ServiceResult<CandidatesPaginatedTableView>> {
 		try {
 			const search = query.search.trim();
-			const selectedCountry = (query.country?.trim() || undefined) as CountryCode | undefined;
-			const selectedGender = (query.gender?.trim() || undefined) as Gender | undefined;
+			const selectedCountryRaw = query.country?.trim();
+			const selectedGenderRaw = query.gender?.trim();
+			const selectedCountry = (selectedCountryRaw === '' ? undefined : selectedCountryRaw) as CountryCode | undefined;
+			const selectedGender = (selectedGenderRaw === '' ? undefined : selectedGenderRaw) as Gender | undefined;
 			const baseWhere: Prisma.RecipientWhereInput = {
 				programId: null,
 				localPartnerId,

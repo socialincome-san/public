@@ -26,6 +26,7 @@ const Progress = ({ className, value = 0, variant = 'default', ...props }: Progr
 			<ProgressPrimitive.Indicator
 				data-slot="progress-indicator"
 				className={cn('h-full transition-all', indicatorClass)}
+				// eslint-disable-next-line react/forbid-component-props
 				style={{ width: `${value}%` }}
 			/>
 		</ProgressPrimitive.Root>

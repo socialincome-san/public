@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion';
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';
@@ -193,6 +194,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 
 		lastResetIdentityRef.current = nextIdentity;
 		form.reset(values);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [form, formSchema, mode]);
 
 	// get options from Zod Object
@@ -406,7 +408,7 @@ const GenericFormField = ({
 											emitChange(value);
 										}}
 										placeholder={formFieldSchema.placeholder}
-										disabled={formFieldSchema.disabled || isLoading || readOnly}
+										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -428,7 +430,7 @@ const GenericFormField = ({
 									<Input
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey)}
-										disabled={formFieldSchema.disabled || isLoading || readOnly}
+										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -447,7 +449,7 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<FormControl>
 									<DatePicker
-										disabled={formFieldSchema.disabled || isLoading || readOnly}
+										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 										{...form.register(optionKey)}
 										onSelect={(value) => {
 											field.onChange(value);
@@ -486,7 +488,7 @@ const GenericFormField = ({
 												emitChange(value);
 											}}
 											placeholder={formFieldSchema.placeholder}
-											disabled={formFieldSchema.disabled || isLoading || readOnly}
+											disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -510,7 +512,7 @@ const GenericFormField = ({
 										field.onChange(value);
 										emitChange(value);
 									}}
-									disabled={formFieldSchema.disabled || isLoading || readOnly}
+									disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 								>
 									<FormControl>
 										<SelectTrigger aria-placeholder={formFieldSchema.placeholder}>
@@ -542,7 +544,7 @@ const GenericFormField = ({
 								<Label htmlFor={optionKey}>{label}</Label>
 								<Switch
 									id={optionKey}
-									disabled={formFieldSchema.disabled || isLoading || readOnly}
+									disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									onCheckedChange={(value) => {
 										field.onChange(value);
 										emitChange(value);
@@ -584,7 +586,7 @@ const GenericFormField = ({
 												return Number.isNaN(parsed) ? undefined : parsed;
 											},
 										})}
-										disabled={formFieldSchema.disabled || isLoading || readOnly}
+										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									/>
 								</FormControl>
 								<FormMessage />

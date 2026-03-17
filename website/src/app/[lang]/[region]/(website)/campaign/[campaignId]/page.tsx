@@ -99,7 +99,13 @@ export default async function Page({ params }: CampaignPageProps) {
 								</Typography>
 							</div>
 							<div>
-								<Typography weight="medium" color="foreground" style={{ lineHeight: '70px' }} className="mt-2 text-[4rem]">
+								<Typography
+									weight="medium"
+									color="foreground"
+									// eslint-disable-next-line react/forbid-component-props
+									style={{ lineHeight: '70px' }}
+									className="mt-2 text-[4rem]"
+								>
 									{campaign.title}
 								</Typography>
 							</div>

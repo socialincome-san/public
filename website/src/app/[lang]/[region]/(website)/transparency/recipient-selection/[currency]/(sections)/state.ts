@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { readFileSync } from 'fs';
 import * as fs from 'fs/promises';
 

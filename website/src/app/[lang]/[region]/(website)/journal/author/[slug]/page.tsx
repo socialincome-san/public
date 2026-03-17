@@ -72,7 +72,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 					</Typography>
 					<Typography className="mt-2 text-black">{author.content.bio}</Typography>
 
-					{(author.content.linkedinName || author.content.githubName) && (
+					{Boolean(author.content.linkedinName ?? author.content.githubName) && (
 						<div className="mt-3 flex flex-row gap-4">
 							{author.content.linkedinName && (
 								<Link
