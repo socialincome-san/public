@@ -169,6 +169,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 				}
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formSchema]);
 
 	// get options from Zod Object

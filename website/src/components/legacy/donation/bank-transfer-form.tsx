@@ -56,6 +56,7 @@ export const BankTransferForm = ({
 		form.setValue('firstName', contributorSession.firstName ?? '');
 		form.setValue('lastName', contributorSession.lastName ?? '');
 		void form.trigger();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [contributorSession]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({

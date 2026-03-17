@@ -67,6 +67,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		});
 
 		return () => unsubscribe();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth, authListenerRegistered, translator]);
 
 	const setServerSession = async (): Promise<boolean> => {

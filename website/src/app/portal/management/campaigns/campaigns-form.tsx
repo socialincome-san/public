@@ -119,6 +119,7 @@ export default function CampaignsForm({
 			// Load campaign
 			startTransition(async () => await loadCampaign(campaignId));
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [campaignId]);
 
 	useEffect(() => {

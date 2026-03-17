@@ -26,6 +26,7 @@ export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 
 	useEffect(() => {
 		void loadSurvey(surveyId, recipientId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [surveyId, recipientId]);
 
 	const translator = useTranslator(lang, 'website-survey');

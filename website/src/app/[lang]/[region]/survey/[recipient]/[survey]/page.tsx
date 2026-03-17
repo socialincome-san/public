@@ -23,6 +23,7 @@ export default function Page({ params }: SurveyPageProps) {
 
 	useEffect(() => {
 		tryLogin(searchParams.get('email'), searchParams.get('pw'));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

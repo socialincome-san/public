@@ -28,7 +28,6 @@ export const useStorageDownloadURL = (storageRef: StorageReference | undefined) 
 	const [error, setError] = useState<Error | undefined>(undefined);
 	useEffect(() => {
 		if (storageRef) {
-			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setLoading(true);
 
 			setError(undefined);
@@ -43,6 +42,7 @@ export const useStorageDownloadURL = (storageRef: StorageReference | undefined) 
 
 			setError(undefined);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { data: url, loading, error };

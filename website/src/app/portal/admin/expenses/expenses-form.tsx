@@ -130,6 +130,7 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 			return;
 		}
 		startTransition(async () => await loadExpense(expenseId));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [expenseId]);
 
 	useEffect(() => {

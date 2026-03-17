@@ -90,6 +90,7 @@ export const GenericDonationForm = ({ defaultInterval, translations, lang, regio
 			lastName: '',
 		},
 	});
+	// eslint-disable-next-line react-hooks/incompatible-library
 	const interval = form.watch('interval');
 
 	const onSubmit = async (values: FormSchema) => {
