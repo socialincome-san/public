@@ -56,13 +56,13 @@ test('admin users can show and search by Firebase auth user ID', async ({ page }
 	await page.goto('/portal/admin/users');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
-	await expect(page.getByRole('cell', { name: seededFirebaseAuthUserId, exact: true })).toHaveCount(0);
+	await expect(page.getByTitle(seededFirebaseAuthUserId, { exact: true })).toHaveCount(0);
 
 	await page.getByTestId('data-table-columns-button').click();
 	await page.getByTestId('data-table-column-firebaseAuthUserId-toggle').click();
 	await page.keyboard.press('Escape');
 
-	await expect(page.getByRole('cell', { name: seededFirebaseAuthUserId, exact: true })).toBeVisible();
+	await expect(page.getByTitle(seededFirebaseAuthUserId, { exact: true })).toBeVisible();
 
 	await page.goto(`/portal/admin/users?page=1&pageSize=10&search=${encodeURIComponent(seededFirebaseAuthUserId)}`);
 	await expect(page.getByRole('cell', { name: seededEmail, exact: true })).toBeVisible();
