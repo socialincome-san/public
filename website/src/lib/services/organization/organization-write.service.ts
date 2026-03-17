@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/generated/prisma/client';
+import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -13,9 +13,13 @@ export class OrganizationWriteService extends BaseService {
 		super(db, loggerInstance);
 	}
 
-	async createFromEmail(email: string): Promise<ServiceResult<OrganizationPayload>> {
+	async createFromEmail(
+		email: string,
+		dbClient?: PrismaClient | Prisma.TransactionClient,
+	): Promise<ServiceResult<OrganizationPayload>> {
 		try {
-			const organization = await this.db.organization.create({
+			const db = dbClient ?? this.db;
+			const organization = await db.organization.create({
 				data: {
 					name: `${email.toLowerCase().trim()} organization`,
 				},

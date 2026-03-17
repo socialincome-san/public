@@ -141,12 +141,89 @@ export class ProgramWriteService extends BaseService {
 
 		const existingContact = await this.db.contact.findUnique({
 			where: { email: normalizedEmail },
-			select: { id: true },
+			select: {
+				id: true,
+				user: {
+					select: {
+						id: true,
+					},
+				},
+				contributor: {
+					select: {
+						accountId: true,
+						contactId: true,
+					},
+				},
+			},
 		});
 		if (existingContact) {
-			return this.resultFail('An account with this email already exists. Please log in instead.');
+			if (existingContact.user) {
+				this.logger.info('Public onboarding reusing existing user', {
+					email: normalizedEmail,
+					contactId: existingContact.id,
+					userId: existingContact.user.id,
+				});
+
+				return this.resultOk({ userId: existingContact.user.id });
+			}
+
+			if (existingContact.contributor) {
+				const contributor = existingContact.contributor;
+				this.logger.info('Public onboarding upgrading contributor to user', {
+					email: normalizedEmail,
+					contactId: existingContact.id,
+				});
+
+				try {
+					const createdUser = await this.db.$transaction(async (tx) => {
+						const organizationResult = await this.organizationWriteService.createFromEmail(normalizedEmail, tx);
+						if (!organizationResult.success) {
+							throw new Error(organizationResult.error);
+						}
+
+						return tx.user.create({
+							data: {
+								role: UserRole.user,
+								account: { connect: { id: contributor.accountId } },
+								contact: { connect: { id: contributor.contactId } },
+								activeOrganization: { connect: { id: organizationResult.data.id } },
+								organizationAccesses: {
+									create: {
+										organizationId: organizationResult.data.id,
+										permission: 'edit',
+									},
+								},
+							},
+							select: { id: true },
+						});
+					});
+
+					return this.resultOk({ userId: createdUser.id });
+				} catch (error) {
+					this.logger.error('Public onboarding failed for contributor upgrade', {
+						email: normalizedEmail,
+						contactId: existingContact.id,
+						error,
+					});
+
+					return this.resultFail('Unable to process request');
+				}
+			}
+
+			this.logger.warn('Public onboarding blocked for non-user existing contact', {
+				email: normalizedEmail,
+				contactId: existingContact.id,
+			});
+
+			return this.resultFail('Unable to process request');
 		}
 
+		const existingFirebaseUserResult = await this.firebaseAdminService.getByEmail(normalizedEmail);
+		if (!existingFirebaseUserResult.success) {
+			return this.resultFail(existingFirebaseUserResult.error);
+		}
+
+		const firebaseUserAlreadyExists = Boolean(existingFirebaseUserResult.data);
 		const firebaseUserResult = await this.firebaseAdminService.getOrCreateUser({
 			email: normalizedEmail,
 			displayName: `${firstName} ${lastName}`,
@@ -155,37 +232,60 @@ export class ProgramWriteService extends BaseService {
 			return this.resultFail(firebaseUserResult.error);
 		}
 
-		const organizationResult = await this.organizationWriteService.createFromEmail(normalizedEmail);
-		if (!organizationResult.success) {
-			return this.resultFail(organizationResult.error);
-		}
+		try {
+			const createdUser = await this.db.$transaction(async (tx) => {
+				const organizationResult = await this.organizationWriteService.createFromEmail(normalizedEmail, tx);
+				if (!organizationResult.success) {
+					throw new Error(organizationResult.error);
+				}
 
-		const createdUser = await this.db.user.create({
-			data: {
-				role: UserRole.user,
-				activeOrganization: { connect: { id: organizationResult.data.id } },
-				contact: {
-					create: {
-						firstName,
-						lastName,
+				return tx.user.create({
+					data: {
+						role: UserRole.user,
+						activeOrganization: { connect: { id: organizationResult.data.id } },
+						contact: {
+							create: {
+								firstName,
+								lastName,
+								email: normalizedEmail,
+							},
+						},
+						account: {
+							create: {
+								firebaseAuthUserId: firebaseUserResult.data.uid,
+							},
+						},
+						organizationAccesses: {
+							create: {
+								organizationId: organizationResult.data.id,
+								permission: 'edit',
+							},
+						},
+					},
+					select: { id: true },
+				});
+			});
+
+			return this.resultOk({ userId: createdUser.id });
+		} catch (error) {
+			this.logger.error('Public onboarding database transaction failed', {
+				email: normalizedEmail,
+				firebaseUid: firebaseUserResult.data.uid,
+				error,
+			});
+
+			if (!firebaseUserAlreadyExists) {
+				const cleanupResult = await this.firebaseAdminService.deleteByUidIfExists(firebaseUserResult.data.uid);
+				if (!cleanupResult.success) {
+					this.logger.error('Public onboarding Firebase cleanup failed', {
 						email: normalizedEmail,
-					},
-				},
-				account: {
-					create: {
-						firebaseAuthUserId: firebaseUserResult.data.uid,
-					},
-				},
-				organizationAccesses: {
-					create: {
-						organizationId: organizationResult.data.id,
-						permission: 'edit',
-					},
-				},
-			},
-			select: { id: true },
-		});
+						firebaseUid: firebaseUserResult.data.uid,
+						cleanupError: cleanupResult.error,
+					});
+				}
+			}
 
-		return this.resultOk({ userId: createdUser.id });
+			return this.resultFail('Unable to process request');
+		}
 	}
 }
