@@ -10,6 +10,7 @@ import {
 	generateRegistrationCsvAction,
 	previewCurrentMonthPayoutsAction,
 } from '@/lib/server-actions/payout-process-actions';
+import type { ServiceResult } from '@/lib/services/core/base.types';
 import { now } from '@/lib/utils/now';
 import { format } from 'date-fns';
 import { CalendarIcon, EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
@@ -73,12 +74,13 @@ export const StartPayoutProcessDialog = ({ open, setOpen }: { open: boolean; set
 	];
 
 	const run = async (step: (typeof steps)[number]) => {
-		try {
-			const result = await step.action();
-			setResult(step.id, result);
-		} catch (e) {
-			setResult(step.id, e instanceof Error ? e.message : 'Unknown error');
+		const result = (await step.action()) as ServiceResult<unknown>;
+		if (!result.success) {
+			setResult(step.id, result.error);
+
+			return;
 		}
+		setResult(step.id, (result.data as StepResult) ?? 'Done');
 	};
 
 	return (

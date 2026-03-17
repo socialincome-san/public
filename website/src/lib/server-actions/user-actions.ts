@@ -1,15 +1,19 @@
 'use server';
 
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { UserService } from '@/lib/services/user/user.service';
-import { UserCreateInput, UserUpdateInput } from '@/lib/services/user/user.types';
+import { getSessionByType } from '@/lib/firebase/current-account';
+import { ServiceResult } from '@/lib/services/core/base.types';
+import { services } from '@/lib/services/services';
+import { UserFormCreateInput, UserFormUpdateInput } from '@/lib/services/user/user-form-input';
+import { UserUpdateInput } from '@/lib/services/user/user.types';
 import { revalidatePath } from 'next/cache';
 
-const service = new UserService();
-
-export const createUserAction = async (input: UserCreateInput) => {
-	const session = await getAuthenticatedUserOrRedirect();
-	const result = await service.create(session.id, input);
+export const createUserAction = async (input: UserFormCreateInput): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.user.create(session.id, input);
 
 	if (result.success) {
 		revalidatePath('/portal/admin/users');
@@ -18,9 +22,13 @@ export const createUserAction = async (input: UserCreateInput) => {
 	return result;
 };
 
-export const updateUserAction = async (input: UserUpdateInput) => {
-	const session = await getAuthenticatedUserOrRedirect();
-	const result = await service.update(session.id, input);
+export const updateUserAction = async (input: UserFormUpdateInput): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.user.update(session.id, input);
 
 	if (result.success) {
 		revalidatePath('/portal/admin/users');
@@ -29,9 +37,28 @@ export const updateUserAction = async (input: UserUpdateInput) => {
 	return result;
 };
 
-export const updateUserSelfAction = async (input: UserUpdateInput) => {
-	const session = await getAuthenticatedUserOrRedirect();
-	const result = await service.updateSelf(session.id, input);
+export const deleteUserAction = async (userId: string): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.user.delete(session.id, userId);
+
+	if (result.success) {
+		revalidatePath('/portal/admin/users');
+	}
+
+	return result;
+};
+
+export const updateUserSelfAction = async (input: UserUpdateInput): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.user.updateSelf(session.id, input);
 
 	if (result.success) {
 		revalidatePath('/portal/profile');
@@ -41,11 +68,21 @@ export const updateUserSelfAction = async (input: UserUpdateInput) => {
 };
 
 export const getUserAction = async (userId: string) => {
-	const session = await getAuthenticatedUserOrRedirect();
-	return service.get(session.id, userId);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+
+	return services.read.user.get(session.id, userId);
 };
 
 export const getUserOptionsAction = async () => {
-	const session = await getAuthenticatedUserOrRedirect();
-	return service.getOptions(session.id);
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+
+	return services.read.user.getOptions(session.id);
 };

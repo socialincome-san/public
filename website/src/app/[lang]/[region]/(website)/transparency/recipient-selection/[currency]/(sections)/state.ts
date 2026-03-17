@@ -19,12 +19,12 @@ export type CompletedDraw = {
 type DrawFile = {
 	time: number;
 	totalCount: number;
-	winners: Array<string>;
+	winners: string[];
 	randomness: string;
 	round: number;
 };
 
-export const loadPastDraws = async (): Promise<Array<CompletedDraw>> => {
+export const loadPastDraws = async (): Promise<CompletedDraw[]> => {
 	const files = await fs.readdir(DRAWS_PATH);
 	try {
 		return (
@@ -32,6 +32,7 @@ export const loadPastDraws = async (): Promise<Array<CompletedDraw>> => {
 				.map((file) => {
 					const drawContents = readFileSync(`${DRAWS_PATH}/${file}`);
 					const drawFile: DrawFile = JSON.parse(drawContents.toString());
+
 					return {
 						time: drawFile.time,
 						name: extractDrawName(file),
@@ -47,17 +48,19 @@ export const loadPastDraws = async (): Promise<Array<CompletedDraw>> => {
 		);
 	} catch (e) {
 		console.error(e);
+
 		return [];
 	}
 };
 
 // extracts the name from a file of format `{count}-{name}-{date}.txt` and capitalises the first letter
 const extractDrawName = (filename: string): string => {
-	const drawNameMatch = filename.match(/\d-([A-Za-z \-]+)-.*\.txt/);
-	if (drawNameMatch == null || drawNameMatch.length < 2) {
+	const drawNameMatch = /\d-([A-Za-z -]+)-.*\.txt/.exec(filename);
+	if (drawNameMatch === null || drawNameMatch.length < 2) {
 		return '';
 	}
 	const unsanitisedName = drawNameMatch[1];
 	const withSpaces = unsanitisedName.replaceAll('-', ' ');
+
 	return withSpaces.slice(0, 1).toUpperCase() + withSpaces.slice(1).toLowerCase();
 };

@@ -1,4 +1,7 @@
+import { Currency } from '@/generated/prisma/enums';
 import { z } from 'zod';
+
+const currencyEnum = z.enum(Object.values(Currency) as [string, ...string[]]);
 
 const Phone = z.object({
 	id: z.string(),
@@ -47,6 +50,7 @@ const LocalPartner = z.object({
 
 const Country = z.object({
 	isoCode: z.string(),
+	currency: currencyEnum,
 });
 
 const Program = z.object({
@@ -55,14 +59,14 @@ const Program = z.object({
 	countryId: z.string(),
 	country: Country,
 	payoutPerInterval: z.union([z.number(), z.string()]),
-	payoutCurrency: z.string(),
 	payoutInterval: z.enum(['monthly', 'quarterly', 'yearly']),
+	coveredByReserves: z.boolean(),
 	programDurationInMonths: z.number(),
 	createdAt: z.string(),
 	updatedAt: z.string().nullable(),
 });
 
-const Recipient = z.object({
+export const Recipient = z.object({
 	id: z.string(),
 	contactId: z.string(),
 	suspendedAt: z.string().nullable(),
@@ -85,7 +89,7 @@ const Payout = z.object({
 	id: z.string(),
 	amount: z.union([z.number(), z.string()]),
 	amountChf: z.union([z.number(), z.string()]).nullable(),
-	currency: z.string(),
+	currency: currencyEnum,
 	paymentAt: z.string(),
 	status: z.enum(['paid', 'confirmed', 'contested', 'failed']),
 	phoneNumber: z.string().nullable(),
@@ -95,7 +99,7 @@ const Payout = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-const PayoutListResponse = z.array(Payout);
+export const PayoutListResponse = z.array(Payout);
 
 const Survey = z.object({
 	id: z.string(),
@@ -114,7 +118,7 @@ const Survey = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-const SurveyListResponse = z.array(Survey);
+export const SurveyListResponse = z.array(Survey);
 
 export const RecipientSelfUpdate = z.object({
 	firstName: z.string().min(1).optional(),
@@ -131,7 +135,7 @@ export const RecipientSelfUpdate = z.object({
 	successorName: z.string().optional(),
 });
 
-const PayoutParams = z.object({
+export const PayoutParams = z.object({
 	payoutId: z.string().describe('Payout ID'),
 });
 
@@ -152,7 +156,7 @@ export const RequestOtpRequest = z.object({
 	phoneNumber: z.string(),
 });
 
-const VerifyOtpResponse = z.object({
+export const VerifyOtpResponse = z.object({
 	customToken: z.string(),
 	isNewUser: z.boolean(),
 	uid: z.string(),

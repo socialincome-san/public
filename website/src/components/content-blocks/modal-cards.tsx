@@ -27,9 +27,7 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 	const [openCardId, setOpenCardId] = useState<string | null>(null);
 	const [isExplainerVideoOpen, setIsExplainerVideoOpen] = useState(false);
 	const explainerVideoLabel = labelForExplainerVideo?.trim();
-	const resolvedExplainerVideoUrl = linkToExplainerVideo
-		? resolveStoryblokLink(linkToExplainerVideo, lang, region)
-		: null;
+	const resolvedExplainerVideoUrl = linkToExplainerVideo ? resolveStoryblokLink(linkToExplainerVideo, lang, region) : null;
 	const explainerVideoEmbedUrl = resolvedExplainerVideoUrl ? vimeoMatcher.parseUrl(resolvedExplainerVideoUrl) : null;
 	const hasExplainerVideo = Boolean(explainerVideoLabel && explainerVideoEmbedUrl);
 	const explainerVideoThumbnailSrc = explainerVideoThumbnail?.filename;
@@ -100,11 +98,7 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 					}
 
 					return (
-						<Dialog
-							key={_uid}
-							open={openCardId === _uid}
-							onOpenChange={(isOpen) => setOpenCardId(isOpen ? _uid : null)}
-						>
+						<Dialog key={_uid} open={openCardId === _uid} onOpenChange={(isOpen) => setOpenCardId(isOpen ? _uid : null)}>
 							<button
 								type="button"
 								onClick={() => setOpenCardId(_uid)}

@@ -6,6 +6,7 @@ import { PropsWithChildren } from 'react';
 
 export const generateMetadata = async (props: DefaultLayoutProps) => {
 	const params = await props.params;
+
 	return getMetadata(params.lang as WebsiteLanguage, 'website-donate');
 };
 

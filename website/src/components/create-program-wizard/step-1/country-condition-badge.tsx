@@ -10,7 +10,7 @@ const CONDITION_UI: Record<
 	{
 		variant: 'verified' | 'destructive' | 'secondary';
 		label: string;
-		Icon: ComponentType<any>;
+		Icon: ComponentType<{ className?: string }>;
 	}
 > = {
 	[CountryCondition.MET]: {

@@ -1,23 +1,30 @@
-import { UserCreateInput, UserPayload, UserUpdateInput } from '@/lib/services/user/user.types';
+import { UserFormCreateInput, UserFormUpdateInput } from '@/lib/services/user/user-form-input';
+import { UserPayload } from '@/lib/services/user/user.types';
 import { UserFormSchema } from './users-form';
 
-export const buildCreateUserInput = (schema: UserFormSchema): UserCreateInput => {
+const asString = (value: unknown): string => (typeof value === 'string' ? value : '');
+const toStringArray = (value: unknown): string[] =>
+	Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0) : [];
+
+export const buildCreateUserInput = (schema: UserFormSchema): UserFormCreateInput => {
 	return {
-		firstName: schema.fields.firstName.value,
-		lastName: schema.fields.lastName.value,
-		email: schema.fields.email.value,
+		firstName: asString(schema.fields.firstName.value).trim(),
+		lastName: asString(schema.fields.lastName.value).trim(),
+		email: asString(schema.fields.email.value).trim(),
 		role: schema.fields.role.value,
-		organizationId: schema.fields.organizationId.value,
+		editOrganizationIds: toStringArray(schema.fields.editOrganizations.value),
+		readonlyOrganizationIds: toStringArray(schema.fields.readonlyOrganizations.value),
 	};
 };
 
-export const buildUpdateUserInput = (schema: UserFormSchema, existing: UserPayload): UserUpdateInput => {
+export const buildUpdateUserInput = (schema: UserFormSchema, existing: UserPayload): UserFormUpdateInput => {
 	return {
 		id: existing.id,
-		firstName: schema.fields.firstName.value,
-		lastName: schema.fields.lastName.value,
-		email: schema.fields.email.value,
+		firstName: asString(schema.fields.firstName.value).trim(),
+		lastName: asString(schema.fields.lastName.value).trim(),
+		email: asString(schema.fields.email.value).trim(),
 		role: schema.fields.role.value,
-		organizationId: schema.fields.organizationId.value,
+		editOrganizationIds: toStringArray(schema.fields.editOrganizations.value),
+		readonlyOrganizationIds: toStringArray(schema.fields.readonlyOrganizations.value),
 	};
 };

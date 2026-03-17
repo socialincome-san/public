@@ -6,6 +6,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { formatStoryblokDate } from '@/lib/services/storyblok/storyblok.utils';
 import { LanguageCode } from '@/lib/types/language';
 import { linkCn, Separator, Typography } from '@socialincome/ui';
+import cn from 'classnames';
 import Link from 'next/link';
 
 const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };
@@ -26,9 +27,9 @@ export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: 
 	};
 
 	return (
-		<div className="bg-primary/10 mt-2 w-full rounded-md p-6">
+		<div className="bg-primary/10 mt-2 mb-6 w-full rounded-md p-6">
 			{hasContextInfo && (
-				<Typography color="foreground" className="m-0 mb-2 p-0">
+				<Typography size="md" color="foreground" className="m-0! mb-2 p-0">
 					{translator.t('reference-article.context.' + props.context)}
 				</Typography>
 			)}
@@ -38,22 +39,22 @@ export const StoryblokReferencesGroup = (props: ReferencesGroup & { translator: 
 			>
 				{references.map((reference, index) => (
 					<div key={reference._uid}>
-						{showSeparator(index) && <Separator className="bg-foreground m-0 mt-4 mb-4 opacity-15" />}
-						<div className="flex items-start gap-8">
+						{showSeparator(index) && <Separator className="bg-foreground m-0 my-4 opacity-15" />}
+						<div className="flex items-center gap-6">
 							{showThumbnails && <ThumbnailImage thumbnail={getThumbnailOrDefault(reference)} />}
 							<div className="flex flex-col justify-center">
 								<Link
-									className={linkCn({ arrow: 'external', underline: 'none' })}
+									className={cn(linkCn({ arrow: 'external', underline: 'none' }), 'leading-none after:ml-1')}
 									href={reference.url}
 									key={'link' + reference._uid}
 									target="_blank"
 									rel="noopener noreferrer"
 								>
-									<Typography weight="semibold" className="m-0 p-0">
+									<Typography weight="medium" size="md" className="m-0! p-0">
 										{reference.title}
 									</Typography>
 								</Link>
-								<Typography className="m-0 p-0" color="foreground" as="div">
+								<Typography size="md" className="m-0 p-0" color="foreground" as="div">
 									{reference.mediaOutlet && <div>{reference.mediaOutlet}</div>}
 									<div>
 										{reference.author && (

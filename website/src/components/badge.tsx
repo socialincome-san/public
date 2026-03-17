@@ -19,7 +19,7 @@ const badgeVariants = cva('inline-flex items-center rounded-full border py-1 px-
 	},
 });
 
-interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
+type BadgeProps = {} & React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof badgeVariants>;
 
 export const Badge = ({ className, variant, ...props }: BadgeProps) => {
 	return <div className={cn(badgeVariants({ variant }), className)} {...props} />;

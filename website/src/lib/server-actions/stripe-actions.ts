@@ -1,9 +1,9 @@
 'use server';
 
-import { StripeService } from '@/lib/services/stripe/stripe.service';
+import { getSessionByType } from '@/lib/firebase/current-account';
+import { services } from '@/lib/services/services';
 import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
 import { getOptionalContributor } from '../firebase/current-contributor';
-import { getAuthenticatedUserOrThrow } from '../firebase/current-user';
 
 export const createStripeCheckoutAction = async (input: {
 	amount: number;
@@ -14,9 +14,8 @@ export const createStripeCheckoutAction = async (input: {
 	campaignId?: string;
 }) => {
 	const contributor = await getOptionalContributor();
-	const stripe = new StripeService();
 
-	return stripe.createCheckoutSession({
+	return services.stripe.createCheckoutSession({
 		...input,
 		stripeCustomerId: contributor?.stripeCustomerId ?? null,
 	});
@@ -29,13 +28,14 @@ export const createPortalProgramDonationCheckoutAction = async (input: {
 	intervalCount?: number;
 	recurring?: boolean;
 }) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const stripe = new StripeService();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 
-	return stripe.createPortalProgramDonationCheckout(user.id, input);
+	return services.stripe.createPortalProgramDonationCheckout(sessionResult.data.id, input);
 };
 
 export const updateContributorAfterCheckoutAction = async (input: UpdateContributorAfterCheckoutInput) => {
-	const stripeService = new StripeService();
-	return stripeService.updateContributorAfterCheckout(input);
+	return services.stripe.updateContributorAfterCheckout(input);
 };

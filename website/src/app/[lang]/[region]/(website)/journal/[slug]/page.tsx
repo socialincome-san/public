@@ -6,7 +6,8 @@ import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorI
 import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { services } from '@/lib/services/services';
+
 import {
 	formatStoryblokDate,
 	formatStoryblokUrl,
@@ -25,8 +26,6 @@ const ARTICLE_IMAGE_HEIGHT = 960;
 
 export const revalidate = 900;
 
-const storyblokService = new StoryblokService();
-
 export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
@@ -35,22 +34,18 @@ export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 	}
 	const story = articleResponse.data;
 	const url = `https://socialincome.org/${lang}/journal/${story.slug}`;
+
 	return generateMetaDataForArticle(story, url);
 };
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
-	return await storyblokService.getArticle(lang, slug);
+	return await services.storyblok.getArticle(lang, slug);
 });
 
-const badgeWithLink = (
-	lang: string,
-	region: string,
-	tag: ISbStoryData<Topic>,
-	variant: 'outline' | 'outline-solid' | 'foreground',
-) => {
+const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
-			<Badge variant={variant} className="mt-6">
+			<Badge variant={variant} className="px-3 py-1 text-sm font-medium capitalize">
 				{tag.content?.value}
 			</Badge>
 		</Link>
@@ -67,12 +62,12 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 	const story = articleResponse.data;
 	const articleData = story.content;
-	const author = articleData.author as ISbStoryData<any>;
+	const author = articleData.author;
 
-	const relativeResult = await storyblokService.getRelativeArticles(
+	const relativeResult = await services.storyblok.getRelativeArticles(
 		author.uuid,
 		story.id,
-		(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) => tag.uuid) ?? [],
+		articleData.tags?.map((tag) => tag.uuid) ?? [],
 		lang,
 		NUMBER_OF_RELATIVE_ARTICLES,
 	);
@@ -81,7 +76,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 	const articleWithImageStyling = !articleData.useImageOnlyForPreview;
 
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
+		language: lang,
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
 	});
 
@@ -116,11 +111,10 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						<div className="flex flex-wrap justify-start gap-2">
 							{articleData.type && (
 								<Typography
-									weight="medium"
 									color={articleWithImageStyling ? 'popover' : 'foreground'}
 									size="lg"
 									key={articleData.type.id}
-									className="uppercase"
+									className="capitalize"
 								>
 									{articleData.type.content.value}
 								</Typography>
@@ -169,15 +163,15 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							</div>
 						</Link>
 
-						<div className="mt-4 flex flex-wrap justify-start gap-2">
-							{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
-								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline-solid' : 'foreground'),
+						<div className="mt-8 flex flex-wrap justify-start gap-2">
+							{articleData.tags?.map((tag) =>
+								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
 							)}
 						</div>
 					</div>
 				</div>
 
-				<div className="prose mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
+				<div className="prose prose-headings:text-foreground prose-h1:font-medium prose-h1:text-4xl prose-a:text-foreground mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
 					<OriginalLanguageLink
 						originalLanguage={articleData.originalLanguage}
 						slug={slug}
@@ -187,11 +181,11 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						languageName={translator.t('language-name.' + articleData.originalLanguage)}
 					/>
 
-					<Typography weight="bold" size="2xl">
+					<Typography weight="medium" size="2xl" color="foreground" className="leading-snug">
 						{articleData.leadText}
 					</Typography>
 
-					<Typography as="div" size="lg" className="text-black">
+					<Typography as="div" size="xl" className="text-black">
 						<RichTextRenderer
 							richTextDocument={articleData.content as StoryblokRichtext}
 							translator={translator}
@@ -200,7 +194,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						/>
 					</Typography>
 
-					<Separator className="my-2" />
+					<Separator className="my-10" />
 
 					{articleData.footnotes && (
 						<Typography as="div" className="mt-5 text-black" size="md">
@@ -214,9 +208,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 					)}
 
 					<div className="mt-4 flex flex-wrap justify-start gap-2">
-						{(articleData.tags as ISbStoryData<Topic>[] | undefined)?.map((tag) =>
-							badgeWithLink(lang, region, tag, 'foreground'),
-						)}
+						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'foreground'))}
 					</div>
 
 					<Link href={`/${lang}/${region}/journal/author/${author.slug}`} className="no-underline">
@@ -231,7 +223,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 				{articleData.showRelativeArticles && (
 					<div>
-						<Typography size="4xl" className="text-center" weight="semibold">
+						<Typography size="2xl" className="text-center" weight="medium">
 							{translator.t('article.keep-reading')}
 						</Typography>
 

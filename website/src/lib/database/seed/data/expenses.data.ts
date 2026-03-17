@@ -9,7 +9,7 @@ export const expensesData: Expense[] = [
 		year: 2024,
 		amountChf: new Prisma.Decimal(1200),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'expense-2',
@@ -19,7 +19,7 @@ export const expensesData: Expense[] = [
 		year: 2024,
 		amountChf: new Prisma.Decimal(2500),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'expense-3',
@@ -29,6 +29,6 @@ export const expensesData: Expense[] = [
 		year: 2024,
 		amountChf: new Prisma.Decimal(800),
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		updatedAt: null,
+	},
 ];

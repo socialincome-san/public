@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
+import { Currency } from '@/generated/prisma/enums';
 import { websiteCurrencies, WebsiteCurrency } from '@/lib/i18n/utils';
-import { Currency } from '@/lib/types/currency';
 import { SelectionFaq } from './(sections)/faq';
 import { HeroSection } from './(sections)/hero-section';
 import { PastRounds } from './(sections)/past-rounds';
@@ -11,13 +11,13 @@ import { SelectionProcess } from './(sections)/selection-process';
 export const revalidate = 3600; // update once an hour
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
-interface TransparencyPageParams extends DefaultParams {
+type TransparencyPageParams = {
 	currency: Currency;
-}
+} & DefaultParams;
 
-interface TransparencyPageProps {
+type TransparencyPageProps = {
 	params: Promise<TransparencyPageParams>;
-}
+};
 
 export default async function Page({ params }: TransparencyPageProps) {
 	const { lang, region, currency } = await params;

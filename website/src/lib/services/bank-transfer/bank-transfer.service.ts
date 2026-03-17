@@ -1,18 +1,24 @@
-import { ContributionStatus, DonationInterval, PaymentEventType } from '@/generated/prisma/client';
-import { Currency } from '@/lib/types/currency';
-import { CampaignService } from '../campaign/campaign.service';
-import { ContributionService } from '../contribution/contribution.service';
+import { ContributionStatus, DonationInterval, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
+import { CampaignReadService } from '../campaign/campaign-read.service';
+import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
-import { ContributorService } from '../contributor/contributor.service';
+import { ContributorWriteService } from '../contributor/contributor-write.service';
 import { BankContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankTransferPayment } from './bank-transfer.types';
 
 export class BankTransferService extends BaseService {
-	private contributorService = new ContributorService();
-	private campaignService = new CampaignService();
-	private contributionService = new ContributionService();
+	constructor(
+		db: PrismaClient,
+		private readonly contributorService: ContributorWriteService,
+		private readonly campaignService: CampaignReadService,
+		private readonly contributionService: ContributionWriteService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async createContributionForNewOrExistingContributor(
 		payment: BankTransferPayment,
@@ -33,9 +39,11 @@ export class BankTransferService extends BaseService {
 			if (!createdContribution.success) {
 				return this.resultFail(`Could not generate pending contribution for reference id ${payment.referenceId}`);
 			}
+
 			return this.resultOk('Contribution created');
 		} catch (error) {
 			console.error('Failed to store charge', error);
+
 			return this.resultFail(`Failed to store contribution: ${JSON.stringify(error)}`);
 		}
 	}
@@ -58,7 +66,7 @@ export class BankTransferService extends BaseService {
 			contribution: {
 				create: {
 					amount: payment.amount,
-					currency: payment.currency as Currency,
+					currency: payment.currency,
 					amountChf: payment.amount,
 					feesChf: 0,
 					interval: this.getDonationInterval(payment.interval),

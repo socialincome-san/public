@@ -1,11 +1,14 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
+import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
 import {
 	createMobileMoneyProviderAction,
+	deleteMobileMoneyProviderAction,
 	getMobileMoneyProviderAction,
 	updateMobileMoneyProviderAction,
 } from '@/lib/server-actions/mobile-money-provider-action';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { MobileMoneyProviderPayload } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -35,7 +38,7 @@ const initialFormSchema: MobileMoneyProviderFormSchema = {
 		name: {
 			placeholder: 'e.g. Orange Money',
 			label: 'Name',
-			zodSchema: z.string().min(1, 'Name is required'),
+			zodSchema: z.string().trim().min(1, 'Name is required.'),
 		},
 		isSupported: {
 			placeholder: 'Supported',
@@ -51,26 +54,34 @@ export default function MobileMoneyProvidersForm({
 	onCancel,
 	providerId,
 }: MobileMoneyProviderFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [provider, setProvider] = useState<MobileMoneyProviderPayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	const onSubmit = (schema: MobileMoneyProviderFormSchema) => {
 		startTransition(async () => {
-			try {
-				let result: { success: boolean; error?: string };
-				if (providerId && provider) {
-					const data = buildUpdateMobileMoneyProviderInput(schema, provider);
-					result = await updateMobileMoneyProviderAction(data);
-				} else {
-					const data = buildCreateMobileMoneyProviderInput(schema);
-					result = await createMobileMoneyProviderAction(data);
-				}
+			const result =
+				providerId && provider
+					? await updateMobileMoneyProviderAction(buildUpdateMobileMoneyProviderInput(schema, provider))
+					: await createMobileMoneyProviderAction(buildCreateMobileMoneyProviderInput(schema));
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
+		});
+	};
 
-				result.success ? onSuccess?.() : onError?.(result.error);
-			} catch (e) {
-				onError?.(e);
-			}
+	const onDelete = () => {
+		if (!providerId) {
+			return;
+		}
+
+		startTransition(async () => {
+			const result = await deleteMobileMoneyProviderAction(providerId);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
@@ -79,22 +90,20 @@ export default function MobileMoneyProvidersForm({
 			return;
 		}
 		startTransition(async () => {
-			try {
-				const result = await getMobileMoneyProviderAction(providerId);
-				if (result.success) {
-					setProvider(result.data);
+			const result = await getMobileMoneyProviderAction(providerId);
+			handleServiceResult(result, {
+				onSuccess: (data) => {
+					setProvider(data);
 					setFormSchema((prev) => {
-						const next = { ...prev };
-						next.fields.name.value = result.data.name;
-						next.fields.isSupported.value = result.data.isSupported;
+						const next = clearFormSchemaValues(prev);
+						next.fields.name.value = data.name;
+						next.fields.isSupported.value = data.isSupported;
+
 						return next;
 					});
-				} else {
-					onError?.(result.error);
-				}
-			} catch (e) {
-				onError?.(e);
-			}
+				},
+				onError: (error) => onError?.(error),
+			});
 		});
 	}, [providerId, onError]);
 
@@ -104,6 +113,7 @@ export default function MobileMoneyProvidersForm({
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={providerId ? 'edit' : 'add'}
 		/>
 	);

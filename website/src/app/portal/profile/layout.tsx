@@ -7,7 +7,7 @@ type ProfileLayoutProps = {
 	children: ReactNode;
 };
 
-export default async function ProfileLayout({ children }: ProfileLayoutProps) {
+export default function ProfileLayout({ children }: ProfileLayoutProps) {
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
 		{ href: '/portal', label: 'Portal' },

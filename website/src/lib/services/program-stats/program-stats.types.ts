@@ -1,7 +1,10 @@
-import { PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
+import { Currency, PaymentEventType, PayoutInterval, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
 
 export type ProgramDashboardStats = {
 	contributedToProgramSoFarChf: number;
+	contributedViaStripeChf: number;
+	contributedViaWireTransferChf: number;
+	contributedViaOthersChf: number;
 	totalProgramCostsChf: number;
 	contributionsCount: number;
 	contributorsCount: number;
@@ -9,14 +12,22 @@ export type ProgramDashboardStats = {
 	fundingProgressPercent: number;
 
 	paidOutSoFarChf: number;
+	paidOutSoFarProgramCurrency: number;
 	totalPayoutsCount: number;
+	payoutsDoneCount: number;
+	remainingPayoutsCount: number;
+	remainingIntervalsCount: number;
 	payoutPerInterval: number;
 	payoutInterval: string;
-	payoutCurrency: string;
+	payoutCurrency: Currency;
 	costPerIntervalChf: number;
+	costPerIntervalProgramCurrency: number;
 	payoutProgressPercent: number;
+	payoutProgressExchangeRateText?: string;
+	totalProgramCostsProgramCurrency: number;
 
 	availableCreditsChf: number;
+	availableCreditsProgramCurrency: number;
 	availableCreditsInIntervals: number;
 	totalExpectedIntervals: number;
 
@@ -24,37 +35,66 @@ export type ProgramDashboardStats = {
 	totalSurveysCount: number;
 	surveyCompletionPercent: number;
 
-	firstPayoutDate: Date | null;
-	programEndDate: Date | null;
-	lifecycleProgressPercent: number;
+	futureRecipientsCount: number;
+	activeRecipientsCount: number;
+	suspendedRecipientsCount: number;
+	completedRecipientsCount: number;
 
 	programDurationInMonths: number;
 	recipientsCount: number;
 };
 
 export type ProgramForDashboard = {
+	coveredByReserves: boolean;
 	programDurationInMonths: number;
 	payoutPerInterval: unknown;
-	payoutCurrency: string;
-	payoutInterval: string;
+	payoutInterval: PayoutInterval;
+	country: {
+		currency: Currency;
+	};
 
-	recipients: Array<{
+	recipients: {
 		id: string;
-		payouts: Array<{
+		startDate: Date | null;
+		suspendedAt: Date | null;
+		payouts: {
 			paymentAt: Date;
-			amountChf: unknown | null;
+			amount: unknown;
+			amountChf: unknown;
 			status: PayoutStatus;
-		}>;
-		surveys: Array<{
+		}[];
+		surveys: {
 			id: string;
 			status: SurveyStatus;
-		}>;
-	}>;
+		}[];
+	}[];
 
-	campaigns: Array<{
-		contributions: Array<{
+	campaigns: {
+		contributions: {
 			amountChf: unknown;
 			contributorId: string;
-		}>;
-	}>;
+			paymentEvent: {
+				type: PaymentEventType;
+			} | null;
+		}[];
+	}[];
+};
+
+export type ProgramBudgetCalculationInput = {
+	amountOfRecipients: number;
+	programDuration: number;
+	defaultPayoutPerInterval: number;
+	payoutPerInterval: number;
+	payoutInterval: PayoutInterval;
+	payoutCurrency: Currency;
+	displayCurrency: Currency;
+};
+
+export type ProgramBudgetCalculation = {
+	calculatedTotalBudget: number;
+	displayMonthlyCost: number;
+	exchangeRateText?: string;
+	totalBudgetTooltipText: string;
+	payoutPerIntervalMin: number;
+	payoutPerIntervalMax: number;
 };

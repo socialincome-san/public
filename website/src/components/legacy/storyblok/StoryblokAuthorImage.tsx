@@ -6,7 +6,7 @@ import Image from 'next/image';
 const sizeClasses = {
 	small: 'h-8 w-8',
 	medium: 'h-12 w-12',
-	large: 'h-14 w-14',
+	large: 'h-12 w-12',
 	'extra-large': 'h-24 w-24',
 };
 

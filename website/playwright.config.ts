@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test', quiet: true });
 
-const publicWebsiteCookieConsentState = {
+const cookieConsentState = {
 	cookies: [],
 	origins: [
 		{
@@ -44,51 +44,68 @@ export default defineConfig({
 
 	projects: [
 		{
-			name: 'setup',
-			testMatch: /test-setup\.ts/,
+			name: 'setup-infra',
+			testMatch: /setup-infra\.ts/,
+			use: {
+				storageState: cookieConsentState,
+			},
+		},
+		{
+			name: 'setup-auth',
+			testMatch: /setup-auth\.ts/,
+			use: {
+				storageState: cookieConsentState,
+			},
+			dependencies: ['setup-infra'],
 		},
 		{
 			name: 'portal',
-			testMatch: /portal\/.*\.e2e\.ts/,
+			testMatch: /projects\/portal\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/user.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-auth'],
 		},
 		{
 			name: 'dashboard',
-			testMatch: /dashboard\/.*\.e2e\.ts/,
+			testMatch: /projects\/dashboard\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/contributor.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-auth'],
 		},
 		{
 			name: 'partner-space',
-			testMatch: /partner-space\/.*\.e2e\.ts/,
+			testMatch: /projects\/partner-space\/.*\.e2e\.ts/,
 			use: {
 				storageState: 'playwright/.auth/partner.json',
 			},
-			dependencies: ['setup'],
+			dependencies: ['setup-auth'],
 		},
 		{
 			name: 'mobile-app-api',
-			testMatch: /mobile-app-api\/.*\.e2e\.ts/,
+			testMatch: /projects\/mobile-app-api\/.*\.e2e\.ts/,
+			use: {
+				storageState: cookieConsentState,
+			},
+			dependencies: ['setup-infra'],
 		},
 		{
 			name: 'public-website-desktop',
-			testMatch: /public-website\/.*\.e2e\.ts/,
+			testMatch: /projects\/public-website\/.*\.e2e\.ts/,
 			use: {
-				storageState: publicWebsiteCookieConsentState,
+				storageState: cookieConsentState,
 			},
+			dependencies: ['setup-infra'],
 		},
 		{
 			name: 'public-website-mobile',
-			testMatch: /public-website\/.*\.e2e\.ts/,
+			testMatch: /projects\/public-website\/.*\.e2e\.ts/,
 			use: {
 				...devices['iPhone 15'],
-				storageState: publicWebsiteCookieConsentState,
+				storageState: cookieConsentState,
 			},
+			dependencies: ['setup-infra'],
 		},
 	],
 	webServer: {

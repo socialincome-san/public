@@ -1,86 +1,123 @@
 'use server';
 
-import { getSessionByTypeOrThrow, type Session } from '@/lib/firebase/current-account';
-import { LocalPartnerService } from '@/lib/services/local-partner/local-partner.service';
-import { ProgramService } from '@/lib/services/program/program.service';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
-import { RecipientCreateInput, RecipientUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { getSessionByType, type Session } from '@/lib/firebase/current-account';
+import { resultFail, resultOk } from '@/lib/services/core/service-result';
+import { RecipientFormCreateInput, RecipientFormUpdateInput } from '@/lib/services/recipient/recipient-form-input';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
 const PORTAL_RECIPIENTS_PATH = '/portal/management/recipients';
 const PORTAL_PROGRAM_RECIPIENTS_PATH = '/portal/programs/[programId]/recipients';
 const PARTNER_RECIPIENTS_PATH = '/partner-space/recipients';
 
-const recipientService = new RecipientService();
-const programService = new ProgramService();
-const localPartnerService = new LocalPartnerService();
-
-export const createRecipientAction = async (recipient: RecipientCreateInput, sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await recipientService.create(session, recipient);
+export const createRecipientAction = async (recipient: RecipientFormCreateInput, sessionType: Session['type'] = 'user') => {
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.recipient.create(session, recipient);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
+
 	return result;
 };
 
 export const updateRecipientAction = async (
-	updateInput: RecipientUpdateInput,
-	nextPaymentPhoneNumber: string | null,
+	updateInput: RecipientFormUpdateInput,
 	sessionType: Session['type'] = 'user',
 ) => {
-	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await recipientService.update(session, updateInput, nextPaymentPhoneNumber);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.recipient.update(session, updateInput);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
+
 	return result;
 };
 
 export const deleteRecipientAction = async (recipientId: string, sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await recipientService.delete(session, recipientId);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.recipient.delete(session, recipientId);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
+
 	return result;
 };
 
 export const getRecipientAction = async (recipientId: string, sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
-	return await recipientService.get(session, recipientId);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+
+	return await services.read.recipient.get(session, recipientId);
 };
 
 export const getRecipientOptions = async (sessionType: Session['type'] = 'user') => {
 	if (sessionType !== 'user') {
-		return {
-			programs: { success: true, data: [] },
-			localPartner: { success: true, data: [] },
-		};
+		return resultOk({ programs: [], localPartner: [] });
 	}
-	const session = await getSessionByTypeOrThrow('user');
-	const programs = await programService.getOptions(session.id);
-	const localPartner = await localPartnerService.getOptions();
-	return { programs, localPartner };
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const programs = await services.read.program.getOptions(session.id);
+	if (!programs.success) {
+		return resultFail(programs.error);
+	}
+	const localPartner = await services.read.localPartner.getOptions();
+	if (!localPartner.success) {
+		return resultFail(localPartner.error);
+	}
+
+	return resultOk({ programs: programs.data, localPartner: localPartner.data });
 };
 
 export const importRecipientsCsvAction = async (file: File, sessionType: Session['type'] = 'user') => {
-	const session = await getSessionByTypeOrThrow(sessionType);
-	const result = await recipientService.importCsv(session, file);
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.recipient.importCsv(session, file);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
+
 	return result;
+};
+
+export const downloadRecipientsCsvAction = async (sessionType: Session['type'] = 'user') => {
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+
+	return services.read.recipient.exportCsv(session);
 };

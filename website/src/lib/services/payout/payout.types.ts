@@ -1,6 +1,6 @@
-import { PayoutStatus, Prisma, ProgramPermission } from '@/generated/prisma/client';
+import { Currency, PayoutStatus, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
-export type PayoutEntity = Prisma.PayoutGetPayload<{}>;
+export type PayoutEntity = Prisma.PayoutGetPayload<Prisma.PayoutDefaultArgs>;
 
 export type PayoutTableViewRow = {
 	id: string;
@@ -8,14 +8,33 @@ export type PayoutTableViewRow = {
 	recipientLastName: string;
 	programName: string;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
 	permission: ProgramPermission;
 };
 
-export type PayoutTableView = {
+export type PayoutTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+	payoutStatus?: string;
+};
+
+export type PayoutPaginatedTableView = {
 	tableRows: PayoutTableViewRow[];
+	totalCount: number;
+	programFilterOptions: {
+		id: string;
+		name: string;
+	}[];
+	statusFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 export type PayoutConfirmationTableViewRow = {
@@ -24,15 +43,34 @@ export type PayoutConfirmationTableViewRow = {
 	recipientLastName: string;
 	programName: string;
 	amount: number;
-	currency: string;
+	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
 	phoneNumber: string | null;
 	permission: ProgramPermission;
 };
 
-export type PayoutConfirmationTableView = {
+export type PayoutConfirmationTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+	payoutStatus?: string;
+};
+
+export type PayoutConfirmationPaginatedTableView = {
 	tableRows: PayoutConfirmationTableViewRow[];
+	totalCount: number;
+	programFilterOptions: {
+		id: string;
+		name: string;
+	}[];
+	statusFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 export type PayoutMonth = {
@@ -53,8 +91,22 @@ export type OngoingPayoutTableViewRow = {
 	permission: ProgramPermission;
 };
 
-export type OngoingPayoutTableView = {
+export type OngoingPayoutTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	programId?: string;
+};
+
+export type OngoingPayoutPaginatedTableView = {
 	tableRows: OngoingPayoutTableViewRow[];
+	totalCount: number;
+	programFilterOptions: {
+		id: string;
+		name: string;
+	}[];
 };
 
 export type PayoutForecastTableViewRow = {
@@ -62,11 +114,24 @@ export type PayoutForecastTableViewRow = {
 	numberOfRecipients: number;
 	amountInProgramCurrency: number;
 	amountUsd: number;
-	programCurrency: string;
+	programCurrency: Currency;
 };
 
 export type PayoutForecastTableView = {
 	tableRows: PayoutForecastTableViewRow[];
+};
+
+export type PayoutForecastTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type PayoutForecastPaginatedTableView = {
+	tableRows: PayoutForecastTableViewRow[];
+	totalCount: number;
 };
 
 export type PayoutPayload = {
@@ -79,30 +144,9 @@ export type PayoutPayload = {
 		programName: string | null;
 	};
 	amount: number;
-	currency: string;
+	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
 	phoneNumber: string | null;
 	comments: string | null;
-};
-
-export type PayoutCreateInput = {
-	recipient: { connect: { id: string } };
-	amount: number;
-	currency: string;
-	status: PayoutStatus;
-	paymentAt: Date;
-	phoneNumber?: string | null;
-	comments?: string | null;
-};
-
-export type PayoutUpdateInput = {
-	id: string;
-	amount?: number;
-	currency?: string;
-	status?: PayoutStatus;
-	paymentAt?: Date;
-	phoneNumber?: string | null;
-	comments?: string | null;
-	recipient?: { connect: { id: string } };
 };

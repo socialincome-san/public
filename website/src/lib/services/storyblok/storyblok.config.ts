@@ -1,5 +1,6 @@
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
+import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { TextBlock } from '@/components/content-blocks/text';
 import PageContentType from '@/components/content-types/page';
@@ -11,12 +12,13 @@ mockStoryblokIfTestMode();
 /**
  * Storyblok component registry mapping component names to React components.
  */
-export const storyblokComponents = {
+const storyblokComponents = {
 	page: PageContentType,
 	heroVideo: HeroVideoBlockServer,
 	text: TextBlock,
 	imageText: ImageTextBlock,
 	modalCards: ModalCardsBlock,
+	journalTeasers: JournalTeasersBlock,
 };
 
 /**

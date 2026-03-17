@@ -1,28 +1,30 @@
-import { Gender, PayoutInterval, Prisma } from '@/generated/prisma/client';
+import { Currency, Gender, PayoutInterval, Prisma } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
 
 export class AppReviewModeService extends BaseService {
-	isEnabled(): boolean {
+	private isEnabled(): boolean {
 		return process.env.APP_REVIEW_MODE_ENABLED === 'true';
 	}
 
-	isReviewPhone(phone: string): boolean {
+	private isReviewPhone(phone: string): boolean {
 		const reviewPhone = process.env.APP_REVIEW_PHONE_NUMBER;
 		if (!reviewPhone) {
 			return false;
 		}
+
 		return phone === reviewPhone || `+${phone}` === reviewPhone;
 	}
 
-	shouldBypass(phone: string): boolean {
-		return this.isEnabled() && this.isReviewPhone(phone);
+	shouldBypass(phone: string): ServiceResult<boolean> {
+		return this.resultOk(this.isEnabled() && this.isReviewPhone(phone));
 	}
 
 	getMockRecipient(phone: string): ServiceResult<RecipientWithPaymentInfo> {
-		if (!this.shouldBypass(phone)) {
+		const bypassResult = this.shouldBypass(phone);
+		if (!bypassResult.success || !bypassResult.data) {
 			return this.resultFail('App review mode not active for this phone');
 		}
 
@@ -56,14 +58,16 @@ export class AppReviewModeService extends BaseService {
 				id: 'avengers-program',
 				name: 'Avengers Initiative',
 				amountOfRecipientsForStart: 6,
+				coveredByReserves: false,
 				programDurationInMonths: 60,
 				payoutPerInterval: new Prisma.Decimal(5000000),
-				payoutCurrency: 'USD',
 				payoutInterval: PayoutInterval.monthly,
 				targetCauses: [],
+				targetProfiles: [],
 				countryId: 'usa',
 				country: {
 					isoCode: 'US',
+					currency: Currency.USD,
 				},
 				createdAt: now(),
 				updatedAt: now(),

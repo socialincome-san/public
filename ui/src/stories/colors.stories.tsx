@@ -202,8 +202,8 @@ export const ColorSystem = () => {
 							background with blue accents
 						</li>
 						<li>
-							<strong>Blue Theme:</strong> A high-contrast theme with blue background and yellow accents, used for
-							emphasis sections
+							<strong>Blue Theme:</strong> A high-contrast theme with blue background and yellow accents, used for emphasis
+							sections
 						</li>
 					</ul>
 					<div className="my-6 flex flex-col gap-4">

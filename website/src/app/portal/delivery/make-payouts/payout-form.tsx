@@ -1,17 +1,18 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@/generated/prisma/enums';
-import { websiteCurrencies } from '@/lib/i18n/utils';
 import {
 	createPayoutAction,
 	getPayoutAction,
 	getPayoutRecipientOptionsAction,
 	updatePayoutAction,
 } from '@/lib/server-actions/payout-actions';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { PayoutPayload } from '@/lib/services/payout/payout.types';
 import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
+import { allCurrencies } from '@/lib/types/currency';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';
@@ -50,9 +51,10 @@ const initialFormSchema: PayoutFormSchema = {
 			zodSchema: z.coerce.number().nonnegative(),
 		},
 		currency: {
-			placeholder: 'USD, EUR, CHF',
+			placeholder: 'Select currency',
 			label: 'Currency Code',
-			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
+			useCombobox: true,
+			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		phoneNumber: {
 			placeholder: '+223...',
@@ -71,7 +73,7 @@ const initialFormSchema: PayoutFormSchema = {
 };
 
 export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) => {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [payout, setPayout] = useState<PayoutPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -82,63 +84,64 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 
 		startTransition(async () => {
 			const result = await getPayoutAction(payoutId);
-			if (!result.success) {
-				return onError?.(result.error);
-			}
+			handleServiceResult(result, {
+				onSuccess: (data) => {
+					setPayout(data);
+					setFormSchema((prev) => {
+						const next = clearFormSchemaValues(prev);
 
-			setPayout(result.data);
-
-			const next = { ...formSchema };
-			next.fields.recipientId.value = result.data.recipient.id;
-			next.fields.amount.value = result.data.amount;
-			next.fields.currency.value = result.data.currency;
-			next.fields.phoneNumber.value = result.data.phoneNumber ?? undefined;
-			next.fields.paymentAt.value = new Date(result.data.paymentAt);
-			next.fields.status.value = result.data.status;
-
-			setFormSchema(next);
+						return {
+							...next,
+							fields: {
+								...next.fields,
+								recipientId: { ...next.fields.recipientId, value: data.recipient.id },
+								amount: { ...next.fields.amount, value: data.amount },
+								currency: { ...next.fields.currency, value: data.currency },
+								phoneNumber: { ...next.fields.phoneNumber, value: data.phoneNumber ?? undefined },
+								paymentAt: { ...next.fields.paymentAt, value: new Date(data.paymentAt) },
+								status: { ...next.fields.status, value: data.status },
+							},
+						};
+					});
+				},
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, [payoutId]);
+	}, [onError, payoutId]);
 
 	useEffect(() => {
 		startTransition(async () => {
 			const res = await getPayoutRecipientOptionsAction();
-			if (!res.success) {
-				return;
-			}
+			handleServiceResult(res, {
+				onSuccess: (data) => {
+					const recipientEnum = getZodEnum(data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
 
-			const recipientEnum = getZodEnum(res.data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
-
-			setFormSchema((prev) => ({
-				...prev,
-				fields: {
-					...prev.fields,
-					recipientId: {
-						...prev.fields.recipientId,
-						zodSchema: z.nativeEnum(recipientEnum),
-					},
+					setFormSchema((prev) => ({
+						...prev,
+						fields: {
+							...prev.fields,
+							recipientId: {
+								...prev.fields.recipientId,
+								zodSchema: z.nativeEnum(recipientEnum),
+							},
+						},
+					}));
 				},
-			}));
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, []);
+	}, [onError]);
 
 	const onSubmit = (schema: PayoutFormSchema) => {
 		startTransition(async () => {
-			try {
-				let res;
-
-				if (payoutId && payout) {
-					const data = buildUpdatePayoutInput(schema, payout);
-					res = await updatePayoutAction(data);
-				} else {
-					const data = buildCreatePayoutInput(schema);
-					res = await createPayoutAction(data);
-				}
-
-				res.success ? onSuccess?.() : onError?.(res.error);
-			} catch (e) {
-				onError?.(e);
-			}
+			const res =
+				payoutId && payout
+					? await updatePayoutAction(buildUpdatePayoutInput(schema, payout))
+					: await createPayoutAction(buildCreatePayoutInput(schema));
+			handleServiceResult(res, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 

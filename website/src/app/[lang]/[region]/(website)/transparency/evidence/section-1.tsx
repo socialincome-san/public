@@ -20,7 +20,7 @@ export default async function Section1({ lang }: DefaultParams) {
 						{title.text}{' '}
 					</Typography>
 				))}
-				<Typography as="h2" size="xl">
+				<Typography as="h2" size="xl" className="mt-6">
 					{translator.t('section-1.subtitle')}
 				</Typography>
 			</div>

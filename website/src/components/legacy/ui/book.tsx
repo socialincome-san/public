@@ -15,7 +15,7 @@ type BookProps = {
 	currentlyReading?: boolean;
 };
 
-export default async function Book({
+export default function Book({
 	cover,
 	author,
 	authorLink,

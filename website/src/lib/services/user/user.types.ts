@@ -7,14 +7,8 @@ export type UserPayload = {
 	email: string | null;
 	role: UserRole;
 	organizationId: string | null;
-};
-
-export type UserCreateInput = {
-	firstName: string;
-	lastName: string;
-	email: string;
-	role: UserRole;
-	organizationId: string;
+	editOrganizationIds: string[];
+	readonlyOrganizationIds: string[];
 };
 
 export type UserUpdateInput = {
@@ -40,13 +34,25 @@ export type UserTableViewRow = {
 	firstName: string | null;
 	lastName: string | null;
 	email: string | null;
+	firebaseAuthUserId: string;
 	role: UserRole;
 	organizationName: string | null;
+	readonlyOrganizationNames: string;
+	editOrganizationNames: string;
 	createdAt: Date;
 };
 
-export type UserTableView = {
+export type UserTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type UserPaginatedTableView = {
 	tableRows: UserTableViewRow[];
+	totalCount: number;
 };
 
 export type UserSession = {

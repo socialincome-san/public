@@ -1,12 +1,17 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
-import { makeContributorColumns } from '@/components/data-table/columns/contributors';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import {
+	contributorsTableConfig,
+	getContributorsTableFilters,
+} from '@/components/data-table/configs/contributors-table.config';
+import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ContributorsForm from './contributors-form';
 
@@ -14,10 +19,14 @@ export default function ContributorsTableClient({
 	rows,
 	error,
 	readOnly,
+	query,
+	countryFilterOptions = [],
 }: {
 	rows: ContributorTableViewRow[];
 	error: string | null;
 	readOnly?: boolean;
+	query?: TableQueryState & { totalRows: number };
+	countryFilterOptions?: { value: string; label: string }[];
 }) {
 	const [open, setOpen] = useState(false);
 	const [contributorId, setContributorId] = useState<string | undefined>();
@@ -40,25 +49,29 @@ export default function ContributorsTableClient({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving contributor: ${error}`);
+		const message = retrieveErrorMessage(error);
+		setErrorMessage(`Error saving contributor: ${message}`);
 		logger.error('Contributor Form Error', { error });
 	};
 
 	return (
 		<>
-			<DataTable
-				title="Contributors"
+			<ConfiguredDataTableClient
+				config={contributorsTableConfig}
+				titleInfoTooltip="Shows contributors in your active organization scope."
+				rows={rows}
 				error={error}
-				emptyMessage="No contributors found"
-				data={rows}
-				makeColumns={makeContributorColumns}
-				actions={
-					<Button disabled={readOnly} onClick={openEmptyForm}>
-						Add new contributor
-					</Button>
-				}
+				query={query}
+				toolbarFilters={getContributorsTableFilters({ query, countryFilterOptions })}
+				actionMenuItems={[
+					{
+						label: 'Add new contributor',
+						icon: <PlusIcon />,
+						disabled: readOnly,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
-				searchKeys={['firstName', 'lastName', 'email']}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>

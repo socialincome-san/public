@@ -1,41 +1,46 @@
 'use server';
 
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { PayoutService } from '@/lib/services/payout/payout.service';
-import { type PayoutCreateInput, type PayoutUpdateInput } from '@/lib/services/payout/payout.types';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
+import { getSessionByType } from '@/lib/firebase/current-account';
+import { type PayoutFormCreateInput, type PayoutFormUpdateInput } from '@/lib/services/payout/payout-form-input';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-export const createPayoutAction = async (input: PayoutCreateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.create(user.id, input);
-
+export const createPayoutAction = async (input: PayoutFormCreateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const result = await services.write.payout.create(sessionResult.data.id, input);
 	revalidatePath('/portal/delivery/make-payouts');
+
 	return result;
 };
 
-export const updatePayoutAction = async (input: PayoutUpdateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
-
-	const result = await service.update(user.id, input);
-
+export const updatePayoutAction = async (input: PayoutFormUpdateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const result = await services.write.payout.update(sessionResult.data.id, input);
 	revalidatePath('/portal/delivery/make-payouts');
+
 	return result;
 };
 
 export const getPayoutAction = async (id: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new PayoutService();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 
-	return service.get(user.id, id);
+	return services.read.payout.get(sessionResult.data.id, id);
 };
 
 export const getPayoutRecipientOptionsAction = async () => {
-	const user = await getAuthenticatedUserOrThrow();
-	const service = new RecipientService();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 
-	return service.getEditableRecipientOptions(user.id);
+	return services.read.recipient.getEditableRecipientOptions(sessionResult.data.id);
 };

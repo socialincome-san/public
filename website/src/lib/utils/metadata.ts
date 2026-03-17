@@ -11,11 +11,7 @@ import { Metadata } from 'next';
  * @param metadata - The metadata to merge with the default metadata
  * @returns The metadata for the website
  */
-export const getMetadata = async (
-	language: WebsiteLanguage,
-	namespace: string,
-	metadata?: Metadata,
-): Promise<Metadata> => {
+export const getMetadata = async (language: WebsiteLanguage, namespace: string, metadata?: Metadata): Promise<Metadata> => {
 	const namespaces = namespace ? [namespace, 'website-common'] : ['website-common'];
 	const translator = await Translator.getInstance({ language, namespaces });
 	const title = translator.t('metadata.title');
@@ -49,5 +45,6 @@ export const getMetadata = async (
 			images: translator.t('metadata.twitter-image'),
 		},
 	};
+
 	return _.merge(defaultMetadata, metadata);
 };

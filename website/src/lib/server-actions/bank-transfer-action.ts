@@ -1,24 +1,27 @@
 'use server';
 
-import { BankTransferService } from '@/lib/services/bank-transfer/bank-transfer.service';
 import { BankTransferPayment } from '@/lib/services/bank-transfer/bank-transfer.types';
-import { ContributorService } from '@/lib/services/contributor/contributor.service';
 import { BankContributorData } from '@/lib/services/contributor/contributor.types';
+import { ServiceResult } from '@/lib/services/core/base.types';
+import { resultFail, resultOk } from '@/lib/services/core/service-result';
+import { services } from '@/lib/services/services';
 import { DateTime } from 'luxon';
 
 export const getReferenceIds = async (
 	email: string,
-): Promise<{ contributorReferenceId: string; contributionReferenceId: string } | undefined> => {
-	const contributorService = new ContributorService();
-	const contributorReferenceId = await contributorService.getOrCreateReferenceIdByEmail(email);
+): Promise<ServiceResult<{ contributorReferenceId: string; contributionReferenceId: string }>> => {
+	const contributorReferenceId = await services.write.contributor.getOrCreateReferenceIdByEmail(email);
 	if (!contributorReferenceId.success) {
-		return;
+		return resultFail(contributorReferenceId.error);
 	}
 	const contributionReferenceId = Math.round(DateTime.now().toMillis() / 1000).toString();
-	return { contributorReferenceId: contributorReferenceId.data, contributionReferenceId };
+
+	return resultOk({ contributorReferenceId: contributorReferenceId.data, contributionReferenceId });
 };
 
-export const createContributionForContributor = async (payment: BankTransferPayment, userData: BankContributorData) => {
-	const bankTransferService = new BankTransferService();
-	return await bankTransferService.createContributionForNewOrExistingContributor(payment, userData);
+export const createContributionForContributor = async (
+	payment: BankTransferPayment,
+	userData: BankContributorData,
+): Promise<ServiceResult<unknown>> => {
+	return await services.bankTransfer.createContributionForNewOrExistingContributor(payment, userData);
 };

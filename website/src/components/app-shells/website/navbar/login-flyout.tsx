@@ -104,9 +104,7 @@ export const LoginFlyout = ({ lang }: Props) => {
 									{translator?.t('submit-button')}
 								</Button>
 
-								<p className="text-muted-foreground text-center text-xs">
-									{translator?.t('flyout.magic-link-description')}
-								</p>
+								<p className="text-muted-foreground text-center text-xs">{translator?.t('flyout.magic-link-description')}</p>
 							</form>
 						</Form>
 					)}

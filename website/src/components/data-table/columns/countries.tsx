@@ -1,7 +1,7 @@
 'use client';
 
-import { CountryFlag } from '@/components/country-flag';
 import { ActionCell } from '@/components/data-table/elements/action-cell';
+import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
@@ -16,7 +16,7 @@ export const makeCountryColumns = (): ColumnDef<CountryTableViewRow>[] => {
 			id: 'flag',
 			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
 			accessorFn: (row) => row.isoCode,
-			cell: ({ row }) => <CountryFlag country={row.original.isoCode} />,
+			cell: ({ row }) => <CountryFlagCell country={row.original.isoCode} />,
 		},
 		{
 			accessorKey: 'name',
@@ -53,15 +53,15 @@ export const makeCountryColumns = (): ColumnDef<CountryTableViewRow>[] => {
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+			accessorKey: 'updatedAt',
+			header: (ctx) => <SortableHeader ctx={ctx}>Updated</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 
 		{
 			id: 'actions',
 			header: '',
-			enableSorting: false,
+			enableHiding: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];

@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { ExpenseType } from '@/generated/prisma/enums';
 import {
 	createExpenseAction,
@@ -9,6 +9,7 @@ import {
 	getExpenseOptionsAction,
 	updateExpenseAction,
 } from '@/lib/server-actions/expense-action';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ExpensePayload } from '@/lib/services/expense/expense.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -38,16 +39,21 @@ const initialFormSchema: ExpenseFormSchema = {
 			placeholder: 'Type',
 			label: 'Type',
 			zodSchema: z.nativeEnum(ExpenseType),
+			value: ExpenseType.staff,
 		},
 		year: {
 			placeholder: 'Year',
 			label: 'Year',
-			zodSchema: z.coerce.number().int().min(2000).max(2100),
+			zodSchema: z.coerce
+				.number()
+				.int()
+				.min(2000, 'Year must be between 2000 and 2100.')
+				.max(2100, 'Year must be between 2000 and 2100.'),
 		},
 		amountChf: {
 			placeholder: 'Amount CHF',
 			label: 'Amount CHF',
-			zodSchema: z.coerce.number().nonnegative(),
+			zodSchema: z.coerce.number().min(0, 'Amount CHF must be zero or greater.'),
 		},
 		organization: {
 			placeholder: 'Organization',
@@ -57,27 +63,32 @@ const initialFormSchema: ExpenseFormSchema = {
 };
 
 export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }: ExpenseFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [expense, setExpense] = useState<ExpensePayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	const loadExpense = async (id: string) => {
-		try {
-			const result = await getExpenseAction(id);
-			if (result.success) {
-				setExpense(result.data);
-				const next = { ...formSchema };
-				next.fields.type.value = result.data.type;
-				next.fields.year.value = result.data.year;
-				next.fields.amountChf.value = result.data.amountChf;
-				next.fields.organization.value = result.data.organization.id;
-				setFormSchema(next);
-			} else {
-				onError?.(result.error);
-			}
-		} catch (e) {
-			onError?.(e);
-		}
+		const result = await getExpenseAction(id);
+		handleServiceResult(result, {
+			onSuccess: (data) => {
+				setExpense(data);
+				setFormSchema((prev) => {
+					const next = clearFormSchemaValues(prev);
+
+					return {
+						...next,
+						fields: {
+							...next.fields,
+							type: { ...next.fields.type, value: data.type },
+							year: { ...next.fields.year, value: data.year },
+							amountChf: { ...next.fields.amountChf, value: data.amountChf },
+							organization: { ...next.fields.organization, value: data.organization.id },
+						},
+					};
+				});
+			},
+			onError: (error) => onError?.(error),
+		});
 	};
 
 	const setOptions = (organizations: { id: string; name: string }[]) => {
@@ -93,6 +104,9 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 				organization: {
 					...prev.fields.organization,
 					zodSchema: z.nativeEnum(orgEnum),
+					value:
+						prev.fields.organization.value ??
+						(organizations.length > 0 ? organizations[0].id : prev.fields.organization.value),
 				},
 			},
 		}));
@@ -100,19 +114,17 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 
 	const onSubmit = (schema: ExpenseFormSchema) => {
 		startTransition(async () => {
-			try {
-				let res: { success: boolean; error?: string };
-				if (expenseId && expense) {
-					const data = buildUpdateExpenseInput(schema, expense);
-					res = await updateExpenseAction(data);
-				} else {
-					const data = buildCreateExpenseInput(schema);
-					res = await createExpenseAction(data);
-				}
-				res.success ? onSuccess?.() : onError?.(res.error);
-			} catch (e) {
-				onError?.(e);
+			if (expenseId && expense?.id !== expenseId) {
+				return onError?.('Expense is still loading. Please try again.');
 			}
+			const result =
+				expenseId && expense
+					? await updateExpenseAction(buildUpdateExpenseInput(schema, expense))
+					: await createExpenseAction(buildCreateExpenseInput(schema));
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 

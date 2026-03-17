@@ -24,8 +24,8 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 
 				{noCandidates ? (
 					<div className="bg-destructive/10 text-destructive rounded-md px-4 py-3 text-sm">
-						No candidates are currently available in the candidate pool. Please go back to Step 2 and adjust the
-						selected causes or ensure candidates are available.
+						No candidates are currently available in the candidate pool. Please go back to Step 2 and adjust the selected
+						causes or ensure candidates are available.
 					</div>
 				) : (
 					<>

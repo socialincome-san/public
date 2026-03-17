@@ -9,7 +9,7 @@ export const addressesData: Address[] = [
 		zip: '8001',
 		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-2',
@@ -19,7 +19,7 @@ export const addressesData: Address[] = [
 		zip: '1204',
 		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-3',
@@ -29,7 +29,7 @@ export const addressesData: Address[] = [
 		zip: '3011',
 		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-4',
@@ -39,7 +39,7 @@ export const addressesData: Address[] = [
 		zip: '1000',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-5',
@@ -49,7 +49,7 @@ export const addressesData: Address[] = [
 		zip: '2002',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-6',
@@ -59,7 +59,7 @@ export const addressesData: Address[] = [
 		zip: '3003',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-7',
@@ -69,7 +69,7 @@ export const addressesData: Address[] = [
 		zip: '4004',
 		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-8',
@@ -79,7 +79,7 @@ export const addressesData: Address[] = [
 		zip: '5005',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-9',
@@ -89,7 +89,7 @@ export const addressesData: Address[] = [
 		zip: '1001',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-10',
@@ -99,7 +99,7 @@ export const addressesData: Address[] = [
 		zip: '1002',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-11',
@@ -109,7 +109,7 @@ export const addressesData: Address[] = [
 		zip: '1003',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-12',
@@ -119,7 +119,7 @@ export const addressesData: Address[] = [
 		zip: '1004',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-13',
@@ -129,7 +129,7 @@ export const addressesData: Address[] = [
 		zip: '1005',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-14',
@@ -139,7 +139,7 @@ export const addressesData: Address[] = [
 		zip: '4005',
 		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-15',
@@ -149,7 +149,7 @@ export const addressesData: Address[] = [
 		zip: '3004',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-16',
@@ -159,7 +159,7 @@ export const addressesData: Address[] = [
 		zip: '8001',
 		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-17',
@@ -169,7 +169,7 @@ export const addressesData: Address[] = [
 		zip: '8008',
 		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-18',
@@ -179,9 +179,9 @@ export const addressesData: Address[] = [
 		zip: '3012',
 		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
-		{
+	{
 		id: 'address-19',
 		street: 'Calaba Town Road',
 		number: '6',
@@ -189,7 +189,7 @@ export const addressesData: Address[] = [
 		zip: '1006',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-20',
@@ -199,7 +199,7 @@ export const addressesData: Address[] = [
 		zip: '2003',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-21',
@@ -209,7 +209,7 @@ export const addressesData: Address[] = [
 		zip: '2004',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-22',
@@ -219,7 +219,7 @@ export const addressesData: Address[] = [
 		zip: '5006',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-23',
@@ -229,7 +229,7 @@ export const addressesData: Address[] = [
 		zip: '5007',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-24',
@@ -239,7 +239,7 @@ export const addressesData: Address[] = [
 		zip: '3005',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-25',
@@ -249,7 +249,7 @@ export const addressesData: Address[] = [
 		zip: '3006',
 		country: 'SL',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-26',
@@ -259,7 +259,7 @@ export const addressesData: Address[] = [
 		zip: '4010',
 		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-27',
@@ -269,7 +269,7 @@ export const addressesData: Address[] = [
 		zip: '4011',
 		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-28',
@@ -279,9 +279,9 @@ export const addressesData: Address[] = [
 		zip: '4012',
 		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
-		{
+	{
 		id: 'address-29',
 		street: 'Tubman Boulevard',
 		number: '54',
@@ -289,7 +289,7 @@ export const addressesData: Address[] = [
 		zip: '4013',
 		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-30',
@@ -299,7 +299,7 @@ export const addressesData: Address[] = [
 		zip: '4014',
 		country: 'LR',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 	{
 		id: 'address-31',
@@ -309,6 +309,6 @@ export const addressesData: Address[] = [
 		zip: '8000',
 		country: 'CH',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		updatedAt: null,
 	},
 ];

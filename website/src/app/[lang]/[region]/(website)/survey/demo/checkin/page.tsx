@@ -6,6 +6,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 
 export const generateMetadata = async (props: DefaultPageProps) => {
 	const params = await props.params;
+
 	return getMetadata(params.lang as WebsiteLanguage, 'website-survey');
 };
 
@@ -47,11 +48,7 @@ export default async function Page(props: DefaultPageProps) {
 				<Typography size="2xl" weight="bold">
 					{translator.t('survey.questions.plannedAchievementRemainingTitleV1')}
 				</Typography>
-				<input
-					type="text"
-					className="w-full rounded border border-gray-300 p-2"
-					placeholder={translator.t('freetext')}
-				/>
+				<input type="text" className="w-full rounded border border-gray-300 p-2" placeholder={translator.t('freetext')} />
 			</div>
 
 			<div className="space-y-4">

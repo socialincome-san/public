@@ -8,7 +8,7 @@ type ManagementLayoutProps = {
 	children: ReactNode;
 };
 
-export default async function ManagementLayout({ children }: ManagementLayoutProps) {
+export default function ManagementLayout({ children }: ManagementLayoutProps) {
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
 		{ href: '/portal', label: 'Portal' },

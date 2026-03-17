@@ -1,21 +1,25 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
-import { makeLocalPartnerColumns } from '@/components/data-table/columns/local-partners';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { localPartnersTableConfig } from '@/components/data-table/configs/local-partners-table.config';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
+import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import LocalPartnersForm from './local-partners-form';
 
 export default function LocalPartnersTable({
 	rows,
 	error,
+	query,
 }: {
 	rows: LocalPartnerTableViewRow[];
 	error: string | null;
+	query?: TableQueryState & { totalRows: number };
 }) {
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -33,19 +37,26 @@ export default function LocalPartnersTable({
 	};
 
 	const onError = (error: unknown) => {
-		setErrorMessage(`Error saving local partner: ${error}`);
+		const errorMessage = retrieveErrorMessage(error);
+		setErrorMessage(`Error saving local partner: ${errorMessage}`);
 		logger.error('Local Partner Form Error', { error });
 	};
 
 	return (
 		<>
-			<DataTable
-				title="All Local Partners"
+			<ConfiguredDataTableClient
+				config={localPartnersTableConfig}
+				titleInfoTooltip="Shows all local partners in admin scope."
+				rows={rows}
 				error={error}
-				emptyMessage="No local partners found"
-				data={rows}
-				makeColumns={makeLocalPartnerColumns}
-				actions={<Button onClick={openEmptyForm}>Add new local partner</Button>}
+				query={query}
+				actionMenuItems={[
+					{
+						label: 'Add new local partner',
+						icon: <PlusIcon />,
+						onSelect: openEmptyForm,
+					},
+				]}
 				onRowClick={openEditForm}
 			/>
 

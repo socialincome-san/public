@@ -9,6 +9,7 @@ export const generateMetadata = async (props: DefaultPageProps) => {
 		language: params.lang as WebsiteLanguage,
 		namespaces: ['website-fundraisers'],
 	});
+
 	return { title: translator.t('metadata.title') };
 };
 export default async function Page(props: DefaultPageProps) {

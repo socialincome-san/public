@@ -1,47 +1,50 @@
 'use server';
 
-import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
-import { CampaignService } from '@/lib/services/campaign/campaign.service';
-import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
-import { ProgramService } from '@/lib/services/program/program.service';
+import { getSessionByType } from '@/lib/firebase/current-account';
+import { CampaignFormCreateInput, CampaignFormUpdateInput } from '@/lib/services/campaign/campaign-form-input';
+import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-export const createCampaignsAction = async (campaigns: CampaignsCreateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const campaignService = new CampaignService();
-
-	const res = await campaignService.create(user.id, campaigns);
+export const createCampaignsAction = async (campaigns: CampaignFormCreateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.campaign.create(sessionResult.data.id, campaigns);
 	revalidatePath('/portal/management/campaigns');
+
 	return res;
 };
 
-export const updateCampaignsAction = async (campaigns: CampaignsUpdateInput) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const campaignService = new CampaignService();
-
-	const res = await campaignService.update(user.id, campaigns);
+export const updateCampaignsAction = async (campaigns: CampaignFormUpdateInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const res = await services.write.campaign.update(sessionResult.data.id, campaigns);
 	revalidatePath('/portal/management/campaigns');
+
 	return res;
 };
 
 export const getCampaignsAction = async (campaignsId: string) => {
-	const user = await getAuthenticatedUserOrThrow();
-	const campaignService = new CampaignService();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 
-	return await campaignService.get(user.id, campaignsId);
+	return await services.read.campaign.get(sessionResult.data.id, campaignsId);
 };
 
 export const getProgramsOptions = async () => {
-	const user = await getAuthenticatedUserOrThrow();
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
 
-	const programService = new ProgramService();
-	const programs = await programService.getOptions(user.id);
-
-	return programs;
+	return services.read.program.getOptions(sessionResult.data.id);
 };
 
 export const getCampaignByIdAction = async (id: string) => {
-	const campaignService = new CampaignService();
-
-	return await campaignService.getById(id);
+	return await services.read.campaign.getById(id);
 };

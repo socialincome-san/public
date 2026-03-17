@@ -6,5 +6,6 @@ export const useI18n = () => {
 	if (!i18nContext) {
 		throw new Error('useI18n must be used within a I18nContextProvider');
 	}
+
 	return i18nContext;
 };

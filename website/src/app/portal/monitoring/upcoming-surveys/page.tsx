@@ -1,34 +1,47 @@
-import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
-import DataTable from '@/components/data-table/data-table';
+import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import {
+	getUpcomingSurveysTableFilters,
+	upcomingSurveysTableConfig,
+} from '@/components/data-table/configs/upcoming-surveys-table.config';
+import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { SurveyService } from '@/lib/services/survey/survey.service';
+import { services } from '@/lib/services/services';
+
+import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 
-export default function UpcomingSurveysPage() {
+export default function UpcomingSurveysPage({ searchParams }: SearchParamsPageProps) {
 	return (
-		<Suspense>
-			<UpcomingSurveysDataLoader />
+		<Suspense fallback={<AppLoadingSkeleton />}>
+			<UpcomingSurveysDataLoader searchParams={searchParams} />
 		</Suspense>
 	);
 }
 
-const UpcomingSurveysDataLoader = async () => {
+const UpcomingSurveysDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await getAuthenticatedUserOrRedirect();
+	const resolvedSearchParams = await searchParams;
+	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const service = new SurveyService();
-	const result = await service.getUpcomingSurveyTableView(user.id);
+	const result = await services.read.survey.getPaginatedUpcomingSurveyTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
+	const totalRows = result.success ? result.data.totalCount : 0;
+	const programFilterOptions = result.success ? result.data.programFilterOptions : [];
 
 	return (
-		<DataTable
-			title="Upcoming Surveys"
+		<ConfiguredDataTableClient
+			config={upcomingSurveysTableConfig}
+			titleInfoTooltip="Shows upcoming surveys for accessible programs that are due around the current period."
+			rows={rows}
 			error={error}
-			emptyMessage="No upcoming surveys found"
-			data={rows}
-			makeColumns={makeSurveyColumns}
-			searchKeys={['name', 'recipientName']}
+			query={{ ...tableQuery, totalRows }}
+			toolbarFilters={getUpcomingSurveysTableFilters({
+				query: { ...tableQuery, totalRows },
+				programFilterOptions,
+			})}
 		/>
 	);
 };

@@ -1,11 +1,10 @@
-import { Cause, CountryCode, PayoutInterval, ProgramPermission } from '@/generated/prisma/client';
-import { Profile } from '../candidate/candidate.types';
+import { Cause, CountryCode, Currency, PayoutInterval, Profile, ProgramPermission } from '@/generated/prisma/client';
 
 export type ProgramWallet = {
 	id: string;
 	programName: string;
 	country: CountryCode;
-	payoutCurrency: string;
+	payoutCurrency: Currency;
 	recipientsCount: number;
 	totalPayoutsSum: number;
 	permission: ProgramPermission;
@@ -26,7 +25,6 @@ export type CreateProgramInput = {
 	amountOfRecipientsForStart: number;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
-	payoutCurrency: string;
 	payoutInterval: PayoutInterval;
 	targetCauses: Cause[];
 	targetProfiles: Profile[];
@@ -42,11 +40,48 @@ export type PublicProgramDetails = {
 	amountOfRecipientsForStart: number | null;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
-	payoutCurrency: string;
+	payoutCurrency: Currency;
 	payoutInterval: PayoutInterval;
 	recipientsCount: number;
 	totalPayoutsCount: number;
 	totalPayoutsSum: number;
 	completedSurveysCount: number;
 	startedAt: Date | null;
+};
+
+export type ProgramSettingsPayload = {
+	id: string;
+	name: string;
+	countryId: string;
+	country: {
+		isoCode: CountryCode;
+		currency: Currency;
+	};
+	amountOfRecipientsForStart: number | null;
+	coveredByReserves: boolean;
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutInterval: PayoutInterval;
+	targetCauses: Cause[];
+	targetProfiles: Profile[];
+	ownerOrganizationIds: string[];
+	operatorOrganizationIds: string[];
+	createdAt: Date;
+	updatedAt: Date | null;
+	permission: ProgramPermission;
+	canEdit: boolean;
+};
+
+export type ProgramSettingsUpdateInput = {
+	id: string;
+	name: string;
+	countryId: string;
+	coveredByReserves: boolean;
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutInterval: PayoutInterval;
+	targetCauses: Cause[];
+	targetProfiles: Profile[];
+	ownerOrganizationIds: string[];
+	operatorOrganizationIds: string[];
 };

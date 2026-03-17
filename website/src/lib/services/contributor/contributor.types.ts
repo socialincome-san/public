@@ -13,13 +13,29 @@ export type ContributorTableViewRow = {
 	firstName: string;
 	lastName: string;
 	email: string;
-	country: string | null;
+	firebaseAuthUserId: string;
+	country: CountryCode | null;
+	totalContributedChf: number;
 	createdAt: Date;
 	permission: OrganizationPermission;
 };
 
-export type ContributorTableView = {
+export type ContributorTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	country?: string;
+};
+
+export type ContributorPaginatedTableView = {
 	tableRows: ContributorTableViewRow[];
+	totalCount: number;
+	countryFilterOptions: {
+		value: string;
+		label: string;
+	}[];
 };
 
 export type ContributorPayload = {
@@ -94,23 +110,4 @@ export type ContributorSession = {
 	zip: string | null;
 	country: CountryCode | null;
 	stripeCustomerId: string | null;
-};
-
-export type ContributorFormCreateInput = {
-	firstName: string;
-	lastName: string;
-	email: string;
-	referral: ContributorReferralSource;
-	gender?: Gender | null;
-	language?: string | null;
-	dateOfBirth?: Date | null;
-	profession?: string | null;
-	callingName?: string | null;
-	address?: {
-		street: string;
-		number: string;
-		city: string;
-		zip: string;
-		country: CountryCode;
-	} | null;
 };

@@ -1,20 +1,18 @@
-import { ContributionStatus, PaymentEvent, PaymentEventType } from '@/generated/prisma/client';
+import { ContributionStatus, PaymentEvent, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
+import { Currency } from '@/generated/prisma/enums';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
-import { Currency } from '@/lib/types/currency';
+import { logger } from '@/lib/utils/logger';
 import xmldom from '@xmldom/xmldom';
 import { DateTime } from 'luxon';
 import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
 import xpath from 'xpath';
-import {
-	CONTRIBUTION_REFERENCE_ID_LENGTH,
-	CONTRIBUTOR_REFERENCE_ID_LENGTH,
-} from '../bank-transfer/bank-transfer-config';
-import { CampaignService } from '../campaign/campaign.service';
-import { ContributionService } from '../contribution/contribution.service';
+import { CONTRIBUTION_REFERENCE_ID_LENGTH, CONTRIBUTOR_REFERENCE_ID_LENGTH } from '../bank-transfer/bank-transfer-config';
+import { CampaignReadService } from '../campaign/campaign-read.service';
+import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
-import { ContributorService } from '../contributor/contributor.service';
+import { ContributorReadService } from '../contributor/contributor-read.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';
@@ -25,14 +23,18 @@ const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
 
 export class PaymentFileImportService extends BaseService {
-	private contributorService = new ContributorService();
-	private contributionService = new ContributionService();
-	private readonly campaignService = new CampaignService();
 	private readonly bucketName;
 	private readonly xmlSelectExpression = '//ns:BkToCstmrDbtCdtNtfctn/ns:Ntfctn/ns:Ntry/ns:NtryDtls/ns:TxDtls';
 
-	constructor(bucketName: string) {
-		super();
+	constructor(
+		bucketName: string,
+		db: PrismaClient,
+		private readonly contributorService: ContributorReadService,
+		private readonly contributionService: ContributionWriteService,
+		private readonly campaignService: CampaignReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
 		this.bucketName = bucketName;
 	}
 
@@ -41,10 +43,10 @@ export class PaymentFileImportService extends BaseService {
 	 */
 	async importPaymentFiles(): Promise<ServiceResult<PaymentEvent[]>> {
 		const sftp = new SFTPClient();
-		const bucket = storageAdmin.storage.bucket(this.bucketName);
-		const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
 		const allContributions: BankContribution[] = [];
 		try {
+			const bucket = storageAdmin.storage.bucket(this.bucketName);
+			const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
 			await sftp.connect({
 				host: POSTFINANCE_FTP_HOST,
 				port: Number(POSTFINANCE_FTP_PORT),
@@ -53,7 +55,7 @@ export class PaymentFileImportService extends BaseService {
 			});
 			const sftpFiles = await sftp.list('/yellow-net-reports');
 
-			for (let file of sftpFiles) {
+			for (const file of sftpFiles) {
 				if (bucketFiles.includes(file.name)) {
 					this.logger.info(`Skipped copying file ${file.name} because it already exists in ${this.bucketName} bucket`);
 					continue;
@@ -67,25 +69,31 @@ export class PaymentFileImportService extends BaseService {
 						);
 					} else {
 						this.logger.info(`Importing contributions from file ${file.name}.`);
-						const contributions = this.getContributionsFromPaymentFile(tmpPath);
-						allContributions.push(...contributions);
+						const contributionsResult = this.getContributionsFromPaymentFile(tmpPath);
+						if (!contributionsResult.success) {
+							throw new Error(contributionsResult.error);
+						}
+						allContributions.push(...contributionsResult.data);
 					}
 					await storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
 				});
 			}
 			const result = await this.createOrUpdateContributions(allContributions);
-			sftp.end();
+			void sftp.end();
 
 			if (!result.success) {
-				this.logger.error(`Error importing payment files: ${result.error}`);
-				return this.resultFail(`Error importing payment files: ${result.error}`);
+				this.logger.error(`Error importing payment files: ${String(result.error)}`);
+
+				return this.resultFail(`Error importing payment files: ${String(result.error)}`);
 			}
+
 			return this.resultOk(result.data);
 		} catch (error) {
-			this.logger.error(`Error importing payment files: ${error}`);
+			this.logger.error(`Error importing payment files: ${String(error)}`);
+
 			return this.resultFail(`Error importing payment files: ${JSON.stringify(error)}`);
 		} finally {
-			sftp.end();
+			void sftp.end();
 		}
 	}
 
@@ -93,33 +101,41 @@ export class PaymentFileImportService extends BaseService {
 	 * gets the contributions information from the payment file
 	 * @param file The path of the file to process
 	 */
-	getContributionsFromPaymentFile(file: string): BankContribution[] {
-		const xml = fs.readFileSync(file, 'utf8');
-		const xmlDoc = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
-		const select = xpath.useNamespaces({ ns: 'urn:iso:std:iso:20022:tech:xsd:camt.054.001.08' });
-		const nodes = select(this.xmlSelectExpression, xmlDoc) as Node[];
+	getContributionsFromPaymentFile(file: string): ServiceResult<BankContribution[]> {
+		try {
+			const xml = fs.readFileSync(file, 'utf8');
+			const xmlDoc = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
+			const select = xpath.useNamespaces({ ns: 'urn:iso:std:iso:20022:tech:xsd:camt.054.001.08' });
+			const nodes = select(this.xmlSelectExpression, xmlDoc) as Node[];
 
-		const contributions: BankContribution[] = [];
+			const contributions: BankContribution[] = [];
 
-		for (let node of nodes) {
-			const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
+			for (const node of nodes) {
+				const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
-			if (!referenceId) {
-				this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
-				continue;
+				const rawNode = new xmldom.XMLSerializer().serializeToString(node);
+				if (!referenceId) {
+					this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${rawNode}`);
+					continue;
+				}
+
+				const amountStr = select('string(ancestor::ns:Ntry/ns:Amt)', node) as string;
+				const currencyStr = select('string(ancestor::ns:Ntry/ns:Amt/@Ccy)', node) as string;
+
+				contributions.push({
+					referenceId,
+					amount: parseFloat(amountStr),
+					currency: (currencyStr || 'CHF').toUpperCase() as Currency,
+					rawContent: rawNode,
+				});
 			}
 
-			const amountStr = select('string(ancestor::ns:Ntry/ns:Amt)', node) as string;
-			const currencyStr = select('string(ancestor::ns:Ntry/ns:Amt/@Ccy)', node) as string;
+			return this.resultOk(contributions);
+		} catch (error) {
+			this.logger.error(error);
 
-			contributions.push({
-				referenceId,
-				amount: parseFloat(amountStr),
-				currency: (currencyStr || 'CHF').toUpperCase() as Currency,
-				rawContent: node.toString(),
-			});
+			return this.resultFail(`Could not parse payment file: ${JSON.stringify(error)}`);
 		}
-		return contributions;
 	}
 
 	/**
@@ -127,9 +143,7 @@ export class PaymentFileImportService extends BaseService {
 	 * @param bankContributions contributions from payment files
 	 */
 	// TODO: create or update
-	private async createOrUpdateContributions(
-		bankContributions: BankContribution[],
-	): Promise<ServiceResult<PaymentEvent[]>> {
+	private async createOrUpdateContributions(bankContributions: BankContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
 		try {
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 			if (!fallbackCampaignResult.success) {
@@ -148,10 +162,9 @@ export class PaymentFileImportService extends BaseService {
 
 			const created = [];
 
-			for (let c of bankContributions) {
+			for (const c of bankContributions) {
 				const contributor = contributors.data.find(
-					(contributor) =>
-						contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
+					(contributor) => contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
 				);
 				if (!contributor) {
 					this.logger.alert(
@@ -197,7 +210,7 @@ export class PaymentFileImportService extends BaseService {
 					} else {
 						created.push(result.data);
 					}
-				} catch (error) {
+				} catch {
 					failedPaymentEvents.push(contributionReferenceId);
 				}
 			}
@@ -206,6 +219,7 @@ export class PaymentFileImportService extends BaseService {
 				this.logger.alert(
 					`Failed to create payment events with contributions in payment file imports. Failed transaction IDs: ${failedPaymentEvents.join(', ')}`,
 				);
+
 				return this.resultFail(
 					`Failed to create payment events with contributions. Failed transaction IDs: ${failedPaymentEvents.join(', ')}`,
 				);
@@ -214,6 +228,7 @@ export class PaymentFileImportService extends BaseService {
 			return this.resultOk(created);
 		} catch (error) {
 			this.logger.error(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
+
 			return this.resultFail(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
 		}
 	}

@@ -5,8 +5,17 @@ export type MobileMoneyProviderTableViewRow = {
 	createdAt: Date;
 };
 
-export type MobileMoneyProviderTableView = {
+export type MobileMoneyProviderTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type MobileMoneyProviderPaginatedTableView = {
 	tableRows: MobileMoneyProviderTableViewRow[];
+	totalCount: number;
 };
 
 export type MobileMoneyProviderPayload = {
@@ -15,17 +24,6 @@ export type MobileMoneyProviderPayload = {
 	isSupported: boolean;
 	createdAt: Date;
 	updatedAt: Date | null;
-};
-
-export type MobileMoneyProviderCreateInput = {
-	name: string;
-	isSupported: boolean;
-};
-
-export type MobileMoneyProviderUpdateInput = {
-	id: string;
-	name?: string;
-	isSupported?: boolean;
 };
 
 export type MobileMoneyProviderOption = {

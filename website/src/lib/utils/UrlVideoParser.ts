@@ -1,16 +1,17 @@
-interface VideoMatchAndExtract {
+type VideoMatchAndExtract = {
 	parseUrl(string: string): string | null;
-}
+};
 
 export class VimeoVideoMatchAndExtract implements VideoMatchAndExtract {
-	regex = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|)(\d+)(?:|\/\?)/i;
+	regex = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^/]*)\/videos\/|)(\d+)(?:|\/\?)/i;
 	urlCreate = (videoId: string) => `https://player.vimeo.com/video/${videoId}`;
 
 	parseUrl(url: string): string | null {
-		const match = url?.match(this.regex);
-		if (match && match[4]) {
+		const match = url.match(this.regex);
+		if (match?.[4]) {
 			return this.urlCreate(match[4]);
 		}
+
 		return null;
 	}
 }
@@ -21,10 +22,11 @@ export class YouTubeVideoMatchAndExtract implements VideoMatchAndExtract {
 	urlCreate = (videoId: string) => `https://www.youtube.com/embed/${videoId}`;
 
 	parseUrl(url: string): string | null {
-		const match = url?.match(this.regex);
-		if (match && match[1]) {
+		const match = url.match(this.regex);
+		if (match?.[1]) {
 			return this.urlCreate(match[1]);
 		}
+
 		return null;
 	}
 }

@@ -1,6 +1,6 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { RecipientService } from '@/lib/services/recipient/recipient.service';
 import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
@@ -12,8 +12,7 @@ import { RecipientSelfUpdate } from '../../models';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		logger.warn('[GET /recipients/me] Failed', {
@@ -38,13 +37,11 @@ export const GET = withAppCheck(async (request: NextRequest) => {
  * @openapi
  */
 export const PATCH = withAppCheck(async (request: NextRequest) => {
-	const recipientService = new RecipientService();
-
 	logger.info('[PATCH /recipients/me] Incoming request', {
 		contentType: request.headers.get('content-type'),
 	});
 
-	const recipientResult = await recipientService.getRecipientFromRequest(request);
+	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		logger.warn('[PATCH /recipients/me] Recipient resolution failed', {
@@ -65,6 +62,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		body = await request.json();
 	} catch {
 		logger.warn('[PATCH /recipients/me] Invalid JSON body');
+
 		return new Response('Invalid JSON body', { status: 400 });
 	}
 
@@ -121,9 +119,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 				? {
 						upsert: {
 							update: {
-								mobileMoneyProvider: data.paymentProvider
-									? { connect: { id: data.paymentProvider } }
-									: { disconnect: true },
+								mobileMoneyProvider: data.paymentProvider ? { connect: { id: data.paymentProvider } } : { disconnect: true },
 								phone: data.paymentPhone
 									? {
 											connectOrCreate: {
@@ -148,7 +144,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 				: undefined,
 	};
 
-	const updateResult = await recipientService.updateSelf(recipient.id, updateData, {
+	const updateResult = await services.write.recipient.updateSelf(recipient.id, updateData, {
 		oldPaymentPhone,
 		newPaymentPhone,
 	});

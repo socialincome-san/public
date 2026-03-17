@@ -1,11 +1,11 @@
-import { OrganizationPermission, Prisma } from '@/generated/prisma/client';
+import { Currency, OrganizationPermission } from '@/generated/prisma/client';
 
 export type CampaignTableViewRow = {
 	id: string;
 	link: string;
 	title: string;
 	description: string;
-	currency: string;
+	currency: Currency;
 	endDate: Date;
 	isActive: boolean;
 	programName: string | null;
@@ -13,8 +13,17 @@ export type CampaignTableViewRow = {
 	permission: OrganizationPermission;
 };
 
-export type CampaignTableView = {
+export type CampaignTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type CampaignPaginatedTableView = {
 	tableRows: CampaignTableViewRow[];
+	totalCount: number;
 };
 
 export type CampaignPayload = {
@@ -31,7 +40,7 @@ export type CampaignPayload = {
 	linkFacebook?: string | null;
 	linkX?: string | null;
 	goal?: number | null;
-	currency: string;
+	currency: Currency;
 	additionalAmountChf?: number | null;
 	endDate: Date;
 	isActive: boolean;
@@ -56,7 +65,4 @@ export type CampaignPage = CampaignPayload & {
 	daysLeft: number;
 };
 
-// campaign will be created using current users organization ID
-export type CampaignsCreateInput = Omit<Prisma.CampaignCreateInput, 'organization'>;
-export type CampaignsUpdateInput = Prisma.CampaignUpdateInput;
 export type CampaignOption = { id: string; name: string };

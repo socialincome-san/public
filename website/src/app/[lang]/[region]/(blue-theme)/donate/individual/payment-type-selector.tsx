@@ -56,17 +56,15 @@ const PaymentTypeFormItem = ({
 							<Typography size="sm">{description}</Typography>
 						</div>
 					</div>
-					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')}
-						aria-hidden="true"
-					/>
+					<CheckCircleIcon className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')} aria-hidden="true" />
 				</div>
 			</FormControl>
 		</FormItem>
 	);
 };
 
-export const PaymentTypeSelector = ({ lang, translations, bankTransferForm }: PaymentTypeSelectorProps) => {
+export const PaymentTypeSelector = (props: PaymentTypeSelectorProps) => {
+	const { translations, bankTransferForm } = props;
 	const form = useFormContext();
 
 	return (

@@ -1,7 +1,7 @@
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import { websiteCurrencies } from '@/lib/i18n/utils';
-import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { CampaignFormCreateInput, CampaignFormUpdateInput } from '@/lib/services/campaign/campaign-form-input';
+import { allCurrencies } from '@/lib/types/currency';
 import z from 'zod';
 
 type CampaignsFormSchema = {
@@ -95,17 +95,18 @@ export const initialFormSchema: CampaignsFormSchema = {
 		goal: {
 			placeholder: 'Target amount for goal',
 			label: 'Goal Amount',
-			zodSchema: z.number().positive('Goal must be positive').nullable(),
+			zodSchema: z.number().positive('Goal must be positive').nullable().optional(),
 		},
 		currency: {
-			placeholder: 'USD, EUR, CHF',
+			placeholder: 'Select currency',
 			label: 'Currency Code',
-			zodSchema: z.nativeEnum(getZodEnum(websiteCurrencies.map((c) => ({ id: c, label: c })))),
+			useCombobox: true,
+			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
 		},
 		additionalAmountChf: {
 			placeholder: 'Additional Amount in CHF',
 			label: 'Additional CHF Amount',
-			zodSchema: z.number().positive('Amount must be positive').nullable(),
+			zodSchema: z.number().positive('Amount must be positive').nullable().optional(),
 		},
 		endDate: {
 			label: 'End Date',
@@ -166,8 +167,9 @@ export const initialFormSchema: CampaignsFormSchema = {
 	},
 };
 
-export const buildUpdateCampaignsInput = (schema: CampaignsFormSchema): CampaignsUpdateInput => {
+export const buildUpdateCampaignsInput = (schema: CampaignsFormSchema, campaignId: string): CampaignFormUpdateInput => {
 	return {
+		id: campaignId,
 		title: schema.fields.title.value,
 		description: schema.fields.description.value,
 		secondDescriptionTitle: schema.fields.secondDescriptionTitle.value,
@@ -192,11 +194,11 @@ export const buildUpdateCampaignsInput = (schema: CampaignsFormSchema): Campaign
 		metadataTwitterImage: schema.fields.metadataTwitterImage.value,
 		creatorName: schema.fields.creatorName.value,
 		creatorEmail: schema.fields.creatorEmail.value,
-		program: { connect: { id: schema.fields.program.value } },
+		programId: schema.fields.program.value,
 	};
 };
 
-export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): CampaignsCreateInput => {
+export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): CampaignFormCreateInput => {
 	return {
 		title: schema.fields.title.value,
 		description: schema.fields.description.value,
@@ -222,6 +224,6 @@ export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): Campaign
 		metadataTwitterImage: schema.fields.metadataTwitterImage.value,
 		creatorName: schema.fields.creatorName.value,
 		creatorEmail: schema.fields.creatorEmail.value,
-		program: { connect: { id: schema.fields.program.value } },
+		programId: schema.fields.program.value,
 	};
 };

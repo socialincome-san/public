@@ -1,4 +1,4 @@
-import { ExchangeRateImportService } from '@/lib/services/exchange-rate/exchange-rate-import.service';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,20 +7,26 @@ export const POST = async (request: NextRequest) => {
 
 	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
 		logger.alert('Scheduler API key not set or wrong');
+
 		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const service = new ExchangeRateImportService();
-
 	try {
-		const result = await service.import();
+		const result = await services.exchangeRateImport.import();
 		if (!result.success) {
-			logger.alert(`Exchange rate import failed: ${result.error}`, { result }, { component: 'exchange-rate-import' });
+			logger.alert(
+				`Exchange rate import failed: ${String(result.error)}`,
+				{ result },
+				{ component: 'exchange-rate-import' },
+			);
+
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
+
 		return NextResponse.json({}, { status: 201 });
 	} catch (error) {
-		logger.alert(`Exchange rate import failed: ${error}`, { error }, { component: 'exchange-rate-import' });
+		logger.alert(`Exchange rate import failed: ${String(error)}`, { error }, { component: 'exchange-rate-import' });
+
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 };

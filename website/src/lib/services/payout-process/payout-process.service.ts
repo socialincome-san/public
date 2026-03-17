@@ -1,17 +1,24 @@
-import { PayoutStatus, Prisma } from '@/generated/prisma/client';
+import { PayoutStatus, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { format, isSameMonth, startOfMonth } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
-import { ProgramAccessService } from '../program-access/program-access.service';
-import { ProgramService } from '../program/program.service';
+import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
+import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 
 export class PayoutProcessService extends BaseService {
-	private programAccessService = new ProgramAccessService();
-	private programService = new ProgramService();
-	private exchangeRateService = new ExchangeRateService();
+	constructor(
+		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly programStatsService: ProgramStatsService,
+		private readonly exchangeRateService: ExchangeRateReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
 
 	async getRecipientsReadyForFirstPayout(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
 		try {
@@ -29,7 +36,7 @@ export class PayoutProcessService extends BaseService {
 			const programIdsReadyForFirstPayoutInterval: string[] = [];
 
 			for (const program of accessiblePrograms) {
-				const result = await this.programService.isReadyForFirstPayoutInterval(program.programId);
+				const result = await this.programStatsService.isReadyForFirstPayoutInterval(program.programId);
 
 				if (result.success && result.data === true) {
 					programIdsReadyForFirstPayoutInterval.push(program.programId);
@@ -41,11 +48,11 @@ export class PayoutProcessService extends BaseService {
 			const recipients = await this.db.recipient.findMany({
 				where: {
 					programId: { in: programIdsReadyForFirstPayoutInterval },
-					startDate: { lte: nowDate },
-					OR: [{ suspendedAt: null }, { suspendedAt: { gt: nowDate } }],
 				},
 				select: {
 					id: true,
+					startDate: true,
+					suspendedAt: true,
 					contact: {
 						select: {
 							firstName: true,
@@ -61,9 +68,13 @@ export class PayoutProcessService extends BaseService {
 					program: {
 						select: {
 							payoutPerInterval: true,
-							payoutCurrency: true,
 							programDurationInMonths: true,
 							payoutInterval: true,
+							country: {
+								select: {
+									currency: true,
+								},
+							},
 						},
 					},
 					payouts: {
@@ -84,20 +95,16 @@ export class PayoutProcessService extends BaseService {
 					const paidCount = recipient.payouts.filter(
 						(p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed,
 					).length;
+					const isEligibleResult = this.programStatsService.isRecipientEligibleForPayout({
+						startDate: recipient.startDate,
+						suspendedAt: recipient.suspendedAt,
+						paidOrConfirmedCount: paidCount,
+						programDurationInMonths: program.programDurationInMonths,
+						payoutInterval: program.payoutInterval,
+						nowDate,
+					});
 
-					let intervalInMonths = 1;
-
-					if (program.payoutInterval === 'quarterly') {
-						intervalInMonths = 3;
-					}
-
-					if (program.payoutInterval === 'yearly') {
-						intervalInMonths = 12;
-					}
-
-					const expectedPayouts = Math.ceil(program.programDurationInMonths / intervalInMonths);
-
-					return paidCount < expectedPayouts;
+					return isEligibleResult.success && isEligibleResult.data;
 				})
 				.map((recipient) => ({
 					id: recipient.id,
@@ -105,7 +112,7 @@ export class PayoutProcessService extends BaseService {
 					paymentInformation: recipient.paymentInformation,
 					program: {
 						payoutPerInterval: Number(recipient.program!.payoutPerInterval),
-						payoutCurrency: recipient.program!.payoutCurrency,
+						payoutCurrency: recipient.program!.country.currency,
 						programDurationInMonths: recipient.program!.programDurationInMonths,
 					},
 					payouts: recipient.payouts,
@@ -114,6 +121,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(mapped);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -137,6 +145,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate registration CSV: ${JSON.stringify(error)}`);
 		}
 	}
@@ -176,6 +185,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate payout CSV: ${JSON.stringify(error)}`);
 		}
 	}
@@ -205,7 +215,7 @@ export class PayoutProcessService extends BaseService {
 					const payoutPerInterval = r.program.payoutPerInterval;
 					const currency = r.program.payoutCurrency;
 					const rateCurrency = rates[currency];
-					const rateChf = rates['CHF'];
+					const rateChf = rates.CHF;
 					const amountChf = rateCurrency && rateChf ? (payoutPerInterval / rateCurrency) * rateChf : null;
 					const phoneNumber = r.paymentInformation?.phone?.number ?? 'NO_PHONE';
 
@@ -225,6 +235,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(toCreate);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not preview payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -257,6 +268,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(`Created ${dbPayload.length} payouts for ${format(selectedDate, 'yyyy-MM')}.`);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate payouts: ${JSON.stringify(error)}`);
 		}
 	}

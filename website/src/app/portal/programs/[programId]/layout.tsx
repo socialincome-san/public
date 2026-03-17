@@ -1,10 +1,11 @@
-import { TabNavigation } from '@/components/tab-navigation';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ProgramService } from '@/lib/services/program/program.service';
-
 import { CountryBadge } from '@/components/badges/country-badge';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { TabNavigation } from '@/components/tab-navigation';
+import { ProgramPermission } from '@/generated/prisma/enums';
+import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { services } from '@/lib/services/services';
 import { ReactNode } from 'react';
+import { ProgramSettingsDialog } from './components/program-settings-dialog';
 
 type ProgramLayoutProps = {
 	children: ReactNode;
@@ -15,8 +16,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new ProgramService();
-	const result = await service.getProgramWalletsProgramScoped(user.id, programId);
+	const result = await services.read.program.getProgramWalletsProgramScoped(user.id, programId);
 
 	if (!result.success) {
 		return <div className="p-4">Error loading the program</div>;
@@ -44,6 +44,10 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 				<h1 className="py-8 text-5xl">{programName}</h1>
 
 				<CountryBadge country={country} />
+
+				<div className="ml-auto">
+					<ProgramSettingsDialog programId={programId} readOnly={result.data.permission === ProgramPermission.owner} />
+				</div>
 			</div>
 
 			<TabNavigation sections={sections} />

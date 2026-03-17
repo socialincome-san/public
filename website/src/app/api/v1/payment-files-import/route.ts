@@ -1,4 +1,4 @@
-import { PaymentFileImportService } from '@/lib/services/payment-file-import/payment-file-import.service';
+import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,20 +7,23 @@ export const POST = async (request: NextRequest) => {
 
 	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
 		logger.alert('Scheduler API key not set or wrong');
+
 		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 	}
 
 	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
 		logger.alert('Payment files storage bucket env var not set');
+
 		return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
 	}
 
-	const service = new PaymentFileImportService(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
+	const service = services.createPaymentFileImport(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
 
 	try {
 		const result = await service.importPaymentFiles();
 		if (!result.success) {
 			logger.alert(`Payment files import failed: ${result.error}`, { result }, { component: 'payment-files-import' });
+
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 		if (result.data.length > 0) {
@@ -30,9 +33,11 @@ export const POST = async (request: NextRequest) => {
 		} else {
 			logger.info('Payment files import succeeded. No payment events updated.');
 		}
+
 		return NextResponse.json(result.data, { status: 201 });
 	} catch (error) {
-		logger.alert(`Payment files import failed: ${error}`, { error }, { component: 'payment-files-import' });
+		logger.alert(`Payment files import failed: ${String(error)}`, { error }, { component: 'payment-files-import' });
+
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 };

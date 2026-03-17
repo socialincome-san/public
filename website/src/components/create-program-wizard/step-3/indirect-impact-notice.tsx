@@ -23,8 +23,8 @@ export const IndirectImpactNotice = ({ recipients }: Props) => {
 							</span>
 						</TooltipTrigger>
 						<TooltipContent className="max-w-[220px] text-left">
-							On average, each supported recipient positively impacts around five additional people in their household
-							and community.
+							On average, each supported recipient positively impacts around five additional people in their household and
+							community.
 						</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>{' '}

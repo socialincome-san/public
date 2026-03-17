@@ -9,63 +9,89 @@
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
-import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@/generated/prisma/client';
+import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
+import { isValidCurrency } from '@/lib/types/currency';
+import { logger } from '@/lib/utils/logger';
 import { titleCase } from '@/lib/utils/string-utils';
+import { toSortKey } from '@/lib/utils/to-sort-key';
 import Stripe from 'stripe';
-import { CampaignService } from '../campaign/campaign.service';
-import { ContributionService } from '../contribution/contribution.service';
+import { CampaignReadService } from '../campaign/campaign-read.service';
+import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
-import { ContributorService } from '../contributor/contributor.service';
-import {
-	ContributorUpdateInput,
-	ContributorWithContact,
-	StripeContributorData,
-} from '../contributor/contributor.types';
+import { ContributorReadService } from '../contributor/contributor-read.service';
+import { ContributorWriteService } from '../contributor/contributor-write.service';
+import { ContributorUpdateInput, ContributorWithContact, StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramAccessService } from '../program-access/program-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
 	CheckoutMetadata,
 	StripeCustomerData,
 	StripePaymentMethod,
+	StripeSubscriptionPaginatedTableView,
 	StripeSubscriptionRow,
+	StripeSubscriptionTableQuery,
 	StripeSubscriptionTableView,
 	UpdateContributorAfterCheckoutInput,
 	WebhookResult,
 } from './stripe.types';
 export class StripeService extends BaseService {
-	private readonly stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
-	private readonly contributorService = new ContributorService();
-	private readonly contributionService = new ContributionService();
-	private readonly campaignService = new CampaignService();
-	private readonly programAccessService = new ProgramAccessService();
+	private stripeClient?: Stripe;
+	private readonly stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
-	async handleWebhookEvent(
-		body: string,
-		signature: string,
-		webhookSecret: string,
-	): Promise<ServiceResult<WebhookResult>> {
+	constructor(
+		db: PrismaClient,
+		private readonly contributorReadService: ContributorReadService,
+		private readonly contributorWriteService: ContributorWriteService,
+		private readonly contributionService: ContributionWriteService,
+		private readonly campaignService: CampaignReadService,
+		private readonly programAccessService: ProgramAccessReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
+
+	private getStripeClientOrThrow(): Stripe {
+		if (this.stripeClient) {
+			return this.stripeClient;
+		}
+
+		if (!this.stripeSecretKey) {
+			throw new Error('Missing STRIPE_SECRET_KEY environment variable');
+		}
+		if (!this.stripeSecretKey.startsWith('sk_')) {
+			throw new Error('Invalid STRIPE_SECRET_KEY format');
+		}
+
+		this.stripeClient = new Stripe(this.stripeSecretKey, { typescript: true });
+
+		return this.stripeClient;
+	}
+
+	async handleWebhookEvent(body: string, signature: string, webhookSecret: string): Promise<ServiceResult<WebhookResult>> {
 		try {
 			// Verify webhook signature and parse event
-			const event = this.stripe.webhooks.constructEvent(body, signature, webhookSecret);
+			const event = this.getStripeClientOrThrow().webhooks.constructEvent(body, signature, webhookSecret);
 
 			switch (event.type) {
 				case 'charge.succeeded':
 				case 'charge.updated': // For final balance_transaction updates
 				case 'charge.failed': {
-					const charge = event.data.object as Stripe.Charge;
+					const charge = event.data.object;
 					this.logger.info('Processing charge event', { eventType: event.type, chargeId: charge.id });
 
 					const result = await this.processChargeEvent(charge);
 
 					if (!result.success) {
 						this.logger.error(result.error);
+
 						return this.resultFail(result.error);
 					}
 
 					if (result.data.contributionId) {
 						this.logger.info('Successfully processed charge', { chargeId: charge.id });
 					}
+
 					return this.resultOk(result.data);
 				}
 				default:
@@ -73,6 +99,7 @@ export class StripeService extends BaseService {
 			}
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to handle webhook event: ${JSON.stringify(error)}`);
 		}
 	}
@@ -80,7 +107,7 @@ export class StripeService extends BaseService {
 	private async processChargeEvent(charge: Stripe.Charge): Promise<ServiceResult<WebhookResult>> {
 		try {
 			// Get full charge details with expanded balance_transaction for fees
-			const fullCharge = await this.stripe.charges.retrieve(charge.id, {
+			const fullCharge = await this.getStripeClientOrThrow().charges.retrieve(charge.id, {
 				expand: ['balance_transaction', 'invoice'],
 			});
 
@@ -93,20 +120,21 @@ export class StripeService extends BaseService {
 			let isNewContributor = false;
 
 			// Portal flow: metadata has accountId (logged-in user donating from portal)
-			const accountId = checkoutMetadata?.accountId as string | undefined;
+			const accountId = checkoutMetadata?.accountId;
 			if (accountId) {
 				const user = await this.db.user.findUnique({
 					where: { accountId },
 					select: { contactId: true },
 				});
 				if (user) {
-					const portalResult = await this.contributorService.getOrCreateContributorForAccount(
+					const portalResult = await this.contributorWriteService.getOrCreateContributorForAccount(
 						accountId,
 						stripeCustomer.id,
 						user.contactId,
 					);
 					if (!portalResult.success) {
 						this.logger.error(portalResult.error);
+
 						return this.resultFail(portalResult.error);
 					}
 					contributor = portalResult.data.contributor;
@@ -131,9 +159,10 @@ export class StripeService extends BaseService {
 					};
 
 					const contributorResult =
-						await this.contributorService.getOrCreateContributorWithFirebaseAuth(contributorData);
+						await this.contributorWriteService.getOrCreateContributorWithFirebaseAuth(contributorData);
 					if (!contributorResult.success) {
 						this.logger.error(contributorResult.error);
+
 						return this.resultFail(contributorResult.error);
 					}
 
@@ -145,18 +174,20 @@ export class StripeService extends BaseService {
 					}
 				} else {
 					// For failed/pending payments: only process if contributor already exists
-					const existingContributorResult = await this.contributorService.findByStripeCustomerOrEmail(
+					const existingContributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(
 						stripeCustomer.id,
 						stripeCustomer.email || undefined,
 					);
 
 					if (!existingContributorResult.success) {
 						this.logger.error(existingContributorResult.error);
+
 						return this.resultFail(existingContributorResult.error);
 					}
 
 					if (!existingContributorResult.data) {
 						this.logger.info(`Skipping non-successful charge for non-existent contributor`);
+
 						return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
 					}
 
@@ -171,16 +202,22 @@ export class StripeService extends BaseService {
 				const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 				if (!fallbackCampaignResult.success) {
 					this.logger.error(fallbackCampaignResult.error);
+
 					return this.resultFail(fallbackCampaignResult.error);
 				}
 				campaignId = fallbackCampaignResult.data.id;
+			}
+
+			const chargeCurrency = fullCharge.currency.toUpperCase();
+			if (!isValidCurrency(chargeCurrency)) {
+				return this.resultFail(`Unsupported currency from Stripe charge: ${fullCharge.currency}`);
 			}
 
 			// Prepare contribution data with CHF amounts from balance_transaction
 			const contributionData: StripeContributionCreateData = {
 				contributorId: contributor.id,
 				amount: fullCharge.amount / 100, // Original charge amount
-				currency: fullCharge.currency.toUpperCase(),
+				currency: chargeCurrency,
 				amountChf: this.extractAmountChf(fullCharge), // Final settled amount in CHF
 				feesChf: this.extractFeesChf(fullCharge), // Stripe processing fees
 				status: this.constructStatus(fullCharge.status),
@@ -201,17 +238,16 @@ export class StripeService extends BaseService {
 			};
 
 			// Create or update contribution with associated payment event (upsert based on transactionId)
-			const contributionResult = await this.contributionService.upsertFromStripeEvent(
-				contributionData,
-				paymentEventData,
-			);
+			const contributionResult = await this.contributionService.upsertFromStripeEvent(contributionData, paymentEventData);
 
 			if (!contributionResult.success) {
 				this.logger.error(contributionResult.error);
+
 				return this.resultFail(contributionResult.error);
 			}
 
 			this.logger.info('Created contribution', { contributionId: contributionResult.data.id });
+
 			return this.resultOk({
 				contributionId: contributionResult.data.id,
 				contributorId: contributor.id,
@@ -219,6 +255,7 @@ export class StripeService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to process charge: ${JSON.stringify(error)}`);
 		}
 	}
@@ -226,35 +263,40 @@ export class StripeService extends BaseService {
 	private extractAmountChf(charge: Stripe.Charge): number {
 		// Extract final settled amount in CHF from balance_transaction
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
+
 		return balanceTransaction?.amount ? balanceTransaction.amount / 100 : 0;
 	}
 
 	private extractFeesChf(charge: Stripe.Charge): number {
 		// Extract Stripe processing fees in CHF from balance_transaction
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
+
 		return balanceTransaction?.fee ? balanceTransaction.fee / 100 : 0;
 	}
 
 	private async retrieveStripeCustomer(customerId: string): Promise<StripeCustomerData> {
-		const customer = await this.stripe.customers.retrieve(customerId);
+		const customer = await this.getStripeClientOrThrow().customers.retrieve(customerId);
 		if (customer.deleted) {
 			throw new Error(`Deleted Stripe customer: ${customerId}`);
 		}
+
 		return customer as StripeCustomerData;
 	}
 
 	private async getCheckoutMetadata(charge: Stripe.Charge): Promise<CheckoutMetadata | null> {
 		// Retrieve campaign ID and other metadata from the original checkout session
-		const paymentIntentId = charge.payment_intent;
-		if (!paymentIntentId) {
+		const paymentIntent = charge.payment_intent;
+		if (!paymentIntent) {
 			return null;
 		}
+		const paymentIntentId = typeof paymentIntent === 'string' ? paymentIntent : paymentIntent.id;
 
-		const sessions = await this.stripe.checkout.sessions.list({
+		const sessions = await this.getStripeClientOrThrow().checkout.sessions.list({
 			payment_intent: paymentIntentId.toString(),
 		});
 
 		const session = sessions.data.length > 0 ? sessions.data[0] : null;
+
 		return session?.metadata || null;
 	}
 
@@ -284,18 +326,57 @@ export class StripeService extends BaseService {
 
 		const firstName = parts[0];
 		const lastName = parts.slice(1).join(' '); // Handle multiple middle/last names
+
 		return { firstName, lastName };
 	}
 
-	async getSubscriptionsTableView(
+	private sortSubscriptionRows(rows: StripeSubscriptionRow[], query: StripeSubscriptionTableQuery): StripeSubscriptionRow[] {
+		const direction = query.sortDirection === 'asc' ? 1 : -1;
+		const sortedRows = [...rows];
+		const sortBy = toSortKey(query.sortBy, ['created', 'status', 'interval', 'paymentMethod', 'amount'] as const);
+		sortedRows.sort((a, b) => {
+			switch (sortBy) {
+				case 'created':
+					return (a.created.getTime() - b.created.getTime()) * direction;
+				case 'status':
+					return a.status.localeCompare(b.status) * direction;
+				case 'interval':
+					return a.interval.localeCompare(b.interval) * direction;
+				case 'paymentMethod':
+					return a.paymentMethod.label.localeCompare(b.paymentMethod.label) * direction;
+				case 'amount':
+					return (a.amount - b.amount) * direction;
+				default:
+					return b.created.getTime() - a.created.getTime();
+			}
+		});
+
+		return sortedRows;
+	}
+
+	async getSubscriptionsTableView(stripeCustomerId: string | null): Promise<ServiceResult<StripeSubscriptionTableView>> {
+		const paginated = await this.getPaginatedSubscriptionsTableView(stripeCustomerId, {
+			page: 1,
+			pageSize: 10_000,
+			search: '',
+		});
+		if (!paginated.success) {
+			return this.resultFail(paginated.error);
+		}
+
+		return this.resultOk({ rows: paginated.data.rows });
+	}
+
+	async getPaginatedSubscriptionsTableView(
 		stripeCustomerId: string | null,
-	): Promise<ServiceResult<StripeSubscriptionTableView>> {
+		query: StripeSubscriptionTableQuery,
+	): Promise<ServiceResult<StripeSubscriptionPaginatedTableView>> {
 		try {
 			if (!stripeCustomerId) {
-				return this.resultOk({ rows: [] });
+				return this.resultOk({ rows: [], totalCount: 0 });
 			}
 
-			const subscriptions = await this.stripe.subscriptions.list({
+			const subscriptions = await this.getStripeClientOrThrow().subscriptions.list({
 				customer: stripeCustomerId,
 				status: 'all',
 			});
@@ -308,8 +389,24 @@ export class StripeService extends BaseService {
 					const amount = price?.unit_amount ? price.unit_amount / 100 : 0;
 					const currency = price?.currency?.toUpperCase() ?? '';
 					const interval = price?.recurring?.interval_count?.toString() ?? '';
+					let paymentMethod: StripePaymentMethod = { type: 'other', label: 'Unknown' };
+					const defaultPaymentMethod = sub.default_payment_method;
 
-					const method = await this.stripe.paymentMethods.retrieve(sub.default_payment_method?.toString() ?? '');
+					if (defaultPaymentMethod && typeof defaultPaymentMethod !== 'string') {
+						paymentMethod = this.getPaymentMethod(defaultPaymentMethod);
+					} else if (typeof defaultPaymentMethod === 'string' && defaultPaymentMethod.trim() !== '') {
+						try {
+							const method = await this.getStripeClientOrThrow().paymentMethods.retrieve(defaultPaymentMethod);
+							paymentMethod = this.getPaymentMethod(method);
+						} catch (error) {
+							const stripeError = error as { type?: string; code?: string };
+							const isMissingResource =
+								stripeError.type === 'StripeInvalidRequestError' && stripeError.code === 'resource_missing';
+							if (!isMissingResource) {
+								throw error;
+							}
+						}
+					}
 
 					return {
 						id: sub.id,
@@ -318,14 +415,32 @@ export class StripeService extends BaseService {
 						amount,
 						interval,
 						currency,
-						paymentMethod: this.getPaymentMethod(method),
+						paymentMethod,
 					};
 				}),
 			);
 
-			return this.resultOk({ rows });
+			const sortedRows = this.sortSubscriptionRows(rows, query);
+			const offset = (query.page - 1) * query.pageSize;
+			const paginatedRows = sortedRows.slice(offset, offset + query.pageSize);
+
+			return this.resultOk({ rows: paginatedRows, totalCount: sortedRows.length });
 		} catch (error) {
+			const stripeError = error as { type?: string; code?: string; param?: string; message?: string };
+			const isMissingCustomer =
+				stripeError.type === 'StripeInvalidRequestError' &&
+				stripeError.code === 'resource_missing' &&
+				(stripeError.param === 'customer' || stripeError.message?.includes('No such customer'));
+			if (isMissingCustomer) {
+				this.logger.warn('Stripe customer not found in current mode; returning empty subscriptions', {
+					stripeCustomerId,
+				});
+
+				return this.resultOk({ rows: [], totalCount: 0 });
+			}
+
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
 		}
 	}
@@ -337,6 +452,7 @@ export class StripeService extends BaseService {
 				label: titleCase(paymentMethod.card.brand),
 			};
 		}
+
 		return {
 			type: 'other',
 			label: titleCase(paymentMethod.type),
@@ -352,7 +468,7 @@ export class StripeService extends BaseService {
 				return this.resultFail('Missing Stripe customer ID');
 			}
 
-			const session = await this.stripe.billingPortal.sessions.create({
+			const session = await this.getStripeClientOrThrow().billingPortal.sessions.create({
 				customer: stripeCustomerId,
 				return_url: `${process.env.BASE_URL}/dashboard/subscriptions`,
 				locale: (language as Stripe.BillingPortal.SessionCreateParams.Locale) ?? 'auto',
@@ -365,6 +481,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(session.url);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create billing portal session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -404,7 +521,7 @@ export class StripeService extends BaseService {
 				metadata.source = source;
 			}
 
-			const price = await this.stripe.prices.create({
+			const price = await this.getStripeClientOrThrow().prices.create({
 				active: true,
 				unit_amount: amount,
 				currency: currency.toLowerCase(),
@@ -412,7 +529,7 @@ export class StripeService extends BaseService {
 				recurring: recurring ? { interval: 'month', interval_count: intervalCount } : undefined,
 			});
 
-			const session = await this.stripe.checkout.sessions.create({
+			const session = await this.getStripeClientOrThrow().checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
 
 				customer: stripeCustomerId || undefined,
@@ -439,6 +556,7 @@ export class StripeService extends BaseService {
 			return this.resultOk(session.url ?? '');
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -453,93 +571,101 @@ export class StripeService extends BaseService {
 			recurring?: boolean;
 		},
 	): Promise<ServiceResult<string>> {
-		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-		if (!accessResult.success || !accessResult.data.some((p) => p.programId === input.programId)) {
-			return this.resultFail('Program not found or access denied');
-		}
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success || !accessResult.data.some((p) => p.programId === input.programId)) {
+				return this.resultFail('Program not found or access denied');
+			}
 
-		const user = await this.db.user.findUnique({
-			where: { id: userId },
-			select: {
-				accountId: true,
-				contactId: true,
-				contact: {
-					select: { id: true, email: true, firstName: true, lastName: true },
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+				select: {
+					accountId: true,
+					contactId: true,
+					contact: {
+						select: { id: true, email: true, firstName: true, lastName: true },
+					},
 				},
-			},
-		});
-		if (!user) {
-			return this.resultFail('User account not found');
-		}
-
-		let stripeCustomerId: string | null = null;
-		const contributor = await this.db.contributor.findUnique({
-			where: { accountId: user.accountId },
-			select: { stripeCustomerId: true },
-		});
-
-		if (contributor?.stripeCustomerId) {
-			stripeCustomerId = contributor.stripeCustomerId;
-		} else {
-			// First-time portal donor: create Stripe Customer with user's email/name so Checkout
-			// prefills and locks the email (no different-email mismatch).
-			const email = user.contact?.email ?? null;
-			if (!email) {
-				return this.resultFail('User contact email is required for portal donations');
+			});
+			if (!user) {
+				return this.resultFail('User account not found');
 			}
-			const name = [user.contact?.firstName, user.contact?.lastName].filter(Boolean).join(' ') || undefined;
-			const createCustomerResult = await this.createStripeCustomerForPortal(email, name);
-			if (!createCustomerResult.success) {
-				return createCustomerResult;
+
+			let stripeCustomerId: string | null = null;
+			const contributor = await this.db.contributor.findUnique({
+				where: { accountId: user.accountId },
+				select: { stripeCustomerId: true },
+			});
+
+			if (contributor?.stripeCustomerId) {
+				stripeCustomerId = contributor.stripeCustomerId;
+			} else {
+				// First-time portal donor: create Stripe Customer with user's email/name so Checkout
+				// prefills and locks the email (no different-email mismatch).
+				const email = user.contact?.email ?? null;
+				if (!email) {
+					return this.resultFail('User contact email is required for portal donations');
+				}
+				const name = [user.contact?.firstName, user.contact?.lastName].filter(Boolean).join(' ') || undefined;
+				const createCustomerResult = await this.createStripeCustomerForPortal(email, name);
+				if (!createCustomerResult.success) {
+					return createCustomerResult;
+				}
+				stripeCustomerId = createCustomerResult.data;
+				const contributorResult = await this.contributorWriteService.getOrCreateContributorForAccount(
+					user.accountId,
+					stripeCustomerId,
+					user.contactId,
+				);
+				if (!contributorResult.success) {
+					return this.resultFail(contributorResult.error);
+				}
 			}
-			stripeCustomerId = createCustomerResult.data;
-			const contributorResult = await this.contributorService.getOrCreateContributorForAccount(
-				user.accountId,
+
+			const campaignResult = await this.campaignService.getActiveCampaignForProgram(input.programId);
+			if (!campaignResult.success) {
+				return this.resultFail(campaignResult.error);
+			}
+
+			const baseUrl = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+			const successUrl = `${baseUrl}/portal/programs/${input.programId}/overview?donation=success`;
+
+			return this.createCheckoutSession({
+				amount: input.amount,
+				currency: input.currency ?? 'CHF',
+				intervalCount: input.intervalCount ?? 1,
+				recurring: input.recurring ?? false,
+				successUrl,
+				campaignId: campaignResult.data.id,
+				accountId: user.accountId,
+				source: 'portal',
 				stripeCustomerId,
-				user.contactId,
-			);
-			if (!contributorResult.success) {
-				return this.resultFail(contributorResult.error);
-			}
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not create portal donation checkout session: ${JSON.stringify(error)}`);
 		}
-
-		const campaignResult = await this.campaignService.getActiveCampaignForProgram(input.programId);
-		if (!campaignResult.success) {
-			return this.resultFail(campaignResult.error);
-		}
-
-		const baseUrl = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
-		const successUrl = `${baseUrl}/portal/programs/${input.programId}/overview?donation=success`;
-
-		return this.createCheckoutSession({
-			amount: input.amount,
-			currency: input.currency ?? 'CHF',
-			intervalCount: input.intervalCount ?? 1,
-			recurring: input.recurring ?? false,
-			successUrl,
-			campaignId: campaignResult.data.id,
-			accountId: user.accountId,
-			source: 'portal',
-			stripeCustomerId,
-		});
 	}
 
 	private async createStripeCustomerForPortal(email: string, name?: string): Promise<ServiceResult<string>> {
 		try {
-			const customer = await this.stripe.customers.create({
+			const customer = await this.getStripeClientOrThrow().customers.create({
 				email,
 				name: name || undefined,
 			});
+
 			return this.resultOk(customer.id);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create Stripe customer: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getCheckoutSession(sessionId: string) {
+	async getCheckoutSession(sessionId: string): Promise<ServiceResult<Stripe.Checkout.Session>> {
 		try {
-			const checkoutSession = await this.stripe.checkout.sessions.retrieve(sessionId);
+			const checkoutSession = await this.getStripeClientOrThrow().checkout.sessions.retrieve(sessionId);
 
 			if (!checkoutSession.customer) {
 				return this.resultFail('Checkout session has no Stripe customer');
@@ -548,20 +674,23 @@ export class StripeService extends BaseService {
 			return this.resultOk(checkoutSession);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not load Stripe checkout session: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getContributorFromCheckoutSession(session: Stripe.Checkout.Session) {
+	async getContributorFromCheckoutSession(
+		session: Stripe.Checkout.Session,
+	): Promise<ServiceResult<ContributorWithContact | null>> {
 		try {
-			if (!session.customer) {
+			const customer = session.customer;
+			if (!customer) {
 				return this.resultFail('Checkout session has no Stripe customer');
 			}
-
-			const stripeCustomerId = session.customer.toString();
+			const stripeCustomerId = typeof customer === 'string' ? customer : customer.id;
 			const email = session.customer_details?.email ?? undefined;
 
-			const contributorResult = await this.contributorService.findByStripeCustomerOrEmail(stripeCustomerId, email);
+			const contributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(stripeCustomerId, email);
 
 			if (!contributorResult.success) {
 				return contributorResult;
@@ -570,20 +699,21 @@ export class StripeService extends BaseService {
 			return this.resultOk(contributorResult.data ?? null);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not load contributor from checkout session: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async updateContributorAfterCheckout(input: UpdateContributorAfterCheckoutInput) {
+	async updateContributorAfterCheckout(input: UpdateContributorAfterCheckoutInput): Promise<ServiceResult<unknown>> {
 		try {
 			const { stripeCheckoutSessionId, user } = input;
 
-			const session = await this.stripe.checkout.sessions.retrieve(stripeCheckoutSessionId);
+			const session = await this.getStripeClientOrThrow().checkout.sessions.retrieve(stripeCheckoutSessionId);
 			if (!session.customer) {
 				return this.resultFail('Checkout session has no Stripe customer');
 			}
 
-			const stripeCustomer = await this.stripe.customers.retrieve(session.customer as string);
+			const stripeCustomer = await this.getStripeClientOrThrow().customers.retrieve(session.customer as string);
 			if (stripeCustomer.deleted) {
 				return this.resultFail(`Stripe customer ${stripeCustomer.id} was deleted`);
 			}
@@ -594,7 +724,7 @@ export class StripeService extends BaseService {
 				return this.resultFail('A contributor email is required');
 			}
 
-			const existingResult = await this.contributorService.findByStripeCustomerOrEmail(
+			const existingResult = await this.contributorReadService.findByStripeCustomerOrEmail(
 				stripeCustomer.id,
 				contributorEmail,
 			);
@@ -606,7 +736,7 @@ export class StripeService extends BaseService {
 			let contributor = existingResult.data;
 
 			if (!contributor) {
-				const createResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth({
+				const createResult = await this.contributorWriteService.getOrCreateContributorWithFirebaseAuth({
 					stripeCustomerId: stripeCustomer.id,
 					email: contributorEmail,
 					firstName: user.personal.name,
@@ -652,9 +782,10 @@ export class StripeService extends BaseService {
 				},
 			};
 
-			return this.contributorService.updateSelf(contributor.id, updateInput);
+			return this.contributorWriteService.updateSelf(contributor.id, updateInput);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contributor after checkout: ${JSON.stringify(error)}`);
 		}
 	}

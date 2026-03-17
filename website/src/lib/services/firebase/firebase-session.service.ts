@@ -44,14 +44,18 @@ export class FirebaseSessionService extends BaseService {
 		if (!idToken) {
 			return this.resultFail('missing-id-token');
 		}
+		try {
+			const result = await this.createSessionCookie(idToken);
+			if (!result.success) {
+				return result;
+			}
 
-		const result = await this.createSessionCookie(idToken);
-		if (!result.success) {
-			return result;
+			await this.setSessionCookie(result.data);
+
+			return this.resultOk(true);
+		} catch (error) {
+			return this.resultFail(`Could not create session cookie: ${JSON.stringify(error)}`);
 		}
-
-		await this.setSessionCookie(result.data);
-		return this.resultOk(true);
 	}
 
 	async clearSessionCookie(): Promise<ServiceResult<boolean>> {
@@ -66,20 +70,27 @@ export class FirebaseSessionService extends BaseService {
 				path: '/',
 				maxAge: 0,
 			});
+
 			return this.resultOk(true);
 		} catch {
 			return this.resultFail('logout-failed');
 		}
 	}
 
-	async readSessionCookie(): Promise<string | null> {
-		const store = await cookies();
-		return store.get(SESSION_COOKIE_NAME)?.value ?? null;
+	async readSessionCookie(): Promise<ServiceResult<string | null>> {
+		try {
+			const store = await cookies();
+
+			return this.resultOk(store.get(SESSION_COOKIE_NAME)?.value ?? null);
+		} catch (error) {
+			return this.resultFail(`Could not read session cookie: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async verifySessionCookie(cookie: string): Promise<ServiceResult<DecodedIdToken>> {
 		try {
 			const decoded = await authAdmin.auth.verifySessionCookie(cookie, true);
+
 			return this.resultOk(decoded);
 		} catch (error) {
 			return this.resultFail(`Invalid or expired session cookie: ${JSON.stringify(error)}`);
@@ -92,12 +103,13 @@ export class FirebaseSessionService extends BaseService {
 			return this.resultFail('Missing session cookie');
 		}
 
-		const match = cookieHeader.match(/session=([^;]+)/);
+		const match = /session=([^;]+)/.exec(cookieHeader);
 		if (!match) {
 			return this.resultFail('Missing session cookie');
 		}
 
 		const cookie = match[1];
+
 		return this.verifySessionCookie(cookie);
 	}
 }

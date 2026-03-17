@@ -8,15 +8,12 @@ import Link from 'next/link';
 const ARTICLE_IMAGE_TARGET_WIDTH = 1920;
 const ARTICLE_IMAGE_TARGET_HEIGHT = 1080;
 
-export const StoryblokArticleCard = (props: {
-	lang: string;
-	region: string;
-	article: ISbStoryData<ResolvedArticle>;
-}) => {
+export const StoryblokArticleCard = (props: { lang: string; region: string; article: ISbStoryData<ResolvedArticle> }) => {
 	const { region, lang, article } = props;
 	const author = article.content.author;
+
 	return (
-		<Link href={`/${props.lang}/${props.region}/journal/${article.slug!}`}>
+		<Link href={`/${props.lang}/${props.region}/journal/${article.slug}`}>
 			<div className="mb-4 overflow-hidden transition-transform duration-200 hover:scale-[101%]">
 				{article.content.image.filename && (
 					<Image
@@ -29,25 +26,21 @@ export const StoryblokArticleCard = (props: {
 						alt={article.content.title}
 						width={ARTICLE_IMAGE_TARGET_WIDTH}
 						height={ARTICLE_IMAGE_TARGET_HEIGHT}
-						className="h-60 w-full object-cover"
+						className="h-60 w-full rounded-sm object-cover"
 					/>
 				)}
 				<div className="mt-2 flex items-center justify-between">
 					<div className="flex items-center space-x-2">
-						<Typography weight="bold" size="sm" className="uppercase">
-							{article.content.type?.content?.value}
-						</Typography>
+						<Typography size="sm">{article.content.type?.content?.value}</Typography>
 					</div>
-					<Typography weight="normal" className="text-black">
-						{formatStoryblokDate(article.first_published_at, props.lang)}
-					</Typography>
+					<Typography size="sm">{formatStoryblokDate(article.first_published_at, props.lang)}</Typography>
 				</div>
 
 				<div className="mt-2 flex grow flex-col">
 					<Typography
 						aria-label={article.content.title}
 						size="xl"
-						className="my-4 line-clamp-2 h-14 w-auto overflow-hidden wrap-break-word md:line-clamp-3 md:h-18"
+						className="my-4 line-clamp-2 w-auto overflow-hidden wrap-break-word md:line-clamp-3 md:h-14"
 						weight="medium"
 					>
 						{`${article.content.title}${article.content.subtitle ? ' ' + article.content.subtitle : ''}`}
@@ -60,7 +53,7 @@ export const StoryblokArticleCard = (props: {
 							</Typography>
 						</div>
 					</div>
-					<Typography size="md" weight="normal" className="mt-4 line-clamp-4 text-black">
+					<Typography size="lg" weight="normal" className="mt-4 line-clamp-5 text-black">
 						{article.content.leadText}
 					</Typography>
 				</div>
