@@ -488,10 +488,14 @@
         "properties": {
           "isoCode": {
             "type": "string"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/currencyEnum"
           }
         },
         "required": [
-          "isoCode"
+          "isoCode",
+          "currency"
         ]
       },
       "Program": {
@@ -527,6 +531,9 @@
               "yearly"
             ]
           },
+          "coveredByReserves": {
+            "type": "boolean"
+          },
           "programDurationInMonths": {
             "type": "number"
           },
@@ -545,6 +552,7 @@
           "country",
           "payoutPerInterval",
           "payoutInterval",
+          "coveredByReserves",
           "programDurationInMonths",
           "createdAt"
         ]

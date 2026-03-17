@@ -2,7 +2,7 @@
 
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
-import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
 import {
 	createContributorAction,
@@ -63,7 +63,7 @@ export default function ContributorsForm({
 	contributorId?: string;
 	readOnly: boolean;
 }) {
-	const [formSchema, setFormSchema] = useState<ContributorFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<ContributorFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [contributor, setContributor] = useState<ContributorPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -91,29 +91,30 @@ export default function ContributorsForm({
 					onSuccess: (data) => {
 						setContributor(data);
 						setFormSchema((previousSchema) => {
+							const nextSchema = clearFormSchemaValues(previousSchema);
 							const contactFields = {
-								...previousSchema.fields.contact.fields,
+								...nextSchema.fields.contact.fields,
 							};
 							const contactValues = getContactValuesFromPayload(data.contact, contactFields);
 
 							return {
-								...previousSchema,
+								...nextSchema,
 								fields: {
-									...previousSchema.fields,
+									...nextSchema.fields,
 									referral: {
-										...previousSchema.fields.referral,
+										...nextSchema.fields.referral,
 										value: data.referral,
 									},
 									paymentReferenceId: {
-										...previousSchema.fields.paymentReferenceId,
+										...nextSchema.fields.paymentReferenceId,
 										value: data.paymentReferenceId,
 									},
 									stripeCustomerId: {
-										...previousSchema.fields.stripeCustomerId,
+										...nextSchema.fields.stripeCustomerId,
 										value: data.stripeCustomerId,
 									},
 									contact: {
-										...previousSchema.fields.contact,
+										...nextSchema.fields.contact,
 										fields: contactValues,
 									},
 								},

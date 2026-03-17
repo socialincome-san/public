@@ -13,6 +13,7 @@ export type ContributorTableViewRow = {
 	firstName: string;
 	lastName: string;
 	email: string;
+	firebaseAuthUserId: string;
 	country: CountryCode | null;
 	totalContributedChf: number;
 	createdAt: Date;

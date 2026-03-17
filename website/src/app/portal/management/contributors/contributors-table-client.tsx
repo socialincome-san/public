@@ -9,6 +9,7 @@ import {
 import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -48,12 +49,7 @@ export default function ContributorsTableClient({
 	};
 
 	const onError = (error: unknown) => {
-		const message =
-			error instanceof Error
-				? error.message
-				: typeof error === 'string'
-					? error
-					: 'An unexpected error occurred while saving.';
+		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving contributor: ${message}`);
 		logger.error('Contributor Form Error', { error });
 	};

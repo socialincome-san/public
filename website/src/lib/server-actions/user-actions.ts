@@ -37,6 +37,21 @@ export const updateUserAction = async (input: UserFormUpdateInput): Promise<Serv
 	return result;
 };
 
+export const deleteUserAction = async (userId: string): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.user.delete(session.id, userId);
+
+	if (result.success) {
+		revalidatePath('/portal/admin/users');
+	}
+
+	return result;
+};
+
 export const updateUserSelfAction = async (input: UserUpdateInput): Promise<ServiceResult<unknown>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {

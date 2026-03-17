@@ -95,7 +95,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		goal: {
 			placeholder: 'Target amount for goal',
 			label: 'Goal Amount',
-			zodSchema: z.number().positive('Goal must be positive').nullable(),
+			zodSchema: z.number().positive('Goal must be positive').nullable().optional(),
 		},
 		currency: {
 			placeholder: 'Select currency',
@@ -106,7 +106,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		additionalAmountChf: {
 			placeholder: 'Additional Amount in CHF',
 			label: 'Additional CHF Amount',
-			zodSchema: z.number().positive('Amount must be positive').nullable(),
+			zodSchema: z.number().positive('Amount must be positive').nullable().optional(),
 		},
 		endDate: {
 			label: 'End Date',

@@ -35,6 +35,8 @@ import { MobileMoneyProviderValidationService } from './mobile-money-provider/mo
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
 import { OrganizationAccessService } from './organization-access/organization-access.service';
 import { OrganizationReadService } from './organization/organization-read.service';
+import { OrganizationValidationService } from './organization/organization-validation.service';
+import { OrganizationWriteService } from './organization/organization-write.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
 import { PayoutProcessService } from './payout-process/payout-process.service';
 import { PayoutReadService } from './payout/payout-read.service';
@@ -44,6 +46,7 @@ import { ProgramAccessReadService } from './program-access/program-access-read.s
 import { ProgramAccessWriteService } from './program-access/program-access-write.service';
 import { ProgramStatsService } from './program-stats/program-stats.service';
 import { ProgramReadService } from './program/program-read.service';
+import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
 import { RecipientValidationService } from './recipient/recipient-validation.service';
@@ -98,6 +101,8 @@ const contributionRead = new ContributionReadService(prisma, organizationAccess)
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, organizationAccess, contributionValidation);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
+const organizationValidation = new OrganizationValidationService(prisma);
+const organizationWrite = new OrganizationWriteService(prisma, userRead, organizationValidation);
 const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
 const localPartnerValidation = new LocalPartnerValidationService(prisma);
 const localPartnerWrite = new LocalPartnerWriteService(
@@ -133,7 +138,14 @@ const donationCertificateRead = new DonationCertificateReadService(prisma, organ
 const programStats = new ProgramStatsService(prisma, exchangeRateRead);
 const campaignRead = new CampaignReadService(prisma, organizationAccess, exchangeRateRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
-const programWrite = new ProgramWriteService(prisma, programAccessWrite, candidateWrite);
+const programValidation = new ProgramValidationService(prisma);
+const programWrite = new ProgramWriteService(
+	prisma,
+	programAccessRead,
+	programAccessWrite,
+	candidateWrite,
+	programValidation,
+);
 const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, programStats);
 const payoutProcess = new PayoutProcessService(prisma, programAccessRead, programStats, exchangeRateRead);
 const donationCertificateWrite = new DonationCertificateWriteService(
@@ -188,6 +200,7 @@ export const services = {
 		expense: expenseWrite,
 		localPartner: localPartnerWrite,
 		mobileMoneyProvider: mobileMoneyProviderWrite,
+		organization: organizationWrite,
 		payout: payoutWrite,
 		program: programWrite,
 		recipient: recipientWrite,
