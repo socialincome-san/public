@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { UserFormCreateInput, UserFormUpdateInput } from '@/lib/services/user/user-form-input';
 import { UserPayload } from '@/lib/services/user/user.types';
 import { UserFormSchema } from './users-form';

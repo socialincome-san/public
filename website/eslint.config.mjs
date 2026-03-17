@@ -18,7 +18,6 @@ export default [
 		},
 		rules: {
 			'@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-			'@typescript-eslint/no-unsafe-assignment': 'warn',
 			'react/forbid-component-props': 'off',
 		},
 	},

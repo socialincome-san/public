@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { SurveyFormCreateInput, SurveyFormUpdateInput } from '@/lib/services/survey/survey-form-input';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
 import { SurveyFormSchema } from './survey-form';

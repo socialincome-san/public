@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { expect, test } from '@playwright/test';
 
 test('OpenAPI JSON should match snapshot', async ({ page }) => {

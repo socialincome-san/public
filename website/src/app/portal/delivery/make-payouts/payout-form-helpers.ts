@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PayoutFormCreateInput, PayoutFormUpdateInput } from '@/lib/services/payout/payout-form-input';
 import { PayoutPayload } from '@/lib/services/payout/payout.types';
 import { PayoutFormSchema } from './payout-form';

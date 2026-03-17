@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { APIResponse, Browser, expect } from '@playwright/test';
 

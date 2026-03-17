@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { PaymentType, PaymentTypes } from '@/components/legacy/donation/generic-donation-form';
 import { WebsiteLanguage } from '@/lib/i18n/utils';

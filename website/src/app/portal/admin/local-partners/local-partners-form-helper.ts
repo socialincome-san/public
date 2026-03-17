@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { mapContactFormFields } from '@/components/dynamic-form/contact-form-input-mapper';
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import {

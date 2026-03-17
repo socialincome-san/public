@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { CountryFormCreateInput, CountryFormUpdateInput } from '@/lib/services/country/country-form-input';
 import { CountryPayload } from '@/lib/services/country/country.types';
 import { CountryFormSchema } from './countries-form';

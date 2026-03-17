@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { useI18n } from '@/lib/i18n/useI18n';
