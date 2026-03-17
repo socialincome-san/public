@@ -8,11 +8,7 @@ import {
 	campaignCreateInputSchema,
 	campaignUpdateInputSchema,
 } from './campaign-form-input';
-
-type CampaignUpdateUniquenessContext = {
-	campaignId: string;
-	existingTitle: string;
-};
+import { CampaignUpdateUniquenessContext } from './campaign-validation.types';
 
 export class CampaignValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {

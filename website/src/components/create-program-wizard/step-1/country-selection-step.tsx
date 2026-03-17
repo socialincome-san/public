@@ -14,14 +14,13 @@ type Props = {
 
 export const CountrySelectionStep = ({ rows, selectedCountryId, openRowIds, onSelectCountry, onToggleRow }: Props) => {
 	const active = rows.filter((r) => r.country.isActive);
-	const inactive = rows.filter((r) => !r.country.isActive);
 
 	return (
 		<div className="space-y-6">
 			<ActiveCountryCards rows={active} selectedCountryId={selectedCountryId} onSelectCountry={onSelectCountry} />
 
 			<CountryTable
-				rows={inactive}
+				rows={rows}
 				value={selectedCountryId}
 				openIds={openRowIds}
 				onValueChange={(id) => id && onSelectCountry(id)}

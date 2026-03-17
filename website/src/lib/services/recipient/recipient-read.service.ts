@@ -537,6 +537,11 @@ export class RecipientReadService extends BaseService {
 					localPartner: {
 						select: {
 							name: true,
+							account: {
+								select: {
+									firebaseAuthUserId: true,
+								},
+							},
 							contact: {
 								select: {
 									address: {
@@ -571,7 +576,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: recipient.id,
-					firebaseAuthUserId: '',
+					firebaseAuthUserId: recipient.localPartner?.account?.firebaseAuthUserId || '',
 					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
@@ -691,6 +696,11 @@ export class RecipientReadService extends BaseService {
 						localPartner: {
 							select: {
 								name: true,
+								account: {
+									select: {
+										firebaseAuthUserId: true,
+									},
+								},
 								contact: {
 									select: {
 										address: {
@@ -729,7 +739,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: recipient.id,
-					firebaseAuthUserId: '',
+					firebaseAuthUserId: recipient.localPartner?.account?.firebaseAuthUserId || '',
 					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
@@ -880,6 +890,11 @@ export class RecipientReadService extends BaseService {
 						},
 						localPartner: {
 							select: {
+								account: {
+									select: {
+										firebaseAuthUserId: true,
+									},
+								},
 								contact: {
 									select: {
 										address: {
@@ -924,7 +939,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: r.id,
-					firebaseAuthUserId: '',
+					firebaseAuthUserId: r.localPartner?.account?.firebaseAuthUserId || '',
 					country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 					firstName: r.contact?.firstName ?? '',
 					lastName: r.contact?.lastName ?? '',

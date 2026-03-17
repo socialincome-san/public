@@ -15,6 +15,7 @@ import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actio
 import { CandidatePayload } from '@/lib/services/candidate/candidate.types';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
+import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCandidateInput, buildUpdateCandidateInput } from './candidate-form-helpers';
@@ -91,7 +92,7 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): CandidateF
 						label: 'Phone Number',
 						zodSchema: z
 							.string()
-							.regex(/^$|^\+[1-9]\d{1,14}$/, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
+							.regex(E164_OPTIONAL_PHONE_REGEX, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
 							.optional(),
 					},
 				},
@@ -253,6 +254,13 @@ export const CandidateForm = ({
 		});
 	}, [sessionType]);
 
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (candidateId) {
+		mode = 'edit';
+	}
+
 	return (
 		<DynamicForm
 			formSchema={formSchema}
@@ -260,7 +268,7 @@ export const CandidateForm = ({
 			onSubmit={onSubmit}
 			onCancel={onCancel}
 			onDelete={onDelete}
-			mode={readOnly ? 'readonly' : candidateId ? 'edit' : 'add'}
+			mode={mode}
 		/>
 	);
 };

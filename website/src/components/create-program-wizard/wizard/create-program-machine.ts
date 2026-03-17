@@ -4,7 +4,8 @@ import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import { calculateProgramBudgetAction } from '@/lib/server-actions/program-stats-actions';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
-import { CreateProgramInput } from '@/lib/services/program/program.types';
+import { CreateProgramInput, PublicOnboardingUserDetails } from '@/lib/services/program/program.types';
+import { EMAIL_REGEX } from '@/lib/utils/regex';
 import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 
@@ -45,6 +46,9 @@ export const createProgramWizardMachine = setup({
 
 			// step 4
 			isAuthenticated: boolean;
+			contactEmail: string;
+			contactFirstName: string;
+			contactLastName: string;
 
 			// meta
 			createdProgramId?: string;
@@ -72,7 +76,9 @@ export const createProgramWizardMachine = setup({
 			| { type: 'BACK' }
 
 			// step 4
-			| { type: 'AUTH_SUCCESS' }
+			| { type: 'SET_CONTACT_EMAIL'; value: string }
+			| { type: 'SET_CONTACT_FIRST_NAME'; value: string }
+			| { type: 'SET_CONTACT_LAST_NAME'; value: string }
 
 			// meta
 			| { type: 'OPEN' }
@@ -94,14 +100,16 @@ export const createProgramWizardMachine = setup({
 			return result.data.rows;
 		}),
 
-		saveProgram: fromPromise(async ({ input }: { input: CreateProgramInput }) => {
-			const result = await createProgramAction(input);
-			if (!result.success) {
-				throw new Error(result.error);
-			}
+		saveProgram: fromPromise(
+			async ({ input }: { input: { programInput: CreateProgramInput; userDetails?: PublicOnboardingUserDetails } }) => {
+				const result = await createProgramAction(input.programInput, input.userDetails);
+				if (!result.success) {
+					throw new Error(result.error);
+				}
 
-			return result.data.programId;
-		}),
+				return result.data.programId;
+			},
+		),
 
 		loadCandidateCounts: fromPromise(
 			async ({
@@ -183,6 +191,14 @@ export const createProgramWizardMachine = setup({
 			context.programDuration > 0 &&
 			context.payoutPerInterval > 0 &&
 			!context.isAuthenticated,
+		contactEmailValid: ({ context }) => EMAIL_REGEX.test(context.contactEmail),
+		contactNamesValid: ({ context }) =>
+			context.contactFirstName.trim().length > 0 && context.contactLastName.trim().length > 0,
+		accountDetailsValid: ({ context }) =>
+			EMAIL_REGEX.test(context.contactEmail) &&
+			context.contactFirstName.trim().length > 0 &&
+			context.contactLastName.trim().length > 0,
+		isAuthenticatedUser: ({ context }) => context.isAuthenticated,
 	},
 }).createMachine({
 	id: 'createProgramWizard',
@@ -224,6 +240,9 @@ export const createProgramWizardMachine = setup({
 
 		// step 4
 		isAuthenticated: input?.isAuthenticated ?? false,
+		contactEmail: '',
+		contactFirstName: '',
+		contactLastName: '',
 
 		// meta
 		createdProgramId: undefined,
@@ -397,7 +416,7 @@ export const createProgramWizardMachine = setup({
 				},
 				BACK: 'programSetup',
 				NEXT: [
-					{ guard: 'budgetConfigValidAndUnauthenticated', target: 'auth' },
+					{ guard: 'budgetConfigValidAndUnauthenticated', target: 'accountDetails' },
 					{ guard: 'budgetConfigValid', target: 'saving' },
 				],
 				CLOSE: 'closed',
@@ -405,13 +424,22 @@ export const createProgramWizardMachine = setup({
 		},
 
 		// Step 4
-		auth: {
+		accountDetails: {
 			on: {
-				AUTH_SUCCESS: {
-					actions: assign({ isAuthenticated: () => true }),
-					target: 'saving',
+				SET_CONTACT_EMAIL: {
+					actions: assign({ contactEmail: ({ event }) => event.value.trim() }),
+				},
+				SET_CONTACT_FIRST_NAME: {
+					actions: assign({ contactFirstName: ({ event }) => event.value }),
+				},
+				SET_CONTACT_LAST_NAME: {
+					actions: assign({ contactLastName: ({ event }) => event.value }),
 				},
 				BACK: 'budget',
+				NEXT: {
+					guard: 'accountDetailsValid',
+					target: 'saving',
+				},
 				CLOSE: 'closed',
 			},
 		},
@@ -443,25 +471,46 @@ export const createProgramWizardMachine = setup({
 		saving: {
 			invoke: {
 				src: 'saveProgram',
-				input: ({ context }): CreateProgramInput => ({
-					countryId: context.selectedCountryId!,
-					amountOfRecipientsForStart: context.amountOfRecipients,
-					programDurationInMonths: context.programDuration,
-					payoutPerInterval: context.payoutPerInterval,
-					payoutInterval: context.payoutInterval,
-					targetCauses: context.targetCauses,
-					targetProfiles: context.targetProfiles,
+				input: ({ context }) => ({
+					programInput: {
+						countryId: context.selectedCountryId!,
+						amountOfRecipientsForStart: context.amountOfRecipients,
+						programDurationInMonths: context.programDuration,
+						payoutPerInterval: context.payoutPerInterval,
+						payoutInterval: context.payoutInterval,
+						targetCauses: context.targetCauses,
+						targetProfiles: context.targetProfiles,
+					},
+					userDetails: context.isAuthenticated
+						? undefined
+						: {
+								email: context.contactEmail,
+								firstName: context.contactFirstName,
+								lastName: context.contactLastName,
+							},
 				}),
-				onDone: {
-					actions: assign({ createdProgramId: ({ event }) => event.output }),
-					target: 'closed',
-				},
+				onDone: [
+					{
+						guard: 'isAuthenticatedUser',
+						actions: assign({ createdProgramId: ({ event }) => event.output }),
+						target: 'closed',
+					},
+					{
+						actions: assign({ createdProgramId: ({ event }) => event.output }),
+						target: 'success',
+					},
+				],
 				onError: {
 					target: 'error',
 					actions: assign({
 						error: ({ event }) => (event.error instanceof Error ? event.error.message : 'Failed to create program'),
 					}),
 				},
+			},
+		},
+		success: {
+			on: {
+				CLOSE: 'closed',
 			},
 		},
 

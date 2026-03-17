@@ -1,6 +1,7 @@
 'use client';
 
 import { TableCell, TableRow } from '@/components/table';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import Link from 'next/link';
 
@@ -10,10 +11,14 @@ type Props = {
 };
 
 export const ExpansionRow = ({ row, bgClass }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+
 	const renderSource = (source: ProgramCountryFeasibilityRow['cash']['details']['source'] | undefined) => {
 		if (!source) {
 			return null;
 		}
+
+		const translatedSourceText = source.translationKey ? t(source.translationKey, source.translationContext) : source.text;
 
 		if (source.href) {
 			return (
@@ -21,21 +26,23 @@ export const ExpansionRow = ({ row, bgClass }: Props) => {
 					href={source.href}
 					target="_blank"
 					rel="noreferrer"
-					className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition"
+					className="text-muted-foreground hover:text-foreground transition"
 				>
 					{source.text}
-					<span aria-hidden>↗</span>
+					<span aria-hidden className="ml-1 inline">
+						↗
+					</span>
 				</Link>
 			);
 		}
 
-		return <p className="text-muted-foreground">{source.text}</p>;
+		return <p className="text-muted-foreground">{translatedSourceText}</p>;
 	};
 
 	const renderDetails = (details: ProgramCountryFeasibilityRow['cash']['details']) => {
 		return (
 			<div className="space-y-1 text-sm">
-				<p>{details.text}</p>
+				<p>{t(details.translationKey, details.translationContext)}</p>
 				{renderSource(details.source)}
 			</div>
 		);

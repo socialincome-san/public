@@ -127,13 +127,12 @@ export default function ContributorsForm({
 		}
 	}, [contributorId, onError]);
 
-	return (
-		<DynamicForm
-			formSchema={formSchema}
-			isLoading={isLoading}
-			onSubmit={onSubmit}
-			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : contributorId ? 'edit' : 'add'}
-		/>
-	);
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (contributorId) {
+		mode = 'edit';
+	}
+
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 }

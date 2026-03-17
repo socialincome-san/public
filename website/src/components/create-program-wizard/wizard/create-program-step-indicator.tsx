@@ -16,7 +16,7 @@ const getCurrentStepIndex = (state: CreateProgramWizardState): number => {
 		return 2;
 	}
 
-	if (state.matches('auth')) {
+	if (state.matches('accountDetails')) {
 		return 3;
 	}
 
@@ -44,8 +44,8 @@ type Props = {
 export const CreateProgramStepIndicator = ({ state }: Props) => {
 	const activeIndex = getCurrentStepIndex(state);
 
-	const showLoginStep = state.context.isAuthenticated === false;
-	const stepCount = showLoginStep ? 4 : 3;
+	const showFourthStep = state.context.isAuthenticated === false;
+	const stepCount = showFourthStep ? 4 : 3;
 
 	return (
 		<div className="flex items-center gap-3">

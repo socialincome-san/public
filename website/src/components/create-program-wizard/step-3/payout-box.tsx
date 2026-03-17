@@ -2,6 +2,7 @@
 
 import { Switch } from '@/components/switch';
 import { PayoutInterval } from '@/generated/prisma/enums';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { PayoutControls } from './payout-controls';
 import { PayoutSummary } from './payout-summary';
 
@@ -30,9 +31,11 @@ export const PayoutBox = ({
 	onIntervalChange: (value: PayoutInterval) => void;
 	onToggleCustomizePayouts: () => void;
 }) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+
 	return (
 		<div className="flex h-full flex-col rounded-xl border p-8">
-			<h3 className="font-medium">Payouts</h3>
+			<h3 className="font-medium">{t('step3.payouts.title')}</h3>
 
 			<div className="mt-6">
 				{customizePayouts ? (
@@ -63,7 +66,7 @@ export const PayoutBox = ({
 					checked={customizePayouts}
 					onCheckedChange={onToggleCustomizePayouts}
 				/>
-				<span className="text-sm font-medium">Customize</span>
+				<span className="text-sm font-medium">{t('step3.payouts.customize')}</span>
 			</div>
 		</div>
 	);

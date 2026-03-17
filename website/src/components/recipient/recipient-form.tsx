@@ -16,6 +16,7 @@ import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
 import { ProgramOption } from '@/lib/services/program/program.types';
 import { RecipientPayload } from '@/lib/services/recipient/recipient.types';
+import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateRecipientInput, buildUpdateRecipientInput } from './recipient-form-helpers';
@@ -103,7 +104,7 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): RecipientF
 						label: 'Phone Number',
 						zodSchema: z
 							.string()
-							.regex(/^$|^\+[1-9]\d{1,14}$/, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
+							.regex(E164_OPTIONAL_PHONE_REGEX, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
 							.optional(),
 					},
 				},
@@ -292,6 +293,13 @@ export const RecipientForm = ({
 		});
 	}, [sessionType, programId]);
 
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (recipientId) {
+		mode = 'edit';
+	}
+
 	return (
 		<DynamicForm
 			formSchema={formSchema}
@@ -299,7 +307,7 @@ export const RecipientForm = ({
 			onSubmit={onSubmit}
 			onCancel={onCancel}
 			onDelete={onDelete}
-			mode={readOnly ? 'readonly' : recipientId ? 'edit' : 'add'}
+			mode={mode}
 		/>
 	);
 };

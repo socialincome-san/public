@@ -12,12 +12,12 @@ import { DonationCertificateReadService } from './donation-certificate-read.serv
 import { DonationCertificateWriter } from './donation-certificate-writer';
 import { DonationCertificateError } from './types';
 
-const isDonationCertificateError = (value: string): value is DonationCertificateError => {
-	return Object.values(DonationCertificateError).includes(value as DonationCertificateError);
-};
-
 export class DonationCertificateWriteService extends BaseService {
 	private bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+
+	private isDonationCertificateError(value: string): value is DonationCertificateError {
+		return Object.values(DonationCertificateError).includes(value as DonationCertificateError);
+	}
 
 	constructor(
 		db: PrismaClient,
@@ -127,7 +127,7 @@ export class DonationCertificateWriteService extends BaseService {
 				contributorsIds.map(async (contributorsId) => {
 					const result = await this.createDonationCertificate(year, contributorsId, language);
 					if (!result.success) {
-						if (!isDonationCertificateError(result.error)) {
+						if (!this.isDonationCertificateError(result.error)) {
 							creationWithFailures.push(contributorsId);
 
 							return;

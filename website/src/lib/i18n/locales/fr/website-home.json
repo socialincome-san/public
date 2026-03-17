@@ -85,6 +85,11 @@
 		],
 		"subtitle-1": "Social Income est une nouvelle approche de lutte contre la pauvreté dans le sud de la planète. Numérique, efficace et mobile."
 	},
+	"section-create-program": {
+		"title": "Lance ton propre programme",
+		"description": "Un programme est une manière structurée de financer des transferts monétaires mensuels prévisibles pour des personnes dans le besoin. Nous te guidons dans la configuration, la sélection des bénéficiaires et le budget pour lancer un soutien concret rapidement.",
+		"cta": "Créer un nouveau programme"
+	},
 	"section-faq": {
 		"title": "Tout cela est bien beau, mais… ",
 		"cta": "Toutes les FAQ"

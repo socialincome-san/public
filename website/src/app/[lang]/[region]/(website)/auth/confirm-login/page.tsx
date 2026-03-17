@@ -2,6 +2,7 @@
 
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX } from '@/lib/utils/regex';
 import { Button, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -18,7 +19,7 @@ export default function ConfirmLoginPage() {
 	const translator = useTranslator(lang, 'website-login');
 
 	const continueToLogin = () => {
-		const path = window.location.pathname.replace(/\/auth\/confirm-login\/?$/, '/login');
+		const path = window.location.pathname.replace(WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX, '/login');
 		const searchParams = new URLSearchParams(window.location.search);
 		searchParams.set('confirmed', 'true');
 		const queryString = searchParams.toString();

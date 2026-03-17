@@ -7,50 +7,6 @@ import { OrganizationFormCreateInput, OrganizationFormUpdateInput } from './orga
 import { OrganizationValidationService } from './organization-validation.service';
 import { OrganizationPayload } from './organization.types';
 
-const buildOrganizationAccessRows = (
-	organizationId: string,
-	editUserIds: string[],
-	readonlyUserIds: string[],
-): { organizationId: string; userId: string; permission: OrganizationPermission }[] => {
-	const uniqueEditUserIds = Array.from(new Set(editUserIds));
-	const uniqueReadonlyUserIds = Array.from(new Set(readonlyUserIds)).filter((userId) => !uniqueEditUserIds.includes(userId));
-
-	return [
-		...uniqueEditUserIds.map((userId) => ({
-			organizationId,
-			userId,
-			permission: OrganizationPermission.edit,
-		})),
-		...uniqueReadonlyUserIds.map((userId) => ({
-			organizationId,
-			userId,
-			permission: OrganizationPermission.readonly,
-		})),
-	];
-};
-
-const buildProgramAccessRows = (
-	organizationId: string,
-	ownedProgramIds: string[],
-	operatedProgramIds: string[],
-): { organizationId: string; programId: string; permission: ProgramPermission }[] => {
-	const uniqueOwnedProgramIds = Array.from(new Set(ownedProgramIds));
-	const uniqueOperatedProgramIds = Array.from(new Set(operatedProgramIds));
-
-	return [
-		...uniqueOwnedProgramIds.map((programId) => ({
-			organizationId,
-			programId,
-			permission: ProgramPermission.owner,
-		})),
-		...uniqueOperatedProgramIds.map((programId) => ({
-			organizationId,
-			programId,
-			permission: ProgramPermission.operator,
-		})),
-	];
-};
-
 export class OrganizationWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
@@ -59,6 +15,79 @@ export class OrganizationWriteService extends BaseService {
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
+	}
+
+	private buildOrganizationAccessRows(
+		organizationId: string,
+		editUserIds: string[],
+		readonlyUserIds: string[],
+	): { organizationId: string; userId: string; permission: OrganizationPermission }[] {
+		const uniqueEditUserIds = Array.from(new Set(editUserIds));
+		const uniqueReadonlyUserIds = Array.from(new Set(readonlyUserIds)).filter(
+			(userId) => !uniqueEditUserIds.includes(userId),
+		);
+
+		return [
+			...uniqueEditUserIds.map((userId) => ({
+				organizationId,
+				userId,
+				permission: OrganizationPermission.edit,
+			})),
+			...uniqueReadonlyUserIds.map((userId) => ({
+				organizationId,
+				userId,
+				permission: OrganizationPermission.readonly,
+			})),
+		];
+	}
+
+	private buildProgramAccessRows(
+		organizationId: string,
+		ownedProgramIds: string[],
+		operatedProgramIds: string[],
+	): { organizationId: string; programId: string; permission: ProgramPermission }[] {
+		const uniqueOwnedProgramIds = Array.from(new Set(ownedProgramIds));
+		const uniqueOperatedProgramIds = Array.from(new Set(operatedProgramIds));
+
+		return [
+			...uniqueOwnedProgramIds.map((programId) => ({
+				organizationId,
+				programId,
+				permission: ProgramPermission.owner,
+			})),
+			...uniqueOperatedProgramIds.map((programId) => ({
+				organizationId,
+				programId,
+				permission: ProgramPermission.operator,
+			})),
+		];
+	}
+
+	async createFromEmail(email: string): Promise<ServiceResult<OrganizationPayload>> {
+		try {
+			const organization = await this.db.organization.create({
+				data: {
+					name: `${email.toLowerCase().trim()} organization`,
+				},
+				select: {
+					id: true,
+					name: true,
+				},
+			});
+
+			return this.resultOk({
+				id: organization.id,
+				name: organization.name,
+				editUserIds: [],
+				readonlyUserIds: [],
+				ownedProgramIds: [],
+				operatedProgramIds: [],
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not create organization');
+		}
 	}
 
 	private async validateUserIds(userIds: string[]): Promise<ServiceResult<void>> {
@@ -135,7 +164,7 @@ export class OrganizationWriteService extends BaseService {
 					},
 				});
 
-				const accesses = buildOrganizationAccessRows(
+				const accesses = this.buildOrganizationAccessRows(
 					organization.id,
 					validatedInput.editUserIds,
 					validatedInput.readonlyUserIds,
@@ -144,7 +173,7 @@ export class OrganizationWriteService extends BaseService {
 					await tx.organizationAccess.createMany({ data: accesses });
 				}
 
-				const programAccesses = buildProgramAccessRows(
+				const programAccesses = this.buildProgramAccessRows(
 					organization.id,
 					validatedInput.ownedProgramIds,
 					validatedInput.operatedProgramIds,
@@ -222,7 +251,7 @@ export class OrganizationWriteService extends BaseService {
 					where: { organizationId: validatedInput.id },
 				});
 
-				const accesses = buildOrganizationAccessRows(
+				const accesses = this.buildOrganizationAccessRows(
 					validatedInput.id,
 					validatedInput.editUserIds,
 					validatedInput.readonlyUserIds,
@@ -235,7 +264,7 @@ export class OrganizationWriteService extends BaseService {
 					where: { organizationId: validatedInput.id },
 				});
 
-				const programAccesses = buildProgramAccessRows(
+				const programAccesses = this.buildProgramAccessRows(
 					validatedInput.id,
 					validatedInput.ownedProgramIds,
 					validatedInput.operatedProgramIds,

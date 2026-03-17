@@ -1,0 +1,177 @@
+{
+	"modal": {
+		"title": "Demarrer un nouveau programme"
+	},
+	"common": {
+		"back": "Retour",
+		"continue": "Continuer",
+		"retry": "Reessayer",
+		"search": "Rechercher",
+		"coming_soon": "Bientot disponible",
+		"recommended": "Recommande",
+		"months": "mois",
+		"per_month": "/ mois",
+		"interval": {
+			"monthly": "Mensuel",
+			"quarterly": "Trimestriel",
+			"yearly": "Annuel"
+		}
+	},
+	"error": {
+		"generic": "Une erreur est survenue"
+	},
+	"step1": {
+		"choose_country": "Sélectionnez un pays où nous opérons",
+		"feasibility_title": "Verifier l'eligibilite pour n'importe quel pays en Afrique",
+		"all_conditions_met": "Toutes les conditions sont remplies",
+		"no_countries_match": "Aucun pays ne correspond aux filtres actuels",
+		"no_active_programs": "Aucun programme actif",
+		"country_stats": "{{programCount}} programmes - {{recipientCount}} beneficiaires",
+		"table": {
+			"country": "Pays",
+			"cash": "Adequation du cash",
+			"mobile_money": "Mobile money",
+			"mobile_network": "Couverture reseau",
+			"sanctions": "Aucune sanction"
+		},
+		"condition": {
+			"met": "Condition remplie",
+			"not_met": "Conditions non remplies",
+			"restrictions_apply": "Restrictions"
+		},
+		"details": {
+			"cash": {
+				"met": "Le fonctionnement du marche en {{country}} semble intact.",
+				"not_met": "Le fonctionnement du marche en {{country}} pourrait etre degrade."
+			},
+			"mobile_money": {
+				"met": "L'infrastructure mobile money semble suffisante. {{providerCount}} fournisseurs actifs : {{providers}}.",
+				"not_met": "L'infrastructure mobile money semble insuffisante."
+			},
+			"mobile_network": {
+				"met": "La couverture du reseau mobile est consideree comme suffisante, avec {{populationCoverage}}% de couverture de la population.",
+				"met_with_tech": "La couverture du reseau mobile est consideree comme suffisante, avec {{populationCoverage}}% de couverture de la population sur {{tech}}.",
+				"not_met": "La couverture du reseau mobile est consideree comme insuffisante. Seulement {{populationCoverage}}% de la population est couverte.",
+				"not_met_unknown": "La couverture du reseau mobile est consideree comme insuffisante."
+			},
+			"sanctions": {
+				"met": "{{country}} n'est pas soumis a des sanctions internationales.",
+				"restrictions_apply": "{{country}} est soumis a des sanctions internationales."
+			}
+		},
+		"source": {
+			"si_research": "SI research",
+			"sanctions_lists": "Source: EU Sanctions Map & US Sanctions List"
+		}
+	},
+	"step2": {
+		"program_management": {
+			"title": "Gestion du programme",
+			"social_income": {
+				"label": "Programme gere par Social Income",
+				"description": "Social Income gere les beneficiaires, les paiements et les operations."
+			},
+			"self_run": {
+				"label": "Gerer le programme vous-meme",
+				"description": "Vous gerez les beneficiaires et les operations de maniere autonome."
+			}
+		},
+		"recipient_selection": {
+			"title": "Selection des beneficiaires",
+			"universal": {
+				"label": "Approche universelle",
+				"description": "Tous les beneficiaires eligibles du pays selectionne recoivent un soutien.",
+				"available": "beneficiaires pre-evalues disponibles dans ce pays",
+				"empty_error": "Au moins un beneficiaire est requis pour continuer."
+			},
+			"targeted": {
+				"label": "Approche ciblee",
+				"description": "Le soutien est fourni aux beneficiaires qui correspondent aux causes et profils selectionnes.",
+				"matching_count": "{{matched}} sur {{total}} beneficiaires correspondent au pays et aux filtres selectionnes",
+				"matching": "beneficiaires correspondent au pays et aux filtres selectionnes",
+				"empty_error": "Veuillez ajuster les filtres afin qu'au moins un beneficiaire corresponde."
+			},
+			"causes": "Causes",
+			"profiles": "Profils",
+			"custom": {
+				"label": "Choisir vos propres beneficiaires",
+				"description": "Selectionnez et gerez manuellement des beneficiaires individuels."
+			}
+		},
+		"causes": {
+			"poverty": "Pauvrete",
+			"health": "Sante",
+			"gender_based_violence": "Violence basee sur le genre",
+			"climate": "Climat"
+		},
+		"profiles": {
+			"male": "Homme",
+			"female": "Femme",
+			"youth": "Jeunes"
+		}
+	},
+	"step3": {
+		"recipients": {
+			"title": "Beneficiaires au demarrage",
+			"no_candidates": "Aucun candidat n'est actuellement disponible dans le pool. Revenez a l'etape 2 et ajustez les causes selectionnees ou assurez-vous que des candidats sont disponibles.",
+			"max_hint": "Le maximum est determine par le nombre de candidats actuellement disponibles pour les causes selectionnees."
+		},
+		"indirect_notice": {
+			"prefix": "{{recipients}} beneficiaires profitent",
+			"indirect_people": "{{indirect}} personnes indirectement touchees en plus",
+			"tooltip": "En moyenne, chaque beneficiaire soutenu a un impact positif sur environ cinq autres personnes dans son foyer et sa communaute.",
+			"suffix": "de la pauvrete."
+		},
+		"payouts": {
+			"title": "Paiements",
+			"customize": "Personnaliser"
+		},
+		"payout_controls": {
+			"program_duration": "Duree du programme",
+			"payout_per_interval": "Paiement par intervalle",
+			"payout_interval": "Frequence de paiement"
+		},
+		"payout_summary": {
+			"program_duration": "Duree du programme",
+			"payout_per_interval": "Paiement par intervalle",
+			"schedule": "Frequence"
+		},
+		"total_costs": {
+			"title": "Cout total du programme",
+			"aria": "Afficher le calcul du cout total du programme",
+			"updating": "Mise a jour du cout total...",
+			"tooltip": "{{recipients}} beneficiaires x {{payoutPerInterval}} {{payoutCurrency}} paiement par intervalle x {{numberOfIntervals}} {{intervalLabel}} = {{totalBudget}} {{displayCurrency}}",
+			"interval_label": {
+				"monthly": "intervalles mensuels",
+				"quarterly": "intervalles trimestriels",
+				"yearly": "intervalles annuels"
+			}
+		}
+	},
+	"step4": {
+		"title": "Presque fini",
+		"description": "Partagez vos coordonnees afin que nous puissions creer votre compte et une organisation par defaut. Votre nouveau programme sera cree a partir des choix des etapes precedentes et vous pourrez le verifier juste apres la connexion.",
+		"first_name": {
+			"label": "Prenom",
+			"placeholder": "Prenom"
+		},
+		"last_name": {
+			"label": "Nom",
+			"placeholder": "Nom"
+		},
+		"email": {
+			"label": "E-mail",
+			"placeholder": "name@example.com"
+		},
+		"validation": {
+			"first_name_required": "Le prenom est requis.",
+			"last_name_required": "Le nom est requis.",
+			"email_invalid": "Veuillez saisir une adresse e-mail valide."
+		}
+	},
+	"step5": {
+		"title": "Votre programme est pret",
+		"description": "Nous avons cree votre compte, votre organisation et la configuration initiale du programme. Connectez-vous maintenant avec votre e-mail pour ouvrir votre tableau de bord et gerer votre programme.",
+		"go_to_login": "Aller a la connexion"
+	}
+}

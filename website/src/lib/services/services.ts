@@ -144,6 +144,8 @@ const programWrite = new ProgramWriteService(
 	programAccessRead,
 	programAccessWrite,
 	candidateWrite,
+	firebaseAdmin,
+	organizationWrite,
 	programValidation,
 );
 const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, programStats);

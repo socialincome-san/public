@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
+import { LEADING_TRAILING_DASHES_REGEX, NON_ALPHANUMERIC_DASH_REGEX } from '@/lib/utils/regex';
 import { MoreHorizontalIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
@@ -19,11 +20,7 @@ type ActionMenuProps = {
 };
 
 const toTestIdSlug = (label: string): string =>
-	label
-		.toLowerCase()
-		.trim()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-+|-+$/g, '');
+	label.toLowerCase().trim().replace(NON_ALPHANUMERIC_DASH_REGEX, '-').replace(LEADING_TRAILING_DASHES_REGEX, '');
 
 export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 	const router = useRouter();

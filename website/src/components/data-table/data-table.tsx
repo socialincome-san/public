@@ -16,6 +16,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/ui';
 import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/react-table';
@@ -50,7 +51,7 @@ type DataTableProps<Row> = {
 };
 
 const formatTableError = (error: string): string => {
-	const raw = error.replace(/^Could not fetch [^:]+:\s*/i, '').trim();
+	const raw = error.replace(DATA_TABLE_FETCH_PREFIX_REGEX, '').trim();
 	if (raw.startsWith('{') && raw.endsWith('}')) {
 		try {
 			const parsed = JSON.parse(raw) as { name?: string };

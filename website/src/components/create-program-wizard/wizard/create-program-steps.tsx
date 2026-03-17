@@ -1,10 +1,12 @@
 'use client';
 
 import { Currency } from '@/generated/prisma/enums';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
-import { LoginStep } from '../step-4/login-step';
+import { AccountDetailsStep } from '../step-4/account-details-step';
+import { SuccessStep } from '../step-5/success-step';
 import { WizardError } from './create-program-wizard-error';
 import { WizardLoading } from './create-program-wizard-loading';
 import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
@@ -12,15 +14,18 @@ import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
 type Props = {
 	state: CreateProgramWizardState;
 	send: CreateProgramWizardSend;
+	onGoToLogin: () => void;
 };
 
-export const CreateProgramSteps = ({ state, send }: Props) => {
+export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+
 	if (state.matches('loading') || state.matches('saving')) {
 		return <WizardLoading />;
 	}
 
 	if (state.matches('error')) {
-		return <WizardError message={state.context.error ?? 'Something went wrong'} onRetry={() => window.location.reload()} />;
+		return <WizardError message={state.context.error ?? t('error.generic')} onRetry={() => window.location.reload()} />;
 	}
 
 	if (state.matches('countrySelection')) {
@@ -81,8 +86,21 @@ export const CreateProgramSteps = ({ state, send }: Props) => {
 		);
 	}
 
-	if (state.matches('auth')) {
-		return <LoginStep onSuccess={() => send({ type: 'AUTH_SUCCESS' })} />;
+	if (state.matches('accountDetails')) {
+		return (
+			<AccountDetailsStep
+				email={state.context.contactEmail}
+				firstName={state.context.contactFirstName}
+				lastName={state.context.contactLastName}
+				onEmailChange={(value) => send({ type: 'SET_CONTACT_EMAIL', value })}
+				onFirstNameChange={(value) => send({ type: 'SET_CONTACT_FIRST_NAME', value })}
+				onLastNameChange={(value) => send({ type: 'SET_CONTACT_LAST_NAME', value })}
+			/>
+		);
+	}
+
+	if (state.matches('success')) {
+		return <SuccessStep onGoToLogin={onGoToLogin} />;
 	}
 
 	return null;

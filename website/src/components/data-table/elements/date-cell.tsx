@@ -23,8 +23,12 @@ export const DateCell = <TData,>({
 		return <span>-</span>;
 	}
 
-	const date =
-		value instanceof Date ? value : typeof value === 'string' || typeof value === 'number' ? new Date(value) : null;
+	let date: Date | null = null;
+	if (value instanceof Date) {
+		date = value;
+	} else if (typeof value === 'string' || typeof value === 'number') {
+		date = new Date(value);
+	}
 	if (!date || Number.isNaN(date.getTime())) {
 		return <span>-</span>;
 	}

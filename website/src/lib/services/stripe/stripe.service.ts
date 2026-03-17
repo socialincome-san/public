@@ -12,6 +12,7 @@
 import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { isValidCurrency } from '@/lib/types/currency';
 import { logger } from '@/lib/utils/logger';
+import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { titleCase } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import Stripe from 'stripe';
@@ -533,7 +534,7 @@ export class StripeService extends BaseService {
 				mode: recurring ? 'subscription' : 'payment',
 
 				customer: stripeCustomerId || undefined,
-				customer_creation: stripeCustomerId ? undefined : recurring ? undefined : 'always',
+				customer_creation: !stripeCustomerId && !recurring ? 'always' : undefined,
 				line_items: [
 					{
 						price: price.id,
@@ -627,7 +628,7 @@ export class StripeService extends BaseService {
 				return this.resultFail(campaignResult.error);
 			}
 
-			const baseUrl = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+			const baseUrl = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
 			const successUrl = `${baseUrl}/portal/programs/${input.programId}/overview?donation=success`;
 
 			return this.createCheckoutSession({

@@ -161,13 +161,12 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 		});
 	};
 
-	return (
-		<DynamicForm
-			formSchema={formSchema}
-			isLoading={isLoading}
-			onSubmit={onSubmit}
-			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : surveyId ? 'edit' : 'add'}
-		/>
-	);
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (surveyId) {
+		mode = 'edit';
+	}
+
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 };

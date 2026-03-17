@@ -8,31 +8,40 @@ import { UserReadService } from './user-read.service';
 import { UserValidationService } from './user-validation.service';
 import { UserPayload, UserUpdateInput } from './user.types';
 
-const getAccessRows = (editOrganizationIds: string[], readonlyOrganizationIds: string[]) => [
-	...editOrganizationIds.map((organizationId) => ({
-		organizationId,
-		permission: 'edit' as const,
-	})),
-	...readonlyOrganizationIds.map((organizationId) => ({
-		organizationId,
-		permission: 'readonly' as const,
-	})),
-];
+export class UserWriteService extends BaseService {
+	private getAccessRows(editOrganizationIds: string[], readonlyOrganizationIds: string[]) {
+		const accessByOrganizationId = new Map<string, { organizationId: string; permission: 'edit' | 'readonly' }>();
 
-const getPreferredActiveOrganizationId = (
-	editOrganizationIds: string[],
-	readonlyOrganizationIds: string[],
-	currentActiveOrganizationId?: string | null,
-) => {
-	const allowedOrganizationIds = new Set([...editOrganizationIds, ...readonlyOrganizationIds]);
-	if (currentActiveOrganizationId && allowedOrganizationIds.has(currentActiveOrganizationId)) {
-		return currentActiveOrganizationId;
+		for (const organizationId of readonlyOrganizationIds) {
+			accessByOrganizationId.set(organizationId, {
+				organizationId,
+				permission: 'readonly',
+			});
+		}
+
+		for (const organizationId of editOrganizationIds) {
+			accessByOrganizationId.set(organizationId, {
+				organizationId,
+				permission: 'edit',
+			});
+		}
+
+		return Array.from(accessByOrganizationId.values());
 	}
 
-	return editOrganizationIds[0] ?? readonlyOrganizationIds[0] ?? null;
-};
+	private getPreferredActiveOrganizationId(
+		editOrganizationIds: string[],
+		readonlyOrganizationIds: string[],
+		currentActiveOrganizationId?: string | null,
+	) {
+		const allowedOrganizationIds = new Set([...editOrganizationIds, ...readonlyOrganizationIds]);
+		if (currentActiveOrganizationId && allowedOrganizationIds.has(currentActiveOrganizationId)) {
+			return currentActiveOrganizationId;
+		}
 
-export class UserWriteService extends BaseService {
+		return editOrganizationIds[0] ?? readonlyOrganizationIds[0] ?? null;
+	}
+
 	constructor(
 		db: PrismaClient,
 		private readonly firebaseAdminService: FirebaseAdminService,
@@ -93,7 +102,7 @@ export class UserWriteService extends BaseService {
 						} | null;
 				  }
 				| undefined;
-			const activeOrganizationId = getPreferredActiveOrganizationId(
+			const activeOrganizationId = this.getPreferredActiveOrganizationId(
 				validatedInput.editOrganizationIds,
 				validatedInput.readonlyOrganizationIds,
 			);
@@ -124,7 +133,7 @@ export class UserWriteService extends BaseService {
 						},
 						organizationAccesses: {
 							createMany: {
-								data: getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
+								data: this.getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
 							},
 						},
 					},
@@ -215,7 +224,7 @@ export class UserWriteService extends BaseService {
 			const shouldSyncFirebaseUser =
 				validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
 
-			const activeOrganizationId = getPreferredActiveOrganizationId(
+			const activeOrganizationId = this.getPreferredActiveOrganizationId(
 				validatedInput.editOrganizationIds,
 				validatedInput.readonlyOrganizationIds,
 				existingUser.activeOrganizationId,
@@ -236,7 +245,7 @@ export class UserWriteService extends BaseService {
 					organizationAccesses: {
 						deleteMany: { userId: validatedInput.id },
 						createMany: {
-							data: getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
+							data: this.getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
 						},
 					},
 				},

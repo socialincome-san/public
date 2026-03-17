@@ -3,6 +3,7 @@
 import { Slider } from '@/components/slider';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
 import { PayoutInterval } from '@/generated/prisma/enums';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 
 type Props = {
 	programDuration: number;
@@ -27,12 +28,16 @@ export const PayoutControls = ({
 	onPayoutChange,
 	onIntervalChange,
 }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+
 	return (
 		<div className="space-y-6">
 			<div className="space-y-2">
 				<div className="flex justify-between text-sm">
-					<span>Program duration</span>
-					<span className="font-medium">{programDuration} months</span>
+					<span>{t('step3.payout_controls.program_duration')}</span>
+					<span className="font-medium">
+						{programDuration} {t('common.months')}
+					</span>
 				</div>
 
 				<Slider
@@ -47,7 +52,7 @@ export const PayoutControls = ({
 
 			<div className="space-y-2">
 				<div className="flex justify-between text-sm">
-					<span>Payout per interval</span>
+					<span>{t('step3.payout_controls.payout_per_interval')}</span>
 					<span className="font-medium">
 						{currency} {payoutPerInterval}
 					</span>
@@ -64,13 +69,13 @@ export const PayoutControls = ({
 			</div>
 
 			<div className="space-y-2">
-				<p className="text-sm font-medium">Payout interval</p>
+				<p className="text-sm font-medium">{t('step3.payout_controls.payout_interval')}</p>
 
 				<Tabs value={payoutInterval} onValueChange={(v) => onIntervalChange(v as PayoutInterval)}>
 					<TabsList className="grid w-fit grid-cols-3">
-						<TabsTrigger value="monthly">Monthly</TabsTrigger>
-						<TabsTrigger value="quarterly">Quarterly</TabsTrigger>
-						<TabsTrigger value="yearly">Yearly</TabsTrigger>
+						<TabsTrigger value="monthly">{t('common.interval.monthly')}</TabsTrigger>
+						<TabsTrigger value="quarterly">{t('common.interval.quarterly')}</TabsTrigger>
+						<TabsTrigger value="yearly">{t('common.interval.yearly')}</TabsTrigger>
 					</TabsList>
 				</Tabs>
 			</div>

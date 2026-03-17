@@ -2,6 +2,7 @@ import { Gender } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
+import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import z from 'zod';
 import { FormSchema } from './dynamic-form';
 import { getZodEnum } from './helper';
@@ -58,7 +59,7 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 				label: 'Phone Number',
 				zodSchema: z
 					.string()
-					.regex(/^$|^\+[1-9]\d{1,14}$/, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
+					.regex(E164_OPTIONAL_PHONE_REGEX, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
 					.optional(),
 			},
 			hasWhatsApp: {

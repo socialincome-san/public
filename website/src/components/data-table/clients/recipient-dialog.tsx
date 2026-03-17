@@ -34,11 +34,18 @@ export const RecipientDialog = ({
 		logger.error('Recipient Form Error', { error });
 	};
 
+	let dialogTitle = 'New Recipient';
+	if (readOnly) {
+		dialogTitle = 'View Recipient';
+	} else if (recipientId) {
+		dialogTitle = 'Edit Recipient';
+	}
+
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>{readOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}</DialogTitle>
+					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
 
 				{errorMessage && (

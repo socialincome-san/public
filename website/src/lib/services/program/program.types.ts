@@ -30,6 +30,12 @@ export type CreateProgramInput = {
 	targetProfiles: Profile[];
 };
 
+export type PublicOnboardingUserDetails = {
+	email: string;
+	firstName: string;
+	lastName: string;
+};
+
 export type PublicProgramDetails = {
 	programId: string;
 	programName: string;

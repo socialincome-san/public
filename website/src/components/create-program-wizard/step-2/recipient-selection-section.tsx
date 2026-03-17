@@ -3,6 +3,7 @@
 import { Badge } from '@/components/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { Cause, Profile } from '@/generated/prisma/enums';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { cn } from '@/lib/utils/cn';
 import { SpinnerIcon } from '@socialincome/ui';
 import { RadioCard } from '../radio-card';
@@ -32,20 +33,23 @@ export const RecipientSelectionSection = ({
 	onToggleCause,
 	onToggleProfile,
 }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 	const noUniversalRecipients = value === 'universal' && totalRecipients === 0;
 	const noTargetedRecipients = value === 'targeted' && filteredRecipients === 0;
+	const causeLabel = (cause: string) => t(`step2.causes.${cause}`);
+	const profileLabel = (profile: string) => t(`step2.profiles.${profile}`);
 
 	return (
 		<div className="space-y-4">
-			<div className="text-lg font-medium">Recipient selection</div>
+			<div className="text-lg font-medium">{t('step2.recipient_selection.title')}</div>
 
 			<RadioCardGroup value={value ?? ''} onChange={(v) => onChangeApproach(v as RecipientApproachType)}>
 				<RadioCard
 					value="universal"
 					checked={value === 'universal'}
-					label="Universal approach"
-					description="All eligible recipients in the selected country receive support."
-					badge={<Badge variant="verified">Recommended</Badge>}
+					label={t('step2.recipient_selection.universal.label')}
+					description={t('step2.recipient_selection.universal.description')}
+					badge={<Badge variant="verified">{t('common.recommended')}</Badge>}
 				>
 					<div className={cn('text-sm', noUniversalRecipients ? 'text-destructive' : 'text-muted-foreground')}>
 						{isCountingRecipients ? (
@@ -53,11 +57,11 @@ export const RecipientSelectionSection = ({
 						) : (
 							<>
 								<span>
-									<strong>{totalRecipients.toLocaleString()}</strong> pre-assessed recipients available in this country
+									<strong>{totalRecipients.toLocaleString()}</strong> {t('step2.recipient_selection.universal.available')}
 								</span>
 
 								{noUniversalRecipients && (
-									<div className="mt-1 text-xs">At least one recipient is required to continue.</div>
+									<div className="mt-1 text-xs">{t('step2.recipient_selection.universal.empty_error')}</div>
 								)}
 							</>
 						)}
@@ -67,22 +71,24 @@ export const RecipientSelectionSection = ({
 				<RadioCard
 					value="targeted"
 					checked={value === 'targeted'}
-					label="Targeted approach"
-					description="Support is provided to recipients who match selected causes and profiles."
+					label={t('step2.recipient_selection.targeted.label')}
+					description={t('step2.recipient_selection.targeted.description')}
 				>
 					<div className="space-y-4">
 						<PillMultiSelect
-							label="Causes"
+							label={t('step2.recipient_selection.causes')}
 							values={Object.values(Cause)}
 							selected={targetCauses}
 							onToggle={(selectedCause) => onToggleCause(selectedCause as Cause)}
+							getLabel={causeLabel}
 						/>
 
 						<PillMultiSelect
-							label="Profiles"
+							label={t('step2.recipient_selection.profiles')}
 							values={Object.values(Profile)}
 							selected={targetProfiles}
 							onToggle={(selectedProfile) => onToggleProfile(selectedProfile as Profile)}
+							getLabel={profileLabel}
 						/>
 
 						<div className={cn('text-sm', noTargetedRecipients ? 'text-destructive' : 'text-muted-foreground')}>
@@ -92,11 +98,11 @@ export const RecipientSelectionSection = ({
 								<>
 									<span>
 										<strong>{filteredRecipients.toLocaleString()}</strong> of{' '}
-										<strong>{totalRecipients.toLocaleString()}</strong> recipients match the selected country and filters
+										<strong>{totalRecipients.toLocaleString()}</strong> {t('step2.recipient_selection.targeted.matching')}
 									</span>
 
 									{noTargetedRecipients && (
-										<div className="mt-1 text-xs">Please adjust the filters so at least one recipient matches.</div>
+										<div className="mt-1 text-xs">{t('step2.recipient_selection.targeted.empty_error')}</div>
 									)}
 								</>
 							)}
@@ -107,9 +113,9 @@ export const RecipientSelectionSection = ({
 				<RadioCard
 					value="custom"
 					disabled
-					label="Choose your own recipients"
-					description="Manually select and manage individual recipients."
-					badge={<Badge>Coming soon</Badge>}
+					label={t('step2.recipient_selection.custom.label')}
+					description={t('step2.recipient_selection.custom.description')}
+					badge={<Badge>{t('common.coming_soon')}</Badge>}
 				/>
 			</RadioCardGroup>
 		</div>

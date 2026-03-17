@@ -1,0 +1,177 @@
+{
+	"modal": {
+		"title": "Neues Programm starten"
+	},
+	"common": {
+		"back": "Zurück",
+		"continue": "Weiter",
+		"retry": "Erneut versuchen",
+		"search": "Suchen",
+		"coming_soon": "Bald verfügbar",
+		"recommended": "Empfohlen",
+		"months": "Monate",
+		"per_month": "/ Monat",
+		"interval": {
+			"monthly": "Monatlich",
+			"quarterly": "Quartalsweise",
+			"yearly": "Jährlich"
+		}
+	},
+	"error": {
+		"generic": "Etwas ist schiefgelaufen"
+	},
+	"step1": {
+		"choose_country": "Wähle ein Land, in dem wir tätig sind",
+		"feasibility_title": "Prüfe die Eignung für jedes Land in Afrika",
+		"all_conditions_met": "Alle Bedingungen erfüllt",
+		"no_countries_match": "Keine Länder entsprechen den aktuellen Filtern",
+		"no_active_programs": "Keine aktiven Programme",
+		"country_stats": "{{programCount}} Programme - {{recipientCount}} Empfänger",
+		"table": {
+			"country": "Land",
+			"cash": "Eignung für Bargeld",
+			"mobile_money": "Mobile Money",
+			"mobile_network": "Netzabdeckung",
+			"sanctions": "Keine Sanktionen"
+		},
+		"condition": {
+			"met": "Bedingung erfüllt",
+			"not_met": "Bedingungen nicht erfüllt",
+			"restrictions_apply": "Einschränkungen"
+		},
+		"details": {
+			"cash": {
+				"met": "Die Marktfunktionalität in {{country}} scheint intakt.",
+				"not_met": "Die Marktfunktionalität in {{country}} könnte eingeschränkt sein."
+			},
+			"mobile_money": {
+				"met": "Die Mobile-Money-Infrastruktur scheint ausreichend. {{providerCount}} aktive Anbieter: {{providers}}.",
+				"not_met": "Die Mobile-Money-Infrastruktur scheint unzureichend."
+			},
+			"mobile_network": {
+				"met": "Die Mobilfunkabdeckung gilt als ausreichend, mit {{populationCoverage}}% Bevölkerungsabdeckung.",
+				"met_with_tech": "Die Mobilfunkabdeckung gilt als ausreichend, mit {{populationCoverage}}% Bevölkerungsabdeckung auf {{tech}}.",
+				"not_met": "Die Mobilfunkabdeckung gilt als unzureichend. Nur {{populationCoverage}}% der Bevölkerung sind abgedeckt.",
+				"not_met_unknown": "Die Mobilfunkabdeckung gilt als unzureichend."
+			},
+			"sanctions": {
+				"met": "{{country}} unterliegt keinen internationalen Sanktionen.",
+				"restrictions_apply": "{{country}} unterliegt internationalen Sanktionen."
+			}
+		},
+		"source": {
+			"si_research": "SI research",
+			"sanctions_lists": "Quelle: EU Sanctions Map & US Sanctions List"
+		}
+	},
+	"step2": {
+		"program_management": {
+			"title": "Programmverwaltung",
+			"social_income": {
+				"label": "Programm wird von Social Income betrieben",
+				"description": "Social Income verwaltet Empfänger, Auszahlungen und den Betrieb."
+			},
+			"self_run": {
+				"label": "Programm selbst betreiben",
+				"description": "Sie verwalten Empfänger und Abläufe eigenständig."
+			}
+		},
+		"recipient_selection": {
+			"title": "Empfängerauswahl",
+			"universal": {
+				"label": "Universeller Ansatz",
+				"description": "Alle berechtigten Empfänger im ausgewählten Land erhalten Unterstützung.",
+				"available": "vorgeprüfte Empfänger in diesem Land verfügbar",
+				"empty_error": "Mindestens ein Empfänger ist erforderlich, um fortzufahren."
+			},
+			"targeted": {
+				"label": "Gezielter Ansatz",
+				"description": "Unterstützung erhalten Empfänger, die zu ausgewählten Ursachen und Profilen passen.",
+				"matching_count": "{{matched}} von {{total}} Empfängern entsprechen dem ausgewählten Land und den Filtern",
+				"matching": "Empfänger entsprechen dem ausgewählten Land und den Filtern",
+				"empty_error": "Bitte passen Sie die Filter an, damit mindestens ein Empfänger passt."
+			},
+			"causes": "Ursachen",
+			"profiles": "Profile",
+			"custom": {
+				"label": "Empfänger selbst auswählen",
+				"description": "Einzelne Empfänger manuell auswählen und verwalten."
+			}
+		},
+		"causes": {
+			"poverty": "Armut",
+			"health": "Gesundheit",
+			"gender_based_violence": "Geschlechtsbezogene Gewalt",
+			"climate": "Klima"
+		},
+		"profiles": {
+			"male": "Männlich",
+			"female": "Weiblich",
+			"youth": "Jugendliche"
+		}
+	},
+	"step3": {
+		"recipients": {
+			"title": "Empfänger zum Programmstart",
+			"no_candidates": "Derzeit sind keine Kandidatinnen und Kandidaten im Pool verfügbar. Gehen Sie zu Schritt 2 zurück und passen Sie die ausgewählten Ursachen an oder stellen Sie sicher, dass Kandidaten verfügbar sind.",
+			"max_hint": "Das Maximum richtet sich nach der Anzahl der aktuell verfügbaren Kandidatinnen und Kandidaten für Ihre ausgewählten Ursachen."
+		},
+		"indirect_notice": {
+			"prefix": "{{recipients}} Empfänger profitieren",
+			"indirect_people": "{{indirect}} weitere indirekt betroffene Personen",
+			"tooltip": "Im Durchschnitt wirkt sich jede unterstützte empfangende Person positiv auf etwa fünf weitere Personen im Haushalt und Umfeld aus.",
+			"suffix": "von Armut."
+		},
+		"payouts": {
+			"title": "Auszahlungen",
+			"customize": "Anpassen"
+		},
+		"payout_controls": {
+			"program_duration": "Programmdauer",
+			"payout_per_interval": "Auszahlung pro Intervall",
+			"payout_interval": "Auszahlungsintervall"
+		},
+		"payout_summary": {
+			"program_duration": "Programmdauer",
+			"payout_per_interval": "Auszahlung pro Intervall",
+			"schedule": "Rhythmus"
+		},
+		"total_costs": {
+			"title": "Gesamtkosten des Programms",
+			"aria": "Berechnung der gesamten Programmkosten anzeigen",
+			"updating": "Gesamtkosten werden aktualisiert...",
+			"tooltip": "{{recipients}} Empfänger x {{payoutPerInterval}} {{payoutCurrency}} Auszahlung pro Intervall x {{numberOfIntervals}} {{intervalLabel}} = {{totalBudget}} {{displayCurrency}}",
+			"interval_label": {
+				"monthly": "monatliche Intervalle",
+				"quarterly": "quartalsweise Intervalle",
+				"yearly": "jährliche Intervalle"
+			}
+		}
+	},
+	"step4": {
+		"title": "Fast geschafft",
+		"description": "Teilen Sie Ihre Kontaktdaten, damit wir Ihr Konto und eine Standardorganisation für Sie erstellen können. Ihr neues Programm wird aus den Einstellungen der vorherigen Schritte erstellt und kann direkt nach der Anmeldung geprüft werden.",
+		"first_name": {
+			"label": "Vorname",
+			"placeholder": "Vorname"
+		},
+		"last_name": {
+			"label": "Nachname",
+			"placeholder": "Nachname"
+		},
+		"email": {
+			"label": "E-Mail",
+			"placeholder": "name@example.com"
+		},
+		"validation": {
+			"first_name_required": "Vorname ist erforderlich.",
+			"last_name_required": "Nachname ist erforderlich.",
+			"email_invalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+		}
+	},
+	"step5": {
+		"title": "Ihr Programm ist bereit",
+		"description": "Wir haben Ihr Konto, Ihre Organisation und die erste Programmeinrichtung erstellt. Melden Sie sich jetzt mit Ihrer E-Mail-Adresse an, um Ihr Dashboard zu öffnen und Ihr Programm zu verwalten.",
+		"go_to_login": "Zum Login"
+	}
+}

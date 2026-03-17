@@ -178,13 +178,12 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 		});
 	};
 
-	return (
-		<DynamicForm
-			formSchema={formSchema}
-			isLoading={isLoading}
-			onSubmit={onSubmit}
-			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : contributionId ? 'edit' : 'add'}
-		/>
-	);
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (contributionId) {
+		mode = 'edit';
+	}
+
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 };

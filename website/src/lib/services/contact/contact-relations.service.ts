@@ -1,34 +1,11 @@
 import { CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
-
-type ContactAddressFields = {
-	street: string | null;
-	number: string | null;
-	city: string | null;
-	zip: string | null;
-	country: string | null;
-};
-
-type BuildPhoneWriteOperationParams = {
-	nextPhoneNumber: string | undefined;
-	nextHasWhatsApp: boolean;
-	currentPhoneId: string | undefined;
-	currentPhoneNumber: string | undefined;
-};
-
-type BuildAddressWriteOperationParams = {
-	addressInput:
-		| {
-				street: string;
-				number: string;
-				city: string;
-				zip: string;
-				country: CountryCode | null;
-		  }
-		| undefined;
-	currentAddressId: string | undefined;
-};
+import {
+	BuildAddressWriteOperationParams,
+	BuildPhoneWriteOperationParams,
+	ContactAddressFields,
+} from './contact-relations.types';
 
 export class ContactRelationsService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {

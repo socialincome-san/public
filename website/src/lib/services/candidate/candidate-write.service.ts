@@ -12,39 +12,39 @@ import { CandidateFormCreateInput, CandidateFormUpdateInput } from './candidate-
 import { CandidateValidationService } from './candidate-validation.service';
 import { CandidatePayload, Profile } from './candidate.types';
 
-const candidatePayloadSelect = {
-	id: true,
-	suspendedAt: true,
-	suspensionReason: true,
-	successorName: true,
-	termsAccepted: true,
-	localPartner: { select: { id: true, name: true } },
-	contact: {
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			callingName: true,
-			email: true,
-			gender: true,
-			language: true,
-			dateOfBirth: true,
-			profession: true,
-			phone: true,
-			address: true,
-		},
-	},
-	paymentInformation: {
-		select: {
-			id: true,
-			code: true,
-			mobileMoneyProvider: { select: { id: true, name: true } },
-			phone: true,
-		},
-	},
-} as const;
-
 export class CandidateWriteService extends BaseService {
+	private readonly candidatePayloadSelect = {
+		id: true,
+		suspendedAt: true,
+		suspensionReason: true,
+		successorName: true,
+		termsAccepted: true,
+		localPartner: { select: { id: true, name: true } },
+		contact: {
+			select: {
+				id: true,
+				firstName: true,
+				lastName: true,
+				callingName: true,
+				email: true,
+				gender: true,
+				language: true,
+				dateOfBirth: true,
+				profession: true,
+				phone: true,
+				address: true,
+			},
+		},
+		paymentInformation: {
+			select: {
+				id: true,
+				code: true,
+				mobileMoneyProvider: { select: { id: true, name: true } },
+				phone: true,
+			},
+		},
+	} as const;
+
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
@@ -399,7 +399,7 @@ export class CandidateWriteService extends BaseService {
 			return await this.db.$transaction(async (tx) => {
 				const newCandidate = await tx.recipient.create({
 					data,
-					select: candidatePayloadSelect,
+					select: this.candidatePayloadSelect,
 				});
 
 				if (paymentPhoneNumber) {
@@ -515,7 +515,7 @@ export class CandidateWriteService extends BaseService {
 				const updatedCandidate = await this.db.recipient.update({
 					where: { id: candidateId },
 					data: updateData,
-					select: candidatePayloadSelect,
+					select: this.candidatePayloadSelect,
 				});
 				const previousAddressId = existing.contact.address?.id;
 				const didRemoveAddress =
@@ -559,7 +559,7 @@ export class CandidateWriteService extends BaseService {
 			const updatedCandidate = await this.db.recipient.update({
 				where: { id: candidateId },
 				data: updateData,
-				select: candidatePayloadSelect,
+				select: this.candidatePayloadSelect,
 			});
 
 			const previousAddressId = existing.contact.address?.id;
