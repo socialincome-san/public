@@ -24,13 +24,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	const createdProgramId = state.context.createdProgramId;
 
 	useEffect(() => {
-		if (!createdProgramId) {
-			return;
-		}
-
-		if (!isAuthenticated) {
-			router.replace('/login');
-
+		if (!createdProgramId || !isAuthenticated) {
 			return;
 		}
 
@@ -56,7 +50,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 						<DialogTitle>Initiate New Program</DialogTitle>
 					</DialogHeader>
 
-					<CreateProgramWizard state={state} send={send} />
+					<CreateProgramWizard state={state} send={send} onGoToLogin={() => router.replace('/login')} />
 				</DialogContent>
 			</Dialog>
 		</>

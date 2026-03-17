@@ -39,65 +39,68 @@ export const AccountDetailsStep = ({
 	});
 
 	return (
-		<div className="space-y-5 py-2">
+		<div className="mx-auto max-w-2xl space-y-5 py-2">
 			<div className="space-y-2">
 				<Typography size="xl" weight="bold">
 					Almost there
 				</Typography>
 				<Typography className="text-muted-foreground">
-					Add your details to create your account, your organization, and your program.
+					Share your contact details so we can create your account and a default organization for you. Your new program will be
+					created from the setup in the previous steps, and you can review it right after signing in.
 				</Typography>
 			</div>
 
 			<Form {...form}>
 				<form onSubmit={(event) => event.preventDefault()} className="space-y-4">
-					<FormField
-						control={form.control}
-						name="firstName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel htmlFor="create-program-first-name">First name</FormLabel>
-								<FormControl>
-									<Input
-										id="create-program-first-name"
-										placeholder="First name"
-										autoComplete="given-name"
-										{...field}
-										value={field.value ?? ''}
-										onChange={(event) => {
-											field.onChange(event);
-											onFirstNameChange(event.target.value);
-										}}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+					<div className="grid gap-4 md:grid-cols-2">
+						<FormField
+							control={form.control}
+							name="firstName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel htmlFor="create-program-first-name">First name</FormLabel>
+									<FormControl>
+										<Input
+											id="create-program-first-name"
+											placeholder="First name"
+											autoComplete="given-name"
+											{...field}
+											value={field.value ?? ''}
+											onChange={(event) => {
+												field.onChange(event);
+												onFirstNameChange(event.target.value);
+											}}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-					<FormField
-						control={form.control}
-						name="lastName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel htmlFor="create-program-last-name">Last name</FormLabel>
-								<FormControl>
-									<Input
-										id="create-program-last-name"
-										placeholder="Last name"
-										autoComplete="family-name"
-										{...field}
-										value={field.value ?? ''}
-										onChange={(event) => {
-											field.onChange(event);
-											onLastNameChange(event.target.value);
-										}}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+						<FormField
+							control={form.control}
+							name="lastName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel htmlFor="create-program-last-name">Last name</FormLabel>
+									<FormControl>
+										<Input
+											id="create-program-last-name"
+											placeholder="Last name"
+											autoComplete="family-name"
+											{...field}
+											value={field.value ?? ''}
+											onChange={(event) => {
+												field.onChange(event);
+												onLastNameChange(event.target.value);
+											}}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
 
 					<FormField
 						control={form.control}

@@ -198,6 +198,7 @@ export const createProgramWizardMachine = setup({
 			EMAIL_REGEX.test(context.contactEmail) &&
 			context.contactFirstName.trim().length > 0 &&
 			context.contactLastName.trim().length > 0,
+		isAuthenticatedUser: ({ context }) => context.isAuthenticated,
 	},
 }).createMachine({
 	id: 'createProgramWizard',
@@ -488,16 +489,28 @@ export const createProgramWizardMachine = setup({
 								lastName: context.contactLastName,
 							},
 				}),
-				onDone: {
-					actions: assign({ createdProgramId: ({ event }) => event.output }),
-					target: 'closed',
-				},
+				onDone: [
+					{
+						guard: 'isAuthenticatedUser',
+						actions: assign({ createdProgramId: ({ event }) => event.output }),
+						target: 'closed',
+					},
+					{
+						actions: assign({ createdProgramId: ({ event }) => event.output }),
+						target: 'success',
+					},
+				],
 				onError: {
 					target: 'error',
 					actions: assign({
 						error: ({ event }) => (event.error instanceof Error ? event.error.message : 'Failed to create program'),
 					}),
 				},
+			},
+		},
+		success: {
+			on: {
+				CLOSE: 'closed',
 			},
 		},
 

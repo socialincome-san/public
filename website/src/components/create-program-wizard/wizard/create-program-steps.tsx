@@ -5,6 +5,7 @@ import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
 import { AccountDetailsStep } from '../step-4/account-details-step';
+import { SuccessStep } from '../step-5/success-step';
 import { WizardError } from './create-program-wizard-error';
 import { WizardLoading } from './create-program-wizard-loading';
 import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
@@ -12,9 +13,10 @@ import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
 type Props = {
 	state: CreateProgramWizardState;
 	send: CreateProgramWizardSend;
+	onGoToLogin: () => void;
 };
 
-export const CreateProgramSteps = ({ state, send }: Props) => {
+export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
 	if (state.matches('loading') || state.matches('saving')) {
 		return <WizardLoading />;
 	}
@@ -92,6 +94,10 @@ export const CreateProgramSteps = ({ state, send }: Props) => {
 				onLastNameChange={(value) => send({ type: 'SET_CONTACT_LAST_NAME', value })}
 			/>
 		);
+	}
+
+	if (state.matches('success')) {
+		return <SuccessStep onGoToLogin={onGoToLogin} />;
 	}
 
 	return null;

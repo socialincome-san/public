@@ -7,13 +7,14 @@ import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
 type Props = {
 	state: CreateProgramWizardState;
 	send: CreateProgramWizardSend;
+	onGoToLogin: () => void;
 };
 
-export const CreateProgramWizard = ({ state, send }: Props) => {
+export const CreateProgramWizard = ({ state, send, onGoToLogin }: Props) => {
 	return (
 		<div className="space-y-6">
-			<CreateProgramSteps state={state} send={send} />
-			<CreateProgramWizardFooter state={state} send={send} />
+			<CreateProgramSteps state={state} send={send} onGoToLogin={onGoToLogin} />
+			{!state.matches('success') && <CreateProgramWizardFooter state={state} send={send} />}
 		</div>
 	);
 };
