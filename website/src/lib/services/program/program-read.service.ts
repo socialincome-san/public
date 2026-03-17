@@ -352,10 +352,8 @@ export class ProgramReadService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const hasOperatorAccess = accessibleProgramsResult.data.some(
-				(access) => access.programId === programId && access.permission === ProgramPermission.operator,
-			);
-			if (!hasOperatorAccess) {
+			const hasProgramAccess = accessibleProgramsResult.data.some((access) => access.programId === programId);
+			if (!hasProgramAccess) {
 				return this.resultFail('Permission denied');
 			}
 
