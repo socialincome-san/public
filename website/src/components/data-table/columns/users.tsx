@@ -10,6 +10,12 @@ import type { ColumnDef } from '@tanstack/react-table';
 export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 	return [
 		{
+			id: 'firebaseAuthUserId',
+			accessorFn: (row) => row.firebaseAuthUserId,
+			header: (ctx) => <SortableHeader ctx={ctx}>Firebase Auth User ID</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			id: 'user',
 			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
 			header: (ctx) => <SortableHeader ctx={ctx}>User</SortableHeader>,

@@ -10,6 +10,11 @@ import type { ColumnDef } from '@tanstack/react-table';
 export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[] => {
 	return [
 		{
+			accessorKey: 'firebaseAuthUserId',
+			header: 'Firebase Auth User ID',
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			accessorKey: 'name',
 			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,

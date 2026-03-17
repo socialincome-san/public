@@ -107,8 +107,36 @@ export const selectMultiOptionsByTestId = async (page: Page, fieldName: string, 
 	await field.waitFor({ state: 'visible' });
 	await field.locator('button[role="combobox"]').click();
 
+	const desiredLabels = new Set(optionLabels);
 	for (const optionLabel of optionLabels) {
-		await page.getByRole('option', { name: `${optionLabel}, not selected`, exact: true }).click();
+		const unselectedOption = page.getByRole('option', { name: `${optionLabel}, not selected`, exact: true });
+		if ((await unselectedOption.count()) > 0) {
+			await unselectedOption.first().click();
+			continue;
+		}
+
+		const selectedOption = page.getByRole('option', { name: `${optionLabel}, selected`, exact: true });
+		if ((await selectedOption.count()) > 0) {
+			continue;
+		}
+
+		await page.getByRole('option', { name: optionLabel, exact: true }).first().click();
+	}
+
+	const selectedLabels = await page
+		.locator('[role="option"][aria-label$=", selected"]')
+		.evaluateAll((elements) =>
+			elements
+				.map((element) => element.getAttribute('aria-label'))
+				.filter((value): value is string => Boolean(value))
+				.map((value) => value.replace(/, selected$/, '')),
+		);
+
+	for (const selectedLabel of selectedLabels) {
+		if (desiredLabels.has(selectedLabel)) {
+			continue;
+		}
+		await page.getByRole('option', { name: `${selectedLabel}, selected`, exact: true }).click();
 	}
 
 	await page.keyboard.press('Escape');

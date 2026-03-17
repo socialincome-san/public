@@ -11,6 +11,7 @@ export const usersTableConfig: DataTableConfig<UserTableViewRow> = {
 		'firstName',
 		'lastName',
 		'email',
+		'firebaseAuthUserId',
 		'organizationName',
 		'readonlyOrganizationNames',
 		'editOrganizationNames',

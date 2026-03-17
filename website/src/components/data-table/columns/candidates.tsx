@@ -16,6 +16,11 @@ export const makeCandidateColumns = (
 	void hideProgramName;
 	const columns: ColumnDef<CandidatesTableViewRow>[] = [
 		{
+			accessorKey: 'firebaseAuthUserId',
+			header: 'Firebase Auth User ID',
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			id: 'country',
 			header: (ctx) => <SortableHeader ctx={ctx}>Country</SortableHeader>,
 			accessorFn: (row) => row.country ?? '',

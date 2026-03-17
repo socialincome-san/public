@@ -16,6 +16,11 @@ export const makeRecipientColumns = (
 ): ColumnDef<RecipientTableViewRow>[] => {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{
+			accessorKey: 'firebaseAuthUserId',
+			header: 'Firebase Auth User ID',
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			id: 'recipient',
 			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
 			header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,

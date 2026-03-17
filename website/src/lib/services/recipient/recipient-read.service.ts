@@ -571,6 +571,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: recipient.id,
+					firebaseAuthUserId: '',
 					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
@@ -728,6 +729,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: recipient.id,
+					firebaseAuthUserId: '',
 					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 					firstName: recipient.contact?.firstName ?? '',
 					lastName: recipient.contact?.lastName ?? '',
@@ -922,6 +924,7 @@ export class RecipientReadService extends BaseService {
 
 				return {
 					id: r.id,
+					firebaseAuthUserId: '',
 					country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 					firstName: r.contact?.firstName ?? '',
 					lastName: r.contact?.lastName ?? '',

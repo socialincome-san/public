@@ -34,6 +34,7 @@ export type CandidatePayload = {
 
 export type CandidatesTableViewRow = {
 	id: string;
+	firebaseAuthUserId: string;
 	country: CountryCode | null;
 	firstName: string;
 	lastName: string;

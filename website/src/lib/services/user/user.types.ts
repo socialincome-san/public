@@ -34,6 +34,7 @@ export type UserTableViewRow = {
 	firstName: string | null;
 	lastName: string | null;
 	email: string | null;
+	firebaseAuthUserId: string;
 	role: UserRole;
 	organizationName: string | null;
 	readonlyOrganizationNames: string;

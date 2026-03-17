@@ -122,6 +122,7 @@ export class UserReadService extends BaseService {
 							{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
+							{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' as const } } },
 							{ activeOrganization: { name: { contains: search, mode: 'insensitive' as const } } },
 							{
 								organizationAccesses: {
@@ -144,6 +145,11 @@ export class UserReadService extends BaseService {
 								firstName: true,
 								lastName: true,
 								email: true,
+							},
+						},
+						account: {
+							select: {
+								firebaseAuthUserId: true,
 							},
 						},
 						activeOrganization: {
@@ -186,6 +192,7 @@ export class UserReadService extends BaseService {
 					firstName: user.contact?.firstName ?? null,
 					lastName: user.contact?.lastName ?? null,
 					email: user.contact?.email ?? null,
+					firebaseAuthUserId: user.account.firebaseAuthUserId,
 					role: user.role,
 					organizationName: user.activeOrganization?.name ?? null,
 					readonlyOrganizationNames,

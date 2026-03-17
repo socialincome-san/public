@@ -5,6 +5,7 @@ export type LocalPartnerTableViewRow = {
 	name: string;
 	contactPerson: string;
 	email: string | null;
+	firebaseAuthUserId: string;
 	contactNumber: string | null;
 	causes: string;
 	recipientsCount: number;

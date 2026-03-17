@@ -26,7 +26,7 @@ export class ContributorReadService extends BaseService {
 
 	private buildContributorOrderBy(query: ContributorTableQuery): Prisma.ContributorOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'contributor', 'email', 'country', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'contributor', 'email', 'firebaseAuthUserId', 'country', 'createdAt'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
@@ -34,6 +34,8 @@ export class ContributorReadService extends BaseService {
 				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
 			case 'email':
 				return [{ contact: { email: direction } }];
+			case 'firebaseAuthUserId':
+				return [{ account: { firebaseAuthUserId: direction } }];
 			case 'country':
 				return [{ contact: { address: { country: direction } } }];
 			case 'createdAt':
@@ -214,6 +216,7 @@ export class ContributorReadService extends BaseService {
 									{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
+									{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' as const } } },
 								],
 							},
 						],
@@ -240,6 +243,11 @@ export class ContributorReadService extends BaseService {
 			const contributorSelect = {
 				id: true,
 				createdAt: true,
+				account: {
+					select: {
+						firebaseAuthUserId: true,
+					},
+				},
 				contact: {
 					select: {
 						firstName: true,
@@ -268,20 +276,11 @@ export class ContributorReadService extends BaseService {
 				}),
 			]);
 
-			let contributors: Prisma.ContributorGetPayload<{
-				select: {
-					id: true;
-					createdAt: true;
-					contact: {
-						select: {
-							firstName: true;
-							lastName: true;
-							email: true;
-							address: { select: { country: true } };
-						};
-					};
-				};
-			}>[];
+			let contributors: Array<
+				Prisma.ContributorGetPayload<{
+					select: typeof contributorSelect;
+				}>
+			>;
 
 			if (sortBy === 'totalContributedChf') {
 				const allContributors = await this.db.contributor.findMany({
@@ -325,6 +324,7 @@ export class ContributorReadService extends BaseService {
 				firstName: c.contact?.firstName ?? '',
 				lastName: c.contact?.lastName ?? '',
 				email: c.contact?.email ?? '',
+				firebaseAuthUserId: c.account.firebaseAuthUserId,
 				country: c.contact?.address?.country ?? null,
 				totalContributedChf: sumsByContributorId.get(c.id) ?? 0,
 				createdAt: c.createdAt,

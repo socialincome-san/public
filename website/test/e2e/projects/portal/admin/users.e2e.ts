@@ -156,11 +156,8 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-firstName').locator('input').fill(updatedFirstName);
 	await page.getByTestId('form-item-lastName').locator('input').fill(updatedLastName);
 	await page.getByTestId('form-item-email').locator('input').fill(updatedEmail);
-	await selectMultiOptionsByTestId(page, 'editOrganizations', [initialEditOrganizationName, updatedEditOrganizationName]);
-	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', [
-		initialReadonlyOrganizationName,
-		updatedReadonlyOrganizationName,
-	]);
+	await selectMultiOptionsByTestId(page, 'editOrganizations', [updatedEditOrganizationName]);
+	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', [updatedReadonlyOrganizationName]);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
