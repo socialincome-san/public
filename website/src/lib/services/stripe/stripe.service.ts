@@ -533,7 +533,7 @@ export class StripeService extends BaseService {
 			const session = await this.getStripeClientOrThrow().checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
 
-				customer: stripeCustomerId || undefined,
+				customer: stripeCustomerId ?? undefined,
 				customer_creation: !stripeCustomerId && !recurring ? 'always' : undefined,
 				line_items: [
 					{
