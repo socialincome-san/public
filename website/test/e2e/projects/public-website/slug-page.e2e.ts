@@ -12,6 +12,7 @@ test('new website slug page matches screenshot', async ({ page }) => {
 	await setupStoryblokMock(STORYBLOK_RECORDING);
 	await page.goto('/en/int/new-website/example');
 
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 	await saveStoryblokMock(STORYBLOK_RECORDING);
 });

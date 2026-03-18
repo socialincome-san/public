@@ -6,7 +6,8 @@ test.beforeEach(async () => {
 });
 
 test('management ongoing payouts page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/management/ongoing-payouts');
+	await page.goto('/portal/management/ongoing-payouts?sortBy=recipient&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

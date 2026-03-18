@@ -7,5 +7,6 @@ test.beforeEach(async () => {
 
 test('dashboard not found page matches screenshot', async ({ page }) => {
 	await page.goto('/en/int/dashboard/does-not-exist');
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

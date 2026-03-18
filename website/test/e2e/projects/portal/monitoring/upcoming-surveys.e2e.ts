@@ -6,7 +6,8 @@ test.beforeEach(async () => {
 });
 
 test('monitoring upcoming surveys page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/monitoring/upcoming-surveys');
+	await page.goto('/portal/monitoring/upcoming-surveys?sortBy=dueAt&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

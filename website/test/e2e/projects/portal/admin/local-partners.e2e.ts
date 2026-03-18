@@ -8,20 +8,23 @@ test.beforeEach(async () => {
 });
 
 test('admin local partners page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/local-partners');
+	await page.goto('/portal/admin/local-partners?sortBy=name&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin local partners with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/local-partners?page=1&pageSize=10&search=local-partner-2');
+	await page.goto('/portal/admin/local-partners?page=1&pageSize=10&sortBy=name&sortDirection=asc&search=local-partner-2');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin local partners with direct URL sorting matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/local-partners?page=1&pageSize=10&sortBy=name&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 

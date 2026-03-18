@@ -6,7 +6,8 @@ test.beforeEach(async () => {
 });
 
 test('dashboard subscriptions-page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/subscriptions');
+	await page.goto('/en/int/dashboard/subscriptions?sortBy=created&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

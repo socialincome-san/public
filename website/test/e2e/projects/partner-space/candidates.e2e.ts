@@ -6,7 +6,8 @@ test.beforeEach(async () => {
 });
 
 test('partner-space candidates page matches screenshot', async ({ page }) => {
-	await page.goto('/partner-space/candidates');
+	await page.goto('/partner-space/candidates?sortBy=candidate&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

@@ -8,6 +8,7 @@ test.beforeEach(async () => {
 
 test('partner-space profile-page matches screenshot', async ({ page }) => {
 	await page.goto('/partner-space/profile');
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 

@@ -8,6 +8,7 @@ test.beforeEach(async () => {
 
 test('dashboard profile-page matches screenshot', async ({ page }) => {
 	await page.goto('/en/int/dashboard/profile');
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 

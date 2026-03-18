@@ -7,6 +7,7 @@ test.beforeEach(async () => {
 
 test('portal home-page matches screenshot', async ({ page }) => {
 	await page.goto('/portal');
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
@@ -30,5 +31,6 @@ test('country list in create program wizard matches screenshot', async ({ page }
 		table.style.overflow = 'visible';
 	});
 
+	await page.waitForLoadState('networkidle');
 	await expect(page.getByTestId('country-table')).toHaveScreenshot();
 });

@@ -7,13 +7,14 @@ test.beforeEach(async () => {
 });
 
 test('dashboard donation certificates page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/donation-certificates');
+	await page.goto('/en/int/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('dashboard donation certificates has downloadable PDF links', async ({ page }) => {
-	await page.goto('/en/int/dashboard/donation-certificates');
+	await page.goto('/en/int/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
 	await clickDataTableActionItem(page, 'data-table-action-item-generate-donation-certificate');
 
 	const dialog = page.getByRole('dialog');
@@ -27,7 +28,7 @@ test('dashboard donation certificates has downloadable PDF links', async ({ page
 	await dialog.getByRole('button', { name: 'Close' }).first().click();
 	await expect(dialog).not.toBeVisible();
 
-	await page.goto('/en/int/dashboard/donation-certificates?page=1&pageSize=10&search=2025');
+	await page.goto('/en/int/dashboard/donation-certificates?page=1&pageSize=10&sortBy=createdAt&sortDirection=desc&search=2025');
 	await expect(page.getByRole('cell', { name: '2025' }).first()).toBeVisible();
 	const downloadLink = page.getByRole('link', { name: 'Download' }).first();
 	await expect(downloadLink).toBeVisible();

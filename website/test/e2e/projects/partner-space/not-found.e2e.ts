@@ -7,5 +7,6 @@ test.beforeEach(async () => {
 
 test('partner-space not found page matches screenshot', async ({ page }) => {
 	await page.goto('/partner-space/does-not-exist');
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

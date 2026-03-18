@@ -17,11 +17,13 @@ test.beforeEach(async () => {
 
 test('Program ready for payout overview page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/programs/program-1/overview');
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('Program not ready for payout overview page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/programs/program-2/overview');
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
@@ -61,6 +63,7 @@ test('program settings dialog for program-1 updates all editable values and save
 	await expect(dialog.getByTestId('form-item-ownerOrganizations')).toContainText('Coop');
 	await expect(dialog.getByTestId('form-item-operatorOrganizations')).toContainText('Swiss Red Cross');
 
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 

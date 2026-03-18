@@ -13,20 +13,23 @@ test.beforeEach(async () => {
 });
 
 test('admin users page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/users');
+	await page.goto('/portal/admin/users?sortBy=email&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin users with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/users?page=1&pageSize=10&search=test%40portal.org');
+	await page.goto('/portal/admin/users?page=1&pageSize=10&sortBy=email&sortDirection=asc&search=test%40portal.org');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
 test('admin users with direct URL sorting matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/users?page=1&pageSize=10&sortBy=role&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 

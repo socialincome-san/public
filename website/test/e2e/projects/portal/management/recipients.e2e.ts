@@ -6,7 +6,8 @@ test.beforeEach(async () => {
 });
 
 test('management recipients page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/management/recipients');
+	await page.goto('/portal/management/recipients?sortBy=recipient&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });

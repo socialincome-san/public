@@ -8,6 +8,7 @@ test.beforeEach(async () => {
 
 test('portal profile-page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/profile');
+	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
 });
 
