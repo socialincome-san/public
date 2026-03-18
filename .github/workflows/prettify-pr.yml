@@ -22,12 +22,12 @@ jobs:
           installDependencies: "false"
 
       - name: Install Prettier
-        run: npm install --no-save prettier@3.4.2 prettier-plugin-organize-imports@4.1.0 prettier-plugin-tailwindcss@0.6.9
+        run: npm install --no-save prettier@3.8.1 prettier-plugin-organize-imports@4.3.0 prettier-plugin-tailwindcss@0.7.2
 
       - name: Prettify code
         uses: creyD/prettier_action@8c18391fdc98ed0d884c6345f03975edac71b8f0 # v4.6
         with:
-          prettier_version: 3.4.2
-          prettier_plugins: prettier-plugin-organize-imports@4.1.0 prettier-plugin-tailwindcss@0.6.9
+          prettier_version: 3.8.1
+          prettier_plugins: prettier-plugin-organize-imports@4.3.0 prettier-plugin-tailwindcss@0.7.2
           prettier_options: --write ./
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
