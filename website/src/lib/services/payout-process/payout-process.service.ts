@@ -7,6 +7,7 @@ import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
+import { RecipientStatusService } from '../recipient/recipient-status.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 
 export class PayoutProcessService extends BaseService {
@@ -15,6 +16,7 @@ export class PayoutProcessService extends BaseService {
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly programStatsService: ProgramStatsService,
 		private readonly exchangeRateService: ExchangeRateReadService,
+		private readonly recipientStatusService: RecipientStatusService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -91,20 +93,23 @@ export class PayoutProcessService extends BaseService {
 				.filter((recipient) => recipient.program !== null)
 				.filter((recipient) => {
 					const program = recipient.program!;
-
-					const paidCount = recipient.payouts.filter(
-						(p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed,
-					).length;
-					const isEligibleResult = this.programStatsService.isRecipientEligibleForPayout({
+					const paidCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+					if (!paidCountResult.success) {
+						return false;
+					}
+					const isEligibleResult = this.recipientStatusService.isRecipientEligibleForPayout({
 						startDate: recipient.startDate,
 						suspendedAt: recipient.suspendedAt,
-						paidOrConfirmedCount: paidCount,
+						paidOrConfirmedCount: paidCountResult.data,
 						programDurationInMonths: program.programDurationInMonths,
 						payoutInterval: program.payoutInterval,
 						nowDate,
 					});
+					if (!isEligibleResult.success) {
+						return false;
+					}
 
-					return isEligibleResult.success && isEligibleResult.data;
+					return isEligibleResult.data;
 				})
 				.map((recipient) => ({
 					id: recipient.id,
