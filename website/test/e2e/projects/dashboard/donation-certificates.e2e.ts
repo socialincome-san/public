@@ -1,6 +1,7 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem } from '../../utils';
+import { expectToHaveScreenshot } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -9,8 +10,7 @@ test.beforeEach(async () => {
 test('dashboard donation certificates page matches screenshot', async ({ page }) => {
 	await page.goto('/en/int/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('dashboard donation certificates has downloadable PDF links', async ({ page }) => {

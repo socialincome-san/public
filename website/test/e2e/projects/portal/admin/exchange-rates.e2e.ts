@@ -1,5 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { expectToHaveScreenshot } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -8,8 +9,7 @@ test.beforeEach(async () => {
 test('admin exchange rates page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/exchange-rates?sortBy=timestamp&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('exchange rates search sets URL and matches screenshot', async ({ page }) => {
@@ -20,8 +20,7 @@ test('exchange rates search sets URL and matches screenshot', async ({ page }) =
 	await page.getByTestId('data-table-search-input').fill('exchange-rate-historical-1200');
 	await expect(page).toHaveURL(/search=exchange-rate-historical-1200/);
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1-1 of 1');
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('exchange rates filter sets URL and matches screenshot', async ({ page }) => {
@@ -33,8 +32,7 @@ test('exchange rates filter sets URL and matches screenshot', async ({ page }) =
 	await page.getByRole('option', { name: 'USD' }).click();
 
 	await expect(page).toHaveURL(/currency=USD/);
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('exchange rates search and filter combination sets URL and matches screenshot', async ({ page }) => {
@@ -49,8 +47,7 @@ test('exchange rates search and filter combination sets URL and matches screensh
 
 	await expect(page).toHaveURL(/search=exchange-rate-historical-12/);
 	await expect(page).toHaveURL(/currency=CHF/);
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('exchange rates pagination updates URL and matches screenshot', async ({ page }) => {
@@ -66,8 +63,7 @@ test('exchange rates pagination updates URL and matches screenshot', async ({ pa
 
 	await Promise.all([page.waitForURL(/(?:[?&])page=2(?:&|$)/), page.getByTestId('data-table-pagination-next').click()]);
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('101-200 of 3005');
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 
 	await Promise.all([page.waitForURL(/(?:[?&])page=1(?:&|$)/), page.getByTestId('data-table-pagination-previous').click()]);
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1-100 of');
@@ -83,8 +79,7 @@ test('exchange rates columns can be hidden and matches screenshot', async ({ pag
 	await expect(page.getByText('Visible columns')).toBeVisible();
 	await page.getByTestId('data-table-column-rate-toggle').click({ force: true });
 	await expect(page.getByRole('columnheader', { name: 'Rate' })).toHaveCount(0);
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 
 	await toolbar.getByTestId('data-table-columns-button').click();
 	await expect(page.getByText('Visible columns')).toBeVisible();
@@ -100,6 +95,5 @@ test('exchange rates no-result search keeps URL and matches screenshot', async (
 	await page.getByTestId('data-table-search-input').fill('exchange-rate-does-not-exist');
 	await expect(page).toHaveURL(/search=exchange-rate-does-not-exist/);
 	await expect(page.getByText('No exchange rates found')).toBeVisible();
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });

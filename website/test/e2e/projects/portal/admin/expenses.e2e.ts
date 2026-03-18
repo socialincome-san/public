@@ -3,6 +3,7 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
+import { expectToHaveScreenshot } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -11,22 +12,19 @@ test.beforeEach(async () => {
 test('admin expenses page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/expenses?sortBy=id&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('admin expenses with direct URL search matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/expenses?page=1&pageSize=10&sortBy=id&sortDirection=asc&search=expense-2');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('admin expenses with direct URL sorting matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/expenses?page=1&pageSize=10&sortBy=amountChf&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('add new expense', async ({ page }) => {

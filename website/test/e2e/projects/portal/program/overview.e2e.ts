@@ -1,6 +1,7 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, Page, test } from '@playwright/test';
 import { selectMultiOptionsByTestId, selectOptionByTestId } from '../../../utils';
+import { expectToHaveScreenshot } from '../../../utils';
 
 const openProgramSettingsDialog = async (page: Page, programId = 'program-1') => {
 	await page.goto(`/portal/programs/${programId}/overview`);
@@ -17,14 +18,12 @@ test.beforeEach(async () => {
 
 test('Program ready for payout overview page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/programs/program-1/overview');
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('Program not ready for payout overview page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/programs/program-2/overview');
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('program settings dialog for program-1 updates all editable values and saves', async ({ page }) => {
@@ -63,8 +62,7 @@ test('program settings dialog for program-1 updates all editable values and save
 	await expect(dialog.getByTestId('form-item-ownerOrganizations')).toContainText('Coop');
 	await expect(dialog.getByTestId('form-item-operatorOrganizations')).toContainText('Swiss Red Cross');
 
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('program settings dialog can delete a newly created program and redirects to portal', async ({ page }) => {

@@ -1,5 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
+import { expectToHaveScreenshot } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -7,8 +8,7 @@ test.beforeEach(async () => {
 
 test('portal home-page matches screenshot', async ({ page }) => {
 	await page.goto('/portal');
-	await page.waitForLoadState('networkidle');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('country list in create program wizard matches screenshot', async ({ page }) => {
@@ -31,6 +31,5 @@ test('country list in create program wizard matches screenshot', async ({ page }
 		table.style.overflow = 'visible';
 	});
 
-	await page.waitForLoadState('networkidle');
-	await expect(page.getByTestId('country-table')).toHaveScreenshot();
+	await expectToHaveScreenshot(page.getByTestId('country-table'));
 });

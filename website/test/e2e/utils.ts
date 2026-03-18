@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/database/prisma';
-import { Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 export const getFirebaseAdminService = async () => {
 	const { FirebaseAdminService } = await import('@/lib/services/firebase/firebase-admin.service');
@@ -139,3 +139,37 @@ export const selectMultiOptionsByTestId = async (page: Page, fieldName: string, 
 
 	await page.keyboard.press('Escape');
 };
+
+const scrollToBottomAndTop = async (page: Page) => {
+	await page.evaluate(() => {
+		window.scrollTo(0, document.body.scrollHeight);
+	});
+	await page.waitForLoadState('networkidle');
+	await page.evaluate(() => {
+		window.scrollTo(0, 0);
+	});
+	await page.waitForLoadState('networkidle');
+};
+
+const waitForScreenshotReady = async (page: Page) => {
+	await page.waitForLoadState('networkidle');
+};
+
+const isPage = (target: Page | Locator): target is Page => {
+	return 'goto' in target;
+};
+
+export const expectToHaveScreenshot = async (target: Page | Locator, scrollBeforeScreenshot = false) => {
+	const page = isPage(target) ? target : target.page();
+	await waitForScreenshotReady(page);
+	if (scrollBeforeScreenshot) {
+		await scrollToBottomAndTop(page);
+	}
+	if (isPage(target)) {
+		await expect(target).toHaveScreenshot({ fullPage: true });
+
+		return;
+	}
+	await expect(target).toHaveScreenshot();
+};
+
