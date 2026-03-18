@@ -1,4 +1,4 @@
-import { Address, Gender, Phone, PayoutInterval, Prisma } from '@/generated/prisma/client';
+import { Address, Gender, PayoutInterval, Phone, Prisma } from '@/generated/prisma/client';
 export type { RecipientProgramFilterOption, RecipientTableViewRow } from './recipient-table.types';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
