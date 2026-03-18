@@ -28,7 +28,9 @@ test('dashboard donation certificates has downloadable PDF links', async ({ page
 	await dialog.getByRole('button', { name: 'Close' }).first().click();
 	await expect(dialog).not.toBeVisible();
 
-	await page.goto('/en/int/dashboard/donation-certificates?page=1&pageSize=10&sortBy=createdAt&sortDirection=desc&search=2025');
+	await page.goto(
+		'/en/int/dashboard/donation-certificates?page=1&pageSize=10&sortBy=createdAt&sortDirection=desc&search=2025',
+	);
 	await expect(page.getByRole('cell', { name: '2025' }).first()).toBeVisible();
 	const downloadLink = page.getByRole('link', { name: 'Download' }).first();
 	await expect(downloadLink).toBeVisible();

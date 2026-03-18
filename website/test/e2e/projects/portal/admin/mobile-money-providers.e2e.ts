@@ -15,7 +15,9 @@ test('admin mobile money providers page matches screenshot', async ({ page }) =>
 });
 
 test('admin mobile money providers with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/mobile-money-providers?page=1&pageSize=10&sortBy=name&sortDirection=asc&search=mobile-money-provider-id-1');
+	await page.goto(
+		'/portal/admin/mobile-money-providers?page=1&pageSize=10&sortBy=name&sortDirection=asc&search=mobile-money-provider-id-1',
+	);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await page.waitForLoadState('networkidle');
 	await expect(page).toHaveScreenshot({ fullPage: true });
