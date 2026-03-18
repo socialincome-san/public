@@ -3,8 +3,8 @@
 import { getSessionByType } from '@/lib/firebase/current-account';
 import type {
 	OrganizationFormCreateInput,
-	OrganizationRenameInput,
 	OrganizationFormUpdateInput,
+	OrganizationRenameInput,
 } from '@/lib/services/organization/organization-form-input';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';

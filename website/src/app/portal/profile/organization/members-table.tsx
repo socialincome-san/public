@@ -9,8 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/d
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input';
 import { renameActiveOrganizationAction } from '@/lib/server-actions/organization-action';
-import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,13 +33,7 @@ const renameOrganizationSchema = z.object({
 
 type RenameOrganizationFormValues = z.infer<typeof renameOrganizationSchema>;
 
-export default function MembersTable({
-	rows,
-	error,
-	organizationName,
-	canRenameOrganization,
-	query,
-}: MembersTableProps) {
+export default function MembersTable({ rows, error, organizationName, canRenameOrganization, query }: MembersTableProps) {
 	const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isPending, startTransition] = useTransition();
@@ -121,12 +115,7 @@ export default function MembersTable({
 							/>
 
 							<div className="flex justify-end gap-2">
-								<Button
-									type="button"
-									variant="outline"
-									onClick={() => setIsRenameDialogOpen(false)}
-									disabled={isPending}
-								>
+								<Button type="button" variant="outline" onClick={() => setIsRenameDialogOpen(false)} disabled={isPending}>
 									Cancel
 								</Button>
 								<Button type="submit" disabled={isPending}>

@@ -4,8 +4,8 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
 	OrganizationFormCreateInput,
-	OrganizationRenameInput,
 	OrganizationFormUpdateInput,
+	OrganizationRenameInput,
 	organizationCreateInputSchema,
 	organizationRenameInputSchema,
 	organizationUpdateInputSchema,
