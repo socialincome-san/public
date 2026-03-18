@@ -75,8 +75,7 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 	const firstName = 'E2E';
 	const lastName = 'User';
 	const email = `e2e.user.create.${unique}@example.com`;
-	const editOrganizationName = 'Migros';
-	const readonlyOrganizationName = 'Coop';
+	const organizationNames = ['Migros', 'Coop'];
 
 	await page.goto('/portal/admin/users');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-user');
@@ -84,8 +83,7 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-lastName').locator('input').fill(lastName);
 	await page.getByTestId('form-item-email').locator('input').fill(email);
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectMultiOptionsByTestId(page, 'editOrganizations', [editOrganizationName]);
-	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', [readonlyOrganizationName]);
+	await selectMultiOptionsByTestId(page, 'organizations', organizationNames);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -97,7 +95,6 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 			activeOrganizationId: true,
 			organizationAccesses: {
 				select: {
-					permission: true,
 					organization: {
 						select: {
 							name: true,
@@ -120,15 +117,7 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 	expect(created?.contact.lastName).toBe(lastName);
 	expect(created?.contact.email).toBe(email);
 	expect(created?.activeOrganizationId).toBeTruthy();
-	expect(created?.organizationAccesses).toEqual(
-		expect.arrayContaining([
-			expect.objectContaining({ permission: 'edit', organization: expect.objectContaining({ name: editOrganizationName }) }),
-			expect.objectContaining({
-				permission: 'readonly',
-				organization: expect.objectContaining({ name: readonlyOrganizationName }),
-			}),
-		]),
-	);
+	expect(created?.organizationAccesses.map((access) => access.organization.name).sort()).toEqual(organizationNames.sort());
 
 	const firebaseCreatedResult = await firebaseService.getByEmail(email);
 	expect(firebaseCreatedResult.success).toBeTruthy();
@@ -146,7 +135,7 @@ test('shows uniqueness error when user email already exists', async ({ page }) =
 	await page.getByTestId('form-item-lastName').locator('input').fill('User');
 	await page.getByTestId('form-item-email').locator('input').fill('test@portal.org');
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Migros']);
+	await selectMultiOptionsByTestId(page, 'organizations', ['Migros']);
 	await page.getByRole('button', { name: 'Save' }).click();
 
 	await expect(page.getByText('A user with this email already exists.')).toBeVisible();
@@ -162,10 +151,8 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	const updatedFirstName = 'Updated';
 	const updatedLastName = 'User';
 	const updatedEmail = `e2e.user.firebase.updated.${unique}@example.com`;
-	const initialEditOrganizationName = 'Migros';
-	const initialReadonlyOrganizationName = 'Coop';
-	const updatedEditOrganizationName = 'Coop';
-	const updatedReadonlyOrganizationName = 'Migros';
+	const initialOrganizationNames = ['Migros', 'Coop'];
+	const updatedOrganizationNames = ['Coop', 'Migros'];
 
 	const openUserByEmail = async (email: string) => {
 		await page.goto(`/portal/admin/users?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
@@ -178,8 +165,7 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-lastName').locator('input').fill(initialLastName);
 	await page.getByTestId('form-item-email').locator('input').fill(initialEmail);
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectMultiOptionsByTestId(page, 'editOrganizations', [initialEditOrganizationName]);
-	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', [initialReadonlyOrganizationName]);
+	await selectMultiOptionsByTestId(page, 'organizations', initialOrganizationNames);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -195,8 +181,7 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 	await page.getByTestId('form-item-firstName').locator('input').fill(updatedFirstName);
 	await page.getByTestId('form-item-lastName').locator('input').fill(updatedLastName);
 	await page.getByTestId('form-item-email').locator('input').fill(updatedEmail);
-	await selectMultiOptionsByTestId(page, 'editOrganizations', [updatedEditOrganizationName]);
-	await selectMultiOptionsByTestId(page, 'readonlyOrganizations', [updatedReadonlyOrganizationName]);
+	await selectMultiOptionsByTestId(page, 'organizations', updatedOrganizationNames);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -220,7 +205,6 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 		select: {
 			organizationAccesses: {
 				select: {
-					permission: true,
 					organization: {
 						select: {
 							name: true,
@@ -230,17 +214,8 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 			},
 		},
 	});
-	expect(updatedUser?.organizationAccesses).toEqual(
-		expect.arrayContaining([
-			expect.objectContaining({
-				permission: 'edit',
-				organization: expect.objectContaining({ name: updatedEditOrganizationName }),
-			}),
-			expect.objectContaining({
-				permission: 'readonly',
-				organization: expect.objectContaining({ name: updatedReadonlyOrganizationName }),
-			}),
-		]),
+	expect(updatedUser?.organizationAccesses.map((access) => access.organization.name).sort()).toEqual(
+		updatedOrganizationNames.sort(),
 	);
 });
 
@@ -262,7 +237,7 @@ test('delete user removes database and Firebase entries', async ({ page }) => {
 	await page.getByTestId('form-item-lastName').locator('input').fill(lastName);
 	await page.getByTestId('form-item-email').locator('input').fill(email);
 	await selectOptionByTestId(page, 'role', 'user');
-	await selectMultiOptionsByTestId(page, 'editOrganizations', ['Migros']);
+	await selectMultiOptionsByTestId(page, 'organizations', ['Migros']);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 

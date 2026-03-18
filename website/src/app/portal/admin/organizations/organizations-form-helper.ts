@@ -13,8 +13,7 @@ export const buildCreateOrganizationInput = (formSchema: OrganizationFormSchema)
 
 	return {
 		name: typeof fields.name.value === 'string' ? fields.name.value : '',
-		editUserIds: toStringArray(fields.editUsers.value),
-		readonlyUserIds: toStringArray(fields.readonlyUsers.value),
+		userIds: toStringArray(fields.users.value),
 		ownedProgramIds: toStringArray(fields.ownedPrograms.value),
 		operatedProgramIds: toStringArray(fields.operatedPrograms.value),
 	};

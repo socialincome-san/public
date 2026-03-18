@@ -1,4 +1,4 @@
-import { OrganizationPermission, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { PrismaClient, ProgramPermission, UserRole } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -25,26 +25,14 @@ export class OrganizationWriteService extends BaseService {
 
 	private buildOrganizationAccessRows(
 		organizationId: string,
-		editUserIds: string[],
-		readonlyUserIds: string[],
-	): { organizationId: string; userId: string; permission: OrganizationPermission }[] {
-		const uniqueEditUserIds = Array.from(new Set(editUserIds));
-		const uniqueReadonlyUserIds = Array.from(new Set(readonlyUserIds)).filter(
-			(userId) => !uniqueEditUserIds.includes(userId),
-		);
+		userIds: string[],
+	): { organizationId: string; userId: string }[] {
+		const uniqueUserIds = Array.from(new Set(userIds));
 
-		return [
-			...uniqueEditUserIds.map((userId) => ({
-				organizationId,
-				userId,
-				permission: OrganizationPermission.edit,
-			})),
-			...uniqueReadonlyUserIds.map((userId) => ({
-				organizationId,
-				userId,
-				permission: OrganizationPermission.readonly,
-			})),
-		];
+		return uniqueUserIds.map((userId) => ({
+			organizationId,
+			userId,
+		}));
 	}
 
 	private buildProgramAccessRows(
@@ -84,8 +72,7 @@ export class OrganizationWriteService extends BaseService {
 			return this.resultOk({
 				id: organization.id,
 				name: organization.name,
-				editUserIds: [],
-				readonlyUserIds: [],
+				userIds: [],
 				ownedProgramIds: [],
 				operatedProgramIds: [],
 			});
@@ -148,8 +135,7 @@ export class OrganizationWriteService extends BaseService {
 				return this.resultFail(uniquenessResult.error);
 			}
 
-			const allUserIds = [...validatedInput.editUserIds, ...validatedInput.readonlyUserIds];
-			const userValidationResult = await this.validateUserIds(allUserIds);
+			const userValidationResult = await this.validateUserIds(validatedInput.userIds);
 			if (!userValidationResult.success) {
 				return this.resultFail(userValidationResult.error);
 			}
@@ -172,8 +158,7 @@ export class OrganizationWriteService extends BaseService {
 
 				const accesses = this.buildOrganizationAccessRows(
 					organization.id,
-					validatedInput.editUserIds,
-					validatedInput.readonlyUserIds,
+					validatedInput.userIds,
 				);
 				if (accesses.length > 0) {
 					await tx.organizationAccess.createMany({ data: accesses });
@@ -194,8 +179,7 @@ export class OrganizationWriteService extends BaseService {
 			return this.resultOk({
 				id: created.id,
 				name: created.name,
-				editUserIds: validatedInput.editUserIds,
-				readonlyUserIds: validatedInput.readonlyUserIds,
+				userIds: validatedInput.userIds,
 				ownedProgramIds: validatedInput.ownedProgramIds,
 				operatedProgramIds: validatedInput.operatedProgramIds,
 			});
@@ -235,8 +219,7 @@ export class OrganizationWriteService extends BaseService {
 				return this.resultFail(uniquenessResult.error);
 			}
 
-			const allUserIds = [...validatedInput.editUserIds, ...validatedInput.readonlyUserIds];
-			const userValidationResult = await this.validateUserIds(allUserIds);
+			const userValidationResult = await this.validateUserIds(validatedInput.userIds);
 			if (!userValidationResult.success) {
 				return this.resultFail(userValidationResult.error);
 			}
@@ -259,8 +242,7 @@ export class OrganizationWriteService extends BaseService {
 
 				const accesses = this.buildOrganizationAccessRows(
 					validatedInput.id,
-					validatedInput.editUserIds,
-					validatedInput.readonlyUserIds,
+					validatedInput.userIds,
 				);
 				if (accesses.length > 0) {
 					await tx.organizationAccess.createMany({ data: accesses });
@@ -285,8 +267,7 @@ export class OrganizationWriteService extends BaseService {
 			return this.resultOk({
 				id: updated.id,
 				name: updated.name,
-				editUserIds: validatedInput.editUserIds,
-				readonlyUserIds: validatedInput.readonlyUserIds,
+				userIds: validatedInput.userIds,
 				ownedProgramIds: validatedInput.ownedProgramIds,
 				operatedProgramIds: validatedInput.operatedProgramIds,
 			});
@@ -306,8 +287,24 @@ export class OrganizationWriteService extends BaseService {
 			if (!activeOrgResult.success) {
 				return this.resultFail(activeOrgResult.error);
 			}
-			if (activeOrgResult.data.permission !== OrganizationPermission.edit) {
-				return this.resultFail('You do not have permission to rename this organization.');
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+				select: { role: true },
+			});
+			if (!user) {
+				return this.resultFail('User not found');
+			}
+			if (user.role !== UserRole.admin) {
+				const hasOperatorAccess = await this.db.programAccess.findFirst({
+					where: {
+						organizationId: activeOrgResult.data.id,
+						permission: ProgramPermission.operator,
+					},
+					select: { id: true },
+				});
+				if (!hasOperatorAccess) {
+					return this.resultFail('You do not have permission to rename this organization.');
+				}
 			}
 
 			const validatedInputResult = this.organizationValidationService.validateRenameInput(input);
@@ -353,14 +350,13 @@ export class OrganizationWriteService extends BaseService {
 				return this.resultFail('Organization not found');
 			}
 
-			const [activeUsersCount, expensesCount, campaignsCount, programAccessesCount] = await Promise.all([
+			const [activeUsersCount, expensesCount, programAccessesCount] = await Promise.all([
 				this.db.user.count({ where: { activeOrganizationId: organizationId } }),
 				this.db.expense.count({ where: { organizationId } }),
-				this.db.campaign.count({ where: { organizationId } }),
 				this.db.programAccess.count({ where: { organizationId } }),
 			]);
 
-			if (activeUsersCount > 0 || expensesCount > 0 || campaignsCount > 0 || programAccessesCount > 0) {
+			if (activeUsersCount > 0 || expensesCount > 0 || programAccessesCount > 0) {
 				return this.resultFail('Organization cannot be deleted because it is still in use.');
 			}
 

@@ -34,13 +34,8 @@ export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 			cell: ({ row }) => <UserRoleBadge role={row.original.role} />,
 		},
 		{
-			accessorKey: 'readonlyOrganizationNames',
-			header: 'Organizations (read only)',
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'editOrganizationNames',
-			header: 'Organizations (write)',
+			accessorKey: 'organizationNames',
+			header: 'Organizations',
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

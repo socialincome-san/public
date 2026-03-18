@@ -3,7 +3,7 @@ import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ContributionFormCreateInput, ContributionFormUpdateInput } from './contribution-form-input';
 import { ContributionValidationService } from './contribution-validation.service';
 import {
@@ -16,7 +16,7 @@ import {
 export class ContributionWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
 		private readonly contributionValidationService: ContributionValidationService,
 		loggerInstance = logger,
 	) {
@@ -31,26 +31,27 @@ export class ContributionWriteService extends BaseService {
 		const validatedInput = validatedInputResult.data;
 
 		try {
-			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
 			}
 
-			if (accessResult.data.permission !== 'edit') {
-				return this.resultFail('No permissions to update contribution');
-			}
-
 			const existing = await this.db.contribution.findUnique({
 				where: { id: validatedInput.id },
 				select: {
-					campaign: { select: { id: true, organizationId: true } },
+					campaign: { select: { id: true, programId: true } },
 					contributor: { select: { id: true } },
 				},
 			});
-
-			if (existing?.campaign.organizationId !== accessResult.data.id) {
-				return this.resultFail('Permission denied');
+			if (!existing) {
+				return this.resultFail('Contribution not found');
+			}
+			const hasOperatorAccessToExistingProgram = accessResult.data.some(
+				(program) => program.programId === existing.campaign.programId && program.permission === 'operator',
+			);
+			if (!hasOperatorAccessToExistingProgram) {
+				return this.resultFail('No permissions to update contribution');
 			}
 
 			const referencesResult = await this.contributionValidationService.validateReferencesExist({
@@ -63,9 +64,15 @@ export class ContributionWriteService extends BaseService {
 
 			const campaign = await this.db.campaign.findUnique({
 				where: { id: validatedInput.campaignId },
-				select: { organizationId: true },
+				select: { programId: true },
 			});
-			if (campaign?.organizationId !== accessResult.data.id) {
+			if (!campaign) {
+				return this.resultFail('Campaign not found');
+			}
+			const hasOperatorAccessToTargetProgram = accessResult.data.some(
+				(program) => program.programId === campaign.programId && program.permission === 'operator',
+			);
+			if (!hasOperatorAccessToTargetProgram) {
 				return this.resultFail('Permission denied');
 			}
 
@@ -119,14 +126,10 @@ export class ContributionWriteService extends BaseService {
 		const validatedInput = validatedInputResult.data;
 
 		try {
-			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
-			}
-
-			if (accessResult.data.permission !== 'edit') {
-				return this.resultFail('No permissions to create contribution');
 			}
 
 			const referencesResult = await this.contributionValidationService.validateReferencesExist({
@@ -139,9 +142,15 @@ export class ContributionWriteService extends BaseService {
 
 			const campaign = await this.db.campaign.findUnique({
 				where: { id: validatedInput.campaignId },
-				select: { organizationId: true },
+				select: { programId: true },
 			});
-			if (campaign?.organizationId !== accessResult.data.id) {
+			if (!campaign) {
+				return this.resultFail('Campaign not found');
+			}
+			const hasOperatorAccessToProgram = accessResult.data.some(
+				(program) => program.programId === campaign.programId && program.permission === 'operator',
+			);
+			if (!hasOperatorAccessToProgram) {
 				return this.resultFail('Permission denied');
 			}
 

@@ -69,8 +69,8 @@ test('public user can create a program and account', async ({ page }) => {
 
 	const createdProgram = await prisma.program.findFirst({
 		where: {
-			campaigns: {
-				some: { organizationId: createdUser.activeOrganizationId },
+			programAccesses: {
+				some: { organizationId: createdUser.activeOrganizationId, permission: 'owner' },
 			},
 		},
 		orderBy: { createdAt: 'desc' },

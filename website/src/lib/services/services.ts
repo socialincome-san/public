@@ -99,9 +99,9 @@ const recipientWrite = new RecipientWriteService(
 const payoutValidation = new PayoutValidationService(prisma);
 const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutValidation);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
-const contributionRead = new ContributionReadService(prisma, organizationAccess);
+const contributionRead = new ContributionReadService(prisma, programAccessRead);
 const contributionValidation = new ContributionValidationService(prisma);
-const contributionWrite = new ContributionWriteService(prisma, organizationAccess, contributionValidation);
+const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
 const organizationValidation = new OrganizationValidationService(prisma);
 const organizationWrite = new OrganizationWriteService(prisma, userRead, organizationAccess, organizationValidation);
@@ -123,22 +123,22 @@ const countryWrite = new CountryWriteService(prisma, userRead, countryValidation
 const expenseRead = new ExpenseReadService(prisma, userRead);
 const expenseValidation = new ExpenseValidationService(prisma);
 const expenseWrite = new ExpenseWriteService(prisma, userRead, expenseValidation);
-const contributorRead = new ContributorReadService(prisma, organizationAccess);
+const contributorRead = new ContributorReadService(prisma, programAccessRead);
 const contributorValidation = new ContributorValidationService(prisma);
 const contributorWrite = new ContributorWriteService(
 	prisma,
-	organizationAccess,
+	programAccessRead,
 	firebaseAdmin,
 	sendgrid,
 	contributorValidation,
 	contactRelations,
 );
 const campaignValidation = new CampaignValidationService(prisma);
-const campaignWrite = new CampaignWriteService(prisma, organizationAccess, campaignValidation);
-const donationCertificateRead = new DonationCertificateReadService(prisma, organizationAccess);
+const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
+const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
 const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
-const campaignRead = new CampaignReadService(prisma, organizationAccess, exchangeRateRead);
+const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
 const programValidation = new ProgramValidationService(prisma);
 const programWrite = new ProgramWriteService(

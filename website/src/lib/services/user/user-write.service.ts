@@ -9,37 +9,19 @@ import { UserValidationService } from './user-validation.service';
 import { UserPayload, UserUpdateInput } from './user.types';
 
 export class UserWriteService extends BaseService {
-	private getAccessRows(editOrganizationIds: string[], readonlyOrganizationIds: string[]) {
-		const accessByOrganizationId = new Map<string, { organizationId: string; permission: 'edit' | 'readonly' }>();
+	private getAccessRows(organizationIds: string[]) {
+		const uniqueOrganizationIds = Array.from(new Set(organizationIds));
 
-		for (const organizationId of readonlyOrganizationIds) {
-			accessByOrganizationId.set(organizationId, {
-				organizationId,
-				permission: 'readonly',
-			});
-		}
-
-		for (const organizationId of editOrganizationIds) {
-			accessByOrganizationId.set(organizationId, {
-				organizationId,
-				permission: 'edit',
-			});
-		}
-
-		return Array.from(accessByOrganizationId.values());
+		return uniqueOrganizationIds.map((organizationId) => ({ organizationId }));
 	}
 
-	private getPreferredActiveOrganizationId(
-		editOrganizationIds: string[],
-		readonlyOrganizationIds: string[],
-		currentActiveOrganizationId?: string | null,
-	) {
-		const allowedOrganizationIds = new Set([...editOrganizationIds, ...readonlyOrganizationIds]);
+	private getPreferredActiveOrganizationId(organizationIds: string[], currentActiveOrganizationId?: string | null) {
+		const allowedOrganizationIds = new Set(organizationIds);
 		if (currentActiveOrganizationId && allowedOrganizationIds.has(currentActiveOrganizationId)) {
 			return currentActiveOrganizationId;
 		}
 
-		return editOrganizationIds[0] ?? readonlyOrganizationIds[0] ?? null;
+		return organizationIds[0] ?? null;
 	}
 
 	constructor(
@@ -102,10 +84,7 @@ export class UserWriteService extends BaseService {
 						} | null;
 				  }
 				| undefined;
-			const activeOrganizationId = this.getPreferredActiveOrganizationId(
-				validatedInput.editOrganizationIds,
-				validatedInput.readonlyOrganizationIds,
-			);
+			const activeOrganizationId = this.getPreferredActiveOrganizationId(validatedInput.organizationIds);
 			if (!activeOrganizationId) {
 				return this.resultFail('At least one organization permission is required.');
 			}
@@ -133,7 +112,7 @@ export class UserWriteService extends BaseService {
 						},
 						organizationAccesses: {
 							createMany: {
-								data: this.getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
+								data: this.getAccessRows(validatedInput.organizationIds),
 							},
 						},
 					},
@@ -178,8 +157,7 @@ export class UserWriteService extends BaseService {
 				email: createdUser.contact.email,
 				role: createdUser.role,
 				organizationId: createdUser.activeOrganization?.id ?? null,
-				editOrganizationIds: validatedInput.editOrganizationIds,
-				readonlyOrganizationIds: validatedInput.readonlyOrganizationIds,
+				organizationIds: validatedInput.organizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -225,8 +203,7 @@ export class UserWriteService extends BaseService {
 				validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
 
 			const activeOrganizationId = this.getPreferredActiveOrganizationId(
-				validatedInput.editOrganizationIds,
-				validatedInput.readonlyOrganizationIds,
+				validatedInput.organizationIds,
 				existingUser.activeOrganizationId,
 			);
 
@@ -245,7 +222,7 @@ export class UserWriteService extends BaseService {
 					organizationAccesses: {
 						deleteMany: { userId: validatedInput.id },
 						createMany: {
-							data: this.getAccessRows(validatedInput.editOrganizationIds, validatedInput.readonlyOrganizationIds),
+							data: this.getAccessRows(validatedInput.organizationIds),
 						},
 					},
 				},
@@ -277,8 +254,7 @@ export class UserWriteService extends BaseService {
 				email: updatedUser.contact.email,
 				role: updatedUser.role,
 				organizationId: updatedUser.activeOrganization?.id ?? null,
-				editOrganizationIds: validatedInput.editOrganizationIds,
-				readonlyOrganizationIds: validatedInput.readonlyOrganizationIds,
+				organizationIds: validatedInput.organizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -350,18 +326,12 @@ export class UserWriteService extends BaseService {
 					organizationAccesses: {
 						select: {
 							organizationId: true,
-							permission: true,
 						},
 					},
 				},
 			});
 
-			const editOrganizationIds = updatedUser.organizationAccesses
-				.filter((access) => access.permission === 'edit')
-				.map((access) => access.organizationId);
-			const readonlyOrganizationIds = updatedUser.organizationAccesses
-				.filter((access) => access.permission === 'readonly')
-				.map((access) => access.organizationId);
+			const organizationIds = updatedUser.organizationAccesses.map((access) => access.organizationId);
 
 			return this.resultOk({
 				id: updatedUser.id,
@@ -370,8 +340,7 @@ export class UserWriteService extends BaseService {
 				email: updatedUser.contact.email,
 				role: updatedUser.role,
 				organizationId: updatedUser.activeOrganization?.id ?? null,
-				editOrganizationIds,
-				readonlyOrganizationIds,
+				organizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);

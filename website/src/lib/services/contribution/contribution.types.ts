@@ -1,4 +1,4 @@
-import { ContributionStatus, Currency, OrganizationPermission, PaymentEventType, Prisma } from '@/generated/prisma/client';
+import { ContributionStatus, Currency, PaymentEventType, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;
@@ -28,7 +28,7 @@ export type ContributionTableQuery = {
 export type ContributionPaginatedTableView = {
 	tableRows: ContributionTableViewRow[];
 	totalCount: number;
-	permission: OrganizationPermission;
+	permission: ProgramPermission;
 	filterOptions: {
 		programs: { value: string; label: string }[];
 		campaigns: { value: string; label: string }[];

@@ -13,8 +13,7 @@ export class UserReadService extends BaseService {
 			'email',
 			'role',
 			'organizationName',
-			'readonlyOrganizationNames',
-			'editOrganizationNames',
+			'organizationNames',
 			'createdAt',
 		] as const);
 		switch (sortBy) {
@@ -27,8 +26,7 @@ export class UserReadService extends BaseService {
 			case 'role':
 				return [{ role: direction }];
 			case 'organizationName':
-			case 'readonlyOrganizationNames':
-			case 'editOrganizationNames':
+			case 'organizationNames':
 				return [{ activeOrganization: { name: direction } }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
@@ -52,7 +50,6 @@ export class UserReadService extends BaseService {
 					organizationAccesses: {
 						select: {
 							organizationId: true,
-							permission: true,
 						},
 					},
 				},
@@ -62,12 +59,7 @@ export class UserReadService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
-			const editOrganizationIds = user.organizationAccesses
-				.filter((access) => access.permission === 'edit')
-				.map((access) => access.organizationId);
-			const readonlyOrganizationIds = user.organizationAccesses
-				.filter((access) => access.permission === 'readonly')
-				.map((access) => access.organizationId);
+			const organizationIds = user.organizationAccesses.map((access) => access.organizationId);
 
 			return this.resultOk({
 				id: user.id,
@@ -76,8 +68,7 @@ export class UserReadService extends BaseService {
 				email: user.contact.email,
 				role: user.role,
 				organizationId: user.activeOrganization?.id ?? null,
-				editOrganizationIds,
-				readonlyOrganizationIds,
+				organizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
@@ -159,7 +150,6 @@ export class UserReadService extends BaseService {
 						},
 						organizationAccesses: {
 							select: {
-								permission: true,
 								organization: {
 									select: {
 										name: true,
@@ -176,13 +166,7 @@ export class UserReadService extends BaseService {
 			]);
 
 			const tableRows: UserTableViewRow[] = users.map((user) => {
-				const readonlyOrganizationNames = user.organizationAccesses
-					.filter((access) => access.permission === 'readonly')
-					.map((access) => access.organization.name)
-					.sort((a, b) => a.localeCompare(b))
-					.join(', ');
-				const editOrganizationNames = user.organizationAccesses
-					.filter((access) => access.permission === 'edit')
+				const organizationNames = user.organizationAccesses
 					.map((access) => access.organization.name)
 					.sort((a, b) => a.localeCompare(b))
 					.join(', ');
@@ -195,8 +179,7 @@ export class UserReadService extends BaseService {
 					firebaseAuthUserId: user.account.firebaseAuthUserId,
 					role: user.role,
 					organizationName: user.activeOrganization?.name ?? null,
-					readonlyOrganizationNames,
-					editOrganizationNames,
+					organizationNames,
 					createdAt: user.createdAt,
 				};
 			});

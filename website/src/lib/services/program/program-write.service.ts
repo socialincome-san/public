@@ -97,7 +97,6 @@ export class ProgramWriteService extends BaseService {
 					endDate: defaultCampaignEndDate,
 					isActive: true,
 					program: { connect: { id: program.id } },
-					organization: { connect: { id: user.activeOrganizationId } },
 				},
 			});
 
@@ -186,7 +185,6 @@ export class ProgramWriteService extends BaseService {
 				organizationAccesses: {
 					create: {
 						organizationId: organizationResult.data.id,
-						permission: 'edit',
 					},
 				},
 			},

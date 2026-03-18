@@ -1,10 +1,10 @@
-import { DonationCertificate, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { DonationCertificate, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { LanguageCode } from '@/lib/types/language';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
 	DonationCertificatePaginatedTableView,
 	DonationCertificateTableQuery,
@@ -17,7 +17,7 @@ import {
 export class DonationCertificateReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -71,12 +71,20 @@ export class DonationCertificateReadService extends BaseService {
 		query: DonationCertificateTableQuery,
 	): Promise<ServiceResult<DonationCertificatePaginatedTableView>> {
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
-
-			const { id: organizationId, permission } = activeOrgResult.data;
+			const accessiblePrograms = accessibleProgramsResult.data;
+			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((program) => program.programId)));
+			if (accessibleProgramIds.length === 0) {
+				return this.resultOk({ tableRows: [], totalCount: 0 });
+			}
+			const operatorProgramIds = new Set(
+				accessiblePrograms
+					.filter((program) => program.permission === ProgramPermission.operator)
+					.map((program) => program.programId),
+			);
 			const search = query.search.trim();
 			const parsedYear = Number(search);
 			const hasYearFilter = search.length > 0 && Number.isInteger(parsedYear);
@@ -84,7 +92,11 @@ export class DonationCertificateReadService extends BaseService {
 				contributor: {
 					contributions: {
 						some: {
-							campaign: { organizationId },
+							campaign: {
+								programId: {
+									in: accessibleProgramIds,
+								},
+							},
 						},
 					},
 				},
@@ -120,6 +132,7 @@ export class DonationCertificateReadService extends BaseService {
 						createdAt: true,
 						contributor: {
 							select: {
+								id: true,
 								contact: {
 									select: {
 										firstName: true,
@@ -136,6 +149,25 @@ export class DonationCertificateReadService extends BaseService {
 				}),
 				this.db.donationCertificate.count({ where }),
 			]);
+			const contributorIds = Array.from(new Set(certificates.map((certificate) => certificate.contributor.id)));
+			const operatorContributorIds = contributorIds.length
+				? new Set(
+						(
+							await this.db.contribution.findMany({
+								where: {
+									contributorId: { in: contributorIds },
+									campaign: {
+										programId: {
+											in: Array.from(operatorProgramIds),
+										},
+									},
+								},
+								select: { contributorId: true },
+								distinct: ['contributorId'],
+							})
+						).map((contribution) => contribution.contributorId),
+					)
+				: new Set<string>();
 
 			const tableRows: DonationCertificateTableViewRow[] = certificates.map((c) => ({
 				id: c.id,
@@ -145,7 +177,9 @@ export class DonationCertificateReadService extends BaseService {
 				email: c.contributor.contact?.email ?? '',
 				storagePath: c.storagePath,
 				createdAt: c.createdAt,
-				permission,
+				permission: operatorContributorIds.has(c.contributor.id)
+					? ProgramPermission.operator
+					: ProgramPermission.owner,
 			}));
 
 			return this.resultOk({ tableRows, totalCount });

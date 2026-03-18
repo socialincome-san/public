@@ -1,9 +1,9 @@
 import {
 	Contributor,
 	ContributorReferralSource,
-	OrganizationPermission,
 	Prisma,
 	PrismaClient,
+	ProgramPermission,
 } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
@@ -11,7 +11,7 @@ import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
 import { SupportedLanguage } from '../sendgrid/types';
 import { ContributorFormCreateInput, ContributorFormUpdateInput } from './contributor-form-input';
@@ -26,7 +26,7 @@ import {
 export class ContributorWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly sendGridService: SendgridSubscriptionService,
 		private readonly contributorValidationService: ContributorValidationService,
@@ -94,12 +94,13 @@ export class ContributorWriteService extends BaseService {
 		const validatedInput = validatedInputResult.data;
 
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
-
-			if (activeOrgResult.data.permission !== 'edit') {
+			const accessiblePrograms = accessibleProgramsResult.data;
+			const hasOperatorAccess = accessiblePrograms.some((program) => program.permission === ProgramPermission.operator);
+			if (!hasOperatorAccess) {
 				return this.resultFail('No permissions to update contributor');
 			}
 
@@ -122,6 +123,19 @@ export class ContributorWriteService extends BaseService {
 			});
 			if (!existing) {
 				return this.resultFail('Contributor not found');
+			}
+			const contributorProgramIds = await this.db.contribution.findMany({
+				where: { contributorId: validatedInput.id },
+				select: { campaign: { select: { programId: true } } },
+			});
+			const canOperateContributorPrograms = contributorProgramIds.some((entry) =>
+				accessiblePrograms.some(
+					(program) =>
+						program.programId === entry.campaign.programId && program.permission === ProgramPermission.operator,
+				),
+			);
+			if (!canOperateContributorPrograms) {
+				return this.resultFail('No permissions to update contributor');
 			}
 
 			const uniquenessResult = await this.contributorValidationService.validateUpdateUniqueness(validatedInput, {
@@ -470,12 +484,14 @@ export class ContributorWriteService extends BaseService {
 		const validatedInput = validatedInputResult.data;
 
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
-
-			if (activeOrgResult.data.permission !== OrganizationPermission.edit) {
+			const hasOperatorAccess = accessibleProgramsResult.data.some(
+				(program) => program.permission === ProgramPermission.operator,
+			);
+			if (!hasOperatorAccess) {
 				return this.resultFail('No permission to create contributor');
 			}
 

@@ -13,8 +13,7 @@ export const buildCreateUserInput = (schema: UserFormSchema): UserFormCreateInpu
 		lastName: asString(schema.fields.lastName.value).trim(),
 		email: asString(schema.fields.email.value).trim(),
 		role: schema.fields.role.value,
-		editOrganizationIds: toStringArray(schema.fields.editOrganizations.value),
-		readonlyOrganizationIds: toStringArray(schema.fields.readonlyOrganizations.value),
+		organizationIds: toStringArray(schema.fields.organizations.value),
 	};
 };
 
@@ -25,7 +24,6 @@ export const buildUpdateUserInput = (schema: UserFormSchema, existing: UserPaylo
 		lastName: asString(schema.fields.lastName.value).trim(),
 		email: asString(schema.fields.email.value).trim(),
 		role: schema.fields.role.value,
-		editOrganizationIds: toStringArray(schema.fields.editOrganizations.value),
-		readonlyOrganizationIds: toStringArray(schema.fields.readonlyOrganizations.value),
+		organizationIds: toStringArray(schema.fields.organizations.value),
 	};
 };

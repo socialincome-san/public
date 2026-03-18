@@ -30,8 +30,7 @@ export type UserFormSchema = {
 		lastName: FormField;
 		email: FormField;
 		role: FormField;
-		editOrganizations: FormField;
-		readonlyOrganizations: FormField;
+		organizations: FormField;
 	};
 };
 
@@ -59,15 +58,9 @@ const initialFormSchema: UserFormSchema = {
 			zodSchema: z.nativeEnum(UserRole),
 			value: UserRole.user,
 		},
-		editOrganizations: {
+		organizations: {
 			placeholder: 'Select organizations',
-			label: 'Organizations with edit permission',
-			zodSchema: z.array(z.string()).optional(),
-			options: [],
-		},
-		readonlyOrganizations: {
-			placeholder: 'Select organizations',
-			label: 'Organizations with read permission',
+			label: 'Organizations',
 			zodSchema: z.array(z.string()).optional(),
 			options: [],
 		},
@@ -95,11 +88,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 							lastName: { ...next.fields.lastName, value: data.lastName },
 							email: { ...next.fields.email, value: data.email },
 							role: { ...next.fields.role, value: data.role },
-							editOrganizations: { ...next.fields.editOrganizations, value: data.editOrganizationIds },
-							readonlyOrganizations: {
-								...next.fields.readonlyOrganizations,
-								value: data.readonlyOrganizationIds,
-							},
+							organizations: { ...next.fields.organizations, value: data.organizationIds },
 						},
 					};
 				});
@@ -114,12 +103,8 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 			...prev,
 			fields: {
 				...prev.fields,
-				editOrganizations: {
-					...prev.fields.editOrganizations,
-					options,
-				},
-				readonlyOrganizations: {
-					...prev.fields.readonlyOrganizations,
+				organizations: {
+					...prev.fields.organizations,
 					options,
 				},
 			},

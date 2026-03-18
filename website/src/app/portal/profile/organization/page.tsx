@@ -1,6 +1,5 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { OrganizationPermission } from '@/generated/prisma/client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 import { services } from '@/lib/services/services';
@@ -33,16 +32,12 @@ const ProfileOrganizationDataLoader = async ({ searchParams }: SearchParamsPageP
 	const organizationName = activeOrganizationSummaryResult.success
 		? activeOrganizationSummaryResult.data.name
 		: (user.activeOrganization?.name ?? 'Organization');
-	const canRenameOrganization = activeOrganizationSummaryResult.success
-		? activeOrganizationSummaryResult.data.permission === OrganizationPermission.edit
-		: false;
 
 	return (
 		<MembersTable
 			rows={rows}
 			error={error}
 			organizationName={organizationName}
-			canRenameOrganization={canRenameOrganization}
 			query={{ ...tableQuery, totalRows }}
 		/>
 	);

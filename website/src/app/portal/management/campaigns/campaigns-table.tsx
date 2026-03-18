@@ -5,6 +5,7 @@ import { ConfiguredDataTableClient } from '@/components/data-table/clients/confi
 import { campaignsTableConfig } from '@/components/data-table/configs/campaigns-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
@@ -24,7 +25,7 @@ export default function CampaignsTable({
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [campaignId, setCampaignId] = useState<string | undefined>(undefined);
-	const readOnly = rows.some((row) => row.permission === 'readonly');
+	const readOnly = rows.every((row) => row.permission !== ProgramPermission.operator);
 
 	const openEmptyForm = () => {
 		setCampaignId(undefined);

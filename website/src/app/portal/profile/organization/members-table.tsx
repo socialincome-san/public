@@ -23,7 +23,6 @@ type MembersTableProps = {
 	rows: OrganizationMemberTableViewRow[];
 	error: string | null;
 	organizationName: string;
-	canRenameOrganization: boolean;
 	query?: TableQueryState & { totalRows: number };
 };
 
@@ -33,7 +32,7 @@ const renameOrganizationSchema = z.object({
 
 type RenameOrganizationFormValues = z.infer<typeof renameOrganizationSchema>;
 
-export default function MembersTable({ rows, error, organizationName, canRenameOrganization, query }: MembersTableProps) {
+export default function MembersTable({ rows, error, organizationName, query }: MembersTableProps) {
 	const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isPending, startTransition] = useTransition();
@@ -44,19 +43,17 @@ export default function MembersTable({ rows, error, organizationName, canRenameO
 		},
 	});
 
-	const actionMenuItems = canRenameOrganization
-		? [
-				{
-					label: 'Rename organization',
-					icon: <PencilIcon className="size-4" />,
-					onSelect: () => {
-						setErrorMessage(null);
-						form.reset({ name: organizationName });
-						setIsRenameDialogOpen(true);
-					},
-				},
-			]
-		: undefined;
+	const actionMenuItems = [
+		{
+			label: 'Rename organization',
+			icon: <PencilIcon className="size-4" />,
+			onSelect: () => {
+				setErrorMessage(null);
+				form.reset({ name: organizationName });
+				setIsRenameDialogOpen(true);
+			},
+		},
+	];
 
 	const onSubmit = ({ name }: RenameOrganizationFormValues) => {
 		startTransition(async () => {

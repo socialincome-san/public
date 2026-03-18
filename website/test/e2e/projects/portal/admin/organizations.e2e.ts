@@ -25,14 +25,13 @@ test('admin organizations with direct URL sorting matches screenshot', async ({ 
 	await expectToHaveScreenshot(page);
 });
 
-test('add new organization with user and program permissions', async ({ page }) => {
+test('add new organization with users and program permissions', async ({ page }) => {
 	const organizationName = `E2E Organization ${Date.now()}`;
 
 	await page.goto('/portal/admin/organizations');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-organization');
 	await page.getByTestId('form-item-name').locator('input').fill(organizationName);
-	await selectMultiOptionsByTestId(page, 'editUsers', ['Portal Tester']);
-	await selectMultiOptionsByTestId(page, 'readonlyUsers', ['Jonas Baumann']);
+	await selectMultiOptionsByTestId(page, 'users', ['Portal Tester', 'Jonas Baumann']);
 	await selectMultiOptionsByTestId(page, 'ownedPrograms', ['Migros Relief SL']);
 	await selectMultiOptionsByTestId(page, 'operatedPrograms', ['Coop Cash Aid SL']);
 	await page.getByRole('button', { name: 'Save' }).click();
@@ -50,7 +49,7 @@ test('add new organization with user and program permissions', async ({ page }) 
 	const [organizationAccesses, programAccesses] = await Promise.all([
 		prisma.organizationAccess.findMany({
 			where: { organizationId: created.id },
-			select: { permission: true, userId: true },
+			select: { userId: true },
 		}),
 		prisma.programAccess.findMany({
 			where: { organizationId: created.id },
@@ -60,8 +59,8 @@ test('add new organization with user and program permissions', async ({ page }) 
 
 	expect(organizationAccesses).toEqual(
 		expect.arrayContaining([
-			expect.objectContaining({ permission: 'edit', userId: 'user-1' }),
-			expect.objectContaining({ permission: 'readonly', userId: 'user-2' }),
+			expect.objectContaining({ userId: 'user-1' }),
+			expect.objectContaining({ userId: 'user-2' }),
 		]),
 	);
 	expect(programAccesses).toEqual(
@@ -72,7 +71,7 @@ test('add new organization with user and program permissions', async ({ page }) 
 	);
 });
 
-test('update organization permissions', async ({ page }) => {
+test('update organization users and permissions', async ({ page }) => {
 	const organization = await prisma.organization.create({
 		data: { name: `E2E Update Organization ${Date.now()}` },
 		select: { id: true, name: true },
@@ -83,8 +82,7 @@ test('update organization permissions', async ({ page }) => {
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 
 	await page.getByTestId('form-item-name').locator('input').fill(`${organization.name} Updated`);
-	await selectMultiOptionsByTestId(page, 'editUsers', ['Portal Tester']);
-	await selectMultiOptionsByTestId(page, 'readonlyUsers', ['Jonas Baumann']);
+	await selectMultiOptionsByTestId(page, 'users', ['Portal Tester', 'Jonas Baumann']);
 	await selectMultiOptionsByTestId(page, 'ownedPrograms', ['Migros Relief SL']);
 	await selectMultiOptionsByTestId(page, 'operatedPrograms', ['Coop Cash Aid SL']);
 	await page.getByRole('button', { name: 'Save' }).click();
@@ -99,7 +97,7 @@ test('update organization permissions', async ({ page }) => {
 	const [organizationAccesses, programAccesses] = await Promise.all([
 		prisma.organizationAccess.findMany({
 			where: { organizationId: organization.id },
-			select: { permission: true, userId: true },
+			select: { userId: true },
 		}),
 		prisma.programAccess.findMany({
 			where: { organizationId: organization.id },
@@ -109,8 +107,8 @@ test('update organization permissions', async ({ page }) => {
 
 	expect(organizationAccesses).toEqual(
 		expect.arrayContaining([
-			expect.objectContaining({ permission: 'edit', userId: 'user-1' }),
-			expect.objectContaining({ permission: 'readonly', userId: 'user-2' }),
+			expect.objectContaining({ userId: 'user-1' }),
+			expect.objectContaining({ userId: 'user-2' }),
 		]),
 	);
 	expect(programAccesses).toEqual(

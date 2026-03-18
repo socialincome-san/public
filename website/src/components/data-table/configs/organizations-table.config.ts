@@ -9,8 +9,7 @@ export const organizationsTableConfig: DataTableConfig<OrganizationTableViewRow>
 	searchKeys: ['id', 'name'],
 	sortOptions: [
 		{ id: 'name', label: 'Name' },
-		{ id: 'readonlyUsersCount', label: 'Readonly users' },
-		{ id: 'writeUsersCount', label: 'Write users' },
+		{ id: 'usersCount', label: 'Users' },
 		{ id: 'createdAt', label: 'Created' },
 	],
 	makeColumns: makeOrganizationAdminColumns,
