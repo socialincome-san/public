@@ -1,10 +1,4 @@
-import {
-	Contributor,
-	ContributorReferralSource,
-	Prisma,
-	PrismaClient,
-	ProgramPermission,
-} from '@/generated/prisma/client';
+import { Contributor, ContributorReferralSource, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { ContactRelationsService } from '../contact/contact-relations.service';
@@ -130,8 +124,7 @@ export class ContributorWriteService extends BaseService {
 			});
 			const canOperateContributorPrograms = contributorProgramIds.some((entry) =>
 				accessiblePrograms.some(
-					(program) =>
-						program.programId === entry.campaign.programId && program.permission === ProgramPermission.operator,
+					(program) => program.programId === entry.campaign.programId && program.permission === ProgramPermission.operator,
 				),
 			);
 			if (!canOperateContributorPrograms) {

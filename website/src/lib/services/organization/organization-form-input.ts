@@ -12,10 +12,9 @@ const organizationBaseInputSchema = z.object({
 });
 export const organizationCreateInputSchema = organizationBaseInputSchema;
 
-export const organizationUpdateInputSchema = organizationBaseInputSchema
-	.extend({
-		id: requiredTrimmedString('Organization id'),
-	});
+export const organizationUpdateInputSchema = organizationBaseInputSchema.extend({
+	id: requiredTrimmedString('Organization id'),
+});
 
 export const organizationRenameInputSchema = z.object({
 	name: requiredTrimmedString('Organization name'),

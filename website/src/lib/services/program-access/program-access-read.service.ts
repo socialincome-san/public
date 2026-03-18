@@ -52,7 +52,9 @@ export class ProgramAccessReadService extends BaseService {
 	}
 
 	private resolveEffectivePermission(accesses: ProgramAccesses, programId: string): ProgramPermission | null {
-		const programPermissions = accesses.filter((access) => access.programId === programId).map((access) => access.permission);
+		const programPermissions = accesses
+			.filter((access) => access.programId === programId)
+			.map((access) => access.permission);
 		if (programPermissions.includes(ProgramPermission.operator)) {
 			return ProgramPermission.operator;
 		}

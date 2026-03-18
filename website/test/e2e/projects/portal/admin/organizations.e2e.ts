@@ -58,10 +58,7 @@ test('add new organization with users and program permissions', async ({ page })
 	]);
 
 	expect(organizationAccesses).toEqual(
-		expect.arrayContaining([
-			expect.objectContaining({ userId: 'user-1' }),
-			expect.objectContaining({ userId: 'user-2' }),
-		]),
+		expect.arrayContaining([expect.objectContaining({ userId: 'user-1' }), expect.objectContaining({ userId: 'user-2' })]),
 	);
 	expect(programAccesses).toEqual(
 		expect.arrayContaining([
@@ -106,10 +103,7 @@ test('update organization users and permissions', async ({ page }) => {
 	]);
 
 	expect(organizationAccesses).toEqual(
-		expect.arrayContaining([
-			expect.objectContaining({ userId: 'user-1' }),
-			expect.objectContaining({ userId: 'user-2' }),
-		]),
+		expect.arrayContaining([expect.objectContaining({ userId: 'user-1' }), expect.objectContaining({ userId: 'user-2' })]),
 	);
 	expect(programAccesses).toEqual(
 		expect.arrayContaining([

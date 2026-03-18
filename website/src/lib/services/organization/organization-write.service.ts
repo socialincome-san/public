@@ -156,10 +156,7 @@ export class OrganizationWriteService extends BaseService {
 					},
 				});
 
-				const accesses = this.buildOrganizationAccessRows(
-					organization.id,
-					validatedInput.userIds,
-				);
+				const accesses = this.buildOrganizationAccessRows(organization.id, validatedInput.userIds);
 				if (accesses.length > 0) {
 					await tx.organizationAccess.createMany({ data: accesses });
 				}
@@ -240,10 +237,7 @@ export class OrganizationWriteService extends BaseService {
 					where: { organizationId: validatedInput.id },
 				});
 
-				const accesses = this.buildOrganizationAccessRows(
-					validatedInput.id,
-					validatedInput.userIds,
-				);
+				const accesses = this.buildOrganizationAccessRows(validatedInput.id, validatedInput.userIds);
 				if (accesses.length > 0) {
 					await tx.organizationAccess.createMany({ data: accesses });
 				}

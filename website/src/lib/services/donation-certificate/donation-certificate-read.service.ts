@@ -177,9 +177,7 @@ export class DonationCertificateReadService extends BaseService {
 				email: c.contributor.contact?.email ?? '',
 				storagePath: c.storagePath,
 				createdAt: c.createdAt,
-				permission: operatorContributorIds.has(c.contributor.id)
-					? ProgramPermission.operator
-					: ProgramPermission.owner,
+				permission: operatorContributorIds.has(c.contributor.id) ? ProgramPermission.operator : ProgramPermission.owner,
 			}));
 
 			return this.resultOk({ tableRows, totalCount });

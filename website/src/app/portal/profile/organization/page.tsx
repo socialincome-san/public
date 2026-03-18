@@ -33,12 +33,5 @@ const ProfileOrganizationDataLoader = async ({ searchParams }: SearchParamsPageP
 		? activeOrganizationSummaryResult.data.name
 		: (user.activeOrganization?.name ?? 'Organization');
 
-	return (
-		<MembersTable
-			rows={rows}
-			error={error}
-			organizationName={organizationName}
-			query={{ ...tableQuery, totalRows }}
-		/>
-	);
+	return <MembersTable rows={rows} error={error} organizationName={organizationName} query={{ ...tableQuery, totalRows }} />;
 };

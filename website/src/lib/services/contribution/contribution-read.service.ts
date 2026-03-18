@@ -272,7 +272,9 @@ export class ContributionReadService extends BaseService {
 			const selectedCampaigns = campaigns.filter((campaign) => filteredCampaignIds.includes(campaign.id));
 			const selectedProgramIds = Array.from(new Set(selectedCampaigns.map((campaign) => campaign.programId)));
 			const permission = selectedProgramIds.some((programId) =>
-				accessiblePrograms.some((program) => program.programId === programId && program.permission === ProgramPermission.operator),
+				accessiblePrograms.some(
+					(program) => program.programId === programId && program.permission === ProgramPermission.operator,
+				),
 			)
 				? ProgramPermission.operator
 				: ProgramPermission.owner;

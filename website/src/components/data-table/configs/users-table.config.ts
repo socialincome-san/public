@@ -6,15 +6,7 @@ export const usersTableConfig: DataTableConfig<UserTableViewRow> = {
 	id: 'admin-users',
 	title: 'Users',
 	emptyMessage: 'No users found',
-	searchKeys: [
-		'id',
-		'firstName',
-		'lastName',
-		'email',
-		'firebaseAuthUserId',
-		'organizationName',
-		'organizationNames',
-	],
+	searchKeys: ['id', 'firstName', 'lastName', 'email', 'firebaseAuthUserId', 'organizationName', 'organizationNames'],
 	sortOptions: [
 		{ id: 'user', label: 'User' },
 		{ id: 'email', label: 'Email' },
