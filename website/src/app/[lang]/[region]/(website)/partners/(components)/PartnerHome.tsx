@@ -48,10 +48,10 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 	};
 	const showVisitOnline = Boolean(
 		ngoHoverCard.orgInstagram ??
-			ngoHoverCard.orgFacebook ??
-			ngoHoverCard.orgWebsite ??
-			ngoHoverCard.orgLinkedIn ??
-			ngoHoverCard.orgYoutube,
+		ngoHoverCard.orgFacebook ??
+		ngoHoverCard.orgWebsite ??
+		ngoHoverCard.orgLinkedIn ??
+		ngoHoverCard.orgYoutube,
 	);
 
 	const showFundRaiser = !!ngoHoverCard.orgFundRaiserText;
