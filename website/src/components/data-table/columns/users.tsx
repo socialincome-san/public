@@ -1,5 +1,6 @@
 'use client';
 
+import { UserRoleBadge } from '@/components/badges/user-role-badge';
 import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { IdCell } from '@/components/data-table/elements/id-cell';
@@ -30,7 +31,7 @@ export const makeUserColumns = (): ColumnDef<UserTableViewRow>[] => {
 		{
 			accessorKey: 'role',
 			header: (ctx) => <SortableHeader ctx={ctx}>Role</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			cell: ({ row }) => <UserRoleBadge role={row.original.role} />,
 		},
 		{
 			accessorKey: 'readonlyOrganizationNames',
