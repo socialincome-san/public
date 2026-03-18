@@ -28,5 +28,10 @@ export const organizationUpdateInputSchema = organizationBaseInputSchema
 	})
 	.refine(hasNoPermissionOverlap, noPermissionOverlapMessage);
 
+export const organizationRenameInputSchema = z.object({
+	name: requiredTrimmedString('Organization name'),
+});
+
 export type OrganizationFormCreateInput = z.infer<typeof organizationCreateInputSchema>;
 export type OrganizationFormUpdateInput = z.infer<typeof organizationUpdateInputSchema>;
+export type OrganizationRenameInput = z.infer<typeof organizationRenameInputSchema>;

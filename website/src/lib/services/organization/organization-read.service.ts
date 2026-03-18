@@ -6,6 +6,7 @@ import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { UserReadService } from '../user/user-read.service';
 import {
+	ActiveOrganizationSummary,
 	OrganizationMemberPaginatedTableView,
 	OrganizationMemberTableQuery,
 	OrganizationMemberTableView,
@@ -83,6 +84,36 @@ export class OrganizationReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch organization members table view: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getActiveOrganizationSummary(userId: string): Promise<ServiceResult<ActiveOrganizationSummary>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const organization = await this.db.organization.findUnique({
+				where: { id: activeOrgResult.data.id },
+				select: {
+					id: true,
+					name: true,
+				},
+			});
+			if (!organization) {
+				return this.resultFail('Organization not found');
+			}
+
+			return this.resultOk({
+				id: organization.id,
+				name: organization.name,
+				permission: activeOrgResult.data.permission,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch active organization summary: ${JSON.stringify(error)}`);
 		}
 	}
 

@@ -66,3 +66,9 @@ export type OrganizationPayload = {
 	ownedProgramIds: string[];
 	operatedProgramIds: string[];
 };
+
+export type ActiveOrganizationSummary = {
+	id: string;
+	name: string;
+	permission: OrganizationPermission;
+};

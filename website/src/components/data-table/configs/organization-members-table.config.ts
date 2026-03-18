@@ -10,7 +10,6 @@ export const organizationMembersTableConfig: DataTableConfig<OrganizationMemberT
 	sortOptions: [
 		{ id: 'member', label: 'Member' },
 		{ id: 'email', label: 'Email' },
-		{ id: 'role', label: 'Role' },
 		{ id: 'permission', label: 'Permission' },
 	],
 	makeColumns: makeOrganizationMemberColumns,

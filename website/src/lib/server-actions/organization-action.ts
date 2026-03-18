@@ -3,6 +3,7 @@
 import { getSessionByType } from '@/lib/firebase/current-account';
 import type {
 	OrganizationFormCreateInput,
+	OrganizationRenameInput,
 	OrganizationFormUpdateInput,
 } from '@/lib/services/organization/organization-form-input';
 import { services } from '@/lib/services/services';
@@ -28,6 +29,20 @@ export const updateOrganizationAction = async (input: OrganizationFormUpdateInpu
 	}
 	const res = await services.write.organization.update(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
+
+	return res;
+};
+
+export const renameActiveOrganizationAction = async (input: OrganizationRenameInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const res = await services.write.organization.renameActiveOrganization(sessionResult.data.id, input);
+	revalidatePath('/portal');
+	revalidatePath('/portal/profile/account');
+	revalidatePath('/portal/profile/organization');
 
 	return res;
 };

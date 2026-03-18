@@ -2,8 +2,9 @@ import { OrganizationPermission, PrismaClient, ProgramPermission } from '@/gener
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { UserReadService } from '../user/user-read.service';
-import { OrganizationFormCreateInput, OrganizationFormUpdateInput } from './organization-form-input';
+import { OrganizationFormCreateInput, OrganizationRenameInput, OrganizationFormUpdateInput } from './organization-form-input';
 import { OrganizationValidationService } from './organization-validation.service';
 import { OrganizationPayload } from './organization.types';
 
@@ -11,6 +12,7 @@ export class OrganizationWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
+		private readonly organizationAccessService: OrganizationAccessService,
 		private readonly organizationValidationService: OrganizationValidationService,
 		loggerInstance = logger,
 	) {
@@ -288,6 +290,47 @@ export class OrganizationWriteService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail('Could not update organization. Please try again later.');
+		}
+	}
+
+	async renameActiveOrganization(
+		userId: string,
+		input: OrganizationRenameInput,
+	): Promise<ServiceResult<{ id: string; name: string }>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+			if (activeOrgResult.data.permission !== OrganizationPermission.edit) {
+				return this.resultFail('You do not have permission to rename this organization.');
+			}
+
+			const validatedInputResult = this.organizationValidationService.validateRenameInput(input);
+			if (!validatedInputResult.success) {
+				return this.resultFail(validatedInputResult.error);
+			}
+			const validatedInput = validatedInputResult.data;
+
+			const uniquenessResult = await this.organizationValidationService.validateRenameForOrganizationId(
+				validatedInput,
+				activeOrgResult.data.id,
+			);
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const updatedOrganization = await this.db.organization.update({
+				where: { id: activeOrgResult.data.id },
+				data: { name: validatedInput.name },
+				select: { id: true, name: true },
+			});
+
+			return this.resultOk(updatedOrganization);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not rename organization. Please try again later.');
 		}
 	}
 
