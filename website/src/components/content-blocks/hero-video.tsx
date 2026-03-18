@@ -21,6 +21,7 @@ type Props = {
 	region: WebsiteRegion;
 	subtitleUrl?: string;
 	translations: HeroVideoControlTranslations;
+	disableAutoplay?: boolean;
 };
 
 export type HeroVideoControlTranslations = {
@@ -34,11 +35,11 @@ export type HeroVideoControlTranslations = {
 	exitExpandedVideoView: string;
 };
 
-export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations }: Props) => {
+export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations, disableAutoplay = false }: Props) => {
 	const { heading, description, muxPlaybackId, button } = blok;
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
-	const [isPlaying, setIsPlaying] = useState(true);
+	const [isPlaying, setIsPlaying] = useState(!disableAutoplay);
 	const [isMuted, setIsMuted] = useState(true);
 	const [showCaptions, setShowCaptions] = useState(true);
 
@@ -83,7 +84,7 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations }
 					preload="metadata"
 					loop
 					muted={isMuted}
-					autoPlay
+					autoPlay={!disableAutoplay}
 					playsInline
 					onPlay={() => setIsPlaying(true)}
 					onPause={() => setIsPlaying(false)}
