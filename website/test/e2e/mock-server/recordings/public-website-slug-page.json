@@ -529,13 +529,13 @@
             }
           ]
         },
-        "cv": 1773074505,
+        "cv": 1773764331,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773074505",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773764331",
         "body": {},
         "method": "GET",
         "headers": {
@@ -549,7 +549,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 76
+      "durationMs": 45
     },
     {
       "body": {
@@ -1080,13 +1080,13 @@
             }
           ]
         },
-        "cv": 1773074505,
+        "cv": 1773764331,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773074505",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773764331",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1100,7 +1100,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 67
+      "durationMs": 47
     }
   ],
   "e4474cdc27f387f4c3faceaf99b74c13832755df0c5611a74c74b77b2d1d4f94": [
@@ -1125,7 +1125,7 @@
                   "focus": "1263x924:1264x925",
                   "title": "",
                   "source": "",
-                  "filename": "https://a.storyblok.com/f/109655/3000x2001/30f709a3c9/keke-liberia.jpg",
+                  "filename": "/assets/e2e-media-placeholder.svg",
                   "copyright": "",
                   "fieldtype": "asset",
                   "meta_data": {
@@ -1220,7 +1220,7 @@
                   "focus": "",
                   "title": "",
                   "source": "",
-                  "filename": "https://a.storyblok.com/f/109655/3000x2001/093c26ed62/arts.jpg",
+                  "filename": "/assets/e2e-media-placeholder.svg",
                   "copyright": "",
                   "fieldtype": "asset",
                   "meta_data": {},
@@ -1306,13 +1306,13 @@
             }
           ]
         },
-        "cv": 1773074505,
+        "cv": 1773764331,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&token=__TOKEN__&cv=1773074505",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&token=__TOKEN__&cv=1773764331",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1326,7 +1326,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 81
+      "durationMs": 52
     }
   ]
 }

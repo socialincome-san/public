@@ -36,6 +36,7 @@ const getVideoControlTranslations = (translator: TranslatorInstance): HeroVideoC
 
 export const HeroVideoBlockServer = async ({ blok, lang, region }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-home' });
+	const disableAutoplay = ['record', 'replay'].includes(process.env.STORYBLOK_MOCK_MODE ?? '');
 
 	return (
 		<HeroVideoBlock
@@ -44,6 +45,7 @@ export const HeroVideoBlockServer = async ({ blok, lang, region }: Props) => {
 			region={region}
 			subtitleUrl={translator.t('video-subtitle')}
 			translations={getVideoControlTranslations(translator)}
+			disableAutoplay={disableAutoplay}
 		/>
 	);
 };

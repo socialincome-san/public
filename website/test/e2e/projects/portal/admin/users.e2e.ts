@@ -3,6 +3,7 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import {
 	clickDataTableActionItem,
+	expectToHaveScreenshot,
 	getFirebaseAdminService,
 	selectMultiOptionsByTestId,
 	selectOptionByTestId,
@@ -13,21 +14,21 @@ test.beforeEach(async () => {
 });
 
 test('admin users page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/users');
+	await page.goto('/portal/admin/users?sortBy=email&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('admin users with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/users?page=1&pageSize=10&search=test%40portal.org');
+	await page.goto('/portal/admin/users?page=1&pageSize=10&sortBy=email&sortDirection=asc&search=test%40portal.org');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('admin users with direct URL sorting matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/users?page=1&pageSize=10&sortBy=role&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('admin users can show and search by Firebase auth user ID', async ({ page }) => {

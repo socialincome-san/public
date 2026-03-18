@@ -3,7 +3,7 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { bestGuessCurrency } from '@/lib/types/currency';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
+import { clickDataTableActionItem, expectToHaveScreenshot, selectOptionByTestId } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -27,21 +27,21 @@ const pickUnusedCountryOption = async (excludedCodes: string[] = []) => {
 };
 
 test('admin countries page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/countries');
+	await page.goto('/portal/admin/countries?sortBy=isoCode&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('admin countries with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/countries?page=1&pageSize=10&search=country-liberia');
+	await page.goto('/portal/admin/countries?page=1&pageSize=10&sortBy=isoCode&sortDirection=asc&search=country-liberia');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('admin countries with direct URL sorting matches screenshot', async ({ page }) => {
 	await page.goto('/portal/admin/countries?page=1&pageSize=10&sortBy=isoCode&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('add new country', async ({ page }) => {

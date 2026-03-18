@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { expectToHaveScreenshot } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -8,7 +9,7 @@ test.beforeEach(async () => {
 
 test('portal profile-page matches screenshot', async ({ page }) => {
 	await page.goto('/portal/profile');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('portal profile updates user personal info', async ({ page }) => {
