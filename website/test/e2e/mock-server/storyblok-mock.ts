@@ -19,8 +19,7 @@ const recordingPath = (recordingKey: string) =>
 	path.resolve(RECORDINGS_DIR, recordingKey.endsWith('.json') ? recordingKey : `${recordingKey}.json`);
 
 const hideToken = (json: string) => json.replace(/([?&]token=)[^&"]+/gi, '$1__TOKEN__');
-const replaceStoryblokMedia = (json: string) =>
-	json.replace(STORYBLOK_MEDIA_URL_REGEX, STORYBLOK_MEDIA_PLACEHOLDER);
+const replaceStoryblokMedia = (json: string) => json.replace(STORYBLOK_MEDIA_URL_REGEX, STORYBLOK_MEDIA_PLACEHOLDER);
 
 const restoreToken = (json: string) =>
 	process.env.STORYBLOK_PREVIEW_TOKEN
