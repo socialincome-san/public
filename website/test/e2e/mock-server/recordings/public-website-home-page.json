@@ -46,7 +46,7 @@
                   "focus": "",
                   "title": "",
                   "source": "",
-                  "filename": "/e2e-media-placeholder.svg",
+                  "filename": "/assets/e2e-media-placeholder.svg",
                   "copyright": "",
                   "fieldtype": "asset",
                   "meta_data": {},
@@ -65,7 +65,7 @@
                       "focus": "",
                       "title": "",
                       "source": "",
-                      "filename": "/e2e-media-placeholder.svg",
+                      "filename": "/assets/e2e-media-placeholder.svg",
                       "copyright": "",
                       "fieldtype": "asset",
                       "meta_data": {},
@@ -125,7 +125,7 @@
                       "focus": "",
                       "title": "",
                       "source": "",
-                      "filename": "/e2e-media-placeholder.svg",
+                      "filename": "/assets/e2e-media-placeholder.svg",
                       "copyright": "",
                       "fieldtype": "asset",
                       "meta_data": {},
@@ -185,7 +185,7 @@
                       "focus": "",
                       "title": "",
                       "source": "",
-                      "filename": "/e2e-media-placeholder.svg",
+                      "filename": "/assets/e2e-media-placeholder.svg",
                       "copyright": "",
                       "fieldtype": "asset",
                       "meta_data": {},
@@ -254,7 +254,7 @@
                   "focus": "",
                   "title": "",
                   "source": "",
-                  "filename": "/e2e-media-placeholder.svg",
+                  "filename": "/assets/e2e-media-placeholder.svg",
                   "copyright": "",
                   "fieldtype": "asset",
                   "meta_data": {},
@@ -461,7 +461,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 65
+      "durationMs": 42
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -1014,7 +1014,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 51
+      "durationMs": 37
     },
     {
       "body": {
@@ -1565,7 +1565,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 54
+      "durationMs": 46
     }
   ],
   "ec0561f679c6a8f878a0e1f99c9dfcaf42f977853551d13038bd29462040c9be": [
@@ -1595,7 +1595,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {},
@@ -1676,7 +1676,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {},
@@ -1757,7 +1757,7 @@
                 "focus": "2311x1093:2312x1094",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
@@ -1892,7 +1892,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
@@ -2114,7 +2114,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {},
@@ -2381,7 +2381,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {},
@@ -2450,7 +2450,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 10
+      "durationMs": 11
     }
   ]
 }

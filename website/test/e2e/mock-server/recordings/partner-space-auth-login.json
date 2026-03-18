@@ -46,7 +46,7 @@
                   "focus": "",
                   "title": "",
                   "source": "",
-                  "filename": "/e2e-media-placeholder.svg",
+                  "filename": "/assets/e2e-media-placeholder.svg",
                   "copyright": "",
                   "fieldtype": "asset",
                   "meta_data": {},
@@ -65,7 +65,7 @@
                       "focus": "",
                       "title": "",
                       "source": "",
-                      "filename": "/e2e-media-placeholder.svg",
+                      "filename": "/assets/e2e-media-placeholder.svg",
                       "copyright": "",
                       "fieldtype": "asset",
                       "meta_data": {},
@@ -125,7 +125,7 @@
                       "focus": "",
                       "title": "",
                       "source": "",
-                      "filename": "/e2e-media-placeholder.svg",
+                      "filename": "/assets/e2e-media-placeholder.svg",
                       "copyright": "",
                       "fieldtype": "asset",
                       "meta_data": {},
@@ -185,7 +185,7 @@
                       "focus": "",
                       "title": "",
                       "source": "",
-                      "filename": "/e2e-media-placeholder.svg",
+                      "filename": "/assets/e2e-media-placeholder.svg",
                       "copyright": "",
                       "fieldtype": "asset",
                       "meta_data": {},
@@ -254,7 +254,7 @@
                   "focus": "",
                   "title": "",
                   "source": "",
-                  "filename": "/e2e-media-placeholder.svg",
+                  "filename": "/assets/e2e-media-placeholder.svg",
                   "copyright": "",
                   "fieldtype": "asset",
                   "meta_data": {},
@@ -461,7 +461,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 26
+      "durationMs": 10
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -1014,7 +1014,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 18
+      "durationMs": 12
     },
     {
       "body": {
@@ -1565,7 +1565,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 80
+      "durationMs": 8
     },
     {
       "body": {
@@ -2116,7 +2116,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 76
+      "durationMs": 15
     },
     {
       "body": {
@@ -2667,7 +2667,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 75
+      "durationMs": 15
     },
     {
       "body": {
@@ -3218,7 +3218,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 28
+      "durationMs": 12
     },
     {
       "body": {
@@ -3769,7 +3769,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 27
+      "durationMs": 13
     },
     {
       "body": {
@@ -4320,7 +4320,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 38
+      "durationMs": 16
     },
     {
       "body": {
@@ -4871,7 +4871,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 34
+      "durationMs": 14
     },
     {
       "body": {
@@ -5408,7 +5408,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773764331",
         "body": {},
         "method": "GET",
         "headers": {
@@ -5422,7 +5422,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 118
+      "durationMs": 11
     }
   ],
   "ec0561f679c6a8f878a0e1f99c9dfcaf42f977853551d13038bd29462040c9be": [
@@ -5452,7 +5452,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {},
@@ -5533,7 +5533,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {},
@@ -5614,7 +5614,7 @@
                 "focus": "2311x1093:2312x1094",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
@@ -5749,7 +5749,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
@@ -5971,7 +5971,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {},
@@ -6238,7 +6238,7 @@
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "/e2e-media-placeholder.svg",
+                "filename": "/assets/e2e-media-placeholder.svg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {},
@@ -6307,7 +6307,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 17
+      "durationMs": 19
     }
   ]
 }
