@@ -2,8 +2,7 @@ import { ExpenseType } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
-import { expectToHaveScreenshot } from '../../../utils';
+import { clickDataTableActionItem, expectToHaveScreenshot, selectOptionByTestId } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();

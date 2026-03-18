@@ -1,5 +1,5 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { saveStoryblokMock, setupStoryblokMock } from '../../mock-server/storyblok-mock';
 import { expectToHaveScreenshot } from '../../utils';
 

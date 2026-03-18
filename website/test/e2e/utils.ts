@@ -172,4 +172,3 @@ export const expectToHaveScreenshot = async (target: Page | Locator, scrollBefor
 	}
 	await expect(target).toHaveScreenshot();
 };
-

@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { getFirebaseAdminService } from '../../../utils';
-import { expectToHaveScreenshot } from '../../../utils';
+import { expectToHaveScreenshot, getFirebaseAdminService } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();

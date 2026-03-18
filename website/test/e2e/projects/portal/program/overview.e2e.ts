@@ -1,7 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, Page, test } from '@playwright/test';
-import { selectMultiOptionsByTestId, selectOptionByTestId } from '../../../utils';
-import { expectToHaveScreenshot } from '../../../utils';
+import { expectToHaveScreenshot, selectMultiOptionsByTestId, selectOptionByTestId } from '../../../utils';
 
 const openProgramSettingsDialog = async (page: Page, programId = 'program-1') => {
 	await page.goto(`/portal/programs/${programId}/overview`);

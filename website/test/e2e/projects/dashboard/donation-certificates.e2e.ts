@@ -1,7 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem } from '../../utils';
-import { expectToHaveScreenshot } from '../../utils';
+import { clickDataTableActionItem, expectToHaveScreenshot } from '../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
