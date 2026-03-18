@@ -4,7 +4,7 @@ import path from 'path';
 const BASE = process.env.MOCKSERVER_URL ?? 'http://localhost:1080';
 const MOCK = `${BASE}/mock`;
 const RECORDINGS_DIR = path.resolve(process.cwd(), 'test/e2e/mock-server/recordings');
-const STORYBLOK_MEDIA_PLACEHOLDER = '/assets/metadata/placeholder/news-outlet.svg';
+const STORYBLOK_MEDIA_PLACEHOLDER = '/e2e-media-placeholder.svg';
 const STORYBLOK_MEDIA_URL_REGEX =
 	/https:\/\/a\.storyblok\.com\/f\/[^"'\\\s)]+?\.(?:avif|bmp|gif|jpe?g|png|svg|webp|mp4|mov|webm|m4v)(?:\?[^"'\\\s)]*)?/gi;
 
