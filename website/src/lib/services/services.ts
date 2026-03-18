@@ -49,6 +49,7 @@ import { ProgramReadService } from './program/program-read.service';
 import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
+import { RecipientStatusService } from './recipient/recipient-status.service';
 import { RecipientValidationService } from './recipient/recipient-validation.service';
 import { RecipientWriteService } from './recipient/recipient-write.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
@@ -77,6 +78,7 @@ const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma);
 const storyblok = new StoryblokService(prisma);
 const sendgrid = new SendgridSubscriptionService();
+const recipientStatus = new RecipientStatusService(prisma);
 
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
 const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
@@ -85,7 +87,7 @@ const candidateRead = new CandidateReadService(prisma, userRead);
 const contactRelations = new ContactRelationsService(prisma);
 const candidateValidation = new CandidateValidationService(prisma);
 const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin, candidateValidation, contactRelations);
-const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode);
+const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode, recipientStatus);
 const recipientValidation = new RecipientValidationService(prisma);
 const recipientWrite = new RecipientWriteService(
 	prisma,
@@ -135,7 +137,7 @@ const campaignValidation = new CampaignValidationService(prisma);
 const campaignWrite = new CampaignWriteService(prisma, organizationAccess, campaignValidation);
 const donationCertificateRead = new DonationCertificateReadService(prisma, organizationAccess);
 
-const programStats = new ProgramStatsService(prisma, exchangeRateRead);
+const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
 const campaignRead = new CampaignReadService(prisma, organizationAccess, exchangeRateRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
 const programValidation = new ProgramValidationService(prisma);
@@ -148,8 +150,8 @@ const programWrite = new ProgramWriteService(
 	organizationWrite,
 	programValidation,
 );
-const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, programStats);
-const payoutProcess = new PayoutProcessService(prisma, programAccessRead, programStats, exchangeRateRead);
+const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, recipientStatus);
+const payoutProcess = new PayoutProcessService(prisma, programAccessRead, programStats, exchangeRateRead, recipientStatus);
 const donationCertificateWrite = new DonationCertificateWriteService(
 	prisma,
 	contributorRead,

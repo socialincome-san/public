@@ -2,6 +2,7 @@ import {
 	ContributionStatus,
 	Currency,
 	PaymentEventType,
+	PayoutInterval,
 	PayoutStatus,
 	PrismaClient,
 	SurveyStatus,
@@ -12,6 +13,7 @@ import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
+import { RecipientStatusService } from '../recipient/recipient-status.service';
 import {
 	ProgramBudgetCalculation,
 	ProgramBudgetCalculationInput,
@@ -23,6 +25,7 @@ export class ProgramStatsService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly exchangeRateService: ExchangeRateReadService,
+		private readonly recipientStatusService: RecipientStatusService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -36,7 +39,14 @@ export class ProgramStatsService extends BaseService {
 			}
 
 			const nowDate = now();
-			const expectedIntervals = this.getExpectedIntervals(program.programDurationInMonths, program.payoutInterval);
+			const expectedIntervalsResult = this.recipientStatusService.getExpectedIntervals(
+				program.programDurationInMonths,
+				program.payoutInterval,
+			);
+			if (!expectedIntervalsResult.success) {
+				return this.resultFail(expectedIntervalsResult.error);
+			}
+			const expectedIntervals = expectedIntervalsResult.data;
 			const cohorts = this.splitRecipientCohorts(program, nowDate, expectedIntervals);
 			if (program.coveredByReserves) {
 				return this.resultOk(true);
@@ -90,7 +100,14 @@ export class ProgramStatsService extends BaseService {
 			const nowDate = now();
 			const recipientsCount = program.recipients.length;
 			const payoutPerInterval = Number(program.payoutPerInterval);
-			const totalExpectedIntervals = this.getExpectedIntervals(program.programDurationInMonths, program.payoutInterval);
+			const totalExpectedIntervalsResult = this.recipientStatusService.getExpectedIntervals(
+				program.programDurationInMonths,
+				program.payoutInterval,
+			);
+			if (!totalExpectedIntervalsResult.success) {
+				return this.resultFail(totalExpectedIntervalsResult.error);
+			}
+			const totalExpectedIntervals = totalExpectedIntervalsResult.data;
 			const cohorts = this.splitRecipientCohorts(program, nowDate, totalExpectedIntervals);
 
 			const rates = await this.getLatestRatesOrUndefined();
@@ -302,7 +319,8 @@ export class ProgramStatsService extends BaseService {
 		let payoutsDoneCount = 0;
 
 		for (const recipient of program.recipients) {
-			const paidOrConfirmedCount = this.countPaidOrConfirmedPayouts(recipient.payouts);
+			const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+			const paidOrConfirmedCount = paidOrConfirmedCountResult.success ? paidOrConfirmedCountResult.data : 0;
 			totalPayoutsCount += paidOrConfirmedCount;
 			payoutsDoneCount += recipient.payouts.length;
 
@@ -337,11 +355,17 @@ export class ProgramStatsService extends BaseService {
 		let remainingIntervalsCount = 0;
 
 		for (const recipient of params.recipients) {
-			const isSuspended = this.isRecipientSuspendedNow(recipient.suspendedAt, params.nowDate);
-			const paidOrConfirmedCount = this.countPaidOrConfirmedPayouts(recipient.payouts);
-			const isCompleted = this.isRecipientCompleted(paidOrConfirmedCount, params.expectedIntervals);
-
-			if (isSuspended || isCompleted) {
+			const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+			const paidOrConfirmedCount = paidOrConfirmedCountResult.success ? paidOrConfirmedCountResult.data : 0;
+			const statusResult = this.recipientStatusService.getRecipientLifecycleStatusFromExpectedIntervals({
+				startDate: recipient.startDate,
+				suspendedAt: recipient.suspendedAt,
+				paidOrConfirmedCount,
+				expectedIntervals: params.expectedIntervals,
+				nowDate: params.nowDate,
+			});
+			const status = statusResult.success ? statusResult.data : 'future';
+			if (status === 'suspended' || status === 'completed') {
 				continue;
 			}
 			const remainingIntervals = Math.max(0, params.expectedIntervals - paidOrConfirmedCount);
@@ -388,21 +412,22 @@ export class ProgramStatsService extends BaseService {
 		suspendedAt: Date | null;
 		paidOrConfirmedCount: number;
 		programDurationInMonths: number;
-		payoutInterval: string;
+		payoutInterval: PayoutInterval;
 		nowDate: Date;
 	}): ServiceResult<boolean> {
-		const hasStarted = this.isRecipientStartedNow(params.startDate, params.nowDate);
-		if (!hasStarted) {
-			return this.resultOk(false);
+		const isEligibleResult = this.recipientStatusService.isRecipientEligibleForPayout({
+			startDate: params.startDate,
+			suspendedAt: params.suspendedAt,
+			paidOrConfirmedCount: params.paidOrConfirmedCount,
+			programDurationInMonths: params.programDurationInMonths,
+			payoutInterval: params.payoutInterval,
+			nowDate: params.nowDate,
+		});
+		if (!isEligibleResult.success) {
+			return this.resultFail(isEligibleResult.error);
 		}
 
-		if (this.isRecipientSuspendedNow(params.suspendedAt, params.nowDate)) {
-			return this.resultOk(false);
-		}
-
-		const expectedIntervals = this.getExpectedIntervals(params.programDurationInMonths, params.payoutInterval);
-
-		return this.resultOk(!this.isRecipientCompleted(params.paidOrConfirmedCount, expectedIntervals));
+		return this.resultOk(isEligibleResult.data);
 	}
 
 	private async getLatestRatesOrUndefined(): Promise<Partial<Record<Currency, number>> | undefined> {
@@ -411,7 +436,7 @@ export class ProgramStatsService extends BaseService {
 		return latestRatesResult.success ? latestRatesResult.data : undefined;
 	}
 
-	private getNumberOfIntervals(programDurationInMonths: number, interval: string): number {
+	private getNumberOfIntervals(programDurationInMonths: number, interval: PayoutInterval): number {
 		if (interval === 'quarterly') {
 			return Math.ceil(programDurationInMonths / 3);
 		}
@@ -422,30 +447,22 @@ export class ProgramStatsService extends BaseService {
 		return programDurationInMonths;
 	}
 
-	private getExpectedIntervals(programDurationInMonths: number, interval: string): number {
-		return this.getNumberOfIntervals(programDurationInMonths, interval);
-	}
-
 	private calculateCostPerInterval(activeRecipientsCount: number, payoutPerInterval: number): number {
 		return activeRecipientsCount * payoutPerInterval;
-	}
-
-	private countPaidOrConfirmedPayouts(payouts: { status: PayoutStatus }[]): number {
-		return payouts.filter((p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed).length;
 	}
 
 	private calculateTotalBudget(
 		recipients: number,
 		durationMonths: number,
 		payoutPerInterval: number,
-		interval: string,
+		interval: PayoutInterval,
 	): number {
 		const numberOfIntervals = this.getNumberOfIntervals(durationMonths, interval);
 
 		return recipients * payoutPerInterval * numberOfIntervals;
 	}
 
-	private calculateMonthlyCost(recipients: number, payoutPerInterval: number, interval: string): number {
+	private calculateMonthlyCost(recipients: number, payoutPerInterval: number, interval: PayoutInterval): number {
 		if (interval === 'quarterly') {
 			return (recipients * payoutPerInterval) / 3;
 		}
@@ -556,26 +573,24 @@ export class ProgramStatsService extends BaseService {
 		let completedRecipientsCount = 0;
 
 		for (const recipient of program.recipients) {
-			const hasStarted = this.isRecipientStartedNow(recipient.startDate, nowDate);
-			const isFuture = !hasStarted;
-			const isSuspended = this.isRecipientSuspendedNow(recipient.suspendedAt, nowDate);
-			const paidOrConfirmedCount = this.countPaidOrConfirmedPayouts(recipient.payouts);
-			const isCompleted = this.isRecipientCompleted(paidOrConfirmedCount, expectedIntervals);
-
-			if (isFuture) {
+			const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+			const paidOrConfirmedCount = paidOrConfirmedCountResult.success ? paidOrConfirmedCountResult.data : 0;
+			const statusResult = this.recipientStatusService.getRecipientLifecycleStatusFromExpectedIntervals({
+				startDate: recipient.startDate,
+				suspendedAt: recipient.suspendedAt,
+				paidOrConfirmedCount,
+				expectedIntervals,
+				nowDate,
+			});
+			const status = statusResult.success ? statusResult.data : 'future';
+			if (status === 'future') {
 				futureRecipientsCount++;
-				continue;
-			}
-			if (isCompleted) {
-				completedRecipientsCount++;
-				continue;
-			}
-			if (isSuspended) {
-				suspendedRecipientsCount++;
-				continue;
-			}
-			if (hasStarted) {
+			} else if (status === 'active') {
 				activeRecipientsCount++;
+			} else if (status === 'suspended') {
+				suspendedRecipientsCount++;
+			} else if (status === 'completed') {
+				completedRecipientsCount++;
 			}
 		}
 
@@ -585,17 +600,5 @@ export class ProgramStatsService extends BaseService {
 			suspendedRecipientsCount,
 			completedRecipientsCount,
 		};
-	}
-
-	private isRecipientStartedNow(startDate: Date | null, nowDate: Date): boolean {
-		return startDate !== null && startDate < nowDate;
-	}
-
-	private isRecipientSuspendedNow(suspendedAt: Date | null, nowDate: Date): boolean {
-		return suspendedAt !== null && suspendedAt <= nowDate;
-	}
-
-	private isRecipientCompleted(paidOrConfirmedCount: number, expectedIntervals: number): boolean {
-		return paidOrConfirmedCount >= expectedIntervals;
 	}
 }

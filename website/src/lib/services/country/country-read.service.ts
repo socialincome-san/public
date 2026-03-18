@@ -13,6 +13,7 @@ import {
 	CountryTableView,
 	CountryTableViewRow,
 	MobileMoneyProviderRef,
+	NETWORK_TECH_LABELS,
 	ProgramCountryFeasibilityRow,
 	ProgramCountryFeasibilityView,
 } from './country.types';
@@ -187,7 +188,7 @@ export class CountryReadService extends BaseService {
 				isActive: c.isActive,
 				microfinanceIndex: c.microfinanceIndex ? Number(c.microfinanceIndex) : null,
 				populationCoverage: c.populationCoverage ? Number(c.populationCoverage) : null,
-				networkTechnology: c.networkTechnology ?? null,
+				networkTechnology: c.networkTechnology ? NETWORK_TECH_LABELS[c.networkTechnology] : null,
 				latestSurveyDate: c.latestSurveyDate ?? null,
 				mobileMoneyProviders: c.mobileMoneyProviders ?? [],
 				sanctions: c.sanctions ?? [],
@@ -383,23 +384,7 @@ export class CountryReadService extends BaseService {
 			return undefined;
 		}
 
-		if (networkTechnology === NetworkTechnology.g3) {
-			return '3G';
-		}
-
-		if (networkTechnology === NetworkTechnology.g4) {
-			return '4G';
-		}
-
-		if (networkTechnology === NetworkTechnology.g5) {
-			return '5G';
-		}
-
-		if (networkTechnology === NetworkTechnology.satellite) {
-			return 'satellite';
-		}
-
-		return undefined;
+		return NETWORK_TECH_LABELS[networkTechnology];
 	}
 
 	private getSanctionsCondition(sanctions: SanctionRegime[] | null): CountryCondition {

@@ -1,4 +1,5 @@
 import { CountryCode, ProgramPermission } from '@/generated/prisma/client';
+import type { RecipientLifecycleStatus } from './recipient.types';
 
 export type RecipientTableViewRow = {
 	id: string;
@@ -18,6 +19,7 @@ export type RecipientTableViewRow = {
 	payoutsTotal: number;
 	payoutsProgressPercent: number;
 	createdAt: Date;
+	status: RecipientLifecycleStatus;
 	permission: ProgramPermission;
 };
 
@@ -33,6 +35,7 @@ export type RecipientTableQuery = {
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
 	programId?: string;
+	recipientStatus?: string;
 };
 
 export type RecipientProgramFilterOption = {
