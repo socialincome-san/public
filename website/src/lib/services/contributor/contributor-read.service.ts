@@ -372,10 +372,42 @@ export class ContributorReadService extends BaseService {
 		}
 	}
 
-	async getByIds(contributorIds?: string[]): Promise<ServiceResult<ContributorDonationCertificate[]>> {
+	async getByIds(params?: {
+		actorUserId?: string;
+		contributorIds?: string[];
+	}): Promise<ServiceResult<ContributorDonationCertificate[]>> {
 		try {
+			const contributorIds = params?.contributorIds;
+			const actorUserId = params?.actorUserId;
+			let accessibleProgramIds: string[] | null = null;
+			if (actorUserId) {
+				const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(actorUserId);
+				if (!accessibleProgramsResult.success) {
+					return this.resultFail(accessibleProgramsResult.error);
+				}
+				accessibleProgramIds = Array.from(new Set(accessibleProgramsResult.data.map((program) => program.programId)));
+				if (accessibleProgramIds.length === 0) {
+					return this.resultOk([]);
+				}
+			}
+
 			const result = await this.db.contributor.findMany({
-				where: contributorIds && contributorIds.length > 0 ? { id: { in: contributorIds } } : {},
+				where: {
+					...(contributorIds && contributorIds.length > 0 ? { id: { in: contributorIds } } : {}),
+					...(accessibleProgramIds
+						? {
+								contributions: {
+									some: {
+										campaign: {
+											programId: {
+												in: accessibleProgramIds,
+											},
+										},
+									},
+								},
+							}
+						: {}),
+				},
 				select: {
 					id: true,
 					account: true,

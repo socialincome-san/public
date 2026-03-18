@@ -1,4 +1,4 @@
-import { PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -113,8 +113,10 @@ export class SurveyWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program?.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
+			if (!recipient.program?.id) {
+				return this.resultFail('Recipient is not assigned to a program');
+			}
+			if (!this.programAccessService.hasOperatorAccess(accessibleProgramsResult.data, recipient.program.id)) {
 				return this.resultFail('Access denied');
 			}
 
@@ -182,8 +184,10 @@ export class SurveyWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program?.id);
-			if (!programAccess || programAccess.permission === ProgramPermission.owner) {
+			if (!survey.recipient.program?.id) {
+				return this.resultFail('Recipient is not assigned to a program');
+			}
+			if (!this.programAccessService.hasOperatorAccess(accessibleProgramsResult.data, survey.recipient.program.id)) {
 				return this.resultFail('Access denied');
 			}
 
@@ -194,10 +198,10 @@ export class SurveyWriteService extends BaseService {
 			if (!targetRecipient) {
 				return this.resultFail('Recipient not found');
 			}
-			const targetProgramAccess = accessibleProgramsResult.data.find(
-				(p) => p.programId === targetRecipient.program?.id && p.permission !== ProgramPermission.owner,
-			);
-			if (!targetProgramAccess) {
+			if (!targetRecipient.program?.id) {
+				return this.resultFail('Recipient is not assigned to a program');
+			}
+			if (!this.programAccessService.hasOperatorAccess(accessibleProgramsResult.data, targetRecipient.program.id)) {
 				return this.resultFail('Access denied');
 			}
 

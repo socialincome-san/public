@@ -211,8 +211,9 @@ export class ProgramWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const hasOperatorAccess = accessibleProgramsResult.data.some(
-				(program) => program.programId === parsedInput.id && program.permission === ProgramPermission.operator,
+			const hasOperatorAccess = this.programAccessReadService.hasOperatorAccess(
+				accessibleProgramsResult.data,
+				parsedInput.id,
 			);
 			if (!hasOperatorAccess) {
 				return this.resultFail('Permission denied');
@@ -300,9 +301,7 @@ export class ProgramWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const hasOperatorAccess = accessibleProgramsResult.data.some(
-				(program) => program.programId === programId && program.permission === ProgramPermission.operator,
-			);
+			const hasOperatorAccess = this.programAccessReadService.hasOperatorAccess(accessibleProgramsResult.data, programId);
 			if (!hasOperatorAccess) {
 				return this.resultFail('Permission denied');
 			}

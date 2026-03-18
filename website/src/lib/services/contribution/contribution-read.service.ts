@@ -174,7 +174,7 @@ export class ContributionReadService extends BaseService {
 					new Map(
 						campaigns
 							.filter((campaign) => campaign.program?.id && campaign.program?.name)
-							.map((campaign) => [campaign.program!.id, { value: campaign.program!.id, label: campaign.program!.name }]),
+							.map((campaign) => [campaign.program.id, { value: campaign.program.id, label: campaign.program.name }]),
 					).values(),
 				),
 				campaigns: campaigns.map((campaign) => ({ value: campaign.id, label: campaign.title })),
@@ -194,6 +194,7 @@ export class ContributionReadService extends BaseService {
 					: campaignIds;
 			if (filteredCampaignIds.length === 0) {
 				const readOnlyPermission = ProgramPermission.owner;
+
 				return this.resultOk({ tableRows: [], totalCount: 0, permission: readOnlyPermission, filterOptions });
 			}
 

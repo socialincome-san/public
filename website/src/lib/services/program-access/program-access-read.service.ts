@@ -51,7 +51,7 @@ export class ProgramAccessReadService extends BaseService {
 		}
 	}
 
-	private resolveEffectivePermission(accesses: ProgramAccesses, programId: string): ProgramPermission | null {
+	getPermissionFromAccesses(accesses: ProgramAccesses, programId: string): ProgramPermission | null {
 		const programPermissions = accesses
 			.filter((access) => access.programId === programId)
 			.map((access) => access.permission);
@@ -66,6 +66,18 @@ export class ProgramAccessReadService extends BaseService {
 		return null;
 	}
 
+	hasReadAccess(accesses: ProgramAccesses, programId: string): boolean {
+		return this.getPermissionFromAccesses(accesses, programId) !== null;
+	}
+
+	hasOperatorAccess(accesses: ProgramAccesses, programId: string): boolean {
+		return this.getPermissionFromAccesses(accesses, programId) === ProgramPermission.operator;
+	}
+
+	hasAnyOperatorAccess(accesses: ProgramAccesses): boolean {
+		return accesses.some((access) => access.permission === ProgramPermission.operator);
+	}
+
 	async getProgramPermission(userId: string, programId: string): Promise<ServiceResult<ProgramPermission | null>> {
 		try {
 			const accessibleProgramsResult = await this.getAccessiblePrograms(userId);
@@ -73,7 +85,7 @@ export class ProgramAccessReadService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const permission = this.resolveEffectivePermission(accessibleProgramsResult.data, programId);
+			const permission = this.getPermissionFromAccesses(accessibleProgramsResult.data, programId);
 
 			return this.resultOk(permission);
 		} catch (error) {

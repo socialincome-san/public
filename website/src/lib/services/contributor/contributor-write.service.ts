@@ -1,4 +1,4 @@
-import { Contributor, ContributorReferralSource, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { Contributor, ContributorReferralSource, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { ContactRelationsService } from '../contact/contact-relations.service';
@@ -93,7 +93,7 @@ export class ContributorWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 			const accessiblePrograms = accessibleProgramsResult.data;
-			const hasOperatorAccess = accessiblePrograms.some((program) => program.permission === ProgramPermission.operator);
+			const hasOperatorAccess = this.programAccessService.hasAnyOperatorAccess(accessiblePrograms);
 			if (!hasOperatorAccess) {
 				return this.resultFail('No permissions to update contributor');
 			}
@@ -123,9 +123,7 @@ export class ContributorWriteService extends BaseService {
 				select: { campaign: { select: { programId: true } } },
 			});
 			const canOperateContributorPrograms = contributorProgramIds.some((entry) =>
-				accessiblePrograms.some(
-					(program) => program.programId === entry.campaign.programId && program.permission === ProgramPermission.operator,
-				),
+				this.programAccessService.hasOperatorAccess(accessiblePrograms, entry.campaign.programId),
 			);
 			if (!canOperateContributorPrograms) {
 				return this.resultFail('No permissions to update contributor');
@@ -481,9 +479,7 @@ export class ContributorWriteService extends BaseService {
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const hasOperatorAccess = accessibleProgramsResult.data.some(
-				(program) => program.permission === ProgramPermission.operator,
-			);
+			const hasOperatorAccess = this.programAccessService.hasAnyOperatorAccess(accessibleProgramsResult.data);
 			if (!hasOperatorAccess) {
 				return this.resultFail('No permission to create contributor');
 			}

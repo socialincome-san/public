@@ -47,8 +47,9 @@ export class ContributionWriteService extends BaseService {
 			if (!existing) {
 				return this.resultFail('Contribution not found');
 			}
-			const hasOperatorAccessToExistingProgram = accessResult.data.some(
-				(program) => program.programId === existing.campaign.programId && program.permission === 'operator',
+			const hasOperatorAccessToExistingProgram = this.programAccessService.hasOperatorAccess(
+				accessResult.data,
+				existing.campaign.programId,
 			);
 			if (!hasOperatorAccessToExistingProgram) {
 				return this.resultFail('No permissions to update contribution');
@@ -69,8 +70,9 @@ export class ContributionWriteService extends BaseService {
 			if (!campaign) {
 				return this.resultFail('Campaign not found');
 			}
-			const hasOperatorAccessToTargetProgram = accessResult.data.some(
-				(program) => program.programId === campaign.programId && program.permission === 'operator',
+			const hasOperatorAccessToTargetProgram = this.programAccessService.hasOperatorAccess(
+				accessResult.data,
+				campaign.programId,
 			);
 			if (!hasOperatorAccessToTargetProgram) {
 				return this.resultFail('Permission denied');
@@ -147,9 +149,7 @@ export class ContributionWriteService extends BaseService {
 			if (!campaign) {
 				return this.resultFail('Campaign not found');
 			}
-			const hasOperatorAccessToProgram = accessResult.data.some(
-				(program) => program.programId === campaign.programId && program.permission === 'operator',
-			);
+			const hasOperatorAccessToProgram = this.programAccessService.hasOperatorAccess(accessResult.data, campaign.programId);
 			if (!hasOperatorAccessToProgram) {
 				return this.resultFail('Permission denied');
 			}
