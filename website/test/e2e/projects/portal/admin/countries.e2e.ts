@@ -124,3 +124,71 @@ test('update country', async ({ page }) => {
 	expect(updated).toBeDefined();
 	expect(Number(updated?.defaultPayoutAmount)).toBe(updatedPayoutAmount);
 });
+
+test('update country clears existing source URLs', async ({ page }) => {
+	const countryOption = await pickUnusedCountryOption();
+	const currency = bestGuessCurrency(countryOption.code);
+	const initialPayoutAmount = 80;
+
+	const created = await prisma.country.create({
+		data: {
+			isoCode: countryOption.code,
+			isActive: true,
+			currency,
+			defaultPayoutAmount: initialPayoutAmount,
+			microfinanceSourceLink: {
+				create: {
+					text: 'WFP',
+					href: 'https://www.wfp.org',
+				},
+			},
+			networkSourceLink: {
+				create: {
+					text: 'ITU',
+					href: 'https://www.itu.int',
+				},
+			},
+		},
+		select: { id: true },
+	});
+	expect(created.id).toBeTruthy();
+
+	await page.goto(`/portal/admin/countries?page=1&pageSize=10&search=${countryOption.code}`);
+	await expect(page.getByRole('cell', { name: countryOption.code }).first()).toBeVisible();
+	await page.getByTestId('data-table').locator('tbody tr').first().click();
+	await expect(page.getByTestId('dynamic-form')).toBeVisible();
+
+	const microfinanceSourceHrefInput = page
+		.getByTestId('form-item-suitabilityOfCash.microfinanceSourceHref')
+		.locator('input');
+	const networkSourceHrefInput = page.getByTestId('form-item-mobileNetwork.networkSourceHref').locator('input');
+
+	await expect(microfinanceSourceHrefInput).toHaveValue('https://www.wfp.org');
+	await expect(networkSourceHrefInput).toHaveValue('https://www.itu.int');
+
+	await microfinanceSourceHrefInput.clear();
+	await networkSourceHrefInput.clear();
+	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const updated = await prisma.country.findUnique({
+		where: { id: created.id },
+		select: {
+			microfinanceSourceLink: {
+				select: { id: true },
+			},
+			networkSourceLink: {
+				select: { id: true },
+			},
+		},
+	});
+
+	expect(updated).toBeDefined();
+	expect(updated?.microfinanceSourceLink).toBeNull();
+	expect(updated?.networkSourceLink).toBeNull();
+
+	await page.getByTestId('data-table').locator('tbody tr').first().click();
+	await expect(page.getByTestId('dynamic-form')).toBeVisible();
+	await expect(microfinanceSourceHrefInput).toHaveValue('');
+	await expect(networkSourceHrefInput).toHaveValue('');
+});

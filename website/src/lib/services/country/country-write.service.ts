@@ -175,7 +175,7 @@ export class CountryWriteService extends BaseService {
 									},
 								},
 							}
-						: undefined,
+						: { disconnect: true },
 					networkSourceLink: validatedInput.networkSourceLink
 						? {
 								upsert: {
@@ -183,7 +183,7 @@ export class CountryWriteService extends BaseService {
 									update: { text: validatedInput.networkSourceLink.text, href: validatedInput.networkSourceLink.href },
 								},
 							}
-						: undefined,
+						: { disconnect: true },
 				},
 				include: {
 					microfinanceSourceLink: true,
