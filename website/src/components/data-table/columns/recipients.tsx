@@ -7,6 +7,7 @@ import { DateCell } from '@/components/data-table/elements/date-cell';
 import { IdCell } from '@/components/data-table/elements/id-cell';
 import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
+import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -32,6 +33,12 @@ export const makeRecipientColumns = (
 			accessorFn: (row) => row.country ?? '',
 			header: (ctx) => <SortableHeader ctx={ctx}>Country</SortableHeader>,
 			cell: ({ row }) => <CountryFlagCell country={row.original.country} />,
+		},
+		{
+			id: 'status',
+			accessorFn: (row) => row.status,
+			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
+			cell: (ctx) => <StatusCell ctx={ctx} variant="recipient" />,
 		},
 		{
 			accessorKey: 'paymentCode',

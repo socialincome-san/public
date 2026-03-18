@@ -1,4 +1,4 @@
-import { Address, Gender, Phone, Prisma } from '@/generated/prisma/client';
+import { Address, Gender, Phone, PayoutInterval, Prisma } from '@/generated/prisma/client';
 export type { RecipientProgramFilterOption, RecipientTableViewRow } from './recipient-table.types';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
@@ -69,4 +69,23 @@ export type RecipientPrismaUpdateInput = Prisma.RecipientUpdateInput;
 export type RecipientOption = {
 	id: string;
 	fullName: string;
+};
+
+export type RecipientLifecycleStatus = 'future' | 'active' | 'suspended' | 'completed';
+
+export type RecipientLifecycleStatusInput = {
+	startDate: Date | null;
+	suspendedAt: Date | null;
+	paidOrConfirmedCount: number;
+	programDurationInMonths: number;
+	payoutInterval: PayoutInterval;
+	nowDate: Date;
+};
+
+export type RecipientLifecycleStatusFromExpectedIntervalsInput = {
+	startDate: Date | null;
+	suspendedAt: Date | null;
+	paidOrConfirmedCount: number;
+	expectedIntervals: number;
+	nowDate: Date;
 };

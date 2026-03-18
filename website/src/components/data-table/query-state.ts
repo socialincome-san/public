@@ -22,6 +22,7 @@ export type TableQueryState = {
 	campaignId?: string;
 	paymentEventType?: string;
 	payoutStatus?: string;
+	recipientStatus?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -40,6 +41,7 @@ type TableQueryInput = {
 	campaignId?: QueryValue;
 	paymentEventType?: QueryValue;
 	payoutStatus?: QueryValue;
+	recipientStatus?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
@@ -100,6 +102,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const campaignId = normalizeToken(input.campaignId, MAX_QUERY_TOKEN_LENGTH);
 	const paymentEventType = normalizeToken(input.paymentEventType, MAX_QUERY_TOKEN_LENGTH);
 	const payoutStatus = normalizeToken(input.payoutStatus, MAX_QUERY_TOKEN_LENGTH);
+	const recipientStatus = normalizeToken(input.recipientStatus, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
@@ -115,6 +118,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		campaignId: campaignId || undefined,
 		paymentEventType: paymentEventType || undefined,
 		payoutStatus: payoutStatus || undefined,
+		recipientStatus: recipientStatus || undefined,
 	};
 };
 
@@ -133,6 +137,7 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		campaignId: searchParams.campaignId,
 		paymentEventType: searchParams.paymentEventType,
 		payoutStatus: searchParams.payoutStatus,
+		recipientStatus: searchParams.recipientStatus,
 	});
 };
 
@@ -156,6 +161,7 @@ export const applyTableQueryPatch = (
 		campaignId: hasPatchKey('campaignId') ? patch.campaignId : currentSearchParams.get('campaignId'),
 		paymentEventType: hasPatchKey('paymentEventType') ? patch.paymentEventType : currentSearchParams.get('paymentEventType'),
 		payoutStatus: hasPatchKey('payoutStatus') ? patch.payoutStatus : currentSearchParams.get('payoutStatus'),
+		recipientStatus: hasPatchKey('recipientStatus') ? patch.recipientStatus : currentSearchParams.get('recipientStatus'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -213,6 +219,11 @@ export const applyTableQueryPatch = (
 		nextParams.set('payoutStatus', nextQuery.payoutStatus);
 	} else {
 		nextParams.delete('payoutStatus');
+	}
+	if (nextQuery.recipientStatus) {
+		nextParams.set('recipientStatus', nextQuery.recipientStatus);
+	} else {
+		nextParams.delete('recipientStatus');
 	}
 
 	return nextParams;

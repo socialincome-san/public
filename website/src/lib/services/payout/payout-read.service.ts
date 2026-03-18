@@ -7,7 +7,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
-import { ProgramStatsService } from '../program-stats/program-stats.service';
+import { RecipientStatusService } from '../recipient/recipient-status.service';
 import {
 	OngoingPayoutPaginatedTableView,
 	OngoingPayoutTableQuery,
@@ -32,7 +32,7 @@ export class PayoutReadService extends BaseService {
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly exchangeRateService: ExchangeRateReadService,
-		private readonly programStatsService: ProgramStatsService,
+		private readonly recipientStatusService: RecipientStatusService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -377,7 +377,7 @@ export class PayoutReadService extends BaseService {
 
 			for (const recipient of program.recipients) {
 				const paid = recipient.payouts.length;
-				const isEligibleNowResult = this.programStatsService.isRecipientEligibleForPayout({
+				const isEligibleNowResult = this.recipientStatusService.isRecipientEligibleForPayout({
 					startDate: recipient.startDate,
 					suspendedAt: recipient.suspendedAt,
 					paidOrConfirmedCount: paid,
