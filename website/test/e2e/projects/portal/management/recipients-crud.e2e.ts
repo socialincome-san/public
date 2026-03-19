@@ -421,26 +421,83 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 	}
 });
 
-test.only('Delete recipient', async ({ page }) => {
-	const phone = EXISTING_RECIPIENT.paymentPhone;
+test('Delete recipient', async ({ page }) => {
+	const unique = Date.now();
+	const firstName = `delete_recipient_${unique}`;
+	const lastName = 'recipient_delete';
+	const unusedPhones = await buildUnusedPaymentPhoneNumbers();
+	const phone = unusedPhones.first;
 	const firebaseService = await getFirebaseAdminService();
+
 	await firebaseService.deleteByPhoneNumberIfExists(phone);
 	await firebaseService.createByPhoneNumber(phone);
+
+	const localPartner = await prisma.localPartner.findFirst({
+		where: { id: 'local-partner-sl-1' },
+		select: { id: true },
+	});
+	const program = await prisma.program.findFirst({
+		where: { id: 'program-si-core-sl' },
+		select: { id: true },
+	});
+	expect(localPartner?.id).toBeTruthy();
+	expect(program?.id).toBeTruthy();
+
+	const createdPhone = await prisma.phone.create({
+		data: {
+			number: phone,
+			hasWhatsApp: false,
+		},
+		select: {
+			id: true,
+		},
+	});
+
+	await prisma.recipient.create({
+		data: {
+			localPartner: {
+				connect: {
+					id: localPartner!.id,
+				},
+			},
+			program: {
+				connect: {
+					id: program!.id,
+				},
+			},
+			startDate: new Date('2024-10-01T00:00:00.000Z'),
+			termsAccepted: true,
+			contact: {
+				create: {
+					firstName,
+					lastName,
+					callingName: firstName,
+					email: `delete.recipient.${unique}@recipient.test`,
+					language: 'kri',
+				},
+			},
+			paymentInformation: {
+				create: {
+					mobileMoneyProviderId: 'mobile-money-provider-id-1',
+					code: `PI-DELETE-${unique}`,
+					phoneId: createdPhone.id,
+				},
+			},
+		},
+	});
 
 	try {
 		await page.goto('http://localhost:4000/auth');
 		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(phone);
 		await expect(page.getByRole('cell', { name: phone })).toBeVisible();
 
-		await page.goto(
-			`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(EXISTING_RECIPIENT.firstName)}`,
-		);
-		await page.getByRole('cell', { name: EXISTING_RECIPIENT.firstName }).click();
+		await page.goto(`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+		await page.getByRole('cell', { name: firstName }).click();
 		await page.getByRole('button', { name: 'Delete' }).click();
 		await page.getByRole('button', { name: 'Delete permanently' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-		const deleted = await getRecipientIdByName(EXISTING_RECIPIENT.firstName, EXISTING_RECIPIENT.lastName);
+		const deleted = await getRecipientIdByName(firstName, lastName);
 
 		expect(deleted).toBeNull();
 
@@ -449,7 +506,6 @@ test.only('Delete recipient', async ({ page }) => {
 		await expect(page.getByRole('cell', { name: phone })).toHaveCount(0);
 	} finally {
 		await firebaseService.deleteByPhoneNumberIfExists(phone);
-		await firebaseService.createByPhoneNumber(phone);
 	}
 });
 
