@@ -432,7 +432,9 @@ test.only('Delete recipient', async ({ page }) => {
 		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(phone);
 		await expect(page.getByRole('cell', { name: phone })).toBeVisible();
 
-		await page.goto(`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(EXISTING_RECIPIENT.firstName)}`);
+		await page.goto(
+			`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(EXISTING_RECIPIENT.firstName)}`,
+		);
 		await page.getByRole('cell', { name: EXISTING_RECIPIENT.firstName }).click();
 		await page.getByRole('button', { name: 'Delete' }).click();
 		await page.getByRole('button', { name: 'Delete permanently' }).click();
