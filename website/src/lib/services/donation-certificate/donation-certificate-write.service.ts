@@ -41,7 +41,7 @@ export class DonationCertificateWriteService extends BaseService {
 				return this.resultFail(DonationCertificateError.bucketMissing);
 			}
 
-			const result = await this.contributorService.getByIds([contributorsId]);
+			const result = await this.contributorService.getByIds({ contributorIds: [contributorsId] });
 			if (!result.success || !result.data?.length) {
 				this.logger.info(`Could not load contributor for contributor ID ${contributorsId}`);
 
@@ -169,5 +169,29 @@ export class DonationCertificateWriteService extends BaseService {
 
 			return this.resultFail(`Error while creating donation certificates for ${year}: ${JSON.stringify(error)}`);
 		}
+	}
+
+	async createDonationCertificatesForUser(
+		userId: string,
+		year: number,
+		contributorIds: string[],
+		language?: LanguageCode,
+	): Promise<ServiceResult<string>> {
+		const scopedContributorsResult = await this.contributorService.getByIds({
+			actorUserId: userId,
+			contributorIds,
+		});
+		if (!scopedContributorsResult.success) {
+			return this.resultFail(scopedContributorsResult.error);
+		}
+		if (scopedContributorsResult.data.length !== contributorIds.length) {
+			return this.resultFail('Permission denied');
+		}
+
+		return this.createDonationCertificates(
+			year,
+			scopedContributorsResult.data.map((contributor) => contributor.id),
+			language,
+		);
 	}
 }

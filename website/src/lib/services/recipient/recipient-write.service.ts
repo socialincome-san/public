@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, ProgramPermission, Recipient } from '@/generated/prisma/client';
+import { Prisma, PrismaClient, Recipient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
@@ -46,9 +46,7 @@ export class RecipientWriteService extends BaseService {
 				if (!accessResult.success) {
 					return this.resultFail(accessResult.error);
 				}
-				const hasOperatorAccess = accessResult.data.some(
-					(a) => a.programId === programId && a.permission === ProgramPermission.operator,
-				);
+				const hasOperatorAccess = this.programAccessService.hasOperatorAccess(accessResult.data, programId);
 				if (!hasOperatorAccess) {
 					return this.resultFail('Permission denied');
 				}
@@ -159,17 +157,15 @@ export class RecipientWriteService extends BaseService {
 				if (!accessResult.success) {
 					return this.resultFail(accessResult.error);
 				}
-				const existingProgramAllowed = accessResult.data.some(
-					(a) => a.programId === existing.programId && a.permission === ProgramPermission.operator,
-				);
+				const existingProgramAllowed =
+					typeof existing.programId === 'string' &&
+					this.programAccessService.hasOperatorAccess(accessResult.data, existing.programId);
 				if (!existingProgramAllowed) {
 					return this.resultFail('Permission denied');
 				}
 				const requestedProgramId = validatedInput.programId;
 				if (requestedProgramId) {
-					const requestedProgramAllowed = accessResult.data.some(
-						(a) => a.programId === requestedProgramId && a.permission === ProgramPermission.operator,
-					);
+					const requestedProgramAllowed = this.programAccessService.hasOperatorAccess(accessResult.data, requestedProgramId);
 					if (!requestedProgramAllowed) {
 						return this.resultFail('Permission denied');
 					}
@@ -607,9 +603,9 @@ export class RecipientWriteService extends BaseService {
 				if (!accessResult.success) {
 					return this.resultFail(accessResult.error);
 				}
-				const allowed = accessResult.data.some(
-					(a) => a.programId === existing.programId && a.permission === ProgramPermission.operator,
-				);
+				const allowed =
+					typeof existing.programId === 'string' &&
+					this.programAccessService.hasOperatorAccess(accessResult.data, existing.programId);
 				if (!allowed) {
 					return this.resultFail('Permission denied');
 				}

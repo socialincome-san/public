@@ -121,9 +121,9 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													{session.organizations.map((org) => (
-														<SelectItem key={org.id} value={org.id}>
-															{org.name}
+													{session.organizations.map((organization) => (
+														<SelectItem key={organization.id} value={organization.id}>
+															{organization.name}
 														</SelectItem>
 													))}
 												</SelectContent>

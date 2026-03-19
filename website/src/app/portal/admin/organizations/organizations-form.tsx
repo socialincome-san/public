@@ -27,8 +27,7 @@ export type OrganizationFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
-		editUsers: FormField;
-		readonlyUsers: FormField;
+		users: FormField;
 		ownedPrograms: FormField;
 		operatedPrograms: FormField;
 	};
@@ -42,14 +41,8 @@ const initialFormSchema: OrganizationFormSchema = {
 			label: 'Name',
 			zodSchema: z.string().trim().min(1, 'Organization name is required.'),
 		},
-		editUsers: {
-			label: 'Users with edit permission',
-			placeholder: 'Select users',
-			zodSchema: z.array(z.string()).optional(),
-			options: [],
-		},
-		readonlyUsers: {
-			label: 'Users with readonly permission',
+		users: {
+			label: 'Users',
 			placeholder: 'Select users',
 			zodSchema: z.array(z.string()).optional(),
 			options: [],
@@ -118,12 +111,8 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 					const next = cloneFormSchema(initialFormSchema);
 					if (usersResult.success) {
 						const userOptions = usersResult.data.map((user) => ({ id: user.id, label: user.name }));
-						next.fields.editUsers = {
-							...next.fields.editUsers,
-							options: userOptions,
-						};
-						next.fields.readonlyUsers = {
-							...next.fields.readonlyUsers,
+						next.fields.users = {
+							...next.fields.users,
 							options: userOptions,
 						};
 					}
@@ -141,8 +130,7 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 
 					if (organizationId && organizationResult?.success) {
 						next.fields.name.value = organizationResult.data.name;
-						next.fields.editUsers.value = organizationResult.data.editUserIds;
-						next.fields.readonlyUsers.value = organizationResult.data.readonlyUserIds;
+						next.fields.users.value = organizationResult.data.userIds;
 						next.fields.ownedPrograms.value = organizationResult.data.ownedProgramIds;
 						next.fields.operatedPrograms.value = organizationResult.data.operatedProgramIds;
 					}

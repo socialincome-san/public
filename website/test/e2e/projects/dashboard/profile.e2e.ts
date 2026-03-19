@@ -22,7 +22,7 @@ test('dashboard profile updates contributor personal info', async ({ page }) => 
 	await expect
 		.poll(async () => {
 			const contributor = await prisma.contributor.findFirst({
-				where: { contact: { email: 'test@dashboard.org' } },
+				where: { contact: { email: 'coreh@dashboard.test' } },
 				select: { contact: { select: { firstName: true } } },
 			});
 

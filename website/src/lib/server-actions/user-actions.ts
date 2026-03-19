@@ -61,7 +61,8 @@ export const updateUserSelfAction = async (input: UserUpdateInput): Promise<Serv
 	const result = await services.write.user.updateSelf(session.id, input);
 
 	if (result.success) {
-		revalidatePath('/portal/profile');
+		revalidatePath('/portal/profile/account');
+		revalidatePath('/portal/profile/organization');
 	}
 
 	return result;

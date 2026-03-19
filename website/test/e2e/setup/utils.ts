@@ -4,19 +4,19 @@ import { APIResponse, Browser, expect } from '@playwright/test';
 
 const ACTORS = {
 	user: {
-		email: 'test@portal.org',
+		email: 'power@portal.test',
 		testId: 'welcome-message-portal',
 		expectedPath: '/portal',
 		state: 'playwright/.auth/user.json',
 	},
 	contributor: {
-		email: 'test@dashboard.org',
+		email: 'coreh@dashboard.test',
 		testId: 'welcome-message-dashboard',
 		expectedPath: '/dashboard',
 		state: 'playwright/.auth/contributor.json',
 	},
 	partner: {
-		email: 'test@partner.org',
+		email: 'sl@partner.test',
 		testId: 'welcome-message-partner-space',
 		expectedPath: '/partner-space',
 		state: 'playwright/.auth/partner.json',

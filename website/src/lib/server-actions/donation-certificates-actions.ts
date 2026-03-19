@@ -11,7 +11,7 @@ export const getContributorOptions = async () => {
 		return sessionResult;
 	}
 
-	return await services.read.contributor.getByIds();
+	return await services.read.contributor.getByIds({ actorUserId: sessionResult.data.id });
 };
 
 export const generateDonationCertificates = async (year: number, contributorIds: string[], language?: LanguageCode) => {
@@ -19,7 +19,12 @@ export const generateDonationCertificates = async (year: number, contributorIds:
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	const result = await services.write.donationCertificate.createDonationCertificates(year, contributorIds, language);
+	const result = await services.write.donationCertificate.createDonationCertificatesForUser(
+		sessionResult.data.id,
+		year,
+		contributorIds,
+		language,
+	);
 	revalidatePath('/portal/management/donation-certificates');
 
 	return result;
