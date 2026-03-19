@@ -19,6 +19,16 @@ export const makeUpcomingOnboardingColumns = (): ColumnDef<UpcomingOnboardingTab
 		cell: (ctx) => <TextCell ctx={ctx} />,
 	},
 	{
+		accessorKey: 'localPartnerName',
+		header: (ctx) => <SortableHeader ctx={ctx}>Local Partner</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
+		accessorKey: 'communicationPhoneNumber',
+		header: (ctx) => <SortableHeader ctx={ctx}>Communication Phone</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
 		accessorKey: 'daysUntilStart',
 		header: (ctx) => <SortableHeader ctx={ctx}>Starts in</SortableHeader>,
 		cell: (ctx) => <DaysCountCell ctx={ctx} />,

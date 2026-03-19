@@ -55,6 +55,8 @@ export type UpcomingOnboardingTableViewRow = {
 	recipientName: string;
 	programId: string;
 	programName: string;
+	localPartnerName: string;
+	communicationPhoneNumber: string | null;
 	startDate: Date;
 	daysUntilStart: number;
 	createdAt: Date;

@@ -12,10 +12,12 @@ export const upcomingOnboardingTableConfig: DataTableConfig<UpcomingOnboardingTa
 	id: 'upcoming-onboarding',
 	title: 'Upcoming Onboarding',
 	emptyMessage: 'No upcoming onboarding recipients found',
-	searchKeys: ['id', 'recipientName', 'programName'],
+	searchKeys: ['id', 'recipientName', 'programName', 'localPartnerName', 'communicationPhoneNumber'],
 	sortOptions: [
 		{ id: 'recipientName', label: 'Recipient' },
 		{ id: 'programName', label: 'Program' },
+		{ id: 'localPartnerName', label: 'Local partner' },
+		{ id: 'communicationPhoneNumber', label: 'Communication phone' },
 		{ id: 'daysUntilStart', label: 'Starts in' },
 		{ id: 'startDate', label: 'Start date' },
 		{ id: 'createdAt', label: 'Created' },

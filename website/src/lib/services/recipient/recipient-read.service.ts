@@ -121,6 +121,8 @@ export class RecipientReadService extends BaseService {
 			'id',
 			'recipientName',
 			'programName',
+			'localPartnerName',
+			'communicationPhoneNumber',
 			'daysUntilStart',
 			'startDate',
 			'createdAt',
@@ -134,6 +136,10 @@ export class RecipientReadService extends BaseService {
 				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
 			case 'programName':
 				return [{ program: { name: direction } }];
+			case 'localPartnerName':
+				return [{ localPartner: { name: direction } }];
+			case 'communicationPhoneNumber':
+				return [{ contact: { phone: { number: direction } } }];
 			case 'daysUntilStart':
 			case 'startDate':
 				return [{ startDate: direction }];
@@ -960,6 +966,8 @@ export class RecipientReadService extends BaseService {
 									{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
 									{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
 									{ program: { is: { name: { contains: search, mode: 'insensitive' } } } },
+									{ localPartner: { is: { name: { contains: search, mode: 'insensitive' } } } },
+									{ contact: { is: { phone: { is: { number: { contains: search, mode: 'insensitive' } } } } } },
 								],
 							},
 						],
@@ -980,11 +988,21 @@ export class RecipientReadService extends BaseService {
 							select: {
 								firstName: true,
 								lastName: true,
+								phone: {
+									select: {
+										number: true,
+									},
+								},
 							},
 						},
 						program: {
 							select: {
 								id: true,
+								name: true,
+							},
+						},
+						localPartner: {
+							select: {
 								name: true,
 							},
 						},
@@ -1006,6 +1024,8 @@ export class RecipientReadService extends BaseService {
 					recipientName: `${recipient.contact?.firstName ?? ''} ${recipient.contact?.lastName ?? ''}`.trim(),
 					programId,
 					programName,
+					localPartnerName: recipient.localPartner?.name ?? '',
+					communicationPhoneNumber: recipient.contact?.phone?.number ?? null,
 					startDate,
 					daysUntilStart: differenceInCalendarDays(startOfDay(startDate), today),
 					createdAt: recipient.createdAt,
