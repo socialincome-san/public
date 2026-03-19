@@ -8,7 +8,7 @@ export const contributorsData: Contributor[] = [
 		contactId: 'ct-contributor-core-high',
 		referral: ContributorReferralSource.family_and_friends,
 		paymentReferenceId: null,
-		stripeCustomerId: 'stripe-customer-core-high',
+		stripeCustomerId: 'cus_U54Q6mWSPbVREN',
 		needsOnboarding: false,
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,

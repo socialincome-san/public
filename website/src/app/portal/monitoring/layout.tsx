@@ -18,6 +18,7 @@ export default function MonitoringLayout({ children }: MonitoringLayoutProps) {
 	const sections = [
 		{ href: `/portal/monitoring/payout-confirmation`, label: 'Payout Confirmation' },
 		{ href: `/portal/monitoring/upcoming-surveys`, label: 'Upcoming Surveys' },
+		{ href: `/portal/monitoring/upcoming-onboarding`, label: 'Upcoming Onboarding' },
 	];
 
 	return (
