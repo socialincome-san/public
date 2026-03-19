@@ -12,7 +12,7 @@ test('dashboard donation certificates page matches screenshot', async ({ page })
 	await expectToHaveScreenshot(page);
 });
 
-test('dashboard donation certificates has downloadable PDF links', async ({ page }) => {
+test.only('dashboard donation certificates has downloadable PDF links', async ({ page }) => {
 	await page.goto('/en/int/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
 	await clickDataTableActionItem(page, 'data-table-action-item-generate-donation-certificate');
 

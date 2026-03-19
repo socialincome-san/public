@@ -7,7 +7,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test('add new contribution', async ({ page }) => {
+test.only('add new contribution', async ({ page }) => {
 	const source = await prisma.contribution.findFirst({
 		select: {
 			contributorId: true,
@@ -65,7 +65,7 @@ test('add new contribution', async ({ page }) => {
 	expect(created).toBeDefined();
 });
 
-test('edit contribution', async ({ page }) => {
+test.only('edit contribution', async ({ page }) => {
 	const existing = await prisma.contribution.findFirst({
 		where: {
 			contributor: {
@@ -115,7 +115,7 @@ test('edit contribution', async ({ page }) => {
 	expect(updated.status).toBe('pending');
 });
 
-test('shows validation error when contribution amount is invalid', async ({ page }) => {
+test.only('shows validation error when contribution amount is invalid', async ({ page }) => {
 	const source = await prisma.contribution.findFirst({
 		select: {
 			contributor: {

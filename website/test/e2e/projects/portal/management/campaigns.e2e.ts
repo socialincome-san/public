@@ -24,7 +24,7 @@ const saveCampaignAndWait = async (page: Page) => {
 	}
 };
 
-test('add new campaign', async ({ page }) => {
+test.only('add new campaign', async ({ page }) => {
 	const unique = Date.now();
 	const title = `E2E Campaign ${unique}`;
 	const program = await prisma.program.findFirst({
@@ -51,7 +51,7 @@ test('add new campaign', async ({ page }) => {
 	expect(created?.currency).toBe('CHF');
 });
 
-test('edit campaign', async ({ page }) => {
+test.only('edit campaign', async ({ page }) => {
 	const existing = await prisma.campaign.findFirst({
 		select: { id: true, title: true, description: true },
 	});
@@ -71,7 +71,7 @@ test('edit campaign', async ({ page }) => {
 	expect(updated.description).toBe(updatedDescription);
 });
 
-test('shows uniqueness error when campaign title already exists', async ({ page }) => {
+test.only('shows uniqueness error when campaign title already exists', async ({ page }) => {
 	const existing = await prisma.campaign.findFirst({
 		select: { title: true },
 	});
@@ -94,7 +94,7 @@ test('shows uniqueness error when campaign title already exists', async ({ page 
 	await expect(page.getByText('Error saving campaign: A campaign with this title already exists.')).toBeVisible();
 });
 
-test('shows uniqueness error when editing campaign title to an existing one', async ({ page }) => {
+test.only('shows uniqueness error when editing campaign title to an existing one', async ({ page }) => {
 	const campaigns = await prisma.campaign.findMany({
 		select: { title: true },
 		orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],

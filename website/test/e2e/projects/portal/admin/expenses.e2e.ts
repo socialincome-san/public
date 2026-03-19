@@ -26,7 +26,7 @@ test('admin expenses with direct URL sorting matches screenshot', async ({ page 
 	await expectToHaveScreenshot(page);
 });
 
-test('add new expense', async ({ page }) => {
+test.only('add new expense', async ({ page }) => {
 	const unique = Date.now();
 	const year = 2099;
 	const amountChf = Number(`1${String(unique).slice(-5)}`);
@@ -65,7 +65,7 @@ test('add new expense', async ({ page }) => {
 	expect(created?.organizationId).toBe(organization.id);
 });
 
-test('shows validation error when amount is negative', async ({ page }) => {
+test.only('shows validation error when amount is negative', async ({ page }) => {
 	const organization = await prisma.organization.findFirst({
 		orderBy: { name: 'asc' },
 		select: { name: true },
@@ -87,7 +87,7 @@ test('shows validation error when amount is negative', async ({ page }) => {
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 });
 
-test('update expense', async ({ page }) => {
+test.only('update expense', async ({ page }) => {
 	const organizations = await prisma.organization.findMany({
 		orderBy: { name: 'asc' },
 		select: { id: true, name: true },

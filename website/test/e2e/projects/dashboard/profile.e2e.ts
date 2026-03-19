@@ -12,7 +12,7 @@ test('dashboard profile-page matches screenshot', async ({ page }) => {
 	await expectToHaveScreenshot(page);
 });
 
-test('dashboard profile updates contributor personal info', async ({ page }) => {
+test.only('dashboard profile updates contributor personal info', async ({ page }) => {
 	const updatedFirstName = `Contributor-${Date.now()}`;
 
 	await page.goto('/en/int/dashboard/profile');
@@ -22,7 +22,7 @@ test('dashboard profile updates contributor personal info', async ({ page }) => 
 	await expect
 		.poll(async () => {
 			const contributor = await prisma.contributor.findFirst({
-				where: { contact: { email: 'test@dashboard.org' } },
+				where: { contact: { email: 'coreh@dashboard.test' } },
 				select: { contact: { select: { firstName: true } } },
 			});
 

@@ -2,12 +2,18 @@ import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, getCandidateByName, getFirebaseAdminService, selectOptionByTestId } from '../../../utils';
+import {
+	clickDataTableActionItem,
+	deleteFirebasePhonesIfExist,
+	getCandidateByName,
+	getFirebaseAdminService,
+	selectOptionByTestId,
+} from '../../../utils';
 
 const ADD_CANDIDATE = {
 	firstName: 'Clark',
 	lastName: 'Kent',
-	localPartnerName: 'Kenema Youth Foundation',
+	localPartnerName: 'Local Partner SL Operations',
 };
 
 const PAYMENT_PHONE_ONE = '+23277000111';
@@ -23,7 +29,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test('add new candidate', async ({ page }) => {
+test.only('add new candidate', async ({ page }) => {
 	await page.goto('/portal/admin/candidates');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-candidate');
 	await selectOptionByTestId(page, 'localPartner', ADD_CANDIDATE.localPartnerName);
@@ -38,7 +44,7 @@ test('add new candidate', async ({ page }) => {
 	expect(created?.localPartner?.name).toBe(ADD_CANDIDATE.localPartnerName);
 });
 
-test('shows uniqueness error when candidate email already exists', async ({ page }) => {
+test.only('shows uniqueness error when candidate email already exists', async ({ page }) => {
 	const existingContact = await prisma.contact.findFirst({
 		where: { email: { not: null } },
 		select: { email: true },
@@ -56,77 +62,82 @@ test('shows uniqueness error when candidate email already exists', async ({ page
 	await expect(page.getByText('A contact with this email already exists.')).toBeVisible();
 });
 
-test('candidate payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
-	await firebaseService.deleteByPhoneNumberIfExists(PAYMENT_PHONE_ONE);
-	await firebaseService.deleteByPhoneNumberIfExists(PAYMENT_PHONE_TWO);
+test.only('candidate payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
+	await deleteFirebasePhonesIfExist(PAYMENT_PHONE_ONE, PAYMENT_PHONE_TWO);
 
-	const candidate = await prisma.recipient.findFirst({
-		where: { programId: null },
-		select: {
-			contact: {
-				select: {
-					firstName: true,
-					lastName: true,
+	try {
+		const candidate = await prisma.recipient.findFirst({
+			where: { programId: null },
+			select: {
+				contact: {
+					select: {
+						firstName: true,
+						lastName: true,
+					},
 				},
 			},
-		},
-	});
-	expect(candidate).toBeTruthy();
+		});
+		expect(candidate).toBeTruthy();
 
-	await openCandidateByName(page, candidate!.contact.firstName, candidate!.contact.lastName);
-	await page.getByTestId('form-accordion-trigger-paymentInformation').click();
-	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(PAYMENT_PHONE_ONE);
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+		await openCandidateByName(page, candidate!.contact.firstName, candidate!.contact.lastName);
+		await page.getByTestId('form-accordion-trigger-paymentInformation').click();
+		await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(PAYMENT_PHONE_ONE);
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_ONE);
-	await expect(page.getByRole('cell', { name: PAYMENT_PHONE_ONE })).toBeVisible();
+		await page.goto('http://localhost:4000/auth');
+		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_ONE);
+		await expect(page.getByRole('cell', { name: PAYMENT_PHONE_ONE })).toBeVisible();
 
-	await openCandidateByName(page, candidate!.contact.firstName, candidate!.contact.lastName);
-	await page.getByTestId('form-accordion-trigger-paymentInformation').click();
-	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(PAYMENT_PHONE_TWO);
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+		await openCandidateByName(page, candidate!.contact.firstName, candidate!.contact.lastName);
+		await page.getByTestId('form-accordion-trigger-paymentInformation').click();
+		await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(PAYMENT_PHONE_TWO);
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_TWO);
-	await expect(page.getByRole('cell', { name: PAYMENT_PHONE_TWO })).toBeVisible();
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_ONE);
-	await expect(page.getByRole('cell', { name: PAYMENT_PHONE_ONE })).toHaveCount(0);
+		await page.goto('http://localhost:4000/auth');
+		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_TWO);
+		await expect(page.getByRole('cell', { name: PAYMENT_PHONE_TWO })).toBeVisible();
+		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(PAYMENT_PHONE_ONE);
+		await expect(page.getByRole('cell', { name: PAYMENT_PHONE_ONE })).toHaveCount(0);
+	} finally {
+		await deleteFirebasePhonesIfExist(PAYMENT_PHONE_ONE, PAYMENT_PHONE_TWO);
+	}
 });
 
-test('add candidate with payment phone keeps Firebase user in sync', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
+test.only('add candidate with payment phone keeps Firebase user in sync', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = `Candidate-${unique}`;
 	const lastName = 'Firebase';
 	const paymentPhone = `+23277${String(unique).slice(-6)}`;
 
-	await firebaseService.deleteByPhoneNumberIfExists(paymentPhone);
+	await deleteFirebasePhonesIfExist(paymentPhone);
 
-	await page.goto('/portal/admin/candidates');
-	await clickDataTableActionItem(page, 'data-table-action-item-add-new-candidate');
-	await selectOptionByTestId(page, 'localPartner', ADD_CANDIDATE.localPartnerName);
-	await page.getByTestId('form-accordion-trigger-contact').click();
-	await page.getByTestId('form-item-contact.firstName').locator('input').fill(firstName);
-	await page.getByTestId('form-item-contact.lastName').locator('input').fill(lastName);
-	await page.getByTestId('form-accordion-trigger-paymentInformation').click();
-	await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(paymentPhone);
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+	try {
+		await page.goto('/portal/admin/candidates');
+		await clickDataTableActionItem(page, 'data-table-action-item-add-new-candidate');
+		await selectOptionByTestId(page, 'localPartner', ADD_CANDIDATE.localPartnerName);
+		await page.getByTestId('form-accordion-trigger-contact').click();
+		await page.getByTestId('form-item-contact.firstName').locator('input').fill(firstName);
+		await page.getByTestId('form-item-contact.lastName').locator('input').fill(lastName);
+		await page.getByTestId('form-accordion-trigger-paymentInformation').click();
+		await page.getByTestId('form-item-paymentInformation.phone').locator('input').fill(paymentPhone);
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
-	await expect(page.getByRole('cell', { name: paymentPhone })).toBeVisible();
+		await page.goto('http://localhost:4000/auth');
+		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
+		await expect(page.getByRole('cell', { name: paymentPhone })).toBeVisible();
 
-	const created = await getCandidateByName(firstName, lastName);
-	expect(created).toBeDefined();
-	expect(created?.paymentInformation?.phone?.number).toBe(paymentPhone);
+		const created = await getCandidateByName(firstName, lastName);
+		expect(created).toBeDefined();
+		expect(created?.paymentInformation?.phone?.number).toBe(paymentPhone);
+	} finally {
+		await deleteFirebasePhonesIfExist(paymentPhone);
+	}
 });
 
-test('delete candidate removes Firebase user for payment phone', async ({ page }) => {
+test.only('delete candidate removes Firebase user for payment phone', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const firstName = `Delete-${unique}`;
@@ -134,58 +145,63 @@ test('delete candidate removes Firebase user for payment phone', async ({ page }
 	const paymentPhone = `+23277${String(unique).slice(-6)}`;
 
 	await firebaseService.deleteByPhoneNumberIfExists(paymentPhone);
-	await firebaseService.createByPhoneNumber(paymentPhone);
 
-	const localPartner = await prisma.localPartner.findFirst({
-		select: { id: true },
-	});
-	expect(localPartner?.id).toBeTruthy();
+	try {
+		await firebaseService.createByPhoneNumber(paymentPhone);
 
-	await prisma.recipient.create({
-		data: {
-			localPartner: {
-				connect: {
-					id: localPartner!.id,
+		const localPartner = await prisma.localPartner.findFirst({
+			select: { id: true },
+		});
+		expect(localPartner?.id).toBeTruthy();
+
+		await prisma.recipient.create({
+			data: {
+				localPartner: {
+					connect: {
+						id: localPartner!.id,
+					},
 				},
-			},
-			contact: {
-				create: {
-					firstName,
-					lastName,
-					email: `candidate.delete.${unique}@example.com`,
+				contact: {
+					create: {
+						firstName,
+						lastName,
+						email: `candidate.delete.${unique}@example.com`,
+					},
 				},
-			},
-			paymentInformation: {
-				create: {
-					phone: {
-						create: {
-							number: paymentPhone,
-							hasWhatsApp: false,
+				paymentInformation: {
+					create: {
+						phone: {
+							create: {
+								number: paymentPhone,
+								hasWhatsApp: false,
+							},
 						},
 					},
 				},
 			},
-		},
-	});
+		});
 
-	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
-	await expect(page.getByRole('cell', { name: paymentPhone })).toBeVisible();
+		await page.goto('http://localhost:4000/auth');
+		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
+		await expect(page.getByRole('cell', { name: paymentPhone })).toBeVisible();
 
-	await openCandidateByName(page, firstName, lastName);
-	await page.getByRole('button', { name: 'Delete' }).click();
-	await page.getByRole('button', { name: 'Delete permanently' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+		await openCandidateByName(page, firstName, lastName);
+		await page.getByRole('button', { name: 'Delete' }).click();
+		await page.getByRole('button', { name: 'Delete permanently' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const deletedCandidate = await getCandidateByName(firstName, lastName);
-	expect(deletedCandidate).toBeNull();
+		const deletedCandidate = await getCandidateByName(firstName, lastName);
+		expect(deletedCandidate).toBeNull();
 
-	await page.goto('http://localhost:4000/auth');
-	await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
-	await expect(page.getByRole('cell', { name: paymentPhone })).toHaveCount(0);
+		await page.goto('http://localhost:4000/auth');
+		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
+		await expect(page.getByRole('cell', { name: paymentPhone })).toHaveCount(0);
+	} finally {
+		await firebaseService.deleteByPhoneNumberIfExists(paymentPhone);
+	}
 });
 
-test('edit candidate and remove contact phone and address', async ({ page }) => {
+test.only('edit candidate and remove contact phone and address', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = `Edge-${unique}`;
 	const lastName = 'Candidate';

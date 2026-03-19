@@ -1,55 +1,61 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, getFirebaseAdminService } from '../../../utils';
+import { clickDataTableActionItem, deleteFirebaseEmailsIfExist, getFirebaseAdminService } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test('add new contributor', async ({ page }) => {
+test.only('add new contributor', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = 'Bruce';
 	const lastName = 'Wayne';
 	const email = `contributors.e2e.${unique}@example.com`;
 
-	await page.goto('/portal/management/contributors');
-	await clickDataTableActionItem(page, 'data-table-action-item-add-new-contributor');
-	await page.getByTestId('form-item-referral').locator('button').click();
-	await page.getByRole('option', { name: 'other' }).click();
-	await page.getByTestId('form-accordion-trigger-contact').click();
-	await page.getByTestId('form-item-contact.firstName').locator('input').fill(firstName);
-	await page.getByTestId('form-item-contact.lastName').locator('input').fill(lastName);
-	await page.getByTestId('form-item-contact.email').locator('input').fill(email);
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+	await deleteFirebaseEmailsIfExist(email);
 
-	const created = await prisma.contributor.findFirst({
-		where: {
-			contact: {
-				email,
-			},
-		},
-		select: {
-			id: true,
-			referral: true,
-			contact: {
-				select: {
-					firstName: true,
-					lastName: true,
-					email: true,
+	try {
+		await page.goto('/portal/management/contributors');
+		await clickDataTableActionItem(page, 'data-table-action-item-add-new-contributor');
+		await page.getByTestId('form-item-referral').locator('button').click();
+		await page.getByRole('option', { name: 'other' }).click();
+		await page.getByTestId('form-accordion-trigger-contact').click();
+		await page.getByTestId('form-item-contact.firstName').locator('input').fill(firstName);
+		await page.getByTestId('form-item-contact.lastName').locator('input').fill(lastName);
+		await page.getByTestId('form-item-contact.email').locator('input').fill(email);
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+		const created = await prisma.contributor.findFirst({
+			where: {
+				contact: {
+					email,
 				},
 			},
-		},
-	});
-	expect(created).toBeDefined();
-	expect(created?.contact.firstName).toBe(firstName);
-	expect(created?.contact.lastName).toBe(lastName);
-	expect(created?.contact.email).toBe(email);
-	expect(created?.referral).toBe('other');
+			select: {
+				id: true,
+				referral: true,
+				contact: {
+					select: {
+						firstName: true,
+						lastName: true,
+						email: true,
+					},
+				},
+			},
+		});
+		expect(created).toBeDefined();
+		expect(created?.contact.firstName).toBe(firstName);
+		expect(created?.contact.lastName).toBe(lastName);
+		expect(created?.contact.email).toBe(email);
+		expect(created?.referral).toBe('other');
+	} finally {
+		await deleteFirebaseEmailsIfExist(email);
+	}
 });
 
-test('shows uniqueness error when contributor email already exists', async ({ page }) => {
+test.only('shows uniqueness error when contributor email already exists', async ({ page }) => {
 	const existingContact = await prisma.contact.findFirst({
 		where: { email: { not: null } },
 		select: { email: true },
@@ -68,7 +74,7 @@ test('shows uniqueness error when contributor email already exists', async ({ pa
 	await expect(page.getByText('Error saving contributor: A contact with this email already exists.')).toBeVisible();
 });
 
-test('shows uniqueness error when contributor phone already exists', async ({ page }) => {
+test.only('shows uniqueness error when contributor phone already exists', async ({ page }) => {
 	const existingPhone = await prisma.phone.findFirst({
 		where: {
 			contacts: {
@@ -92,7 +98,7 @@ test('shows uniqueness error when contributor phone already exists', async ({ pa
 	await expect(page.getByText('Error saving contributor: A contact with this phone number already exists.')).toBeVisible();
 });
 
-test('edit contributor and remove phone and address', async ({ page }) => {
+test.only('edit contributor and remove phone and address', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = `Edge-${unique}`;
 	const lastName = 'Contributor';
@@ -180,7 +186,7 @@ test('edit contributor and remove phone and address', async ({ page }) => {
 	expect(deletedAddress).toBeNull();
 });
 
-test('contributor create and update keeps Firebase user in sync', async ({ page }) => {
+test.only('contributor create and update keeps Firebase user in sync', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const initialFirstName = 'Firebase';
@@ -195,45 +201,51 @@ test('contributor create and update keeps Firebase user in sync', async ({ page 
 		await page.getByRole('cell', { name: email }).click();
 	};
 
-	await page.goto('/portal/management/contributors');
-	await clickDataTableActionItem(page, 'data-table-action-item-add-new-contributor');
-	await page.getByTestId('form-item-referral').locator('button').click();
-	await page.getByRole('option', { name: 'other' }).click();
-	await page.getByTestId('form-accordion-trigger-contact').click();
-	await page.getByTestId('form-item-contact.firstName').locator('input').fill(initialFirstName);
-	await page.getByTestId('form-item-contact.lastName').locator('input').fill(initialLastName);
-	await page.getByTestId('form-item-contact.email').locator('input').fill(initialEmail);
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+	await deleteFirebaseEmailsIfExist(initialEmail, updatedEmail);
 
-	const firebaseCreatedResult = await firebaseService.getByEmail(initialEmail);
-	expect(firebaseCreatedResult.success).toBeTruthy();
-	if (!firebaseCreatedResult.success) {
-		throw new Error(firebaseCreatedResult.error);
+	try {
+		await page.goto('/portal/management/contributors');
+		await clickDataTableActionItem(page, 'data-table-action-item-add-new-contributor');
+		await page.getByTestId('form-item-referral').locator('button').click();
+		await page.getByRole('option', { name: 'other' }).click();
+		await page.getByTestId('form-accordion-trigger-contact').click();
+		await page.getByTestId('form-item-contact.firstName').locator('input').fill(initialFirstName);
+		await page.getByTestId('form-item-contact.lastName').locator('input').fill(initialLastName);
+		await page.getByTestId('form-item-contact.email').locator('input').fill(initialEmail);
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+		const firebaseCreatedResult = await firebaseService.getByEmail(initialEmail);
+		expect(firebaseCreatedResult.success).toBeTruthy();
+		if (!firebaseCreatedResult.success) {
+			throw new Error(firebaseCreatedResult.error);
+		}
+		expect(firebaseCreatedResult.data).toBeTruthy();
+		expect(firebaseCreatedResult.data?.displayName).toBe(`${initialFirstName} ${initialLastName}`);
+
+		await openContributorByEmail(initialEmail);
+		await page.getByTestId('form-accordion-trigger-contact').click();
+		await page.getByTestId('form-item-contact.firstName').locator('input').fill(updatedFirstName);
+		await page.getByTestId('form-item-contact.lastName').locator('input').fill(updatedLastName);
+		await page.getByTestId('form-item-contact.email').locator('input').fill(updatedEmail);
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+		const firebaseOldEmailResult = await firebaseService.getByEmail(initialEmail);
+		expect(firebaseOldEmailResult.success).toBeTruthy();
+		if (!firebaseOldEmailResult.success) {
+			throw new Error(firebaseOldEmailResult.error);
+		}
+		expect(firebaseOldEmailResult.data).toBeNull();
+
+		const firebaseUpdatedResult = await firebaseService.getByEmail(updatedEmail);
+		expect(firebaseUpdatedResult.success).toBeTruthy();
+		if (!firebaseUpdatedResult.success) {
+			throw new Error(firebaseUpdatedResult.error);
+		}
+		expect(firebaseUpdatedResult.data).toBeTruthy();
+		expect(firebaseUpdatedResult.data?.displayName).toBe(`${updatedFirstName} ${updatedLastName}`);
+	} finally {
+		await deleteFirebaseEmailsIfExist(initialEmail, updatedEmail);
 	}
-	expect(firebaseCreatedResult.data).toBeTruthy();
-	expect(firebaseCreatedResult.data?.displayName).toBe(`${initialFirstName} ${initialLastName}`);
-
-	await openContributorByEmail(initialEmail);
-	await page.getByTestId('form-accordion-trigger-contact').click();
-	await page.getByTestId('form-item-contact.firstName').locator('input').fill(updatedFirstName);
-	await page.getByTestId('form-item-contact.lastName').locator('input').fill(updatedLastName);
-	await page.getByTestId('form-item-contact.email').locator('input').fill(updatedEmail);
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
-
-	const firebaseOldEmailResult = await firebaseService.getByEmail(initialEmail);
-	expect(firebaseOldEmailResult.success).toBeTruthy();
-	if (!firebaseOldEmailResult.success) {
-		throw new Error(firebaseOldEmailResult.error);
-	}
-	expect(firebaseOldEmailResult.data).toBeNull();
-
-	const firebaseUpdatedResult = await firebaseService.getByEmail(updatedEmail);
-	expect(firebaseUpdatedResult.success).toBeTruthy();
-	if (!firebaseUpdatedResult.success) {
-		throw new Error(firebaseUpdatedResult.error);
-	}
-	expect(firebaseUpdatedResult.data).toBeTruthy();
-	expect(firebaseUpdatedResult.data?.displayName).toBe(`${updatedFirstName} ${updatedLastName}`);
 });

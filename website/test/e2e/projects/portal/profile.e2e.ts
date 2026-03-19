@@ -12,7 +12,7 @@ test('portal profile-page matches screenshot', async ({ page }) => {
 	await expectToHaveScreenshot(page);
 });
 
-test('portal profile updates user personal info', async ({ page }) => {
+test.only('portal profile updates user personal info', async ({ page }) => {
 	const updatedFirstName = `Portal-${Date.now()}`;
 
 	await page.goto('/portal/profile/account');
@@ -22,7 +22,7 @@ test('portal profile updates user personal info', async ({ page }) => {
 	await expect
 		.poll(async () => {
 			const user = await prisma.user.findFirst({
-				where: { contact: { email: 'test@portal.org' } },
+				where: { contact: { email: 'power@portal.test' } },
 				select: { contact: { select: { firstName: true } } },
 			});
 

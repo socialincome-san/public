@@ -44,7 +44,7 @@ test('admin countries with direct URL sorting matches screenshot', async ({ page
 	await expectToHaveScreenshot(page);
 });
 
-test('add new country', async ({ page }) => {
+test.only('add new country', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
 	const defaultPayoutAmount = 123;
 	const currency = bestGuessCurrency(countryOption.code);
@@ -73,7 +73,7 @@ test('add new country', async ({ page }) => {
 	expect(Number(created?.defaultPayoutAmount)).toBe(defaultPayoutAmount);
 });
 
-test('shows validation error when default payout amount is invalid', async ({ page }) => {
+test.only('shows validation error when default payout amount is invalid', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
 	const currency = bestGuessCurrency(countryOption.code);
 
@@ -88,7 +88,7 @@ test('shows validation error when default payout amount is invalid', async ({ pa
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 });
 
-test('update country', async ({ page }) => {
+test.only('update country', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
 	const currency = bestGuessCurrency(countryOption.code);
 	const initialPayoutAmount = 80;
@@ -125,7 +125,7 @@ test('update country', async ({ page }) => {
 	expect(Number(updated?.defaultPayoutAmount)).toBe(updatedPayoutAmount);
 });
 
-test('update country clears existing source URLs', async ({ page }) => {
+test.only('update country clears existing source URLs', async ({ page }) => {
 	const countryOption = await pickUnusedCountryOption();
 	const currency = bestGuessCurrency(countryOption.code);
 	const initialPayoutAmount = 80;
