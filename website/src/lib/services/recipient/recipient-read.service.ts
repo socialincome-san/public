@@ -4,6 +4,7 @@ import { stringifyCsv } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -12,9 +13,12 @@ import { ProgramAccessReadService } from '../program-access/program-access-read.
 import { RecipientStatusService } from './recipient-status.service';
 import {
 	RecipientPaginatedTableView,
+	RecipientProgramFilterOption,
 	RecipientTableQuery,
 	RecipientTableView,
 	RecipientTableViewRow,
+	RecipientUpcomingOnboardingPaginatedTableView,
+	UpcomingOnboardingTableViewRow,
 } from './recipient-table.types';
 import { RecipientLifecycleStatus, RecipientOption, RecipientPayload, RecipientWithPaymentInfo } from './recipient.types';
 
@@ -110,6 +114,34 @@ export class RecipientReadService extends BaseService {
 		}
 
 		return undefined;
+	}
+
+	private buildUpcomingOnboardingOrderBy(query: RecipientTableQuery): Prisma.RecipientOrderByWithRelationInput[] {
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'recipientName',
+			'programName',
+			'daysUntilStart',
+			'startDate',
+			'createdAt',
+		] as const);
+		const direction: Prisma.SortOrder = query.sortDirection === 'desc' ? 'desc' : 'asc';
+
+		switch (sortBy) {
+			case 'id':
+				return [{ id: direction }];
+			case 'recipientName':
+				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
+			case 'programName':
+				return [{ program: { name: direction } }];
+			case 'daysUntilStart':
+			case 'startDate':
+				return [{ startDate: direction }];
+			case 'createdAt':
+				return [{ createdAt: direction }];
+			default:
+				return [{ startDate: 'asc' }];
+		}
 	}
 
 	private mapToRecipientTableRows(
@@ -876,6 +908,119 @@ export class RecipientReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPaginatedUpcomingOnboardingTableView(
+		userId: string,
+		query: RecipientTableQuery,
+	): Promise<ServiceResult<RecipientUpcomingOnboardingPaginatedTableView>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			const programFilterOptions: RecipientProgramFilterOption[] = Array.from(
+				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
+			);
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					programFilterOptions: [],
+				});
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
+			if (selectedProgramId && filteredProgramIds.length === 0) {
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					programFilterOptions,
+				});
+			}
+
+			const search = query.search.trim();
+			const today = startOfDay(now());
+			const where: Prisma.RecipientWhereInput = search
+				? {
+						AND: [
+							{
+								programId: { in: filteredProgramIds },
+								startDate: { not: null, gte: today },
+							},
+							{
+								OR: [
+									{ id: { contains: search, mode: 'insensitive' } },
+									{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
+									{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
+									{ program: { is: { name: { contains: search, mode: 'insensitive' } } } },
+								],
+							},
+						],
+					}
+				: {
+						programId: { in: filteredProgramIds },
+						startDate: { not: null, gte: today },
+					};
+
+			const [recipients, totalCount] = await Promise.all([
+				this.db.recipient.findMany({
+					where,
+					select: {
+						id: true,
+						startDate: true,
+						createdAt: true,
+						contact: {
+							select: {
+								firstName: true,
+								lastName: true,
+							},
+						},
+						program: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
+					},
+					orderBy: this.buildUpcomingOnboardingOrderBy(query),
+					skip: (query.page - 1) * query.pageSize,
+					take: query.pageSize,
+				}),
+				this.db.recipient.count({ where }),
+			]);
+
+			const tableRows: UpcomingOnboardingTableViewRow[] = recipients.map((recipient) => {
+				const startDate = recipient.startDate ?? today;
+				const programId = recipient.program?.id ?? '';
+				const programName = recipient.program?.name ?? '';
+
+				return {
+					id: recipient.id,
+					recipientName: `${recipient.contact?.firstName ?? ''} ${recipient.contact?.lastName ?? ''}`.trim(),
+					programId,
+					programName,
+					startDate,
+					daysUntilStart: differenceInCalendarDays(startOfDay(startDate), today),
+					createdAt: recipient.createdAt,
+				};
+			});
+
+			return this.resultOk({
+				tableRows,
+				totalCount,
+				programFilterOptions,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch upcoming onboarding recipients: ${JSON.stringify(error)}`);
 		}
 	}
 

@@ -49,3 +49,19 @@ export type RecipientPaginatedTableView = {
 	permission: ProgramPermission;
 	programFilterOptions: RecipientProgramFilterOption[];
 };
+
+export type UpcomingOnboardingTableViewRow = {
+	id: string;
+	recipientName: string;
+	programId: string;
+	programName: string;
+	startDate: Date;
+	daysUntilStart: number;
+	createdAt: Date;
+};
+
+export type RecipientUpcomingOnboardingPaginatedTableView = {
+	tableRows: UpcomingOnboardingTableViewRow[];
+	totalCount: number;
+	programFilterOptions: RecipientProgramFilterOption[];
+};
