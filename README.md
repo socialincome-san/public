@@ -138,8 +138,8 @@ Local Partner self‑service area:
 
 ### **5. Authentication Roles & Test Accounts (Local Dev)**
 
-We use hardcoded deterministic seed data for local development and tests.
-All local login users come from Firebase Auth emulator seed data.
+We use hardcoded deterministic seed data for local development and
+tests. All local login users come from Firebase Auth emulator seed data.
 
 To see which users can log in locally, open:
 `http://localhost:4000/auth`
