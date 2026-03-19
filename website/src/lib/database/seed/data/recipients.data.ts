@@ -82,11 +82,30 @@ const statusStartDates: Record<RecipientState, Date> = {
 	suspended: new Date('2024-07-01T00:00:00.000Z'),
 };
 
+const futureStartDateByKey: Record<RecipientKey, Date> = {
+	'core-sl': new Date('2025-01-04T00:00:00.000Z'), // +3 days from NEXT_PUBLIC_FIXED_TIME date
+	'women-sl': new Date('2025-01-21T00:00:00.000Z'), // +20 days
+	'education-sl': new Date('2025-02-20T00:00:00.000Z'), // +50 days
+	'livelihood-gh': new Date('2025-01-08T00:00:00.000Z'), // +7 days
+	'education-gh': new Date('2025-02-05T00:00:00.000Z'), // +35 days
+	'resilience-lr': new Date('2025-03-07T00:00:00.000Z'), // +65 days
+	'health-lr': new Date('2025-03-22T00:00:00.000Z'), // +80 days
+	'somaha-lr': new Date('2025-04-06T00:00:00.000Z'), // +95 days
+};
+
+const getStartDate = (key: RecipientKey, state: RecipientState): Date => {
+	if (state !== 'future') {
+		return statusStartDates[state];
+	}
+
+	return futureStartDateByKey[key];
+};
+
 const programRecipientsData: Recipient[] = recipientContactDefinitions.map(({ key, state, contactId }) => ({
 	id: `recipient-${key}-${state}`,
 	legacyFirestoreId: null,
 	contactId,
-	startDate: statusStartDates[state],
+	startDate: getStartDate(key, state),
 	suspendedAt: state === 'suspended' ? new Date('2024-12-01T00:00:00.000Z') : null,
 	suspensionReason: state === 'suspended' ? `suspension_${key}_${state}` : null,
 	successorName: null,
