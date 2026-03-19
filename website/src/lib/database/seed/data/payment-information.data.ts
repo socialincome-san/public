@@ -13,7 +13,7 @@ type PaymentInformationSeed = {
 	phoneId: PhoneId;
 };
 
-const paymentInformationSeeds: ReadonlyArray<PaymentInformationSeed> = [
+const paymentInformationSeeds: readonly PaymentInformationSeed[] = [
 	{ key: 'core-sl-active', phoneId: 'ph-recipient-core-sl-active' },
 	{ key: 'core-sl-future', phoneId: 'ph-recipient-core-sl-future' },
 	{ key: 'core-sl-completed', phoneId: 'ph-recipient-core-sl-completed' },

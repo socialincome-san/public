@@ -21,7 +21,7 @@ type SurveySeed = {
 	surveyScheduleId: SurveyScheduleId | null;
 };
 
-const surveySeeds: ReadonlyArray<SurveySeed> = [
+const surveySeeds: readonly SurveySeed[] = [
 	{
 		id: 'survey-recipient-core-sl-active-onboarding',
 		name: 'recipient_core_sl_active_onboarding',

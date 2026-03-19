@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem } from '../../../utils';
@@ -44,10 +43,13 @@ test('Payout Process', async ({ page }) => {
 		.getByTestId('step-result-box-3')
 		.innerText()
 		.then((text) => {
-			const data = JSON.parse(text);
-			expect(Array.isArray(data)).toBeTruthy();
-			expect(data.length).toBeGreaterThan(0);
-			expect(data).toEqual(
+			const parsed: unknown = JSON.parse(text);
+			expect(Array.isArray(parsed)).toBeTruthy();
+			if (!Array.isArray(parsed)) {
+				throw new Error('Expected step 3 output to be an array');
+			}
+			expect(parsed.length).toBeGreaterThan(0);
+			expect(parsed).toEqual(
 				expect.arrayContaining([
 					expect.objectContaining({
 						currency: expect.any(String),

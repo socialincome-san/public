@@ -14,7 +14,7 @@ type PayoutSeed = {
 	phoneNumber: NonNullable<Payout['phoneNumber']>;
 };
 
-const payoutSeeds: ReadonlyArray<PayoutSeed> = [
+const payoutSeeds: readonly PayoutSeed[] = [
 	{
 		id: 'payout-core-sl-active',
 		recipientId: 'recipient-core-sl-active',
@@ -89,17 +89,19 @@ const payoutSeeds: ReadonlyArray<PayoutSeed> = [
 	},
 ];
 
-export const payoutsData: Payout[] = payoutSeeds.map(({ id, recipientId, currency, amount, amountChf, paymentAt, phoneNumber }) => ({
-	id,
-	legacyFirestoreId: null,
-	amount,
-	amountChf,
-	currency,
-	paymentAt,
-	status: PayoutStatus.paid,
-	phoneNumber,
-	comments: `seed_payout_${recipientId}`,
-	recipientId,
-	createdAt,
-	updatedAt: null,
-}));
+export const payoutsData: Payout[] = payoutSeeds.map(
+	({ id, recipientId, currency, amount, amountChf, paymentAt, phoneNumber }) => ({
+		id,
+		legacyFirestoreId: null,
+		amount,
+		amountChf,
+		currency,
+		paymentAt,
+		status: PayoutStatus.paid,
+		phoneNumber,
+		comments: `seed_payout_${recipientId}`,
+		recipientId,
+		createdAt,
+		updatedAt: null,
+	}),
+);

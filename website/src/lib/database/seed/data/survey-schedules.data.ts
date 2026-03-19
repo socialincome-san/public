@@ -12,7 +12,7 @@ type SurveyScheduleSeed = {
 	programId: ProgramId;
 };
 
-const surveyScheduleSeeds: ReadonlyArray<SurveyScheduleSeed> = [
+const surveyScheduleSeeds: readonly SurveyScheduleSeed[] = [
 	{
 		id: 'survey-schedule-core-sl-onboarding',
 		name: 'core_sl_onboarding',

@@ -65,20 +65,19 @@ test('add new contribution', async ({ page }) => {
 	expect(created).toBeDefined();
 });
 
-test.only('edit contribution', async ({ page }) => {
-	const existing = await prisma.contribution.findFirst({
-		where: {
-			contributor: {
-				contact: {
-					email: { not: null },
-				},
-			},
-		},
+test('edit contribution', async ({ page }) => {
+	const existing = await prisma.contribution.findUnique({
+		where: { id: 'contribution-mixed-owner-2' },
 		select: {
 			id: true,
 			contributor: {
 				select: {
 					contact: { select: { email: true } },
+				},
+			},
+			campaign: {
+				select: {
+					title: true,
 				},
 			},
 		},
@@ -89,8 +88,15 @@ test.only('edit contribution', async ({ page }) => {
 	const updatedAmountChf = 111.11;
 	const updatedFeesChf = 2.22;
 
-	await page.goto(`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.id)}`);
-	await page.getByRole('row').filter({ hasText: existing!.id }).first().click();
+	await page.goto(
+		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact.email!)}`,
+	);
+	await page
+		.getByRole('row')
+		.filter({ hasText: existing!.contributor.contact.email! })
+		.filter({ hasText: existing!.campaign.title })
+		.first()
+		.click();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
 	await page.getByTestId('form-item-amountChf').locator('input').fill(`${updatedAmountChf}`);
 	await page.getByTestId('form-item-feesChf').locator('input').fill(`${updatedFeesChf}`);

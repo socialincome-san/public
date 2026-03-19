@@ -4,7 +4,7 @@ const createdAt = new Date('2025-01-01T13:00:00.000Z');
 
 type PhoneSeed = Pick<Phone, 'id' | 'number'>;
 
-const phoneSeeds: ReadonlyArray<PhoneSeed> = [
+const phoneSeeds: readonly PhoneSeed[] = [
 	{ id: 'ph-user-somaha-1', number: '+41790000001' },
 	{ id: 'ph-user-somaha-2', number: '+41790000002' },
 	{ id: 'ph-user-si-sl-1', number: '+23230000001' },

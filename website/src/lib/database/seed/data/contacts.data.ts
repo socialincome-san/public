@@ -405,7 +405,7 @@ type RecipientContactDefinition = {
 	contactId: `ct-recipient-${RecipientKey}-${RecipientState}`;
 };
 
-export const recipientContactDefinitions: ReadonlyArray<RecipientContactDefinition> = [
+export const recipientContactDefinitions: readonly RecipientContactDefinition[] = [
 	{
 		key: 'core-sl',
 		country: 'sl',
@@ -740,7 +740,7 @@ type CandidateContactDefinition = {
 	contactId: `ct-candidate-${CandidateKey}`;
 };
 
-export const candidateContactDefinitions: ReadonlyArray<CandidateContactDefinition> = [
+export const candidateContactDefinitions: readonly CandidateContactDefinition[] = [
 	{
 		key: 'sl-1',
 		country: 'sl',
@@ -824,38 +824,42 @@ export const candidateContactDefinitions: ReadonlyArray<CandidateContactDefiniti
 	},
 ];
 
-const recipientContacts: Contact[] = recipientContactDefinitions.map(({ key, state, country, program, phoneId, firstName, lastName, contactId }, index) => ({
-	id: contactId,
-	firstName,
-	lastName,
-	callingName: firstName,
-	addressId: `ad-recipient-${key}-${state}`,
-	phoneId,
-	email: `${firstName}@recipient.test`,
-	gender: index % 2 === 0 ? Gender.female : Gender.male,
-	language: defaultContactLanguageByCountry[country],
-	dateOfBirth: new Date(`199${index % 9}-01-15`),
-	profession: `recipient_${country}_${program}`,
-	isInstitution: false,
-	createdAt,
-	updatedAt: null,
-}));
+const recipientContacts: Contact[] = recipientContactDefinitions.map(
+	({ key, state, country, program, phoneId, firstName, lastName, contactId }, index) => ({
+		id: contactId,
+		firstName,
+		lastName,
+		callingName: firstName,
+		addressId: `ad-recipient-${key}-${state}`,
+		phoneId,
+		email: `${firstName}@recipient.test`,
+		gender: index % 2 === 0 ? Gender.female : Gender.male,
+		language: defaultContactLanguageByCountry[country],
+		dateOfBirth: new Date(`199${index % 9}-01-15`),
+		profession: `recipient_${country}_${program}`,
+		isInstitution: false,
+		createdAt,
+		updatedAt: null,
+	}),
+);
 
-const candidateContacts: Contact[] = candidateContactDefinitions.map(({ key, country, phoneId, firstName, lastName, gender, contactId }, index) => ({
-	id: contactId,
-	firstName,
-	lastName,
-	callingName: firstName,
-	addressId: `ad-candidate-${key}`,
-	phoneId,
-	email: `${firstName}@candidate.test`,
-	gender,
-	language: defaultContactLanguageByCountry[country],
-	dateOfBirth: new Date(`199${(index + 4) % 9}-02-10`),
-	profession: `candidate_${country}`,
-	isInstitution: false,
-	createdAt,
-	updatedAt: null,
-}));
+const candidateContacts: Contact[] = candidateContactDefinitions.map(
+	({ key, country, phoneId, firstName, lastName, gender, contactId }, index) => ({
+		id: contactId,
+		firstName,
+		lastName,
+		callingName: firstName,
+		addressId: `ad-candidate-${key}`,
+		phoneId,
+		email: `${firstName}@candidate.test`,
+		gender,
+		language: defaultContactLanguageByCountry[country],
+		dateOfBirth: new Date(`199${(index + 4) % 9}-02-10`),
+		profession: `candidate_${country}`,
+		isInstitution: false,
+		createdAt,
+		updatedAt: null,
+	}),
+);
 
 export const contactsData: Contact[] = [...baseContacts, ...recipientContacts, ...candidateContacts];

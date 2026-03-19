@@ -234,6 +234,7 @@ export const addressesData: Address[] = [
 	},
 	...recipientContactDefinitions.map(({ key, state, country, program }, index) => {
 		const addressCountry: Address['country'] = country === 'sl' ? 'SL' : country === 'gh' ? 'GH' : 'LR';
+
 		return {
 			id: `ad-recipient-${key}-${state}`,
 			street: `recipient_${country}_${program}_${state}_street`,
@@ -247,6 +248,7 @@ export const addressesData: Address[] = [
 	}),
 	...candidateContactDefinitions.map(({ key, country }, index) => {
 		const addressCountry: Address['country'] = country === 'sl' ? 'SL' : 'LR';
+
 		return {
 			id: `ad-candidate-${key}`,
 			street: `candidate_${country}_pool_street`,
