@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { expectToHaveScreenshot, getFirebaseAdminService } from '../../../utils';
+import { deleteFirebaseEmailsIfExist, expectToHaveScreenshot, getFirebaseAdminService } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -14,7 +14,7 @@ test('admin local partners page matches screenshot', async ({ page }) => {
 });
 
 test('admin local partners with direct URL search matches screenshot', async ({ page }) => {
-	await page.goto('/portal/admin/local-partners?page=1&pageSize=10&sortBy=name&sortDirection=asc&search=local-partner-2');
+	await page.goto('/portal/admin/local-partners?page=1&pageSize=10&sortBy=name&sortDirection=asc&search=Local%20Partner');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expectToHaveScreenshot(page);
 });
@@ -30,35 +30,41 @@ test('add new local partner', async ({ page }) => {
 	const partnerName = `e2e-local-partner-${unique}`;
 	const email = `e2e.local.partner.${unique}@example.com`;
 
-	await page.goto('/portal/admin/local-partners');
-	await page.getByTestId('data-table-actions-button').click();
-	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
+	await deleteFirebaseEmailsIfExist(email);
 
-	await page.getByTestId('form-item-name').locator('input').fill(partnerName);
-	await page.getByTestId('form-accordion-trigger-contact').click();
-	await page.getByTestId('form-item-contact.firstName').locator('input').fill('E2E');
-	await page.getByTestId('form-item-contact.lastName').locator('input').fill('Partner');
-	await page.getByTestId('form-item-contact.email').locator('input').fill(email);
-	await page.getByTestId('form-item-contact.phone').locator('input').fill('+41791230001');
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+	try {
+		await page.goto('/portal/admin/local-partners');
+		await page.getByTestId('data-table-actions-button').click();
+		await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 
-	const created = await prisma.localPartner.findUnique({
-		where: { name: partnerName },
-		select: {
-			id: true,
-			contact: {
-				select: {
-					email: true,
-					phone: { select: { number: true } },
+		await page.getByTestId('form-item-name').locator('input').fill(partnerName);
+		await page.getByTestId('form-accordion-trigger-contact').click();
+		await page.getByTestId('form-item-contact.firstName').locator('input').fill('E2E');
+		await page.getByTestId('form-item-contact.lastName').locator('input').fill('Partner');
+		await page.getByTestId('form-item-contact.email').locator('input').fill(email);
+		await page.getByTestId('form-item-contact.phone').locator('input').fill('+41791230001');
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+		const created = await prisma.localPartner.findUnique({
+			where: { name: partnerName },
+			select: {
+				id: true,
+				contact: {
+					select: {
+						email: true,
+						phone: { select: { number: true } },
+					},
 				},
 			},
-		},
-	});
+		});
 
-	expect(created).toBeDefined();
-	expect(created?.contact.email).toBe(email);
-	expect(created?.contact.phone?.number).toBe('+41791230001');
+		expect(created).toBeDefined();
+		expect(created?.contact.email).toBe(email);
+		expect(created?.contact.phone?.number).toBe('+41791230001');
+	} finally {
+		await deleteFirebaseEmailsIfExist(email);
+	}
 });
 
 test('shows uniqueness error when email already exists', async ({ page }) => {
@@ -70,7 +76,7 @@ test('shows uniqueness error when email already exists', async ({ page }) => {
 	await page.getByTestId('form-accordion-trigger-contact').click();
 	await page.getByTestId('form-item-contact.firstName').locator('input').fill('Dup');
 	await page.getByTestId('form-item-contact.lastName').locator('input').fill('Email');
-	await page.getByTestId('form-item-contact.email').locator('input').fill('test@portal.org');
+	await page.getByTestId('form-item-contact.email').locator('input').fill('power@portal.test');
 	await page.getByRole('button', { name: 'Save' }).click();
 
 	await expect(page.getByText('A contact with this email already exists.')).toBeVisible();
@@ -274,57 +280,63 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 		await page.getByRole('cell', { name }).click();
 	};
 
-	await page.goto('/portal/admin/local-partners');
-	await page.getByTestId('data-table-actions-button').click();
-	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
-	await page.getByTestId('form-item-name').locator('input').fill(partnerName);
-	await page.getByTestId('form-accordion-trigger-contact').click();
-	await page.getByTestId('form-item-contact.firstName').locator('input').fill(initialFirstName);
-	await page.getByTestId('form-item-contact.lastName').locator('input').fill(initialLastName);
-	await page.getByTestId('form-item-contact.email').locator('input').fill(initialEmail);
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+	await deleteFirebaseEmailsIfExist(initialEmail, updatedEmail);
 
-	const firebaseCreatedResult = await firebaseService.getByEmail(initialEmail);
-	expect(firebaseCreatedResult.success).toBeTruthy();
-	if (!firebaseCreatedResult.success) {
-		throw new Error(firebaseCreatedResult.error);
+	try {
+		await page.goto('/portal/admin/local-partners');
+		await page.getByTestId('data-table-actions-button').click();
+		await page.getByTestId('data-table-action-item-add-new-local-partner').click();
+		await page.getByTestId('form-item-name').locator('input').fill(partnerName);
+		await page.getByTestId('form-accordion-trigger-contact').click();
+		await page.getByTestId('form-item-contact.firstName').locator('input').fill(initialFirstName);
+		await page.getByTestId('form-item-contact.lastName').locator('input').fill(initialLastName);
+		await page.getByTestId('form-item-contact.email').locator('input').fill(initialEmail);
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+		const firebaseCreatedResult = await firebaseService.getByEmail(initialEmail);
+		expect(firebaseCreatedResult.success).toBeTruthy();
+		if (!firebaseCreatedResult.success) {
+			throw new Error(firebaseCreatedResult.error);
+		}
+		expect(firebaseCreatedResult.data).toBeTruthy();
+		expect(firebaseCreatedResult.data?.displayName).toBe(`${initialFirstName} ${initialLastName}`);
+
+		await openPartnerByName(partnerName);
+		await page.getByTestId('form-accordion-trigger-contact').click();
+		await page.getByTestId('form-item-contact.firstName').locator('input').fill(updatedFirstName);
+		await page.getByTestId('form-item-contact.lastName').locator('input').fill(updatedLastName);
+		await page.getByTestId('form-item-contact.email').locator('input').fill(updatedEmail);
+		await page.getByRole('button', { name: 'Save' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+		const firebaseOldEmailResult = await firebaseService.getByEmail(initialEmail);
+		expect(firebaseOldEmailResult.success).toBeTruthy();
+		if (!firebaseOldEmailResult.success) {
+			throw new Error(firebaseOldEmailResult.error);
+		}
+		expect(firebaseOldEmailResult.data).toBeNull();
+
+		const firebaseUpdatedResult = await firebaseService.getByEmail(updatedEmail);
+		expect(firebaseUpdatedResult.success).toBeTruthy();
+		if (!firebaseUpdatedResult.success) {
+			throw new Error(firebaseUpdatedResult.error);
+		}
+		expect(firebaseUpdatedResult.data).toBeTruthy();
+		expect(firebaseUpdatedResult.data?.displayName).toBe(`${updatedFirstName} ${updatedLastName}`);
+
+		await openPartnerByName(partnerName);
+		await page.getByRole('button', { name: 'Delete' }).click();
+		await page.getByRole('button', { name: 'Delete permanently' }).click();
+		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+		const firebaseDeletedResult = await firebaseService.getByEmail(updatedEmail);
+		expect(firebaseDeletedResult.success).toBeTruthy();
+		if (!firebaseDeletedResult.success) {
+			throw new Error(firebaseDeletedResult.error);
+		}
+		expect(firebaseDeletedResult.data).toBeNull();
+	} finally {
+		await deleteFirebaseEmailsIfExist(initialEmail, updatedEmail);
 	}
-	expect(firebaseCreatedResult.data).toBeTruthy();
-	expect(firebaseCreatedResult.data?.displayName).toBe(`${initialFirstName} ${initialLastName}`);
-
-	await openPartnerByName(partnerName);
-	await page.getByTestId('form-accordion-trigger-contact').click();
-	await page.getByTestId('form-item-contact.firstName').locator('input').fill(updatedFirstName);
-	await page.getByTestId('form-item-contact.lastName').locator('input').fill(updatedLastName);
-	await page.getByTestId('form-item-contact.email').locator('input').fill(updatedEmail);
-	await page.getByRole('button', { name: 'Save' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
-
-	const firebaseOldEmailResult = await firebaseService.getByEmail(initialEmail);
-	expect(firebaseOldEmailResult.success).toBeTruthy();
-	if (!firebaseOldEmailResult.success) {
-		throw new Error(firebaseOldEmailResult.error);
-	}
-	expect(firebaseOldEmailResult.data).toBeNull();
-
-	const firebaseUpdatedResult = await firebaseService.getByEmail(updatedEmail);
-	expect(firebaseUpdatedResult.success).toBeTruthy();
-	if (!firebaseUpdatedResult.success) {
-		throw new Error(firebaseUpdatedResult.error);
-	}
-	expect(firebaseUpdatedResult.data).toBeTruthy();
-	expect(firebaseUpdatedResult.data?.displayName).toBe(`${updatedFirstName} ${updatedLastName}`);
-
-	await openPartnerByName(partnerName);
-	await page.getByRole('button', { name: 'Delete' }).click();
-	await page.getByRole('button', { name: 'Delete permanently' }).click();
-	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
-
-	const firebaseDeletedResult = await firebaseService.getByEmail(updatedEmail);
-	expect(firebaseDeletedResult.success).toBeTruthy();
-	if (!firebaseDeletedResult.success) {
-		throw new Error(firebaseDeletedResult.error);
-	}
-	expect(firebaseDeletedResult.data).toBeNull();
 });

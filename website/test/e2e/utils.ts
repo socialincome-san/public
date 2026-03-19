@@ -8,6 +8,20 @@ export const getFirebaseAdminService = async () => {
 	return new FirebaseAdminService(prisma);
 };
 
+export const deleteFirebaseEmailsIfExist = async (...emails: string[]) => {
+	const firebaseService = await getFirebaseAdminService();
+	for (const email of emails) {
+		await firebaseService.deleteByEmailIfExists(email);
+	}
+};
+
+export const deleteFirebasePhonesIfExist = async (...phoneNumbers: string[]) => {
+	const firebaseService = await getFirebaseAdminService();
+	for (const phoneNumber of phoneNumbers) {
+		await firebaseService.deleteByPhoneNumberIfExists(phoneNumber);
+	}
+};
+
 export const getRecipientProgramAndLocalPartnerByName = async (firstName: string, lastName: string) => {
 	return prisma.recipient.findFirst({
 		where: {

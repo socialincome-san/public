@@ -97,7 +97,6 @@ export class ProgramWriteService extends BaseService {
 					endDate: defaultCampaignEndDate,
 					isActive: true,
 					program: { connect: { id: program.id } },
-					organization: { connect: { id: user.activeOrganizationId } },
 				},
 			});
 
@@ -186,7 +185,6 @@ export class ProgramWriteService extends BaseService {
 				organizationAccesses: {
 					create: {
 						organizationId: organizationResult.data.id,
-						permission: 'edit',
 					},
 				},
 			},
@@ -213,8 +211,9 @@ export class ProgramWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const hasOperatorAccess = accessibleProgramsResult.data.some(
-				(program) => program.programId === parsedInput.id && program.permission === ProgramPermission.operator,
+			const hasOperatorAccess = this.programAccessReadService.hasOperatorAccess(
+				accessibleProgramsResult.data,
+				parsedInput.id,
 			);
 			if (!hasOperatorAccess) {
 				return this.resultFail('Permission denied');
@@ -302,9 +301,7 @@ export class ProgramWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const hasOperatorAccess = accessibleProgramsResult.data.some(
-				(program) => program.programId === programId && program.permission === ProgramPermission.operator,
-			);
+			const hasOperatorAccess = this.programAccessReadService.hasOperatorAccess(accessibleProgramsResult.data, programId);
 			if (!hasOperatorAccess) {
 				return this.resultFail('Permission denied');
 			}

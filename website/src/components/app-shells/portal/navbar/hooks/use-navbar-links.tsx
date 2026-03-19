@@ -39,7 +39,7 @@ export const useNavbarLinks = (sessions: Session[]) => {
 
 	const userMenuNavLinks: NavLink[] = [
 		{
-			href: '/portal/profile',
+			href: '/portal/profile/account',
 			activeBase: '/portal/profile',
 			label: 'Profile',
 			icon: User,

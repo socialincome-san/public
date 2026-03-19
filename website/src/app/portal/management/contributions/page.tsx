@@ -1,5 +1,6 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
 import { services } from '@/lib/services/services';
@@ -24,7 +25,7 @@ const ContributionsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 
 	const error = result.success ? null : result.error;
 	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];
-	const readOnly = result.success ? result.data.permission !== 'edit' : true;
+	const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const filterOptions = result.success ? result.data.filterOptions : { programs: [], campaigns: [], paymentEventTypes: [] };
 

@@ -18,15 +18,5 @@ export const makeOrganizationMemberColumns = (): ColumnDef<OrganizationMemberTab
 			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-		{
-			accessorKey: 'role',
-			header: (ctx) => <SortableHeader ctx={ctx}>Role</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'permission',
-			header: (ctx) => <SortableHeader ctx={ctx}>Permission</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
 	];
 };
