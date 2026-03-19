@@ -27,7 +27,7 @@ test('admin mobile money providers with direct URL sorting matches screenshot', 
 	await expectToHaveScreenshot(page);
 });
 
-test.only('add new mobile money provider', async ({ page }) => {
+test('add new mobile money provider', async ({ page }) => {
 	const unique = Date.now();
 	const name = `e2e-mobile-money-provider-${unique}`;
 
@@ -47,7 +47,7 @@ test.only('add new mobile money provider', async ({ page }) => {
 	expect(created?.isSupported).toBe(true);
 });
 
-test.only('shows uniqueness error when provider name already exists', async ({ page }) => {
+test('shows uniqueness error when provider name already exists', async ({ page }) => {
 	const existing = await prisma.mobileMoneyProvider.findFirst({
 		orderBy: { name: 'asc' },
 		select: { name: true },
@@ -66,7 +66,7 @@ test.only('shows uniqueness error when provider name already exists', async ({ p
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 });
 
-test.only('update mobile money provider', async ({ page }) => {
+test('update mobile money provider', async ({ page }) => {
 	const unique = Date.now();
 	const initialName = `e2e-mobile-money-provider-initial-${unique}`;
 	const updatedName = `e2e-mobile-money-provider-updated-${unique}`;

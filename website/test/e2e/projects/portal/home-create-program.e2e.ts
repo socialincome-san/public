@@ -5,7 +5,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test.only('create new program', async ({ page }) => {
+test('create new program', async ({ page }) => {
 	await page.goto('/portal');
 
 	await page.getByTestId('create-program-modal-trigger').click();

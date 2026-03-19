@@ -29,7 +29,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test.only('add new candidate', async ({ page }) => {
+test('add new candidate', async ({ page }) => {
 	await page.goto('/portal/admin/candidates');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-new-candidate');
 	await selectOptionByTestId(page, 'localPartner', ADD_CANDIDATE.localPartnerName);
@@ -44,7 +44,7 @@ test.only('add new candidate', async ({ page }) => {
 	expect(created?.localPartner?.name).toBe(ADD_CANDIDATE.localPartnerName);
 });
 
-test.only('shows uniqueness error when candidate email already exists', async ({ page }) => {
+test('shows uniqueness error when candidate email already exists', async ({ page }) => {
 	const existingContact = await prisma.contact.findFirst({
 		where: { email: { not: null } },
 		select: { email: true },
@@ -62,7 +62,7 @@ test.only('shows uniqueness error when candidate email already exists', async ({
 	await expect(page.getByText('A contact with this email already exists.')).toBeVisible();
 });
 
-test.only('candidate payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
+test('candidate payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
 	await deleteFirebasePhonesIfExist(PAYMENT_PHONE_ONE, PAYMENT_PHONE_TWO);
 
 	try {
@@ -105,7 +105,7 @@ test.only('candidate payment phone stays aligned in Firebase after phone changes
 	}
 });
 
-test.only('add candidate with payment phone keeps Firebase user in sync', async ({ page }) => {
+test('add candidate with payment phone keeps Firebase user in sync', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = `Candidate-${unique}`;
 	const lastName = 'Firebase';
@@ -137,7 +137,7 @@ test.only('add candidate with payment phone keeps Firebase user in sync', async 
 	}
 });
 
-test.only('delete candidate removes Firebase user for payment phone', async ({ page }) => {
+test('delete candidate removes Firebase user for payment phone', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const firstName = `Delete-${unique}`;
@@ -201,7 +201,7 @@ test.only('delete candidate removes Firebase user for payment phone', async ({ p
 	}
 });
 
-test.only('edit candidate and remove contact phone and address', async ({ page }) => {
+test('edit candidate and remove contact phone and address', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = `Edge-${unique}`;
 	const lastName = 'Candidate';

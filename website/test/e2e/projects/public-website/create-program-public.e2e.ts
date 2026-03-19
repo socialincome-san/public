@@ -8,7 +8,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test.only('public user can create a program and account', async ({ page }) => {
+test('public user can create a program and account', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = 'Public';
 	const lastName = `Creator${unique}`;

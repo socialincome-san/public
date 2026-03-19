@@ -101,6 +101,11 @@ const programRecipientsData: Recipient[] = recipientContactDefinitions.map(({ ke
 const candidateLocalPartnerByKey: Record<CandidateKey, LocalPartnerId> = {
 	'sl-1': 'local-partner-sl-1',
 	'sl-2': 'local-partner-sl-1',
+	'sl-3': 'local-partner-sl-1',
+	'sl-4': 'local-partner-sl-1',
+	'sl-5': 'local-partner-sl-1',
+	'sl-6': 'local-partner-sl-1',
+	'sl-7': 'local-partner-sl-1',
 	'lr-1': 'local-partner-lr-1',
 	'lr-2': 'local-partner-lr-1',
 };

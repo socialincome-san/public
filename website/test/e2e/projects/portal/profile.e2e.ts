@@ -12,7 +12,7 @@ test('portal profile-page matches screenshot', async ({ page }) => {
 	await expectToHaveScreenshot(page);
 });
 
-test.only('portal profile updates user personal info', async ({ page }) => {
+test('portal profile updates user personal info', async ({ page }) => {
 	const updatedFirstName = `Portal-${Date.now()}`;
 
 	await page.goto('/portal/profile/account');

@@ -89,7 +89,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test.only('Add new recipient', async ({ page }) => {
+test('Add new recipient', async ({ page }) => {
 	await assertContactExistsByEmail('power@portal.test');
 
 	await page.goto('/portal/management/recipients');
@@ -111,7 +111,7 @@ test.only('Add new recipient', async ({ page }) => {
 	expect(row?.localPartner?.name).toBe(ADD_RECIPIENT.localPartnerName);
 });
 
-test.only('add recipient with payment phone keeps Firebase user in sync', async ({ page }) => {
+test('add recipient with payment phone keeps Firebase user in sync', async ({ page }) => {
 	const unusedPhones = await buildUnusedPaymentPhoneNumbers();
 	const firstName = `Firebase-${Date.now()}`;
 	const lastName = 'Recipient';
@@ -139,7 +139,7 @@ test.only('add recipient with payment phone keeps Firebase user in sync', async 
 	}
 });
 
-test.only('Edit existing recipient', async ({ page }) => {
+test('Edit existing recipient', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	await firebaseService.deleteByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
 	await firebaseService.deleteByPhoneNumberIfExists(EXISTING_RECIPIENT.paymentPhone);
@@ -197,7 +197,7 @@ test.only('Edit existing recipient', async ({ page }) => {
 	}
 });
 
-test.only('shows uniqueness error when recipient email already exists', async ({ page }) => {
+test('shows uniqueness error when recipient email already exists', async ({ page }) => {
 	const existingContact = await prisma.contact.findFirst({
 		where: { email: { not: null } },
 		select: { email: true },
@@ -216,7 +216,7 @@ test.only('shows uniqueness error when recipient email already exists', async ({
 	await expect(page.getByText('A contact with this email already exists.')).toBeVisible();
 });
 
-test.only('shows uniqueness error when recipient payment code already exists', async ({ page }) => {
+test('shows uniqueness error when recipient payment code already exists', async ({ page }) => {
 	const existingPaymentInfo = await prisma.paymentInformation.findFirst({
 		where: { code: { not: null } },
 		select: { code: true },
@@ -236,7 +236,7 @@ test.only('shows uniqueness error when recipient payment code already exists', a
 	await expect(page.getByText('A payment code with this value already exists.')).toBeVisible();
 });
 
-test.only('edit recipient and remove contact phone and address', async ({ page }) => {
+test('edit recipient and remove contact phone and address', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = `Edge-${unique}`;
 	const lastName = 'Recipient';
@@ -335,7 +335,7 @@ test.only('edit recipient and remove contact phone and address', async ({ page }
 	expect(deletedAddress).toBeNull();
 });
 
-test.only('recipient payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
+test('recipient payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
 	const unusedPhones = await buildUnusedPaymentPhoneNumbers();
 	const firebaseService = await getFirebaseAdminService();
 	await deleteFirebasePhonesIfExist(unusedPhones.first, unusedPhones.second);
@@ -432,7 +432,7 @@ test.only('Delete recipient', async ({ page }) => {
 		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(phone);
 		await expect(page.getByRole('cell', { name: phone })).toBeVisible();
 
-		await page.goto('/portal/management/recipients');
+		await page.goto(`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(EXISTING_RECIPIENT.firstName)}`);
 		await page.getByRole('cell', { name: EXISTING_RECIPIENT.firstName }).click();
 		await page.getByRole('button', { name: 'Delete' }).click();
 		await page.getByRole('button', { name: 'Delete permanently' }).click();
@@ -451,7 +451,7 @@ test.only('Delete recipient', async ({ page }) => {
 	}
 });
 
-test.only('CSV Upload', async ({ page }) => {
+test('CSV Upload', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
 	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-example.csv');
@@ -466,7 +466,7 @@ test.only('CSV Upload', async ({ page }) => {
 	}
 });
 
-test.only('CSV Export', async ({ page }) => {
+test('CSV Export', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 
 	const downloadPromise = page.waitForEvent('download');

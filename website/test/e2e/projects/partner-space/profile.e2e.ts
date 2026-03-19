@@ -12,7 +12,7 @@ test('partner-space profile-page matches screenshot', async ({ page }) => {
 	await expectToHaveScreenshot(page);
 });
 
-test.only('partner-space profile updates local partner contact info', async ({ page }) => {
+test('partner-space profile updates local partner contact info', async ({ page }) => {
 	const updatedFirstName = `Partner-${Date.now()}`;
 
 	await page.goto('/partner-space/profile');

@@ -25,7 +25,7 @@ test('admin organizations with direct URL sorting matches screenshot', async ({ 
 	await expectToHaveScreenshot(page);
 });
 
-test.only('add new organization with users and program permissions', async ({ page }) => {
+test('add new organization with users and program permissions', async ({ page }) => {
 	const organizationName = `E2E Organization ${Date.now()}`;
 	const selectedUsers = ['si_power_user global_owner', 'si_sl_user_1 owner'];
 	const ownedProgramName = 'SI Core Program SL';
@@ -81,7 +81,7 @@ test.only('add new organization with users and program permissions', async ({ pa
 	);
 });
 
-test.only('update organization users and permissions', async ({ page }) => {
+test('update organization users and permissions', async ({ page }) => {
 	const selectedUsers = ['si_power_user global_owner', 'si_sl_user_1 owner'];
 	const ownedProgramName = 'SI Core Program SL';
 	const operatedProgramName = 'SI Women Support SL';
@@ -135,7 +135,7 @@ test.only('update organization users and permissions', async ({ page }) => {
 	);
 });
 
-test.only('delete organization', async ({ page }) => {
+test('delete organization', async ({ page }) => {
 	const organization = await prisma.organization.create({
 		data: { name: `E2E Delete Organization ${Date.now()}` },
 		select: { id: true, name: true },

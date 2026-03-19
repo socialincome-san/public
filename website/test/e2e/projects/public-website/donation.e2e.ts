@@ -6,7 +6,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test.only('Stripe One Time Donation flow', async ({ page }) => {
+test('Stripe One Time Donation flow', async ({ page }) => {
 	const TEST_EMAIL = 'sam.winchester@supernatural.com';
 	await deleteFirebaseEmailsIfExist(TEST_EMAIL);
 

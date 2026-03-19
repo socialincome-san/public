@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { clickDataTableActionItem } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -12,10 +13,9 @@ const expected = {
 	step4: 'Created',
 };
 
-test.only('Payout Process', async ({ page }) => {
+test('Payout Process', async ({ page }) => {
 	await page.goto('/portal/delivery/make-payouts');
-	await page.getByTestId('data-table-actions-button').click();
-	await page.getByTestId('data-table-action-item-start-payout-process').click();
+	await clickDataTableActionItem(page, 'data-table-action-item-start-payout-process');
 
 	await page.getByTestId('date-picker-button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
@@ -36,7 +36,7 @@ test.only('Payout Process', async ({ page }) => {
 		.innerText()
 		.then((text) => {
 			expect(text.replace(/\s+/g, '')).toContain(expected.step2Header.replace(/\s+/g, ''));
-			expect(text).toContain('SocialIncomeMarch2025');
+			expect(text).toContain('Social Income March 2025');
 		});
 
 	await page.getByTestId('payout-step-3-button').click();

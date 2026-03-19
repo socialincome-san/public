@@ -32,7 +32,7 @@ test('admin users with direct URL sorting matches screenshot', async ({ page }) 
 	await expectToHaveScreenshot(page);
 });
 
-test.only('admin users can show and search by Firebase auth user ID', async ({ page }) => {
+test('admin users can show and search by Firebase auth user ID', async ({ page }) => {
 	const seededUser = await prisma.user.findFirst({
 		where: { contact: { email: 'power@portal.test' } },
 		select: {
@@ -70,7 +70,7 @@ test.only('admin users can show and search by Firebase auth user ID', async ({ p
 	await expect(page.getByRole('cell', { name: seededEmail, exact: true })).toBeVisible();
 });
 
-test.only('add new user keeps Firebase user in sync', async ({ page }) => {
+test('add new user keeps Firebase user in sync', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const firstName = 'E2E';
@@ -135,7 +135,7 @@ test.only('add new user keeps Firebase user in sync', async ({ page }) => {
 	}
 });
 
-test.only('shows uniqueness error when user email already exists', async ({ page }) => {
+test('shows uniqueness error when user email already exists', async ({ page }) => {
 	await page.goto('/portal/admin/users');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-user');
 	await page.getByTestId('form-item-firstName').locator('input').fill('Dup');
@@ -149,7 +149,7 @@ test.only('shows uniqueness error when user email already exists', async ({ page
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 });
 
-test.only('update user keeps Firebase user in sync', async ({ page }) => {
+test('update user keeps Firebase user in sync', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const initialFirstName = 'Firebase';
@@ -232,7 +232,7 @@ test.only('update user keeps Firebase user in sync', async ({ page }) => {
 	}
 });
 
-test.only('delete user removes database and Firebase entries', async ({ page }) => {
+test('delete user removes database and Firebase entries', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const firstName = 'Delete';

@@ -729,13 +729,14 @@ export const recipientContactDefinitions: ReadonlyArray<RecipientContactDefiniti
 ];
 
 type CandidateCountry = 'sl' | 'lr';
-type CandidateKey = 'sl-1' | 'sl-2' | 'lr-1' | 'lr-2';
+type CandidateKey = 'sl-1' | 'sl-2' | 'sl-3' | 'sl-4' | 'sl-5' | 'sl-6' | 'sl-7' | 'lr-1' | 'lr-2';
 type CandidateContactDefinition = {
 	key: CandidateKey;
 	country: CandidateCountry;
 	phoneId: PhoneId | null;
 	firstName: `candidate_${CandidateKey}`;
 	lastName: 'candidate_pool';
+	gender: Gender;
 	contactId: `ct-candidate-${CandidateKey}`;
 };
 
@@ -746,6 +747,7 @@ export const candidateContactDefinitions: ReadonlyArray<CandidateContactDefiniti
 		phoneId: null,
 		firstName: 'candidate_sl-1',
 		lastName: 'candidate_pool',
+		gender: Gender.female,
 		contactId: 'ct-candidate-sl-1',
 	},
 	{
@@ -754,7 +756,53 @@ export const candidateContactDefinitions: ReadonlyArray<CandidateContactDefiniti
 		phoneId: null,
 		firstName: 'candidate_sl-2',
 		lastName: 'candidate_pool',
+		gender: Gender.male,
 		contactId: 'ct-candidate-sl-2',
+	},
+	{
+		key: 'sl-3',
+		country: 'sl',
+		phoneId: null,
+		firstName: 'candidate_sl-3',
+		lastName: 'candidate_pool',
+		gender: Gender.female,
+		contactId: 'ct-candidate-sl-3',
+	},
+	{
+		key: 'sl-4',
+		country: 'sl',
+		phoneId: null,
+		firstName: 'candidate_sl-4',
+		lastName: 'candidate_pool',
+		gender: Gender.male,
+		contactId: 'ct-candidate-sl-4',
+	},
+	{
+		key: 'sl-5',
+		country: 'sl',
+		phoneId: null,
+		firstName: 'candidate_sl-5',
+		lastName: 'candidate_pool',
+		gender: Gender.male,
+		contactId: 'ct-candidate-sl-5',
+	},
+	{
+		key: 'sl-6',
+		country: 'sl',
+		phoneId: null,
+		firstName: 'candidate_sl-6',
+		lastName: 'candidate_pool',
+		gender: Gender.male,
+		contactId: 'ct-candidate-sl-6',
+	},
+	{
+		key: 'sl-7',
+		country: 'sl',
+		phoneId: null,
+		firstName: 'candidate_sl-7',
+		lastName: 'candidate_pool',
+		gender: Gender.male,
+		contactId: 'ct-candidate-sl-7',
 	},
 	{
 		key: 'lr-1',
@@ -762,6 +810,7 @@ export const candidateContactDefinitions: ReadonlyArray<CandidateContactDefiniti
 		phoneId: null,
 		firstName: 'candidate_lr-1',
 		lastName: 'candidate_pool',
+		gender: Gender.female,
 		contactId: 'ct-candidate-lr-1',
 	},
 	{
@@ -770,6 +819,7 @@ export const candidateContactDefinitions: ReadonlyArray<CandidateContactDefiniti
 		phoneId: null,
 		firstName: 'candidate_lr-2',
 		lastName: 'candidate_pool',
+		gender: Gender.male,
 		contactId: 'ct-candidate-lr-2',
 	},
 ];
@@ -791,7 +841,7 @@ const recipientContacts: Contact[] = recipientContactDefinitions.map(({ key, sta
 	updatedAt: null,
 }));
 
-const candidateContacts: Contact[] = candidateContactDefinitions.map(({ key, country, phoneId, firstName, lastName, contactId }, index) => ({
+const candidateContacts: Contact[] = candidateContactDefinitions.map(({ key, country, phoneId, firstName, lastName, gender, contactId }, index) => ({
 	id: contactId,
 	firstName,
 	lastName,
@@ -799,7 +849,7 @@ const candidateContacts: Contact[] = candidateContactDefinitions.map(({ key, cou
 	addressId: `ad-candidate-${key}`,
 	phoneId,
 	email: `${firstName}@candidate.test`,
-	gender: index % 2 === 0 ? Gender.female : Gender.male,
+	gender,
 	language: defaultContactLanguageByCountry[country],
 	dateOfBirth: new Date(`199${(index + 4) % 9}-02-10`),
 	profession: `candidate_${country}`,

@@ -7,7 +7,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test.only('add new contributor', async ({ page }) => {
+test('add new contributor', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = 'Bruce';
 	const lastName = 'Wayne';
@@ -55,7 +55,7 @@ test.only('add new contributor', async ({ page }) => {
 	}
 });
 
-test.only('shows uniqueness error when contributor email already exists', async ({ page }) => {
+test('shows uniqueness error when contributor email already exists', async ({ page }) => {
 	const existingContact = await prisma.contact.findFirst({
 		where: { email: { not: null } },
 		select: { email: true },
@@ -74,7 +74,7 @@ test.only('shows uniqueness error when contributor email already exists', async 
 	await expect(page.getByText('Error saving contributor: A contact with this email already exists.')).toBeVisible();
 });
 
-test.only('shows uniqueness error when contributor phone already exists', async ({ page }) => {
+test('shows uniqueness error when contributor phone already exists', async ({ page }) => {
 	const existingPhone = await prisma.phone.findFirst({
 		where: {
 			contacts: {
@@ -98,7 +98,7 @@ test.only('shows uniqueness error when contributor phone already exists', async 
 	await expect(page.getByText('Error saving contributor: A contact with this phone number already exists.')).toBeVisible();
 });
 
-test.only('edit contributor and remove phone and address', async ({ page }) => {
+test('edit contributor and remove phone and address', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = `Edge-${unique}`;
 	const lastName = 'Contributor';
@@ -186,7 +186,7 @@ test.only('edit contributor and remove phone and address', async ({ page }) => {
 	expect(deletedAddress).toBeNull();
 });
 
-test.only('contributor create and update keeps Firebase user in sync', async ({ page }) => {
+test('contributor create and update keeps Firebase user in sync', async ({ page }) => {
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const initialFirstName = 'Firebase';

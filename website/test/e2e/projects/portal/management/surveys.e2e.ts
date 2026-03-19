@@ -46,7 +46,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test.only('updates a survey access password', async ({ page }) => {
+test('updates a survey access password', async ({ page }) => {
 	const [survey] = await getEditableSurveys();
 	const nextPassword = `pw-${Date.now()}-updated`;
 
@@ -62,7 +62,7 @@ test.only('updates a survey access password', async ({ page }) => {
 	expect(updated.accessPw).toBe(nextPassword);
 });
 
-test.only('shows uniqueness error when survey access email already exists', async ({ page }) => {
+test('shows uniqueness error when survey access email already exists', async ({ page }) => {
 	const [firstSurvey, secondSurvey] = await getEditableSurveys();
 
 	await openSurveyById(page, firstSurvey.id);
@@ -72,7 +72,7 @@ test.only('shows uniqueness error when survey access email already exists', asyn
 	await expect(page.getByText('Error saving survey: A survey with this access email already exists.')).toBeVisible();
 });
 
-test.only('shows uniqueness error when survey name already exists for recipient', async ({ page }) => {
+test('shows uniqueness error when survey name already exists for recipient', async ({ page }) => {
 	const [firstSurvey, secondSurvey] = await getEditableSurveys();
 	const secondRecipientName =
 		`${secondSurvey.recipient.contact?.firstName ?? ''} ${secondSurvey.recipient.contact?.lastName ?? ''}`.trim();

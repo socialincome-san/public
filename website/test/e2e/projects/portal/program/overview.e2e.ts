@@ -25,7 +25,7 @@ test('Program not ready for payout overview page matches screenshot', async ({ p
 	await expectToHaveScreenshot(page);
 });
 
-test.only('program settings dialog for program-si-core-sl updates all editable values and saves', async ({ page }) => {
+test('program settings dialog for program-si-core-sl updates all editable values and saves', async ({ page }) => {
 	const updatedName = 'Program One Updated E2E';
 	const updatedDuration = '24';
 	const updatedPayoutPerInterval = '77';
@@ -64,7 +64,7 @@ test.only('program settings dialog for program-si-core-sl updates all editable v
 	await expectToHaveScreenshot(page);
 });
 
-test.only('program settings dialog can delete a newly created program and redirects to portal', async ({ page }) => {
+test('program settings dialog can delete a newly created program and redirects to portal', async ({ page }) => {
 	await page.goto('/portal');
 	await page.getByTestId('create-program-modal-trigger').click();
 

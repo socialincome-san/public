@@ -25,7 +25,7 @@ const savePayoutAndWait = async (page: Page) => {
 	}
 };
 
-test.only('add manual payout', async ({ page }) => {
+test('add manual payout', async ({ page }) => {
 	const unique = Date.now();
 	const amount = 77.7;
 	const phoneNumber = `+23277${String(unique).slice(-6)}`;
@@ -53,7 +53,7 @@ test.only('add manual payout', async ({ page }) => {
 	expect(created).toBeDefined();
 });
 
-test.only('edit payout', async ({ page }) => {
+test('edit payout', async ({ page }) => {
 	const unique = Date.now();
 	const firstName = `Payout-${unique}`;
 	const lastName = 'Editor';

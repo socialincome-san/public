@@ -12,7 +12,7 @@ test('dashboard profile-page matches screenshot', async ({ page }) => {
 	await expectToHaveScreenshot(page);
 });
 
-test.only('dashboard profile updates contributor personal info', async ({ page }) => {
+test('dashboard profile updates contributor personal info', async ({ page }) => {
 	const updatedFirstName = `Contributor-${Date.now()}`;
 
 	await page.goto('/en/int/dashboard/profile');

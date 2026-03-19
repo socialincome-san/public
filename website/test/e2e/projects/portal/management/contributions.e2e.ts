@@ -7,7 +7,7 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test.only('add new contribution', async ({ page }) => {
+test('add new contribution', async ({ page }) => {
 	const source = await prisma.contribution.findFirst({
 		select: {
 			contributorId: true,
@@ -89,10 +89,8 @@ test.only('edit contribution', async ({ page }) => {
 	const updatedAmountChf = 111.11;
 	const updatedFeesChf = 2.22;
 
-	await page.goto(
-		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact.email!)}`,
-	);
-	await page.getByRole('cell', { name: existing!.contributor.contact.email! }).click();
+	await page.goto(`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.id)}`);
+	await page.getByRole('row').filter({ hasText: existing!.id }).first().click();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
 	await page.getByTestId('form-item-amountChf').locator('input').fill(`${updatedAmountChf}`);
 	await page.getByTestId('form-item-feesChf').locator('input').fill(`${updatedFeesChf}`);
@@ -115,7 +113,7 @@ test.only('edit contribution', async ({ page }) => {
 	expect(updated.status).toBe('pending');
 });
 
-test.only('shows validation error when contribution amount is invalid', async ({ page }) => {
+test('shows validation error when contribution amount is invalid', async ({ page }) => {
 	const source = await prisma.contribution.findFirst({
 		select: {
 			contributor: {

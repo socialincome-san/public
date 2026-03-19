@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test.only('wait for emulators to be ready', async ({ page }) => {
+test('wait for emulators to be ready', async ({ page }) => {
 	for (let i = 0; i < 30; i++) {
 		try {
 			await page.goto('http://127.0.0.1:4000/logs');

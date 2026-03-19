@@ -4,7 +4,7 @@ import { saveStoryblokMock, setupStoryblokMock } from '../mock-server/storyblok-
 import { assertContactExistsByEmail } from '../utils';
 import { loginAs } from './utils';
 
-test.only('seed and login default auth actors', async ({ browser }) => {
+test('seed and login default auth actors', async ({ browser }) => {
 	await seedDatabase();
 
 	await setupStoryblokMock('portal-auth-login');
