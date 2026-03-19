@@ -6,6 +6,7 @@ import {
 	getContributionsTableFilters,
 } from '@/components/data-table/configs/contributions-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import type { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -30,14 +31,17 @@ export const ContributionsTableClient = ({
 }) => {
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [contributionId, setContributionId] = useState<string | undefined>(undefined);
+	const [isContributionReadOnly, setIsContributionReadOnly] = useState(readOnly);
 
 	const openEmptyForm = () => {
 		setContributionId(undefined);
+		setIsContributionReadOnly(readOnly);
 		setIsFormOpen(true);
 	};
 
 	const openEditForm = (row: ContributionTableViewRow) => {
 		setContributionId(row.id);
+		setIsContributionReadOnly(row.permission !== ProgramPermission.operator);
 		setIsFormOpen(true);
 	};
 
@@ -45,6 +49,7 @@ export const ContributionsTableClient = ({
 		setIsFormOpen(open);
 		if (!open) {
 			setContributionId(undefined);
+			setIsContributionReadOnly(readOnly);
 		}
 	};
 
@@ -72,7 +77,7 @@ export const ContributionsTableClient = ({
 			/>
 
 			<ContributionFormDialog
-				readOnly={readOnly}
+				readOnly={isContributionReadOnly}
 				open={isFormOpen}
 				onOpenChange={handleClose}
 				contributionId={contributionId}

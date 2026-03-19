@@ -91,12 +91,14 @@ test('edit contribution', async ({ page }) => {
 	await page.goto(
 		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact.email!)}`,
 	);
-	await page
+	const editableRow = page
 		.getByRole('row')
 		.filter({ hasText: existing!.contributor.contact.email! })
 		.filter({ hasText: existing!.campaign.title })
-		.first()
-		.click();
+		.first();
+	await expect(editableRow.getByTestId('action-cell-icon-edit')).toBeVisible();
+	await editableRow.click();
+	await expect(page.getByRole('heading', { name: 'Edit Contribution' })).toBeVisible();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
 	await page.getByTestId('form-item-amountChf').locator('input').fill(`${updatedAmountChf}`);
 	await page.getByTestId('form-item-feesChf').locator('input').fill(`${updatedFeesChf}`);
@@ -117,6 +119,39 @@ test('edit contribution', async ({ page }) => {
 	expect(Number(updated.amountChf)).toBe(updatedAmountChf);
 	expect(Number(updated.feesChf)).toBe(updatedFeesChf);
 	expect(updated.status).toBe('pending');
+});
+
+test('shows view icon and readonly dialog for owner-only contribution rows', async ({ page }) => {
+	const ownerOnly = await prisma.contribution.findUnique({
+		where: { id: 'contribution-lr-high-1' },
+		select: {
+			contributor: {
+				select: {
+					contact: { select: { email: true } },
+				},
+			},
+			campaign: {
+				select: {
+					title: true,
+				},
+			},
+		},
+	});
+	expect(ownerOnly?.contributor.contact?.email).toBeTruthy();
+	expect(ownerOnly?.campaign.title).toBeTruthy();
+
+	await page.goto(
+		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(ownerOnly!.contributor.contact.email!)}`,
+	);
+	const readOnlyRow = page
+		.getByRole('row')
+		.filter({ hasText: ownerOnly!.contributor.contact.email! })
+		.filter({ hasText: ownerOnly!.campaign.title })
+		.first();
+	await expect(readOnlyRow.getByTestId('action-cell-icon-view')).toBeVisible();
+	await readOnlyRow.click();
+	await expect(page.getByRole('heading', { name: 'View Contribution' })).toBeVisible();
+	await expect(page.getByRole('button', { name: 'Save' })).toBeHidden();
 });
 
 test('shows validation error when contribution amount is invalid', async ({ page }) => {

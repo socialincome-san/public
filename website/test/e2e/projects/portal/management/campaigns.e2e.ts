@@ -52,14 +52,18 @@ test('add new campaign', async ({ page }) => {
 });
 
 test('edit campaign', async ({ page }) => {
-	const existing = await prisma.campaign.findFirst({
-		select: { id: true, title: true, description: true },
+	const existing = await prisma.campaign.findUnique({
+		where: { id: 'campaign-si-core-sl-default' },
+		select: { id: true, title: true },
 	});
 	expect(existing).toBeTruthy();
 	const updatedDescription = `Updated description ${Date.now()}`;
 
 	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(existing!.title)}`);
-	await page.getByRole('cell', { name: existing!.title }).click();
+	const editableRow = page.getByRole('row').filter({ hasText: existing!.title }).first();
+	await expect(editableRow.getByTestId('action-cell-icon-edit')).toBeVisible();
+	await editableRow.getByRole('cell', { name: existing!.title }).click();
+	await expect(page.getByRole('heading', { name: 'Edit Campaign' })).toBeVisible();
 	await page.getByTestId('form-item-description').locator('input').fill(updatedDescription);
 	await selectOptionByTestId(page, 'program');
 	await saveCampaignAndWait(page);
@@ -69,6 +73,21 @@ test('edit campaign', async ({ page }) => {
 		select: { description: true },
 	});
 	expect(updated.description).toBe(updatedDescription);
+});
+
+test('shows view icon and readonly dialog for owner-only campaign rows', async ({ page }) => {
+	const ownerOnly = await prisma.campaign.findUnique({
+		where: { id: 'campaign-si-health-lr-default' },
+		select: { title: true },
+	});
+	expect(ownerOnly).toBeTruthy();
+
+	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(ownerOnly!.title)}`);
+	const row = page.getByRole('row').filter({ hasText: ownerOnly!.title }).first();
+	await expect(row.getByTestId('action-cell-icon-view')).toBeVisible();
+	await row.getByRole('cell', { name: ownerOnly!.title }).click();
+	await expect(page.getByRole('heading', { name: 'View Campaign' })).toBeVisible();
+	await expect(page.getByRole('button', { name: 'Save' })).toBeHidden();
 });
 
 test('shows uniqueness error when campaign title already exists', async ({ page }) => {

@@ -150,7 +150,9 @@ test('edit contributor and remove phone and address', async ({ page }) => {
 	expect(created.contact.addressId).toBeTruthy();
 
 	await page.goto(`/portal/management/contributors?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
-	await page.getByRole('cell', { name: firstName }).click();
+	const editableRow = page.getByRole('row').filter({ hasText: firstName }).first();
+	await expect(editableRow.getByTestId('action-cell-icon-edit')).toBeVisible();
+	await editableRow.getByRole('cell', { name: firstName }).click();
 	await page.getByTestId('form-accordion-trigger-contact').click();
 	await page.getByTestId('form-item-contact.phone').locator('input').clear();
 	await page.getByTestId('form-item-contact.street').locator('input').clear();

@@ -12,6 +12,7 @@ export type ContributionTableViewRow = {
 	paymentEventType: PaymentEventType | null;
 	programName: string | null;
 	createdAt: Date;
+	permission: ProgramPermission;
 };
 
 export type ContributionTableQuery = {
