@@ -61,7 +61,7 @@ export const campaignCreateInputSchema = z.object({
 	metadataTwitterImage: optionalTrimmedString,
 	creatorName: nullableTrimmedString,
 	creatorEmail: nullableEmail,
-	programId: optionalTrimmedString,
+	programId: z.string().trim().min(1, 'Program is required.'),
 });
 
 export const campaignUpdateInputSchema = campaignCreateInputSchema.extend({

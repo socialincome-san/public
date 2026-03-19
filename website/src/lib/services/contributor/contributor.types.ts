@@ -3,9 +3,9 @@ import {
 	ContributorReferralSource,
 	CountryCode,
 	Gender,
-	OrganizationPermission,
 	Phone,
 	Prisma,
+	ProgramPermission,
 } from '@/generated/prisma/client';
 
 export type ContributorTableViewRow = {
@@ -17,7 +17,7 @@ export type ContributorTableViewRow = {
 	country: CountryCode | null;
 	totalContributedChf: number;
 	createdAt: Date;
-	permission: OrganizationPermission;
+	permission: ProgramPermission;
 };
 
 export type ContributorTableQuery = {

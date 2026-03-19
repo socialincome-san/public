@@ -7,8 +7,7 @@ export type UserPayload = {
 	email: string | null;
 	role: UserRole;
 	organizationId: string | null;
-	editOrganizationIds: string[];
-	readonlyOrganizationIds: string[];
+	organizationIds: string[];
 };
 
 export type UserUpdateInput = {
@@ -37,8 +36,7 @@ export type UserTableViewRow = {
 	firebaseAuthUserId: string;
 	role: UserRole;
 	organizationName: string | null;
-	readonlyOrganizationNames: string;
-	editOrganizationNames: string;
+	organizationNames: string;
 	createdAt: Date;
 };
 

@@ -2,14 +2,14 @@ import { Campaign, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { CampaignFormCreateInput, CampaignFormUpdateInput } from './campaign-form-input';
 import { CampaignValidationService } from './campaign-validation.service';
 
 export class CampaignWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
 		private readonly campaignValidationService: CampaignValidationService,
 		loggerInstance = logger,
 	) {
@@ -24,30 +24,25 @@ export class CampaignWriteService extends BaseService {
 		const validatedInput = validatedInputResult.data;
 
 		try {
-			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-
-			if (!accessResult.success) {
-				return this.resultFail(accessResult.error);
+			const canOperateProgramResult = await this.programAccessService.canOperateProgram(userId, validatedInput.programId);
+			if (!canOperateProgramResult.success) {
+				return this.resultFail(canOperateProgramResult.error);
 			}
-
-			if (accessResult.data.permission !== 'edit') {
+			if (!canOperateProgramResult.data) {
 				return this.resultFail('No permissions to create campaign');
 			}
 
-			const { id: organizationId } = accessResult.data;
 			const uniquenessResult = await this.campaignValidationService.validateCreateUniqueness(validatedInput);
 			if (!uniquenessResult.success) {
 				return this.resultFail(uniquenessResult.error);
 			}
 
-			if (validatedInput.programId) {
-				const program = await this.db.program.findUnique({
-					where: { id: validatedInput.programId },
-					select: { id: true },
-				});
-				if (!program) {
-					return this.resultFail('Program not found.');
-				}
+			const program = await this.db.program.findUnique({
+				where: { id: validatedInput.programId },
+				select: { id: true },
+			});
+			if (!program) {
+				return this.resultFail('Program not found.');
 			}
 
 			const createData: Prisma.CampaignCreateInput = {
@@ -75,8 +70,7 @@ export class CampaignWriteService extends BaseService {
 				metadataTwitterImage: validatedInput.metadataTwitterImage,
 				creatorName: validatedInput.creatorName,
 				creatorEmail: validatedInput.creatorEmail,
-				organization: { connect: { id: organizationId } },
-				program: validatedInput.programId ? { connect: { id: validatedInput.programId } } : undefined,
+				program: { connect: { id: validatedInput.programId } },
 			};
 
 			const newCampaign = await this.db.campaign.create({
@@ -100,22 +94,19 @@ export class CampaignWriteService extends BaseService {
 		const validatedInput = validatedInputResult.data;
 
 		try {
-			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-
-			if (!accessResult.success) {
-				return this.resultFail(accessResult.error);
-			}
-
-			if (accessResult.data.permission !== 'edit') {
-				return this.resultFail('No permissions to update campaign');
-			}
-
 			const existing = await this.db.campaign.findUnique({
 				where: { id: validatedInput.id },
-				select: { id: true, title: true, organizationId: true, programId: true },
+				select: { id: true, title: true, programId: true },
 			});
-			if (existing?.organizationId !== accessResult.data.id) {
+			if (!existing) {
 				return this.resultFail('Permission denied');
+			}
+			const canOperateExistingProgramResult = await this.programAccessService.canOperateProgram(userId, existing.programId);
+			if (!canOperateExistingProgramResult.success) {
+				return this.resultFail(canOperateExistingProgramResult.error);
+			}
+			if (!canOperateExistingProgramResult.data) {
+				return this.resultFail('No permissions to update campaign');
 			}
 
 			const uniquenessResult = await this.campaignValidationService.validateUpdateUniqueness(validatedInput, {
@@ -126,14 +117,20 @@ export class CampaignWriteService extends BaseService {
 				return this.resultFail(uniquenessResult.error);
 			}
 
-			if (validatedInput.programId) {
-				const program = await this.db.program.findUnique({
-					where: { id: validatedInput.programId },
-					select: { id: true },
-				});
-				if (!program) {
-					return this.resultFail('Program not found.');
-				}
+			const targetProgramId = validatedInput.programId ?? existing.programId;
+			const program = await this.db.program.findUnique({
+				where: { id: targetProgramId },
+				select: { id: true },
+			});
+			if (!program) {
+				return this.resultFail('Program not found.');
+			}
+			const canOperateTargetProgramResult = await this.programAccessService.canOperateProgram(userId, targetProgramId);
+			if (!canOperateTargetProgramResult.success) {
+				return this.resultFail(canOperateTargetProgramResult.error);
+			}
+			if (!canOperateTargetProgramResult.data) {
+				return this.resultFail('No permissions to update campaign');
 			}
 
 			const updateData: Prisma.CampaignUpdateInput = {
@@ -162,8 +159,8 @@ export class CampaignWriteService extends BaseService {
 				creatorName: validatedInput.creatorName,
 				creatorEmail: validatedInput.creatorEmail,
 			};
-			if (validatedInput.programId !== existing.programId) {
-				updateData.program = validatedInput.programId ? { connect: { id: validatedInput.programId } } : { disconnect: true };
+			if (targetProgramId !== existing.programId) {
+				updateData.program = { connect: { id: targetProgramId } };
 			}
 
 			const updatedCampaign = await this.db.campaign.update({

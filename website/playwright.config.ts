@@ -24,7 +24,7 @@ export default defineConfig({
 	retries: process.env.CI ? 2 : 0,
 
 	snapshotDir: 'snapshots',
-	snapshotPathTemplate: '{testDir}/{testFileDir}/__screenshots__/{projectName}/{testName}{ext}',
+	snapshotPathTemplate: '{testDir}/__screenshots__/{projectName}/{testFilePath}/{testName}{ext}',
 
 	reporter: [['html', { open: 'never' }]],
 

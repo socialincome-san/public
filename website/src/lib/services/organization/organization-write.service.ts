@@ -1,9 +1,14 @@
-import { OrganizationPermission, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { PrismaClient, ProgramPermission, UserRole } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { UserReadService } from '../user/user-read.service';
-import { OrganizationFormCreateInput, OrganizationFormUpdateInput } from './organization-form-input';
+import {
+	OrganizationFormCreateInput,
+	OrganizationFormUpdateInput,
+	OrganizationRenameInput,
+} from './organization-form-input';
 import { OrganizationValidationService } from './organization-validation.service';
 import { OrganizationPayload } from './organization.types';
 
@@ -11,6 +16,7 @@ export class OrganizationWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
+		private readonly organizationAccessService: OrganizationAccessService,
 		private readonly organizationValidationService: OrganizationValidationService,
 		loggerInstance = logger,
 	) {
@@ -19,26 +25,14 @@ export class OrganizationWriteService extends BaseService {
 
 	private buildOrganizationAccessRows(
 		organizationId: string,
-		editUserIds: string[],
-		readonlyUserIds: string[],
-	): { organizationId: string; userId: string; permission: OrganizationPermission }[] {
-		const uniqueEditUserIds = Array.from(new Set(editUserIds));
-		const uniqueReadonlyUserIds = Array.from(new Set(readonlyUserIds)).filter(
-			(userId) => !uniqueEditUserIds.includes(userId),
-		);
+		userIds: string[],
+	): { organizationId: string; userId: string }[] {
+		const uniqueUserIds = Array.from(new Set(userIds));
 
-		return [
-			...uniqueEditUserIds.map((userId) => ({
-				organizationId,
-				userId,
-				permission: OrganizationPermission.edit,
-			})),
-			...uniqueReadonlyUserIds.map((userId) => ({
-				organizationId,
-				userId,
-				permission: OrganizationPermission.readonly,
-			})),
-		];
+		return uniqueUserIds.map((userId) => ({
+			organizationId,
+			userId,
+		}));
 	}
 
 	private buildProgramAccessRows(
@@ -78,8 +72,7 @@ export class OrganizationWriteService extends BaseService {
 			return this.resultOk({
 				id: organization.id,
 				name: organization.name,
-				editUserIds: [],
-				readonlyUserIds: [],
+				userIds: [],
 				ownedProgramIds: [],
 				operatedProgramIds: [],
 			});
@@ -142,8 +135,7 @@ export class OrganizationWriteService extends BaseService {
 				return this.resultFail(uniquenessResult.error);
 			}
 
-			const allUserIds = [...validatedInput.editUserIds, ...validatedInput.readonlyUserIds];
-			const userValidationResult = await this.validateUserIds(allUserIds);
+			const userValidationResult = await this.validateUserIds(validatedInput.userIds);
 			if (!userValidationResult.success) {
 				return this.resultFail(userValidationResult.error);
 			}
@@ -164,11 +156,7 @@ export class OrganizationWriteService extends BaseService {
 					},
 				});
 
-				const accesses = this.buildOrganizationAccessRows(
-					organization.id,
-					validatedInput.editUserIds,
-					validatedInput.readonlyUserIds,
-				);
+				const accesses = this.buildOrganizationAccessRows(organization.id, validatedInput.userIds);
 				if (accesses.length > 0) {
 					await tx.organizationAccess.createMany({ data: accesses });
 				}
@@ -188,8 +176,7 @@ export class OrganizationWriteService extends BaseService {
 			return this.resultOk({
 				id: created.id,
 				name: created.name,
-				editUserIds: validatedInput.editUserIds,
-				readonlyUserIds: validatedInput.readonlyUserIds,
+				userIds: validatedInput.userIds,
 				ownedProgramIds: validatedInput.ownedProgramIds,
 				operatedProgramIds: validatedInput.operatedProgramIds,
 			});
@@ -229,8 +216,7 @@ export class OrganizationWriteService extends BaseService {
 				return this.resultFail(uniquenessResult.error);
 			}
 
-			const allUserIds = [...validatedInput.editUserIds, ...validatedInput.readonlyUserIds];
-			const userValidationResult = await this.validateUserIds(allUserIds);
+			const userValidationResult = await this.validateUserIds(validatedInput.userIds);
 			if (!userValidationResult.success) {
 				return this.resultFail(userValidationResult.error);
 			}
@@ -251,11 +237,7 @@ export class OrganizationWriteService extends BaseService {
 					where: { organizationId: validatedInput.id },
 				});
 
-				const accesses = this.buildOrganizationAccessRows(
-					validatedInput.id,
-					validatedInput.editUserIds,
-					validatedInput.readonlyUserIds,
-				);
+				const accesses = this.buildOrganizationAccessRows(validatedInput.id, validatedInput.userIds);
 				if (accesses.length > 0) {
 					await tx.organizationAccess.createMany({ data: accesses });
 				}
@@ -279,8 +261,7 @@ export class OrganizationWriteService extends BaseService {
 			return this.resultOk({
 				id: updated.id,
 				name: updated.name,
-				editUserIds: validatedInput.editUserIds,
-				readonlyUserIds: validatedInput.readonlyUserIds,
+				userIds: validatedInput.userIds,
 				ownedProgramIds: validatedInput.ownedProgramIds,
 				operatedProgramIds: validatedInput.operatedProgramIds,
 			});
@@ -288,6 +269,63 @@ export class OrganizationWriteService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail('Could not update organization. Please try again later.');
+		}
+	}
+
+	async renameActiveOrganization(
+		userId: string,
+		input: OrganizationRenameInput,
+	): Promise<ServiceResult<{ id: string; name: string }>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+				select: { role: true },
+			});
+			if (!user) {
+				return this.resultFail('User not found');
+			}
+			if (user.role !== UserRole.admin) {
+				const hasOperatorAccess = await this.db.programAccess.findFirst({
+					where: {
+						organizationId: activeOrgResult.data.id,
+						permission: ProgramPermission.operator,
+					},
+					select: { id: true },
+				});
+				if (!hasOperatorAccess) {
+					return this.resultFail('You do not have permission to rename this organization.');
+				}
+			}
+
+			const validatedInputResult = this.organizationValidationService.validateRenameInput(input);
+			if (!validatedInputResult.success) {
+				return this.resultFail(validatedInputResult.error);
+			}
+			const validatedInput = validatedInputResult.data;
+
+			const uniquenessResult = await this.organizationValidationService.validateRenameForOrganizationId(
+				validatedInput,
+				activeOrgResult.data.id,
+			);
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const updatedOrganization = await this.db.organization.update({
+				where: { id: activeOrgResult.data.id },
+				data: { name: validatedInput.name },
+				select: { id: true, name: true },
+			});
+
+			return this.resultOk(updatedOrganization);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not rename organization. Please try again later.');
 		}
 	}
 
@@ -306,14 +344,13 @@ export class OrganizationWriteService extends BaseService {
 				return this.resultFail('Organization not found');
 			}
 
-			const [activeUsersCount, expensesCount, campaignsCount, programAccessesCount] = await Promise.all([
+			const [activeUsersCount, expensesCount, programAccessesCount] = await Promise.all([
 				this.db.user.count({ where: { activeOrganizationId: organizationId } }),
 				this.db.expense.count({ where: { organizationId } }),
-				this.db.campaign.count({ where: { organizationId } }),
 				this.db.programAccess.count({ where: { organizationId } }),
 			]);
 
-			if (activeUsersCount > 0 || expensesCount > 0 || campaignsCount > 0 || programAccessesCount > 0) {
+			if (activeUsersCount > 0 || expensesCount > 0 || programAccessesCount > 0) {
 				return this.resultFail('Organization cannot be deleted because it is still in use.');
 			}
 

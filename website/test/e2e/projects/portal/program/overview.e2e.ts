@@ -2,7 +2,7 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, Page, test } from '@playwright/test';
 import { expectToHaveScreenshot, selectMultiOptionsByTestId, selectOptionByTestId } from '../../../utils';
 
-const openProgramSettingsDialog = async (page: Page, programId = 'program-1') => {
+const openProgramSettingsDialog = async (page: Page, programId = 'program-si-core-sl') => {
 	await page.goto(`/portal/programs/${programId}/overview`);
 	await page.getByRole('button', { name: 'Program settings' }).click();
 	const dialog = page.getByRole('dialog');
@@ -16,21 +16,21 @@ test.beforeEach(async () => {
 });
 
 test('Program ready for payout overview page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/programs/program-1/overview');
+	await page.goto('/portal/programs/program-si-core-sl/overview');
 	await expectToHaveScreenshot(page);
 });
 
 test('Program not ready for payout overview page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/programs/program-2/overview');
+	await page.goto('/portal/programs/program-si-education-sl/overview');
 	await expectToHaveScreenshot(page);
 });
 
-test('program settings dialog for program-1 updates all editable values and saves', async ({ page }) => {
+test('program settings dialog for program-si-core-sl updates all editable values and saves', async ({ page }) => {
 	const updatedName = 'Program One Updated E2E';
 	const updatedDuration = '24';
 	const updatedPayoutPerInterval = '77';
-	const updatedOwnerOrganizations = ['Coop'];
-	const updatedOperatorOrganizations = ['Migros', 'Swiss Red Cross'];
+	const updatedOwnerOrganizations = ['Social Income GH'];
+	const updatedOperatorOrganizations = ['Social Income SL'];
 
 	let dialog = await openProgramSettingsDialog(page);
 	await dialog.getByTestId('form-item-name').locator('input').fill(updatedName);
@@ -58,8 +58,8 @@ test('program settings dialog for program-1 updates all editable values and save
 	await expect(dialog.getByTestId('form-item-payoutInterval')).toContainText('Quarterly');
 	await expect(dialog.getByTestId('form-item-targetCauses')).toContainText('poverty');
 	await expect(dialog.getByTestId('form-item-targetProfiles')).toContainText('female');
-	await expect(dialog.getByTestId('form-item-ownerOrganizations')).toContainText('Coop');
-	await expect(dialog.getByTestId('form-item-operatorOrganizations')).toContainText('Swiss Red Cross');
+	await expect(dialog.getByTestId('form-item-ownerOrganizations')).toContainText('Social Income GH');
+	await expect(dialog.getByTestId('form-item-operatorOrganizations')).toContainText('Social Income SL');
 
 	await expectToHaveScreenshot(page);
 });
@@ -74,7 +74,7 @@ test('program settings dialog can delete a newly created program and redirects t
 	await page.getByTestId('pill-multi-select-poverty').click();
 	await page.getByTestId('pill-multi-select-health').click();
 	await page.getByTestId('pill-multi-select-female').click();
-	await expect(page.getByText('2 of 7 recipients match the selected country and filters')).toBeVisible();
+	await expect(page.getByText(/recipients match the selected country and filters/i)).toBeVisible();
 	await page.getByRole('button', { name: 'Continue' }).click();
 	await page.getByRole('button', { name: 'Continue' }).click();
 

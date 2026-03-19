@@ -8,6 +8,7 @@ import {
 } from '@/components/data-table/configs/contributors-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
@@ -43,7 +44,7 @@ export default function ContributorsTableClient({
 
 	const openEditForm = (row: ContributorTableViewRow) => {
 		setContributorId(row.id);
-		if (row.permission === 'readonly') {
+		if (row.permission === ProgramPermission.owner) {
 			setRowReadOnly(true);
 		} else {
 			setRowReadOnly(readOnly ?? false);

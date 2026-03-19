@@ -57,11 +57,6 @@ enum ProgramPermission {
   operator
 }
 
-enum OrganizationPermission {
-  readonly
-  edit
-}
-
 enum ContributorReferralSource {
   family_and_friends
   work
@@ -771,8 +766,6 @@ model OrganizationAccess {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  permission OrganizationPermission @default(readonly)
-
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -801,7 +794,6 @@ model Organization {
   name               String  @unique @map("name")
   isOperatorFallback Boolean @default(false) @map("is_operator_fallback")
 
-  campaigns            Campaign[]           @relation("OrganizationCampaigns")
   expenses             Expense[]
   users                User[]
   organizationAccesses OrganizationAccess[]
@@ -867,10 +859,8 @@ model Campaign {
   metadataTwitterImage   String?      @map("metadata_twitter_image")
   creatorName            String?      @map("creator_name")
   creatorEmail           String?      @map("creator_email")
-  organizationId         String       @map("organization_id")
-  organization           Organization @relation("OrganizationCampaigns", fields: [organizationId], references: [id])
-  programId              String?      @map("program_id")
-  program                Program?     @relation(fields: [programId], references: [id])
+  programId              String       @map("program_id")
+  program                Program      @relation(fields: [programId], references: [id])
 
   contributions Contribution[]
 

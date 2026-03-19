@@ -25,13 +25,8 @@ export const makeOrganizationAdminColumns = (): ColumnDef<OrganizationTableViewR
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'readonlyUsersCount',
-			header: (ctx) => <SortableHeader ctx={ctx}>Readonly Users</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'writeUsersCount',
-			header: (ctx) => <SortableHeader ctx={ctx}>Write Users</SortableHeader>,
+			accessorKey: 'usersCount',
+			header: (ctx) => <SortableHeader ctx={ctx}>Users</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

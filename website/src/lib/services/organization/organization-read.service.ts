@@ -1,4 +1,4 @@
-import { OrganizationPermission, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -6,6 +6,7 @@ import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { UserReadService } from '../user/user-read.service';
 import {
+	ActiveOrganizationSummary,
 	OrganizationMemberPaginatedTableView,
 	OrganizationMemberTableQuery,
 	OrganizationMemberTableView,
@@ -30,14 +31,13 @@ export class OrganizationReadService extends BaseService {
 
 	private buildOrganizationOrderBy(query: OrganizationTableQuery): Prisma.OrganizationOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'name', 'readonlyUsersCount', 'writeUsersCount', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'name', 'usersCount', 'createdAt'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
 			case 'name':
 				return [{ name: direction }];
-			case 'readonlyUsersCount':
-			case 'writeUsersCount':
+			case 'usersCount':
 				return [{ organizationAccesses: { _count: direction } }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
@@ -50,7 +50,7 @@ export class OrganizationReadService extends BaseService {
 		query: OrganizationMemberTableQuery,
 	): Prisma.OrganizationAccessOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'member', 'email', 'role', 'permission'] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'member', 'email', 'role'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ user: { id: direction } }];
@@ -60,8 +60,6 @@ export class OrganizationReadService extends BaseService {
 				return [{ user: { contact: { email: direction } } }];
 			case 'role':
 				return [{ user: { role: direction } }];
-			case 'permission':
-				return [{ permission: direction }];
 			default:
 				return [{ user: { contact: { firstName: 'asc' } } }];
 		}
@@ -83,6 +81,35 @@ export class OrganizationReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch organization members table view: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getActiveOrganizationSummary(userId: string): Promise<ServiceResult<ActiveOrganizationSummary>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const organization = await this.db.organization.findUnique({
+				where: { id: activeOrgResult.data.id },
+				select: {
+					id: true,
+					name: true,
+				},
+			});
+			if (!organization) {
+				return this.resultFail('Organization not found');
+			}
+
+			return this.resultOk({
+				id: organization.id,
+				name: organization.name,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch active organization summary: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -137,7 +164,6 @@ export class OrganizationReadService extends BaseService {
 								},
 							},
 						},
-						permission: true,
 					},
 					orderBy: this.buildOrganizationMemberOrderBy(query),
 					skip: (query.page - 1) * query.pageSize,
@@ -152,7 +178,6 @@ export class OrganizationReadService extends BaseService {
 				lastName: member.user.contact?.lastName ?? '',
 				email: member.user.contact?.email ?? '',
 				role: member.user.role ?? null,
-				permission: member.permission ?? OrganizationPermission.readonly,
 			}));
 
 			return this.resultOk({ tableRows, totalCount });
@@ -210,7 +235,7 @@ export class OrganizationReadService extends BaseService {
 						createdAt: true,
 						organizationAccesses: {
 							select: {
-								permission: true,
+								id: true,
 							},
 						},
 						programAccesses: {
@@ -234,20 +259,14 @@ export class OrganizationReadService extends BaseService {
 				const operatedProgramsCount = organization.programAccesses.filter(
 					(pa) => pa.permission === ProgramPermission.operator,
 				).length;
-				const readonlyUsersCount = organization.organizationAccesses.filter(
-					(access) => access.permission === OrganizationPermission.readonly,
-				).length;
-				const writeUsersCount = organization.organizationAccesses.filter(
-					(access) => access.permission === OrganizationPermission.edit,
-				).length;
+				const userCount = organization.organizationAccesses.length;
 
 				return {
 					id: organization.id,
 					name: organization.name,
 					ownedProgramsCount,
 					operatedProgramsCount,
-					readonlyUsersCount,
-					writeUsersCount,
+					usersCount: userCount,
 					createdAt: organization.createdAt,
 				};
 			});
@@ -295,7 +314,6 @@ export class OrganizationReadService extends BaseService {
 					organizationAccesses: {
 						select: {
 							userId: true,
-							permission: true,
 						},
 					},
 					programAccesses: {
@@ -313,12 +331,7 @@ export class OrganizationReadService extends BaseService {
 			return this.resultOk({
 				id: organization.id,
 				name: organization.name,
-				editUserIds: organization.organizationAccesses
-					.filter((access) => access.permission === OrganizationPermission.edit)
-					.map((access) => access.userId),
-				readonlyUserIds: organization.organizationAccesses
-					.filter((access) => access.permission === OrganizationPermission.readonly)
-					.map((access) => access.userId),
+				userIds: organization.organizationAccesses.map((access) => access.userId),
 				ownedProgramIds: organization.programAccesses
 					.filter((access) => access.permission === ProgramPermission.owner)
 					.map((access) => access.programId),

@@ -7,7 +7,7 @@ test.beforeEach(async () => {
 });
 
 test('program payout forecast page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/programs/program-1/payout-forecast?sortBy=period&sortDirection=asc');
+	await page.goto('/portal/programs/program-si-core-sl/payout-forecast?sortBy=period&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expectToHaveScreenshot(page);
 });
