@@ -352,11 +352,38 @@ export class ProgramReadService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
+			const hasReadAccess = accessibleProgramsResult.data.some((access) => access.programId === programId);
+			if (!hasReadAccess) {
+				return this.resultFail('Permission denied');
+			}
+
 			const hasOperatorAccess = accessibleProgramsResult.data.some(
 				(access) => access.programId === programId && access.permission === ProgramPermission.operator,
 			);
 			if (!hasOperatorAccess) {
-				return this.resultFail('Permission denied');
+				const programOrganizations = await this.db.programAccess.findMany({
+					where: { programId },
+					select: {
+						organization: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
+					},
+					orderBy: {
+						organization: {
+							name: 'asc',
+						},
+					},
+				});
+
+				return this.resultOk(
+					programOrganizations.map(({ organization }) => ({
+						id: organization.id,
+						name: organization.name,
+					})),
+				);
 			}
 
 			const organizations = await this.db.organization.findMany({
