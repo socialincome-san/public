@@ -524,6 +524,10 @@ test('CSV Upload', async ({ page }) => {
 	}
 });
 
+const expectedCsvExport = {
+	snapshotFile: 'recipients-export.csv',
+};
+
 test('CSV Export', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 
@@ -537,6 +541,5 @@ test('CSV Export', async ({ page }) => {
 	expect(downloadPath).toBeTruthy();
 
 	const csvContent = await readFile(downloadPath, 'utf8');
-	expect(csvContent).toContain('firstName,lastName,status');
-	expect(csvContent).toContain('recipient_sl_core_active');
+	expect(csvContent).toMatchSnapshot(expectedCsvExport.snapshotFile);
 });
