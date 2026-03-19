@@ -122,9 +122,12 @@ export class ContributorWriteService extends BaseService {
 				where: { contributorId: validatedInput.id },
 				select: { campaign: { select: { programId: true } } },
 			});
-			const canOperateContributorPrograms = contributorProgramIds.some((entry) =>
-				this.programAccessService.hasOperatorAccess(accessiblePrograms, entry.campaign.programId),
-			);
+			const canOperateContributorPrograms =
+				contributorProgramIds.length === 0
+					? this.programAccessService.hasAnyOperatorAccess(accessiblePrograms)
+					: contributorProgramIds.some((entry) =>
+							this.programAccessService.hasOperatorAccess(accessiblePrograms, entry.campaign.programId),
+						);
 			if (!canOperateContributorPrograms) {
 				return this.resultFail('No permissions to update contributor');
 			}

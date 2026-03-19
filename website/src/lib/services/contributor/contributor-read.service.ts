@@ -81,18 +81,27 @@ export class ContributorReadService extends BaseService {
 				return this.resultFail('Contributor not found');
 			}
 
-			const contributor = await this.db.contributor.findUnique({
+			const contributor = await this.db.contributor.findFirst({
 				where: {
 					id: contributorId,
-					contributions: {
-						some: {
-							campaign: {
-								programId: {
-									in: accessibleProgramIds,
+					OR: [
+						{
+							contributions: {
+								some: {
+									campaign: {
+										programId: {
+											in: accessibleProgramIds,
+										},
+									},
 								},
 							},
 						},
-					},
+						{
+							contributions: {
+								none: {},
+							},
+						},
+					],
 				},
 				select: {
 					id: true,
@@ -142,15 +151,24 @@ export class ContributorReadService extends BaseService {
 
 			const contributors = await this.db.contributor.findMany({
 				where: {
-					contributions: {
-						some: {
-							campaign: {
-								programId: {
-									in: accessibleProgramIds,
+					OR: [
+						{
+							contributions: {
+								some: {
+									campaign: {
+										programId: {
+											in: accessibleProgramIds,
+										},
+									},
 								},
 							},
 						},
-					},
+						{
+							contributions: {
+								none: {},
+							},
+						},
+					],
 				},
 				select: {
 					id: true,
@@ -199,15 +217,24 @@ export class ContributorReadService extends BaseService {
 			const selectedCountryRaw = query.country?.trim();
 			const selectedCountry = (selectedCountryRaw === '' ? undefined : selectedCountryRaw) as CountryCode | undefined;
 			const baseScope = {
-				contributions: {
-					some: {
-						campaign: {
-							programId: {
-								in: accessibleProgramIds,
+				OR: [
+					{
+						contributions: {
+							some: {
+								campaign: {
+									programId: {
+										in: accessibleProgramIds,
+									},
+								},
 							},
 						},
 					},
-				},
+					{
+						contributions: {
+							none: {},
+						},
+					},
+				],
 			};
 			const where = search
 				? {
@@ -337,14 +364,20 @@ export class ContributorReadService extends BaseService {
 			);
 
 			const tableRows: ContributorTableViewRow[] = contributors.map((c) => ({
-				permission: c.contributions.some((contribution) =>
-					accessiblePrograms.some(
-						(program) =>
-							program.programId === contribution.campaign.programId && program.permission === ProgramPermission.operator,
-					),
-				)
-					? ProgramPermission.operator
-					: ProgramPermission.owner,
+				permission:
+					c.contributions.length === 0
+						? (this.programAccessService.hasAnyOperatorAccess(accessiblePrograms)
+								? ProgramPermission.operator
+								: ProgramPermission.owner)
+						: c.contributions.some((contribution) =>
+									accessiblePrograms.some(
+										(program) =>
+											program.programId === contribution.campaign.programId &&
+											program.permission === ProgramPermission.operator,
+									),
+								)
+							? ProgramPermission.operator
+							: ProgramPermission.owner,
 				id: c.id,
 				firstName: c.contact?.firstName ?? '',
 				lastName: c.contact?.lastName ?? '',
