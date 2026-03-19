@@ -9,8 +9,7 @@
 -- Backfill campaign.program_id for legacy organization-scoped campaigns.
 -- Prefer owner access, then operator access; use deterministic tiebreaker by program id.
 UPDATE "campaign" AS c
-SET "program_id" = pa."programId"
-FROM LATERAL (
+SET "program_id" = (
 	SELECT p."programId"
 	FROM "program_access" AS p
 	WHERE p."organization_id" = c."organization_id"
@@ -18,7 +17,7 @@ FROM LATERAL (
 		CASE WHEN p."permission" = 'owner' THEN 0 ELSE 1 END,
 		p."programId" ASC
 	LIMIT 1
-) AS pa
+)
 WHERE c."program_id" IS NULL;
 
 DO $$
