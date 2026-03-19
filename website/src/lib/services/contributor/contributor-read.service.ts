@@ -366,16 +366,16 @@ export class ContributorReadService extends BaseService {
 			const tableRows: ContributorTableViewRow[] = contributors.map((c) => ({
 				permission:
 					c.contributions.length === 0
-						? (this.programAccessService.hasAnyOperatorAccess(accessiblePrograms)
-								? ProgramPermission.operator
-								: ProgramPermission.owner)
+						? this.programAccessService.hasAnyOperatorAccess(accessiblePrograms)
+							? ProgramPermission.operator
+							: ProgramPermission.owner
 						: c.contributions.some((contribution) =>
 									accessiblePrograms.some(
 										(program) =>
 											program.programId === contribution.campaign.programId &&
 											program.permission === ProgramPermission.operator,
 									),
-								)
+							  )
 							? ProgramPermission.operator
 							: ProgramPermission.owner,
 				id: c.id,
