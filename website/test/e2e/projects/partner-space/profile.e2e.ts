@@ -22,7 +22,7 @@ test('partner-space profile updates local partner contact info', async ({ page }
 	await expect
 		.poll(async () => {
 			const localPartner = await prisma.localPartner.findFirst({
-				where: { contact: { email: 'test@partner.org' } },
+				where: { contact: { email: 'sl@partner.test' } },
 				select: { contact: { select: { firstName: true } } },
 			});
 

@@ -25,18 +25,29 @@ export default function CampaignsTable({
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [campaignId, setCampaignId] = useState<string | undefined>(undefined);
+	const [isCampaignReadOnly, setIsCampaignReadOnly] = useState(false);
 	const readOnly = rows.every((row) => row.permission !== ProgramPermission.operator);
 
 	const openEmptyForm = () => {
 		setCampaignId(undefined);
+		setIsCampaignReadOnly(readOnly);
 		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: CampaignTableViewRow) => {
 		setCampaignId(row.id);
+		setIsCampaignReadOnly(row.permission !== ProgramPermission.operator);
 		setErrorMessage(null);
 		setOpen(true);
+	};
+
+	const handleOpenChange = (nextOpen: boolean) => {
+		setOpen(nextOpen);
+		if (!nextOpen) {
+			setCampaignId(undefined);
+			setIsCampaignReadOnly(false);
+		}
 	};
 
 	const onError = (error: unknown) => {
@@ -64,10 +75,10 @@ export default function CampaignsTable({
 				]}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
+			<Dialog open={open} onOpenChange={handleOpenChange}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>{campaignId ? (readOnly ? 'View' : 'Edit') : 'Add'} Campaign</DialogTitle>
+						<DialogTitle>{campaignId ? (isCampaignReadOnly ? 'View' : 'Edit') : 'Add'} Campaign</DialogTitle>
 					</DialogHeader>
 					{errorMessage && (
 						<Alert variant="destructive">
@@ -80,7 +91,7 @@ export default function CampaignsTable({
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
-						readOnly={readOnly}
+						readOnly={isCampaignReadOnly}
 					/>
 				</DialogContent>
 			</Dialog>

@@ -234,7 +234,7 @@ export class ContributionReadService extends BaseService {
 							select: {
 								id: true,
 								title: true,
-								program: { select: { name: true } },
+								program: { select: { id: true, name: true } },
 							},
 						},
 						contributor: {
@@ -256,6 +256,14 @@ export class ContributionReadService extends BaseService {
 				this.db.contribution.count({ where }),
 			]);
 
+			const permissionByProgramId = new Map<string, ProgramPermission>();
+			for (const access of accessiblePrograms) {
+				const current = permissionByProgramId.get(access.programId);
+				if (access.permission === ProgramPermission.operator || current === undefined) {
+					permissionByProgramId.set(access.programId, access.permission);
+				}
+			}
+
 			const tableRows: ContributionTableViewRow[] = contributions.map((c) => ({
 				id: c.id,
 				firstName: c.contributor?.contact?.firstName ?? '',
@@ -268,6 +276,7 @@ export class ContributionReadService extends BaseService {
 				paymentEventType: c.paymentEvent?.type ?? null,
 				programName: c.campaign?.program?.name ?? null,
 				createdAt: c.createdAt,
+				permission: permissionByProgramId.get(c.campaign?.program?.id ?? '') ?? ProgramPermission.owner,
 			}));
 
 			const selectedCampaigns = campaigns.filter((campaign) => filteredCampaignIds.includes(campaign.id));

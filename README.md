@@ -138,17 +138,11 @@ Local Partner self‑service area:
 
 ### **5. Authentication Roles & Test Accounts (Local Dev)**
 
-During development, three login roles can be tested directly from the
-login page:
+We use hardcoded deterministic seed data for local development and
+tests. All local login users come from Firebase Auth emulator seed data.
 
-| Role               | Login Email          | Route                      |
-| ------------------ | -------------------- | -------------------------- |
-| Contributor        | `test@dashboard.org` | `/dashboard`               |
-| User               | `test@portal.org`    | `/portal`                  |
-| Local Partner      | `test@partner.org`   | `/partner-space`           |
-| User + Contributor | `test@combined.org`  | `/portal` and `/dashboard` |
-
-These are created automatically via seed data.
+To see which users can log in locally, open:
+`http://localhost:4000/auth`
 
 ---
 
