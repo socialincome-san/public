@@ -1,4 +1,5 @@
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { makeLanguagePrefixRegex } from '@/lib/utils/regex';
 import { cookies, draftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
@@ -10,12 +11,13 @@ const DEFAULT_REGION = 'int';
 
 const getLanguage = (slug: string | null) => {
 	if (slug) {
-		for (let lang of ALLOWED_LANGUAGES) {
+		for (const lang of ALLOWED_LANGUAGES) {
 			if (slug.toLowerCase().startsWith(lang.toLowerCase())) {
 				return lang;
 			}
 		}
 	}
+
 	return DEFAULT_LANGUAGE;
 };
 
@@ -34,8 +36,9 @@ const removeLanguagePrefix = (slug: string | null, language: string) => {
 	const lowerSlug = slug.toLowerCase();
 	const lowerLang = language.toLowerCase();
 	if (lowerSlug === lowerLang || lowerSlug.startsWith(`${lowerLang}/`)) {
-		return slug.replace(new RegExp(`^${language}(/|$)`, 'i'), '');
+		return slug.replace(makeLanguagePrefixRegex(language), '');
 	}
+
 	return slug;
 };
 

@@ -23,6 +23,7 @@ export const makePayoutForecastColumns = (): ColumnDef<PayoutForecastTableViewRo
 			header: (ctx) => {
 				const firstRow = ctx.table.options.data?.[0];
 				const currencyLabel = firstRow?.programCurrency ? ` (${firstRow.programCurrency})` : '';
+
 				return <SortableHeader ctx={ctx}>{`Amount${currencyLabel}`}</SortableHeader>;
 			},
 			accessorFn: (row) => row.amountInProgramCurrency,

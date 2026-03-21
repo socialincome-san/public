@@ -11,10 +11,13 @@ import { PaymentMethodCell } from '../elements/payment-method-cell';
 import { StatusCell } from '../elements/status-cell';
 
 export const makeYourStripeSubscriptionsColumns = (
-	hideProgramName: boolean = false,
-	hideLocalPartner: boolean = false,
+	_hideProgramName = false,
+	_hideLocalPartner = false,
 	translator?: Translator,
 ): ColumnDef<StripeSubscriptionRow>[] => {
+	void _hideProgramName;
+	void _hideLocalPartner;
+
 	return [
 		{
 			accessorKey: 'created',
@@ -27,19 +30,18 @@ export const makeYourStripeSubscriptionsColumns = (
 			cell: (ctx) => {
 				const translateKey = `subscriptions.status.${ctx.row.original.status}`;
 				const label = translator?.t(translateKey);
+
 				return (
-					<StatusCell
-						ctx={ctx}
-						variant="subscription"
-						label={label === translateKey ? ctx.row.original.status : label}
-					/>
+					<StatusCell ctx={ctx} variant="subscription" label={label === translateKey ? ctx.row.original.status : label} />
 				);
 			},
 		},
 		{
 			accessorKey: 'interval',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.interval')}</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} translatedValue={translator?.t(`subscriptions.interval-${ctx.getValue()}`)} />,
+			cell: (ctx) => (
+				<TextCell ctx={ctx} translatedValue={translator?.t(`subscriptions.interval-${String(ctx.getValue())}`)} />
+			),
 		},
 		{
 			id: 'paymentMethod',
@@ -52,6 +54,7 @@ export const makeYourStripeSubscriptionsColumns = (
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('subscriptions.amount')}</SortableHeader>,
 			cell: (ctx) => {
 				const currency = ctx.row.original.currency;
+
 				return <CurrencyCell ctx={ctx} currency={currency} />;
 			},
 		},

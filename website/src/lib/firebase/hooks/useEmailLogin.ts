@@ -5,6 +5,7 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { createSessionAction } from '@/lib/server-actions/session-actions';
 import { logger } from '@/lib/utils/logger';
+import { WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX } from '@/lib/utils/regex';
 import { FirebaseError } from 'firebase/app';
 import { isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
@@ -43,7 +44,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 			if (continueUrl) {
 				const interstitialUrl = new URL(continueUrl);
-				const isConfirmLoginPath = /\/auth\/confirm-login\/?$/.test(interstitialUrl.pathname);
+				const isConfirmLoginPath = WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX.test(interstitialUrl.pathname);
 
 				if (isConfirmLoginPath && !confirmed) {
 					// Prevent auto-consumption of one-time links; require explicit user click first.
@@ -51,6 +52,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 					nextParams.set('continueUrl', continueUrl);
 					interstitialUrl.search = nextParams.toString();
 					window.location.href = interstitialUrl.toString();
+
 					return;
 				}
 			}
@@ -59,12 +61,13 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 			if (email) {
 				void signIn(email);
-			} else {
-				translator && toast.error(translator.t('error.invalid-email'));
+			} else if (translator) {
+				toast.error(translator.t('error.invalid-email'));
 			}
 		});
 
 		return () => unsubscribe();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth, authListenerRegistered, translator]);
 
 	const setServerSession = async (): Promise<boolean> => {
@@ -77,6 +80,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			const idToken = await user.getIdToken(true);
 
 			const result = await createSessionAction(idToken);
+
 			return result.success;
 		} catch {
 			return false;
@@ -91,8 +95,11 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 			const ok = await setServerSession();
 			if (!ok) {
-				await signOut(auth).catch(() => {});
-				translator && toast.error(translator.t('error.unknown'));
+				await signOut(auth).catch(() => undefined);
+				if (translator) {
+					toast.error(translator.t('error.unknown'));
+				}
+
 				return;
 			}
 
@@ -103,16 +110,24 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			if (error instanceof FirebaseError) {
 				switch (error.code) {
 					case 'auth/user-not-found':
-						translator && toast.error(translator.t('error.user-not-found'));
+						if (translator) {
+							toast.error(translator.t('error.user-not-found'));
+						}
 						break;
 					case 'auth/invalid-email':
-						translator && toast.error(translator.t('error.invalid-email'));
+						if (translator) {
+							toast.error(translator.t('error.invalid-email'));
+						}
 						break;
 					default:
-						translator && toast.error(translator.t('error.unknown'));
+						if (translator) {
+							toast.error(translator.t('error.unknown'));
+						}
 				}
 			} else {
-				translator && toast.error(translator.t('error.unknown'));
+				if (translator) {
+					toast.error(translator.t('error.unknown'));
+				}
 			}
 		}
 	};
@@ -120,7 +135,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	const sendSignInEmail = async (email: string, targetUrl?: string) => {
 		setSendingEmail(true);
 
-		const url = new URL(targetUrl || window.location.href);
+		const url = new URL(targetUrl ?? window.location.href);
 		url.searchParams.set('email', email);
 
 		const actionCodeSettings = {
@@ -133,7 +148,9 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			setEmailSent(true);
 		} catch (error) {
 			logger.error('Error sending sign-in email', { error });
-			translator && toast.error(translator.t('error.unknown'));
+			if (translator) {
+				toast.error(translator.t('error.unknown'));
+			}
 		} finally {
 			setSendingEmail(false);
 		}

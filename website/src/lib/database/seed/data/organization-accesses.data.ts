@@ -1,44 +1,81 @@
-import { OrganizationAccess, OrganizationPermission } from '@/generated/prisma/client';
+import { OrganizationAccess } from '@/generated/prisma/client';
 
 export const organizationAccessesData: OrganizationAccess[] = [
 	{
-		id: 'organization-access-1',
-		userId: 'user-1',
-		organizationId: 'organization-1',
-		permission: OrganizationPermission.edit,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'org-access-somaha-1',
+		userId: 'user-somaha-1',
+		organizationId: 'org-somaha',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'organization-access-2',
-		userId: 'user-2',
-		organizationId: 'organization-1',
-		permission: OrganizationPermission.edit,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'org-access-somaha-2',
+		userId: 'user-somaha-2',
+		organizationId: 'org-somaha',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'organization-access-3',
-		userId: 'user-2',
-		organizationId: 'organization-3',
-		permission: OrganizationPermission.edit,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'org-access-si-sl-1',
+		userId: 'user-si-sl-1',
+		organizationId: 'org-si-sl',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'organization-access-4',
-		userId: 'user-1',
-		organizationId: 'organization-5',
-		permission: OrganizationPermission.readonly,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'org-access-si-sl-2',
+		userId: 'user-si-sl-2',
+		organizationId: 'org-si-sl',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'organization-access-5',
-		userId: 'user-4',
-		organizationId: 'organization-1',
-		permission: OrganizationPermission.edit,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		id: 'org-access-si-gh-1',
+		userId: 'user-si-gh-1',
+		organizationId: 'org-si-gh',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'org-access-si-gh-2',
+		userId: 'user-si-gh-2',
+		organizationId: 'org-si-gh',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'org-access-si-lr-1',
+		userId: 'user-si-lr-1',
+		organizationId: 'org-si-lr',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'org-access-si-lr-2',
+		userId: 'user-si-lr-2',
+		organizationId: 'org-si-lr',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'org-access-si-power-sl',
+		userId: 'user-si-power',
+		organizationId: 'org-si-sl',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'org-access-si-power-gh',
+		userId: 'user-si-power',
+		organizationId: 'org-si-gh',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'org-access-si-power-lr',
+		userId: 'user-si-power',
+		organizationId: 'org-si-lr',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
 ];

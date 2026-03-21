@@ -1,13 +1,13 @@
-import { Contribution, ContributionStatus, PaymentEvent, PrismaClient } from '@/generated/prisma/client';
+import { Contribution, ContributionStatus, PaymentEvent, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
+import { ContributionFormCreateInput, ContributionFormUpdateInput } from './contribution-form-input';
+import { ContributionValidationService } from './contribution-validation.service';
 import {
-	ContributionCreateInput,
 	ContributionPayload,
-	ContributionUpdateInput,
 	PaymentEventCreateData,
 	PaymentEventCreateInput,
 	StripeContributionCreateData,
@@ -16,38 +16,85 @@ import {
 export class ContributionWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
+		private readonly contributionValidationService: ContributionValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
 	}
 
-	async update(userId: string, contribution: ContributionUpdateInput): Promise<ServiceResult<ContributionPayload>> {
+	async update(userId: string, input: ContributionFormUpdateInput): Promise<ServiceResult<ContributionPayload>> {
+		const validatedInputResult = this.contributionValidationService.validateUpdateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
 		try {
-			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
 			}
 
-			if (accessResult.data.permission !== 'edit') {
+			const existing = await this.db.contribution.findUnique({
+				where: { id: validatedInput.id },
+				select: {
+					campaign: { select: { id: true, programId: true } },
+					contributor: { select: { id: true } },
+				},
+			});
+			if (!existing) {
+				return this.resultFail('Contribution not found');
+			}
+			const hasOperatorAccessToExistingProgram = this.programAccessService.hasOperatorAccess(
+				accessResult.data,
+				existing.campaign.programId,
+			);
+			if (!hasOperatorAccessToExistingProgram) {
 				return this.resultFail('No permissions to update contribution');
 			}
 
-			const existing = await this.db.contribution.findUnique({
-				where: { id: contribution.id?.toString() },
-				select: {
-					campaign: { select: { organizationId: true } },
-				},
+			const referencesResult = await this.contributionValidationService.validateReferencesExist({
+				contributorId: validatedInput.contributorId,
+				campaignId: validatedInput.campaignId,
 			});
+			if (!referencesResult.success) {
+				return this.resultFail(referencesResult.error);
+			}
 
-			if (!existing || existing.campaign.organizationId !== accessResult.data.id) {
+			const campaign = await this.db.campaign.findUnique({
+				where: { id: validatedInput.campaignId },
+				select: { programId: true },
+			});
+			if (!campaign) {
+				return this.resultFail('Campaign not found');
+			}
+			const hasOperatorAccessToTargetProgram = this.programAccessService.hasOperatorAccess(
+				accessResult.data,
+				campaign.programId,
+			);
+			if (!hasOperatorAccessToTargetProgram) {
 				return this.resultFail('Permission denied');
 			}
 
+			const updateData: Prisma.ContributionUpdateInput = {
+				amount: validatedInput.amount,
+				currency: validatedInput.currency,
+				amountChf: validatedInput.amountChf,
+				feesChf: validatedInput.feesChf,
+				status: validatedInput.status,
+			};
+			if (validatedInput.contributorId !== existing.contributor.id) {
+				updateData.contributor = { connect: { id: validatedInput.contributorId } };
+			}
+			if (validatedInput.campaignId !== existing.campaign.id) {
+				updateData.campaign = { connect: { id: validatedInput.campaignId } };
+			}
+
 			const updatedContribution = await this.db.contribution.update({
-				where: { id: contribution.id?.toString() },
-				data: contribution,
+				where: { id: validatedInput.id },
+				data: updateData,
 				select: {
 					id: true,
 					amount: true,
@@ -68,24 +115,57 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not update contribution: ${JSON.stringify(error)}`);
+
+			return this.resultFail('Could not update contribution. Please try again later.');
 		}
 	}
 
-	async create(userId: string, contribution: ContributionCreateInput): Promise<ServiceResult<ContributionPayload>> {
+	async create(userId: string, input: ContributionFormCreateInput): Promise<ServiceResult<ContributionPayload>> {
+		const validatedInputResult = this.contributionValidationService.validateCreateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
 		try {
-			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
 			}
 
-			if (accessResult.data.permission !== 'edit') {
-				return this.resultFail('No permissions to create contribution');
+			const referencesResult = await this.contributionValidationService.validateReferencesExist({
+				contributorId: validatedInput.contributorId,
+				campaignId: validatedInput.campaignId,
+			});
+			if (!referencesResult.success) {
+				return this.resultFail(referencesResult.error);
 			}
 
+			const campaign = await this.db.campaign.findUnique({
+				where: { id: validatedInput.campaignId },
+				select: { programId: true },
+			});
+			if (!campaign) {
+				return this.resultFail('Campaign not found');
+			}
+			const hasOperatorAccessToProgram = this.programAccessService.hasOperatorAccess(accessResult.data, campaign.programId);
+			if (!hasOperatorAccessToProgram) {
+				return this.resultFail('Permission denied');
+			}
+
+			const createData: Prisma.ContributionCreateInput = {
+				amount: validatedInput.amount,
+				currency: validatedInput.currency,
+				amountChf: validatedInput.amountChf,
+				feesChf: validatedInput.feesChf,
+				status: validatedInput.status,
+				contributor: { connect: { id: validatedInput.contributorId } },
+				campaign: { connect: { id: validatedInput.campaignId } },
+			};
+
 			const created = await this.db.contribution.create({
-				data: contribution,
+				data: createData,
 				select: {
 					id: true,
 					amount: true,
@@ -106,7 +186,8 @@ export class ContributionWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create contribution: ${JSON.stringify(error)}`);
+
+			return this.resultFail('Could not create contribution. Please try again later.');
 		}
 	}
 
@@ -139,6 +220,7 @@ export class ContributionWriteService extends BaseService {
 			return this.resultOk(paymentEvent.contribution);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create or update contribution from Stripe event: ${JSON.stringify(error)}`);
 		}
 	}
@@ -179,6 +261,7 @@ export class ContributionWriteService extends BaseService {
 			return this.resultOk(result);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create payment events with contributions: ${JSON.stringify(error)}`);
 		}
 	}

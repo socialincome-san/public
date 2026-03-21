@@ -10,7 +10,8 @@ export const getContributorOptions = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	return await services.read.contributor.getByIds();
+
+	return await services.read.contributor.getByIds({ actorUserId: sessionResult.data.id });
 };
 
 export const generateDonationCertificates = async (year: number, contributorIds: string[], language?: LanguageCode) => {
@@ -18,8 +19,14 @@ export const generateDonationCertificates = async (year: number, contributorIds:
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	const result = await services.write.donationCertificate.createDonationCertificates(year, contributorIds, language);
+	const result = await services.write.donationCertificate.createDonationCertificatesForUser(
+		sessionResult.data.id,
+		year,
+		contributorIds,
+		language,
+	);
 	revalidatePath('/portal/management/donation-certificates');
+
 	return result;
 };
 
@@ -29,11 +36,8 @@ export const generateDonationCertificateForCurrentUser = async (year: number, la
 		return sessionResult;
 	}
 	const contributorSession = sessionResult.data;
-	const result = await services.write.donationCertificate.createDonationCertificate(
-		year,
-		contributorSession.id,
-		language,
-	);
+	const result = await services.write.donationCertificate.createDonationCertificate(year, contributorSession.id, language);
 	revalidatePath('/dashboard/donation-certificates');
+
 	return result;
 };

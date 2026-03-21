@@ -1,21 +1,26 @@
-import { Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { PayoutInterval, PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
+import { RecipientStatusService } from './recipient-status.service';
 import {
 	RecipientPaginatedTableView,
+	RecipientProgramFilterOption,
 	RecipientTableQuery,
 	RecipientTableView,
 	RecipientTableViewRow,
+	RecipientUpcomingOnboardingPaginatedTableView,
+	UpcomingOnboardingTableViewRow,
 } from './recipient-table.types';
-import { RecipientOption, RecipientPayload, RecipientWithPaymentInfo } from './recipient.types';
+import { RecipientLifecycleStatus, RecipientOption, RecipientPayload, RecipientWithPaymentInfo } from './recipient.types';
 
 export class RecipientReadService extends BaseService {
 	constructor(
@@ -23,6 +28,7 @@ export class RecipientReadService extends BaseService {
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly appReviewModeService: AppReviewModeService,
+		private readonly recipientStatusService: RecipientStatusService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -39,6 +45,7 @@ export class RecipientReadService extends BaseService {
 			'localPartnerName',
 			'programName',
 			'startDate',
+			'status',
 			'createdAt',
 		] as const);
 		switch (sortBy) {
@@ -58,11 +65,162 @@ export class RecipientReadService extends BaseService {
 				return [{ program: { name: direction } }];
 			case 'startDate':
 				return [{ startDate: direction }];
+			case 'status':
+				return [{ createdAt: 'desc' }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
 			default:
 				return [{ createdAt: 'desc' }];
 		}
+	}
+
+	private getRecipientStatusSortRank(status: RecipientLifecycleStatus): number {
+		switch (status) {
+			case 'future':
+				return 0;
+			case 'active':
+				return 1;
+			case 'suspended':
+				return 2;
+			case 'completed':
+				return 3;
+		}
+	}
+
+	private sortRowsByStatus(rows: RecipientTableViewRow[], query: RecipientTableQuery): RecipientTableViewRow[] {
+		const direction = query.sortDirection === 'asc' ? 1 : -1;
+		const sortedRows = [...rows];
+		sortedRows.sort((left, right) => {
+			const byStatus =
+				(this.getRecipientStatusSortRank(left.status) - this.getRecipientStatusSortRank(right.status)) * direction;
+			if (byStatus !== 0) {
+				return byStatus;
+			}
+
+			const byFirstName = left.firstName.localeCompare(right.firstName) * direction;
+			if (byFirstName !== 0) {
+				return byFirstName;
+			}
+
+			return left.lastName.localeCompare(right.lastName) * direction;
+		});
+
+		return sortedRows;
+	}
+
+	private parseRecipientStatusFilter(status: string | undefined): RecipientLifecycleStatus | undefined {
+		if (status === 'future' || status === 'active' || status === 'suspended' || status === 'completed') {
+			return status;
+		}
+
+		return undefined;
+	}
+
+	private buildUpcomingOnboardingOrderBy(query: RecipientTableQuery): Prisma.RecipientOrderByWithRelationInput[] {
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'recipientName',
+			'programName',
+			'localPartnerName',
+			'communicationPhoneNumber',
+			'daysUntilStart',
+			'startDate',
+			'createdAt',
+		] as const);
+		const direction: Prisma.SortOrder = query.sortDirection === 'desc' ? 'desc' : 'asc';
+
+		switch (sortBy) {
+			case 'id':
+				return [{ id: direction }];
+			case 'recipientName':
+				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
+			case 'programName':
+				return [{ program: { name: direction } }];
+			case 'localPartnerName':
+				return [{ localPartner: { name: direction } }];
+			case 'communicationPhoneNumber':
+				return [{ contact: { phone: { number: direction } } }];
+			case 'daysUntilStart':
+			case 'startDate':
+				return [{ startDate: direction }];
+			case 'createdAt':
+				return [{ createdAt: direction }];
+			default:
+				return [{ startDate: 'asc' }];
+		}
+	}
+
+	private mapToRecipientTableRows(
+		recipients: {
+			id: string;
+			startDate: Date | null;
+			suspendedAt: Date | null;
+			suspensionReason: string | null;
+			createdAt: Date;
+			paymentInformation: { code: string | null } | null;
+			contact: {
+				firstName: string;
+				lastName: string;
+				dateOfBirth: Date | null;
+				address: { country: RecipientTableViewRow['country'] } | null;
+			} | null;
+			program: {
+				id: string;
+				name: string;
+				programDurationInMonths: number;
+				payoutInterval: PayoutInterval;
+			} | null;
+			localPartner: {
+				name?: string | null;
+				account: { firebaseAuthUserId: string | null } | null;
+				contact: { address: { country: RecipientTableViewRow['country'] } | null } | null;
+			} | null;
+			payouts: { status: PayoutStatus }[];
+		}[],
+		getPermission: (programId: string | null) => ProgramPermission,
+		getLocalPartnerName: (recipient: { localPartner: { name?: string | null } | null }) => string | null,
+		nowDate: Date,
+	): RecipientTableViewRow[] {
+		return recipients.map((recipient) => {
+			const payoutsReceived = recipient.payouts.length;
+			const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
+			const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
+			const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+			const paidOrConfirmedCount = paidOrConfirmedCountResult.success ? paidOrConfirmedCountResult.data : 0;
+			const statusResult = recipient.program
+				? this.recipientStatusService.getRecipientLifecycleStatus({
+						startDate: recipient.startDate,
+						suspendedAt: recipient.suspendedAt,
+						paidOrConfirmedCount,
+						programDurationInMonths: recipient.program.programDurationInMonths,
+						payoutInterval: recipient.program.payoutInterval,
+						nowDate,
+					})
+				: this.resultOk<RecipientLifecycleStatus>('future');
+			const status = statusResult.success ? statusResult.data : 'future';
+
+			return {
+				id: recipient.id,
+				firebaseAuthUserId: recipient.localPartner?.account?.firebaseAuthUserId ?? '',
+				country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
+				firstName: recipient.contact?.firstName ?? '',
+				lastName: recipient.contact?.lastName ?? '',
+				paymentCode: recipient.paymentInformation?.code ?? null,
+				dateOfBirth: recipient.contact?.dateOfBirth ?? null,
+				startDate: recipient.startDate ?? null,
+				localPartnerName: getLocalPartnerName(recipient),
+				suspendedAt: recipient.suspendedAt,
+				suspensionReason: recipient.suspensionReason,
+				programId: recipient.program?.id ?? null,
+				programName: recipient.program?.name ?? null,
+				payoutsReceived,
+				payoutsTotal,
+				payoutsProgressPercent,
+				createdAt: recipient.createdAt,
+				status,
+				permission: getPermission(recipient.program?.id ?? null),
+			};
+		});
 	}
 
 	async get(session: Session, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
@@ -144,6 +302,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(recipient as RecipientPayload);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch recipient: ${JSON.stringify(error)}`);
 		}
 	}
@@ -181,13 +340,14 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch editable recipient options: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getSurveyRecipients(
 		programIds: string[],
-	): Promise<ServiceResult<Array<{ id: string; programId: string | null; startDate: Date | null }>>> {
+	): Promise<ServiceResult<{ id: string; programId: string | null; startDate: Date | null }[]>> {
 		try {
 			const recipients = await this.db.recipient.findMany({
 				where: {
@@ -216,6 +376,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(recipients);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get survey recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -247,6 +408,7 @@ export class RecipientReadService extends BaseService {
 							country: {
 								select: {
 									isoCode: true,
+									currency: true,
 								},
 							},
 						},
@@ -266,6 +428,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(recipient);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find recipient by phone number: ${JSON.stringify(error)}`);
 		}
 	}
@@ -296,6 +459,7 @@ export class RecipientReadService extends BaseService {
 				if (mockResult.success) {
 					return mockResult;
 				}
+
 				return this.resultFail(mockResult.error ?? 'Could not create mock recipient');
 			}
 
@@ -311,6 +475,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(recipientResult.data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not resolve recipient from request: ${JSON.stringify(error)}`);
 		}
 	}
@@ -398,7 +563,7 @@ export class RecipientReadService extends BaseService {
 						},
 					},
 				},
-				orderBy: { createdAt: 'desc' },
+				orderBy: [{ id: 'asc' }],
 			});
 
 			const formatDate = (value: Date | null | undefined) => (value ? value.toISOString() : '');
@@ -475,6 +640,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk(stringifyCsv(rows, headers));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not export recipients CSV: ${JSON.stringify(error)}`);
 		}
 	}
@@ -524,11 +690,17 @@ export class RecipientReadService extends BaseService {
 							id: true,
 							name: true,
 							programDurationInMonths: true,
+							payoutInterval: true,
 						},
 					},
 					localPartner: {
 						select: {
 							name: true,
+							account: {
+								select: {
+									firebaseAuthUserId: true,
+								},
+							},
 							contact: {
 								select: {
 									address: {
@@ -541,46 +713,25 @@ export class RecipientReadService extends BaseService {
 						},
 					},
 					payouts: {
-						select: { id: true },
+						select: { status: true },
 					},
 					createdAt: true,
 				},
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const tableRows: RecipientTableViewRow[] = recipients.map((recipient) => {
-				const programPermissions = accessiblePrograms
-					.filter((p) => p.programId === recipient.program?.id)
-					.map((p) => p.permission);
+			const tableRows = this.mapToRecipientTableRows(
+				recipients,
+				(programId) => {
+					const programPermissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
 
-				const permission = programPermissions.includes(ProgramPermission.operator)
-					? ProgramPermission.operator
-					: ProgramPermission.owner;
-
-				const payoutsReceived = recipient.payouts.length;
-				const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
-				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
-
-				return {
-					id: recipient.id,
-					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
-					firstName: recipient.contact?.firstName ?? '',
-					lastName: recipient.contact?.lastName ?? '',
-					paymentCode: recipient.paymentInformation?.code ?? null,
-					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
-					startDate: recipient.startDate ?? null,
-					localPartnerName: recipient.localPartner?.name ?? null,
-					suspendedAt: recipient.suspendedAt,
-					suspensionReason: recipient.suspensionReason,
-					programId: recipient.program?.id ?? null,
-					programName: recipient.program?.name ?? null,
-					payoutsReceived,
-					payoutsTotal,
-					payoutsProgressPercent,
-					createdAt: recipient.createdAt,
-					permission,
-				};
-			});
+					return programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
+				},
+				(recipient) => recipient.localPartner?.name ?? null,
+				now(),
+			);
 
 			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.operator)
 				? ProgramPermission.operator
@@ -589,6 +740,7 @@ export class RecipientReadService extends BaseService {
 			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -615,7 +767,9 @@ export class RecipientReadService extends BaseService {
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
 			const search = query.search.trim();
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+			const selectedRecipientStatus = this.parseRecipientStatusFilter(query.recipientStatus);
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 			if (selectedProgramId && filteredProgramIds.length === 0) {
 				return this.resultOk({
@@ -626,6 +780,7 @@ export class RecipientReadService extends BaseService {
 				});
 			}
 			const skip = (query.page - 1) * query.pageSize;
+			const shouldSortOrFilterByStatus = query.sortBy === 'status' || Boolean(selectedRecipientStatus);
 			const baseWhere: Prisma.RecipientWhereInput = {
 				programId: { in: filteredProgramIds },
 			};
@@ -646,24 +801,46 @@ export class RecipientReadService extends BaseService {
 				AND: [baseWhere, searchWhere],
 			};
 
-			const [recipients, totalCount] = await Promise.all([
-				this.db.recipient.findMany({
-					where,
+			const recipientSelect = {
+				id: true,
+				startDate: true,
+				suspendedAt: true,
+				suspensionReason: true,
+				paymentInformation: {
+					select: {
+						code: true,
+					},
+				},
+				contact: {
+					select: {
+						firstName: true,
+						lastName: true,
+						dateOfBirth: true,
+						address: {
+							select: {
+								country: true,
+							},
+						},
+					},
+				},
+				program: {
 					select: {
 						id: true,
-						startDate: true,
-						suspendedAt: true,
-						suspensionReason: true,
-						paymentInformation: {
+						name: true,
+						programDurationInMonths: true,
+						payoutInterval: true,
+					},
+				},
+				localPartner: {
+					select: {
+						name: true,
+						account: {
 							select: {
-								code: true,
+								firebaseAuthUserId: true,
 							},
 						},
 						contact: {
 							select: {
-								firstName: true,
-								lastName: true,
-								dateOfBirth: true,
 								address: {
 									select: {
 										country: true,
@@ -671,72 +848,54 @@ export class RecipientReadService extends BaseService {
 								},
 							},
 						},
-						program: {
-							select: {
-								id: true,
-								name: true,
-								programDurationInMonths: true,
-							},
-						},
-						localPartner: {
-							select: {
-								name: true,
-								contact: {
-									select: {
-										address: {
-											select: {
-												country: true,
-											},
-										},
-									},
-								},
-							},
-						},
-						payouts: {
-							select: { id: true },
-						},
-						createdAt: true,
 					},
-					orderBy: this.buildRecipientOrderBy(query),
-					skip,
-					take: query.pageSize,
-				}),
-				this.db.recipient.count({ where }),
-			]);
+				},
+				payouts: {
+					select: { status: true },
+				},
+				createdAt: true,
+			} satisfies Prisma.RecipientSelect;
 
-			const tableRows: RecipientTableViewRow[] = recipients.map((recipient) => {
-				const programPermissions = accessiblePrograms
-					.filter((p) => p.programId === recipient.program?.id)
-					.map((p) => p.permission);
+			const [allRecipients, totalCount] = shouldSortOrFilterByStatus
+				? await Promise.all([
+						this.db.recipient.findMany({
+							where,
+							select: recipientSelect,
+							orderBy: this.buildRecipientOrderBy(query),
+						}),
+						this.db.recipient.count({ where }),
+					])
+				: await Promise.all([
+						this.db.recipient.findMany({
+							where,
+							select: recipientSelect,
+							orderBy: this.buildRecipientOrderBy(query),
+							skip,
+							take: query.pageSize,
+						}),
+						this.db.recipient.count({ where }),
+					]);
 
-				const permission = programPermissions.includes(ProgramPermission.operator)
-					? ProgramPermission.operator
-					: ProgramPermission.owner;
+			let tableRows = this.mapToRecipientTableRows(
+				allRecipients,
+				(programId) => {
+					const programPermissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
 
-				const payoutsReceived = recipient.payouts.length;
-				const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
-				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
-
-				return {
-					id: recipient.id,
-					country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
-					firstName: recipient.contact?.firstName ?? '',
-					lastName: recipient.contact?.lastName ?? '',
-					paymentCode: recipient.paymentInformation?.code ?? null,
-					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
-					startDate: recipient.startDate ?? null,
-					localPartnerName: recipient.localPartner?.name ?? null,
-					suspendedAt: recipient.suspendedAt,
-					suspensionReason: recipient.suspensionReason,
-					programId: recipient.program?.id ?? null,
-					programName: recipient.program?.name ?? null,
-					payoutsReceived,
-					payoutsTotal,
-					payoutsProgressPercent,
-					createdAt: recipient.createdAt,
-					permission,
-				};
-			});
+					return programPermissions.includes(ProgramPermission.operator)
+						? ProgramPermission.operator
+						: ProgramPermission.owner;
+				},
+				(recipient) => recipient.localPartner?.name ?? null,
+				now(),
+			);
+			if (selectedRecipientStatus) {
+				tableRows = tableRows.filter((row) => row.status === selectedRecipientStatus);
+			}
+			if (query.sortBy === 'status') {
+				tableRows = this.sortRowsByStatus(tableRows, query);
+			}
+			const paginatedRows = shouldSortOrFilterByStatus ? tableRows.slice(skip, skip + query.pageSize) : tableRows;
+			const computedTotalCount = shouldSortOrFilterByStatus ? tableRows.length : totalCount;
 
 			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.operator)
 				? ProgramPermission.operator
@@ -745,10 +904,143 @@ export class RecipientReadService extends BaseService {
 				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
 			);
 
-			return this.resultOk({ tableRows, totalCount, permission: globalPermission, programFilterOptions });
+			return this.resultOk({
+				tableRows: paginatedRows,
+				totalCount: computedTotalCount,
+				permission: globalPermission,
+				programFilterOptions,
+			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPaginatedUpcomingOnboardingTableView(
+		userId: string,
+		query: RecipientTableQuery,
+	): Promise<ServiceResult<RecipientUpcomingOnboardingPaginatedTableView>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			const programFilterOptions: RecipientProgramFilterOption[] = Array.from(
+				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
+			);
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					programFilterOptions: [],
+				});
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
+			if (selectedProgramId && filteredProgramIds.length === 0) {
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					programFilterOptions,
+				});
+			}
+
+			const search = query.search.trim();
+			const today = startOfDay(now());
+			const where: Prisma.RecipientWhereInput = search
+				? {
+						AND: [
+							{
+								programId: { in: filteredProgramIds },
+								startDate: { not: null, gte: today },
+							},
+							{
+								OR: [
+									{ id: { contains: search, mode: 'insensitive' } },
+									{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
+									{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
+									{ program: { is: { name: { contains: search, mode: 'insensitive' } } } },
+									{ localPartner: { is: { name: { contains: search, mode: 'insensitive' } } } },
+									{ contact: { is: { phone: { is: { number: { contains: search, mode: 'insensitive' } } } } } },
+								],
+							},
+						],
+					}
+				: {
+						programId: { in: filteredProgramIds },
+						startDate: { not: null, gte: today },
+					};
+
+			const [recipients, totalCount] = await Promise.all([
+				this.db.recipient.findMany({
+					where,
+					select: {
+						id: true,
+						startDate: true,
+						createdAt: true,
+						contact: {
+							select: {
+								firstName: true,
+								lastName: true,
+								phone: {
+									select: {
+										number: true,
+									},
+								},
+							},
+						},
+						program: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
+						localPartner: {
+							select: {
+								name: true,
+							},
+						},
+					},
+					orderBy: this.buildUpcomingOnboardingOrderBy(query),
+					skip: (query.page - 1) * query.pageSize,
+					take: query.pageSize,
+				}),
+				this.db.recipient.count({ where }),
+			]);
+
+			const tableRows: UpcomingOnboardingTableViewRow[] = recipients.map((recipient) => {
+				const startDate = recipient.startDate ?? today;
+				const programId = recipient.program?.id ?? '';
+				const programName = recipient.program?.name ?? '';
+
+				return {
+					id: recipient.id,
+					recipientName: `${recipient.contact?.firstName ?? ''} ${recipient.contact?.lastName ?? ''}`.trim(),
+					programId,
+					programName,
+					localPartnerName: recipient.localPartner?.name ?? '',
+					communicationPhoneNumber: recipient.contact?.phone?.number ?? null,
+					startDate,
+					daysUntilStart: differenceInCalendarDays(startOfDay(startDate), today),
+					createdAt: recipient.createdAt,
+				};
+			});
+
+			return this.resultOk({
+				tableRows,
+				totalCount,
+				programFilterOptions,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch upcoming onboarding recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -778,6 +1070,7 @@ export class RecipientReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch program scoped recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -792,12 +1085,14 @@ export class RecipientReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({
 				tableRows: paginated.data.tableRows,
 				permission: paginated.data.permission,
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch local partner recipients table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -807,7 +1102,10 @@ export class RecipientReadService extends BaseService {
 		query: RecipientTableQuery,
 	): Promise<ServiceResult<RecipientPaginatedTableView>> {
 		try {
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+			const selectedRecipientStatus = this.parseRecipientStatusFilter(query.recipientStatus);
+			const shouldSortOrFilterByStatus = query.sortBy === 'status' || Boolean(selectedRecipientStatus);
 			const baseWhere = {
 				localPartnerId,
 				programId: { not: null },
@@ -831,24 +1129,46 @@ export class RecipientReadService extends BaseService {
 					}
 				: baseWhere;
 
-			const [recipients, totalCount, filterSource] = await Promise.all([
-				this.db.recipient.findMany({
-					where,
+			const skip = (query.page - 1) * query.pageSize;
+			const recipientSelect = {
+				id: true,
+				startDate: true,
+				suspendedAt: true,
+				suspensionReason: true,
+				paymentInformation: {
+					select: {
+						code: true,
+					},
+				},
+				contact: {
+					select: {
+						firstName: true,
+						lastName: true,
+						dateOfBirth: true,
+						address: {
+							select: {
+								country: true,
+							},
+						},
+					},
+				},
+				program: {
 					select: {
 						id: true,
-						startDate: true,
-						suspendedAt: true,
-						suspensionReason: true,
-						paymentInformation: {
+						name: true,
+						programDurationInMonths: true,
+						payoutInterval: true,
+					},
+				},
+				localPartner: {
+					select: {
+						account: {
 							select: {
-								code: true,
+								firebaseAuthUserId: true,
 							},
 						},
 						contact: {
 							select: {
-								firstName: true,
-								lastName: true,
-								dateOfBirth: true,
 								address: {
 									select: {
 										country: true,
@@ -856,35 +1176,28 @@ export class RecipientReadService extends BaseService {
 								},
 							},
 						},
-						program: {
-							select: {
-								id: true,
-								name: true,
-								programDurationInMonths: true,
-							},
-						},
-						localPartner: {
-							select: {
-								contact: {
-									select: {
-										address: {
-											select: {
-												country: true,
-											},
-										},
-									},
-								},
-							},
-						},
-						payouts: {
-							select: { id: true },
-						},
-						createdAt: true,
 					},
-					orderBy: this.buildRecipientOrderBy(query),
-					skip: (query.page - 1) * query.pageSize,
-					take: query.pageSize,
-				}),
+				},
+				payouts: {
+					select: { status: true },
+				},
+				createdAt: true,
+			} satisfies Prisma.RecipientSelect;
+
+			const [allRecipients, totalCount, filterSource] = await Promise.all([
+				shouldSortOrFilterByStatus
+					? this.db.recipient.findMany({
+							where,
+							select: recipientSelect,
+							orderBy: this.buildRecipientOrderBy(query),
+						})
+					: this.db.recipient.findMany({
+							where,
+							select: recipientSelect,
+							orderBy: this.buildRecipientOrderBy(query),
+							skip,
+							take: query.pageSize,
+						}),
 				this.db.recipient.count({ where }),
 				this.db.recipient.findMany({
 					where: {
@@ -902,31 +1215,20 @@ export class RecipientReadService extends BaseService {
 				}),
 			]);
 
-			const tableRows: RecipientTableViewRow[] = recipients.map((r) => {
-				const payoutsReceived = r.payouts.length;
-				const payoutsTotal = r.program?.programDurationInMonths ?? 0;
-				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
-
-				return {
-					id: r.id,
-					country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
-					firstName: r.contact?.firstName ?? '',
-					lastName: r.contact?.lastName ?? '',
-					paymentCode: r.paymentInformation?.code ?? null,
-					dateOfBirth: r.contact?.dateOfBirth ?? null,
-					startDate: r.startDate ?? null,
-					localPartnerName: null,
-					suspendedAt: r.suspendedAt,
-					suspensionReason: r.suspensionReason,
-					programId: r.program?.id ?? null,
-					programName: r.program?.name ?? null,
-					payoutsReceived,
-					payoutsTotal,
-					payoutsProgressPercent,
-					createdAt: r.createdAt,
-					permission: ProgramPermission.operator,
-				};
-			});
+			let tableRows = this.mapToRecipientTableRows(
+				allRecipients,
+				() => ProgramPermission.operator,
+				() => null,
+				now(),
+			);
+			if (selectedRecipientStatus) {
+				tableRows = tableRows.filter((row) => row.status === selectedRecipientStatus);
+			}
+			if (query.sortBy === 'status') {
+				tableRows = this.sortRowsByStatus(tableRows, query);
+			}
+			const paginatedRows = shouldSortOrFilterByStatus ? tableRows.slice(skip, skip + query.pageSize) : tableRows;
+			const computedTotalCount = shouldSortOrFilterByStatus ? tableRows.length : totalCount;
 
 			const programFilterOptions = Array.from(
 				new Map(
@@ -938,13 +1240,14 @@ export class RecipientReadService extends BaseService {
 			).sort((a, b) => a.name.localeCompare(b.name));
 
 			return this.resultOk({
-				tableRows,
-				totalCount,
+				tableRows: paginatedRows,
+				totalCount: computedTotalCount,
 				permission: ProgramPermission.operator,
 				programFilterOptions,
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch recipients for local partner: ${JSON.stringify(error)}`);
 		}
 	}

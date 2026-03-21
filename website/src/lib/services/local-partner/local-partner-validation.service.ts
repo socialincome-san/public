@@ -8,15 +8,7 @@ import {
 	localPartnerCreateInputSchema,
 	localPartnerUpdateInputSchema,
 } from './local-partner-form-input';
-
-type UpdateUniquenessContext = {
-	partnerId: string;
-	existingName: string;
-	existingContactId: string;
-	existingEmail: string | null;
-	existingPhoneId: string | null;
-	existingPhoneNumber: string | null;
-};
+import { LocalPartnerUpdateUniquenessContext } from './local-partner-validation.types';
 
 export class LocalPartnerValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {
@@ -28,6 +20,7 @@ export class LocalPartnerValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -36,6 +29,7 @@ export class LocalPartnerValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -71,7 +65,7 @@ export class LocalPartnerValidationService extends BaseService {
 
 	async validateUpdateUniqueness(
 		input: LocalPartnerFormUpdateInput,
-		context: UpdateUniquenessContext,
+		context: LocalPartnerUpdateUniquenessContext,
 	): Promise<ServiceResult<void>> {
 		if (input.name !== context.existingName) {
 			const nameConflict = await this.db.localPartner.findUnique({

@@ -1,5 +1,4 @@
-import { Cause, CountryCode, Currency, PayoutInterval, ProgramPermission } from '@/generated/prisma/client';
-import { Profile } from '../candidate/candidate.types';
+import { Cause, CountryCode, Currency, PayoutInterval, Profile, ProgramPermission } from '@/generated/prisma/client';
 
 export type ProgramWallet = {
 	id: string;
@@ -31,6 +30,12 @@ export type CreateProgramInput = {
 	targetProfiles: Profile[];
 };
 
+export type PublicOnboardingUserDetails = {
+	email: string;
+	firstName: string;
+	lastName: string;
+};
+
 export type PublicProgramDetails = {
 	programId: string;
 	programName: string;
@@ -48,4 +53,41 @@ export type PublicProgramDetails = {
 	totalPayoutsSum: number;
 	completedSurveysCount: number;
 	startedAt: Date | null;
+};
+
+export type ProgramSettingsPayload = {
+	id: string;
+	name: string;
+	countryId: string;
+	country: {
+		isoCode: CountryCode;
+		currency: Currency;
+	};
+	amountOfRecipientsForStart: number | null;
+	coveredByReserves: boolean;
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutInterval: PayoutInterval;
+	targetCauses: Cause[];
+	targetProfiles: Profile[];
+	ownerOrganizationIds: string[];
+	operatorOrganizationIds: string[];
+	createdAt: Date;
+	updatedAt: Date | null;
+	permission: ProgramPermission;
+	canEdit: boolean;
+};
+
+export type ProgramSettingsUpdateInput = {
+	id: string;
+	name: string;
+	countryId: string;
+	coveredByReserves: boolean;
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutInterval: PayoutInterval;
+	targetCauses: Cause[];
+	targetProfiles: Profile[];
+	ownerOrganizationIds: string[];
+	operatorOrganizationIds: string[];
 };

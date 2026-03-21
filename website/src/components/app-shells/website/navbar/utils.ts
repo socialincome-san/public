@@ -10,6 +10,7 @@ export const displaySession = (sessions: Session[], scope: Scope): Session | nul
 	if (scope === 'partner-space') {
 		return sessions.find((s) => s.type === 'local-partner') ?? null;
 	}
+
 	return sessions[0] ?? null;
 };
 

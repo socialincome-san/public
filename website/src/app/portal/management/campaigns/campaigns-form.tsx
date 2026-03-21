@@ -1,14 +1,14 @@
 'use client';
 
 import DynamicForm from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import {
 	createCampaignsAction,
 	getCampaignsAction,
 	getProgramsOptions,
 	updateCampaignsAction,
 } from '@/lib/server-actions/campaigns-actions';
-import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ProgramOption } from '@/lib/services/program/program.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -27,53 +27,82 @@ export default function CampaignsForm({
 	campaignId?: string;
 	readOnly?: boolean;
 }) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [isLoading, startTransition] = useTransition();
+	const asOptionalString = (value: string | null | undefined) => value ?? undefined;
 
 	const loadCampaign = async (campaignId: string) => {
 		if (campaignId) {
-			try {
-				const result = await getCampaignsAction(campaignId);
-				if (result.success) {
-					const newSchema = { ...formSchema };
-					newSchema.fields.title.value = result.data.title;
-					newSchema.fields.description.value = result.data.description;
-					newSchema.fields.secondDescriptionTitle.value = result.data.secondDescriptionTitle;
-					newSchema.fields.secondDescription.value = result.data.secondDescription;
-					newSchema.fields.thirdDescriptionTitle.value = result.data.thirdDescriptionTitle;
-					newSchema.fields.thirdDescription.value = result.data.thirdDescription;
-					newSchema.fields.linkWebsite.value = result.data.linkWebsite;
-					newSchema.fields.linkInstagram.value = result.data.linkInstagram;
-					newSchema.fields.linkTiktok.value = result.data.linkTiktok;
-					newSchema.fields.linkFacebook.value = result.data.linkFacebook;
-					newSchema.fields.linkX.value = result.data.linkX;
-					newSchema.fields.goal.value = result.data.goal;
-					newSchema.fields.currency.value = result.data.currency;
-					newSchema.fields.additionalAmountChf.value = result.data.additionalAmountChf;
-					newSchema.fields.endDate.value = result.data.endDate ?? undefined;
-					newSchema.fields.isActive.value = result.data.isActive;
-					newSchema.fields.public.value = result.data.public;
-					newSchema.fields.featured.value = result.data.featured;
-					newSchema.fields.slug.value = result.data.slug;
-					newSchema.fields.metadataDescription.value = result.data.metadataDescription;
-					newSchema.fields.metadataOgImage.value = result.data.metadataOgImage;
-					newSchema.fields.metadataTwitterImage.value = result.data.metadataTwitterImage;
-					newSchema.fields.creatorName.value = result.data.creatorName;
-					newSchema.fields.creatorEmail.value = result.data.creatorEmail;
-					newSchema.fields.program.value = result.data.program?.id;
-					setFormSchema(newSchema);
-				} else {
-					onError?.(result.error);
-				}
-			} catch (error: unknown) {
-				onError?.(error);
-			}
+			const result = await getCampaignsAction(campaignId);
+			handleServiceResult(result, {
+				onSuccess: (data) => {
+					setFormSchema((previousSchema) => {
+						const nextSchema = clearFormSchemaValues(previousSchema);
+
+						return {
+							...nextSchema,
+							fields: {
+								...nextSchema.fields,
+								title: { ...nextSchema.fields.title, value: data.title },
+								description: { ...nextSchema.fields.description, value: data.description },
+								secondDescriptionTitle: {
+									...nextSchema.fields.secondDescriptionTitle,
+									value: asOptionalString(data.secondDescriptionTitle),
+								},
+								secondDescription: {
+									...nextSchema.fields.secondDescription,
+									value: asOptionalString(data.secondDescription),
+								},
+								thirdDescriptionTitle: {
+									...nextSchema.fields.thirdDescriptionTitle,
+									value: asOptionalString(data.thirdDescriptionTitle),
+								},
+								thirdDescription: {
+									...nextSchema.fields.thirdDescription,
+									value: asOptionalString(data.thirdDescription),
+								},
+								linkWebsite: { ...nextSchema.fields.linkWebsite, value: asOptionalString(data.linkWebsite) },
+								linkInstagram: { ...nextSchema.fields.linkInstagram, value: asOptionalString(data.linkInstagram) },
+								linkTiktok: { ...nextSchema.fields.linkTiktok, value: asOptionalString(data.linkTiktok) },
+								linkFacebook: { ...nextSchema.fields.linkFacebook, value: asOptionalString(data.linkFacebook) },
+								linkX: { ...nextSchema.fields.linkX, value: asOptionalString(data.linkX) },
+								goal: { ...nextSchema.fields.goal, value: data.goal },
+								currency: { ...nextSchema.fields.currency, value: data.currency },
+								additionalAmountChf: {
+									...nextSchema.fields.additionalAmountChf,
+									value: data.additionalAmountChf,
+								},
+								endDate: { ...nextSchema.fields.endDate, value: data.endDate ?? undefined },
+								isActive: { ...nextSchema.fields.isActive, value: data.isActive },
+								public: { ...nextSchema.fields.public, value: data.public },
+								featured: { ...nextSchema.fields.featured, value: data.featured },
+								slug: { ...nextSchema.fields.slug, value: asOptionalString(data.slug) },
+								metadataDescription: {
+									...nextSchema.fields.metadataDescription,
+									value: asOptionalString(data.metadataDescription),
+								},
+								metadataOgImage: {
+									...nextSchema.fields.metadataOgImage,
+									value: asOptionalString(data.metadataOgImage),
+								},
+								metadataTwitterImage: {
+									...nextSchema.fields.metadataTwitterImage,
+									value: asOptionalString(data.metadataTwitterImage),
+								},
+								creatorName: { ...nextSchema.fields.creatorName, value: asOptionalString(data.creatorName) },
+								creatorEmail: { ...nextSchema.fields.creatorEmail, value: asOptionalString(data.creatorEmail) },
+								program: { ...nextSchema.fields.program, value: data.program?.id },
+							},
+						};
+					});
+				},
+				onError: (error) => onError?.(error),
+			});
 		}
 	};
 
 	const setOptions = (programs: ProgramOption[]) => {
-		const optionsToZodEnum = (options: ProgramOption[]) =>
-			getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
+		const optionsToZodEnum = (options: ProgramOption[]) => getZodEnum(options.map(({ id, name }) => ({ id, label: name })));
 
 		setFormSchema((prevSchema) => ({
 			...prevSchema,
@@ -87,21 +116,15 @@ export default function CampaignsForm({
 		}));
 	};
 
-	const onSubmit = async (schema: typeof initialFormSchema) => {
+	const onSubmit = (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
-			try {
-				let res;
-				if (campaignId) {
-					const data: CampaignsUpdateInput = buildUpdateCampaignsInput(schema);
-					res = await updateCampaignsAction({ id: campaignId, ...data });
-				} else {
-					const data: CampaignsCreateInput = buildCreateCampaignsInput(schema);
-					res = await createCampaignsAction(data);
-				}
-				res.success ? onSuccess?.() : onError?.(res.error);
-			} catch (error: unknown) {
-				onError?.(error);
-			}
+			const res = campaignId
+				? await updateCampaignsAction(buildUpdateCampaignsInput(schema, campaignId))
+				: await createCampaignsAction(buildCreateCampaignsInput(schema));
+			handleServiceResult(res, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
@@ -110,6 +133,7 @@ export default function CampaignsForm({
 			// Load campaign
 			startTransition(async () => await loadCampaign(campaignId));
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [campaignId]);
 
 	useEffect(() => {
@@ -123,13 +147,12 @@ export default function CampaignsForm({
 		});
 	}, []);
 
-	return (
-		<DynamicForm
-			formSchema={formSchema}
-			isLoading={isLoading}
-			onSubmit={onSubmit}
-			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : campaignId ? 'edit' : 'add'}
-		/>
-	);
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (campaignId) {
+		mode = 'edit';
+	}
+
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 }

@@ -1,12 +1,4 @@
-export default function storyblokImageLoader({
-	src,
-	width,
-	quality,
-}: {
-	src: string;
-	width: number;
-	quality?: number;
-}) {
+export default function storyblokImageLoader({ src, width, quality }: { src: string; width: number; quality?: number }) {
 	let url: URL;
 	try {
 		url = new URL(src);
@@ -19,7 +11,7 @@ export default function storyblokImageLoader({
 	}
 
 	const crop = url.searchParams.get('_crop');
-	const ratio = Number(url.searchParams.get('_ratio') || '0');
+	const ratio = Number(url.searchParams.get('_ratio') ?? '0');
 	url.searchParams.delete('_crop');
 	url.searchParams.delete('_ratio');
 	const baseUrl = url.toString();
@@ -34,5 +26,6 @@ export default function storyblokImageLoader({
 	if (crop === 'smart') {
 		return `${baseUrl}/m/${dimensions}/smart/filters:format(webp)${qualityParam}`;
 	}
+
 	return `${baseUrl}/m/${dimensions}/filters:format(webp)${qualityParam}`;
 }

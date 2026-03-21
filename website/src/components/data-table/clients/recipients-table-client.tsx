@@ -1,10 +1,7 @@
 'use client';
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
-import {
-	getRecipientsTableFilters,
-	recipientsTableConfig,
-} from '@/components/data-table/configs/recipients-table.config';
+import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
@@ -26,6 +23,7 @@ type Props = {
 	query?: TableQueryState & { totalRows: number };
 	programFilterOptions?: RecipientProgramFilterOption[];
 	showProgramFilter?: boolean;
+	hideProgramName?: boolean;
 };
 
 export const RecipientsTableClient = ({
@@ -37,6 +35,7 @@ export const RecipientsTableClient = ({
 	query,
 	programFilterOptions = [],
 	showProgramFilter = true,
+	hideProgramName = false,
 }: Props) => {
 	const canManageRecipients = sessionType === 'user';
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
@@ -72,6 +71,7 @@ export const RecipientsTableClient = ({
 
 		if (!result.success) {
 			console.error(result.error);
+
 			return;
 		}
 
@@ -83,7 +83,9 @@ export const RecipientsTableClient = ({
 			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading,
-			onSelect: handleDownloadCsv,
+			onSelect: () => {
+				void handleDownloadCsv();
+			},
 		},
 		...(canManageRecipients
 			? [
@@ -113,6 +115,7 @@ export const RecipientsTableClient = ({
 				actionMenuItems={actionMenuItems}
 				query={query}
 				toolbarFilters={getRecipientsTableFilters({ query, programFilterOptions, showProgramFilter })}
+				hideProgramName={hideProgramName}
 				hideLocalPartner={sessionType === 'local-partner'}
 				showEntityIdColumn={sessionType !== 'local-partner'}
 				onRowClick={openEditRecipientDialog}

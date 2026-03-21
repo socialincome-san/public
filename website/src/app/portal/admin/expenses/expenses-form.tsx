@@ -1,7 +1,8 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { ExpenseType } from '@/generated/prisma/enums';
 import {
 	createExpenseAction,
@@ -63,7 +64,7 @@ const initialFormSchema: ExpenseFormSchema = {
 };
 
 export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }: ExpenseFormProps) {
-	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [expense, setExpense] = useState<ExpensePayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -72,12 +73,20 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 		handleServiceResult(result, {
 			onSuccess: (data) => {
 				setExpense(data);
-				const next = { ...formSchema };
-				next.fields.type.value = data.type;
-				next.fields.year.value = data.year;
-				next.fields.amountChf.value = data.amountChf;
-				next.fields.organization.value = data.organization.id;
-				setFormSchema(next);
+				setFormSchema((prev) => {
+					const next = clearFormSchemaValues(prev);
+
+					return {
+						...next,
+						fields: {
+							...next.fields,
+							type: { ...next.fields.type, value: data.type },
+							year: { ...next.fields.year, value: data.year },
+							amountChf: { ...next.fields.amountChf, value: data.amountChf },
+							organization: { ...next.fields.organization, value: data.organization.id },
+						},
+					};
+				});
 			},
 			onError: (error) => onError?.(error),
 		});
@@ -106,6 +115,9 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 
 	const onSubmit = (schema: ExpenseFormSchema) => {
 		startTransition(async () => {
+			if (expenseId && expense?.id !== expenseId) {
+				return onError?.('Expense is still loading. Please try again.');
+			}
 			const result =
 				expenseId && expense
 					? await updateExpenseAction(buildUpdateExpenseInput(schema, expense))
@@ -122,6 +134,7 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 			return;
 		}
 		startTransition(async () => await loadExpense(expenseId));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [expenseId]);
 
 	useEffect(() => {

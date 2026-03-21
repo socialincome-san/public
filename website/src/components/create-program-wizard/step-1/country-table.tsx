@@ -1,7 +1,9 @@
 'use client';
 
 import { RadioGroup } from '@/components/radio-group';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import { CountryCondition } from '@/lib/services/country/country.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { useState } from 'react';
 import { CountryTableBody } from './country-table-body';
@@ -14,15 +16,16 @@ const matchesSearch = (row: ProgramCountryFeasibilityRow, search: string) => {
 
 	const q = search.toLowerCase();
 	const countryName = getCountryNameByCode(row.country.isoCode)?.toLowerCase() ?? '';
+
 	return row.country.isoCode.toLowerCase().includes(q) || countryName.includes(q);
 };
 
 const meetsAllConditions = (row: ProgramCountryFeasibilityRow) => {
 	return (
-		row.cash.condition === 'met' &&
-		row.mobileMoney.condition === 'met' &&
-		row.mobileNetwork.condition === 'met' &&
-		row.sanctions.condition === 'met'
+		row.cash.condition === CountryCondition.MET &&
+		row.mobileMoney.condition === CountryCondition.MET &&
+		row.mobileNetwork.condition === CountryCondition.MET &&
+		row.sanctions.condition === CountryCondition.MET
 	);
 };
 
@@ -35,6 +38,7 @@ type Props = {
 };
 
 export const CountryTable = ({ rows, value, openIds, onValueChange, onToggleRow }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 	const [search, setSearch] = useState('');
 	const [onlyAllMet, setOnlyAllMet] = useState(false);
 
@@ -59,7 +63,7 @@ export const CountryTable = ({ rows, value, openIds, onValueChange, onToggleRow 
 				/>
 
 				{filtered.length === 0 ? (
-					<div className="text-muted-foreground py-10 text-center text-sm">No countries match the current filters</div>
+					<div className="text-muted-foreground py-10 text-center text-sm">{t('step1.no_countries_match')}</div>
 				) : (
 					<CountryTableBody rows={filtered} value={value} openIds={openIds} onToggleRow={onToggleRow} />
 				)}

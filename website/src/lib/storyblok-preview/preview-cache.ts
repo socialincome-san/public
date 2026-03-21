@@ -13,9 +13,8 @@ declare global {
 }
 
 const getStore = (): PreviewCacheStore => {
-	if (!globalThis.storyblokPreviewCacheStore) {
-		globalThis.storyblokPreviewCacheStore = new Map();
-	}
+	globalThis.storyblokPreviewCacheStore ??= new Map();
+
 	return globalThis.storyblokPreviewCacheStore;
 };
 
@@ -65,6 +64,7 @@ export const getPreviewCache = <T>(key: string): T | undefined => {
 
 	if (isExpired(entry)) {
 		store.delete(key);
+
 		return undefined;
 	}
 

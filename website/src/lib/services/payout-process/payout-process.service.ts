@@ -7,6 +7,7 @@ import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
+import { RecipientStatusService } from '../recipient/recipient-status.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 
 export class PayoutProcessService extends BaseService {
@@ -15,6 +16,7 @@ export class PayoutProcessService extends BaseService {
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly programStatsService: ProgramStatsService,
 		private readonly exchangeRateService: ExchangeRateReadService,
+		private readonly recipientStatusService: RecipientStatusService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -91,19 +93,23 @@ export class PayoutProcessService extends BaseService {
 				.filter((recipient) => recipient.program !== null)
 				.filter((recipient) => {
 					const program = recipient.program!;
-
-					const paidCount = recipient.payouts.filter(
-						(p) => p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed,
-					).length;
-					const isEligibleResult = this.programStatsService.isRecipientEligibleForPayout({
+					const paidCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+					if (!paidCountResult.success) {
+						return false;
+					}
+					const isEligibleResult = this.recipientStatusService.isRecipientEligibleForPayout({
 						startDate: recipient.startDate,
 						suspendedAt: recipient.suspendedAt,
-						paidOrConfirmedCount: paidCount,
+						paidOrConfirmedCount: paidCountResult.data,
 						programDurationInMonths: program.programDurationInMonths,
 						payoutInterval: program.payoutInterval,
 						nowDate,
 					});
-					return isEligibleResult.success && isEligibleResult.data;
+					if (!isEligibleResult.success) {
+						return false;
+					}
+
+					return isEligibleResult.data;
 				})
 				.map((recipient) => ({
 					id: recipient.id,
@@ -120,6 +126,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(mapped);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch payout recipients: ${JSON.stringify(error)}`);
 		}
 	}
@@ -143,6 +150,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate registration CSV: ${JSON.stringify(error)}`);
 		}
 	}
@@ -182,6 +190,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate payout CSV: ${JSON.stringify(error)}`);
 		}
 	}
@@ -211,7 +220,7 @@ export class PayoutProcessService extends BaseService {
 					const payoutPerInterval = r.program.payoutPerInterval;
 					const currency = r.program.payoutCurrency;
 					const rateCurrency = rates[currency];
-					const rateChf = rates['CHF'];
+					const rateChf = rates.CHF;
 					const amountChf = rateCurrency && rateChf ? (payoutPerInterval / rateCurrency) * rateChf : null;
 					const phoneNumber = r.paymentInformation?.phone?.number ?? 'NO_PHONE';
 
@@ -231,6 +240,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(toCreate);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not preview payouts: ${JSON.stringify(error)}`);
 		}
 	}
@@ -263,6 +273,7 @@ export class PayoutProcessService extends BaseService {
 			return this.resultOk(`Created ${dbPayload.length} payouts for ${format(selectedDate, 'yyyy-MM')}.`);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not generate payouts: ${JSON.stringify(error)}`);
 		}
 	}

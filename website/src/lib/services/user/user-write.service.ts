@@ -9,6 +9,21 @@ import { UserValidationService } from './user-validation.service';
 import { UserPayload, UserUpdateInput } from './user.types';
 
 export class UserWriteService extends BaseService {
+	private getAccessRows(organizationIds: string[]) {
+		const uniqueOrganizationIds = Array.from(new Set(organizationIds));
+
+		return uniqueOrganizationIds.map((organizationId) => ({ organizationId }));
+	}
+
+	private getPreferredActiveOrganizationId(organizationIds: string[], currentActiveOrganizationId?: string | null) {
+		const allowedOrganizationIds = new Set(organizationIds);
+		if (currentActiveOrganizationId && allowedOrganizationIds.has(currentActiveOrganizationId)) {
+			return currentActiveOrganizationId;
+		}
+
+		return organizationIds[0] ?? null;
+	}
+
 	constructor(
 		db: PrismaClient,
 		private readonly firebaseAdminService: FirebaseAdminService,
@@ -39,6 +54,12 @@ export class UserWriteService extends BaseService {
 			}
 
 			const displayName = `${validatedInput.firstName} ${validatedInput.lastName}`.trim();
+			const existingFirebaseUserResult = await this.firebaseAdminService.getByEmail(validatedInput.email);
+			if (!existingFirebaseUserResult.success) {
+				return this.resultFail(`Failed to check Firebase user: ${existingFirebaseUserResult.error}`);
+			}
+			const didCreateFirebaseUser = !existingFirebaseUserResult.data;
+
 			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: validatedInput.email,
 				displayName,
@@ -49,6 +70,74 @@ export class UserWriteService extends BaseService {
 			}
 
 			const firebaseAuthUser = firebaseResult.data;
+			let createdUser:
+				| {
+						id: string;
+						role: UserPayload['role'];
+						contact: {
+							firstName: string | null;
+							lastName: string | null;
+							email: string | null;
+						};
+						activeOrganization: {
+							id: string;
+						} | null;
+				  }
+				| undefined;
+			const activeOrganizationId = this.getPreferredActiveOrganizationId(validatedInput.organizationIds);
+			if (!activeOrganizationId) {
+				return this.resultFail('At least one organization permission is required.');
+			}
+
+			try {
+				createdUser = await this.db.user.create({
+					data: {
+						role: validatedInput.role,
+						activeOrganization: {
+							connect: {
+								id: activeOrganizationId,
+							},
+						},
+						contact: {
+							create: {
+								firstName: validatedInput.firstName,
+								lastName: validatedInput.lastName,
+								email: validatedInput.email,
+							},
+						},
+						account: {
+							create: {
+								firebaseAuthUserId: firebaseAuthUser.uid,
+							},
+						},
+						organizationAccesses: {
+							createMany: {
+								data: this.getAccessRows(validatedInput.organizationIds),
+							},
+						},
+					},
+					include: {
+						contact: true,
+						activeOrganization: true,
+					},
+				});
+			} catch (dbError) {
+				if (didCreateFirebaseUser) {
+					const rollbackResult = await this.firebaseAdminService.deleteByUidIfExists(firebaseAuthUser.uid);
+					if (!rollbackResult.success) {
+						this.logger.warn('Could not rollback Firebase user after failed user creation', {
+							firebaseUid: firebaseAuthUser.uid,
+							error: rollbackResult.error,
+						});
+					}
+				}
+				throw dbError;
+			}
+
+			if (!createdUser) {
+				return this.resultFail('Could not create user. Please try again later.');
+			}
+
 			const firebaseSyncResult = await this.firebaseAdminService.updateByUid(firebaseAuthUser.uid, {
 				email: validatedInput.email,
 				displayName,
@@ -61,37 +150,6 @@ export class UserWriteService extends BaseService {
 				});
 			}
 
-			const createdUser = await this.db.user.create({
-				data: {
-					role: validatedInput.role,
-					activeOrganization: {
-						connect: { id: validatedInput.organizationId },
-					},
-					contact: {
-						create: {
-							firstName: validatedInput.firstName,
-							lastName: validatedInput.lastName,
-							email: validatedInput.email,
-						},
-					},
-					account: {
-						create: {
-							firebaseAuthUserId: firebaseAuthUser.uid,
-						},
-					},
-					organizationAccesses: {
-						create: {
-							organizationId: validatedInput.organizationId,
-							permission: 'edit',
-						},
-					},
-				},
-				include: {
-					contact: true,
-					activeOrganization: true,
-				},
-			});
-
 			return this.resultOk({
 				id: createdUser.id,
 				firstName: createdUser.contact.firstName,
@@ -99,9 +157,11 @@ export class UserWriteService extends BaseService {
 				email: createdUser.contact.email,
 				role: createdUser.role,
 				organizationId: createdUser.activeOrganization?.id ?? null,
+				organizationIds: validatedInput.organizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create user. Please try again later.');
 		}
 	}
@@ -141,28 +201,17 @@ export class UserWriteService extends BaseService {
 			const oldDisplayName = `${existingUser.contact.firstName} ${existingUser.contact.lastName}`.trim();
 			const shouldSyncFirebaseUser =
 				validatedInput.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
-			if (shouldSyncFirebaseUser) {
-				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(
-					existingUser.account.firebaseAuthUserId,
-					{
-						email: validatedInput.email,
-						displayName: newDisplayName,
-						emailVerified: true,
-					},
-				);
 
-				if (!firebaseUpdateResult.success) {
-					return this.resultFail(firebaseUpdateResult.error);
-				}
-			}
+			const activeOrganizationId = this.getPreferredActiveOrganizationId(
+				validatedInput.organizationIds,
+				existingUser.activeOrganizationId,
+			);
 
 			const updatedUser = await this.db.user.update({
 				where: { id: validatedInput.id },
 				data: {
 					role: validatedInput.role,
-					activeOrganization: {
-						connect: { id: validatedInput.organizationId },
-					},
+					activeOrganization: activeOrganizationId ? { connect: { id: activeOrganizationId } } : undefined,
 					contact: {
 						update: {
 							firstName: validatedInput.firstName,
@@ -172,9 +221,8 @@ export class UserWriteService extends BaseService {
 					},
 					organizationAccesses: {
 						deleteMany: { userId: validatedInput.id },
-						create: {
-							organizationId: validatedInput.organizationId,
-							permission: 'edit',
+						createMany: {
+							data: this.getAccessRows(validatedInput.organizationIds),
 						},
 					},
 				},
@@ -184,6 +232,21 @@ export class UserWriteService extends BaseService {
 				},
 			});
 
+			if (shouldSyncFirebaseUser) {
+				const firebaseUpdateResult = await this.firebaseAdminService.updateByUid(existingUser.account.firebaseAuthUserId, {
+					email: validatedInput.email,
+					displayName: newDisplayName,
+					emailVerified: true,
+				});
+
+				if (!firebaseUpdateResult.success) {
+					this.logger.warn('Could not fully sync Firebase Auth user on user update', {
+						firebaseUid: existingUser.account.firebaseAuthUserId,
+						error: firebaseUpdateResult.error,
+					});
+				}
+			}
+
 			return this.resultOk({
 				id: updatedUser.id,
 				firstName: updatedUser.contact.firstName,
@@ -191,9 +254,11 @@ export class UserWriteService extends BaseService {
 				email: updatedUser.contact.email,
 				role: updatedUser.role,
 				organizationId: updatedUser.activeOrganization?.id ?? null,
+				organizationIds: validatedInput.organizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update user. Please try again later.');
 		}
 	}
@@ -258,8 +323,15 @@ export class UserWriteService extends BaseService {
 				include: {
 					contact: { include: { address: true } },
 					activeOrganization: true,
+					organizationAccesses: {
+						select: {
+							organizationId: true,
+						},
+					},
 				},
 			});
+
+			const organizationIds = updatedUser.organizationAccesses.map((access) => access.organizationId);
 
 			return this.resultOk({
 				id: updatedUser.id,
@@ -268,10 +340,75 @@ export class UserWriteService extends BaseService {
 				email: updatedUser.contact.email,
 				role: updatedUser.role,
 				organizationId: updatedUser.activeOrganization?.id ?? null,
+				organizationIds,
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async delete(actorUserId: string, targetUserId: string): Promise<ServiceResult<void>> {
+		try {
+			const isAdminResult = await this.userReadService.isAdmin(actorUserId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			if (actorUserId === targetUserId) {
+				return this.resultFail('You cannot delete your own user account.');
+			}
+
+			const existingUser = await this.db.user.findUnique({
+				where: { id: targetUserId },
+				select: {
+					id: true,
+					accountId: true,
+					contactId: true,
+					account: {
+						select: {
+							firebaseAuthUserId: true,
+						},
+					},
+				},
+			});
+
+			if (!existingUser) {
+				return this.resultFail('User not found');
+			}
+
+			await this.db.$transaction(async (tx) => {
+				await tx.organizationAccess.deleteMany({
+					where: { userId: targetUserId },
+				});
+				await tx.user.delete({
+					where: { id: targetUserId },
+				});
+				await tx.contact.delete({
+					where: { id: existingUser.contactId },
+				});
+				await tx.account.delete({
+					where: { id: existingUser.accountId },
+				});
+			});
+
+			const firebaseDeleteResult = await this.firebaseAdminService.deleteByUidIfExists(
+				existingUser.account.firebaseAuthUserId,
+			);
+			if (!firebaseDeleteResult.success) {
+				this.logger.warn('User deleted in DB but Firebase user deletion failed', {
+					userId: targetUserId,
+					firebaseUid: existingUser.account.firebaseAuthUserId,
+					error: firebaseDeleteResult.error,
+				});
+			}
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not delete user. Please try again later.');
 		}
 	}
 }

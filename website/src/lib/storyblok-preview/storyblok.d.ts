@@ -1,16 +1,14 @@
 import type { ISbStoryData } from '@storyblok/js';
 
-interface StoryblokBridgeEvent {
+type StoryblokBridgeEvent = {
 	story?: ISbStoryData;
-}
+};
 
-interface StoryblokBridgeInstance {
+type StoryblokBridgeInstance = {
 	on: (events: string | string[], handler: (event: StoryblokBridgeEvent) => void) => void;
-}
+};
 
-interface StoryblokBridgeConstructor {
-	new (): StoryblokBridgeInstance;
-}
+type StoryblokBridgeConstructor = new () => StoryblokBridgeInstance;
 
 declare global {
 	interface Window {

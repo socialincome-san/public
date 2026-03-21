@@ -2,81 +2,141 @@ import { Account } from '@/generated/prisma/client';
 
 export const accountsData: Account[] = [
 	{
-		id: 'account-1',
-		firebaseAuthUserId: 'w43IydQbr8lgeGeevbSBoP9ui3WQ',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-somaha-1',
+		firebaseAuthUserId: 'auth-user-somaha-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-2',
-		firebaseAuthUserId: 'u43IydQbr8lgeGeevbSBoP9ui3WP',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-somaha-2',
+		firebaseAuthUserId: 'auth-user-somaha-2',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-3',
-		firebaseAuthUserId: 'firebase-auth-user-3',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-si-sl-1',
+		firebaseAuthUserId: 'auth-user-si-sl-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-4',
-		firebaseAuthUserId: 'firebase-auth-user-4',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-si-sl-2',
+		firebaseAuthUserId: 'auth-user-si-sl-2',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-5',
-		firebaseAuthUserId: 'firebase-auth-user-5',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-si-gh-1',
+		firebaseAuthUserId: 'auth-user-si-gh-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-6',
-		firebaseAuthUserId: 'firebase-auth-user-6',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-si-gh-2',
+		firebaseAuthUserId: 'auth-user-si-gh-2',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-7',
-		firebaseAuthUserId: 'firebase-auth-user-7',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-si-lr-1',
+		firebaseAuthUserId: 'auth-user-si-lr-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-8',
-		firebaseAuthUserId: 'firebase-auth-user-8',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-si-lr-2',
+		firebaseAuthUserId: 'auth-user-si-lr-2',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-9',
-		firebaseAuthUserId: 'firebase-auth-user-9',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-user-si-power',
+		firebaseAuthUserId: 'auth-user-si-power',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-10',
-		firebaseAuthUserId: 'a80doqpnw1lgeFoepbSBdl2sj2AP',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-localpartner-sl-1',
+		firebaseAuthUserId: 'auth-localpartner-sl-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-11',
-		firebaseAuthUserId: 'firebase-auth-user-11',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-localpartner-gh-1',
+		firebaseAuthUserId: 'auth-localpartner-gh-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-12',
-		firebaseAuthUserId: 'firebase-auth-user-12',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		id: 'acc-localpartner-lr-1',
+		firebaseAuthUserId: 'auth-localpartner-lr-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'account-13',
-		firebaseAuthUserId: 'c43IydQbr8lgeGeevbSBoP9ui3WX',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
+		id: 'acc-localpartner-somaha-1',
+		firebaseAuthUserId: 'auth-localpartner-somaha-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-core-high',
+		firebaseAuthUserId: 'auth-contributor-core-high',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-core-recurring',
+		firebaseAuthUserId: 'auth-contributor-core-recurring',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-sl-small',
+		firebaseAuthUserId: 'auth-contributor-sl-small',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-sl-medium',
+		firebaseAuthUserId: 'auth-contributor-sl-medium',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-gh-onetime',
+		firebaseAuthUserId: 'auth-contributor-gh-onetime',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-gh-recurring',
+		firebaseAuthUserId: 'auth-contributor-gh-recurring',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-lr-small',
+		firebaseAuthUserId: 'auth-contributor-lr-small',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-lr-high',
+		firebaseAuthUserId: 'auth-contributor-lr-high',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-somaha-onetime',
+		firebaseAuthUserId: 'auth-contributor-somaha-onetime',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'acc-contributor-mixed-owner',
+		firebaseAuthUserId: 'auth-contributor-mixed-owner',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
 ];

@@ -8,7 +8,7 @@ type MonitoringLayoutProps = {
 	children: ReactNode;
 };
 
-export default async function MonitoringLayout({ children }: MonitoringLayoutProps) {
+export default function MonitoringLayout({ children }: MonitoringLayoutProps) {
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
 		{ href: '/portal', label: 'Portal' },
@@ -18,6 +18,7 @@ export default async function MonitoringLayout({ children }: MonitoringLayoutPro
 	const sections = [
 		{ href: `/portal/monitoring/payout-confirmation`, label: 'Payout Confirmation' },
 		{ href: `/portal/monitoring/upcoming-surveys`, label: 'Upcoming Surveys' },
+		{ href: `/portal/monitoring/upcoming-onboarding`, label: 'Upcoming Onboarding' },
 	];
 
 	return (

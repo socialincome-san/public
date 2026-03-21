@@ -8,13 +8,13 @@ import { services } from '@/lib/services/services';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
 
-interface StripeSuccessPageParams extends DefaultParams {
+type StripeSuccessPageParams = {
 	session: string;
-}
+} & DefaultParams;
 
-interface StripeSuccessPageProps {
+type StripeSuccessPageProps = {
 	params: Promise<StripeSuccessPageParams>;
-}
+};
 
 export default async function Page({ params }: StripeSuccessPageProps) {
 	const { lang, region, session } = await params;
@@ -54,10 +54,10 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 						lang={lang as WebsiteLanguage}
 						onSuccessURL={`/${lang}/${region}/dashboard/${recurring ? 'subscriptions' : 'contributions'}`}
 						stripeCheckoutSessionId={checkoutSession.id}
-						firstname={checkoutSession.customer_details?.name?.split(' ')[0] || undefined}
-						lastname={checkoutSession.customer_details?.name?.split(' ')[1] || undefined}
-						country={(checkoutSession.customer_details?.address?.country as CountryCode) || undefined}
-						email={checkoutSession.customer_details?.email || undefined}
+						firstname={checkoutSession.customer_details?.name?.split(' ')[0] ?? undefined}
+						lastname={checkoutSession.customer_details?.name?.split(' ')[1] ?? undefined}
+						country={(checkoutSession.customer_details?.address?.country as CountryCode) ?? undefined}
+						email={checkoutSession.customer_details?.email ?? undefined}
 						translations={{
 							firstname: translator.t('success.user-form.firstname'),
 							lastname: translator.t('success.user-form.lastname'),

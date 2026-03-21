@@ -1,12 +1,13 @@
-import { Campaign, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { Campaign, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
+import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
 	CampaignOption,
 	CampaignPage,
@@ -19,7 +20,7 @@ import {
 export class CampaignReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
 		private readonly exchangeRateService: ExchangeRateReadService,
 		loggerInstance = logger,
 	) {
@@ -62,21 +63,19 @@ export class CampaignReadService extends BaseService {
 
 	private daysUntilTs(ts: Date): number {
 		const diffInMs = ts.getTime() - nowMs();
+
 		return Math.ceil(diffInMs / (24 * 60 * 60 * 1000));
 	}
 
 	async get(userId: string, campaignId: string): Promise<ServiceResult<CampaignPayload>> {
 		try {
-			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-
-			if (!accessResult.success) {
-				return this.resultFail(accessResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const { id: organizationId } = accessResult.data;
-
 			const campaign = await this.db.campaign.findFirst({
-				where: { id: campaignId, organizationId },
+				where: { id: campaignId },
 				select: {
 					id: true,
 					title: true,
@@ -101,6 +100,7 @@ export class CampaignReadService extends BaseService {
 					metadataTwitterImage: true,
 					creatorName: true,
 					creatorEmail: true,
+					programId: true,
 					program: { select: { id: true, name: true } },
 					createdAt: true,
 					updatedAt: true,
@@ -110,6 +110,10 @@ export class CampaignReadService extends BaseService {
 			if (!campaign) {
 				return this.resultFail('Campaign not found');
 			}
+			const hasProgramReadAccess = accessibleProgramsResult.data.some((access) => access.programId === campaign.programId);
+			if (!hasProgramReadAccess) {
+				return this.resultFail('Permission denied');
+			}
 
 			return this.resultOk({
 				...campaign,
@@ -118,6 +122,7 @@ export class CampaignReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
@@ -182,19 +187,24 @@ export class CampaignReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getOptions(userId: string): Promise<ServiceResult<CampaignOption[]>> {
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+			const programIds = Array.from(new Set(accessibleProgramsResult.data.map((access) => access.programId)));
+			if (programIds.length === 0) {
+				return this.resultOk([]);
 			}
 
 			const campaigns = await this.db.campaign.findMany({
-				where: { organizationId: activeOrgResult.data.id },
+				where: { programId: { in: programIds } },
 				select: { id: true, title: true },
 				orderBy: { title: 'asc' },
 			});
@@ -207,6 +217,7 @@ export class CampaignReadService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaign options: ${JSON.stringify(error)}`);
 		}
 	}
@@ -216,15 +227,18 @@ export class CampaignReadService extends BaseService {
 		query: CampaignTableQuery,
 	): Promise<ServiceResult<CampaignPaginatedTableView>> {
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
-
-			const { id: organizationId, permission } = activeOrgResult.data;
+			const programAccesses = accessibleProgramsResult.data;
+			const programIds = Array.from(new Set(programAccesses.map((access) => access.programId)));
+			if (programIds.length === 0) {
+				return this.resultOk({ tableRows: [], totalCount: 0 });
+			}
 			const search = query.search.trim();
 			const where = {
-				organizationId,
+				programId: { in: programIds },
 				...(search
 					? {
 							OR: [
@@ -248,6 +262,7 @@ export class CampaignReadService extends BaseService {
 						currency: true,
 						endDate: true,
 						isActive: true,
+						programId: true,
 						program: { select: { name: true } },
 						createdAt: true,
 					},
@@ -268,12 +283,17 @@ export class CampaignReadService extends BaseService {
 				isActive: campaign.isActive,
 				programName: campaign.program?.name ?? null,
 				createdAt: campaign.createdAt,
-				permission,
+				permission: programAccesses.some(
+					(access) => access.programId === campaign.programId && access.permission === ProgramPermission.operator,
+				)
+					? ProgramPermission.operator
+					: ProgramPermission.owner,
 			}));
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaigns: ${JSON.stringify(error)}`);
 		}
 	}
@@ -294,6 +314,7 @@ export class CampaignReadService extends BaseService {
 			return this.resultOk(campaign);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch default campaign: ${JSON.stringify(error)}`);
 		}
 	}
@@ -314,12 +335,16 @@ export class CampaignReadService extends BaseService {
 			return this.getFallbackCampaign();
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch campaign for program: ${JSON.stringify(error)}`);
 		}
 	}
 
 	private getCampaignLink(id: string, legacyFirestoreId: string | null): string {
-		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
-		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${legacyFirestoreId || id}`;
+		const base = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
+
+		const campaignId = legacyFirestoreId && legacyFirestoreId.length > 0 ? legacyFirestoreId : id;
+
+		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${campaignId}`;
 	}
 }

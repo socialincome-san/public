@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { SurveyStatus } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
@@ -24,13 +25,14 @@ export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
 
 	useEffect(() => {
-		loadSurvey(surveyId, recipientId);
+		void loadSurvey(surveyId, recipientId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [surveyId, recipientId]);
 
 	const translator = useTranslator(lang, 'website-survey');
 
 	if (!hasError && survey && translator) {
-		if (survey.status == SurveyStatus.completed) {
+		if (survey.status === SurveyStatus.completed) {
 			return <div>Survey already completed</div>;
 		}
 

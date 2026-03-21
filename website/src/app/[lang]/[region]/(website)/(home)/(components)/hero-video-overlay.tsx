@@ -20,7 +20,7 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 	const refButton = useGlowHover({ lightColor: '#CEFF00' });
 
 	useEffect(() => {
-		let id;
+		let id: ReturnType<typeof setTimeout> | undefined;
 		if (!hideOverlay) {
 			id = setTimeout(() => setHideOverlay(true), OVERLAY_FADE_OUT_DELAY);
 		}

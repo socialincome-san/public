@@ -14,6 +14,7 @@ export const getActiveSubscriptionAction = async (): Promise<ServiceResult<Sendg
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.sendgrid.getActiveSubscription(sessionResult.data);
 };
 
@@ -22,5 +23,6 @@ export const unsubscribeFromNewsletterAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.sendgrid.unsubscribeFromNewsletter(sessionResult.data);
 };

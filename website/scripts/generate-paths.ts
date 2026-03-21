@@ -12,14 +12,8 @@ const getStaticPages = (startPath: string): string[] => {
 			const fullPath = path.join(currentPath, directoryEntry.name);
 			if (!excludedPrefixes.some((char) => directoryEntry.name.startsWith(char))) {
 				if (directoryEntry.isDirectory()) {
-					traverse(
-						fullPath,
-						directoryEntry.name.startsWith('(') ? currentRoute : `${currentRoute}/${directoryEntry.name}`,
-					);
-				} else if (
-					(directoryEntry.isFile() && directoryEntry.name === 'page.tsx') ||
-					directoryEntry.name === 'page.ts'
-				) {
+					traverse(fullPath, directoryEntry.name.startsWith('(') ? currentRoute : `${currentRoute}/${directoryEntry.name}`);
+				} else if ((directoryEntry.isFile() && directoryEntry.name === 'page.tsx') || directoryEntry.name === 'page.ts') {
 					const route = `${currentRoute}/${directoryEntry.name.replace(/page\.(tsx|ts)$/, '')}`
 						.replace(/^\//, '')
 						.replace(/\/+$/, '');
@@ -29,6 +23,7 @@ const getStaticPages = (startPath: string): string[] => {
 		}
 	};
 	traverse(startPath);
+
 	return routes;
 };
 
@@ -37,7 +32,7 @@ const writePagesToFile = (pages: string[], folderPath: string, fileName: string)
 	const filePath = path.join(folderPath, fileName);
 	const content = JSON.stringify(pages, null, 2);
 	fs.writeFileSync(filePath, content);
-	console.log(`Successfully wrote ${pages.length} paths to ${filePath}`);
+	console.info(`Successfully wrote ${pages.length} paths to ${filePath}`);
 };
 
 const WEBSITE_LOCAL_PATH = 'src/app/[lang]/[region]/(website)';

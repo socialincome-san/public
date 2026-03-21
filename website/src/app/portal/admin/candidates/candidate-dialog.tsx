@@ -3,6 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { Session } from '@/lib/firebase/current-account';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
 import { CandidateForm } from './candidates-form';
 
@@ -26,15 +27,23 @@ export const CandidateDialog = ({
 	onError,
 }: Props) => {
 	const handleError = (error: unknown) => {
-		onError(`Error saving candidate: ${error}`);
+		const errorMessage = retrieveErrorMessage(error);
+		onError(`Error saving candidate: ${errorMessage}`);
 		logger.error('Candidate Form Error', { error });
 	};
+
+	let dialogTitle = 'New Candidate';
+	if (readOnly) {
+		dialogTitle = 'View Candidate';
+	} else if (candidateId) {
+		dialogTitle = 'Edit Candidate';
+	}
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>{readOnly ? 'View Candidate' : candidateId ? 'Edit Candidate' : 'New Candidate'}</DialogTitle>
+					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
 
 				{errorMessage && (

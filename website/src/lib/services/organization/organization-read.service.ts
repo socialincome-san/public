@@ -1,4 +1,4 @@
-import { OrganizationPermission, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -6,12 +6,14 @@ import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { UserReadService } from '../user/user-read.service';
 import {
+	ActiveOrganizationSummary,
 	OrganizationMemberPaginatedTableView,
 	OrganizationMemberTableQuery,
 	OrganizationMemberTableView,
 	OrganizationMemberTableViewRow,
 	OrganizationOption,
 	OrganizationPaginatedTableView,
+	OrganizationPayload,
 	OrganizationTableQuery,
 	OrganizationTableView,
 	OrganizationTableViewRow,
@@ -48,7 +50,7 @@ export class OrganizationReadService extends BaseService {
 		query: OrganizationMemberTableQuery,
 	): Prisma.OrganizationAccessOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'member', 'email', 'role', 'permission'] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'member', 'email', 'role'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ user: { id: direction } }];
@@ -58,8 +60,6 @@ export class OrganizationReadService extends BaseService {
 				return [{ user: { contact: { email: direction } } }];
 			case 'role':
 				return [{ user: { role: direction } }];
-			case 'permission':
-				return [{ permission: direction }];
 			default:
 				return [{ user: { contact: { firstName: 'asc' } } }];
 		}
@@ -75,10 +75,41 @@ export class OrganizationReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organization members table view: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getActiveOrganizationSummary(userId: string): Promise<ServiceResult<ActiveOrganizationSummary>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const organization = await this.db.organization.findUnique({
+				where: { id: activeOrgResult.data.id },
+				select: {
+					id: true,
+					name: true,
+				},
+			});
+			if (!organization) {
+				return this.resultFail('Organization not found');
+			}
+
+			return this.resultOk({
+				id: organization.id,
+				name: organization.name,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch active organization summary: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -133,7 +164,6 @@ export class OrganizationReadService extends BaseService {
 								},
 							},
 						},
-						permission: true,
 					},
 					orderBy: this.buildOrganizationMemberOrderBy(query),
 					skip: (query.page - 1) * query.pageSize,
@@ -148,12 +178,12 @@ export class OrganizationReadService extends BaseService {
 				lastName: member.user.contact?.lastName ?? '',
 				email: member.user.contact?.email ?? '',
 				role: member.user.role ?? null,
-				permission: member.permission ?? OrganizationPermission.readonly,
 			}));
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organization members: ${JSON.stringify(error)}`);
 		}
 	}
@@ -168,9 +198,11 @@ export class OrganizationReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organizations table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -201,13 +233,14 @@ export class OrganizationReadService extends BaseService {
 						id: true,
 						name: true,
 						createdAt: true,
-						_count: {
+						organizationAccesses: {
 							select: {
-								organizationAccesses: true,
+								id: true,
 							},
 						},
 						programAccesses: {
 							select: {
+								programId: true,
 								permission: true,
 							},
 						},
@@ -226,13 +259,14 @@ export class OrganizationReadService extends BaseService {
 				const operatedProgramsCount = organization.programAccesses.filter(
 					(pa) => pa.permission === ProgramPermission.operator,
 				).length;
+				const userCount = organization.organizationAccesses.length;
 
 				return {
 					id: organization.id,
 					name: organization.name,
 					ownedProgramsCount,
 					operatedProgramsCount,
-					usersCount: organization._count.organizationAccesses,
+					usersCount: userCount,
 					createdAt: organization.createdAt,
 				};
 			});
@@ -240,6 +274,7 @@ export class OrganizationReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organizations: ${JSON.stringify(error)}`);
 		}
 	}
@@ -255,10 +290,115 @@ export class OrganizationReadService extends BaseService {
 				select: { id: true, name: true },
 				orderBy: { name: 'asc' },
 			});
+
 			return this.resultOk(organizations);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch organizations: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async get(userId: string, organizationId: string): Promise<ServiceResult<OrganizationPayload>> {
+		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			const organization = await this.db.organization.findUnique({
+				where: { id: organizationId },
+				select: {
+					id: true,
+					name: true,
+					organizationAccesses: {
+						select: {
+							userId: true,
+						},
+					},
+					programAccesses: {
+						select: {
+							programId: true,
+							permission: true,
+						},
+					},
+				},
+			});
+			if (!organization) {
+				return this.resultFail('Organization not found');
+			}
+
+			return this.resultOk({
+				id: organization.id,
+				name: organization.name,
+				userIds: organization.organizationAccesses.map((access) => access.userId),
+				ownedProgramIds: organization.programAccesses
+					.filter((access) => access.permission === ProgramPermission.owner)
+					.map((access) => access.programId),
+				operatedProgramIds: organization.programAccesses
+					.filter((access) => access.permission === ProgramPermission.operator)
+					.map((access) => access.programId),
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch organization: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getUserOptions(userId: string): Promise<ServiceResult<{ id: string; name: string }[]>> {
+		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			const users = await this.db.user.findMany({
+				select: {
+					id: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+				},
+				orderBy: [{ contact: { firstName: 'asc' } }, { contact: { lastName: 'asc' } }],
+			});
+
+			return this.resultOk(
+				users.map((user) => ({
+					id: user.id,
+					name: `${user.contact.firstName} ${user.contact.lastName}`.trim(),
+				})),
+			);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch organization users: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getProgramOptions(userId: string): Promise<ServiceResult<{ id: string; name: string }[]>> {
+		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			const programs = await this.db.program.findMany({
+				select: {
+					id: true,
+					name: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(programs);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch organization programs: ${JSON.stringify(error)}`);
 		}
 	}
 }

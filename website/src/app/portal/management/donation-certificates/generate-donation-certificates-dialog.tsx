@@ -5,13 +5,10 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { MultiSelect, MultiSelectOption } from '@/components/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
-import {
-	generateDonationCertificates,
-	getContributorOptions,
-} from '@/lib/server-actions/donation-certificates-actions';
+import { generateDonationCertificates, getContributorOptions } from '@/lib/server-actions/donation-certificates-actions';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
 import _ from 'lodash';
-import { useEffect, useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 
 import { now } from '@/lib/utils/now';
 const CURRENT_YEAR = now().getFullYear();
@@ -30,6 +27,7 @@ export default function GenerateDonationCertificatesDialog({
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<string | undefined>();
 	const [error, setError] = useState<string | undefined>();
+	const optionsLoadedRef = useRef(false);
 
 	const loadContributorsOption = async () => {
 		const contributors = await getContributorOptions();
@@ -56,12 +54,16 @@ export default function GenerateDonationCertificatesDialog({
 		});
 	};
 
-	useEffect(() => {
-		loadContributorsOption();
-	}, []);
+	const handleOpenChange = (nextOpen: boolean) => {
+		setOpen(nextOpen);
+		if (nextOpen && !optionsLoadedRef.current) {
+			optionsLoadedRef.current = true;
+			void loadContributorsOption();
+		}
+	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
 				<DialogHeader>
 					<DialogTitle>Generate Donation Certificates</DialogTitle>
@@ -112,9 +114,7 @@ export default function GenerateDonationCertificatesDialog({
 					</div>
 					<div className="flex flex-col gap-2">
 						<p className="font-medium">Contributors</p>
-						<p className="text-muted-foreground mb-1 text-xs">
-							Select Contributors certificates should be generated for
-						</p>
+						<p className="text-muted-foreground mb-1 text-xs">Select Contributors certificates should be generated for</p>
 						<MultiSelect
 							modalPopover
 							hideSelectAll
@@ -131,7 +131,7 @@ export default function GenerateDonationCertificatesDialog({
 					>
 						{isLoading ? 'Generating...' : 'Generate Certificates'}
 					</Button>
-					{(success || error) && (
+					{Boolean(success ?? error) && (
 						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
 							{success && <p className="text-sm text-green-700">{success}</p>}
 							{error && <p className="text-sm text-red-700">{error}</p>}

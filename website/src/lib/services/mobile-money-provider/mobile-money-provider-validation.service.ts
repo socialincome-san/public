@@ -8,11 +8,7 @@ import {
 	mobileMoneyProviderCreateInputSchema,
 	mobileMoneyProviderUpdateInputSchema,
 } from './mobile-money-provider-form-input';
-
-type UpdateUniquenessContext = {
-	providerId: string;
-	existingName: string;
-};
+import { MobileMoneyProviderUpdateUniquenessContext } from './mobile-money-provider-validation.types';
 
 export class MobileMoneyProviderValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {
@@ -24,6 +20,7 @@ export class MobileMoneyProviderValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -32,6 +29,7 @@ export class MobileMoneyProviderValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -43,12 +41,13 @@ export class MobileMoneyProviderValidationService extends BaseService {
 		if (nameConflict) {
 			return this.resultFail('A mobile money provider with this name already exists.');
 		}
+
 		return this.resultOk(undefined);
 	}
 
 	async validateUpdateUniqueness(
 		input: MobileMoneyProviderFormUpdateInput,
-		context: UpdateUniquenessContext,
+		context: MobileMoneyProviderUpdateUniquenessContext,
 	): Promise<ServiceResult<void>> {
 		if (input.name !== context.existingName) {
 			const nameConflict = await this.db.mobileMoneyProvider.findUnique({
@@ -59,6 +58,7 @@ export class MobileMoneyProviderValidationService extends BaseService {
 				return this.resultFail('A mobile money provider with this name already exists.');
 			}
 		}
+
 		return this.resultOk(undefined);
 	}
 }

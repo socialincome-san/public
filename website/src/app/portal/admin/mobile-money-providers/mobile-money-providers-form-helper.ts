@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type {
 	MobileMoneyProviderFormCreateInput,
 	MobileMoneyProviderFormUpdateInput,
@@ -5,10 +6,12 @@ import type {
 import type { MobileMoneyProviderPayload } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
 import type { MobileMoneyProviderFormSchema } from './mobile-money-providers-form';
 
+const asString = (value: unknown): string => (typeof value === 'string' ? value : '');
+
 export const buildCreateMobileMoneyProviderInput = (
 	schema: MobileMoneyProviderFormSchema,
 ): MobileMoneyProviderFormCreateInput => ({
-	name: `${schema.fields.name.value ?? ''}`.trim(),
+	name: asString(schema.fields.name.value).trim(),
 	isSupported: schema.fields.isSupported.value ?? false,
 });
 
@@ -17,6 +20,6 @@ export const buildUpdateMobileMoneyProviderInput = (
 	existing: MobileMoneyProviderPayload,
 ): MobileMoneyProviderFormUpdateInput => ({
 	id: existing.id,
-	name: `${schema.fields.name.value ?? existing.name}`.trim(),
+	name: asString(schema.fields.name.value).trim() || existing.name,
 	isSupported: schema.fields.isSupported.value ?? existing.isSupported,
 });

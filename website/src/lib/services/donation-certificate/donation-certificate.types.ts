@@ -1,4 +1,4 @@
-import { OrganizationPermission } from '@/generated/prisma/client';
+import { ProgramPermission } from '@/generated/prisma/client';
 
 export type DonationCertificateTableViewRow = {
 	id: string;
@@ -8,11 +8,7 @@ export type DonationCertificateTableViewRow = {
 	email: string;
 	storagePath: string;
 	createdAt: Date;
-	permission: OrganizationPermission;
-};
-
-type DonationCertificateTableView = {
-	tableRows: DonationCertificateTableViewRow[];
+	permission: ProgramPermission;
 };
 
 export type DonationCertificateTableQuery = {
@@ -34,10 +30,6 @@ export type YourDonationCertificateTableViewRow = {
 	language: string | null;
 	storagePath: string | null;
 	createdAt: Date;
-};
-
-type YourDonationCertificateTableView = {
-	tableRows: YourDonationCertificateTableViewRow[];
 };
 
 export type YourDonationCertificateTableQuery = {

@@ -85,6 +85,11 @@
 		],
 		"subtitle-1": "Social Income is a new way to fight poverty in the Global South. Digital, efficient and mobile."
 	},
+	"section-create-program": {
+		"title": "Start your own program",
+		"description": "A program is a structured way to fund predictable monthly cash transfers for people in need. We guide you through setup, recipient selection, and budget so you can launch meaningful support quickly.",
+		"cta": "Create new program"
+	},
 	"section-faq": {
 		"title": "This sounds good, but ... ",
 		"cta": "All FAQ"

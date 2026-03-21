@@ -21,6 +21,7 @@ export default async function Page({ params }: DefaultLayoutProps<TransparencyFi
 			.minus({ months: 11 - i })
 			.startOf('month');
 		const end = start.endOf('month');
+
 		return { start, end };
 	});
 	const requestedCurrency = currency.toUpperCase();
@@ -54,12 +55,7 @@ export default async function Page({ params }: DefaultLayoutProps<TransparencyFi
 				currency={currencyCode}
 				lang={language}
 			/>
-			<CountriesSection
-				countries={data.topCountries}
-				exchangeRate={exchangeRate}
-				currency={currencyCode}
-				lang={language}
-			/>
+			<CountriesSection countries={data.topCountries} exchangeRate={exchangeRate} currency={currencyCode} lang={language} />
 		</div>
 	);
 }

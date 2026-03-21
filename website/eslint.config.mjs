@@ -1,18 +1,25 @@
-import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
-import { defineConfig } from 'eslint/config';
+import { config } from '@smartive/eslint-config';
+import reactPlugin from 'eslint-plugin-react';
+import tseslint from 'typescript-eslint';
 
-export default defineConfig([
+const smartiveNextConfig = config('nextjs');
+
+export default [
 	{
-		extends: [...nextCoreWebVitals],
-		rules: {
-			curly: ['error', 'all'],
-			'react-hooks/set-state-in-effect': 'off',
-			'react-hooks/refs': 'off',
-			'react-hooks/static-components': 'off',
-			// Enforce arrow functions
-			'func-style': ['error', 'expression', { allowArrowFunctions: true }],
-			'prefer-arrow-callback': ['error', { allowNamedFunctions: false }],
-		},
-		ignores: ['**playwright-report/**'],
+		ignores: ['eslint.config.mjs', 'prettier.config.cjs', 'src/generated/**', '**/playwright-report/**'],
 	},
-]);
+	...smartiveNextConfig,
+	{
+		plugins: {
+			'@typescript-eslint': tseslint.plugin,
+			react: reactPlugin,
+		},
+		rules: {
+			'react/forbid-component-props': ['error', { forbid: ['style'] }],
+		},
+	},
+	{
+		files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
+		...tseslint.configs.disableTypeChecked,
+	},
+];

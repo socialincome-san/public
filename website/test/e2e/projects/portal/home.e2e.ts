@@ -1,8 +1,14 @@
-import { expect, test } from '@playwright/test';
+import { seedDatabase } from '@/lib/database/seed/run-seed';
+import { test } from '@playwright/test';
+import { expectToHaveScreenshot } from '../../utils';
+
+test.beforeEach(async () => {
+	await seedDatabase();
+});
 
 test('portal home-page matches screenshot', async ({ page }) => {
 	await page.goto('/portal');
-	await expect(page).toHaveScreenshot({ fullPage: true });
+	await expectToHaveScreenshot(page);
 });
 
 test('country list in create program wizard matches screenshot', async ({ page }) => {
@@ -25,5 +31,5 @@ test('country list in create program wizard matches screenshot', async ({ page }
 		table.style.overflow = 'visible';
 	});
 
-	await expect(page.getByTestId('country-table')).toHaveScreenshot();
+	await expectToHaveScreenshot(page.getByTestId('country-table'));
 });

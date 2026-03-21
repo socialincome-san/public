@@ -1,6 +1,6 @@
 import { Currency, PayoutStatus, Prisma, ProgramPermission } from '@/generated/prisma/client';
 
-export type PayoutEntity = Prisma.PayoutGetPayload<{}>;
+export type PayoutEntity = Prisma.PayoutGetPayload<Prisma.PayoutDefaultArgs>;
 
 export type PayoutTableViewRow = {
 	id: string;
@@ -12,10 +12,6 @@ export type PayoutTableViewRow = {
 	status: PayoutStatus;
 	paymentAt: Date;
 	permission: ProgramPermission;
-};
-
-type PayoutTableView = {
-	tableRows: PayoutTableViewRow[];
 };
 
 export type PayoutTableQuery = {
@@ -52,10 +48,6 @@ export type PayoutConfirmationTableViewRow = {
 	paymentAt: Date;
 	phoneNumber: string | null;
 	permission: ProgramPermission;
-};
-
-type PayoutConfirmationTableView = {
-	tableRows: PayoutConfirmationTableViewRow[];
 };
 
 export type PayoutConfirmationTableQuery = {
@@ -97,10 +89,6 @@ export type OngoingPayoutTableViewRow = {
 	last3Months: PayoutMonth[];
 	createdAt: Date;
 	permission: ProgramPermission;
-};
-
-type OngoingPayoutTableView = {
-	tableRows: OngoingPayoutTableViewRow[];
 };
 
 export type OngoingPayoutTableQuery = {
@@ -161,25 +149,4 @@ export type PayoutPayload = {
 	paymentAt: Date;
 	phoneNumber: string | null;
 	comments: string | null;
-};
-
-export type PayoutCreateInput = {
-	recipient: { connect: { id: string } };
-	amount: number;
-	currency: Currency;
-	status: PayoutStatus;
-	paymentAt: Date;
-	phoneNumber?: string | null;
-	comments?: string | null;
-};
-
-export type PayoutUpdateInput = {
-	id: string;
-	amount?: number;
-	currency?: Currency;
-	status?: PayoutStatus;
-	paymentAt?: Date;
-	phoneNumber?: string | null;
-	comments?: string | null;
-	recipient?: { connect: { id: string } };
 };

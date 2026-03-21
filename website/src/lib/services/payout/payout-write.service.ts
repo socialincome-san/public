@@ -1,15 +1,17 @@
 import { PayoutStatus, PrismaClient } from '@/generated/prisma/client';
-import { ProgramPermission } from '@/generated/prisma/enums';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
-import { PayoutCreateInput, PayoutEntity, PayoutPayload, PayoutUpdateInput } from './payout.types';
+import { PayoutFormCreateInput, PayoutFormUpdateInput } from './payout-form-input';
+import { PayoutValidationService } from './payout-validation.service';
+import { PayoutEntity, PayoutPayload } from './payout.types';
 
 export class PayoutWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
+		private readonly payoutValidationService: PayoutValidationService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -34,14 +36,13 @@ export class PayoutWriteService extends BaseService {
 			if (!payout) {
 				return this.resultFail('Payout not found');
 			}
-
-			const access = accessResult.data.find((p) => p.programId === payout.recipient.programId);
-			if (!access) {
-				return this.resultFail('Access denied for this payout');
+			if (!payout.recipient.programId) {
+				return this.resultFail('Recipient is not assigned to a program');
 			}
 
-			if (access.permission !== ProgramPermission.operator) {
-				return this.resultFail('You do not have permission to modify payouts for this program');
+			const canOperateProgram = this.programAccessService.hasOperatorAccess(accessResult.data, payout.recipient.programId);
+			if (!canOperateProgram) {
+				return this.resultFail('Access denied for this payout');
 			}
 
 			if (payout.status !== PayoutStatus.paid) {
@@ -56,14 +57,21 @@ export class PayoutWriteService extends BaseService {
 			return this.resultOk(`Payout updated to "${newStatus}"`);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async create(userId: string, input: PayoutCreateInput): Promise<ServiceResult<PayoutPayload>> {
+	async create(userId: string, input: PayoutFormCreateInput): Promise<ServiceResult<PayoutPayload>> {
+		const validatedInputResult = this.payoutValidationService.validateCreateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
 		try {
 			const recipient = await this.db.recipient.findUnique({
-				where: { id: input.recipient.connect.id },
+				where: { id: validatedInput.recipientId },
 				select: { programId: true },
 			});
 
@@ -71,22 +79,27 @@ export class PayoutWriteService extends BaseService {
 				return this.resultFail('Recipient not found');
 			}
 
-			if (recipient.programId) {
-				const access = await this.programAccessService.getAccessiblePrograms(userId);
-				if (!access.success) {
-					return this.resultFail(access.error);
-				}
-
-				const allowed = access.data.find(
-					(p) => p.programId === recipient.programId && p.permission === ProgramPermission.operator,
-				);
-				if (!allowed) {
-					return this.resultFail('No edit access for this program');
-				}
+			if (!recipient.programId) {
+				return this.resultFail('Recipient is not assigned to a program');
+			}
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
+			if (!this.programAccessService.hasOperatorAccess(access.data, recipient.programId)) {
+				return this.resultFail('No edit access for this program');
 			}
 
 			const created = await this.db.payout.create({
-				data: input,
+				data: {
+					recipient: { connect: { id: validatedInput.recipientId } },
+					amount: validatedInput.amount,
+					currency: validatedInput.currency,
+					status: validatedInput.status,
+					paymentAt: validatedInput.paymentAt,
+					phoneNumber: validatedInput.phoneNumber,
+					comments: validatedInput.comments,
+				},
 				include: {
 					recipient: {
 						select: {
@@ -110,20 +123,27 @@ export class PayoutWriteService extends BaseService {
 					id: created.recipient.id,
 					firstName: created.recipient.contact.firstName,
 					lastName: created.recipient.contact.lastName,
-					programId: created.recipient.program && created.recipient.program.id,
-					programName: created.recipient.program && created.recipient.program.name,
+					programId: created.recipient.program?.id ?? null,
+					programName: created.recipient.program?.name ?? null,
 				},
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create payout: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async update(userId: string, input: PayoutUpdateInput): Promise<ServiceResult<PayoutPayload>> {
+	async update(userId: string, input: PayoutFormUpdateInput): Promise<ServiceResult<PayoutPayload>> {
+		const validatedInputResult = this.payoutValidationService.validateUpdateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
 		try {
 			const existing = await this.db.payout.findUnique({
-				where: { id: input.id },
+				where: { id: validatedInput.id },
 				select: { recipient: { select: { programId: true } } },
 			});
 
@@ -131,23 +151,42 @@ export class PayoutWriteService extends BaseService {
 				return this.resultFail('Payout not found');
 			}
 
-			if (existing.recipient.programId) {
-				const access = await this.programAccessService.getAccessiblePrograms(userId);
-				if (!access.success) {
-					return this.resultFail(access.error);
-				}
+			if (!existing.recipient.programId) {
+				return this.resultFail('Recipient is not assigned to a program');
+			}
+			const access = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!access.success) {
+				return this.resultFail(access.error);
+			}
+			if (!this.programAccessService.hasOperatorAccess(access.data, existing.recipient.programId)) {
+				return this.resultFail('No edit permission for this payout');
+			}
 
-				const allowed = access.data.some(
-					(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.operator,
-				);
-				if (!allowed) {
-					return this.resultFail('No edit permission for this payout');
-				}
+			const targetRecipient = await this.db.recipient.findUnique({
+				where: { id: validatedInput.recipientId },
+				select: { programId: true },
+			});
+			if (!targetRecipient) {
+				return this.resultFail('Recipient not found');
+			}
+			if (!targetRecipient.programId) {
+				return this.resultFail('Recipient is not assigned to a program');
+			}
+			if (!this.programAccessService.hasOperatorAccess(access.data, targetRecipient.programId)) {
+				return this.resultFail('No edit access for selected recipient');
 			}
 
 			const updated = await this.db.payout.update({
-				where: { id: input.id },
-				data: input,
+				where: { id: validatedInput.id },
+				data: {
+					amount: validatedInput.amount,
+					currency: validatedInput.currency,
+					status: validatedInput.status,
+					paymentAt: validatedInput.paymentAt,
+					phoneNumber: validatedInput.phoneNumber,
+					comments: validatedInput.comments,
+					recipient: { connect: { id: validatedInput.recipientId } },
+				},
 				include: {
 					recipient: {
 						select: {
@@ -171,12 +210,13 @@ export class PayoutWriteService extends BaseService {
 					id: updated.recipient.id,
 					firstName: updated.recipient.contact.firstName,
 					lastName: updated.recipient.contact.lastName,
-					programId: updated.recipient.program && updated.recipient.program.id,
-					programName: updated.recipient.program && updated.recipient.program.name,
+					programId: updated.recipient.program?.id ?? null,
+					programName: updated.recipient.program?.name ?? null,
 				},
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
 	}
@@ -199,9 +239,11 @@ export class PayoutWriteService extends BaseService {
 					comments,
 				},
 			});
+
 			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to update payout "${payoutId}": ${JSON.stringify(error)}`);
 		}
 	}

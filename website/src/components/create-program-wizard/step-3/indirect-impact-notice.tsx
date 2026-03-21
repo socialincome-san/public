@@ -1,12 +1,14 @@
 'use client';
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/tool-tip';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 
 type Props = {
 	recipients: number;
 };
 
 export const IndirectImpactNotice = ({ recipients }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 	const indirect = recipients * 5;
 
 	return (
@@ -14,21 +16,18 @@ export const IndirectImpactNotice = ({ recipients }: Props) => {
 			<span className="text-lg">🎉</span>
 
 			<p>
-				{recipients} recipients benefit{' '}
+				{t('step3.indirect_notice.prefix', { recipients })}{' '}
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<span className="inline cursor-help underline decoration-dotted underline-offset-4">
-								{indirect.toLocaleString('de-CH')} additional indirect people
+								{t('step3.indirect_notice.indirect_people', { indirect: indirect.toLocaleString('de-CH') })}
 							</span>
 						</TooltipTrigger>
-						<TooltipContent className="max-w-[220px] text-left">
-							On average, each supported recipient positively impacts around five additional people in their household
-							and community.
-						</TooltipContent>
+						<TooltipContent className="max-w-[220px] text-left">{t('step3.indirect_notice.tooltip')}</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>{' '}
-				in poverty.
+				{t('step3.indirect_notice.suffix')}
 			</p>
 		</div>
 	);

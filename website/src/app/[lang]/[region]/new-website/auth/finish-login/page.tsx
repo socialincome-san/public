@@ -19,6 +19,7 @@ export default function FinishLoginPage() {
 
 			if (!isSignInWithEmailLink(auth, url)) {
 				setStatus('error');
+
 				return;
 			}
 
@@ -29,6 +30,7 @@ export default function FinishLoginPage() {
 
 			if (!email) {
 				setStatus('error');
+
 				return;
 			}
 
@@ -48,6 +50,7 @@ export default function FinishLoginPage() {
 				if (!result.success) {
 					await signOut(auth);
 					setStatus('error');
+
 					return;
 				}
 
@@ -55,6 +58,7 @@ export default function FinishLoginPage() {
 				if (!redirectPathResult.success) {
 					await signOut(auth);
 					setStatus('error');
+
 					return;
 				}
 				router.replace(redirectPathResult.data);

@@ -104,6 +104,7 @@ export class CountryWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create country. Please try again later.');
 		}
 	}
@@ -174,7 +175,7 @@ export class CountryWriteService extends BaseService {
 									},
 								},
 							}
-						: undefined,
+						: { disconnect: true },
 					networkSourceLink: validatedInput.networkSourceLink
 						? {
 								upsert: {
@@ -182,7 +183,7 @@ export class CountryWriteService extends BaseService {
 									update: { text: validatedInput.networkSourceLink.text, href: validatedInput.networkSourceLink.href },
 								},
 							}
-						: undefined,
+						: { disconnect: true },
 				},
 				include: {
 					microfinanceSourceLink: true,
@@ -222,6 +223,7 @@ export class CountryWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update country. Please try again later.');
 		}
 	}
@@ -260,6 +262,7 @@ export class CountryWriteService extends BaseService {
 			return this.resultOk({ id: countryId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not delete country: ${JSON.stringify(error)}`);
 		}
 	}

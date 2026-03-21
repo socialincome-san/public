@@ -62,6 +62,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		body = await request.json();
 	} catch {
 		logger.warn('[PATCH /recipients/me] Invalid JSON body');
+
 		return new Response('Invalid JSON body', { status: 400 });
 	}
 
@@ -79,11 +80,17 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 
 	const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
 	const newPaymentPhone = data.paymentPhone ?? null;
+	let contactPhoneState: 'provided' | 'unchanged' | null = 'unchanged';
+	if (data.contactPhone === null) {
+		contactPhoneState = null;
+	} else if (typeof data.contactPhone === 'string') {
+		contactPhoneState = 'provided';
+	}
 
 	logger.info('[PATCH /recipients/me] Phone update intent', {
 		oldPaymentPhone,
 		newPaymentPhone,
-		contactPhone: data.contactPhone === null ? null : typeof data.contactPhone === 'string' ? 'provided' : 'unchanged',
+		contactPhone: contactPhoneState,
 	});
 
 	const updateData: RecipientPrismaUpdateInput = {
@@ -118,9 +125,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 				? {
 						upsert: {
 							update: {
-								mobileMoneyProvider: data.paymentProvider
-									? { connect: { id: data.paymentProvider } }
-									: { disconnect: true },
+								mobileMoneyProvider: data.paymentProvider ? { connect: { id: data.paymentProvider } } : { disconnect: true },
 								phone: data.paymentPhone
 									? {
 											connectOrCreate: {

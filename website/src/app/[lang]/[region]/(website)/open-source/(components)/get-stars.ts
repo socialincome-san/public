@@ -1,22 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { now } from '@/lib/utils/now';
 import { fetchData } from './fetch-data';
 
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface GitHubStar {
+type GitHubStar = {
 	user: {
 		id: number;
 		login: string;
 	};
 	starred_at: string;
-}
+};
+type RepoStarsResponse = {
+	stargazers_count: number;
+};
 
 export const getStarCount = async (): Promise<{ totalStars: number; newStars: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
 	const repoRes = await fetchData(owner, repo, repoUrl);
 
-	const repoData = await repoRes.json();
+	const repoData = (await repoRes.json()) as RepoStarsResponse;
 	const totalStars = repoData.stargazers_count;
 
 	// Calculate the date 30 days ago from today

@@ -8,20 +8,21 @@ import { ServiceResult } from '../core/base.types';
 import { getStoryblokApi } from './storyblok.config';
 import type { ResolvedArticle } from './storyblok.utils';
 
-enum StoryblokContentType {
-	Article = 'article',
-	Author = 'author',
-	Tag = 'topic',
-}
-
-const STANDARD_ARTICLE_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
-const DEFAULT_PAGE_SIZE = 50;
-const CONTENT = 'content';
-const LEAD_TEXT = 'leadText';
-const STORIES_PATH = 'cdn/stories';
-const EXCLUDED_FIELDS_FOR_COUNTING = [CONTENT, LEAD_TEXT].join(',');
-
 export class StoryblokService extends BaseService {
+	private static readonly contentType = {
+		article: 'article',
+		author: 'author',
+		tag: 'topic',
+	} as const;
+	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
+	private static readonly defaultPageSize = 50;
+	private static readonly contentField = 'content';
+	private static readonly leadTextField = 'leadText';
+	private static readonly storiesPath = 'cdn/stories';
+	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
+		',',
+	);
+
 	private async getStoryParams(language: string): Promise<ISbStoriesParams> {
 		return {
 			language,
@@ -36,11 +37,13 @@ export class StoryblokService extends BaseService {
 	): Promise<T> {
 		try {
 			return await loader(lang, slug);
-		} catch (error: any) {
-			if (error?.status === 404) {
+		} catch (error: unknown) {
+			const errorStatus = typeof error === 'object' && error !== null && 'status' in error ? error.status : undefined;
+			if (errorStatus === 404) {
 				if (lang === defaultLanguage) {
 					return notFound();
 				}
+
 				return await this.withLanguageFallback(loader, defaultLanguage, slug);
 			}
 			throw error;
@@ -52,14 +55,18 @@ export class StoryblokService extends BaseService {
 			const data = await this.withLanguageFallback(
 				async (language: string) => {
 					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, await this.getStoryParams(language));
-					return response.data.story as T;
+					const responseData = response.data as { story: T };
+
+					return responseData.story;
 				},
 				lang,
 				slug,
 			);
+
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to fetch story: ${JSON.stringify(error)}`);
 		}
 	}
@@ -69,14 +76,16 @@ export class StoryblokService extends BaseService {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(defaultLanguage)),
 				per_page: 1,
-				excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
-				content_type: StoryblokContentType.Article,
+				excluding_fields: StoryblokService.excludedFieldsForCounting,
+				content_type: StoryblokService.contentType.article,
 				filter_query: { displayInOverviewPage: { is: true } },
 			};
-			const res = await getStoryblokApi().get(STORIES_PATH, params);
+			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
+
 			return this.resultOk(res.total);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to count overview articles: ${JSON.stringify(error)}`);
 		}
 	}
@@ -86,14 +95,16 @@ export class StoryblokService extends BaseService {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(defaultLanguage)),
 				per_page: 1,
-				excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
-				content_type: StoryblokContentType.Article,
+				excluding_fields: StoryblokService.excludedFieldsForCounting,
+				content_type: StoryblokService.contentType.article,
 				filter_query: this.articleByTagsFilter(tagId),
 			};
-			const res = await getStoryblokApi().get(STORIES_PATH, params);
+			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
+
 			return this.resultOk(res.total);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to count articles by tag: ${JSON.stringify(error)}`);
 		}
 	}
@@ -103,14 +114,16 @@ export class StoryblokService extends BaseService {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(defaultLanguage)),
 				per_page: 1,
-				excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
-				content_type: StoryblokContentType.Article,
+				excluding_fields: StoryblokService.excludedFieldsForCounting,
+				content_type: StoryblokService.contentType.article,
 				filter_query: this.articlesByAuthorFilter(authorId),
 			};
-			const res = await getStoryblokApi().get(STORIES_PATH, params);
+			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
+
 			return this.resultOk(res.total);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to count articles by author: ${JSON.stringify(error)}`);
 		}
 	}
@@ -119,13 +132,15 @@ export class StoryblokService extends BaseService {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
-				content_type: StoryblokContentType.Author,
+				content_type: StoryblokService.contentType.author,
 				filter_query: { displayInOverviewPage: { is: true } },
 			};
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultOk([]);
 		}
 	}
@@ -134,13 +149,15 @@ export class StoryblokService extends BaseService {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
-				content_type: StoryblokContentType.Tag,
+				content_type: StoryblokService.contentType.tag,
 				filter_query: { displayInOverviewPage: { is: true } },
 			};
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultOk([]);
 		}
 	}
@@ -152,9 +169,11 @@ export class StoryblokService extends BaseService {
 				lang,
 				slug,
 			);
-			return this.resultOk(res.data.story);
+
+			return this.resultOk((res.data as { story: ISbStoryData<Topic> }).story);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to fetch tag: ${JSON.stringify(error)}`);
 		}
 	}
@@ -166,9 +185,11 @@ export class StoryblokService extends BaseService {
 				lang,
 				slug,
 			);
-			return this.resultOk(res.data.story);
+
+			return this.resultOk((res.data as { story: ISbStoryData<Author> }).story);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to fetch author: ${JSON.stringify(error)}`);
 		}
 	}
@@ -177,17 +198,19 @@ export class StoryblokService extends BaseService {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
-				per_page: DEFAULT_PAGE_SIZE,
-				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-				excluding_fields: CONTENT,
+				per_page: StoryblokService.defaultPageSize,
+				resolve_relations: StoryblokService.standardArticleRelationsToResolve,
+				excluding_fields: StoryblokService.contentField,
 				sort_by: 'first_published_at:desc',
-				content_type: StoryblokContentType.Article,
+				content_type: StoryblokService.contentType.article,
 				filter_query: this.articleByTagsFilter(tagId),
 			};
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultOk([]);
 		}
 	}
@@ -196,17 +219,19 @@ export class StoryblokService extends BaseService {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
-				per_page: DEFAULT_PAGE_SIZE,
-				excluding_fields: CONTENT,
-				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
+				per_page: StoryblokService.defaultPageSize,
+				excluding_fields: StoryblokService.contentField,
+				resolve_relations: StoryblokService.standardArticleRelationsToResolve,
 				sort_by: 'first_published_at:desc',
-				content_type: StoryblokContentType.Article,
+				content_type: StoryblokService.contentType.article,
 				filter_query: this.articlesByAuthorFilter(authorId),
 			};
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultOk([]);
 		}
 	}
@@ -219,32 +244,32 @@ export class StoryblokService extends BaseService {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
-				per_page: limit || DEFAULT_PAGE_SIZE,
-				excluding_fields: CONTENT,
-				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
+				per_page: limit ?? StoryblokService.defaultPageSize,
+				excluding_fields: StoryblokService.contentField,
+				resolve_relations: StoryblokService.standardArticleRelationsToResolve,
 				sort_by: 'first_published_at:desc',
-				content_type: StoryblokContentType.Article,
+				content_type: StoryblokService.contentType.article,
 				filter_query: { displayInOverviewPage: { is: true } },
 				...(idsToIgnore ? { excluding_ids: idsToIgnore } : {}),
 			};
 
 			if (limit) {
-				const res = await getStoryblokApi().get(STORIES_PATH, params);
-				return this.resultOk(res.data.stories);
+				const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
+
+				return this.resultOk((res.data as { stories: ISbStoryData<ResolvedArticle>[] }).stories);
 			}
 
-			const data = await getStoryblokApi().getAll(STORIES_PATH, params);
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
 			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultOk([]);
 		}
 	}
 
-	async getArticlesByUuids(
-		lang: string,
-		articleUuids: string[],
-	): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
+	async getArticlesByUuids(lang: string, articleUuids: string[]): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
 		try {
 			const uuids = [...new Set(articleUuids.filter(Boolean))];
 			if (!uuids.length) {
@@ -254,16 +279,18 @@ export class StoryblokService extends BaseService {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
 				per_page: uuids.length,
-				excluding_fields: CONTENT,
-				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
-				content_type: StoryblokContentType.Article,
+				excluding_fields: StoryblokService.contentField,
+				resolve_relations: StoryblokService.standardArticleRelationsToResolve,
+				content_type: StoryblokService.contentType.article,
 			};
 			(params as ISbStoriesParams & { by_uuids_ordered: string }).by_uuids_ordered = uuids.join(',');
 
-			const res = await getStoryblokApi().get(STORIES_PATH, params);
-			return this.resultOk(res.data.stories as ISbStoryData<ResolvedArticle>[]);
+			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
+
+			return this.resultOk((res.data as { stories: ISbStoryData<ResolvedArticle>[] }).stories);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultOk([]);
 		}
 	}
@@ -274,16 +301,19 @@ export class StoryblokService extends BaseService {
 				async (l, s) => {
 					const params: ISbStoriesParams = {
 						...(await this.getStoryParams(l)),
-						resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
+						resolve_relations: StoryblokService.standardArticleRelationsToResolve,
 					};
+
 					return getStoryblokApi().get(`cdn/stories/journal/${s}`, params);
 				},
 				lang,
 				slug,
 			);
-			return this.resultOk(res.data.story);
+
+			return this.resultOk((res.data as { story: ISbStoryData<ResolvedArticle> }).story);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to fetch article: ${JSON.stringify(error)}`);
 		}
 	}
@@ -311,6 +341,7 @@ export class StoryblokService extends BaseService {
 			return this.resultOk(result);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultOk([]);
 		}
 	}
@@ -324,7 +355,7 @@ export class StoryblokService extends BaseService {
 	}
 
 	private createRelativeArticlesFilter(tags: string[], authorId: string) {
-		return tags && tags.length
+		return tags.length
 			? { __or: [{ author: { in: authorId } }, { tags: { in_array: tags.join(',') } }] }
 			: { author: { in: authorId } };
 	}
@@ -340,13 +371,14 @@ export class StoryblokService extends BaseService {
 		const params: ISbStoriesParams = {
 			...(await this.getStoryParams(lang)),
 			per_page: numberOfArticles,
-			excluding_fields: CONTENT,
-			resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
+			excluding_fields: StoryblokService.contentField,
+			resolve_relations: StoryblokService.standardArticleRelationsToResolve,
 			sort_by: 'first_published_at:desc',
 			excluding_ids: articleId.toString(),
-			content_type: StoryblokContentType.Article,
+			content_type: StoryblokService.contentType.article,
 			filter_query: filter,
 		};
-		return getStoryblokApi().get(STORIES_PATH, params);
+
+		return getStoryblokApi().get(StoryblokService.storiesPath, params);
 	}
 }

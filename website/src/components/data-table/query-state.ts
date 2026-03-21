@@ -22,6 +22,7 @@ export type TableQueryState = {
 	campaignId?: string;
 	paymentEventType?: string;
 	payoutStatus?: string;
+	recipientStatus?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -40,26 +41,37 @@ type TableQueryInput = {
 	campaignId?: QueryValue;
 	paymentEventType?: QueryValue;
 	payoutStatus?: QueryValue;
+	recipientStatus?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
 	if (Array.isArray(value)) {
 		const first = value[0];
+
 		return first === undefined ? undefined : String(first);
 	}
 	if (value === null || value === undefined) {
 		return undefined;
 	}
+
 	return String(value);
 };
 
-const stripControlChars = (value: string): string => value.replace(/[\u0000-\u001F\u007F]/g, '');
+const stripControlChars = (value: string): string =>
+	Array.from(value)
+		.filter((char) => {
+			const code = char.charCodeAt(0);
+
+			return !(code <= 31 || code === 127);
+		})
+		.join('');
 
 const normalizeToken = (value: QueryValue, maxLength: number): string => {
 	const token = takeFirst(value);
 	if (!token) {
 		return '';
 	}
+
 	return stripControlChars(token).trim().slice(0, maxLength);
 };
 
@@ -68,6 +80,7 @@ const parsePositiveInt = (value: QueryValue, fallback: number) => {
 	if (!Number.isInteger(parsed) || parsed < 1) {
 		return fallback;
 	}
+
 	return parsed;
 };
 
@@ -89,6 +102,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const campaignId = normalizeToken(input.campaignId, MAX_QUERY_TOKEN_LENGTH);
 	const paymentEventType = normalizeToken(input.paymentEventType, MAX_QUERY_TOKEN_LENGTH);
 	const payoutStatus = normalizeToken(input.payoutStatus, MAX_QUERY_TOKEN_LENGTH);
+	const recipientStatus = normalizeToken(input.recipientStatus, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
@@ -104,12 +118,11 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		campaignId: campaignId || undefined,
 		paymentEventType: paymentEventType || undefined,
 		payoutStatus: payoutStatus || undefined,
+		recipientStatus: recipientStatus || undefined,
 	};
 };
 
-export const tableQueryFromSearchParams = (
-	searchParams: Record<string, string | string[] | undefined>,
-): TableQueryState => {
+export const tableQueryFromSearchParams = (searchParams: Record<string, string | string[] | undefined>): TableQueryState => {
 	return normalizeTableQuery({
 		page: searchParams.page,
 		pageSize: searchParams.pageSize,
@@ -124,6 +137,7 @@ export const tableQueryFromSearchParams = (
 		campaignId: searchParams.campaignId,
 		paymentEventType: searchParams.paymentEventType,
 		payoutStatus: searchParams.payoutStatus,
+		recipientStatus: searchParams.recipientStatus,
 	});
 };
 
@@ -145,10 +159,9 @@ export const applyTableQueryPatch = (
 		currency: hasPatchKey('currency') ? patch.currency : currentSearchParams.get('currency'),
 		gender: hasPatchKey('gender') ? patch.gender : currentSearchParams.get('gender'),
 		campaignId: hasPatchKey('campaignId') ? patch.campaignId : currentSearchParams.get('campaignId'),
-		paymentEventType: hasPatchKey('paymentEventType')
-			? patch.paymentEventType
-			: currentSearchParams.get('paymentEventType'),
+		paymentEventType: hasPatchKey('paymentEventType') ? patch.paymentEventType : currentSearchParams.get('paymentEventType'),
 		payoutStatus: hasPatchKey('payoutStatus') ? patch.payoutStatus : currentSearchParams.get('payoutStatus'),
+		recipientStatus: hasPatchKey('recipientStatus') ? patch.recipientStatus : currentSearchParams.get('recipientStatus'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -206,6 +219,11 @@ export const applyTableQueryPatch = (
 		nextParams.set('payoutStatus', nextQuery.payoutStatus);
 	} else {
 		nextParams.delete('payoutStatus');
+	}
+	if (nextQuery.recipientStatus) {
+		nextParams.set('recipientStatus', nextQuery.recipientStatus);
+	} else {
+		nextParams.delete('recipientStatus');
 	}
 
 	return nextParams;

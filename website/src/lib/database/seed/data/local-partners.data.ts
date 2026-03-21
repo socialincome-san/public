@@ -2,33 +2,43 @@ import { LocalPartner } from '@/generated/prisma/client';
 
 export const localPartnersData: LocalPartner[] = [
 	{
-		id: 'local-partner-1',
+		id: 'local-partner-sl-1',
 		legacyFirestoreId: null,
-		name: 'Makeni Development Initiative',
-		causes: ['poverty'],
-		contactId: 'contact-13',
-		accountId: 'account-10',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		name: 'Local Partner SL Operations',
+		causes: ['poverty', 'health'],
+		contactId: 'ct-localpartner-sl-1',
+		accountId: 'acc-localpartner-sl-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'local-partner-2',
+		id: 'local-partner-gh-1',
 		legacyFirestoreId: null,
-		name: 'Bo Women Empowerment Group',
+		name: 'Local Partner GH Operations',
+		causes: ['poverty', 'climate'],
+		contactId: 'ct-localpartner-gh-1',
+		accountId: 'acc-localpartner-gh-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'local-partner-lr-1',
+		legacyFirestoreId: null,
+		name: 'Local Partner LR Operations',
+		causes: ['poverty', 'gender_based_violence'],
+		contactId: 'ct-localpartner-lr-1',
+		accountId: 'acc-localpartner-lr-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'local-partner-somaha-1',
+		legacyFirestoreId: null,
+		name: 'Local Partner Somaha Operations',
 		causes: ['health'],
-		contactId: 'contact-14',
-		accountId: 'account-11',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		contactId: 'ct-localpartner-somaha-1',
+		accountId: 'acc-localpartner-somaha-1',
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
-	{
-		id: 'local-partner-3',
-		legacyFirestoreId: null,
-		name: 'Kenema Youth Foundation',
-		causes: ['gender_based_violence'],
-		contactId: 'contact-15',
-		accountId: 'account-12',
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
 ];

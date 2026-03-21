@@ -8,11 +8,7 @@ import {
 	countryCreateInputSchema,
 	countryUpdateInputSchema,
 } from './country-form-input';
-
-type UpdateUniquenessContext = {
-	countryId: string;
-	existingIsoCode: CountryFormUpdateInput['isoCode'];
-};
+import { CountryUpdateUniquenessContext } from './country-validation.types';
 
 export class CountryValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {
@@ -24,6 +20,7 @@ export class CountryValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -32,6 +29,7 @@ export class CountryValidationService extends BaseService {
 		if (!parsedInput.success) {
 			return this.resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 		}
+
 		return this.resultOk(parsedInput.data);
 	}
 
@@ -43,12 +41,13 @@ export class CountryValidationService extends BaseService {
 		if (isoCodeConflict) {
 			return this.resultFail('A country with this ISO code already exists.');
 		}
+
 		return this.resultOk(undefined);
 	}
 
 	async validateUpdateUniqueness(
 		input: CountryFormUpdateInput,
-		context: UpdateUniquenessContext,
+		context: CountryUpdateUniquenessContext,
 	): Promise<ServiceResult<void>> {
 		if (input.isoCode !== context.existingIsoCode) {
 			const isoCodeConflict = await this.db.country.findUnique({
@@ -59,6 +58,7 @@ export class CountryValidationService extends BaseService {
 				return this.resultFail('A country with this ISO code already exists.');
 			}
 		}
+
 		return this.resultOk(undefined);
 	}
 }

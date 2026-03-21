@@ -1,18 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { now } from '@/lib/utils/now';
 import { fetchData } from './fetch-data';
 
 const owner = 'socialincome-san';
 const repo = 'public';
 
-interface GitHubFork {
+type GitHubFork = {
 	id: number;
 	created_at: string;
-}
+};
+type RepoForksResponse = {
+	forks_count: number;
+};
 
 export const getForkCount = async (): Promise<{ totalForks: number; newForks: number }> => {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
 	const repoDataRes = await fetchData(owner, repo, repoUrl);
-	const repoData = await repoDataRes.json();
+	const repoData = (await repoDataRes.json()) as RepoForksResponse;
 	const totalForks = repoData.forks_count;
 
 	// Calculate the date 30 days ago from today

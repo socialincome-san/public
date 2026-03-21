@@ -8,10 +8,7 @@ import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
 import xpath from 'xpath';
-import {
-	CONTRIBUTION_REFERENCE_ID_LENGTH,
-	CONTRIBUTOR_REFERENCE_ID_LENGTH,
-} from '../bank-transfer/bank-transfer-config';
+import { CONTRIBUTION_REFERENCE_ID_LENGTH, CONTRIBUTOR_REFERENCE_ID_LENGTH } from '../bank-transfer/bank-transfer-config';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
@@ -20,14 +17,13 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';
 
-const POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 = process.env.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64!;
-const POSTFINANCE_FTP_HOST = process.env.POSTFINANCE_FTP_HOST!;
-const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
-const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
-
 export class PaymentFileImportService extends BaseService {
 	private readonly bucketName;
 	private readonly xmlSelectExpression = '//ns:BkToCstmrDbtCdtNtfctn/ns:Ntfctn/ns:Ntry/ns:NtryDtls/ns:TxDtls';
+	private readonly postfinanceFtpRsaPrivateKeyBase64 = process.env.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64!;
+	private readonly postfinanceFtpHost = process.env.POSTFINANCE_FTP_HOST!;
+	private readonly postfinanceFtpPort = process.env.POSTFINANCE_FTP_PORT!;
+	private readonly postfinanceFtpUser = process.env.POSTFINANCE_FTP_USER!;
 
 	constructor(
 		bucketName: string,
@@ -51,14 +47,14 @@ export class PaymentFileImportService extends BaseService {
 			const bucket = storageAdmin.storage.bucket(this.bucketName);
 			const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
 			await sftp.connect({
-				host: POSTFINANCE_FTP_HOST,
-				port: Number(POSTFINANCE_FTP_PORT),
-				username: POSTFINANCE_FTP_USER,
-				privateKey: atob(POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64),
+				host: this.postfinanceFtpHost,
+				port: Number(this.postfinanceFtpPort),
+				username: this.postfinanceFtpUser,
+				privateKey: atob(this.postfinanceFtpRsaPrivateKeyBase64),
 			});
 			const sftpFiles = await sftp.list('/yellow-net-reports');
 
-			for (let file of sftpFiles) {
+			for (const file of sftpFiles) {
 				if (bucketFiles.includes(file.name)) {
 					this.logger.info(`Skipped copying file ${file.name} because it already exists in ${this.bucketName} bucket`);
 					continue;
@@ -82,18 +78,21 @@ export class PaymentFileImportService extends BaseService {
 				});
 			}
 			const result = await this.createOrUpdateContributions(allContributions);
-			sftp.end();
+			void sftp.end();
 
 			if (!result.success) {
-				this.logger.error(`Error importing payment files: ${result.error}`);
-				return this.resultFail(`Error importing payment files: ${result.error}`);
+				this.logger.error(`Error importing payment files: ${String(result.error)}`);
+
+				return this.resultFail(`Error importing payment files: ${String(result.error)}`);
 			}
+
 			return this.resultOk(result.data);
 		} catch (error) {
-			this.logger.error(`Error importing payment files: ${error}`);
+			this.logger.error(`Error importing payment files: ${String(error)}`);
+
 			return this.resultFail(`Error importing payment files: ${JSON.stringify(error)}`);
 		} finally {
-			sftp.end();
+			void sftp.end();
 		}
 	}
 
@@ -110,11 +109,12 @@ export class PaymentFileImportService extends BaseService {
 
 			const contributions: BankContribution[] = [];
 
-			for (let node of nodes) {
+			for (const node of nodes) {
 				const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
+				const rawNode = new xmldom.XMLSerializer().serializeToString(node);
 				if (!referenceId) {
-					this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${node.toString()}`);
+					this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${rawNode}`);
 					continue;
 				}
 
@@ -125,13 +125,14 @@ export class PaymentFileImportService extends BaseService {
 					referenceId,
 					amount: parseFloat(amountStr),
 					currency: (currencyStr || 'CHF').toUpperCase() as Currency,
-					rawContent: node.toString(),
+					rawContent: rawNode,
 				});
 			}
 
 			return this.resultOk(contributions);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not parse payment file: ${JSON.stringify(error)}`);
 		}
 	}
@@ -141,9 +142,7 @@ export class PaymentFileImportService extends BaseService {
 	 * @param bankContributions contributions from payment files
 	 */
 	// TODO: create or update
-	private async createOrUpdateContributions(
-		bankContributions: BankContribution[],
-	): Promise<ServiceResult<PaymentEvent[]>> {
+	private async createOrUpdateContributions(bankContributions: BankContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
 		try {
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 			if (!fallbackCampaignResult.success) {
@@ -162,10 +161,9 @@ export class PaymentFileImportService extends BaseService {
 
 			const created = [];
 
-			for (let c of bankContributions) {
+			for (const c of bankContributions) {
 				const contributor = contributors.data.find(
-					(contributor) =>
-						contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
+					(contributor) => contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
 				);
 				if (!contributor) {
 					this.logger.alert(
@@ -182,7 +180,10 @@ export class PaymentFileImportService extends BaseService {
 
 				const paymentEvent: PaymentEventCreateInput = {
 					type: PaymentEventType.bank_transfer,
-					transactionId: contributionReferenceId || DateTime.now().toMillis().toString() + '-legacy',
+					transactionId:
+						contributionReferenceId && contributionReferenceId.length > 0
+							? contributionReferenceId
+							: DateTime.now().toMillis().toString() + '-legacy',
 					metadata: {
 						raw_content: c.rawContent,
 					},
@@ -211,7 +212,7 @@ export class PaymentFileImportService extends BaseService {
 					} else {
 						created.push(result.data);
 					}
-				} catch (error) {
+				} catch {
 					failedPaymentEvents.push(contributionReferenceId);
 				}
 			}
@@ -220,6 +221,7 @@ export class PaymentFileImportService extends BaseService {
 				this.logger.alert(
 					`Failed to create payment events with contributions in payment file imports. Failed transaction IDs: ${failedPaymentEvents.join(', ')}`,
 				);
+
 				return this.resultFail(
 					`Failed to create payment events with contributions. Failed transaction IDs: ${failedPaymentEvents.join(', ')}`,
 				);
@@ -228,12 +230,14 @@ export class PaymentFileImportService extends BaseService {
 			return this.resultOk(created);
 		} catch (error) {
 			this.logger.error(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
+
 			return this.resultFail(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
 		}
 	}
-	private getReferenceIds = (
-		referenceId: string,
-	): { contributorReferenceId: string; contributionReferenceId: string | undefined } => {
+	private getReferenceIds(referenceId: string): {
+		contributorReferenceId: string;
+		contributionReferenceId: string | undefined;
+	} {
 		// Old reference IDs without contribution reference ID
 		const isLegacyReferenceId = referenceId.startsWith('0000000');
 
@@ -250,5 +254,5 @@ export class PaymentFileImportService extends BaseService {
 				startIndex + CONTRIBUTOR_REFERENCE_ID_LENGTH + CONTRIBUTION_REFERENCE_ID_LENGTH,
 			),
 		};
-	};
+	}
 }

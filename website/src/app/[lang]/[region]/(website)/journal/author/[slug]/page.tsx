@@ -23,11 +23,12 @@ const getTotalArticlesInDefaultLanguage = async (
 	totalArticlesInSelectedLanguage: number,
 	authorId: string,
 ) => {
-	if (lang == defaultLanguage) {
+	if (lang === defaultLanguage) {
 		return totalArticlesInSelectedLanguage;
 	}
 
 	const res = await services.storyblok.getArticleCountByAuthorForDefaultLang(authorId);
+
 	return res.success ? res.data : totalArticlesInSelectedLanguage;
 };
 
@@ -47,11 +48,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 	const totalArticlesInSelectedLanguage = articles.length;
 
-	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(
-		lang,
-		totalArticlesInSelectedLanguage,
-		authorId,
-	);
+	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(lang, totalArticlesInSelectedLanguage, authorId);
 
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
@@ -75,7 +72,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 					</Typography>
 					<Typography className="mt-2 text-black">{author.content.bio}</Typography>
 
-					{(author.content.linkedinName || author.content.githubName) && (
+					{Boolean(author.content.linkedinName ?? author.content.githubName) && (
 						<div className="mt-3 flex flex-row gap-4">
 							{author.content.linkedinName && (
 								<Link

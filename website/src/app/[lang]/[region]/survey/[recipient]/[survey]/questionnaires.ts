@@ -35,6 +35,7 @@ export const getQuestionnaire = (questionnaire: SurveyQuestionnaire, t: Translat
 		case SurveyQuestionnaire.offboarded_checkin:
 			return offboardingCheckinQuestionnaire(t, name);
 	}
+
 	return [];
 };
 

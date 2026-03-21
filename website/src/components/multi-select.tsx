@@ -7,22 +7,14 @@ import * as React from 'react';
 import { cn } from '@/lib/utils/cn';
 import { Badge } from './badge';
 import { Button } from './button';
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-	CommandSeparator,
-} from './command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Separator } from './separator';
 
 /**
  * Animation types and configurations
  */
-interface AnimationConfig {
+type AnimationConfig = {
 	/** Badge animation type */
 	badgeAnimation?: 'bounce' | 'pulse' | 'wiggle' | 'fade' | 'slide' | 'none';
 	/** Popover animation type */
@@ -33,7 +25,7 @@ interface AnimationConfig {
 	duration?: number;
 	/** Animation delay in seconds */
 	delay?: number;
-}
+};
 
 /**
  * Variants for the multi-select component to handle different styles.
@@ -65,7 +57,7 @@ const multiSelectVariants = cva('m-1 transition-all duration-300 ease-in-out', {
 /**
  * Option interface for MultiSelect component
  */
-interface MultiSelectOption {
+type MultiSelectOption = {
 	/** The text to display for the option. */
 	label: string;
 	/** The unique value associated with the option. */
@@ -83,24 +75,22 @@ interface MultiSelectOption {
 		/** Gradient background for badge */
 		gradient?: string;
 	};
-}
+};
 
 /**
  * Group interface for organizing options
  */
-interface MultiSelectGroup {
+type MultiSelectGroup = {
 	/** Group heading */
 	heading: string;
 	/** Options in this group */
 	options: MultiSelectOption[];
-}
+};
 
 /**
  * Props for MultiSelect component
  */
-interface MultiSelectProps
-	extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'>,
-		VariantProps<typeof multiSelectVariants> {
+type MultiSelectProps = {
 	/**
 	 * An array of option objects or groups to be displayed in the multi-select component.
 	 */
@@ -263,12 +253,13 @@ interface MultiSelectProps
 	 * Optional, defaults to false.
 	 */
 	closeOnSelect?: boolean;
-}
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'> &
+	VariantProps<typeof multiSelectVariants>;
 
 /**
  * Imperative methods exposed through ref
  */
-interface MultiSelectRef {
+type MultiSelectRef = {
 	/**
 	 * Programmatically reset the component to its default value
 	 */
@@ -289,7 +280,7 @@ interface MultiSelectRef {
 	 * Focus the component
 	 */
 	focus: () => void;
-}
+};
 
 export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 	(
@@ -303,7 +294,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			animationConfig,
 			maxCount = 3,
 			modalPopover = false,
-			asChild = false,
 			className,
 			hideSelectAll = false,
 			searchable = true,
@@ -363,6 +353,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			}
 			const sortedA = [...a].sort();
 			const sortedB = [...b].sort();
+
 			return sortedA.every((val, index) => val === sortedB[index]);
 		}, []);
 
@@ -425,6 +416,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			};
 			handleResize();
 			window.addEventListener('resize', handleResize);
+
 			return () => {
 				if (typeof window !== 'undefined') {
 					window.removeEventListener('resize', handleResize);
@@ -447,6 +439,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 					desktop: { maxCount: 6, hideIcons: false, compactMode: false },
 				};
 				const currentSettings = defaultResponsive[screenSize];
+
 				return {
 					maxCount: currentSettings?.maxCount ?? maxCount,
 					hideIcons: currentSettings?.hideIcons ?? false,
@@ -454,6 +447,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 				};
 			}
 			const currentSettings = responsive[screenSize];
+
 			return {
 				maxCount: currentSettings?.maxCount ?? maxCount,
 				hideIcons: currentSettings?.hideIcons ?? false,
@@ -482,6 +476,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						return '';
 				}
 			}
+
 			return isAnimating ? 'animate-bounce' : '';
 		};
 
@@ -502,6 +497,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						return '';
 				}
 			}
+
 			return '';
 		};
 
@@ -540,6 +536,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						}`,
 				);
 			}
+
 			return deduplicateOptions ? uniqueOptions : allOptions;
 		}, [options, deduplicateOptions, isGroupedOptions]);
 
@@ -549,6 +546,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 				if (!option && process.env.NODE_ENV === 'development') {
 					console.warn(`MultiSelect: Option with value "${value}" not found in options list`);
 				}
+
 				return option;
 			},
 			[getAllOptions],
@@ -573,6 +571,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 					}))
 					.filter((group) => group.options.length > 0);
 			}
+
 			return options.filter(
 				(option) =>
 					option.label.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -666,8 +665,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 
 		const getWidthConstraints = () => {
 			const defaultMinWidth = screenSize === 'mobile' ? '0px' : '200px';
-			const effectiveMinWidth = minWidth || defaultMinWidth;
-			const effectiveMaxWidth = maxWidth || '100%';
+			const effectiveMinWidth = minWidth ?? defaultMinWidth;
+			const effectiveMaxWidth = maxWidth ?? '100%';
+
 			return {
 				minWidth: effectiveMinWidth,
 				maxWidth: effectiveMaxWidth,
@@ -776,6 +776,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 								disabled && 'cursor-not-allowed opacity-50',
 								className,
 							)}
+							// eslint-disable-next-line react/forbid-component-props
 							style={{
 								...widthConstraints,
 								maxWidth: `min(${widthConstraints.maxWidth}, 100%)`,
@@ -816,6 +817,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 														color: 'white',
 													}),
 												};
+
 												return (
 													<Badge
 														key={value}
@@ -828,10 +830,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 															singleLine && 'shrink-0 whitespace-nowrap',
 															'[&>svg]:pointer-events-auto',
 														)}
+														// eslint-disable-next-line react/forbid-component-props
 														style={{
 															...badgeStyle,
-															animationDuration: `${animationConfig?.duration || animation}s`,
-															animationDelay: `${animationConfig?.delay || 0}s`,
+															animationDuration: `${animationConfig?.duration ?? animation}s`,
+															animationDelay: `${animationConfig?.delay ?? 0}s`,
 														}}
 													>
 														{IconComponent && !responsiveSettings.hideIcons && (
@@ -880,17 +883,15 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 													singleLine && 'shrink-0 whitespace-nowrap',
 													'[&>svg]:pointer-events-auto',
 												)}
+												// eslint-disable-next-line react/forbid-component-props
 												style={{
-													animationDuration: `${animationConfig?.duration || animation}s`,
-													animationDelay: `${animationConfig?.delay || 0}s`,
+													animationDuration: `${animationConfig?.duration ?? animation}s`,
+													animationDelay: `${animationConfig?.delay ?? 0}s`,
 												}}
 											>
 												{`+ ${selectedValues.length - responsiveSettings.maxCount} more`}
 												<XCircle
-													className={cn(
-														'ml-2 h-4 w-4 cursor-pointer',
-														responsiveSettings.compactMode && 'ml-1 h-3 w-3',
-													)}
+													className={cn('ml-2 h-4 w-4 cursor-pointer', responsiveSettings.compactMode && 'ml-1 h-3 w-3')}
 													onClick={(event: React.MouseEvent<HTMLOrSVGElement>) => {
 														event.stopPropagation();
 														clearExtraOptions();
@@ -944,9 +945,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 							screenSize === 'desktop' && 'min-w-[300px]',
 							popoverClassName,
 						)}
+						// eslint-disable-next-line react/forbid-component-props
 						style={{
-							animationDuration: `${animationConfig?.duration || animation}s`,
-							animationDelay: `${animationConfig?.delay || 0}s`,
+							animationDuration: `${animationConfig?.duration ?? animation}s`,
+							animationDelay: `${animationConfig?.delay ?? 0}s`,
 							maxWidth: `min(${widthConstraints.maxWidth}, 85vw)`,
 							maxHeight: screenSize === 'mobile' ? '70vh' : '60vh',
 							touchAction: 'manipulation',
@@ -977,7 +979,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 									'overscroll-behavior-y-contain',
 								)}
 							>
-								<CommandEmpty>{emptyIndicator || 'No results found.'}</CommandEmpty>{' '}
+								<CommandEmpty>{emptyIndicator ?? 'No results found.'}</CommandEmpty>{' '}
 								{!hideSelectAll && !searchValue && (
 									<CommandGroup>
 										<CommandItem
@@ -1011,6 +1013,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 										<CommandGroup key={group.heading} heading={group.heading}>
 											{group.options.map((option) => {
 												const isSelected = selectedValues.includes(option.value);
+
 												return (
 													<CommandItem
 														key={option.value}
@@ -1046,6 +1049,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 									<CommandGroup>
 										{filteredOptions.map((option) => {
 											const isSelected = selectedValues.includes(option.value);
+
 											return (
 												<CommandItem
 													key={option.value}
@@ -1068,9 +1072,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 													>
 														<CheckIcon className="h-4 w-4" />
 													</div>
-													{option.icon && (
-														<option.icon className="text-muted-foreground mr-2 h-4 w-4" aria-hidden="true" />
-													)}
+													{option.icon && <option.icon className="text-muted-foreground mr-2 h-4 w-4" aria-hidden="true" />}
 													<span>{option.label}</span>
 												</CommandItem>
 											);

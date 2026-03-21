@@ -2,6 +2,7 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { CircleHelp } from 'lucide-react';
@@ -25,16 +26,18 @@ export const ProgramCostsHeader = ({
 	isCalculatingBudget,
 	onCurrencyChange,
 }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+
 	return (
 		<div className="flex items-start justify-between text-cyan-900">
 			<div className="space-y-1">
 				<div className="flex items-center gap-2">
-					<p className="text-sm font-medium text-black">Total program costs</p>
+					<p className="text-sm font-medium text-black">{t('step3.total_costs.title')}</p>
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<button
 								type="button"
-								aria-label="Show total program cost calculation"
+								aria-label={t('step3.total_costs.aria')}
 								className="text-muted-foreground hover:text-foreground inline-flex"
 							>
 								<CircleHelp className="h-4 w-4" />
@@ -62,7 +65,7 @@ export const ProgramCostsHeader = ({
 						<span data-testid={`monthly-cost-${Math.round(monthlyCost)}`}>
 							{Math.round(monthlyCost).toLocaleString('de-CH')}
 						</span>{' '}
-						/ month
+						{t('common.per_month')}
 					</span>
 				</div>
 			</div>
@@ -81,7 +84,7 @@ export const ProgramCostsHeader = ({
 					</SelectContent>
 				</Select>
 				{isCalculatingBudget ? (
-					<span className="text-xs text-cyan-800">Updating total cost...</span>
+					<span className="text-xs text-cyan-800">{t('step3.total_costs.updating')}</span>
 				) : (
 					exchangeRateText && <span className="text-xs text-cyan-800">{exchangeRateText}</span>
 				)}

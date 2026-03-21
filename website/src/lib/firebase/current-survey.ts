@@ -17,6 +17,7 @@ const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
 		return null;
 	}
 	const result = await services.read.survey.getByAccessEmail(email);
+
 	return result.success ? result.data : null;
 };
 

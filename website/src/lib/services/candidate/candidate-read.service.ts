@@ -64,6 +64,7 @@ export class CandidateReadService extends BaseService {
 		if (!isAdmin.data) {
 			return this.resultFail('Permission denied');
 		}
+
 		return this.resultOk(true);
 	}
 
@@ -229,6 +230,7 @@ export class CandidateReadService extends BaseService {
 			return this.resultOk(candidate);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch candidate: ${JSON.stringify(error)}`);
 		}
 	}
@@ -243,9 +245,11 @@ export class CandidateReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch candidates table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -261,9 +265,12 @@ export class CandidateReadService extends BaseService {
 			}
 
 			const search = query.search.trim();
-			const selectedCountry = (query.country?.trim() || undefined) as CountryCode | undefined;
-			const selectedGender = (query.gender?.trim() || undefined) as Gender | undefined;
-			const selectedLocalPartnerId = query.localPartnerId?.trim() || undefined;
+			const selectedCountryRaw = query.country?.trim();
+			const selectedGenderRaw = query.gender?.trim();
+			const selectedLocalPartnerIdRaw = query.localPartnerId?.trim();
+			const selectedCountry = (selectedCountryRaw === '' ? undefined : selectedCountryRaw) as CountryCode | undefined;
+			const selectedGender = (selectedGenderRaw === '' ? undefined : selectedGenderRaw) as Gender | undefined;
+			const selectedLocalPartnerId = selectedLocalPartnerIdRaw === '' ? undefined : selectedLocalPartnerIdRaw;
 			const baseScope: Prisma.RecipientWhereInput = {
 				programId: null,
 				...(selectedLocalPartnerId ? { localPartnerId: selectedLocalPartnerId } : {}),
@@ -382,6 +389,7 @@ export class CandidateReadService extends BaseService {
 
 			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
 				id: r.id,
+				firebaseAuthUserId: '',
 				country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 				firstName: r.contact?.firstName ?? '',
 				lastName: r.contact?.lastName ?? '',
@@ -425,6 +433,7 @@ export class CandidateReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch candidates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -439,9 +448,11 @@ export class CandidateReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch local partner candidates table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -452,8 +463,10 @@ export class CandidateReadService extends BaseService {
 	): Promise<ServiceResult<CandidatesPaginatedTableView>> {
 		try {
 			const search = query.search.trim();
-			const selectedCountry = (query.country?.trim() || undefined) as CountryCode | undefined;
-			const selectedGender = (query.gender?.trim() || undefined) as Gender | undefined;
+			const selectedCountryRaw = query.country?.trim();
+			const selectedGenderRaw = query.gender?.trim();
+			const selectedCountry = (selectedCountryRaw === '' ? undefined : selectedCountryRaw) as CountryCode | undefined;
+			const selectedGender = (selectedGenderRaw === '' ? undefined : selectedGenderRaw) as Gender | undefined;
 			const baseWhere: Prisma.RecipientWhereInput = {
 				programId: null,
 				localPartnerId,
@@ -567,6 +580,7 @@ export class CandidateReadService extends BaseService {
 
 			const tableRows: CandidatesTableViewRow[] = recipients.map((r) => ({
 				id: r.id,
+				firebaseAuthUserId: '',
 				country: r.contact?.address?.country ?? r.localPartner?.contact?.address?.country ?? null,
 				firstName: r.contact?.firstName ?? '',
 				lastName: r.contact?.lastName ?? '',
@@ -602,6 +616,7 @@ export class CandidateReadService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch candidates for local partner: ${JSON.stringify(error)}`);
 		}
 	}
@@ -633,6 +648,7 @@ export class CandidateReadService extends BaseService {
 			return this.resultOk({ count });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not count candidates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -793,6 +809,7 @@ export class CandidateReadService extends BaseService {
 			return this.resultOk(stringifyCsv(rows, headers));
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not export candidates CSV: ${JSON.stringify(error)}`);
 		}
 	}

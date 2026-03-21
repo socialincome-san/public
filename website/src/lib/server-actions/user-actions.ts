@@ -37,6 +37,21 @@ export const updateUserAction = async (input: UserFormUpdateInput): Promise<Serv
 	return result;
 };
 
+export const deleteUserAction = async (userId: string): Promise<ServiceResult<unknown>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.user.delete(session.id, userId);
+
+	if (result.success) {
+		revalidatePath('/portal/admin/users');
+	}
+
+	return result;
+};
+
 export const updateUserSelfAction = async (input: UserUpdateInput): Promise<ServiceResult<unknown>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
@@ -46,7 +61,8 @@ export const updateUserSelfAction = async (input: UserUpdateInput): Promise<Serv
 	const result = await services.write.user.updateSelf(session.id, input);
 
 	if (result.success) {
-		revalidatePath('/portal/profile');
+		revalidatePath('/portal/profile/account');
+		revalidatePath('/portal/profile/organization');
 	}
 
 	return result;
@@ -58,6 +74,7 @@ export const getUserAction = async (userId: string) => {
 		return sessionResult;
 	}
 	const session = sessionResult.data;
+
 	return services.read.user.get(session.id, userId);
 };
 
@@ -67,5 +84,6 @@ export const getUserOptionsAction = async () => {
 		return sessionResult;
 	}
 	const session = sessionResult.data;
+
 	return services.read.user.getOptions(session.id);
 };

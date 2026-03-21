@@ -1,20 +1,17 @@
-import {
-	Contributor,
-	ContributorReferralSource,
-	OrganizationPermission,
-	PrismaClient,
-} from '@/generated/prisma/client';
+import { Contributor, ContributorReferralSource, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
+import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
 import { SupportedLanguage } from '../sendgrid/types';
+import { ContributorFormCreateInput, ContributorFormUpdateInput } from './contributor-form-input';
+import { ContributorValidationService } from './contributor-validation.service';
 import {
 	BankContributorData,
-	ContributorFormCreateInput,
 	ContributorUpdateInput,
 	ContributorWithContact,
 	StripeContributorData,
@@ -23,9 +20,11 @@ import {
 export class ContributorWriteService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly sendGridService: SendgridSubscriptionService,
+		private readonly contributorValidationService: ContributorValidationService,
+		private readonly contactRelationsService: ContactRelationsService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -48,7 +47,8 @@ export class ContributorWriteService extends BaseService {
 				return this.resultFail('Contributor not found');
 			}
 
-			const newEmail = data.contact?.update?.data?.email?.toString();
+			const emailInput = data.contact?.update?.data?.email;
+			const newEmail = typeof emailInput === 'string' ? emailInput : undefined;
 			const oldEmail = existing.contact?.email ?? null;
 
 			if (!newEmail) {
@@ -75,30 +75,124 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(updatedContributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async update(userId: string, contributor: ContributorUpdateInput): Promise<ServiceResult<Contributor>> {
-		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
-			}
+	async update(userId: string, input: ContributorFormUpdateInput): Promise<ServiceResult<Contributor>> {
+		const validatedInputResult = this.contributorValidationService.validateUpdateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
 
-			if (activeOrgResult.data.permission !== 'edit') {
+		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+			const accessiblePrograms = accessibleProgramsResult.data;
+			const hasOperatorAccess = this.programAccessService.hasAnyOperatorAccess(accessiblePrograms);
+			if (!hasOperatorAccess) {
 				return this.resultFail('No permissions to update contributor');
 			}
 
-			const contributorId = contributor.id?.toString();
-			if (!contributorId) {
-				return this.resultFail('Contributor ID is required');
+			const existing = await this.db.contributor.findUnique({
+				where: { id: validatedInput.id },
+				select: {
+					id: true,
+					account: { select: { firebaseAuthUserId: true } },
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							email: true,
+							phone: { select: { id: true, number: true } },
+							address: { select: { id: true } },
+						},
+					},
+				},
+			});
+			if (!existing) {
+				return this.resultFail('Contributor not found');
+			}
+			const contributorProgramIds = await this.db.contribution.findMany({
+				where: { contributorId: validatedInput.id },
+				select: { campaign: { select: { programId: true } } },
+			});
+			const canOperateContributorPrograms =
+				contributorProgramIds.length === 0
+					? this.programAccessService.hasAnyOperatorAccess(accessiblePrograms)
+					: contributorProgramIds.some((entry) =>
+							this.programAccessService.hasOperatorAccess(accessiblePrograms, entry.campaign.programId),
+						);
+			if (!canOperateContributorPrograms) {
+				return this.resultFail('No permissions to update contributor');
 			}
 
-			return this.applyContributorUpdate(contributorId, contributor);
+			const uniquenessResult = await this.contributorValidationService.validateUpdateUniqueness(validatedInput, {
+				existingContactId: existing.contact.id,
+				existingEmail: existing.contact.email,
+				existingPhoneId: existing.contact.phone?.id ?? null,
+				existingPhoneNumber: existing.contact.phone?.number ?? null,
+			});
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const newDisplayName = `${validatedInput.contact.firstName} ${validatedInput.contact.lastName}`.trim();
+			const oldDisplayName = `${existing.contact.firstName} ${existing.contact.lastName}`.trim();
+			if (validatedInput.contact.email !== existing.contact.email || newDisplayName !== oldDisplayName) {
+				const firebaseResult = await this.firebaseAdminService.updateByUid(existing.account.firebaseAuthUserId, {
+					email: validatedInput.contact.email,
+					displayName: newDisplayName,
+				});
+				if (!firebaseResult.success) {
+					this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
+				}
+			}
+
+			const updated = await this.db.contributor.update({
+				where: { id: validatedInput.id },
+				data: {
+					referral: validatedInput.referral,
+					paymentReferenceId: validatedInput.paymentReferenceId,
+					stripeCustomerId: validatedInput.stripeCustomerId,
+					contact: {
+						update: {
+							where: { id: existing.contact.id },
+							data: this.buildContactUpdateData(
+								validatedInput,
+								existing.contact.phone?.id,
+								existing.contact.phone?.number,
+								existing.contact.address?.id,
+							),
+						},
+					},
+				},
+			});
+
+			const previousPhoneId = existing.contact.phone?.id;
+			const previousPhoneNumber = existing.contact.phone?.number ?? null;
+			const didRemovePhone = !validatedInput.contact.phone;
+			const didChangePhoneNumber = !!validatedInput.contact.phone && validatedInput.contact.phone !== previousPhoneNumber;
+			if ((didRemovePhone || didChangePhoneNumber) && previousPhoneId) {
+				await this.contactRelationsService.deletePhoneIfUnused(previousPhoneId);
+			}
+
+			const previousAddressId = existing.contact.address?.id;
+			const didRemoveAddress = !!previousAddressId && !this.contactRelationsService.hasAddressInput(validatedInput.contact);
+			if (didRemoveAddress && previousAddressId) {
+				await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
+			}
+
+			return this.resultOk(updated);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not update contributor: ${JSON.stringify(error)}`);
+
+			return this.resultFail('Could not update contributor. Please try again later.');
 		}
 	}
 
@@ -107,6 +201,7 @@ export class ContributorWriteService extends BaseService {
 			return this.applyContributorUpdate(contributorId, data);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contributor (self): ${JSON.stringify(error)}`);
 		}
 	}
@@ -128,6 +223,7 @@ export class ContributorWriteService extends BaseService {
 				if (!existingResult.data.stripeCustomerId) {
 					await this.updateStripeCustomerId(existingResult.data.id, contributorData.stripeCustomerId);
 				}
+
 				return this.resultOk({ contributor: existingResult.data, isNewContributor: false });
 			}
 
@@ -139,6 +235,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get or create contributor from Stripe customer: ${JSON.stringify(error)}`);
 		}
 	}
@@ -162,8 +259,10 @@ export class ContributorWriteService extends BaseService {
 						include: { contact: true },
 					});
 					const contributor = updated ?? { ...existing, stripeCustomerId };
+
 					return this.resultOk({ contributor, isNewContributor: false });
 				}
+
 				return this.resultOk({ contributor: existing, isNewContributor: false });
 			}
 
@@ -181,18 +280,21 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk({ contributor, isNewContributor: true });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get or create contributor for account: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getOrCreateReferenceIdByEmail(email: string): Promise<ServiceResult<string>> {
 		try {
-			let referenceId: string;
 			const existingContributor = await this.db.contributor.findFirst({
 				where: { contact: { email: email } },
 				select: { id: true, contact: { select: { email: true } }, paymentReferenceId: true },
 			});
-			referenceId = existingContributor?.paymentReferenceId || DateTime.now().toMillis().toString();
+			const referenceId =
+				existingContributor?.paymentReferenceId && existingContributor.paymentReferenceId.length > 0
+					? existingContributor.paymentReferenceId
+					: DateTime.now().toMillis().toString();
 			if (existingContributor && !existingContributor?.paymentReferenceId) {
 				const res = await this.updateSelf(existingContributor.id, {
 					paymentReferenceId: referenceId,
@@ -206,6 +308,7 @@ export class ContributorWriteService extends BaseService {
 				});
 				if (!res.success) {
 					this.logger.error(res.error);
+
 					return this.resultFail('Could not udate existing contributor with newly created reference ID');
 				}
 			}
@@ -213,6 +316,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(referenceId);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get or generate contributor reference ID: ${JSON.stringify(error)}`);
 		}
 	}
@@ -266,6 +370,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(newContributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get or create contributor by reference ID: ${JSON.stringify(error)}`);
 		}
 	}
@@ -306,24 +411,91 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not create contributor with Firebase Auth user: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async create(userId: string, input: ContributorFormCreateInput): Promise<ServiceResult<Contributor>> {
-		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
-			}
+	private buildContactCreateData(input: ContributorFormCreateInput): Prisma.ContactCreateWithoutContributorInput {
+		const addressInput = this.contactRelationsService.getAddressInput(input.contact);
 
-			if (activeOrgResult.data.permission !== OrganizationPermission.edit) {
+		return {
+			firstName: input.contact.firstName,
+			lastName: input.contact.lastName,
+			callingName: input.contact.callingName,
+			email: input.contact.email,
+			gender: input.contact.gender,
+			language: input.contact.language,
+			dateOfBirth: input.contact.dateOfBirth,
+			profession: input.contact.profession,
+			phone: input.contact.phone
+				? {
+						create: {
+							number: input.contact.phone,
+							hasWhatsApp: input.contact.hasWhatsApp,
+						},
+					}
+				: undefined,
+			address: addressInput ? { create: addressInput } : undefined,
+		};
+	}
+
+	private buildContactUpdateData(
+		input: ContributorFormUpdateInput,
+		currentPhoneId: string | undefined,
+		currentPhoneNumber: string | undefined,
+		currentAddressId: string | undefined,
+	): Prisma.ContactUpdateWithoutContributorInput {
+		const addressInput = this.contactRelationsService.getAddressInput(input.contact);
+
+		return {
+			firstName: input.contact.firstName,
+			lastName: input.contact.lastName,
+			callingName: input.contact.callingName,
+			email: input.contact.email,
+			gender: input.contact.gender,
+			language: input.contact.language,
+			dateOfBirth: input.contact.dateOfBirth,
+			profession: input.contact.profession,
+			phone: this.contactRelationsService.buildPhoneWriteOperation({
+				nextPhoneNumber: input.contact.phone,
+				nextHasWhatsApp: input.contact.hasWhatsApp,
+				currentPhoneId,
+				currentPhoneNumber,
+			}),
+			address: this.contactRelationsService.buildAddressWriteOperation({
+				addressInput,
+				currentAddressId,
+			}),
+		};
+	}
+
+	async create(userId: string, input: ContributorFormCreateInput): Promise<ServiceResult<Contributor>> {
+		const validatedInputResult = this.contributorValidationService.validateCreateInput(input);
+		if (!validatedInputResult.success) {
+			return this.resultFail(validatedInputResult.error);
+		}
+		const validatedInput = validatedInputResult.data;
+
+		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+			const hasOperatorAccess = this.programAccessService.hasAnyOperatorAccess(accessibleProgramsResult.data);
+			if (!hasOperatorAccess) {
 				return this.resultFail('No permission to create contributor');
 			}
 
+			const uniquenessResult = await this.contributorValidationService.validateCreateUniqueness(validatedInput);
+			if (!uniquenessResult.success) {
+				return this.resultFail(uniquenessResult.error);
+			}
+
+			const displayName = `${validatedInput.contact.firstName} ${validatedInput.contact.lastName}`.trim();
 			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
-				email: input.email,
-				displayName: `${input.firstName} ${input.lastName}`,
+				email: validatedInput.contact.email,
+				displayName,
 			});
 
 			if (!firebaseResult.success) {
@@ -332,24 +504,16 @@ export class ContributorWriteService extends BaseService {
 
 			const contributor = await this.db.contributor.create({
 				data: {
-					referral: input.referral,
+					referral: validatedInput.referral,
+					paymentReferenceId: validatedInput.paymentReferenceId,
+					stripeCustomerId: validatedInput.stripeCustomerId,
 					account: {
 						create: {
 							firebaseAuthUserId: firebaseResult.data.uid,
 						},
 					},
 					contact: {
-						create: {
-							firstName: input.firstName,
-							lastName: input.lastName,
-							callingName: input.callingName ?? null,
-							email: input.email,
-							gender: input.gender,
-							language: input.language,
-							dateOfBirth: input.dateOfBirth,
-							profession: input.profession,
-							address: input.address ? { create: input.address } : undefined,
-						},
+						create: this.buildContactCreateData(validatedInput),
 					},
 				},
 			});
@@ -357,7 +521,8 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
-			return this.resultFail(`Could not create contributor: ${JSON.stringify(error)}`);
+
+			return this.resultFail('Could not create contributor. Please try again later.');
 		}
 	}
 
@@ -371,6 +536,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(undefined);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not update contributor Stripe customer ID: ${JSON.stringify(error)}`);
 		}
 	}
@@ -395,6 +561,7 @@ export class ContributorWriteService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
 	}

@@ -12,16 +12,16 @@ type OverviewProp = {
 	time: string;
 };
 
-interface OverviewItem {
+type OverviewItem = {
 	title: string;
 	time: string;
-}
+};
 
-interface Overview {
+type Overview = {
 	forks: OverviewItem;
 	commits: OverviewItem;
 	stars: OverviewItem;
-}
+};
 
 const OverviewCard = ({ title, total, time }: OverviewProp) => {
 	return (

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
@@ -17,6 +18,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	const [state, send] = useMachine(createProgramWizardMachine, {
 		input: { isAuthenticated },
 	});
+	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	const router = useRouter();
 
@@ -24,12 +26,12 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	const createdProgramId = state.context.createdProgramId;
 
 	useEffect(() => {
-		if (!createdProgramId) {
+		if (!createdProgramId || !isAuthenticated) {
 			return;
 		}
 
 		router.replace(`/portal/programs/${createdProgramId}/overview`);
-	}, [createdProgramId, router]);
+	}, [createdProgramId, isAuthenticated, router]);
 
 	return (
 		<>
@@ -45,12 +47,12 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 			</div>
 
 			<Dialog open={isOpen} onOpenChange={(open) => send({ type: open ? 'OPEN' : 'CLOSE' })}>
-				<DialogContent variant="large" className="max-h-[90dvh] overflow-y-auto">
+				<DialogContent variant="large" className="flex max-h-[90dvh] flex-col overflow-hidden">
 					<DialogHeader>
-						<DialogTitle>Initiate New Program</DialogTitle>
+						<DialogTitle>{t('modal.title')}</DialogTitle>
 					</DialogHeader>
 
-					<CreateProgramWizard state={state} send={send} />
+					<CreateProgramWizard state={state} send={send} onGoToLogin={() => router.replace('/login')} />
 				</DialogContent>
 			</Dialog>
 		</>

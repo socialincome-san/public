@@ -1,7 +1,6 @@
 import { FundraiserBadge, SDGBadge } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
 import { NgoCardProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	Badge,
 	Card,
@@ -34,19 +33,19 @@ export default async function NgoCard({
 	region,
 }: NgoCardProps) {
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
+		language: lang,
 		namespaces: ['website-common', 'countries', 'website-partners'],
 	});
 
-	const showVisitOnline: boolean = !!(
-		ngoHoverCard.orgInstagram ||
-		ngoHoverCard.orgFacebook ||
-		ngoHoverCard.orgWebsite ||
-		ngoHoverCard.orgLinkedIn ||
-		ngoHoverCard.orgYoutube
+	const showVisitOnline = Boolean(
+		ngoHoverCard.orgInstagram ??
+		ngoHoverCard.orgFacebook ??
+		ngoHoverCard.orgWebsite ??
+		ngoHoverCard.orgLinkedIn ??
+		ngoHoverCard.orgYoutube,
 	);
 
-	const showFundRaiser: boolean = !!ngoHoverCard.orgFundRaiserText;
+	const showFundRaiser = !!ngoHoverCard.orgFundRaiserText;
 
 	const SL_flag = SL as unknown as React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
@@ -68,14 +67,14 @@ export default async function NgoCard({
 					<CardFooter className="flex-row flex-wrap gap-2 p-0 pt-2">
 						<HoverCard>
 							<HoverCardTrigger>
-								{countryBadge?.countryFlagComponent || <SL_flag className="h-5 w-5 rounded-full" />}
+								{countryBadge?.countryFlagComponent ?? <SL_flag className="h-5 w-5 rounded-full" />}
 							</HoverCardTrigger>
 							<HoverCardContent className="inline-flex w-auto items-center">
 								<div className="mr-3">
-									{countryBadge?.countryFlagComponent || <SL_flag className="mr-2 h-5 w-5 rounded-full" />}
+									{countryBadge?.countryFlagComponent ?? <SL_flag className="mr-2 h-5 w-5 rounded-full" />}
 								</div>
 								<Typography size="sm" weight="normal" className="text-inherit">
-									{translator.t(countryBadge?.countryAbbreviation || 'SL')}
+									{translator.t(countryBadge?.countryAbbreviation ?? 'SL')}
 								</Typography>
 							</HoverCardContent>
 						</HoverCard>
@@ -120,9 +119,9 @@ export default async function NgoCard({
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
 							<Badge className="bg-primary/10 hover:bg-primary text-primary space-x-2 px-4 py-2 hover:text-white">
-								{countryBadge?.countryFlagComponent || <SL_flag className="h-5 w-5 rounded-full" />}
+								{countryBadge?.countryFlagComponent ?? <SL_flag className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
-									{translator.t(countryBadge?.countryAbbreviation || 'SL')}
+									{translator.t(countryBadge?.countryAbbreviation ?? 'SL')}
 								</Typography>
 							</Badge>
 						</div>

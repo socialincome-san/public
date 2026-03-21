@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { CountryFormCreateInput, CountryFormUpdateInput } from '@/lib/services/country/country-form-input';
 import { CountryPayload } from '@/lib/services/country/country.types';
 import { CountryFormSchema } from './countries-form';
@@ -22,21 +23,12 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryFormC
 		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
 		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
 		sanctions: sanctions.sanctions.value ?? [],
-		microfinanceSourceLink: buildOptionalSourceLink(
-			cash.microfinanceSourceText.value,
-			cash.microfinanceSourceHref.value,
-		),
-		networkSourceLink: buildOptionalSourceLink(
-			mobileNetwork.networkSourceText.value,
-			mobileNetwork.networkSourceHref.value,
-		),
+		microfinanceSourceLink: buildOptionalSourceLink(cash.microfinanceSourceText.value, cash.microfinanceSourceHref.value),
+		networkSourceLink: buildOptionalSourceLink(mobileNetwork.networkSourceText.value, mobileNetwork.networkSourceHref.value),
 	};
 };
 
-export const buildUpdateCountryInput = (
-	schema: CountryFormSchema,
-	existing: CountryPayload,
-): CountryFormUpdateInput => {
+export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryFormUpdateInput => {
 	const countrySettings = schema.fields.countrySettings.fields;
 	const cash = schema.fields.suitabilityOfCash.fields;
 	const mobileMoney = schema.fields.mobileMoney.fields;
@@ -57,20 +49,14 @@ export const buildUpdateCountryInput = (
 		mobileMoneyProviderIds: mobileMoney.mobileMoneyProviders.value ?? [],
 		mobileMoneyConditionOverride: mobileMoney.mobileMoneyConditionOverride.value ?? false,
 		sanctions: sanctions.sanctions.value ?? [],
-		microfinanceSourceLink: buildOptionalSourceLink(
-			cash.microfinanceSourceText.value,
-			cash.microfinanceSourceHref.value,
-		),
-		networkSourceLink: buildOptionalSourceLink(
-			mobileNetwork.networkSourceText.value,
-			mobileNetwork.networkSourceHref.value,
-		),
+		microfinanceSourceLink: buildOptionalSourceLink(cash.microfinanceSourceText.value, cash.microfinanceSourceHref.value),
+		networkSourceLink: buildOptionalSourceLink(mobileNetwork.networkSourceText.value, mobileNetwork.networkSourceHref.value),
 	};
 };
 
 const buildOptionalSourceLink = (rawText: unknown, rawHref: unknown): { text: string; href: string } | null => {
-	const text = `${rawText ?? ''}`.trim();
-	const href = `${rawHref ?? ''}`.trim();
+	const text = typeof rawText === 'string' ? rawText.trim() : '';
+	const href = typeof rawHref === 'string' ? rawHref.trim() : '';
 
 	if (!text || !href) {
 		return null;

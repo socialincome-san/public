@@ -1,5 +1,9 @@
-import { Address, Gender, Phone, Prisma } from '@/generated/prisma/client';
-export type { RecipientProgramFilterOption, RecipientTableViewRow } from './recipient-table.types';
+import { Address, Gender, PayoutInterval, Phone, Prisma } from '@/generated/prisma/client';
+export type {
+	RecipientProgramFilterOption,
+	RecipientTableViewRow,
+	UpcomingOnboardingTableViewRow,
+} from './recipient-table.types';
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {
@@ -19,6 +23,7 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 				country: {
 					select: {
 						isoCode: true;
+						currency: true;
 					};
 				};
 			};
@@ -63,11 +68,28 @@ export type RecipientPayload = {
 	} | null;
 };
 
-export type RecipientCreateInput = Prisma.RecipientCreateInput;
-export type RecipientUpdateInput = Prisma.RecipientUpdateInput;
 export type RecipientPrismaUpdateInput = Prisma.RecipientUpdateInput;
 
 export type RecipientOption = {
 	id: string;
 	fullName: string;
+};
+
+export type RecipientLifecycleStatus = 'future' | 'active' | 'suspended' | 'completed';
+
+export type RecipientLifecycleStatusInput = {
+	startDate: Date | null;
+	suspendedAt: Date | null;
+	paidOrConfirmedCount: number;
+	programDurationInMonths: number;
+	payoutInterval: PayoutInterval;
+	nowDate: Date;
+};
+
+export type RecipientLifecycleStatusFromExpectedIntervalsInput = {
+	startDate: Date | null;
+	suspendedAt: Date | null;
+	paidOrConfirmedCount: number;
+	expectedIntervals: number;
+	nowDate: Date;
 };

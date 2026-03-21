@@ -13,7 +13,7 @@ const CAMPAIGN_STATUS_UI: Record<
 	{
 		variant: 'verified' | 'destructive' | 'outline-solid' | 'secondary' | 'default';
 		label: string;
-		Icon: ComponentType<any>;
+		Icon: ComponentType<{ className?: string }>;
 	}
 > = {
 	active: { variant: 'verified', label: 'Active', Icon: HourglassIcon },
@@ -23,6 +23,7 @@ const CAMPAIGN_STATUS_UI: Record<
 export const CampaignStatusBadge = ({ status }: CampaignStatusBadgeProps) => {
 	const key = status ? 'active' : 'inactive';
 	const { variant, label, Icon } = CAMPAIGN_STATUS_UI[key];
+
 	return (
 		<Badge variant={variant}>
 			<Icon className="mr-1 h-4 w-4" />

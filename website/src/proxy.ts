@@ -19,7 +19,8 @@ export const config = {
  * Checks if a valid country is set as a cookie and set it based on the request header if available.
  */
 const countryMiddleware = (request: NextRequest, response: NextResponse) => {
-	if (request.cookies.has(COUNTRY_COOKIE) && isValidCountryCode(request.cookies.get(COUNTRY_COOKIE)?.value!)) {
+	const countryCookie = request.cookies.get(COUNTRY_COOKIE);
+	if (countryCookie && isValidCountryCode(countryCookie.value)) {
 		return response;
 	}
 
@@ -32,6 +33,7 @@ const countryMiddleware = (request: NextRequest, response: NextResponse) => {
 			maxAge: 60 * 60 * 24 * 7,
 		});
 	} // 1 week
+
 	return response;
 };
 
@@ -49,6 +51,7 @@ const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
 	const currency = bestGuessCurrency(country);
 
 	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 7 }); // 1 week
+
 	return response;
 };
 
@@ -118,7 +121,7 @@ const i18nRedirectMiddleware = (request: NextRequest) => {
 };
 
 export const proxy = (request: NextRequest) => {
-	let response = redirectMiddleware(request) || i18nRedirectMiddleware(request);
+	let response = redirectMiddleware(request) ?? i18nRedirectMiddleware(request);
 	if (response) {
 		return response;
 	}
@@ -127,5 +130,6 @@ export const proxy = (request: NextRequest) => {
 	response = NextResponse.next();
 	response = countryMiddleware(request, response);
 	response = currencyMiddleware(request, response);
+
 	return response;
 };

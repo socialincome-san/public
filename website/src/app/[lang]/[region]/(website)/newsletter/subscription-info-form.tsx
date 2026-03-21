@@ -49,17 +49,21 @@ export const SubscriptionInfoForm = ({ lang, translations }: PersonalInfoFormPro
 
 	const onSubmit = async (values: FormSchema) => {
 		setIsSubmitting(true);
+		let newsletterLanguage: NewsletterSubscriptionData['language'] = 'en';
+		if (lang === 'de' || lang === 'fr' || lang === 'it') {
+			newsletterLanguage = lang;
+		}
 		const data: NewsletterSubscriptionData = {
 			firstname: values.firstname,
 			email: values.email,
-			language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : lang === 'it' ? 'it' : 'en',
+			language: newsletterLanguage,
 		};
 
 		try {
 			await subscribeToNewsletterAction(data);
 			toast.success(translations.toastMessage);
 			form.reset();
-		} catch (error) {
+		} catch {
 			toast.error(translations.toastErrorMessage);
 		} finally {
 			setIsSubmitting(false);

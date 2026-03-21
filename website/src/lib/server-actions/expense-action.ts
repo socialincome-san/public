@@ -14,6 +14,7 @@ export const createExpenseAction = async (input: ExpenseFormCreateInput) => {
 	}
 	const res = await services.write.expense.create(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
+
 	return res;
 };
 
@@ -24,6 +25,7 @@ export const updateExpenseAction = async (input: ExpenseFormUpdateInput) => {
 	}
 	const res = await services.write.expense.update(sessionResult.data.id, input);
 	revalidatePath(REVALIDATE_PATH);
+
 	return res;
 };
 
@@ -32,6 +34,7 @@ export const getExpenseAction = async (id: string) => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.expense.get(sessionResult.data.id, id);
 };
 
@@ -40,5 +43,6 @@ export const getExpenseOptionsAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
+
 	return services.read.organization.getOptions(sessionResult.data.id);
 };

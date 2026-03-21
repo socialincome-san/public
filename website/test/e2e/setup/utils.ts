@@ -1,21 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { APIResponse, Browser, expect } from '@playwright/test';
 
 const ACTORS = {
 	user: {
-		email: 'test@portal.org',
+		email: 'power@portal.test',
 		testId: 'welcome-message-portal',
 		expectedPath: '/portal',
 		state: 'playwright/.auth/user.json',
 	},
 	contributor: {
-		email: 'test@dashboard.org',
+		email: 'coreh@dashboard.test',
 		testId: 'welcome-message-dashboard',
 		expectedPath: '/dashboard',
 		state: 'playwright/.auth/contributor.json',
 	},
 	partner: {
-		email: 'test@partner.org',
+		email: 'sl@partner.test',
 		testId: 'welcome-message-partner-space',
 		expectedPath: '/partner-space',
 		state: 'playwright/.auth/partner.json',
@@ -90,7 +91,7 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 		{ key: COOKIE_CONSENT_KEY, value: COOKIE_CONSENT_VALUE },
 	);
 
-	await context.storageState({ path: state });
+	await context.storageState({ path: state, indexedDB: true });
 
 	await context.close();
 };

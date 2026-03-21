@@ -8,7 +8,7 @@ export const mobileMoneyProvidersData: MobileMoneyProvider[] = [
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null,
 	},
-		{
+	{
 		id: 'mobile-money-provider-id-2',
 		name: 'Yellow Money',
 		isSupported: false,

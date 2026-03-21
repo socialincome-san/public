@@ -1,7 +1,9 @@
 import { CountryCode, ProgramPermission } from '@/generated/prisma/client';
+import type { RecipientLifecycleStatus } from './recipient.types';
 
 export type RecipientTableViewRow = {
 	id: string;
+	firebaseAuthUserId: string;
 	country: CountryCode | null;
 	firstName: string;
 	lastName: string;
@@ -17,6 +19,7 @@ export type RecipientTableViewRow = {
 	payoutsTotal: number;
 	payoutsProgressPercent: number;
 	createdAt: Date;
+	status: RecipientLifecycleStatus;
 	permission: ProgramPermission;
 };
 
@@ -32,6 +35,7 @@ export type RecipientTableQuery = {
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
 	programId?: string;
+	recipientStatus?: string;
 };
 
 export type RecipientProgramFilterOption = {
@@ -43,5 +47,23 @@ export type RecipientPaginatedTableView = {
 	tableRows: RecipientTableViewRow[];
 	totalCount: number;
 	permission: ProgramPermission;
+	programFilterOptions: RecipientProgramFilterOption[];
+};
+
+export type UpcomingOnboardingTableViewRow = {
+	id: string;
+	recipientName: string;
+	programId: string;
+	programName: string;
+	localPartnerName: string;
+	communicationPhoneNumber: string | null;
+	startDate: Date;
+	daysUntilStart: number;
+	createdAt: Date;
+};
+
+export type RecipientUpcomingOnboardingPaginatedTableView = {
+	tableRows: UpcomingOnboardingTableViewRow[];
+	totalCount: number;
 	programFilterOptions: RecipientProgramFilterOption[];
 };

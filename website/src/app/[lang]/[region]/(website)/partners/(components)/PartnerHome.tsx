@@ -17,44 +17,45 @@ const country_abbreviations_to_flag_map: Record<string, React.ReactElement> = {
 	CH: <CH_Flag className="h-5 w-5 rounded-full" />,
 };
 
-const getFlag = (abbreviation: string): ReactElement<any> => {
-	return country_abbreviations_to_flag_map[abbreviation] || <SL_Flag className="h-5 w-5 rounded-full" />;
+const getFlag = (abbreviation: string): ReactElement<unknown> => {
+	return country_abbreviations_to_flag_map[abbreviation] ?? <SL_Flag className="h-5 w-5 rounded-full" />;
 };
 
 export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang, region }: NgoHomeProps) => {
 	const image_base_path = '/assets/partners/';
 
 	const countryBadge: CountryBadgeType = {
-		countryAbbreviation: currentNgo!['org-country'],
-		countryFlagComponent: getFlag(currentNgo!['org-country']),
+		countryAbbreviation: currentNgo['org-country'],
+		countryFlagComponent: getFlag(currentNgo['org-country']),
 	};
 	const ngoHoverCard: NgoHoverCardType = {
-		orgImage: image_base_path.concat(currentNgo!['org-image']),
-		orgLongName: currentNgo!['org-long-name'],
-		partnershipStart: currentNgo!['partnership-start'],
-		orgDescriptionParagraphs: currentNgo!['org-description-paragraphs'],
-		quote: currentNgo!['org-quote'] ?? null,
-		quoteAuthor: currentNgo!['org-quote-author'] ?? null,
-		quotePhoto: currentNgo!['org-quote-photo'] ? image_base_path.concat(currentNgo!['org-quote-photo']) : null,
-		orgFoundation: currentNgo!['org-foundation'],
-		orgHeadquarter: currentNgo!['org-headquarter'],
-		orgWebsite: currentNgo!['org-website'] ?? null,
-		orgFacebook: currentNgo!['org-facebook'] ?? null,
-		orgInstagram: currentNgo!['org-instagram'] ?? null,
-		orgLinkedIn: currentNgo!['org-linkedin'] ?? null,
-		orgYoutube: currentNgo!['org-youtube'] ?? null,
-		orgFundRaiserText: currentNgo!['org-fundraiser-text'] ?? null,
-		orgSlug: currentNgo!['org-slug'],
+		orgImage: image_base_path.concat(currentNgo['org-image']),
+		orgLongName: currentNgo['org-long-name'],
+		partnershipStart: currentNgo['partnership-start'],
+		orgDescriptionParagraphs: currentNgo['org-description-paragraphs'],
+		quote: currentNgo['org-quote'] ?? null,
+		quoteAuthor: currentNgo['org-quote-author'] ?? null,
+		quotePhoto: currentNgo['org-quote-photo'] ? image_base_path.concat(currentNgo['org-quote-photo']) : null,
+		orgFoundation: currentNgo['org-foundation'],
+		orgHeadquarter: currentNgo['org-headquarter'],
+		orgWebsite: currentNgo['org-website'] ?? null,
+		orgFacebook: currentNgo['org-facebook'] ?? null,
+		orgInstagram: currentNgo['org-instagram'] ?? null,
+		orgLinkedIn: currentNgo['org-linkedin'] ?? null,
+		orgYoutube: currentNgo['org-youtube'] ?? null,
+		orgFundRaiserText: currentNgo['org-fundraiser-text'] ?? null,
+		orgSlug: currentNgo['org-slug'],
 	};
-	const showVisitOnline: boolean = !!(
-		ngoHoverCard.orgInstagram ||
-		ngoHoverCard.orgFacebook ||
-		ngoHoverCard.orgWebsite ||
-		ngoHoverCard.orgLinkedIn ||
-		ngoHoverCard.orgYoutube
+	const showVisitOnline = Boolean(
+		ngoHoverCard.orgInstagram ??
+		ngoHoverCard.orgFacebook ??
+		ngoHoverCard.orgWebsite ??
+		ngoHoverCard.orgLinkedIn ??
+		ngoHoverCard.orgYoutube,
 	);
 
-	const showFundRaiser: boolean = !!ngoHoverCard.orgFundRaiserText;
+	const showFundRaiser = !!ngoHoverCard.orgFundRaiserText;
+
 	return (
 		<div className="flex items-center justify-center">
 			<div className="sm:w-3/4">
@@ -84,7 +85,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
 							<Badge variant="interactive" size="md" className="space-x-2">
-								{countryBadge?.countryFlagComponent || <SL_Flag className="h-5 w-5 rounded-full" />}
+								{countryBadge?.countryFlagComponent ?? <SL_Flag className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
 									{currentNgoCountry}
 								</Typography>
@@ -166,7 +167,7 @@ export const PartnerHome = ({ currentNgo, currentNgoCountry, translations, lang,
 							<Typography size="lg">{translations.mission}</Typography>
 						</div>
 						<div className="col-span-2">
-							<Typography size="lg">{currentNgo!['org-mission']}</Typography>
+							<Typography size="lg">{currentNgo['org-mission']}</Typography>
 						</div>
 					</div>
 					<div className="grid grid-cols-3 gap-4">

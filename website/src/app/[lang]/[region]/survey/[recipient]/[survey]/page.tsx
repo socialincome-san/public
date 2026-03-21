@@ -13,9 +13,9 @@ export default function Page({ params }: SurveyPageProps) {
 	const searchParams = useSearchParams();
 	const { hasError, login } = useSurvey();
 
-	const tryLogin = async (email: string | null, password: string | null) => {
+	const tryLogin = (email: string | null, password: string | null) => {
 		if (email && password) {
-			login(email, password).then((loggedIn) => {
+			void login(email, password).then((loggedIn) => {
 				setIsLoggedIn(loggedIn);
 			});
 		}
@@ -23,6 +23,7 @@ export default function Page({ params }: SurveyPageProps) {
 
 	useEffect(() => {
 		tryLogin(searchParams.get('email'), searchParams.get('pw'));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -34,17 +35,19 @@ export default function Page({ params }: SurveyPageProps) {
 
 	if (isLoggedIn && !hasError) {
 		return <Survey surveyId={survey} recipientId={recipient} lang={lang as SurveyLanguage} />;
-	} else if (hasError) {
-		return <div className="theme-new mx-auto max-w-md">Error logging in. Please check your credentials.</div>;
-	} else {
-		return (
-			<form className="theme-new mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>
-				<Input name="email" type="text" placeholder="Email" />
-				<Input name="password" type="password" placeholder="Password" />
-				<Button type="submit" className="btn btn-primary mx-auto">
-					Save
-				</Button>
-			</form>
-		);
 	}
+
+	if (hasError) {
+		return <div className="theme-new mx-auto max-w-md">Error logging in. Please check your credentials.</div>;
+	}
+
+	return (
+		<form className="theme-new mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>
+			<Input name="email" type="text" placeholder="Email" />
+			<Input name="password" type="password" placeholder="Password" />
+			<Button type="submit" className="btn btn-primary mx-auto">
+				Save
+			</Button>
+		</form>
+	);
 }

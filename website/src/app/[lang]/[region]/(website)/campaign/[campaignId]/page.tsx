@@ -26,9 +26,9 @@ import {
 } from '@socialincome/ui';
 import Link from 'next/link';
 
-interface CampaignPageParams extends DefaultParams {
+type CampaignPageParams = {
 	campaignId: string;
-}
+} & DefaultParams;
 
 export type CampaignPageProps = {
 	params: Promise<CampaignPageParams>;
@@ -60,6 +60,7 @@ export const generateMetadata = async ({ params }: CampaignPageProps) => {
 					},
 				}
 			: undefined;
+
 	return getMetadata(lang as WebsiteLanguage, 'website-campaign', campaignMetadata);
 };
 
@@ -101,6 +102,7 @@ export default async function Page({ params }: CampaignPageProps) {
 								<Typography
 									weight="medium"
 									color="foreground"
+									// eslint-disable-next-line react/forbid-component-props
 									style={{ lineHeight: '70px' }}
 									className="mt-2 text-[4rem]"
 								>
@@ -322,14 +324,12 @@ export default async function Page({ params }: CampaignPageProps) {
 								<PopoverContent align="end" className="w-96">
 									<Table>
 										<TableBody>
-											{translator
-												.t<{ role: string; name: string }[]>('video-01.credits')
-												.map(({ role, name }, index) => (
-													<TableRow key={index}>
-														<TableCell className="p-1.5 font-medium">{role}</TableCell>
-														<TableCell className="p-1.5">{name}</TableCell>
-													</TableRow>
-												))}
+											{translator.t<{ role: string; name: string }[]>('video-01.credits').map(({ role, name }, index) => (
+												<TableRow key={index}>
+													<TableCell className="p-1.5 font-medium">{role}</TableCell>
+													<TableCell className="p-1.5">{name}</TableCell>
+												</TableRow>
+											))}
 										</TableBody>
 									</Table>
 								</PopoverContent>

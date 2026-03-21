@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
-import { CampaignsCreateInput, CampaignsUpdateInput } from '@/lib/services/campaign/campaign.types';
+import { CampaignFormCreateInput, CampaignFormUpdateInput } from '@/lib/services/campaign/campaign-form-input';
 import { allCurrencies } from '@/lib/types/currency';
+import { CAMPAIGN_SLUG_REGEX } from '@/lib/utils/regex';
 import z from 'zod';
 
 type CampaignsFormSchema = {
@@ -95,7 +97,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		goal: {
 			placeholder: 'Target amount for goal',
 			label: 'Goal Amount',
-			zodSchema: z.number().positive('Goal must be positive').nullable(),
+			zodSchema: z.number().positive('Goal must be positive').nullable().optional(),
 		},
 		currency: {
 			placeholder: 'Select currency',
@@ -106,7 +108,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		additionalAmountChf: {
 			placeholder: 'Additional Amount in CHF',
 			label: 'Additional CHF Amount',
-			zodSchema: z.number().positive('Amount must be positive').nullable(),
+			zodSchema: z.number().positive('Amount must be positive').nullable().optional(),
 		},
 		endDate: {
 			label: 'End Date',
@@ -129,11 +131,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		slug: {
 			placeholder: 'unique-readable-id',
 			label: 'Slug (URL Identifier)',
-			zodSchema: z
-				.string()
-				.regex(/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/, 'Invalid slug format.')
-				.or(z.literal(''))
-				.optional(),
+			zodSchema: z.string().regex(CAMPAIGN_SLUG_REGEX, 'Invalid slug format.').or(z.literal('')).optional(),
 		},
 		metadataDescription: {
 			placeholder: 'SEO description for search engines',
@@ -167,8 +165,9 @@ export const initialFormSchema: CampaignsFormSchema = {
 	},
 };
 
-export const buildUpdateCampaignsInput = (schema: CampaignsFormSchema): CampaignsUpdateInput => {
+export const buildUpdateCampaignsInput = (schema: CampaignsFormSchema, campaignId: string): CampaignFormUpdateInput => {
 	return {
+		id: campaignId,
 		title: schema.fields.title.value,
 		description: schema.fields.description.value,
 		secondDescriptionTitle: schema.fields.secondDescriptionTitle.value,
@@ -193,11 +192,11 @@ export const buildUpdateCampaignsInput = (schema: CampaignsFormSchema): Campaign
 		metadataTwitterImage: schema.fields.metadataTwitterImage.value,
 		creatorName: schema.fields.creatorName.value,
 		creatorEmail: schema.fields.creatorEmail.value,
-		program: { connect: { id: schema.fields.program.value } },
+		programId: schema.fields.program.value,
 	};
 };
 
-export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): CampaignsCreateInput => {
+export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): CampaignFormCreateInput => {
 	return {
 		title: schema.fields.title.value,
 		description: schema.fields.description.value,
@@ -223,6 +222,6 @@ export const buildCreateCampaignsInput = (schema: CampaignsFormSchema): Campaign
 		metadataTwitterImage: schema.fields.metadataTwitterImage.value,
 		creatorName: schema.fields.creatorName.value,
 		creatorEmail: schema.fields.creatorEmail.value,
-		program: { connect: { id: schema.fields.program.value } },
+		programId: schema.fields.program.value,
 	};
 };

@@ -2,38 +2,31 @@ import { Organization } from '@/generated/prisma/client';
 
 export const organizationsData: Organization[] = [
 	{
-		id: 'organization-1',
-		name: 'Migros',
+		id: 'org-si-sl',
+		name: 'Social Income SL',
 		isOperatorFallback: true,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'organization-2',
-		name: 'Coop',
+		id: 'org-si-gh',
+		name: 'Social Income GH',
 		isOperatorFallback: false,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'organization-3',
-		name: 'Swiss Red Cross',
+		id: 'org-si-lr',
+		name: 'Social Income LR',
 		isOperatorFallback: false,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
 	{
-		id: 'organization-4',
-		name: 'Caritas',
+		id: 'org-somaha',
+		name: 'Somaha Foundation',
 		isOperatorFallback: false,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
+		createdAt: new Date('2025-01-01T13:00:00.000Z'),
+		updatedAt: null,
 	},
-	{
-		id: 'organization-5',
-		name: 'Famigros',
-		isOperatorFallback: false,
-		createdAt: new Date('2024-03-12T12:00:00.000Z'),
-		updatedAt: null
-	}
 ];

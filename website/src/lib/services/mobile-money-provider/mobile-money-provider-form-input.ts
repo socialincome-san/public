@@ -8,7 +8,7 @@ export const mobileMoneyProviderCreateInputSchema = z.object({
 });
 
 export const mobileMoneyProviderUpdateInputSchema = mobileMoneyProviderCreateInputSchema.extend({
-	id: requiredTrimmedString('Mobile money provider id').optional(),
+	id: requiredTrimmedString('Mobile money provider id'),
 });
 
 export type MobileMoneyProviderFormCreateInput = z.infer<typeof mobileMoneyProviderCreateInputSchema>;

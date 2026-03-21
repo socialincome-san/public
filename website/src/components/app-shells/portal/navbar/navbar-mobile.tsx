@@ -14,7 +14,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-type NavbarMobileProps = { sessions: Session[] };
+type NavbarMobileProps = {
+	sessions: Session[];
+};
 
 export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,7 +31,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
 
-	const ProfileName = () => (
+	const profileName = (
 		<div className="flex items-center space-x-3">
 			<Avatar>
 				<AvatarFallback className="bg-primary text-background">
@@ -55,9 +57,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 					className="relative -ml-2 flex h-9 w-9 items-center justify-center [&_svg]:size-5"
 				>
 					<span
-						className={`absolute transition-all duration-300 ${
-							isMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
-						}`}
+						className={`absolute transition-all duration-300 ${isMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'}`}
 					>
 						<Menu />
 					</span>
@@ -105,7 +105,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 						<Separator />
 
 						<div className="p-2">
-							<ProfileName />
+							{profileName}
 
 							<div className="mt-3 grid gap-1 p-2">
 								{userMenuNavLinks.map(({ href, label }) => (

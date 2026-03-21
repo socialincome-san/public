@@ -1,10 +1,11 @@
-import { Currency, PaymentEventType, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { Currency, PaymentEventType, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
+import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { endOfYear, startOfYear } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
 	ContributionDonationEntry,
 	ContributionPaginatedTableView,
@@ -18,7 +19,7 @@ import {
 export class ContributionReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -58,9 +59,7 @@ export class ContributionReadService extends BaseService {
 		}
 	}
 
-	private buildYourContributionOrderBy(
-		query: YourContributionsTableQuery,
-	): Prisma.ContributionOrderByWithRelationInput[] {
+	private buildYourContributionOrderBy(query: YourContributionsTableQuery): Prisma.ContributionOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, ['amount', 'currency', 'campaignTitle', 'createdAt'] as const);
 		switch (sortBy) {
@@ -79,7 +78,7 @@ export class ContributionReadService extends BaseService {
 
 	async get(userId: string, contributionId: string): Promise<ServiceResult<ContributionPayload>> {
 		try {
-			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
 			}
@@ -103,7 +102,7 @@ export class ContributionReadService extends BaseService {
 					campaign: {
 						select: {
 							id: true,
-							organizationId: true,
+							programId: true,
 						},
 					},
 				},
@@ -113,18 +112,20 @@ export class ContributionReadService extends BaseService {
 				return this.resultFail('Contribution not found');
 			}
 
-			if (contribution.campaign.organizationId !== accessResult.data.id) {
+			const hasAccess = accessResult.data.some((program) => program.programId === contribution.campaign.programId);
+			if (!hasAccess) {
 				return this.resultFail('Permission denied');
 			}
 
 			return this.resultOk({
 				...contribution,
 				amount: Number(contribution.amount),
-				amountChf: Number(contribution.amount),
-				feesChf: Number(contribution.amount),
+				amountChf: Number(contribution.amountChf),
+				feesChf: Number(contribution.feesChf),
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contribution: ${JSON.stringify(error)}`);
 		}
 	}
@@ -134,22 +135,34 @@ export class ContributionReadService extends BaseService {
 		query: ContributionTableQuery,
 	): Promise<ServiceResult<ContributionPaginatedTableView>> {
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
-
-			const { id: organizationId, permission } = activeOrgResult.data;
+			const accessiblePrograms = accessibleProgramsResult.data;
+			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((p) => p.programId)));
+			if (accessibleProgramIds.length === 0) {
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					permission: ProgramPermission.owner,
+					filterOptions: { programs: [], campaigns: [], paymentEventTypes: [] },
+				});
+			}
 			const search = query.search.trim();
-			const selectedProgramId = query.programId?.trim() || undefined;
-			const selectedCampaignId = query.campaignId?.trim() || undefined;
-			const selectedPaymentEventType = query.paymentEventType?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedCampaignIdRaw = query.campaignId?.trim();
+			const selectedPaymentEventTypeRaw = query.paymentEventType?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+			const selectedCampaignId = selectedCampaignIdRaw === '' ? undefined : selectedCampaignIdRaw;
+			const selectedPaymentEventType = selectedPaymentEventTypeRaw === '' ? undefined : selectedPaymentEventTypeRaw;
 
 			const campaigns = await this.db.campaign.findMany({
-				where: { organizationId },
+				where: { programId: { in: accessibleProgramIds } },
 				select: {
 					id: true,
 					title: true,
+					programId: true,
 					program: { select: { id: true, name: true } },
 				},
 				orderBy: { title: 'asc' },
@@ -161,17 +174,16 @@ export class ContributionReadService extends BaseService {
 					new Map(
 						campaigns
 							.filter((campaign) => campaign.program?.id && campaign.program?.name)
-							.map((campaign) => [
-								campaign.program!.id,
-								{ value: campaign.program!.id, label: campaign.program!.name },
-							]),
+							.map((campaign) => [campaign.program.id, { value: campaign.program.id, label: campaign.program.name }]),
 					).values(),
 				),
 				campaigns: campaigns.map((campaign) => ({ value: campaign.id, label: campaign.title })),
 				paymentEventTypes: (Object.values(PaymentEventType) as PaymentEventType[]).map((type) => ({
 					value: type,
 					label:
-						type === 'bank_transfer' ? 'Wire transfer' : type.replace(/_/g, ' ').replace(/^./, (s) => s.toUpperCase()),
+						type === 'bank_transfer'
+							? 'Wire transfer'
+							: type.replace(UNDERSCORE_REGEX, ' ').replace(START_CHARACTER_REGEX, (s) => s.toUpperCase()),
 				})),
 			};
 
@@ -181,7 +193,9 @@ export class ContributionReadService extends BaseService {
 					? campaigns.filter((campaign) => campaign.program?.id === selectedProgramId).map((campaign) => campaign.id)
 					: campaignIds;
 			if (filteredCampaignIds.length === 0) {
-				return this.resultOk({ tableRows: [], totalCount: 0, permission, filterOptions });
+				const readOnlyPermission = ProgramPermission.owner;
+
+				return this.resultOk({ tableRows: [], totalCount: 0, permission: readOnlyPermission, filterOptions });
 			}
 
 			const where = {
@@ -220,7 +234,7 @@ export class ContributionReadService extends BaseService {
 							select: {
 								id: true,
 								title: true,
-								program: { select: { name: true } },
+								program: { select: { id: true, name: true } },
 							},
 						},
 						contributor: {
@@ -242,6 +256,14 @@ export class ContributionReadService extends BaseService {
 				this.db.contribution.count({ where }),
 			]);
 
+			const permissionByProgramId = new Map<string, ProgramPermission>();
+			for (const access of accessiblePrograms) {
+				const current = permissionByProgramId.get(access.programId);
+				if (access.permission === ProgramPermission.operator || current === undefined) {
+					permissionByProgramId.set(access.programId, access.permission);
+				}
+			}
+
 			const tableRows: ContributionTableViewRow[] = contributions.map((c) => ({
 				id: c.id,
 				firstName: c.contributor?.contact?.firstName ?? '',
@@ -254,11 +276,23 @@ export class ContributionReadService extends BaseService {
 				paymentEventType: c.paymentEvent?.type ?? null,
 				programName: c.campaign?.program?.name ?? null,
 				createdAt: c.createdAt,
+				permission: permissionByProgramId.get(c.campaign?.program?.id ?? '') ?? ProgramPermission.owner,
 			}));
+
+			const selectedCampaigns = campaigns.filter((campaign) => filteredCampaignIds.includes(campaign.id));
+			const selectedProgramIds = Array.from(new Set(selectedCampaigns.map((campaign) => campaign.programId)));
+			const permission = selectedProgramIds.some((programId) =>
+				accessiblePrograms.some(
+					(program) => program.programId === programId && program.permission === ProgramPermission.operator,
+				),
+			)
+				? ProgramPermission.operator
+				: ProgramPermission.owner;
 
 			return this.resultOk({ tableRows, totalCount, permission, filterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributions: ${JSON.stringify(error)}`);
 		}
 	}
@@ -300,6 +334,7 @@ export class ContributionReadService extends BaseService {
 			return this.resultOk(contributions);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributions for contributor ${contributorId}`);
 		}
 	}
@@ -310,9 +345,7 @@ export class ContributionReadService extends BaseService {
 	): Promise<ServiceResult<YourContributionsPaginatedTableView>> {
 		try {
 			const search = query.search.trim();
-			const matchedCurrency = Object.values(Currency).find(
-				(currency) => currency.toLowerCase() === search.toLowerCase(),
-			);
+			const matchedCurrency = Object.values(Currency).find((currency) => currency.toLowerCase() === search.toLowerCase());
 			const where = search
 				? {
 						AND: [
@@ -355,6 +388,7 @@ export class ContributionReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributions for contributor: ${JSON.stringify(error)}`);
 		}
 	}

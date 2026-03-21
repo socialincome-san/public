@@ -7,11 +7,7 @@ import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-componen
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
-import {
-	ArrowsPointingInIcon,
-	ArrowsPointingOutIcon,
-	ChatBubbleBottomCenterTextIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowsPointingInIcon, ArrowsPointingOutIcon, ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -25,6 +21,7 @@ type Props = {
 	region: WebsiteRegion;
 	subtitleUrl?: string;
 	translations: HeroVideoControlTranslations;
+	disableAutoplay?: boolean;
 };
 
 export type HeroVideoControlTranslations = {
@@ -38,11 +35,11 @@ export type HeroVideoControlTranslations = {
 	exitExpandedVideoView: string;
 };
 
-export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations }: Props) => {
+export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations, disableAutoplay = false }: Props) => {
 	const { heading, description, muxPlaybackId, button } = blok;
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
-	const [isPlaying, setIsPlaying] = useState(true);
+	const [isPlaying, setIsPlaying] = useState(!disableAutoplay);
 	const [isMuted, setIsMuted] = useState(true);
 	const [showCaptions, setShowCaptions] = useState(true);
 
@@ -63,6 +60,7 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations }
 		if (video.paused) {
 			void video.play().catch(() => undefined);
 			setIsPlaying(true);
+
 			return;
 		}
 
@@ -86,7 +84,7 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations }
 					preload="metadata"
 					loop
 					muted={isMuted}
-					autoPlay
+					autoPlay={!disableAutoplay}
 					playsInline
 					onPlay={() => setIsPlaying(true)}
 					onPause={() => setIsPlaying(false)}
@@ -161,6 +159,7 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations }
 								<div>
 									{button.map(({ _uid, label, link }) => {
 										const href = resolveStoryblokLink(link, lang, region);
+
 										return (
 											<Button key={_uid} variant="outline" size="lg" asChild>
 												<NextLink href={href}>{label}</NextLink>

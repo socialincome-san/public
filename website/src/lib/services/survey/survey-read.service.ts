@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
+import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import crypto from 'crypto';
 import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns';
@@ -51,10 +52,7 @@ export class SurveyReadService extends BaseService {
 			case 'name':
 				return [{ name: direction }];
 			case 'recipientName':
-				return [
-					{ recipient: { contact: { firstName: direction } } },
-					{ recipient: { contact: { lastName: direction } } },
-				];
+				return [{ recipient: { contact: { firstName: direction } } }, { recipient: { contact: { lastName: direction } } }];
 			case 'programName':
 				return [{ recipient: { program: { name: direction } } }];
 			case 'questionnaire':
@@ -85,9 +83,10 @@ export class SurveyReadService extends BaseService {
 		accessEmail: string;
 		accessPw: string;
 	}): string {
-		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+		const base = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
 		const url = new URL([base, 'survey', recipientId, surveyId].join('/'));
 		url.search = new URLSearchParams({ email: accessEmail, pw: accessPw }).toString();
+
 		return url.toString();
 	}
 
@@ -105,17 +104,16 @@ export class SurveyReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch survey table view: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getPaginatedTableView(
-		userId: string,
-		query: SurveyTableQuery,
-	): Promise<ServiceResult<SurveyPaginatedTableView>> {
+	async getPaginatedTableView(userId: string, query: SurveyTableQuery): Promise<ServiceResult<SurveyPaginatedTableView>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessibleProgramsResult.success) {
@@ -128,7 +126,8 @@ export class SurveyReadService extends BaseService {
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 			const programFilterOptions = Array.from(
 				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
@@ -188,9 +187,7 @@ export class SurveyReadService extends BaseService {
 				.map((survey) => {
 					const programId = survey.recipient.program!.id;
 
-					const programPermissions = accessiblePrograms
-						.filter((p) => p.programId === programId)
-						.map((p) => p.permission);
+					const programPermissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
 
 					const permission = programPermissions.includes(ProgramPermission.operator)
 						? ProgramPermission.operator
@@ -199,8 +196,7 @@ export class SurveyReadService extends BaseService {
 					return {
 						id: survey.id,
 						name: survey.name,
-						recipientName:
-							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+						recipientName: `${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
 						programId,
 						programName: survey.recipient.program!.name,
 						questionnaire: survey.questionnaire,
@@ -222,6 +218,7 @@ export class SurveyReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, programFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
@@ -236,9 +233,11 @@ export class SurveyReadService extends BaseService {
 			if (!paginated.success) {
 				return this.resultFail(paginated.error);
 			}
+
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch upcoming survey table view: ${JSON.stringify(error)}`);
 		}
 	}
@@ -259,7 +258,8 @@ export class SurveyReadService extends BaseService {
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
-			const selectedProgramId = query.programId?.trim() || undefined;
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 			const programFilterOptions = Array.from(
 				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
@@ -350,8 +350,7 @@ export class SurveyReadService extends BaseService {
 					return {
 						id: survey.id,
 						name: survey.name,
-						recipientName:
-							`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+						recipientName: `${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
 						programId,
 						programName: survey.recipient.program!.name,
 						questionnaire: survey.questionnaire,
@@ -373,6 +372,7 @@ export class SurveyReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, programFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch upcoming surveys: ${JSON.stringify(error)}`);
 		}
 	}
@@ -385,9 +385,11 @@ export class SurveyReadService extends BaseService {
 			}
 
 			const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+
 			return this.resultOk({ tableRows: filteredRows });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch program scoped surveys: ${JSON.stringify(error)}`);
 		}
 	}
@@ -433,9 +435,11 @@ export class SurveyReadService extends BaseService {
 				createdAt: survey.createdAt,
 				updatedAt: survey.updatedAt,
 			};
+
 			return this.resultOk(payload);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to get survey: ${JSON.stringify(error)}`);
 		}
 	}
@@ -524,6 +528,7 @@ export class SurveyReadService extends BaseService {
 			return this.resultOk({ surveys });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Failed to preview survey generation: ${JSON.stringify(error)}`);
 		}
 	}
@@ -534,9 +539,11 @@ export class SurveyReadService extends BaseService {
 				where: { recipientId },
 				orderBy: [{ dueAt: 'desc' }, { createdAt: 'desc' }],
 			});
+
 			return this.resultOk(surveys);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
@@ -549,9 +556,11 @@ export class SurveyReadService extends BaseService {
 			if (!surveys) {
 				return this.resultFail('Survey not found');
 			}
+
 			return this.resultOk(surveys);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}
@@ -584,13 +593,14 @@ export class SurveyReadService extends BaseService {
 			if (!surveys) {
 				return this.resultFail('Survey not found');
 			}
+
 			return this.resultOk({
 				...surveys,
-				nameOfRecipient:
-					`${surveys.recipient.contact?.firstName ?? ''} ${surveys.recipient.contact?.lastName ?? ''}`.trim(),
+				nameOfRecipient: `${surveys.recipient.contact?.firstName ?? ''} ${surveys.recipient.contact?.lastName ?? ''}`.trim(),
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
 	}

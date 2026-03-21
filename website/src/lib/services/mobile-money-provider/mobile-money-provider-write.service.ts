@@ -3,10 +3,7 @@ import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
-import {
-	MobileMoneyProviderFormCreateInput,
-	MobileMoneyProviderFormUpdateInput,
-} from './mobile-money-provider-form-input';
+import { MobileMoneyProviderFormCreateInput, MobileMoneyProviderFormUpdateInput } from './mobile-money-provider-form-input';
 import { MobileMoneyProviderValidationService } from './mobile-money-provider-validation.service';
 import { MobileMoneyProviderPayload } from './mobile-money-provider.types';
 
@@ -57,6 +54,7 @@ export class MobileMoneyProviderWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not create mobile money provider. Please try again later.');
 		}
 	}
@@ -113,6 +111,7 @@ export class MobileMoneyProviderWriteService extends BaseService {
 			});
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail('Could not update mobile money provider. Please try again later.');
 		}
 	}
@@ -152,6 +151,7 @@ export class MobileMoneyProviderWriteService extends BaseService {
 			return this.resultOk({ id: providerId });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not delete mobile money provider: ${JSON.stringify(error)}`);
 		}
 	}

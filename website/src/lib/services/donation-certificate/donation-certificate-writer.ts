@@ -22,7 +22,7 @@ export class DonationCertificateWriter {
 		this.contributions = contributions;
 	}
 
-	private groupContributionsByCurrency = async (contributions: ContributionDonationEntry[], year: number) => {
+	private groupContributionsByCurrency = (contributions: ContributionDonationEntry[], year: number) => {
 		return _(contributions)
 			.filter((contribution) => contribution.createdAt.getFullYear() === year)
 			.groupBy((contribution) => contribution.currency)
@@ -35,7 +35,7 @@ export class DonationCertificateWriter {
 	 */
 	writeDonationCertificatePDF = async (filePath: string, language: LanguageCode): Promise<ServiceResult<void>> => {
 		try {
-			const contributionsByCurrency = await this.groupContributionsByCurrency(this.contributions, this.year);
+			const contributionsByCurrency = this.groupContributionsByCurrency(this.contributions, this.year);
 
 			const translator = await Translator.getInstance({
 				language,
@@ -77,7 +77,7 @@ export class DonationCertificateWriter {
 			const footerRightLine2 = translator.t('footer-right-line-2');
 			const footerRightLine3 = translator.t('footer-right-line-3');
 
-			return new Promise<ServiceResult<void>>(async (resolve) => {
+			return new Promise<ServiceResult<void>>((resolve) => {
 				const pdfDocument = new PDFDocument({ size: 'A4' });
 				const writeStream = createWriteStream(filePath);
 				let yPosition;

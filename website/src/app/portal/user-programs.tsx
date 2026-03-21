@@ -23,35 +23,11 @@ export const UserPrograms = async ({ userId }: Props) => {
 
 	return (
 		<section className="space-y-16">
-			<div>
-				<h2 className="py-6 text-3xl font-medium">Operated Programs</h2>
-				<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
-					{operatedPrograms.map((program) => (
-						<Wallet
-							key={program.id}
-							href={`/portal/programs/${program.id}/overview`}
-							title={program.programName}
-							subtitle={getCountryNameByCode(program.country)}
-							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
-							footerLeft={{
-								label: 'Paid out',
-								currency: program.payoutCurrency,
-								amount: program.totalPayoutsSum,
-							}}
-							footerRight={{
-								label: 'Recipients',
-								amount: program.recipientsCount,
-							}}
-						/>
-					))}
-					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
-				</div>
-			</div>
-			{ownedPrograms.length > 0 && (
+			{operatedPrograms.length > 0 && (
 				<div>
-					<h2 className="py-6 text-3xl font-medium">Owned Programs</h2>
+					<h2 className="py-6 text-3xl font-medium">Operated Programs</h2>
 					<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
-						{ownedPrograms.map((program) => (
+						{operatedPrograms.map((program) => (
 							<Wallet
 								key={program.id}
 								href={`/portal/programs/${program.id}/overview`}
@@ -72,6 +48,30 @@ export const UserPrograms = async ({ userId }: Props) => {
 					</div>
 				</div>
 			)}
+			<div>
+				<h2 className="py-6 text-3xl font-medium">Owned Programs</h2>
+				<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
+					{ownedPrograms.map((program) => (
+						<Wallet
+							key={program.id}
+							href={`/portal/programs/${program.id}/overview`}
+							title={program.programName}
+							subtitle={getCountryNameByCode(program.country)}
+							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
+							footerLeft={{
+								label: 'Paid out',
+								currency: program.payoutCurrency,
+								amount: program.totalPayoutsSum,
+							}}
+							footerRight={{
+								label: 'Recipients',
+								amount: program.recipientsCount,
+							}}
+						/>
+					))}
+					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
+				</div>
+			</div>
 		</section>
 	);
 };

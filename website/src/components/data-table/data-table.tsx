@@ -8,6 +8,7 @@ import {
 	type ToolbarFilter,
 	type ToolbarSortOption,
 } from '@/components/data-table/elements/data-table-toolbar';
+import { IdCell } from '@/components/data-table/elements/id-cell';
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
 import { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
@@ -15,6 +16,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/ui';
 import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/react-table';
@@ -49,7 +51,7 @@ type DataTableProps<Row> = {
 };
 
 const formatTableError = (error: string): string => {
-	const raw = error.replace(/^Could not fetch [^:]+:\s*/i, '').trim();
+	const raw = error.replace(DATA_TABLE_FETCH_PREFIX_REGEX, '').trim();
 	if (raw.startsWith('{') && raw.endsWith('}')) {
 		try {
 			const parsed = JSON.parse(raw) as { name?: string };
@@ -60,7 +62,8 @@ const formatTableError = (error: string): string => {
 			// Keep fallback below.
 		}
 	}
-	return raw || 'Something went wrong while loading this table.';
+
+	return raw.length > 0 ? raw : 'Something went wrong while loading this table.';
 };
 
 export default function DataTable<Row>({
@@ -88,7 +91,7 @@ export default function DataTable<Row>({
 	toolbarFilters = [],
 }: DataTableProps<Row>) {
 	const stableTableMinHeightClass = 'min-h-[680px] md:min-h-[760px]';
-	const translator = useTranslator(lang || 'en', 'website-me');
+	const translator = useTranslator(lang ?? 'en', 'website-me');
 	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, translator);
 	const columns = showEntityIdColumn
 		? ([
@@ -97,15 +100,27 @@ export default function DataTable<Row>({
 					header: 'ID',
 					accessorFn: (row: Row) => {
 						const value = (row as { id?: unknown }).id;
-						return value == null ? '' : String(value);
+						if (typeof value === 'string' || typeof value === 'number') {
+							return String(value);
+						}
+
+						return '';
 					},
+					cell: (ctx) => <IdCell ctx={ctx} />,
 				},
 				...baseColumns,
 			] as ColumnDef<Row>[])
 		: baseColumns;
 	const activeQuery = query ?? null;
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-		showEntityIdColumn ? ({ id: false } as VisibilityState) : ({} as VisibilityState),
+		showEntityIdColumn
+			? ({
+					id: false,
+					firebaseAuthUserId: false,
+				} as VisibilityState)
+			: ({
+					firebaseAuthUserId: false,
+				} as VisibilityState),
 	);
 	const displayedData = data;
 	const isDatasetEmpty = activeQuery ? activeQuery.totalRows === 0 : data.length === 0;
@@ -176,6 +191,7 @@ export default function DataTable<Row>({
 						return null;
 					}
 					const label = typeof column.header === 'string' ? column.header : humanizeIdentifier(String(fallbackId));
+
 					return {
 						id: String(fallbackId),
 						label,
@@ -196,7 +212,7 @@ export default function DataTable<Row>({
 		}
 		onQueryChange({
 			page: 1,
-			sortBy: sortBy || undefined,
+			sortBy: sortBy ?? undefined,
 			sortDirection: sortBy ? (sortDirection ?? 'asc') : undefined,
 		});
 	};
@@ -207,9 +223,7 @@ export default function DataTable<Row>({
 				<div className="flex items-center gap-2">
 					<h2 className="text-3xl">
 						{title}{' '}
-						<span className="text-lg text-gray-500">
-							({activeQuery ? activeQuery.totalRows : displayedData.length})
-						</span>
+						<span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
 					</h2>
 					{titleInfoTooltip ? (
 						<Tooltip>

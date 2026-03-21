@@ -27,7 +27,7 @@ export default function GenerateDonationCertificateDialog({
 	const [language, setLanguage] = useState<LanguageCode | undefined>(DEFAULT_LANGUAGE);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<boolean>();
-	const [error, setError] = useState<string | undefined>();
+	const [error, setError] = useState<DonationCertificateError | string | undefined>();
 	const translator = useTranslator(lang, 'website-me');
 
 	const generateCertificates = () => {
@@ -43,15 +43,15 @@ export default function GenerateDonationCertificateDialog({
 		});
 	};
 
-	const getErrorMessage = (errorCode: string) => {
-		switch (errorCode) {
-			case DonationCertificateError.noContributions:
-				return translator?.t('donation-certificates.no-contributions');
-			case DonationCertificateError.alreadyExists:
-				return translator?.t('donation-certificates.already-exists');
-			default:
-				return translator?.t('donation-certificates.technical-error');
+	const getErrorMessage = (errorCode: DonationCertificateError | string) => {
+		if (errorCode === 'noContributions') {
+			return translator?.t('donation-certificates.no-contributions');
 		}
+		if (errorCode === 'alreadyExists') {
+			return translator?.t('donation-certificates.already-exists');
+		}
+
+		return translator?.t('donation-certificates.technical-error');
 	};
 
 	const onOpenChange = (open: boolean) => {
@@ -94,9 +94,7 @@ export default function GenerateDonationCertificateDialog({
 						</p>
 						<Select value={language} disabled={!language} onValueChange={(l: string) => setLanguage(l as LanguageCode)}>
 							<SelectTrigger>
-								<SelectValue
-									placeholder={translator?.t('donation-certificates.generate-dialog.placeholder_language')}
-								/>
+								<SelectValue placeholder={translator?.t('donation-certificates.generate-dialog.placeholder_language')} />
 							</SelectTrigger>
 							<SelectContent>
 								{LANGUAGES.map((langCode) => (
@@ -118,7 +116,7 @@ export default function GenerateDonationCertificateDialog({
 							: translator?.t('donation-certificates.generate-dialog.button_generate')}
 					</Button>
 
-					{(success || error) && (
+					{Boolean(success ?? error) && (
 						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
 							{success && (
 								<p className="text-sm text-green-700">

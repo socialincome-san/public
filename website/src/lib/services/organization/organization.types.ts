@@ -1,4 +1,4 @@
-import { OrganizationPermission, UserRole } from '@/generated/prisma/client';
+import { UserRole } from '@/generated/prisma/client';
 
 export type OrganizationMemberTableViewRow = {
 	id: string;
@@ -6,7 +6,6 @@ export type OrganizationMemberTableViewRow = {
 	lastName: string;
 	email: string;
 	role: UserRole | null;
-	permission: OrganizationPermission;
 };
 
 export type OrganizationMemberTableView = {
@@ -53,6 +52,19 @@ export type OrganizationPaginatedTableView = {
 };
 
 export type OrganizationOption = {
+	id: string;
+	name: string;
+};
+
+export type OrganizationPayload = {
+	id: string;
+	name: string;
+	userIds: string[];
+	ownedProgramIds: string[];
+	operatedProgramIds: string[];
+};
+
+export type ActiveOrganizationSummary = {
 	id: string;
 	name: string;
 };

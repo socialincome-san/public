@@ -1,10 +1,11 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
 import {
 	createUserAction,
+	deleteUserAction,
 	getUserAction,
 	getUserOptionsAction,
 	updateUserAction,
@@ -29,7 +30,7 @@ export type UserFormSchema = {
 		lastName: FormField;
 		email: FormField;
 		role: FormField;
-		organizationId: FormField;
+		organizations: FormField;
 	};
 };
 
@@ -57,15 +58,17 @@ const initialFormSchema: UserFormSchema = {
 			zodSchema: z.nativeEnum(UserRole),
 			value: UserRole.user,
 		},
-		organizationId: {
-			placeholder: 'Organization',
-			label: 'Organization',
+		organizations: {
+			placeholder: 'Select organizations',
+			label: 'Organizations',
+			zodSchema: z.array(z.string()).optional(),
+			options: [],
 		},
 	},
 };
 
 export default function UsersForm({ onSuccess, onError, onCancel, userId }: UserFormProps) {
-	const [formSchema, setFormSchema] = useState(initialFormSchema);
+	const [formSchema, setFormSchema] = useState(() => cloneFormSchema(initialFormSchema));
 	const [user, setUser] = useState<UserPayload>();
 	const [isLoading, startTransition] = useTransition();
 
@@ -74,35 +77,35 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 		handleServiceResult(result, {
 			onSuccess: (data) => {
 				setUser(data);
+				setFormSchema((prev) => {
+					const next = clearFormSchemaValues(prev);
 
-				const next = { ...formSchema };
-				next.fields.firstName.value = data.firstName;
-				next.fields.lastName.value = data.lastName;
-				next.fields.email.value = data.email;
-				next.fields.role.value = data.role;
-				next.fields.organizationId.value = data.organizationId;
-				setFormSchema(next);
+					return {
+						...next,
+						fields: {
+							...next.fields,
+							firstName: { ...next.fields.firstName, value: data.firstName },
+							lastName: { ...next.fields.lastName, value: data.lastName },
+							email: { ...next.fields.email, value: data.email },
+							role: { ...next.fields.role, value: data.role },
+							organizations: { ...next.fields.organizations, value: data.organizationIds },
+						},
+					};
+				});
 			},
 			onError: (error) => onError?.(error),
 		});
 	};
 
 	const setOptions = (organizations: { id: string; name: string }[]) => {
-		const optionsToZodEnum = (opts: { id: string; name: string }[]) =>
-			getZodEnum(opts.map(({ id, name }) => ({ id, label: name })));
-
-		const orgEnum = optionsToZodEnum(organizations);
-
+		const options = organizations.map(({ id, name }) => ({ id, label: name }));
 		setFormSchema((prev) => ({
 			...prev,
 			fields: {
 				...prev.fields,
-				organizationId: {
-					...prev.fields.organizationId,
-					zodSchema: z.nativeEnum(orgEnum),
-					value:
-						prev.fields.organizationId.value ??
-						(organizations.length > 0 ? organizations[0].id : prev.fields.organizationId.value),
+				organizations: {
+					...prev.fields.organizations,
+					options,
 				},
 			},
 		}));
@@ -110,10 +113,27 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 	const onSubmit = (schema: UserFormSchema) => {
 		startTransition(async () => {
+			if (userId && user?.id !== userId) {
+				return onError?.('User is still loading. Please try again.');
+			}
 			const result =
 				userId && user
 					? await updateUserAction(buildUpdateUserInput(schema, user))
 					: await createUserAction(buildCreateUserInput(schema));
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
+		});
+	};
+
+	const onDelete = () => {
+		if (!userId) {
+			return;
+		}
+
+		startTransition(async () => {
+			const result = await deleteUserAction(userId);
 			handleServiceResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
@@ -126,6 +146,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 			return;
 		}
 		startTransition(async () => await loadUser(userId));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userId]);
 
 	useEffect(() => {
@@ -144,6 +165,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
+			onDelete={onDelete}
 			mode={userId ? 'edit' : 'add'}
 		/>
 	);

@@ -1,7 +1,7 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 
 import { ContributionStatus } from '@/generated/prisma/enums';
 import { useEffect, useState, useTransition } from 'react';
@@ -16,6 +16,7 @@ import {
 import { CampaignOption } from '@/lib/services/campaign/campaign.types';
 import { ContributionPayload } from '@/lib/services/contribution/contribution.types';
 import { ContributorOption } from '@/lib/services/contributor/contributor.types';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { allCurrencies } from '@/lib/types/currency';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 
@@ -82,7 +83,7 @@ const initialFormSchema: ContributionFormSchema = {
 };
 
 export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId, readOnly }: ContributionFormProps) => {
-	const [formSchema, setFormSchema] = useState(initialFormSchema);
+	const [formSchema, setFormSchema] = useState(() => cloneFormSchema(initialFormSchema));
 	const [contribution, setContribution] = useState<ContributionPayload>();
 	const [optionsLoaded, setOptionsLoaded] = useState(false);
 	const [isLoading, startTransition] = useTransition();
@@ -90,43 +91,42 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 	useEffect(() => {
 		startTransition(async () => {
 			const optionsResult = await getContributionsOptionsAction();
-			if (!optionsResult.success) {
-				return;
-			}
-			const { contributorOptions, campaignOptions } = optionsResult.data;
+			handleServiceResult(optionsResult, {
+				onSuccess: (data) => {
+					const contributorEnum = getZodEnum(
+						data.contributorOptions.map((c: ContributorOption) => ({
+							id: c.id,
+							label: c.name,
+						})),
+					);
 
-			const contributorEnum = getZodEnum(
-				contributorOptions.map((c: ContributorOption) => ({
-					id: c.id,
-					label: c.name,
-				})),
-			);
+					const campaignEnum = getZodEnum(
+						data.campaignOptions.map((c: CampaignOption) => ({
+							id: c.id,
+							label: c.name,
+						})),
+					);
 
-			const campaignEnum = getZodEnum(
-				campaignOptions.map((c: CampaignOption) => ({
-					id: c.id,
-					label: c.name,
-				})),
-			);
-
-			setFormSchema((prev) => ({
-				...prev,
-				fields: {
-					...prev.fields,
-					contributor: {
-						...prev.fields.contributor,
-						zodSchema: z.nativeEnum(contributorEnum),
-					},
-					campaign: {
-						...prev.fields.campaign,
-						zodSchema: z.nativeEnum(campaignEnum),
-					},
+					setFormSchema((prev) => ({
+						...prev,
+						fields: {
+							...prev.fields,
+							contributor: {
+								...prev.fields.contributor,
+								zodSchema: z.nativeEnum(contributorEnum),
+							},
+							campaign: {
+								...prev.fields.campaign,
+								zodSchema: z.nativeEnum(campaignEnum),
+							},
+						},
+					}));
+					setOptionsLoaded(true);
 				},
-			}));
-
-			setOptionsLoaded(true);
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, []);
+	}, [onError]);
 
 	useEffect(() => {
 		if (!contributionId || !optionsLoaded) {
@@ -135,55 +135,55 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 
 		startTransition(async () => {
 			const result = await getContributionAction(contributionId);
-			if (!result.success) {
-				return onError?.(result.error);
-			}
+			handleServiceResult(result, {
+				onSuccess: (data) => {
+					setContribution(data);
 
-			setContribution(result.data);
+					setFormSchema((prev) => {
+						const next = clearFormSchemaValues(prev);
 
-			setFormSchema((prev) => ({
-				...prev,
-				fields: {
-					...prev.fields,
-					amount: { ...prev.fields.amount, value: result.data.amount },
-					currency: { ...prev.fields.currency, value: result.data.currency },
-					amountChf: { ...prev.fields.amountChf, value: result.data.amountChf },
-					feesChf: { ...prev.fields.feesChf, value: result.data.feesChf },
-					status: { ...prev.fields.status, value: result.data.status },
-					contributor: { ...prev.fields.contributor, value: result.data.contributor.id },
-					campaign: { ...prev.fields.campaign, value: result.data.campaign.id },
+						return {
+							...next,
+							fields: {
+								...next.fields,
+								amount: { ...next.fields.amount, value: data.amount },
+								currency: { ...next.fields.currency, value: data.currency },
+								amountChf: { ...next.fields.amountChf, value: data.amountChf },
+								feesChf: { ...next.fields.feesChf, value: data.feesChf },
+								status: { ...next.fields.status, value: data.status },
+								contributor: { ...next.fields.contributor, value: data.contributor.id },
+								campaign: { ...next.fields.campaign, value: data.campaign.id },
+							},
+						};
+					});
 				},
-			}));
+				onError: (error) => onError?.(error),
+			});
 		});
-	}, [contributionId, optionsLoaded]);
+	}, [contributionId, onError, optionsLoaded]);
 
 	const onSubmit = (schema: ContributionFormSchema) => {
 		startTransition(async () => {
-			try {
-				let response;
-
-				if (contributionId && contribution) {
-					const data = buildUpdateContributionInput(schema, contribution);
-					response = await updateContributionAction(data);
-				} else {
-					const data = buildCreateContributionInput(schema);
-					response = await createContributionAction(data);
-				}
-
-				response.success ? onSuccess?.() : onError?.(response.error);
-			} catch (e) {
-				onError?.(e);
+			if (contributionId && contribution?.id !== contributionId) {
+				return onError?.('Contribution is still loading. Please try again.');
 			}
+			const response =
+				contributionId && contribution
+					? await updateContributionAction(buildUpdateContributionInput(schema, contribution))
+					: await createContributionAction(buildCreateContributionInput(schema));
+			handleServiceResult(response, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
 		});
 	};
 
-	return (
-		<DynamicForm
-			formSchema={formSchema}
-			isLoading={isLoading}
-			onSubmit={onSubmit}
-			onCancel={onCancel}
-			mode={readOnly ? 'readonly' : contributionId ? 'edit' : 'add'}
-		/>
-	);
+	let mode: 'readonly' | 'edit' | 'add' = 'add';
+	if (readOnly) {
+		mode = 'readonly';
+	} else if (contributionId) {
+		mode = 'edit';
+	}
+
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 };

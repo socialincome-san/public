@@ -91,12 +91,9 @@ npm run format-code           # Prettier
 
 ## Test Accounts (Local Dev)
 
-| Role               | Email              | Route               |
-| ------------------ | ------------------ | ------------------- |
-| Contributor        | test@dashboard.org | /dashboard          |
-| User               | test@portal.org    | /portal             |
-| Local Partner      | test@partner.org   | /partner-space      |
-| User + Contributor | test@combined.org  | /portal, /dashboard |
+- Local auth uses deterministic hardcoded seed data.
+- To see which users can log in locally, open:
+  <http://localhost:4000/auth>
 
 ## Resources
 

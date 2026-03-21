@@ -1,9 +1,9 @@
-import { CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { CountryCode, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
 	ContributorDonationCertificate,
 	ContributorOption,
@@ -18,7 +18,7 @@ import {
 export class ContributorReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly organizationAccessService: OrganizationAccessService,
+		private readonly programAccessService: ProgramAccessReadService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -26,7 +26,14 @@ export class ContributorReadService extends BaseService {
 
 	private buildContributorOrderBy(query: ContributorTableQuery): Prisma.ContributorOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'contributor', 'email', 'country', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'contributor',
+			'email',
+			'firebaseAuthUserId',
+			'country',
+			'createdAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
@@ -34,6 +41,8 @@ export class ContributorReadService extends BaseService {
 				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
 			case 'email':
 				return [{ contact: { email: direction } }];
+			case 'firebaseAuthUserId':
+				return [{ account: { firebaseAuthUserId: direction } }];
 			case 'country':
 				return [{ contact: { address: { country: direction } } }];
 			case 'createdAt':
@@ -43,22 +52,48 @@ export class ContributorReadService extends BaseService {
 		}
 	}
 
+	private async getContributionSumsByContributorId(contributorIds: string[]): Promise<Map<string, number>> {
+		if (contributorIds.length === 0) {
+			return new Map();
+		}
+
+		const grouped = await this.db.contribution.groupBy({
+			by: ['contributorId'],
+			where: {
+				contributorId: { in: contributorIds },
+			},
+			_sum: {
+				amountChf: true,
+			},
+		});
+
+		return new Map(grouped.map((row) => [row.contributorId, Number(row._sum.amountChf ?? 0)]));
+	}
+
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+			const accessibleProgramIds = Array.from(new Set(accessibleProgramsResult.data.map((program) => program.programId)));
+			if (accessibleProgramIds.length === 0) {
+				return this.resultFail('Contributor not found');
 			}
 
-			const { id: organizationId } = activeOrgResult.data;
-
-			const contributor = await this.db.contributor.findUnique({
+			const contributor = await this.db.contributor.findFirst({
 				where: {
 					id: contributorId,
 					OR: [
 						{
 							contributions: {
-								some: { campaign: { organizationId } },
+								some: {
+									campaign: {
+										programId: {
+											in: accessibleProgramIds,
+										},
+									},
+								},
 							},
 						},
 						{
@@ -98,25 +133,34 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not get contributor: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getOptions(userId: string): Promise<ServiceResult<ContributorOption[]>> {
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
-
-			const { id: organizationId } = activeOrgResult.data;
+			const accessibleProgramIds = Array.from(new Set(accessibleProgramsResult.data.map((program) => program.programId)));
+			if (accessibleProgramIds.length === 0) {
+				return this.resultOk([]);
+			}
 
 			const contributors = await this.db.contributor.findMany({
 				where: {
 					OR: [
 						{
 							contributions: {
-								some: { campaign: { organizationId } },
+								some: {
+									campaign: {
+										programId: {
+											in: accessibleProgramIds,
+										},
+									},
+								},
 							},
 						},
 						{
@@ -146,6 +190,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor options: ${JSON.stringify(error)}`);
 		}
 	}
@@ -155,19 +200,33 @@ export class ContributorReadService extends BaseService {
 		query: ContributorTableQuery,
 	): Promise<ServiceResult<ContributorPaginatedTableView>> {
 		try {
-			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
-			if (!activeOrgResult.success) {
-				return this.resultFail(activeOrgResult.error);
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
-
-			const { id: organizationId, permission } = activeOrgResult.data;
+			const accessiblePrograms = accessibleProgramsResult.data;
+			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((program) => program.programId)));
+			if (accessibleProgramIds.length === 0) {
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					countryFilterOptions: [],
+				});
+			}
 			const search = query.search.trim();
-			const selectedCountry = (query.country?.trim() || undefined) as CountryCode | undefined;
+			const selectedCountryRaw = query.country?.trim();
+			const selectedCountry = (selectedCountryRaw === '' ? undefined : selectedCountryRaw) as CountryCode | undefined;
 			const baseScope = {
 				OR: [
 					{
 						contributions: {
-							some: { campaign: { organizationId } },
+							some: {
+								campaign: {
+									programId: {
+										in: accessibleProgramIds,
+									},
+								},
+							},
 						},
 					},
 					{
@@ -194,6 +253,7 @@ export class ContributorReadService extends BaseService {
 									{ contact: { firstName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { lastName: { contains: search, mode: 'insensitive' as const } } },
 									{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
+									{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' as const } } },
 								],
 							},
 						],
@@ -209,25 +269,42 @@ export class ContributorReadService extends BaseService {
 						}
 					: baseScope;
 
-			const [contributors, totalCount, countrySource] = await Promise.all([
-				this.db.contributor.findMany({
-					where,
+			const sortBy = toSortKey(query.sortBy, [
+				'id',
+				'contributor',
+				'email',
+				'country',
+				'totalContributedChf',
+				'createdAt',
+			] as const);
+			const contributorSelect = {
+				id: true,
+				createdAt: true,
+				contributions: {
 					select: {
-						id: true,
-						createdAt: true,
-						contact: {
+						campaign: {
 							select: {
-								firstName: true,
-								lastName: true,
-								email: true,
-								address: { select: { country: true } },
+								programId: true,
 							},
 						},
 					},
-					orderBy: this.buildContributorOrderBy(query),
-					skip: (query.page - 1) * query.pageSize,
-					take: query.pageSize,
-				}),
+				},
+				account: {
+					select: {
+						firebaseAuthUserId: true,
+					},
+				},
+				contact: {
+					select: {
+						firstName: true,
+						lastName: true,
+						email: true,
+						address: { select: { country: true } },
+					},
+				},
+			} as const;
+
+			const [totalCount, countrySource] = await Promise.all([
 				this.db.contributor.count({ where }),
 				this.db.contributor.findMany({
 					where: baseScope,
@@ -245,14 +322,70 @@ export class ContributorReadService extends BaseService {
 				}),
 			]);
 
+			let contributors: Prisma.ContributorGetPayload<{
+				select: typeof contributorSelect;
+			}>[];
+
+			if (sortBy === 'totalContributedChf') {
+				const allContributors = await this.db.contributor.findMany({
+					where,
+					select: contributorSelect,
+				});
+				const sumsByContributorId = await this.getContributionSumsByContributorId(
+					allContributors.map((contributor) => contributor.id),
+				);
+				const directionMultiplier = query.sortDirection === 'asc' ? 1 : -1;
+
+				const sorted = [...allContributors].sort((left, right) => {
+					const leftValue = sumsByContributorId.get(left.id) ?? 0;
+					const rightValue = sumsByContributorId.get(right.id) ?? 0;
+					if (leftValue !== rightValue) {
+						return (leftValue - rightValue) * directionMultiplier;
+					}
+
+					return left.id.localeCompare(right.id);
+				});
+
+				const start = (query.page - 1) * query.pageSize;
+				const end = start + query.pageSize;
+				contributors = sorted.slice(start, end);
+			} else {
+				contributors = await this.db.contributor.findMany({
+					where,
+					select: contributorSelect,
+					orderBy: this.buildContributorOrderBy(query),
+					skip: (query.page - 1) * query.pageSize,
+					take: query.pageSize,
+				});
+			}
+
+			const sumsByContributorId = await this.getContributionSumsByContributorId(
+				contributors.map((contributor) => contributor.id),
+			);
+
 			const tableRows: ContributorTableViewRow[] = contributors.map((c) => ({
+				permission:
+					c.contributions.length === 0
+						? this.programAccessService.hasAnyOperatorAccess(accessiblePrograms)
+							? ProgramPermission.operator
+							: ProgramPermission.owner
+						: c.contributions.some((contribution) =>
+									accessiblePrograms.some(
+										(program) =>
+											program.programId === contribution.campaign.programId &&
+											program.permission === ProgramPermission.operator,
+									),
+							  )
+							? ProgramPermission.operator
+							: ProgramPermission.owner,
 				id: c.id,
 				firstName: c.contact?.firstName ?? '',
 				lastName: c.contact?.lastName ?? '',
 				email: c.contact?.email ?? '',
+				firebaseAuthUserId: c.account.firebaseAuthUserId,
 				country: c.contact?.address?.country ?? null,
+				totalContributedChf: sumsByContributorId.get(c.id) ?? 0,
 				createdAt: c.createdAt,
-				permission,
 			}));
 			const countryFilterOptions = Array.from(
 				new Set(
@@ -267,14 +400,47 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk({ tableRows, totalCount, countryFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributors: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getByIds(contributorIds?: string[]): Promise<ServiceResult<ContributorDonationCertificate[]>> {
+	async getByIds(params?: {
+		actorUserId?: string;
+		contributorIds?: string[];
+	}): Promise<ServiceResult<ContributorDonationCertificate[]>> {
 		try {
+			const contributorIds = params?.contributorIds;
+			const actorUserId = params?.actorUserId;
+			let accessibleProgramIds: string[] | null = null;
+			if (actorUserId) {
+				const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(actorUserId);
+				if (!accessibleProgramsResult.success) {
+					return this.resultFail(accessibleProgramsResult.error);
+				}
+				accessibleProgramIds = Array.from(new Set(accessibleProgramsResult.data.map((program) => program.programId)));
+				if (accessibleProgramIds.length === 0) {
+					return this.resultOk([]);
+				}
+			}
+
 			const result = await this.db.contributor.findMany({
-				where: contributorIds && contributorIds.length > 0 ? { id: { in: contributorIds } } : {},
+				where: {
+					...(contributorIds && contributorIds.length > 0 ? { id: { in: contributorIds } } : {}),
+					...(accessibleProgramIds
+						? {
+								contributions: {
+									some: {
+										campaign: {
+											programId: {
+												in: accessibleProgramIds,
+											},
+										},
+									},
+								},
+							}
+						: {}),
+				},
 				select: {
 					id: true,
 					account: true,
@@ -304,6 +470,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor IDs for certificates: ${JSON.stringify(error)}`);
 		}
 	}
@@ -335,6 +502,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
 	}
@@ -392,6 +560,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(session);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not fetch contributor session: ${JSON.stringify(error)}`);
 		}
 	}
@@ -410,6 +579,7 @@ export class ContributorReadService extends BaseService {
 			return this.resultOk(contributors);
 		} catch (error) {
 			this.logger.error(error);
+
 			return this.resultFail(`Could not find contributor by Payment Reference ID: ${JSON.stringify(error)}`);
 		}
 	}
