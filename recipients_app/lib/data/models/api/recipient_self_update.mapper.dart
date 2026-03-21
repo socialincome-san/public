@@ -49,11 +49,12 @@ class RecipientSelfUpdateMapper extends ClassMapperBase<RecipientSelfUpdate> {
     _$gender,
     opt: true,
   );
-  static String? _$dateOfBirth(RecipientSelfUpdate v) => v.dateOfBirth;
-  static const Field<RecipientSelfUpdate, String> _f$dateOfBirth = Field(
+  static DateTime? _$dateOfBirth(RecipientSelfUpdate v) => v.dateOfBirth;
+  static const Field<RecipientSelfUpdate, DateTime> _f$dateOfBirth = Field(
     'dateOfBirth',
     _$dateOfBirth,
     opt: true,
+    hook: DateTimeHook(),
   );
   static LanguageCode? _$language(RecipientSelfUpdate v) => v.language;
   static const Field<RecipientSelfUpdate, LanguageCode> _f$language = Field(
@@ -212,7 +213,7 @@ abstract class RecipientSelfUpdateCopyWith<
     String? lastName,
     String? callingName,
     Gender? gender,
-    String? dateOfBirth,
+    DateTime? dateOfBirth,
     LanguageCode? language,
     String? email,
     String? contactPhone,

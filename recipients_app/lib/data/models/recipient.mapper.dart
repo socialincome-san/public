@@ -33,11 +33,12 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
     'contactId',
     _$contactId,
   );
-  static String? _$startDate(Recipient v) => v.startDate;
-  static const Field<Recipient, String> _f$startDate = Field(
+  static DateTime? _$startDate(Recipient v) => v.startDate;
+  static const Field<Recipient, DateTime> _f$startDate = Field(
     'startDate',
     _$startDate,
     opt: true,
+    hook: DateTimeHook(),
   );
   static String? _$successorName(Recipient v) => v.successorName;
   static const Field<Recipient, String> _f$successorName = Field(
@@ -85,16 +86,18 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
       v.paymentInformation;
   static const Field<Recipient, PaymentInformation> _f$paymentInformation =
       Field('paymentInformation', _$paymentInformation, opt: true);
-  static String _$createdAt(Recipient v) => v.createdAt;
-  static const Field<Recipient, String> _f$createdAt = Field(
+  static DateTime _$createdAt(Recipient v) => v.createdAt;
+  static const Field<Recipient, DateTime> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
+    hook: DateTimeHook(),
   );
-  static String? _$updatedAt(Recipient v) => v.updatedAt;
-  static const Field<Recipient, String> _f$updatedAt = Field(
+  static DateTime? _$updatedAt(Recipient v) => v.updatedAt;
+  static const Field<Recipient, DateTime> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
 
   @override
@@ -201,7 +204,7 @@ abstract class RecipientCopyWith<$R, $In extends Recipient, $Out>
   $R call({
     String? id,
     String? contactId,
-    String? startDate,
+    DateTime? startDate,
     String? successorName,
     bool? termsAccepted,
     String? paymentInformationId,
@@ -211,8 +214,8 @@ abstract class RecipientCopyWith<$R, $In extends Recipient, $Out>
     Program? program,
     LocalPartner? localPartner,
     PaymentInformation? paymentInformation,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   RecipientCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -253,7 +256,7 @@ class _RecipientCopyWithImpl<$R, $Out>
     Program? program,
     LocalPartner? localPartner,
     Object? paymentInformation = $none,
-    String? createdAt,
+    DateTime? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

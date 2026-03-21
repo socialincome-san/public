@@ -71,7 +71,7 @@ class UserDemoDataSource implements UserDataSource {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     ),
-    createdAt: DateTime.now().toIso8601String(),
+    createdAt: DateTime.now(),
     program: Program(
       id: "demo",
       name: "Demo",
@@ -119,7 +119,7 @@ class UserDemoDataSource implements UserDataSource {
       contact: _recipient.contact.copyWith(
         firstName: selfUpdate.firstName,
         lastName: selfUpdate.lastName,
-        dateOfBirth: selfUpdate.dateOfBirth != null ? DateTime.tryParse(selfUpdate.dateOfBirth!) : null,
+        dateOfBirth: selfUpdate.dateOfBirth,
         gender: selfUpdate.gender,
         language: selfUpdate.language,
       ),

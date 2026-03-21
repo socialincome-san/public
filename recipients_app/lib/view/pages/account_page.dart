@@ -260,7 +260,7 @@ class AccountPageState extends State<AccountPage> {
                           // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
                           if (context.mounted) {
                             context.read<AuthCubit>().updateRecipient(
-                              selfUpdate: RecipientSelfUpdate(dateOfBirth: value.toIso8601String()),
+                              selfUpdate: RecipientSelfUpdate(dateOfBirth: value),
                             );
                             _birthDateController.text = getFormattedDate(value, locale) ?? "";
                           }

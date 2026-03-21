@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:app/data/models/contact.dart";
 import "package:app/data/models/local_partner.dart";
 import "package:app/data/models/payment_information.dart";
@@ -9,7 +10,8 @@ part "recipient.mapper.dart";
 @MappableClass()
 class Recipient with RecipientMappable {
   final String id;
-  final String? startDate;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? startDate;
   final String? successorName;
   final bool termsAccepted;
   final String contactId;
@@ -20,8 +22,10 @@ class Recipient with RecipientMappable {
   final LocalPartner localPartner;
   final Program program;
   final PaymentInformation? paymentInformation;
-  final String createdAt;
-  final String? updatedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
   const Recipient({
     required this.id,

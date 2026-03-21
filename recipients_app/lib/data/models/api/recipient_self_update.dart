@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:app/data/enums/gender.dart";
 import "package:app/data/models/language_code.dart";
 import "package:app/data/models/mobile_money_provider.dart";
@@ -11,7 +12,8 @@ class RecipientSelfUpdate with RecipientSelfUpdateMappable {
   final String? lastName;
   final String? callingName;
   final Gender? gender;
-  final String? dateOfBirth;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? dateOfBirth;
   final LanguageCode? language;
   final String? email;
   final String? contactPhone;
