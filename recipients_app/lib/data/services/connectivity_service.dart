@@ -1,9 +1,14 @@
 import "dart:async";
 
 import "package:connectivity_plus/connectivity_plus.dart";
+import "package:flutter/widgets.dart";
 import "package:http/http.dart" as http;
 
-class ConnectivityService {
+/// Monitors network connectivity and exposes the current online status via [isOnline]
+/// and [isOnlineStream]. Re-checks connectivity on network changes and when the app
+/// returns to the foreground. Uses an HTTP reachability probe to confirm actual internet
+/// access beyond just having a network interface.
+class ConnectivityService with WidgetsBindingObserver {
   final Connectivity _connectivity;
   final Uri _reachabilityUrl;
   late final StreamController<bool> _controller;
@@ -24,6 +29,25 @@ class ConnectivityService {
         _controller.add(_isOnline);
       }
     });
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkConnectivity();
+    }
+  }
+
+  Future<void> _checkConnectivity() async {
+    final results = await _connectivity.checkConnectivity();
+    final hasConnection = !results.contains(ConnectivityResult.none);
+    final online = hasConnection && await _canReachInternet();
+    if (online != _isOnline) {
+      _isOnline = online;
+      _controller.add(_isOnline);
+    }
   }
 
   bool get isOnline => _isOnline;
@@ -31,9 +55,7 @@ class ConnectivityService {
   Stream<bool> get isOnlineStream => _controller.stream;
 
   Future<void> initialize() async {
-    final results = await _connectivity.checkConnectivity();
-    final hasConnection = !results.contains(ConnectivityResult.none);
-    _isOnline = hasConnection && await _canReachInternet();
+    _checkConnectivity();
   }
 
   Future<bool> _canReachInternet() async {
@@ -46,6 +68,7 @@ class ConnectivityService {
   }
 
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _subscription.cancel();
     _controller.close();
   }
