@@ -146,9 +146,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
     final List<MappedPayout> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
 
     for (final payment in paidOrConfirmedPayments) {
-      // Some of the users still have the currency SLL from the begining of the program. We will change it to SLE.
-      final factor = (payment.payout.currency.toUpperCase() == "SLL") ? 1000 : 1;
-      total += (payment.payout.amount) ~/ factor;
+      total += payment.payout.amount;
     }
 
     return "${paidOrConfirmedPayments.firstOrNull?.payout.currency ?? "???"} $total";
