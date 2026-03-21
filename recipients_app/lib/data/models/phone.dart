@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "phone.mapper.dart";
@@ -7,8 +8,10 @@ class Phone with PhoneMappable {
   final String id;
   final String number;
   final bool hasWhatsApp;
-  final String createdAt;
-  final String? updatedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
   const Phone({
     required this.id,

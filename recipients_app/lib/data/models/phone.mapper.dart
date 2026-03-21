@@ -31,16 +31,18 @@ class PhoneMapper extends ClassMapperBase<Phone> {
     'hasWhatsApp',
     _$hasWhatsApp,
   );
-  static String _$createdAt(Phone v) => v.createdAt;
-  static const Field<Phone, String> _f$createdAt = Field(
+  static DateTime _$createdAt(Phone v) => v.createdAt;
+  static const Field<Phone, DateTime> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
+    hook: DateTimeHook(),
   );
-  static String? _$updatedAt(Phone v) => v.updatedAt;
-  static const Field<Phone, String> _f$updatedAt = Field(
+  static DateTime? _$updatedAt(Phone v) => v.updatedAt;
+  static const Field<Phone, DateTime> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
 
   @override
@@ -112,8 +114,8 @@ abstract class PhoneCopyWith<$R, $In extends Phone, $Out>
     String? id,
     String? number,
     bool? hasWhatsApp,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   PhoneCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -129,7 +131,7 @@ class _PhoneCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Phone, $Out>
     String? id,
     String? number,
     bool? hasWhatsApp,
-    String? createdAt,
+    DateTime? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({
