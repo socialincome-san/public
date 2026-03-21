@@ -32,16 +32,18 @@ class LocalPartnerMapper extends ClassMapperBase<LocalPartner> {
     'contact',
     _$contact,
   );
-  static String _$createdAt(LocalPartner v) => v.createdAt;
-  static const Field<LocalPartner, String> _f$createdAt = Field(
+  static DateTime _$createdAt(LocalPartner v) => v.createdAt;
+  static const Field<LocalPartner, DateTime> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
+    hook: DateTimeHook(),
   );
-  static String? _$updatedAt(LocalPartner v) => v.updatedAt;
-  static const Field<LocalPartner, String> _f$updatedAt = Field(
+  static DateTime? _$updatedAt(LocalPartner v) => v.updatedAt;
+  static const Field<LocalPartner, DateTime> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
 
   @override
@@ -130,8 +132,8 @@ abstract class LocalPartnerCopyWith<$R, $In extends LocalPartner, $Out>
     String? id,
     String? name,
     Contact? contact,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   LocalPartnerCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -152,7 +154,7 @@ class _LocalPartnerCopyWithImpl<$R, $Out>
     String? id,
     String? name,
     Object? contact = $none,
-    String? createdAt,
+    DateTime? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

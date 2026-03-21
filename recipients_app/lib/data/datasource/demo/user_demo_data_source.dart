@@ -68,8 +68,8 @@ class UserDemoDataSource implements UserDataSource {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
-      createdAt: DateTime.now().toIso8601String(),
-      updatedAt: DateTime.now().toIso8601String(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     createdAt: DateTime.now().toIso8601String(),
     program: Program(

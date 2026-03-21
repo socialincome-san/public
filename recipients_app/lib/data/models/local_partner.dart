@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:app/data/models/contact.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
@@ -8,8 +9,10 @@ class LocalPartner with LocalPartnerMappable {
   final String id;
   final String name;
   final Contact? contact;
-  final String createdAt;
-  final String? updatedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
   const LocalPartner({
     required this.id,
