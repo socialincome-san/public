@@ -16,7 +16,9 @@ part "payouts_cubit.mapper.dart";
 part "payouts_state.dart";
 
 const int kMaxReviewDays = 10;
+//TODO(migration): get real amount from backend (Model Programm) and remove this constant
 const int kCurrentPaymentAmount = 700;
+//TODO(migration): get real amount from backend (Model Programm) and remove this constant
 const int kProgramDurationMonths = 36;
 
 const _kOnHoldCandidateStates = [PayoutStatus.paid, PayoutStatus.contested];
