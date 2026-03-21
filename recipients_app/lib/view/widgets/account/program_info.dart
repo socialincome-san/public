@@ -1,4 +1,3 @@
-import "package:app/data/models/currency.dart";
 import "package:app/data/models/program.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
@@ -67,7 +66,7 @@ class ProgramInfo extends StatelessWidget {
                     Text("${context.l10n.amount}:", style: Theme.of(context).textTheme.bodyMedium),
                     const SizedBox(width: 8),
                     Text(
-                      "${program.payoutPerInterval} ${program.country.currency.toDisplayString()}",
+                      "${program.payoutPerInterval} ${program.country.currency.isEmpty ? "???" : program.country.currency}",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],

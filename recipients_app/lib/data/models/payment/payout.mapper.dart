@@ -15,7 +15,6 @@ class PayoutMapper extends ClassMapperBase<Payout> {
   static PayoutMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PayoutMapper._());
-      CurrencyMapper.ensureInitialized();
       PayoutStatusMapper.ensureInitialized();
     }
     return _instance!;
@@ -34,8 +33,8 @@ class PayoutMapper extends ClassMapperBase<Payout> {
     _$amountChf,
     opt: true,
   );
-  static Currency _$currency(Payout v) => v.currency;
-  static const Field<Payout, Currency> _f$currency = Field(
+  static String _$currency(Payout v) => v.currency;
+  static const Field<Payout, String> _f$currency = Field(
     'currency',
     _$currency,
   );
@@ -159,7 +158,7 @@ abstract class PayoutCopyWith<$R, $In extends Payout, $Out>
     String? id,
     int? amount,
     double? amountChf,
-    Currency? currency,
+    String? currency,
     String? paymentAt,
     PayoutStatus? status,
     String? phoneNumber,
@@ -182,7 +181,7 @@ class _PayoutCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Payout, $Out>
     String? id,
     int? amount,
     Object? amountChf = $none,
-    Currency? currency,
+    String? currency,
     String? paymentAt,
     PayoutStatus? status,
     Object? phoneNumber = $none,

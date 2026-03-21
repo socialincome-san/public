@@ -15,7 +15,6 @@ class CountryMapper extends ClassMapperBase<Country> {
   static CountryMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CountryMapper._());
-      CurrencyMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -25,12 +24,10 @@ class CountryMapper extends ClassMapperBase<Country> {
 
   static String _$isoCode(Country v) => v.isoCode;
   static const Field<Country, String> _f$isoCode = Field('isoCode', _$isoCode);
-  static Currency _$currency(Country v) => v.currency;
-  static const Field<Country, Currency> _f$currency = Field(
+  static String _$currency(Country v) => v.currency;
+  static const Field<Country, String> _f$currency = Field(
     'currency',
     _$currency,
-    opt: true,
-    def: Currency.sle,
   );
 
   @override
@@ -103,7 +100,7 @@ extension CountryValueCopy<$R, $Out> on ObjectCopyWith<$R, Country, $Out> {
 
 abstract class CountryCopyWith<$R, $In extends Country, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? isoCode, Currency? currency});
+  $R call({String? isoCode, String? currency});
   CountryCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -116,7 +113,7 @@ class _CountryCopyWithImpl<$R, $Out>
   late final ClassMapperBase<Country> $mapper =
       CountryMapper.ensureInitialized();
   @override
-  $R call({String? isoCode, Currency? currency}) => $apply(
+  $R call({String? isoCode, String? currency}) => $apply(
     FieldCopyWithData({
       if (isoCode != null) #isoCode: isoCode,
       if (currency != null) #currency: currency,

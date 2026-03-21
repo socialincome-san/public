@@ -2,7 +2,6 @@ import "dart:math" as math;
 
 import "package:app/data/datasource/payout_data_source.dart";
 import "package:app/data/enums/payout_status.dart";
-import "package:app/data/models/currency.dart";
 import "package:app/data/models/payment/payout.dart";
 
 class PayoutDemoDataSource implements PayoutDataSource {
@@ -27,7 +26,7 @@ class PayoutDemoDataSource implements PayoutDataSource {
         Payout(
           id: "${currentDateTime.year}-${currentDateTime.month}",
           paymentAt: currentDateTime.toIso8601String(),
-          currency: Currency.sle,
+          currency: "SLE",
           amount: 700,
           status: PayoutStatus.confirmed,
           recipientId: "123",
@@ -46,7 +45,7 @@ class PayoutDemoDataSource implements PayoutDataSource {
         Payout(
           id: "${currentDateTime.year}-${currentDateTime.month}",
           paymentAt: currentDateTime.toIso8601String(),
-          currency: Currency.sle,
+          currency: "SLE",
           amount: 700,
           status: PayoutStatus.paid,
           recipientId: "123",

@@ -2,7 +2,6 @@ import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/enums/balance_card_status.dart";
 import "package:app/data/enums/payout_status.dart";
 import "package:app/data/enums/payout_ui_status.dart";
-import "package:app/data/models/currency.dart";
 import "package:app/data/models/payment/mapped_payout.dart";
 import "package:app/data/models/payment/next_payout_data.dart";
 import "package:app/data/models/payment/payout.dart";
@@ -241,7 +240,7 @@ class PayoutsCubit extends Cubit<PayoutsState> {
 
     return NextPayoutData(
       amount: nextPayment?.payout.amount ?? kCurrentPaymentAmount,
-      currency: nextPayment?.payout.currency ?? Currency.sle,
+      currency: nextPayment?.payout.currency ?? "???",
       daysToPayout: daysToPayment,
     );
   }

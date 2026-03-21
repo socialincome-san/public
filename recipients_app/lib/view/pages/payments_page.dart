@@ -2,7 +2,6 @@ import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/data/enums/balance_card_status.dart";
 import "package:app/data/enums/payout_status.dart";
-import "package:app/data/models/currency.dart";
 import "package:app/data/models/payment/mapped_payout.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
@@ -148,11 +147,11 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
     for (final payment in paidOrConfirmedPayments) {
       // Some of the users still have the currency SLL from the begining of the program. We will change it to SLE.
-      final factor = (payment.payout.currency.name.toUpperCase() == "SLL") ? 1000 : 1;
+      final factor = (payment.payout.currency.toUpperCase() == "SLL") ? 1000 : 1;
       total += (payment.payout.amount) ~/ factor;
     }
 
-    return "${paidOrConfirmedPayments.firstOrNull?.payout.currency.toDisplayString() ?? "???"} $total";
+    return "${paidOrConfirmedPayments.firstOrNull?.payout.currency ?? "???"} $total";
   }
 
   String _calculateFuturePayments(List<MappedPayout> mappedPayments) {
@@ -161,7 +160,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
     // Due to problem that payment amount can change, we need to calculate the future payments without calculation of previous payments
     final futurePayments = (kProgramDurationMonths - paidOrConfirmedPayments.length) * kCurrentPaymentAmount;
 
-    return "${paidOrConfirmedPayments.firstOrNull?.payout.currency.toDisplayString() ?? "???"} $futurePayments";
+    return "${paidOrConfirmedPayments.firstOrNull?.payout.currency ?? "???"} $futurePayments";
   }
 
   List<MappedPayout> _getAllPaidOrConfirmedPayments(List<MappedPayout> mappedPayments) {

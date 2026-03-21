@@ -76,7 +76,7 @@ class UserDemoDataSource implements UserDataSource {
       id: "demo",
       name: "Demo",
       countryId: "SL",
-      country: const Country(isoCode:"SL"),
+      country: const Country(isoCode:"SL", currency: "SLE"),
       payoutPerInterval: 50,
       payoutInterval: PayoutInterval.monthly,
       programDurationInMonths: 12,
