@@ -25,12 +25,12 @@ class PayoutDemoDataSource implements PayoutDataSource {
       payments.add(
         Payout(
           id: "${currentDateTime.year}-${currentDateTime.month}",
-          paymentAt: currentDateTime.toIso8601String(),
+          paymentAt: currentDateTime,
           currency: "SLE",
           amount: 700,
           status: PayoutStatus.confirmed,
           recipientId: "123",
-          createdAt: currentDateTime.toIso8601String(),
+          createdAt: currentDateTime,
         ),
       );
     }
@@ -44,12 +44,12 @@ class PayoutDemoDataSource implements PayoutDataSource {
       payments.add(
         Payout(
           id: "${currentDateTime.year}-${currentDateTime.month}",
-          paymentAt: currentDateTime.toIso8601String(),
+          paymentAt: currentDateTime,
           currency: "SLE",
           amount: 700,
           status: PayoutStatus.paid,
           recipientId: "123",
-          createdAt: currentDateTime.toIso8601String(),
+          createdAt: currentDateTime,
         ),
       );
     }

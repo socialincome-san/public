@@ -38,7 +38,7 @@ class PaymentTile extends StatelessWidget {
               children: [
                 Text(
                   _formatDate(
-                    DateTime.parse(mappedPayment.payout.paymentAt),
+                    mappedPayment.payout.paymentAt,
                     context.l10n,
                     locale,
                   ),

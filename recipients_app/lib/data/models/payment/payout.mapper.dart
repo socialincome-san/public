@@ -38,10 +38,11 @@ class PayoutMapper extends ClassMapperBase<Payout> {
     'currency',
     _$currency,
   );
-  static String _$paymentAt(Payout v) => v.paymentAt;
-  static const Field<Payout, String> _f$paymentAt = Field(
+  static DateTime _$paymentAt(Payout v) => v.paymentAt;
+  static const Field<Payout, DateTime> _f$paymentAt = Field(
     'paymentAt',
     _$paymentAt,
+    hook: DateTimeHook(),
   );
   static PayoutStatus _$status(Payout v) => v.status;
   static const Field<Payout, PayoutStatus> _f$status = Field(
@@ -65,16 +66,18 @@ class PayoutMapper extends ClassMapperBase<Payout> {
     'recipientId',
     _$recipientId,
   );
-  static String _$createdAt(Payout v) => v.createdAt;
-  static const Field<Payout, String> _f$createdAt = Field(
+  static DateTime _$createdAt(Payout v) => v.createdAt;
+  static const Field<Payout, DateTime> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
+    hook: DateTimeHook(),
   );
-  static String? _$updatedAt(Payout v) => v.updatedAt;
-  static const Field<Payout, String> _f$updatedAt = Field(
+  static DateTime? _$updatedAt(Payout v) => v.updatedAt;
+  static const Field<Payout, DateTime> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
 
   @override
@@ -159,13 +162,13 @@ abstract class PayoutCopyWith<$R, $In extends Payout, $Out>
     int? amount,
     double? amountChf,
     String? currency,
-    String? paymentAt,
+    DateTime? paymentAt,
     PayoutStatus? status,
     String? phoneNumber,
     String? comments,
     String? recipientId,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   PayoutCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -182,12 +185,12 @@ class _PayoutCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Payout, $Out>
     int? amount,
     Object? amountChf = $none,
     String? currency,
-    String? paymentAt,
+    DateTime? paymentAt,
     PayoutStatus? status,
     Object? phoneNumber = $none,
     Object? comments = $none,
     String? recipientId,
-    String? createdAt,
+    DateTime? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

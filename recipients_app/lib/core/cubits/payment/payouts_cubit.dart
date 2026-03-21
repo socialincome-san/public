@@ -1,4 +1,3 @@
-import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/enums/balance_card_status.dart";
 import "package:app/data/enums/payout_status.dart";
 import "package:app/data/enums/payout_ui_status.dart";
@@ -202,16 +201,12 @@ class PayoutsCubit extends Cubit<PayoutsState> {
   }
 
   bool _isRecent(Payout? payout) {
-    final paymentDate = payout?.paymentAt;
-
-    if (paymentDate == null) {
+    if (payout == null) {
       return false;
     }
 
-    final paymentDateTime = DateTime.parse(paymentDate);
-
     // checks if days between payment date and now are less than 5
-    return ((paymentDateTime.difference(DateTime.now()).inDays) * -1) < kMaxReviewDays;
+    return ((payout.paymentAt.difference(DateTime.now()).inDays) * -1) < kMaxReviewDays;
   }
 
   NextPayoutData _getNextPaymentData(
@@ -226,11 +221,10 @@ class PayoutsCubit extends Cubit<PayoutsState> {
           (element) => element.uiStatus != PayoutUiStatus.toBePaid,
         )
         ?.payout
-        .paymentAt
-        .toDate();
+        .paymentAt;
 
     final nextPaymentDate =
-        nextPayment?.payout.paymentAt.toDate() ??
+        nextPayment?.payout.paymentAt ??
         DateTime(
           previousPaymentDate?.year ?? 2023,
           (previousPaymentDate?.month ?? 1) + 1,

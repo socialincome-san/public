@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:app/data/enums/payout_status.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
@@ -9,14 +10,16 @@ class Payout with PayoutMappable {
   final int amount;
   final double? amountChf;
   final String currency;
-  final String paymentAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime paymentAt;
   final PayoutStatus status;
   final String? phoneNumber;
   final String? comments;
   final String recipientId;
-
-  final String createdAt;
-  final String? updatedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
   const Payout({
     required this.id,
