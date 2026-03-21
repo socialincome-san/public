@@ -74,7 +74,7 @@ class SurveyCubit extends Cubit<SurveyState> {
             daysAfterOverdue: _getDaysAfterOverdue(survey),
           ),
         )
-        .sortedBy((element) => DateTime.tryParse(element.survey.dueAt) ?? DateTime.now())
+        .sortedBy((element) => element.survey.dueAt)
         .toList();
 
     return mappedSurveys;
@@ -166,13 +166,8 @@ int? _getDaysAfterOverdue(Survey survey) {
 }
 
 int? _getSurveyDueDateAndNowDifferenceInDays(Survey survey) {
-  final dueDateAt = DateTime.tryParse(survey.dueAt);
-  if (dueDateAt == null) {
-    return null;
-  }
-
   final currentDate = DateTime.now();
-  final dateDifference = currentDate.difference(dueDateAt);
+  final dateDifference = currentDate.difference(survey.dueAt);
 
   return dateDifference.inDays;
 }

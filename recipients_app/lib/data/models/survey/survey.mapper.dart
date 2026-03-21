@@ -38,13 +38,18 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     'language',
     _$language,
   );
-  static String _$dueAt(Survey v) => v.dueAt;
-  static const Field<Survey, String> _f$dueAt = Field('dueAt', _$dueAt);
-  static String? _$completedAt(Survey v) => v.completedAt;
-  static const Field<Survey, String> _f$completedAt = Field(
+  static DateTime _$dueAt(Survey v) => v.dueAt;
+  static const Field<Survey, DateTime> _f$dueAt = Field(
+    'dueAt',
+    _$dueAt,
+    hook: DateTimeHook(),
+  );
+  static DateTime? _$completedAt(Survey v) => v.completedAt;
+  static const Field<Survey, DateTime> _f$completedAt = Field(
     'completedAt',
     _$completedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
   static SurveyQuestionnaire _$questionnaire(Survey v) => v.questionnaire;
   static const Field<Survey, SurveyQuestionnaire> _f$questionnaire = Field(
@@ -74,16 +79,18 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     'accessPw',
     _$accessPw,
   );
-  static String _$createdAt(Survey v) => v.createdAt;
-  static const Field<Survey, String> _f$createdAt = Field(
+  static DateTime _$createdAt(Survey v) => v.createdAt;
+  static const Field<Survey, DateTime> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
+    hook: DateTimeHook(),
   );
-  static String? _$updatedAt(Survey v) => v.updatedAt;
-  static const Field<Survey, String> _f$updatedAt = Field(
+  static DateTime? _$updatedAt(Survey v) => v.updatedAt;
+  static const Field<Survey, DateTime> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
 
   @override
@@ -174,16 +181,16 @@ abstract class SurveyCopyWith<$R, $In extends Survey, $Out>
     String? name,
     String? recipientId,
     String? language,
-    String? dueAt,
-    String? completedAt,
+    DateTime? dueAt,
+    DateTime? completedAt,
     SurveyQuestionnaire? questionnaire,
     SurveyStatus? status,
     String? surveyScheduleId,
     Object? data,
     String? accessEmail,
     String? accessPw,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   SurveyCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -200,7 +207,7 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
     String? name,
     String? recipientId,
     String? language,
-    String? dueAt,
+    DateTime? dueAt,
     Object? completedAt = $none,
     SurveyQuestionnaire? questionnaire,
     SurveyStatus? status,
@@ -208,7 +215,7 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
     Object? data = $none,
     String? accessEmail,
     String? accessPw,
-    String? createdAt,
+    DateTime? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

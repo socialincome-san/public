@@ -13,20 +13,3 @@ enum SurveyStatus {
   completed,
   missed,
 }
-
-// OLD
-/* @MappableEnum()
-enum SurveyServerStatus {
-  @MappableValue("created")
-  created,
-  @MappableValue("sent")
-  sent,
-  @MappableValue("scheduled")
-  scheduled,
-  @MappableValue("in-progress")
-  inProgress,
-  @MappableValue("completed")
-  completed,
-  @MappableValue("missed")
-  missed,
-} */

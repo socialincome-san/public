@@ -1,5 +1,4 @@
 import "package:app/core/cubits/survey/survey_cubit.dart";
-import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
 import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/l10n/arb/app_localizations.dart";
@@ -123,7 +122,7 @@ class SurveyCardBottomAction extends StatelessWidget {
     switch (mappedSurvey.cardStatus) {
       case SurveyCardStatus.answered:
         return DateFormat.yMd(locale).format(
-          mappedSurvey.survey.completedAt?.toDateTime() ?? DateTime.now(),
+          mappedSurvey.survey.completedAt ?? DateTime.now(),
         );
       case SurveyCardStatus.overdue:
         final daysAfterOverdue = mappedSurvey.daysAfterOverdue ?? 0;

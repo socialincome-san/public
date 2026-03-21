@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:app/data/models/survey/survey_questionnaire.dart";
 import "package:app/data/models/survey/survey_status.dart";
 import "package:dart_mappable/dart_mappable.dart";
@@ -10,8 +11,10 @@ class Survey with SurveyMappable {
   final String name;
   final String recipientId;
   final String language;
-  final String dueAt;
-  final String? completedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime dueAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? completedAt;
   final SurveyQuestionnaire questionnaire;
   final SurveyStatus status;
   final String? surveyScheduleId;
@@ -19,8 +22,10 @@ class Survey with SurveyMappable {
   final Object? data;
   final String accessEmail;
   final String accessPw;
-  final String createdAt;
-  final String? updatedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
   const Survey({
     required this.id,

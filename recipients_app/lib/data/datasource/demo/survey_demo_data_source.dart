@@ -20,13 +20,13 @@ class SurveyDemoDataSource implements SurveyDataSource {
         accessPw: "demo",
         // new fields
         name: "Demo Recipient",
-        dueAt: now.subtract(const Duration(days: 10)).toIso8601String(),
-        createdAt: now.toIso8601String(),
+        dueAt: now.subtract(const Duration(days: 10)),
+        createdAt: now,
       ),
       Survey(
         id: "checkin",
         status: SurveyStatus.scheduled,
-        dueAt: now.toIso8601String(),
+        dueAt: now,
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.checkin,
         language: "en",
@@ -35,12 +35,12 @@ class SurveyDemoDataSource implements SurveyDataSource {
         accessPw: "demo",
         // new fields
         name: "Demo Recipient",
-        createdAt: now.toIso8601String(),
+        createdAt: now,
       ),
       Survey(
         id: "offboarding",
         status: SurveyStatus.scheduled,
-        dueAt: now.add(const Duration(days: 11)).toIso8601String(),
+        dueAt: now.add(const Duration(days: 11)),
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.offboarding,
         language: "en",
@@ -49,12 +49,12 @@ class SurveyDemoDataSource implements SurveyDataSource {
         accessPw: "demo",
         // new fields
         name: "Demo Recipient",
-        createdAt: now.toIso8601String(),
+        createdAt: now,
       ),
       Survey(
         id: "followup",
         status: SurveyStatus.scheduled,
-        dueAt: DateTime.now().add(const Duration(days: 16)).toIso8601String(),
+        dueAt: DateTime.now().add(const Duration(days: 16)),
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.offboardedCheckin,
         language: "en",
@@ -63,7 +63,7 @@ class SurveyDemoDataSource implements SurveyDataSource {
         accessPw: "demo",
         // new fields
         name: "Demo Recipient",
-        createdAt: now.toIso8601String(),
+        createdAt: now,
       ),
     ];
 
