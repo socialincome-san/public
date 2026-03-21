@@ -3,7 +3,6 @@ import "dart:convert";
 import "package:app/data/datasource/payout_data_source.dart";
 import "package:app/data/models/payment/payout.dart";
 import "package:app/data/services/authenticated_client.dart";
-import "package:http/http.dart";
 
 class PayoutRemoteDataSource implements PayoutDataSource {
   final AuthenticatedClient authenticatedClient;
@@ -25,27 +24,15 @@ class PayoutRemoteDataSource implements PayoutDataSource {
     return PayoutMapper.fromJson(response.body);
   }
 
-  /// TODO(migration): contest reason is not yet implemented in backend
-  /// curl http://localhost:3001/api/v1/recipients/me/payouts/123/contest \
-  /// --request POST
   @override
   Future<Payout> contestPayout({
     required String payoutId,
     required String? contestReason,
   }) async {
     final uri = authenticatedClient.resolveUri("recipients/me/payouts/$payoutId/contest");
+    final body = {"comments": contestReason ?? ""};
 
-    // if contest reason is not null, add it to the comment in payout
-    Response? response;
-    if (contestReason != null) {
-      final body = {
-        "comments": contestReason,
-      };
-
-      response = await authenticatedClient.post(uri, body: jsonEncode(body));
-    } else {
-      response = await authenticatedClient.post(uri);
-    }
+    final response = await authenticatedClient.post(uri, body: jsonEncode(body));
 
     if (response.statusCode != 200) {
       throw Exception("Failed to contest payout: ${response.statusCode} - ${response.body}");
