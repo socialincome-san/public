@@ -76,10 +76,10 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   );
   final userDemoDataSource = UserDemoDataSource();
 
-  final paymentRemoteDataSource = PayoutRemoteDataSource(
+  final payoutRemoteDataSource = PayoutRemoteDataSource(
     authenticatedClient: authenticatedClient,
   );
-  final paymentDemoDataSource = PayoutDemoDataSource();
+  final payoutDemoDataSource = PayoutDemoDataSource();
 
   final surveyRemoteDataSource = SurveyRemoteDataSource(
     authenticatedClient: authenticatedClient,
@@ -116,8 +116,8 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
         demoManager: demoManager,
         userRemoteDataSource: userRemoteDataSource,
         userDemoDataSource: userDemoDataSource,
-        paymentRemoteDataSource: paymentRemoteDataSource,
-        paymentDemoDataSource: paymentDemoDataSource,
+        payoutRemoteDataSource: payoutRemoteDataSource,
+        payoutDemoDataSource: payoutDemoDataSource,
         surveyRemoteDataSource: surveyRemoteDataSource,
         surveyDemoDataSource: surveyDemoDataSource,
         authService: authService,

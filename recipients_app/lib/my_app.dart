@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
   final UserRemoteDataSource userRemoteDataSource;
   final UserDemoDataSource userDemoDataSource;
 
-  final PayoutRemoteDataSource paymentRemoteDataSource;
-  final PayoutDemoDataSource paymentDemoDataSource;
+  final PayoutRemoteDataSource payoutRemoteDataSource;
+  final PayoutDemoDataSource payoutDemoDataSource;
 
   final SurveyRemoteDataSource surveyRemoteDataSource;
   final SurveyDemoDataSource surveyDemoDataSource;
@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
     required this.demoManager,
     required this.userRemoteDataSource,
     required this.userDemoDataSource,
-    required this.paymentRemoteDataSource,
-    required this.paymentDemoDataSource,
+    required this.payoutRemoteDataSource,
+    required this.payoutDemoDataSource,
     required this.surveyRemoteDataSource,
     required this.surveyDemoDataSource,
     required this.authService,
@@ -80,8 +80,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider.value(value: crashReportingRepository),
         RepositoryProvider(
           create: (context) => PaymentRepository(
-            remoteDataSource: paymentRemoteDataSource,
-            demoDataSource: paymentDemoDataSource,
+            remoteDataSource: payoutRemoteDataSource,
+            demoDataSource: payoutDemoDataSource,
             demoManager: demoManager,
           ),
         ),
