@@ -50,16 +50,18 @@ class ProgramMapper extends ClassMapperBase<Program> {
     'programDurationInMonths',
     _$programDurationInMonths,
   );
-  static String _$createdAt(Program v) => v.createdAt;
-  static const Field<Program, String> _f$createdAt = Field(
+  static DateTime _$createdAt(Program v) => v.createdAt;
+  static const Field<Program, DateTime> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
+    hook: DateTimeHook(),
   );
-  static String? _$updatedAt(Program v) => v.updatedAt;
-  static const Field<Program, String> _f$updatedAt = Field(
+  static DateTime? _$updatedAt(Program v) => v.updatedAt;
+  static const Field<Program, DateTime> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
 
   @override
@@ -155,8 +157,8 @@ abstract class ProgramCopyWith<$R, $In extends Program, $Out>
     int? payoutPerInterval,
     PayoutInterval? payoutInterval,
     int? programDurationInMonths,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   ProgramCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -181,7 +183,7 @@ class _ProgramCopyWithImpl<$R, $Out>
     int? payoutPerInterval,
     PayoutInterval? payoutInterval,
     int? programDurationInMonths,
-    String? createdAt,
+    DateTime? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

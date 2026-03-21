@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:app/data/enums/payout_interval.dart";
 import "package:app/data/models/country.dart";
 import "package:dart_mappable/dart_mappable.dart";
@@ -13,8 +14,10 @@ class Program with ProgramMappable {
   final int payoutPerInterval;
   final PayoutInterval payoutInterval;
   final int programDurationInMonths;
-  final String createdAt;
-  final String? updatedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
   const Program({
     required this.id,

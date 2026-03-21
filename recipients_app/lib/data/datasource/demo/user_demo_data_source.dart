@@ -80,8 +80,8 @@ class UserDemoDataSource implements UserDataSource {
       payoutPerInterval: 50,
       payoutInterval: PayoutInterval.monthly,
       programDurationInMonths: 12,
-      createdAt: DateTime.now().toIso8601String(),
-      updatedAt: DateTime.now().toIso8601String(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     paymentInformation: PaymentInformation(
       id: "demo",
