@@ -7,7 +7,7 @@ watch:
 	fvm dart run build_runner watch --delete-conflicting-outputs
 
 test: 
-	echo $(VAR)
+	fvm flutter test
 
 clean:
 	fvm flutter clean
