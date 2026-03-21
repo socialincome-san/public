@@ -37,7 +37,7 @@ class UserDemoDataSource implements UserDataSource {
       ),
       gender: Gender.male,
       language: LanguageCode.en,
-      dateOfBirth: DateTime.now(),
+      dateOfBirth: DateTime.now().subtract(const Duration(days: 365 * 30)), // Assuming 30 years old
       profession: "Demo",
       isInstitution: false,
       createdAt: DateTime.now(),
