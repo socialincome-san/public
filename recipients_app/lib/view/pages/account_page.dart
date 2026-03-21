@@ -1,7 +1,6 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
-import "package:app/core/helpers/string_extensions.dart";
 import "package:app/data/enums/gender.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/language_code.dart";
@@ -89,7 +88,7 @@ class AccountPageState extends State<AccountPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final locale = Localizations.localeOf(context).toLanguageTag();
-      _birthDateController.text = getFormattedDate(widget.recipient.contact.dateOfBirth?.toDate(), locale) ?? "";
+      _birthDateController.text = getFormattedDate(widget.recipient.contact.dateOfBirth, locale) ?? "";
     });
   }
 
@@ -253,11 +252,11 @@ class AccountPageState extends State<AccountPage> {
                       showDatePicker(
                         firstDate: DateTime(1950),
                         lastDate: DateTime(DateTime.now().year - 10),
-                        initialDate: recipient.contact.dateOfBirth?.toDate() ?? DateTime(2000),
+                        initialDate: recipient.contact.dateOfBirth ?? DateTime(2000),
                         context: context,
                       ).then((value) {
                         // Update value only if changed
-                        if (value != null && value != recipient.contact.dateOfBirth?.toDate()) {
+                        if (value != null && value != recipient.contact.dateOfBirth) {
                           // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
                           if (context.mounted) {
                             context.read<AuthCubit>().updateRecipient(

@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:app/data/enums/gender.dart";
 import "package:app/data/models/language_code.dart";
 import "package:app/data/models/phone.dart";
@@ -17,11 +18,14 @@ class Contact with ContactMappable {
   final String? email;
   final Gender? gender;
   final LanguageCode? language;
-  final String? dateOfBirth;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? dateOfBirth;
   final String? profession;
   final bool isInstitution;
-  final String createdAt;
-  final String? updatedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
   /// Returns a new [Contact] instance.
   const Contact({

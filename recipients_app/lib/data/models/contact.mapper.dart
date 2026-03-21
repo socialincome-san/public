@@ -79,11 +79,12 @@ class ContactMapper extends ClassMapperBase<Contact> {
     _$language,
     opt: true,
   );
-  static String? _$dateOfBirth(Contact v) => v.dateOfBirth;
-  static const Field<Contact, String> _f$dateOfBirth = Field(
+  static DateTime? _$dateOfBirth(Contact v) => v.dateOfBirth;
+  static const Field<Contact, DateTime> _f$dateOfBirth = Field(
     'dateOfBirth',
     _$dateOfBirth,
     opt: true,
+    hook: DateTimeHook(),
   );
   static String? _$profession(Contact v) => v.profession;
   static const Field<Contact, String> _f$profession = Field(
@@ -96,16 +97,18 @@ class ContactMapper extends ClassMapperBase<Contact> {
     'isInstitution',
     _$isInstitution,
   );
-  static String _$createdAt(Contact v) => v.createdAt;
-  static const Field<Contact, String> _f$createdAt = Field(
+  static DateTime _$createdAt(Contact v) => v.createdAt;
+  static const Field<Contact, DateTime> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
+    hook: DateTimeHook(),
   );
-  static String? _$updatedAt(Contact v) => v.updatedAt;
-  static const Field<Contact, String> _f$updatedAt = Field(
+  static DateTime? _$updatedAt(Contact v) => v.updatedAt;
+  static const Field<Contact, DateTime> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
 
   @override
@@ -216,11 +219,11 @@ abstract class ContactCopyWith<$R, $In extends Contact, $Out>
     String? email,
     Gender? gender,
     LanguageCode? language,
-    String? dateOfBirth,
+    DateTime? dateOfBirth,
     String? profession,
     bool? isInstitution,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   ContactCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -251,7 +254,7 @@ class _ContactCopyWithImpl<$R, $Out>
     Object? dateOfBirth = $none,
     Object? profession = $none,
     bool? isInstitution,
-    String? createdAt,
+    DateTime? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({
