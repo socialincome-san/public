@@ -134,7 +134,4 @@ class UserDemoDataSource implements UserDataSource {
       ),
     );
   }
-
-  @override
-  Recipient? get currentRecipient => _recipient;
 }

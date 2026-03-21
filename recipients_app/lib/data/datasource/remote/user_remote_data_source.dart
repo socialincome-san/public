@@ -10,8 +10,6 @@ class UserRemoteDataSource implements UserDataSource {
   final FirebaseAuth firebaseAuth;
   final AuthenticatedClient authenticatedClient;
 
-  Recipient? _currentRecipient;
-
   UserRemoteDataSource({
     required this.firebaseAuth,
     required this.authenticatedClient,
@@ -21,26 +19,19 @@ class UserRemoteDataSource implements UserDataSource {
   User? get currentFirebaseUser => firebaseAuth.currentUser;
 
   @override
-  Recipient? get currentRecipient => _currentRecipient;
-
-  @override
   Future<Recipient?> fetchRecipient(User firebaseUser) async {
     final uri = authenticatedClient.resolveUri("recipients/me");
     final response = await authenticatedClient.get(uri);
 
     if (response.statusCode == 404) { // no user found
-      _currentRecipient = null;
       return null;
     }
 
     if (response.statusCode != 200) { // any other error
-      _currentRecipient = null;
       throw Exception("Failed to fetch recipient: ${response.statusCode} - ${response.body}");
     }
 
-    final recipient = RecipientMapper.fromJson(response.body);
-    _currentRecipient = recipient;
-    return recipient;
+    return RecipientMapper.fromJson(response.body);
   }
 
   @override
@@ -55,8 +46,6 @@ class UserRemoteDataSource implements UserDataSource {
       throw Exception("Failed to update recipient: ${response.statusCode} - ${response.body}");
     }
 
-    final recipient = RecipientMapper.fromJson(response.body);
-    _currentRecipient = recipient;
-    return recipient;
+    return RecipientMapper.fromJson(response.body);
   }
 }
