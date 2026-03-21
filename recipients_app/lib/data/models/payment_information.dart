@@ -1,3 +1,4 @@
+import "package:app/core/helpers/date_time_converter.dart";
 import "package:app/data/models/mobile_money_provider.dart";
 import "package:app/data/models/phone.dart";
 import "package:dart_mappable/dart_mappable.dart";
@@ -12,8 +13,10 @@ class PaymentInformation with PaymentInformationMappable {
   final String code;
   final String phoneId;
   final Phone phone;
-  final String createdAt;
-  final String? updatedAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
   const PaymentInformation({
     required this.id,

@@ -49,16 +49,18 @@ class PaymentInformationMapper extends ClassMapperBase<PaymentInformation> {
     'phone',
     _$phone,
   );
-  static String _$createdAt(PaymentInformation v) => v.createdAt;
-  static const Field<PaymentInformation, String> _f$createdAt = Field(
+  static DateTime _$createdAt(PaymentInformation v) => v.createdAt;
+  static const Field<PaymentInformation, DateTime> _f$createdAt = Field(
     'createdAt',
     _$createdAt,
+    hook: DateTimeHook(),
   );
-  static String? _$updatedAt(PaymentInformation v) => v.updatedAt;
-  static const Field<PaymentInformation, String> _f$updatedAt = Field(
+  static DateTime? _$updatedAt(PaymentInformation v) => v.updatedAt;
+  static const Field<PaymentInformation, DateTime> _f$updatedAt = Field(
     'updatedAt',
     _$updatedAt,
     opt: true,
+    hook: DateTimeHook(),
   );
 
   @override
@@ -167,8 +169,8 @@ abstract class PaymentInformationCopyWith<
     String? code,
     String? phoneId,
     Phone? phone,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   PaymentInformationCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -199,7 +201,7 @@ class _PaymentInformationCopyWithImpl<$R, $Out>
     String? code,
     String? phoneId,
     Phone? phone,
-    String? createdAt,
+    DateTime? createdAt,
     Object? updatedAt = $none,
   }) => $apply(
     FieldCopyWithData({

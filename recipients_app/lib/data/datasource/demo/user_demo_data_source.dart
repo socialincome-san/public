@@ -89,8 +89,8 @@ class UserDemoDataSource implements UserDataSource {
       mobileMoneyProvider: const MobileMoneyProvider(id: "demo", name: "Demo Mobile Money Provider"),
       code: "7843754",
       phoneId: "demo",
-      createdAt: DateTime.now().toIso8601String(),
-      updatedAt: DateTime.now().toIso8601String(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
       phone: Phone(
         id: "demo",
         number: "23271118897",
