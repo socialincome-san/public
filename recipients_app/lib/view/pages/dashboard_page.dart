@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cubit.dart";
 import "package:app/core/cubits/payment/payouts_cubit.dart";
@@ -101,21 +103,61 @@ class _DashboardViewState extends State<_DashboardView> {
             context.read<PayoutsCubit>().loadPayments();
             context.read<SurveyCubit>().getSurveys();
           },
-          child: BlocListener<DashboardCardManagerCubit, DashboardCardManagerState>(
-            listener: (context, state) {
-              if (state.status == DashboardCardManagerStatus.error) {
-                FlushbarHelper.showFlushbar(
-                  context,
-                  message: state.exception?.toString() ?? "An error occurred",
-                  type: FlushbarType.error,
-                );
-              } else if (state.status == DashboardCardManagerStatus.updated) {
-                FlushbarHelper.showFlushbar(
-                  context,
-                  message: "Profile updated successfully",
-                );
-              }
-            },
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<DashboardCardManagerCubit, DashboardCardManagerState>(
+                listener: (context, state) {
+                  if (state.status == DashboardCardManagerStatus.error) {
+                    FlushbarHelper.showFlushbar(
+                      context,
+                      message: state.exception?.toString() ?? "An error occurred",
+                      type: FlushbarType.error,
+                    );
+                  } else if (state.status == DashboardCardManagerStatus.updated) {
+                    FlushbarHelper.showFlushbar(
+                      context,
+                      message: "Profile updated successfully",
+                    );
+                  }
+                },
+              ),
+              BlocListener<PayoutsCubit, PayoutsState>(
+                listener: (context, state) {
+                  if (state.status == PayoutsStatus.failure) {
+                    state.exception is SocketException
+                        ? FlushbarHelper.showFlushbar(
+                            context,
+                            message: "No internet connection. Cannot refresh data.",
+                            type: FlushbarType.error,
+                          )
+                        :
+                    FlushbarHelper.showFlushbar(
+                      context,
+                      message: state.exception?.toString() ?? "An error occurred",
+                      type: FlushbarType.error,
+                    );
+                  }
+                },
+              ),
+              BlocListener<SurveyCubit, SurveyState>(
+                listener: (context, state) {
+                  if (state.status == SurveyStateStatus.updatedFailure) {
+                    state.exception is SocketException
+                        ? FlushbarHelper.showFlushbar(
+                            context,
+                            message: "No internet connection. Cannot refresh data.",
+                            type: FlushbarType.error,
+                          )
+                        :
+                    FlushbarHelper.showFlushbar(
+                      context,
+                      message: state.exception?.toString() ?? "An error occurred",
+                      type: FlushbarType.error,
+                    );
+                  }
+                },
+              ),
+            ],
             child: Padding(
               padding: AppSpacings.h8,
               child: Column(

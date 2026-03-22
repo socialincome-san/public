@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:app/data/enums/balance_card_status.dart";
 import "package:app/data/enums/payout_status.dart";
 import "package:app/data/enums/payout_ui_status.dart";
@@ -9,6 +11,7 @@ import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:collection/collection.dart";
 import "package:dart_mappable/dart_mappable.dart";
+import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -47,13 +50,22 @@ class PayoutsCubit extends Cubit<PayoutsState> {
         ),
       );
     } on Exception catch (ex, stackTrace) {
-      crashReportingRepository.logError(ex, stackTrace);
-      emit(
-        state.copyWith(
-          status: PayoutsStatus.failure,
-          exception: ex,
-        ),
-      );
+      if (ex is SocketException || (ex is FirebaseException && ex.code == "unknown")) {
+        emit(
+          state.copyWith(
+            status: PayoutsStatus.failure,
+            exception: ex,
+          ),
+        );
+      } else {
+        crashReportingRepository.logError(ex, stackTrace);
+        emit(
+          state.copyWith(
+            status: PayoutsStatus.failure,
+            exception: ex,
+          ),
+        );
+      }
     }
   }
 

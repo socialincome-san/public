@@ -1,3 +1,6 @@
+import "dart:async";
+import "dart:io";
+
 import "package:app/data/models/recipient.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
 import "package:app/data/models/survey/survey.dart";
@@ -7,6 +10,7 @@ import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
 import "package:collection/collection.dart";
 import "package:dart_mappable/dart_mappable.dart";
+import "package:firebase_core/firebase_core.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 part "survey_cubit.mapper.dart";
@@ -46,12 +50,22 @@ class SurveyCubit extends Cubit<SurveyState> {
         ),
       );
     } on Exception catch (ex, stackTrace) {
-      crashReportingRepository.logError(ex, stackTrace);
-      emit(
-        const SurveyState(
-          status: SurveyStateStatus.updatedFailure,
-        ),
-      );
+      if (ex is SocketException || (ex is FirebaseException && ex.code == "unknown")) {
+        emit(
+          SurveyState(
+            status: SurveyStateStatus.updatedFailure,
+            exception: ex,
+          ),
+        );
+      } else {
+        crashReportingRepository.logError(ex, stackTrace);
+        emit(
+          SurveyState(
+            status: SurveyStateStatus.updatedFailure,
+            exception: ex,
+          ),
+        );
+      }
     }
   }
 

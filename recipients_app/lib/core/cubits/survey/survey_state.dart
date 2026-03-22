@@ -12,10 +12,12 @@ class SurveyState with SurveyStateMappable {
   final SurveyStateStatus status;
   final List<MappedSurvey> mappedSurveys;
   final List<MappedSurvey> dashboardMappedSurveys;
+  final Exception? exception;
 
   const SurveyState({
     this.status = SurveyStateStatus.initial,
     this.mappedSurveys = const [],
     this.dashboardMappedSurveys = const [],
+    this.exception,
   });
 }
