@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
@@ -26,6 +28,7 @@ class SurveyPageState extends State<SurveyPage> {
   bool isLoading = true;
   bool hasNetworkError = false;
   late final WebViewController _webViewController;
+  Timer? _loadingTimer;
 
   @override
   void initState() {
@@ -35,29 +38,52 @@ class SurveyPageState extends State<SurveyPage> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {},
-          onPageStarted: (String url) {},
+          onPageStarted: (String url) {
+            _loadingTimer = Timer(const Duration(seconds: 15), _onLoadTimeout);
+          },
           onPageFinished: (String url) {
+            _loadingTimer?.cancel();
             setState(() {
               isLoading = false;
             });
           },
           onWebResourceError: (WebResourceError error) {
+            _loadingTimer?.cancel();
             if (_networkErrorTypes.contains(error.errorType)) {
-              setState(() {
-                isLoading = false;
-                hasNetworkError = true;
-              });
-              FlushbarHelper.showFlushbar(
-                context,
-                message: context.l10n.offlineMutationError,
-                type: FlushbarType.error,
-              );
+              _showNetworkError();
             }
           },
           onNavigationRequest: (NavigationRequest request) => NavigationDecision.navigate,
         ),
       )
       ..loadRequest(Uri.parse(widget.mappedSurvey.surveyUrl));
+  }
+
+  void _showNetworkError() {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      isLoading = false;
+      hasNetworkError = true;
+    });
+
+    FlushbarHelper.showFlushbar(
+      context,
+      message: context.l10n.offlineMutationError,
+      type: FlushbarType.error,
+    );
+  }
+
+  void _onLoadTimeout() {
+    _showNetworkError();
+  }
+
+  @override
+  void dispose() {
+    _loadingTimer?.cancel();
+    super.dispose();
   }
 
   @override
