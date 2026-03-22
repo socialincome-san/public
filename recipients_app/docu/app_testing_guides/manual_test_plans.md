@@ -97,9 +97,3 @@ Not yet added as feature
 
 →
 [Change survey status.mov](https://drive.google.com/file/d/1I3SELIPc0ReLpIGc_Q0lY291GWUjFrgU/view?usp=sharing)
-
-# Things to know about the app or Sierra Leone
-
-- The leone is the currency of Sierra Leone. It is subdivided into 100
-  cents. As of 1 July 2022, the ISO 4217 code is SLE due to a
-  redenomination of the old leone (SLL) at a rate of SLL 1000 to SLE 1.

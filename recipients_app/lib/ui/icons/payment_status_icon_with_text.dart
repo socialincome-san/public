@@ -1,11 +1,11 @@
-import "package:app/data/models/payment/payment.dart";
+import "package:app/data/enums/payout_ui_status.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
 const statusIconHeight = 20.0;
 
 class PaymentStatusIconWithText extends StatelessWidget {
-  final PaymentUiStatus status;
+  final PayoutUiStatus status;
   final String text;
   final bool isInverted;
 

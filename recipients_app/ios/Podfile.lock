@@ -3,10 +3,6 @@ PODS:
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - PromisesObjC (~> 2.4)
-  - cloud_firestore (6.1.3):
-    - Firebase/Firestore (= 12.9.0)
-    - firebase_core
-    - Flutter
   - cloud_functions (6.0.7):
     - Firebase/Functions (= 12.9.0)
     - firebase_core
@@ -16,9 +12,6 @@ PODS:
     - FirebaseAuth (~> 12.9.0)
   - Firebase/CoreOnly (12.9.0):
     - FirebaseCore (~> 12.9.0)
-  - Firebase/Firestore (12.9.0):
-    - Firebase/CoreOnly
-    - FirebaseFirestore (~> 12.9.0)
   - Firebase/Functions (12.9.0):
     - Firebase/CoreOnly
     - FirebaseFunctions (~> 12.9.0)
@@ -32,7 +25,7 @@ PODS:
     - firebase_core
     - FirebaseAnalytics (= 12.9.0)
     - Flutter
-  - firebase_app_check (0.4.1-3):
+  - firebase_app_check (0.4.1-4):
     - Firebase/CoreOnly (~> 12.9.0)
     - firebase_core
     - FirebaseAppCheck (~> 12.9.0)
@@ -234,7 +227,6 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
-  - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_app_check (from `.symlinks/plugins/firebase_app_check/ios`)
@@ -288,8 +280,6 @@ SPEC REPOS:
     - Sentry
 
 EXTERNAL SOURCES:
-  cloud_firestore:
-    :path: ".symlinks/plugins/cloud_firestore/ios"
   cloud_functions:
     :path: ".symlinks/plugins/cloud_functions/ios"
   firebase_analytics:
@@ -327,11 +317,10 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
-  cloud_firestore: d5c7f731e71034665afe74e3a1d0ff334f9b7799
   cloud_functions: 0c2b3ab8937f9b5b1521c0f1b5203bcd41b308ff
   Firebase: 065f2bb395062046623036d8e6dc857bc2521d56
   firebase_analytics: 6903a46192a92993abde88152a14ce1df1c0de2f
-  firebase_app_check: 5daa290993b5d27f57b2d336455ad1d217fe8f90
+  firebase_app_check: f1af8c3583669ed66c25205951156347293f9cbe
   firebase_auth: eeb19010b5aa7c83cc85f23b6c4f009ea28461f1
   firebase_core: afac1aac13c931e0401c7e74ed1276112030efab
   firebase_messaging: 7cb2727feb789751fc6936bcc8e08408970e2820
@@ -373,8 +362,8 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: 841fa2fe08dc72eb95e2320b76e3f751f3400cf5
-  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
-  webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
+  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
+  webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
 
 PODFILE CHECKSUM: f6630cbb6d4880fc735fb33dd942e4120137dbba
 

@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get other;
 
+  /// No description provided for @private.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get private;
+
   /// No description provided for @genderError.
   ///
   /// In en, this message translates to:
@@ -398,12 +404,6 @@ abstract class AppLocalizations {
   /// **'Payments'**
   String get payments;
 
-  /// No description provided for @orangeMoneyNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Orange Money Number'**
-  String get orangeMoneyNumber;
-
   /// No description provided for @pastPayments.
   ///
   /// In en, this message translates to:
@@ -434,11 +434,11 @@ abstract class AppLocalizations {
   /// **'Survey'**
   String get survey;
 
-  /// No description provided for @createAccountInfo.
+  /// No description provided for @acceptAndContinueInfo.
   ///
   /// In en, this message translates to:
-  /// **'By creating an account, you agree with our '**
-  String get createAccountInfo;
+  /// **'Before proceeding, you must accept our '**
+  String get acceptAndContinueInfo;
 
   /// No description provided for @privacyPolicy.
   ///
@@ -452,17 +452,29 @@ abstract class AppLocalizations {
   /// **'Can\'t open privacy policy right now. Copied website address to the clipboard.'**
   String get privacyPolicyError;
 
-  /// No description provided for @createAccount.
+  /// No description provided for @acceptAndContinue.
   ///
   /// In en, this message translates to:
-  /// **'Create Account'**
-  String get createAccount;
+  /// **'Accept and Continue'**
+  String get acceptAndContinue;
 
-  /// No description provided for @recommendingOrganization.
+  /// No description provided for @acceptAndContinueDemo.
   ///
   /// In en, this message translates to:
-  /// **'Recommending Organization'**
-  String get recommendingOrganization;
+  /// **'Enter demo'**
+  String get acceptAndContinueDemo;
+
+  /// No description provided for @localPartner.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Partner'**
+  String get localPartner;
+
+  /// No description provided for @programInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Program Information'**
+  String get programInformation;
 
   /// No description provided for @call.
   ///
@@ -542,6 +554,18 @@ abstract class AppLocalizations {
   /// **'Amount'**
   String get amount;
 
+  /// No description provided for @interval.
+  ///
+  /// In en, this message translates to:
+  /// **'Interval'**
+  String get interval;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
   /// No description provided for @nextMonth.
   ///
   /// In en, this message translates to:
@@ -583,6 +607,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'days'**
   String get days;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get month;
+
+  /// No description provided for @months.
+  ///
+  /// In en, this message translates to:
+  /// **'months'**
+  String get months;
 
   /// No description provided for @myPayments.
   ///
@@ -1430,12 +1466,6 @@ abstract class AppLocalizations {
   /// **'Demo'**
   String get demoCta;
 
-  /// No description provided for @createAccountDemo.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter demo'**
-  String get createAccountDemo;
-
   /// No description provided for @contestReason_phoneStolen.
   ///
   /// In en, this message translates to:
@@ -1489,6 +1519,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income.'**
   String get appUpdateWidgetErrorLaunchingStore;
+
+  /// No description provided for @country.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// No description provided for @recipientNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipient account found for this phone number. Please check your phone number or contact your local partner.'**
+  String get recipientNotFound;
+
+  /// No description provided for @unknownPaymentPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown payment phone number'**
+  String get unknownPaymentPhoneNumber;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
