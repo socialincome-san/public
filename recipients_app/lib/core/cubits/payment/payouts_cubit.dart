@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:io";
 
 import "package:app/data/enums/balance_card_status.dart";
@@ -31,6 +32,8 @@ class PayoutsCubit extends Cubit<PayoutsState> {
   final PaymentRepository paymentRepository;
   final CrashReportingRepository crashReportingRepository;
 
+  StreamSubscription<List<Payout>>? _payoutsSubscription;
+
   PayoutsCubit({
     required this.recipient,
     required this.paymentRepository,
@@ -40,33 +43,31 @@ class PayoutsCubit extends Cubit<PayoutsState> {
   Future<void> loadPayments() async {
     emit(state.copyWith(status: PayoutsStatus.loading));
 
-    try {
-      final payouts = await paymentRepository.fetchPayouts();
-
-      emit(
-        state.copyWith(
-          status: PayoutsStatus.success,
-          payoutsUiState: await _mapPayoutsUiState(payouts),
-        ),
-      );
-    } on Exception catch (ex, stackTrace) {
-      if (ex is SocketException || (ex is FirebaseException && ex.code == "unknown")) {
+    _payoutsSubscription?.cancel();
+    _payoutsSubscription = paymentRepository.fetchPayouts().listen(
+      (payouts) async {
+        emit(
+          state.copyWith(
+            status: PayoutsStatus.success,
+            payoutsUiState: await _mapPayoutsUiState(payouts),
+          ),
+        );
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        if (error is SocketException || (error is FirebaseException && error.code == "unknown")) {
+          // Do not log this kind of errors in Sentry as they are caused by network issues on the client side
+          // and do not indicate a problem in the app itself.
+        } else {
+          crashReportingRepository.logError(error is Exception ? error : Exception(error.toString()), stackTrace);
+        }
         emit(
           state.copyWith(
             status: PayoutsStatus.failure,
-            exception: ex,
+            exception: error is Exception ? error : Exception(error.toString()),
           ),
         );
-      } else {
-        crashReportingRepository.logError(ex, stackTrace);
-        emit(
-          state.copyWith(
-            status: PayoutsStatus.failure,
-            exception: ex,
-          ),
-        );
-      }
-    }
+      },
+    );
   }
 
   Future<void> confirmPayment(Payout payout) async {
@@ -77,16 +78,8 @@ class PayoutsCubit extends Cubit<PayoutsState> {
         payoutId: payout.id,
       );
 
-      final payouts = await paymentRepository.fetchPayouts();
-
-      final paymentUiState = await _mapPayoutsUiState(payouts);
-
-      emit(
-        state.copyWith(
-          status: PayoutsStatus.updated,
-          payoutsUiState: paymentUiState,
-        ),
-      );
+      // Re-fetch payouts after mutation
+      await loadPayments();
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
@@ -110,16 +103,8 @@ class PayoutsCubit extends Cubit<PayoutsState> {
         contestReason: contestReason,
       );
 
-      final payouts = await paymentRepository.fetchPayouts();
-
-      final paymentUiState = await _mapPayoutsUiState(payouts);
-
-      emit(
-        state.copyWith(
-          status: PayoutsStatus.updated,
-          payoutsUiState: paymentUiState,
-        ),
-      );
+      // Re-fetch payouts after mutation
+      await loadPayments();
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
@@ -261,6 +246,12 @@ class PayoutsCubit extends Cubit<PayoutsState> {
       paymentUiStatus = PayoutUiStatus.onHoldToReview;
     }
     return paymentUiStatus;
+  }
+
+  @override
+  Future<void> close() {
+    _payoutsSubscription?.cancel();
+    return super.close();
   }
 
   MappedPayout? _getLastPaidPayment(List<MappedPayout> payments) {

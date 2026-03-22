@@ -1,9 +1,14 @@
+import "package:app/data/models/offline_exception.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:cloud_functions/cloud_functions.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
 String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
+  if (ex is OfflineMutationException) {
+    return localizations.offlineMutationError;
+  }
+
   if (ex is FirebaseFunctionsException) {
     return switch (ex.code) {
       "permission-denied" => localizations.invalidVerificationCodeError,

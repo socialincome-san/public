@@ -1,11 +1,15 @@
 import "dart:developer";
 
+import "package:app/data/models/offline_exception.dart";
 import "package:sentry_flutter/sentry_flutter.dart";
 
 class CrashReportingRepository {
   const CrashReportingRepository();
 
   Future<void> logError(Exception exception, StackTrace stackTrace) async {
+    if (exception is OfflineMutationException) {
+      return;
+    }
     log("--- SENTRY: Logging error: $exception");
     Sentry.captureException(exception, stackTrace: stackTrace);
   }
