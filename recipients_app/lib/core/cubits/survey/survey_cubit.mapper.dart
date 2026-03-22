@@ -97,12 +97,19 @@ class SurveyStateMapper extends ClassMapperBase<SurveyState> {
     opt: true,
     def: const [],
   );
+  static Exception? _$exception(SurveyState v) => v.exception;
+  static const Field<SurveyState, Exception> _f$exception = Field(
+    'exception',
+    _$exception,
+    opt: true,
+  );
 
   @override
   final MappableFields<SurveyState> fields = const {
     #status: _f$status,
     #mappedSurveys: _f$mappedSurveys,
     #dashboardMappedSurveys: _f$dashboardMappedSurveys,
+    #exception: _f$exception,
   };
 
   static SurveyState _instantiate(DecodingData data) {
@@ -110,6 +117,7 @@ class SurveyStateMapper extends ClassMapperBase<SurveyState> {
       status: data.dec(_f$status),
       mappedSurveys: data.dec(_f$mappedSurveys),
       dashboardMappedSurveys: data.dec(_f$dashboardMappedSurveys),
+      exception: data.dec(_f$exception),
     );
   }
 
@@ -189,6 +197,7 @@ abstract class SurveyStateCopyWith<$R, $In extends SurveyState, $Out>
     SurveyStateStatus? status,
     List<MappedSurvey>? mappedSurveys,
     List<MappedSurvey>? dashboardMappedSurveys,
+    Exception? exception,
   });
   SurveyStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -228,12 +237,14 @@ class _SurveyStateCopyWithImpl<$R, $Out>
     SurveyStateStatus? status,
     List<MappedSurvey>? mappedSurveys,
     List<MappedSurvey>? dashboardMappedSurveys,
+    Object? exception = $none,
   }) => $apply(
     FieldCopyWithData({
       if (status != null) #status: status,
       if (mappedSurveys != null) #mappedSurveys: mappedSurveys,
       if (dashboardMappedSurveys != null)
         #dashboardMappedSurveys: dashboardMappedSurveys,
+      if (exception != $none) #exception: exception,
     }),
   );
   @override
@@ -244,6 +255,7 @@ class _SurveyStateCopyWithImpl<$R, $Out>
       #dashboardMappedSurveys,
       or: $value.dashboardMappedSurveys,
     ),
+    exception: data.get(#exception, or: $value.exception),
   );
 
   @override
