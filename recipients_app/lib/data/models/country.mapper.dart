@@ -24,10 +24,11 @@ class CountryMapper extends ClassMapperBase<Country> {
 
   static String _$isoCode(Country v) => v.isoCode;
   static const Field<Country, String> _f$isoCode = Field('isoCode', _$isoCode);
-  static String _$currency(Country v) => v.currency;
+  static String? _$currency(Country v) => v.currency;
   static const Field<Country, String> _f$currency = Field(
     'currency',
     _$currency,
+    opt: true,
   );
 
   @override
@@ -113,10 +114,10 @@ class _CountryCopyWithImpl<$R, $Out>
   late final ClassMapperBase<Country> $mapper =
       CountryMapper.ensureInitialized();
   @override
-  $R call({String? isoCode, String? currency}) => $apply(
+  $R call({String? isoCode, Object? currency = $none}) => $apply(
     FieldCopyWithData({
       if (isoCode != null) #isoCode: isoCode,
-      if (currency != null) #currency: currency,
+      if (currency != $none) #currency: currency,
     }),
   );
   @override
