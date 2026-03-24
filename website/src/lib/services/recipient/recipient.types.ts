@@ -8,8 +8,21 @@ export type {
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {
 		contact: {
-			include: {
+			select: {
+				id: true;
+				firstName: true;
+				lastName: true;
+				callingName: true;
+				phoneId: true;
 				phone: true;
+				email: true;
+				gender: true;
+				language: true;
+				dateOfBirth: true;
+				profession: true;
+				isInstitution: true;
+				createdAt: true;
+				updatedAt: true;
 			};
 		};
 		paymentInformation: {
@@ -28,7 +41,28 @@ export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 				};
 			};
 		};
-		localPartner: true;
+		localPartner: {
+			include: {
+				contact: {
+					select: {
+						id: true;
+						firstName: true;
+						lastName: true;
+						callingName: true;
+						phoneId: true;
+						phone: true;
+						email: true;
+						gender: true;
+						language: true;
+						dateOfBirth: true;
+						profession: true;
+						isInstitution: true;
+						createdAt: true;
+						updatedAt: true;
+					};
+				};
+			};
+		};
 	};
 }>;
 
