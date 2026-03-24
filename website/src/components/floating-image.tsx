@@ -2,7 +2,7 @@ import { getScaledDimensions } from '@/lib/services/storyblok/storyblok.utils';
 import { motion, MotionValue, useTransform } from 'motion/react';
 import NextImage from 'next/image';
 
-export const imageConfigs = [
+const imageConfigs = [
 	{ className: 'top-[15%] left-[8%]', pointerFactor: 22 },
 	{ className: 'top-[15%] right-[8%]', pointerFactor: -20 },
 	{ className: 'bottom-[18%] left-[12%]', pointerFactor: -25 },
