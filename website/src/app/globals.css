@@ -111,8 +111,8 @@
 		--sidebar-ring: 215 20% 65%;
 		--gradient-button-from: 201 90% 27%;
 		--gradient-button-to: 160 16% 66%;
-		--gradient-background-from: 40 84% 95%;
-		--gradient-background-to: 203 42% 93%;
+		--gradient-background-from: rgba(251, 237, 209, 0.6);
+		--gradient-background-to: rgba(202, 221, 233, 0.6);
 		--confirm: 142 76% 36%;
 		--confirm-foreground: 141 84% 93%;
 		--gradient-card-from: 203 40% 53%;
