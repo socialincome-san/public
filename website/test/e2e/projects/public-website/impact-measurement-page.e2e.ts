@@ -1,20 +1,26 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { saveStoryblokMock, setupStoryblokMock } from '../../mock-server/storyblok-mock';
 import { expectToHaveScreenshot } from '../../utils';
+
+const STORYBLOK_RECORDING = 'public-website-impact-measurement-page';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
 
 test('new website impact measurement page matches initial screenshot', async ({ page }) => {
+	await setupStoryblokMock(STORYBLOK_RECORDING);
 	await page.goto('/de/ch/new-website/programs/impact-measurement');
 	await expect(page.getByText('Wofür gibst du dein Social Income hauptsächlich aus?')).toBeVisible();
 	await page.getByTestId('impact-measurement-study-details-trigger').click();
 
-	await expectToHaveScreenshot(page, true);
+	await expectToHaveScreenshot(page);
+	await saveStoryblokMock(STORYBLOK_RECORDING);
 });
 
 test('new website impact measurement page supports filters and matches filtered screenshot', async ({ page }) => {
+	await setupStoryblokMock(STORYBLOK_RECORDING);
 	await page.goto('/de/ch/new-website/programs/impact-measurement');
 	await expect(page.getByText('Wofür gibst du dein Social Income hauptsächlich aus?')).toBeVisible();
 	await page.getByTestId('impact-measurement-study-details-trigger').click();
@@ -30,5 +36,6 @@ test('new website impact measurement page supports filters and matches filtered 
 	);
 	await page.getByTestId('impact-measurement-study-details-trigger').click();
 	await expect(page.getByText('Wofür gibst du dein Social Income hauptsächlich aus?')).toBeVisible();
-	await expectToHaveScreenshot(page, true);
+	await expectToHaveScreenshot(page);
+	await saveStoryblokMock(STORYBLOK_RECORDING);
 });
