@@ -18,7 +18,7 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 
 	return (
 		<div
-			className="theme-new text-primary flex min-h-screen w-full flex-col bg-fixed antialiased"
+			className="theme-new text-primary flex min-h-screen w-full flex-col antialiased"
 			style={{
 				background: `repeating-linear-gradient(
       330deg,
