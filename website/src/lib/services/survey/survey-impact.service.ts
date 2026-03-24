@@ -1,6 +1,6 @@
 import { CountryCode, Prisma, PrismaClient, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
-import * as surveyQuestions from '@/lib/types/question';
+import { QUESTIONS } from '@/lib/types/question';
 import { logger } from '@/lib/utils/logger';
 import { getQuestionnaire } from '../../../app/[lang]/[region]/survey/[recipient]/[survey]/questionnaires';
 import { BaseService } from '../core/base.service';
@@ -68,7 +68,7 @@ export class SurveyImpactService extends BaseService {
 	}
 
 	private getQuestionCatalog(): QuestionDefinition[] {
-		return Object.values(surveyQuestions).filter((value) => this.isQuestionDefinition(value));
+		return QUESTIONS.filter((value) => this.isQuestionDefinition(value));
 	}
 
 	private identityTranslate<T = string>(this: void, key: string): T {

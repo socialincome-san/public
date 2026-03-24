@@ -1,6 +1,7 @@
 import { services } from '@/lib/services/services';
 import { SurveyImpactQuestion } from '@/lib/services/survey/survey-impact.types';
-import { followUpConfigs, highlightedQuestionOrder, questionInsightKeysByName, questionTypeLabelKeys } from './config';
+import { QUESTIONS } from '@/lib/types/question';
+import { followUpConfigs, highlightedQuestionOrder, questionTypeLabelKeys } from './config';
 import { toImpactServiceFilters } from './filters.server';
 import { renderFollowUpSections } from './follow-ups';
 import { ImpactMeasurementQuestionCard } from './question-card';
@@ -27,6 +28,7 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 	}
 
 	const questionsByName = new Map(impactResult.data.questions.map((question) => [question.name, question]));
+	const questionDefinitionsByName = new Map(QUESTIONS.map((question) => [question.name, question]));
 	const followUpQuestionNames = new Set(
 		Object.values(followUpConfigs)
 			.flat()
@@ -45,7 +47,7 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 			return [];
 		}
 
-		const insightKeys = questionInsightKeysByName[question.name] ?? [];
+		const insightKeys = questionDefinitionsByName.get(question.name)?.insightTranslationKeys ?? [];
 
 		return insightKeys.map((key) => translator.t(key)).filter((insight, index) => insight !== insightKeys[index]);
 	};

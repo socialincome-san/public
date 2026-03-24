@@ -119,11 +119,11 @@
 			"happierCommentTitleV1": "How so?",
 			"notHappierCommentTitleV1": "Can you tell us why?",
 			"impactInsights": {
-				"spendingV1": "Food spending remains a pressure point, which is consistent with recent price volatility in Sierra Leone and helps explain why recipients prioritize short-term household stability over longer-horizon investments.",
+				"spendingV1": "Food spending remains a pressure point, which helps explain why recipients often prioritize short-term household stability over longer-horizon investments.",
 				"hasDependentsV1": "Many recipients support others, so one transfer often stabilizes more than one person. This suggests program effects are likely to extend beyond the direct recipient.",
 				"debtPersonalV1": "Personal debt appears to be used as a coping mechanism during income shocks, indicating that regular transfers can reduce reliance on high-stress borrowing cycles.",
 				"debtHouseholdV1": "Household debt dynamics suggest financial stress is often shared within families, not only individual. That supports framing impact at household level, not recipient level alone.",
-				"employmentStatusV1": "Self-employment patterns align with Sierra Leone's informal labor reality, where income is often irregular. Transfers seem to function as working-capital smoothing rather than wage replacement.",
+				"employmentStatusV1": "Self-employment patterns align with informal labor realities where income is often irregular. Transfers can function more as working-capital smoothing than wage replacement.",
 				"skippingMealsV1": "Meal-skipping responses indicate food insecurity is episodic for many households, pointing to vulnerability around weekly cash-flow gaps rather than only chronic scarcity.",
 				"savingsV1": "Limited ability to save suggests most transfer value is absorbed by immediate essentials, which is expected in high-inflation contexts and should inform realistic expectations around capital accumulation.",
 				"unexpectedExpensesCoveredV1": "Difficulty covering unexpected costs highlights fragile resilience. Health or emergency expenses likely remain a key pathway into debt even when regular support exists.",
