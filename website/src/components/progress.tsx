@@ -1,35 +1,35 @@
-'use client';
-
-import * as ProgressPrimitive from '@radix-ui/react-progress';
 import { cn } from '@socialincome/ui';
-import * as React from 'react';
 
 type ProgressVariant = 'default' | 'urgent';
 
-type ProgressProps = React.ComponentProps<typeof ProgressPrimitive.Root> & {
+type ProgressProps = {
 	value?: number;
 	variant?: ProgressVariant;
+	className?: string;
 };
 
-const Progress = ({ className, value = 0, variant = 'default', ...props }: ProgressProps) => {
+const clampPercent = (value: number): number => {
+	if (Number.isNaN(value)) {
+		return 0;
+	}
+
+	return Math.min(100, Math.max(0, value));
+};
+
+const Progress = ({ className, value = 0, variant = 'default' }: ProgressProps) => {
 	const indicatorClass =
 		variant === 'urgent'
 			? 'bg-rose-400'
 			: 'bg-[linear-gradient(to_right,hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to)))]';
 
 	return (
-		<ProgressPrimitive.Root
-			data-slot="progress"
-			className={cn('bg-primary/20 relative h-2 w-full overflow-hidden rounded-full', className)}
-			{...props}
-		>
-			<ProgressPrimitive.Indicator
+		<div data-slot="progress" className={cn('bg-primary/20 relative h-2 w-full overflow-hidden rounded-full', className)}>
+			<div
 				data-slot="progress-indicator"
 				className={cn('h-full transition-all', indicatorClass)}
-				// eslint-disable-next-line react/forbid-component-props
-				style={{ width: `${value}%` }}
+				style={{ width: `${clampPercent(value)}%` }}
 			/>
-		</ProgressPrimitive.Root>
+		</div>
 	);
 };
 

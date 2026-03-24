@@ -117,7 +117,90 @@
 			"achievementsNotAchievedCommentTitleV1": "What has kept you from achieving this goal? Is there something we could have done to further support you? (e.g. mentoring, connections)",
 			"happierTitleV1": "Has Social Income made you feel happier?",
 			"happierCommentTitleV1": "How so?",
-			"notHappierCommentTitleV1": "Can you tell us why?"
+			"notHappierCommentTitleV1": "Can you tell us why?",
+			"impactInsights": {
+				"spendingV1": "Food spending remains a pressure point, which is consistent with recent price volatility in Sierra Leone and helps explain why recipients prioritize short-term household stability over longer-horizon investments.",
+				"hasDependentsV1": "Many recipients support others, so one transfer often stabilizes more than one person. This suggests program effects are likely to extend beyond the direct recipient.",
+				"debtPersonalV1": "Personal debt appears to be used as a coping mechanism during income shocks, indicating that regular transfers can reduce reliance on high-stress borrowing cycles.",
+				"debtHouseholdV1": "Household debt dynamics suggest financial stress is often shared within families, not only individual. That supports framing impact at household level, not recipient level alone.",
+				"employmentStatusV1": "Self-employment patterns align with Sierra Leone's informal labor reality, where income is often irregular. Transfers seem to function as working-capital smoothing rather than wage replacement.",
+				"skippingMealsV1": "Meal-skipping responses indicate food insecurity is episodic for many households, pointing to vulnerability around weekly cash-flow gaps rather than only chronic scarcity.",
+				"savingsV1": "Limited ability to save suggests most transfer value is absorbed by immediate essentials, which is expected in high-inflation contexts and should inform realistic expectations around capital accumulation.",
+				"unexpectedExpensesCoveredV1": "Difficulty covering unexpected costs highlights fragile resilience. Health or emergency expenses likely remain a key pathway into debt even when regular support exists.",
+				"schoolAttendanceV1": "School-attendance responses suggest education constraints are not only fee-related and may include caregiving pressure, transport barriers, or opportunity costs within households.",
+				"impactFinancialIndependenceV1": "Perceived financial independence is improving for many respondents, but this should be interpreted as increased day-to-day control rather than full economic security.",
+				"longEnough": "Views on whether support duration is sufficient suggest that stability timelines differ across households; fixed program duration may fit some recipients better than others.",
+				"plannedAchievementRemainingV1": "Open responses indicate recipients are still goal-oriented near later program stages, which points to meaningful agency and planning even under constrained conditions.",
+				"impactLifeGeneralV1": "Life-impact narratives suggest effects beyond income, including reduced stress and improved decision space, which are important outcomes not captured by financial indicators alone."
+			}
+		},
+		"impactMeasurement": {
+			"title": "Impact Measurement",
+			"description": "All data shown on this page is updated in real time from surveys conducted with our recipients.",
+			"loadError": "Unable to load survey insights right now.",
+			"notAvailable": "N/A",
+			"breadcrumb": {
+				"home": "Home",
+				"programs": "Programs",
+				"impactMeasurement": "Impact Measurement"
+			},
+			"filters": {
+				"allCountries": "All countries",
+				"allPrograms": "All programs",
+				"allSurveys": "All surveys",
+				"allRecipients": "All recipients",
+				"allFilters": "All filters",
+				"filter": "Filter",
+				"apply": "Apply",
+				"reset": "Reset"
+			},
+			"downloadCsv": "Download CSV",
+			"comingSoon": "Coming soon",
+			"downloadFilteredCsv": "Download filtered CSV",
+			"surveyResponsesFrom": "survey responses from",
+			"recipients": "Recipients",
+			"responsesIn": "responses in",
+			"surveys": "surveys",
+			"questionLabel": "Question {{number}}",
+			"textResponseInsights": "Text response insights",
+			"textResponsePrivacyTooltip": "Free-text answers are not published for privacy reasons, as they may identify individuals or reveal who is behind a response.",
+			"noTextResponsesYet": "No text responses yet.",
+			"textResponsesCollected": "text responses collected.",
+			"insights": "Insights",
+			"questionTypes": {
+				"singleChoice": "Single choice",
+				"multipleChoice": "Multiple choice",
+				"ranking": "Ranking",
+				"freeText": "Free text",
+				"fallback": "Other"
+			},
+			"questionnaires": {
+				"onboarding": "Onboarding",
+				"checkin": "Check-in",
+				"offboarding": "Offboarding",
+				"offboardedCheckin": "Offboarded check-in",
+				"fallback": "Other"
+			},
+			"followUp": {
+				"prefix": "Follow-up question for",
+				"individuals": "individuals",
+				"whoSaid": "who said",
+				"selectedMoreThanOneCategory": "who selected more than one category"
+			},
+			"recipientsFilter": {
+				"genderHeading": "Gender",
+				"ageHeading": "Age",
+				"gender": {
+					"male": "Male",
+					"female": "Female"
+				},
+				"age": {
+					"youth": "Youth (16-25)",
+					"youngAdults": "Young adults (26-35)",
+					"middleAged": "Middle-aged (36-55)",
+					"olderAdults": "Older adults (56+)"
+				}
+			}
 		}
 	}
 }
