@@ -542,6 +542,7 @@ export class RecipientWriteService extends BaseService {
 							country: {
 								select: {
 									isoCode: true,
+									currency: true,
 								},
 							},
 						},
