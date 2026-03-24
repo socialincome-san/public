@@ -11,6 +11,18 @@ import {
 } from './transparency.types';
 
 export class TransparencyService extends BaseService {
+	async getTransparencyTotals(): Promise<ServiceResult<TransparencyTotals>> {
+		try {
+			const totals = await this.getTotals();
+
+			return this.resultOk(totals);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch transparency totals: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getTransparencyData(timeRanges: TimeRange[]): Promise<ServiceResult<TransparencyData>> {
 		try {
 			const [totals, timeRangeData, topCountries] = await Promise.all([
