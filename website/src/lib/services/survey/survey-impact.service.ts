@@ -71,7 +71,7 @@ export class SurveyImpactService extends BaseService {
 		return Object.values(surveyQuestions).filter((value) => this.isQuestionDefinition(value));
 	}
 
-	private identityTranslate<T = string>(key: string): T {
+	private identityTranslate<T = string>(this: void, key: string): T {
 		return key as T;
 	}
 

@@ -12,7 +12,7 @@ const isYesNoQuestion = (question: SurveyImpactQuestion): boolean => {
 
 const renderOptionsDonut = (question: SurveyImpactQuestion, keyPrefix: string, translate: (key: string) => string) => {
 	const sortedOptions = [...question.options].sort((left, right) => right.count - left.count);
-	const optionsWithMeta = sortedOptions.map((option, index) => ({
+	const optionsWithMeta = sortedOptions.map((option) => ({
 		...option,
 		optionLabel: question.choicesTranslationKey
 			? translate(`${question.choicesTranslationKey}.${option.value}`)
