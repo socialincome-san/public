@@ -40,6 +40,24 @@ export type SurveyImpactData = {
 	questions: SurveyImpactQuestion[];
 };
 
+export type SurveyImpactStudyDetailItem = {
+	value: string;
+	count: number;
+	percentage: number;
+};
+
+export type SurveyImpactStudyDetails = {
+	totalCompletedSurveys: number;
+	totalRecipients: number;
+	lastResponseDaysAgo: number | null;
+	timeFrameStart: Date | null;
+	timeFrameEnd: Date | null;
+	timeFrameDays: number | null;
+	countryBreakdown: SurveyImpactStudyDetailItem[];
+	genderBreakdown: SurveyImpactStudyDetailItem[];
+	ageBreakdown: SurveyImpactStudyDetailItem[];
+};
+
 export type SurveyImpactFilterOption = {
 	value: string;
 	label: string;

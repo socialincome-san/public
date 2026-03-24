@@ -13,7 +13,7 @@ type ImpactMeasurementResultsProps = {
 };
 
 export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMeasurementResultsProps) => {
-	// TEMP: Keep suspense fallback visible while polishing loading UX.
+	// TEMP: Simulate slower backend for loading-state checks.
 	await new Promise((resolve) => setTimeout(resolve, 2500));
 
 	const impactFilters = toImpactServiceFilters(searchParams);

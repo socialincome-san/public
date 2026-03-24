@@ -1,7 +1,9 @@
-import { CountryCode, Prisma, PrismaClient, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
+import { CountryCode, Gender, Prisma, PrismaClient, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
 import { QUESTIONS } from '@/lib/types/question';
 import { logger } from '@/lib/utils/logger';
+import { now, nowMs } from '@/lib/utils/now';
+import { differenceInDays, max, min } from 'date-fns';
 import { getQuestionnaire } from '../../../app/[lang]/[region]/survey/[recipient]/[survey]/questionnaires';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -14,6 +16,8 @@ import {
 	SurveyImpactFilters,
 	SurveyImpactQuestion,
 	SurveyImpactRecipientAgeGroup,
+	SurveyImpactStudyDetailItem,
+	SurveyImpactStudyDetails,
 } from './survey-impact.types';
 
 const defaultQuestionnaires: SurveyQuestionnaire[] = [
@@ -136,14 +140,15 @@ export class SurveyImpactService extends BaseService {
 	}
 
 	private shiftYears(date: Date, years: number): Date {
-		const next = new Date(date);
+		const next = now();
+		next.setTime(date.getTime());
 		next.setFullYear(next.getFullYear() + years);
 
 		return next;
 	}
 
 	private toAgeDateRanges(ageGroups: SurveyImpactRecipientAgeGroup[]): Prisma.DateTimeFilter[] {
-		const now = new Date();
+		const currentDate = now();
 		const ranges: Prisma.DateTimeFilter[] = [];
 
 		for (const group of RECIPIENT_AGE_GROUPS) {
@@ -153,12 +158,66 @@ export class SurveyImpactService extends BaseService {
 
 			const bounds = RECIPIENT_AGE_GROUP_BOUNDS[group];
 			ranges.push({
-				...(bounds.maxAge !== undefined ? { gte: this.shiftYears(now, -bounds.maxAge) } : {}),
-				...(bounds.minAge !== undefined ? { lte: this.shiftYears(now, -bounds.minAge) } : {}),
+				...(bounds.maxAge !== undefined ? { gte: this.shiftYears(currentDate, -bounds.maxAge) } : {}),
+				...(bounds.minAge !== undefined ? { lte: this.shiftYears(currentDate, -bounds.minAge) } : {}),
 			});
 		}
 
 		return ranges;
+	}
+
+	private getAgeGroupForDateOfBirth(dateOfBirth: Date | null): SurveyImpactRecipientAgeGroup | null {
+		if (!dateOfBirth) {
+			return null;
+		}
+
+		const today = now();
+		const age = today.getFullYear() - dateOfBirth.getFullYear();
+		const hasHadBirthdayThisYear =
+			today.getMonth() > dateOfBirth.getMonth() ||
+			(today.getMonth() === dateOfBirth.getMonth() && today.getDate() >= dateOfBirth.getDate());
+		const normalizedAge = hasHadBirthdayThisYear ? age : age - 1;
+
+		for (const group of RECIPIENT_AGE_GROUPS) {
+			const bounds = RECIPIENT_AGE_GROUP_BOUNDS[group];
+			const minAge = bounds.minAge ?? Number.NEGATIVE_INFINITY;
+			const maxAge = bounds.maxAge ?? Number.POSITIVE_INFINITY;
+			if (normalizedAge >= minAge && normalizedAge <= maxAge) {
+				return group;
+			}
+		}
+
+		return null;
+	}
+
+	private toBreakdownItems(counts: Map<string, number>, total: number, sortByCount = true): SurveyImpactStudyDetailItem[] {
+		const items = Array.from(counts.entries()).map(([value, count]) => ({
+			value,
+			count,
+			percentage: total > 0 ? (count / total) * 100 : 0,
+		}));
+
+		if (!sortByCount) {
+			return items;
+		}
+
+		return items.sort((left, right) => right.count - left.count);
+	}
+
+	private toDaysAgo(date: Date | null): number | null {
+		if (!date) {
+			return null;
+		}
+
+		return Math.max(0, differenceInDays(nowMs(), date));
+	}
+
+	private toDaySpan(start: Date | null, end: Date | null): number | null {
+		if (!start || !end) {
+			return null;
+		}
+
+		return Math.max(0, differenceInDays(end, start));
 	}
 
 	private buildWhere(filters?: SurveyImpactFilters): Prisma.SurveyWhereInput {
@@ -488,6 +547,91 @@ export class SurveyImpactService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not load survey impact filter options: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getImpactStudyDetails(filters?: SurveyImpactFilters): Promise<ServiceResult<SurveyImpactStudyDetails>> {
+		try {
+			const surveys = await this.db.survey.findMany({
+				where: this.buildWhere(filters),
+				select: {
+					completedAt: true,
+					recipientId: true,
+					recipient: {
+						select: {
+							contact: {
+								select: {
+									gender: true,
+									dateOfBirth: true,
+								},
+							},
+							program: {
+								select: {
+									country: {
+										select: {
+											isoCode: true,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				orderBy: [{ completedAt: 'desc' }, { createdAt: 'desc' }],
+			});
+
+			const uniqueRecipients = new Map<string, (typeof surveys)[number]['recipient']>();
+			for (const survey of surveys) {
+				if (!uniqueRecipients.has(survey.recipientId)) {
+					uniqueRecipients.set(survey.recipientId, survey.recipient);
+				}
+			}
+
+			const countryCounts = new Map<string, number>();
+			const genderCounts = new Map<string, number>([
+				[Gender.male, 0],
+				[Gender.female, 0],
+			]);
+			const ageCounts = new Map<string, number>(RECIPIENT_AGE_GROUPS.map((ageGroup) => [ageGroup, 0]));
+
+			for (const recipient of uniqueRecipients.values()) {
+				const isoCode = recipient.program?.country?.isoCode;
+				if (isoCode) {
+					countryCounts.set(isoCode, (countryCounts.get(isoCode) ?? 0) + 1);
+				}
+
+				if (recipient.contact?.gender && genderCounts.has(recipient.contact.gender)) {
+					genderCounts.set(recipient.contact.gender, (genderCounts.get(recipient.contact.gender) ?? 0) + 1);
+				}
+
+				const ageGroup = this.getAgeGroupForDateOfBirth(recipient.contact?.dateOfBirth ?? null);
+				if (ageGroup) {
+					ageCounts.set(ageGroup, (ageCounts.get(ageGroup) ?? 0) + 1);
+				}
+			}
+
+			const lastCompletedAt = surveys.find((survey) => survey.completedAt !== null)?.completedAt ?? null;
+			const completedAtDates = surveys
+				.map((survey) => survey.completedAt)
+				.filter((completedAt): completedAt is Date => completedAt instanceof Date);
+			const timeFrameStart = completedAtDates.length > 0 ? min(completedAtDates) : null;
+			const timeFrameEnd = completedAtDates.length > 0 ? max(completedAtDates) : null;
+
+			return this.resultOk({
+				totalCompletedSurveys: surveys.length,
+				totalRecipients: uniqueRecipients.size,
+				lastResponseDaysAgo: this.toDaysAgo(lastCompletedAt),
+				timeFrameStart,
+				timeFrameEnd,
+				timeFrameDays: this.toDaySpan(timeFrameStart, timeFrameEnd),
+				countryBreakdown: this.toBreakdownItems(countryCounts, uniqueRecipients.size),
+				genderBreakdown: this.toBreakdownItems(genderCounts, uniqueRecipients.size, false),
+				ageBreakdown: this.toBreakdownItems(ageCounts, uniqueRecipients.size, false),
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load survey impact study details: ${JSON.stringify(error)}`);
 		}
 	}
 }

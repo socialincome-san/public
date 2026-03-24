@@ -42,6 +42,7 @@ const getQuestion = (name: Question['name']): Question => {
 	if (!question) {
 		throw new Error(`Question not found: ${name}`);
 	}
+
 	return question;
 };
 

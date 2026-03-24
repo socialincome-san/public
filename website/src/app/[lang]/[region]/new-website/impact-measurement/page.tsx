@@ -4,7 +4,8 @@ import { Suspense } from 'react';
 import { ImpactMeasurementFilterSection } from './filter-section';
 import { ImpactMeasurementResults } from './results';
 import { ImpactMeasurementResultsSkeleton } from './results-skeleton';
-import { ImpactMeasurementSummary } from './summary';
+import { ImpactMeasurementStudyDetailsSkeleton } from './study-details-skeleton';
+import { ImpactMeasurementStudyDetails } from './summary';
 import { getImpactTranslator } from './translator';
 
 export const revalidate = 900;
@@ -41,15 +42,14 @@ export default async function Page({ params, searchParams }: DefaultPageProps) {
 				<p className="text-base leading-6 text-cyan-950 sm:text-lg sm:leading-7">
 					{translator.t('survey.impactMeasurement.description')}
 				</p>
-				<div className="flex flex-wrap items-center justify-between gap-4 pt-3 pb-0">
-					<Suspense
-						key={`summary-${suspenseKey}`}
-						fallback={<div className="h-5 w-72 animate-pulse rounded-full bg-slate-200" />}
-					>
-						<ImpactMeasurementSummary lang={lang} searchParams={resolvedSearchParams} />
-					</Suspense>
-					<ImpactMeasurementFilterSection lang={lang} searchParams={resolvedSearchParams} />
+				<div className="flex w-full justify-end">
+					<div className="w-full sm:w-auto">
+						<ImpactMeasurementFilterSection lang={lang} searchParams={resolvedSearchParams} />
+					</div>
 				</div>
+				<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
+					<ImpactMeasurementStudyDetails lang={lang} searchParams={resolvedSearchParams} />
+				</Suspense>
 			</div>
 			<Suspense key={suspenseKey} fallback={<ImpactMeasurementResultsSkeleton />}>
 				<ImpactMeasurementResults lang={lang} searchParams={resolvedSearchParams} />
