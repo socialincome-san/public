@@ -32,15 +32,18 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalChf }: Props) => 
 	const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
 	useEffect(() => {
-		const handlePointerMove = (event: PointerEvent) => {
-			const el = sectionRef.current;
-			if (!el) {
-				return;
-			}
+		const el = sectionRef.current;
+		if (!el) {
+			return;
+		}
 
+		const handlePointerMove = (event: PointerEvent) => {
 			const rect = el.getBoundingClientRect();
-			mouseX.set((event.clientX - rect.left - rect.width / 2) / (rect.width / 2));
-			mouseY.set((event.clientY - rect.top - rect.height / 2) / (rect.height / 2));
+			const normalizedX = (event.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+			const normalizedY = (event.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+
+			mouseX.set(Math.max(-1, Math.min(1, normalizedX)));
+			mouseY.set(Math.max(-1, Math.min(1, normalizedY)));
 		};
 
 		window.addEventListener('pointermove', handlePointerMove);
