@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Button } from '../components/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../components/collapsible';
+import { cn } from '../lib/utils';
 
 const meta = {
 	title: 'Components/Collapsible',
@@ -23,7 +24,7 @@ export const Basic: Story = {
 					<h4 className="text-sm font-semibold">What is a Collapsible?</h4>
 					<CollapsibleTrigger asChild>
 						<Button variant="ghost" size="sm" className="w-9 p-0">
-							<ChevronDownIcon className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+							<ChevronDownIcon className={cn('h-4 w-4 transition-transform duration-200', isOpen && 'rotate-180')} />
 							<span className="sr-only">Toggle</span>
 						</Button>
 					</CollapsibleTrigger>
@@ -61,9 +62,10 @@ export const MultipleSections: Story = {
 							<CollapsibleTrigger asChild>
 								<Button variant="ghost" size="sm" className="w-9 p-0">
 									<ChevronDownIcon
-										className={`h-4 w-4 transition-transform duration-200 ${
-											openSections.includes(section) ? 'rotate-180' : ''
-										}`}
+										className={cn(
+											'h-4 w-4 transition-transform duration-200',
+											openSections.includes(section) && 'rotate-180',
+										)}
 									/>
 								</Button>
 							</CollapsibleTrigger>
@@ -92,7 +94,7 @@ export const CustomStyled: Story = {
 					<h4 className="text-primary text-sm font-semibold">Custom Styled Collapsible</h4>
 					<CollapsibleTrigger asChild>
 						<Button variant="outline" size="sm" className="border-primary text-primary w-9 p-0">
-							<ChevronDownIcon className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+							<ChevronDownIcon className={cn('h-4 w-4 transition-transform duration-200', isOpen && 'rotate-180')} />
 						</Button>
 					</CollapsibleTrigger>
 				</div>

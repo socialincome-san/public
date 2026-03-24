@@ -65,7 +65,10 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 
 	return (
 		<details className="group w-full overflow-hidden rounded-3xl border border-slate-200 bg-white">
-			<summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 transition-colors marker:hidden hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+			<summary
+				data-testid="impact-measurement-study-details-trigger"
+				className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 transition-colors marker:hidden hover:bg-slate-50 [&::-webkit-details-marker]:hidden"
+			>
 				<div className="flex min-w-0 flex-wrap items-center gap-2 text-sm leading-5 font-medium text-cyan-900">
 					<span className="text-3xl leading-none font-semibold text-cyan-950">
 						{formatNumberLocale(details.totalCompletedSurveys, 'de-CH')}

@@ -1,6 +1,7 @@
 import { Card } from '@/components/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
+import { cn } from '@/lib/utils/cn';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { AlertCircle, CheckCircle, CircleHelp, TriangleAlert } from 'lucide-react';
 import { AdditionalNumbers } from './additional-numbers';
@@ -279,7 +280,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 										<Tooltip>
 											<TooltipTrigger asChild>
 												<div className="flex items-center gap-2 font-medium">
-													<Icon className={`${color} h-4 w-4`} aria-hidden />
+													<Icon className={cn(color, 'h-4 w-4')} aria-hidden />
 													<span>{creditStatus}</span>
 												</div>
 											</TooltipTrigger>

@@ -63,6 +63,7 @@ export const ImpactMeasurementFilters = ({
 	return (
 		<div className="flex flex-wrap items-center gap-2">
 			<MultiSelect
+				data-testid="impact-measurement-filters-trigger"
 				options={filterGroups}
 				defaultValue={selectedFilters}
 				onValueChange={updateMultiFilter}
