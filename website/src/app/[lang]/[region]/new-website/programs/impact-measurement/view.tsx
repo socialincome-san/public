@@ -12,10 +12,7 @@ type ImpactMeasurementViewProps = {
 	searchParams: ParsedUrlQueryInput;
 };
 
-export const ImpactMeasurementView = async ({
-	lang,
-	searchParams,
-}: ImpactMeasurementViewProps) => {
+export const ImpactMeasurementView = async ({ lang, searchParams }: ImpactMeasurementViewProps) => {
 	const normalizedSearchParams = Object.fromEntries(
 		Object.entries(searchParams).filter(([, value]) => typeof value === 'string'),
 	) as Record<string, string | undefined>;
