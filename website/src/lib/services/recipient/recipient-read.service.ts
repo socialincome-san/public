@@ -393,8 +393,21 @@ export class RecipientReadService extends BaseService {
 				},
 				include: {
 					contact: {
-						include: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							callingName: true,
+							phoneId: true,
 							phone: true,
+							email: true,
+							gender: true,
+							language: true,
+							dateOfBirth: true,
+							profession: true,
+							isInstitution: true,
+							createdAt: true,
+							updatedAt: true,
 						},
 					},
 					paymentInformation: {
@@ -416,8 +429,21 @@ export class RecipientReadService extends BaseService {
 					localPartner: {
 						include: {
 							contact: {
-								include: {
+								select: {
+									id: true,
+									firstName: true,
+									lastName: true,
+									callingName: true,
+									phoneId: true,
 									phone: true,
+									email: true,
+									gender: true,
+									language: true,
+									dateOfBirth: true,
+									profession: true,
+									isInstitution: true,
+									createdAt: true,
+									updatedAt: true,
 								},
 							},
 						},
