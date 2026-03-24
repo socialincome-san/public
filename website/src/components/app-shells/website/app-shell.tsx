@@ -22,9 +22,9 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 			style={{
 				background: `repeating-linear-gradient(
       330deg,
-      hsl(var(--gradient-background-from)) 0px,
-      hsl(var(--gradient-background-to)) 600px,
-      hsl(var(--gradient-background-from)) 1200px
+      var(--gradient-background-from) 0px,
+      var(--gradient-background-to) 600px,
+      var(--gradient-background-from) 1200px
     )`,
 			}}
 		>
