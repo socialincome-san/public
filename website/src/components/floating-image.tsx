@@ -12,7 +12,7 @@ const imageConfigs = [
 const FLOATING_IMAGE_MAX_WIDTH = 175;
 
 type Props = {
-	image: { filename: string | null; alt: string | null };
+	image: { filename: string; alt: string | null };
 	index: number;
 	smoothMouseX: MotionValue<number>;
 	smoothMouseY: MotionValue<number>;
@@ -25,7 +25,7 @@ export const FloatingImage = ({ image, index, smoothMouseX, smoothMouseY }: Prop
 	const x = useTransform(smoothMouseX, (value) => value * pointerFactor);
 	const y = useTransform(smoothMouseY, (value) => value * pointerFactor);
 
-	if (!config || !image.filename) {
+	if (!config) {
 		return null;
 	}
 

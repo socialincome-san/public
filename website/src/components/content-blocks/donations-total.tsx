@@ -4,6 +4,7 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
 import { FloatingImage } from '@/components/floating-image';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { useCountUp } from '@/lib/hooks/useCountUp';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
@@ -22,6 +23,8 @@ type Props = {
 };
 
 export const DonationsTotalBlock = ({ blok, lang, region, totalChf }: Props) => {
+	const hasFilename = (image: StoryblokAsset): image is StoryblokAsset & { filename: string } => Boolean(image.filename);
+
 	const sectionRef = useRef<HTMLDivElement>(null);
 	const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 	const displayValue = useCountUp(totalChf, isInView);
@@ -51,7 +54,7 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalChf }: Props) => 
 		return () => window.removeEventListener('pointermove', handlePointerMove);
 	}, [mouseX, mouseY]);
 
-	const images = blok.images?.slice(0, 4) ?? [];
+	const images = blok.images?.filter(hasFilename).slice(0, 4) ?? [];
 	const button = blok.button?.[0];
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
 
