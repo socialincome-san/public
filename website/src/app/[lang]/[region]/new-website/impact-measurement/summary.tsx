@@ -16,9 +16,6 @@ const topItems = (items: SurveyImpactStudyDetailItem[], limit = 4): SurveyImpact
 };
 
 export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: ImpactMeasurementSummaryProps) => {
-	// TEMP: Simulate slower backend for loading-state checks.
-	await new Promise((resolve) => setTimeout(resolve, 2500));
-
 	const translator = await getImpactTranslator(lang);
 	const filters = toImpactServiceFilters(searchParams);
 	const detailsResult = await services.surveyImpact.getImpactStudyDetails(filters);
