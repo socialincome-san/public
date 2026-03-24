@@ -132,7 +132,7 @@
 			}
 		},
 		"impactMeasurement": {
-			"title": "Impact Measurement",
+			"title": "Wirkungsmessung",
 			"description": "Alle auf dieser Seite gezeigten Daten werden in Echtzeit aus Umfragen mit unseren Recipients aktualisiert.",
 			"loadError": "Die Umfrage-Insights konnten derzeit nicht geladen werden.",
 			"notAvailable": "N/A",
