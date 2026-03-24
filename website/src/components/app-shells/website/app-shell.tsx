@@ -17,17 +17,7 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 	const isContained = scope === 'dashboard' || scope === 'partner-space';
 
 	return (
-		<div
-			className="theme-new text-primary flex min-h-screen w-full flex-col antialiased"
-			style={{
-				background: `repeating-linear-gradient(
-      330deg,
-      var(--gradient-background-from) 0px,
-      var(--gradient-background-to) 600px,
-      var(--gradient-background-from) 1200px
-    )`,
-			}}
-		>
+		<div className="theme-new bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
 			<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
 			<div
 				className={

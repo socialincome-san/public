@@ -36,6 +36,15 @@
 }
 
 @layer utilities {
+	.bg-website-gradient {
+		background: repeating-linear-gradient(
+			330deg,
+			var(--gradient-background-from) 0px,
+			var(--gradient-background-to) 600px,
+			var(--gradient-background-from) 1200px
+		);
+	}
+
 	@font-face {
 		font-family: 'Unica77';
 		src: url('../../../ui/assets/fonts/Unica77LLWeb-Light.woff2') format('woff2');
