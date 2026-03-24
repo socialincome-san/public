@@ -10,11 +10,7 @@ const isYesNoQuestion = (question: SurveyImpactQuestion): boolean => {
 	return normalizedValues.size === 2 && normalizedValues.has('true') && normalizedValues.has('false');
 };
 
-const renderOptionsDonut = (
-	question: SurveyImpactQuestion,
-	keyPrefix: string,
-	translate: (key: string) => string,
-) => {
+const renderOptionsDonut = (question: SurveyImpactQuestion, keyPrefix: string, translate: (key: string) => string) => {
 	const sortedOptions = [...question.options].sort((left, right) => right.count - left.count);
 	const optionsWithMeta = sortedOptions.map((option, index) => ({
 		...option,

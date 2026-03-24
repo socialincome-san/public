@@ -1,5 +1,5 @@
-import { CountryCode, Gender, Prisma, PrismaClient, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
-import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS, RecipientAgeGroup } from '@/lib/constants/recipient-age-groups';
+import { CountryCode, Prisma, PrismaClient, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
+import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
 import * as surveyQuestions from '@/lib/types/question';
 import { logger } from '@/lib/utils/logger';
 import { getQuestionnaire } from '../../../app/[lang]/[region]/survey/[recipient]/[survey]/questionnaires';
@@ -22,7 +22,6 @@ const defaultQuestionnaires: SurveyQuestionnaire[] = [
 	SurveyQuestionnaire.offboarding,
 	SurveyQuestionnaire.offboarded_checkin,
 ];
-
 
 export class SurveyImpactService extends BaseService {
 	private static questionQuestionnairesCache: Record<string, SurveyQuestionnaire[]> | null = null;
@@ -127,7 +126,10 @@ export class SurveyImpactService extends BaseService {
 		}
 
 		SurveyImpactService.questionQuestionnairesCache = Object.fromEntries(
-			Array.from(questionMap.entries()).map(([questionName, questionnaireSet]) => [questionName, Array.from(questionnaireSet)]),
+			Array.from(questionMap.entries()).map(([questionName, questionnaireSet]) => [
+				questionName,
+				Array.from(questionnaireSet),
+			]),
 		);
 
 		return SurveyImpactService.questionQuestionnairesCache;
@@ -203,14 +205,16 @@ export class SurveyImpactService extends BaseService {
 	}
 
 	private toAnswerRecords(dataRows: Prisma.JsonValue[]): AnswerRecord[] {
-		return dataRows.filter((row): row is Prisma.JsonObject => this.isJsonObject(row)).map((row) => {
-			const answerRecord: AnswerRecord = {};
-			for (const [key, value] of Object.entries(row)) {
-				answerRecord[key] = value as Prisma.JsonValue;
-			}
+		return dataRows
+			.filter((row): row is Prisma.JsonObject => this.isJsonObject(row))
+			.map((row) => {
+				const answerRecord: AnswerRecord = {};
+				for (const [key, value] of Object.entries(row)) {
+					answerRecord[key] = value as Prisma.JsonValue;
+				}
 
-			return answerRecord;
-		});
+				return answerRecord;
+			});
 	}
 
 	private aggregateSingleChoice(question: QuestionDefinition, responses: AnswerRecord[]): SurveyImpactQuestion {
@@ -352,7 +356,6 @@ export class SurveyImpactService extends BaseService {
 		return this.aggregateSingleChoice(question, responses);
 	}
 
-
 	async getImpactMeasurements(filters?: SurveyImpactFilters): Promise<ServiceResult<SurveyImpactData>> {
 		try {
 			const surveys = await this.db.survey.findMany({
@@ -487,5 +490,4 @@ export class SurveyImpactService extends BaseService {
 			return this.resultFail(`Could not load survey impact filter options: ${JSON.stringify(error)}`);
 		}
 	}
-
 }

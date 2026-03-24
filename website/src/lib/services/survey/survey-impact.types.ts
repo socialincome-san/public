@@ -59,4 +59,3 @@ export type SurveyAnswerRecord = {
 	questionnaire: SurveyQuestionnaire;
 	answers: AnswerRecord;
 };
-

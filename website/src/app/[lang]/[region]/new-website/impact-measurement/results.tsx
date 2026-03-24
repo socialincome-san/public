@@ -1,11 +1,6 @@
 import { services } from '@/lib/services/services';
 import { SurveyImpactQuestion } from '@/lib/services/survey/survey-impact.types';
-import {
-	followUpConfigs,
-	highlightedQuestionOrder,
-	questionInsightKeysByName,
-	questionTypeLabelKeys,
-} from './config';
+import { followUpConfigs, highlightedQuestionOrder, questionInsightKeysByName, questionTypeLabelKeys } from './config';
 import { toImpactServiceFilters } from './filters.server';
 import { renderFollowUpSections } from './follow-ups';
 import { ImpactMeasurementQuestionCard } from './question-card';

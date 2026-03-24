@@ -41,9 +41,7 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 	).stops;
 
 	const donutBackground =
-		gradientStops.length > 0
-			? `conic-gradient(${gradientStops.join(', ')})`
-			: 'conic-gradient(hsl(var(--muted)) 0 100%)';
+		gradientStops.length > 0 ? `conic-gradient(${gradientStops.join(', ')})` : 'conic-gradient(hsl(var(--muted)) 0 100%)';
 
 	return (
 		<div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-10">
@@ -63,10 +61,7 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 			<div className="w-full space-y-3 sm:w-auto sm:space-y-4">
 				{options.map((option, index) => (
 					<div key={option.id} className="grid grid-cols-3 items-center gap-3 text-sm text-cyan-950 sm:flex sm:gap-6">
-						<div
-							className="size-2 rounded-sm"
-							style={{ backgroundColor: chartColors[index % chartColors.length] }}
-						/>
+						<div className="size-2 rounded-sm" style={{ backgroundColor: chartColors[index % chartColors.length] }} />
 						<div className="min-w-0 sm:min-w-24">{option.label}</div>
 						<div className="w-auto text-right font-medium sm:w-10">{Math.round(option.percentage)}%</div>
 					</div>
