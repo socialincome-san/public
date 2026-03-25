@@ -957,11 +957,16 @@ export class RecipientReadService extends BaseService {
 			const programFilterOptions: RecipientProgramFilterOption[] = Array.from(
 				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
 			);
+			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.operator)
+				? ProgramPermission.operator
+				: ProgramPermission.owner;
+			const permissionByProgramId = new Map(accessiblePrograms.map((p) => [p.programId, p.permission] as const));
 			if (accessiblePrograms.length === 0) {
 				return this.resultOk({
 					tableRows: [],
 					totalCount: 0,
 					programFilterOptions: [],
+					permission: ProgramPermission.owner,
 				});
 			}
 
@@ -974,6 +979,7 @@ export class RecipientReadService extends BaseService {
 					tableRows: [],
 					totalCount: 0,
 					programFilterOptions,
+					permission: globalPermission,
 				});
 			}
 
@@ -1044,6 +1050,7 @@ export class RecipientReadService extends BaseService {
 				const startDate = recipient.startDate ?? today;
 				const programId = recipient.program?.id ?? '';
 				const programName = recipient.program?.name ?? '';
+				const permission = permissionByProgramId.get(programId) ?? ProgramPermission.owner;
 
 				return {
 					id: recipient.id,
@@ -1055,6 +1062,7 @@ export class RecipientReadService extends BaseService {
 					startDate,
 					daysUntilStart: differenceInCalendarDays(startOfDay(startDate), today),
 					createdAt: recipient.createdAt,
+					permission,
 				};
 			});
 
@@ -1062,6 +1070,7 @@ export class RecipientReadService extends BaseService {
 				tableRows,
 				totalCount,
 				programFilterOptions,
+				permission: globalPermission,
 			});
 		} catch (error) {
 			this.logger.error(error);
