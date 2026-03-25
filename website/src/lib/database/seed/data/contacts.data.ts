@@ -835,7 +835,14 @@ const recipientContacts: Contact[] = recipientContactDefinitions.map(
 		email: `${firstName}@recipient.test`,
 		gender: index % 2 === 0 ? Gender.female : Gender.male,
 		language: defaultContactLanguageByCountry[country],
-		dateOfBirth: new Date(`199${index % 9}-01-15`),
+		dateOfBirth:
+			index % 4 === 0
+				? new Date('2004-06-15') // youth (16-25)
+				: index % 4 === 1
+					? new Date('1996-06-15') // young adults (26-35)
+					: index % 4 === 2
+						? new Date('1980-06-15') // middle-aged (36-55)
+						: new Date('1962-06-15'), // older adults (56+)
 		profession: `recipient_${country}_${program}`,
 		isInstitution: false,
 		createdAt,
