@@ -1,5 +1,5 @@
 {
-  "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
+  "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695": [
     {
       "body": {
         "story": {
@@ -529,19 +529,19 @@
             }
           ]
         },
-        "cv": 1773764331,
+        "cv": 1774424509,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773764331",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1774424509&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312",
+          "x-mock-hash": "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -549,7 +549,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 45
+      "durationMs": 86
     },
     {
       "body": {
@@ -1080,19 +1080,19 @@
             }
           ]
         },
-        "cv": 1773764331,
+        "cv": 1774424509,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773764331",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1774424509&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312",
+          "x-mock-hash": "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1100,10 +1100,10 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 47
+      "durationMs": 85
     }
   ],
-  "e4474cdc27f387f4c3faceaf99b74c13832755df0c5611a74c74b77b2d1d4f94": [
+  "8ba56f0edb0d25c24c144e1aa02cd30d6b96fb3cea2ae2a9a8652e939acda8c6": [
     {
       "body": {
         "story": {
@@ -1306,19 +1306,19 @@
             }
           ]
         },
-        "cv": 1773764331,
+        "cv": 1774424509,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&token=__TOKEN__&cv=1773764331",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1774424509&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "e4474cdc27f387f4c3faceaf99b74c13832755df0c5611a74c74b77b2d1d4f94",
+          "x-mock-hash": "8ba56f0edb0d25c24c144e1aa02cd30d6b96fb3cea2ae2a9a8652e939acda8c6",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1326,7 +1326,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 52
+      "durationMs": 101
     }
   ]
 }
