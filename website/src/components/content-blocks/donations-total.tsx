@@ -28,7 +28,9 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalChf, disableAnima
 
 	const sectionRef = useRef<HTMLDivElement>(null);
 	const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-	const displayValue = useCountUp(totalChf, isInView && !disableAnimation);
+	const shouldAnimate = isInView && !disableAnimation;
+	const animatedValue = useCountUp(totalChf, shouldAnimate);
+	const displayValue = shouldAnimate ? animatedValue : totalChf;
 
 	const mouseX = useMotionValue(0);
 	const mouseY = useMotionValue(0);
