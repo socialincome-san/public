@@ -5,8 +5,8 @@
         "story": {
           "name": "Home",
           "created_at": "2026-01-14T09:36:30.190Z",
-          "published_at": "2026-03-15T16:00:10.565Z",
-          "updated_at": "2026-03-15T16:00:10.584Z",
+          "published_at": "2026-03-24T08:40:44.499Z",
+          "updated_at": "2026-03-24T08:40:44.515Z",
           "id": 133913764645632,
           "uuid": "06cda40c-171b-4ff8-8b9b-c39230b57595",
           "content": {
@@ -262,6 +262,75 @@
                 }
               },
               {
+                "_uid": "c20688d2-368a-48f5-bcb8-61834025b58c",
+                "button": [
+                  {
+                    "_uid": "3d2a3c21-f79d-4608-840d-ab894f05d032",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "View all financials",
+                    "component": "button"
+                  }
+                ],
+                "images": [
+                  {
+                    "id": 158317740112311,
+                    "alt": "",
+                    "name": "",
+                    "focus": "",
+                    "title": "",
+                    "source": "",
+                    "filename": "/assets/e2e-media-placeholder.svg",
+                    "copyright": "",
+                    "fieldtype": "asset",
+                    "meta_data": {}
+                  },
+                  {
+                    "id": 158317739968950,
+                    "alt": "",
+                    "name": "",
+                    "focus": "",
+                    "title": "",
+                    "source": "",
+                    "filename": "/assets/e2e-media-placeholder.svg",
+                    "copyright": "",
+                    "fieldtype": "asset",
+                    "meta_data": {}
+                  },
+                  {
+                    "id": 158317739923893,
+                    "alt": "",
+                    "name": "",
+                    "focus": "",
+                    "title": "",
+                    "source": "",
+                    "filename": "/assets/e2e-media-placeholder.svg",
+                    "copyright": "",
+                    "fieldtype": "asset",
+                    "meta_data": {}
+                  },
+                  {
+                    "id": 158317739915700,
+                    "alt": "",
+                    "name": "",
+                    "focus": "",
+                    "title": "",
+                    "source": "",
+                    "filename": "/assets/e2e-media-placeholder.svg",
+                    "copyright": "",
+                    "fieldtype": "asset",
+                    "meta_data": {}
+                  }
+                ],
+                "heading": "**Your donations**\nsince March 2020",
+                "component": "donationsTotal"
+              },
+              {
                 "_uid": "091450da-6902-4a24-b1c0-03b1d06811e2",
                 "content": {
                   "type": "doc",
@@ -441,13 +510,13 @@
             }
           ]
         },
-        "cv": 1773764331,
+        "cv": 1774358989,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=__TOKEN__&cv=1773764331",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=__TOKEN__&cv=1774358989",
         "body": {},
         "method": "GET",
         "headers": {
@@ -461,7 +530,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 42
+      "durationMs": 93
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -994,13 +1063,13 @@
             }
           ]
         },
-        "cv": 1773764331,
+        "cv": 1774358989,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773764331",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774358989",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1014,7 +1083,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 37
+      "durationMs": 89
     },
     {
       "body": {
@@ -1545,13 +1614,13 @@
             }
           ]
         },
-        "cv": 1773764331,
+        "cv": 1774358989,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1773764331",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774358989",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1565,7 +1634,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 46
+      "durationMs": 88
     }
   ],
   "ec0561f679c6a8f878a0e1f99c9dfcaf42f977853551d13038bd29462040c9be": [
@@ -1823,7 +1892,7 @@
             ]
           }
         ],
-        "cv": 1773764331,
+        "cv": 1774358989,
         "rels": [
           {
             "name": "Volunteering",
@@ -2436,7 +2505,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&per_page=3&excluding_fields=content&resolve_relations=article.author%2Carticle.tags%2Carticle.type&content_type=article&by_uuids_ordered=7353362f-5574-4072-a2db-6095eeef4c79%2C034ef9af-c6c3-4197-864a-29bb932ffb07%2C5d8d1f9d-42e2-4c10-b730-42bf043d1caa&token=__TOKEN__&cv=1773764331&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&per_page=3&excluding_fields=content&resolve_relations=article.author%2Carticle.tags%2Carticle.type&content_type=article&by_uuids_ordered=7353362f-5574-4072-a2db-6095eeef4c79%2C034ef9af-c6c3-4197-864a-29bb932ffb07%2C5d8d1f9d-42e2-4c10-b730-42bf043d1caa&token=__TOKEN__&cv=1774358989&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -2450,7 +2519,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 11
+      "durationMs": 45
     }
   ]
 }
