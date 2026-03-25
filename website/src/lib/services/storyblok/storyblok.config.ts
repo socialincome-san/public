@@ -1,3 +1,4 @@
+import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
@@ -15,6 +16,7 @@ mockStoryblokIfTestMode();
  */
 const storyblokComponents = {
 	page: PageContentType,
+	donationsTotal: DonationsTotalBlockServer,
 	heroVideo: HeroVideoBlockServer,
 	text: TextBlock,
 	faqSelection: FaqSelectionBlock,

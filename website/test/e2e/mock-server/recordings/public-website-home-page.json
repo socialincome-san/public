@@ -1,5 +1,539 @@
 {
-  "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695": [
+  "6275b103dd714306666780488c44f4c1674c3d70638c6d169d0d965f7e210083": [
+    {
+      "body": {
+        "story": {
+          "name": "Home",
+          "created_at": "2026-01-14T09:36:30.190Z",
+          "published_at": "2026-03-24T08:40:44.499Z",
+          "updated_at": "2026-03-24T08:40:44.515Z",
+          "id": 133913764645632,
+          "uuid": "06cda40c-171b-4ff8-8b9b-c39230b57595",
+          "content": {
+            "_uid": "922092d5-fc86-40e7-821f-3c69c4339f28",
+            "content": [
+              {
+                "_uid": "4fecfd0a-d835-477b-a6a9-b5be4c87dfc3",
+                "Button": {
+                  "id": "",
+                  "url": "",
+                  "linktype": "story",
+                  "fieldtype": "multilink",
+                  "cached_url": ""
+                },
+                "button": [
+                  {
+                    "_uid": "8e8b8aae-e531-46d2-a367-874d495f56ad",
+                    "link": {
+                      "id": "bc67177c-4f9f-429d-b263-1c9991af9299",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/donate"
+                    },
+                    "label": "Donate Now",
+                    "component": "button"
+                  }
+                ],
+                "heading": "Give 1 % of your income and **change lives**.",
+                "component": "heroVideo",
+                "description": "We send a basic income directly to people in extreme poverty. Transparent, simple and effective.",
+                "muxPlaybackId": "IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE",
+                "backgroundVideo": {
+                  "id": 133921723421589,
+                  "alt": "",
+                  "name": "",
+                  "focus": "",
+                  "title": "",
+                  "source": "",
+                  "filename": "/assets/e2e-media-placeholder.svg",
+                  "copyright": "",
+                  "fieldtype": "asset",
+                  "meta_data": {},
+                  "is_external_url": false
+                }
+              },
+              {
+                "_uid": "22b81294-8a6e-4c67-8437-c6247aa0172e",
+                "cards": [
+                  {
+                    "_uid": "6a420dd3-8c3f-4224-86ec-eac797ee07ad",
+                    "image": {
+                      "id": 150877926158651,
+                      "alt": "",
+                      "name": "",
+                      "focus": "",
+                      "title": "",
+                      "source": "",
+                      "filename": "/assets/e2e-media-placeholder.svg",
+                      "copyright": "",
+                      "fieldtype": "asset",
+                      "meta_data": {},
+                      "is_external_url": false
+                    },
+                    "heading": "Your donation creates immediate help",
+                    "component": "modalCard",
+                    "modalContent": {
+                      "type": "doc",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "attrs": {
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "heading",
+                          "attrs": {
+                            "level": 4,
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "An example heading",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "paragraph",
+                          "attrs": {
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                              "type": "text"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "_uid": "a767e4db-0c9e-4485-83bc-4162c046c5e0",
+                    "image": {
+                      "id": 151251599883143,
+                      "alt": "",
+                      "name": "",
+                      "focus": "",
+                      "title": "",
+                      "source": "",
+                      "filename": "/assets/e2e-media-placeholder.svg",
+                      "copyright": "",
+                      "fieldtype": "asset",
+                      "meta_data": {},
+                      "is_external_url": false
+                    },
+                    "heading": "Our recipient selection is fair and transparent",
+                    "component": "modalCard",
+                    "modalContent": {
+                      "type": "doc",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "attrs": {
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "heading",
+                          "attrs": {
+                            "level": 4,
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "An example heading",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "paragraph",
+                          "attrs": {
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                              "type": "text"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "_uid": "5d808897-bd38-4217-8f1f-d10db2345a55",
+                    "image": {
+                      "id": 151251599915912,
+                      "alt": "",
+                      "name": "",
+                      "focus": "",
+                      "title": "",
+                      "source": "",
+                      "filename": "/assets/e2e-media-placeholder.svg",
+                      "copyright": "",
+                      "fieldtype": "asset",
+                      "meta_data": {},
+                      "is_external_url": false
+                    },
+                    "heading": "Recipients receive money via mobile cash",
+                    "component": "modalCard",
+                    "modalContent": {
+                      "type": "doc",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "attrs": {
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "heading",
+                          "attrs": {
+                            "level": 4,
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "An example heading",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "paragraph",
+                          "attrs": {
+                            "textAlign": null
+                          },
+                          "content": [
+                            {
+                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                              "type": "text"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "heading": "From you to them.\n**How it works.**",
+                "component": "modalCards",
+                "linkToExplainerVideo": {
+                  "id": "",
+                  "url": "https://vimeo.com/433937157",
+                  "linktype": "url",
+                  "fieldtype": "multilink",
+                  "cached_url": "https://vimeo.com/433937157"
+                },
+                "labelForExplainerVideo": "Watch Explainer-Video",
+                "explainerVideoThumbnail": {
+                  "id": 150892474898556,
+                  "alt": "",
+                  "name": "",
+                  "focus": "",
+                  "title": "",
+                  "source": "",
+                  "filename": "/assets/e2e-media-placeholder.svg",
+                  "copyright": "",
+                  "fieldtype": "asset",
+                  "meta_data": {},
+                  "is_external_url": false
+                }
+              },
+              {
+                "_uid": "c20688d2-368a-48f5-bcb8-61834025b58c",
+                "button": [
+                  {
+                    "_uid": "3d2a3c21-f79d-4608-840d-ab894f05d032",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "View all financials",
+                    "component": "button"
+                  }
+                ],
+                "images": [
+                  {
+                    "id": 158317740112311,
+                    "alt": "",
+                    "name": "",
+                    "focus": "",
+                    "title": "",
+                    "source": "",
+                    "filename": "/assets/e2e-media-placeholder.svg",
+                    "copyright": "",
+                    "fieldtype": "asset",
+                    "meta_data": {}
+                  },
+                  {
+                    "id": 158317739968950,
+                    "alt": "",
+                    "name": "",
+                    "focus": "",
+                    "title": "",
+                    "source": "",
+                    "filename": "/assets/e2e-media-placeholder.svg",
+                    "copyright": "",
+                    "fieldtype": "asset",
+                    "meta_data": {}
+                  },
+                  {
+                    "id": 158317739923893,
+                    "alt": "",
+                    "name": "",
+                    "focus": "",
+                    "title": "",
+                    "source": "",
+                    "filename": "/assets/e2e-media-placeholder.svg",
+                    "copyright": "",
+                    "fieldtype": "asset",
+                    "meta_data": {}
+                  },
+                  {
+                    "id": 158317739915700,
+                    "alt": "",
+                    "name": "",
+                    "focus": "",
+                    "title": "",
+                    "source": "",
+                    "filename": "/assets/e2e-media-placeholder.svg",
+                    "copyright": "",
+                    "fieldtype": "asset",
+                    "meta_data": {}
+                  }
+                ],
+                "heading": "**Your donations**\nsince March 2020",
+                "component": "donationsTotal"
+              },
+              {
+                "_uid": "091450da-6902-4a24-b1c0-03b1d06811e2",
+                "content": {
+                  "type": "doc",
+                  "content": [
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 1,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Überschrift 1x",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo ",
+                          "type": "text"
+                        },
+                        {
+                          "text": "dolores",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "italic"
+                            }
+                          ]
+                        },
+                        {
+                          "text": " et ea ",
+                          "type": "text"
+                        },
+                        {
+                          "text": "rebum",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "bold"
+                            }
+                          ]
+                        },
+                        {
+                          "text": ". Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr. asdf",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 2,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Überschrift 2",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Consetetur sadipscing elitr, sed diam nonumy eirmod ",
+                          "type": "text"
+                        },
+                        {
+                          "text": "tempor",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "link",
+                              "attrs": {
+                                "href": "https://smartive.ch",
+                                "uuid": null,
+                                "anchor": null,
+                                "target": "_self",
+                                "linktype": "url"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "text": " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 3,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Überschrift 3",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "component": "text"
+              },
+              {
+                "_uid": "86488eed-d22a-4f76-b868-05c5823dc774",
+                "heading": "Stories & Updates from **our journal**.",
+                "component": "journalTeasers",
+                "selectedArticles": [
+                  "7353362f-5574-4072-a2db-6095eeef4c79",
+                  "034ef9af-c6c3-4197-864a-29bb932ffb07",
+                  "5d8d1f9d-42e2-4c10-b730-42bf043d1caa"
+                ],
+                "articlesDisplayMode": "selected"
+              }
+            ],
+            "component": "page"
+          },
+          "slug": "new-website",
+          "full_slug": "new-website/",
+          "sort_by_date": null,
+          "position": -120,
+          "tag_list": [],
+          "is_startpage": true,
+          "parent_id": 133906872082434,
+          "meta_data": null,
+          "group_id": "653556a9-1007-41a6-b32e-9a0f0e791426",
+          "first_published_at": "2026-01-14T09:56:06.962Z",
+          "release_id": null,
+          "lang": "default",
+          "path": null,
+          "alternates": [],
+          "default_full_slug": "new-website/",
+          "translated_slugs": [
+            {
+              "path": "new-website/",
+              "name": null,
+              "lang": "fr",
+              "published": true
+            },
+            {
+              "path": "new-website/",
+              "name": null,
+              "lang": "it",
+              "published": true
+            },
+            {
+              "path": "new-website/",
+              "name": null,
+              "lang": "de",
+              "published": true
+            }
+          ]
+        },
+        "cv": 1774358989,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&token=__TOKEN__&cv=1774358989",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "6275b103dd714306666780488c44f4c1674c3d70638c6d169d0d965f7e210083",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 93
+    }
+  ],
+  "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
     {
       "body": {
         "story": {
@@ -529,19 +1063,19 @@
             }
           ]
         },
-        "cv": 1774424509,
+        "cv": 1774358989,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1774424509&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774358989",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695",
+          "x-mock-hash": "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -549,7 +1083,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 77
+      "durationMs": 89
     },
     {
       "body": {
@@ -1080,875 +1614,19 @@
             }
           ]
         },
-        "cv": 1774424509,
+        "cv": 1774358989,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1774424509&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774358989",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 74
-    }
-  ],
-  "da0ba471527f1aff1648c1bf287bd5a0e71e6204babcfcfcf5f0d40aed4da9bb": [
-    {
-      "body": {
-        "story": {
-          "name": "Home",
-          "created_at": "2026-01-14T09:36:30.190Z",
-          "published_at": "2026-03-25T07:05:45.912Z",
-          "updated_at": "2026-03-25T07:41:48.764Z",
-          "id": 133913764645632,
-          "uuid": "06cda40c-171b-4ff8-8b9b-c39230b57595",
-          "content": {
-            "_uid": "922092d5-fc86-40e7-821f-3c69c4339f28",
-            "content": [
-              {
-                "_uid": "4fecfd0a-d835-477b-a6a9-b5be4c87dfc3",
-                "Button": {
-                  "id": "",
-                  "url": "",
-                  "linktype": "story",
-                  "fieldtype": "multilink",
-                  "cached_url": ""
-                },
-                "button": [
-                  {
-                    "_uid": "8e8b8aae-e531-46d2-a367-874d495f56ad",
-                    "link": {
-                      "id": "bc67177c-4f9f-429d-b263-1c9991af9299",
-                      "url": "",
-                      "linktype": "story",
-                      "fieldtype": "multilink",
-                      "cached_url": "new-website/donate"
-                    },
-                    "label": "Donate Now",
-                    "component": "button"
-                  }
-                ],
-                "heading": "Give 1 % of your income and **change lives**.",
-                "component": "heroVideo",
-                "description": "We send a basic income directly to people in extreme poverty. Transparent, simple and effective.",
-                "muxPlaybackId": "IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE",
-                "backgroundVideo": {
-                  "id": 133921723421589,
-                  "alt": "",
-                  "name": "",
-                  "focus": "",
-                  "title": "",
-                  "source": "",
-                  "filename": "/assets/e2e-media-placeholder.svg",
-                  "copyright": "",
-                  "fieldtype": "asset",
-                  "meta_data": {},
-                  "is_external_url": false
-                }
-              },
-              {
-                "_uid": "22b81294-8a6e-4c67-8437-c6247aa0172e",
-                "cards": [
-                  {
-                    "_uid": "6a420dd3-8c3f-4224-86ec-eac797ee07ad",
-                    "image": {
-                      "id": 150877926158651,
-                      "alt": "",
-                      "name": "",
-                      "focus": "",
-                      "title": "",
-                      "source": "",
-                      "filename": "/assets/e2e-media-placeholder.svg",
-                      "copyright": "",
-                      "fieldtype": "asset",
-                      "meta_data": {},
-                      "is_external_url": false
-                    },
-                    "heading": "Your donation creates immediate help",
-                    "component": "modalCard",
-                    "modalContent": {
-                      "type": "doc",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "attrs": {
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                              "type": "text"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "heading",
-                          "attrs": {
-                            "level": 4,
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "An example heading",
-                              "type": "text"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "paragraph",
-                          "attrs": {
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                              "type": "text"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "_uid": "a767e4db-0c9e-4485-83bc-4162c046c5e0",
-                    "image": {
-                      "id": 151251599883143,
-                      "alt": "",
-                      "name": "",
-                      "focus": "",
-                      "title": "",
-                      "source": "",
-                      "filename": "/assets/e2e-media-placeholder.svg",
-                      "copyright": "",
-                      "fieldtype": "asset",
-                      "meta_data": {},
-                      "is_external_url": false
-                    },
-                    "heading": "Our recipient selection is fair and transparent",
-                    "component": "modalCard",
-                    "modalContent": {
-                      "type": "doc",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "attrs": {
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                              "type": "text"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "heading",
-                          "attrs": {
-                            "level": 4,
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "An example heading",
-                              "type": "text"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "paragraph",
-                          "attrs": {
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                              "type": "text"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "_uid": "5d808897-bd38-4217-8f1f-d10db2345a55",
-                    "image": {
-                      "id": 151251599915912,
-                      "alt": "",
-                      "name": "",
-                      "focus": "",
-                      "title": "",
-                      "source": "",
-                      "filename": "/assets/e2e-media-placeholder.svg",
-                      "copyright": "",
-                      "fieldtype": "asset",
-                      "meta_data": {},
-                      "is_external_url": false
-                    },
-                    "heading": "Recipients receive money via mobile cash",
-                    "component": "modalCard",
-                    "modalContent": {
-                      "type": "doc",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "attrs": {
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                              "type": "text"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "heading",
-                          "attrs": {
-                            "level": 4,
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "An example heading",
-                              "type": "text"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "paragraph",
-                          "attrs": {
-                            "textAlign": null
-                          },
-                          "content": [
-                            {
-                              "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                              "type": "text"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "heading": "From you to them.\n**How it works.**",
-                "component": "modalCards",
-                "linkToExplainerVideo": {
-                  "id": "",
-                  "url": "https://vimeo.com/433937157",
-                  "linktype": "url",
-                  "fieldtype": "multilink",
-                  "cached_url": "https://vimeo.com/433937157"
-                },
-                "labelForExplainerVideo": "Watch Explainer-Video",
-                "explainerVideoThumbnail": {
-                  "id": 150892474898556,
-                  "alt": "",
-                  "name": "",
-                  "focus": "",
-                  "title": "",
-                  "source": "",
-                  "filename": "/assets/e2e-media-placeholder.svg",
-                  "copyright": "",
-                  "fieldtype": "asset",
-                  "meta_data": {},
-                  "is_external_url": false
-                }
-              },
-              {
-                "_uid": "c20688d2-368a-48f5-bcb8-61834025b58c",
-                "button": [
-                  {
-                    "_uid": "3d2a3c21-f79d-4608-840d-ab894f05d032",
-                    "link": {
-                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
-                      "url": "",
-                      "linktype": "story",
-                      "fieldtype": "multilink",
-                      "cached_url": "new-website/example"
-                    },
-                    "label": "View all financials",
-                    "component": "button"
-                  }
-                ],
-                "images": [
-                  {
-                    "id": 158317740112311,
-                    "alt": "",
-                    "name": "",
-                    "focus": "",
-                    "title": "",
-                    "source": "",
-                    "filename": "/assets/e2e-media-placeholder.svg",
-                    "copyright": "",
-                    "fieldtype": "asset",
-                    "meta_data": {}
-                  },
-                  {
-                    "id": 158317739968950,
-                    "alt": "",
-                    "name": "",
-                    "focus": "",
-                    "title": "",
-                    "source": "",
-                    "filename": "/assets/e2e-media-placeholder.svg",
-                    "copyright": "",
-                    "fieldtype": "asset",
-                    "meta_data": {}
-                  },
-                  {
-                    "id": 158317739923893,
-                    "alt": "",
-                    "name": "",
-                    "focus": "",
-                    "title": "",
-                    "source": "",
-                    "filename": "/assets/e2e-media-placeholder.svg",
-                    "copyright": "",
-                    "fieldtype": "asset",
-                    "meta_data": {}
-                  },
-                  {
-                    "id": 158317739915700,
-                    "alt": "",
-                    "name": "",
-                    "focus": "",
-                    "title": "",
-                    "source": "",
-                    "filename": "/assets/e2e-media-placeholder.svg",
-                    "copyright": "",
-                    "fieldtype": "asset",
-                    "meta_data": {}
-                  }
-                ],
-                "heading": "**Your donations**\nsince March 2020",
-                "component": "donationsTotal"
-              },
-              {
-                "_uid": "091450da-6902-4a24-b1c0-03b1d06811e2",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 1,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Überschrift 1x",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo ",
-                          "type": "text"
-                        },
-                        {
-                          "text": "dolores",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "italic"
-                            }
-                          ]
-                        },
-                        {
-                          "text": " et ea ",
-                          "type": "text"
-                        },
-                        {
-                          "text": "rebum",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "bold"
-                            }
-                          ]
-                        },
-                        {
-                          "text": ". Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr. asdf",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 2,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Überschrift 2",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Consetetur sadipscing elitr, sed diam nonumy eirmod ",
-                          "type": "text"
-                        },
-                        {
-                          "text": "tempor",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "link",
-                              "attrs": {
-                                "href": "https://smartive.ch",
-                                "uuid": null,
-                                "anchor": null,
-                                "target": "_self",
-                                "linktype": "url"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "text": " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 3,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Überschrift 3",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                          "type": "text"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "component": "text"
-              },
-              {
-                "_uid": "86488eed-d22a-4f76-b868-05c5823dc774",
-                "heading": "Stories & Updates from **our journal**.",
-                "component": "journalTeasers",
-                "selectedArticles": [
-                  "7353362f-5574-4072-a2db-6095eeef4c79",
-                  "034ef9af-c6c3-4197-864a-29bb932ffb07",
-                  "5d8d1f9d-42e2-4c10-b730-42bf043d1caa"
-                ],
-                "articlesDisplayMode": "selected"
-              },
-              {
-                "_uid": "c08d0da0-4c67-4d73-a5cc-e5a7b8bb1ae8",
-                "button": [
-                  {
-                    "_uid": "5f6e01a5-d6ab-4c2e-8efa-d4ea29e170be",
-                    "link": {
-                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
-                      "url": "",
-                      "linktype": "story",
-                      "fieldtype": "multilink",
-                      "cached_url": "new-website/example"
-                    },
-                    "label": "All FAQ",
-                    "component": "button"
-                  }
-                ],
-                "heading": "FAQ",
-                "component": "faqSelection",
-                "questions": [
-                  "9facceee-7ff1-48d1-b457-5cd0b2625fee",
-                  "1cb68f7d-f5d2-456f-ade4-8a489727c4e7",
-                  "621b1849-5cc5-4b0f-990a-4953420f3f09",
-                  "a49076f1-26fc-41da-bb06-ac27d69f2b20",
-                  "930c1caa-7054-4f2a-ac35-62a57edd6672",
-                  "7821c302-5386-4cee-9112-8aa3b9e7e833"
-                ]
-              }
-            ],
-            "component": "page"
-          },
-          "slug": "new-website",
-          "full_slug": "new-website/",
-          "sort_by_date": null,
-          "position": -140,
-          "tag_list": [],
-          "is_startpage": true,
-          "parent_id": 133906872082434,
-          "meta_data": null,
-          "group_id": "653556a9-1007-41a6-b32e-9a0f0e791426",
-          "first_published_at": "2026-01-14T09:56:06.962Z",
-          "release_id": null,
-          "lang": "default",
-          "path": null,
-          "alternates": [],
-          "default_full_slug": "new-website/",
-          "translated_slugs": [
-            {
-              "path": "new-website/",
-              "name": null,
-              "lang": "fr",
-              "published": true
-            },
-            {
-              "path": "new-website/",
-              "name": null,
-              "lang": "it",
-              "published": true
-            },
-            {
-              "path": "new-website/",
-              "name": null,
-              "lang": "de",
-              "published": true
-            }
-          ]
-        },
-        "cv": 1774424509,
-        "rels": [
-          {
-            "name": "Is it helpful to send money to people in need?",
-            "created_at": "2026-03-25T06:52:23.885Z",
-            "published_at": "2026-03-25T06:52:32.447Z",
-            "updated_at": "2026-03-25T06:52:32.458Z",
-            "id": 158646042182155,
-            "uuid": "1cb68f7d-f5d2-456f-ade4-8a489727c4e7",
-            "content": {
-              "_uid": "82592d06-593b-4157-9cc8-0116bb669f78",
-              "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-              "question": "Is it helpful to send money to people in need?",
-              "component": "faq"
-            },
-            "slug": "is-it-helpful-to-send-money-to-people-in-need-",
-            "full_slug": "new-website/faq/is-it-helpful-to-send-money-to-people-in-need-",
-            "sort_by_date": null,
-            "position": -10,
-            "tag_list": [],
-            "is_startpage": false,
-            "parent_id": 158645783380484,
-            "meta_data": null,
-            "group_id": "4ee78180-a60e-490f-ae92-e7cfc5e04a18",
-            "first_published_at": "2026-03-25T06:52:31.580Z",
-            "release_id": null,
-            "lang": "default",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/faq/is-it-helpful-to-send-money-to-people-in-need-",
-            "translated_slugs": [
-              {
-                "path": "new-website/faq/is-it-helpful-to-send-money-to-people-in-need-",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/is-it-helpful-to-send-money-to-people-in-need-",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/is-it-helpful-to-send-money-to-people-in-need-",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          },
-          {
-            "name": "Who can eliminate inequality?",
-            "created_at": "2026-03-25T06:54:22.137Z",
-            "published_at": "2026-03-25T06:54:39.603Z",
-            "updated_at": "2026-03-25T06:54:39.616Z",
-            "id": 158646526534444,
-            "uuid": "621b1849-5cc5-4b0f-990a-4953420f3f09",
-            "content": {
-              "_uid": "213d3944-b50d-4491-8005-87fd95bd1384",
-              "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-              "question": "Are direct cash payments an effective way to fight poverty?",
-              "component": "faq"
-            },
-            "slug": "who-can-eliminate-inequality-",
-            "full_slug": "new-website/faq/who-can-eliminate-inequality-",
-            "sort_by_date": null,
-            "position": 0,
-            "tag_list": [],
-            "is_startpage": false,
-            "parent_id": 158645783380484,
-            "meta_data": null,
-            "group_id": "f6ec87b5-0aed-4490-af5c-6e3eae6a1e68",
-            "first_published_at": "2026-03-25T06:54:39.603Z",
-            "release_id": null,
-            "lang": "default",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/faq/who-can-eliminate-inequality-",
-            "translated_slugs": [
-              {
-                "path": "new-website/faq/who-can-eliminate-inequality-",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/who-can-eliminate-inequality-",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/who-can-eliminate-inequality-",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          },
-          {
-            "name": "Are direct cash payments an effective way to fight poverty?",
-            "created_at": "2026-03-25T06:51:42.826Z",
-            "published_at": "2026-03-25T06:51:52.701Z",
-            "updated_at": "2026-03-25T06:51:52.712Z",
-            "id": 158645874000393,
-            "uuid": "7821c302-5386-4cee-9112-8aa3b9e7e833",
-            "content": {
-              "_uid": "213d3944-b50d-4491-8005-87fd95bd1384",
-              "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-              "question": "Are direct cash payments an effective way to fight poverty?",
-              "component": "faq"
-            },
-            "slug": "are-direct-cash-payments-an-effective-way-to-fight-poverty-",
-            "full_slug": "new-website/faq/are-direct-cash-payments-an-effective-way-to-fight-poverty-",
-            "sort_by_date": null,
-            "position": 30,
-            "tag_list": [],
-            "is_startpage": false,
-            "parent_id": 158645783380484,
-            "meta_data": null,
-            "group_id": "178ebf4b-cd85-4b6d-9084-b6971c4b3d84",
-            "first_published_at": "2026-03-25T06:51:52.701Z",
-            "release_id": null,
-            "lang": "default",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/faq/are-direct-cash-payments-an-effective-way-to-fight-poverty-",
-            "translated_slugs": [
-              {
-                "path": "new-website/faq/are-direct-cash-payments-an-effective-way-to-fight-poverty-",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/are-direct-cash-payments-an-effective-way-to-fight-poverty-",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/are-direct-cash-payments-an-effective-way-to-fight-poverty-",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          },
-          {
-            "name": "What do recipients need the money for?",
-            "created_at": "2026-03-25T06:55:01.965Z",
-            "published_at": "2026-03-25T06:55:05.124Z",
-            "updated_at": "2026-03-25T06:55:05.135Z",
-            "id": 158646689669935,
-            "uuid": "930c1caa-7054-4f2a-ac35-62a57edd6672",
-            "content": {
-              "_uid": "213d3944-b50d-4491-8005-87fd95bd1384",
-              "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-              "question": "Are direct cash payments an effective way to fight poverty?",
-              "component": "faq"
-            },
-            "slug": "what-do-recipients-need-the-money-for-",
-            "full_slug": "new-website/faq/what-do-recipients-need-the-money-for-",
-            "sort_by_date": null,
-            "position": 20,
-            "tag_list": [],
-            "is_startpage": false,
-            "parent_id": 158645783380484,
-            "meta_data": null,
-            "group_id": "7291e57c-e1b3-45df-b08e-953c4e82d188",
-            "first_published_at": "2026-03-25T06:55:05.124Z",
-            "release_id": null,
-            "lang": "default",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/faq/what-do-recipients-need-the-money-for-",
-            "translated_slugs": [
-              {
-                "path": "new-website/faq/what-do-recipients-need-the-money-for-",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/what-do-recipients-need-the-money-for-",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/what-do-recipients-need-the-money-for-",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          },
-          {
-            "name": "Can Social Income create equality?",
-            "created_at": "2026-03-25T06:53:56.751Z",
-            "published_at": "2026-03-25T06:54:04.802Z",
-            "updated_at": "2026-03-25T06:54:04.816Z",
-            "id": 158646422561295,
-            "uuid": "9facceee-7ff1-48d1-b457-5cd0b2625fee",
-            "content": {
-              "_uid": "64dad735-f7ab-48ec-8687-cb801a294166",
-              "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-              "question": "Can Social Income create equality?",
-              "component": "faq"
-            },
-            "slug": "can-social-income-create-equality-",
-            "full_slug": "new-website/faq/can-social-income-create-equality-",
-            "sort_by_date": null,
-            "position": -20,
-            "tag_list": [],
-            "is_startpage": false,
-            "parent_id": 158645783380484,
-            "meta_data": null,
-            "group_id": "9010f1fe-8b85-4807-93cd-f2079ac571b3",
-            "first_published_at": "2026-03-25T06:54:04.802Z",
-            "release_id": null,
-            "lang": "default",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/faq/can-social-income-create-equality-",
-            "translated_slugs": [
-              {
-                "path": "new-website/faq/can-social-income-create-equality-",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/can-social-income-create-equality-",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/can-social-income-create-equality-",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          },
-          {
-            "name": "How are recipients chosen?",
-            "created_at": "2026-03-25T06:54:36.430Z",
-            "published_at": "2026-03-25T06:54:46.839Z",
-            "updated_at": "2026-03-25T06:54:46.852Z",
-            "id": 158646585078573,
-            "uuid": "a49076f1-26fc-41da-bb06-ac27d69f2b20",
-            "content": {
-              "_uid": "213d3944-b50d-4491-8005-87fd95bd1384",
-              "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-              "question": "Are direct cash payments an effective way to fight poverty?",
-              "component": "faq"
-            },
-            "slug": "how-are-recipients-chosen-",
-            "full_slug": "new-website/faq/how-are-recipients-chosen-",
-            "sort_by_date": null,
-            "position": 10,
-            "tag_list": [],
-            "is_startpage": false,
-            "parent_id": 158645783380484,
-            "meta_data": null,
-            "group_id": "3542135e-bfaa-499b-8a7b-e515162925f7",
-            "first_published_at": "2026-03-25T06:54:46.839Z",
-            "release_id": null,
-            "lang": "default",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/faq/how-are-recipients-chosen-",
-            "translated_slugs": [
-              {
-                "path": "new-website/faq/how-are-recipients-chosen-",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/how-are-recipients-chosen-",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/faq/how-are-recipients-chosen-",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          }
-        ],
-        "links": []
-      },
-      "status": 200,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1774424509&resolve_level=2",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "da0ba471527f1aff1648c1bf287bd5a0e71e6204babcfcfcf5f0d40aed4da9bb",
+          "x-mock-hash": "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -2214,7 +1892,7 @@
             ]
           }
         ],
-        "cv": 1774424509,
+        "cv": 1774358989,
         "rels": [
           {
             "name": "Volunteering",
@@ -2827,7 +2505,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&per_page=3&excluding_fields=content&resolve_relations=article.author%2Carticle.tags%2Carticle.type&content_type=article&by_uuids_ordered=7353362f-5574-4072-a2db-6095eeef4c79%2C034ef9af-c6c3-4197-864a-29bb932ffb07%2C5d8d1f9d-42e2-4c10-b730-42bf043d1caa&token=__TOKEN__&cv=1774424509&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&per_page=3&excluding_fields=content&resolve_relations=article.author%2Carticle.tags%2Carticle.type&content_type=article&by_uuids_ordered=7353362f-5574-4072-a2db-6095eeef4c79%2C034ef9af-c6c3-4197-864a-29bb932ffb07%2C5d8d1f9d-42e2-4c10-b730-42bf043d1caa&token=__TOKEN__&cv=1774358989&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -2841,7 +2519,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 103
+      "durationMs": 45
     }
   ]
 }

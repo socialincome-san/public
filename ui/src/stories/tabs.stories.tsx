@@ -1,6 +1,7 @@
 import { ChatBubbleLeftIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/tabs';
+import { cn } from '../lib/utils';
 
 const meta = {
 	title: 'Components/Tabs',
@@ -199,7 +200,7 @@ export const FullWidth: StoryObj<FullWidthStoryProps> = {
 	},
 	render: ({ gap = 2, ...args }) => (
 		<Tabs {...args}>
-			<TabsList className={`flex w-full justify-between gap-${gap}`}>
+			<TabsList className={cn('flex w-full justify-between')} style={{ gap: `${gap * 0.25}rem` }}>
 				<TabsTrigger value="tab1" className="flex-1">
 					Messages
 				</TabsTrigger>
@@ -274,12 +275,12 @@ export const WithRichContent: Story = {
 				<TabsTrigger value="profile">Profile</TabsTrigger>
 				<TabsTrigger value="notifications">Notifications</TabsTrigger>
 			</TabsList>
-			<TabsContent value="profile" className={`space-y-4`}>
+			<TabsContent value="profile" className="space-y-4">
 				<h3 className="text-lg font-medium">Profile Settings</h3>
 				<p className="text-muted-foreground text-sm">Update your profile information and preferences.</p>
 				<input type="text" placeholder="Display Name" className="flex h-10 w-full rounded-md border px-3" />
 			</TabsContent>
-			<TabsContent value="notifications" className={`space-y-4`}>
+			<TabsContent value="notifications" className="space-y-4">
 				<h3 className="text-lg font-medium">Notification Settings</h3>
 				<p className="text-muted-foreground text-sm">Choose how you want to be notified.</p>
 				<div className="flex items-center space-x-2">

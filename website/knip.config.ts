@@ -23,7 +23,6 @@ const config: KnipConfig = {
 		'npm-run-all',
 		'@radix-ui/react-accordion',
 		'@radix-ui/react-popover',
-		'@radix-ui/react-progress',
 		'@radix-ui/react-switch',
 		'@radix-ui/react-radio-group',
 		'@radix-ui/react-slider',
