@@ -114,7 +114,100 @@
 			"achievementsNotAchievedCommentTitleV1": "Was hat dich daran gehindert, dieses Ziel zu erreichen? Gibt es etwas, das wir hätten tun können, um dich weiter zu unterstützen? (z.B. Mentoring, Kontakte)",
 			"happierTitleV1": "Hat dich Social Income glücklicher gemacht?",
 			"happierCommentTitleV1": "Wie genau?",
-			"notHappierCommentTitleV1": "Kannst du uns sagen, warum?"
+			"notHappierCommentTitleV1": "Kannst du uns sagen, warum?",
+			"impactInsights": {
+				"spendingV1": "Ausgaben für Lebensmittel bleiben ein zentraler Druckpunkt. Das erklärt, warum viele Haushalte kurzfristige Stabilität höher gewichten als langfristige Investitionen.",
+				"hasDependentsV1": "Viele Recipients tragen Verantwortung für weitere Personen. Eine einzelne Auszahlung stabilisiert daher oft mehr als nur eine Person und deutet auf Wirkungen über den direkten Recipient hinaus hin.",
+				"debtPersonalV1": "Persönliche Verschuldung wirkt häufig wie ein Bewältigungsmechanismus bei Einkommensschocks. Regelmässige Transfers können helfen, diese belastenden Schuldenzyklen zu durchbrechen.",
+				"debtHouseholdV1": "Die Dynamik bei Haushaltsschulden zeigt, dass finanzieller Druck oft im ganzen Haushalt geteilt wird und nicht nur einzelne Personen betrifft. Wirkung sollte deshalb auf Haushaltsebene betrachtet werden.",
+				"employmentStatusV1": "Die Muster bei Selbständigkeit spiegeln informelle Arbeitsrealitäten wider, in denen Einkommen oft unregelmässig sind. Transfers wirken hier eher als Stabilisierung von Betriebskapital als als Ersatz für Lohn.",
+				"skippingMealsV1": "Das Auslassen von Mahlzeiten deutet darauf hin, dass Ernährungsunsicherheit für viele Haushalte phasenweise auftritt. Das spricht eher für wiederkehrende wöchentliche Liquiditätslücken als nur für dauerhafte Knappheit.",
+				"savingsV1": "Die eingeschränkte Sparfähigkeit zeigt, dass ein grosser Teil der Transfers in unmittelbare Grundbedürfnisse fliesst. Das ist in einem inflationären Umfeld erwartbar und wichtig für realistische Erwartungen an Vermögensaufbau.",
+				"unexpectedExpensesCoveredV1": "Schwierigkeiten bei unerwarteten Ausgaben weisen auf eine fragile Resilienz hin. Gesundheits- oder Notfallkosten bleiben wahrscheinlich ein zentraler Weg in neue Verschuldung, auch bei regelmässiger Unterstützung.",
+				"schoolAttendanceV1": "Die Antworten zur Schulteilnahme deuten darauf hin, dass Bildungsbarrieren nicht nur mit Kosten zusammenhängen, sondern auch mit Care-Arbeit, Transporthürden und Opportunitätskosten im Haushalt.",
+				"impactFinancialIndependenceV1": "Das Gefühl finanzieller Unabhängigkeit verbessert sich bei vielen, sollte aber eher als gewonnene Handlungsfähigkeit im Alltag verstanden werden als als vollständige wirtschaftliche Absicherung.",
+				"longEnough": "Die Einschätzung zur Programmdauer zeigt, dass Wege zu Stabilität je nach Haushalt unterschiedlich lang sind. Eine fixe Laufzeit passt nicht für alle gleich gut.",
+				"plannedAchievementRemainingV1": "Die offenen Antworten zeigen, dass auch in späteren Programmphasen klare Ziele verfolgt werden. Das spricht für anhaltende Handlungsfähigkeit und Planung trotz begrenzter Mittel.",
+				"impactLifeGeneralV1": "Die Wirkungsbeschreibungen gehen über Einkommen hinaus und umfassen weniger Stress sowie mehr Entscheidungsspielraum. Diese Effekte sind zentral, werden aber von rein finanziellen Kennzahlen oft nicht erfasst."
+			}
+		},
+		"impactMeasurement": {
+			"title": "Wirkungsmessung",
+			"description": "Alle auf dieser Seite gezeigten Daten werden in Echtzeit aus Umfragen mit unseren Empfängerinnen und Empfängern aktualisiert.",
+			"loadError": "Die Umfrage-Erkenntnisse konnten derzeit nicht geladen werden.",
+			"notAvailable": "N/A",
+			"breadcrumb": {
+				"home": "Startseite",
+				"programs": "Programme",
+				"impactMeasurement": "Wirkungsmessung"
+			},
+			"filters": {
+				"allCountries": "Alle Länder",
+				"allPrograms": "Alle Programme",
+				"allSurveys": "Alle Umfragen",
+				"allRecipients": "Alle Empfängerinnen und Empfänger",
+				"allFilters": "Alle Filter",
+				"filter": "Filter",
+				"apply": "Anwenden",
+				"reset": "Zurücksetzen"
+			},
+			"downloadCsv": "CSV herunterladen",
+			"comingSoon": "Demnächst",
+			"downloadFilteredCsv": "Gefilterte CSV herunterladen",
+			"studyDetails": "Studien-Details",
+			"sampleSize": "Stichprobengrösse",
+			"uniqueIndividuals": "Eindeutige Personen",
+			"countryHeading": "Land",
+			"ageHeading": "Alter",
+			"genderHeading": "Geschlecht",
+			"timeFrame": "Zeitraum",
+			"days": "Tage",
+			"lastResponseDaysAgo": "Letzte Antwort vor {{days}} Tagen",
+			"lastResponseNotAvailable": "Letzte Antwort N/A",
+			"surveyResponsesFrom": "Umfrageantworten von",
+			"recipients": "Empfängerinnen und Empfänger",
+			"responsesIn": "Antworten in",
+			"surveys": "Umfragen",
+			"questionLabel": "Frage {{number}}",
+			"textResponseInsights": "Erkenntnisse zu Textantworten",
+			"textResponsePrivacyTooltip": "Freitextantworten werden aus Datenschutzgründen nicht veröffentlicht, da sie Personen identifizierbar machen oder offenlegen könnten, wer hinter einer Antwort steht.",
+			"noTextResponsesYet": "Noch keine Textantworten.",
+			"textResponsesCollected": "Textantworten erfasst.",
+			"insights": "Erkenntnisse",
+			"questionTypes": {
+				"singleChoice": "Einzelauswahl",
+				"multipleChoice": "Mehrfachauswahl",
+				"ranking": "Rangfolge",
+				"freeText": "Freitext",
+				"fallback": "Andere"
+			},
+			"questionnaires": {
+				"onboarding": "Onboarding",
+				"checkin": "Check-in",
+				"offboarding": "Offboarding",
+				"offboardedCheckin": "Offboarded Check-in",
+				"fallback": "Andere"
+			},
+			"followUp": {
+				"prefix": "Folgefrage für",
+				"individuals": "Personen",
+				"whoSaid": "die geantwortet haben",
+				"selectedMoreThanOneCategory": "die mehr als eine Kategorie ausgewählt haben"
+			},
+			"recipientsFilter": {
+				"genderHeading": "Geschlecht",
+				"ageHeading": "Alter",
+				"gender": {
+					"male": "Männlich",
+					"female": "Weiblich"
+				},
+				"age": {
+					"youth": "Jugendliche (16-25)",
+					"youngAdults": "Junge Erwachsene (26-35)",
+					"middleAged": "Mittleres Alter (36-55)",
+					"olderAdults": "Ältere Erwachsene (56+)"
+				}
+			}
 		}
 	}
 }

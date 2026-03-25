@@ -56,6 +56,7 @@ import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.se
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
+import { SurveyImpactService } from './survey/survey-impact.service';
 import { SurveyReadService } from './survey/survey-read.service';
 import { SurveyValidationService } from './survey/survey-validation.service';
 import { SurveyWriteService } from './survey/survey-write.service';
@@ -168,6 +169,7 @@ const stripe = new StripeService(
 	programAccessRead,
 );
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
+const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
 const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead, surveyValidation);
 
@@ -222,6 +224,7 @@ export const services = {
 	sendgrid,
 	storyblok,
 	stripe,
+	surveyImpact,
 	transparency,
 	twilio,
 };

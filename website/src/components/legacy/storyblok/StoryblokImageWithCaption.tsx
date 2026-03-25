@@ -19,7 +19,7 @@ export const StoryblokImageWithCaption = ({
 			<Image
 				src={image.filename}
 				alt={image.alt ?? ''}
-				className={`m-0! h-auto w-full object-contain p-0`}
+				className="m-0! h-auto w-full object-contain p-0"
 				width={dimensionsFromStoryblokImage.width}
 				height={dimensionsFromStoryblokImage.height}
 			/>

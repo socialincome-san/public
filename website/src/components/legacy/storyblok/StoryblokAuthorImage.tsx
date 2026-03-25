@@ -1,5 +1,6 @@
 import type { Author } from '@/generated/storyblok/types/109655/storyblok-components';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 
@@ -37,7 +38,7 @@ const StoryblokAuthorImage = (props: {
 				author.content.avatar.focus,
 			)}
 			alt={`${author.content.firstName} ${author.content.lastName} avatar`}
-			className={`${sizeClasses[size]} flex-none rounded-full object-cover object-top ${className}`}
+			className={cn(sizeClasses[size], 'flex-none rounded-full object-cover object-top', className)}
 			width={AUTHOR_IMAGE_TARGET_WIDTH}
 			height={AUTHOR_IMAGE_TARGET_HEIGHT}
 		/>
