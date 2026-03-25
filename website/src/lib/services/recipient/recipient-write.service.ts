@@ -530,7 +530,24 @@ export class RecipientWriteService extends BaseService {
 				where: { id: recipientId },
 				data,
 				include: {
-					contact: { include: { phone: true } },
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							callingName: true,
+							phoneId: true,
+							phone: true,
+							email: true,
+							gender: true,
+							language: true,
+							dateOfBirth: true,
+							profession: true,
+							isInstitution: true,
+							createdAt: true,
+							updatedAt: true,
+						},
+					},
 					paymentInformation: {
 						include: {
 							phone: true,
@@ -542,11 +559,33 @@ export class RecipientWriteService extends BaseService {
 							country: {
 								select: {
 									isoCode: true,
+									currency: true,
 								},
 							},
 						},
 					},
-					localPartner: true,
+					localPartner: {
+						include: {
+							contact: {
+								select: {
+									id: true,
+									firstName: true,
+									lastName: true,
+									callingName: true,
+									phoneId: true,
+									phone: true,
+									email: true,
+									gender: true,
+									language: true,
+									dateOfBirth: true,
+									profession: true,
+									isInstitution: true,
+									createdAt: true,
+									updatedAt: true,
+								},
+							},
+						},
+					},
 				},
 			});
 
