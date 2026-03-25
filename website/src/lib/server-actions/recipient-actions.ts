@@ -8,6 +8,7 @@ import { revalidatePath } from 'next/cache';
 
 const PORTAL_RECIPIENTS_PATH = '/portal/management/recipients';
 const PORTAL_PROGRAM_RECIPIENTS_PATH = '/portal/programs/[programId]/recipients';
+const PORTAL_MONITORING_UPCOMING_ONBOARDING_PATH = '/portal/monitoring/upcoming-onboarding';
 const PARTNER_RECIPIENTS_PATH = '/partner-space/recipients';
 
 export const createRecipientAction = async (recipient: RecipientFormCreateInput, sessionType: Session['type'] = 'user') => {
@@ -20,6 +21,7 @@ export const createRecipientAction = async (recipient: RecipientFormCreateInput,
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
+		revalidatePath(PORTAL_MONITORING_UPCOMING_ONBOARDING_PATH);
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
@@ -40,6 +42,7 @@ export const updateRecipientAction = async (
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
+		revalidatePath(PORTAL_MONITORING_UPCOMING_ONBOARDING_PATH);
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
@@ -57,6 +60,7 @@ export const deleteRecipientAction = async (recipientId: string, sessionType: Se
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
+		revalidatePath(PORTAL_MONITORING_UPCOMING_ONBOARDING_PATH);
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
@@ -105,6 +109,7 @@ export const importRecipientsCsvAction = async (file: File, sessionType: Session
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
+		revalidatePath(PORTAL_MONITORING_UPCOMING_ONBOARDING_PATH);
 	} else if (session.type === 'local-partner') {
 		revalidatePath(PARTNER_RECIPIENTS_PATH);
 	}
