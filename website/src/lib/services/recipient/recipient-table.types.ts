@@ -60,12 +60,10 @@ export type UpcomingOnboardingTableViewRow = {
 	startDate: Date;
 	daysUntilStart: number;
 	createdAt: Date;
-	permission: ProgramPermission;
 };
 
 export type RecipientUpcomingOnboardingPaginatedTableView = {
 	tableRows: UpcomingOnboardingTableViewRow[];
 	totalCount: number;
 	programFilterOptions: RecipientProgramFilterOption[];
-	permission: ProgramPermission;
 };
