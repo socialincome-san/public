@@ -1,8 +1,9 @@
 let patched = false;
 
+export const isStoryblokMockRecordOrReplay = () => ['record', 'replay'].includes(process.env.STORYBLOK_MOCK_MODE ?? '');
+
 export const mockStoryblokIfTestMode = () => {
-	const mode = process.env.STORYBLOK_MOCK_MODE;
-	if (!['record', 'replay'].includes(mode ?? '')) {
+	if (!isStoryblokMockRecordOrReplay()) {
 		return;
 	} // only run in mock modes
 	if (patched) {

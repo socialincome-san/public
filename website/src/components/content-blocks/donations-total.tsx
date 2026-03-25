@@ -20,14 +20,15 @@ type Props = {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	totalChf: number;
+	disableAnimation?: boolean;
 };
 
-export const DonationsTotalBlock = ({ blok, lang, region, totalChf }: Props) => {
+export const DonationsTotalBlock = ({ blok, lang, region, totalChf, disableAnimation = false }: Props) => {
 	const hasFilename = (image: StoryblokAsset): image is StoryblokAsset & { filename: string } => Boolean(image.filename);
 
 	const sectionRef = useRef<HTMLDivElement>(null);
 	const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-	const displayValue = useCountUp(totalChf, isInView);
+	const displayValue = useCountUp(totalChf, isInView && !disableAnimation);
 
 	const mouseX = useMotionValue(0);
 	const mouseY = useMotionValue(0);
