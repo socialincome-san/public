@@ -27,7 +27,6 @@ const Contact = z.object({
 	firstName: z.string(),
 	lastName: z.string(),
 	callingName: z.string().nullable(),
-	addressId: z.string().nullable(),
 	phoneId: z.string().nullable(),
 	phone: Phone.nullable(),
 	email: z.string().nullable(),
