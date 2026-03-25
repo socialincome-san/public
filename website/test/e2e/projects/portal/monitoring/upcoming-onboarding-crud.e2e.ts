@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { addDays } from 'date-fns';
 import { readFile } from 'node:fs/promises';
 import {
 	assertContactExistsByEmail,
@@ -11,7 +12,6 @@ import {
 	getRecipientProgramAndLocalPartnerByName,
 	selectOptionByTestId,
 } from '../../../utils';
-import { addDays } from 'date-fns';
 
 const UPCOMING_ONBOARDING_PATH = '/portal/monitoring/upcoming-onboarding';
 
@@ -437,7 +437,9 @@ test.only('recipient payment phone stays aligned in Firebase after phone changes
 		}
 
 		await page.goto('http://localhost:4000/auth');
-		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.second);
+		await page
+			.getByPlaceholder('Search by user UID, email address, phone number, or display name')
+			.fill(unusedPhones.second);
 		await expect(page.getByRole('cell', { name: unusedPhones.second })).toBeVisible();
 		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(unusedPhones.first);
 		await expect(page.getByRole('cell', { name: unusedPhones.first })).toHaveCount(0);
@@ -559,4 +561,3 @@ test.only('CSV Export', async ({ page }) => {
 	const csvContent = await readFile(downloadPath!, 'utf8');
 	expect(csvContent).toMatchSnapshot(expectedCsvExport.snapshotFile);
 });
-
