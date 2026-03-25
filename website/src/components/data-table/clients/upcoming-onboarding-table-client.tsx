@@ -8,10 +8,7 @@ import {
 import { TableQueryState } from '@/components/data-table/query-state';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
-import type {
-	RecipientProgramFilterOption,
-	UpcomingOnboardingTableViewRow,
-} from '@/lib/services/recipient/recipient.types';
+import type { RecipientProgramFilterOption, UpcomingOnboardingTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -27,13 +24,7 @@ type Props = {
 	programFilterOptions?: RecipientProgramFilterOption[];
 };
 
-export const UpcomingOnboardingTableClient = ({
-	rows,
-	error,
-	readOnly,
-	query,
-	programFilterOptions = [],
-}: Props) => {
+export const UpcomingOnboardingTableClient = ({ rows, error, readOnly, query, programFilterOptions = [] }: Props) => {
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
 	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
@@ -134,4 +125,3 @@ export const UpcomingOnboardingTableClient = ({
 		</>
 	);
 };
-
