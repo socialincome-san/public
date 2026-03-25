@@ -1,10 +1,13 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion';
+'use client';
+
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
 import { FaqSelection } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import * as RadixAccordion from '@radix-ui/react-accordion';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { ChevronDownIcon } from 'lucide-react';
 import NextLink from 'next/link';
 
 type Props = {
@@ -38,7 +41,7 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 		];
 	});
 
-	if (!resolvedQuestions.length && !button?.length) {
+	if (!resolvedQuestions.length) {
 		return null;
 	}
 
@@ -46,22 +49,29 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="mx-auto max-w-4xl">
 				{heading && <h2 className="mb-8 text-center text-4xl font-bold text-[#0d3652] md:mb-10 md:text-5xl">{heading}</h2>}
-				<Accordion type="single" collapsible className="border-border/50 w-full border-t">
+				<RadixAccordion.Root type="single" collapsible className="border-input w-full border-b">
 					{resolvedQuestions.map((item) => (
-						<AccordionItem key={item.id} value={item.id} className="border-border/50">
-							<AccordionTrigger className="py-5 text-lg font-medium text-[#0d3652] hover:no-underline md:text-2xl">
-								{item.question}
-							</AccordionTrigger>
+						<RadixAccordion.Item key={item.id} value={item.id} className="border-input border-b last:border-b-0">
+							<RadixAccordion.Header className="flex">
+								<RadixAccordion.Trigger className="group text-primary flex flex-1 items-start justify-between gap-4 py-6 text-lg md:text-xl">
+									{item.question}
+									<ChevronDownIcon className="pointer-events-none mt-1 size-6 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+								</RadixAccordion.Trigger>
+							</RadixAccordion.Header>
 							{item.answer && (
-								<AccordionContent className="pb-5 text-base text-[#0d3652] md:text-lg">{item.answer}</AccordionContent>
+								<RadixAccordion.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down text-primary overflow-hidden md:text-lg">
+									<div className="pb-6">{item.answer}</div>
+								</RadixAccordion.Content>
 							)}
-						</AccordionItem>
+						</RadixAccordion.Item>
 					))}
-				</Accordion>
+				</RadixAccordion.Root>
 				{button && buttonHref && (
-					<Button variant="outline" asChild>
-						<NextLink href={buttonHref}>{button.label}</NextLink>
-					</Button>
+					<div className="mt-6 flex justify-center">
+						<Button variant="outline" asChild>
+							<NextLink href={buttonHref}>{button.label}</NextLink>
+						</Button>
+					</div>
 				)}
 			</div>
 		</BlockWrapper>
