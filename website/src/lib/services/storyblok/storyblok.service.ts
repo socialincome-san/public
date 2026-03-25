@@ -15,6 +15,7 @@ export class StoryblokService extends BaseService {
 		tag: 'topic',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
+	private static readonly standardStoryRelationsToResolve = ['faqSelection.questions'];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
@@ -54,7 +55,10 @@ export class StoryblokService extends BaseService {
 		try {
 			const data = await this.withLanguageFallback(
 				async (language: string) => {
-					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, await this.getStoryParams(language));
+					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, {
+						...(await this.getStoryParams(language)),
+						resolve_relations: StoryblokService.standardStoryRelationsToResolve,
+					});
 					const responseData = response.data as { story: T };
 
 					return responseData.story;
