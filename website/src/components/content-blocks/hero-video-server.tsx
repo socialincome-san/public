@@ -2,7 +2,7 @@ import { HeroVideoBlock, type HeroVideoControlTranslations } from '@/components/
 import type { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { isStoryblokMockRecordOrReplay } from '@/lib/services/storyblok/storyblok.mock';
+import { isStoryblokMockRecordOrReplay } from '@/lib/utils/environment';
 
 type Props = {
 	blok: HeroVideo;

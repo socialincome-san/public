@@ -5,14 +5,12 @@ import { Button } from '@/components/button';
 import { FloatingImage } from '@/components/floating-image';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { useCountUp } from '@/lib/hooks/useCountUp';
+import { useDonationTotalAnimations } from '@/lib/hooks/use-donation-total-animations';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import { useInView, useMotionValue, useSpring } from 'motion/react';
 import NextLink from 'next/link';
-import { useEffect, useRef } from 'react';
 import Markdown from 'react-markdown';
 
 type Props = {
@@ -26,36 +24,10 @@ type Props = {
 export const DonationsTotalBlock = ({ blok, lang, region, totalChf, disableAnimation = false }: Props) => {
 	const hasFilename = (image: StoryblokAsset): image is StoryblokAsset & { filename: string } => Boolean(image.filename);
 
-	const sectionRef = useRef<HTMLDivElement>(null);
-	const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-	const shouldAnimate = isInView && !disableAnimation;
-	const animatedValue = useCountUp(totalChf, shouldAnimate);
-	const displayValue = shouldAnimate ? animatedValue : totalChf;
-
-	const mouseX = useMotionValue(0);
-	const mouseY = useMotionValue(0);
-	const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
-	const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
-
-	useEffect(() => {
-		const el = sectionRef.current;
-		if (!el) {
-			return;
-		}
-
-		const handlePointerMove = (event: PointerEvent) => {
-			const rect = el.getBoundingClientRect();
-			const normalizedX = (event.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-			const normalizedY = (event.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-
-			mouseX.set(Math.max(-1, Math.min(1, normalizedX)));
-			mouseY.set(Math.max(-1, Math.min(1, normalizedY)));
-		};
-
-		window.addEventListener('pointermove', handlePointerMove);
-
-		return () => window.removeEventListener('pointermove', handlePointerMove);
-	}, [mouseX, mouseY]);
+	const { sectionRef, displayValue, smoothMouseX, smoothMouseY } = useDonationTotalAnimations({
+		totalChf,
+		disableAnimation,
+	});
 
 	const images = blok.images?.filter(hasFilename).slice(0, 4) ?? [];
 	const button = blok.button?.[0];

@@ -1,4 +1,5 @@
 import { getScaledDimensions } from '@/lib/services/storyblok/storyblok.utils';
+import { cn } from '@/lib/utils/cn';
 import { motion, MotionValue, useTransform } from 'motion/react';
 import NextImage from 'next/image';
 
@@ -35,7 +36,7 @@ export const FloatingImage = ({ image, index, smoothMouseX, smoothMouseY }: Prop
 	};
 
 	return (
-		<motion.div className={`absolute hidden md:block ${config.className}`} style={{ x, y }}>
+		<motion.div className={cn('absolute hidden md:block', config.className)} style={{ x, y }}>
 			<NextImage
 				src={image.filename}
 				alt={image.alt ?? ''}
