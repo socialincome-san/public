@@ -1,10 +1,7 @@
-import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
-import {
-	getUpcomingOnboardingTableFilters,
-	upcomingOnboardingTableConfig,
-} from '@/components/data-table/configs/upcoming-onboarding-table.config';
+import { UpcomingOnboardingTableClient } from '@/components/data-table/clients/upcoming-onboarding-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
@@ -29,18 +26,15 @@ const UpcomingOnboardingDataLoader = async ({ searchParams }: SearchParamsPagePr
 	const rows = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const programFilterOptions = result.success ? result.data.programFilterOptions : [];
+	const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
 
 	return (
-		<ConfiguredDataTableClient
-			config={upcomingOnboardingTableConfig}
-			titleInfoTooltip="Shows recipients who have a future start date, sorted by how soon they are onboarding."
+		<UpcomingOnboardingTableClient
 			rows={rows}
 			error={error}
+			readOnly={readOnly}
 			query={{ ...tableQuery, totalRows }}
-			toolbarFilters={getUpcomingOnboardingTableFilters({
-				query: { ...tableQuery, totalRows },
-				programFilterOptions,
-			})}
+			programFilterOptions={programFilterOptions}
 		/>
 	);
 };
