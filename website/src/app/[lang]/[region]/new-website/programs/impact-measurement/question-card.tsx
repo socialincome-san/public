@@ -1,6 +1,5 @@
 import { Card } from '@/components/card';
 import { SurveyImpactQuestion } from '@/lib/services/survey/survey-impact.types';
-import { Lightbulb } from 'lucide-react';
 import { ReactNode } from 'react';
 import { ImpactMeasurementQuestionContent } from './question-content';
 import { getImpactTranslator } from './translator';
@@ -10,14 +9,12 @@ export const ImpactMeasurementQuestionCard = async ({
 	question,
 	index,
 	questionTypeLabelKey,
-	questionInsights,
 	followUpSections,
 }: {
 	lang: string;
 	question: SurveyImpactQuestion;
 	index: number;
 	questionTypeLabelKey: string;
-	questionInsights: string[];
 	followUpSections: ReactNode[];
 }) => {
 	const translator = await getImpactTranslator(lang);
@@ -45,21 +42,7 @@ export const ImpactMeasurementQuestionCard = async ({
 				</div>
 				{followUpSections}
 			</Card>
-			{questionInsights.length > 0 && (
-				<div className="flex flex-col gap-3 px-4 py-5 sm:flex-row sm:items-start sm:gap-8 sm:px-6">
-					<div className="flex items-center gap-2">
-						<Lightbulb className="size-4 text-cyan-900" />
-						<p className="text-sm font-medium text-cyan-900">{translator.t('survey.impactMeasurement.insights')}</p>
-					</div>
-					<div>
-						{questionInsights.map((insight, insightIndex) => (
-							<p key={`${question.name}-insight-${insightIndex}`} className="text-sm text-cyan-950">
-								{insight}
-							</p>
-						))}
-					</div>
-				</div>
-			)}
+			{/* TODO: Render question-specific insights from CMS-managed content once available. */}
 		</div>
 	);
 };
