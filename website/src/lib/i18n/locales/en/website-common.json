@@ -111,5 +111,17 @@
 		"sdg17-title": "Partnerships",
 		"sdg17-mission-1": "The mission of ",
 		"sdg17-mission-2": "is to strengthen global partnerships for sustainable development."
+	},
+	"countries-page": {
+		"title": "Countries",
+		"empty": "No countries found.",
+		"program-singular": "program",
+		"program-plural": "programs",
+		"active-program-singular": "active program",
+		"active-program-plural": "active programs",
+		"recipient-singular": "recipient",
+		"recipient-plural": "recipients",
+		"donate-now": "Donate now",
+		"about": "About"
 	}
 }

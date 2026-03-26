@@ -1,5 +1,6 @@
 import { Button } from '@/components/button';
 import { MakeDonationForm } from '@/components/make-donation-form';
+import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import NextImage from 'next/image';
@@ -15,7 +16,8 @@ type Props = {
 	recipientsCount: number;
 };
 
-export const CountryDetail = ({ country, lang, region, activeProgramsCount, recipientsCount }: Props) => {
+export const CountryDetail = async ({ country, lang, region, activeProgramsCount, recipientsCount }: Props) => {
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const countryDescription = getCountryDescription(country.content);
 	const isoCode = getCountryIsoCode(country.content);
 	const isoCodeLower = isoCode.toLowerCase();
@@ -48,15 +50,23 @@ export const CountryDetail = ({ country, lang, region, activeProgramsCount, reci
 						</div>
 						<div className="flex flex-col gap-1 text-xl">
 							<p>
-								{activeProgramsCount} active {activeProgramsCount === 1 ? 'program' : 'programs'}
+								{activeProgramsCount}{' '}
+								{activeProgramsCount === 1
+									? translator.t('countries-page.active-program-singular')
+									: translator.t('countries-page.active-program-plural')}
 							</p>
 							<p>
-								{recipientsCount} {recipientsCount === 1 ? 'recipient' : 'recipients'}
+								{recipientsCount}{' '}
+								{recipientsCount === 1
+									? translator.t('countries-page.recipient-singular')
+									: translator.t('countries-page.recipient-plural')}
 							</p>
 						</div>
 						<div>
 							<Button variant="outline" size="lg" asChild>
-								<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/donate`}>Donate now</NextLink>
+								<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/donate`}>
+									{translator.t('countries-page.donate-now')}
+								</NextLink>
 							</Button>
 						</div>
 					</div>
@@ -71,7 +81,9 @@ export const CountryDetail = ({ country, lang, region, activeProgramsCount, reci
 			</div>
 
 			<div className="w-site-width max-w-content mx-auto flex min-h-96 flex-col gap-4 px-6 py-8">
-				<h2 className="text-2xl font-semibold">About {countryTitle}</h2>
+				<h2 className="text-2xl font-semibold">
+					{translator.t('countries-page.about')} {countryTitle}
+				</h2>
 				<p className="text-base">{countryDescription ?? '-'}</p>
 			</div>
 		</section>

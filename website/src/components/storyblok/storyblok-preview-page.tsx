@@ -13,19 +13,17 @@ type Props = {
 	searchParams: Record<string, string | undefined>;
 };
 
-export const StoryblokPreviewPage = ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
-	return (
-		<StoryblokPreviewStory
-			storyPath={storyPath}
-			lang={lang}
-			previewRoutePath={previewRoutePath}
-			searchParams={searchParams}
-			loadStory={async (path, language) => {
-				const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(path, language);
+export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
+	return await StoryblokPreviewStory({
+		storyPath,
+		lang,
+		previewRoutePath,
+		searchParams,
+		loadStory: async (path, language) => {
+			const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(path, language);
 
-				return storyResult.success ? storyResult.data : null;
-			}}
-			renderStory={(story) => <PageContentType blok={story.content} lang={lang} region={region} />}
-		/>
-	);
+			return storyResult.success ? storyResult.data : null;
+		},
+		renderStory: (story) => <PageContentType blok={story.content} lang={lang} region={region} />,
+	});
 };

@@ -1,3 +1,4 @@
+import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import NextImage from 'next/image';
@@ -12,12 +13,14 @@ type Props = {
 	region: WebsiteRegion;
 };
 
-export const CountriesOverview = ({ countries, statsByIsoCode, lang, region }: Props) => {
+export const CountriesOverview = async ({ countries, statsByIsoCode, lang, region }: Props) => {
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+
 	return (
 		<div className="w-site-width max-w-content mx-auto flex w-full flex-col gap-6 px-6 py-8">
-			<h1 className="text-3xl font-semibold">Countries</h1>
+			<h1 className="text-3xl font-semibold">{translator.t('countries-page.title')}</h1>
 			{countries.length === 0 ? (
-				<p className="text-muted-foreground">No countries found.</p>
+				<p className="text-muted-foreground">{translator.t('countries-page.empty')}</p>
 			) : (
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{countries.map((country) => {
@@ -56,10 +59,16 @@ export const CountriesOverview = ({ countries, statsByIsoCode, lang, region }: P
 											</div>
 											<div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-white/90">
 												<p className="font-medium">
-													{stats.programsCount} {stats.programsCount === 1 ? 'program' : 'programs'}
+													{stats.programsCount}{' '}
+													{stats.programsCount === 1
+														? translator.t('countries-page.program-singular')
+														: translator.t('countries-page.program-plural')}
 												</p>
 												<p className="font-medium">
-													{stats.recipientsCount} {stats.recipientsCount === 1 ? 'recipient' : 'recipients'}
+													{stats.recipientsCount}{' '}
+													{stats.recipientsCount === 1
+														? translator.t('countries-page.recipient-singular')
+														: translator.t('countries-page.recipient-plural')}
 												</p>
 											</div>
 										</div>

@@ -24,31 +24,29 @@ const getCountryStats = async (isoCode: string) => {
 	};
 };
 
-export const StoryblokPreviewCountryPage = ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
-	return (
-		<StoryblokPreviewStory<CountryStory>
-			storyPath={storyPath}
-			lang={lang}
-			previewRoutePath={previewRoutePath}
-			searchParams={searchParams}
-			loadStory={async (path, language) => {
-				const storyResult = await services.storyblok.getStoryWithFallback<CountryStory>(path, language);
+export const StoryblokPreviewCountryPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
+	return await StoryblokPreviewStory<CountryStory>({
+		storyPath,
+		lang,
+		previewRoutePath,
+		searchParams,
+		loadStory: async (path, language) => {
+			const storyResult = await services.storyblok.getStoryWithFallback<CountryStory>(path, language);
 
-				return storyResult.success ? storyResult.data : null;
-			}}
-			renderStory={async (story) => {
-				const { activeProgramsCount, recipientsCount } = await getCountryStats(story.content.isoCode);
+			return storyResult.success ? storyResult.data : null;
+		},
+		renderStory: async (story) => {
+			const { activeProgramsCount, recipientsCount } = await getCountryStats(story.content.isoCode);
 
-				return (
-					<CountryDetail
-						country={story}
-						lang={lang}
-						region={region}
-						activeProgramsCount={activeProgramsCount}
-						recipientsCount={recipientsCount}
-					/>
-				);
-			}}
-		/>
-	);
+			return (
+				<CountryDetail
+					country={story}
+					lang={lang}
+					region={region}
+					activeProgramsCount={activeProgramsCount}
+					recipientsCount={recipientsCount}
+				/>
+			);
+		},
+	});
 };
