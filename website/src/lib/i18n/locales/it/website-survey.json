@@ -114,27 +114,12 @@
 			"achievementsNotAchievedCommentTitleV1": "Cosa ti ha impedito di raggiungere questo obiettivo? C'è qualcosa che avremmo potuto fare per offrirti ulteriore supporto? (ad esempio mentoring, contatti)",
 			"happierTitleV1": "Social Income ti ha reso più felice?",
 			"happierCommentTitleV1": "In che modo?",
-			"notHappierCommentTitleV1": "Puoi dirci il perché?",
-			"impactInsights": {
-				"spendingV1": "La spesa per il cibo resta un punto di forte pressione e aiuta a spiegare perché molte famiglie diano priorità alla stabilità immediata rispetto a investimenti di più lungo periodo.",
-				"hasDependentsV1": "Molti recipient sostengono altre persone. Un singolo trasferimento spesso stabilizza quindi più di una persona, suggerendo effetti che vanno oltre il solo recipient diretto.",
-				"debtPersonalV1": "Il debito personale sembra spesso un meccanismo di risposta agli shock di reddito. Trasferimenti regolari possono ridurre la dipendenza da cicli di indebitamento ad alto stress.",
-				"debtHouseholdV1": "Le dinamiche del debito familiare indicano che la pressione finanziaria è spesso condivisa all'interno del nucleo, non solo individuale. L'impatto andrebbe quindi letto anche a livello di famiglia.",
-				"employmentStatusV1": "I pattern di lavoro autonomo riflettono realtà di lavoro informale, dove i redditi sono spesso irregolari. I trasferimenti sembrano funzionare soprattutto come stabilizzazione della liquidità, più che come sostituzione salariale.",
-				"skippingMealsV1": "Le risposte sui pasti saltati indicano che l'insicurezza alimentare è spesso episodica per molte famiglie, segnalando vulnerabilità legate a gap di cassa settimanali più che a sola scarsità cronica.",
-				"savingsV1": "La capacità limitata di risparmiare suggerisce che gran parte del trasferimento viene assorbita da bisogni essenziali immediati. In un contesto inflazionistico questo è atteso e utile per definire aspettative realistiche sull'accumulo.",
-				"unexpectedExpensesCoveredV1": "La difficoltà nel coprire spese impreviste evidenzia una resilienza fragile. Costi sanitari o emergenze restano probabilmente una via principale verso nuovo debito anche in presenza di supporto regolare.",
-				"schoolAttendanceV1": "Le risposte sulla frequenza scolastica suggeriscono che le barriere all'istruzione non sono solo economiche, ma includono anche carichi di cura, limiti di trasporto e costi opportunità nel nucleo familiare.",
-				"impactFinancialIndependenceV1": "La percezione di indipendenza finanziaria migliora per molti respondent, ma va letta soprattutto come maggiore controllo nella vita quotidiana, non come piena sicurezza economica.",
-				"longEnough": "Le opinioni sulla durata del supporto suggeriscono che i tempi per raggiungere stabilità variano tra famiglie. Una durata fissa del programma non è quindi adatta a tutti allo stesso modo.",
-				"plannedAchievementRemainingV1": "Le risposte aperte mostrano che anche nelle fasi avanzate del programma i recipient restano orientati a obiettivi concreti, segnale di agency e capacità di pianificazione nonostante i vincoli.",
-				"impactLifeGeneralV1": "I racconti sull'impatto vanno oltre il reddito e includono meno stress e maggiore spazio decisionale. Sono risultati importanti che i soli indicatori finanziari spesso non catturano."
-			}
+			"notHappierCommentTitleV1": "Puoi dirci il perché?"
 		},
 		"impactMeasurement": {
 			"title": "Misurazione dell'impatto",
 			"description": "Tutti i dati mostrati in questa pagina vengono aggiornati in tempo reale dai questionari svolti con i nostri recipient.",
-			"loadError": "Impossibile caricare gli insight del questionario in questo momento.",
+			"loadError": "Impossibile caricare i dati di misurazione dell'impatto in questo momento.",
 			"notAvailable": "N/D",
 			"breadcrumb": {
 				"home": "Home",
@@ -173,7 +158,6 @@
 			"textResponsePrivacyTooltip": "Le risposte a testo libero non vengono pubblicate per motivi di privacy, poiché potrebbero identificare individui o rivelare chi si cela dietro una risposta.",
 			"noTextResponsesYet": "Nessuna risposta testuale al momento.",
 			"textResponsesCollected": "risposte testuali raccolte.",
-			"insights": "Approfondimenti",
 			"questionTypes": {
 				"singleChoice": "Scelta singola",
 				"multipleChoice": "Scelta multipla",
