@@ -77,6 +77,16 @@ export interface CampaignDonate {
   [k: string]: unknown;
 }
 
+export interface Country {
+  isoCode: string;
+  title: string;
+  description: string;
+  heroImage: StoryblokAsset;
+  component: "Country";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
@@ -99,6 +109,23 @@ export interface EmbeddedVideo {
   muxPlaybackId?: string;
   caption?: string;
   component: "embeddedVideo";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Faq {
+  question: string;
+  answer?: string;
+  component: "faq";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface FaqSelection {
+  heading?: string;
+  questions: (ISbStoryData<Faq> | string)[];
+  button?: Button[];
+  component: "faqSelection";
   _uid: string;
   [k: string]: unknown;
 }
@@ -194,7 +221,7 @@ export interface NewsletterSignup {
 }
 
 export interface Page {
-  content: (DonationsTotal | HeroVideo | ImageText | JournalTeasers | ModalCards | Text)[];
+  content: (DonationsTotal | FaqSelection | HeroVideo | ImageText | JournalTeasers | ModalCards | Text)[];
   component: "page";
   _uid: string;
   [k: string]: unknown;
@@ -245,4 +272,14 @@ export interface Topic {
   [k: string]: unknown;
 }
 
-export type ContentType = ActionButton | Article | ArticleType | Author | Layout | Page | ReferenceArticle | Topic;
+export type ContentType =
+  | ActionButton
+  | Article
+  | ArticleType
+  | Author
+  | Country
+  | Faq
+  | Layout
+  | Page
+  | ReferenceArticle
+  | Topic;

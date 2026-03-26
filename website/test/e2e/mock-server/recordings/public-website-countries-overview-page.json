@@ -1,4 +1,340 @@
 {
+  "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc": [
+    {
+      "body": [
+        "This record could not be found"
+      ],
+      "status": 404,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 470
+    },
+    {
+      "body": [
+        "This record could not be found"
+      ],
+      "status": 404,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 481
+    }
+  ],
+  "6fbae1a71b9da72243ae87c71cbdad2dfab1cd4d12db466d67fcb17a1de9f487": [
+    {
+      "body": {
+        "stories": [
+          {
+            "name": "Kenya",
+            "created_at": "2026-03-26T15:33:39.418Z",
+            "published_at": null,
+            "updated_at": "2026-03-26T15:34:06.372Z",
+            "id": 159128041171728,
+            "uuid": "50cdb98b-34fe-4b09-a8bd-38803c142f0d",
+            "content": {
+              "_uid": "26384a68-e290-4c4a-93b0-40f57088f41c",
+              "title": "Kenya",
+              "isoCode": "ke",
+              "component": "Country",
+              "heroImage": {
+                "id": 139054963800414,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "description": "nice nice nice",
+              "_editable": "<!--#storyblok#{\"name\": \"Country\", \"space\": \"109655\", \"uid\": \"26384a68-e290-4c4a-93b0-40f57088f41c\", \"id\": \"159128041171728\"}-->"
+            },
+            "slug": "kenya",
+            "full_slug": "de/new-website/countries/kenya",
+            "sort_by_date": null,
+            "position": -30,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 159089068979075,
+            "meta_data": null,
+            "group_id": "1d3507a4-8bfd-48ba-8e37-ec2a1d9ceea3",
+            "first_published_at": null,
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/countries/kenya",
+            "translated_slugs": [
+              {
+                "path": "new-website/countries/kenya",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/countries/kenya",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/countries/kenya",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Ghana",
+            "created_at": "2026-03-26T15:32:26.266Z",
+            "published_at": null,
+            "updated_at": "2026-03-26T15:32:56.390Z",
+            "id": 159127741535241,
+            "uuid": "5fdd3c60-1a19-4db8-8676-7bb078b2116b",
+            "content": {
+              "_uid": "3d761537-dc1e-4f28-b270-d0ec729a7857",
+              "title": "Ghana",
+              "isoCode": "gh",
+              "component": "Country",
+              "heroImage": {
+                "id": 139606802644574,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "description": "Its awesome here",
+              "_editable": "<!--#storyblok#{\"name\": \"Country\", \"space\": \"109655\", \"uid\": \"3d761537-dc1e-4f28-b270-d0ec729a7857\", \"id\": \"159127741535241\"}-->"
+            },
+            "slug": "ghana",
+            "full_slug": "de/new-website/countries/ghana",
+            "sort_by_date": null,
+            "position": -20,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 159089068979075,
+            "meta_data": null,
+            "group_id": "2cfcc09e-258d-44de-9358-3e3cf46258c4",
+            "first_published_at": null,
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/countries/ghana",
+            "translated_slugs": [
+              {
+                "path": "new-website/countries/ghana",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/countries/ghana",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/countries/ghana",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Liberia",
+            "created_at": "2026-03-26T15:31:28.364Z",
+            "published_at": null,
+            "updated_at": "2026-03-26T15:32:10.063Z",
+            "id": 159127504372629,
+            "uuid": "3e95acfa-5773-4cf7-a126-6a2589c33074",
+            "content": {
+              "_uid": "537c19d3-5205-40fc-9b59-6b94323b1e9f",
+              "title": "Liberia",
+              "isoCode": "lr",
+              "component": "Country",
+              "heroImage": {
+                "id": 158389168950833,
+                "alt": "",
+                "name": "",
+                "focus": "1125x964:1126x965",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "",
+                  "title": "",
+                  "source": "",
+                  "copyright": ""
+                },
+                "is_external_url": false
+              },
+              "description": "Nice Country",
+              "_editable": "<!--#storyblok#{\"name\": \"Country\", \"space\": \"109655\", \"uid\": \"537c19d3-5205-40fc-9b59-6b94323b1e9f\", \"id\": \"159127504372629\"}-->"
+            },
+            "slug": "liberia",
+            "full_slug": "de/new-website/countries/liberia",
+            "sort_by_date": null,
+            "position": -10,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 159089068979075,
+            "meta_data": null,
+            "group_id": "5db6034b-7867-4030-ba12-37e3ef83aa33",
+            "first_published_at": null,
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/countries/liberia",
+            "translated_slugs": [
+              {
+                "path": "new-website/countries/liberia",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/countries/liberia",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/countries/liberia",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "Sierra Leone",
+            "created_at": "2026-03-26T13:00:58.743Z",
+            "published_at": null,
+            "updated_at": "2026-03-26T14:25:35.262Z",
+            "id": 159090519040967,
+            "uuid": "23fcc517-6433-44e4-a209-dfa4f741e3b3",
+            "content": {
+              "_uid": "dc944870-1eb1-4fa3-a895-1db158e3bf90",
+              "title": "Sierra Leone",
+              "isoCode": "sl",
+              "component": "Country",
+              "heroImage": {
+                "id": 158317739968950,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "Description": "sierra leone is awesome",
+              "description": "mega cools land",
+              "_editable": "<!--#storyblok#{\"name\": \"Country\", \"space\": \"109655\", \"uid\": \"dc944870-1eb1-4fa3-a895-1db158e3bf90\", \"id\": \"159090519040967\"}-->"
+            },
+            "slug": "sierra-leone",
+            "full_slug": "de/new-website/countries/sierra-leone",
+            "sort_by_date": null,
+            "position": 0,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 159089068979075,
+            "meta_data": null,
+            "group_id": "b1795895-2c11-4803-96e6-ce441b85247c",
+            "first_published_at": null,
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/countries/sierra-leone",
+            "translated_slugs": [
+              {
+                "path": "new-website/countries/sierra-leone",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/countries/sierra-leone",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/countries/sierra-leone",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          }
+        ],
+        "cv": 1774540531,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1774540531",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "6fbae1a71b9da72243ae87c71cbdad2dfab1cd4d12db466d67fcb17a1de9f487",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 337
+    }
+  ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
     {
       "body": {
@@ -537,7 +873,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774540531",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -551,7 +887,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 66
+      "durationMs": 363
     },
     {
       "body": {
@@ -1090,7 +1426,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774540531",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1104,225 +1440,26 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 65
+      "durationMs": 357
     }
   ],
-  "e4474cdc27f387f4c3faceaf99b74c13832755df0c5611a74c74b77b2d1d4f94": [
+  "f81aca3ec6d44399806dc5a93db743b9c0b5ed311be92da2a2124f3de9e09cb8": [
     {
       "body": {
-        "story": {
-          "name": "Example",
-          "created_at": "2026-01-29T13:53:24.402Z",
-          "published_at": "2026-02-06T13:22:41.038Z",
-          "updated_at": "2026-02-06T13:22:41.053Z",
-          "id": 139285317331160,
-          "uuid": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
-          "content": {
-            "_uid": "682b8ecd-1d3c-48b5-92c4-bbc0ccd70ba7",
-            "content": [
-              {
-                "_uid": "531b81b0-28d3-4b6a-91b3-eef75720e2ae",
-                "image": {
-                  "id": 85866835993871,
-                  "alt": "",
-                  "name": "",
-                  "focus": "1263x924:1264x925",
-                  "title": "",
-                  "source": "",
-                  "filename": "/assets/e2e-media-placeholder.svg",
-                  "copyright": "",
-                  "fieldtype": "asset",
-                  "meta_data": {
-                    "alt": "",
-                    "title": "",
-                    "source": "",
-                    "copyright": ""
-                  },
-                  "is_external_url": false
-                },
-                "layout": "imageLeft",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 2,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Image with text",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "This is a comprehensive and detailed description that can extend across multiple lines, offering crucial information in a clear and concise manner while ensuring that all necessary details are effectively communicated.",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "textStyle",
-                              "attrs": {
-                                "color": ""
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "component": "imageText"
-              },
-              {
-                "_uid": "0121978d-75b0-4cbd-ba3c-9479d4cd6390",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 1,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Example page",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                          "type": "text"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "component": "text"
-              },
-              {
-                "_uid": "839e9e9b-2a5e-4180-bb40-2c0128fcb31c",
-                "image": {
-                  "id": 130819426533088,
-                  "alt": "",
-                  "name": "",
-                  "focus": "",
-                  "title": "",
-                  "source": "",
-                  "filename": "/assets/e2e-media-placeholder.svg",
-                  "copyright": "",
-                  "fieldtype": "asset",
-                  "meta_data": {},
-                  "is_external_url": false
-                },
-                "layout": "imageRight",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 2,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Image with text",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "This is a comprehensive and detailed description that can extend across multiple lines, offering crucial information in a clear and concise manner while ensuring that all necessary details are effectively communicated.",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "textStyle",
-                              "attrs": {
-                                "color": ""
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "component": "imageText"
-              }
-            ],
-            "component": "page"
-          },
-          "slug": "example",
-          "full_slug": "new-website/example",
-          "sort_by_date": null,
-          "position": -30,
-          "tag_list": [],
-          "is_startpage": false,
-          "parent_id": 133906872082434,
-          "meta_data": null,
-          "group_id": "64828717-980e-4a89-8e6d-b14ccd18165d",
-          "first_published_at": "2026-01-29T13:54:36.144Z",
-          "release_id": null,
-          "lang": "default",
-          "path": null,
-          "alternates": [],
-          "default_full_slug": "new-website/example",
-          "translated_slugs": [
-            {
-              "path": "new-website/example",
-              "name": null,
-              "lang": "fr",
-              "published": null
-            },
-            {
-              "path": "new-website/example",
-              "name": null,
-              "lang": "it",
-              "published": null
-            },
-            {
-              "path": "new-website/example",
-              "name": null,
-              "lang": "de",
-              "published": null
-            }
-          ]
-        },
+        "stories": [],
         "cv": 1774540531,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&token=__TOKEN__&cv=1774540531",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "e4474cdc27f387f4c3faceaf99b74c13832755df0c5611a74c74b77b2d1d4f94",
+          "x-mock-hash": "f81aca3ec6d44399806dc5a93db743b9c0b5ed311be92da2a2124f3de9e09cb8",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1330,7 +1467,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 141
+      "durationMs": 713
     }
   ]
 }

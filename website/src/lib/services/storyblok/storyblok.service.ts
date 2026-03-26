@@ -1,5 +1,6 @@
-import type { Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Author, Country, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -12,6 +13,7 @@ export class StoryblokService extends BaseService {
 	private static readonly contentType = {
 		article: 'article',
 		author: 'author',
+		country: 'Country',
 		tag: 'topic',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
@@ -19,9 +21,29 @@ export class StoryblokService extends BaseService {
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
+	private static readonly countriesPath = `${NEW_WEBSITE_SLUG}/countries`;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
 		',',
 	);
+
+	private static isCountryStory(story: unknown): story is ISbStoryData<Country> {
+		if (!story || typeof story !== 'object' || !('content' in story)) {
+			return false;
+		}
+
+		const storyWithContent = story as { content?: unknown };
+		if (!storyWithContent.content || typeof storyWithContent.content !== 'object') {
+			return false;
+		}
+
+		const contentWithComponent = storyWithContent.content as { component?: string };
+
+		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.country.toLowerCase();
+	}
+
+	private static shouldFallbackToDraft(version: ISbStoriesParams['version']) {
+		return process.env.NODE_ENV !== 'production' && version === 'published';
+	}
 
 	private async getStoryParams(language: string): Promise<ISbStoriesParams> {
 		return {
@@ -175,6 +197,66 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to fetch tag: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getCountries(lang: string): Promise<ServiceResult<ISbStoryData<Country>[]>> {
+		try {
+			const baseParams = await this.getStoryParams(lang);
+			const params: ISbStoriesParams = {
+				...baseParams,
+				starts_with: `${StoryblokService.countriesPath}/`,
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+			let countries = data.filter((story) => StoryblokService.isCountryStory(story));
+
+			if (countries.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
+				const draftParams: ISbStoriesParams = {
+					...baseParams,
+					version: 'draft',
+					starts_with: `${StoryblokService.countriesPath}/`,
+				};
+				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
+				countries = draftData.filter((story) => StoryblokService.isCountryStory(story));
+			}
+
+			return this.resultOk(countries);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
+	async getCountryBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Country>>> {
+		const loadCountry = async (language: string) => {
+			const countries = await this.getCountries(language);
+			if (!countries.success) {
+				return undefined;
+			}
+
+			return countries.data.find((country) => {
+				const fullSlugTail = country.full_slug?.split('/').at(-1);
+
+				return country.slug === slug || fullSlugTail === slug;
+			});
+		};
+
+		try {
+			let story = await loadCountry(lang);
+			if (!story && lang !== defaultLanguage) {
+				story = await loadCountry(defaultLanguage);
+			}
+
+			if (!story) {
+				return this.resultFail(`Failed to fetch country: not found for slug '${slug}'`);
+			}
+
+			return this.resultOk(story);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch country: ${JSON.stringify(error)}`);
 		}
 	}
 
