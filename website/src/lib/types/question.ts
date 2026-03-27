@@ -5,7 +5,6 @@ export type Question = {
 	choicesTranslationKey?: string;
 	translationKey: string;
 	descriptionTranslationKey?: string;
-	insightTranslationKeys?: string[];
 };
 
 enum QuestionInputType {
@@ -47,7 +46,6 @@ const HAS_DEPENDENTS: Question = {
 	...BOOLEAN_CHOICES,
 	translationKey: 'survey.questions.hasDependentsTitleV1',
 	descriptionTranslationKey: 'survey.questions.hasDependentsDescV1',
-	insightTranslationKeys: ['survey.questions.impactInsights.hasDependentsV1'],
 };
 
 const NOT_EMPLOYED: Question = {
@@ -70,7 +68,6 @@ const SCHOOL_ATTENDANCE: Question = {
 	name: 'schoolAttendanceV1',
 	...BOOLEAN_CHOICES,
 	translationKey: 'survey.questions.attendingSchoolV1',
-	insightTranslationKeys: ['survey.questions.impactInsights.schoolAttendanceV1'],
 };
 
 const EMPLOYMENT_STATUS: Question = {
@@ -79,7 +76,6 @@ const EMPLOYMENT_STATUS: Question = {
 	choices: ['employed', 'selfEmployed', 'notEmployed', 'retired'],
 	translationKey: 'survey.questions.employmentStatusTitleV1',
 	choicesTranslationKey: 'survey.questions.employmentStatusChoices',
-	insightTranslationKeys: ['survey.questions.impactInsights.employmentStatusV1'],
 };
 const DISABILITY: Question = {
 	type: QuestionInputType.RADIO_GROUP,
@@ -93,7 +89,6 @@ const SKIPPING_MEALS: Question = {
 	name: 'skippingMealsV1',
 	...BOOLEAN_CHOICES,
 	translationKey: 'survey.questions.skippingMealsTitleV1',
-	insightTranslationKeys: ['survey.questions.impactInsights.skippingMealsV1'],
 };
 
 const SKIPPING_MEALS_LAST_WEEK: Question = {
@@ -115,14 +110,12 @@ const UNEXPECTED_EXPENSES_COVERED: Question = {
 	name: 'unexpectedExpensesCoveredV1',
 	...BOOLEAN_CHOICES,
 	translationKey: 'survey.questions.unexpectedExpensesCoveredTitleV1',
-	insightTranslationKeys: ['survey.questions.impactInsights.unexpectedExpensesCoveredV1'],
 };
 const SAVINGS: Question = {
 	type: QuestionInputType.RADIO_GROUP,
 	name: 'savingsV1',
 	...BOOLEAN_CHOICES,
 	translationKey: 'survey.questions.savingsTitleV1',
-	insightTranslationKeys: ['survey.questions.impactInsights.savingsV1'],
 };
 
 const DEBT_PERSONAL: Question = {
@@ -130,7 +123,6 @@ const DEBT_PERSONAL: Question = {
 	name: 'debtPersonalV1',
 	...BOOLEAN_CHOICES,
 	translationKey: 'survey.questions.debtPersonalTitleV1',
-	insightTranslationKeys: ['survey.questions.impactInsights.debtPersonalV1'],
 };
 
 const DEBT_PERSONAL_REPAY: Question = {
@@ -145,7 +137,6 @@ const DEBT_HOUSEHOLD: Question = {
 	name: 'debtHouseholdV1',
 	...BOOLEAN_CHOICES,
 	translationKey: 'survey.questions.debtHouseholdTitleV1',
-	insightTranslationKeys: ['survey.questions.impactInsights.debtHouseholdV1'],
 };
 const DEBT_HOUSEHOLD_WHO_REPAYS: Question = {
 	type: QuestionInputType.RADIO_GROUP,
@@ -174,7 +165,6 @@ const SPENDING: Question = {
 	translationKey: 'survey.questions.spendingTitleV1',
 	descriptionTranslationKey: 'survey.questions.spendingDescV1',
 	choicesTranslationKey: 'survey.questions.spendingChoices',
-	insightTranslationKeys: ['survey.questions.impactInsights.spendingV1'],
 };
 
 const PLANNED_ACHIEVEMENT_REMAINING: Question = {
@@ -182,7 +172,6 @@ const PLANNED_ACHIEVEMENT_REMAINING: Question = {
 	name: 'plannedAchievementRemainingV1',
 	translationKey: 'survey.questions.plannedAchievementRemainingTitleV1',
 	choices: [],
-	insightTranslationKeys: ['survey.questions.impactInsights.plannedAchievementRemainingV1'],
 };
 
 const IMPACT_FINANCIAL_INDEPENDENCE: Question = {
@@ -190,7 +179,6 @@ const IMPACT_FINANCIAL_INDEPENDENCE: Question = {
 	name: 'impactFinancialIndependenceV1',
 	...BOOLEAN_CHOICES,
 	translationKey: 'survey.questions.financialIndependenceTitleV1',
-	insightTranslationKeys: ['survey.questions.impactInsights.impactFinancialIndependenceV1'],
 };
 
 const IMPACT_LIFE_GENERAL: Question = {
@@ -198,7 +186,6 @@ const IMPACT_LIFE_GENERAL: Question = {
 	name: 'impactLifeGeneralV1',
 	translationKey: 'survey.questions.impactLifeGeneralTitleV1',
 	choices: [],
-	insightTranslationKeys: ['survey.questions.impactInsights.impactLifeGeneralV1'],
 };
 
 const ACHIEVEMENTS_ACHIEVED: Question = {
@@ -240,7 +227,6 @@ const LONG_ENOUGH: Question = {
 	name: 'longEnough',
 	translationKey: 'survey.questions.longEnoughTitleV1',
 	...BOOLEAN_CHOICES,
-	insightTranslationKeys: ['survey.questions.impactInsights.longEnough'],
 };
 
 const RANKING: Question = {
