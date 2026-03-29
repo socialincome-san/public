@@ -1,4 +1,4 @@
-import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { websiteCurrencies, WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 
@@ -11,17 +11,26 @@ import { TotalsSection } from './(sections)/totals-section';
 export const revalidate = 3600;
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
-type TransparencyFinancesParams = DefaultParams & { currency: string };
+const FIRST_YEAR = 2020;
 
-export default async function Page({ params }: DefaultLayoutProps<TransparencyFinancesParams>) {
+type TransparencyFinancesParams = DefaultParams & { currency: string };
+type TransparencyFinancesPageProps = {
+	params: Promise<TransparencyFinancesParams>;
+	searchParams: Promise<Record<string, string>>;
+};
+
+export default async function Page({ params, searchParams }: TransparencyFinancesPageProps) {
 	const { lang, currency } = await params;
+	const resolvedSearchParams = await searchParams;
+
+	const currentYear = DateTime.now().year;
+	const availableYears = Array.from({ length: currentYear - FIRST_YEAR + 1 }, (_, i) => FIRST_YEAR + i);
+	const requestedYear = parseInt(resolvedSearchParams.year, 10);
+	const selectedYear = availableYears.includes(requestedYear) ? requestedYear : currentYear;
 
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
-		const start = DateTime.now()
-			.minus({ months: 11 - i })
-			.startOf('month');
+		const start = DateTime.local(selectedYear, i + 1, 1);
 		const end = start.endOf('month');
-
 		return { start, end };
 	});
 	const requestedCurrency = currency.toUpperCase();
@@ -54,6 +63,8 @@ export default async function Page({ params }: DefaultLayoutProps<TransparencyFi
 				exchangeRate={exchangeRate}
 				currency={currencyCode}
 				lang={language}
+				selectedYear={selectedYear}
+				availableYears={availableYears}
 			/>
 			<CountriesSection countries={data.topCountries} exchangeRate={exchangeRate} currency={currencyCode} lang={language} />
 		</div>
