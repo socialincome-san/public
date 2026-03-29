@@ -55,7 +55,7 @@ const enableDraftModeAndAdaptCookie = async () => {
 			httpOnly: true,
 			path: '/',
 			secure: true,
-			sameSite: 'none'
+			sameSite: 'none',
 		});
 	}
 };
