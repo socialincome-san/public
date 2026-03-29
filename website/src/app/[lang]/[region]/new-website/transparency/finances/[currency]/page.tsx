@@ -31,6 +31,7 @@ export default async function Page({ params, searchParams }: TransparencyFinance
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
 		const start = DateTime.local(selectedYear, i + 1, 1);
 		const end = start.endOf('month');
+
 		return { start, end };
 	});
 	const requestedCurrency = currency.toUpperCase();
