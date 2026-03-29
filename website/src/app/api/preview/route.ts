@@ -3,7 +3,8 @@ import { makeLanguagePrefixRegex } from '@/lib/utils/regex';
 import { cookies, draftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
-const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag', NEW_WEBSITE_SLUG];
+const ALLOWED_SLUGS_PREFIXES = ['journal', 'person', 'tag', NEW_WEBSITE_SLUG];
+const SLUGS_UNDER_JOURNAL = ['tag'];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
@@ -54,7 +55,7 @@ const enableDraftModeAndAdaptCookie = async () => {
 			httpOnly: true,
 			path: '/',
 			secure: true,
-			sameSite: 'none',
+			sameSite: 'none'
 		});
 	}
 };
@@ -71,7 +72,8 @@ export const GET = async (request: Request) => {
 	const { searchParams } = new URL(request.url);
 	const secret = searchParams.get('secret');
 	const lang = getLanguage(searchParams.get('slug'));
-	const slug = removeLanguagePrefix(searchParams.get('slug'), lang);
+	const simpleSlug = removeLanguagePrefix(searchParams.get('slug'), lang);
+	const slug = SLUGS_UNDER_JOURNAL.some((prefix) => simpleSlug?.startsWith(prefix)) ? `journal/${simpleSlug}` : simpleSlug;
 
 	if (!validateSlug(slug)) {
 		return new Response('Invalid slug', { status: 400 });
@@ -83,7 +85,6 @@ export const GET = async (request: Request) => {
 	await enableDraftModeAndAdaptCookie();
 
 	const path = slug!.toLowerCase().startsWith(NEW_WEBSITE_SLUG) ? `${slug}/preview` : slug!;
-
 	const storyblokParams = new URLSearchParams();
 	for (const [key, value] of searchParams.entries()) {
 		if (key.startsWith('_storyblok')) {

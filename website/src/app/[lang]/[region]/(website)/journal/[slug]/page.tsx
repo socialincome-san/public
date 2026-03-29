@@ -3,7 +3,7 @@ import { OriginalLanguageLink } from '@/components/legacy/storyblok/OriginalLang
 import { RichTextRenderer } from '@/components/legacy/storyblok/RichTextRenderer';
 import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
-import type { Topic } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -42,7 +42,7 @@ const getArticleMemoized = cache(async (lang: string, slug: string) => {
 	return await services.storyblok.getArticle(lang, slug);
 });
 
-const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Topic>, variant: 'outline' | 'foreground') => {
+const badgeWithLink = (lang: string, region: string, tag: ISbStoryData<Tag>, variant: 'outline' | 'foreground') => {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge variant={variant} className="px-3 py-1 text-sm font-medium capitalize">
@@ -148,7 +148,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 							{articleData.subtitle}
 						</Typography>
 
-						<Link href={`/${lang}/${region}/journal/author/${author.slug}`}>
+						<Link href={`/${lang}/${region}/person/${author.slug}`}>
 							<div className="mt-8 flex items-center space-x-4">
 								<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />
 								<Typography
@@ -211,7 +211,7 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'foreground'))}
 					</div>
 
-					<Link href={`/${lang}/${region}/journal/author/${author.slug}`} className="no-underline">
+					<Link href={`/${lang}/${region}/person/${author.slug}`} className="no-underline">
 						<div className="mt-5 flex items-center space-x-4">
 							<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />
 							<Typography size="lg" as="span" className="ml-1" color="foreground">

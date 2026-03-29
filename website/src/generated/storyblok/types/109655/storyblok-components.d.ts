@@ -19,11 +19,11 @@ export interface Article {
   subtitle?: string;
   leadText?: string;
   content: StoryblokRichtext;
-  author: ISbStoryData<Author> | string;
+  author: ISbStoryData<Person> | string;
   displayInOverviewPage?: boolean;
   originalLanguage?: "" | "en" | "fr" | "de" | "it";
   type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
-  tags?: (ISbStoryData<Topic> | string)[];
+  tags?: (ISbStoryData<Tag> | string)[];
   showRelativeArticles?: boolean;
   footnotes?: StoryblokRichtext;
   component: "article";
@@ -40,7 +40,7 @@ export interface ArticleType {
   [k: string]: unknown;
 }
 
-export interface Author {
+export interface Person {
   fullName: string;
   firstName: string;
   lastName: string;
@@ -49,7 +49,7 @@ export interface Author {
   displayInOverviewPage?: boolean;
   githubName?: string;
   linkedinName?: string;
-  component: "author";
+  component: "person";
   _uid: string;
   [k: string]: unknown;
 }
@@ -236,13 +236,13 @@ export interface Text {
   [k: string]: unknown;
 }
 
-export interface Topic {
+export interface Tag {
   value: string;
   description?: string;
   displayInOverviewPage?: boolean;
-  component: "topic";
+  component: "tag";
   _uid: string;
   [k: string]: unknown;
 }
 
-export type ContentType = ActionButton | Article | ArticleType | Author | Layout | Page | ReferenceArticle | Topic;
+export type ContentType = ActionButton | Article | ArticleType | Person | Layout | Page | ReferenceArticle | Tag;
