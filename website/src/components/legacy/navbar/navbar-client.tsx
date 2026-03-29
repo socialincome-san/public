@@ -208,6 +208,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('about-us')}>
 							{aboutUs.title}
 						</Typography>
+						{navbarLink(`/${lang}/${region}/journal`, translations.journal)}
 						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('transparency')}>
 							{transparency.title}
 						</Typography>
@@ -234,7 +235,6 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							<DonateIcon className="mx-3 h-6 w-6" />
 							{navbarLink(`/${lang}/${region}/donate/individual`, translations.donate, 'text-accent text-2xl')}
 						</div>
-						{navbarLink(`/${lang}/${region}/journal`, translations.journal, 'ml-12 text-2xl')}
 					</div>
 				</div>
 			);
@@ -293,7 +293,6 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 						<DonateIcon className="h-4 w-4" />
 						{navbarLink(`/${lang}/${region}/donate/individual`, translations.donate, 'text-accent')}
 					</div>
-					{navbarLink(`/${lang}/${region}/journal`, translations.journal)}
 				</div>
 			</div>
 			<div className="flex flex-row items-center justify-evenly gap-x-10 overflow-visible">
@@ -316,6 +315,9 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 							</Link>
 						))}
 					</div>
+				</div>
+				<div className="flex flex-1 justify-center">
+					{navbarLink(`/${lang}/${region}/journal`, translations.journal, 'px-2 whitespace-nowrap')}
 				</div>
 				<div className="group/transparency relative flex flex-1 justify-start">
 					{navbarLink(transparency.href, transparency.title, 'px-2 whitespace-nowrap')}
