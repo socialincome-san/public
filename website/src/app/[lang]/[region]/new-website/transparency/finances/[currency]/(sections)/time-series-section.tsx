@@ -22,6 +22,11 @@ type TimeSeriesSectionProps = {
 	lang: WebsiteLanguage;
 	selectedYear: number;
 	availableYears: number[];
+	translations: {
+		yearlyOverview: string;
+		previousYear: string;
+		nextYear: string;
+	};
 };
 
 export const TimeSeriesSection = ({
@@ -31,6 +36,7 @@ export const TimeSeriesSection = ({
 	lang,
 	selectedYear,
 	availableYears,
+	translations,
 }: TimeSeriesSectionProps) => {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 	const router = useRouter();
@@ -69,7 +75,7 @@ export const TimeSeriesSection = ({
 		<section>
 			<div className="mb-6 flex items-center justify-between">
 				<div>
-					<h2 className="text-2xl font-semibold">Yearly overview</h2>
+					<h2 className="text-2xl font-semibold">{translations.yearlyOverview}</h2>
 					<p className="text-muted-foreground text-sm">{formatCurrencyLocale(yearlyTotal, currency, lang)}</p>
 				</div>
 				<div className="flex items-center gap-1">
@@ -78,7 +84,7 @@ export const TimeSeriesSection = ({
 						size="icon"
 						onClick={() => navigateToYear(selectedYear - 1)}
 						disabled={selectedYear <= minYear}
-						aria-label="Previous year"
+						aria-label={translations.previousYear}
 					>
 						<ChevronLeftIcon />
 					</Button>
@@ -88,7 +94,7 @@ export const TimeSeriesSection = ({
 						size="icon"
 						onClick={() => navigateToYear(selectedYear + 1)}
 						disabled={selectedYear >= maxYear}
-						aria-label="Next year"
+						aria-label={translations.nextYear}
 					>
 						<ChevronRightIcon />
 					</Button>

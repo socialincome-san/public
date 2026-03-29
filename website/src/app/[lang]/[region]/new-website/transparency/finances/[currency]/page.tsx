@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import { CountriesSection } from './(sections)/countries-section';
 import { TimeSeriesSection } from './(sections)/time-series-section';
 import { TotalsSection } from './(sections)/totals-section';
+import { getFinancesTranslator } from './translator';
 
 export const revalidate = 3600;
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
@@ -37,6 +38,8 @@ export default async function Page({ params, searchParams }: TransparencyFinance
 	const requestedCurrency = currency.toUpperCase();
 	const exchangeCurrency = isValidCurrency(requestedCurrency) ? requestedCurrency : 'USD';
 
+	const translator = await getFinancesTranslator(lang);
+
 	const [dataResult, rateResult] = await Promise.all([
 		services.transparency.getTransparencyData(timeRanges),
 		services.read.exchangeRate.getLatestRateForCurrency(exchangeCurrency),
@@ -66,6 +69,11 @@ export default async function Page({ params, searchParams }: TransparencyFinance
 				lang={language}
 				selectedYear={selectedYear}
 				availableYears={availableYears}
+				translations={{
+					yearlyOverview: translator.t('section-time-series.yearly-overview'),
+					previousYear: translator.t('section-time-series.previous-year'),
+					nextYear: translator.t('section-time-series.next-year'),
+				}}
 			/>
 			<CountriesSection countries={data.topCountries} exchangeRate={exchangeRate} currency={currencyCode} lang={language} />
 		</div>

@@ -30,6 +30,11 @@
 		"country-amount": "{{ value, currency }} de {{ contributorsCount }} contributeurs",
 		"all-countries": "Voir tous les pays"
 	},
+	"section-time-series": {
+		"yearly-overview": "Aperçu annuel",
+		"previous-year": "Année précédente",
+		"next-year": "Année suivante"
+	},
 	"section-4": {
 		"title": "Comment est utilisé l'argent?",
 		"amount-since-march-2020": "Montant total depuis mars 2020",

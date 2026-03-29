@@ -30,6 +30,11 @@
 		"country-amount": "{{ value, currency }} da {{ contributorsCount }} donatori",
 		"all-countries": "Mostra tutti i paesi"
 	},
+	"section-time-series": {
+		"yearly-overview": "Panoramica annuale",
+		"previous-year": "Anno precedente",
+		"next-year": "Anno successivo"
+	},
 	"section-4": {
 		"title": "Come vengono utilizzati i fondi?",
 		"amount-since-march-2020": "Importo totale da marzo 2020",
