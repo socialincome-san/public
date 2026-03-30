@@ -1,4 +1,4 @@
-import type { Article, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Article, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { toDateObject } from '@/lib/services/storyblok/storyblok.utils';
@@ -30,7 +30,7 @@ const tagUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = def
 };
 
 const authorUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
-	return `${url}/${lang}/${region}/journal/author/${slug}`;
+	return `${url}/${lang}/${region}/person/${slug}`;
 };
 
 const generateAlternativeLanguages = (alternativeArticles: Record<string, string[]>, slug: string) => {
@@ -60,7 +60,7 @@ const generateStoryblokArticlesSitemap = (
 	}));
 };
 
-const generateStoryblokAuthorsSitemap = (authors: ISbStoryData<Author>[]): MetadataRoute.Sitemap => {
+const generateStoryblokAuthorsSitemap = (authors: ISbStoryData<Person>[]): MetadataRoute.Sitemap => {
 	return authors.map((author) => ({
 		url: authorUrl(author.slug, defaultLanguage),
 		alternates: {
@@ -70,7 +70,7 @@ const generateStoryblokAuthorsSitemap = (authors: ISbStoryData<Author>[]): Metad
 	}));
 };
 
-const generateStoryblokTagSitemap = (tags: ISbStoryData<Topic>[]): MetadataRoute.Sitemap => {
+const generateStoryblokTagSitemap = (tags: ISbStoryData<Tag>[]): MetadataRoute.Sitemap => {
 	return tags.map((tag) => ({
 		url: tagUrl(tag.slug, defaultLanguage),
 		alternates: {
