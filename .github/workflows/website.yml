@@ -6,8 +6,6 @@ on:
       - "recipients_app/**"
   merge_group:
   push:
-    branches:
-      - main
     paths-ignore:
       - "recipients_app/**"
 
