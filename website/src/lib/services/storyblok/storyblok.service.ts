@@ -1,4 +1,4 @@
-import type { Country, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Country, LocalPartner, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
@@ -13,6 +13,7 @@ export class StoryblokService extends BaseService {
 	private static readonly contentType = {
 		article: 'article',
 		country: 'Country',
+		localPartner: 'Local Partner',
 		person: 'person',
 		tag: 'tag',
 	} as const;
@@ -22,6 +23,7 @@ export class StoryblokService extends BaseService {
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
 	private static readonly countriesPath = `${NEW_WEBSITE_SLUG}/countries`;
+	private static readonly localPartnersPath = `${NEW_WEBSITE_SLUG}/local-partners`;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
 		',',
 	);
@@ -39,6 +41,21 @@ export class StoryblokService extends BaseService {
 		const contentWithComponent = storyWithContent.content as { component?: string };
 
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.country.toLowerCase();
+	}
+
+	private static isLocalPartnerStory(story: unknown): story is ISbStoryData<LocalPartner> {
+		if (!story || typeof story !== 'object' || !('content' in story)) {
+			return false;
+		}
+
+		const storyWithContent = story as { content?: unknown };
+		if (!storyWithContent.content || typeof storyWithContent.content !== 'object') {
+			return false;
+		}
+
+		const contentWithComponent = storyWithContent.content as { component?: string };
+
+		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.localPartner.toLowerCase();
 	}
 
 	private static shouldFallbackToDraft(version: ISbStoriesParams['version']) {
@@ -257,6 +274,66 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to fetch country: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getLocalPartners(lang: string): Promise<ServiceResult<ISbStoryData<LocalPartner>[]>> {
+		try {
+			const baseParams = await this.getStoryParams(lang);
+			const params: ISbStoriesParams = {
+				...baseParams,
+				starts_with: `${StoryblokService.localPartnersPath}/`,
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+			let localPartners = data.filter((story) => StoryblokService.isLocalPartnerStory(story));
+
+			if (localPartners.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
+				const draftParams: ISbStoriesParams = {
+					...baseParams,
+					version: 'draft',
+					starts_with: `${StoryblokService.localPartnersPath}/`,
+				};
+				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
+				localPartners = draftData.filter((story) => StoryblokService.isLocalPartnerStory(story));
+			}
+
+			return this.resultOk(localPartners);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
+	async getLocalPartnerBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<LocalPartner>>> {
+		const loadLocalPartner = async (language: string) => {
+			const localPartners = await this.getLocalPartners(language);
+			if (!localPartners.success) {
+				return undefined;
+			}
+
+			return localPartners.data.find((localPartner) => {
+				const fullSlugTail = localPartner.full_slug?.split('/').at(-1);
+
+				return localPartner.slug === slug || fullSlugTail === slug;
+			});
+		};
+
+		try {
+			let story = await loadLocalPartner(lang);
+			if (!story && lang !== defaultLanguage) {
+				story = await loadLocalPartner(defaultLanguage);
+			}
+
+			if (!story) {
+				return this.resultFail(`Failed to fetch local partner: not found for slug '${slug}'`);
+			}
+
+			return this.resultOk(story);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch local partner: ${JSON.stringify(error)}`);
 		}
 	}
 

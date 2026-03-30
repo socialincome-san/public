@@ -161,6 +161,16 @@ export interface Layout {
   [k: string]: unknown;
 }
 
+export interface LocalPartner {
+  id?: string;
+  heroImage?: StoryblokAsset;
+  title?: string;
+  description?: string;
+  component: "Local Partner";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
@@ -174,6 +184,8 @@ export interface MenuItem {
 export interface MenuItemGroup {
   label: string;
   items?: MenuItem[];
+  overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  overviewLabel?: string;
   component: "menuItemGroup";
   _uid: string;
   [k: string]: unknown;
@@ -279,6 +291,7 @@ export type ContentType =
   | Country
   | Faq
   | Layout
+  | LocalPartner
   | Page
   | Person
   | ReferenceArticle

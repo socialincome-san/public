@@ -1,5 +1,6 @@
 import { Button } from '@/components/button';
 import { MakeDonationForm } from '@/components/make-donation-form';
+import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
@@ -26,66 +27,46 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	const heroImageAlt = country.content.heroImage?.alt ?? countryTitle;
 
 	return (
-		<section className="hero-video hero-video-block flex flex-col gap-6">
-			<div className="relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl bg-black md:min-h-160 md:rounded-b-[56px]">
-				{heroImageFilename ? (
-					<NextImage src={heroImageFilename} alt={heroImageAlt} fill className="object-cover" priority />
-				) : (
-					<div className="bg-primary/20 absolute inset-0" />
-				)}
-
-				<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/15" />
-
-				<div className="w-site-width max-w-content absolute inset-0 z-20 mx-auto flex flex-row items-center justify-between gap-4 text-white">
-					<div className="flex max-w-2xl flex-col gap-4 text-white">
-						<div className="flex items-center gap-4">
-							<NextImage
-								src={`/assets/flags/${isoCodeLower}.svg`}
-								alt={`${isoCode} flag`}
-								width={44}
-								height={32}
-								className="h-8 w-auto rounded-sm"
-							/>
-							<h1 className="text-4xl font-bold xl:text-6xl">{countryTitle}</h1>
-						</div>
-						<div className="flex flex-col gap-1 text-xl">
-							<p>
-								{activeProgramsCount}{' '}
-								{activeProgramsCount === 1
-									? translator.t('countries-page.active-program-singular')
-									: translator.t('countries-page.active-program-plural')}
-							</p>
-							<p>
-								{recipientsCount}{' '}
-								{recipientsCount === 1
-									? translator.t('countries-page.recipient-singular')
-									: translator.t('countries-page.recipient-plural')}
-							</p>
-						</div>
-						<div>
-							<Button variant="outline" size="lg" asChild>
-								<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/donate`}>
-									{translator.t('countries-page.donate-now')}
-								</NextLink>
-							</Button>
-						</div>
-					</div>
-					<div className="hidden shrink-0 lg:block">
-						<MakeDonationForm lang={lang} />
-					</div>
-				</div>
-			</div>
-
-			<div className="flex justify-center lg:hidden">
-				<MakeDonationForm lang={lang} />
-			</div>
-
-			<div className="w-site-width max-w-content mx-auto flex min-h-96 flex-col gap-4 px-6 py-8">
-				<h2 className="text-2xl font-semibold">
-					{translator.t('countries-page.about')} {countryTitle}
-				</h2>
-				<p className="text-base">{countryDescription ?? '-'}</p>
-			</div>
-		</section>
+		<LandingPageDetail
+			title={countryTitle}
+			description={countryDescription}
+			heroImageFilename={heroImageFilename}
+			heroImageAlt={heroImageAlt}
+			titleVisual={
+				<NextImage
+					src={`/assets/flags/${isoCodeLower}.svg`}
+					alt={`${isoCode} flag`}
+					width={44}
+					height={32}
+					className="h-8 w-auto rounded-sm"
+				/>
+			}
+			stats={[
+				{
+					value: activeProgramsCount,
+					label:
+						activeProgramsCount === 1
+							? translator.t('countries-page.active-program-singular')
+							: translator.t('countries-page.active-program-plural'),
+				},
+				{
+					value: recipientsCount,
+					label:
+						recipientsCount === 1
+							? translator.t('countries-page.recipient-singular')
+							: translator.t('countries-page.recipient-plural'),
+				},
+			]}
+			actions={
+				<Button variant="outline" size="lg" asChild>
+					<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/donate`}>
+						{translator.t('countries-page.donate-now')}
+					</NextLink>
+				</Button>
+			}
+			sideContent={<MakeDonationForm lang={lang} />}
+			mobileContent={<MakeDonationForm lang={lang} />}
+			descriptionHeading={`${translator.t('countries-page.about')} ${countryTitle}`}
+		/>
 	);
 };

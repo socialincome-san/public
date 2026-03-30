@@ -24,6 +24,96 @@ export class LocalPartnerReadService extends BaseService {
 		super(db, loggerInstance);
 	}
 
+	async getPublicLocalPartnerStatsById(
+		localPartnerId: string,
+	): Promise<ServiceResult<{ assignedRecipientsCount: number; waitingRecipientsCount: number }>> {
+		try {
+			const normalizedLocalPartnerId = localPartnerId.trim();
+			if (!normalizedLocalPartnerId) {
+				return this.resultFail('Missing local partner id');
+			}
+
+			const statsMapResult = await this.getPublicLocalPartnerStatsByIds([normalizedLocalPartnerId]);
+			if (!statsMapResult.success) {
+				return this.resultFail(statsMapResult.error);
+			}
+
+			const stats = statsMapResult.data[normalizedLocalPartnerId];
+			if (!stats) {
+				return this.resultFail('Local partner not found');
+			}
+
+			return this.resultOk(stats);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch local partner stats: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicLocalPartnerStatsByIds(
+		localPartnerIds: string[],
+	): Promise<ServiceResult<Record<string, { assignedRecipientsCount: number; waitingRecipientsCount: number }>>> {
+		try {
+			const normalizedLocalPartnerIds = [...new Set(localPartnerIds.map((id) => id.trim()).filter(Boolean))];
+			if (!normalizedLocalPartnerIds.length) {
+				return this.resultOk({});
+			}
+
+			const [partners, assignedRecipientGroups, waitingRecipientGroups] = await Promise.all([
+				this.db.localPartner.findMany({
+					where: { id: { in: normalizedLocalPartnerIds } },
+					select: { id: true },
+				}),
+				this.db.recipient.groupBy({
+					by: ['localPartnerId'],
+					where: {
+						localPartnerId: { in: normalizedLocalPartnerIds },
+						programId: { not: null },
+					},
+					_count: { _all: true },
+				}),
+				this.db.recipient.groupBy({
+					by: ['localPartnerId'],
+					where: {
+						localPartnerId: { in: normalizedLocalPartnerIds },
+						programId: null,
+					},
+					_count: { _all: true },
+				}),
+			]);
+
+			const statsByLocalPartnerId: Record<string, { assignedRecipientsCount: number; waitingRecipientsCount: number }> =
+				Object.fromEntries(
+					partners.map((partner) => [
+						partner.id,
+						{
+							assignedRecipientsCount: 0,
+							waitingRecipientsCount: 0,
+						},
+					]),
+				);
+
+			for (const group of assignedRecipientGroups) {
+				if (statsByLocalPartnerId[group.localPartnerId]) {
+					statsByLocalPartnerId[group.localPartnerId].assignedRecipientsCount = group._count._all;
+				}
+			}
+
+			for (const group of waitingRecipientGroups) {
+				if (statsByLocalPartnerId[group.localPartnerId]) {
+					statsByLocalPartnerId[group.localPartnerId].waitingRecipientsCount = group._count._all;
+				}
+			}
+
+			return this.resultOk(statsByLocalPartnerId);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch local partner stats map: ${JSON.stringify(error)}`);
+		}
+	}
+
 	private buildLocalPartnerOrderBy(query: LocalPartnerTableQuery): Prisma.LocalPartnerOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, [

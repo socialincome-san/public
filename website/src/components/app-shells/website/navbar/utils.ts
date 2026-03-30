@@ -21,4 +21,4 @@ export const isMenuItem = (item: NavbarMenuItem): item is MenuItem => item.compo
 export const isDropdownItem = (item: NavbarMenuItem): item is DropdownItem => item.component === 'dropdownItem';
 
 export const hasDropdownChildren = (item: DropdownItem): boolean =>
-	item.menuItemGroups.some((group) => (group.items?.length ?? 0) > 0);
+	item.menuItemGroups.some((group) => (group.items?.length ?? 0) > 0 || Boolean(group.overviewLink && group.overviewLabel));
