@@ -30,4 +30,3 @@ export default async function LocalPartnerPage({ params }: DefaultLayoutPropsWit
 		/>
 	);
 }
-

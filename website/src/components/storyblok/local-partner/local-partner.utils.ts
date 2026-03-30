@@ -18,4 +18,3 @@ export const getLocalPartnerSlug = (localPartner: LocalPartnerStory) => {
 export const getLocalPartnerTitle = (localPartner: LocalPartner) => {
 	return localPartner.title?.trim() ?? getLocalPartnerId(localPartner);
 };
-

@@ -1,7 +1,7 @@
+import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
 import NextImage from 'next/image';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountrySlug, getCountryTitle } from './country.utils';

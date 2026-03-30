@@ -51,11 +51,7 @@ export const LocalPartnersOverview = ({ localPartners, statsById, lang, region }
 												},
 												{
 													value: stats.waitingRecipientsCount,
-													label: formatLabel(
-														stats.waitingRecipientsCount,
-														'recipient waiting',
-														'recipients waiting',
-													),
+													label: formatLabel(stats.waitingRecipientsCount, 'recipient waiting', 'recipients waiting'),
 												},
 											]
 										: []
@@ -68,4 +64,3 @@ export const LocalPartnersOverview = ({ localPartners, statsById, lang, region }
 		</div>
 	);
 };
-

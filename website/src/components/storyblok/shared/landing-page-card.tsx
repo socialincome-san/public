@@ -49,4 +49,3 @@ export const LandingPageCard = ({ href, title, heroImageFilename, heroImageAlt, 
 		</li>
 	);
 };
-
