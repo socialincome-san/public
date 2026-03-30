@@ -123,5 +123,14 @@
 		"recipient-plural": "beneficiari",
 		"donate-now": "Dona ora",
 		"about": "Informazioni su"
+	},
+	"local-partners-page": {
+		"title": "Partner locali",
+		"empty": "Nessun partner locale trovato.",
+		"recipient-in-program-singular": "beneficiario in un programma",
+		"recipient-in-program-plural": "beneficiari in un programma",
+		"recipient-waiting-singular": "beneficiario in attesa",
+		"recipient-waiting-plural": "beneficiari in attesa",
+		"about": "Informazioni su"
 	}
 }

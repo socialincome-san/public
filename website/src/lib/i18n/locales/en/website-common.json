@@ -123,5 +123,14 @@
 		"recipient-plural": "recipients",
 		"donate-now": "Donate now",
 		"about": "About"
+	},
+	"local-partners-page": {
+		"title": "Local partners",
+		"empty": "No local partners found.",
+		"recipient-in-program-singular": "recipient in a program",
+		"recipient-in-program-plural": "recipients in a program",
+		"recipient-waiting-singular": "recipient waiting",
+		"recipient-waiting-plural": "recipients waiting",
+		"about": "About"
 	}
 }

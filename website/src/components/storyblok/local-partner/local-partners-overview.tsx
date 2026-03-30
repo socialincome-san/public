@@ -1,4 +1,5 @@
 import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
+import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { LocalPartnerStory } from './local-partner.types';
@@ -11,16 +12,14 @@ type Props = {
 	region: WebsiteRegion;
 };
 
-const formatLabel = (value: number, singular: string, plural: string) => {
-	return value === 1 ? singular : plural;
-};
+export const LocalPartnersOverview = async ({ localPartners, statsById, lang, region }: Props) => {
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
-export const LocalPartnersOverview = ({ localPartners, statsById, lang, region }: Props) => {
 	return (
 		<div className="w-site-width max-w-content mx-auto flex w-full flex-col gap-6 px-6 py-8">
-			<h1 className="text-3xl font-semibold">Local partners</h1>
+			<h1 className="text-3xl font-semibold">{translator.t('local-partners-page.title')}</h1>
 			{localPartners.length === 0 ? (
-				<p className="text-muted-foreground">No local partners available yet.</p>
+				<p className="text-muted-foreground">{translator.t('local-partners-page.empty')}</p>
 			) : (
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{localPartners.map((localPartner) => {
@@ -43,15 +42,17 @@ export const LocalPartnersOverview = ({ localPartners, statsById, lang, region }
 										? [
 												{
 													value: stats.assignedRecipientsCount,
-													label: formatLabel(
-														stats.assignedRecipientsCount,
-														'recipient in a program',
-														'recipients in a program',
-													),
+													label:
+														stats.assignedRecipientsCount === 1
+															? translator.t('local-partners-page.recipient-in-program-singular')
+															: translator.t('local-partners-page.recipient-in-program-plural'),
 												},
 												{
 													value: stats.waitingRecipientsCount,
-													label: formatLabel(stats.waitingRecipientsCount, 'recipient waiting', 'recipients waiting'),
+													label:
+														stats.waitingRecipientsCount === 1
+															? translator.t('local-partners-page.recipient-waiting-singular')
+															: translator.t('local-partners-page.recipient-waiting-plural'),
 												},
 											]
 										: []
