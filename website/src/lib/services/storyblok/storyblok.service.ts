@@ -1,4 +1,4 @@
-import type { Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Country, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
@@ -12,6 +12,7 @@ import type { ResolvedArticle } from './storyblok.utils';
 export class StoryblokService extends BaseService {
 	private static readonly contentType = {
 		article: 'article',
+		country: 'Country',
 		person: 'person',
 		tag: 'tag',
 	} as const;
@@ -259,7 +260,7 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getPerson(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Author>>> {
+	async getPerson(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Person>>> {
 		try {
 			const res = await this.withLanguageFallback(
 				async (l, s) => getStoryblokApi().get(`cdn/stories/person/${s}`, await this.getStoryParams(l)),
@@ -271,7 +272,7 @@ export class StoryblokService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Failed to fetch author: ${JSON.stringify(error)}`);
+			return this.resultFail(`Failed to fetch person: ${JSON.stringify(error)}`);
 		}
 	}
 
