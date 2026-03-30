@@ -1,4 +1,4 @@
-import type { Author } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
@@ -17,7 +17,7 @@ const AUTHOR_IMAGE_TARGET_HEIGHT = 300;
 const AUTHOR_IMAGE_TARGET_WIDTH = 300;
 
 const StoryblokAuthorImage = (props: {
-	author: ISbStoryData<Author>;
+	author: ISbStoryData<Person>;
 	size?: Size;
 	className?: string;
 	lang: string;

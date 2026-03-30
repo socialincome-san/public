@@ -19,11 +19,11 @@ export interface Article {
   subtitle?: string;
   leadText?: string;
   content: StoryblokRichtext;
-  author: ISbStoryData<Author> | string;
+  author: ISbStoryData<Author> | ISbStoryData<Person> | string;
   displayInOverviewPage?: boolean;
   originalLanguage?: "" | "en" | "fr" | "de" | "it";
   type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
-  tags?: (ISbStoryData<Topic> | string)[];
+  tags?: (ISbStoryData<Tag> | string)[];
   showRelativeArticles?: boolean;
   footnotes?: StoryblokRichtext;
   component: "article";
@@ -36,20 +36,6 @@ export interface ArticleType {
   description?: string;
   displayInOverviewPage?: boolean;
   component: "articleType";
-  _uid: string;
-  [k: string]: unknown;
-}
-
-export interface Author {
-  fullName: string;
-  firstName: string;
-  lastName: string;
-  avatar: StoryblokAsset;
-  bio?: string;
-  displayInOverviewPage?: boolean;
-  githubName?: string;
-  linkedinName?: string;
-  component: "author";
   _uid: string;
   [k: string]: unknown;
 }
@@ -227,6 +213,20 @@ export interface Page {
   [k: string]: unknown;
 }
 
+export interface Person {
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  avatar: StoryblokAsset;
+  bio?: string;
+  displayInOverviewPage?: boolean;
+  githubName?: string;
+  linkedinName?: string;
+  component: "person";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface QuotedText {
   text: string;
   author?: string;
@@ -256,18 +256,18 @@ export interface ReferencesGroup {
   [k: string]: unknown;
 }
 
-export interface Text {
-  content?: StoryblokRichtext;
-  component: "text";
+export interface Tag {
+  value: string;
+  description?: string;
+  displayInOverviewPage?: boolean;
+  component: "tag";
   _uid: string;
   [k: string]: unknown;
 }
 
-export interface Topic {
-  value: string;
-  description?: string;
-  displayInOverviewPage?: boolean;
-  component: "topic";
+export interface Text {
+  content?: StoryblokRichtext;
+  component: "text";
   _uid: string;
   [k: string]: unknown;
 }
@@ -276,10 +276,10 @@ export type ContentType =
   | ActionButton
   | Article
   | ArticleType
-  | Author
   | Country
   | Faq
   | Layout
   | Page
+  | Person
   | ReferenceArticle
-  | Topic;
+  | Tag;
