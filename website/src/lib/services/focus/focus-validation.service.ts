@@ -2,7 +2,12 @@ import { PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { FocusFormCreateInput, FocusFormUpdateInput, focusCreateInputSchema, focusUpdateInputSchema } from './focus-form-input';
+import {
+	FocusFormCreateInput,
+	FocusFormUpdateInput,
+	focusCreateInputSchema,
+	focusUpdateInputSchema,
+} from './focus-form-input';
 
 type FocusUpdateUniquenessContext = {
 	focusId: string;

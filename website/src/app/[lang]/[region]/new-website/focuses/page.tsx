@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { FocusesOverview } from '@/components/storyblok/focus/focuses-overview';
 import { getFocusId } from '@/components/storyblok/focus/focus.utils';
+import { FocusesOverview } from '@/components/storyblok/focus/focuses-overview';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 

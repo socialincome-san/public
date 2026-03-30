@@ -2,12 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
-import {
-	createFocusAction,
-	deleteFocusAction,
-	getFocusAction,
-	updateFocusAction,
-} from '@/lib/server-actions/focus-action';
+import { createFocusAction, deleteFocusAction, getFocusAction, updateFocusAction } from '@/lib/server-actions/focus-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { FocusPayload } from '@/lib/services/focus/focus.types';
 import { useEffect, useState, useTransition } from 'react';

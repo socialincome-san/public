@@ -3,8 +3,8 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutInterval, Profile } from '@/generated/prisma/enums';
-import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
+import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import {
 	deleteProgramAction,
 	getProgramOrganizationOptionsAction,
