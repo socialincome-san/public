@@ -30,6 +30,11 @@
 		"country-amount": "{{ value, currency }} von {{ contributorsCount }} Spender:innen",
 		"all-countries": "Alle Länder anzeigen"
 	},
+	"section-time-series": {
+		"yearly-overview": "Jahresübersicht",
+		"previous-year": "Vorheriges Jahr",
+		"next-year": "Nächstes Jahr"
+	},
 	"section-4": {
 		"title": "Wie werden Spenden ausbezahlt?",
 		"amount-since-march-2020": "Insgesamt seit März 2020",

@@ -1,10 +1,13 @@
 'use client';
 
+import { Button } from '@/components/button';
 import { Card } from '@/components/card';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { DateTime } from 'luxon';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 type SerializedTimeRange = {
@@ -17,10 +20,42 @@ type TimeSeriesSectionProps = {
 	exchangeRate: number;
 	currency: WebsiteCurrency;
 	lang: WebsiteLanguage;
+	selectedYear: number;
+	availableYears: number[];
+	translations: {
+		yearlyOverview: string;
+		previousYear: string;
+		nextYear: string;
+	};
 };
 
-export const TimeSeriesSection = ({ timeRanges, exchangeRate, currency, lang }: TimeSeriesSectionProps) => {
+export const TimeSeriesSection = ({
+	timeRanges,
+	exchangeRate,
+	currency,
+	lang,
+	selectedYear,
+	availableYears,
+	translations,
+}: TimeSeriesSectionProps) => {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+
+	const minYear = availableYears[0];
+	const maxYear = availableYears[availableYears.length - 1];
+
+	const navigateToYear = (year: number) => {
+		const nextParams = new URLSearchParams(searchParams.toString());
+		if (year === maxYear) {
+			nextParams.delete('year');
+		} else {
+			nextParams.set('year', String(year));
+		}
+		const query = nextParams.toString();
+		router.push(query ? `${pathname}?${query}` : pathname);
+	};
 
 	const convertedRanges = timeRanges.map((range) => {
 		const start = DateTime.fromISO(range.startIso, { setZone: true });
@@ -34,10 +69,37 @@ export const TimeSeriesSection = ({ timeRanges, exchangeRate, currency, lang }: 
 	});
 
 	const maxValue = Math.max(...convertedRanges.map((r) => r.total), 1);
+	const yearlyTotal = convertedRanges.reduce((sum, r) => sum + r.total, 0);
 
 	return (
 		<section>
-			<h2 className="mb-6 text-2xl font-semibold">Monthly Contributions</h2>
+			<div className="mb-6 flex items-center justify-between">
+				<div>
+					<h2 className="text-2xl font-semibold">{translations.yearlyOverview}</h2>
+					<p className="text-muted-foreground text-sm">{formatCurrencyLocale(yearlyTotal, currency, lang)}</p>
+				</div>
+				<div className="flex items-center gap-1">
+					<Button
+						variant="ghost"
+						size="icon"
+						onClick={() => navigateToYear(selectedYear - 1)}
+						disabled={selectedYear <= minYear}
+						aria-label={translations.previousYear}
+					>
+						<ChevronLeftIcon />
+					</Button>
+					<span className="min-w-12 text-center text-sm font-medium">{selectedYear}</span>
+					<Button
+						variant="ghost"
+						size="icon"
+						onClick={() => navigateToYear(selectedYear + 1)}
+						disabled={selectedYear >= maxYear}
+						aria-label={translations.nextYear}
+					>
+						<ChevronRightIcon />
+					</Button>
+				</div>
+			</div>
 			<Card>
 				<div className="flex h-64 items-end gap-2">
 					{convertedRanges.map((range, index) => {

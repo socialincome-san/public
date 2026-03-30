@@ -30,6 +30,11 @@
 		"country-amount": "{{ value, currency }} from {{ contributorsCount }} contributors",
 		"all-countries": "Show All Countries"
 	},
+	"section-time-series": {
+		"yearly-overview": "Yearly overview",
+		"previous-year": "Previous year",
+		"next-year": "Next year"
+	},
 	"section-4": {
 		"title": "How are the funds used?",
 		"amount-since-march-2020": "Total amount since March 2020",
