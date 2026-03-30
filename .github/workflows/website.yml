@@ -192,6 +192,7 @@ jobs:
           file_pattern: |
             **/__screenshots__/**
             **/snapshots/**
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Upload Test Report (only if failure)
         if: failure()
