@@ -48,7 +48,7 @@
 			"city": "Localité",
 			"zip": "Code postal",
 			"name": "Nom",
-			"causes": "Critères"
+			"focuses": "Axes"
 		}
 	},
 	"sections": {

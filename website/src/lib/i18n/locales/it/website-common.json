@@ -132,5 +132,18 @@
 		"recipient-waiting-singular": "beneficiario in attesa",
 		"recipient-waiting-plural": "beneficiari in attesa",
 		"about": "Informazioni su"
+	},
+	"focuses-page": {
+		"title": "Focus",
+		"empty": "Nessun focus trovato.",
+		"program-singular": "programma",
+		"program-plural": "programmi",
+		"active-program-singular": "programma attivo",
+		"active-program-plural": "programmi attivi",
+		"recipient-in-program-singular": "beneficiario in un programma",
+		"recipient-in-program-plural": "beneficiari in un programma",
+		"candidate-singular": "candidato",
+		"candidate-plural": "candidati",
+		"about": "Informazioni su"
 	}
 }

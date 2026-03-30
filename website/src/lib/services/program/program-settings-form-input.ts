@@ -1,4 +1,4 @@
-import { Cause, PayoutInterval, Profile } from '@/generated/prisma/enums';
+import { PayoutInterval, Profile } from '@/generated/prisma/enums';
 import z from 'zod';
 
 const positiveInteger = z.preprocess(
@@ -28,7 +28,7 @@ export const programSettingsUpdateInputSchema = z.object({
 	programDurationInMonths: positiveInteger,
 	payoutPerInterval: positiveNumber,
 	payoutInterval: z.nativeEnum(PayoutInterval),
-	targetCauses: z.array(z.nativeEnum(Cause)).default([]),
+	targetFocuses: z.array(z.string().trim().min(1)).default([]),
 	targetProfiles: z.array(z.nativeEnum(Profile)).default([]),
 	ownerOrganizationIds: z.array(z.string().trim().min(1)).default([]),
 	operatorOrganizationIds: z.array(z.string().trim().min(1)).min(1, 'At least one operator organization is required.'),

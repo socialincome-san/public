@@ -141,7 +141,11 @@ export class ProgramReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
-					targetCauses: true,
+					targetFocuses: {
+						select: {
+							focusId: true,
+						},
+					},
 					amountOfRecipientsForStart: true,
 					programDurationInMonths: true,
 					payoutPerInterval: true,
@@ -209,7 +213,7 @@ export class ProgramReadService extends BaseService {
 				countryIsoCode: program.country.isoCode,
 				ownerOrganizationName: ownerAccess?.organization.name ?? null,
 				operatorOrganizationName: operatorAccess?.organization.name ?? null,
-				targetCauses: program.targetCauses,
+				targetFocuses: program.targetFocuses.map((focus) => focus.focusId),
 				amountOfRecipientsForStart: program.amountOfRecipientsForStart,
 				programDurationInMonths: program.programDurationInMonths,
 				payoutPerInterval: Number(program.payoutPerInterval),
@@ -295,7 +299,11 @@ export class ProgramReadService extends BaseService {
 					programDurationInMonths: true,
 					payoutPerInterval: true,
 					payoutInterval: true,
-					targetCauses: true,
+					targetFocuses: {
+						select: {
+							focusId: true,
+						},
+					},
 					targetProfiles: true,
 					programAccesses: {
 						select: {
@@ -322,7 +330,7 @@ export class ProgramReadService extends BaseService {
 				programDurationInMonths: program.programDurationInMonths,
 				payoutPerInterval: Number(program.payoutPerInterval),
 				payoutInterval: program.payoutInterval,
-				targetCauses: program.targetCauses,
+				targetFocuses: program.targetFocuses.map((focus) => focus.focusId),
 				targetProfiles: program.targetProfiles,
 				ownerOrganizationIds: program.programAccesses
 					.filter((access) => access.permission === ProgramPermission.owner)

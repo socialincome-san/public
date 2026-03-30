@@ -116,6 +116,16 @@ export interface FaqSelection {
   [k: string]: unknown;
 }
 
+export interface Focus {
+  id?: string;
+  heroImage?: StoryblokAsset;
+  title?: string;
+  description?: string;
+  component: "Focus";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface HeroVideo {
   heading?: string;
   description?: string;
@@ -290,6 +300,7 @@ export type ContentType =
   | ArticleType
   | Country
   | Faq
+  | Focus
   | Layout
   | LocalPartner
   | Page

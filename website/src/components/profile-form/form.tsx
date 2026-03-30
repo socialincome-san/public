@@ -6,15 +6,15 @@ import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
-import { Cause, ContributorReferralSource, Gender } from '@/generated/prisma/enums';
+import { ContributorReferralSource, Gender } from '@/generated/prisma/enums';
+import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
-import { UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { MultiSelect, MultiSelectOption } from '../multi-select';
@@ -31,6 +31,7 @@ type Props = {
 
 export const ProfileForm = ({ session, translations, isNewsletterSubscribed = false }: Props) => {
 	const [errorMessage, setErrorMessage] = useState('');
+	const [focusOptions, setFocusOptions] = useState<MultiSelectOption[]>([]);
 
 	const form = useForm<ProfileFormInput, unknown, ProfileFormOutput>({
 		resolver: zodResolver(profileFormSchema) as unknown as Resolver<ProfileFormInput, unknown, ProfileFormOutput>,
@@ -56,10 +57,15 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 		form.reset(values);
 	};
 
-	const causeOptions: MultiSelectOption[] = Object.values(Cause).map((c) => ({
-		value: c,
-		label: c.replace(UNDERSCORE_REGEX, ' ').toLowerCase(),
-	}));
+	useEffect(() => {
+		void (async () => {
+			const result = await getFocusOptionsAction();
+			if (!result.success) {
+				return;
+			}
+			setFocusOptions(result.data.map((focus) => ({ value: focus.id, label: focus.name })));
+		})();
+	}, []);
 
 	return (
 		<Form {...form}>
@@ -84,14 +90,14 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 
 						<FormField
 							control={form.control}
-							name="causes"
+							name="focuses"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>{translations.causes}</FormLabel>
+									<FormLabel>{translations.focuses}</FormLabel>
 									<MultiSelect
-										options={causeOptions}
+										options={focusOptions}
 										defaultValue={field.value ?? []}
-										onValueChange={(v) => field.onChange(v as Cause[])}
+										onValueChange={(v) => field.onChange(v)}
 										disabled
 										placeholder={translations.selectOptionPlaceholder}
 									/>

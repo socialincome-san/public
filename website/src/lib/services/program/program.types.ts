@@ -1,4 +1,4 @@
-import { Cause, CountryCode, Currency, PayoutInterval, Profile, ProgramPermission } from '@/generated/prisma/client';
+import { CountryCode, Currency, PayoutInterval, Profile, ProgramPermission } from '@/generated/prisma/client';
 
 export type ProgramWallet = {
 	id: string;
@@ -26,7 +26,7 @@ export type CreateProgramInput = {
 	programDurationInMonths: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
-	targetCauses: Cause[];
+	targetFocuses: string[];
 	targetProfiles: Profile[];
 };
 
@@ -42,7 +42,7 @@ export type PublicProgramDetails = {
 	countryIsoCode: string;
 	ownerOrganizationName: string | null;
 	operatorOrganizationName: string | null;
-	targetCauses: Cause[];
+	targetFocuses: string[];
 	amountOfRecipientsForStart: number | null;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
@@ -68,7 +68,7 @@ export type ProgramSettingsPayload = {
 	programDurationInMonths: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
-	targetCauses: Cause[];
+	targetFocuses: string[];
 	targetProfiles: Profile[];
 	ownerOrganizationIds: string[];
 	operatorOrganizationIds: string[];
@@ -86,7 +86,7 @@ export type ProgramSettingsUpdateInput = {
 	programDurationInMonths: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
-	targetCauses: Cause[];
+	targetFocuses: string[];
 	targetProfiles: Profile[];
 	ownerOrganizationIds: string[];
 	operatorOrganizationIds: string[];

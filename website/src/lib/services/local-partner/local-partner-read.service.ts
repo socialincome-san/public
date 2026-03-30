@@ -1,6 +1,5 @@
-import { Cause, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
-import { UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -161,7 +160,7 @@ export class LocalPartnerReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
-					causes: true,
+					focuses: { select: { focusId: true } },
 					contact: {
 						select: {
 							id: true,
@@ -184,7 +183,12 @@ export class LocalPartnerReadService extends BaseService {
 				return this.resultFail('Could not get local partner');
 			}
 
-			return this.resultOk(partner);
+			return this.resultOk({
+				id: partner.id,
+				name: partner.name,
+				focuses: partner.focuses.map((focus) => focus.focusId),
+				contact: partner.contact,
+			});
 		} catch (error) {
 			this.logger.error(error);
 
@@ -223,7 +227,6 @@ export class LocalPartnerReadService extends BaseService {
 			}
 
 			const search = query.search.trim();
-			const matchingCauses = Object.values(Cause).filter((cause) => cause.toLowerCase().includes(search.toLowerCase()));
 			const where = search
 				? {
 						OR: [
@@ -234,7 +237,13 @@ export class LocalPartnerReadService extends BaseService {
 							{ contact: { email: { contains: search, mode: 'insensitive' as const } } },
 							{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' as const } } },
 							{ contact: { phone: { number: { contains: search, mode: 'insensitive' as const } } } },
-							...(matchingCauses.length > 0 ? [{ causes: { hasSome: matchingCauses } }] : []),
+							{
+								focuses: {
+									some: {
+										focus: { name: { contains: search, mode: 'insensitive' as const } },
+									},
+								},
+							},
 						],
 					}
 				: undefined;
@@ -259,7 +268,11 @@ export class LocalPartnerReadService extends BaseService {
 								firebaseAuthUserId: true,
 							},
 						},
-						causes: true,
+						focuses: {
+							select: {
+								focus: { select: { name: true } },
+							},
+						},
 						_count: { select: { recipients: true } },
 					},
 					orderBy: this.buildLocalPartnerOrderBy(query),
@@ -276,7 +289,7 @@ export class LocalPartnerReadService extends BaseService {
 				email: partner.contact?.email ?? null,
 				firebaseAuthUserId: partner.account.firebaseAuthUserId,
 				contactNumber: partner.contact?.phone?.number ?? null,
-				causes: partner.causes.map((cause) => cause.replace(UNDERSCORE_REGEX, ' ')).join(', '),
+				focuses: partner.focuses.map((focus) => focus.focus.name).join(', '),
 				recipientsCount: partner._count.recipients,
 				createdAt: partner.createdAt,
 			}));
@@ -314,7 +327,11 @@ export class LocalPartnerReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
-					causes: true,
+					focuses: {
+						select: {
+							focusId: true,
+						},
+					},
 					contact: {
 						select: {
 							gender: true,
@@ -344,7 +361,7 @@ export class LocalPartnerReadService extends BaseService {
 				type: 'local-partner',
 				id: partner.id,
 				name: partner.name,
-				causes: partner.causes,
+				focuses: partner.focuses.map((focus) => focus.focusId),
 				gender: partner.contact?.gender ?? null,
 				email: partner.contact?.email ?? null,
 				firstName: partner.contact?.firstName ?? null,

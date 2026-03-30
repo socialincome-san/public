@@ -132,5 +132,18 @@
 		"recipient-waiting-singular": "bénéficiaire en attente",
 		"recipient-waiting-plural": "bénéficiaires en attente",
 		"about": "À propos de"
+	},
+	"focuses-page": {
+		"title": "Axes",
+		"empty": "Aucun axe trouvé.",
+		"program-singular": "programme",
+		"program-plural": "programmes",
+		"active-program-singular": "programme actif",
+		"active-program-plural": "programmes actifs",
+		"recipient-in-program-singular": "bénéficiaire dans un programme",
+		"recipient-in-program-plural": "bénéficiaires dans un programme",
+		"candidate-singular": "candidat",
+		"candidate-plural": "candidats",
+		"about": "À propos de"
 	}
 }

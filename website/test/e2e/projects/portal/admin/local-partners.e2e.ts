@@ -92,7 +92,6 @@ test('edit local partner and remove phone number', async ({ page }) => {
 	await prisma.localPartner.create({
 		data: {
 			name: partnerName,
-			causes: [],
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-local-partner-uid-${unique}`,
@@ -150,7 +149,6 @@ test('edit local partner and remove address', async ({ page }) => {
 	const created = await prisma.localPartner.create({
 		data: {
 			name: partnerName,
-			causes: [],
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-local-partner-uid-address-${unique}`,
@@ -220,7 +218,6 @@ test('delete local partner from admin table', async ({ page }) => {
 	const created = await prisma.localPartner.create({
 		data: {
 			name: partnerName,
-			causes: [],
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-delete-local-partner-uid-${unique}`,

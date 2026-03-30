@@ -132,5 +132,18 @@
 		"recipient-waiting-singular": "recipient waiting",
 		"recipient-waiting-plural": "recipients waiting",
 		"about": "About"
+	},
+	"focuses-page": {
+		"title": "Focuses",
+		"empty": "No focuses found.",
+		"program-singular": "program",
+		"program-plural": "programs",
+		"active-program-singular": "active program",
+		"active-program-plural": "active programs",
+		"recipient-in-program-singular": "recipient in a program",
+		"recipient-in-program-plural": "recipients in a program",
+		"candidate-singular": "candidate",
+		"candidate-plural": "candidates",
+		"about": "About"
 	}
 }

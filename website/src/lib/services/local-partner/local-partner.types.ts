@@ -1,4 +1,4 @@
-import { Address, Cause, CountryCode, Gender, Phone } from '@/generated/prisma/client';
+import { Address, CountryCode, Gender, Phone } from '@/generated/prisma/client';
 
 export type LocalPartnerTableViewRow = {
 	id: string;
@@ -7,7 +7,7 @@ export type LocalPartnerTableViewRow = {
 	email: string | null;
 	firebaseAuthUserId: string;
 	contactNumber: string | null;
-	causes: string;
+	focuses: string;
 	recipientsCount: number;
 	createdAt: Date;
 };
@@ -32,7 +32,7 @@ export type LocalPartnerPaginatedTableView = {
 export type LocalPartnerPayload = {
 	id: string;
 	name: string;
-	causes: Cause[];
+	focuses: string[];
 	contact: {
 		id: string;
 		firstName: string;
@@ -57,7 +57,7 @@ export type LocalPartnerSession = {
 	type: 'local-partner';
 	id: string;
 	name: string;
-	causes: Cause[];
+	focuses: string[];
 	gender: Gender | null;
 	email: string | null;
 	firstName: string | null;

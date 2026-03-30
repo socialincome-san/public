@@ -132,5 +132,18 @@
 		"recipient-waiting-singular": "Empfänger:in wartet",
 		"recipient-waiting-plural": "Empfänger:innen warten",
 		"about": "Über"
+	},
+	"focuses-page": {
+		"title": "Schwerpunkte",
+		"empty": "Keine Schwerpunkte gefunden.",
+		"program-singular": "Programm",
+		"program-plural": "Programme",
+		"active-program-singular": "aktives Programm",
+		"active-program-plural": "aktive Programme",
+		"recipient-in-program-singular": "Empfänger:in in einem Programm",
+		"recipient-in-program-plural": "Empfänger:innen in einem Programm",
+		"candidate-singular": "Kandidat:in",
+		"candidate-plural": "Kandidat:innen",
+		"about": "Über"
 	}
 }

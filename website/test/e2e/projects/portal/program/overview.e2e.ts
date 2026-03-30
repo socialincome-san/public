@@ -40,7 +40,7 @@ test('program settings dialog for program-si-core-sl updates all editable values
 	await dialog.getByTestId('form-item-payoutPerInterval').locator('input').fill(updatedPayoutPerInterval);
 	await dialog.getByTestId('form-item-coveredByReserves').getByRole('switch').click();
 	await selectOptionByTestId(page, 'payoutInterval', 'Quarterly');
-	await selectMultiOptionsByTestId(page, 'targetCauses', ['poverty']);
+	await selectMultiOptionsByTestId(page, 'targetFocuses', ['poverty']);
 	await selectMultiOptionsByTestId(page, 'targetProfiles', ['female']);
 	await selectMultiOptionsByTestId(page, 'ownerOrganizations', updatedOwnerOrganizations);
 	await selectMultiOptionsByTestId(page, 'operatorOrganizations', updatedOperatorOrganizations);
@@ -57,7 +57,7 @@ test('program settings dialog for program-si-core-sl updates all editable values
 		'true',
 	);
 	await expect(dialog.getByTestId('form-item-payoutInterval')).toContainText('Quarterly');
-	await expect(dialog.getByTestId('form-item-targetCauses')).toContainText('poverty');
+	await expect(dialog.getByTestId('form-item-targetFocuses')).toContainText('poverty');
 	await expect(dialog.getByTestId('form-item-targetProfiles')).toContainText('female');
 	await expect(dialog.getByTestId('form-item-ownerOrganizations')).toContainText('Social Income GH');
 	await expect(dialog.getByTestId('form-item-operatorOrganizations')).toContainText('Social Income SL');

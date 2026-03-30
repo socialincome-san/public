@@ -86,19 +86,19 @@
 			},
 			"targeted": {
 				"label": "Approccio mirato",
-				"description": "Il supporto viene fornito ai beneficiari che corrispondono a cause e profili selezionati.",
+				"description": "Il supporto viene fornito ai beneficiari che corrispondono a focus e profili selezionati.",
 				"matching_count": "{{matched}} su {{total}} beneficiari corrispondono al paese e ai filtri selezionati",
 				"matching": "beneficiari corrispondono al paese e ai filtri selezionati",
 				"empty_error": "Modifica i filtri in modo che almeno un beneficiario corrisponda."
 			},
-			"causes": "Cause",
+			"focuses": "Focus",
 			"profiles": "Profili",
 			"custom": {
 				"label": "Scegli i tuoi beneficiari",
 				"description": "Seleziona e gestisci manualmente i singoli beneficiari."
 			}
 		},
-		"causes": {
+		"focuses": {
 			"poverty": "Povertà",
 			"health": "Salute",
 			"gender_based_violence": "Violenza di genere",
@@ -113,8 +113,8 @@
 	"step3": {
 		"recipients": {
 			"title": "Beneficiari all'avvio del programma",
-			"no_candidates": "Al momento non ci sono candidati disponibili nel pool. Torna al passaggio 2 e modifica le cause selezionate oppure assicurati che ci siano candidati disponibili.",
-			"max_hint": "Il massimo è determinato dal numero di candidati attualmente disponibili per le cause selezionate."
+			"no_candidates": "Al momento non ci sono candidati disponibili nel pool. Torna al passaggio 2 e modifica i focus selezionati oppure assicurati che ci siano candidati disponibili.",
+			"max_hint": "Il massimo è determinato dal numero di candidati attualmente disponibili per i focus selezionati."
 		},
 		"indirect_notice": {
 			"prefix": "{{recipients}} beneficiari traggono beneficio",

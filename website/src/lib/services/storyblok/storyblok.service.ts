@@ -1,4 +1,4 @@
-import type { Country, LocalPartner, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Country, Focus, LocalPartner, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
@@ -13,6 +13,7 @@ export class StoryblokService extends BaseService {
 	private static readonly contentType = {
 		article: 'article',
 		country: 'Country',
+		focus: 'Focus',
 		localPartner: 'Local Partner',
 		person: 'person',
 		tag: 'tag',
@@ -23,6 +24,7 @@ export class StoryblokService extends BaseService {
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
 	private static readonly countriesPath = `${NEW_WEBSITE_SLUG}/countries`;
+	private static readonly focusesPath = `${NEW_WEBSITE_SLUG}/focuses`;
 	private static readonly localPartnersPath = `${NEW_WEBSITE_SLUG}/local-partners`;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
 		',',
@@ -56,6 +58,21 @@ export class StoryblokService extends BaseService {
 		const contentWithComponent = storyWithContent.content as { component?: string };
 
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.localPartner.toLowerCase();
+	}
+
+	private static isFocusStory(story: unknown): story is ISbStoryData<Focus> {
+		if (!story || typeof story !== 'object' || !('content' in story)) {
+			return false;
+		}
+
+		const storyWithContent = story as { content?: unknown };
+		if (!storyWithContent.content || typeof storyWithContent.content !== 'object') {
+			return false;
+		}
+
+		const contentWithComponent = storyWithContent.content as { component?: string };
+
+		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.focus.toLowerCase();
 	}
 
 	private static shouldFallbackToDraft(version: ISbStoriesParams['version']) {
@@ -334,6 +351,68 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to fetch local partner: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getFocuses(lang: string): Promise<ServiceResult<ISbStoryData<Focus>[]>> {
+		try {
+			const baseParams = await this.getStoryParams(lang);
+			const params: ISbStoriesParams = {
+				...baseParams,
+				starts_with: `${StoryblokService.focusesPath}/`,
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+			let focuses = data.filter((story) => StoryblokService.isFocusStory(story));
+
+			if (focuses.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
+				const draftParams: ISbStoriesParams = {
+					...baseParams,
+					version: 'draft',
+					starts_with: `${StoryblokService.focusesPath}/`,
+				};
+				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
+				focuses = draftData.filter((story) => StoryblokService.isFocusStory(story));
+			}
+
+			return this.resultOk(focuses);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
+	async getFocusBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Focus>>> {
+		const normalizedSlug = slug.trim();
+		const loadFocus = async (language: string) => {
+			const focuses = await this.getFocuses(language);
+			if (!focuses.success) {
+				return undefined;
+			}
+
+			return focuses.data.find((focus) => {
+				const fullSlugTail = focus.full_slug?.split('/').at(-1);
+				const focusId = focus.content.id?.trim();
+
+				return focus.slug === normalizedSlug || fullSlugTail === normalizedSlug || focusId === normalizedSlug;
+			});
+		};
+
+		try {
+			let story = await loadFocus(lang);
+			if (!story && lang !== defaultLanguage) {
+				story = await loadFocus(defaultLanguage);
+			}
+
+			if (!story) {
+				return this.resultFail(`Failed to fetch focus: not found for slug '${slug}'`);
+			}
+
+			return this.resultOk(story);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch focus: ${JSON.stringify(error)}`);
 		}
 	}
 

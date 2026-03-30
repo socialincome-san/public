@@ -64,7 +64,9 @@ export class LocalPartnerWriteService extends BaseService {
 			const partner = await this.db.localPartner.create({
 				data: {
 					name: validatedInput.name,
-					causes: validatedInput.causes,
+					focuses: {
+						create: validatedInput.focuses.map((focusId) => ({ focusId })),
+					},
 					account: {
 						create: {
 							firebaseAuthUserId: firebaseResult.data.uid,
@@ -176,7 +178,10 @@ export class LocalPartnerWriteService extends BaseService {
 				where: { id: partnerId },
 				data: {
 					name: validatedInput.name,
-					causes: validatedInput.causes,
+					focuses: {
+						deleteMany: {},
+						create: validatedInput.focuses.map((focusId) => ({ focusId })),
+					},
 					contact: {
 						update: {
 							where: { id: existing.contact.id },
