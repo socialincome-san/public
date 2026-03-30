@@ -48,12 +48,23 @@ jobs:
       # Push/merge_group: full scan, fails on any high/critical. Existing issues do not fail PRs.
       - name: Run Aikido scan
         run: |
+          # Aikido treats push-scans on arbitrary branches as long-living branches unless we use PR gating mode.
+          # For push events, we gate against the previous commit on that branch.
+          EXTRA_ARGS=""
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            EXTRA_ARGS="--gating-mode pr --base-commit-id ${{ github.event.pull_request.base.sha }} --head-commit-id ${{ github.event.pull_request.head.sha }}"
+          elif [ "${{ github.event_name }}" = "merge_group" ]; then
+            EXTRA_ARGS="--gating-mode pr --base-commit-id ${{ github.event.merge_group.base_sha }} --head-commit-id ${{ github.event.merge_group.head_sha }}"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            EXTRA_ARGS="--gating-mode pr --base-commit-id ${{ github.event.before }} --head-commit-id ${{ github.sha }}"
+          fi
+
           aikido-local-scanner scan ./ \
             --apikey ${{ secrets.AIKIDO_API_KEY }} \
             --repositoryname socialincome-public \
             --branchname ${{ github.head_ref || github.ref_name }} \
             --fail-on high \
-            ${{ github.event_name == 'pull_request' && format('--gating-mode pr --base-commit-id {0} --head-commit-id {1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || '' }}
+            ${EXTRA_ARGS}
 
   lint:
     name: "✨ Lint"
