@@ -23,7 +23,8 @@ export const CreateProgram = async ({ lang }: DefaultParams) => {
 				<div className="mt-8 flex items-center justify-center gap-3">
 					<Typography className="text-left text-white/60">{translator.t('section-create-program.partner')}</Typography>
 					<a href="https://somaha-stiftung.ch/en/home/" target="_blank" rel="noopener noreferrer">
-						<Image src={Somaha as string} alt="Somaha" className="h-6 w-auto shrink-0 brightness-0 invert opacity-60" />
+						{/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+						<Image src={Somaha} alt="Somaha" className="h-6 w-auto shrink-0 opacity-60 brightness-0 invert" />
 					</a>
 				</div>
 			</div>
