@@ -5,6 +5,7 @@ import { expectToHaveScreenshot } from '../../utils';
 
 const CAMPAIGNS_OVERVIEW_RECORDING = 'public-website-campaigns-overview-page';
 const CAMPAIGN_DEFAULT_CORE_SL_RECORDING = 'public-website-campaign-si-core-program-sl-default-campaign-page';
+const CAMPAIGN_OPERATIONS_CORE_SL_PREVIEW_RECORDING = 'public-website-campaign-si-core-program-sl-operations-preview-page';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -25,3 +26,12 @@ test('new website campaign detail page matches screenshot', async ({ page }) => 
 	await expectToHaveScreenshot(page, true);
 	await saveStoryblokMock(CAMPAIGN_DEFAULT_CORE_SL_RECORDING);
 });
+
+test('new website campaign detail page shows db preview and matches screenshot', async ({ page }) => {
+	await setupStoryblokMock(CAMPAIGN_OPERATIONS_CORE_SL_PREVIEW_RECORDING);
+	await page.goto('/de/ch/new-website/campaigns/si-core-program-sl-operations-campaign');
+
+	await expectToHaveScreenshot(page, true);
+	await saveStoryblokMock(CAMPAIGN_OPERATIONS_CORE_SL_PREVIEW_RECORDING);
+});
+

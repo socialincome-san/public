@@ -40,12 +40,12 @@ export const ProgramSetupSuccess = ({ programId, publicUrl }: ProgramSetupSucces
 				/>
 
 				<SuccessBanner
-					title="Preview page ready"
-					description="This page will be public as soon as the first interval is funded."
+					title="Public page ready"
+					description="This is your public program page."
 					action={
-						<Link href={`${publicUrl}?preview=true`} target="_blank">
+						<Link href={publicUrl} target="_blank">
 							<Button variant="outline">
-								View Preview Page <ExternalLinkIcon className="ml-2 h-4 w-4" />
+								View Public Page <ExternalLinkIcon className="ml-2 h-4 w-4" />
 							</Button>
 						</Link>
 					}

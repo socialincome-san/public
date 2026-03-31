@@ -1,18 +1,178 @@
 {
-  "3d1cfeb45a5a759816fa0840f1e272af67fc142a2e34f184c7bf0d2aa0531230": [
+  "0c3a3cd117ed91b51e2b04fc7ec69100df6904c35807260169b0161ff91ef20f": [
     {
-      "body": [
-        "This record could not be found"
-      ],
-      "status": 404,
+      "body": {
+        "stories": [
+          {
+            "name": "Overview",
+            "created_at": "2026-03-31T11:24:32.982Z",
+            "published_at": "2026-03-31T11:25:01.380Z",
+            "updated_at": "2026-03-31T11:25:01.396Z",
+            "id": 160836292566557,
+            "uuid": "c0eaf2ff-fed8-4513-a87d-17bee72e85f7",
+            "content": {
+              "_uid": "d77b5428-4152-4e84-b429-b92bf492495f",
+              "content": [
+                {
+                  "_uid": "cc461344-a15a-49ad-a6b2-ca30f6f6ad6e",
+                  "content": {
+                    "type": "doc",
+                    "content": [
+                      {
+                        "type": "heading",
+                        "attrs": {
+                          "level": 1,
+                          "textAlign": null
+                        },
+                        "content": [
+                          {
+                            "text": "Campaigns",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "textAlign": null
+                        },
+                        "content": [
+                          {
+                            "text": "all the nice campaigns",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "component": "text",
+                  "_editable": "<!--#storyblok#{\"name\": \"text\", \"space\": \"109655\", \"uid\": \"cc461344-a15a-49ad-a6b2-ca30f6f6ad6e\", \"id\": \"160836292566557\"}-->"
+                },
+                {
+                  "_uid": "19aab296-08d0-4a5d-acc1-1ef0b7dd1bf5",
+                  "campaigns": [],
+                  "component": "campaignGrid",
+                  "showAllCampaigns": true,
+                  "_editable": "<!--#storyblok#{\"name\": \"campaignGrid\", \"space\": \"109655\", \"uid\": \"19aab296-08d0-4a5d-acc1-1ef0b7dd1bf5\", \"id\": \"160836292566557\"}-->"
+                }
+              ],
+              "component": "page",
+              "_editable": "<!--#storyblok#{\"name\": \"page\", \"space\": \"109655\", \"uid\": \"d77b5428-4152-4e84-b429-b92bf492495f\", \"id\": \"160836292566557\"}-->"
+            },
+            "slug": "campaigns",
+            "full_slug": "de/new-website/campaigns/",
+            "sort_by_date": null,
+            "position": -20,
+            "tag_list": [],
+            "is_startpage": true,
+            "parent_id": 160833741653763,
+            "meta_data": null,
+            "group_id": "dd3bbaa9-33e7-4b35-a269-945fcc89006c",
+            "first_published_at": "2026-03-31T11:24:50.360Z",
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/campaigns/",
+            "translated_slugs": [
+              {
+                "path": "new-website/campaigns/",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/campaigns/",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/campaigns/",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "SI Core Program SL Default Campaign",
+            "created_at": "2026-03-31T11:26:29.658Z",
+            "published_at": "2026-03-31T11:27:42.352Z",
+            "updated_at": "2026-03-31T11:27:42.426Z",
+            "id": 160836770475628,
+            "uuid": "a09df4bf-14ce-4e32-885e-9741f7d026fe",
+            "content": {
+              "id": "campaign-si-core-sl-default",
+              "_uid": "d43014aa-1057-4a52-8fa7-cf408a52db75",
+              "title": "SI Core Program SL Default Campaign",
+              "component": "campaign",
+              "heroImage": {
+                "id": 156515611466913,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "description": "awesome campaign",
+              "_editable": "<!--#storyblok#{\"name\": \"campaign\", \"space\": \"109655\", \"uid\": \"d43014aa-1057-4a52-8fa7-cf408a52db75\", \"id\": \"160836770475628\"}-->"
+            },
+            "slug": "si-core-program-sl-default-campaign",
+            "full_slug": "de/new-website/campaigns/si-core-program-sl-default-campaign",
+            "sort_by_date": null,
+            "position": -10,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 160833741653763,
+            "meta_data": null,
+            "group_id": "edd965e4-858c-4d98-bccc-27e2f1e17744",
+            "first_published_at": "2026-03-31T11:27:42.352Z",
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/campaigns/si-core-program-sl-default-campaign",
+            "translated_slugs": [
+              {
+                "path": "new-website/campaigns/si-core-program-sl-default-campaign",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/campaigns/si-core-program-sl-default-campaign",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/campaigns/si-core-program-sl-default-campaign",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          }
+        ],
+        "cv": 1774957042,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/local-partners?language=de&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "3d1cfeb45a5a759816fa0840f1e272af67fc142a2e34f184c7bf0d2aa0531230",
+          "x-mock-hash": "0c3a3cd117ed91b51e2b04fc7ec69100df6904c35807260169b0161ff91ef20f",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -20,10 +180,10 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 114
+      "durationMs": 648
     }
   ],
-  "45872c732878a479ec89ed4e4075b961f5cbeee4f19ec4303462c08bac4bcfd4": [
+  "131957dd62176c00e95a2fe3db6a30beb707d23be56fb2132d787884f19f00c4": [
     {
       "body": {
         "stories": [],
@@ -33,13 +193,13 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Flocal-partners%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "45872c732878a479ec89ed4e4075b961f5cbeee4f19ec4303462c08bac4bcfd4",
+          "x-mock-hash": "131957dd62176c00e95a2fe3db6a30beb707d23be56fb2132d787884f19f00c4",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -47,7 +207,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 41
+      "durationMs": 42
     }
   ],
   "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc": [
@@ -71,7 +231,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 63
+      "durationMs": 32
     },
     {
       "body": [
@@ -93,114 +253,179 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 63
+      "durationMs": 36
     }
   ],
-  "6e7f5e973b8e2957dae3c6cf0ebb879ed8a13ba691160813d1381fc135f89486": [
+  "b47488cdc4a66394825595668f696dfbe936704a4bd0b13866d5290e3cfe4c27": [
     {
       "body": {
-        "story": {
-          "name": "Overview",
-          "created_at": "2026-03-31T10:48:38.052Z",
-          "published_at": "2026-03-31T10:52:09.819Z",
-          "updated_at": "2026-03-31T10:52:09.830Z",
-          "id": 160827465967532,
-          "uuid": "74da986a-ea7a-4fc1-bc59-bfc72c6482b9",
-          "content": {
-            "_uid": "fbb9f617-54bb-4b87-8e15-57a3caf4e034",
-            "content": [
-              {
-                "_uid": "60771f82-29e4-482a-bcf5-158832a43dd7",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 1,
-                        "textAlign": null
+        "stories": [
+          {
+            "name": "Overview",
+            "created_at": "2026-03-31T11:24:32.982Z",
+            "published_at": "2026-03-31T11:25:01.380Z",
+            "updated_at": "2026-03-31T11:25:01.396Z",
+            "id": 160836292566557,
+            "uuid": "c0eaf2ff-fed8-4513-a87d-17bee72e85f7",
+            "content": {
+              "_uid": "d77b5428-4152-4e84-b429-b92bf492495f",
+              "content": [
+                {
+                  "_uid": "cc461344-a15a-49ad-a6b2-ca30f6f6ad6e",
+                  "content": {
+                    "type": "doc",
+                    "content": [
+                      {
+                        "type": "heading",
+                        "attrs": {
+                          "level": 1,
+                          "textAlign": null
+                        },
+                        "content": [
+                          {
+                            "text": "Campaigns",
+                            "type": "text"
+                          }
+                        ]
                       },
-                      "content": [
-                        {
-                          "text": "Local Partners",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "All the awesome local partners!",
-                          "type": "text"
-                        }
-                      ]
-                    }
-                  ]
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "textAlign": null
+                        },
+                        "content": [
+                          {
+                            "text": "all the nice campaigns",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "component": "text"
                 },
-                "component": "text"
+                {
+                  "_uid": "19aab296-08d0-4a5d-acc1-1ef0b7dd1bf5",
+                  "campaigns": [],
+                  "component": "campaignGrid",
+                  "showAllCampaigns": true
+                }
+              ],
+              "component": "page"
+            },
+            "slug": "campaigns",
+            "full_slug": "new-website/campaigns/",
+            "sort_by_date": null,
+            "position": -20,
+            "tag_list": [],
+            "is_startpage": true,
+            "parent_id": 160833741653763,
+            "meta_data": null,
+            "group_id": "dd3bbaa9-33e7-4b35-a269-945fcc89006c",
+            "first_published_at": "2026-03-31T11:24:50.360Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/campaigns/",
+            "translated_slugs": [
+              {
+                "path": "new-website/campaigns/",
+                "name": null,
+                "lang": "fr",
+                "published": null
               },
               {
-                "_uid": "20e43417-d364-453b-9931-314c7ea509db",
-                "component": "localPartnerGrid",
-                "localPartners": [],
-                "showAllLocalPartners": true
+                "path": "new-website/campaigns/",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/campaigns/",
+                "name": null,
+                "lang": "de",
+                "published": null
               }
-            ],
-            "component": "page"
+            ]
           },
-          "slug": "local-partners",
-          "full_slug": "new-website/local-partners/",
-          "sort_by_date": null,
-          "position": -20,
-          "tag_list": [],
-          "is_startpage": true,
-          "parent_id": 160479824364543,
-          "meta_data": null,
-          "group_id": "fdffdcf4-87b1-4bac-aedc-2afd6f2693fe",
-          "first_published_at": "2026-03-31T10:50:23.474Z",
-          "release_id": null,
-          "lang": "default",
-          "path": null,
-          "alternates": [],
-          "default_full_slug": "new-website/local-partners/",
-          "translated_slugs": [
-            {
-              "path": "new-website/local-partners/",
-              "name": null,
-              "lang": "fr",
-              "published": null
+          {
+            "name": "SI Core Program SL Default Campaign",
+            "created_at": "2026-03-31T11:26:29.658Z",
+            "published_at": "2026-03-31T11:27:42.352Z",
+            "updated_at": "2026-03-31T11:27:42.426Z",
+            "id": 160836770475628,
+            "uuid": "a09df4bf-14ce-4e32-885e-9741f7d026fe",
+            "content": {
+              "id": "campaign-si-core-sl-default",
+              "_uid": "d43014aa-1057-4a52-8fa7-cf408a52db75",
+              "title": "SI Core Program SL Default Campaign",
+              "component": "campaign",
+              "heroImage": {
+                "id": 156515611466913,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "description": "awesome campaign"
             },
-            {
-              "path": "new-website/local-partners/",
-              "name": null,
-              "lang": "it",
-              "published": null
-            },
-            {
-              "path": "new-website/local-partners/",
-              "name": null,
-              "lang": "de",
-              "published": null
-            }
-          ]
-        },
+            "slug": "si-core-program-sl-default-campaign",
+            "full_slug": "new-website/campaigns/si-core-program-sl-default-campaign",
+            "sort_by_date": null,
+            "position": -10,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 160833741653763,
+            "meta_data": null,
+            "group_id": "edd965e4-858c-4d98-bccc-27e2f1e17744",
+            "first_published_at": "2026-03-31T11:27:42.352Z",
+            "release_id": null,
+            "lang": "default",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/campaigns/si-core-program-sl-default-campaign",
+            "translated_slugs": [
+              {
+                "path": "new-website/campaigns/si-core-program-sl-default-campaign",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/campaigns/si-core-program-sl-default-campaign",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/campaigns/si-core-program-sl-default-campaign",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          }
+        ],
         "cv": 1774957042,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/local-partners?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "6e7f5e973b8e2957dae3c6cf0ebb879ed8a13ba691160813d1381fc135f89486",
+          "x-mock-hash": "b47488cdc4a66394825595668f696dfbe936704a4bd0b13866d5290e3cfe4c27",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -208,7 +433,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 28
+      "durationMs": 11
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -815,7 +1040,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 13
+      "durationMs": 19
     },
     {
       "body": {
@@ -1420,260 +1645,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 23
-    }
-  ],
-  "e6646ea82cac0881d4e48315c83f9e2334dc32b51f8684748d2e4fb15579d4dc": [
-    {
-      "body": {
-        "stories": [
-          {
-            "name": "Overview",
-            "created_at": "2026-03-31T10:48:38.052Z",
-            "published_at": "2026-03-31T10:52:09.819Z",
-            "updated_at": "2026-03-31T10:52:09.830Z",
-            "id": 160827465967532,
-            "uuid": "74da986a-ea7a-4fc1-bc59-bfc72c6482b9",
-            "content": {
-              "_uid": "fbb9f617-54bb-4b87-8e15-57a3caf4e034",
-              "content": [
-                {
-                  "_uid": "60771f82-29e4-482a-bcf5-158832a43dd7",
-                  "content": {
-                    "type": "doc",
-                    "content": [
-                      {
-                        "type": "heading",
-                        "attrs": {
-                          "level": 1,
-                          "textAlign": null
-                        },
-                        "content": [
-                          {
-                            "text": "Local Partners",
-                            "type": "text"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "paragraph",
-                        "attrs": {
-                          "textAlign": null
-                        },
-                        "content": [
-                          {
-                            "text": "All the awesome local partners!",
-                            "type": "text"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  "component": "text",
-                  "_editable": "<!--#storyblok#{\"name\": \"text\", \"space\": \"109655\", \"uid\": \"60771f82-29e4-482a-bcf5-158832a43dd7\", \"id\": \"160827465967532\"}-->"
-                },
-                {
-                  "_uid": "20e43417-d364-453b-9931-314c7ea509db",
-                  "component": "localPartnerGrid",
-                  "localPartners": [],
-                  "showAllLocalPartners": true,
-                  "_editable": "<!--#storyblok#{\"name\": \"localPartnerGrid\", \"space\": \"109655\", \"uid\": \"20e43417-d364-453b-9931-314c7ea509db\", \"id\": \"160827465967532\"}-->"
-                }
-              ],
-              "component": "page",
-              "_editable": "<!--#storyblok#{\"name\": \"page\", \"space\": \"109655\", \"uid\": \"fbb9f617-54bb-4b87-8e15-57a3caf4e034\", \"id\": \"160827465967532\"}-->"
-            },
-            "slug": "local-partners",
-            "full_slug": "de/new-website/local-partners/",
-            "sort_by_date": null,
-            "position": -20,
-            "tag_list": [],
-            "is_startpage": true,
-            "parent_id": 160479824364543,
-            "meta_data": null,
-            "group_id": "fdffdcf4-87b1-4bac-aedc-2afd6f2693fe",
-            "first_published_at": "2026-03-31T10:50:23.474Z",
-            "release_id": null,
-            "lang": "de",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/local-partners/",
-            "translated_slugs": [
-              {
-                "path": "new-website/local-partners/",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/local-partners/",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/local-partners/",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          },
-          {
-            "name": "widows",
-            "created_at": "2026-03-30T11:54:22.964Z",
-            "published_at": null,
-            "updated_at": "2026-03-30T11:54:39.425Z",
-            "id": 160489729929614,
-            "uuid": "141721b0-71ac-4ff8-8c2a-22e11abb6be6",
-            "content": {
-              "id": "test",
-              "_uid": "41c1d588-6473-4dcb-b2df-f86d7847ee28",
-              "title": "Widows",
-              "component": "Local Partner",
-              "heroImage": {
-                "id": 158389168950833,
-                "alt": "",
-                "name": "",
-                "focus": "1125x964:1126x965",
-                "title": "",
-                "source": "",
-                "filename": "/assets/e2e-media-placeholder.svg",
-                "copyright": "",
-                "fieldtype": "asset",
-                "meta_data": {
-                  "alt": "",
-                  "title": "",
-                  "source": "",
-                  "copyright": ""
-                },
-                "is_external_url": false
-              },
-              "description": "nice",
-              "_editable": "<!--#storyblok#{\"name\": \"Local Partner\", \"space\": \"109655\", \"uid\": \"41c1d588-6473-4dcb-b2df-f86d7847ee28\", \"id\": \"160489729929614\"}-->"
-            },
-            "slug": "widows",
-            "full_slug": "de/new-website/local-partners/widows",
-            "sort_by_date": null,
-            "position": -10,
-            "tag_list": [],
-            "is_startpage": false,
-            "parent_id": 160479824364543,
-            "meta_data": null,
-            "group_id": "b26a2647-660f-4ad8-9f17-1141168c017e",
-            "first_published_at": null,
-            "release_id": null,
-            "lang": "de",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/local-partners/widows",
-            "translated_slugs": [
-              {
-                "path": "new-website/local-partners/widows",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/local-partners/widows",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/local-partners/widows",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          },
-          {
-            "name": "ebola survivors",
-            "created_at": "2026-03-30T11:14:31.013Z",
-            "published_at": "2026-03-30T11:43:24.273Z",
-            "updated_at": "2026-03-30T11:48:42.746Z",
-            "id": 160479932498954,
-            "uuid": "bc2b78b8-35ef-423e-8fe9-e05f794f6f70",
-            "content": {
-              "id": "local-partner-gh-1",
-              "_uid": "23a24755-2d91-4a0c-9421-7a7f1593a664",
-              "title": "Ebola Survivors",
-              "component": "Local Partner",
-              "heroImage": {
-                "id": 138530341154783,
-                "alt": "",
-                "name": "",
-                "focus": "",
-                "title": "",
-                "source": "",
-                "filename": "/assets/e2e-media-placeholder.svg",
-                "copyright": "",
-                "fieldtype": "asset",
-                "meta_data": {},
-                "is_external_url": false
-              },
-              "description": "awesome partner",
-              "_editable": "<!--#storyblok#{\"name\": \"Local Partner\", \"space\": \"109655\", \"uid\": \"23a24755-2d91-4a0c-9421-7a7f1593a664\", \"id\": \"160479932498954\"}-->"
-            },
-            "slug": "ebola-survivors",
-            "full_slug": "de/new-website/local-partners/ebola-survivors",
-            "sort_by_date": null,
-            "position": 0,
-            "tag_list": [],
-            "is_startpage": false,
-            "parent_id": 160479824364543,
-            "meta_data": null,
-            "group_id": "88314521-883a-4ae7-8261-37fbc1b0682d",
-            "first_published_at": "2026-03-30T11:43:24.273Z",
-            "release_id": null,
-            "lang": "de",
-            "path": null,
-            "alternates": [],
-            "default_full_slug": "new-website/local-partners/ebola-survivors",
-            "translated_slugs": [
-              {
-                "path": "new-website/local-partners/ebola-survivors",
-                "name": null,
-                "lang": "fr",
-                "published": null
-              },
-              {
-                "path": "new-website/local-partners/ebola-survivors",
-                "name": null,
-                "lang": "it",
-                "published": null
-              },
-              {
-                "path": "new-website/local-partners/ebola-survivors",
-                "name": null,
-                "lang": "de",
-                "published": null
-              }
-            ]
-          }
-        ],
-        "cv": 1774957042,
-        "rels": [],
-        "links": []
-      },
-      "status": 200,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Flocal-partners%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "e6646ea82cac0881d4e48315c83f9e2334dc32b51f8684748d2e4fb15579d4dc",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 103
+      "durationMs": 18
     }
   ]
 }

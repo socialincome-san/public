@@ -7,6 +7,11 @@ import { ProgramAccessReadService } from '../program-access/program-access-read.
 import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { ProgramOption, ProgramSettingsPayload, ProgramWallet, ProgramWallets, PublicProgramDetails } from './program.types';
 
+type PublicPreviewProgram = {
+	id: string;
+	name: string;
+};
+
 export class ProgramReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
@@ -229,6 +234,28 @@ export class ProgramReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not load public program: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicPreviewProgramBySlug(slug: string): Promise<ServiceResult<PublicPreviewProgram>> {
+		try {
+			const programs = await this.db.program.findMany({
+				select: {
+					id: true,
+					name: true,
+				},
+			});
+			const program = programs.find((currentProgram) => slugify(currentProgram.name) === slug);
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			return this.resultOk(program);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load public preview program: ${JSON.stringify(error)}`);
 		}
 	}
 

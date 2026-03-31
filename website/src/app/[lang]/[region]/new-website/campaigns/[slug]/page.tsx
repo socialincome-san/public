@@ -1,4 +1,5 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
+import { PreviewCampaign } from '@/components/public-landing/preview-campaign';
 import { CampaignDetail } from '@/components/storyblok/campaign/campaign-detail';
 import { getCampaignId } from '@/components/storyblok/campaign/campaign.utils';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -11,19 +12,37 @@ export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlu
 	const { slug, lang } = await params;
 	const campaignResult = await services.storyblok.getCampaignBySlug(slug, lang);
 
-	if (!campaignResult.success) {
+	if (campaignResult.success) {
+		const campaignId = getCampaignId(campaignResult.data.content);
+		const statsResult = campaignId ? await services.read.campaign.getPublicCampaignStatsById(campaignId) : undefined;
+
+		return (
+			<CampaignDetail
+				campaign={campaignResult.data}
+				lang={lang as WebsiteLanguage}
+				contributionsCount={statsResult?.success ? statsResult.data.contributionsCount : undefined}
+				daysLeft={statsResult?.success ? statsResult.data.daysLeft : undefined}
+			/>
+		);
+	}
+
+	const previewCampaignResult = await services.read.campaign.getPublicPreviewCampaignBySlug(slug);
+	if (!previewCampaignResult.success) {
 		return notFound();
 	}
 
-	const campaignId = getCampaignId(campaignResult.data.content);
-	const statsResult = campaignId ? await services.read.campaign.getPublicCampaignStatsById(campaignId) : undefined;
+	const statsResult = await services.read.campaign.getPublicCampaignStatsById(previewCampaignResult.data.id);
+	if (!statsResult.success) {
+		return notFound();
+	}
 
 	return (
-		<CampaignDetail
-			campaign={campaignResult.data}
+		<PreviewCampaign
+			title={previewCampaignResult.data.title}
+			description={previewCampaignResult.data.description}
 			lang={lang as WebsiteLanguage}
-			contributionsCount={statsResult?.success ? statsResult.data.contributionsCount : undefined}
-			daysLeft={statsResult?.success ? statsResult.data.daysLeft : undefined}
+			contributionsCount={statsResult.data.contributionsCount}
+			daysLeft={statsResult.data.daysLeft}
 		/>
 	);
 }

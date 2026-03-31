@@ -3,6 +3,7 @@ import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
+import { slugify } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -16,6 +17,13 @@ import {
 	CampaignTableQuery,
 	CampaignTableViewRow,
 } from './campaign.types';
+
+type PublicPreviewCampaign = {
+	id: string;
+	title: string;
+	description: string;
+	slug: string;
+};
 
 export class CampaignReadService extends BaseService {
 	constructor(
@@ -189,6 +197,35 @@ export class CampaignReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicPreviewCampaignBySlug(slug: string): Promise<ServiceResult<PublicPreviewCampaign>> {
+		try {
+			const normalizedSlug = slug.trim();
+			if (!normalizedSlug) {
+				return this.resultFail('Missing campaign slug');
+			}
+
+			const campaigns = await this.db.campaign.findMany({
+				select: { id: true, title: true, description: true, slug: true },
+			});
+			const campaign = campaigns.find((currentCampaign) => slugify(currentCampaign.title) === normalizedSlug);
+
+			if (!campaign?.slug) {
+				return this.resultFail('Campaign not found');
+			}
+
+			return this.resultOk({
+				id: campaign.id,
+				title: campaign.title,
+				description: campaign.description,
+				slug: campaign.slug,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load public preview campaign: ${JSON.stringify(error)}`);
 		}
 	}
 

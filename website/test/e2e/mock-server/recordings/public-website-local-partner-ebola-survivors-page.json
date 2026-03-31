@@ -1,1 +1,1540 @@
-{}
+{
+  "45872c732878a479ec89ed4e4075b961f5cbeee4f19ec4303462c08bac4bcfd4": [
+    {
+      "body": {
+        "stories": [],
+        "cv": 1774957042,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Flocal-partners%2F&per_page=25&page=1&token=__TOKEN__",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "45872c732878a479ec89ed4e4075b961f5cbeee4f19ec4303462c08bac4bcfd4",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 119
+    }
+  ],
+  "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc": [
+    {
+      "body": [
+        "This record could not be found"
+      ],
+      "status": 404,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 155
+    },
+    {
+      "body": [
+        "This record could not be found"
+      ],
+      "status": 404,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 155
+    }
+  ],
+  "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
+    {
+      "body": {
+        "story": {
+          "name": "Layout",
+          "created_at": "2026-02-09T15:29:57.490Z",
+          "published_at": "2026-03-31T11:37:22.284Z",
+          "updated_at": "2026-03-31T11:37:22.306Z",
+          "id": 143201884212331,
+          "uuid": "7d96ab3b-7c09-4b8e-b87e-ad24b8e9e094",
+          "content": {
+            "_uid": "1a3112b1-a308-4098-9002-ba14de38bd42",
+            "menu": [
+              {
+                "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
+                "label": "Programs",
+                "component": "dropdownItem",
+                "menuItemGroups": [
+                  {
+                    "_uid": "e5756ee2-c0b3-4ba5-9a6d-e72f5d6aba74",
+                    "items": [
+                      {
+                        "_uid": "d1c74029-c297-4402-b1ac-3dd702bbad46",
+                        "icon": "",
+                        "link": {
+                          "id": "23fcc517-6433-44e4-a209-dfa4f741e3b3",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/countries/sierra-leone"
+                        },
+                        "label": "Sierra Leone",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "584ede67-134a-45c9-a64e-10560fa830a8",
+                        "icon": "",
+                        "link": {
+                          "id": "3e95acfa-5773-4cf7-a126-6a2589c33074",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/countries/liberia"
+                        },
+                        "label": "Liberia",
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Countries",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "bdc289d0-b285-44f8-bad8-e6afcf08c149",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/countries/"
+                    },
+                    "overviewLabel": "All Countries"
+                  },
+                  {
+                    "_uid": "4bcfc45d-25a8-4cd1-b7f4-7a5971f46316",
+                    "items": [
+                      {
+                        "_uid": "ee2f2c5b-7c50-4713-962d-c38a14df2cdb",
+                        "icon": "",
+                        "link": {
+                          "id": "bc2b78b8-35ef-423e-8fe9-e05f794f6f70",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/local-partners/ebola-survivors"
+                        },
+                        "label": "Ebola Survivors",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "e41653bf-a18d-4a5a-9f19-844d2daba241",
+                        "icon": "",
+                        "link": {
+                          "id": "141721b0-71ac-4ff8-8c2a-22e11abb6be6",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/local-partners/widows"
+                        },
+                        "label": "Widows",
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Local Partners",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "74da986a-ea7a-4fc1-bc59-bfc72c6482b9",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/local-partners/"
+                    },
+                    "overviewLabel": "All local partners"
+                  },
+                  {
+                    "_uid": "00ac90c6-d15b-43a9-a9bd-2c8d087cbfca",
+                    "items": [
+                      {
+                        "_uid": "c0f1d542-45aa-4279-b251-08ce3fae0b16",
+                        "icon": "",
+                        "link": {
+                          "id": "58a6e243-b313-4536-8cd9-18a8efdb5898",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/focuses/poverty"
+                        },
+                        "label": "Poverty",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "7a42e642-1964-41c7-a385-1c9943fe51b2",
+                        "icon": "",
+                        "link": {
+                          "id": "600bcce9-c394-4854-b364-f4f05cafa82c",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/focuses/climate"
+                        },
+                        "label": "Climate",
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Our focus",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "4a2113c9-5880-45bb-bd66-7b5f59b9997b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/focuses/"
+                    },
+                    "overviewLabel": "All Focuses"
+                  },
+                  {
+                    "_uid": "4805846a-dfe3-427f-a5de-c29eb8891072",
+                    "items": [
+                      {
+                        "_uid": "392ea669-e460-4288-944d-dbba001f8483",
+                        "icon": "",
+                        "link": {
+                          "id": "005956bd-a370-470d-bc53-6ed078892467",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/programs/si-core-program-sl"
+                        },
+                        "label": "Core Program",
+                        "newTab": false,
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "4816b7f3-087d-4628-b43c-76186e4bba72",
+                        "icon": "",
+                        "link": {
+                          "id": "1bb3fbd5-ef11-4a04-b02e-1bb4e329dc1c",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/programs/si-women-support-sl"
+                        },
+                        "label": "Woman Program",
+                        "newTab": false,
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Programs",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "c9e97da8-956b-4791-b156-84235e9787b0",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/programs/"
+                    },
+                    "overviewLabel": "All Programs"
+                  },
+                  {
+                    "_uid": "ce4d021b-bf05-473c-b11c-f59534e45909",
+                    "items": [
+                      {
+                        "_uid": "9fdafed8-5b87-4412-94ce-abb199eb6e81",
+                        "icon": "",
+                        "link": {
+                          "id": "a09df4bf-14ce-4e32-885e-9741f7d026fe",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/campaigns/si-core-program-sl-default-campaign"
+                        },
+                        "label": "Core Campaign",
+                        "newTab": false,
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Campaigns",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "c0eaf2ff-fed8-4513-a87d-17bee72e85f7",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/campaigns/"
+                    },
+                    "overviewLabel": "All Campaigns"
+                  }
+                ]
+              },
+              {
+                "_uid": "885a0563-1dec-409c-a8c7-dfaa5765df9a",
+                "link": {
+                  "id": "",
+                  "url": "/journal",
+                  "linktype": "url",
+                  "fieldtype": "multilink",
+                  "cached_url": "/journal"
+                },
+                "label": "Journal",
+                "component": "menuItem"
+              },
+              {
+                "_uid": "8db6ddcf-be2e-4d2b-b3e5-8be593943745",
+                "link": {
+                  "id": "",
+                  "url": "#",
+                  "linktype": "url",
+                  "fieldtype": "multilink",
+                  "cached_url": "#"
+                },
+                "label": "Transparency",
+                "component": "menuItem"
+              },
+              {
+                "_uid": "8d85421e-145c-4909-9c2e-6944fbf310bc",
+                "label": "About",
+                "component": "dropdownItem",
+                "menuItemGroups": [
+                  {
+                    "_uid": "bbf58359-f678-473e-aab9-4753e5935a40",
+                    "items": [
+                      {
+                        "_uid": "26183104-00b7-4310-b6b8-cd37d1e56426",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Our mission",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "2374cb8b-cc4f-4577-afa8-01331839222f",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Team",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "4628ef21-7ac8-4a52-8827-76359a329f0f",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Basic Income",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "98d30afe-1869-4372-9ab0-31d1e0ef1e28",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Empowerment",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "aeeb463e-5d64-4f49-a38e-26d4e7fbf8fb",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Homeless",
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "About us",
+                    "component": "menuItemGroup"
+                  }
+                ]
+              }
+            ],
+            "component": "layout",
+            "footerMenu": [
+              {
+                "_uid": "cd5f287b-33da-4d03-a2e4-0ddb15743ed6",
+                "items": [
+                  {
+                    "_uid": "77df115d-92db-4bcc-8667-64aceea1c5ac",
+                    "icon": "instagram",
+                    "link": {
+                      "id": "",
+                      "url": "https://www.instagram.com/so_income/",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://www.instagram.com/so_income/"
+                    },
+                    "label": "Instagram",
+                    "newTab": true,
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "6fb1f5a9-7353-4049-81f0-da96389f8d2f",
+                    "icon": "linkedin",
+                    "link": {
+                      "id": "",
+                      "url": "https://www.linkedin.com/company/socialincome",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://www.linkedin.com/company/socialincome"
+                    },
+                    "label": "LinkedIn",
+                    "newTab": true,
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "903f728a-9fcf-4578-a7f9-21d747540111",
+                    "icon": "facebook",
+                    "link": {
+                      "id": "",
+                      "url": "https://facebook.com/socialincome.org",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://facebook.com/socialincome.org"
+                    },
+                    "label": "Facebook",
+                    "newTab": true,
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "59e880e7-42c6-480b-8b37-44b7fa98c032",
+                    "icon": "github",
+                    "link": {
+                      "id": "",
+                      "url": "https://github.com/socialincome-san/public",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://github.com/socialincome-san/public"
+                    },
+                    "label": "GitHub",
+                    "newTab": true,
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "970354a2-52b3-4354-852b-51ef4294e0ee",
+                    "icon": "newsletter",
+                    "link": {
+                      "id": "",
+                      "url": "#",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "#"
+                    },
+                    "label": "Newsletter",
+                    "component": "menuItem"
+                  }
+                ],
+                "label": "Stay tuned",
+                "component": "menuItemGroup"
+              },
+              {
+                "_uid": "6983bab5-a810-4917-8701-11e2ba2f7da4",
+                "items": [
+                  {
+                    "_uid": "18f6f337-622d-40c9-84cf-18ae56106b72",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "FAQ",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "b24dfbe5-b793-4de5-a4a6-34e19456258c",
+                    "link": {
+                      "id": "",
+                      "url": "#",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "#"
+                    },
+                    "label": "My Account",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "f29aed6a-3f0b-425f-92ab-499c2160dc98",
+                    "link": {
+                      "id": "",
+                      "url": "#",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "#"
+                    },
+                    "label": "Do No Harm Principle",
+                    "component": "menuItem"
+                  }
+                ],
+                "label": "Resources",
+                "component": "menuItemGroup"
+              },
+              {
+                "_uid": "61edcc86-576d-4d77-8751-033248b2bf8b",
+                "items": [
+                  {
+                    "_uid": "48a3e6c8-f5ff-469f-acb8-1d1cf6958f3e",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "How it works",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "03d94010-7bc7-4c53-bb4e-3c045bd67347",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Contributors",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "3c96bd31-81d1-4909-bca5-86b5e5691353",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Recipients",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "a18a58aa-d051-40b4-aa01-66f4e5b6cd8b",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Transparency",
+                    "component": "menuItem"
+                  }
+                ],
+                "label": "Our work",
+                "component": "menuItemGroup"
+              },
+              {
+                "_uid": "961e60d7-25c9-4c59-ab92-3c30d8a59a15",
+                "items": [
+                  {
+                    "_uid": "96940eb6-32a3-4e0f-9309-699ccf0387f3",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Our mission",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "55faedc2-8e4b-4b13-b3fa-6f99bd3b3b8c",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Team",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "e29fdcf3-2446-4f13-9313-d8c1fbc0654b",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Basic Income",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "2649e49b-f644-416c-baa2-68864489161c",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Cash Transfers",
+                    "component": "menuItem"
+                  }
+                ],
+                "label": "About us",
+                "component": "menuItemGroup"
+              }
+            ],
+            "copyrightNotice": "© %YEAR% Social Income · Registered Non-Profit in Switzerland       "
+          },
+          "slug": "layout",
+          "full_slug": "new-website/layout/",
+          "sort_by_date": null,
+          "position": -70,
+          "tag_list": [],
+          "is_startpage": true,
+          "parent_id": 143204405160734,
+          "meta_data": null,
+          "group_id": "894b9bd2-98ff-4460-bd5a-1b1a914a805b",
+          "first_published_at": "2026-02-09T15:33:37.925Z",
+          "release_id": null,
+          "lang": "default",
+          "path": null,
+          "alternates": [],
+          "default_full_slug": "new-website/layout/",
+          "translated_slugs": [
+            {
+              "path": "new-website/layout/",
+              "name": null,
+              "lang": "fr",
+              "published": null
+            },
+            {
+              "path": "new-website/layout/",
+              "name": null,
+              "lang": "it",
+              "published": null
+            },
+            {
+              "path": "new-website/layout/",
+              "name": null,
+              "lang": "de",
+              "published": null
+            }
+          ]
+        },
+        "cv": 1774957042,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 11
+    },
+    {
+      "body": {
+        "story": {
+          "name": "Layout",
+          "created_at": "2026-02-09T15:29:57.490Z",
+          "published_at": "2026-03-31T11:37:22.284Z",
+          "updated_at": "2026-03-31T11:37:22.306Z",
+          "id": 143201884212331,
+          "uuid": "7d96ab3b-7c09-4b8e-b87e-ad24b8e9e094",
+          "content": {
+            "_uid": "1a3112b1-a308-4098-9002-ba14de38bd42",
+            "menu": [
+              {
+                "_uid": "5fdd38c5-3185-412d-bca2-1bb89f1ec4e5",
+                "label": "Programs",
+                "component": "dropdownItem",
+                "menuItemGroups": [
+                  {
+                    "_uid": "e5756ee2-c0b3-4ba5-9a6d-e72f5d6aba74",
+                    "items": [
+                      {
+                        "_uid": "d1c74029-c297-4402-b1ac-3dd702bbad46",
+                        "icon": "",
+                        "link": {
+                          "id": "23fcc517-6433-44e4-a209-dfa4f741e3b3",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/countries/sierra-leone"
+                        },
+                        "label": "Sierra Leone",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "584ede67-134a-45c9-a64e-10560fa830a8",
+                        "icon": "",
+                        "link": {
+                          "id": "3e95acfa-5773-4cf7-a126-6a2589c33074",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/countries/liberia"
+                        },
+                        "label": "Liberia",
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Countries",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "bdc289d0-b285-44f8-bad8-e6afcf08c149",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/countries/"
+                    },
+                    "overviewLabel": "All Countries"
+                  },
+                  {
+                    "_uid": "4bcfc45d-25a8-4cd1-b7f4-7a5971f46316",
+                    "items": [
+                      {
+                        "_uid": "ee2f2c5b-7c50-4713-962d-c38a14df2cdb",
+                        "icon": "",
+                        "link": {
+                          "id": "bc2b78b8-35ef-423e-8fe9-e05f794f6f70",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/local-partners/ebola-survivors"
+                        },
+                        "label": "Ebola Survivors",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "e41653bf-a18d-4a5a-9f19-844d2daba241",
+                        "icon": "",
+                        "link": {
+                          "id": "141721b0-71ac-4ff8-8c2a-22e11abb6be6",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/local-partners/widows"
+                        },
+                        "label": "Widows",
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Local Partners",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "74da986a-ea7a-4fc1-bc59-bfc72c6482b9",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/local-partners/"
+                    },
+                    "overviewLabel": "All local partners"
+                  },
+                  {
+                    "_uid": "00ac90c6-d15b-43a9-a9bd-2c8d087cbfca",
+                    "items": [
+                      {
+                        "_uid": "c0f1d542-45aa-4279-b251-08ce3fae0b16",
+                        "icon": "",
+                        "link": {
+                          "id": "58a6e243-b313-4536-8cd9-18a8efdb5898",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/focuses/poverty"
+                        },
+                        "label": "Poverty",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "7a42e642-1964-41c7-a385-1c9943fe51b2",
+                        "icon": "",
+                        "link": {
+                          "id": "600bcce9-c394-4854-b364-f4f05cafa82c",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/focuses/climate"
+                        },
+                        "label": "Climate",
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Our focus",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "4a2113c9-5880-45bb-bd66-7b5f59b9997b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/focuses/"
+                    },
+                    "overviewLabel": "All Focuses"
+                  },
+                  {
+                    "_uid": "4805846a-dfe3-427f-a5de-c29eb8891072",
+                    "items": [
+                      {
+                        "_uid": "392ea669-e460-4288-944d-dbba001f8483",
+                        "icon": "",
+                        "link": {
+                          "id": "005956bd-a370-470d-bc53-6ed078892467",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/programs/si-core-program-sl"
+                        },
+                        "label": "Core Program",
+                        "newTab": false,
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "4816b7f3-087d-4628-b43c-76186e4bba72",
+                        "icon": "",
+                        "link": {
+                          "id": "1bb3fbd5-ef11-4a04-b02e-1bb4e329dc1c",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/programs/si-women-support-sl"
+                        },
+                        "label": "Woman Program",
+                        "newTab": false,
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Programs",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "c9e97da8-956b-4791-b156-84235e9787b0",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/programs/"
+                    },
+                    "overviewLabel": "All Programs"
+                  },
+                  {
+                    "_uid": "ce4d021b-bf05-473c-b11c-f59534e45909",
+                    "items": [
+                      {
+                        "_uid": "9fdafed8-5b87-4412-94ce-abb199eb6e81",
+                        "icon": "",
+                        "link": {
+                          "id": "a09df4bf-14ce-4e32-885e-9741f7d026fe",
+                          "url": "",
+                          "linktype": "story",
+                          "fieldtype": "multilink",
+                          "cached_url": "new-website/campaigns/si-core-program-sl-default-campaign"
+                        },
+                        "label": "Core Campaign",
+                        "newTab": false,
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "Campaigns",
+                    "component": "menuItemGroup",
+                    "overviewLink": {
+                      "id": "c0eaf2ff-fed8-4513-a87d-17bee72e85f7",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/campaigns/"
+                    },
+                    "overviewLabel": "All Campaigns"
+                  }
+                ]
+              },
+              {
+                "_uid": "885a0563-1dec-409c-a8c7-dfaa5765df9a",
+                "link": {
+                  "id": "",
+                  "url": "/journal",
+                  "linktype": "url",
+                  "fieldtype": "multilink",
+                  "cached_url": "/journal"
+                },
+                "label": "Journal",
+                "component": "menuItem"
+              },
+              {
+                "_uid": "8db6ddcf-be2e-4d2b-b3e5-8be593943745",
+                "link": {
+                  "id": "",
+                  "url": "#",
+                  "linktype": "url",
+                  "fieldtype": "multilink",
+                  "cached_url": "#"
+                },
+                "label": "Transparency",
+                "component": "menuItem"
+              },
+              {
+                "_uid": "8d85421e-145c-4909-9c2e-6944fbf310bc",
+                "label": "About",
+                "component": "dropdownItem",
+                "menuItemGroups": [
+                  {
+                    "_uid": "bbf58359-f678-473e-aab9-4753e5935a40",
+                    "items": [
+                      {
+                        "_uid": "26183104-00b7-4310-b6b8-cd37d1e56426",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Our mission",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "2374cb8b-cc4f-4577-afa8-01331839222f",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Team",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "4628ef21-7ac8-4a52-8827-76359a329f0f",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Basic Income",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "98d30afe-1869-4372-9ab0-31d1e0ef1e28",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Empowerment",
+                        "component": "menuItem"
+                      },
+                      {
+                        "_uid": "aeeb463e-5d64-4f49-a38e-26d4e7fbf8fb",
+                        "link": {
+                          "id": "",
+                          "url": "https://example.com",
+                          "linktype": "url",
+                          "fieldtype": "multilink",
+                          "cached_url": "https://example.com"
+                        },
+                        "label": "Homeless",
+                        "component": "menuItem"
+                      }
+                    ],
+                    "label": "About us",
+                    "component": "menuItemGroup"
+                  }
+                ]
+              }
+            ],
+            "component": "layout",
+            "footerMenu": [
+              {
+                "_uid": "cd5f287b-33da-4d03-a2e4-0ddb15743ed6",
+                "items": [
+                  {
+                    "_uid": "77df115d-92db-4bcc-8667-64aceea1c5ac",
+                    "icon": "instagram",
+                    "link": {
+                      "id": "",
+                      "url": "https://www.instagram.com/so_income/",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://www.instagram.com/so_income/"
+                    },
+                    "label": "Instagram",
+                    "newTab": true,
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "6fb1f5a9-7353-4049-81f0-da96389f8d2f",
+                    "icon": "linkedin",
+                    "link": {
+                      "id": "",
+                      "url": "https://www.linkedin.com/company/socialincome",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://www.linkedin.com/company/socialincome"
+                    },
+                    "label": "LinkedIn",
+                    "newTab": true,
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "903f728a-9fcf-4578-a7f9-21d747540111",
+                    "icon": "facebook",
+                    "link": {
+                      "id": "",
+                      "url": "https://facebook.com/socialincome.org",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://facebook.com/socialincome.org"
+                    },
+                    "label": "Facebook",
+                    "newTab": true,
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "59e880e7-42c6-480b-8b37-44b7fa98c032",
+                    "icon": "github",
+                    "link": {
+                      "id": "",
+                      "url": "https://github.com/socialincome-san/public",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://github.com/socialincome-san/public"
+                    },
+                    "label": "GitHub",
+                    "newTab": true,
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "970354a2-52b3-4354-852b-51ef4294e0ee",
+                    "icon": "newsletter",
+                    "link": {
+                      "id": "",
+                      "url": "#",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "#"
+                    },
+                    "label": "Newsletter",
+                    "component": "menuItem"
+                  }
+                ],
+                "label": "Stay tuned",
+                "component": "menuItemGroup"
+              },
+              {
+                "_uid": "6983bab5-a810-4917-8701-11e2ba2f7da4",
+                "items": [
+                  {
+                    "_uid": "18f6f337-622d-40c9-84cf-18ae56106b72",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "FAQ",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "b24dfbe5-b793-4de5-a4a6-34e19456258c",
+                    "link": {
+                      "id": "",
+                      "url": "#",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "#"
+                    },
+                    "label": "My Account",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "f29aed6a-3f0b-425f-92ab-499c2160dc98",
+                    "link": {
+                      "id": "",
+                      "url": "#",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "#"
+                    },
+                    "label": "Do No Harm Principle",
+                    "component": "menuItem"
+                  }
+                ],
+                "label": "Resources",
+                "component": "menuItemGroup"
+              },
+              {
+                "_uid": "61edcc86-576d-4d77-8751-033248b2bf8b",
+                "items": [
+                  {
+                    "_uid": "48a3e6c8-f5ff-469f-acb8-1d1cf6958f3e",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "How it works",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "03d94010-7bc7-4c53-bb4e-3c045bd67347",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Contributors",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "3c96bd31-81d1-4909-bca5-86b5e5691353",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Recipients",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "a18a58aa-d051-40b4-aa01-66f4e5b6cd8b",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Transparency",
+                    "component": "menuItem"
+                  }
+                ],
+                "label": "Our work",
+                "component": "menuItemGroup"
+              },
+              {
+                "_uid": "961e60d7-25c9-4c59-ab92-3c30d8a59a15",
+                "items": [
+                  {
+                    "_uid": "96940eb6-32a3-4e0f-9309-699ccf0387f3",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Our mission",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "55faedc2-8e4b-4b13-b3fa-6f99bd3b3b8c",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Team",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "e29fdcf3-2446-4f13-9313-d8c1fbc0654b",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Basic Income",
+                    "component": "menuItem"
+                  },
+                  {
+                    "_uid": "2649e49b-f644-416c-baa2-68864489161c",
+                    "link": {
+                      "id": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": "new-website/example"
+                    },
+                    "label": "Cash Transfers",
+                    "component": "menuItem"
+                  }
+                ],
+                "label": "About us",
+                "component": "menuItemGroup"
+              }
+            ],
+            "copyrightNotice": "© %YEAR% Social Income · Registered Non-Profit in Switzerland       "
+          },
+          "slug": "layout",
+          "full_slug": "new-website/layout/",
+          "sort_by_date": null,
+          "position": -70,
+          "tag_list": [],
+          "is_startpage": true,
+          "parent_id": 143204405160734,
+          "meta_data": null,
+          "group_id": "894b9bd2-98ff-4460-bd5a-1b1a914a805b",
+          "first_published_at": "2026-02-09T15:33:37.925Z",
+          "release_id": null,
+          "lang": "default",
+          "path": null,
+          "alternates": [],
+          "default_full_slug": "new-website/layout/",
+          "translated_slugs": [
+            {
+              "path": "new-website/layout/",
+              "name": null,
+              "lang": "fr",
+              "published": null
+            },
+            {
+              "path": "new-website/layout/",
+              "name": null,
+              "lang": "it",
+              "published": null
+            },
+            {
+              "path": "new-website/layout/",
+              "name": null,
+              "lang": "de",
+              "published": null
+            }
+          ]
+        },
+        "cv": 1774957042,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 10
+    }
+  ],
+  "e6646ea82cac0881d4e48315c83f9e2334dc32b51f8684748d2e4fb15579d4dc": [
+    {
+      "body": {
+        "stories": [
+          {
+            "name": "Overview",
+            "created_at": "2026-03-31T10:48:38.052Z",
+            "published_at": "2026-03-31T10:52:09.819Z",
+            "updated_at": "2026-03-31T10:52:09.830Z",
+            "id": 160827465967532,
+            "uuid": "74da986a-ea7a-4fc1-bc59-bfc72c6482b9",
+            "content": {
+              "_uid": "fbb9f617-54bb-4b87-8e15-57a3caf4e034",
+              "content": [
+                {
+                  "_uid": "60771f82-29e4-482a-bcf5-158832a43dd7",
+                  "content": {
+                    "type": "doc",
+                    "content": [
+                      {
+                        "type": "heading",
+                        "attrs": {
+                          "level": 1,
+                          "textAlign": null
+                        },
+                        "content": [
+                          {
+                            "text": "Local Partners",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "textAlign": null
+                        },
+                        "content": [
+                          {
+                            "text": "All the awesome local partners!",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "component": "text",
+                  "_editable": "<!--#storyblok#{\"name\": \"text\", \"space\": \"109655\", \"uid\": \"60771f82-29e4-482a-bcf5-158832a43dd7\", \"id\": \"160827465967532\"}-->"
+                },
+                {
+                  "_uid": "20e43417-d364-453b-9931-314c7ea509db",
+                  "component": "localPartnerGrid",
+                  "localPartners": [],
+                  "showAllLocalPartners": true,
+                  "_editable": "<!--#storyblok#{\"name\": \"localPartnerGrid\", \"space\": \"109655\", \"uid\": \"20e43417-d364-453b-9931-314c7ea509db\", \"id\": \"160827465967532\"}-->"
+                }
+              ],
+              "component": "page",
+              "_editable": "<!--#storyblok#{\"name\": \"page\", \"space\": \"109655\", \"uid\": \"fbb9f617-54bb-4b87-8e15-57a3caf4e034\", \"id\": \"160827465967532\"}-->"
+            },
+            "slug": "local-partners",
+            "full_slug": "de/new-website/local-partners/",
+            "sort_by_date": null,
+            "position": -20,
+            "tag_list": [],
+            "is_startpage": true,
+            "parent_id": 160479824364543,
+            "meta_data": null,
+            "group_id": "fdffdcf4-87b1-4bac-aedc-2afd6f2693fe",
+            "first_published_at": "2026-03-31T10:50:23.474Z",
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/local-partners/",
+            "translated_slugs": [
+              {
+                "path": "new-website/local-partners/",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "widows",
+            "created_at": "2026-03-30T11:54:22.964Z",
+            "published_at": null,
+            "updated_at": "2026-03-30T11:54:39.425Z",
+            "id": 160489729929614,
+            "uuid": "141721b0-71ac-4ff8-8c2a-22e11abb6be6",
+            "content": {
+              "id": "test",
+              "_uid": "41c1d588-6473-4dcb-b2df-f86d7847ee28",
+              "title": "Widows",
+              "component": "Local Partner",
+              "heroImage": {
+                "id": 158389168950833,
+                "alt": "",
+                "name": "",
+                "focus": "1125x964:1126x965",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "",
+                  "title": "",
+                  "source": "",
+                  "copyright": ""
+                },
+                "is_external_url": false
+              },
+              "description": "nice",
+              "_editable": "<!--#storyblok#{\"name\": \"Local Partner\", \"space\": \"109655\", \"uid\": \"41c1d588-6473-4dcb-b2df-f86d7847ee28\", \"id\": \"160489729929614\"}-->"
+            },
+            "slug": "widows",
+            "full_slug": "de/new-website/local-partners/widows",
+            "sort_by_date": null,
+            "position": -10,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 160479824364543,
+            "meta_data": null,
+            "group_id": "b26a2647-660f-4ad8-9f17-1141168c017e",
+            "first_published_at": null,
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/local-partners/widows",
+            "translated_slugs": [
+              {
+                "path": "new-website/local-partners/widows",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/widows",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/widows",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "ebola survivors",
+            "created_at": "2026-03-30T11:14:31.013Z",
+            "published_at": "2026-03-30T11:43:24.273Z",
+            "updated_at": "2026-03-30T11:48:42.746Z",
+            "id": 160479932498954,
+            "uuid": "bc2b78b8-35ef-423e-8fe9-e05f794f6f70",
+            "content": {
+              "id": "local-partner-gh-1",
+              "_uid": "23a24755-2d91-4a0c-9421-7a7f1593a664",
+              "title": "Ebola Survivors",
+              "component": "Local Partner",
+              "heroImage": {
+                "id": 138530341154783,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "description": "awesome partner",
+              "_editable": "<!--#storyblok#{\"name\": \"Local Partner\", \"space\": \"109655\", \"uid\": \"23a24755-2d91-4a0c-9421-7a7f1593a664\", \"id\": \"160479932498954\"}-->"
+            },
+            "slug": "ebola-survivors",
+            "full_slug": "de/new-website/local-partners/ebola-survivors",
+            "sort_by_date": null,
+            "position": 0,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 160479824364543,
+            "meta_data": null,
+            "group_id": "88314521-883a-4ae7-8261-37fbc1b0682d",
+            "first_published_at": "2026-03-30T11:43:24.273Z",
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/local-partners/ebola-survivors",
+            "translated_slugs": [
+              {
+                "path": "new-website/local-partners/ebola-survivors",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/ebola-survivors",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/ebola-survivors",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          }
+        ],
+        "cv": 1774957042,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Flocal-partners%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "e6646ea82cac0881d4e48315c83f9e2334dc32b51f8684748d2e4fb15579d4dc",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 92
+    }
+  ]
+}
