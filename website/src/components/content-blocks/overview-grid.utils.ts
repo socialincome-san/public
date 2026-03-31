@@ -4,11 +4,11 @@ const getSlugTail = (story: ISbStoryData<unknown>) => {
 	return story.full_slug?.split('/').at(-1);
 };
 
-const isStoryData = <T,>(value: ISbStoryData<T> | string): value is ISbStoryData<T> => {
+const isStoryData = <T>(value: ISbStoryData<T> | string): value is ISbStoryData<T> => {
 	return typeof value !== 'string';
 };
 
-export const resolveSelectedStories = <T,>(
+export const resolveSelectedStories = <T>(
 	selectedEntries: Array<ISbStoryData<T> | string> | undefined,
 	allStories: ISbStoryData<T>[],
 ) => {
@@ -32,4 +32,3 @@ export const resolveSelectedStories = <T,>(
 		return story ? [story] : [];
 	});
 };
-

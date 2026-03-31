@@ -1,7 +1,7 @@
+import { BlockWrapper } from '@/components/block-wrapper';
+import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import { CountriesOverview } from '@/components/storyblok/country/countries-overview';
 import { getCountryIsoCode } from '@/components/storyblok/country/country.utils';
-import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
-import { BlockWrapper } from '@/components/block-wrapper';
 import type { CountryGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -27,4 +27,3 @@ export const CountryGridBlock = async ({ blok, lang, region }: Props) => {
 		</BlockWrapper>
 	);
 };
-

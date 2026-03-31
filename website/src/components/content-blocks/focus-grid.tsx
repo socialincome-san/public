@@ -1,7 +1,7 @@
-import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
-import { FocusesOverview } from '@/components/storyblok/focus/focuses-overview';
-import { getFocusId } from '@/components/storyblok/focus/focus.utils';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
+import { getFocusId } from '@/components/storyblok/focus/focus.utils';
+import { FocusesOverview } from '@/components/storyblok/focus/focuses-overview';
 import type { FocusGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -27,4 +27,3 @@ export const FocusGridBlock = async ({ blok, lang, region }: Props) => {
 		</BlockWrapper>
 	);
 };
-
