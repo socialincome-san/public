@@ -52,7 +52,7 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			id: 'newWebsiteLink',
 			accessorFn: (row) => {
 				const origin = typeof window !== 'undefined' ? window.location.origin : '';
-				
+
 				return `${origin}/de/ch/new-website/campaigns/${slugify(row.title)}`;
 			},
 			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
