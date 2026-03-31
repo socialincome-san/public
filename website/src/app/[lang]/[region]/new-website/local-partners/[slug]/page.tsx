@@ -1,14 +1,14 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { LocalPartnerDetail } from '@/components/storyblok/local-partner/local-partner-detail';
 import { getLocalPartnerId } from '@/components/storyblok/local-partner/local-partner.utils';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
 export default async function LocalPartnerPage({ params }: DefaultLayoutPropsWithSlug) {
-	const { slug, lang, region } = await params;
+	const { slug, lang } = await params;
 	const localPartnerResult = await services.storyblok.getLocalPartnerBySlug(slug, lang);
 
 	if (!localPartnerResult.success) {
@@ -24,7 +24,6 @@ export default async function LocalPartnerPage({ params }: DefaultLayoutPropsWit
 		<LocalPartnerDetail
 			localPartner={localPartnerResult.data}
 			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
 			assignedRecipientsCount={statsResult?.success ? statsResult.data.assignedRecipientsCount : undefined}
 			waitingRecipientsCount={statsResult?.success ? statsResult.data.waitingRecipientsCount : undefined}
 		/>

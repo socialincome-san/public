@@ -1,14 +1,14 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { FocusDetail } from '@/components/storyblok/focus/focus-detail';
 import { getFocusId } from '@/components/storyblok/focus/focus.utils';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
 export default async function FocusPage({ params }: DefaultLayoutPropsWithSlug) {
-	const { slug, lang, region } = await params;
+	const { slug, lang } = await params;
 	const focusResult = await services.storyblok.getFocusBySlug(slug, lang);
 
 	if (!focusResult.success) {
@@ -25,7 +25,6 @@ export default async function FocusPage({ params }: DefaultLayoutPropsWithSlug) 
 		<FocusDetail
 			focus={focusResult.data}
 			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
 			activeProgramsCount={activeProgramsCount}
 			recipientsInProgramsCount={recipientsInProgramsCount}
 			candidatesCount={candidatesCount}

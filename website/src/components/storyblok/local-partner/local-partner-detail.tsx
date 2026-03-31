@@ -1,13 +1,12 @@
 import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { LocalPartnerStory } from './local-partner.types';
 import { getLocalPartnerDescription, getLocalPartnerTitle } from './local-partner.utils';
 
 type Props = {
 	localPartner: LocalPartnerStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	assignedRecipientsCount?: number;
 	waitingRecipientsCount?: number;
 };
@@ -15,7 +14,6 @@ type Props = {
 export const LocalPartnerDetail = async ({
 	localPartner,
 	lang,
-	region: _region,
 	assignedRecipientsCount,
 	waitingRecipientsCount,
 }: Props) => {

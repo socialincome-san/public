@@ -8,7 +8,6 @@ import { services } from '@/lib/services/services';
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
@@ -22,7 +21,6 @@ const getLocalPartnerStats = async (localPartnerId: string) => {
 export const StoryblokPreviewLocalPartnerPage = async ({
 	storyPath,
 	lang,
-	region,
 	previewRoutePath,
 	searchParams,
 }: Props) => {
@@ -44,7 +42,6 @@ export const StoryblokPreviewLocalPartnerPage = async ({
 				<LocalPartnerDetail
 					localPartner={story}
 					lang={lang}
-					region={region}
 					assignedRecipientsCount={stats?.assignedRecipientsCount}
 					waitingRecipientsCount={stats?.waitingRecipientsCount}
 				/>

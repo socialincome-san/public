@@ -1,13 +1,12 @@
 import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { FocusStory } from './focus.types';
 import { getFocusDescription, getFocusTitle } from './focus.utils';
 
 type Props = {
 	focus: FocusStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	activeProgramsCount: number;
 	recipientsInProgramsCount: number;
 	candidatesCount: number;
@@ -16,7 +15,6 @@ type Props = {
 export const FocusDetail = async ({
 	focus,
 	lang,
-	region: _region,
 	activeProgramsCount,
 	recipientsInProgramsCount,
 	candidatesCount,
