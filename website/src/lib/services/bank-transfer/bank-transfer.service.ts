@@ -1,5 +1,6 @@
 import { ContributionStatus, DonationInterval, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
+import { DateTime } from 'luxon';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
@@ -7,7 +8,7 @@ import { ContributorWriteService } from '../contributor/contributor-write.servic
 import { BankContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { BankTransferPayment } from './bank-transfer.types';
+import { BankTransferPayment, BankTransferQrReferenceData } from './bank-transfer.types';
 
 export class BankTransferService extends BaseService {
 	constructor(
@@ -18,6 +19,30 @@ export class BankTransferService extends BaseService {
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
+	}
+
+	async getOrCreateQrReferences(
+		contributorData: BankTransferQrReferenceData,
+	): Promise<ServiceResult<{ contributorReferenceId: string; contributionReferenceId: string }>> {
+		const contributorReferenceIdResult = await this.contributorService.getOrCreateReferenceIdByEmail(contributorData.email);
+		if (!contributorReferenceIdResult.success) {
+			return this.resultFail(contributorReferenceIdResult.error);
+		}
+
+		const contributorUpsertResult = await this.contributorService.getOrCreateByReferenceId({
+			...contributorData,
+			paymentReferenceId: contributorReferenceIdResult.data,
+		});
+		if (!contributorUpsertResult.success) {
+			return this.resultFail(contributorUpsertResult.error);
+		}
+
+		const contributionReferenceId = Math.round(DateTime.now().toMillis() / 1000).toString();
+
+		return this.resultOk({
+			contributorReferenceId: contributorReferenceIdResult.data,
+			contributionReferenceId,
+		});
 	}
 
 	async createContributionForNewOrExistingContributor(
