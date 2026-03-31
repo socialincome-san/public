@@ -2,7 +2,7 @@ import { LocalPartnerDetail } from '@/components/storyblok/local-partner/local-p
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
 import { getLocalPartnerId } from '@/components/storyblok/local-partner/local-partner.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 
 type Props = {
@@ -18,12 +18,7 @@ const getLocalPartnerStats = async (localPartnerId: string) => {
 	return statsResult.success ? statsResult.data : undefined;
 };
 
-export const StoryblokPreviewLocalPartnerPage = async ({
-	storyPath,
-	lang,
-	previewRoutePath,
-	searchParams,
-}: Props) => {
+export const StoryblokPreviewLocalPartnerPage = async ({ storyPath, lang, previewRoutePath, searchParams }: Props) => {
 	return await StoryblokPreviewStory<LocalPartnerStory>({
 		storyPath,
 		lang,

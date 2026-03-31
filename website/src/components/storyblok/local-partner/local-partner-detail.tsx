@@ -11,12 +11,7 @@ type Props = {
 	waitingRecipientsCount?: number;
 };
 
-export const LocalPartnerDetail = async ({
-	localPartner,
-	lang,
-	assignedRecipientsCount,
-	waitingRecipientsCount,
-}: Props) => {
+export const LocalPartnerDetail = async ({ localPartner, lang, assignedRecipientsCount, waitingRecipientsCount }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const localPartnerTitle = getLocalPartnerTitle(localPartner.content);
 	const localPartnerDescription = getLocalPartnerDescription(localPartner.content);
