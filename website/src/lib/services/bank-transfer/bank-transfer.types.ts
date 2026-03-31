@@ -1,4 +1,5 @@
 import { Currency } from '@/generated/prisma/enums';
+import { BankContributorData } from '../contributor/contributor.types';
 
 export type BankTransferPayment = {
 	amount: number;
@@ -6,3 +7,8 @@ export type BankTransferPayment = {
 	referenceId: string;
 	interval: number;
 };
+
+export type BankTransferQrReferenceData = Pick<
+	BankContributorData,
+	'email' | 'firstName' | 'lastName' | 'language'
+>;

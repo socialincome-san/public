@@ -330,6 +330,37 @@ export class ContributorWriteService extends BaseService {
 				return this.resultOk(existingContributor);
 			}
 
+			const existingByEmail = await this.db.contributor.findFirst({
+				where: { contact: { email: contributorData.email } },
+				select: { id: true, paymentReferenceId: true },
+			});
+			if (existingByEmail) {
+				if (existingByEmail.paymentReferenceId !== contributorData.paymentReferenceId) {
+					const updated = await this.updateSelf(existingByEmail.id, {
+						paymentReferenceId: contributorData.paymentReferenceId,
+						contact: {
+							update: {
+								data: {
+									email: contributorData.email,
+								},
+							},
+						},
+					});
+					if (!updated.success) {
+						return this.resultFail(updated.error);
+					}
+
+					return this.resultOk(updated.data);
+				}
+
+				const contributor = await this.db.contributor.findUnique({ where: { id: existingByEmail.id } });
+				if (!contributor) {
+					return this.resultFail(`Contributor not found after lookup by email: ${existingByEmail.id}`);
+				}
+
+				return this.resultOk(contributor);
+			}
+
 			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
 				email: contributorData.email,
 				displayName: `${contributorData.firstName} ${contributorData.lastName}`,

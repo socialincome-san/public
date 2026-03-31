@@ -33,7 +33,7 @@ export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, t
 		}
 
 		startTransition(async () => {
-			const result = await getReferenceIds(email);
+			const result = await getReferenceIds(email, firstName, lastName, language);
 			if (!result.success) {
 				toast.error(translations.errors.qrBillError);
 
