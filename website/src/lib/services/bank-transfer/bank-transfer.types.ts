@@ -8,7 +8,4 @@ export type BankTransferPayment = {
 	interval: number;
 };
 
-export type BankTransferQrReferenceData = Pick<
-	BankContributorData,
-	'email' | 'firstName' | 'lastName' | 'language'
->;
+export type BankTransferQrReferenceData = Pick<BankContributorData, 'email' | 'firstName' | 'lastName' | 'language'>;
