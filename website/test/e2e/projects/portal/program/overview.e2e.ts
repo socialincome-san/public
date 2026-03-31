@@ -113,8 +113,8 @@ test('program settings dialog can delete a newly created program and redirects t
 	await page.getByTestId('radio-card-country-sierra-leone').click();
 	await page.getByRole('button', { name: 'Continue' }).click();
 	await page.getByTestId('radio-card-targeted').click();
-	await page.getByTestId('pill-multi-select-poverty').click();
-	await page.getByTestId('pill-multi-select-health').click();
+	await page.getByTestId('pill-multi-select-focus-poverty').click();
+	await page.getByTestId('pill-multi-select-focus-health').click();
 	await page.getByTestId('pill-multi-select-female').click();
 	await expect(page.getByText(/recipients match the selected country and filters/i)).toBeVisible();
 	await page.getByRole('button', { name: 'Continue' }).click();
