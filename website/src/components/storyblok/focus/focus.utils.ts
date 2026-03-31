@@ -2,11 +2,11 @@ import type { Focus } from '@/generated/storyblok/types/109655/storyblok-compone
 import type { FocusStory } from './focus.types';
 
 export const getFocusId = (focus: Focus) => {
-	return focus.id?.trim() ?? '';
+	return focus.id.trim();
 };
 
 export const getFocusDescription = (focus: Focus) => {
-	return focus.description?.trim() ?? '';
+	return focus.description.trim();
 };
 
 export const getFocusSlug = (focus: FocusStory) => {
@@ -16,5 +16,5 @@ export const getFocusSlug = (focus: FocusStory) => {
 };
 
 export const getFocusTitle = (focus: Focus) => {
-	return focus.title?.trim() ?? getFocusId(focus);
+	return focus.title.trim() || getFocusId(focus);
 };

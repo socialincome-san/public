@@ -26,8 +26,8 @@ export const LocalPartnersOverview = async ({ localPartners, statsById, lang, re
 						const localPartnerTitle = getLocalPartnerTitle(localPartner.content);
 						const localPartnerSlug = getLocalPartnerSlug(localPartner);
 						const stats = localPartnerId ? statsById[localPartnerId] : undefined;
-						const heroImageFilename = localPartner.content.heroImage?.filename;
-						const heroImageAlt = localPartner.content.heroImage?.alt ?? localPartnerTitle;
+						const heroImageFilename = localPartner.content.heroImage.filename;
+						const heroImageAlt = localPartner.content.heroImage.alt ?? localPartnerTitle;
 
 						return (
 							<LandingPageCard

@@ -3,6 +3,7 @@ import { CountryGridBlock } from '@/components/content-blocks/country-grid';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { FocusGridBlock } from '@/components/content-blocks/focus-grid';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
+import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
@@ -25,6 +26,7 @@ const storyblokComponents = {
 	donationsTotal: DonationsTotalBlockServer,
 	focusGrid: FocusGridBlock,
 	heroVideo: HeroVideoBlockServer,
+	impactMeasurement: ImpactMeasurementBlock,
 	text: TextBlock,
 	imageText: ImageTextBlock,
 	modalCards: ModalCardsBlock,

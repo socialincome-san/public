@@ -2,11 +2,11 @@ import type { LocalPartner } from '@/generated/storyblok/types/109655/storyblok-
 import type { LocalPartnerStory } from './local-partner.types';
 
 export const getLocalPartnerId = (localPartner: LocalPartner) => {
-	return localPartner.id?.trim() ?? '';
+	return localPartner.id.trim();
 };
 
 export const getLocalPartnerDescription = (localPartner: LocalPartner) => {
-	return localPartner.description?.trim() ?? '';
+	return localPartner.description.trim();
 };
 
 export const getLocalPartnerSlug = (localPartner: LocalPartnerStory) => {
@@ -16,5 +16,5 @@ export const getLocalPartnerSlug = (localPartner: LocalPartnerStory) => {
 };
 
 export const getLocalPartnerTitle = (localPartner: LocalPartner) => {
-	return localPartner.title?.trim() ?? getLocalPartnerId(localPartner);
+	return localPartner.title.trim() || getLocalPartnerId(localPartner);
 };

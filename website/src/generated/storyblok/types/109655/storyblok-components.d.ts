@@ -57,10 +57,10 @@ export interface Button {
 }
 
 export interface Campaign {
-  id?: string;
-  title?: string;
-  heroImage?: StoryblokAsset;
-  description?: string;
+  id: string;
+  title: string;
+  heroImage: StoryblokAsset;
+  description: string;
   component: "campaign";
   _uid: string;
   [k: string]: unknown;
@@ -143,10 +143,10 @@ export interface FaqSelection {
 }
 
 export interface Focus {
-  id?: string;
-  heroImage?: StoryblokAsset;
-  title?: string;
-  description?: string;
+  id: string;
+  heroImage: StoryblokAsset;
+  title: string;
+  description: string;
   component: "Focus";
   _uid: string;
   [k: string]: unknown;
@@ -187,6 +187,12 @@ export interface ImageWithCaption {
   [k: string]: unknown;
 }
 
+export interface ImpactMeasurement {
+  component: "impactMeasurement";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface JournalTeasers {
   heading?: string;
   articlesDisplayMode: "latest" | "selected";
@@ -206,10 +212,10 @@ export interface Layout {
 }
 
 export interface LocalPartner {
-  id?: string;
-  heroImage?: StoryblokAsset;
-  title?: string;
-  description?: string;
+  id: string;
+  heroImage: StoryblokAsset;
+  title: string;
+  description: string;
   component: "Local Partner";
   _uid: string;
   [k: string]: unknown;
@@ -279,6 +285,7 @@ export interface Page {
     | FocusGrid
     | HeroVideo
     | ImageText
+    | ImpactMeasurement
     | JournalTeasers
     | LocalPartnerGrid
     | ModalCards
@@ -306,10 +313,10 @@ export interface Person {
 }
 
 export interface Program {
-  id?: string;
-  title?: string;
-  heroImage?: StoryblokAsset;
-  description?: string;
+  id: string;
+  title: string;
+  heroImage: StoryblokAsset;
+  description: string;
   component: "program";
   _uid: string;
   [k: string]: unknown;

@@ -26,8 +26,8 @@ export const CampaignsOverview = async ({ campaigns, statsById, lang, region }: 
 						const campaignTitle = getCampaignTitle(campaign.content);
 						const campaignSlug = getCampaignSlug(campaign);
 						const stats = campaignId ? statsById[campaignId] : undefined;
-						const heroImageFilename = campaign.content.heroImage?.filename;
-						const heroImageAlt = campaign.content.heroImage?.alt ?? campaignTitle;
+						const heroImageFilename = campaign.content.heroImage.filename;
+						const heroImageAlt = campaign.content.heroImage.alt ?? campaignTitle;
 
 						return (
 							<LandingPageCard

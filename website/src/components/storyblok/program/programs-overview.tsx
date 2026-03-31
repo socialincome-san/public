@@ -26,8 +26,8 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 						const programTitle = getProgramTitle(program.content);
 						const programSlug = getProgramSlug(program);
 						const stats = programId ? statsById[programId] : undefined;
-						const heroImageFilename = program.content.heroImage?.filename;
-						const heroImageAlt = program.content.heroImage?.alt ?? programTitle;
+						const heroImageFilename = program.content.heroImage.filename;
+						const heroImageAlt = program.content.heroImage.alt ?? programTitle;
 
 						return (
 							<LandingPageCard

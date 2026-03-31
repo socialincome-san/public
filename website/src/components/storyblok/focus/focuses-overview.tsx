@@ -29,8 +29,8 @@ export const FocusesOverview = async ({ focuses, statsById, lang, region }: Prop
 						const focusTitle = getFocusTitle(focus.content);
 						const focusSlug = getFocusSlug(focus);
 						const stats = focusId ? statsById[focusId] : undefined;
-						const heroImageFilename = focus.content.heroImage?.filename;
-						const heroImageAlt = focus.content.heroImage?.alt ?? focusTitle;
+						const heroImageFilename = focus.content.heroImage.filename;
+						const heroImageAlt = focus.content.heroImage.alt ?? focusTitle;
 
 						return (
 							<LandingPageCard
