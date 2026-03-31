@@ -7,6 +7,7 @@ import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
+import { slugify } from '@/lib/utils/string-utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { CopyUrlCell } from '../elements/copy-url-cell';
 
@@ -48,8 +49,17 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'link',
+			id: 'newWebsiteLink',
+			accessorFn: (row) => {
+				const origin = typeof window !== 'undefined' ? window.location.origin : '';
+				return `${origin}/de/ch/new-website/campaigns/${slugify(row.title)}`;
+			},
 			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
+			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'link',
+			header: (ctx) => <SortableHeader ctx={ctx}>Legacy link</SortableHeader>,
 			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
 		},
 		{
