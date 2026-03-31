@@ -113,7 +113,6 @@
 		"sdg17-mission-2": "is to strengthen global partnerships for sustainable development."
 	},
 	"countries-page": {
-		"title": "Countries",
 		"empty": "No countries found.",
 		"program-singular": "program",
 		"program-plural": "programs",
@@ -125,7 +124,6 @@
 		"about": "About"
 	},
 	"local-partners-page": {
-		"title": "Local partners",
 		"empty": "No local partners found.",
 		"recipient-in-program-singular": "recipient in a program",
 		"recipient-in-program-plural": "recipients in a program",
@@ -134,7 +132,6 @@
 		"about": "About"
 	},
 	"focuses-page": {
-		"title": "Focuses",
 		"empty": "No focuses found.",
 		"program-singular": "program",
 		"program-plural": "programs",

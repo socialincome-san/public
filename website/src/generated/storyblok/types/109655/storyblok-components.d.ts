@@ -73,6 +73,14 @@ export interface Country {
   [k: string]: unknown;
 }
 
+export interface CountryGrid {
+  showAllCountries?: boolean;
+  countries?: (ISbStoryData<Country> | string)[];
+  component: "countryGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
@@ -122,6 +130,14 @@ export interface Focus {
   title?: string;
   description?: string;
   component: "Focus";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface FocusGrid {
+  showAllFocuses?: boolean;
+  focuses?: (ISbStoryData<Focus> | string)[];
+  component: "focusGrid";
   _uid: string;
   [k: string]: unknown;
 }
@@ -181,6 +197,14 @@ export interface LocalPartner {
   [k: string]: unknown;
 }
 
+export interface LocalPartnerGrid {
+  showAllLocalPartners?: boolean;
+  localPartners?: (ISbStoryData<LocalPartner> | string)[];
+  component: "localPartnerGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
@@ -229,7 +253,18 @@ export interface NewsletterSignup {
 }
 
 export interface Page {
-  content: (DonationsTotal | FaqSelection | HeroVideo | ImageText | JournalTeasers | ModalCards | Text)[];
+  content: (
+    | CountryGrid
+    | DonationsTotal
+    | FaqSelection
+    | FocusGrid
+    | HeroVideo
+    | ImageText
+    | JournalTeasers
+    | LocalPartnerGrid
+    | ModalCards
+    | Text
+  )[];
   component: "page";
   _uid: string;
   [k: string]: unknown;
@@ -244,6 +279,7 @@ export interface Person {
   displayInOverviewPage?: boolean;
   githubName?: string;
   linkedinName?: string;
+  is_volunteer?: boolean;
   component: "person";
   _uid: string;
   [k: string]: unknown;

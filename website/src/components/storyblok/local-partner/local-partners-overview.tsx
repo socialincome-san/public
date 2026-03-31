@@ -16,8 +16,7 @@ export const LocalPartnersOverview = async ({ localPartners, statsById, lang, re
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
 	return (
-		<div className="w-site-width max-w-content mx-auto flex w-full flex-col gap-6 px-6 py-8">
-			<h1 className="text-3xl font-semibold">{translator.t('local-partners-page.title')}</h1>
+		<div className="flex w-full flex-col gap-6">
 			{localPartners.length === 0 ? (
 				<p className="text-muted-foreground">{translator.t('local-partners-page.empty')}</p>
 			) : (

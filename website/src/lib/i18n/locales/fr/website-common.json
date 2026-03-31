@@ -113,7 +113,6 @@
 		"sdg17-mission-2": "est de renforcer les partenariats pour le développement durable."
 	},
 	"countries-page": {
-		"title": "Pays",
 		"empty": "Aucun pays trouvé.",
 		"program-singular": "programme",
 		"program-plural": "programmes",
@@ -125,7 +124,6 @@
 		"about": "À propos de"
 	},
 	"local-partners-page": {
-		"title": "Partenaires locaux",
 		"empty": "Aucun partenaire local trouvé.",
 		"recipient-in-program-singular": "bénéficiaire dans un programme",
 		"recipient-in-program-plural": "bénéficiaires dans un programme",
@@ -134,7 +132,6 @@
 		"about": "À propos de"
 	},
 	"focuses-page": {
-		"title": "Axes",
 		"empty": "Aucun axe trouvé.",
 		"program-singular": "programme",
 		"program-plural": "programmes",
