@@ -10,7 +10,7 @@ type Props = {
 	searchParams?: ParsedUrlQueryInput;
 };
 
-export const ImpactMeasurementBlock = async ({ blok, lang, searchParams }: Props) => {
+export const ImpactMeasurementBlock = ({ blok, lang, searchParams }: Props) => {
 	return (
 		<div {...storyblokEditable(blok as SbBlokData)}>
 			<ImpactMeasurementView lang={lang} searchParams={searchParams ?? {}} />
