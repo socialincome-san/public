@@ -56,9 +56,27 @@ export interface Button {
   [k: string]: unknown;
 }
 
+export interface Campaign {
+  id?: string;
+  title?: string;
+  heroImage?: StoryblokAsset;
+  description?: string;
+  component: "campaign";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface CampaignDonate {
   campaignId?: string;
   component: "campaignDonate";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface CampaignGrid {
+  showAllCampaigns?: boolean;
+  campaigns?: (ISbStoryData<Campaign> | string)[];
+  component: "campaignGrid";
   _uid: string;
   [k: string]: unknown;
 }
@@ -254,6 +272,7 @@ export interface NewsletterSignup {
 
 export interface Page {
   content: (
+    | CampaignGrid
     | CountryGrid
     | DonationsTotal
     | FaqSelection
@@ -263,6 +282,7 @@ export interface Page {
     | JournalTeasers
     | LocalPartnerGrid
     | ModalCards
+    | ProgramGrid
     | Text
   )[];
   component: "page";
@@ -281,6 +301,24 @@ export interface Person {
   linkedinName?: string;
   is_volunteer?: boolean;
   component: "person";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Program {
+  id?: string;
+  title?: string;
+  heroImage?: StoryblokAsset;
+  description?: string;
+  component: "program";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface ProgramGrid {
+  showAllPrograms?: boolean;
+  programs?: (ISbStoryData<Program> | string)[];
+  component: "programGrid";
   _uid: string;
   [k: string]: unknown;
 }
@@ -334,6 +372,7 @@ export type ContentType =
   | ActionButton
   | Article
   | ArticleType
+  | Campaign
   | Country
   | Faq
   | Focus
@@ -341,5 +380,6 @@ export type ContentType =
   | LocalPartner
   | Page
   | Person
+  | Program
   | ReferenceArticle
   | Tag;

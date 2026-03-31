@@ -142,5 +142,21 @@
 		"candidate-singular": "candidat",
 		"candidate-plural": "candidats",
 		"about": "À propos de"
+	},
+	"programs-page": {
+		"empty": "Aucun programme trouvé.",
+		"campaign-singular": "campagne",
+		"campaign-plural": "campagnes",
+		"recipient-singular": "bénéficiaire",
+		"recipient-plural": "bénéficiaires",
+		"about": "À propos de"
+	},
+	"campaigns-page": {
+		"empty": "Aucune campagne trouvée.",
+		"contribution-singular": "contribution",
+		"contribution-plural": "contributions",
+		"day-left-singular": "jour restant",
+		"day-left-plural": "jours restants",
+		"about": "À propos de"
 	}
 }

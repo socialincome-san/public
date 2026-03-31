@@ -9,7 +9,7 @@ const isStoryData = <T>(value: ISbStoryData<T> | string): value is ISbStoryData<
 };
 
 export const resolveSelectedStories = <T>(
-	selectedEntries: Array<ISbStoryData<T> | string> | undefined,
+	selectedEntries: (ISbStoryData<T> | string)[] | undefined,
 	allStories: ISbStoryData<T>[],
 ) => {
 	if (!selectedEntries?.length) {

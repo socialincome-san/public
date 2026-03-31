@@ -1,4 +1,12 @@
-import type { Country, Focus, LocalPartner, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import type {
+	Campaign,
+	Country,
+	Focus,
+	LocalPartner,
+	Person,
+	Program,
+	Tag,
+} from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
@@ -12,10 +20,12 @@ import type { ResolvedArticle } from './storyblok.utils';
 export class StoryblokService extends BaseService {
 	private static readonly contentType = {
 		article: 'article',
+		campaign: 'campaign',
 		country: 'Country',
 		focus: 'Focus',
 		localPartner: 'Local Partner',
 		person: 'person',
+		program: 'program',
 		tag: 'tag',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
@@ -24,8 +34,10 @@ export class StoryblokService extends BaseService {
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
 	private static readonly countriesPath = `${NEW_WEBSITE_SLUG}/countries`;
+	private static readonly campaignsPath = `${NEW_WEBSITE_SLUG}/campaigns`;
 	private static readonly focusesPath = `${NEW_WEBSITE_SLUG}/focuses`;
 	private static readonly localPartnersPath = `${NEW_WEBSITE_SLUG}/local-partners`;
+	private static readonly programsPath = `${NEW_WEBSITE_SLUG}/programs`;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
 		',',
 	);
@@ -43,6 +55,36 @@ export class StoryblokService extends BaseService {
 		const contentWithComponent = storyWithContent.content as { component?: string };
 
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.country.toLowerCase();
+	}
+
+	private static isProgramStory(story: unknown): story is ISbStoryData<Program> {
+		if (!story || typeof story !== 'object' || !('content' in story)) {
+			return false;
+		}
+
+		const storyWithContent = story as { content?: unknown };
+		if (!storyWithContent.content || typeof storyWithContent.content !== 'object') {
+			return false;
+		}
+
+		const contentWithComponent = storyWithContent.content as { component?: string };
+
+		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.program.toLowerCase();
+	}
+
+	private static isCampaignStory(story: unknown): story is ISbStoryData<Campaign> {
+		if (!story || typeof story !== 'object' || !('content' in story)) {
+			return false;
+		}
+
+		const storyWithContent = story as { content?: unknown };
+		if (!storyWithContent.content || typeof storyWithContent.content !== 'object') {
+			return false;
+		}
+
+		const contentWithComponent = storyWithContent.content as { component?: string };
+
+		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.campaign.toLowerCase();
 	}
 
 	private static isLocalPartnerStory(story: unknown): story is ISbStoryData<LocalPartner> {
@@ -259,6 +301,126 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultOk([]);
+		}
+	}
+
+	async getPrograms(lang: string): Promise<ServiceResult<ISbStoryData<Program>[]>> {
+		try {
+			const baseParams = await this.getStoryParams(lang);
+			const params: ISbStoriesParams = {
+				...baseParams,
+				starts_with: `${StoryblokService.programsPath}/`,
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+			let programs = data.filter((story) => StoryblokService.isProgramStory(story));
+
+			if (programs.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
+				const draftParams: ISbStoriesParams = {
+					...baseParams,
+					version: 'draft',
+					starts_with: `${StoryblokService.programsPath}/`,
+				};
+				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
+				programs = draftData.filter((story) => StoryblokService.isProgramStory(story));
+			}
+
+			return this.resultOk(programs);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
+	async getProgramBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Program>>> {
+		const loadProgram = async (language: string) => {
+			const programs = await this.getPrograms(language);
+			if (!programs.success) {
+				return undefined;
+			}
+
+			return programs.data.find((program) => {
+				const fullSlugTail = program.full_slug?.split('/').at(-1);
+
+				return program.slug === slug || fullSlugTail === slug;
+			});
+		};
+
+		try {
+			let story = await loadProgram(lang);
+			if (!story && lang !== defaultLanguage) {
+				story = await loadProgram(defaultLanguage);
+			}
+
+			if (!story) {
+				return this.resultFail(`Failed to fetch program: not found for slug '${slug}'`);
+			}
+
+			return this.resultOk(story);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch program: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getCampaigns(lang: string): Promise<ServiceResult<ISbStoryData<Campaign>[]>> {
+		try {
+			const baseParams = await this.getStoryParams(lang);
+			const params: ISbStoriesParams = {
+				...baseParams,
+				starts_with: `${StoryblokService.campaignsPath}/`,
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+			let campaigns = data.filter((story) => StoryblokService.isCampaignStory(story));
+
+			if (campaigns.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
+				const draftParams: ISbStoriesParams = {
+					...baseParams,
+					version: 'draft',
+					starts_with: `${StoryblokService.campaignsPath}/`,
+				};
+				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
+				campaigns = draftData.filter((story) => StoryblokService.isCampaignStory(story));
+			}
+
+			return this.resultOk(campaigns);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
+	async getCampaignBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Campaign>>> {
+		const loadCampaign = async (language: string) => {
+			const campaigns = await this.getCampaigns(language);
+			if (!campaigns.success) {
+				return undefined;
+			}
+
+			return campaigns.data.find((campaign) => {
+				const fullSlugTail = campaign.full_slug?.split('/').at(-1);
+
+				return campaign.slug === slug || fullSlugTail === slug;
+			});
+		};
+
+		try {
+			let story = await loadCampaign(lang);
+			if (!story && lang !== defaultLanguage) {
+				story = await loadCampaign(defaultLanguage);
+			}
+
+			if (!story) {
+				return this.resultFail(`Failed to fetch campaign: not found for slug '${slug}'`);
+			}
+
+			return this.resultOk(story);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 

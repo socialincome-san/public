@@ -232,6 +232,71 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
+	async getPublicProgramStatsById(
+		programId: string,
+	): Promise<ServiceResult<{ campaignsCount: number; recipientsCount: number }>> {
+		try {
+			const normalizedProgramId = programId.trim();
+			if (!normalizedProgramId) {
+				return this.resultFail('Missing program id');
+			}
+
+			const statsMapResult = await this.getPublicProgramStatsByIds([normalizedProgramId]);
+			if (!statsMapResult.success) {
+				return this.resultFail(statsMapResult.error);
+			}
+
+			const stats = statsMapResult.data[normalizedProgramId];
+			if (!stats) {
+				return this.resultFail('Program not found');
+			}
+
+			return this.resultOk(stats);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program stats: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicProgramStatsByIds(
+		programIds: string[],
+	): Promise<ServiceResult<Record<string, { campaignsCount: number; recipientsCount: number }>>> {
+		try {
+			const normalizedProgramIds = [...new Set(programIds.map((programId) => programId.trim()).filter(Boolean))];
+			if (!normalizedProgramIds.length) {
+				return this.resultOk({});
+			}
+
+			const programs = await this.db.program.findMany({
+				where: { id: { in: normalizedProgramIds } },
+				select: {
+					id: true,
+					_count: {
+						select: {
+							campaigns: true,
+							recipients: true,
+						},
+					},
+				},
+			});
+
+			const statsById: Record<string, { campaignsCount: number; recipientsCount: number }> = {};
+			for (const program of programs) {
+				statsById[program.id] = {
+					campaignsCount: program._count.campaigns,
+					recipientsCount: program._count.recipients,
+				};
+			}
+
+			return this.resultOk(statsById);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program stats map: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getProgramIdBySlug(slug: string): Promise<ServiceResult<string>> {
 		try {
 			const programs = await this.db.program.findMany({ select: { id: true, name: true } });

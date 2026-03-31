@@ -192,6 +192,71 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
+	async getPublicCampaignStatsById(
+		campaignId: string,
+	): Promise<ServiceResult<{ contributionsCount: number; daysLeft: number }>> {
+		try {
+			const normalizedCampaignId = campaignId.trim();
+			if (!normalizedCampaignId) {
+				return this.resultFail('Missing campaign id');
+			}
+
+			const statsMapResult = await this.getPublicCampaignStatsByIds([normalizedCampaignId]);
+			if (!statsMapResult.success) {
+				return this.resultFail(statsMapResult.error);
+			}
+
+			const stats = statsMapResult.data[normalizedCampaignId];
+			if (!stats) {
+				return this.resultFail('Campaign not found');
+			}
+
+			return this.resultOk(stats);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch campaign stats: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicCampaignStatsByIds(
+		campaignIds: string[],
+	): Promise<ServiceResult<Record<string, { contributionsCount: number; daysLeft: number }>>> {
+		try {
+			const normalizedCampaignIds = [...new Set(campaignIds.map((campaignId) => campaignId.trim()).filter(Boolean))];
+			if (!normalizedCampaignIds.length) {
+				return this.resultOk({});
+			}
+
+			const campaigns = await this.db.campaign.findMany({
+				where: { id: { in: normalizedCampaignIds } },
+				select: {
+					id: true,
+					endDate: true,
+					_count: {
+						select: {
+							contributions: true,
+						},
+					},
+				},
+			});
+
+			const statsById: Record<string, { contributionsCount: number; daysLeft: number }> = {};
+			for (const campaign of campaigns) {
+				statsById[campaign.id] = {
+					contributionsCount: campaign._count.contributions,
+					daysLeft: Math.max(0, this.daysUntilTs(campaign.endDate)),
+				};
+			}
+
+			return this.resultOk(statsById);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch campaign stats map: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getOptions(userId: string): Promise<ServiceResult<CampaignOption[]>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
