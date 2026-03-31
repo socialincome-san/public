@@ -3,13 +3,13 @@
     {
       "body": {
         "stories": [],
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Ffocuses%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Ffocuses%2F&per_page=25&page=1&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -23,7 +23,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 34
+      "durationMs": 211
     }
   ],
   "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc": [
@@ -33,7 +33,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -47,7 +47,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 73
+      "durationMs": 42
     },
     {
       "body": [
@@ -55,7 +55,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -69,7 +69,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 80
+      "durationMs": 41
     }
   ],
   "b15f3d71d476648d8f213cb0dafc51b2b95fbad25a232febd2f53ad20d32b4ab": [
@@ -164,13 +164,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/focuses?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/focuses?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -184,7 +184,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 23
+      "durationMs": 79
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -771,13 +771,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -791,7 +791,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 18
+      "durationMs": 10
     },
     {
       "body": {
@@ -1376,13 +1376,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1396,7 +1396,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 16
+      "durationMs": 10
     }
   ],
   "f866438ef93633f025f0b956948f6015ff301cc031f53333bdaae4ce46c90a7f": [
@@ -1629,13 +1629,13 @@
             ]
           }
         ],
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Ffocuses%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Ffocuses%2F&per_page=25&page=1&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1649,7 +1649,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 74
+      "durationMs": 133
     }
   ],
   "f8fd55e31513fd7ada04125b77d57c44a3c8d99fe1d7bb36b263a33f137ad75d": [
@@ -1659,7 +1659,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/focuses?language=de&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/focuses?language=de&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1673,7 +1673,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 88
+      "durationMs": 91
     }
   ]
 }

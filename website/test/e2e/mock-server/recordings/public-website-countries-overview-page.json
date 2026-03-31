@@ -6,7 +6,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -20,7 +20,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 20
+      "durationMs": 8
     },
     {
       "body": [
@@ -28,7 +28,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -42,7 +42,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 19
+      "durationMs": 8
     }
   ],
   "5fe2a35c452a112afe6d9e8a8f36dbd854c6815ff5629f4c6f7b3d28dbeaa253": [
@@ -52,7 +52,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/countries?language=de&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/countries?language=de&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -66,7 +66,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 29
+      "durationMs": 73
     }
   ],
   "6fbae1a71b9da72243ae87c71cbdad2dfab1cd4d12db466d67fcb17a1de9f487": [
@@ -428,13 +428,13 @@
             ]
           }
         ],
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -448,7 +448,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 237
+      "durationMs": 135
     }
   ],
   "a5a1faa9837346f6ab8f38c17ca5706d21b856c22dcc7dcf628d97101d84cf8a": [
@@ -543,13 +543,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/countries?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/countries?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -563,7 +563,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 46
+      "durationMs": 612
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -1150,13 +1150,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1170,7 +1170,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 31
+      "durationMs": 21
     },
     {
       "body": {
@@ -1755,13 +1755,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1775,20 +1775,20 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 14
+      "durationMs": 22
     }
   ],
   "f81aca3ec6d44399806dc5a93db743b9c0b5ed311be92da2a2124f3de9e09cb8": [
     {
       "body": {
         "stories": [],
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1802,7 +1802,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 16
+      "durationMs": 73
     }
   ]
 }

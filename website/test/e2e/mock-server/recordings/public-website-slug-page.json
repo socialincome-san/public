@@ -583,13 +583,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -603,7 +603,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 130
+      "durationMs": 20
     },
     {
       "body": {
@@ -1188,13 +1188,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1208,7 +1208,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 134
+      "durationMs": 16
     }
   ],
   "e4474cdc27f387f4c3faceaf99b74c13832755df0c5611a74c74b77b2d1d4f94": [
@@ -1414,13 +1414,13 @@
             }
           ]
         },
-        "cv": 1774957042,
+        "cv": 1774962779,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&token=__TOKEN__&cv=1774957042",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&token=__TOKEN__&cv=1774962779",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1434,7 +1434,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 145
+      "durationMs": 60
     }
   ]
 }
