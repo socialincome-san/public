@@ -1,4 +1,4 @@
-import type { Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
@@ -11,8 +11,8 @@ import type { ResolvedArticle } from './storyblok.utils';
 export class StoryblokService extends BaseService {
 	private static readonly contentType = {
 		article: 'article',
-		author: 'author',
-		tag: 'topic',
+		person: 'person',
+		tag: 'tag',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
 	private static readonly standardStoryRelationsToResolve = ['faqSelection.questions'];
@@ -132,11 +132,11 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getOverviewAuthors(lang: string): Promise<ServiceResult<ISbStoryData<Author>[]>> {
+	async getOverviewAuthors(lang: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
-				content_type: StoryblokService.contentType.author,
+				content_type: StoryblokService.contentType.person,
 				filter_query: { displayInOverviewPage: { is: true } },
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
@@ -149,7 +149,7 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getOverviewTags(lang: string): Promise<ServiceResult<ISbStoryData<Topic>[]>> {
+	async getOverviewTags(lang: string): Promise<ServiceResult<ISbStoryData<Tag>[]>> {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
@@ -166,7 +166,7 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getTag(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Topic>>> {
+	async getTag(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Tag>>> {
 		try {
 			const res = await this.withLanguageFallback(
 				async (l, s) => getStoryblokApi().get(`cdn/stories/tag/${s}`, await this.getStoryParams(l)),
@@ -174,7 +174,7 @@ export class StoryblokService extends BaseService {
 				slug,
 			);
 
-			return this.resultOk((res.data as { story: ISbStoryData<Topic> }).story);
+			return this.resultOk((res.data as { story: ISbStoryData<Tag> }).story);
 		} catch (error) {
 			this.logger.error(error);
 
@@ -182,15 +182,15 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getAuthor(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Author>>> {
+	async getPerson(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Person>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/author/${s}`, await this.getStoryParams(l)),
+				async (l, s) => getStoryblokApi().get(`cdn/stories/person/${s}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
 
-			return this.resultOk((res.data as { story: ISbStoryData<Author> }).story);
+			return this.resultOk((res.data as { story: ISbStoryData<Person> }).story);
 		} catch (error) {
 			this.logger.error(error);
 

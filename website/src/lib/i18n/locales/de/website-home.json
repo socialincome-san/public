@@ -87,8 +87,9 @@
 	},
 	"section-create-program": {
 		"title": "Starte dein eigenes Programm",
-		"description": "Ein Programm ist ein strukturierter Weg, planbare monatliche Cash-Transfers für Menschen in Armut zu finanzieren. Wir führen dich durch Setup, Empfänger-Auswahl und Budget, damit du schnell wirksame Unterstützung starten kannst.",
-		"cta": "Neues Programm erstellen"
+		"description": "Du kannst jetzt dein eigenes Programm für Direktzahlungen oder UBI-Pilotprojekt mit bereits von uns vorab geprüften Empfänger:innen starten.",
+		"cta": "Neues Programm starten",
+		"partner": "Plattformpartner"
 	},
 	"section-faq": {
 		"title": "Das klingt gut, aber ... ",
