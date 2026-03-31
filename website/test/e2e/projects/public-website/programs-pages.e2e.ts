@@ -34,4 +34,3 @@ test('new website program detail page shows db preview and matches screenshot', 
 	await expectToHaveScreenshot(page, true);
 	await saveStoryblokMock(PROGRAM_SI_EDUCATION_GH_PREVIEW_RECORDING);
 });
-

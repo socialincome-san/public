@@ -20,4 +20,3 @@ export const PreviewPage = ({ title, stats, children }: Props) => {
 		</BlockWrapper>
 	);
 };
-

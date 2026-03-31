@@ -24,11 +24,13 @@ export const PreviewCampaign = async ({ title, description, lang, contributionsC
 						: translator.t('campaigns-page.contribution-plural')}
 					{' · '}
 					{daysLeft}{' '}
-					{daysLeft === 1 ? translator.t('campaigns-page.day-left-singular') : translator.t('campaigns-page.day-left-plural')}
+					{daysLeft === 1
+						? translator.t('campaigns-page.day-left-singular')
+						: translator.t('campaigns-page.day-left-plural')}
 				</p>
 			}
 		>
-			<div className="rounded-3xl border bg-card p-6">
+			<div className="bg-card rounded-3xl border p-6">
 				<h2 className="text-xl font-semibold">
 					{translator.t('campaigns-page.about')} {title}
 				</h2>

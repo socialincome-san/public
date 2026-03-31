@@ -29,8 +29,10 @@ export const PreviewProgram = async ({ title, lang, campaignsCount, recipientsCo
 				</p>
 			}
 		>
-			<div className="rounded-3xl border bg-card p-6">
-				<h2 className="text-xl font-semibold">{translator.t('programs-page.about')} {title}</h2>
+			<div className="bg-card rounded-3xl border p-6">
+				<h2 className="text-xl font-semibold">
+					{translator.t('programs-page.about')} {title}
+				</h2>
 				<p className="text-muted-foreground mt-2">-</p>
 			</div>
 		</PreviewPage>

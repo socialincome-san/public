@@ -34,4 +34,3 @@ test('new website campaign detail page shows db preview and matches screenshot',
 	await expectToHaveScreenshot(page, true);
 	await saveStoryblokMock(CAMPAIGN_OPERATIONS_CORE_SL_PREVIEW_RECORDING);
 });
-
