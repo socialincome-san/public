@@ -25,4 +25,3 @@ test('new website campaign detail page matches screenshot', async ({ page }) => 
 	await expectToHaveScreenshot(page, true);
 	await saveStoryblokMock(CAMPAIGN_DEFAULT_CORE_SL_RECORDING);
 });
-

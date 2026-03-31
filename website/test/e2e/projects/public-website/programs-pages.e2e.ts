@@ -25,4 +25,3 @@ test('new website program detail page matches screenshot', async ({ page }) => {
 	await expectToHaveScreenshot(page, true);
 	await saveStoryblokMock(PROGRAM_SI_CORE_SL_RECORDING);
 });
-
