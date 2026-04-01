@@ -12,6 +12,8 @@ import {
 	LocalPartnerTableQuery,
 	LocalPartnerTableView,
 	LocalPartnerTableViewRow,
+	PublicLocalPartnerStats,
+	PublicLocalPartnerStatsMap,
 } from './local-partner.types';
 
 export class LocalPartnerReadService extends BaseService {
@@ -23,9 +25,7 @@ export class LocalPartnerReadService extends BaseService {
 		super(db, loggerInstance);
 	}
 
-	async getPublicLocalPartnerStatsById(
-		localPartnerId: string,
-	): Promise<ServiceResult<{ assignedRecipientsCount: number; waitingRecipientsCount: number }>> {
+	async getPublicLocalPartnerStatsById(localPartnerId: string): Promise<ServiceResult<PublicLocalPartnerStats>> {
 		try {
 			const normalizedLocalPartnerId = localPartnerId.trim();
 			if (!normalizedLocalPartnerId) {
@@ -50,9 +50,7 @@ export class LocalPartnerReadService extends BaseService {
 		}
 	}
 
-	async getPublicLocalPartnerStatsByIds(
-		localPartnerIds: string[],
-	): Promise<ServiceResult<Record<string, { assignedRecipientsCount: number; waitingRecipientsCount: number }>>> {
+	async getPublicLocalPartnerStatsByIds(localPartnerIds: string[]): Promise<ServiceResult<PublicLocalPartnerStatsMap>> {
 		try {
 			const normalizedLocalPartnerIds = [...new Set(localPartnerIds.map((id) => id.trim()).filter(Boolean))];
 			if (!normalizedLocalPartnerIds.length) {
@@ -82,16 +80,15 @@ export class LocalPartnerReadService extends BaseService {
 				}),
 			]);
 
-			const statsByLocalPartnerId: Record<string, { assignedRecipientsCount: number; waitingRecipientsCount: number }> =
-				Object.fromEntries(
-					partners.map((partner) => [
-						partner.id,
-						{
-							assignedRecipientsCount: 0,
-							waitingRecipientsCount: 0,
-						},
-					]),
-				);
+			const statsByLocalPartnerId: PublicLocalPartnerStatsMap = Object.fromEntries(
+				partners.map((partner) => [
+					partner.id,
+					{
+						assignedRecipientsCount: 0,
+						waitingRecipientsCount: 0,
+					},
+				]),
+			);
 
 			for (const group of assignedRecipientGroups) {
 				if (statsByLocalPartnerId[group.localPartnerId]) {

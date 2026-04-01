@@ -5,12 +5,16 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
-import { ProgramOption, ProgramSettingsPayload, ProgramWallet, ProgramWallets, PublicProgramDetails } from './program.types';
-
-type PublicPreviewProgram = {
-	id: string;
-	name: string;
-};
+import {
+	ProgramOption,
+	ProgramSettingsPayload,
+	ProgramWallet,
+	ProgramWallets,
+	PublicPreviewProgram,
+	PublicProgramDetails,
+	PublicProgramStats,
+	PublicProgramStatsMap,
+} from './program.types';
 
 export class ProgramReadService extends BaseService {
 	constructor(
@@ -259,9 +263,7 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
-	async getPublicProgramStatsById(
-		programId: string,
-	): Promise<ServiceResult<{ campaignsCount: number; recipientsCount: number }>> {
+	async getPublicProgramStatsById(programId: string): Promise<ServiceResult<PublicProgramStats>> {
 		try {
 			const normalizedProgramId = programId.trim();
 			if (!normalizedProgramId) {
@@ -286,9 +288,7 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
-	async getPublicProgramStatsByIds(
-		programIds: string[],
-	): Promise<ServiceResult<Record<string, { campaignsCount: number; recipientsCount: number }>>> {
+	async getPublicProgramStatsByIds(programIds: string[]): Promise<ServiceResult<PublicProgramStatsMap>> {
 		try {
 			const normalizedProgramIds = [...new Set(programIds.map((programId) => programId.trim()).filter(Boolean))];
 			if (!normalizedProgramIds.length) {
@@ -308,12 +308,13 @@ export class ProgramReadService extends BaseService {
 				},
 			});
 
-			const statsById: Record<string, { campaignsCount: number; recipientsCount: number }> = {};
+			const statsById: PublicProgramStatsMap = {};
 			for (const program of programs) {
-				statsById[program.id] = {
+				const stats: PublicProgramStats = {
 					campaignsCount: program._count.campaigns,
 					recipientsCount: program._count.recipients,
 				};
+				statsById[program.id] = stats;
 			}
 
 			return this.resultOk(statsById);

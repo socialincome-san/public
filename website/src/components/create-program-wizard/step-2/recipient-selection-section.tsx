@@ -14,6 +14,7 @@ type Props = {
 	value: RecipientApproachType | null;
 	targetFocuses: string[];
 	focusOptions: { id: string; name: string }[];
+	focusOptionsError?: string;
 	targetProfiles: Profile[];
 	totalRecipients: number;
 	filteredRecipients: number;
@@ -27,6 +28,7 @@ export const RecipientSelectionSection = ({
 	value,
 	targetFocuses,
 	focusOptions,
+	focusOptionsError,
 	targetProfiles,
 	totalRecipients,
 	filteredRecipients,
@@ -45,6 +47,11 @@ export const RecipientSelectionSection = ({
 	return (
 		<div className="space-y-4">
 			<div className="text-lg font-medium">{t('step2.recipient_selection.title')}</div>
+			{focusOptionsError ? (
+				<div className="text-muted-foreground text-sm">
+					{t('common.error')}: {focusOptionsError}
+				</div>
+			) : null}
 
 			<RadioCardGroup value={value ?? ''} onChange={(v) => onChangeApproach(v as RecipientApproachType)}>
 				<RadioCard

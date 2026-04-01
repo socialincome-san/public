@@ -16,6 +16,8 @@ import {
 	NETWORK_TECH_LABELS,
 	ProgramCountryFeasibilityRow,
 	ProgramCountryFeasibilityView,
+	PublicCountryStats,
+	PublicCountryStatsMap,
 } from './country.types';
 
 export class CountryReadService extends BaseService {
@@ -375,9 +377,7 @@ export class CountryReadService extends BaseService {
 		}
 	}
 
-	async getPublicCountryStatsByIsoCodes(
-		isoCodes: string[],
-	): Promise<ServiceResult<Record<string, { programsCount: number; recipientsCount: number }>>> {
+	async getPublicCountryStatsByIsoCodes(isoCodes: string[]): Promise<ServiceResult<PublicCountryStatsMap>> {
 		try {
 			const normalizedIsoCodes = [...new Set(isoCodes.map((isoCode) => isoCode.trim().toUpperCase()).filter(Boolean))];
 			if (!normalizedIsoCodes.length) {
@@ -397,17 +397,18 @@ export class CountryReadService extends BaseService {
 				},
 			});
 
-			const statsByIsoCode: Record<string, { programsCount: number; recipientsCount: number }> = {};
+			const statsByIsoCode: PublicCountryStatsMap = {};
 			for (const country of countries) {
 				let recipientsCount = 0;
 				for (const program of country.programs) {
 					recipientsCount += program._count.recipients;
 				}
 
-				statsByIsoCode[country.isoCode] = {
+				const stats: PublicCountryStats = {
 					programsCount: country._count.programs,
 					recipientsCount,
 				};
+				statsByIsoCode[country.isoCode] = stats;
 			}
 
 			return this.resultOk(statsByIsoCode);

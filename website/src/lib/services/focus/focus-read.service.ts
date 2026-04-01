@@ -4,7 +4,15 @@ import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
-import { FocusOption, FocusPaginatedTableView, FocusPayload, FocusTableQuery, FocusTableViewRow } from './focus.types';
+import {
+	FocusOption,
+	FocusPaginatedTableView,
+	FocusPayload,
+	FocusTableQuery,
+	FocusTableViewRow,
+	PublicFocusStats,
+	PublicFocusStatsMap,
+} from './focus.types';
 
 export class FocusReadService extends BaseService {
 	constructor(
@@ -124,9 +132,7 @@ export class FocusReadService extends BaseService {
 		}
 	}
 
-	async getPublicFocusStatsById(
-		focusId: string,
-	): Promise<ServiceResult<{ programsCount: number; recipientsInProgramsCount: number; candidatesCount: number }>> {
+	async getPublicFocusStatsById(focusId: string): Promise<ServiceResult<PublicFocusStats>> {
 		try {
 			const normalizedFocusId = focusId.trim();
 			if (!normalizedFocusId) {
@@ -151,11 +157,7 @@ export class FocusReadService extends BaseService {
 		}
 	}
 
-	async getPublicFocusStatsByIds(
-		focusIds: string[],
-	): Promise<
-		ServiceResult<Record<string, { programsCount: number; recipientsInProgramsCount: number; candidatesCount: number }>>
-	> {
+	async getPublicFocusStatsByIds(focusIds: string[]): Promise<ServiceResult<PublicFocusStatsMap>> {
 		try {
 			const normalizedFocusIds = [...new Set(focusIds.map((focusId) => focusId.trim()).filter(Boolean))];
 			if (!normalizedFocusIds.length) {
@@ -171,38 +173,37 @@ export class FocusReadService extends BaseService {
 							programs: true,
 						},
 					},
-					localPartners: {
-						select: {
-							localPartner: {
-								select: {
-									recipients: {
-										select: {
-											programId: true,
-										},
-									},
-								},
-							},
-						},
-					},
+					// Note: `programs`/`localPartners` are relation tables (ProgramTargetFocus / LocalPartnerFocus).
+					programs: { select: { programId: true } },
+					localPartners: { select: { localPartnerId: true } },
 				},
 			});
 
-			const statsById: Record<
-				string,
-				{ programsCount: number; recipientsInProgramsCount: number; candidatesCount: number }
-			> = {};
+			const statsById: PublicFocusStatsMap = {};
+
 			for (const focus of focuses) {
-				let recipientsInProgramsCount = 0;
-				let candidatesCount = 0;
-				for (const relation of focus.localPartners) {
-					for (const recipient of relation.localPartner.recipients) {
-						if (recipient.programId) {
-							recipientsInProgramsCount++;
-						} else {
-							candidatesCount++;
-						}
-					}
-				}
+				const programIds = focus.programs.map((p) => p.programId);
+				const localPartnerIds = focus.localPartners.map((lp) => lp.localPartnerId);
+				const hasLocalPartners = localPartnerIds.length > 0;
+
+				const recipientsInProgramsCount =
+					hasLocalPartners && programIds.length > 0
+						? await this.db.recipient.count({
+								where: {
+									programId: { in: programIds },
+									localPartnerId: { in: localPartnerIds },
+								},
+							})
+						: 0;
+
+				const candidatesCount = hasLocalPartners
+					? await this.db.recipient.count({
+							where: {
+								programId: null,
+								localPartnerId: { in: localPartnerIds },
+							},
+						})
+					: 0;
 
 				statsById[focus.id] = {
 					programsCount: focus._count.programs,

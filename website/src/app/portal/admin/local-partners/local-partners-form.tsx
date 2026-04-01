@@ -80,6 +80,11 @@ export default function LocalPartnersForm({
 			getFocusOptionsAction(),
 		]);
 
+		if (!partnerId) {
+			setLocalPartner(undefined);
+			setFormSchema(cloneFormSchema(initialFormSchema));
+		}
+
 		setFormSchema((prev) => {
 			const next = cloneFormSchema(prev);
 			if (focusOptionsResult.success) {

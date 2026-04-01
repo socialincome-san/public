@@ -23,6 +23,7 @@ export const createProgramWizardMachine = setup({
 			recipientApproach: RecipientApproachType | null;
 			targetFocuses: string[];
 			focusOptions: { id: string; name: string }[];
+			focusOptionsError?: string;
 			targetProfiles: Profile[];
 
 			// step 3
@@ -101,13 +102,11 @@ export const createProgramWizardMachine = setup({
 			if (!countryResult.success) {
 				throw new Error(countryResult.error);
 			}
-			if (!focusOptionsResult.success) {
-				throw new Error(focusOptionsResult.error);
-			}
 
 			return {
 				countries: countryResult.data.rows,
-				focusOptions: focusOptionsResult.data,
+				focusOptions: focusOptionsResult.success ? focusOptionsResult.data : [],
+				focusOptionsError: focusOptionsResult.success ? undefined : focusOptionsResult.error,
 			};
 		}),
 
@@ -469,6 +468,7 @@ export const createProgramWizardMachine = setup({
 					actions: assign({
 						countries: ({ event }) => event.output.countries,
 						focusOptions: ({ event }) => event.output.focusOptions,
+						focusOptionsError: ({ event }) => event.output.focusOptionsError,
 						error: () => undefined,
 					}),
 				},

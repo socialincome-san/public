@@ -239,7 +239,7 @@ export class StoryblokService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultOk([]);
+			return this.resultFail(`Failed to fetch focuses: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -480,28 +480,34 @@ export class StoryblokService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultOk([]);
+			return this.resultFail(`Failed to fetch local partners: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getLocalPartnerBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<LocalPartner>>> {
-		const loadLocalPartner = async (language: string) => {
-			const localPartners = await this.getLocalPartners(language);
-			if (!localPartners.success) {
-				return undefined;
-			}
-
-			return localPartners.data.find((localPartner) => {
+		const normalizedSlug = slug.trim();
+		const findLocalPartner = (localPartners: ISbStoryData<LocalPartner>[]) => {
+			return localPartners.find((localPartner) => {
 				const fullSlugTail = localPartner.full_slug?.split('/').at(-1);
 
-				return localPartner.slug === slug || fullSlugTail === slug;
+				return localPartner.slug === normalizedSlug || fullSlugTail === normalizedSlug;
 			});
 		};
 
 		try {
-			let story = await loadLocalPartner(lang);
+			const localPartners = await this.getLocalPartners(lang);
+			if (!localPartners.success) {
+				return this.resultFail(localPartners.error);
+			}
+
+			let story = findLocalPartner(localPartners.data);
 			if (!story && lang !== defaultLanguage) {
-				story = await loadLocalPartner(defaultLanguage);
+				const fallbackLocalPartners = await this.getLocalPartners(defaultLanguage);
+				if (!fallbackLocalPartners.success) {
+					return this.resultFail(fallbackLocalPartners.error);
+				}
+
+				story = findLocalPartner(fallbackLocalPartners.data);
 			}
 
 			if (!story) {
@@ -540,19 +546,14 @@ export class StoryblokService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultOk([]);
+			return this.resultFail(`Failed to fetch focuses: ${JSON.stringify(error)}`);
 		}
 	}
 
 	async getFocusBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Focus>>> {
 		const normalizedSlug = slug.trim();
-		const loadFocus = async (language: string) => {
-			const focuses = await this.getFocuses(language);
-			if (!focuses.success) {
-				return undefined;
-			}
-
-			return focuses.data.find((focus) => {
+		const findFocus = (focuses: ISbStoryData<Focus>[]) => {
+			return focuses.find((focus) => {
 				const fullSlugTail = focus.full_slug?.split('/').at(-1);
 				const focusId = focus.content.id?.trim();
 
@@ -561,9 +562,19 @@ export class StoryblokService extends BaseService {
 		};
 
 		try {
-			let story = await loadFocus(lang);
+			const focuses = await this.getFocuses(lang);
+			if (!focuses.success) {
+				return this.resultFail(focuses.error);
+			}
+
+			let story = findFocus(focuses.data);
 			if (!story && lang !== defaultLanguage) {
-				story = await loadFocus(defaultLanguage);
+				const fallbackFocuses = await this.getFocuses(defaultLanguage);
+				if (!fallbackFocuses.success) {
+					return this.resultFail(fallbackFocuses.error);
+				}
+
+				story = findFocus(fallbackFocuses.data);
 			}
 
 			if (!story) {

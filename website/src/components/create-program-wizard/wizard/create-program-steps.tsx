@@ -47,6 +47,7 @@ export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
 				recipientApproach={state.context.recipientApproach}
 				targetFocuses={state.context.targetFocuses}
 				focusOptions={state.context.focusOptions}
+				focusOptionsError={state.context.focusOptionsError}
 				targetProfiles={state.context.targetProfiles}
 				totalRecipients={state.context.totalRecipients}
 				filteredRecipients={state.context.filteredRecipients}

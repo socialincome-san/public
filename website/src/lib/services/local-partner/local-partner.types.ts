@@ -53,6 +53,13 @@ export type LocalPartnerOption = {
 	name: string;
 };
 
+export type PublicLocalPartnerStats = {
+	assignedRecipientsCount: number;
+	waitingRecipientsCount: number;
+};
+
+export type PublicLocalPartnerStatsMap = Record<string, PublicLocalPartnerStats>;
+
 export type LocalPartnerSession = {
 	type: 'local-partner';
 	id: string;

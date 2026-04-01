@@ -28,3 +28,11 @@ export type FocusOption = {
 	id: string;
 	name: string;
 };
+
+export type PublicFocusStats = {
+	programsCount: number;
+	recipientsInProgramsCount: number;
+	candidatesCount: number;
+};
+
+export type PublicFocusStatsMap = Record<string, PublicFocusStats>;

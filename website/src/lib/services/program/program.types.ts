@@ -55,6 +55,18 @@ export type PublicProgramDetails = {
 	startedAt: Date | null;
 };
 
+export type PublicPreviewProgram = {
+	id: string;
+	name: string;
+};
+
+export type PublicProgramStats = {
+	campaignsCount: number;
+	recipientsCount: number;
+};
+
+export type PublicProgramStatsMap = Record<string, PublicProgramStats>;
+
 export type ProgramSettingsPayload = {
 	id: string;
 	name: string;

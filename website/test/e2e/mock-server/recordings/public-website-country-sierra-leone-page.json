@@ -6,7 +6,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -20,7 +20,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 9
+      "durationMs": 130
     },
     {
       "body": [
@@ -28,7 +28,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -42,7 +42,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 9
+      "durationMs": 196
     }
   ],
   "6fbae1a71b9da72243ae87c71cbdad2dfab1cd4d12db466d67fcb17a1de9f487": [
@@ -52,8 +52,8 @@
           {
             "name": "overview",
             "created_at": "2026-03-31T10:44:06.758Z",
-            "published_at": "2026-03-31T10:46:48.205Z",
-            "updated_at": "2026-03-31T10:46:48.216Z",
+            "published_at": "2026-03-31T15:17:55.318Z",
+            "updated_at": "2026-03-31T15:17:55.334Z",
             "id": 160826354752685,
             "uuid": "bdc289d0-b285-44f8-bad8-e6afcf08c149",
             "content": {
@@ -144,8 +144,8 @@
           {
             "name": "Kenya",
             "created_at": "2026-03-26T15:33:39.418Z",
-            "published_at": null,
-            "updated_at": "2026-03-26T15:34:06.372Z",
+            "published_at": "2026-03-31T15:17:55.567Z",
+            "updated_at": "2026-03-31T15:17:55.581Z",
             "id": 159128041171728,
             "uuid": "50cdb98b-34fe-4b09-a8bd-38803c142f0d",
             "content": {
@@ -178,7 +178,7 @@
             "parent_id": 159089068979075,
             "meta_data": null,
             "group_id": "1d3507a4-8bfd-48ba-8e37-ec2a1d9ceea3",
-            "first_published_at": null,
+            "first_published_at": "2026-03-31T15:17:13.913Z",
             "release_id": null,
             "lang": "de",
             "path": null,
@@ -208,8 +208,8 @@
           {
             "name": "Ghana",
             "created_at": "2026-03-26T15:32:26.266Z",
-            "published_at": null,
-            "updated_at": "2026-03-26T15:32:56.390Z",
+            "published_at": "2026-03-31T15:17:55.823Z",
+            "updated_at": "2026-03-31T15:17:55.837Z",
             "id": 159127741535241,
             "uuid": "5fdd3c60-1a19-4db8-8676-7bb078b2116b",
             "content": {
@@ -242,7 +242,7 @@
             "parent_id": 159089068979075,
             "meta_data": null,
             "group_id": "2cfcc09e-258d-44de-9358-3e3cf46258c4",
-            "first_published_at": null,
+            "first_published_at": "2026-03-31T15:17:13.913Z",
             "release_id": null,
             "lang": "de",
             "path": null,
@@ -272,8 +272,8 @@
           {
             "name": "Liberia",
             "created_at": "2026-03-26T15:31:28.364Z",
-            "published_at": null,
-            "updated_at": "2026-03-26T15:32:10.063Z",
+            "published_at": "2026-03-31T15:17:56.065Z",
+            "updated_at": "2026-03-31T15:17:56.080Z",
             "id": 159127504372629,
             "uuid": "3e95acfa-5773-4cf7-a126-6a2589c33074",
             "content": {
@@ -311,7 +311,7 @@
             "parent_id": 159089068979075,
             "meta_data": null,
             "group_id": "5db6034b-7867-4030-ba12-37e3ef83aa33",
-            "first_published_at": null,
+            "first_published_at": "2026-03-31T15:17:13.913Z",
             "release_id": null,
             "lang": "de",
             "path": null,
@@ -341,8 +341,8 @@
           {
             "name": "Sierra Leone",
             "created_at": "2026-03-26T13:00:58.743Z",
-            "published_at": null,
-            "updated_at": "2026-03-26T14:25:35.262Z",
+            "published_at": "2026-03-31T15:17:56.320Z",
+            "updated_at": "2026-03-31T15:17:56.334Z",
             "id": 159090519040967,
             "uuid": "23fcc517-6433-44e4-a209-dfa4f741e3b3",
             "content": {
@@ -376,7 +376,7 @@
             "parent_id": 159089068979075,
             "meta_data": null,
             "group_id": "b1795895-2c11-4803-96e6-ce441b85247c",
-            "first_published_at": null,
+            "first_published_at": "2026-03-31T15:17:13.913Z",
             "release_id": null,
             "lang": "de",
             "path": null,
@@ -404,13 +404,13 @@
             ]
           }
         ],
-        "cv": 1774962779,
+        "cv": 1774970276,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1774970276",
         "body": {},
         "method": "GET",
         "headers": {
@@ -424,7 +424,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 274
+      "durationMs": 137
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -1011,13 +1011,13 @@
             }
           ]
         },
-        "cv": 1774962779,
+        "cv": 1774970276,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1031,7 +1031,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 7
+      "durationMs": 55
     },
     {
       "body": {
@@ -1616,13 +1616,13 @@
             }
           ]
         },
-        "cv": 1774962779,
+        "cv": 1774970276,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1636,20 +1636,20 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 8
+      "durationMs": 67
     }
   ],
   "f81aca3ec6d44399806dc5a93db743b9c0b5ed311be92da2a2124f3de9e09cb8": [
     {
       "body": {
         "stories": [],
-        "cv": 1774962779,
+        "cv": 1774970276,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1663,7 +1663,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 20
+      "durationMs": 242
     }
   ]
 }

@@ -10,6 +10,7 @@ type Props = {
 	recipientApproach: RecipientApproachType | null;
 	targetFocuses: string[];
 	focusOptions: { id: string; name: string }[];
+	focusOptionsError?: string;
 	targetProfiles: Profile[];
 	totalRecipients: number;
 	filteredRecipients: number;
@@ -25,6 +26,7 @@ export const ProgramSetupStep = ({
 	recipientApproach,
 	targetFocuses,
 	focusOptions,
+	focusOptionsError,
 	targetProfiles,
 	totalRecipients,
 	filteredRecipients,
@@ -42,6 +44,7 @@ export const ProgramSetupStep = ({
 				value={recipientApproach}
 				targetFocuses={targetFocuses}
 				focusOptions={focusOptions}
+				focusOptionsError={focusOptionsError}
 				targetProfiles={targetProfiles}
 				totalRecipients={totalRecipients}
 				filteredRecipients={filteredRecipients}

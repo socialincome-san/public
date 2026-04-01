@@ -16,14 +16,10 @@ import {
 	CampaignPayload,
 	CampaignTableQuery,
 	CampaignTableViewRow,
+	PublicCampaignStats,
+	PublicCampaignStatsMap,
+	PublicPreviewCampaign,
 } from './campaign.types';
-
-type PublicPreviewCampaign = {
-	id: string;
-	title: string;
-	description: string;
-	slug: string;
-};
 
 export class CampaignReadService extends BaseService {
 	constructor(
@@ -229,9 +225,7 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getPublicCampaignStatsById(
-		campaignId: string,
-	): Promise<ServiceResult<{ contributionsCount: number; daysLeft: number }>> {
+	async getPublicCampaignStatsById(campaignId: string): Promise<ServiceResult<PublicCampaignStats>> {
 		try {
 			const normalizedCampaignId = campaignId.trim();
 			if (!normalizedCampaignId) {
@@ -256,9 +250,7 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getPublicCampaignStatsByIds(
-		campaignIds: string[],
-	): Promise<ServiceResult<Record<string, { contributionsCount: number; daysLeft: number }>>> {
+	async getPublicCampaignStatsByIds(campaignIds: string[]): Promise<ServiceResult<PublicCampaignStatsMap>> {
 		try {
 			const normalizedCampaignIds = [...new Set(campaignIds.map((campaignId) => campaignId.trim()).filter(Boolean))];
 			if (!normalizedCampaignIds.length) {
@@ -278,12 +270,13 @@ export class CampaignReadService extends BaseService {
 				},
 			});
 
-			const statsById: Record<string, { contributionsCount: number; daysLeft: number }> = {};
+			const statsById: PublicCampaignStatsMap = {};
 			for (const campaign of campaigns) {
-				statsById[campaign.id] = {
+				const stats: PublicCampaignStats = {
 					contributionsCount: campaign._count.contributions,
 					daysLeft: Math.max(0, this.daysUntilTs(campaign.endDate)),
 				};
+				statsById[campaign.id] = stats;
 			}
 
 			return this.resultOk(statsById);

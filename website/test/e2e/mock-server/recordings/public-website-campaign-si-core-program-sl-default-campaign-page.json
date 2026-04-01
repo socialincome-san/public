@@ -160,13 +160,13 @@
             ]
           }
         ],
-        "cv": 1774962779,
+        "cv": 1774970276,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1774970276",
         "body": {},
         "method": "GET",
         "headers": {
@@ -187,7 +187,7 @@
     {
       "body": {
         "stories": [],
-        "cv": 1774962779,
+        "cv": 1774970276,
         "rels": [],
         "links": []
       },
@@ -207,7 +207,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 145
+      "durationMs": 254
     }
   ],
   "5311261268bd9ed95e1039311acee9c8ac3cbcd50390c5ef43641814f8ca89fc": [
@@ -231,7 +231,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 74
+      "durationMs": 206
     },
     {
       "body": [
@@ -253,7 +253,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 74
+      "durationMs": 206
     }
   ],
   "db559f936a972736c92507d8ab4c8121f9a9da402a45b89376ec88b91607c312": [
@@ -840,13 +840,13 @@
             }
           ]
         },
-        "cv": 1774962779,
+        "cv": 1774970276,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -860,7 +860,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 13
+      "durationMs": 227
     },
     {
       "body": {
@@ -1445,13 +1445,13 @@
             }
           ]
         },
-        "cv": 1774962779,
+        "cv": 1774970276,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__&cv=1774962779",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&token=__TOKEN__",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1465,7 +1465,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 21
+      "durationMs": 232
     }
   ]
 }

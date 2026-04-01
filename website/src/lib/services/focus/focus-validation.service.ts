@@ -8,11 +8,7 @@ import {
 	focusCreateInputSchema,
 	focusUpdateInputSchema,
 } from './focus-form-input';
-
-type FocusUpdateUniquenessContext = {
-	focusId: string;
-	existingName: string;
-};
+import type { FocusUpdateUniquenessContext } from './focus-validation.types';
 
 export class FocusValidationService extends BaseService {
 	constructor(db: PrismaClient, loggerInstance = logger) {
