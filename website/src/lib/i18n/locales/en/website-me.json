@@ -48,7 +48,7 @@
 			"city": "City",
 			"zip": "Zip",
 			"name": "Name",
-			"causes": "Causes"
+			"focuses": "Focuses"
 		}
 	},
 	"sections": {

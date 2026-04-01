@@ -104,6 +104,13 @@ export type ProgramCountryFeasibilityView = {
 	rows: ProgramCountryFeasibilityRow[];
 };
 
+export type PublicCountryStats = {
+	programsCount: number;
+	recipientsCount: number;
+};
+
+export type PublicCountryStatsMap = Record<string, PublicCountryStats>;
+
 export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
 	[NetworkTechnology.g3]: '3G',
 	[NetworkTechnology.g4]: '4G',

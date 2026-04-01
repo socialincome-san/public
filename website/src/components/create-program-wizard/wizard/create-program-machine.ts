@@ -1,6 +1,7 @@
-import { Cause, Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
+import { Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
+import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import { calculateProgramBudgetAction } from '@/lib/server-actions/program-stats-actions';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
@@ -20,7 +21,9 @@ export const createProgramWizardMachine = setup({
 			// step 2
 			programManagement: ProgramManagementType | null;
 			recipientApproach: RecipientApproachType | null;
-			targetCauses: Cause[];
+			targetFocuses: string[];
+			focusOptions: { id: string; name: string }[];
+			focusOptionsError?: string;
 			targetProfiles: Profile[];
 
 			// step 3
@@ -62,7 +65,7 @@ export const createProgramWizardMachine = setup({
 			// step 2
 			| { type: 'SELECT_PROGRAM_MANAGEMENT'; value: ProgramManagementType }
 			| { type: 'SELECT_RECIPIENT_APPROACH'; value: RecipientApproachType }
-			| { type: 'TOGGLE_TARGET_CAUSE'; cause: Cause }
+			| { type: 'TOGGLE_TARGET_FOCUS'; focus: string }
 			| { type: 'TOGGLE_TARGET_PROFILE'; profile: Profile }
 
 			// step 3
@@ -92,12 +95,19 @@ export const createProgramWizardMachine = setup({
 
 	actors: {
 		loadCountries: fromPromise(async () => {
-			const result = await getProgramCountryFeasibilityAction();
-			if (!result.success) {
-				throw new Error(result.error);
+			const [countryResult, focusOptionsResult] = await Promise.all([
+				getProgramCountryFeasibilityAction(),
+				getFocusOptionsAction(),
+			]);
+			if (!countryResult.success) {
+				throw new Error(countryResult.error);
 			}
 
-			return result.data.rows;
+			return {
+				countries: countryResult.data.rows,
+				focusOptions: focusOptionsResult.success ? focusOptionsResult.data : [],
+				focusOptionsError: focusOptionsResult.success ? undefined : focusOptionsResult.error,
+			};
 		}),
 
 		saveProgram: fromPromise(
@@ -117,13 +127,13 @@ export const createProgramWizardMachine = setup({
 			}: {
 				input: {
 					countryId: string | null;
-					causes?: Cause[];
+					focuses?: string[];
 					profiles?: Profile[];
 				};
 			}) => {
 				const [total, filtered] = await Promise.all([
 					getCandidateCountAction([], [], input.countryId),
-					getCandidateCountAction(input.causes ?? [], input.profiles ?? [], input.countryId),
+					getCandidateCountAction(input.focuses ?? [], input.profiles ?? [], input.countryId),
 				]);
 
 				if (!total.success) {
@@ -172,14 +182,14 @@ export const createProgramWizardMachine = setup({
 		programSetupValid: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
-			(context.recipientApproach === 'universal' || context.targetCauses.length > 0 || context.targetProfiles.length > 0),
+			(context.recipientApproach === 'universal' || context.targetFocuses.length > 0 || context.targetProfiles.length > 0),
 
 		// step 2 → step 3
 		programSetupValidWithRecipients: ({ context }) =>
 			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
 			context.filteredRecipients > 0 &&
-			(context.recipientApproach === 'universal' || context.targetCauses.length > 0 || context.targetProfiles.length > 0),
+			(context.recipientApproach === 'universal' || context.targetFocuses.length > 0 || context.targetProfiles.length > 0),
 
 		// step 3
 		budgetConfigValid: ({ context }) =>
@@ -213,7 +223,8 @@ export const createProgramWizardMachine = setup({
 		// step 2
 		programManagement: 'social_income',
 		recipientApproach: null,
-		targetCauses: [],
+		targetFocuses: [],
+		focusOptions: [],
 		targetProfiles: [],
 
 		// step 3
@@ -289,7 +300,7 @@ export const createProgramWizardMachine = setup({
 				src: 'loadCandidateCounts',
 				input: ({ context }) => ({
 					countryId: context.selectedCountryId,
-					causes: context.recipientApproach === 'targeted' ? context.targetCauses : [],
+					focuses: context.recipientApproach === 'targeted' ? context.targetFocuses : [],
 					profiles: context.recipientApproach === 'targeted' ? context.targetProfiles : [],
 				}),
 				onDone: {
@@ -321,18 +332,18 @@ export const createProgramWizardMachine = setup({
 				SELECT_RECIPIENT_APPROACH: {
 					actions: assign({
 						recipientApproach: ({ event }) => event.value,
-						targetCauses: () => [],
+						targetFocuses: () => [],
 						targetProfiles: () => [],
 					}),
 					target: 'programSetup',
 					reenter: true,
 				},
-				TOGGLE_TARGET_CAUSE: {
+				TOGGLE_TARGET_FOCUS: {
 					actions: assign({
-						targetCauses: ({ context, event }) =>
-							context.targetCauses.includes(event.cause)
-								? context.targetCauses.filter((c) => c !== event.cause)
-								: [...context.targetCauses, event.cause],
+						targetFocuses: ({ context, event }) =>
+							context.targetFocuses.includes(event.focus)
+								? context.targetFocuses.filter((f) => f !== event.focus)
+								: [...context.targetFocuses, event.focus],
 					}),
 					target: 'programSetup',
 					reenter: true,
@@ -455,7 +466,9 @@ export const createProgramWizardMachine = setup({
 				onDone: {
 					target: 'countrySelection',
 					actions: assign({
-						countries: ({ event }) => event.output,
+						countries: ({ event }) => event.output.countries,
+						focusOptions: ({ event }) => event.output.focusOptions,
+						focusOptionsError: ({ event }) => event.output.focusOptionsError,
 						error: () => undefined,
 					}),
 				},
@@ -478,7 +491,7 @@ export const createProgramWizardMachine = setup({
 						programDurationInMonths: context.programDuration,
 						payoutPerInterval: context.payoutPerInterval,
 						payoutInterval: context.payoutInterval,
-						targetCauses: context.targetCauses,
+						targetFocuses: context.targetFocuses,
 						targetProfiles: context.targetProfiles,
 					},
 					userDetails: context.isAuthenticated

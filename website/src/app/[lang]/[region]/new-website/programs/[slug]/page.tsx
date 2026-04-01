@@ -1,47 +1,47 @@
-import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[region]';
-import { StatsSection } from '@/app/portal/programs/[programId]/overview/components/stats-section';
+import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
+import { PreviewProgram } from '@/components/public-landing/preview-program';
+import { ProgramDetail } from '@/components/storyblok/program/program-detail';
+import { getProgramId } from '@/components/storyblok/program/program.utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
-export default function ProgramsPage({ params, searchParams }: DefaultLayoutPropsWithSlug & DefaultPageProps) {
+export const revalidate = 900;
+
+export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug) {
+	const { slug, lang } = await params;
+	const programResult = await services.storyblok.getProgramBySlug(slug, lang);
+
+	if (programResult.success) {
+		const programId = getProgramId(programResult.data.content);
+		const statsResult = programId ? await services.read.program.getPublicProgramStatsById(programId) : undefined;
+
+		return (
+			<ProgramDetail
+				program={programResult.data}
+				lang={lang as WebsiteLanguage}
+				campaignsCount={statsResult?.success ? statsResult.data.campaignsCount : undefined}
+				recipientsCount={statsResult?.success ? statsResult.data.recipientsCount : undefined}
+			/>
+		);
+	}
+
+	const previewProgramResult = await services.read.program.getPublicPreviewProgramBySlug(slug);
+	if (!previewProgramResult.success) {
+		return notFound();
+	}
+
+	const statsResult = await services.read.program.getPublicProgramStatsById(previewProgramResult.data.id);
+	if (!statsResult.success) {
+		return notFound();
+	}
+
 	return (
-		<Suspense>
-			<ProgramsPageDataLoader params={params} searchParams={searchParams} />
-		</Suspense>
+		<PreviewProgram
+			title={previewProgramResult.data.name}
+			lang={lang as WebsiteLanguage}
+			campaignsCount={statsResult.data.campaignsCount}
+			recipientsCount={statsResult.data.recipientsCount}
+		/>
 	);
 }
-
-const ProgramsPageDataLoader = async ({ params, searchParams }: DefaultLayoutPropsWithSlug & DefaultPageProps) => {
-	const { slug } = await params;
-	const query = await searchParams;
-
-	const statsResult = await services.programStats.getProgramDashboardStatsBySlug(slug);
-
-	if (!statsResult.success || !statsResult.data) {
-		return notFound();
-	}
-
-	const stats = statsResult.data;
-
-	const idResult = await services.read.program.getProgramIdBySlug(slug);
-	if (!idResult.success) {
-		return notFound();
-	}
-	const programId = idResult.data;
-
-	const isPreview = query.preview === 'true';
-	if (!isPreview) {
-		const readyResult = await services.programStats.isReadyForFirstPayoutInterval(programId);
-		if (!readyResult.success || !readyResult.data) {
-			return notFound();
-		}
-	}
-
-	return (
-		<div className="mx-auto max-w-6xl p-6">
-			<StatsSection programId={programId} stats={stats} />
-		</div>
-	);
-};

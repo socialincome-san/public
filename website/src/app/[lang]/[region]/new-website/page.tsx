@@ -10,8 +10,9 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function HomePage({ params }: DefaultPageProps) {
+export default async function HomePage({ params, searchParams }: DefaultPageProps) {
 	const { lang, region } = await params;
+	const resolvedSearchParams = await searchParams;
 
 	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(NEW_WEBSITE_SLUG, lang);
 
@@ -25,5 +26,12 @@ export default async function HomePage({ params }: DefaultPageProps) {
 		return notFound();
 	}
 
-	return <PageContentType blok={story.content} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />;
+	return (
+		<PageContentType
+			blok={story.content}
+			lang={lang as WebsiteLanguage}
+			region={region as WebsiteRegion}
+			searchParams={resolvedSearchParams}
+		/>
+	);
 }

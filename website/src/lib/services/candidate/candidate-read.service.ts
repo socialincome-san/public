@@ -1,4 +1,4 @@
-import { Cause, CountryCode, Gender, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { CountryCode, Gender, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
@@ -69,7 +69,7 @@ export class CandidateReadService extends BaseService {
 	}
 
 	private buildCandidateWhere(
-		causes?: Cause[],
+		focuses?: string[],
 		profiles?: Profile[],
 		countryCode?: CountryCode | null,
 	): Prisma.RecipientWhereInput {
@@ -122,10 +122,12 @@ export class CandidateReadService extends BaseService {
 			];
 		}
 
-		if (causes && causes.length > 0) {
+		if (focuses && focuses.length > 0) {
 			where.localPartner = {
-				causes: {
-					hasSome: causes,
+				focuses: {
+					some: {
+						focusId: { in: focuses },
+					},
 				},
 			};
 		}
@@ -622,7 +624,7 @@ export class CandidateReadService extends BaseService {
 	}
 
 	async getCandidateCount(
-		causes?: Cause[],
+		focuses?: string[],
 		profiles?: Profile[],
 		countryId?: string | null,
 	): Promise<ServiceResult<{ count: number }>> {
@@ -642,7 +644,7 @@ export class CandidateReadService extends BaseService {
 				countryCode = country.isoCode;
 			}
 
-			const where = this.buildCandidateWhere(causes, profiles, countryCode);
+			const where = this.buildCandidateWhere(focuses, profiles, countryCode);
 			const count = await this.db.recipient.count({ where });
 
 			return this.resultOk({ count });
