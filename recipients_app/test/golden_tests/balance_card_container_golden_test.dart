@@ -37,6 +37,7 @@ void main() {
               ),
               confirmedPayoutsCount: 2,
               unconfirmedPayoutsCount: 0,
+              programTotalCountOfPayments: 36,
               payouts: [
                 MappedPayout(
                   payout: Payout(
@@ -90,6 +91,7 @@ void main() {
               ),
               confirmedPayoutsCount: 1,
               unconfirmedPayoutsCount: 1,
+              programTotalCountOfPayments: 36,
               payouts: [
                 MappedPayout(
                   payout: Payout(
@@ -143,6 +145,7 @@ void main() {
               ),
               confirmedPayoutsCount: 1,
               unconfirmedPayoutsCount: 1,
+              programTotalCountOfPayments: 36,
               payouts: [
                 MappedPayout(
                   payout: Payout(
@@ -196,6 +199,7 @@ void main() {
               ),
               confirmedPayoutsCount: 1,
               unconfirmedPayoutsCount: 3,
+              programTotalCountOfPayments: 36,
               payouts: [
                 MappedPayout(
                   payout: Payout(
@@ -273,6 +277,7 @@ void main() {
               ),
               confirmedPayoutsCount: 1,
               unconfirmedPayoutsCount: 0,
+              programTotalCountOfPayments: 36,
               payouts: [
                 MappedPayout(
                   payout: Payout(

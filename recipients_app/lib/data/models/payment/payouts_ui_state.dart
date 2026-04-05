@@ -13,6 +13,7 @@ class PayoutsUiState with PayoutsUiStateMappable {
   final int unconfirmedPayoutsCount;
   final NextPayoutData nextPayout;
   final MappedPayout? lastPaidPayout;
+  final int programTotalCountOfPayments;
 
   const PayoutsUiState({
     required this.status,
@@ -21,5 +22,6 @@ class PayoutsUiState with PayoutsUiStateMappable {
     required this.unconfirmedPayoutsCount,
     required this.nextPayout,
     this.lastPaidPayout,
+    required this.programTotalCountOfPayments,
   });
 }

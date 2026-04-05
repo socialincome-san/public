@@ -79,7 +79,7 @@ class UserDemoDataSource implements UserDataSource {
       country: const Country(isoCode:"SL", currency: "SLE"),
       payoutPerInterval: 50,
       payoutInterval: PayoutInterval.monthly,
-      programDurationInMonths: 12,
+      programDurationInMonths: 36,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     ),

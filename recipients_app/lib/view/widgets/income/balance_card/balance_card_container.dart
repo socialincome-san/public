@@ -64,6 +64,7 @@ class BalanceCardContainer extends DashboardItem {
                       const SizedBox(height: 8),
                       BalanceCardGrid(
                         payments: payoutsUiState?.payouts ?? [],
+                        programTotalCountOfPayments: payoutsUiState?.programTotalCountOfPayments ?? 0,
                       ),
                     ],
                   ),

@@ -94,6 +94,8 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                 payoutsUiState.status != BalanceCardStatus.onHold
                                     ? _calculateFuturePayments(
                                         payoutsUiState.payouts,
+                                        payoutsUiState.programTotalCountOfPayments,
+                                        recipient?.program.payoutPerInterval ?? 0,
                                       )
                                     : context.l10n.paymentsSuspended,
                                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
@@ -152,11 +154,15 @@ class _PaymentsPageState extends State<PaymentsPage> {
     return "${paidOrConfirmedPayments.firstOrNull?.payout.currency ?? "???"} $total";
   }
 
-  String _calculateFuturePayments(List<MappedPayout> mappedPayments) {
+  String _calculateFuturePayments(
+    List<MappedPayout> mappedPayments,
+    int programTotalCountOfPayments,
+    int paymentAmount,
+  ) {
     final List<MappedPayout> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
 
     // Due to problem that payment amount can change, we need to calculate the future payments without calculation of previous payments
-    final futurePayments = (kProgramDurationMonths - paidOrConfirmedPayments.length) * kCurrentPaymentAmount;
+    final futurePayments = (programTotalCountOfPayments - paidOrConfirmedPayments.length) * paymentAmount;
 
     return "${paidOrConfirmedPayments.firstOrNull?.payout.currency ?? "???"} $futurePayments";
   }

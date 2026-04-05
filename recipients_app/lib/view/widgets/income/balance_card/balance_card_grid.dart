@@ -1,4 +1,3 @@
-import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/data/enums/payout_ui_status.dart";
 import "package:app/data/models/payment/mapped_payout.dart";
 import "package:app/ui/icons/payment_status_icon.dart";
@@ -8,10 +7,12 @@ const kMonthsPerYear = 12;
 
 class BalanceCardGrid extends StatelessWidget {
   final List<MappedPayout> payments;
+  final int programTotalCountOfPayments;
 
   const BalanceCardGrid({
     super.key,
     required this.payments,
+    required this.programTotalCountOfPayments,
   });
 
   @override
@@ -24,7 +25,7 @@ class BalanceCardGrid extends StatelessWidget {
       mainAxisSpacing: 6,
       physics: const NeverScrollableScrollPhysics(),
       children: List.generate(
-        kProgramDurationMonths,
+        programTotalCountOfPayments,
         (index) {
           if (index < paymentsFromOldest.length) {
             final payment = paymentsFromOldest[index];

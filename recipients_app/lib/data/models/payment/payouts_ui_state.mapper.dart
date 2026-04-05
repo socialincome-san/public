@@ -59,6 +59,10 @@ class PayoutsUiStateMapper extends ClassMapperBase<PayoutsUiState> {
     _$lastPaidPayout,
     opt: true,
   );
+  static int _$programTotalCountOfPayments(PayoutsUiState v) =>
+      v.programTotalCountOfPayments;
+  static const Field<PayoutsUiState, int> _f$programTotalCountOfPayments =
+      Field('programTotalCountOfPayments', _$programTotalCountOfPayments);
 
   @override
   final MappableFields<PayoutsUiState> fields = const {
@@ -68,6 +72,7 @@ class PayoutsUiStateMapper extends ClassMapperBase<PayoutsUiState> {
     #unconfirmedPayoutsCount: _f$unconfirmedPayoutsCount,
     #nextPayout: _f$nextPayout,
     #lastPaidPayout: _f$lastPaidPayout,
+    #programTotalCountOfPayments: _f$programTotalCountOfPayments,
   };
 
   static PayoutsUiState _instantiate(DecodingData data) {
@@ -78,6 +83,7 @@ class PayoutsUiStateMapper extends ClassMapperBase<PayoutsUiState> {
       unconfirmedPayoutsCount: data.dec(_f$unconfirmedPayoutsCount),
       nextPayout: data.dec(_f$nextPayout),
       lastPaidPayout: data.dec(_f$lastPaidPayout),
+      programTotalCountOfPayments: data.dec(_f$programTotalCountOfPayments),
     );
   }
 
@@ -158,6 +164,7 @@ abstract class PayoutsUiStateCopyWith<$R, $In extends PayoutsUiState, $Out>
     int? unconfirmedPayoutsCount,
     NextPayoutData? nextPayout,
     MappedPayout? lastPaidPayout,
+    int? programTotalCountOfPayments,
   });
   PayoutsUiStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -197,6 +204,7 @@ class _PayoutsUiStateCopyWithImpl<$R, $Out>
     int? unconfirmedPayoutsCount,
     NextPayoutData? nextPayout,
     Object? lastPaidPayout = $none,
+    int? programTotalCountOfPayments,
   }) => $apply(
     FieldCopyWithData({
       if (status != null) #status: status,
@@ -207,6 +215,8 @@ class _PayoutsUiStateCopyWithImpl<$R, $Out>
         #unconfirmedPayoutsCount: unconfirmedPayoutsCount,
       if (nextPayout != null) #nextPayout: nextPayout,
       if (lastPaidPayout != $none) #lastPaidPayout: lastPaidPayout,
+      if (programTotalCountOfPayments != null)
+        #programTotalCountOfPayments: programTotalCountOfPayments,
     }),
   );
   @override
@@ -223,6 +233,10 @@ class _PayoutsUiStateCopyWithImpl<$R, $Out>
     ),
     nextPayout: data.get(#nextPayout, or: $value.nextPayout),
     lastPaidPayout: data.get(#lastPaidPayout, or: $value.lastPaidPayout),
+    programTotalCountOfPayments: data.get(
+      #programTotalCountOfPayments,
+      or: $value.programTotalCountOfPayments,
+    ),
   );
 
   @override

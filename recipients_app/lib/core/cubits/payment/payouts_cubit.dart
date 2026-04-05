@@ -1,6 +1,7 @@
 import "dart:io";
 
 import "package:app/data/enums/balance_card_status.dart";
+import "package:app/data/enums/payout_interval.dart";
 import "package:app/data/enums/payout_status.dart";
 import "package:app/data/enums/payout_ui_status.dart";
 import "package:app/data/models/payment/mapped_payout.dart";
@@ -19,10 +20,6 @@ part "payouts_cubit.mapper.dart";
 part "payouts_state.dart";
 
 const int kMaxReviewDays = 10;
-//TODO(migration): get real amount from backend (Model Programm) and remove this constant
-const int kCurrentPaymentAmount = 700;
-//TODO(migration): get real amount from backend (Model Programm) and remove this constant
-const int kProgramDurationMonths = 36;
 
 const _kOnHoldCandidateStates = [PayoutStatus.paid, PayoutStatus.contested];
 
@@ -189,7 +186,22 @@ class PayoutsCubit extends Cubit<PayoutsState> {
       unconfirmedPayoutsCount: unconfirmedPaymentsCount,
       nextPayout: _getNextPaymentData(reversedMappedPayments),
       lastPaidPayout: _getLastPaidPayment(reversedMappedPayments),
+      programTotalCountOfPayments: _calculateTotalCountOfPayments(
+        recipient.program.programDurationInMonths,
+        recipient.program.payoutInterval,
+      ),
     );
+  }
+
+  int _calculateTotalCountOfPayments(int programDurationInMonths, PayoutInterval interval){
+    switch (interval) {
+      case PayoutInterval.monthly:
+        return programDurationInMonths;
+      case PayoutInterval.quarterly:
+        return (programDurationInMonths / 4).ceil();
+      case PayoutInterval.yearly:
+        return (programDurationInMonths / 12).ceil();
+    }
   }
 
   BalanceCardStatus _getBalanceCardStatus(
@@ -247,7 +259,7 @@ class PayoutsCubit extends Cubit<PayoutsState> {
     final daysToPayment = DateUtils.dateOnly(nextPaymentDate).difference(DateUtils.dateOnly(DateTime.now())).inDays;
 
     return NextPayoutData(
-      amount: nextPayment?.payout.amount ?? kCurrentPaymentAmount,
+      amount: nextPayment?.payout.amount ?? 0,
       currency: nextPayment?.payout.currency ?? "???",
       daysToPayout: daysToPayment,
     );
