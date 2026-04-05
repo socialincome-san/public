@@ -1,13 +1,23 @@
-import "package:json_annotation/json_annotation.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-class DateTimeConverter implements JsonConverter<DateTime, String> {
-  const DateTimeConverter();
-
-  @override
-  DateTime fromJson(String json) =>
-      DateTime.fromMillisecondsSinceEpoch(int.parse(json));
+/// A [MappingHook] that converts between ISO 8601 strings (from the API)
+/// and [DateTime] objects.
+class DateTimeHook extends MappingHook {
+  const DateTimeHook();
 
   @override
-  String toJson(DateTime timestamp) =>
-      timestamp.millisecondsSinceEpoch.toString();
+  Object? beforeDecode(Object? value) {
+    if (value is String) {
+      return DateTime.parse(value);
+    }
+    return value;
+  }
+
+  @override
+  Object? beforeEncode(Object? value) {
+    if (value is DateTime) {
+      return value.toIso8601String();
+    }
+    return value;
+  }
 }

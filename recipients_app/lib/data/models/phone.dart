@@ -1,18 +1,23 @@
-import "package:equatable/equatable.dart";
-import "package:json_annotation/json_annotation.dart";
+import "package:app/core/helpers/date_time_converter.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-part "phone.g.dart";
+part "phone.mapper.dart";
 
-@JsonSerializable()
-class Phone extends Equatable {
-  @JsonKey(name: "phone", defaultValue: 0)
-  final int phoneNumber;
+@MappableClass()
+class Phone with PhoneMappable {
+  final String id;
+  final String number;
+  final bool hasWhatsApp;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
 
-  const Phone(this.phoneNumber);
-
-  factory Phone.fromJson(Map<String, dynamic> json) => _$PhoneFromJson(json);
-  Map<String, dynamic> toJson() => _$PhoneToJson(this);
-
-  @override
-  List<Object?> get props => [phoneNumber];
+  const Phone({
+    required this.id,
+    required this.number,
+    required this.hasWhatsApp,
+    required this.createdAt,
+    this.updatedAt,
+  });
 }

@@ -1,0 +1,33 @@
+import "package:app/core/helpers/date_time_converter.dart";
+import "package:app/data/enums/payout_interval.dart";
+import "package:app/data/models/country.dart";
+import "package:dart_mappable/dart_mappable.dart";
+
+part "program.mapper.dart";
+
+@MappableClass()
+class Program with ProgramMappable {
+  final String id;
+  final String name;
+  final String countryId;
+  final Country country;
+  final int payoutPerInterval;
+  final PayoutInterval payoutInterval;
+  final int programDurationInMonths;
+  @MappableField(hook: DateTimeHook())
+  final DateTime createdAt;
+  @MappableField(hook: DateTimeHook())
+  final DateTime? updatedAt;
+
+  const Program({
+    required this.id,
+    required this.name,
+    required this.countryId,
+    required this.country,
+    required this.payoutPerInterval,
+    required this.payoutInterval,
+    required this.programDurationInMonths,
+    required this.createdAt,
+    this.updatedAt,
+  });
+}
