@@ -1,15 +1,18 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/cubits/connectivity/connectivity_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
+import "package:app/data/datasource/local/app_cache_database.dart";
 import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/models/app_version_info.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
+import "package:app/data/services/connectivity_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
@@ -21,6 +24,7 @@ import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/terms_and_conditions_page.dart";
 import "package:app/view/pages/welcome_page.dart";
 import "package:app/view/widgets/app_update_check_widget.dart";
+import "package:app/view/widgets/offline_banner.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -47,6 +51,9 @@ class MyApp extends StatelessWidget {
 
   final AppVersionInfo? appVersionInfo;
 
+  final AppCacheDatabase cacheDatabase;
+  final ConnectivityService connectivityService;
+
   const MyApp({
     super.key,
     required this.messaging,
@@ -61,6 +68,8 @@ class MyApp extends StatelessWidget {
     required this.firebaseRemoteConfigService,
     required this.crashReportingRepository,
     required this.appVersionInfo,
+    required this.cacheDatabase,
+    required this.connectivityService,
   });
 
   // This widget is the root of your application.
@@ -69,12 +78,16 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<DemoManager>(create: (context) => demoManager),
+        RepositoryProvider<AppCacheDatabase>.value(value: cacheDatabase),
+        RepositoryProvider<ConnectivityService>.value(value: connectivityService),
         RepositoryProvider(create: (context) => MessagingRepository(messaging: messaging)),
         RepositoryProvider(
           create: (context) => UserRepository(
             remoteDataSource: userRemoteDataSource,
             demoDataSource: userDemoDataSource,
             demoManager: demoManager,
+            cacheDatabase: cacheDatabase,
+            connectivityService: connectivityService,
           ),
         ),
         RepositoryProvider.value(value: crashReportingRepository),
@@ -83,6 +96,8 @@ class MyApp extends StatelessWidget {
             remoteDataSource: payoutRemoteDataSource,
             demoDataSource: payoutDemoDataSource,
             demoManager: demoManager,
+            cacheDatabase: cacheDatabase,
+            connectivityService: connectivityService,
           ),
         ),
         RepositoryProvider(
@@ -90,6 +105,7 @@ class MyApp extends StatelessWidget {
             remoteDataSource: surveyRemoteDataSource,
             demoDataSource: surveyDemoDataSource,
             demoManager: demoManager,
+            cacheDatabase: cacheDatabase,
           ),
         ),
         RepositoryProvider<AuthService>.value(value: authService),
@@ -104,7 +120,13 @@ class MyApp extends StatelessWidget {
               crashReportingRepository: context.read<CrashReportingRepository>(),
               userRepository: context.read<UserRepository>(),
               authService: context.read<AuthService>(),
+              cacheDatabase: context.read<AppCacheDatabase>(),
             )..init(),
+          ),
+          BlocProvider(
+            create: (context) => ConnectivityCubit(
+              connectivityService: context.read<ConnectivityService>(),
+            ),
           ),
           BlocProvider(
             create: (context) => SettingsCubit(
@@ -145,6 +167,9 @@ class _App extends StatelessWidget {
         KriCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale("en", "US"), Locale("kri")],
+      builder: (context, child) {
+        return OfflineBanner(child: child ?? const SizedBox.shrink());
+      },
       home: AppUpdateCheckWidget(
         appVersionInfo: appVersionInfo,
         child: BlocConsumer<AuthCubit, AuthState>(
