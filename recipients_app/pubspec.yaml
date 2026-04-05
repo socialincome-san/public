@@ -66,14 +66,15 @@ flutter:
           weight: 500
         - asset: assets/fonts/Unica77LL-Bold.otf
           weight: 700
-# flutter_native_splash:
-#   2.4.7
-#   # also let us to keep splash screen longer on the screen.
-#   # See flutter_native_splash documentation for more info
 
-#   color: "#EDF3FF"
-#   image: assets/splash.png
+flutter_native_splash:
+  # This package generates native code to customize Flutter's default white native splash screen,
+  # also let us to keep splash screen longer on the screen.
+  # See flutter_native_splash documentation for more info
 
-#   android_12:
-#     image: assets/splashAndroid12.png
-#     color: "#EDF3FF"
+  color: "#EDF3FF"
+  image: assets/splash.png
+
+  android_12:
+    image: assets/splashAndroid12.png
+    color: "#EDF3FF"
