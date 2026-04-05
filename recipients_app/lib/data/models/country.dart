@@ -5,12 +5,11 @@ part "country.mapper.dart";
 @MappableClass()
 class Country with CountryMappable {
   final String isoCode;
-  final String? currency;
+  final String currency;
 
   /// Returns a new [Country] instance.
   const Country({
     required this.isoCode,
-    // TODO(migration): make it mandatory if bug on server side is fixed
-    this.currency,
+    required this.currency,
   });
 }
