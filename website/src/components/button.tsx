@@ -22,10 +22,10 @@ const buttonVariants = cva(
 					'bg-[hsl(var(--confirm))] text-[hsl(var(--confirm-foreground))] shadow-xs hover:bg-[hsl(var(--confirm)/0.9)]',
 			},
 			size: {
-				default: 'h-9 px-4 py-2',
+				default: 'px-6 py-3',
 				sm: 'h-8 rounded-full px-3 text-xs',
 				lg: 'h-10 rounded-full px-8',
-				icon: 'h-9 w-9',
+				icon: 'size-9',
 			},
 		},
 		defaultVariants: {

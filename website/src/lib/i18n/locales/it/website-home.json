@@ -87,8 +87,9 @@
 	},
 	"section-create-program": {
 		"title": "Avvia il tuo programma",
-		"description": "Un programma è un modo strutturato per finanziare trasferimenti di denaro mensili e prevedibili a persone in difficoltà. Ti guidiamo nella configurazione, nella selezione dei beneficiari e nel budget, così puoi avviare rapidamente un supporto concreto.",
-		"cta": "Crea un nuovo programma"
+		"description": "Ora puoi lanciare il tuo programma di trasferimenti monetari diretti o progetto pilota di reddito di base universale con beneficiari già preselezionati e valutati da noi.",
+		"cta": "Crea un nuovo programma",
+		"partner": "Partner della piattaforma"
 	},
 	"section-faq": {
 		"title": "Tutto questo sembra fantastico, ma ... ",

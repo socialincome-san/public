@@ -1,8 +1,9 @@
+import { isStoryblokMockRecordOrReplay } from '@/lib/utils/environment';
+
 let patched = false;
 
 export const mockStoryblokIfTestMode = () => {
-	const mode = process.env.STORYBLOK_MOCK_MODE;
-	if (!['record', 'replay'].includes(mode ?? '')) {
+	if (!isStoryblokMockRecordOrReplay()) {
 		return;
 	} // only run in mock modes
 	if (patched) {

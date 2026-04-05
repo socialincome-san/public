@@ -115,6 +115,83 @@
 			"happierTitleV1": "Hat dich Social Income glücklicher gemacht?",
 			"happierCommentTitleV1": "Wie genau?",
 			"notHappierCommentTitleV1": "Kannst du uns sagen, warum?"
+		},
+		"impactMeasurement": {
+			"title": "Wirkungsmessung",
+			"description": "Alle auf dieser Seite gezeigten Daten werden in Echtzeit aus Umfragen mit unseren Empfängerinnen und Empfängern aktualisiert.",
+			"loadError": "Die Wirkungsdaten konnten derzeit nicht geladen werden.",
+			"notAvailable": "N/A",
+			"breadcrumb": {
+				"home": "Startseite",
+				"programs": "Programme",
+				"impactMeasurement": "Wirkungsmessung"
+			},
+			"filters": {
+				"allCountries": "Alle Länder",
+				"allPrograms": "Alle Programme",
+				"allSurveys": "Alle Umfragen",
+				"allRecipients": "Alle Empfängerinnen und Empfänger",
+				"allFilters": "Alle Filter",
+				"filter": "Filter",
+				"apply": "Anwenden",
+				"reset": "Zurücksetzen"
+			},
+			"downloadCsv": "CSV herunterladen",
+			"comingSoon": "Demnächst",
+			"downloadFilteredCsv": "Gefilterte CSV herunterladen",
+			"studyDetails": "Studien-Details",
+			"sampleSize": "Stichprobengrösse",
+			"uniqueIndividuals": "Eindeutige Personen",
+			"countryHeading": "Land",
+			"ageHeading": "Alter",
+			"genderHeading": "Geschlecht",
+			"timeFrame": "Zeitraum",
+			"days": "Tage",
+			"lastResponseDaysAgo": "Letzte Antwort vor {{days}} Tagen",
+			"lastResponseNotAvailable": "Letzte Antwort N/A",
+			"surveyResponsesFrom": "Umfrageantworten von",
+			"recipients": "Empfängerinnen und Empfänger",
+			"responsesIn": "Antworten in",
+			"surveys": "Umfragen",
+			"questionLabel": "Frage {{number}}",
+			"textResponseInsights": "Erkenntnisse zu Textantworten",
+			"textResponsePrivacyTooltip": "Freitextantworten werden aus Datenschutzgründen nicht veröffentlicht, da sie Personen identifizierbar machen oder offenlegen könnten, wer hinter einer Antwort steht.",
+			"noTextResponsesYet": "Noch keine Textantworten.",
+			"textResponsesCollected": "Textantworten erfasst.",
+			"questionTypes": {
+				"singleChoice": "Einzelauswahl",
+				"multipleChoice": "Mehrfachauswahl",
+				"ranking": "Rangfolge",
+				"freeText": "Freitext",
+				"fallback": "Andere"
+			},
+			"questionnaires": {
+				"onboarding": "Onboarding",
+				"checkin": "Check-in",
+				"offboarding": "Offboarding",
+				"offboardedCheckin": "Offboarded Check-in",
+				"fallback": "Andere"
+			},
+			"followUp": {
+				"prefix": "Folgefrage für",
+				"individuals": "Personen",
+				"whoSaid": "die geantwortet haben",
+				"selectedMoreThanOneCategory": "die mehr als eine Kategorie ausgewählt haben"
+			},
+			"recipientsFilter": {
+				"genderHeading": "Geschlecht",
+				"ageHeading": "Alter",
+				"gender": {
+					"male": "Männlich",
+					"female": "Weiblich"
+				},
+				"age": {
+					"youth": "Jugendliche (16-25)",
+					"youngAdults": "Junge Erwachsene (26-35)",
+					"middleAged": "Mittleres Alter (36-55)",
+					"olderAdults": "Ältere Erwachsene (56+)"
+				}
+			}
 		}
 	}
 }

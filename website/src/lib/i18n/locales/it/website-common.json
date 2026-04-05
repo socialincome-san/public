@@ -111,5 +111,52 @@
 		"sdg17-title": "Partnerships",
 		"sdg17-mission-1": "La missione di ",
 		"sdg17-mission-2": "è rafforzare le partnership per lo sviluppo sostenibile."
+	},
+	"countries-page": {
+		"empty": "Nessun paese trovato.",
+		"program-singular": "programma",
+		"program-plural": "programmi",
+		"active-program-singular": "programma attivo",
+		"active-program-plural": "programmi attivi",
+		"recipient-singular": "beneficiario",
+		"recipient-plural": "beneficiari",
+		"donate-now": "Dona ora",
+		"about": "Informazioni su"
+	},
+	"local-partners-page": {
+		"empty": "Nessun partner locale trovato.",
+		"recipient-in-program-singular": "beneficiario in un programma",
+		"recipient-in-program-plural": "beneficiari in un programma",
+		"recipient-waiting-singular": "beneficiario in attesa",
+		"recipient-waiting-plural": "beneficiari in attesa",
+		"about": "Informazioni su"
+	},
+	"focuses-page": {
+		"empty": "Nessun focus trovato.",
+		"program-singular": "programma",
+		"program-plural": "programmi",
+		"active-program-singular": "programma attivo",
+		"active-program-plural": "programmi attivi",
+		"recipient-in-program-singular": "beneficiario in un programma",
+		"recipient-in-program-plural": "beneficiari in un programma",
+		"candidate-singular": "candidato",
+		"candidate-plural": "candidati",
+		"about": "Informazioni su"
+	},
+	"programs-page": {
+		"empty": "Nessun programma trovato.",
+		"campaign-singular": "campagna",
+		"campaign-plural": "campagne",
+		"recipient-singular": "beneficiario",
+		"recipient-plural": "beneficiari",
+		"about": "Informazioni su"
+	},
+	"campaigns-page": {
+		"empty": "Nessuna campagna trovata.",
+		"contribution-singular": "contributo",
+		"contribution-plural": "contributi",
+		"day-left-singular": "giorno rimanente",
+		"day-left-plural": "giorni rimanenti",
+		"about": "Informazioni su"
 	}
 }

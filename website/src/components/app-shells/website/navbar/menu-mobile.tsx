@@ -20,7 +20,7 @@ import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import * as Dialog from '@radix-ui/react-dialog';
-import { ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FC, useState } from 'react';
@@ -168,6 +168,16 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 														</li>
 													))}
 												</ul>
+												{group.overviewLink && group.overviewLabel ? (
+													<NextLink
+														href={resolveStoryblokLink(group.overviewLink, lang, region)}
+														className="text-muted-foreground hover:text-foreground group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
+														onClick={() => handleOpenChange(false)}
+													>
+														<span>{group.overviewLabel}</span>
+														<ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
+													</NextLink>
+												) : null}
 											</div>
 										))}
 									</>

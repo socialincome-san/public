@@ -27,6 +27,9 @@ import { ExpenseValidationService } from './expense/expense-validation.service';
 import { ExpenseWriteService } from './expense/expense-write.service';
 import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
+import { FocusReadService } from './focus/focus-read.service';
+import { FocusValidationService } from './focus/focus-validation.service';
+import { FocusWriteService } from './focus/focus-write.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
@@ -56,6 +59,7 @@ import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.se
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
+import { SurveyImpactService } from './survey/survey-impact.service';
 import { SurveyReadService } from './survey/survey-read.service';
 import { SurveyValidationService } from './survey/survey-validation.service';
 import { SurveyWriteService } from './survey/survey-write.service';
@@ -135,6 +139,9 @@ const contributorWrite = new ContributorWriteService(
 );
 const campaignValidation = new CampaignValidationService(prisma);
 const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
+const focusValidation = new FocusValidationService(prisma);
+const focusRead = new FocusReadService(prisma, userRead);
+const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
 const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
 const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
@@ -168,6 +175,7 @@ const stripe = new StripeService(
 	programAccessRead,
 );
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
+const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
 const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead, surveyValidation);
 
@@ -178,6 +186,7 @@ export const services = {
 	read: {
 		candidate: candidateRead,
 		campaign: campaignRead,
+		focus: focusRead,
 		contribution: contributionRead,
 		contributor: contributorRead,
 		country: countryRead,
@@ -196,6 +205,7 @@ export const services = {
 	write: {
 		candidate: candidateWrite,
 		campaign: campaignWrite,
+		focus: focusWrite,
 		contribution: contributionWrite,
 		contributor: contributorWrite,
 		country: countryWrite,
@@ -222,6 +232,7 @@ export const services = {
 	sendgrid,
 	storyblok,
 	stripe,
+	surveyImpact,
 	transparency,
 	twilio,
 };

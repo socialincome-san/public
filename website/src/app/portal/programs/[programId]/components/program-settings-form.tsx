@@ -2,8 +2,9 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
-import { Cause, PayoutInterval, Profile } from '@/generated/prisma/enums';
+import { PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
+import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import {
 	deleteProgramAction,
 	getProgramOrganizationOptionsAction,
@@ -36,7 +37,7 @@ type ProgramSettingsFormSchema = {
 		programDurationInMonths: FormField;
 		payoutPerInterval: FormField;
 		payoutInterval: FormField;
-		targetCauses: FormField;
+		targetFocuses: FormField;
 		targetProfiles: FormField;
 		ownerOrganizations: FormField;
 		operatorOrganizations: FormField;
@@ -88,14 +89,11 @@ const initialFormSchema: ProgramSettingsFormSchema = {
 				{ id: PayoutInterval.yearly, label: 'Yearly' },
 			],
 		},
-		targetCauses: {
-			label: 'Target causes',
-			placeholder: 'Select causes',
-			zodSchema: z.array(z.nativeEnum(Cause)).optional(),
-			options: Object.values(Cause).map((cause) => ({
-				id: cause,
-				label: cause.replaceAll('_', ' '),
-			})),
+		targetFocuses: {
+			label: 'Target focuses',
+			placeholder: 'Select focuses',
+			zodSchema: z.array(z.string().trim().min(1)).optional(),
+			options: [],
 		},
 		targetProfiles: {
 			label: 'Target profiles',
@@ -136,6 +134,7 @@ const fillFormSchema = (
 	settings: ProgramSettingsPayload,
 	countryOptions: CountryOption[],
 	organizationOptions: OrganizationOption[],
+	focusOptions: { id: string; label: string }[],
 	readOnly: boolean,
 ): ProgramSettingsFormSchema => {
 	const nextSchema: ProgramSettingsFormSchema = {
@@ -148,7 +147,7 @@ const fillFormSchema = (
 			programDurationInMonths: { ...formSchema.fields.programDurationInMonths },
 			payoutPerInterval: { ...formSchema.fields.payoutPerInterval },
 			payoutInterval: { ...formSchema.fields.payoutInterval },
-			targetCauses: { ...formSchema.fields.targetCauses },
+			targetFocuses: { ...formSchema.fields.targetFocuses },
 			targetProfiles: { ...formSchema.fields.targetProfiles },
 			ownerOrganizations: { ...formSchema.fields.ownerOrganizations },
 			operatorOrganizations: { ...formSchema.fields.operatorOrganizations },
@@ -168,7 +167,8 @@ const fillFormSchema = (
 	nextSchema.fields.programDurationInMonths.value = settings.programDurationInMonths;
 	nextSchema.fields.payoutPerInterval.value = settings.payoutPerInterval;
 	nextSchema.fields.payoutInterval.value = settings.payoutInterval;
-	nextSchema.fields.targetCauses.value = settings.targetCauses;
+	nextSchema.fields.targetFocuses.value = settings.targetFocuses;
+	nextSchema.fields.targetFocuses.options = focusOptions;
 	nextSchema.fields.targetProfiles.value = settings.targetProfiles;
 	nextSchema.fields.ownerOrganizations.options = organizationOptions;
 	nextSchema.fields.ownerOrganizations.value = settings.ownerOrganizationIds;
@@ -181,7 +181,7 @@ const fillFormSchema = (
 	nextSchema.fields.programDurationInMonths.disabled = readOnlyFields;
 	nextSchema.fields.payoutPerInterval.disabled = readOnlyFields;
 	nextSchema.fields.payoutInterval.disabled = readOnlyFields;
-	nextSchema.fields.targetCauses.disabled = readOnlyFields;
+	nextSchema.fields.targetFocuses.disabled = readOnlyFields;
 	nextSchema.fields.targetProfiles.disabled = readOnlyFields;
 	nextSchema.fields.ownerOrganizations.disabled = readOnlyFields;
 	nextSchema.fields.operatorOrganizations.disabled = readOnlyFields;
@@ -239,10 +239,11 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 			return;
 		}
 		startTransition(async () => {
-			const [settingsResult, countryOptionsResult, organizationOptionsResult] = await Promise.all([
+			const [settingsResult, countryOptionsResult, organizationOptionsResult, focusOptionsResult] = await Promise.all([
 				getProgramSettingsAction(programId),
 				getProgramCountryFeasibilityAction(),
 				getProgramOrganizationOptionsAction(programId),
+				getFocusOptionsAction(),
 			]);
 
 			handleServiceResult(settingsResult, {
@@ -261,8 +262,14 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 									label: organization.name,
 								}))
 							: [];
+						const focusOptions = focusOptionsResult.success
+							? focusOptionsResult.data.map((focus) => ({
+									id: focus.id,
+									label: focus.name,
+								}))
+							: [];
 
-						return fillFormSchema(previousSchema, settings, options, organizationOptions, readOnly);
+						return fillFormSchema(previousSchema, settings, options, organizationOptions, focusOptions, readOnly);
 					});
 				},
 				onError: (error) => onError?.(error),

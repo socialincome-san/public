@@ -118,6 +118,83 @@
 			"happierTitleV1": "Social Income vous a-t-il rendu plus heureux/heureuse ?",
 			"happierCommentTitleV1": "Comment cela ?",
 			"notHappierCommentTitleV1": "Pouvez-vous nous dire pourquoi ?"
+		},
+		"impactMeasurement": {
+			"title": "Mesure d'impact",
+			"description": "Toutes les données affichées sur cette page sont mises à jour en temps réel à partir des enquêtes menées auprès de nos bénéficiaires.",
+			"loadError": "Impossible de charger les données de mesure d'impact pour le moment.",
+			"notAvailable": "N/D",
+			"breadcrumb": {
+				"home": "Accueil",
+				"programs": "Programmes",
+				"impactMeasurement": "Mesure d'impact"
+			},
+			"filters": {
+				"allCountries": "Tous les pays",
+				"allPrograms": "Tous les programmes",
+				"allSurveys": "Toutes les enquêtes",
+				"allRecipients": "Tous les bénéficiaires",
+				"allFilters": "Tous les filtres",
+				"filter": "Filtre",
+				"apply": "Appliquer",
+				"reset": "Réinitialiser"
+			},
+			"downloadCsv": "Télécharger CSV",
+			"comingSoon": "Bientot disponible",
+			"downloadFilteredCsv": "Telecharger le CSV filtre",
+			"studyDetails": "Détails de l'étude",
+			"sampleSize": "Taille de l'échantillon",
+			"uniqueIndividuals": "Individus uniques",
+			"countryHeading": "Pays",
+			"ageHeading": "Âge",
+			"genderHeading": "Genre",
+			"timeFrame": "Période",
+			"days": "jours",
+			"lastResponseDaysAgo": "Dernière réponse il y a {{days}} j",
+			"lastResponseNotAvailable": "Dernière réponse N/D",
+			"surveyResponsesFrom": "réponses d'enquête de",
+			"recipients": "bénéficiaires",
+			"responsesIn": "réponses dans",
+			"surveys": "enquêtes",
+			"questionLabel": "Question {{number}}",
+			"textResponseInsights": "Insights sur les réponses textuelles",
+			"textResponsePrivacyTooltip": "Les réponses en texte libre ne sont pas publiées pour des raisons de confidentialité, car elles peuvent identifier des individus ou révéler qui se cache derrière une réponse.",
+			"noTextResponsesYet": "Aucune réponse textuelle pour le moment.",
+			"textResponsesCollected": "réponses textuelles collectées.",
+			"questionTypes": {
+				"singleChoice": "Choix unique",
+				"multipleChoice": "Choix multiples",
+				"ranking": "Classement",
+				"freeText": "Texte libre",
+				"fallback": "Autre"
+			},
+			"questionnaires": {
+				"onboarding": "Intégration",
+				"checkin": "Check-in",
+				"offboarding": "Fin de participation",
+				"offboardedCheckin": "Check-in post-programme",
+				"fallback": "Autre"
+			},
+			"followUp": {
+				"prefix": "Question de suivi pour",
+				"individuals": "personnes",
+				"whoSaid": "ayant répondu",
+				"selectedMoreThanOneCategory": "ayant sélectionné plus d'une catégorie"
+			},
+			"recipientsFilter": {
+				"genderHeading": "Genre",
+				"ageHeading": "Âge",
+				"gender": {
+					"male": "Homme",
+					"female": "Femme"
+				},
+				"age": {
+					"youth": "Jeunes (16-25)",
+					"youngAdults": "Jeunes adultes (26-35)",
+					"middleAged": "Âge moyen (36-55)",
+					"olderAdults": "Adultes plus âgés (56+)"
+				}
+			}
 		}
 	}
 }

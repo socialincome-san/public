@@ -400,10 +400,6 @@
             "type": "string",
             "nullable": true
           },
-          "addressId": {
-            "type": "string",
-            "nullable": true
-          },
           "phoneId": {
             "type": "string",
             "nullable": true

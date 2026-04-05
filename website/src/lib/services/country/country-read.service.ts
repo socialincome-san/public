@@ -16,6 +16,8 @@ import {
 	NETWORK_TECH_LABELS,
 	ProgramCountryFeasibilityRow,
 	ProgramCountryFeasibilityView,
+	PublicCountryStats,
+	PublicCountryStatsMap,
 } from './country.types';
 
 export class CountryReadService extends BaseService {
@@ -345,6 +347,75 @@ export class CountryReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch program country feasibility: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicCountryStatsByIsoCode(
+		isoCode: string,
+	): Promise<ServiceResult<{ programsCount: number; recipientsCount: number }>> {
+		try {
+			const normalizedIsoCode = isoCode.trim().toUpperCase();
+			if (!normalizedIsoCode) {
+				return this.resultFail('Missing isoCode');
+			}
+
+			const statsByIsoCodesResult = await this.getPublicCountryStatsByIsoCodes([normalizedIsoCode]);
+			if (!statsByIsoCodesResult.success) {
+				return this.resultFail(statsByIsoCodesResult.error);
+			}
+
+			const countryStats = statsByIsoCodesResult.data[normalizedIsoCode];
+			if (!countryStats) {
+				return this.resultFail('Country not found');
+			}
+
+			return this.resultOk(countryStats);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load country stats: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicCountryStatsByIsoCodes(isoCodes: string[]): Promise<ServiceResult<PublicCountryStatsMap>> {
+		try {
+			const normalizedIsoCodes = [...new Set(isoCodes.map((isoCode) => isoCode.trim().toUpperCase()).filter(Boolean))];
+			if (!normalizedIsoCodes.length) {
+				return this.resultOk({});
+			}
+
+			const countries = await this.db.country.findMany({
+				where: { isoCode: { in: normalizedIsoCodes as CountryCode[] } },
+				select: {
+					isoCode: true,
+					_count: { select: { programs: true } },
+					programs: {
+						select: {
+							_count: { select: { recipients: true } },
+						},
+					},
+				},
+			});
+
+			const statsByIsoCode: PublicCountryStatsMap = {};
+			for (const country of countries) {
+				let recipientsCount = 0;
+				for (const program of country.programs) {
+					recipientsCount += program._count.recipients;
+				}
+
+				const stats: PublicCountryStats = {
+					programsCount: country._count.programs,
+					recipientsCount,
+				};
+				statsByIsoCode[country.isoCode] = stats;
+			}
+
+			return this.resultOk(statsByIsoCode);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load country stats map: ${JSON.stringify(error)}`);
 		}
 	}
 

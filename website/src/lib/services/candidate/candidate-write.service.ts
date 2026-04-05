@@ -1,4 +1,4 @@
-import { Cause, CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { parseCsvText } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
@@ -73,7 +73,7 @@ export class CandidateWriteService extends BaseService {
 	}
 
 	private buildCandidateWhere(
-		causes?: Cause[],
+		focuses?: string[],
 		profiles?: Profile[],
 		countryCode?: CountryCode | null,
 	): Prisma.RecipientWhereInput {
@@ -126,10 +126,12 @@ export class CandidateWriteService extends BaseService {
 			];
 		}
 
-		if (causes && causes.length > 0) {
+		if (focuses && focuses.length > 0) {
 			where.localPartner = {
-				causes: {
-					hasSome: causes,
+				focuses: {
+					some: {
+						focusId: { in: focuses },
+					},
 				},
 			};
 		}
@@ -724,11 +726,11 @@ export class CandidateWriteService extends BaseService {
 		programId: string,
 		amountOfRecipientsForStart: number,
 		countryCode: CountryCode,
-		causes?: Cause[],
+		focuses?: string[],
 		profiles?: Profile[],
 	): Promise<ServiceResult<{ assigned: number }>> {
 		try {
-			const where = this.buildCandidateWhere(causes, profiles, countryCode);
+			const where = this.buildCandidateWhere(focuses, profiles, countryCode);
 
 			const allAvailableCandidates = await this.db.recipient.findMany({
 				where,

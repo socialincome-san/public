@@ -3,6 +3,7 @@ import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
+import { slugify } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -15,6 +16,9 @@ import {
 	CampaignPayload,
 	CampaignTableQuery,
 	CampaignTableViewRow,
+	PublicCampaignStats,
+	PublicCampaignStatsMap,
+	PublicPreviewCampaign,
 } from './campaign.types';
 
 export class CampaignReadService extends BaseService {
@@ -189,6 +193,97 @@ export class CampaignReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicPreviewCampaignBySlug(slug: string): Promise<ServiceResult<PublicPreviewCampaign>> {
+		try {
+			const normalizedSlug = slug.trim();
+			if (!normalizedSlug) {
+				return this.resultFail('Missing campaign slug');
+			}
+
+			const campaigns = await this.db.campaign.findMany({
+				select: { id: true, title: true, description: true, slug: true },
+			});
+			const campaign = campaigns.find((currentCampaign) => slugify(currentCampaign.title) === normalizedSlug);
+
+			if (!campaign?.slug) {
+				return this.resultFail('Campaign not found');
+			}
+
+			return this.resultOk({
+				id: campaign.id,
+				title: campaign.title,
+				description: campaign.description,
+				slug: campaign.slug,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load public preview campaign: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicCampaignStatsById(campaignId: string): Promise<ServiceResult<PublicCampaignStats>> {
+		try {
+			const normalizedCampaignId = campaignId.trim();
+			if (!normalizedCampaignId) {
+				return this.resultFail('Missing campaign id');
+			}
+
+			const statsMapResult = await this.getPublicCampaignStatsByIds([normalizedCampaignId]);
+			if (!statsMapResult.success) {
+				return this.resultFail(statsMapResult.error);
+			}
+
+			const stats = statsMapResult.data[normalizedCampaignId];
+			if (!stats) {
+				return this.resultFail('Campaign not found');
+			}
+
+			return this.resultOk(stats);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch campaign stats: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicCampaignStatsByIds(campaignIds: string[]): Promise<ServiceResult<PublicCampaignStatsMap>> {
+		try {
+			const normalizedCampaignIds = [...new Set(campaignIds.map((campaignId) => campaignId.trim()).filter(Boolean))];
+			if (!normalizedCampaignIds.length) {
+				return this.resultOk({});
+			}
+
+			const campaigns = await this.db.campaign.findMany({
+				where: { id: { in: normalizedCampaignIds } },
+				select: {
+					id: true,
+					endDate: true,
+					_count: {
+						select: {
+							contributions: true,
+						},
+					},
+				},
+			});
+
+			const statsById: PublicCampaignStatsMap = {};
+			for (const campaign of campaigns) {
+				const stats: PublicCampaignStats = {
+					contributionsCount: campaign._count.contributions,
+					daysLeft: Math.max(0, this.daysUntilTs(campaign.endDate)),
+				};
+				statsById[campaign.id] = stats;
+			}
+
+			return this.resultOk(statsById);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch campaign stats map: ${JSON.stringify(error)}`);
 		}
 	}
 

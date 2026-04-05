@@ -111,6 +111,16 @@ type MultiSelectProps = {
 	placeholder?: string;
 
 	/**
+	 * Optional icon rendered next to placeholder text when no values are selected.
+	 */
+	placeholderIcon?: React.ComponentType<{ className?: string }>;
+
+	/**
+	 * Optional class name for placeholder text row when no values are selected.
+	 */
+	placeholderClassName?: string;
+
+	/**
 	 * Animation duration in seconds for the visual effects (e.g., bouncing badges).
 	 * Optional, defaults to 0 (no animation).
 	 */
@@ -185,6 +195,12 @@ type MultiSelectProps = {
 	 * Optional, can be used to customize popover appearance.
 	 */
 	popoverClassName?: string;
+
+	/**
+	 * Alignment of popover content relative to trigger.
+	 * Optional, defaults to "start".
+	 */
+	popoverAlign?: 'start' | 'center' | 'end';
 
 	/**
 	 * If true, disables the component completely.
@@ -290,6 +306,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			variant,
 			defaultValue = [],
 			placeholder = 'Select options',
+			placeholderIcon: PlaceholderIcon,
+			placeholderClassName,
 			animation = 0,
 			animationConfig,
 			maxCount = 3,
@@ -301,6 +319,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			autoSize = false,
 			singleLine = false,
 			popoverClassName,
+			popoverAlign = 'start',
 			disabled = false,
 			responsive,
 			minWidth,
@@ -926,7 +945,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 								</div>
 							) : (
 								<div className="mx-auto flex w-full items-center justify-between">
-									<span className="text-muted-foreground mx-3 text-sm">{placeholder}</span>
+									<div className={cn('text-muted-foreground mx-3 flex items-center gap-2 text-sm', placeholderClassName)}>
+										{PlaceholderIcon ? <PlaceholderIcon className={cn('h-4 w-4', placeholderClassName)} /> : null}
+										<span>{placeholder}</span>
+									</div>
 									<ChevronDown className="text-muted-foreground mx-2 h-4 cursor-pointer" />
 								</div>
 							)}
@@ -953,7 +975,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 							maxHeight: screenSize === 'mobile' ? '70vh' : '60vh',
 							touchAction: 'manipulation',
 						}}
-						align="start"
+						align={popoverAlign}
 						onEscapeKeyDown={() => setIsPopoverOpen(false)}
 					>
 						<Command>

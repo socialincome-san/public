@@ -1,4 +1,5 @@
 import { createLinkForArticle } from '@/lib/services/storyblok/storyblok.utils';
+import { cn } from '@/lib/utils/cn';
 import { linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
@@ -25,7 +26,7 @@ export const OriginalLanguageLink = ({
 			<Typography size="sm">
 				{text}
 				<Link
-					className={`${linkCn({ arrow: 'external', underline: 'none' })} ml-1`}
+					className={cn(linkCn({ arrow: 'external', underline: 'none' }), 'ml-1')}
 					href={createLinkForArticle(slug, originalLanguage, region)}
 					key={'link_original_language'}
 					rel="noopener noreferrer"

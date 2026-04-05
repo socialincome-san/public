@@ -63,7 +63,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				{authors.map((author) => (
 					<CarouselContent key={author.id} className="mx-1 flex flex-col justify-center text-center">
 						<Link
-							href={`/${lang}/${region}/journal/author/${author.slug}`}
+							href={`/${lang}/${region}/person/${author.slug}`}
 							title={`${author.content.firstName} ${author.content.lastName}`}
 						>
 							<StoryblokAuthorImage

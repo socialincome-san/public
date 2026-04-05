@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
-import { Cause, Profile } from '@/generated/prisma/enums';
+import { Profile } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { cn } from '@/lib/utils/cn';
 import { SpinnerIcon } from '@socialincome/ui';
@@ -12,36 +12,46 @@ import { PillMultiSelect } from './pill-multi-select';
 
 type Props = {
 	value: RecipientApproachType | null;
-	targetCauses: Cause[];
+	targetFocuses: string[];
+	focusOptions: { id: string; name: string }[];
+	focusOptionsError?: string;
 	targetProfiles: Profile[];
 	totalRecipients: number;
 	filteredRecipients: number;
 	isCountingRecipients: boolean;
 	onChangeApproach: (value: RecipientApproachType) => void;
-	onToggleCause: (cause: Cause) => void;
+	onToggleFocus: (focus: string) => void;
 	onToggleProfile: (profile: Profile) => void;
 };
 
 export const RecipientSelectionSection = ({
 	value,
-	targetCauses,
+	targetFocuses,
+	focusOptions,
+	focusOptionsError,
 	targetProfiles,
 	totalRecipients,
 	filteredRecipients,
 	isCountingRecipients,
 	onChangeApproach,
-	onToggleCause,
+	onToggleFocus,
 	onToggleProfile,
 }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 	const noUniversalRecipients = value === 'universal' && totalRecipients === 0;
 	const noTargetedRecipients = value === 'targeted' && filteredRecipients === 0;
-	const causeLabel = (cause: string) => t(`step2.causes.${cause}`);
+	const focusLabelById = Object.fromEntries(focusOptions.map((focus) => [focus.id, focus.name]));
+	const focusLabel = (focusId: string) => focusLabelById[focusId] ?? focusId;
 	const profileLabel = (profile: string) => t(`step2.profiles.${profile}`);
 
 	return (
 		<div className="space-y-4">
 			<div className="text-lg font-medium">{t('step2.recipient_selection.title')}</div>
+			{focusOptionsError ? (
+				<div className="text-muted-foreground text-sm">
+					{t('common.error')}: {focusOptionsError}
+				</div>
+			) : null}
 
 			<RadioCardGroup value={value ?? ''} onChange={(v) => onChangeApproach(v as RecipientApproachType)}>
 				<RadioCard
@@ -76,11 +86,11 @@ export const RecipientSelectionSection = ({
 				>
 					<div className="space-y-4">
 						<PillMultiSelect
-							label={t('step2.recipient_selection.causes')}
-							values={Object.values(Cause)}
-							selected={targetCauses}
-							onToggle={(selectedCause) => onToggleCause(selectedCause as Cause)}
-							getLabel={causeLabel}
+							label={t('step2.recipient_selection.focuses')}
+							values={focusOptions.map((focus) => focus.id)}
+							selected={targetFocuses}
+							onToggle={(selectedFocus) => onToggleFocus(selectedFocus)}
+							getLabel={focusLabel}
 						/>
 
 						<PillMultiSelect

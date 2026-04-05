@@ -36,6 +36,15 @@
 }
 
 @layer utilities {
+	.bg-website-gradient {
+		background: repeating-linear-gradient(
+			330deg,
+			var(--gradient-background-from) 0px,
+			var(--gradient-background-to) 600px,
+			var(--gradient-background-from) 1200px
+		);
+	}
+
 	@font-face {
 		font-family: 'Unica77';
 		src: url('../../../ui/assets/fonts/Unica77LLWeb-Light.woff2') format('woff2');
@@ -96,11 +105,11 @@
 		--card-muted: 210 40% 96%;
 		--card-foreground-muted: 197 79% 25%;
 		--radius: 0.625rem;
-		--chart-1: 21 90% 48%;
-		--chart-2: 160 16% 66%;
-		--chart-3: 196 64% 24%;
-		--chart-4: 43 96% 56%;
-		--chart-5: 38 92% 50%;
+		--chart-1: 189 94% 43%;
+		--chart-2: 193 86% 30%;
+		--chart-3: 193 36% 47%;
+		--chart-4: 190 21% 50%;
+		--chart-5: 163 19% 65%;
 		--sidebar-foreground: 197 79% 15%;
 		--sidebar-background: 210 40% 98%;
 		--sidebar-primary: 197 79% 15%;
@@ -111,8 +120,8 @@
 		--sidebar-ring: 215 20% 65%;
 		--gradient-button-from: 201 90% 27%;
 		--gradient-button-to: 160 16% 66%;
-		--gradient-background-from: 40 84% 95%;
-		--gradient-background-to: 203 42% 93%;
+		--gradient-background-from: rgba(251, 237, 209, 0.6);
+		--gradient-background-to: rgba(202, 221, 233, 0.6);
 		--confirm: 142 76% 36%;
 		--confirm-foreground: 141 84% 93%;
 		--gradient-card-from: 203 40% 53%;

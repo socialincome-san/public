@@ -5,7 +5,16 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
-import { ProgramOption, ProgramSettingsPayload, ProgramWallet, ProgramWallets, PublicProgramDetails } from './program.types';
+import {
+	ProgramOption,
+	ProgramSettingsPayload,
+	ProgramWallet,
+	ProgramWallets,
+	PublicPreviewProgram,
+	PublicProgramDetails,
+	PublicProgramStats,
+	PublicProgramStatsMap,
+} from './program.types';
 
 export class ProgramReadService extends BaseService {
 	constructor(
@@ -141,7 +150,11 @@ export class ProgramReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
-					targetCauses: true,
+					targetFocuses: {
+						select: {
+							focusId: true,
+						},
+					},
 					amountOfRecipientsForStart: true,
 					programDurationInMonths: true,
 					payoutPerInterval: true,
@@ -209,7 +222,7 @@ export class ProgramReadService extends BaseService {
 				countryIsoCode: program.country.isoCode,
 				ownerOrganizationName: ownerAccess?.organization.name ?? null,
 				operatorOrganizationName: operatorAccess?.organization.name ?? null,
-				targetCauses: program.targetCauses,
+				targetFocuses: program.targetFocuses.map((focus) => focus.focusId),
 				amountOfRecipientsForStart: program.amountOfRecipientsForStart,
 				programDurationInMonths: program.programDurationInMonths,
 				payoutPerInterval: Number(program.payoutPerInterval),
@@ -225,6 +238,90 @@ export class ProgramReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not load public program: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicPreviewProgramBySlug(slug: string): Promise<ServiceResult<PublicPreviewProgram>> {
+		try {
+			const programs = await this.db.program.findMany({
+				select: {
+					id: true,
+					name: true,
+				},
+			});
+			const program = programs.find((currentProgram) => slugify(currentProgram.name) === slug);
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			return this.resultOk(program);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load public preview program: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicProgramStatsById(programId: string): Promise<ServiceResult<PublicProgramStats>> {
+		try {
+			const normalizedProgramId = programId.trim();
+			if (!normalizedProgramId) {
+				return this.resultFail('Missing program id');
+			}
+
+			const statsMapResult = await this.getPublicProgramStatsByIds([normalizedProgramId]);
+			if (!statsMapResult.success) {
+				return this.resultFail(statsMapResult.error);
+			}
+
+			const stats = statsMapResult.data[normalizedProgramId];
+			if (!stats) {
+				return this.resultFail('Program not found');
+			}
+
+			return this.resultOk(stats);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program stats: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicProgramStatsByIds(programIds: string[]): Promise<ServiceResult<PublicProgramStatsMap>> {
+		try {
+			const normalizedProgramIds = [...new Set(programIds.map((programId) => programId.trim()).filter(Boolean))];
+			if (!normalizedProgramIds.length) {
+				return this.resultOk({});
+			}
+
+			const programs = await this.db.program.findMany({
+				where: { id: { in: normalizedProgramIds } },
+				select: {
+					id: true,
+					_count: {
+						select: {
+							campaigns: true,
+							recipients: true,
+						},
+					},
+				},
+			});
+
+			const statsById: PublicProgramStatsMap = {};
+			for (const program of programs) {
+				const stats: PublicProgramStats = {
+					campaignsCount: program._count.campaigns,
+					recipientsCount: program._count.recipients,
+				};
+				statsById[program.id] = stats;
+			}
+
+			return this.resultOk(statsById);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program stats map: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -295,7 +392,11 @@ export class ProgramReadService extends BaseService {
 					programDurationInMonths: true,
 					payoutPerInterval: true,
 					payoutInterval: true,
-					targetCauses: true,
+					targetFocuses: {
+						select: {
+							focusId: true,
+						},
+					},
 					targetProfiles: true,
 					programAccesses: {
 						select: {
@@ -322,7 +423,7 @@ export class ProgramReadService extends BaseService {
 				programDurationInMonths: program.programDurationInMonths,
 				payoutPerInterval: Number(program.payoutPerInterval),
 				payoutInterval: program.payoutInterval,
-				targetCauses: program.targetCauses,
+				targetFocuses: program.targetFocuses.map((focus) => focus.focusId),
 				targetProfiles: program.targetProfiles,
 				ownerOrganizationIds: program.programAccesses
 					.filter((access) => access.permission === ProgramPermission.owner)

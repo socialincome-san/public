@@ -9,16 +9,24 @@ import {
 	WHITESPACE_SPLIT_REGEX,
 } from './regex';
 
+const LOCALE_APOSTROPHE_REGEX = /[\u2018\u2019\u02BC]/g;
+
+const normalizeIntlOutput = (value: string): string => {
+	return value.replace(LOCALE_APOSTROPHE_REGEX, "'");
+};
+
 export const slugify = (value: string): string => {
 	return value.toLowerCase().trim().replace(NON_ALPHANUMERIC_DASH_REGEX, '-').replace(LEADING_TRAILING_DASHES_REGEX, '');
 };
 
 export const formatCurrency = (value: number): string => {
-	return new Intl.NumberFormat('de-CH', {
-		style: 'currency',
-		currency: 'CHF',
-		maximumFractionDigits: 0,
-	}).format(value);
+	return normalizeIntlOutput(
+		new Intl.NumberFormat('de-CH', {
+			style: 'currency',
+			currency: 'CHF',
+			maximumFractionDigits: 0,
+		}).format(value),
+	);
 };
 
 export const formatCurrencyLocale = (
@@ -43,27 +51,33 @@ export const formatCurrencyLocale = (
 
 	if (Math.abs(amount) >= compactThreshold) {
 		try {
-			return new Intl.NumberFormat(compactLocale, {
-				style: 'currency',
-				currency,
-				notation: 'compact',
-				compactDisplay: 'short',
-				maximumFractionDigits: compactMaximumFractionDigits,
-			}).format(amount);
+			return normalizeIntlOutput(
+				new Intl.NumberFormat(compactLocale, {
+					style: 'currency',
+					currency,
+					notation: 'compact',
+					compactDisplay: 'short',
+					maximumFractionDigits: compactMaximumFractionDigits,
+				}).format(amount),
+			);
 		} catch {
 			// Fallback to regular currency formatting below.
 		}
 	}
 
 	try {
-		return new Intl.NumberFormat(locale, {
-			style: 'currency',
-			currency,
-			minimumFractionDigits,
-			maximumFractionDigits,
-		}).format(amount);
+		return normalizeIntlOutput(
+			new Intl.NumberFormat(locale, {
+				style: 'currency',
+				currency,
+				minimumFractionDigits,
+				maximumFractionDigits,
+			}).format(amount),
+		);
 	} catch {
-		const num = new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(amount);
+		const num = normalizeIntlOutput(
+			new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(amount),
+		);
 
 		return `${num} ${currency}`;
 	}
@@ -109,14 +123,16 @@ export const formatNumberLocale = (
 	} = options;
 
 	if (Math.abs(value) >= compactThreshold) {
-		return new Intl.NumberFormat(compactLocale, {
-			notation: 'compact',
-			compactDisplay: 'short',
-			maximumFractionDigits: compactMaximumFractionDigits,
-		}).format(value);
+		return normalizeIntlOutput(
+			new Intl.NumberFormat(compactLocale, {
+				notation: 'compact',
+				compactDisplay: 'short',
+				maximumFractionDigits: compactMaximumFractionDigits,
+			}).format(value),
+		);
 	}
 
-	return new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(value);
+	return normalizeIntlOutput(new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(value));
 };
 
 export const formatDate = (date: Date | string | null | undefined, pattern = 'dd.MM.yyyy'): string => {

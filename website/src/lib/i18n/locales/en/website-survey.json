@@ -118,6 +118,83 @@
 			"happierTitleV1": "Has Social Income made you feel happier?",
 			"happierCommentTitleV1": "How so?",
 			"notHappierCommentTitleV1": "Can you tell us why?"
+		},
+		"impactMeasurement": {
+			"title": "Impact Measurement",
+			"description": "All data shown on this page is updated in real time from surveys conducted with our recipients.",
+			"loadError": "Unable to load impact measurement data right now.",
+			"notAvailable": "N/A",
+			"breadcrumb": {
+				"home": "Home",
+				"programs": "Programs",
+				"impactMeasurement": "Impact Measurement"
+			},
+			"filters": {
+				"allCountries": "All countries",
+				"allPrograms": "All programs",
+				"allSurveys": "All surveys",
+				"allRecipients": "All recipients",
+				"allFilters": "All filters",
+				"filter": "Filter",
+				"apply": "Apply",
+				"reset": "Reset"
+			},
+			"downloadCsv": "Download CSV",
+			"comingSoon": "Coming soon",
+			"downloadFilteredCsv": "Download filtered CSV",
+			"studyDetails": "Study Details",
+			"sampleSize": "Sample size",
+			"uniqueIndividuals": "Unique individuals",
+			"countryHeading": "Country",
+			"ageHeading": "Age",
+			"genderHeading": "Gender",
+			"timeFrame": "Time Frame",
+			"days": "days",
+			"lastResponseDaysAgo": "Last response {{days}}d ago",
+			"lastResponseNotAvailable": "Last response N/A",
+			"surveyResponsesFrom": "survey responses from",
+			"recipients": "Recipients",
+			"responsesIn": "responses in",
+			"surveys": "surveys",
+			"questionLabel": "Question {{number}}",
+			"textResponseInsights": "Text response insights",
+			"textResponsePrivacyTooltip": "Free-text answers are not published for privacy reasons, as they may identify individuals or reveal who is behind a response.",
+			"noTextResponsesYet": "No text responses yet.",
+			"textResponsesCollected": "text responses collected.",
+			"questionTypes": {
+				"singleChoice": "Single choice",
+				"multipleChoice": "Multiple choice",
+				"ranking": "Ranking",
+				"freeText": "Free text",
+				"fallback": "Other"
+			},
+			"questionnaires": {
+				"onboarding": "Onboarding",
+				"checkin": "Check-in",
+				"offboarding": "Offboarding",
+				"offboardedCheckin": "Offboarded check-in",
+				"fallback": "Other"
+			},
+			"followUp": {
+				"prefix": "Follow-up question for",
+				"individuals": "individuals",
+				"whoSaid": "who said",
+				"selectedMoreThanOneCategory": "who selected more than one category"
+			},
+			"recipientsFilter": {
+				"genderHeading": "Gender",
+				"ageHeading": "Age",
+				"gender": {
+					"male": "Male",
+					"female": "Female"
+				},
+				"age": {
+					"youth": "Youth (16-25)",
+					"youngAdults": "Young adults (26-35)",
+					"middleAged": "Middle-aged (36-55)",
+					"olderAdults": "Older adults (56+)"
+				}
+			}
 		}
 	}
 }

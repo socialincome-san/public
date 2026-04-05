@@ -1,38 +1,6 @@
 // Generic set of question pages and choices
 import { TranslateFunction } from '@/lib/i18n/translator';
-import {
-	ACHIEVEMENTS_ACHIEVED,
-	ACHIEVEMENTS_NOT_ACHIEVED,
-	DEBT_HOUSEHOLD,
-	DEBT_HOUSEHOLD_WHO_REPAYS,
-	DEBT_PERSONAL,
-	DEBT_PERSONAL_REPAY,
-	DISABILITY,
-	EMPLOYMENT_STATUS,
-	HAPPIER,
-	HAPPIER_COMMENT,
-	HAS_DEPENDENTS,
-	IMPACT_FINANCIAL_INDEPENDENCE,
-	IMPACT_LIFE_GENERAL,
-	LIVING_LOCATION,
-	LONG_ENOUGH,
-	MARITAL_STATUS,
-	NOT_EMPLOYED,
-	NOT_HAPPIER_COMMENT,
-	NUMBER_OF_DEPENDENTS,
-	OTHER_SUPPORT,
-	PLANNED_ACHIEVEMENT,
-	PLANNED_ACHIEVEMENT_REMAINING,
-	Question,
-	RANKING,
-	SAVINGS,
-	SCHOOL_ATTENDANCE,
-	SKIPPING_MEALS,
-	SKIPPING_MEALS_LAST_WEEK,
-	SKIPPING_MEALS_LAST_WEEK_3_MEALS,
-	SPENDING,
-	UNEXPECTED_EXPENSES_COVERED,
-} from '@/lib/types/question';
+import { QUESTIONS, Question } from '@/lib/types/question';
 
 // Final question pages
 export const welcomePage = (t: TranslateFunction, name: string) => {
@@ -67,11 +35,22 @@ const getSimpleMapping = (question: Question, t: TranslateFunction): object => {
 	};
 };
 
+const questionsByName = new Map(QUESTIONS.map((question) => [question.name, question]));
+
+const getQuestion = (name: Question['name']): Question => {
+	const question = questionsByName.get(name);
+	if (!question) {
+		throw new Error(`Question not found: ${name}`);
+	}
+
+	return question;
+};
+
 export const livingLocationPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(LIVING_LOCATION, t),
+				...getSimpleMapping(getQuestion('livingLocationV1'), t),
 				isRequired: true,
 			},
 		],
@@ -82,7 +61,7 @@ export const maritalStatusPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(MARITAL_STATUS, t),
+				...getSimpleMapping(getQuestion('maritalStatusV1'), t),
 				isRequired: true,
 			},
 		],
@@ -93,11 +72,11 @@ export const dependentsPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(HAS_DEPENDENTS, t),
+				...getSimpleMapping(getQuestion('hasDependentsV1'), t),
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(NUMBER_OF_DEPENDENTS, t),
+				...getSimpleMapping(getQuestion('nrDependentsV1'), t),
 				isRequired: true,
 				visibleIf: '{hasDependentsV1}=true',
 			},
@@ -109,7 +88,7 @@ export const schoolAttendancePage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(SCHOOL_ATTENDANCE, t),
+				...getSimpleMapping(getQuestion('schoolAttendanceV1'), t),
 				isRequired: true,
 			},
 		],
@@ -120,11 +99,11 @@ export const employmentStatusPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(EMPLOYMENT_STATUS, t),
+				...getSimpleMapping(getQuestion('employmentStatusV1'), t),
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(NOT_EMPLOYED, t),
+				...getSimpleMapping(getQuestion('notEmployedV1'), t),
 				visibleIf: '{employmentStatusV1}=notEmployed',
 				isRequired: true,
 			},
@@ -136,7 +115,7 @@ export const disabilityPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(DISABILITY, t),
+				...getSimpleMapping(getQuestion('disabilityV1'), t),
 				isRequired: true,
 			},
 		],
@@ -147,16 +126,16 @@ export const skippingMealsPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(SKIPPING_MEALS, t),
+				...getSimpleMapping(getQuestion('skippingMealsV1'), t),
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(SKIPPING_MEALS_LAST_WEEK, t),
+				...getSimpleMapping(getQuestion('skippingMealsLastWeekV1'), t),
 				visibleIf: '{skippingMealsV1}=true',
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(SKIPPING_MEALS_LAST_WEEK_3_MEALS, t),
+				...getSimpleMapping(getQuestion('skippingMealsLastWeek3MealsV1'), t),
 				visibleIf: '{skippingMealsLastWeekV1}=true',
 				isRequired: true,
 			},
@@ -168,7 +147,7 @@ export const unexpectedExpensesCoveredPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(UNEXPECTED_EXPENSES_COVERED, t),
+				...getSimpleMapping(getQuestion('unexpectedExpensesCoveredV1'), t),
 				isRequired: true,
 			},
 		],
@@ -179,7 +158,7 @@ export const savingsPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(SAVINGS, t),
+				...getSimpleMapping(getQuestion('savingsV1'), t),
 				isRequired: true,
 			},
 		],
@@ -190,11 +169,11 @@ export const debtPersonalPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(DEBT_PERSONAL, t),
+				...getSimpleMapping(getQuestion('debtPersonalV1'), t),
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(DEBT_PERSONAL_REPAY, t),
+				...getSimpleMapping(getQuestion('debtPersonalRepayV1'), t),
 				visibleIf: '{debtPersonalV1}=true',
 				isRequired: true,
 			},
@@ -206,11 +185,11 @@ export const debtHouseholdPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(DEBT_HOUSEHOLD, t),
+				...getSimpleMapping(getQuestion('debtHouseholdV1'), t),
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(DEBT_HOUSEHOLD_WHO_REPAYS, t),
+				...getSimpleMapping(getQuestion('debtHouseholdWhoRepaysV1'), t),
 				visibleIf: '{debtHouseholdV1}=true',
 				isRequired: true,
 			},
@@ -222,7 +201,7 @@ export const otherSupportPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(OTHER_SUPPORT, t),
+				...getSimpleMapping(getQuestion('otherSupportV1'), t),
 				isRequired: true,
 			},
 		],
@@ -233,7 +212,7 @@ export const plannedAchievementsPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(PLANNED_ACHIEVEMENT, t),
+				...getSimpleMapping(getQuestion('plannedAchievementV1'), t),
 				isRequired: true,
 			},
 		],
@@ -246,11 +225,11 @@ export const spendingPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(SPENDING, t),
+				...getSimpleMapping(getQuestion('spendingV1'), t),
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(RANKING, t),
+				...getSimpleMapping(getQuestion('spendingRankedV1'), t),
 				visibleIf: '{spendingV1.length} > 1',
 				isRequired: true,
 				choicesFromQuestion: 'spendingV1',
@@ -264,7 +243,7 @@ export const plannedAchievementsRemainingPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(PLANNED_ACHIEVEMENT_REMAINING, t),
+				...getSimpleMapping(getQuestion('plannedAchievementRemainingV1'), t),
 				isRequired: true,
 			},
 		],
@@ -277,7 +256,7 @@ export const impactFinancialPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(IMPACT_FINANCIAL_INDEPENDENCE, t),
+				...getSimpleMapping(getQuestion('impactFinancialIndependenceV1'), t),
 				isRequired: true,
 			},
 		],
@@ -288,7 +267,7 @@ export const impactLifePage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(IMPACT_LIFE_GENERAL, t),
+				...getSimpleMapping(getQuestion('impactLifeGeneralV1'), t),
 				isRequired: true,
 			},
 		],
@@ -299,11 +278,11 @@ export const achievementsAchievedPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(ACHIEVEMENTS_ACHIEVED, t),
+				...getSimpleMapping(getQuestion('achievementsAchievedV1'), t),
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(ACHIEVEMENTS_NOT_ACHIEVED, t),
+				...getSimpleMapping(getQuestion('achievementsNotAchievedCommentV1'), t),
 
 				visibleIf: '{achievementsAchievedV1}=false',
 				isRequired: true,
@@ -316,16 +295,16 @@ export const happierPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(HAPPIER, t),
+				...getSimpleMapping(getQuestion('happierV1'), t),
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(HAPPIER_COMMENT, t),
+				...getSimpleMapping(getQuestion('happierCommentV1'), t),
 				visibleIf: '{happier}=true',
 				isRequired: true,
 			},
 			{
-				...getSimpleMapping(NOT_HAPPIER_COMMENT, t),
+				...getSimpleMapping(getQuestion('notHappierCommentV1'), t),
 				visibleIf: '{happierCommentV1}=false',
 				isRequired: true,
 			},
@@ -337,7 +316,7 @@ export const longEnoughPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				...getSimpleMapping(LONG_ENOUGH, t),
+				...getSimpleMapping(getQuestion('longEnough'), t),
 				isRequired: true,
 			},
 		],

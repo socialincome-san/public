@@ -9,6 +9,7 @@ import { Button } from '@/components/button';
 import { SILogo } from '@/components/svg/si-logo';
 import type { Session } from '@/lib/firebase/current-account';
 import type { UserSession } from '@/lib/services/user/user.types';
+import { cn } from '@/lib/utils/cn';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -50,21 +51,25 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 
 	return (
 		<nav className="mb-4 lg:hidden">
-			<div className={`flex h-14 items-center justify-between px-4 ${!isMenuOpen ? 'border-border border-b' : ''}`}>
+			<div className={cn('flex h-14 items-center justify-between px-4', !isMenuOpen && 'border-border border-b')}>
 				<Button
 					variant="ghost"
 					onClick={toggleMenu}
 					className="relative -ml-2 flex h-9 w-9 items-center justify-center [&_svg]:size-5"
 				>
 					<span
-						className={`absolute transition-all duration-300 ${isMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'}`}
+						className={cn(
+							'absolute transition-all duration-300',
+							isMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100',
+						)}
 					>
 						<Menu />
 					</span>
 					<span
-						className={`absolute transition-all duration-300 ${
-							isMenuOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'
-						}`}
+						className={cn(
+							'absolute transition-all duration-300',
+							isMenuOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0',
+						)}
 					>
 						<X />
 					</span>
@@ -90,11 +95,12 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 										key={href}
 										href={href}
 										onClick={() => setIsMenuOpen(false)}
-										className={`block rounded-md px-3 py-2 text-base font-medium ${
+										className={cn(
+											'block rounded-md px-3 py-2 text-base font-medium',
 											isActiveLink(pathname, href, activeBase)
 												? 'bg-accent text-primary'
-												: 'text-primary hover:bg-accent hover:text-primary'
-										}`}
+												: 'text-primary hover:bg-accent hover:text-primary',
+										)}
 									>
 										{label}
 									</Link>
