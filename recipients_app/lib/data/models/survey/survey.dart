@@ -18,7 +18,7 @@ class Survey with SurveyMappable {
   final SurveyQuestionnaire questionnaire;
   final SurveyStatus status;
   final String? surveyScheduleId;
-  // TODO(migration): what is this?
+  // TODO(migration): For what should be data used for?
   final Object? data;
   final String accessEmail;
   final String accessPw;
