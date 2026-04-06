@@ -39,7 +39,9 @@ import { MessageTemplateValidationService } from './messaging/message-template-v
 import { MessageTemplateWriteService } from './messaging/message-template-write.service';
 import { MessagingService } from './messaging/messaging.service';
 import { MessageProviderRegistry } from './messaging/providers/message-provider-registry';
+import { SendGridEmailProvider } from './messaging/providers/sendgrid-email.provider';
 import { TwilioSmsProvider } from './messaging/providers/twilio-sms.provider';
+import { TwilioWhatsAppProvider } from './messaging/providers/twilio-whatsapp.provider';
 import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-money-provider-read.service';
 import { MobileMoneyProviderValidationService } from './mobile-money-provider/mobile-money-provider-validation.service';
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
@@ -189,6 +191,8 @@ const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAd
 const messageLogRead = new MessageLogReadService(prisma);
 const messageProviderRegistry = new MessageProviderRegistry();
 messageProviderRegistry.register(new TwilioSmsProvider(prisma));
+messageProviderRegistry.register(new TwilioWhatsAppProvider(prisma));
+messageProviderRegistry.register(new SendGridEmailProvider(prisma));
 const messageTemplateValidation = new MessageTemplateValidationService(prisma);
 const messageTemplateRead = new MessageTemplateReadService(prisma);
 const messageTemplateWrite = new MessageTemplateWriteService(prisma, messageTemplateValidation);
