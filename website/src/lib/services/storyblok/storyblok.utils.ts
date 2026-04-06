@@ -1,4 +1,4 @@
-import type { Article, ArticleType, Author, Topic } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
@@ -13,9 +13,9 @@ type RemoveIndexSignature<T> = {
 };
 
 export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'type' | 'tags'> & {
-	author: ISbStoryData<Author>;
+	author: ISbStoryData<Person>;
 	type: ISbStoryData<ArticleType>;
-	tags?: ISbStoryData<Topic>[];
+	tags?: ISbStoryData<Tag>[];
 };
 
 export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>) => {

@@ -48,7 +48,7 @@
 			"city": "Ort",
 			"zip": "PLZ",
 			"name": "Name",
-			"causes": "Kriterien"
+			"focuses": "Schwerpunkte"
 		}
 	},
 	"sections": {

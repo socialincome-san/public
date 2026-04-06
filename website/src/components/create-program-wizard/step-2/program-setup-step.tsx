@@ -1,6 +1,6 @@
 'use client';
 
-import { Cause, Profile } from '@/generated/prisma/enums';
+import { Profile } from '@/generated/prisma/enums';
 import { ProgramManagementType, RecipientApproachType } from '../wizard/types';
 import { ProgramManagementSection } from './program-management-section';
 import { RecipientSelectionSection } from './recipient-selection-section';
@@ -8,28 +8,32 @@ import { RecipientSelectionSection } from './recipient-selection-section';
 type Props = {
 	programManagement: ProgramManagementType | null;
 	recipientApproach: RecipientApproachType | null;
-	targetCauses: Cause[];
+	targetFocuses: string[];
+	focusOptions: { id: string; name: string }[];
+	focusOptionsError?: string;
 	targetProfiles: Profile[];
 	totalRecipients: number;
 	filteredRecipients: number;
 	isCountingRecipients: boolean;
 	onSelectProgramManagement: (value: ProgramManagementType) => void;
 	onSelectRecipientApproach: (value: RecipientApproachType) => void;
-	onToggleCause: (cause: Cause) => void;
+	onToggleFocus: (focus: string) => void;
 	onToggleProfile: (profile: Profile) => void;
 };
 
 export const ProgramSetupStep = ({
 	programManagement,
 	recipientApproach,
-	targetCauses,
+	targetFocuses,
+	focusOptions,
+	focusOptionsError,
 	targetProfiles,
 	totalRecipients,
 	filteredRecipients,
 	isCountingRecipients,
 	onSelectProgramManagement,
 	onSelectRecipientApproach,
-	onToggleCause,
+	onToggleFocus,
 	onToggleProfile,
 }: Props) => {
 	return (
@@ -38,13 +42,15 @@ export const ProgramSetupStep = ({
 
 			<RecipientSelectionSection
 				value={recipientApproach}
-				targetCauses={targetCauses}
+				targetFocuses={targetFocuses}
+				focusOptions={focusOptions}
+				focusOptionsError={focusOptionsError}
 				targetProfiles={targetProfiles}
 				totalRecipients={totalRecipients}
 				filteredRecipients={filteredRecipients}
 				isCountingRecipients={isCountingRecipients}
 				onChangeApproach={onSelectRecipientApproach}
-				onToggleCause={onToggleCause}
+				onToggleFocus={onToggleFocus}
 				onToggleProfile={onToggleProfile}
 			/>
 		</div>

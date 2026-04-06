@@ -1,5 +1,5 @@
 import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
-import { Author } from '@/generated/storyblok/types/109655/storyblok-components';
+import { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
 	createLinkForArticle,
@@ -26,7 +26,7 @@ type Props = {
 };
 
 type AuthorProps = {
-	author: ISbStoryData<Author>;
+	author: ISbStoryData<Person>;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };

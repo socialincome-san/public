@@ -35,20 +35,20 @@ const getTotalArticlesInDefaultLanguage = async (
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
 
-	const authorResult = await services.storyblok.getAuthor(slug, lang);
-	if (!authorResult.success) {
+	const personResult = await services.storyblok.getPerson(slug, lang);
+	if (!personResult.success) {
 		return null;
 	}
-	const author = authorResult.data;
+	const person = personResult.data;
 
-	const authorId = author.uuid;
+	const personId = person.uuid;
 
-	const articlesResult = await services.storyblok.getArticlesByAuthor(authorId, lang);
+	const articlesResult = await services.storyblok.getArticlesByAuthor(personId, lang);
 	const articles = articlesResult.success ? articlesResult.data : [];
 
 	const totalArticlesInSelectedLanguage = articles.length;
 
-	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(lang, totalArticlesInSelectedLanguage, authorId);
+	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(lang, totalArticlesInSelectedLanguage, personId);
 
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
@@ -59,7 +59,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		<BaseContainer>
 			<div className="mx-auto mt-8 mb-20 flex max-w-6xl justify-center gap-4">
 				<StoryblokAuthorImage
-					author={author}
+					author={person}
 					size="extra-large"
 					className="h-24 w-24 rounded-full object-cover"
 					lang={lang}
@@ -68,19 +68,19 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 				<div className="flex flex-col">
 					<Typography weight="bold" size="4xl">
-						{author.content.fullName}
+						{person.content.fullName}
 					</Typography>
-					<Typography className="mt-2 text-black">{author.content.bio}</Typography>
+					<Typography className="mt-2 text-black">{person.content.bio}</Typography>
 
-					{Boolean(author.content.linkedinName ?? author.content.githubName) && (
+					{Boolean(person.content.linkedinName ?? person.content.githubName) && (
 						<div className="mt-3 flex flex-row gap-4">
-							{author.content.linkedinName && (
+							{person.content.linkedinName && (
 								<Link
 									className={linkCn({
 										arrow: 'external',
 										underline: 'none',
 									})}
-									href={getLinkedInUrl(author.content.linkedinName)}
+									href={getLinkedInUrl(person.content.linkedinName)}
 									target="_blank"
 									rel="noopener noreferrer"
 								>
@@ -88,13 +88,13 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 								</Link>
 							)}
 
-							{author.content.githubName && (
+							{person.content.githubName && (
 								<Link
 									className={linkCn({
 										arrow: 'external',
 										underline: 'none',
 									})}
-									href={getGitHubUrl(author.content.githubName)}
+									href={getGitHubUrl(person.content.githubName)}
 									target="_blank"
 									rel="noopener noreferrer"
 								>

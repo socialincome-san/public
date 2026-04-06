@@ -1,4 +1,4 @@
-import { Cause, CountryCode, Gender } from '@/generated/prisma/enums';
+import { CountryCode, Gender } from '@/generated/prisma/enums';
 import z from 'zod';
 
 const nullableTrimmedString = z.preprocess((value) => {
@@ -47,7 +47,7 @@ const localPartnerContactInputSchema = z.object({
 
 export const localPartnerCreateInputSchema = z.object({
 	name: z.string().trim().min(1, 'Name is required.'),
-	causes: z.array(z.nativeEnum(Cause)).default([]),
+	focuses: z.array(z.string().trim().min(1)).default([]),
 	contact: localPartnerContactInputSchema,
 });
 

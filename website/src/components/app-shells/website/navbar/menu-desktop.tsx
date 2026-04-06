@@ -7,7 +7,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
-import { ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import NextLink from 'next/link';
 
 type Props = {
@@ -15,8 +15,6 @@ type Props = {
 	lang: WebsiteLanguage;
 	region: string;
 };
-
-const FALLBACK_BADGE_COUNT = 23;
 
 export const MenuDesktop = ({ menu, lang, region }: Props) => (
 	<NavigationMenu.Root>
@@ -81,12 +79,20 @@ export const MenuDesktop = ({ menu, lang, region }: Props) => (
 															className="text-muted-foreground hover:text-foreground group flex w-fit items-center gap-2 font-medium transition-colors"
 														>
 															<span>{child.label}</span>
-															<span className="rounded-full border border-slate-300 px-2 py-0.5 text-[10px] leading-none font-semibold text-slate-500">
-																{FALLBACK_BADGE_COUNT}
-															</span>
 														</NextLink>
 													</NavigationMenu.Link>
 												))}
+												{group.overviewLink && group.overviewLabel ? (
+													<NavigationMenu.Link asChild>
+														<NextLink
+															href={resolveStoryblokLink(group.overviewLink, lang, region)}
+															className="text-muted-foreground hover:text-foreground group mt-3 inline-flex w-fit items-center gap-1.5 text-sm font-semibold transition-colors"
+														>
+															<span>{group.overviewLabel}</span>
+															<ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
+														</NextLink>
+													</NavigationMenu.Link>
+												) : null}
 											</div>
 										</div>
 									))}
