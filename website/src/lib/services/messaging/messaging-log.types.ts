@@ -4,7 +4,7 @@ export type MessageTableViewRow = {
 	id: string;
 	channel: MessageChannel;
 	addressee: string;
-	recipientType: MessageRecipientType;
+	recipientType: MessageRecipientType | null;
 	status: MessageStatus;
 	templateName: string | null;
 	sentAt: Date | null;

@@ -9,6 +9,14 @@ export type SendMessageInput = {
 	freeTextSubject?: string;
 };
 
+export type SendToContactsInput = {
+	channel: MessageChannel;
+	contacts: string[];
+	templateId?: string;
+	freeTextBody?: string;
+	freeTextSubject?: string;
+};
+
 export type ResolvedRecipient = {
 	entityId: string;
 	addressee: string;
