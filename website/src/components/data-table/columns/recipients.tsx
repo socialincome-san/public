@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionCell } from '@/components/data-table/elements/action-cell';
+import { Button } from '@/components/button';
 import { AgeCell } from '@/components/data-table/elements/age-cell';
 import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
@@ -9,9 +9,67 @@ import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/dropdown-menu';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
+import { EyeIcon, MoreHorizontalIcon, PenLineIcon, SendIcon } from 'lucide-react';
+import { createContext, useContext } from 'react';
+
+type RecipientTableCallbacks = {
+	onEdit?: (row: RecipientTableViewRow) => void;
+	onSendMessage?: (recipientId: string) => void;
+};
+
+export const RecipientTableCallbacksContext = createContext<RecipientTableCallbacks>({});
+
+const RecipientActionCell = ({ row }: { row: RecipientTableViewRow }) => {
+	const { onEdit, onSendMessage } = useContext(RecipientTableCallbacksContext);
+	const isOperator = row.permission === ProgramPermission.operator;
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon"
+					className="h-8 w-8"
+					onClick={(e) => e.stopPropagation()}
+				>
+					<MoreHorizontalIcon className="h-4 w-4" />
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end">
+				<DropdownMenuItem
+					onSelect={(e) => {
+						e.stopPropagation();
+						onEdit?.(row);
+					}}
+				>
+					{isOperator ? <PenLineIcon className="mr-2 h-4 w-4" /> : <EyeIcon className="mr-2 h-4 w-4" />}
+					{isOperator ? 'Edit' : 'View'}
+				</DropdownMenuItem>
+				{isOperator && onSendMessage && (
+					<DropdownMenuItem
+						onSelect={(e) => {
+							e.stopPropagation();
+							onSendMessage(row.id);
+						}}
+					>
+						<SendIcon className="mr-2 h-4 w-4" />
+						Send message
+					</DropdownMenuItem>
+				)}
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+};
 
 export const makeRecipientColumns = (
 	hideProgramName = false,
@@ -89,9 +147,7 @@ export const makeRecipientColumns = (
 			id: 'actions',
 			header: '',
 			enableHiding: false,
-			cell: (ctx) => (
-				<ActionCell ctx={ctx} mode={ctx.row.original.permission === ProgramPermission.operator ? 'edit' : 'view'} />
-			),
+			cell: (ctx) => <RecipientActionCell row={ctx.row.original} />,
 		},
 	);
 

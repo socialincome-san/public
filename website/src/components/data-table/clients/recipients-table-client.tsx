@@ -1,18 +1,23 @@
 'use client';
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { RecipientTableCallbacksContext } from '@/components/data-table/columns/recipients';
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
+import { getFilteredRecipientIdsAction } from '@/lib/server-actions/messaging-actions';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import type { RecipientTableQuery } from '@/lib/services/recipient/recipient-table.types';
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
-import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
+import { DownloadIcon, PlusIcon, SendIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
+import RecipientSendDialog from '@/app/portal/management/recipients/recipient-send-dialog';
 
 type Props = {
 	rows: RecipientTableViewRow[];
@@ -44,6 +49,9 @@ export const RecipientsTableClient = ({
 	const [recipientError, setRecipientError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
+	const [isSendDialogOpen, setIsSendDialogOpen] = useState(false);
+	const [sendRecipientIds, setSendRecipientIds] = useState<string[]>([]);
+	const [isLoadingRecipientIds, setIsLoadingRecipientIds] = useState(false);
 
 	const openCreateRecipientDialog = () => {
 		setRecipientError(null);
@@ -78,6 +86,32 @@ export const RecipientsTableClient = ({
 		downloadCsvFile(result.data, `recipients-export-${new Date().toISOString().slice(0, 10)}.csv`);
 	};
 
+	const openSendDialogForRow = (recipientId: string) => {
+		setSendRecipientIds([recipientId]);
+		setIsSendDialogOpen(true);
+	};
+
+	const openSendDialogForFiltered = async () => {
+		if (!query) return;
+		setIsLoadingRecipientIds(true);
+		const filterQuery: RecipientTableQuery = {
+			page: 1,
+			pageSize: 1,
+			search: query.search,
+			programId: query.programId,
+			recipientStatus: query.recipientStatus,
+		};
+		const result = await getFilteredRecipientIdsAction(filterQuery);
+		setIsLoadingRecipientIds(false);
+		handleServiceResult(result, {
+			onSuccess: (ids) => {
+				setSendRecipientIds(ids);
+				setIsSendDialogOpen(true);
+			},
+			onError: (err) => console.error('Failed to load recipient IDs:', err),
+		});
+	};
+
 	const actionMenuItems: ActionMenuItem[] = [
 		{
 			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
@@ -101,48 +135,69 @@ export const RecipientsTableClient = ({
 						disabled: readOnly,
 						onSelect: () => setIsCsvUploadDialogOpen(true),
 					},
+					{
+						label: isLoadingRecipientIds ? 'Loading\u2026' : 'Send message',
+						icon: <SendIcon />,
+						disabled: readOnly || isLoadingRecipientIds,
+						onSelect: () => {
+							void openSendDialogForFiltered();
+						},
+					},
 				]
 			: []),
 	];
 
 	return (
-		<>
-			<ConfiguredDataTableClient
-				config={recipientsTableConfig}
-				titleInfoTooltip="Shows recipients in programs you can access."
-				rows={rows}
-				error={error}
-				actionMenuItems={actionMenuItems}
-				query={query}
-				toolbarFilters={getRecipientsTableFilters({ query, programFilterOptions, showProgramFilter })}
-				hideProgramName={hideProgramName}
-				hideLocalPartner={sessionType === 'local-partner'}
-				showEntityIdColumn={sessionType !== 'local-partner'}
-				onRowClick={openEditRecipientDialog}
-			/>
+		<RecipientTableCallbacksContext.Provider
+			value={{
+				onEdit: openEditRecipientDialog,
+				onSendMessage: openSendDialogForRow,
+			}}
+		>
+			<>
+				<ConfiguredDataTableClient
+					config={recipientsTableConfig}
+					titleInfoTooltip="Shows recipients in programs you can access."
+					rows={rows}
+					error={error}
+					actionMenuItems={actionMenuItems}
+					query={query}
+					toolbarFilters={getRecipientsTableFilters({ query, programFilterOptions, showProgramFilter })}
+					hideProgramName={hideProgramName}
+					hideLocalPartner={sessionType === 'local-partner'}
+					showEntityIdColumn={sessionType !== 'local-partner'}
+					onRowClick={openEditRecipientDialog}
+				/>
 
-			<RecipientDialog
-				open={isRecipientDialogOpen}
-				onOpenChange={closeRecipientDialog}
-				recipientId={selectedRecipientId}
-				readOnly={isRecipientReadOnly}
-				programId={programId}
-				sessionType={sessionType}
-				errorMessage={recipientError}
-				onError={setRecipientError}
-			/>
+				<RecipientDialog
+					open={isRecipientDialogOpen}
+					onOpenChange={closeRecipientDialog}
+					recipientId={selectedRecipientId}
+					readOnly={isRecipientReadOnly}
+					programId={programId}
+					sessionType={sessionType}
+					errorMessage={recipientError}
+					onError={setRecipientError}
+				/>
 
-			<CsvUploadDialog
-				open={isCsvUploadDialogOpen}
-				onOpenChange={setIsCsvUploadDialogOpen}
-				title="Upload recipients CSV"
-				template={{
-					headers: ['firstName', 'lastName', 'programId', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
-					filename: 'recipients-import-template.csv',
-				}}
-				onImport={(file) => importRecipientsCsvAction(file, sessionType)}
-			/>
-		</>
+				<CsvUploadDialog
+					open={isCsvUploadDialogOpen}
+					onOpenChange={setIsCsvUploadDialogOpen}
+					title="Upload recipients CSV"
+					template={{
+						headers: ['firstName', 'lastName', 'programId', 'localPartnerId'],
+						exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
+						filename: 'recipients-import-template.csv',
+					}}
+					onImport={(file) => importRecipientsCsvAction(file, sessionType)}
+				/>
+
+				<RecipientSendDialog
+					recipientIds={sendRecipientIds}
+					open={isSendDialogOpen}
+					onOpenChange={setIsSendDialogOpen}
+				/>
+			</>
+		</RecipientTableCallbacksContext.Provider>
 	);
 };
