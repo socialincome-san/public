@@ -943,6 +943,111 @@ export class RecipientReadService extends BaseService {
 		}
 	}
 
+	async getFilteredRecipientIds(
+		userId: string,
+		query: RecipientTableQuery,
+	): Promise<ServiceResult<string[]>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk([]);
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+			const search = query.search.trim();
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+			const selectedRecipientStatus = this.parseRecipientStatusFilter(query.recipientStatus);
+			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
+
+			if (selectedProgramId && filteredProgramIds.length === 0) {
+				return this.resultOk([]);
+			}
+
+			const baseWhere: Prisma.RecipientWhereInput = {
+				programId: { in: filteredProgramIds },
+			};
+
+			const searchWhere: Prisma.RecipientWhereInput =
+				search.length > 0
+					? {
+							OR: [
+								{ id: { contains: search, mode: 'insensitive' } },
+								{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
+								{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
+								{ paymentInformation: { is: { code: { contains: search, mode: 'insensitive' } } } },
+								{ localPartner: { is: { name: { contains: search, mode: 'insensitive' } } } },
+								{ program: { is: { name: { contains: search, mode: 'insensitive' } } } },
+							],
+						}
+					: {};
+
+			const where: Prisma.RecipientWhereInput = {
+				AND: [baseWhere, searchWhere],
+			};
+
+			if (selectedRecipientStatus) {
+				const recipients = await this.db.recipient.findMany({
+					where,
+					select: {
+						id: true,
+						startDate: true,
+						suspendedAt: true,
+						program: {
+							select: {
+								programDurationInMonths: true,
+								payoutInterval: true,
+							},
+						},
+						payouts: {
+							select: { status: true },
+						},
+					},
+				});
+
+				const nowDate = now();
+				const filteredIds = recipients
+					.filter((recipient) => {
+						if (!recipient.program) return false;
+						const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(
+							recipient.payouts,
+						);
+						const paidOrConfirmedCount = paidOrConfirmedCountResult.success
+							? paidOrConfirmedCountResult.data
+							: 0;
+						const statusResult = this.recipientStatusService.getRecipientLifecycleStatus({
+							startDate: recipient.startDate,
+							suspendedAt: recipient.suspendedAt,
+							paidOrConfirmedCount,
+							programDurationInMonths: recipient.program.programDurationInMonths,
+							payoutInterval: recipient.program.payoutInterval,
+							nowDate,
+						});
+						return statusResult.success && statusResult.data === selectedRecipientStatus;
+					})
+					.map((r) => r.id);
+
+				return this.resultOk(filteredIds);
+			}
+
+			const recipients = await this.db.recipient.findMany({
+				where,
+				select: { id: true },
+			});
+
+			return this.resultOk(recipients.map((r) => r.id));
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch filtered recipient IDs: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getPaginatedUpcomingOnboardingTableView(
 		userId: string,
 		query: RecipientTableQuery,
