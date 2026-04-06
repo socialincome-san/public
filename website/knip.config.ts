@@ -13,7 +13,6 @@ const config: KnipConfig = {
 		'zod',
 		'@hookform/resolvers',
 		'jest',
-		'@sendgrid/mail',
 		'dotenv-cli',
 		'@prisma/client',
 		'next-openapi-gen',
