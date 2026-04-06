@@ -1,0 +1,1 @@
+- [Spec location](feedback_spec_location.md) — use ignored/specs/ for design docs, not docs/superpowers/
