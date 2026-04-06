@@ -6,7 +6,7 @@ import { TableQueryState } from '@/components/data-table/query-state';
 import { MessageTableViewRow } from '@/lib/services/messaging/messaging-log.types';
 import { SendIcon } from 'lucide-react';
 import { useState } from 'react';
-import SendMessageDialog from './send-message/send-message-dialog';
+import GenericSendDialog from './send-message/generic-send-dialog';
 
 export default function MessagesTableClient({
 	rows,
@@ -35,7 +35,7 @@ export default function MessagesTableClient({
 				]}
 			/>
 
-			<SendMessageDialog open={sendDialogOpen} onOpenChange={setSendDialogOpen} />
+			<GenericSendDialog open={sendDialogOpen} onOpenChange={setSendDialogOpen} />
 		</>
 	);
 }
