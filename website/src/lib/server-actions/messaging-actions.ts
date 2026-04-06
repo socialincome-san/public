@@ -1,7 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { MessageChannel } from '@/generated/prisma/enums';
+import { getSessionByType } from '@/lib/firebase/current-account';
 import {
 	MessageTemplateCreateInput,
 	MessageTemplateUpdateInput,

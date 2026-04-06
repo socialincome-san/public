@@ -12,14 +12,7 @@ export class MessageLogReadService extends BaseService {
 
 	private buildOrderBy(query: MessageTableQuery): Prisma.MessageOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, [
-			'id',
-			'channel',
-			'status',
-			'recipientType',
-			'sentAt',
-			'createdAt',
-		] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'channel', 'status', 'recipientType', 'sentAt', 'createdAt'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];

@@ -148,9 +148,7 @@ export class MessagingService extends BaseService {
 		};
 
 		for (const contact of input.contacts) {
-			const body = templateBody
-				? this.renderTemplate(templateBody, {})
-				: (input.freeTextBody ?? '');
+			const body = templateBody ? this.renderTemplate(templateBody, {}) : (input.freeTextBody ?? '');
 			const subject = templateBody
 				? templateSubject
 					? this.renderTemplate(templateSubject, {})
@@ -226,7 +224,9 @@ export class MessagingService extends BaseService {
 					});
 					for (const r of recipients) {
 						const addressee = this.resolveAddressForChannel(channel, r.contact.phone?.number, r.contact.email);
-						if (!addressee) continue;
+						if (!addressee) {
+							continue;
+						}
 						resolved.push({
 							entityId: r.id,
 							addressee,
@@ -262,7 +262,9 @@ export class MessagingService extends BaseService {
 					});
 					for (const c of contributors) {
 						const addressee = this.resolveAddressForChannel(channel, c.contact.phone?.number, c.contact.email);
-						if (!addressee) continue;
+						if (!addressee) {
+							continue;
+						}
 						resolved.push({
 							entityId: c.id,
 							addressee,
@@ -297,7 +299,9 @@ export class MessagingService extends BaseService {
 					});
 					for (const p of partners) {
 						const addressee = this.resolveAddressForChannel(channel, p.contact.phone?.number, p.contact.email);
-						if (!addressee) continue;
+						if (!addressee) {
+							continue;
+						}
 						resolved.push({
 							entityId: p.id,
 							addressee,
@@ -330,7 +334,9 @@ export class MessagingService extends BaseService {
 					});
 					for (const u of users) {
 						const addressee = this.resolveAddressForChannel(channel, u.contact.phone?.number, u.contact.email);
-						if (!addressee) continue;
+						if (!addressee) {
+							continue;
+						}
 						resolved.push({
 							entityId: u.id,
 							addressee,

@@ -100,11 +100,7 @@ export default function GenericSendDialog({ open, onOpenChange }: GenericSendDia
 				{step === 'channel' && <StepSelectChannel channel={channel} onChannelChange={setChannel} />}
 
 				{step === 'contacts' && channel && (
-					<StepEnterContacts
-						channel={channel}
-						contactsText={contactsText}
-						onContactsTextChange={setContactsText}
-					/>
+					<StepEnterContacts channel={channel} contactsText={contactsText} onContactsTextChange={setContactsText} />
 				)}
 
 				{step === 'content' && channel && (

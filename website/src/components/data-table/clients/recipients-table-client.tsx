@@ -1,5 +1,6 @@
 'use client';
 
+import RecipientSendDialog from '@/app/portal/management/recipients/recipient-send-dialog';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { RecipientTableCallbacksContext } from '@/components/data-table/columns/recipients';
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
@@ -17,7 +18,6 @@ import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
-import RecipientSendDialog from '@/app/portal/management/recipients/recipient-send-dialog';
 
 type Props = {
 	rows: RecipientTableViewRow[];
@@ -92,7 +92,9 @@ export const RecipientsTableClient = ({
 	};
 
 	const openSendDialogForFiltered = async () => {
-		if (!query) return;
+		if (!query) {
+			return;
+		}
 		setIsLoadingRecipientIds(true);
 		const filterQuery: RecipientTableQuery = {
 			page: 1,
@@ -138,7 +140,7 @@ export const RecipientsTableClient = ({
 					{
 						label: isLoadingRecipientIds ? 'Loading\u2026' : 'Send message',
 						icon: <SendIcon />,
-						disabled: readOnly || isLoadingRecipientIds,
+						disabled: Boolean(readOnly) || isLoadingRecipientIds,
 						onSelect: () => {
 							void openSendDialogForFiltered();
 						},
@@ -192,11 +194,7 @@ export const RecipientsTableClient = ({
 					onImport={(file) => importRecipientsCsvAction(file, sessionType)}
 				/>
 
-				<RecipientSendDialog
-					recipientIds={sendRecipientIds}
-					open={isSendDialogOpen}
-					onOpenChange={setIsSendDialogOpen}
-				/>
+				<RecipientSendDialog recipientIds={sendRecipientIds} open={isSendDialogOpen} onOpenChange={setIsSendDialogOpen} />
 			</>
 		</RecipientTableCallbacksContext.Provider>
 	);

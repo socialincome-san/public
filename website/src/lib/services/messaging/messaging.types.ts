@@ -27,5 +27,5 @@ export type MessageBatchResult = {
 	totalRequested: number;
 	sent: number;
 	failed: number;
-	errors: Array<{ entityId: string; error: string }>;
+	errors: { entityId: string; error: string }[];
 };

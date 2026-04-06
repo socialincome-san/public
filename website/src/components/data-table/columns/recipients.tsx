@@ -9,12 +9,7 @@ import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@/components/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -35,13 +30,7 @@ const RecipientActionCell = ({ row }: { row: RecipientTableViewRow }) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
-					type="button"
-					variant="ghost"
-					size="icon"
-					className="h-8 w-8"
-					onClick={(e) => e.stopPropagation()}
-				>
+				<Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => e.stopPropagation()}>
 					<MoreHorizontalIcon className="h-4 w-4" />
 				</Button>
 			</DropdownMenuTrigger>

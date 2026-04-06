@@ -943,10 +943,7 @@ export class RecipientReadService extends BaseService {
 		}
 	}
 
-	async getFilteredRecipientIds(
-		userId: string,
-		query: RecipientTableQuery,
-	): Promise<ServiceResult<string[]>> {
+	async getFilteredRecipientIds(userId: string, query: RecipientTableQuery): Promise<ServiceResult<string[]>> {
 		try {
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
@@ -1013,13 +1010,11 @@ export class RecipientReadService extends BaseService {
 				const nowDate = now();
 				const filteredIds = recipients
 					.filter((recipient) => {
-						if (!recipient.program) return false;
-						const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(
-							recipient.payouts,
-						);
-						const paidOrConfirmedCount = paidOrConfirmedCountResult.success
-							? paidOrConfirmedCountResult.data
-							: 0;
+						if (!recipient.program) {
+							return false;
+						}
+						const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+						const paidOrConfirmedCount = paidOrConfirmedCountResult.success ? paidOrConfirmedCountResult.data : 0;
 						const statusResult = this.recipientStatusService.getRecipientLifecycleStatus({
 							startDate: recipient.startDate,
 							suspendedAt: recipient.suspendedAt,
@@ -1028,6 +1023,7 @@ export class RecipientReadService extends BaseService {
 							payoutInterval: recipient.program.payoutInterval,
 							nowDate,
 						});
+
 						return statusResult.success && statusResult.data === selectedRecipientStatus;
 					})
 					.map((r) => r.id);

@@ -1,4 +1,4 @@
-import { MessageTemplate, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import { MessageChannel } from '@/generated/prisma/enums';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';

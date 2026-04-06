@@ -105,10 +105,7 @@ export default function StepConfirmSend({
 					<Label className="font-medium">Channel:</Label> {channel}
 				</div>
 				<div>
-					<Label className="font-medium">
-						{target.kind === 'recipients' ? 'Recipients' : 'Contacts'}:
-					</Label>{' '}
-					{count}
+					<Label className="font-medium">{target.kind === 'recipients' ? 'Recipients' : 'Contacts'}:</Label> {count}
 				</div>
 				<div>
 					<Label className="font-medium">Content:</Label> {templateId ? 'Template' : 'Free Text'}
