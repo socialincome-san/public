@@ -5,7 +5,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { MessageTemplateReadService } from './message-template-read.service';
 import { MessageTemplateValidationService } from './message-template-validation.service';
-import { MessageBatchResult, ResolvedRecipient, SendMessageInput } from './messaging.types';
+import { MessageBatchResult, ResolvedRecipient, SendMessageInput, SendToContactsInput } from './messaging.types';
 import { MessageProviderRegistry } from './providers/message-provider-registry';
 
 export class MessagingService extends BaseService {
@@ -104,6 +104,93 @@ export class MessagingService extends BaseService {
 			} else {
 				result.failed++;
 				result.errors.push({ entityId: recipient.entityId, error: sendResult.error });
+			}
+		}
+
+		return this.resultOk(result);
+	}
+
+	async sendToContacts(userId: string, input: SendToContactsInput): Promise<ServiceResult<MessageBatchResult>> {
+		if (!input.templateId && !input.freeTextBody) {
+			return this.resultFail('Either a template or free text body must be provided.');
+		}
+		if (input.templateId && input.freeTextBody) {
+			return this.resultFail('Provide either a template or free text, not both.');
+		}
+		if (input.contacts.length === 0) {
+			return this.resultFail('At least one contact must be provided.');
+		}
+
+		const provider = this.providerRegistry.get(input.channel);
+		if (!provider) {
+			return this.resultFail(`No provider available for channel: ${input.channel}`);
+		}
+
+		let templateBody: string | undefined;
+		let templateSubject: string | null | undefined;
+		let templateId: string | undefined;
+
+		if (input.templateId) {
+			const templateResult = await this.templateReadService.getById(input.templateId);
+			if (!templateResult.success) {
+				return this.resultFail(templateResult.error);
+			}
+			templateBody = templateResult.data.body;
+			templateSubject = templateResult.data.subject;
+			templateId = templateResult.data.id;
+		}
+
+		const result: MessageBatchResult = {
+			totalRequested: input.contacts.length,
+			sent: 0,
+			failed: 0,
+			errors: [],
+		};
+
+		for (const contact of input.contacts) {
+			const body = templateBody
+				? this.renderTemplate(templateBody, {})
+				: (input.freeTextBody ?? '');
+			const subject = templateBody
+				? templateSubject
+					? this.renderTemplate(templateSubject, {})
+					: undefined
+				: input.freeTextSubject;
+
+			const sendResult = await provider.send({
+				to: contact,
+				body,
+				subject: subject ?? undefined,
+			});
+
+			const status: MessageStatus = sendResult.success ? MessageStatus.sent : MessageStatus.failed;
+
+			try {
+				await this.db.message.create({
+					data: {
+						channel: input.channel,
+						subject: subject ?? null,
+						body,
+						recipientType: null,
+						recipientId: null,
+						addressee: contact,
+						status,
+						externalId: sendResult.success ? sendResult.data.externalId : null,
+						errorMessage: sendResult.success ? null : sendResult.error,
+						sentAt: sendResult.success ? new Date() : null,
+						sentByUserId: userId,
+						templateId: templateId ?? null,
+					},
+				});
+			} catch (dbError) {
+				this.logger.error('Failed to log message', { contact, error: dbError });
+			}
+
+			if (sendResult.success) {
+				result.sent++;
+			} else {
+				result.failed++;
+				result.errors.push({ entityId: contact, error: sendResult.error });
 			}
 		}
 
