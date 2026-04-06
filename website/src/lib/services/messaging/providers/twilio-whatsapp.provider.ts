@@ -15,6 +15,7 @@ export class TwilioWhatsAppProvider extends BaseService implements MessageProvid
 	private readonly twilioApiKeySid = process.env.TWILIO_API_KEY_SID;
 	private readonly twilioApiKeySecret = process.env.TWILIO_API_KEY_SECRET;
 	private readonly twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+	private readonly twilioWhatsAppContentSid = process.env.TWILIO_WHATSAPP_CONTENT_SID;
 
 	constructor(db: PrismaClient, loggerInstance = logger) {
 		super(db, loggerInstance);
@@ -29,8 +30,10 @@ export class TwilioWhatsAppProvider extends BaseService implements MessageProvid
 
 			const message = await clientResult.data.messages.create({
 				to: `whatsapp:${request.to}`,
-				body: request.body,
 				from: `whatsapp:${this.twilioPhoneNumber}`,
+				...(this.twilioWhatsAppContentSid
+					? { contentSid: this.twilioWhatsAppContentSid, contentVariables: JSON.stringify({ '1': request.body }) }
+					: { body: request.body }),
 			});
 
 			this.logger.info('Twilio WhatsApp sent successfully', { sid: message.sid, to: request.to });
@@ -69,6 +72,10 @@ export class TwilioWhatsAppProvider extends BaseService implements MessageProvid
 	private requireTwilioEnvVars(): ServiceResult<void> {
 		if (!this.twilioAccountSid || !this.twilioApiKeySid || !this.twilioApiKeySecret || !this.twilioPhoneNumber) {
 			return this.resultFail('Missing Twilio environment variables for WhatsApp provider');
+		}
+
+		if (!this.twilioWhatsAppContentSid) {
+			this.logger.warn('TWILIO_WHATSAPP_CONTENT_SID not set — sending WhatsApp messages without Content Template');
 		}
 
 		if (!this.twilioAccountSid.startsWith('AC')) {
