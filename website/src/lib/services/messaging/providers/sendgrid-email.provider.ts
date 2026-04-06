@@ -32,6 +32,7 @@ export class SendGridEmailProvider extends BaseService implements MessageProvide
 				text: request.body,
 			});
 
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			const externalId = response.headers['x-message-id'] as string | undefined;
 
 			this.logger.info('SendGrid email sent successfully', { externalId, to: request.to });
@@ -40,9 +41,7 @@ export class SendGridEmailProvider extends BaseService implements MessageProvide
 		} catch (error) {
 			this.logger.error('Failed to send SendGrid email', { error, to: request.to });
 
-			return this.resultFail(
-				`Failed to send email: ${error instanceof Error ? error.message : String(error)}`,
-			);
+			return this.resultFail(`Failed to send email: ${error instanceof Error ? error.message : String(error)}`);
 		}
 	}
 
