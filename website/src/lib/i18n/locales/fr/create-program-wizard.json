@@ -86,19 +86,19 @@
 			},
 			"targeted": {
 				"label": "Approche ciblee",
-				"description": "Le soutien est fourni aux beneficiaires qui correspondent aux causes et profils selectionnes.",
+				"description": "Le soutien est fourni aux beneficiaires qui correspondent aux axes et profils selectionnes.",
 				"matching_count": "{{matched}} sur {{total}} beneficiaires correspondent au pays et aux filtres selectionnes",
 				"matching": "beneficiaires correspondent au pays et aux filtres selectionnes",
 				"empty_error": "Veuillez ajuster les filtres afin qu'au moins un beneficiaire corresponde."
 			},
-			"causes": "Causes",
+			"focuses": "Axes",
 			"profiles": "Profils",
 			"custom": {
 				"label": "Choisir vos propres beneficiaires",
 				"description": "Selectionnez et gerez manuellement des beneficiaires individuels."
 			}
 		},
-		"causes": {
+		"focuses": {
 			"poverty": "Pauvrete",
 			"health": "Sante",
 			"gender_based_violence": "Violence basee sur le genre",
@@ -113,8 +113,8 @@
 	"step3": {
 		"recipients": {
 			"title": "Beneficiaires au demarrage",
-			"no_candidates": "Aucun candidat n'est actuellement disponible dans le pool. Revenez a l'etape 2 et ajustez les causes selectionnees ou assurez-vous que des candidats sont disponibles.",
-			"max_hint": "Le maximum est determine par le nombre de candidats actuellement disponibles pour les causes selectionnees."
+			"no_candidates": "Aucun candidat n'est actuellement disponible dans le pool. Revenez a l'etape 2 et ajustez les axes selectionnes ou assurez-vous que des candidats sont disponibles.",
+			"max_hint": "Le maximum est determine par le nombre de candidats actuellement disponibles pour les axes selectionnes."
 		},
 		"indirect_notice": {
 			"prefix": "{{recipients}} beneficiaires profitent",

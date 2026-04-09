@@ -111,5 +111,52 @@
 		"sdg17-title": "Partnerschaften",
 		"sdg17-mission-1": "Die Mission von ",
 		"sdg17-mission-2": "ist es, globale Partnerschaften für nachhaltige Entwicklung zu stärken."
+	},
+	"countries-page": {
+		"empty": "Keine Länder gefunden.",
+		"program-singular": "Programm",
+		"program-plural": "Programme",
+		"active-program-singular": "aktives Programm",
+		"active-program-plural": "aktive Programme",
+		"recipient-singular": "Empfänger:in",
+		"recipient-plural": "Empfänger:innen",
+		"donate-now": "Jetzt spenden",
+		"about": "Über"
+	},
+	"local-partners-page": {
+		"empty": "Keine lokalen Partner gefunden.",
+		"recipient-in-program-singular": "Empfänger:in in einem Programm",
+		"recipient-in-program-plural": "Empfänger:innen in einem Programm",
+		"recipient-waiting-singular": "Empfänger:in wartet",
+		"recipient-waiting-plural": "Empfänger:innen warten",
+		"about": "Über"
+	},
+	"focuses-page": {
+		"empty": "Keine Schwerpunkte gefunden.",
+		"program-singular": "Programm",
+		"program-plural": "Programme",
+		"active-program-singular": "aktives Programm",
+		"active-program-plural": "aktive Programme",
+		"recipient-in-program-singular": "Empfänger:in in einem Programm",
+		"recipient-in-program-plural": "Empfänger:innen in einem Programm",
+		"candidate-singular": "Kandidat:in",
+		"candidate-plural": "Kandidat:innen",
+		"about": "Über"
+	},
+	"programs-page": {
+		"empty": "Keine Programme gefunden.",
+		"campaign-singular": "Kampagne",
+		"campaign-plural": "Kampagnen",
+		"recipient-singular": "Empfänger:in",
+		"recipient-plural": "Empfänger:innen",
+		"about": "Über"
+	},
+	"campaigns-page": {
+		"empty": "Keine Kampagnen gefunden.",
+		"contribution-singular": "Spende",
+		"contribution-plural": "Spenden",
+		"day-left-singular": "Tag verbleibend",
+		"day-left-plural": "Tage verbleibend",
+		"about": "Über"
 	}
 }

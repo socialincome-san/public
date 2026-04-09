@@ -93,13 +93,6 @@ enum PayoutInterval {
   yearly
 }
 
-enum Cause {
-  poverty
-  health
-  gender_based_violence
-  climate
-}
-
 enum Profile {
   male
   female
@@ -745,7 +738,7 @@ model LocalPartner {
   id                String  @id @default(cuid()) @map("id")
   legacyFirestoreId String? @unique @map("legacy_firestore_id")
   name              String  @unique @map("name")
-  causes            Cause[] @map("causes")
+  focuses           LocalPartnerFocus[]
   contactId         String  @unique @map("contact_id")
   contact           Contact @relation(fields: [contactId], references: [id])
   accountId         String  @unique @map("account_id")
@@ -814,7 +807,7 @@ model Program {
   programDurationInMonths    Int            @map("program_duration_in_months")
   payoutPerInterval          Decimal        @map("payout_per_interval") @db.Decimal(12, 4)
   payoutInterval             PayoutInterval @default(monthly) @map("payout_interval")
-  targetCauses               Cause[]        @map("target_causes")
+  targetFocuses              ProgramTargetFocus[]
   targetProfiles             Profile[]      @default([]) @map("target_profiles")
 
   countryId String  @map("country_id")
@@ -829,6 +822,41 @@ model Program {
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("program")
+}
+
+model Focus {
+  id   String @id @default(cuid()) @map("id")
+  name String @unique @map("name")
+
+  localPartners LocalPartnerFocus[]
+  programs      ProgramTargetFocus[]
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("focus")
+}
+
+model LocalPartnerFocus {
+  localPartnerId String       @map("local_partner_id")
+  focusId        String       @map("focus_id")
+  localPartner   LocalPartner @relation(fields: [localPartnerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  focus          Focus        @relation(fields: [focusId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([localPartnerId, focusId])
+  @@index([focusId])
+  @@map("local_partner_focus")
+}
+
+model ProgramTargetFocus {
+  programId String  @map("program_id")
+  focusId   String  @map("focus_id")
+  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  focus     Focus   @relation(fields: [focusId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([programId, focusId])
+  @@index([focusId])
+  @@map("program_target_focus")
 }
 
 model Campaign {

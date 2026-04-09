@@ -86,19 +86,19 @@
 			},
 			"targeted": {
 				"label": "Targeted approach",
-				"description": "Support is provided to recipients who match selected causes and profiles.",
+				"description": "Support is provided to recipients who match selected focuses and profiles.",
 				"matching_count": "{{matched}} of {{total}} recipients match the selected country and filters",
 				"matching": "recipients match the selected country and filters",
 				"empty_error": "Please adjust the filters so at least one recipient matches."
 			},
-			"causes": "Causes",
+			"focuses": "Focuses",
 			"profiles": "Profiles",
 			"custom": {
 				"label": "Choose your own recipients",
 				"description": "Manually select and manage individual recipients."
 			}
 		},
-		"causes": {
+		"focuses": {
 			"poverty": "Poverty",
 			"health": "Health",
 			"gender_based_violence": "Gender based violence",
@@ -113,8 +113,8 @@
 	"step3": {
 		"recipients": {
 			"title": "Recipients for program start",
-			"no_candidates": "No candidates are currently available in the candidate pool. Please go back to Step 2 and adjust the selected causes or ensure candidates are available.",
-			"max_hint": "The maximum is determined by the number of candidates currently available for your selected causes."
+			"no_candidates": "No candidates are currently available in the candidate pool. Please go back to Step 2 and adjust the selected focuses or ensure candidates are available.",
+			"max_hint": "The maximum is determined by the number of candidates currently available for your selected focuses."
 		},
 		"indirect_notice": {
 			"prefix": "{{recipients}} recipients benefit",

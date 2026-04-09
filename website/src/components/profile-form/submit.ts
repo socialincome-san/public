@@ -52,7 +52,7 @@ export const submitProfileForm = async (
 	if (values.type === 'local-partner') {
 		const update: LocalPartnerFormUpdateInput = {
 			name: values.name,
-			causes: values.causes ?? [],
+			focuses: values.focuses ?? [],
 			contact: {
 				firstName: values.firstName,
 				lastName: values.lastName,

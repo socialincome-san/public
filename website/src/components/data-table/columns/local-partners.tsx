@@ -36,8 +36,8 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'causes',
-			header: (ctx) => <SortableHeader ctx={ctx}>Causes</SortableHeader>,
+			accessorKey: 'focuses',
+			header: (ctx) => <SortableHeader ctx={ctx}>Focuses</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

@@ -45,14 +45,16 @@ export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
 			<ProgramSetupStep
 				programManagement={state.context.programManagement}
 				recipientApproach={state.context.recipientApproach}
-				targetCauses={state.context.targetCauses}
+				targetFocuses={state.context.targetFocuses}
+				focusOptions={state.context.focusOptions}
+				focusOptionsError={state.context.focusOptionsError}
 				targetProfiles={state.context.targetProfiles}
 				totalRecipients={state.context.totalRecipients}
 				filteredRecipients={state.context.filteredRecipients}
 				isCountingRecipients={state.context.isCountingRecipients}
 				onSelectProgramManagement={(value) => send({ type: 'SELECT_PROGRAM_MANAGEMENT', value })}
 				onSelectRecipientApproach={(value) => send({ type: 'SELECT_RECIPIENT_APPROACH', value })}
-				onToggleCause={(cause) => send({ type: 'TOGGLE_TARGET_CAUSE', cause })}
+				onToggleFocus={(focus) => send({ type: 'TOGGLE_TARGET_FOCUS', focus })}
 				onToggleProfile={(profile) => send({ type: 'TOGGLE_TARGET_PROFILE', profile })}
 			/>
 		);

@@ -1,6 +1,5 @@
 'use server';
 
-import { Cause } from '@/generated/prisma/enums';
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
 import { CandidateFormCreateInput, CandidateFormUpdateInput } from '@/lib/services/candidate/candidate-form-input';
 import { Profile } from '@/lib/services/candidate/candidate.types';
@@ -88,8 +87,8 @@ export const getCandidateOptions = async (sessionType: Session['type'] = 'user')
 	return resultOk({ localPartners: localPartners.data });
 };
 
-export const getCandidateCountAction = async (causes: Cause[], profiles: Profile[], countryId: string | null) => {
-	return services.read.candidate.getCandidateCount(causes, profiles, countryId);
+export const getCandidateCountAction = async (focuses: string[], profiles: Profile[], countryId: string | null) => {
+	return services.read.candidate.getCandidateCount(focuses, profiles, countryId);
 };
 
 export const importCandidatesCsvAction = async (file: File, sessionType: Session['type'] = 'user') => {

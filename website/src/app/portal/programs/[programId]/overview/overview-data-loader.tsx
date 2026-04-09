@@ -34,7 +34,6 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 	const programSlug = slugify(programNameResult.data);
 	const publicUrl = `/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
-	const publicPreviewUrl = `${publicUrl}?preview=true`;
 
 	return (
 		<div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
@@ -51,9 +50,9 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 			<div className="space-y-4 lg:col-span-3">
 				<div className="flex items-center gap-2">
-					<SectionTitle>{readyForFirstPayout ? 'Your public page' : 'Your preview page'}</SectionTitle>
+					<SectionTitle>Your public page</SectionTitle>
 					<Link
-						href={readyForFirstPayout ? publicUrl : publicPreviewUrl}
+						href={publicUrl}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="text-muted-foreground hover:text-foreground transition-colors"
@@ -68,7 +67,7 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 					title="Program Overview"
 					width="100%"
 					height="418px"
-					src={readyForFirstPayout ? publicUrl : publicPreviewUrl}
+					src={publicUrl}
 				/>
 			</div>
 		</div>

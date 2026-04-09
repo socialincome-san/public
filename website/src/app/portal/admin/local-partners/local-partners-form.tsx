@@ -3,7 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
-import { Cause } from '@/generated/prisma/enums';
+import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import {
 	createLocalPartnerAction,
 	deleteLocalPartnerAction,
@@ -21,7 +21,7 @@ export type LocalPartnerFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
-		causes: FormField;
+		focuses: FormField;
 		contact: FormSchema;
 	};
 };
@@ -34,10 +34,11 @@ const initialFormSchema: LocalPartnerFormSchema = {
 			label: 'Name',
 			zodSchema: z.string().trim().min(1, 'Name is required.'),
 		},
-		causes: {
-			placeholder: 'Causes',
-			label: 'Causes',
-			zodSchema: z.array(z.nativeEnum(Cause)).optional(),
+		focuses: {
+			placeholder: 'Focuses',
+			label: 'Focuses',
+			zodSchema: z.array(z.string().trim().min(1)).optional(),
+			options: [],
 		},
 		contact: {
 			...getContactFormSchema({ isEmailRequired: true }),
@@ -67,18 +68,41 @@ export default function LocalPartnersForm({
 			const contactValues = getContactValuesFromPayload(partner.contact, next.fields.contact.fields);
 			next.fields.name.value = partner.name;
 			next.fields.contact.fields = contactValues;
-			next.fields.causes.value = partner.causes ?? [];
+			next.fields.focuses.value = partner.focuses ?? [];
 
 			return next;
 		});
 	};
 
-	const loadLocalPartner = async (partnerId: string) => {
-		const partnerResult = await getLocalPartnerAction(partnerId);
-		handleServiceResult(partnerResult, {
-			onSuccess: applyPartnerToSchema,
-			onError: (error) => onError?.(error),
+	const loadData = async (partnerId: string | undefined) => {
+		const [partnerResult, focusOptionsResult] = await Promise.all([
+			partnerId ? getLocalPartnerAction(partnerId) : Promise.resolve(null),
+			getFocusOptionsAction(),
+		]);
+
+		if (!partnerId) {
+			setLocalPartner(undefined);
+			setFormSchema(cloneFormSchema(initialFormSchema));
+		}
+
+		setFormSchema((prev) => {
+			const next = cloneFormSchema(prev);
+			if (focusOptionsResult.success) {
+				next.fields.focuses.options = focusOptionsResult.data.map((focus) => ({
+					id: focus.id,
+					label: focus.name,
+				}));
+			}
+
+			return next;
 		});
+
+		if (partnerId && partnerResult) {
+			handleServiceResult(partnerResult, {
+				onSuccess: applyPartnerToSchema,
+				onError: (error) => onError?.(error),
+			});
+		}
 	};
 
 	const onSubmit = (schema: typeof initialFormSchema) => {
@@ -120,12 +144,9 @@ export default function LocalPartnersForm({
 	};
 
 	useEffect(() => {
-		if (localPartnerId) {
-			// Load local partner in edit mode
-			startTransition(async () => {
-				await loadLocalPartner(localPartnerId);
-			});
-		}
+		startTransition(async () => {
+			await loadData(localPartnerId);
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [localPartnerId]);
 

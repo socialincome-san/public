@@ -11,7 +11,7 @@ test.beforeEach(async () => {
 
 test('new website impact measurement page matches initial screenshot', async ({ page }) => {
 	await setupStoryblokMock(STORYBLOK_RECORDING);
-	await page.goto('/de/ch/new-website/programs/impact-measurement');
+	await page.goto('/de/ch/new-website/impact-measurement');
 	await expect(page.getByText('Wofür gibst du dein Social Income hauptsächlich aus?')).toBeVisible();
 	await page.getByTestId('impact-measurement-study-details-trigger').click();
 
@@ -21,7 +21,7 @@ test('new website impact measurement page matches initial screenshot', async ({ 
 
 test('new website impact measurement page supports filters and matches filtered screenshot', async ({ page }) => {
 	await setupStoryblokMock(STORYBLOK_RECORDING);
-	await page.goto('/de/ch/new-website/programs/impact-measurement');
+	await page.goto('/de/ch/new-website/impact-measurement');
 	await expect(page.getByText('Wofür gibst du dein Social Income hauptsächlich aus?')).toBeVisible();
 	await page.getByTestId('impact-measurement-study-details-trigger').click();
 
@@ -32,7 +32,7 @@ test('new website impact measurement page supports filters and matches filtered 
 	await page.keyboard.press('Escape');
 
 	await expect(page).toHaveURL(
-		'http://localhost:3000/de/ch/new-website/programs/impact-measurement?country=LR&recipientFilters=youth%2Cfemale',
+		'http://localhost:3000/de/ch/new-website/impact-measurement?country=LR&recipientFilters=youth%2Cfemale',
 	);
 	await page.getByTestId('impact-measurement-study-details-trigger').click();
 	await expect(page.getByText('Wofür gibst du dein Social Income hauptsächlich aus?')).toBeVisible();
