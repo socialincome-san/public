@@ -67,8 +67,6 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     _$surveyScheduleId,
     opt: true,
   );
-  static Object? _$data(Survey v) => v.data;
-  static const Field<Survey, Object> _f$data = Field('data', _$data);
   static String _$accessEmail(Survey v) => v.accessEmail;
   static const Field<Survey, String> _f$accessEmail = Field(
     'accessEmail',
@@ -104,7 +102,6 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     #questionnaire: _f$questionnaire,
     #status: _f$status,
     #surveyScheduleId: _f$surveyScheduleId,
-    #data: _f$data,
     #accessEmail: _f$accessEmail,
     #accessPw: _f$accessPw,
     #createdAt: _f$createdAt,
@@ -122,7 +119,6 @@ class SurveyMapper extends ClassMapperBase<Survey> {
       questionnaire: data.dec(_f$questionnaire),
       status: data.dec(_f$status),
       surveyScheduleId: data.dec(_f$surveyScheduleId),
-      data: data.dec(_f$data),
       accessEmail: data.dec(_f$accessEmail),
       accessPw: data.dec(_f$accessPw),
       createdAt: data.dec(_f$createdAt),
@@ -186,7 +182,6 @@ abstract class SurveyCopyWith<$R, $In extends Survey, $Out>
     SurveyQuestionnaire? questionnaire,
     SurveyStatus? status,
     String? surveyScheduleId,
-    Object? data,
     String? accessEmail,
     String? accessPw,
     DateTime? createdAt,
@@ -212,7 +207,6 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
     SurveyQuestionnaire? questionnaire,
     SurveyStatus? status,
     Object? surveyScheduleId = $none,
-    Object? data = $none,
     String? accessEmail,
     String? accessPw,
     DateTime? createdAt,
@@ -228,7 +222,6 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
       if (questionnaire != null) #questionnaire: questionnaire,
       if (status != null) #status: status,
       if (surveyScheduleId != $none) #surveyScheduleId: surveyScheduleId,
-      if (data != $none) #data: data,
       if (accessEmail != null) #accessEmail: accessEmail,
       if (accessPw != null) #accessPw: accessPw,
       if (createdAt != null) #createdAt: createdAt,
@@ -246,7 +239,6 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
     questionnaire: data.get(#questionnaire, or: $value.questionnaire),
     status: data.get(#status, or: $value.status),
     surveyScheduleId: data.get(#surveyScheduleId, or: $value.surveyScheduleId),
-    data: data.get(#data, or: $value.data),
     accessEmail: data.get(#accessEmail, or: $value.accessEmail),
     accessPw: data.get(#accessPw, or: $value.accessPw),
     createdAt: data.get(#createdAt, or: $value.createdAt),

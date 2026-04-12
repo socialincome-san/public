@@ -18,8 +18,6 @@ class Survey with SurveyMappable {
   final SurveyQuestionnaire questionnaire;
   final SurveyStatus status;
   final String? surveyScheduleId;
-  // TODO(migration): For what should be data used for?
-  final Object? data;
   final String accessEmail;
   final String accessPw;
   @MappableField(hook: DateTimeHook())
@@ -37,7 +35,6 @@ class Survey with SurveyMappable {
     required this.questionnaire,
     required this.status,
     this.surveyScheduleId,
-    required this.data,
     required this.accessEmail,
     required this.accessPw,
     required this.createdAt,

@@ -15,7 +15,6 @@ class SurveyDemoDataSource implements SurveyDataSource {
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.onboarding,
         language: "en",
-        data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
         // new fields
@@ -30,7 +29,6 @@ class SurveyDemoDataSource implements SurveyDataSource {
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.checkin,
         language: "en",
-        data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
         // new fields
@@ -44,7 +42,6 @@ class SurveyDemoDataSource implements SurveyDataSource {
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.offboarding,
         language: "en",
-        data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
         // new fields
@@ -58,7 +55,6 @@ class SurveyDemoDataSource implements SurveyDataSource {
         recipientId: "demo",
         questionnaire: SurveyQuestionnaire.offboardedCheckin,
         language: "en",
-        data: "Demo data",
         accessEmail: "demo@socialincome.com",
         accessPw: "demo",
         // new fields
