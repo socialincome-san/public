@@ -9,6 +9,7 @@ import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers
 import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
+import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TextBlock } from '@/components/content-blocks/text';
 import PageContentType from '@/components/content-types/page';
 import { mockStoryblokIfTestMode } from '@/lib/services/storyblok/storyblok.mock';
@@ -33,6 +34,8 @@ const storyblokComponents = {
 	journalTeasers: JournalTeasersBlock,
 	localPartnerGrid: LocalPartnerGridBlock,
 	programGrid: ProgramGridBlock,
+	teamGrid: TeamGridBlock,
+	'Team Grid': TeamGridBlock,
 };
 
 /**

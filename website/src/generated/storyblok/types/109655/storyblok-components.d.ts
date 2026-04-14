@@ -290,6 +290,7 @@ export interface Page {
     | LocalPartnerGrid
     | ModalCards
     | ProgramGrid
+    | TeamGrid
     | Text
   )[];
   component: "page";
@@ -364,6 +365,15 @@ export interface Tag {
   description?: string;
   displayInOverviewPage?: boolean;
   component: "tag";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TeamGrid {
+  title?: string;
+  description?: StoryblokRichtext;
+  person?: (ISbStoryData<Person> | string)[];
+  component: "teamGrid";
   _uid: string;
   [k: string]: unknown;
 }

@@ -226,6 +226,22 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getPersons(lang: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+		try {
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(lang)),
+				content_type: StoryblokService.contentType.person,
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
+			return this.resultOk(data);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
 	async getOverviewAuthors(lang: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
 			const params: ISbStoriesParams = {
