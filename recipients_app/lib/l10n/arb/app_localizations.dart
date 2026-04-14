@@ -815,8 +815,8 @@ abstract class AppLocalizations {
   /// No description provided for @failedSentVerificationCodeError.
   ///
   /// In en, this message translates to:
-  /// **'Failed to send verification code. Please check your Internet and try again.'**
-  String get failedSentVerificationCodeError;
+  /// **'Failed to send verification code. Please check your Internet and try again. {errorMessage}'**
+  String failedSentVerificationCodeError(String errorMessage);
 
   /// No description provided for @failedCodeVerificationCodeError.
   ///

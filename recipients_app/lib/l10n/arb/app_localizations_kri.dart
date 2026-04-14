@@ -385,7 +385,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get invalidPhoneNumberError => 'Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.';
 
   @override
-  String get failedSentVerificationCodeError => 'Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak.';
+  String failedSentVerificationCodeError(String errorMessage) {
+    return 'Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak. $errorMessage';
+  }
 
   @override
   String get failedCodeVerificationCodeError => 'Failed fɔ chɛk di kɔd. Duya chɛk yu Intanɛt ɛn tray bak.';

@@ -2,6 +2,7 @@ import "package:app/data/services/auth_service.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:cloud_functions/cloud_functions.dart";
 import "package:firebase_auth/firebase_auth.dart";
+import "package:flutter/services.dart";
 
 String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
   if (ex is FirebaseFunctionsException) {
@@ -128,7 +129,10 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
 
   if (ex is AuthException) {
     return switch (ex.code) {
-      "failed-sent-verification-code" => localizations.failedSentVerificationCodeError,
+      "failed-sent-verification-code" =>
+        appFlavor == "prod"
+            ? localizations.failedSentVerificationCodeError("")
+            : localizations.failedSentVerificationCodeError(ex.message ?? ""),
       "failed-code-verification" => localizations.failedCodeVerificationCodeError,
       "invalid-verification-code" => localizations.invalidVerificationCodeError,
       "invalid-app-check-token" => localizations.invalidAppCheckTokenError,
