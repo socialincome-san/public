@@ -292,6 +292,7 @@ export interface Page {
     | ProgramGrid
     | TeamGrid
     | Text
+    | TextVideo
   )[];
   component: "page";
   _uid: string;
@@ -381,6 +382,14 @@ export interface TeamGrid {
 export interface Text {
   content?: StoryblokRichtext;
   component: "text";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TextVideo {
+  content: StoryblokRichtext;
+  vimeoLink: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  component: "textVideo";
   _uid: string;
   [k: string]: unknown;
 }
