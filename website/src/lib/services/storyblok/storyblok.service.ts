@@ -230,10 +230,7 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getPersonsByUuids(
-		lang: string,
-		uuids: string[]
-	): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+	async getPersonsByUuids(lang: string, uuids: string[]): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
 			if (!uuids.length) {
 				return this.resultOk([]);
