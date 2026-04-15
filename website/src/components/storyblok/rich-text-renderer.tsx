@@ -6,7 +6,6 @@ import {
 	NODE_HEADING,
 	NODE_LI,
 	NODE_PARAGRAPH,
-	NODE_TABLE_CELL,
 	render,
 	StoryblokRichtext,
 } from 'storyblok-rich-text-react-renderer';
@@ -41,7 +40,6 @@ export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
 			},
 			[NODE_LI]: (children) => <li className="m-0.5 p-0.5 *:m-0 *:p-0 [&::marker]:text-black">{children}</li>,
 			[NODE_PARAGRAPH]: (children) => <p className="my-4">{children}</p>,
-			[NODE_TABLE_CELL]: (children) => <td className="align-top">{children}</td>,
 		},
 		blokResolvers: {
 			// Todo: Add blocks as soon as we have them ready in the Storyblok schema

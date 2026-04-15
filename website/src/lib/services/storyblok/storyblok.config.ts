@@ -11,7 +11,7 @@ import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TextBlock } from '@/components/content-blocks/text';
-import { TextVideoBlock } from '@/components/content-blocks/text-video';
+import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import PageContentType from '@/components/content-types/page';
 import { mockStoryblokIfTestMode } from '@/lib/services/storyblok/storyblok.mock';
@@ -37,9 +37,8 @@ const storyblokComponents = {
 	localPartnerGrid: LocalPartnerGridBlock,
 	programGrid: ProgramGridBlock,
 	teamGrid: TeamGridBlock,
-	textVideo: TextVideoBlock,
+	videoText: VideoTextBlock,
 	twoColumnText: TwoColumnTextBlock,
-	'Team Grid': TeamGridBlock,
 };
 
 /**

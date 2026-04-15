@@ -1,17 +1,18 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
-import { TextVideo } from '@/generated/storyblok/types/109655/storyblok-components';
+import { VideoText } from '@/generated/storyblok/types/109655/storyblok-components';
+import { cn } from '@/lib/utils/cn';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 type Props = {
-	blok: TextVideo;
+	blok: VideoText;
 };
 
 const vimeoParser = new VimeoVideoMatchAndExtract();
 
-export const TextVideoBlock = ({ blok }: Props) => {
+export const VideoTextBlock = ({ blok }: Props) => {
 	if (!blok.content) {
 		return null;
 	}
@@ -21,7 +22,7 @@ export const TextVideoBlock = ({ blok }: Props) => {
 	return (
 		<BlockWrapper
 			{...storyblokEditable(blok as SbBlokData)}
-			className="flex flex-col items-center gap-14 text-lg text-black md:flex-row"
+			className={cn("flex flex-col items-center gap-14 text-lg text-black md:flex-row", blok.layout === 'videoLeft' && 'md:flex-row-reverse')}
 		>
 			<div className="md:w-1/3">
 				<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />

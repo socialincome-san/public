@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { services } from '@/lib/services/services';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 
-const AVATAR_SIZE = 300;
+const PERSON_IMAGE_SIZE = 300;
 
 type Props = {
 	blok: TeamGrid;
@@ -22,7 +22,6 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 	const personsResult = await services.storyblok.getPersons(lang);
 	const allPersons = personsResult.success ? personsResult.data : [];
 	const persons = resolveSelectedStories<Person>(blok.person, allPersons);
-	console.log('persons', blok.person);
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
@@ -44,17 +43,17 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 };
 
 function PersonCard({ person }: { person: ISbStoryData<Person> }) {
-	const { avatar, fullName, bio } = person.content;
+	const { avatar, fullName } = person.content;
 
 	return (
 		<li className="flex flex-col">
 			{avatar?.filename && (
 				<Image
-					src={formatStoryblokUrl(avatar.filename, AVATAR_SIZE, AVATAR_SIZE, avatar.focus)}
+					src={formatStoryblokUrl(avatar.filename, PERSON_IMAGE_SIZE, PERSON_IMAGE_SIZE, avatar.focus)}
 					alt={`${fullName} avatar`}
 					className="aspect-square w-full rounded-2xl object-cover object-top"
-					width={AVATAR_SIZE}
-					height={AVATAR_SIZE}
+					width={PERSON_IMAGE_SIZE}
+					height={PERSON_IMAGE_SIZE}
 				/>
 			)}
 			<h3 className="mt-4 text-base font-medium leading-tight">{fullName}</h3>

@@ -292,8 +292,8 @@ export interface Page {
     | ProgramGrid
     | TeamGrid
     | Text
-    | TextVideo
     | TwoColumnText
+    | VideoText
   )[];
   component: "page";
   _uid: string;
@@ -374,7 +374,7 @@ export interface Tag {
 export interface TeamGrid {
   title?: string;
   description?: StoryblokRichtext;
-  person?: (ISbStoryData<Person> | string)[];
+  person: (ISbStoryData<Person> | string)[];
   component: "teamGrid";
   _uid: string;
   [k: string]: unknown;
@@ -387,18 +387,19 @@ export interface Text {
   [k: string]: unknown;
 }
 
-export interface TextVideo {
-  content: StoryblokRichtext;
-  vimeoLink: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  component: "textVideo";
-  _uid: string;
-  [k: string]: unknown;
-}
-
 export interface TwoColumnText {
   left_text: StoryblokRichtext;
   right_text: StoryblokRichtext;
   component: "twoColumnText";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface VideoText {
+  content: StoryblokRichtext;
+  vimeoLink: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  layout: "" | "videoLeft" | "videoRight";
+  component: "videoText";
   _uid: string;
   [k: string]: unknown;
 }
