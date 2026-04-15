@@ -20,8 +20,8 @@ const StoryblokAuthorImage = (props: {
 	author: ISbStoryData<Person>;
 	size?: Size;
 	className?: string;
-	lang?: string;
-	region?: string;
+	lang: string;
+	region: string;
 }) => {
 	const { author, size = 'medium', className = '' } = props;
 
