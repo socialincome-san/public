@@ -232,9 +232,10 @@ export class StoryblokService extends BaseService {
 
 	async getPersonsByUuids(
 		lang: string,
-		uuids: string[]
+		personUuids: string[]
 	): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
+			const uuids = [...new Set(personUuids.map((u) => u.trim()).filter(Boolean))];
 			if (!uuids.length) {
 				return this.resultOk([]);
 			}
