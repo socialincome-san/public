@@ -293,6 +293,7 @@ export interface Page {
     | TeamGrid
     | Text
     | TextVideo
+    | TwoColumnText
   )[];
   component: "page";
   _uid: string;
@@ -390,6 +391,14 @@ export interface TextVideo {
   content: StoryblokRichtext;
   vimeoLink: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "textVideo";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TwoColumnText {
+  left_text: StoryblokRichtext;
+  right_text: StoryblokRichtext;
+  component: "twoColumnText";
   _uid: string;
   [k: string]: unknown;
 }
