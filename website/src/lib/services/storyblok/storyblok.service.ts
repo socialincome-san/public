@@ -251,8 +251,7 @@ export class StoryblokService extends BaseService {
 			return this.resultOk((res.data as { stories: ISbStoryData<Person>[] }).stories);
 		} catch (error) {
 			this.logger.error(error);
-
-			return this.resultOk([]);
+			return this.resultFail(`Failed to fetch persons by UUIDs: ${JSON.stringify(error)}`);
 		}
 	}
 
