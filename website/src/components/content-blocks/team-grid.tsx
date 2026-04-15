@@ -1,27 +1,26 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { Person, TeamGrid } from '@/generated/storyblok/types/109655/storyblok-components';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import type { ISbStoryData } from '@storyblok/js';
-import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
-import Image from 'next/image';
-import { services } from '@/lib/services/services';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { services } from '@/lib/services/services';
+import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import type { ISbStoryData } from '@storyblok/js';
+import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import Image from 'next/image';
+import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 const PERSON_IMAGE_SIZE = 300;
 
 type Props = {
 	blok: TeamGrid;
 	lang: WebsiteLanguage;
-
 };
 
 export const TeamGridBlock = async ({ blok, lang }: Props) => {
 	const uuids = blok.person.map((person) => (typeof person === 'string' ? person : person.uuid));
 	const personsResult = await services.storyblok.getPersonsByUuids(lang, uuids);
 	const persons = personsResult.success ? personsResult.data : [];
-	
+
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			{blok.title && <h2 className="text-3xl font-bold">{blok.title}</h2>}
@@ -55,7 +54,7 @@ function PersonCard({ person }: { person: ISbStoryData<Person> }) {
 					height={PERSON_IMAGE_SIZE}
 				/>
 			)}
-			<h3 className="mt-4 text-base font-medium leading-tight">{fullName}</h3>
+			<h3 className="mt-4 text-base leading-tight font-medium">{fullName}</h3>
 		</li>
 	);
 }

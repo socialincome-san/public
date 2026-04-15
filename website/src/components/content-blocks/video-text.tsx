@@ -22,7 +22,10 @@ export const VideoTextBlock = ({ blok }: Props) => {
 	return (
 		<BlockWrapper
 			{...storyblokEditable(blok as SbBlokData)}
-			className={cn("flex flex-col items-center gap-14 text-lg text-black md:flex-row", blok.layout === 'videoLeft' && 'md:flex-row-reverse')}
+			className={cn(
+				'flex flex-col items-center gap-14 text-lg text-black md:flex-row',
+				blok.layout === 'videoLeft' && 'md:flex-row-reverse',
+			)}
 		>
 			<div className="md:w-1/3">
 				<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />
