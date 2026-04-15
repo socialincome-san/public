@@ -22,8 +22,8 @@ export const ImageTextBlock = ({ blok }: Props) => {
 		<BlockWrapper
 			{...storyblokEditable(blok as SbBlokData)}
 			className={cn(
-				'flex flex-row items-center gap-14 text-lg text-black',
-				blok.layout === 'imageRight' && 'flex-row-reverse',
+				'flex flex-col gap-14 text-lg text-black md:flex-row md:items-center',
+				blok.layout === 'imageRight' && 'md:flex-row-reverse',
 			)}
 		>
 			{blok.image.filename && dimensions && (
@@ -32,10 +32,10 @@ export const ImageTextBlock = ({ blok }: Props) => {
 					alt={blok.image.alt ?? ''}
 					width={dimensions.width}
 					height={dimensions.height}
-					className="rounded-2xl"
+					className="order-2 rounded-2xl md:order-none md:w-2/3"
 				/>
 			)}
-			<div className="flex-1">
+			<div className="order-1 flex-1 md:order-none md:w-1/3">
 				<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />
 			</div>
 		</BlockWrapper>
