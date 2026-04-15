@@ -100,6 +100,46 @@ Mobile App for Recipients of a Social Income.
   deploy and run the app on the selected device in debug mode
 - Happy testing!!
 
+### Important hint after we introduced Firebase AppCheck
+After we introduced Firebase AppCheck, you will need to add a Firebase App Check Debug Token to Firebase before you can access our Backend API in Debug mode.
+
+For this, you need to do the following:
+
+**For iOS:**
+
+1. Open ios/Runner.xcworkspace with Xcode and run your app. Your app will print a local debug token to the debug output when Firebase tries to send a request to the backend. For example:
+```
+Firebase App Check Debug Token:
+123a4567-b89c-12d3-e456-789012345678
+```
+2. In the Firebase console, navigate to [`Security > App Check`](https://console.firebase.google.com/u/0/project/social-income-staging/appcheck/apps).
+3. Register your debug token that you just logged.
+  a. In the `Apps` tab, find the `iOS Stage` app.
+  b. From your app's overflow menu, select `Manage debug tokens`.
+  c. Follow the on-screen instructions to register your debug token.
+
+**For Android:**
+
+1. Run the Flutter app on an Android device. Your app will print a local debug token to the debug output when Firebase tries to send a request to the backend. For example:
+```
+D DebugAppCheckProvider: Enter this debug secret into the allow list in
+the Firebase Console for your project: 123a4567-b89c-12d3-e456-789012345678
+```
+2. In the Firebase console, navigate to [`Security > App Check`](https://console.firebase.google.com/u/0/project/social-income-staging/appcheck/apps).
+3. Register your debug token that you just logged.
+  a. In the `Apps` tab, find the `Android Stage` app.
+  b. From your app's overflow menu, select `Manage debug tokens`.
+  c. Follow the on-screen instructions to register your debug token.
+
+After you register the token, Firebase backend services will accept it as valid. Because this token allows access to your Firebase resources without a valid device, it is crucial that you keep it private. Don't commit it to a public repository, and if a registered token is ever compromised, revoke it immediately in the Firebase console.
+
+Official documentation: https://firebase.google.com/docs/app-check/flutter/debug-provider
+
+### Important for Android release builds ###
+After we introduced Firebase AppCheck, AppCheck will only work if you install the app from the Google PlayStore. If you install the app from CodeMagic or via another adhoc installation method, the app will throw an app attestation error ([firebase_app_check/unknown] i1.j: Error returned from API. code: 403 body: App attestation failed.).
+
+[`For Google Play Integrity attestation to work, the app must be deployed to Google Play and subsequently downloaded from Google Play.`](https://github.com/firebase/flutterfire/issues/11117#issuecomment-1587172724)
+
 ## Available app flavors
 
 Building flavor should work seamlessly for Android Studio and vscode
