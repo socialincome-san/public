@@ -1,6 +1,6 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
-import { VideoText } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { VideoText } from '@/generated/storyblok/types/109655/storyblok-components';
 import { cn } from '@/lib/utils/cn';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -13,11 +13,11 @@ type Props = {
 const vimeoParser = new VimeoVideoMatchAndExtract();
 
 export const VideoTextBlock = ({ blok }: Props) => {
-	if (!blok.content) {
+	const vimeoUrl = blok.vimeoLink?.url ? vimeoParser.parseUrl(blok.vimeoLink.url) : null;
+
+	if (!blok.content || !vimeoUrl) {
 		return null;
 	}
-
-	const vimeoUrl = blok.vimeoLink?.url ? vimeoParser.parseUrl(blok.vimeoLink.url) : null;
 
 	return (
 		<BlockWrapper
@@ -30,18 +30,16 @@ export const VideoTextBlock = ({ blok }: Props) => {
 			<div className="md:w-1/3">
 				<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />
 			</div>
-			{vimeoUrl && (
-				<div className="md:w-2/3">
-					<iframe
-						src={vimeoUrl}
-						title="Video player"
-						sandbox="allow-scripts allow-same-origin allow-presentation"
-						allow="fullscreen"
-						loading="lazy"
-						className="aspect-video w-full rounded-2xl border-0"
-					/>
-				</div>
-			)}
+			<div className="md:w-2/3">
+				<iframe
+					src={vimeoUrl}
+					title="Video player"
+					sandbox="allow-scripts allow-same-origin allow-presentation"
+					allow="fullscreen"
+					loading="lazy"
+					className="aspect-video w-full rounded-2xl border-0"
+				/>
+			</div>
 		</BlockWrapper>
 	);
 };

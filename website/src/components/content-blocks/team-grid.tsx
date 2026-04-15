@@ -21,6 +21,10 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 	const personsResult = await services.storyblok.getPersonsByUuids(lang, uuids);
 	const persons = personsResult.success ? personsResult.data : [];
 
+	if (persons.length === 0) {
+		return null;
+	}
+
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			{blok.title && <h2 className="text-3xl font-bold">{blok.title}</h2>}
@@ -29,13 +33,12 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 					<RichTextRenderer richTextDocument={blok.description as StoryblokRichtext} />
 				</div>
 			)}
-			{persons.length > 0 && (
-				<ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-					{persons.map((person) => (
-						<PersonCard key={person.uuid} person={person} />
-					))}
-				</ul>
-			)}
+
+			<ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+				{persons.map((person) => (
+					<PersonCard key={person.uuid} person={person} />
+				))}
+			</ul>
 		</BlockWrapper>
 	);
 };
