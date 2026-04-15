@@ -226,15 +226,24 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getPersons(lang: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+	async getPersonsByUuids(
+		lang: string,
+		uuids: Array<string>
+	): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
+			if (!uuids.length) {
+				return this.resultOk([]);
+			}
+
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
+				per_page: uuids.length,
 				content_type: StoryblokService.contentType.person,
 			};
-			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+			(params as ISbStoriesParams & { by_uuids_ordered: string }).by_uuids_ordered = uuids.join(',');
+			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
 
-			return this.resultOk(data);
+			return this.resultOk((res.data as { stories: ISbStoryData<Person>[] }).stories);
 		} catch (error) {
 			this.logger.error(error);
 

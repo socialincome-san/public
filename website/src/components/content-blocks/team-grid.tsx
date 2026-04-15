@@ -1,5 +1,4 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { Person, TeamGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
@@ -19,10 +18,10 @@ type Props = {
 };
 
 export const TeamGridBlock = async ({ blok, lang }: Props) => {
-	const personsResult = await services.storyblok.getPersons(lang);
-	const allPersons = personsResult.success ? personsResult.data : [];
-	const persons = resolveSelectedStories<Person>(blok.person, allPersons);
-
+	const uuids = blok.person.map((person) => (typeof person === 'string' ? person : person.uuid));
+	const personsResult = await services.storyblok.getPersonsByUuids(lang, uuids);
+	const persons = personsResult.success ? personsResult.data : [];
+	
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			{blok.title && <h2 className="text-3xl font-bold">{blok.title}</h2>}
