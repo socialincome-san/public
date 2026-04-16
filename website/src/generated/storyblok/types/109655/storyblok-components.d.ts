@@ -108,6 +108,23 @@ export interface DonationsTotal {
   [k: string]: unknown;
 }
 
+export interface Download {
+  title: string;
+  file: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  language?: string;
+  component: "download";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Downloads {
+  heading?: string;
+  files: Download[];
+  component: "downloads";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface DropdownItem {
   label?: string;
   menuItemGroups: MenuItemGroup[];
@@ -281,6 +298,8 @@ export interface Page {
     | CampaignGrid
     | CountryGrid
     | DonationsTotal
+    | Download
+    | Downloads
     | FaqSelection
     | FocusGrid
     | HeroVideo
@@ -388,8 +407,8 @@ export interface Text {
 }
 
 export interface TwoColumnText {
-  left_text: StoryblokRichtext;
-  right_text: StoryblokRichtext;
+  leftText: StoryblokRichtext;
+  rightText: StoryblokRichtext;
   component: "twoColumnText";
   _uid: string;
   [k: string]: unknown;
