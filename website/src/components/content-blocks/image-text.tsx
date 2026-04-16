@@ -17,12 +17,14 @@ export const ImageTextBlock = ({ blok }: Props) => {
 	}
 
 	const dimensions = blok.image.filename ? getScaledDimensions(blok.image.filename, 600) : null;
-	const imageToTextRatio = blok.imageToTextRatio || '1/2';
 	const widthClassesByRatio = {
+		'': { image: 'md:w-1/2', text: 'md:w-1/2' },
 		'1/3': { image: 'md:w-1/3', text: 'md:w-2/3' },
 		'1/2': { image: 'md:w-1/2', text: 'md:w-1/2' },
 		'2/3': { image: 'md:w-2/3', text: 'md:w-1/3' },
 	};
+	const imageToTextRatio = blok.imageToTextRatio ?? '1/2';
+
 	const widthClasses = widthClassesByRatio[imageToTextRatio] ?? widthClassesByRatio['1/2'];
 
 	return (

@@ -46,12 +46,13 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 
 const PersonCard = ({ person }: { person: ISbStoryData<Person> }) => {
 	const { avatar, fullName } = person.content;
+
 	return (
 		<li className="flex flex-col">
 			{avatar?.filename && (
 				<NextImage
 					src={formatStoryblokUrl(avatar.filename, PERSON_IMAGE_SIZE, PERSON_IMAGE_SIZE, avatar.focus)}
-					alt={avatar.alt || `${fullName} avatar`}
+					alt={avatar.alt ?? ''}
 					className="aspect-square w-full rounded-2xl object-cover object-top"
 					width={PERSON_IMAGE_SIZE}
 					height={PERSON_IMAGE_SIZE}
