@@ -1,12 +1,13 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
-import type { Person, TeamGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
-import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import Image from 'next/image';
+import NextImage from 'next/image';
+
+import type { Person, TeamGrid } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { ISbStoryData } from '@storyblok/js';
 import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 const PERSON_IMAGE_SIZE = 300;
@@ -45,13 +46,12 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 
 const PersonCard = ({ person }: { person: ISbStoryData<Person> }) => {
 	const { avatar, fullName } = person.content;
-
 	return (
 		<li className="flex flex-col">
 			{avatar?.filename && (
-				<Image
+				<NextImage
 					src={formatStoryblokUrl(avatar.filename, PERSON_IMAGE_SIZE, PERSON_IMAGE_SIZE, avatar.focus)}
-					alt={`${fullName} avatar`}
+					alt={avatar.alt || `${fullName} avatar`}
 					className="aspect-square w-full rounded-2xl object-cover object-top"
 					width={PERSON_IMAGE_SIZE}
 					height={PERSON_IMAGE_SIZE}
