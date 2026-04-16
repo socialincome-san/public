@@ -43,7 +43,7 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 	);
 };
 
-function PersonCard({ person }: { person: ISbStoryData<Person> }) {
+const PersonCard = ({ person }: { person: ISbStoryData<Person> }) => {
 	const { avatar, fullName } = person.content;
 
 	return (
@@ -60,4 +60,4 @@ function PersonCard({ person }: { person: ISbStoryData<Person> }) {
 			<h3 className="mt-4 text-base leading-tight font-medium">{fullName}</h3>
 		</li>
 	);
-}
+};
