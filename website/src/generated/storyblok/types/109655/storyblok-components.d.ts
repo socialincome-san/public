@@ -191,6 +191,7 @@ export interface ImageText {
   content?: StoryblokRichtext;
   image: StoryblokAsset;
   layout: "" | "imageLeft" | "imageRight";
+  imageToTextRatio?: "" | "1/3" | "1/2" | "2/3";
   component: "imageText";
   _uid: string;
   [k: string]: unknown;
