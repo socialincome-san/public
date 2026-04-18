@@ -4,9 +4,14 @@ import { CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
+import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
+
+const PurchaseEventTracker = dynamic(
+	() => import('./purchase-event-tracker').then((m) => ({ default: m.PurchaseEventTracker })),
+	{ ssr: false },
+);
 
 type StripeSuccessPageParams = {
 	session: string;
@@ -40,6 +45,12 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 
 	return (
 		<div className="mx-auto flex max-w-3xl flex-col space-y-8">
+			<PurchaseEventTracker
+				transactionId={checkoutSession.id}
+				value={(checkoutSession.amount_total ?? 0) / 100}
+				currency={checkoutSession.currency ?? 'chf'}
+				recurring={recurring}
+			/>
 			<Typography size="4xl" color="accent" weight="bold">
 				{translator.t('success.title')}
 			</Typography>
