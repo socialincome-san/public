@@ -8,11 +8,14 @@ import annalinaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ann
 import arieaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ariea-burke.jpg';
 import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import carlosImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/carlos.jpeg';
+import christianImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/christian-grutsch.jpeg';
 import fabioImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fabio-hurni.jpg';
 import fabriceImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fabrice-michaud.jpg';
+import festusImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/festus-bohlen.jpg';
 import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flavien.jpeg';
 import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
 import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
+import hendrikImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/hendrik-beckmann.jpg';
 import innaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/inna-abdrakhmanova.jpeg';
 import jessicaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/jessica-freeman.jpg';
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
@@ -21,21 +24,23 @@ import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabel
 import karinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/karin-berg.jpg';
 import katalinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/katalin-holanyi.jpeg';
 import kerrinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kerrin.jpeg';
+import kwameImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kwame-gyabaa-yeboah.jpeg';
 import larissaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/larissa.jpeg';
 import leaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lea-strohm.jpeg';
 import lorenzoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lorenzo.jpg';
 import mabelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mabel.jpeg';
 import marcImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marc-werner.jpg';
 import marcoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marco-bohler.jpeg';
-import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu.jpg';
+import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu-sesay.jpg';
 import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marion.jpeg';
 import mathildeImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mathilde-dumont.jpg';
-import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
+import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew-roberts.jpeg';
 import michaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/michael.jpeg';
 import mikolajImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mikolaj.jpeg';
 import ninaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/nina-limacher.jpeg';
 import patrickImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrick-mcclurg.jpeg';
 import patrikImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrik.jpeg';
+import paulaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/paula-szemjanyinov.jpeg';
 import pranavImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/pranav.jpg';
 import raphaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/raphael-wirth.jpeg';
 import reneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/rene.jpeg';
@@ -66,6 +71,7 @@ type Group = {
 type Person = {
 	name: string;
 	role: string;
+	country?: string;
 	image: string | StaticImport;
 };
 
@@ -74,8 +80,10 @@ const groups: Group[] = [
 		name: 'staff',
 		size: 'md',
 		people: [
-			{ name: 'Mabel Turay', role: 'finance', image: mabelImage },
-			{ name: 'Mariatu Haja Sesay', role: 'operations', image: mariatuImage },
+			{ name: 'Mabel Turay', role: 'finance', country: 'SL', image: mabelImage },
+			{ name: 'Mariatu Haja Sesay', role: 'operations', country: 'SL', image: mariatuImage },
+			{ name: 'Kwame Gyabaa-Yeboah', role: 'operations', country: 'GH', image: kwameImage },
+			{ name: 'Festus Bohlen', role: 'operations', country: 'LR', image: festusImage },
 		],
 	},
 	{
@@ -89,7 +97,6 @@ const groups: Group[] = [
 			{ name: 'Riccardo Tamburini', role: 'communications', image: riccardoImage },
 			{ name: 'Michael Kündig', role: 'software-development', image: michaelImage },
 			{ name: 'Mikołaj Demkow', role: 'app-development', image: mikolajImage },
-			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
 			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
 			{ name: 'Marc Werner', role: 'research', image: marcImage },
@@ -101,7 +108,9 @@ const groups: Group[] = [
 			{ name: 'Jessica Freeman', role: 'fundraising', image: jessicaImage },
 			{ name: 'Alexandra Andrist', role: 'editorial', image: alexandraImage },
 			{ name: 'Ariea Burke', role: 'editorial', image: arieaImage },
-			{ name: 'Fabrice Michaud', role: 'software-development', image: fabriceImage },
+			{ name: 'Paula Szemjanyinov', role: 'volunteer-coordinator', image: paulaImage },
+			{ name: 'Hendrik Beckmann', role: 'finance', image: hendrikImage },
+			{ name: 'Christian Grutsch', role: 'design', image: christianImage },
 		],
 	},
 	{
@@ -143,6 +152,8 @@ const groups: Group[] = [
 			{ name: 'Katalin Holanyi', role: 'design', image: katalinImage },
 			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
 			{ name: 'Simone Huser', role: 'board-member', image: simoneImage },
+			{ name: 'Fabrice Michaud', role: 'software-development', image: fabriceImage },
+			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
 		],
 	},
 ];
@@ -216,6 +227,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 										className="wrap-break-word hyphens-auto"
 									>
 										{translator.t(`team.roles.${person.role}`)}
+										{person.country && ` ${translator.t(person.country, { namespace: 'countries' })}`}
 									</Typography>
 								</li>
 							))}
