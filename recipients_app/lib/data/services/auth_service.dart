@@ -70,12 +70,14 @@ class AuthService {
     }
   }
 
+  StreamSubscription<User?>? _authStateSubscription;
+  StreamSubscription<bool>? _demoModeSubscription;
+
   @nonVirtual
   Stream<User?> authStateChanges() {
     final StreamController<User?> authStateController = StreamController();
-    StreamSubscription<User?>? authStateSubscription;
 
-    authStateSubscription = _getInternalAuthStateSteam(false).listen((authState) {
+    _authStateSubscription = _getInternalAuthStateSteam(false).listen((authState) {
       authStateController.add(authState);
     });
 
@@ -85,16 +87,12 @@ class AuthService {
     // This allows the app to switch between demo mode and normal mode seamlessly.
     // When the demo mode is enabled, we will emit the demo user as the auth state.
     // When the demo mode is disabled, we will emit the Firebase auth state.
-    demoManager.isDemoEnabledStream.listen((isDemoMode) {
-      authStateSubscription?.cancel();
+    _demoModeSubscription = demoManager.isDemoEnabledStream.listen((isDemoMode) {
+      _authStateSubscription?.cancel();
 
-      authStateSubscription = _getInternalAuthStateSteam(isDemoMode).listen((authState) {
+      _authStateSubscription = _getInternalAuthStateSteam(isDemoMode).listen((authState) {
         authStateController.add(authState);
       });
-
-      authStateController.onCancel = () {
-        authStateSubscription?.cancel();
-      };
     });
 
     return authStateController.stream;
@@ -128,6 +126,8 @@ class AuthService {
   }
 
   void dispose() {
+    _demoModeSubscription?.cancel();
+    _authStateSubscription?.cancel();
     _demoUserStreamController.close();
   }
 }
