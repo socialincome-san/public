@@ -248,6 +248,7 @@ class PayoutsCubit extends Cubit<PayoutsState> {
         ?.payout
         .paymentAt;
 
+    // TODO: Fallback values leak to the UI — year ?? 2023 and currency ?? "???" are user-visible in an empty-payouts state. Treat the empty case explicitly instead.
     final nextPaymentDate =
         nextPayment?.payout.paymentAt ??
         DateTime(
