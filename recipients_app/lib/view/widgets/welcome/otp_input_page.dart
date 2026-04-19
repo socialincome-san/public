@@ -22,7 +22,7 @@ class _OtpInputPageState extends State<OtpInputPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text("Verification"),
+        title: Text(context.l10n.verification),
         leading: BackButton(
           onPressed: () {
             context.read<SignupCubit>().changeToPhoneInput();

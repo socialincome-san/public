@@ -1,5 +1,6 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cubit.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/account_page.dart";
@@ -12,23 +13,31 @@ enum DashboardCardType {
 }
 
 class DashboardCard extends DashboardItem {
-  final String title;
-  final String message;
-  final String primaryButtonText;
-  final String secondaryButtonText;
   final DashboardCardType type;
 
   const DashboardCard({
-    required this.title,
-    required this.message,
-    required this.primaryButtonText,
-    required this.secondaryButtonText,
     required this.type,
   });
+
+  ({String title, String message, String primaryButtonText, String secondaryButtonText}) _resolveStrings(
+    BuildContext context,
+  ) {
+    switch (type) {
+      case DashboardCardType.contactNumberEqualsPaymentNumber:
+        final paymentPhoneNumber = context.read<AuthCubit>().state.recipient?.paymentInformation?.phone.number ?? "";
+        return (
+          title: context.l10n.myProfile,
+          message: context.l10n.contactPhoneQuestion(paymentPhoneNumber),
+          primaryButtonText: context.l10n.yes,
+          secondaryButtonText: context.l10n.no,
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final isUpdating = context.watch<DashboardCardManagerCubit>().state.status == DashboardCardManagerStatus.updating;
+    final strings = _resolveStrings(context);
 
     return Card(
       elevation: 0,
@@ -41,12 +50,12 @@ class DashboardCard extends DashboardItem {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  strings.title,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  message,
+                  strings.message,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.normal,
                   ),
@@ -63,7 +72,7 @@ class DashboardCard extends DashboardItem {
                 ButtonSmall(
                   isLoading: isUpdating,
                   color: Colors.black,
-                  label: primaryButtonText,
+                  label: strings.primaryButtonText,
                   onPressed: () => _onPressPrimary(context),
                   buttonType: ButtonSmallType.outlined,
                 ),
@@ -72,7 +81,7 @@ class DashboardCard extends DashboardItem {
                   isLoading: isUpdating,
                   color: Colors.black,
                   onPressed: () => _onPressSecondary(context),
-                  label: secondaryButtonText,
+                  label: strings.secondaryButtonText,
                   buttonType: ButtonSmallType.outlined,
                 ),
               ],

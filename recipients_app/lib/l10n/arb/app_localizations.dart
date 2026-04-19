@@ -1537,6 +1537,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown payment phone number'**
   String get unknownPaymentPhoneNumber;
+
+  /// No description provided for @myProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get myProfile;
+
+  /// No description provided for @contactPhoneQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your payment phone number ({paymentPhoneNumber}) also your contact phone number?'**
+  String contactPhoneQuestion(String paymentPhoneNumber);
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Cannot refresh data.'**
+  String get noInternetConnection;
+
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

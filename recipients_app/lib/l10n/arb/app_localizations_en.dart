@@ -749,4 +749,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unknownPaymentPhoneNumber => 'Unknown payment phone number';
+
+  @override
+  String get myProfile => 'My Profile';
+
+  @override
+  String contactPhoneQuestion(String paymentPhoneNumber) {
+    return 'Is your payment phone number ($paymentPhoneNumber) also your contact phone number?';
+  }
+
+  @override
+  String get noInternetConnection => 'No internet connection. Cannot refresh data.';
+
+  @override
+  String get anErrorOccurred => 'An error occurred';
 }

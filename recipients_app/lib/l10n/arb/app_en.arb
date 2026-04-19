@@ -298,5 +298,16 @@
     "appUpdateWidgetErrorLaunchingStore": "We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income.",
     "country": "Country",
     "recipientNotFound": "No recipient account found for this phone number. Please check your phone number or contact your local partner.",
-	"unknownPaymentPhoneNumber": "Unknown payment phone number"
+	"unknownPaymentPhoneNumber": "Unknown payment phone number",
+	"myProfile": "My Profile",
+	"contactPhoneQuestion": "Is your payment phone number ({paymentPhoneNumber}) also your contact phone number?",
+	"@contactPhoneQuestion": {
+		"placeholders": {
+			"paymentPhoneNumber": {
+				"type": "String"
+			}
+		}
+	},
+	"noInternetConnection": "No internet connection. Cannot refresh data.",
+	"anErrorOccurred": "An error occurred"
 }

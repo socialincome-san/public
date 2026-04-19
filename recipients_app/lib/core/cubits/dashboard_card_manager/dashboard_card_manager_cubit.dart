@@ -37,11 +37,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       final paymentPhoneNumber = recipient.paymentInformation?.phone.number;
 
       if (contactPhoneNumber == null && paymentPhoneNumber != null) {
-        final contactPhoneCard = DashboardCard(
-          title: "My Profile",
-          message: "Is your payment phone number ($paymentPhoneNumber) also your contact phone number?",
-          primaryButtonText: "Yes",
-          secondaryButtonText: "No",
+        const contactPhoneCard = DashboardCard(
           type: DashboardCardType.contactNumberEqualsPaymentNumber,
         );
 

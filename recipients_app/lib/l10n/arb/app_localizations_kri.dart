@@ -749,4 +749,18 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get unknownPaymentPhoneNumber => 'Di fon nɔmba we yu nɔ no bɔt fɔ pe';
+
+  @override
+  String get myProfile => 'Ɔltin Bɔt Mi';
+
+  @override
+  String contactPhoneQuestion(String paymentPhoneNumber) {
+    return 'Di fon nɔmba we dɛn fɔ pe yu ($paymentPhoneNumber) na in sɛm wan we fɔ kɔl yu?';
+  }
+
+  @override
+  String get noInternetConnection => 'Nɔ intanɛt kɔnɛkshɔn. Nɔ ebul fɔ rifrɛsh data.';
+
+  @override
+  String get anErrorOccurred => 'Sɔntin nɔ go rayt';
 }
