@@ -108,6 +108,8 @@ class AccountPageState extends State<AccountPage> {
     _paymentNumberController.dispose();
     _contactNumberController.dispose();
     _emailController.dispose();
+    _mobileMoneyProviderController.dispose();
+    _successorNameController.dispose();
 
     super.dispose();
   }
