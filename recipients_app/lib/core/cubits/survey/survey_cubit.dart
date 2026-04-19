@@ -8,6 +8,7 @@ import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/models/survey/survey_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
+import "package:app/main.dart";
 import "package:collection/collection.dart";
 import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -21,8 +22,6 @@ const _kNormalSurveyEndDay = 10;
 const _kOverdueEndDay = 15;
 const _kOverduePeriodDays = 6;
 const _kEndOfDisplaySurveyDay = 20;
-
-const _kBaseUrlKey = "BASE_URL";
 
 class SurveyCubit extends Cubit<SurveyState> {
   final Recipient recipient;
@@ -99,7 +98,7 @@ class SurveyCubit extends Cubit<SurveyState> {
       "pw": survey.accessPw,
     };
 
-    const baseUrl = String.fromEnvironment(_kBaseUrlKey);
+    const baseUrl = String.fromEnvironment(kBaseUrlKey);
     if (baseUrl.isEmpty) {
       throw StateError("BASE_URL environment variable is not configured");
     }

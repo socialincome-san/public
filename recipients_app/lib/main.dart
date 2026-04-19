@@ -29,7 +29,7 @@ import "package:sentry_flutter/sentry_flutter.dart";
 // This approach ensures that only the required Firebase configuration file is bundled, making it a secure and efficient solution for managing multiple flavors.
 // For more details see: https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/#option-2-use-multiple-entry-points
 
-const _kBaseUrlKey = "BASE_URL";
+const String kBaseUrlKey = "BASE_URL";
 
 // Async for Firebase
 Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
@@ -56,7 +56,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final demoManager = DemoManager();
 
   // Initialize Social Income api client
-  const baseUrl = String.fromEnvironment(_kBaseUrlKey);
+  const baseUrl = String.fromEnvironment(kBaseUrlKey);
   final uri = Uri.https(baseUrl, "api/v1/");
 
   // Base client without auth (for endpoints that don't need it)
