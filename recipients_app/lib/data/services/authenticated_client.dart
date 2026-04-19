@@ -36,7 +36,7 @@ class AuthenticatedClient extends http.BaseClient {
     request.headers.removeWhere((k, v) => k.toLowerCase() == "content-type");
     request.headers["content-type"] = "application/json";
 
-    // Add app check token to access our Social Income API
+    // Add app check token to access our Social Income API.
     request.headers["X-Firebase-AppCheck"] = await _getAppCheckToken();
 
     // Add Firebase ID token as Bearer authentication if available.
@@ -46,12 +46,29 @@ class AuthenticatedClient extends http.BaseClient {
       request.headers["Authorization"] = "Bearer $idToken";
     }
 
-    return _baseHttpClient
+    // Send the request.
+    var response = await _baseHttpClient
         .send(request)
         .timeout(
           const Duration(seconds: 30),
           onTimeout: () => throw TimeoutException("Request to '${request.url}' timed out. Please try again."),
         );
+
+    // If statusCode 401 (Unauthorized) is returned, force-refresh id token and retry once.
+    if (response.statusCode == 401) {
+      final newToken = await user?.getIdToken(true);
+      if (newToken != null) {
+        request.headers["Authorization"] = "Bearer $newToken";
+        response = await _baseHttpClient
+            .send(request)
+            .timeout(
+              const Duration(seconds: 30),
+              onTimeout: () => throw TimeoutException("Request to '${request.url}' timed out. Please try again."),
+            );
+      }
+    }
+
+    return response;
   }
 
   Uri resolveUri(String path) {
