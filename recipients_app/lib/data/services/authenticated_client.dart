@@ -19,6 +19,19 @@ class AuthenticatedClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    // Refuse cross-origin requests so Bearer + AppCheck tokens can't leak to
+    // an unintended host if a caller passes an absolute URL.
+    if (request.url.scheme != _baseUri.scheme ||
+        request.url.host != _baseUri.host ||
+        request.url.port != _baseUri.port) {
+      throw ArgumentError.value(
+        request.url,
+        "request.url",
+        "AuthenticatedClient authority does not match base "
+            "'${_baseUri.scheme}://${_baseUri.host}:${_baseUri.port}'. Use resolveUri() with a relative path.",
+      );
+    }
+
     // Ensure JSON content type regardless of what `http` added earlier.
     request.headers.removeWhere((k, v) => k.toLowerCase() == "content-type");
     request.headers["content-type"] = "application/json";
