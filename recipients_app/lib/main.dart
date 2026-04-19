@@ -57,6 +57,9 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   // Initialize Social Income api client
   const baseUrl = String.fromEnvironment(kBaseUrlKey);
+  if (baseUrl.isEmpty) {
+    throw Exception("Missing base URL setting");
+  }
   final uri = Uri.https(baseUrl, "api/v1/");
 
   // Base client without auth (for endpoints that don't need it)
