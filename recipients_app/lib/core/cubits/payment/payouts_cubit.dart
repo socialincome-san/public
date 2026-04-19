@@ -12,7 +12,6 @@ import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:collection/collection.dart";
 import "package:dart_mappable/dart_mappable.dart";
-import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -47,7 +46,7 @@ class PayoutsCubit extends Cubit<PayoutsState> {
         ),
       );
     } on Exception catch (ex, stackTrace) {
-      if (ex is SocketException || (ex is FirebaseException && ex.code == "unknown")) {
+      if (ex is SocketException) {
         emit(
           state.copyWith(
             status: PayoutsStatus.failure,
