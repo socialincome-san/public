@@ -1,5 +1,6 @@
 part of "dashboard_card_manager_cubit.dart";
 
+@MappableEnum()
 enum DashboardCardManagerStatus {
   initial,
   loading,

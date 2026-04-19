@@ -16,6 +16,7 @@ class MappedSurveyMapper extends ClassMapperBase<MappedSurvey> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = MappedSurveyMapper._());
       SurveyMapper.ensureInitialized();
+      SurveyCardStatusMapper.ensureInitialized();
     }
     return _instance!;
   }

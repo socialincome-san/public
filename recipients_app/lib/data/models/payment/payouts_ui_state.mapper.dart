@@ -15,6 +15,7 @@ class PayoutsUiStateMapper extends ClassMapperBase<PayoutsUiState> {
   static PayoutsUiStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PayoutsUiStateMapper._());
+      BalanceCardStatusMapper.ensureInitialized();
       MappedPayoutMapper.ensureInitialized();
       NextPayoutDataMapper.ensureInitialized();
     }

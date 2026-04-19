@@ -8,6 +8,73 @@
 
 part of 'dashboard_card_manager_cubit.dart';
 
+class DashboardCardManagerStatusMapper
+    extends EnumMapper<DashboardCardManagerStatus> {
+  DashboardCardManagerStatusMapper._();
+
+  static DashboardCardManagerStatusMapper? _instance;
+  static DashboardCardManagerStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(
+        _instance = DashboardCardManagerStatusMapper._(),
+      );
+    }
+    return _instance!;
+  }
+
+  static DashboardCardManagerStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  DashboardCardManagerStatus decode(dynamic value) {
+    switch (value) {
+      case r'initial':
+        return DashboardCardManagerStatus.initial;
+      case r'loading':
+        return DashboardCardManagerStatus.loading;
+      case r'loaded':
+        return DashboardCardManagerStatus.loaded;
+      case r'updating':
+        return DashboardCardManagerStatus.updating;
+      case r'updated':
+        return DashboardCardManagerStatus.updated;
+      case r'error':
+        return DashboardCardManagerStatus.error;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(DashboardCardManagerStatus self) {
+    switch (self) {
+      case DashboardCardManagerStatus.initial:
+        return r'initial';
+      case DashboardCardManagerStatus.loading:
+        return r'loading';
+      case DashboardCardManagerStatus.loaded:
+        return r'loaded';
+      case DashboardCardManagerStatus.updating:
+        return r'updating';
+      case DashboardCardManagerStatus.updated:
+        return r'updated';
+      case DashboardCardManagerStatus.error:
+        return r'error';
+    }
+  }
+}
+
+extension DashboardCardManagerStatusMapperExtension
+    on DashboardCardManagerStatus {
+  String toValue() {
+    DashboardCardManagerStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<DashboardCardManagerStatus>(this)
+        as String;
+  }
+}
+
 class DashboardCardManagerStateMapper
     extends ClassMapperBase<DashboardCardManagerState> {
   DashboardCardManagerStateMapper._();
@@ -18,6 +85,7 @@ class DashboardCardManagerStateMapper
       MapperContainer.globals.use(
         _instance = DashboardCardManagerStateMapper._(),
       );
+      DashboardCardManagerStatusMapper.ensureInitialized();
     }
     return _instance!;
   }

@@ -16,6 +16,7 @@ class MappedPayoutMapper extends ClassMapperBase<MappedPayout> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = MappedPayoutMapper._());
       PayoutMapper.ensureInitialized();
+      PayoutUiStatusMapper.ensureInitialized();
     }
     return _instance!;
   }

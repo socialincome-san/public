@@ -1,5 +1,6 @@
 part of "settings_cubit.dart";
 
+@MappableEnum()
 enum SettingsStatus {
   initial,
   loading,

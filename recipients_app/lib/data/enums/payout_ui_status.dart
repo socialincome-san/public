@@ -1,6 +1,10 @@
 import "package:app/ui/configs/app_colors.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";
 
+part "payout_ui_status.mapper.dart";
+
+@MappableEnum()
 enum PayoutUiStatus {
   /// blue label, white font, confirm icon
   confirmed(

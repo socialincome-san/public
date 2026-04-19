@@ -8,6 +8,60 @@
 
 part of 'settings_cubit.dart';
 
+class SettingsStatusMapper extends EnumMapper<SettingsStatus> {
+  SettingsStatusMapper._();
+
+  static SettingsStatusMapper? _instance;
+  static SettingsStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = SettingsStatusMapper._());
+    }
+    return _instance!;
+  }
+
+  static SettingsStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  SettingsStatus decode(dynamic value) {
+    switch (value) {
+      case r'initial':
+        return SettingsStatus.initial;
+      case r'loading':
+        return SettingsStatus.loading;
+      case r'success':
+        return SettingsStatus.success;
+      case r'failure':
+        return SettingsStatus.failure;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(SettingsStatus self) {
+    switch (self) {
+      case SettingsStatus.initial:
+        return r'initial';
+      case SettingsStatus.loading:
+        return r'loading';
+      case SettingsStatus.success:
+        return r'success';
+      case SettingsStatus.failure:
+        return r'failure';
+    }
+  }
+}
+
+extension SettingsStatusMapperExtension on SettingsStatus {
+  String toValue() {
+    SettingsStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<SettingsStatus>(this) as String;
+  }
+}
+
 class SettingsStateMapper extends ClassMapperBase<SettingsState> {
   SettingsStateMapper._();
 
@@ -15,6 +69,7 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
   static SettingsStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SettingsStateMapper._());
+      SettingsStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
