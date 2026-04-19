@@ -1538,18 +1538,6 @@ abstract class AppLocalizations {
   /// **'No recipient account found for this phone number. Please check your phone number or contact your local partner.'**
   String get recipientNotFound;
 
-  /// No description provided for @offlineBanner.
-  ///
-  /// In en, this message translates to:
-  /// **'No internet connection'**
-  String get offlineBanner;
-
-  /// No description provided for @offlineMutationError.
-  ///
-  /// In en, this message translates to:
-  /// **'This action requires an internet connection'**
-  String get offlineMutationError;
-
   /// No description provided for @unknownPaymentPhoneNumber.
   ///
   /// In en, this message translates to:
@@ -1574,11 +1562,17 @@ abstract class AppLocalizations {
   /// **'No internet connection. Cannot refresh data.'**
   String get noInternetConnection;
 
-  /// No description provided for @anErrorOccurred.
+  /// No description provided for @offlineBanner.
   ///
   /// In en, this message translates to:
-  /// **'An error occurred'**
-  String get anErrorOccurred;
+  /// **'No internet connection'**
+  String get offlineBanner;
+
+  /// No description provided for @offlineMutationError.
+  ///
+  /// In en, this message translates to:
+  /// **'This action requires an internet connection'**
+  String get offlineMutationError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

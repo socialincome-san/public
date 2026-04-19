@@ -18,7 +18,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get profileUpdateError => 'Ɔltin bɔt yu nɔ go insay. Duya tray bak ɔ rich awt to wit';
 
   @override
-  String get anErrorOccurred => 'An error occurred';
+  String get anErrorOccurred => 'Sɔntin nɔ go rayt';
 
   @override
   String get profile => 'Ɔltin bɔt yu';
@@ -753,12 +753,6 @@ class AppLocalizationsKri extends AppLocalizations {
       'No risipiɛnt akɔn nɔ fɛn fɔ dis fon nɔmba. Duya chɛk yu fon nɔmba ɔ kɔntak yu lokal patna.';
 
   @override
-  String get offlineBanner => 'Nɔ intanɛt kɔnɛkshɔn';
-
-  @override
-  String get offlineMutationError => 'Dis akshɔn nid intanɛt kɔnɛkshɔn';
-
-  @override
   String get unknownPaymentPhoneNumber => 'Di fon nɔmba we yu nɔ no bɔt fɔ pe';
 
   @override
@@ -773,5 +767,8 @@ class AppLocalizationsKri extends AppLocalizations {
   String get noInternetConnection => 'Nɔ intanɛt kɔnɛkshɔn. Nɔ ebul fɔ rifrɛsh data.';
 
   @override
-  String get anErrorOccurred => 'Sɔntin nɔ go rayt';
+  String get offlineBanner => 'Nɔ intanɛt kɔnɛkshɔn';
+
+  @override
+  String get offlineMutationError => 'Dis akshɔn nid intanɛt kɔnɛkshɔn';
 }

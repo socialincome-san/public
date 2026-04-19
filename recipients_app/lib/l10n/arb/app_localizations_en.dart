@@ -752,12 +752,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'No recipient account found for this phone number. Please check your phone number or contact your local partner.';
 
   @override
-  String get offlineBanner => 'No internet connection';
-
-  @override
-  String get offlineMutationError => 'This action requires an internet connection';
-
-  @override
   String get unknownPaymentPhoneNumber => 'Unknown payment phone number';
 
   @override
@@ -772,5 +766,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noInternetConnection => 'No internet connection. Cannot refresh data.';
 
   @override
-  String get anErrorOccurred => 'An error occurred';
+  String get offlineBanner => 'No internet connection';
+
+  @override
+  String get offlineMutationError => 'This action requires an internet connection';
 }
