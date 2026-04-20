@@ -8,7 +8,7 @@ export type RecipientTableViewRow = {
 	firstName: string;
 	lastName: string;
 	paymentCode: string | null;
-	dateOfBirth: Date | null;
+	dateOfBirth: Date | string | null;
 	startDate: Date | null;
 	localPartnerName: string | null;
 	suspendedAt: Date | null;

@@ -3,6 +3,7 @@ import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
+import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
@@ -182,6 +183,7 @@ export class RecipientReadService extends BaseService {
 		nowDate: Date,
 	): RecipientTableViewRow[] {
 		return recipients.map((recipient) => {
+			const permission = getPermission(recipient.program?.id ?? null);
 			const payoutsReceived = recipient.payouts.length;
 			const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
 			const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
@@ -203,10 +205,11 @@ export class RecipientReadService extends BaseService {
 				id: recipient.id,
 				firebaseAuthUserId: recipient.localPartner?.account?.firebaseAuthUserId ?? '',
 				country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
-				firstName: recipient.contact?.firstName ?? '',
-				lastName: recipient.contact?.lastName ?? '',
+				firstName: permission === ProgramPermission.operator ? (recipient.contact?.firstName ?? '') : OBFUSCATED_SENTINEL,
+				lastName: permission === ProgramPermission.operator ? (recipient.contact?.lastName ?? '') : '',
 				paymentCode: recipient.paymentInformation?.code ?? null,
-				dateOfBirth: recipient.contact?.dateOfBirth ?? null,
+				dateOfBirth:
+					permission === ProgramPermission.operator ? (recipient.contact?.dateOfBirth ?? null) : OBFUSCATED_SENTINEL,
 				startDate: recipient.startDate ?? null,
 				localPartnerName: getLocalPartnerName(recipient),
 				suspendedAt: recipient.suspendedAt,
@@ -218,7 +221,7 @@ export class RecipientReadService extends BaseService {
 				payoutsProgressPercent,
 				createdAt: recipient.createdAt,
 				status,
-				permission: getPermission(recipient.program?.id ?? null),
+				permission,
 			};
 		});
 	}
