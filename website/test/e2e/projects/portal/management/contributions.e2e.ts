@@ -96,7 +96,7 @@ test('edit contribution', async ({ page }) => {
 		.filter({ hasText: existing!.contributor.contact.email! })
 		.filter({ hasText: existing!.campaign.title })
 		.first();
-	await expect(editableRow.getByTestId('action-cell-icon-edit')).toBeVisible();
+	await expect(editableRow.getByTestId('action-cell-icon')).toBeVisible();
 	await editableRow.click();
 	await expect(page.getByRole('heading', { name: 'Edit Contribution' })).toBeVisible();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
@@ -121,7 +121,7 @@ test('edit contribution', async ({ page }) => {
 	expect(updated.status).toBe('pending');
 });
 
-test('shows view icon and readonly dialog for owner-only contribution rows', async ({ page }) => {
+test('does not show owner-only contribution rows under management', async ({ page }) => {
 	const ownerOnly = await prisma.contribution.findUnique({
 		where: { id: 'contribution-lr-high-1' },
 		select: {
@@ -143,15 +143,7 @@ test('shows view icon and readonly dialog for owner-only contribution rows', asy
 	await page.goto(
 		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(ownerOnly!.contributor.contact.email!)}`,
 	);
-	const readOnlyRow = page
-		.getByRole('row')
-		.filter({ hasText: ownerOnly!.contributor.contact.email! })
-		.filter({ hasText: ownerOnly!.campaign.title })
-		.first();
-	await expect(readOnlyRow.getByTestId('action-cell-icon-view')).toBeVisible();
-	await readOnlyRow.click();
-	await expect(page.getByRole('heading', { name: 'View Contribution' })).toBeVisible();
-	await expect(page.getByRole('button', { name: 'Save' })).toBeHidden();
+	await expect(page.getByText(ownerOnly!.campaign.title, { exact: true })).toBeHidden();
 });
 
 test('shows validation error when contribution amount is invalid', async ({ page }) => {

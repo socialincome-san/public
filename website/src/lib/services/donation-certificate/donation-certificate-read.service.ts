@@ -75,16 +75,13 @@ export class DonationCertificateReadService extends BaseService {
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const accessiblePrograms = accessibleProgramsResult.data;
+			const accessiblePrograms = accessibleProgramsResult.data.filter(
+				(program) => program.permission === ProgramPermission.operator,
+			);
 			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((program) => program.programId)));
 			if (accessibleProgramIds.length === 0) {
 				return this.resultOk({ tableRows: [], totalCount: 0 });
 			}
-			const operatorProgramIds = new Set(
-				accessiblePrograms
-					.filter((program) => program.permission === ProgramPermission.operator)
-					.map((program) => program.programId),
-			);
 			const search = query.search.trim();
 			const parsedYear = Number(search);
 			const hasYearFilter = search.length > 0 && Number.isInteger(parsedYear);
@@ -149,25 +146,6 @@ export class DonationCertificateReadService extends BaseService {
 				}),
 				this.db.donationCertificate.count({ where }),
 			]);
-			const contributorIds = Array.from(new Set(certificates.map((certificate) => certificate.contributor.id)));
-			const operatorContributorIds = contributorIds.length
-				? new Set(
-						(
-							await this.db.contribution.findMany({
-								where: {
-									contributorId: { in: contributorIds },
-									campaign: {
-										programId: {
-											in: Array.from(operatorProgramIds),
-										},
-									},
-								},
-								select: { contributorId: true },
-								distinct: ['contributorId'],
-							})
-						).map((contribution) => contribution.contributorId),
-					)
-				: new Set<string>();
 
 			const tableRows: DonationCertificateTableViewRow[] = certificates.map((c) => ({
 				id: c.id,
@@ -177,7 +155,6 @@ export class DonationCertificateReadService extends BaseService {
 				email: c.contributor.contact?.email ?? '',
 				storagePath: c.storagePath,
 				createdAt: c.createdAt,
-				permission: operatorContributorIds.has(c.contributor.id) ? ProgramPermission.operator : ProgramPermission.owner,
 			}));
 
 			return this.resultOk({ tableRows, totalCount });

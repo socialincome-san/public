@@ -55,13 +55,11 @@ export default function ContributorsForm({
 	onError,
 	onCancel,
 	contributorId,
-	readOnly,
 }: {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	contributorId?: string;
-	readOnly: boolean;
 }) {
 	const [formSchema, setFormSchema] = useState<ContributorFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [contributor, setContributor] = useState<ContributorPayload>();
@@ -127,12 +125,7 @@ export default function ContributorsForm({
 		}
 	}, [contributorId, onError]);
 
-	let mode: 'readonly' | 'edit' | 'add' = 'add';
-	if (readOnly) {
-		mode = 'readonly';
-	} else if (contributorId) {
-		mode = 'edit';
-	}
+	const mode: 'edit' | 'add' = contributorId ? 'edit' : 'add';
 
 	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 }

@@ -24,7 +24,6 @@ type CandidateFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
-	readOnly?: boolean;
 	candidateId?: string;
 	sessionType?: Session['type'];
 };
@@ -115,7 +114,6 @@ export const CandidateForm = ({
 	onError,
 	onCancel,
 	candidateId,
-	readOnly,
 	sessionType = 'user',
 }: CandidateFormProps) => {
 	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(sessionType));
@@ -254,12 +252,7 @@ export const CandidateForm = ({
 		});
 	}, [sessionType]);
 
-	let mode: 'readonly' | 'edit' | 'add' = 'add';
-	if (readOnly) {
-		mode = 'readonly';
-	} else if (candidateId) {
-		mode = 'edit';
-	}
+	const mode = candidateId ? 'edit' : 'add';
 
 	return (
 		<DynamicForm

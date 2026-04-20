@@ -16,7 +16,7 @@ export default async function ProgramSurveysPage({ params, searchParams }: Props
 				variant="embedded"
 				searchParams={{
 					...resolvedSearchParams,
-					...(typeof resolvedSearchParams?.program === 'string' ? {} : { program: programId }),
+					program: programId,
 				}}
 			/>
 		</Card>

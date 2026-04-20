@@ -11,7 +11,6 @@ type Props = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	candidateId?: string;
-	readOnly: boolean;
 	sessionType: Session['type'];
 	errorMessage: string | null;
 	onError: (error: string) => void;
@@ -21,7 +20,6 @@ export const CandidateDialog = ({
 	open,
 	onOpenChange,
 	candidateId,
-	readOnly,
 	sessionType,
 	errorMessage,
 	onError,
@@ -32,12 +30,7 @@ export const CandidateDialog = ({
 		logger.error('Candidate Form Error', { error });
 	};
 
-	let dialogTitle = 'New Candidate';
-	if (readOnly) {
-		dialogTitle = 'View Candidate';
-	} else if (candidateId) {
-		dialogTitle = 'Edit Candidate';
-	}
+	const dialogTitle = candidateId ? 'Edit Candidate' : 'New Candidate';
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
@@ -55,7 +48,6 @@ export const CandidateDialog = ({
 
 				<CandidateForm
 					candidateId={candidateId}
-					readOnly={readOnly}
 					onSuccess={() => onOpenChange(false)}
 					onCancel={() => onOpenChange(false)}
 					onError={handleError}

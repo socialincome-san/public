@@ -33,7 +33,6 @@ const CandidatesDataLoader = async ({ searchParams }: SearchParamsPageProps) => 
 		<CandidatesTableClient
 			rows={rows}
 			error={error}
-			readOnly={false}
 			query={{ ...tableQuery, totalRows }}
 			countryFilterOptions={countryFilterOptions}
 			genderFilterOptions={genderFilterOptions}

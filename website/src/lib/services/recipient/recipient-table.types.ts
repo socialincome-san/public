@@ -1,4 +1,5 @@
 import { CountryCode, ProgramPermission } from '@/generated/prisma/client';
+import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 import type { RecipientLifecycleStatus } from './recipient.types';
 
 export type RecipientTableViewRow = {
@@ -8,7 +9,7 @@ export type RecipientTableViewRow = {
 	firstName: string;
 	lastName: string;
 	paymentCode: string | null;
-	dateOfBirth: Date | string | null;
+	dateOfBirth: Date | typeof OBFUSCATED_SENTINEL | null;
 	startDate: Date | null;
 	localPartnerName: string | null;
 	suspendedAt: Date | null;
@@ -20,7 +21,6 @@ export type RecipientTableViewRow = {
 	payoutsProgressPercent: number;
 	createdAt: Date;
 	status: RecipientLifecycleStatus;
-	permission: ProgramPermission;
 };
 
 export type RecipientTableView = {
@@ -60,12 +60,10 @@ export type UpcomingOnboardingTableViewRow = {
 	startDate: Date;
 	daysUntilStart: number;
 	createdAt: Date;
-	permission: ProgramPermission;
 };
 
 export type RecipientUpcomingOnboardingPaginatedTableView = {
 	tableRows: UpcomingOnboardingTableViewRow[];
 	totalCount: number;
 	programFilterOptions: RecipientProgramFilterOption[];
-	permission: ProgramPermission;
 };

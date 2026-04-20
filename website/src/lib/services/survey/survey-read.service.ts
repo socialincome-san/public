@@ -94,9 +94,108 @@ export class SurveyReadService extends BaseService {
 		return crypto.randomBytes(bytes).toString('base64url');
 	}
 
+	private async getPaginatedTableViewForAccessiblePrograms(
+		accessiblePrograms: { programId: string; programName: string; permission: ProgramPermission }[],
+		query: SurveyTableQuery,
+	): Promise<ServiceResult<SurveyPaginatedTableView>> {
+		if (accessiblePrograms.length === 0) {
+			return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [] });
+		}
+
+		const programIds = accessiblePrograms.map((program) => program.programId);
+		const selectedProgramIdRaw = query.programId?.trim();
+		const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+		const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
+		const programFilterOptions = Array.from(
+			new Map(accessiblePrograms.map((program) => [program.programId, { id: program.programId, name: program.programName }])).values(),
+		);
+		if (selectedProgramId && filteredProgramIds.length === 0) {
+			return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions });
+		}
+		const search = query.search.trim();
+		const where = search
+			? {
+					AND: [
+						{ recipient: { programId: { in: filteredProgramIds } } },
+						{
+							OR: [
+								{ id: { contains: search, mode: 'insensitive' as const } },
+								{ name: { contains: search, mode: 'insensitive' as const } },
+								{ recipient: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
+								{ recipient: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
+								{ recipient: { program: { name: { contains: search, mode: 'insensitive' as const } } } },
+							],
+						},
+					],
+				}
+			: { recipient: { programId: { in: filteredProgramIds } } };
+
+		const [surveys, totalCount] = await Promise.all([
+			this.db.survey.findMany({
+				where,
+				select: {
+					id: true,
+					name: true,
+					questionnaire: true,
+					status: true,
+					language: true,
+					dueAt: true,
+					completedAt: true,
+					createdAt: true,
+					accessEmail: true,
+					accessPw: true,
+					recipient: {
+						select: {
+							id: true,
+							contact: { select: { firstName: true, lastName: true } },
+							program: { select: { id: true, name: true } },
+						},
+					},
+				},
+				orderBy: this.buildSurveyOrderBy(query),
+				skip: (query.page - 1) * query.pageSize,
+				take: query.pageSize,
+			}),
+			this.db.survey.count({ where }),
+		]);
+
+		const tableRows: SurveyTableViewRow[] = surveys
+			.filter((survey) => survey.recipient.program !== null)
+			.map((survey) => {
+				const programId = survey.recipient.program!.id;
+
+				return {
+					id: survey.id,
+					name: survey.name,
+					recipientName: `${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
+					programId,
+					programName: survey.recipient.program!.name,
+					questionnaire: survey.questionnaire,
+					status: survey.status,
+					language: survey.language,
+					dueAt: survey.dueAt,
+					completedAt: survey.completedAt,
+					createdAt: survey.createdAt,
+					surveyUrl: this.buildSurveyUrl({
+						surveyId: survey.id,
+						recipientId: survey.recipient.id,
+						accessEmail: survey.accessEmail,
+						accessPw: survey.accessPw,
+					}),
+				};
+			});
+
+		return this.resultOk({ tableRows, totalCount, programFilterOptions });
+	}
+
 	async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
-			const paginated = await this.getPaginatedTableView(userId, {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const paginated = await this.getPaginatedTableViewForAccessiblePrograms(accessibleProgramsResult.data, {
 				page: 1,
 				pageSize: 10_000,
 				search: '',
@@ -120,102 +219,10 @@ export class SurveyReadService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const accessiblePrograms = accessibleProgramsResult.data;
-			if (accessiblePrograms.length === 0) {
-				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [] });
-			}
-
-			const programIds = accessiblePrograms.map((p) => p.programId);
-			const selectedProgramIdRaw = query.programId?.trim();
-			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
-			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
-			const programFilterOptions = Array.from(
-				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
+			return this.getPaginatedTableViewForAccessiblePrograms(
+				accessibleProgramsResult.data.filter((program) => program.permission === ProgramPermission.operator),
+				query,
 			);
-			if (selectedProgramId && filteredProgramIds.length === 0) {
-				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions });
-			}
-			const search = query.search.trim();
-			const where = search
-				? {
-						AND: [
-							{ recipient: { programId: { in: filteredProgramIds } } },
-							{
-								OR: [
-									{ id: { contains: search, mode: 'insensitive' as const } },
-									{ name: { contains: search, mode: 'insensitive' as const } },
-									{ recipient: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
-									{ recipient: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
-									{ recipient: { program: { name: { contains: search, mode: 'insensitive' as const } } } },
-								],
-							},
-						],
-					}
-				: { recipient: { programId: { in: filteredProgramIds } } };
-
-			const [surveys, totalCount] = await Promise.all([
-				this.db.survey.findMany({
-					where,
-					select: {
-						id: true,
-						name: true,
-						questionnaire: true,
-						status: true,
-						language: true,
-						dueAt: true,
-						completedAt: true,
-						createdAt: true,
-						accessEmail: true,
-						accessPw: true,
-						recipient: {
-							select: {
-								id: true,
-								contact: { select: { firstName: true, lastName: true } },
-								program: { select: { id: true, name: true } },
-							},
-						},
-					},
-					orderBy: this.buildSurveyOrderBy(query),
-					skip: (query.page - 1) * query.pageSize,
-					take: query.pageSize,
-				}),
-				this.db.survey.count({ where }),
-			]);
-
-			const tableRows: SurveyTableViewRow[] = surveys
-				.filter((s) => s.recipient.program !== null)
-				.map((survey) => {
-					const programId = survey.recipient.program!.id;
-
-					const programPermissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
-
-					const permission = programPermissions.includes(ProgramPermission.operator)
-						? ProgramPermission.operator
-						: ProgramPermission.owner;
-
-					return {
-						id: survey.id,
-						name: survey.name,
-						recipientName: `${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
-						programId,
-						programName: survey.recipient.program!.name,
-						questionnaire: survey.questionnaire,
-						status: survey.status,
-						language: survey.language,
-						dueAt: survey.dueAt,
-						completedAt: survey.completedAt,
-						createdAt: survey.createdAt,
-						surveyUrl: this.buildSurveyUrl({
-							surveyId: survey.id,
-							recipientId: survey.recipient.id,
-							accessEmail: survey.accessEmail,
-							accessPw: survey.accessPw,
-						}),
-						permission,
-					};
-				});
-
-			return this.resultOk({ tableRows, totalCount, programFilterOptions });
 		} catch (error) {
 			this.logger.error(error);
 
@@ -252,7 +259,9 @@ export class SurveyReadService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const accessiblePrograms = accessibleProgramsResult.data;
+			const accessiblePrograms = accessibleProgramsResult.data.filter(
+				(program) => program.permission === ProgramPermission.operator,
+			);
 			if (accessiblePrograms.length === 0) {
 				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [] });
 			}
@@ -341,12 +350,6 @@ export class SurveyReadService extends BaseService {
 				.map((survey) => {
 					const programId = survey.recipient.program!.id;
 
-					const permissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
-
-					const permission = permissions.includes(ProgramPermission.operator)
-						? ProgramPermission.operator
-						: ProgramPermission.owner;
-
 					return {
 						id: survey.id,
 						name: survey.name,
@@ -365,7 +368,6 @@ export class SurveyReadService extends BaseService {
 							accessEmail: survey.accessEmail,
 							accessPw: survey.accessPw,
 						}),
-						permission,
 					};
 				});
 
@@ -379,14 +381,25 @@ export class SurveyReadService extends BaseService {
 
 	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
-			const base = await this.getTableView(userId);
-			if (!base.success) {
-				return base;
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+			const paginated = await this.getPaginatedTableViewForAccessiblePrograms(
+				accessibleProgramsResult.data.filter((program) => program.programId === programId),
+				{
+					page: 1,
+					pageSize: 10_000,
+					search: '',
+					programId,
+				},
+			);
+			if (!paginated.success) {
+				return this.resultFail(paginated.error);
+			}
 
-			return this.resultOk({ tableRows: filteredRows });
+			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
 			this.logger.error(error);
 
@@ -451,7 +464,9 @@ export class SurveyReadService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const accessiblePrograms = accessibleProgramsResult.data;
+			const accessiblePrograms = accessibleProgramsResult.data.filter(
+				(program) => program.permission === ProgramPermission.operator,
+			);
 			if (accessiblePrograms.length === 0) {
 				return this.resultOk({ surveys: [] });
 			}
