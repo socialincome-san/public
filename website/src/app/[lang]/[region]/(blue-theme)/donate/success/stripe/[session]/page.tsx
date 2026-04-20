@@ -1,10 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { PurchaseEventTracker } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/purchase-event-tracker';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
 import { CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
 
@@ -15,6 +15,26 @@ type StripeSuccessPageParams = {
 type StripeSuccessPageProps = {
 	params: Promise<StripeSuccessPageParams>;
 };
+
+const ZERO_DECIMAL = new Set([
+	'bif',
+	'clp',
+	'djf',
+	'gnf',
+	'jpy',
+	'kmf',
+	'krw',
+	'mga',
+	'pyg',
+	'rwf',
+	'ugx',
+	'vnd',
+	'vuv',
+	'xaf',
+	'xof',
+	'xpf',
+]);
+const THREE_DECIMAL = new Set(['bhd', 'jod', 'kwd', 'omr', 'tnd']);
 
 export default async function Page({ params }: StripeSuccessPageProps) {
 	const { lang, region, session } = await params;
@@ -28,6 +48,9 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 
 	const checkoutSession = sessionResult.data;
 	const recurring = checkoutSession.mode === 'subscription';
+	const currency = (checkoutSession.currency ?? 'chf').toLowerCase();
+	const divisor = ZERO_DECIMAL.has(currency) ? 1 : THREE_DECIMAL.has(currency) ? 1000 : 100;
+	const value = (checkoutSession.amount_total ?? 0) / divisor;
 
 	const contributorResult = await services.stripe.getContributorFromCheckoutSession(checkoutSession);
 	if (!contributorResult.success) {
@@ -40,6 +63,12 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 
 	return (
 		<div className="mx-auto flex max-w-3xl flex-col space-y-8">
+			<PurchaseEventTracker
+				transactionId={checkoutSession.id}
+				value={value}
+				currency={currency.toUpperCase()}
+				recurring={recurring}
+			/>
 			<Typography size="4xl" color="accent" weight="bold">
 				{translator.t('success.title')}
 			</Typography>
