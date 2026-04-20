@@ -146,17 +146,18 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 		});
 	};
 
-	const onDelete = payoutId && payout?.status === PayoutStatus.failed
-		? () => {
-				startTransition(async () => {
-					const res = await deletePayoutAction(payoutId);
-					handleServiceResult(res, {
-						onSuccess: () => onSuccess?.(),
-						onError: (error) => onError?.(error),
+	const onDelete =
+		payoutId && payout?.status === PayoutStatus.failed
+			? () => {
+					startTransition(async () => {
+						const res = await deletePayoutAction(payoutId);
+						handleServiceResult(res, {
+							onSuccess: () => onSuccess?.(),
+							onError: (error) => onError?.(error),
+						});
 					});
-				});
-			}
-		: undefined;
+				}
+			: undefined;
 
 	let mode: 'readonly' | 'edit' | 'add' = 'add';
 	if (readOnly) {
