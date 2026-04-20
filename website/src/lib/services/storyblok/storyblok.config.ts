@@ -1,6 +1,7 @@
 import { CampaignGridBlock } from '@/components/content-blocks/campaign-grid';
 import { CountryGridBlock } from '@/components/content-blocks/country-grid';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
+import { DownloadsBlock } from '@/components/content-blocks/downloads';
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { FocusGridBlock } from '@/components/content-blocks/focus-grid';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
@@ -28,6 +29,7 @@ const storyblokComponents = {
 	page: PageContentType,
 	countryGrid: CountryGridBlock,
 	donationsTotal: DonationsTotalBlockServer,
+	downloads: DownloadsBlock,
 	focusGrid: FocusGridBlock,
 	heroVideo: HeroVideoBlockServer,
 	impactMeasurement: ImpactMeasurementBlock,

@@ -112,6 +112,7 @@ export interface Download {
   title: string;
   file: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   language?: string;
+  linkName: string;
   component: "download";
   _uid: string;
   [k: string]: unknown;
@@ -119,6 +120,9 @@ export interface Download {
 
 export interface Downloads {
   heading?: string;
+  tableHeaderLabelFilename: string;
+  tableHeaderLabelInfo: string;
+  tableHeaderLabelLink: string;
   files: Download[];
   component: "downloads";
   _uid: string;
@@ -321,15 +325,21 @@ export interface Page {
 }
 
 export interface Person {
+  displayInOverviewPage?: boolean;
   fullName: string;
   firstName: string;
   lastName: string;
   avatar: StoryblokAsset;
   bio?: string;
-  displayInOverviewPage?: boolean;
   githubName?: string;
   linkedinName?: string;
-  is_volunteer?: boolean;
+  volunteerSince?: string;
+  volunteerStatus?: "" | "active" | "inactive" | "board_member";
+  primaryRole?: number | string;
+  fieldTrips?: {
+    [k: string]: unknown;
+  }[];
+  countryOffice?: ("" | "GHA" | "SLE" | "LBR")[];
   component: "person";
   _uid: string;
   [k: string]: unknown;
