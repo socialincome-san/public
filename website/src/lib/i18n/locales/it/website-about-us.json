@@ -102,11 +102,12 @@
 			"research": "Ricerca",
 			"design": "Design",
 			"editorial": "Editoriale e Contenuti",
-			"socialmedia": "Social Media"
+			"socialmedia": "Social Media",
+			"volunteer-coordinator": "Coordinamento dei volontari"
 		},
 		"groups": {
 			"staff": {
-				"name": "Staff locale",
+				"name": "Uffici nazionali",
 				"subtitle": "Lavorando sul campo, garantendo che i beneficiari e i partner abbiano un punto di contatto affidabile.",
 				"description": "Il personale locale si occupa delle operazioni sul territorio e fornisce supporto ai partner e ai beneficiari. Le loro esperienze vengono incorporate negli strumenti tecnologici che sviluppiamo. Ricevono una retribuzione equa in base agli standard locali."
 			},
