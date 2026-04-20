@@ -35,6 +35,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 					<div className="divide-y divide-gray-200">
 						{blok.files.map((download) => {
 							const href = getFileHref(download.file);
+
 							return (
 								<div
 									key={download._uid}
@@ -48,12 +49,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 									</div>
 									<div className="justify-self-end">
 										{href ? (
-											<Link
-												href={href}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="text-primary underline"
-											>
+											<Link href={href} target="_blank" rel="noopener noreferrer" className="text-primary underline">
 												{download.linkName}
 											</Link>
 										) : (
