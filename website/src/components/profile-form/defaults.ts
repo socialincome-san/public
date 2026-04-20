@@ -34,7 +34,7 @@ export const buildDefaultValues = (
 		return {
 			type: 'local-partner',
 			name: session.name ?? '',
-			causes: session.causes ?? [],
+			focuses: session.focuses ?? [],
 			firstName: session.firstName ?? '',
 			lastName: session.lastName ?? '',
 			email: session.email ?? '',

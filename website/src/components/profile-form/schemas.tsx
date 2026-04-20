@@ -1,4 +1,4 @@
-import { Cause, ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/enums';
+import { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/enums';
 import { z } from 'zod';
 
 const addressSchema = z.object({
@@ -27,7 +27,7 @@ const contributorSchema = z.object({
 const localPartnerSchema = z.object({
 	type: z.literal('local-partner'),
 	name: z.string().min(1),
-	causes: z.array(z.nativeEnum(Cause)).optional(),
+	focuses: z.array(z.string().trim().min(1)).optional(),
 	firstName: z.string().min(1),
 	lastName: z.string().min(1),
 	email: z.string().email(),

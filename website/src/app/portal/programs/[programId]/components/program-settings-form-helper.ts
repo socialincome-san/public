@@ -1,5 +1,5 @@
 import type { FormField } from '@/components/dynamic-form/dynamic-form';
-import { Cause, PayoutInterval, Profile } from '@/generated/prisma/enums';
+import { PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { ProgramSettingsUpdateInput } from '@/lib/services/program/program.types';
 
 const toNumber = (value: FormField['value'], fallback = 0): number => {
@@ -17,19 +17,17 @@ const toNumber = (value: FormField['value'], fallback = 0): number => {
 };
 
 const PAYOUT_INTERVAL_VALUES: readonly string[] = Object.values(PayoutInterval);
-const CAUSE_VALUES: readonly string[] = Object.values(Cause);
 const PROFILE_VALUES: readonly string[] = Object.values(Profile);
 
 const isPayoutInterval = (value: string): value is PayoutInterval => PAYOUT_INTERVAL_VALUES.includes(value);
 
-const isCause = (value: string): value is Cause => CAUSE_VALUES.includes(value);
 const isProfile = (value: string): value is Profile => PROFILE_VALUES.includes(value);
 
 const toPayoutInterval = (value: FormField['value']): PayoutInterval =>
 	typeof value === 'string' && isPayoutInterval(value) ? value : PayoutInterval.monthly;
 
-const toCauses = (value: FormField['value']): Cause[] =>
-	Array.isArray(value) ? value.filter((item): item is Cause => typeof item === 'string' && isCause(item)) : [];
+const toFocuses = (value: FormField['value']): string[] =>
+	Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0) : [];
 
 const toProfiles = (value: FormField['value']): Profile[] =>
 	Array.isArray(value) ? value.filter((item): item is Profile => typeof item === 'string' && isProfile(item)) : [];
@@ -44,7 +42,7 @@ type ProgramSettingsFormFields = {
 	programDurationInMonths: FormField;
 	payoutPerInterval: FormField;
 	payoutInterval: FormField;
-	targetCauses: FormField;
+	targetFocuses: FormField;
 	targetProfiles: FormField;
 	ownerOrganizations: FormField;
 	operatorOrganizations: FormField;
@@ -68,7 +66,7 @@ export const buildUpdateProgramSettingsInput = (
 		programDurationInMonths: toNumber(fields.programDurationInMonths.value),
 		payoutPerInterval: toNumber(fields.payoutPerInterval.value),
 		payoutInterval: toPayoutInterval(fields.payoutInterval.value),
-		targetCauses: toCauses(fields.targetCauses.value),
+		targetFocuses: toFocuses(fields.targetFocuses.value),
 		targetProfiles: toProfiles(fields.targetProfiles.value),
 		ownerOrganizationIds: toStringArray(fields.ownerOrganizations.value),
 		operatorOrganizationIds: toStringArray(fields.operatorOrganizations.value),

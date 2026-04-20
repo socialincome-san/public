@@ -81,7 +81,9 @@ export class ProgramWriteService extends BaseService {
 					programDurationInMonths: input.programDurationInMonths,
 					payoutPerInterval: input.payoutPerInterval,
 					payoutInterval: input.payoutInterval,
-					targetCauses: input.targetCauses,
+					targetFocuses: {
+						create: input.targetFocuses.map((focusId) => ({ focusId })),
+					},
 					targetProfiles: input.targetProfiles,
 				},
 			});
@@ -115,7 +117,7 @@ export class ProgramWriteService extends BaseService {
 					program.id,
 					input.amountOfRecipientsForStart,
 					country.isoCode,
-					input.targetCauses,
+					input.targetFocuses,
 					input.targetProfiles,
 				);
 
@@ -269,7 +271,10 @@ export class ProgramWriteService extends BaseService {
 						programDurationInMonths: parsedInput.programDurationInMonths,
 						payoutPerInterval: parsedInput.payoutPerInterval,
 						payoutInterval: parsedInput.payoutInterval,
-						targetCauses: parsedInput.targetCauses,
+						targetFocuses: {
+							deleteMany: {},
+							create: parsedInput.targetFocuses.map((focusId) => ({ focusId })),
+						},
 						targetProfiles: parsedInput.targetProfiles,
 					},
 				});

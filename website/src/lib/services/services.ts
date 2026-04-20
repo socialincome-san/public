@@ -27,6 +27,9 @@ import { ExpenseValidationService } from './expense/expense-validation.service';
 import { ExpenseWriteService } from './expense/expense-write.service';
 import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
+import { FocusReadService } from './focus/focus-read.service';
+import { FocusValidationService } from './focus/focus-validation.service';
+import { FocusWriteService } from './focus/focus-write.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
@@ -136,6 +139,9 @@ const contributorWrite = new ContributorWriteService(
 );
 const campaignValidation = new CampaignValidationService(prisma);
 const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
+const focusValidation = new FocusValidationService(prisma);
+const focusRead = new FocusReadService(prisma, userRead);
+const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
 const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
 const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
@@ -180,6 +186,7 @@ export const services = {
 	read: {
 		candidate: candidateRead,
 		campaign: campaignRead,
+		focus: focusRead,
 		contribution: contributionRead,
 		contributor: contributorRead,
 		country: countryRead,
@@ -198,6 +205,7 @@ export const services = {
 	write: {
 		candidate: candidateWrite,
 		campaign: campaignWrite,
+		focus: focusWrite,
 		contribution: contributionWrite,
 		contributor: contributorWrite,
 		country: countryWrite,

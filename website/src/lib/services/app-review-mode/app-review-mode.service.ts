@@ -48,7 +48,6 @@ export class AppReviewModeService extends BaseService {
 				accountId: 'stark-industries-account',
 				legacyFirestoreId: null,
 				name: 'Stark Industries',
-				causes: [],
 				contactId: 'stark-industries-contact',
 				createdAt: now(),
 				updatedAt: now(),
@@ -84,7 +83,6 @@ export class AppReviewModeService extends BaseService {
 				programDurationInMonths: 60,
 				payoutPerInterval: new Prisma.Decimal(5000000),
 				payoutInterval: PayoutInterval.monthly,
-				targetCauses: [],
 				targetProfiles: [],
 				countryId: 'usa',
 				country: {

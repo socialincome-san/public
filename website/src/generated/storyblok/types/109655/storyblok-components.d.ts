@@ -19,7 +19,7 @@ export interface Article {
   subtitle?: string;
   leadText?: string;
   content: StoryblokRichtext;
-  author: ISbStoryData<Person> | string;
+  author: ISbStoryData<Author> | ISbStoryData<Person> | string;
   displayInOverviewPage?: boolean;
   originalLanguage?: "" | "en" | "fr" | "de" | "it";
   type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
@@ -40,20 +40,6 @@ export interface ArticleType {
   [k: string]: unknown;
 }
 
-export interface Person {
-  fullName: string;
-  firstName: string;
-  lastName: string;
-  avatar: StoryblokAsset;
-  bio?: string;
-  displayInOverviewPage?: boolean;
-  githubName?: string;
-  linkedinName?: string;
-  component: "person";
-  _uid: string;
-  [k: string]: unknown;
-}
-
 export interface BannerSection {
   text: StoryblokRichtext;
   color: "" | "#fbedd1" | "#cadde9";
@@ -70,9 +56,45 @@ export interface Button {
   [k: string]: unknown;
 }
 
+export interface Campaign {
+  id: string;
+  title: string;
+  heroImage: StoryblokAsset;
+  description: string;
+  component: "campaign";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface CampaignDonate {
   campaignId?: string;
   component: "campaignDonate";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface CampaignGrid {
+  showAllCampaigns?: boolean;
+  campaigns?: (ISbStoryData<Campaign> | string)[];
+  component: "campaignGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Country {
+  isoCode: string;
+  title: string;
+  description: string;
+  heroImage: StoryblokAsset;
+  component: "Country";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface CountryGrid {
+  showAllCountries?: boolean;
+  countries?: (ISbStoryData<Country> | string)[];
+  component: "countryGrid";
   _uid: string;
   [k: string]: unknown;
 }
@@ -99,6 +121,41 @@ export interface EmbeddedVideo {
   muxPlaybackId?: string;
   caption?: string;
   component: "embeddedVideo";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Faq {
+  question: string;
+  answer?: string;
+  component: "faq";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface FaqSelection {
+  heading?: string;
+  questions: (ISbStoryData<Faq> | string)[];
+  button?: Button[];
+  component: "faqSelection";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Focus {
+  id: string;
+  heroImage: StoryblokAsset;
+  title: string;
+  description: string;
+  component: "Focus";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface FocusGrid {
+  showAllFocuses?: boolean;
+  focuses?: (ISbStoryData<Focus> | string)[];
+  component: "focusGrid";
   _uid: string;
   [k: string]: unknown;
 }
@@ -130,6 +187,12 @@ export interface ImageWithCaption {
   [k: string]: unknown;
 }
 
+export interface ImpactMeasurement {
+  component: "impactMeasurement";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface JournalTeasers {
   heading?: string;
   articlesDisplayMode: "latest" | "selected";
@@ -148,6 +211,24 @@ export interface Layout {
   [k: string]: unknown;
 }
 
+export interface LocalPartner {
+  id: string;
+  heroImage: StoryblokAsset;
+  title: string;
+  description: string;
+  component: "Local Partner";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface LocalPartnerGrid {
+  showAllLocalPartners?: boolean;
+  localPartners?: (ISbStoryData<LocalPartner> | string)[];
+  component: "localPartnerGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
@@ -161,6 +242,8 @@ export interface MenuItem {
 export interface MenuItemGroup {
   label: string;
   items?: MenuItem[];
+  overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  overviewLabel?: string;
   component: "menuItemGroup";
   _uid: string;
   [k: string]: unknown;
@@ -194,8 +277,55 @@ export interface NewsletterSignup {
 }
 
 export interface Page {
-  content: (DonationsTotal | HeroVideo | ImageText | JournalTeasers | ModalCards | Text)[];
+  content: (
+    | CampaignGrid
+    | CountryGrid
+    | DonationsTotal
+    | FaqSelection
+    | FocusGrid
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | LocalPartnerGrid
+    | ModalCards
+    | ProgramGrid
+    | Text
+  )[];
   component: "page";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Person {
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  avatar: StoryblokAsset;
+  bio?: string;
+  displayInOverviewPage?: boolean;
+  githubName?: string;
+  linkedinName?: string;
+  is_volunteer?: boolean;
+  component: "person";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Program {
+  id: string;
+  title: string;
+  heroImage: StoryblokAsset;
+  description: string;
+  component: "program";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface ProgramGrid {
+  showAllPrograms?: boolean;
+  programs?: (ISbStoryData<Program> | string)[];
+  component: "programGrid";
   _uid: string;
   [k: string]: unknown;
 }
@@ -229,13 +359,6 @@ export interface ReferencesGroup {
   [k: string]: unknown;
 }
 
-export interface Text {
-  content?: StoryblokRichtext;
-  component: "text";
-  _uid: string;
-  [k: string]: unknown;
-}
-
 export interface Tag {
   value: string;
   description?: string;
@@ -245,4 +368,25 @@ export interface Tag {
   [k: string]: unknown;
 }
 
-export type ContentType = ActionButton | Article | ArticleType | Person | Layout | Page | ReferenceArticle | Tag;
+export interface Text {
+  content?: StoryblokRichtext;
+  component: "text";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export type ContentType =
+  | ActionButton
+  | Article
+  | ArticleType
+  | Campaign
+  | Country
+  | Faq
+  | Focus
+  | Layout
+  | LocalPartner
+  | Page
+  | Person
+  | Program
+  | ReferenceArticle
+  | Tag;

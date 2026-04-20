@@ -39,7 +39,7 @@ export type ProfileFormTranslations = {
 	newsletterLabel: string;
 	language: string;
 	name: string;
-	causes: string;
+	focuses: string;
 };
 
 type Props = {
@@ -90,7 +90,7 @@ export const TranslatedProfileForm = async ({ session, language = 'en', isNewsle
 		newsletterLabel: translator.t('personal-info.newsletter-switch'),
 		language: translator.t('profile.form.language'),
 		name: translator.t('profile.form.name'),
-		causes: translator.t('profile.form.causes'),
+		focuses: translator.t('profile.form.focuses'),
 	};
 
 	return <ProfileForm session={session} translations={translations} isNewsletterSubscribed={isNewsletterSubscribed} />;
