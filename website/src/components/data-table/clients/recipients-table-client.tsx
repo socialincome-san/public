@@ -40,6 +40,7 @@ export const RecipientsTableClient = ({
 }: Props) => {
 	const canManageRecipients = sessionType === 'user';
 	const isReadOnly = readOnly ?? false;
+	const canDownloadCsv = sessionType === 'local-partner' || !isReadOnly;
 	const tableConfig = {
 		...recipientsTableConfig,
 		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => {
@@ -74,7 +75,7 @@ export const RecipientsTableClient = ({
 	};
 
 	const handleDownloadCsv = async () => {
-		if (isReadOnly) {
+		if (!canDownloadCsv) {
 			return;
 		}
 
@@ -95,7 +96,7 @@ export const RecipientsTableClient = ({
 		{
 			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
 			icon: <DownloadIcon />,
-			disabled: isCsvDownloading || isReadOnly,
+			disabled: isCsvDownloading || !canDownloadCsv,
 			onSelect: () => {
 				void handleDownloadCsv();
 			},
