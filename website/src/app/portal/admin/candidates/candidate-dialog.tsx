@@ -16,14 +16,7 @@ type Props = {
 	onError: (error: string) => void;
 };
 
-export const CandidateDialog = ({
-	open,
-	onOpenChange,
-	candidateId,
-	sessionType,
-	errorMessage,
-	onError,
-}: Props) => {
+export const CandidateDialog = ({ open, onOpenChange, candidateId, sessionType, errorMessage, onError }: Props) => {
 	const handleError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
 		onError(`Error saving candidate: ${errorMessage}`);

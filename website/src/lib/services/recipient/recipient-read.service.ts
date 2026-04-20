@@ -225,9 +225,7 @@ export class RecipientReadService extends BaseService {
 		});
 	}
 
-	private getRecipientTablePermission(
-		accessiblePrograms: { permission: ProgramPermission }[],
-	): ProgramPermission {
+	private getRecipientTablePermission(accessiblePrograms: { permission: ProgramPermission }[]): ProgramPermission {
 		return accessiblePrograms.some((program) => program.permission === ProgramPermission.operator)
 			? ProgramPermission.operator
 			: ProgramPermission.owner;
@@ -237,7 +235,9 @@ export class RecipientReadService extends BaseService {
 		accessiblePrograms: { programId: string; programName: string }[],
 	): RecipientProgramFilterOption[] {
 		return Array.from(
-			new Map(accessiblePrograms.map((program) => [program.programId, { id: program.programId, name: program.programName }])).values(),
+			new Map(
+				accessiblePrograms.map((program) => [program.programId, { id: program.programId, name: program.programName }]),
+			).values(),
 		);
 	}
 

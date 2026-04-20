@@ -107,7 +107,9 @@ export class SurveyReadService extends BaseService {
 		const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 		const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 		const programFilterOptions = Array.from(
-			new Map(accessiblePrograms.map((program) => [program.programId, { id: program.programId, name: program.programName }])).values(),
+			new Map(
+				accessiblePrograms.map((program) => [program.programId, { id: program.programId, name: program.programName }]),
+			).values(),
 		);
 		if (selectedProgramId && filteredProgramIds.length === 0) {
 			return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions });

@@ -30,9 +30,7 @@ export class PayoutProcessService extends BaseService {
 				return this.resultFail(accessResult.error);
 			}
 
-			const accessiblePrograms = accessResult.data.filter(
-				(program) => program.permission === ProgramPermission.operator,
-			);
+			const accessiblePrograms = accessResult.data.filter((program) => program.permission === ProgramPermission.operator);
 			if (accessiblePrograms.length === 0) {
 				return this.resultFail('No accessible programs found');
 			}

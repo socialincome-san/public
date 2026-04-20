@@ -139,7 +139,9 @@ export class ContributionReadService extends BaseService {
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const accessiblePrograms = accessibleProgramsResult.data.filter((program) => program.permission === ProgramPermission.operator);
+			const accessiblePrograms = accessibleProgramsResult.data.filter(
+				(program) => program.permission === ProgramPermission.operator,
+			);
 			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((p) => p.programId)));
 			if (accessibleProgramIds.length === 0) {
 				return this.resultOk({

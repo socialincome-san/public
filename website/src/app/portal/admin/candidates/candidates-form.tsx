@@ -109,13 +109,7 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): CandidateF
 	return base;
 };
 
-export const CandidateForm = ({
-	onSuccess,
-	onError,
-	onCancel,
-	candidateId,
-	sessionType = 'user',
-}: CandidateFormProps) => {
+export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessionType = 'user' }: CandidateFormProps) => {
 	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(sessionType));
 	const [candidate, setCandidate] = useState<CandidatePayload>();
 	const [isLoading, startTransition] = useTransition();
