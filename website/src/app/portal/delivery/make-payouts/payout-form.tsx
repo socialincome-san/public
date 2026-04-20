@@ -5,6 +5,7 @@ import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components
 import { PayoutStatus } from '@/generated/prisma/enums';
 import {
 	createPayoutAction,
+	deletePayoutAction,
 	getPayoutAction,
 	getPayoutRecipientOptionsAction,
 	updatePayoutAction,
@@ -145,6 +146,18 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 		});
 	};
 
+	const onDelete = payoutId && payout?.status === PayoutStatus.failed
+		? () => {
+				startTransition(async () => {
+					const res = await deletePayoutAction(payoutId);
+					handleServiceResult(res, {
+						onSuccess: () => onSuccess?.(),
+						onError: (error) => onError?.(error),
+					});
+				});
+			}
+		: undefined;
+
 	let mode: 'readonly' | 'edit' | 'add' = 'add';
 	if (readOnly) {
 		mode = 'readonly';
@@ -152,5 +165,14 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 		mode = 'edit';
 	}
 
-	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
+	return (
+		<DynamicForm
+			formSchema={formSchema}
+			isLoading={isLoading}
+			onSubmit={onSubmit}
+			onCancel={onCancel}
+			onDelete={onDelete}
+			mode={mode}
+		/>
+	);
 };
