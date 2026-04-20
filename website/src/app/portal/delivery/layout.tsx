@@ -3,8 +3,8 @@ import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getSessionByType } from '@/lib/firebase/current-account';
 
-import { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
+import { ReactNode } from 'react';
 
 type MonitoringLayoutProps = {
 	children: ReactNode;
