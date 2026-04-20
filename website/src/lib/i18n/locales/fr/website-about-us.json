@@ -103,11 +103,12 @@
 			"research": "Recherche",
 			"design": "Design",
 			"editorial": "Editorial et Contenu",
-			"socialmedia": "Réseaux sociaux"
+			"socialmedia": "Réseaux sociaux",
+			"volunteer-coordinator": "Coordination des bénévoles"
 		},
 		"groups": {
 			"staff": {
-				"name": "Personnel local",
+				"name": "Bureaux pays",
 				"subtitle": "Ils et elles gèrent et développent les activités dans le pays de destination.",
 				"description": "Le personnel local gère les opérations locales et offre un soutien aux partenaires et aux bénéficiaires. Leurs observations sont prises en compte dans les outils technologiques que nous développons. Ils perçoivent un salaire local équitable."
 			},
