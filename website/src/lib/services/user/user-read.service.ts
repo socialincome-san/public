@@ -1,4 +1,4 @@
-import { Prisma, UserRole } from '@/generated/prisma/client';
+import { Prisma, ProgramPermission, UserRole } from '@/generated/prisma/client';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -224,6 +224,7 @@ export class UserReadService extends BaseService {
 							programAccesses: {
 								select: {
 									program: { select: { id: true, name: true } },
+									permission: true,
 								},
 							},
 						},
@@ -260,6 +261,10 @@ export class UserReadService extends BaseService {
 					)
 				: [];
 
+			const hasAnyOperatorProgramAccess = Boolean(
+				user.activeOrganization?.programAccesses.some((a) => a.permission === ProgramPermission.operator),
+			);
+
 			const contact = user.contact;
 
 			const session: UserSession = {
@@ -279,6 +284,7 @@ export class UserReadService extends BaseService {
 				activeOrganization,
 				organizations,
 				programs,
+				hasAnyOperatorProgramAccess,
 			};
 
 			return this.resultOk(session);

@@ -78,6 +78,21 @@ export class ProgramAccessReadService extends BaseService {
 		return accesses.some((access) => access.permission === ProgramPermission.operator);
 	}
 
+	async isOperatorOfAtLeastOneProgram(userId: string): Promise<ServiceResult<boolean>> {
+		try {
+			const accessibleProgramsResult = await this.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			return this.resultOk(this.hasAnyOperatorAccess(accessibleProgramsResult.data));
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not check operator access: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getProgramPermission(userId: string, programId: string): Promise<ServiceResult<ProgramPermission | null>> {
 		try {
 			const accessibleProgramsResult = await this.getAccessiblePrograms(userId);
