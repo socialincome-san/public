@@ -12,7 +12,7 @@ export const TextCell = <TData, TValue>({ ctx, translatedValue }: Props<TData, T
 	const isObfuscated = raw === OBFUSCATED_SENTINEL;
 
 	return (
-		<span className={cn('inline-block', isObfuscated && 'select-none px-1 blur-[6px] saturate-150')}>
+		<span className={cn('inline-block', isObfuscated && 'px-1 blur-[6px] saturate-150 select-none')}>
 			{raw.length === 0 ? '—' : raw}
 		</span>
 	);

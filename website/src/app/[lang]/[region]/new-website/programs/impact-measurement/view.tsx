@@ -13,11 +13,7 @@ type ImpactMeasurementViewProps = {
 	variant?: 'standalone' | 'embedded';
 };
 
-export const ImpactMeasurementView = async ({
-	lang,
-	searchParams,
-	variant = 'standalone',
-}: ImpactMeasurementViewProps) => {
+export const ImpactMeasurementView = async ({ lang, searchParams, variant = 'standalone' }: ImpactMeasurementViewProps) => {
 	const normalizedSearchParams = Object.fromEntries(
 		Object.entries(searchParams).filter(([, value]) => typeof value === 'string'),
 	) as Record<string, string | undefined>;

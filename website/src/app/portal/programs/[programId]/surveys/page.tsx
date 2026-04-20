@@ -22,4 +22,3 @@ export default async function ProgramSurveysPage({ params, searchParams }: Props
 		</Card>
 	);
 }
-
