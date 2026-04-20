@@ -276,19 +276,22 @@ export class RecipientReadService extends BaseService {
 		const baseWhere: Prisma.RecipientWhereInput = {
 			programId: { in: filteredProgramIds },
 		};
-		const searchWhere: Prisma.RecipientWhereInput =
-			search.length > 0
-				? {
-						OR: [
-							{ id: { contains: search, mode: 'insensitive' } },
-							{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
-							{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
-							{ paymentInformation: { is: { code: { contains: search, mode: 'insensitive' } } } },
-							{ localPartner: { is: { name: { contains: search, mode: 'insensitive' } } } },
-							{ program: { is: { name: { contains: search, mode: 'insensitive' } } } },
-						],
-					}
-				: {};
+		const searchWhere: Prisma.RecipientWhereInput = search.length
+			? {
+					OR: [
+						{ id: { contains: search, mode: 'insensitive' as const } },
+						...(permission === ProgramPermission.operator
+							? [
+									{ contact: { is: { firstName: { contains: search, mode: 'insensitive' as const } } } },
+									{ contact: { is: { lastName: { contains: search, mode: 'insensitive' as const } } } },
+								]
+							: []),
+						{ paymentInformation: { is: { code: { contains: search, mode: 'insensitive' as const } } } },
+						{ localPartner: { is: { name: { contains: search, mode: 'insensitive' as const } } } },
+						{ program: { is: { name: { contains: search, mode: 'insensitive' as const } } } },
+					],
+				}
+			: {};
 		const where: Prisma.RecipientWhereInput = {
 			AND: [baseWhere, searchWhere],
 		};
