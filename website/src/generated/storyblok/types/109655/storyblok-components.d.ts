@@ -112,6 +112,7 @@ export interface Download {
   title: string;
   file: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   language?: string;
+  linkName: string;
   component: "download";
   _uid: string;
   [k: string]: unknown;
@@ -119,6 +120,9 @@ export interface Download {
 
 export interface Downloads {
   heading?: string;
+  tableHeaderLabelFilename: string;
+  tableHeaderLabelInfo: string;
+  tableHeaderLabelLink: string;
   files: Download[];
   component: "downloads";
   _uid: string;
@@ -191,6 +195,7 @@ export interface ImageText {
   content?: StoryblokRichtext;
   image: StoryblokAsset;
   layout: "" | "imageLeft" | "imageRight";
+  imageToTextRatio?: "" | "1/3" | "1/2" | "2/3";
   component: "imageText";
   _uid: string;
   [k: string]: unknown;
@@ -320,15 +325,21 @@ export interface Page {
 }
 
 export interface Person {
+  displayInOverviewPage?: boolean;
   fullName: string;
   firstName: string;
   lastName: string;
   avatar: StoryblokAsset;
   bio?: string;
-  displayInOverviewPage?: boolean;
   githubName?: string;
   linkedinName?: string;
-  is_volunteer?: boolean;
+  volunteerSince?: string;
+  volunteerStatus?: "" | "active" | "inactive" | "board_member";
+  primaryRole?: number | string;
+  fieldTrips?: {
+    [k: string]: unknown;
+  }[];
+  countryOffice?: ("" | "GHA" | "SLE" | "LBR")[];
   component: "person";
   _uid: string;
   [k: string]: unknown;
@@ -407,8 +418,8 @@ export interface Text {
 }
 
 export interface TwoColumnText {
-  left_text: StoryblokRichtext;
-  right_text: StoryblokRichtext;
+  leftText: StoryblokRichtext;
+  rightText: StoryblokRichtext;
   component: "twoColumnText";
   _uid: string;
   [k: string]: unknown;
