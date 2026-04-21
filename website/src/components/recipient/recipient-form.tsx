@@ -25,7 +25,6 @@ type RecipientFormProps = {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
-	readOnly?: boolean;
 	recipientId?: string;
 	programId?: string;
 	sessionType?: Session['type'];
@@ -128,7 +127,6 @@ export const RecipientForm = ({
 	onError,
 	onCancel,
 	recipientId,
-	readOnly,
 	programId,
 	sessionType = 'user',
 }: RecipientFormProps) => {
@@ -293,12 +291,7 @@ export const RecipientForm = ({
 		});
 	}, [sessionType, programId]);
 
-	let mode: 'readonly' | 'edit' | 'add' = 'add';
-	if (readOnly) {
-		mode = 'readonly';
-	} else if (recipientId) {
-		mode = 'edit';
-	}
+	const mode = recipientId ? 'edit' : 'add';
 
 	return (
 		<DynamicForm

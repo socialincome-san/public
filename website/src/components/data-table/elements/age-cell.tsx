@@ -1,6 +1,8 @@
 'use client';
 
 import { now } from '@/lib/utils/now';
+import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
+import { cn } from '@socialincome/ui';
 import { CellContext } from '@tanstack/react-table';
 import { differenceInYears } from 'date-fns';
 
@@ -26,6 +28,12 @@ type AgeCellProps<TData, TValue> = {
 
 export const AgeCell = <TData, TValue>({ ctx }: AgeCellProps<TData, TValue>) => {
 	const date = ctx.getValue() as Date | string | null;
+	const isObfuscated = date === OBFUSCATED_SENTINEL;
+
+	if (isObfuscated) {
+		return <span className={cn('inline-block px-1 blur-[6px] saturate-150 select-none')}>OB</span>;
+	}
+
 	const age = calculateAge(date);
 
 	if (age === null) {

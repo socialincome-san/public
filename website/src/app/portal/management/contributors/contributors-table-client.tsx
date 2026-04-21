@@ -8,7 +8,6 @@ import {
 } from '@/components/data-table/configs/contributors-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { ProgramPermission } from '@/generated/prisma/enums';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
@@ -19,13 +18,11 @@ import ContributorsForm from './contributors-form';
 export default function ContributorsTableClient({
 	rows,
 	error,
-	readOnly,
 	query,
 	countryFilterOptions = [],
 }: {
 	rows: ContributorTableViewRow[];
 	error: string | null;
-	readOnly?: boolean;
 	query?: TableQueryState & { totalRows: number };
 	countryFilterOptions?: { value: string; label: string }[];
 }) {
@@ -33,22 +30,14 @@ export default function ContributorsTableClient({
 	const [contributorId, setContributorId] = useState<string | undefined>();
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	const [rowReadOnly, setRowReadOnly] = useState(readOnly ?? false);
-
 	const openEmptyForm = () => {
 		setContributorId(undefined);
-		setRowReadOnly(readOnly ?? false);
 		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: ContributorTableViewRow) => {
 		setContributorId(row.id);
-		if (row.permission === ProgramPermission.owner) {
-			setRowReadOnly(true);
-		} else {
-			setRowReadOnly(readOnly ?? false);
-		}
 		setErrorMessage(null);
 		setOpen(true);
 	};
@@ -59,12 +48,7 @@ export default function ContributorsTableClient({
 		logger.error('Contributor Form Error', { error });
 	};
 
-	let dialogTitle = 'New Contributor';
-	if (rowReadOnly) {
-		dialogTitle = 'View Contributor';
-	} else if (contributorId) {
-		dialogTitle = 'Edit Contributor';
-	}
+	const dialogTitle = contributorId ? 'Edit Contributor' : 'New Contributor';
 
 	return (
 		<>
@@ -79,7 +63,6 @@ export default function ContributorsTableClient({
 					{
 						label: 'Add new contributor',
 						icon: <PlusIcon />,
-						disabled: readOnly,
 						onSelect: openEmptyForm,
 					},
 				]}
@@ -101,7 +84,6 @@ export default function ContributorsTableClient({
 
 					<ContributorsForm
 						contributorId={contributorId}
-						readOnly={rowReadOnly}
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}

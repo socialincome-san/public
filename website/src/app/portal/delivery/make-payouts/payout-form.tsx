@@ -22,7 +22,6 @@ type PayoutFormProps = {
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	payoutId?: string;
-	readOnly?: boolean;
 };
 
 export type PayoutFormSchema = {
@@ -72,7 +71,7 @@ const initialFormSchema: PayoutFormSchema = {
 	},
 };
 
-export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) => {
+export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFormProps) => {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [payout, setPayout] = useState<PayoutPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -145,12 +144,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 		});
 	};
 
-	let mode: 'readonly' | 'edit' | 'add' = 'add';
-	if (readOnly) {
-		mode = 'readonly';
-	} else if (payoutId) {
-		mode = 'edit';
-	}
+	const mode = payoutId ? 'edit' : 'add';
 
 	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 };

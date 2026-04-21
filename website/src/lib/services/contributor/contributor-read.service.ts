@@ -138,13 +138,19 @@ export class ContributorReadService extends BaseService {
 		}
 	}
 
-	async getOptions(userId: string): Promise<ServiceResult<ContributorOption[]>> {
+	async getEditableOptions(userId: string): Promise<ServiceResult<ContributorOption[]>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const accessibleProgramIds = Array.from(new Set(accessibleProgramsResult.data.map((program) => program.programId)));
+			const accessibleProgramIds = Array.from(
+				new Set(
+					accessibleProgramsResult.data
+						.filter((program) => program.permission === ProgramPermission.operator)
+						.map((program) => program.programId),
+				),
+			);
 			if (accessibleProgramIds.length === 0) {
 				return this.resultOk([]);
 			}
@@ -191,7 +197,7 @@ export class ContributorReadService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not fetch contributor options: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch editable contributor options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -204,8 +210,10 @@ export class ContributorReadService extends BaseService {
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const accessiblePrograms = accessibleProgramsResult.data;
-			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((program) => program.programId)));
+			const operatorAccessiblePrograms = accessibleProgramsResult.data.filter(
+				(program) => program.permission === ProgramPermission.operator,
+			);
+			const accessibleProgramIds = Array.from(new Set(operatorAccessiblePrograms.map((program) => program.programId)));
 			if (accessibleProgramIds.length === 0) {
 				return this.resultOk({
 					tableRows: [],
@@ -364,20 +372,6 @@ export class ContributorReadService extends BaseService {
 			);
 
 			const tableRows: ContributorTableViewRow[] = contributors.map((c) => ({
-				permission:
-					c.contributions.length === 0
-						? this.programAccessService.hasAnyOperatorAccess(accessiblePrograms)
-							? ProgramPermission.operator
-							: ProgramPermission.owner
-						: c.contributions.some((contribution) =>
-									accessiblePrograms.some(
-										(program) =>
-											program.programId === contribution.campaign.programId &&
-											program.permission === ProgramPermission.operator,
-									),
-							  )
-							? ProgramPermission.operator
-							: ProgramPermission.owner,
 				id: c.id,
 				firstName: c.contact?.firstName ?? '',
 				lastName: c.contact?.lastName ?? '',

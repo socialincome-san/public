@@ -3,7 +3,6 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getSurveysTableFilters, surveysTableConfig } from '@/components/data-table/configs/surveys-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import { ProgramPermission } from '@/generated/prisma/enums';
 import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
 import { ClipboardListIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -29,18 +28,15 @@ export const SurveysTableClient = ({
 }: Props) => {
 	const [isSurveyFormOpen, setIsSurveyFormOpen] = useState(false);
 	const [surveyId, setSurveyId] = useState<string | undefined>(undefined);
-	const [readOnly, setReadOnly] = useState(false);
 	const [isGenerationDialogOpen, setIsGenerationDialogOpen] = useState(false);
 
 	const openEmptyForm = () => {
 		setSurveyId(undefined);
-		setReadOnly(false);
 		setIsSurveyFormOpen(true);
 	};
 
 	const openEditForm = (row: SurveyTableViewRow) => {
 		setSurveyId(row.id);
-		setReadOnly(row.permission === ProgramPermission.owner);
 		setIsSurveyFormOpen(true);
 	};
 
@@ -48,7 +44,6 @@ export const SurveysTableClient = ({
 		setIsSurveyFormOpen(open);
 		if (!open) {
 			setSurveyId(undefined);
-			setReadOnly(false);
 		}
 	};
 
@@ -77,12 +72,7 @@ export const SurveysTableClient = ({
 				]}
 			/>
 
-			<SurveyFormDialog
-				open={isSurveyFormOpen}
-				onOpenChange={handleSurveyFormClose}
-				surveyId={surveyId}
-				readOnly={readOnly}
-			/>
+			<SurveyFormDialog open={isSurveyFormOpen} onOpenChange={handleSurveyFormClose} surveyId={surveyId} />
 
 			<GenerateSurveysDialog open={isGenerationDialogOpen} setOpen={setIsGenerationDialogOpen} />
 		</>

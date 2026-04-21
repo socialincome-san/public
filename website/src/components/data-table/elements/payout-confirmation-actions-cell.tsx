@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { ProgramPermission } from '@/generated/prisma/enums';
 import { confirmPayoutAction, contestPayoutAction } from '@/lib/server-actions/payout-confirmation-actions';
 import type { PayoutConfirmationTableViewRow } from '@/lib/services/payout/payout.types';
 import { CheckIcon, XIcon } from 'lucide-react';
@@ -17,22 +16,15 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 	const [confirmOpen, setConfirmOpen] = useState(false);
 	const [contestOpen, setContestOpen] = useState(false);
 
-	const hasEditAccess = payout.permission === ProgramPermission.operator;
-
 	return (
 		<>
 			<div className="flex gap-2">
-				<Button
-					size="sm"
-					onClick={() => setConfirmOpen(true)}
-					disabled={isPending || !hasEditAccess}
-					variant={hasEditAccess ? 'default' : 'secondary'}
-				>
+				<Button size="sm" onClick={() => setConfirmOpen(true)} disabled={isPending}>
 					<CheckIcon className="h-4 w-4" />
 					Confirm
 				</Button>
 
-				<Button size="sm" variant="destructive" onClick={() => setContestOpen(true)} disabled={isPending || !hasEditAccess}>
+				<Button size="sm" variant="destructive" onClick={() => setContestOpen(true)} disabled={isPending}>
 					<XIcon className="h-4 w-4" />
 					Contest
 				</Button>
@@ -55,7 +47,7 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 									void confirmPayoutAction(payout.id);
 								});
 							}}
-							disabled={isPending || !hasEditAccess}
+							disabled={isPending}
 						>
 							Confirm payout
 						</Button>
@@ -81,7 +73,7 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 									void contestPayoutAction(payout.id);
 								});
 							}}
-							disabled={isPending || !hasEditAccess}
+							disabled={isPending}
 						>
 							Contest payout
 						</Button>

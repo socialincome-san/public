@@ -7,7 +7,8 @@ test.beforeEach(async () => {
 });
 
 test('program surveys page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/programs/program-si-core-sl/surveys?sortBy=dueAt&sortDirection=asc');
-	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.goto('/portal/programs/program-si-core-sl/surveys');
+	await expect(page.getByText('What are the key categories that you spend your Social Income payments on?')).toBeVisible();
+	await page.getByTestId('impact-measurement-study-details-trigger').click();
 	await expectToHaveScreenshot(page);
 });
