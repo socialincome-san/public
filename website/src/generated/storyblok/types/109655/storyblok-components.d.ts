@@ -315,6 +315,8 @@ export interface Page {
     | ModalCards
     | ProgramGrid
     | TeamGrid
+    | Testimonial
+    | Testimonials
     | Text
     | TwoColumnText
     | VideoText
@@ -406,6 +408,24 @@ export interface TeamGrid {
   description?: StoryblokRichtext;
   person: (ISbStoryData<Person> | string)[];
   component: "teamGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Testimonial {
+  quote: string;
+  name: string;
+  country?: string;
+  image: StoryblokAsset;
+  component: "testimonial";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Testimonials {
+  testimonials: Testimonial[];
+  heading?: string;
+  component: "testimonials";
   _uid: string;
   [k: string]: unknown;
 }

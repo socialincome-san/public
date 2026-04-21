@@ -12,6 +12,7 @@ import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
+import { TestimonialsBlock } from '@/components/content-blocks/testimonials';
 import { TextBlock } from '@/components/content-blocks/text';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
@@ -41,6 +42,7 @@ const storyblokComponents = {
 	localPartnerGrid: LocalPartnerGridBlock,
 	programGrid: ProgramGridBlock,
 	teamGrid: TeamGridBlock,
+	testimonials: TestimonialsBlock,
 	videoText: VideoTextBlock,
 	twoColumnText: TwoColumnTextBlock,
 };
