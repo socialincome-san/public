@@ -207,7 +207,8 @@ export class RecipientReadService extends BaseService {
 				country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
 				firstName: permission === ProgramPermission.operator ? (recipient.contact?.firstName ?? '') : OBFUSCATED_SENTINEL,
 				lastName: permission === ProgramPermission.operator ? (recipient.contact?.lastName ?? '') : '',
-				paymentCode: recipient.paymentInformation?.code ?? null,
+				paymentCode:
+					permission === ProgramPermission.operator ? (recipient.paymentInformation?.code ?? null) : OBFUSCATED_SENTINEL,
 				dateOfBirth:
 					permission === ProgramPermission.operator ? (recipient.contact?.dateOfBirth ?? null) : OBFUSCATED_SENTINEL,
 				startDate: recipient.startDate ?? null,
