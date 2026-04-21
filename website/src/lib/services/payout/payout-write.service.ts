@@ -221,6 +221,54 @@ export class PayoutWriteService extends BaseService {
 		}
 	}
 
+	async delete(userId: string, payoutId: string): Promise<ServiceResult<{ id: string }>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const existing = await this.db.payout.findUnique({
+				where: { id: payoutId },
+				select: {
+					id: true,
+					status: true,
+					recipient: {
+						select: {
+							programId: true,
+						},
+					},
+				},
+			});
+
+			if (!existing) {
+				return this.resultFail('Payout not found');
+			}
+
+			if (!existing.recipient.programId) {
+				return this.resultFail('Recipient is not assigned to a program');
+			}
+
+			if (!this.programAccessService.hasOperatorAccess(accessResult.data, existing.recipient.programId)) {
+				return this.resultFail('No delete permission for this payout');
+			}
+
+			if (existing.status !== PayoutStatus.failed) {
+				return this.resultFail('Only payouts with status "failed" can be deleted');
+			}
+
+			await this.db.payout.delete({
+				where: { id: payoutId },
+			});
+
+			return this.resultOk({ id: payoutId });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not delete payout: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async updateStatusByRecipient(
 		recipientId: string,
 		payoutId: string,
