@@ -3,6 +3,7 @@ import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
+import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
@@ -182,6 +183,7 @@ export class RecipientReadService extends BaseService {
 		nowDate: Date,
 	): RecipientTableViewRow[] {
 		return recipients.map((recipient) => {
+			const permission = getPermission(recipient.program?.id ?? null);
 			const payoutsReceived = recipient.payouts.length;
 			const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
 			const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
@@ -203,10 +205,12 @@ export class RecipientReadService extends BaseService {
 				id: recipient.id,
 				firebaseAuthUserId: recipient.localPartner?.account?.firebaseAuthUserId ?? '',
 				country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
-				firstName: recipient.contact?.firstName ?? '',
-				lastName: recipient.contact?.lastName ?? '',
-				paymentCode: recipient.paymentInformation?.code ?? null,
-				dateOfBirth: recipient.contact?.dateOfBirth ?? null,
+				firstName: permission === ProgramPermission.operator ? (recipient.contact?.firstName ?? '') : OBFUSCATED_SENTINEL,
+				lastName: permission === ProgramPermission.operator ? (recipient.contact?.lastName ?? '') : '',
+				paymentCode:
+					permission === ProgramPermission.operator ? (recipient.paymentInformation?.code ?? null) : OBFUSCATED_SENTINEL,
+				dateOfBirth:
+					permission === ProgramPermission.operator ? (recipient.contact?.dateOfBirth ?? null) : OBFUSCATED_SENTINEL,
 				startDate: recipient.startDate ?? null,
 				localPartnerName: getLocalPartnerName(recipient),
 				suspendedAt: recipient.suspendedAt,
@@ -218,8 +222,182 @@ export class RecipientReadService extends BaseService {
 				payoutsProgressPercent,
 				createdAt: recipient.createdAt,
 				status,
-				permission: getPermission(recipient.program?.id ?? null),
 			};
+		});
+	}
+
+	private getRecipientTablePermission(accessiblePrograms: { permission: ProgramPermission }[]): ProgramPermission {
+		return accessiblePrograms.some((program) => program.permission === ProgramPermission.operator)
+			? ProgramPermission.operator
+			: ProgramPermission.owner;
+	}
+
+	private getRecipientProgramFilterOptions(
+		accessiblePrograms: { programId: string; programName: string }[],
+	): RecipientProgramFilterOption[] {
+		return Array.from(
+			new Map(
+				accessiblePrograms.map((program) => [program.programId, { id: program.programId, name: program.programName }]),
+			).values(),
+		);
+	}
+
+	private async getPaginatedTableViewForAccessiblePrograms(
+		accessiblePrograms: { programId: string; programName: string; permission: ProgramPermission }[],
+		query: RecipientTableQuery,
+	): Promise<ServiceResult<RecipientPaginatedTableView>> {
+		const permission = this.getRecipientTablePermission(accessiblePrograms);
+		const programFilterOptions = this.getRecipientProgramFilterOptions(accessiblePrograms);
+		if (accessiblePrograms.length === 0) {
+			return this.resultOk({
+				tableRows: [],
+				totalCount: 0,
+				permission,
+				programFilterOptions,
+			});
+		}
+
+		const selectedProgramIdRaw = query.programId?.trim();
+		const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+		const search = query.search.trim();
+		const selectedRecipientStatus = this.parseRecipientStatusFilter(query.recipientStatus);
+		const programIds = accessiblePrograms.map((program) => program.programId);
+		const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
+		if (selectedProgramId && filteredProgramIds.length === 0) {
+			return this.resultOk({
+				tableRows: [],
+				totalCount: 0,
+				permission,
+				programFilterOptions,
+			});
+		}
+
+		const skip = (query.page - 1) * query.pageSize;
+		const shouldSortOrFilterByStatus = query.sortBy === 'status' || Boolean(selectedRecipientStatus);
+		const baseWhere: Prisma.RecipientWhereInput = {
+			programId: { in: filteredProgramIds },
+		};
+		const searchWhere: Prisma.RecipientWhereInput = search.length
+			? {
+					OR: [
+						{ id: { contains: search, mode: 'insensitive' as const } },
+						...(permission === ProgramPermission.operator
+							? [
+									{ contact: { is: { firstName: { contains: search, mode: 'insensitive' as const } } } },
+									{ contact: { is: { lastName: { contains: search, mode: 'insensitive' as const } } } },
+								]
+							: []),
+						{ paymentInformation: { is: { code: { contains: search, mode: 'insensitive' as const } } } },
+						{ localPartner: { is: { name: { contains: search, mode: 'insensitive' as const } } } },
+						{ program: { is: { name: { contains: search, mode: 'insensitive' as const } } } },
+					],
+				}
+			: {};
+		const where: Prisma.RecipientWhereInput = {
+			AND: [baseWhere, searchWhere],
+		};
+
+		const recipientSelect = {
+			id: true,
+			startDate: true,
+			suspendedAt: true,
+			suspensionReason: true,
+			paymentInformation: {
+				select: {
+					code: true,
+				},
+			},
+			contact: {
+				select: {
+					firstName: true,
+					lastName: true,
+					dateOfBirth: true,
+					address: {
+						select: {
+							country: true,
+						},
+					},
+				},
+			},
+			program: {
+				select: {
+					id: true,
+					name: true,
+					programDurationInMonths: true,
+					payoutInterval: true,
+				},
+			},
+			localPartner: {
+				select: {
+					name: true,
+					account: {
+						select: {
+							firebaseAuthUserId: true,
+						},
+					},
+					contact: {
+						select: {
+							address: {
+								select: {
+									country: true,
+								},
+							},
+						},
+					},
+				},
+			},
+			payouts: {
+				select: { status: true },
+			},
+			createdAt: true,
+		} satisfies Prisma.RecipientSelect;
+
+		const [allRecipients, totalCount] = shouldSortOrFilterByStatus
+			? await Promise.all([
+					this.db.recipient.findMany({
+						where,
+						select: recipientSelect,
+						orderBy: this.buildRecipientOrderBy(query),
+					}),
+					this.db.recipient.count({ where }),
+				])
+			: await Promise.all([
+					this.db.recipient.findMany({
+						where,
+						select: recipientSelect,
+						orderBy: this.buildRecipientOrderBy(query),
+						skip,
+						take: query.pageSize,
+					}),
+					this.db.recipient.count({ where }),
+				]);
+
+		let tableRows = this.mapToRecipientTableRows(
+			allRecipients,
+			(programId) => {
+				const programPermissions = accessiblePrograms
+					.filter((program) => program.programId === programId)
+					.map((program) => program.permission);
+
+				return programPermissions.includes(ProgramPermission.operator)
+					? ProgramPermission.operator
+					: ProgramPermission.owner;
+			},
+			(recipient) => recipient.localPartner?.name ?? null,
+			now(),
+		);
+		if (selectedRecipientStatus) {
+			tableRows = tableRows.filter((row) => row.status === selectedRecipientStatus);
+		}
+		if (query.sortBy === 'status') {
+			tableRows = this.sortRowsByStatus(tableRows, query);
+		}
+
+		return this.resultOk({
+			tableRows: shouldSortOrFilterByStatus ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
+			totalCount: shouldSortOrFilterByStatus ? tableRows.length : totalCount,
+			permission,
+			programFilterOptions,
 		});
 	}
 
@@ -282,8 +460,10 @@ export class RecipientReadService extends BaseService {
 				if (!accessResult.success) {
 					return this.resultFail(accessResult.error);
 				}
-				const hasAccess = accessResult.data.some((a) => a.programId === recipient.program?.id);
-				if (!hasAccess) {
+				const hasOperatorAccess =
+					typeof recipient.program?.id === 'string' &&
+					this.programAccessService.hasOperatorAccess(accessResult.data, recipient.program.id);
+				if (!hasOperatorAccess) {
 					return this.resultFail('Permission denied');
 				}
 			}
@@ -518,7 +698,9 @@ export class RecipientReadService extends BaseService {
 				if (!accessResult.success) {
 					return this.resultFail(accessResult.error);
 				}
-				whereProgramIds = accessResult.data.map((a) => a.programId);
+				whereProgramIds = accessResult.data
+					.filter((access) => access.permission === ProgramPermission.operator)
+					.map((access) => access.programId);
 			}
 
 			const recipients = await this.db.recipient.findMany({
@@ -781,165 +963,36 @@ export class RecipientReadService extends BaseService {
 				return this.resultFail(accessResult.error);
 			}
 
-			const accessiblePrograms = accessResult.data;
-			if (accessiblePrograms.length === 0) {
-				return this.resultOk({
-					tableRows: [],
-					totalCount: 0,
-					permission: ProgramPermission.owner,
-					programFilterOptions: [],
-				});
-			}
-
-			const programIds = accessiblePrograms.map((p) => p.programId);
-			const search = query.search.trim();
-			const selectedProgramIdRaw = query.programId?.trim();
-			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
-			const selectedRecipientStatus = this.parseRecipientStatusFilter(query.recipientStatus);
-			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
-			if (selectedProgramId && filteredProgramIds.length === 0) {
-				return this.resultOk({
-					tableRows: [],
-					totalCount: 0,
-					permission: ProgramPermission.owner,
-					programFilterOptions: accessiblePrograms.map((p) => ({ id: p.programId, name: p.programName })),
-				});
-			}
-			const skip = (query.page - 1) * query.pageSize;
-			const shouldSortOrFilterByStatus = query.sortBy === 'status' || Boolean(selectedRecipientStatus);
-			const baseWhere: Prisma.RecipientWhereInput = {
-				programId: { in: filteredProgramIds },
-			};
-			const searchWhere: Prisma.RecipientWhereInput =
-				search.length > 0
-					? {
-							OR: [
-								{ id: { contains: search, mode: 'insensitive' } },
-								{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
-								{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
-								{ paymentInformation: { is: { code: { contains: search, mode: 'insensitive' } } } },
-								{ localPartner: { is: { name: { contains: search, mode: 'insensitive' } } } },
-								{ program: { is: { name: { contains: search, mode: 'insensitive' } } } },
-							],
-						}
-					: {};
-			const where: Prisma.RecipientWhereInput = {
-				AND: [baseWhere, searchWhere],
-			};
-
-			const recipientSelect = {
-				id: true,
-				startDate: true,
-				suspendedAt: true,
-				suspensionReason: true,
-				paymentInformation: {
-					select: {
-						code: true,
-					},
-				},
-				contact: {
-					select: {
-						firstName: true,
-						lastName: true,
-						dateOfBirth: true,
-						address: {
-							select: {
-								country: true,
-							},
-						},
-					},
-				},
-				program: {
-					select: {
-						id: true,
-						name: true,
-						programDurationInMonths: true,
-						payoutInterval: true,
-					},
-				},
-				localPartner: {
-					select: {
-						name: true,
-						account: {
-							select: {
-								firebaseAuthUserId: true,
-							},
-						},
-						contact: {
-							select: {
-								address: {
-									select: {
-										country: true,
-									},
-								},
-							},
-						},
-					},
-				},
-				payouts: {
-					select: { status: true },
-				},
-				createdAt: true,
-			} satisfies Prisma.RecipientSelect;
-
-			const [allRecipients, totalCount] = shouldSortOrFilterByStatus
-				? await Promise.all([
-						this.db.recipient.findMany({
-							where,
-							select: recipientSelect,
-							orderBy: this.buildRecipientOrderBy(query),
-						}),
-						this.db.recipient.count({ where }),
-					])
-				: await Promise.all([
-						this.db.recipient.findMany({
-							where,
-							select: recipientSelect,
-							orderBy: this.buildRecipientOrderBy(query),
-							skip,
-							take: query.pageSize,
-						}),
-						this.db.recipient.count({ where }),
-					]);
-
-			let tableRows = this.mapToRecipientTableRows(
-				allRecipients,
-				(programId) => {
-					const programPermissions = accessiblePrograms.filter((p) => p.programId === programId).map((p) => p.permission);
-
-					return programPermissions.includes(ProgramPermission.operator)
-						? ProgramPermission.operator
-						: ProgramPermission.owner;
-				},
-				(recipient) => recipient.localPartner?.name ?? null,
-				now(),
+			return this.getPaginatedTableViewForAccessiblePrograms(
+				accessResult.data.filter((program) => program.permission === ProgramPermission.operator),
+				query,
 			);
-			if (selectedRecipientStatus) {
-				tableRows = tableRows.filter((row) => row.status === selectedRecipientStatus);
-			}
-			if (query.sortBy === 'status') {
-				tableRows = this.sortRowsByStatus(tableRows, query);
-			}
-			const paginatedRows = shouldSortOrFilterByStatus ? tableRows.slice(skip, skip + query.pageSize) : tableRows;
-			const computedTotalCount = shouldSortOrFilterByStatus ? tableRows.length : totalCount;
-
-			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.operator)
-				? ProgramPermission.operator
-				: ProgramPermission.owner;
-			const programFilterOptions = Array.from(
-				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
-			);
-
-			return this.resultOk({
-				tableRows: paginatedRows,
-				totalCount: computedTotalCount,
-				permission: globalPermission,
-				programFilterOptions,
-			});
 		} catch (error) {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPaginatedTableViewByProgramId(
+		userId: string,
+		programId: string,
+		query: RecipientTableQuery,
+	): Promise<ServiceResult<RecipientPaginatedTableView>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			return this.getPaginatedTableViewForAccessiblePrograms(
+				accessResult.data.filter((program) => program.programId === programId),
+				{ ...query, programId },
+			);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program recipients: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -953,20 +1006,15 @@ export class RecipientReadService extends BaseService {
 				return this.resultFail(accessResult.error);
 			}
 
-			const accessiblePrograms = accessResult.data;
+			const accessiblePrograms = accessResult.data.filter((program) => program.permission === ProgramPermission.operator);
 			const programFilterOptions: RecipientProgramFilterOption[] = Array.from(
 				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
 			);
-			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.operator)
-				? ProgramPermission.operator
-				: ProgramPermission.owner;
-			const permissionByProgramId = new Map(accessiblePrograms.map((p) => [p.programId, p.permission] as const));
 			if (accessiblePrograms.length === 0) {
 				return this.resultOk({
 					tableRows: [],
 					totalCount: 0,
 					programFilterOptions: [],
-					permission: ProgramPermission.owner,
 				});
 			}
 
@@ -979,7 +1027,6 @@ export class RecipientReadService extends BaseService {
 					tableRows: [],
 					totalCount: 0,
 					programFilterOptions,
-					permission: globalPermission,
 				});
 			}
 
@@ -1050,7 +1097,6 @@ export class RecipientReadService extends BaseService {
 				const startDate = recipient.startDate ?? today;
 				const programId = recipient.program?.id ?? '';
 				const programName = recipient.program?.name ?? '';
-				const permission = permissionByProgramId.get(programId) ?? ProgramPermission.owner;
 
 				return {
 					id: recipient.id,
@@ -1062,7 +1108,6 @@ export class RecipientReadService extends BaseService {
 					startDate,
 					daysUntilStart: differenceInCalendarDays(startOfDay(startDate), today),
 					createdAt: recipient.createdAt,
-					permission,
 				};
 			});
 
@@ -1070,7 +1115,6 @@ export class RecipientReadService extends BaseService {
 				tableRows,
 				totalCount,
 				programFilterOptions,
-				permission: globalPermission,
 			});
 		} catch (error) {
 			this.logger.error(error);

@@ -5,7 +5,6 @@ import { ConfiguredDataTableClient } from '@/components/data-table/clients/confi
 import { campaignsTableConfig } from '@/components/data-table/configs/campaigns-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { ProgramPermission } from '@/generated/prisma/enums';
 import { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';
@@ -25,19 +24,15 @@ export default function CampaignsTable({
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [campaignId, setCampaignId] = useState<string | undefined>(undefined);
-	const [isCampaignReadOnly, setIsCampaignReadOnly] = useState(false);
-	const readOnly = rows.every((row) => row.permission !== ProgramPermission.operator);
 
 	const openEmptyForm = () => {
 		setCampaignId(undefined);
-		setIsCampaignReadOnly(readOnly);
 		setErrorMessage(null);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: CampaignTableViewRow) => {
 		setCampaignId(row.id);
-		setIsCampaignReadOnly(row.permission !== ProgramPermission.operator);
 		setErrorMessage(null);
 		setOpen(true);
 	};
@@ -46,7 +41,6 @@ export default function CampaignsTable({
 		setOpen(nextOpen);
 		if (!nextOpen) {
 			setCampaignId(undefined);
-			setIsCampaignReadOnly(false);
 		}
 	};
 
@@ -69,7 +63,6 @@ export default function CampaignsTable({
 					{
 						label: 'Add new campaign',
 						icon: <PlusIcon />,
-						disabled: readOnly,
 						onSelect: openEmptyForm,
 					},
 				]}
@@ -78,7 +71,7 @@ export default function CampaignsTable({
 			<Dialog open={open} onOpenChange={handleOpenChange}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>{campaignId ? (isCampaignReadOnly ? 'View' : 'Edit') : 'Add'} Campaign</DialogTitle>
+						<DialogTitle>{campaignId ? 'Edit' : 'Add'} Campaign</DialogTitle>
 					</DialogHeader>
 					{errorMessage && (
 						<Alert variant="destructive">
@@ -91,7 +84,6 @@ export default function CampaignsTable({
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
-						readOnly={isCampaignReadOnly}
 					/>
 				</DialogContent>
 			</Dialog>

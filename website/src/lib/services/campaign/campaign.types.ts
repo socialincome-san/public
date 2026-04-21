@@ -1,4 +1,4 @@
-import { Currency, ProgramPermission } from '@/generated/prisma/client';
+import { Currency } from '@/generated/prisma/client';
 
 export type CampaignTableViewRow = {
 	id: string;
@@ -10,7 +10,6 @@ export type CampaignTableViewRow = {
 	isActive: boolean;
 	programName: string | null;
 	createdAt: Date;
-	permission: ProgramPermission;
 };
 
 export type CampaignTableQuery = {

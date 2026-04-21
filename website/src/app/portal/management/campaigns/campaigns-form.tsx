@@ -19,13 +19,11 @@ export default function CampaignsForm({
 	onError,
 	onCancel,
 	campaignId,
-	readOnly,
 }: {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	campaignId?: string;
-	readOnly?: boolean;
 }) {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [isLoading, startTransition] = useTransition();
@@ -147,12 +145,7 @@ export default function CampaignsForm({
 		});
 	}, []);
 
-	let mode: 'readonly' | 'edit' | 'add' = 'add';
-	if (readOnly) {
-		mode = 'readonly';
-	} else if (campaignId) {
-		mode = 'edit';
-	}
+	const mode: 'edit' | 'add' = campaignId ? 'edit' : 'add';
 
 	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 }

@@ -11,7 +11,6 @@ type Props = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	recipientId?: string;
-	readOnly: boolean;
 	programId?: string;
 	sessionType: Session['type'];
 	errorMessage: string | null;
@@ -22,7 +21,6 @@ export const RecipientDialog = ({
 	open,
 	onOpenChange,
 	recipientId,
-	readOnly,
 	programId,
 	sessionType,
 	errorMessage,
@@ -34,12 +32,7 @@ export const RecipientDialog = ({
 		logger.error('Recipient Form Error', { error });
 	};
 
-	let dialogTitle = 'New Recipient';
-	if (readOnly) {
-		dialogTitle = 'View Recipient';
-	} else if (recipientId) {
-		dialogTitle = 'Edit Recipient';
-	}
+	const dialogTitle = recipientId ? 'Edit Recipient' : 'New Recipient';
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
@@ -57,7 +50,6 @@ export const RecipientDialog = ({
 
 				<RecipientForm
 					recipientId={recipientId}
-					readOnly={readOnly}
 					onSuccess={() => onOpenChange(false)}
 					onCancel={() => onOpenChange(false)}
 					onError={handleError}

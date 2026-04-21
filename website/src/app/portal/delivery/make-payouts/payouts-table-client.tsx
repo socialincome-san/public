@@ -3,7 +3,6 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getPayoutsTableFilters, payoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { ProgramPermission } from '@/generated/prisma/enums';
 import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import { CircleDollarSignIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -25,7 +24,6 @@ export const PayoutsTableClient = ({
 }) => {
 	const [isPayoutFormOpen, setIsPayoutFormOpen] = useState(false);
 	const [payoutId, setPayoutId] = useState<string | undefined>(undefined);
-	const [readOnly, setReadOnly] = useState(false);
 	const [isPayoutProcessDialogOpen, setIsPayoutProcessDialogOpen] = useState(false);
 	const toolbarFilters = getPayoutsTableFilters({
 		query,
@@ -37,13 +35,11 @@ export const PayoutsTableClient = ({
 
 	const openEmptyForm = () => {
 		setPayoutId(undefined);
-		setReadOnly(false);
 		setIsPayoutFormOpen(true);
 	};
 
 	const openEditForm = (row: PayoutTableViewRow) => {
 		setPayoutId(row.id);
-		setReadOnly(row.permission === ProgramPermission.owner);
 		setIsPayoutFormOpen(true);
 	};
 
@@ -51,7 +47,6 @@ export const PayoutsTableClient = ({
 		setIsPayoutFormOpen(open);
 		if (!open) {
 			setPayoutId(undefined);
-			setReadOnly(false);
 		}
 	};
 
@@ -79,12 +74,7 @@ export const PayoutsTableClient = ({
 				onRowClick={openEditForm}
 			/>
 
-			<PayoutFormDialog
-				open={isPayoutFormOpen}
-				onOpenChange={handlePayoutFormClose}
-				payoutId={payoutId}
-				readOnly={readOnly}
-			/>
+			<PayoutFormDialog open={isPayoutFormOpen} onOpenChange={handlePayoutFormClose} payoutId={payoutId} />
 
 			<StartPayoutProcessDialog open={isPayoutProcessDialogOpen} setOpen={setIsPayoutProcessDialogOpen} />
 		</>
