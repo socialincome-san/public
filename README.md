@@ -297,11 +297,23 @@ pg_restore   --clean --if-exists   --no-owner   -d "postgresql://staging-website
 2. Set env vars in `website/.env.local`:
    - `STORYBLOK_PREVIEW_TOKEN`
    - `STORYBLOK_PREVIEW_SECRET`
+   - `STORYBLOK_WEBHOOK_SECRET` (must match the **Secret key** on the Storyblok webhook; used to verify the `webhook-signature` header)
 3. Optional: run SSL proxy for live preview
 
 ```
 npm run dev:ssl-proxy
 ```
+
+### Storyblok webhook (ISR revalidation)
+
+To refresh cached pages when editors publish in Storyblok, add a **webhook** in the space (Settings → Webhooks):
+
+- **URL:** `https://<your-production-domain>/api/revalidate`
+- **Secret key:** set a value and put the **same** value in `STORYBLOK_WEBHOOK_SECRET` (Storyblok signs the raw body; we verify the `webhook-signature` header per [Storyblok’s webhook signature docs](https://www.storyblok.com/tp/webhook-secret-with-different-technologies))
+- **Method:** POST
+- **Triggers:** Story published, Story unpublished, Story deleted, Story moved
+
+The handler calls Next.js `revalidatePath` for the affected routes (see `website/src/lib/services/storyblok/revalidation.ts`) and invalidates `/sitemap.xml`.
 
 ---
 
