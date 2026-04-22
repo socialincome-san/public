@@ -9,6 +9,21 @@
 	"download-pdf": "PDF",
 	"reports": [
 		{
+			"title": "Financial Statement 2025",
+			"href": "https://drive.google.com/file/d/1_SDAZhrOZIOvUann_U0GwUE7TNp7vPKy/view?usp=sharing",
+			"language": "English"
+		},
+		{
+			"title": "Financial Statement 2025",
+			"href": "https://drive.google.com/file/d/1Xd3aqmSUujgRj_0HSvXv9rylVDKdQJ4Q/view?usp=sharing",
+			"language": "German"
+		},
+		{
+			"title": "Audit Report 2025",
+			"href": "https://drive.google.com/file/d/1dzrxl9nxlUdRxDdh-4n_qtkZvIQNBlAA/view?usp=sharing",
+			"language": "German"
+		},
+		{
 			"title": "Policy for the Prevention of Fraud and Corruption",
 			"href": "https://docs.google.com/document/d/1mgG_knhPK5wWy_y0YGmohs8m-KesuEYZKXoW0MS3Jvc/edit?usp=sharing",
 			"language": "English"
