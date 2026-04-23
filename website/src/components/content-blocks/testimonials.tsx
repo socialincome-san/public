@@ -1,27 +1,19 @@
 'use client';
 
-import * as React from 'react';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
 import type { Testimonial, Testimonials } from '@/generated/storyblok/types/109655/storyblok-components';
 import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
+import * as React from 'react';
 import Markdown from 'react-markdown';
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
-	type CarouselApi,
-} from "@/components/ui/carousel";
 const IMAGE_WIDTH = 281;
 const IMAGE_FRAME_CLASS = 'relative mx-auto h-[433px] w-[281px] max-w-full overflow-hidden rounded-lg border border-white';
 
 type Props = {
 	blok: Testimonials;
 };
-
 
 type TestimonialProps = {
 	entry: Testimonial;
@@ -31,8 +23,8 @@ const Testimonial = ({ entry }: TestimonialProps) => (
 	<div className="overflow-hidden rounded-xl bg-white p-3">
 		<div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_281px]">
 			<div className="flex flex-col justify-between gap-8 p-8 md:p-10">
-				<p className="text-5xl leading-none text-primary">“</p>
-				<p className="text-lg leading-snug text-foreground lg:text-xl">{entry.quote}</p>
+				<p className="text-primary text-5xl leading-none">“</p>
+				<p className="text-foreground text-lg leading-snug lg:text-xl">{entry.quote}</p>
 				<div className="flex items-center gap-3">
 					<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full md:hidden">
 						<NextImage
@@ -43,7 +35,7 @@ const Testimonial = ({ entry }: TestimonialProps) => (
 							className="object-cover"
 						/>
 					</div>
-					<p className="text-base font-medium text-foreground">
+					<p className="text-foreground text-base font-medium">
 						{entry.country ? `${entry.name}, ${entry.country}` : entry.name}
 					</p>
 				</div>
@@ -69,8 +61,7 @@ export const TestimonialsBlock = ({ blok }: Props) => {
 	const [api, setApi] = React.useState<CarouselApi>();
 	const [activeIndex, setActiveIndex] = React.useState(0);
 
-	const entries = blok.testimonials
-		.filter((entry): Boolean => Boolean(entry.image?.filename));
+	const entries = blok.testimonials.filter((entry): Boolean => Boolean(entry.image?.filename));
 
 	if (entries.length === 0) {
 		return null;
@@ -130,9 +121,6 @@ export const TestimonialsBlock = ({ blok }: Props) => {
 						/>
 					))}
 				</div>
-
-
-
 			</div>
 		</BlockWrapper>
 	);
