@@ -11,6 +11,7 @@ import {
 	CarouselItem,
 	CarouselNext,
 	CarouselPrevious,
+	type CarouselApi,
 } from "@/components/ui/carousel";
 const IMAGE_WIDTH = 281;
 const IMAGE_FRAME_CLASS = 'relative mx-auto h-[433px] w-[281px] max-w-full overflow-hidden rounded-lg border border-white';
@@ -30,11 +31,22 @@ const Testimonial = ({ entry }: TestimonialProps) => (
 			<div className="flex flex-col justify-between gap-8 p-8 md:p-10">
 				<p className="text-5xl leading-none text-primary">“</p>
 				<p className="text-lg leading-snug text-foreground lg:text-xl">{entry.quote}</p>
-				<p className="text-base font-medium text-foreground">
-					{entry.country ? `${entry.name}, ${entry.country}` : entry.name}
-				</p>
+				<div className="flex items-center gap-3">
+					<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full md:hidden">
+						<NextImage
+							src={entry.image.filename!}
+							alt={`${entry.name} portrait`}
+							fill
+							sizes="48px"
+							className="object-cover"
+						/>
+					</div>
+					<p className="text-base font-medium text-foreground">
+						{entry.country ? `${entry.name}, ${entry.country}` : entry.name}
+					</p>
+				</div>
 			</div>
-			<div className={`${IMAGE_FRAME_CLASS} md:mx-0`}>
+			<div className={`hidden md:block ${IMAGE_FRAME_CLASS} md:mx-0`}>
 				<NextImage
 					src={entry.image.filename!}
 					alt={`${entry.name} portrait`}
