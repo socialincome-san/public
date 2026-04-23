@@ -11,10 +11,9 @@ import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
 	type CarouselApi,
 } from "@/components/ui/carousel";
+import { Quote } from 'lucide-react';
 const IMAGE_WIDTH = 281;
 const IMAGE_FRAME_CLASS = 'relative mx-auto h-[433px] w-[281px] max-w-full overflow-hidden rounded-lg border border-white';
 
@@ -22,21 +21,26 @@ type Props = {
 	blok: Testimonials;
 };
 
+type TestimonialWithImage = Testimonial & {
+	image: NonNullable<Testimonial['image']> & {
+		filename: string;
+	};
+};
 
 type TestimonialProps = {
-	entry: Testimonial;
+	entry: TestimonialWithImage;
 };
 
 const Testimonial = ({ entry }: TestimonialProps) => (
 	<div className="overflow-hidden rounded-xl bg-white p-3">
 		<div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_281px]">
 			<div className="flex flex-col justify-between gap-8 p-8 md:p-10">
-				<p className="text-5xl leading-none text-primary">“</p>
+				<Quote className="h-12 w-12 text-primary" aria-hidden="true" />
 				<p className="text-lg leading-snug text-foreground lg:text-xl">{entry.quote}</p>
 				<div className="flex items-center gap-3">
 					<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full md:hidden">
 						<NextImage
-							src={entry.image.filename!}
+							src={entry.image.filename}
 							alt={`${entry.name} portrait`}
 							fill
 							sizes="48px"
@@ -50,7 +54,7 @@ const Testimonial = ({ entry }: TestimonialProps) => (
 			</div>
 			<div className={`hidden md:block ${IMAGE_FRAME_CLASS} md:mx-0`}>
 				<NextImage
-					src={entry.image.filename!}
+					src={entry.image.filename}
 					alt={`${entry.name} portrait`}
 					fill
 					sizes={`${IMAGE_WIDTH}px`}
@@ -62,19 +66,17 @@ const Testimonial = ({ entry }: TestimonialProps) => (
 );
 
 export const TestimonialsBlock = ({ blok }: Props) => {
-	if (!blok.testimonials?.length) {
+	const entries = blok.testimonials
+		.filter((entry): entry is TestimonialWithImage => Boolean(entry.image?.filename));
+
+	if (entries.length === 0) {
 		return null;
 	}
 
 	const [api, setApi] = React.useState<CarouselApi>();
 	const [activeIndex, setActiveIndex] = React.useState(0);
 
-	const entries = blok.testimonials
-		.filter((entry): Boolean => Boolean(entry.image?.filename));
 
-	if (entries.length === 0) {
-		return null;
-	}
 
 	React.useEffect(() => {
 		if (!api) {
@@ -111,8 +113,8 @@ export const TestimonialsBlock = ({ blok }: Props) => {
 					}}
 				>
 					<CarouselContent>
-						{entries.map((entry) => (
-							<CarouselItem key={entry._uid ?? entry.name} className="basis-full md:basis-4/5 lg:basis-3/5">
+						{entries.map((entry, index) => (
+							<CarouselItem key={entry._uid ?? `${entry.name}-${index}`} className="basis-full md:basis-4/5 lg:basis-3/5 ">
 								<Testimonial entry={entry} />
 							</CarouselItem>
 						))}
