@@ -1,7 +1,9 @@
 'use client';
 
+import * as React from 'react';
 import { BlockWrapper } from '@/components/block-wrapper';
 import type { Testimonial, Testimonials } from '@/generated/storyblok/types/109655/storyblok-components';
+import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
 import Markdown from 'react-markdown';
@@ -64,12 +66,34 @@ export const TestimonialsBlock = ({ blok }: Props) => {
 		return null;
 	}
 
+	const [api, setApi] = React.useState<CarouselApi>();
+	const [activeIndex, setActiveIndex] = React.useState(0);
+
 	const entries = blok.testimonials
 		.filter((entry): Boolean => Boolean(entry.image?.filename));
 
 	if (entries.length === 0) {
 		return null;
 	}
+
+	React.useEffect(() => {
+		if (!api) {
+			return;
+		}
+
+		const updateActiveIndex = () => {
+			setActiveIndex(api.selectedScrollSnap());
+		};
+
+		updateActiveIndex();
+		api.on('select', updateActiveIndex);
+		api.on('reInit', updateActiveIndex);
+
+		return () => {
+			api.off('select', updateActiveIndex);
+			api.off('reInit', updateActiveIndex);
+		};
+	}, [api]);
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
@@ -79,20 +103,33 @@ export const TestimonialsBlock = ({ blok }: Props) => {
 						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
 					</h2>
 				)}
-				<Carousel opts={{
-					align: "center",
-					loop: true,
-				}}>
+				<Carousel
+					setApi={setApi}
+					opts={{
+						align: 'center',
+						loop: true,
+					}}
+				>
 					<CarouselContent>
 						{entries.map((entry) => (
-							<CarouselItem className="basis-full md:basis-4/5 lg:basis-3/5">
-								<Testimonial key={entry.name} entry={entry} />
+							<CarouselItem key={entry._uid ?? entry.name} className="basis-full md:basis-4/5 lg:basis-3/5">
+								<Testimonial entry={entry} />
 							</CarouselItem>
 						))}
 					</CarouselContent>
-					<CarouselPrevious />
-					<CarouselNext />
 				</Carousel>
+
+				<div className="flex items-center justify-center gap-4">
+					{entries.map((entry, index) => (
+						<button
+							key={`${entry.name}-${index}`}
+							type="button"
+							onClick={() => api?.scrollTo(index)}
+							className={cn('h-1.5 w-16 rounded-full transition', index === activeIndex ? 'bg-primary' : 'bg-primary/25')}
+							aria-label={`Show testimonial ${index + 1}`}
+						/>
+					))}
+				</div>
 
 
 
