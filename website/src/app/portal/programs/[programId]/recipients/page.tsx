@@ -28,7 +28,7 @@ const RecipientsProgramScopedDataLoader = async ({ params, searchParams }: Props
 	const tableQuery = { ...baseQuery, programId };
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const recipientsResult = await services.read.recipient.getPaginatedTableView(user.id, tableQuery);
+	const recipientsResult = await services.read.recipient.getPaginatedTableViewByProgramId(user.id, programId, tableQuery);
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];

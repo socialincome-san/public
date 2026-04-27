@@ -87,7 +87,7 @@ export const getRecipientOptions = async (sessionType: Session['type'] = 'user')
 		return sessionResult;
 	}
 	const session = sessionResult.data;
-	const programs = await services.read.program.getOptions(session.id);
+	const programs = await services.read.program.getEditableOptions(session.id);
 	if (!programs.success) {
 		return resultFail(programs.error);
 	}

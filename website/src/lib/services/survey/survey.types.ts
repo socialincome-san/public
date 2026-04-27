@@ -1,4 +1,4 @@
-import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
+import { Prisma, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
 
 export type SurveyTableViewRow = {
 	id: string;
@@ -13,7 +13,6 @@ export type SurveyTableViewRow = {
 	completedAt: Date | null;
 	createdAt: Date;
 	surveyUrl: string;
-	permission: ProgramPermission;
 };
 
 export type SurveyTableView = {

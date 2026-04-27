@@ -22,7 +22,6 @@ type SurveyFormProps = {
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	surveyId?: string;
-	readOnly?: boolean;
 };
 
 export type SurveyFormSchema = {
@@ -85,7 +84,7 @@ const initialFormSchema: SurveyFormSchema = {
 	},
 };
 
-export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }: SurveyFormProps) => {
+export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId }: SurveyFormProps) => {
 	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();
@@ -161,12 +160,7 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId, readOnly }:
 		});
 	};
 
-	let mode: 'readonly' | 'edit' | 'add' = 'add';
-	if (readOnly) {
-		mode = 'readonly';
-	} else if (surveyId) {
-		mode = 'edit';
-	}
+	const mode: 'edit' | 'add' = surveyId ? 'edit' : 'add';
 
 	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 };

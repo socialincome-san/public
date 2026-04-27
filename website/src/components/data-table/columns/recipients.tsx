@@ -9,14 +9,18 @@ import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import { ProgramPermission } from '@/generated/prisma/enums';
+import type { Translator } from '@/lib/i18n/translator';
 import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
 export const makeRecipientColumns = (
 	hideProgramName = false,
 	hideLocalPartner = false,
+	translator?: Translator,
+	readOnly = false,
 ): ColumnDef<RecipientTableViewRow>[] => {
+	void translator;
+
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{
 			accessorKey: 'firebaseAuthUserId',
@@ -85,15 +89,16 @@ export const makeRecipientColumns = (
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
-		{
+	);
+
+	if (!readOnly) {
+		columns.push({
 			id: 'actions',
 			header: '',
 			enableHiding: false,
-			cell: (ctx) => (
-				<ActionCell ctx={ctx} mode={ctx.row.original.permission === ProgramPermission.operator ? 'edit' : 'view'} />
-			),
-		},
-	);
+			cell: (ctx) => <ActionCell ctx={ctx} />,
+		});
+	}
 
 	return columns;
 };

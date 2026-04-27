@@ -79,6 +79,10 @@ const Navbar = async ({ lang, region }: DefaultParams) => {
 							title: translator.t('navigation.reporting'),
 							href: `/${lang}/${region}/transparency/reporting`,
 						},
+						{
+							title: translator.t('navigation.impact-measurement'),
+							href: `/${lang}/${region}/impact-measurement`,
+						},
 					],
 				},
 				{

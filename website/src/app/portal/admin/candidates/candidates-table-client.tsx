@@ -2,10 +2,12 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { CsvUploadDialog } from '@/components/data-table/clients/csv-upload-dialog';
+import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
 import { candidatesTableConfig, getCandidatesTableFilters } from '@/components/data-table/configs/candidates-table.config';
 import type { ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { Session } from '@/lib/firebase/current-account';
+import type { Translator } from '@/lib/i18n/translator';
 import { downloadCandidatesCsvAction, importCandidatesCsvAction } from '@/lib/server-actions/candidate-actions';
 import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
@@ -37,9 +39,14 @@ export const CandidatesTableClient = ({
 	showGenderFilter = false,
 }: Props) => {
 	const canManageCandidates = sessionType === 'user';
+	const isReadOnly = readOnly ?? false;
+	const tableConfig = {
+		...candidatesTableConfig,
+		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) =>
+			makeCandidateColumns(hideProgramName, hideLocalPartner, translator, isReadOnly),
+	};
 	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
 	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
-	const [isReadOnly, setIsReadOnly] = useState(readOnly ?? false);
 	const [candidateError, setCandidateError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
@@ -47,14 +54,12 @@ export const CandidatesTableClient = ({
 	const openCreateDialog = () => {
 		setCandidateError(null);
 		setSelectedCandidateId(undefined);
-		setIsReadOnly(readOnly ?? false);
 		setIsCandidateDialogOpen(true);
 	};
 
 	const openEditDialog = (_row: CandidatesTableViewRow) => {
 		setCandidateError(null);
 		setSelectedCandidateId(_row.id);
-		setIsReadOnly(readOnly ?? false);
 		setIsCandidateDialogOpen(true);
 	};
 
@@ -91,13 +96,13 @@ export const CandidatesTableClient = ({
 					{
 						label: 'Add new candidate',
 						icon: <PlusIcon />,
-						disabled: readOnly,
+						disabled: isReadOnly,
 						onSelect: openCreateDialog,
 					},
 					{
 						label: 'Upload CSV',
 						icon: <UploadIcon />,
-						disabled: readOnly,
+						disabled: isReadOnly,
 						onSelect: () => setIsCsvUploadDialogOpen(true),
 					},
 				]
@@ -107,7 +112,7 @@ export const CandidatesTableClient = ({
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={candidatesTableConfig}
+				config={tableConfig}
 				titleInfoTooltip="Shows candidate records awaiting program assignment."
 				rows={rows}
 				error={error}
@@ -125,18 +130,19 @@ export const CandidatesTableClient = ({
 				hideLocalPartner={sessionType === 'local-partner'}
 				showEntityIdColumn={sessionType !== 'local-partner'}
 				actionMenuItems={actionMenuItems}
-				onRowClick={openEditDialog}
+				onRowClick={isReadOnly ? undefined : openEditDialog}
 			/>
 
-			<CandidateDialog
-				open={isCandidateDialogOpen}
-				onOpenChange={closeCandidateDialog}
-				candidateId={selectedCandidateId}
-				readOnly={isReadOnly}
-				sessionType={sessionType}
-				errorMessage={candidateError}
-				onError={setCandidateError}
-			/>
+			{!isReadOnly && (
+				<CandidateDialog
+					open={isCandidateDialogOpen}
+					onOpenChange={closeCandidateDialog}
+					candidateId={selectedCandidateId}
+					sessionType={sessionType}
+					errorMessage={candidateError}
+					onError={setCandidateError}
+				/>
+			)}
 
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}

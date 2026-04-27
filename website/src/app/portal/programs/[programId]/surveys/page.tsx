@@ -1,45 +1,24 @@
-import { SurveysTableClient } from '@/app/portal/management/surveys/surveys-table-client';
+import { ImpactMeasurementView } from '@/app/[lang]/[region]/new-website/programs/impact-measurement/view';
 import { Card } from '@/components/card';
-import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
-import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
-import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
-export default function SurveysPageProgramScoped({ params, searchParams }: Props) {
+export default async function ProgramSurveysPage({ params, searchParams }: Props) {
+	const { programId } = await params;
+	const resolvedSearchParams = await searchParams;
+
 	return (
 		<Card>
-			<Suspense fallback={<AppLoadingSkeleton />}>
-				<SurveysProgramScopedDataLoader params={params} searchParams={searchParams} />
-			</Suspense>
+			<ImpactMeasurementView
+				lang={defaultLanguage}
+				variant="embedded"
+				searchParams={{
+					...resolvedSearchParams,
+					program: programId,
+				}}
+			/>
 		</Card>
 	);
 }
-
-const SurveysProgramScopedDataLoader = async ({ params, searchParams }: Props) => {
-	const { programId } = await params;
-	const resolvedSearchParams = await searchParams;
-	const baseQuery = tableQueryFromSearchParams(resolvedSearchParams);
-	const tableQuery = { ...baseQuery, programId };
-	const user = await getAuthenticatedUserOrRedirect();
-
-	const surveysResult = await services.read.survey.getPaginatedTableView(user.id, tableQuery);
-
-	const error = surveysResult.success ? null : surveysResult.error;
-	const rows: SurveyTableViewRow[] = surveysResult.success ? surveysResult.data.tableRows : [];
-	const totalRows = surveysResult.success ? surveysResult.data.totalCount : 0;
-
-	return (
-		<SurveysTableClient
-			rows={rows}
-			error={error}
-			query={{ ...tableQuery, totalRows }}
-			showProgramFilter={false}
-			hideProgramName
-		/>
-	);
-};

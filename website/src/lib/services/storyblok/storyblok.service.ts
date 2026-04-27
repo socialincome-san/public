@@ -230,6 +230,29 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getPersonsByUuids(lang: string, personUuids: string[]): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+		try {
+			const uuids = [...new Set(personUuids.map((u) => u.trim()).filter(Boolean))];
+			if (!uuids.length) {
+				return this.resultOk([]);
+			}
+
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(lang)),
+				per_page: uuids.length,
+				content_type: StoryblokService.contentType.person,
+			};
+			(params as ISbStoriesParams & { by_uuids_ordered: string }).by_uuids_ordered = uuids.join(',');
+			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
+
+			return this.resultOk((res.data as { stories: ISbStoryData<Person>[] }).stories);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch persons by UUIDs: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getOverviewAuthors(lang: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
 			const params: ISbStoriesParams = {

@@ -11,7 +11,6 @@ export type PayoutTableViewRow = {
 	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
-	permission: ProgramPermission;
 };
 
 export type PayoutTableQuery = {
@@ -47,7 +46,6 @@ export type PayoutConfirmationTableViewRow = {
 	status: PayoutStatus;
 	paymentAt: Date;
 	phoneNumber: string | null;
-	permission: ProgramPermission;
 };
 
 export type PayoutConfirmationTableQuery = {
