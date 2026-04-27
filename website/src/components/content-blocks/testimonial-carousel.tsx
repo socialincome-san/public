@@ -2,6 +2,7 @@
 
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/carousel';
+import { Testimonial } from '@/components/testimonial';
 import type {
 	Testimonial as StoryblokTestimonial,
 	TestimonialCarousel,
@@ -10,7 +11,6 @@ import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
-import { Testimonial } from '@/components/testimonial';
 
 type Props = {
 	blok: TestimonialCarousel;
