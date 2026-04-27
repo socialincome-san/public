@@ -158,6 +158,12 @@ variable "storyblok_preview_secret" {
   sensitive   = true
 }
 
+variable "storyblok_webhook_secret" {
+  description = "Shared secret used to verify the Storyblok webhook signature for /api/revalidate"
+  type        = string
+  sensitive   = true
+}
+
 variable "app_review_mode_enabled" {
   description = "Flag to enable or disable app review mode"
   type        = string
