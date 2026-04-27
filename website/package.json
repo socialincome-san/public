@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"serve": "npm run build-paths && npm run openapi:generate && next dev -p 3000",
+		"serve:ssl": "npm run build-paths && npm run openapi:generate && next dev --experimental-https -p 3000",
 		"build-paths": "tsx scripts/generate-paths.ts",
 		"prebuild": "npm run build-paths",
 		"build": "next build",
