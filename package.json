@@ -21,6 +21,7 @@
 		"website:lint": "npm --workspace=@socialincome/website run lint",
 		"website:check:unused": "npm --workspace=@socialincome/website run check:unused",
 		"website:serve": "npm run db:generate && npm run db:migrate:deploy && npm --workspace=@socialincome/website run serve",
+		"website:serve:ssl": "npm run db:generate && npm run db:migrate:deploy && npm --workspace=@socialincome/website run serve:ssl",
 		"website:serve:emulator": "npm --workspace=@socialincome/website run serve:emulator",
 		"website:start": "npm --workspace=@socialincome/website run start",
 		"website:start:emulator": "npm --workspace=@socialincome/website run start:emulator",
@@ -29,7 +30,6 @@
 		"website:check-translations": "npm --workspace=@socialincome/website run check-translations",
 		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
 		"ui:build": "npm --workspace=@socialincome/ui run build-storybook",
-		"dev:ssl-proxy": "ssl-proxy --source 3001 --target 3000",
 		"db:generate": "npm --workspace=@socialincome/website run db:generate",
 		"db:migrate:deploy": "npm --workspace=@socialincome/website run db:migrate:deploy",
 		"db:migrate:dev": "npm --workspace=@socialincome/website run db:migrate:dev",
@@ -53,7 +53,6 @@
 		"prettier": "3.8.1",
 		"prettier-plugin-organize-imports": "4.3.0",
 		"prettier-plugin-tailwindcss": "0.7.2",
-		"ssl-proxy": "1.0.3",
 		"typescript": "5.9.3"
 	},
 	"dependencies": {

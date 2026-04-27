@@ -299,10 +299,10 @@ pg_restore   --clean --if-exists   --no-owner   -d "postgresql://staging-website
    - `STORYBLOK_PREVIEW_SECRET`
    - `STORYBLOK_WEBHOOK_SECRET` (must match the **Secret key** on the
      Storyblok webhook; used to verify the `webhook-signature` header)
-3. Optional: run SSL proxy for live preview
+3. Optional: start local dev with HTTPS for live preview
 
 ```
-npm run dev:ssl-proxy
+mise run dev-ssl
 ```
 
 ### Storyblok webhook (ISR revalidation)

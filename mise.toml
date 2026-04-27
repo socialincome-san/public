@@ -22,5 +22,12 @@ run = "npm run website:build-paths"
 run = "npm run website:serve"
 depends = ["install", "db", "mockserver", "build-paths"]
 
+[tasks.website-ssl]
+run = "npm run website:serve:ssl"
+depends = ["install", "db", "mockserver", "build-paths"]
+
 [tasks.dev]
 depends = ["firebase", "website"]
+
+[tasks.dev-ssl]
+depends = ["firebase", "website-ssl"]
