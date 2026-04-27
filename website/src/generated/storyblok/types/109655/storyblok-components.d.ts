@@ -316,7 +316,7 @@ export interface Page {
     | ProgramGrid
     | TeamGrid
     | Testimonial
-    | Testimonials
+    | TestimonialCarousel
     | Text
     | TwoColumnText
     | VideoText
@@ -422,10 +422,10 @@ export interface Testimonial {
   [k: string]: unknown;
 }
 
-export interface Testimonials {
+export interface TestimonialCarousel {
   testimonials: Testimonial[];
   heading?: string;
-  component: "testimonials";
+  component: "testimonialCarousel";
   _uid: string;
   [k: string]: unknown;
 }
