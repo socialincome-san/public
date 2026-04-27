@@ -1,13 +1,13 @@
 'use client';
 
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/carousel';
 import type { Testimonial, Testimonials } from '@/generated/storyblok/types/109655/storyblok-components';
 import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { Quote } from 'lucide-react';
 import NextImage from 'next/image';
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 
 type Props = {
@@ -55,10 +55,10 @@ const Testimonial = ({ entry }: TestimonialProps) => (
 export const TestimonialsBlock = ({ blok }: Props) => {
 	const entries = blok.testimonials.filter((entry): entry is TestimonialWithImage => Boolean(entry.image?.filename));
 
-	const [api, setApi] = React.useState<CarouselApi>();
-	const [activeIndex, setActiveIndex] = React.useState(0);
+	const [api, setApi] = useState<CarouselApi>();
+	const [activeIndex, setActiveIndex] = useState(0);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (!api) {
 			return;
 		}
