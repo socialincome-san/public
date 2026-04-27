@@ -1,5 +1,3 @@
-'use client';
-
 import { Testimonial, type TestimonialEntry } from '@/components/testimonial';
 import type { Testimonial as StoryblokTestimonial } from '@/generated/storyblok/types/109655/storyblok-components';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
