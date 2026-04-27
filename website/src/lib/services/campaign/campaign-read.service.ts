@@ -287,13 +287,19 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getOptions(userId: string): Promise<ServiceResult<CampaignOption[]>> {
+	async getEditableOptions(userId: string): Promise<ServiceResult<CampaignOption[]>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const programIds = Array.from(new Set(accessibleProgramsResult.data.map((access) => access.programId)));
+			const programIds = Array.from(
+				new Set(
+					accessibleProgramsResult.data
+						.filter((access) => access.permission === ProgramPermission.operator)
+						.map((access) => access.programId),
+				),
+			);
 			if (programIds.length === 0) {
 				return this.resultOk([]);
 			}
@@ -313,7 +319,7 @@ export class CampaignReadService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not fetch campaign options: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch editable campaign options: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -326,7 +332,9 @@ export class CampaignReadService extends BaseService {
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const programAccesses = accessibleProgramsResult.data;
+			const programAccesses = accessibleProgramsResult.data.filter(
+				(access) => access.permission === ProgramPermission.operator,
+			);
 			const programIds = Array.from(new Set(programAccesses.map((access) => access.programId)));
 			if (programIds.length === 0) {
 				return this.resultOk({ tableRows: [], totalCount: 0 });
@@ -378,11 +386,6 @@ export class CampaignReadService extends BaseService {
 				isActive: campaign.isActive,
 				programName: campaign.program?.name ?? null,
 				createdAt: campaign.createdAt,
-				permission: programAccesses.some(
-					(access) => access.programId === campaign.programId && access.permission === ProgramPermission.operator,
-				)
-					? ProgramPermission.operator
-					: ProgramPermission.owner,
 			}));
 
 			return this.resultOk({ tableRows, totalCount });

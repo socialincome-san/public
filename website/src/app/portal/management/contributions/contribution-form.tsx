@@ -25,7 +25,6 @@ type ContributionFormProps = {
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	contributionId?: string;
-	readOnly?: boolean;
 };
 
 export type ContributionFormSchema = {
@@ -82,7 +81,7 @@ const initialFormSchema: ContributionFormSchema = {
 	},
 };
 
-export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId, readOnly }: ContributionFormProps) => {
+export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId }: ContributionFormProps) => {
 	const [formSchema, setFormSchema] = useState(() => cloneFormSchema(initialFormSchema));
 	const [contribution, setContribution] = useState<ContributionPayload>();
 	const [optionsLoaded, setOptionsLoaded] = useState(false);
@@ -178,12 +177,7 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId,
 		});
 	};
 
-	let mode: 'readonly' | 'edit' | 'add' = 'add';
-	if (readOnly) {
-		mode = 'readonly';
-	} else if (contributionId) {
-		mode = 'edit';
-	}
+	const mode: 'edit' | 'add' = contributionId ? 'edit' : 'add';
 
 	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
 };

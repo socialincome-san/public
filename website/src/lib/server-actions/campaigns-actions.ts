@@ -42,7 +42,7 @@ export const getProgramsOptions = async () => {
 		return sessionResult;
 	}
 
-	return services.read.program.getOptions(sessionResult.data.id);
+	return services.read.program.getEditableOptions(sessionResult.data.id);
 };
 
 export const getCampaignByIdAction = async (id: string) => {

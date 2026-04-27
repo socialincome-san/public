@@ -1,4 +1,4 @@
-import { PayoutStatus, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { format, isSameMonth, startOfMonth } from 'date-fns';
@@ -30,7 +30,7 @@ export class PayoutProcessService extends BaseService {
 				return this.resultFail(accessResult.error);
 			}
 
-			const accessiblePrograms = accessResult.data;
+			const accessiblePrograms = accessResult.data.filter((program) => program.permission === ProgramPermission.operator);
 			if (accessiblePrograms.length === 0) {
 				return this.resultFail('No accessible programs found');
 			}

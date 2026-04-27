@@ -13,6 +13,7 @@ type NavLink = {
 export const useNavbarLinks = (sessions: Session[]) => {
 	const user = sessions.find((s): s is UserSession => s.type === 'user');
 	const hasContributor = sessions.some((s) => s.type === 'contributor');
+	const canAccessOperatorSections = Boolean(user?.hasAnyOperatorProgramAccess);
 	const mainNavLinks: NavLink[] = [
 		{
 			href: '/portal/programs',
@@ -20,21 +21,25 @@ export const useNavbarLinks = (sessions: Session[]) => {
 			label: 'Programs',
 			isDropdown: true,
 		},
-		{
-			href: '/portal/monitoring/payout-confirmation',
-			activeBase: '/portal/monitoring',
-			label: 'Monitoring',
-		},
-		{
-			href: '/portal/management/recipients',
-			activeBase: '/portal/management',
-			label: 'Management',
-		},
-		{
-			href: '/portal/delivery/make-payouts',
-			activeBase: '/portal/delivery',
-			label: 'Delivery',
-		},
+		...(canAccessOperatorSections
+			? ([
+					{
+						href: '/portal/monitoring/payout-confirmation',
+						activeBase: '/portal/monitoring',
+						label: 'Monitoring',
+					},
+					{
+						href: '/portal/management/recipients',
+						activeBase: '/portal/management',
+						label: 'Management',
+					},
+					{
+						href: '/portal/delivery/make-payouts',
+						activeBase: '/portal/delivery',
+						label: 'Delivery',
+					},
+				] satisfies NavLink[])
+			: []),
 	];
 
 	const userMenuNavLinks: NavLink[] = [

@@ -123,7 +123,7 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
-	async getOptions(userId: string): Promise<ServiceResult<ProgramOption[]>> {
+	async getEditableOptions(userId: string): Promise<ServiceResult<ProgramOption[]>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
 
@@ -131,16 +131,18 @@ export class ProgramReadService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			const programs = accessibleProgramsResult.data.map((p) => ({
-				id: p.programId,
-				name: p.programName,
-			}));
+			const programs = accessibleProgramsResult.data
+				.filter((program) => program.permission === ProgramPermission.operator)
+				.map((program) => ({
+					id: program.programId,
+					name: program.programName,
+				}));
 
 			return this.resultOk(programs);
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not fetch program options: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch editable program options: ${JSON.stringify(error)}`);
 		}
 	}
 

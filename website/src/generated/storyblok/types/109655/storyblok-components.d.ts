@@ -108,6 +108,27 @@ export interface DonationsTotal {
   [k: string]: unknown;
 }
 
+export interface Download {
+  title: string;
+  file: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  language?: string;
+  linkName: string;
+  component: "download";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Downloads {
+  heading?: string;
+  tableHeaderLabelFilename: string;
+  tableHeaderLabelInfo: string;
+  tableHeaderLabelLink: string;
+  files: Download[];
+  component: "downloads";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface DropdownItem {
   label?: string;
   menuItemGroups: MenuItemGroup[];
@@ -174,6 +195,7 @@ export interface ImageText {
   content?: StoryblokRichtext;
   image: StoryblokAsset;
   layout: "" | "imageLeft" | "imageRight";
+  imageToTextRatio?: "" | "1/3" | "1/2" | "2/3";
   component: "imageText";
   _uid: string;
   [k: string]: unknown;
@@ -281,6 +303,8 @@ export interface Page {
     | CampaignGrid
     | CountryGrid
     | DonationsTotal
+    | Download
+    | Downloads
     | FaqSelection
     | FocusGrid
     | HeroVideo
@@ -290,7 +314,10 @@ export interface Page {
     | LocalPartnerGrid
     | ModalCards
     | ProgramGrid
+    | TeamGrid
     | Text
+    | TwoColumnText
+    | VideoText
   )[];
   component: "page";
   _uid: string;
@@ -298,15 +325,21 @@ export interface Page {
 }
 
 export interface Person {
+  displayInOverviewPage?: boolean;
   fullName: string;
   firstName: string;
   lastName: string;
   avatar: StoryblokAsset;
   bio?: string;
-  displayInOverviewPage?: boolean;
   githubName?: string;
   linkedinName?: string;
-  is_volunteer?: boolean;
+  volunteerSince?: string;
+  volunteerStatus?: "" | "active" | "inactive" | "board_member";
+  primaryRole?: number | string;
+  fieldTrips?: {
+    [k: string]: unknown;
+  }[];
+  countryOffice?: ("" | "GHA" | "SLE" | "LBR")[];
   component: "person";
   _uid: string;
   [k: string]: unknown;
@@ -368,9 +401,35 @@ export interface Tag {
   [k: string]: unknown;
 }
 
+export interface TeamGrid {
+  title?: string;
+  description?: StoryblokRichtext;
+  person: (ISbStoryData<Person> | string)[];
+  component: "teamGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Text {
   content?: StoryblokRichtext;
   component: "text";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TwoColumnText {
+  leftText: StoryblokRichtext;
+  rightText: StoryblokRichtext;
+  component: "twoColumnText";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface VideoText {
+  content: StoryblokRichtext;
+  vimeoLink: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  layout: "" | "videoLeft" | "videoRight";
+  component: "videoText";
   _uid: string;
   [k: string]: unknown;
 }
