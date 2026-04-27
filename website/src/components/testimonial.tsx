@@ -20,7 +20,7 @@ export const Testimonial = ({ entry }: Props) => (
 				<p className="text-foreground text-lg leading-snug lg:text-xl">{entry.quote}</p>
 				<div className="flex items-center gap-3">
 					<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full md:hidden">
-						<NextImage src={entry.image.filename} alt={`${entry.name} portrait`} fill sizes="48px" className="object-cover" />
+						<NextImage src={entry.image.filename} alt={`${entry.image.alt}`} fill sizes="48px" className="object-cover" />
 					</div>
 					<p className="text-foreground text-base font-medium">
 						{entry.country ? `${entry.name}, ${entry.country}` : entry.name}
