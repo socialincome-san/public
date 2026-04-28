@@ -13,6 +13,7 @@ import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
+import { recipientsCsvTemplate } from './recipients-csv-template';
 import { RecipientDialog } from './recipient-dialog';
 
 type Props = {
@@ -151,11 +152,7 @@ export const RecipientsTableClient = ({
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
 				title="Upload recipients CSV"
-				template={{
-					headers: ['firstName', 'lastName', 'programId', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
-					filename: 'recipients-import-template.csv',
-				}}
+				template={recipientsCsvTemplate}
 				onImport={(file) => importRecipientsCsvAction(file, sessionType)}
 			/>
 		</>

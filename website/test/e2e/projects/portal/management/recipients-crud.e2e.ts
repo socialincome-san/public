@@ -70,18 +70,33 @@ const CSV_RECIPIENTS = [
 		lastName: 'Banner',
 		programName: 'SI Core Program SL',
 		localPartnerName: 'Local Partner SL Operations',
+		contactPhone: '+23277000801',
+		paymentPhone: '+23277000811',
+		dateOfBirth: '1991-04-21',
+		gender: 'male',
+		paymentInformationCode: 'CSV-RECIPIENT-001',
 	},
 	{
 		firstName: 'Natasha',
 		lastName: 'Romanoff',
 		programName: 'SI Core Program SL',
 		localPartnerName: 'Local Partner SL Operations',
+		contactPhone: '',
+		paymentPhone: '',
+		dateOfBirth: '',
+		gender: '',
+		paymentInformationCode: '',
 	},
 	{
 		firstName: 'Clint',
 		lastName: 'Barton',
 		programName: 'SI Education SL',
 		localPartnerName: 'Local Partner SL Operations',
+		contactPhone: '+23277000803',
+		paymentPhone: '+23277000813',
+		dateOfBirth: '1988-08-14',
+		gender: 'private',
+		paymentInformationCode: 'CSV-RECIPIENT-003',
 	},
 ];
 
@@ -510,18 +525,75 @@ test('Delete recipient', async ({ page }) => {
 });
 
 test('CSV Upload', async ({ page }) => {
+	await deleteFirebasePhonesIfExist(...CSV_RECIPIENTS.flatMap(({ paymentPhone }) => (paymentPhone ? [paymentPhone] : [])));
+
+	try {
+		await page.goto('/portal/management/recipients');
+		await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
+		await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-example.csv');
+		await page.getByTestId('import-button').click();
+		await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
+
+		for (const expected of CSV_RECIPIENTS) {
+			const row = await prisma.recipient.findFirst({
+				where: {
+					contact: {
+						firstName: expected.firstName,
+						lastName: expected.lastName,
+					},
+				},
+				select: {
+					program: { select: { name: true } },
+					localPartner: { select: { name: true } },
+					contact: {
+						select: {
+							phone: { select: { number: true } },
+							dateOfBirth: true,
+							gender: true,
+						},
+					},
+					paymentInformation: {
+						select: {
+							code: true,
+							phone: { select: { number: true } },
+						},
+					},
+				},
+			});
+			expect(row).toBeDefined();
+			expect(row?.program?.name).toBe(expected.programName);
+			expect(row?.localPartner?.name).toBe(expected.localPartnerName);
+			expect(row?.contact?.phone?.number ?? '').toBe(expected.contactPhone);
+			expect(row?.paymentInformation?.phone?.number ?? '').toBe(expected.paymentPhone);
+			expect(row?.paymentInformation?.code ?? '').toBe(expected.paymentInformationCode);
+			expect(row?.contact?.gender ?? '').toBe(expected.gender);
+			expect(row?.contact?.dateOfBirth?.toISOString().slice(0, 10) ?? '').toBe(expected.dateOfBirth);
+		}
+	} finally {
+		await deleteFirebasePhonesIfExist(...CSV_RECIPIENTS.flatMap(({ paymentPhone }) => (paymentPhone ? [paymentPhone] : [])));
+	}
+});
+
+test('CSV Upload fails for invalid dateOfBirth', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
-	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-example.csv');
+	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-invalid-date-of-birth.csv');
 	await page.getByTestId('import-button').click();
-	await expect(page.getByText('Successfully imported 3 items.')).toBeVisible();
+	await expect(page.getByText('Row 1: dateOfBirth must be a valid date in YYYY-MM-DD format')).toBeVisible();
 
-	for (const expected of CSV_RECIPIENTS) {
-		const row = await getRecipientProgramAndLocalPartnerByName(expected.firstName, expected.lastName);
-		expect(row).toBeDefined();
-		expect(row?.program?.name).toBe(expected.programName);
-		expect(row?.localPartner?.name).toBe(expected.localPartnerName);
-	}
+	const created = await getRecipientIdByName('Wanda', 'Maximoff');
+	expect(created).toBeNull();
+});
+
+test('CSV Upload fails for missing programId', async ({ page }) => {
+	await page.goto('/portal/management/recipients');
+	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
+	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-missing-program-id.csv');
+	await page.getByTestId('import-button').click();
+	await expect(page.getByText('Row 1: programId is required')).toBeVisible();
+
+	const created = await getRecipientIdByName('Steve', 'Rogers');
+	expect(created).toBeNull();
 });
 
 const expectedCsvExport = {

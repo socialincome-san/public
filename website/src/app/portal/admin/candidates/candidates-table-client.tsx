@@ -14,6 +14,7 @@ import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CandidateDialog } from './candidate-dialog';
+import { candidatesCsvTemplate } from './candidates-csv-template';
 
 type Props = {
 	rows: CandidatesTableViewRow[];
@@ -148,11 +149,7 @@ export const CandidatesTableClient = ({
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
 				title="Upload candidates CSV"
-				template={{
-					headers: ['firstName', 'lastName', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'local_partner_id_here'],
-					filename: 'candidates-import-template.csv',
-				}}
+				template={candidatesCsvTemplate}
 				onImport={(file) => importCandidatesCsvAction(file, sessionType)}
 			/>
 		</>
