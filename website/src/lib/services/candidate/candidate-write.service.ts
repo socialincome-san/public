@@ -757,5 +757,4 @@ export class CandidateWriteService extends BaseService {
 			return this.resultFail(`Could not assign candidates: ${JSON.stringify(error)}`);
 		}
 	}
-
 }

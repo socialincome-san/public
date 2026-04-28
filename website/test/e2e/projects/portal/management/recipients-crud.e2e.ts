@@ -577,7 +577,9 @@ test('CSV Upload', async ({ page }) => {
 test('CSV Upload fails for invalid dateOfBirth', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
-	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-invalid-date-of-birth.csv');
+	await page
+		.getByTestId('csv-dropzone-input')
+		.setInputFiles('./test/e2e/projects/portal/management/upload-invalid-date-of-birth.csv');
 	await page.getByTestId('import-button').click();
 	await expect(page.getByText('Row 1: dateOfBirth must be a valid date in YYYY-MM-DD format')).toBeVisible();
 
@@ -588,7 +590,9 @@ test('CSV Upload fails for invalid dateOfBirth', async ({ page }) => {
 test('CSV Upload fails for missing programId', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
-	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/management/upload-missing-program-id.csv');
+	await page
+		.getByTestId('csv-dropzone-input')
+		.setInputFiles('./test/e2e/projects/portal/management/upload-missing-program-id.csv');
 	await page.getByTestId('import-button').click();
 	await expect(page.getByText('Row 1: programId is required')).toBeVisible();
 

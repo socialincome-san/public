@@ -13,8 +13,8 @@ import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
-import { recipientsCsvTemplate } from './recipients-csv-template';
 import { RecipientDialog } from './recipient-dialog';
+import { recipientsCsvTemplate } from './recipients-csv-template';
 
 type Props = {
 	rows: UpcomingOnboardingTableViewRow[];

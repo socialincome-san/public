@@ -741,5 +741,4 @@ export class RecipientWriteService extends BaseService {
 			return this.resultFail('Could not delete recipient. Please try again later.');
 		}
 	}
-
 }

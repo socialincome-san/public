@@ -315,9 +315,7 @@ test('edit candidate and remove contact phone and address', async ({ page }) => 
 });
 
 test('CSV Upload', async ({ page }) => {
-	await deleteFirebasePhonesIfExist(
-		...CSV_CANDIDATES.flatMap(({ paymentPhone }) => (paymentPhone ? [paymentPhone] : [])),
-	);
+	await deleteFirebasePhonesIfExist(...CSV_CANDIDATES.flatMap(({ paymentPhone }) => (paymentPhone ? [paymentPhone] : [])));
 
 	try {
 		await page.goto('/portal/admin/candidates');
@@ -362,9 +360,7 @@ test('CSV Upload', async ({ page }) => {
 			expect(row?.contact?.dateOfBirth?.toISOString().slice(0, 10) ?? '').toBe(expected.dateOfBirth);
 		}
 	} finally {
-		await deleteFirebasePhonesIfExist(
-			...CSV_CANDIDATES.flatMap(({ paymentPhone }) => (paymentPhone ? [paymentPhone] : [])),
-		);
+		await deleteFirebasePhonesIfExist(...CSV_CANDIDATES.flatMap(({ paymentPhone }) => (paymentPhone ? [paymentPhone] : [])));
 	}
 });
 
@@ -382,7 +378,9 @@ test('CSV Upload fails for invalid gender', async ({ page }) => {
 test('CSV Upload fails for missing localPartnerId', async ({ page }) => {
 	await page.goto('/portal/admin/candidates');
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
-	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/admin/upload-missing-local-partner-id.csv');
+	await page
+		.getByTestId('csv-dropzone-input')
+		.setInputFiles('./test/e2e/projects/portal/admin/upload-missing-local-partner-id.csv');
 	await page.getByTestId('import-button').click();
 	await expect(page.getByText('Row 1: localPartnerId is required')).toBeVisible();
 
@@ -393,7 +391,9 @@ test('CSV Upload fails for missing localPartnerId', async ({ page }) => {
 test('CSV Upload fails for duplicate contact phone', async ({ page }) => {
 	await page.goto('/portal/admin/candidates');
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
-	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/admin/upload-duplicate-contact-phone.csv');
+	await page
+		.getByTestId('csv-dropzone-input')
+		.setInputFiles('./test/e2e/projects/portal/admin/upload-duplicate-contact-phone.csv');
 	await page.getByTestId('import-button').click();
 	await expect(page.getByText('Row 1: A contact with this phone number already exists.')).toBeVisible();
 
