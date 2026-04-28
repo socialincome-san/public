@@ -51,7 +51,7 @@ export const parseCsvFile = async (file: File): Promise<CsvRow[]> => {
 const parseOptionalCsvValue = (value: string | undefined): string | undefined => {
 	const trimmedValue = value?.trim();
 
-	return trimmedValue ? trimmedValue : undefined;
+	return trimmedValue ?? undefined;
 };
 
 const parseCsvGender = (rowNumber: number, value: string | undefined): ServiceResult<Gender | null> => {

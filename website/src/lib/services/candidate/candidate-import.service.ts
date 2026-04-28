@@ -4,11 +4,13 @@ import { logger } from '@/lib/utils/logger';
 import { ServiceResult } from '../core/base.types';
 import { resultFail, resultOk } from '../core/service-result';
 import { CandidateFormCreateInput } from './candidate-form-input';
+import { CandidateValidationService } from './candidate-validation.service';
 import { CandidateWriteService } from './candidate-write.service';
 
 export class CandidateImportService {
 	constructor(
 		private readonly candidateWriteService: CandidateWriteService,
+		private readonly candidateValidationService: CandidateValidationService,
 		private readonly loggerInstance = logger,
 	) {}
 
@@ -60,25 +62,49 @@ export class CandidateImportService {
 
 	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {
 		try {
-			let created = 0;
 			const rows = parseCsvText(await file.text());
+			const validatedCandidates: CandidateFormCreateInput[] = [];
+			const validationErrors: string[] = [];
 
 			for (let i = 0; i < rows.length; i++) {
 				const rowNumber = i + 1;
 				const candidateResult = this.mapRowToCandidate(rowNumber, rows[i]);
 				if (!candidateResult.success) {
-					return resultFail(candidateResult.error);
+					validationErrors.push(candidateResult.error);
+
+					continue;
 				}
 
-				const createResult = await this.candidateWriteService.create(session, candidateResult.data);
+				const validatedInputResult = this.candidateValidationService.validateCreateInput(candidateResult.data);
+				if (!validatedInputResult.success) {
+					validationErrors.push(`Row ${rowNumber}: ${validatedInputResult.error}`);
+
+					continue;
+				}
+
+				const uniquenessResult = await this.candidateValidationService.validateCreateUniqueness(validatedInputResult.data);
+				if (!uniquenessResult.success) {
+					validationErrors.push(`Row ${rowNumber}: ${uniquenessResult.error}`);
+
+					continue;
+				}
+
+				validatedCandidates.push(validatedInputResult.data);
+			}
+
+			if (validationErrors.length > 0) {
+				return resultFail(validationErrors.join('\n'));
+			}
+
+			for (let i = 0; i < validatedCandidates.length; i++) {
+				const rowNumber = i + 1;
+				const createResult = await this.candidateWriteService.create(session, validatedCandidates[i]);
 				if (!createResult.success) {
 					return resultFail(`Row ${rowNumber}: ${createResult.error}`);
 				}
-
-				created++;
 			}
 
-			return resultOk({ created });
+			return resultOk({ created: validatedCandidates.length });
 		} catch (error) {
 			this.loggerInstance.error(error);
 

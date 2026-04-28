@@ -93,7 +93,7 @@ const candidateRead = new CandidateReadService(prisma, userRead);
 const contactRelations = new ContactRelationsService(prisma);
 const candidateValidation = new CandidateValidationService(prisma);
 const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin, candidateValidation, contactRelations);
-const candidateImport = new CandidateImportService(candidateWrite);
+const candidateImport = new CandidateImportService(candidateWrite, candidateValidation);
 const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode, recipientStatus);
 const recipientValidation = new RecipientValidationService(prisma);
 const recipientWrite = new RecipientWriteService(
@@ -103,7 +103,7 @@ const recipientWrite = new RecipientWriteService(
 	recipientValidation,
 	contactRelations,
 );
-const recipientImport = new RecipientImportService(recipientWrite);
+const recipientImport = new RecipientImportService(recipientWrite, recipientValidation);
 const payoutValidation = new PayoutValidationService(prisma);
 const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutValidation);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
