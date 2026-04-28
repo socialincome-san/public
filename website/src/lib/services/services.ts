@@ -31,7 +31,6 @@ import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { FocusReadService } from './focus/focus-read.service';
 import { FocusValidationService } from './focus/focus-validation.service';
 import { FocusWriteService } from './focus/focus-write.service';
-import { CsvOptionalFieldsService } from './import/csv-optional-fields.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
@@ -75,7 +74,6 @@ import { UserWriteService } from './user/user-write.service';
 const appReviewMode = new AppReviewModeService(prisma);
 const firebaseAdmin = new FirebaseAdminService(prisma);
 const firebaseSession = new FirebaseSessionService(prisma);
-const csvOptionalFields = new CsvOptionalFieldsService();
 const programAccessRead = new ProgramAccessReadService(prisma);
 const programAccessWrite = new ProgramAccessWriteService(prisma);
 const organizationAccess = new OrganizationAccessService(prisma);
@@ -95,7 +93,7 @@ const candidateRead = new CandidateReadService(prisma, userRead);
 const contactRelations = new ContactRelationsService(prisma);
 const candidateValidation = new CandidateValidationService(prisma);
 const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin, candidateValidation, contactRelations);
-const candidateImport = new CandidateImportService(candidateWrite, csvOptionalFields);
+const candidateImport = new CandidateImportService(candidateWrite);
 const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode, recipientStatus);
 const recipientValidation = new RecipientValidationService(prisma);
 const recipientWrite = new RecipientWriteService(
@@ -105,7 +103,7 @@ const recipientWrite = new RecipientWriteService(
 	recipientValidation,
 	contactRelations,
 );
-const recipientImport = new RecipientImportService(recipientWrite, csvOptionalFields);
+const recipientImport = new RecipientImportService(recipientWrite);
 const payoutValidation = new PayoutValidationService(prisma);
 const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutValidation);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);

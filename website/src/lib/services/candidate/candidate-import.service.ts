@@ -1,16 +1,14 @@
 import { Session } from '@/lib/firebase/current-account';
-import { parseCsvText } from '@/lib/utils/csv';
+import { parseCsvOptionalFields, parseCsvText } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
 import { ServiceResult } from '../core/base.types';
 import { resultFail, resultOk } from '../core/service-result';
-import { CsvOptionalFieldsService } from '../import/csv-optional-fields.service';
 import { CandidateFormCreateInput } from './candidate-form-input';
 import { CandidateWriteService } from './candidate-write.service';
 
 export class CandidateImportService {
 	constructor(
 		private readonly candidateWriteService: CandidateWriteService,
-		private readonly csvOptionalFieldsService: CsvOptionalFieldsService,
 		private readonly loggerInstance = logger,
 	) {}
 
@@ -23,7 +21,7 @@ export class CandidateImportService {
 			return resultFail(`Row ${rowNumber}: localPartnerId is required`);
 		}
 
-		const optionalFieldsResult = this.csvOptionalFieldsService.parseOptionalFields(rowNumber, row);
+		const optionalFieldsResult = parseCsvOptionalFields(rowNumber, row);
 		if (!optionalFieldsResult.success) {
 			return resultFail(optionalFieldsResult.error);
 		}
