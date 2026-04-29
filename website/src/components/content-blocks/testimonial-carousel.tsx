@@ -78,7 +78,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 		const restartProgressAnimation = () => {
 			cancelProgressAnimation();
-			updateRemainingDelay();
+			aimateProgressBar();
 		};
 
 		const cancelProgressAnimation = () => {
@@ -88,7 +88,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 			}
 		};
 
-		const updateRemainingDelay = () => {
+		const aimateProgressBar = () => {
 			const autoplay = api.plugins().autoplay;
 
 			const nextDelay = autoplay.timeUntilNext() ?? AUTOPLAY_DELAY_MS;
@@ -101,12 +101,12 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 				}
 			});
 
-			animationFrameId = window.requestAnimationFrame(updateRemainingDelay);
+			animationFrameId = window.requestAnimationFrame(aimateProgressBar);
 		};
 
-		updateRemainingDelay();
+		aimateProgressBar();
 		api.on('autoplay:stop', cancelProgressAnimation);
-		api.on('autoplay:play', updateRemainingDelay);
+		api.on('autoplay:play', aimateProgressBar);
 
 		return () => {
 			cancelProgressAnimation();
