@@ -31,8 +31,8 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	const [api, setApi] = useState<CarouselApi>();
 	const [activeIndex, setActiveIndex] = useState(0);
-	const [remainingMs, setRemainingMs] = useState(AUTOPLAY_DELAY_MS);
 	const autoplayPlugin = useRef(Autoplay({ delay: AUTOPLAY_DELAY_MS, stopOnInteraction: false }));
+	const progressBarRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
 	useEffect(() => {
 		if (!api) {
@@ -67,8 +67,6 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 				autoplay.play();
 			}
 		}
-
-		setRemainingMs(AUTOPLAY_DELAY_MS);
 	};
 
 	useEffect(() => {
@@ -78,19 +76,42 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 		let animationFrameId: number | null = null;
 
+		const restartProgressAnimation = () => {
+			cancelProgressAnimation();
+			updateRemainingDelay();
+		};
+
+		const cancelProgressAnimation = () => {
+			if (animationFrameId !== null) {
+				window.cancelAnimationFrame(animationFrameId);
+				animationFrameId = null;
+			}
+		};
+
 		const updateRemainingDelay = () => {
 			const autoplay = api.plugins().autoplay;
-			const nextDelay = autoplay?.timeUntilNext();
-			setRemainingMs(nextDelay ?? AUTOPLAY_DELAY_MS);
+
+			const nextDelay = autoplay.timeUntilNext() ?? AUTOPLAY_DELAY_MS;
+			const progress = Math.min(Math.max(1 - nextDelay / AUTOPLAY_DELAY_MS, 0), 1);
+			const selectedIndex = api.selectedScrollSnap();
+
+			progressBarRefs.current.forEach((progressBar, index) => {
+				if (progressBar) {
+					progressBar.style.transform = `scaleX(${index === selectedIndex ? progress : 0})`;
+				}
+			});
+
 			animationFrameId = window.requestAnimationFrame(updateRemainingDelay);
 		};
 
 		updateRemainingDelay();
+		api.on('autoplay:stop', cancelProgressAnimation);
+		api.on('autoplay:play', updateRemainingDelay);
 
 		return () => {
-			if (animationFrameId !== null) {
-				window.cancelAnimationFrame(animationFrameId);
-			}
+			cancelProgressAnimation();
+			api.off('autoplay:stop', cancelProgressAnimation);
+			api.off('autoplay:play', restartProgressAnimation);
 		};
 	}, [api, autoplayEnabled]);
 
@@ -133,15 +154,12 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 							aria-label={`Show testimonial ${index + 1}`}
 						>
 							<span
+								ref={(element) => {
+									progressBarRefs.current[index] = element;
+								}}
 								className="bg-primary absolute inset-0 origin-left transition-transform duration-100"
 								style={{
-									transform: `scaleX(${
-										index === activeIndex
-											? autoplayEnabled
-												? Math.min(Math.max(1 - remainingMs / AUTOPLAY_DELAY_MS, 0), 1)
-												: 1
-											: 0
-									})`,
+									transform: `scaleX(${index === activeIndex && !autoplayEnabled ? 1 : 0})`,
 								}}
 								aria-hidden="true"
 							/>
