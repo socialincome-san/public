@@ -129,7 +129,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 							key={`${entry.name}-${index}`}
 							type="button"
 							onClick={() => handleSelectTestimonialItem(index)}
-							className={cn('bg-primary/25·relative·h-1.5·w-16·overflow-hidden·rounded-full')}
+							className={cn('bg-primary/25 relative h-1.5 w-16 overflow-hidden rounded-full')}
 							aria-label={`Show testimonial ${index + 1}`}
 						>
 							<span
