@@ -78,6 +78,7 @@
 		"date-fns": "^4.1.0",
 		"dotenv-cli": "^11.0.0",
 		"embla-carousel-react": "^8.6.0",
+		"embla-carousel-autoplay": "^8.6.0",
 		"firebase": "^12.0.0",
 		"firebase-admin": "^13.7.0",
 		"i18next": "^25.0.0",

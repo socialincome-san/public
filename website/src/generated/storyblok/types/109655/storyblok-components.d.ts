@@ -425,6 +425,7 @@ export interface Testimonial {
 export interface TestimonialCarousel {
   testimonials: Testimonial[];
   heading?: string;
+  autoplay?: boolean;
   component: "testimonialCarousel";
   _uid: string;
   [k: string]: unknown;
