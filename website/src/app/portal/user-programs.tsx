@@ -21,13 +21,20 @@ export const UserPrograms = async ({ userId }: Props) => {
 	const operatedPrograms = wallets.filter((p) => p.permission === ProgramPermission.operator);
 	const ownedPrograms = wallets.filter((p) => p.permission === ProgramPermission.owner);
 
+	const programImages = [
+		'/assets/partners/aurora.png',
+		'/assets/partners/lizard-earth.jpg',
+		'/assets/partners/rainbo-initiative.jpg',
+		'/assets/partners/regina-bjarnadottir-aurora.jpg',
+	] as const;
+
 	return (
 		<section className="space-y-16">
 			{operatedPrograms.length > 0 && (
 				<div>
 					<h2 className="py-6 text-3xl font-medium">Operated Programs</h2>
 					<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
-						{operatedPrograms.map((program) => (
+						{operatedPrograms.map((program, idx) => (
 							<Wallet
 								key={program.id}
 								href={`/portal/programs/${program.id}/overview`}
@@ -43,6 +50,12 @@ export const UserPrograms = async ({ userId }: Props) => {
 									label: 'Recipients',
 									amount: program.recipientsCount,
 								}}
+								imageHrefs={[
+									programImages[idx % programImages.length],
+									programImages[(idx + 1) % programImages.length],
+									programImages[(idx + 2) % programImages.length],
+								]}
+								imageAlt=""
 							/>
 						))}
 					</div>
