@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient, Recipient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
-import { parseCsvText } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
@@ -740,74 +739,6 @@ export class RecipientWriteService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail('Could not delete recipient. Please try again later.');
-		}
-	}
-
-	async importCsv(session: Session, file: File): Promise<ServiceResult<{ created: number }>> {
-		try {
-			let created = 0;
-			const text = await file.text();
-			const rows = parseCsvText(text);
-			for (let i = 0; i < rows.length; i++) {
-				const row = rows[i];
-				const rowNumber = i + 1;
-
-				if (!row.firstName || !row.lastName) {
-					return this.resultFail(`Row ${rowNumber}: firstName and lastName are required`);
-				}
-
-				if (!row.programId) {
-					return this.resultFail(`Row ${rowNumber}: programId is required`);
-				}
-
-				if (!row.localPartnerId) {
-					return this.resultFail(`Row ${rowNumber}: localPartnerId is required`);
-				}
-
-				const recipient: RecipientFormCreateInput = {
-					startDate: null,
-					suspendedAt: null,
-					suspensionReason: null,
-					successorName: null,
-					termsAccepted: false,
-					programId: row.programId,
-					localPartnerId: row.localPartnerId,
-					paymentInformation: {
-						mobileMoneyProviderId: undefined,
-						code: null,
-						phone: undefined,
-					},
-					contact: {
-						firstName: row.firstName,
-						lastName: row.lastName,
-						callingName: null,
-						email: null,
-						gender: null,
-						language: null,
-						dateOfBirth: null,
-						profession: null,
-						phone: undefined,
-						hasWhatsApp: false,
-						street: null,
-						number: null,
-						city: null,
-						zip: null,
-						country: null,
-					},
-				};
-
-				const result = await this.create(session, recipient);
-
-				if (!result.success) {
-					return this.resultFail(`Row ${rowNumber}: ${result.error}`);
-				}
-
-				created++;
-			}
-
-			return this.resultOk({ created });
-		} catch (error) {
-			return this.resultFail(error instanceof Error ? error.message : 'Failed to parse CSV file');
 		}
 	}
 }
