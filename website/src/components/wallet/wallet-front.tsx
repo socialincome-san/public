@@ -1,6 +1,6 @@
 import { Button } from '@/components/button';
-import { cn } from '@/lib/utils/cn';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { cn } from '@/lib/utils/cn';
 import { PlusIcon } from 'lucide-react';
 import type { WalletBadge, WalletPaidOut, WalletRecipientCount, WalletVariant } from './wallet.types';
 
@@ -53,7 +53,7 @@ const WalletFrontContent = ({ variant, programName, country, badge, paidOut, amo
 				{variant === 'default' ? (
 					<div className="flex h-full w-full flex-col items-start justify-between gap-2">
 						<div>
-							<h3 className="line-clamp-2 mb-3 min-h-[2em] text-4xl leading-none font-normal">{programName}</h3>
+							<h3 className="mb-3 line-clamp-2 min-h-[2em] text-4xl leading-none font-normal">{programName}</h3>
 							<p className="line-clamp-1 min-h-6 text-base leading-6 font-medium">{country}</p>
 							{badge && <div className="mt-1">{badge}</div>}
 						</div>

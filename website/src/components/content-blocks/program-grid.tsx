@@ -35,7 +35,7 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 				</h2>
 			)}
 			{blok.description && (
-				<p className="-mt-4 mb-10 text-center text-lg leading-7 font-normal text-foreground whitespace-pre-line">
+				<p className="text-foreground -mt-4 mb-10 text-center text-lg leading-7 font-normal whitespace-pre-line">
 					<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.description}</Markdown>
 				</p>
 			)}
