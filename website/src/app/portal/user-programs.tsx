@@ -37,25 +37,24 @@ export const UserPrograms = async ({ userId }: Props) => {
 						{operatedPrograms.map((program, idx) => (
 							<Wallet
 								key={program.id}
-								href={`/portal/programs/${program.id}/overview`}
-								title={program.programName}
-								subtitle={getCountryNameByCode(program.country)}
+								linkHref={`/portal/programs/${program.id}/overview`}
+								programName={program.programName}
+								country={getCountryNameByCode(program.country)}
 								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
-								footerLeft={{
+								paidOut={{
 									label: 'Paid out',
 									currency: program.payoutCurrency,
 									amount: program.totalPayoutsSum,
 								}}
-								footerRight={{
+								amountOfRecipients={{
 									label: 'Recipients',
 									amount: program.recipientsCount,
 								}}
-								imageHrefs={[
-									programImages[idx % programImages.length],
-									programImages[(idx + 1) % programImages.length],
-									programImages[(idx + 2) % programImages.length],
-								]}
-								imageAlt=""
+								images={{
+									mainImage: { src: programImages[idx % programImages.length] },
+									extraImage1: { src: programImages[(idx + 1) % programImages.length] },
+									extraImage2: { src: programImages[(idx + 2) % programImages.length] },
+								}}
 							/>
 						))}
 					</div>
@@ -67,22 +66,22 @@ export const UserPrograms = async ({ userId }: Props) => {
 					{ownedPrograms.map((program) => (
 						<Wallet
 							key={program.id}
-							href={`/portal/programs/${program.id}/overview`}
-							title={program.programName}
-							subtitle={getCountryNameByCode(program.country)}
+							linkHref={`/portal/programs/${program.id}/overview`}
+							programName={program.programName}
+							country={getCountryNameByCode(program.country)}
 							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
-							footerLeft={{
+							paidOut={{
 								label: 'Paid out',
 								currency: program.payoutCurrency,
 								amount: program.totalPayoutsSum,
 							}}
-							footerRight={{
+							amountOfRecipients={{
 								label: 'Recipients',
 								amount: program.recipientsCount,
 							}}
 						/>
 					))}
-					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
+					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" programName="Create new program" />} />
 				</div>
 			</div>
 		</section>
