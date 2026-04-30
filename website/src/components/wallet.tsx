@@ -31,6 +31,154 @@ const formatAmount = (amount?: number): string => {
 	}).format(amount);
 };
 
+type WalletVariant = NonNullable<WalletProps['variant']>;
+type WalletFooterLeft = NonNullable<WalletProps['footerLeft']>;
+type WalletFooterRight = NonNullable<WalletProps['footerRight']>;
+
+type WalletImageStackProps = {
+	primaryImageHref?: string;
+	secondaryImageHref?: string;
+	tertiaryImageHref?: string;
+	imageAlt?: string;
+};
+
+const WalletImageStack = ({ primaryImageHref, secondaryImageHref, tertiaryImageHref, imageAlt }: WalletImageStackProps) => (
+	<div className="-mb-(--slant-height) flex flex-col [background:var(--wallet-back-bg)]">
+		<div
+			className={cn(
+				'relative h-(--stack-height) overflow-hidden rounded-sm',
+				primaryImageHref ? 'm-[calc(2*var(--shadow-size))]' : 'm-[calc(3*var(--shadow-size))]',
+				// Keep `mb-0` separate so `twMerge` doesn't drop it due to `m-*` conflicts
+				'mb-0',
+				'[box-shadow:var(--wallet-cards-box-shadow)]',
+				'[background:var(--wallet-cards-background)]',
+			)}
+		>
+			{primaryImageHref ? (
+				<>
+					{tertiaryImageHref ? (
+						<div
+							className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center"
+							style={{ backgroundImage: `url(${tertiaryImageHref})` }}
+							aria-label=""
+						/>
+					) : null}
+					{secondaryImageHref ? (
+						<div
+							className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-y-5 group-hover:translate-x-1 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
+							style={{ backgroundImage: `url(${secondaryImageHref})` }}
+							aria-label=""
+						/>
+					) : null}
+					<div
+						className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-y-7 group-hover:-translate-x-1 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
+						style={{ backgroundImage: `url(${primaryImageHref})` }}
+						aria-label={imageAlt}
+						role={imageAlt ? 'img' : undefined}
+					/>
+				</>
+			) : null}
+		</div>
+	</div>
+);
+
+type WalletFrontProps = {
+	variant: WalletVariant;
+	title: string;
+	subtitle?: string | null;
+	badge?: ReactNode;
+	footerLeft?: WalletFooterLeft;
+	footerRight?: WalletFooterRight;
+};
+
+const WalletFront = ({ variant, title, subtitle, badge, footerLeft, footerRight }: WalletFrontProps) => (
+	<div className="flex aspect-[1.9] flex-1 drop-shadow-[0_4px_20px_rgba(0,0,0,0.09)]">
+		<div
+			className={cn(
+				'flex-1 pt-9',
+				'text-[color:var(--text-color)]',
+				'[background:var(--wallet-front-bg)]',
+				'[clip-path:polygon(100%_0%,_100%_100%,_0%_100%,_0%_0%,_var(--slant-shift)_0%,_var(--slant-position)_var(--slant-height),_calc(100%_-_var(--slant-position))_var(--slant-height),_calc(100%_-_var(--slant-shift))_0%)]',
+			)}
+		>
+			<div className="h-full p-8 pt-0 pb-6">
+				{variant === 'default' ? (
+					<div className="flex h-full w-full flex-col items-start justify-between gap-2">
+						<div>
+							<h3 className="min-h-[2.6em] text-4xl leading-[1.3] font-normal line-clamp-2">{title}</h3>
+							<p className="min-h-[1.25rem] text-sm leading-5 font-medium tracking-wide line-clamp-1">{subtitle}</p>
+							{badge && <div className="mt-1">{badge}</div>}
+						</div>
+						<div className="flex w-full items-start justify-between">
+							<div className="flex flex-col items-start">
+								<p className="text-sm font-medium tracking-wide">{footerLeft?.label}</p>
+								<p className="text-4xl font-normal">
+									<small className="text-lg">{footerLeft?.currency}</small> {formatAmount(footerLeft?.amount)}
+								</p>
+							</div>
+							<div className="flex flex-col items-end">
+								<p className="text-sm font-medium tracking-wide">{footerRight?.label}</p>
+								<p className="text-4xl font-normal">{footerRight?.amount}</p>
+							</div>
+						</div>
+					</div>
+				) : (
+					<div className="flex h-full flex-col items-center justify-center gap-4">
+						<Button variant="secondary" size="icon" className="h-12 w-12 rounded-full shadow-xs" aria-label="Add">
+							<PlusIcon className="h-6 w-6" />
+						</Button>
+						<p className="min-h-[2.5em] text-center text-2xl leading-[1.25] line-clamp-2">{title}</p>
+					</div>
+				)}
+			</div>
+		</div>
+	</div>
+);
+
+type WalletOverlayImagesProps = {
+	primaryImageHref?: string;
+	secondaryImageHref?: string;
+	imageAlt?: string;
+};
+
+const WalletOverlayImages = ({ primaryImageHref, secondaryImageHref, imageAlt }: WalletOverlayImagesProps) => {
+	if (!primaryImageHref) {
+		return null;
+	}
+
+	return (
+		<div
+			className={cn(
+				'pointer-events-none absolute z-20 h-(--stack-height)',
+				'top-[calc(2*var(--shadow-size))]',
+				'right-[calc(2*var(--shadow-size))]',
+				'left-[calc(2*var(--shadow-size))]',
+			)}
+		>
+			<div
+				className={cn(
+					'h-full w-full overflow-visible rounded-sm',
+					'[clip-path:inset(calc(-4*var(--shadow-size))_calc(-2*var(--shadow-size))_calc(2*var(--shadow-size))_calc(-2*var(--shadow-size))_round_2px)]',
+				)}
+			>
+				{secondaryImageHref ? (
+					<div
+						className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-y-4 group-hover:translate-x-1 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
+						style={{ backgroundImage: `url(${secondaryImageHref})` }}
+						aria-label=""
+					/>
+				) : null}
+				<div
+					className="h-full w-full origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-y-7 group-hover:-translate-x-1 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
+					style={{ backgroundImage: `url(${primaryImageHref})` }}
+					aria-label={imageAlt}
+					role={imageAlt ? 'img' : undefined}
+				/>
+			</div>
+		</div>
+	);
+};
+
 export const Wallet = ({
 	variant = 'default',
 	title,
@@ -81,117 +229,23 @@ export const Wallet = ({
 				variant="noPadding"
 				className="flex h-full max-w-full cursor-pointer flex-col overflow-hidden transition hover:shadow-xs"
 			>
-				<div className="-mb-(--slant-height) flex flex-col [background:var(--wallet-back-bg)]">
-					<div
-						className={cn(
-							'relative h-(--stack-height) overflow-hidden rounded-sm',
-							primaryImageHref ? 'm-[calc(2*var(--shadow-size))]' : 'm-[calc(3*var(--shadow-size))]',
-							'mb-0',
-							'[box-shadow:var(--wallet-cards-box-shadow)]',
-							'[background:var(--wallet-cards-background)]',
-						)}
-					>
-						{primaryImageHref ? (
-							<>
-								{tertiaryImageHref ? (
-									<div
-										className="absolute inset-0 rounded-sm bg-cover bg-center"
-										style={{ backgroundImage: `url(${tertiaryImageHref})` }}
-										aria-label=""
-									/>
-								) : null}
-								{secondaryImageHref ? (
-									<div
-										className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-y-5 group-hover:translate-x-1 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
-										style={{ backgroundImage: `url(${secondaryImageHref})` }}
-										aria-label=""
-									/>
-								) : null}
-								<div
-									className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-y-7 group-hover:-translate-x-1 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
-									style={{ backgroundImage: `url(${primaryImageHref})` }}
-									aria-label={imageAlt}
-									role={imageAlt ? 'img' : undefined}
-								/>
-							</>
-						) : null}
-					</div>
-				</div>
-
-				<div className="flex aspect-[1.9] flex-1 drop-shadow-[0_4px_20px_rgba(0,0,0,0.09)]">
-					<div
-						className={cn(
-							'flex-1 pt-9',
-							'text-[color:var(--text-color)]',
-							'[background:var(--wallet-front-bg)]',
-							'[clip-path:polygon(100%_0%,_100%_100%,_0%_100%,_0%_0%,_var(--slant-shift)_0%,_var(--slant-position)_var(--slant-height),_calc(100%_-_var(--slant-position))_var(--slant-height),_calc(100%_-_var(--slant-shift))_0%)]',
-						)}
-					>
-						<div className="h-full p-8 pt-0 pb-6">
-							{variant === 'default' ? (
-								<div className="flex h-full w-full flex-col items-start justify-between gap-2">
-									<div>
-										<h3 className="min-h-[2.6em] text-4xl leading-[1.3] font-normal line-clamp-2">{title}</h3>
-										<p className="min-h-[1.25rem] text-sm leading-5 font-medium tracking-wide line-clamp-1">{subtitle}</p>
-										{badge && <div className="mt-1">{badge}</div>}
-									</div>
-									<div className="flex w-full items-start justify-between">
-										<div className="flex flex-col items-start">
-											<p className="text-sm font-medium tracking-wide">{footerLeft?.label}</p>
-											<p className="text-4xl font-normal">
-												<small className="text-lg">{footerLeft?.currency}</small> {formatAmount(footerLeft?.amount)}
-											</p>
-										</div>
-										<div className="flex flex-col items-end">
-											<p className="text-sm font-medium tracking-wide">{footerRight?.label}</p>
-											<p className="text-4xl font-normal">{footerRight?.amount}</p>
-										</div>
-									</div>
-								</div>
-							) : (
-								<div className="flex h-full flex-col items-center justify-center gap-4">
-									<Button variant="secondary" size="icon" className="h-12 w-12 rounded-full shadow-xs" aria-label="Add">
-										<PlusIcon className="h-6 w-6" />
-									</Button>
-									<p className="min-h-[2.5em] text-center text-2xl leading-[1.25] line-clamp-2">{title}</p>
-								</div>
-							)}
-						</div>
-					</div>
-				</div>
+				<WalletImageStack
+					primaryImageHref={primaryImageHref}
+					secondaryImageHref={secondaryImageHref}
+					tertiaryImageHref={tertiaryImageHref}
+					imageAlt={imageAlt}
+				/>
+				<WalletFront
+					variant={variant}
+					title={title}
+					subtitle={subtitle}
+					badge={badge}
+					footerLeft={footerLeft}
+					footerRight={footerRight}
+				/>
 			</Card>
 
-			{primaryImageHref ? (
-				<div
-					className={cn(
-						'pointer-events-none absolute z-20 h-(--stack-height)',
-						'top-[calc(2*var(--shadow-size))]',
-						'right-[calc(2*var(--shadow-size))]',
-						'left-[calc(2*var(--shadow-size))]',
-					)}
-				>
-					<div
-						className={cn(
-							'h-full w-full overflow-visible rounded-sm',
-							'[clip-path:inset(calc(-4*var(--shadow-size))_calc(-2*var(--shadow-size))_calc(2*var(--shadow-size))_calc(-2*var(--shadow-size))_round_2px)]',
-						)}
-					>
-						{secondaryImageHref ? (
-							<div
-								className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-y-4 group-hover:translate-x-1 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
-								style={{ backgroundImage: `url(${secondaryImageHref})` }}
-								aria-label=""
-							/>
-						) : null}
-						<div
-							className="h-full w-full origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-y-7 group-hover:-translate-x-1 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
-							style={{ backgroundImage: `url(${primaryImageHref})` }}
-							aria-label={imageAlt}
-							role={imageAlt ? 'img' : undefined}
-						/>
-					</div>
-				</div>
-			) : null}
+			<WalletOverlayImages primaryImageHref={primaryImageHref} secondaryImageHref={secondaryImageHref} imageAlt={imageAlt} />
 		</div>
 	);
 
