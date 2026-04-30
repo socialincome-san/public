@@ -6,10 +6,10 @@ type WalletOverlayImagesProps = {
 };
 
 export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
-	const main = images?.mainImage;
-	const extra1 = images?.extraImage1;
+	const primaryImage = images?.primaryImage;
+	const hoverEffectImage1 = images?.hoverEffectImage1;
 
-	if (!main?.src) {
+	if (!primaryImage?.src) {
 		return null;
 	}
 
@@ -29,18 +29,18 @@ export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
 					'[clip-path:inset(calc(-4*var(--shadow-size))_calc(-2*var(--shadow-size))_calc(2*var(--shadow-size))_calc(-2*var(--shadow-size))_round_2px)]',
 				)}
 			>
-				{extra1?.src ? (
+				{hoverEffectImage1?.src ? (
 					<div
 						className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:translate-x-1 group-hover:-translate-y-4 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
-						style={{ backgroundImage: `url(${extra1.src})` }}
+						style={{ backgroundImage: `url(${hoverEffectImage1.src})` }}
 						aria-label=""
 					/>
 				) : null}
 				<div
 					className="h-full w-full origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
-					style={{ backgroundImage: `url(${main.src})` }}
-					aria-label={main.alt}
-					role={main.alt ? 'img' : undefined}
+					style={{ backgroundImage: `url(${primaryImage.src})` }}
+					aria-label={primaryImage.alt}
+					role={primaryImage.alt ? 'img' : undefined}
 				/>
 			</div>
 		</div>

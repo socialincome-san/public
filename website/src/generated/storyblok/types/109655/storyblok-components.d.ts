@@ -350,8 +350,10 @@ export interface Person {
 export interface Program {
   id: string;
   title: string;
-  heroImage: StoryblokAsset;
   description: string;
+  primaryImage: StoryblokAsset;
+  secondaryImage: StoryblokAsset;
+  tertiaryImage: StoryblokAsset;
   component: "program";
   _uid: string;
   [k: string]: unknown;

@@ -6,9 +6,9 @@ export type WalletImage = {
 };
 
 export type WalletImages = {
-	mainImage: WalletImage;
-	extraImage1: WalletImage;
-	extraImage2: WalletImage;
+	primaryImage: WalletImage;
+	hoverEffectImage1: WalletImage;
+	hoverEffectImage2: WalletImage;
 };
 
 export type WalletPaidOut = {

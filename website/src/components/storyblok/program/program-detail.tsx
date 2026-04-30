@@ -15,8 +15,8 @@ export const ProgramDetail = async ({ program, lang, campaignsCount, recipientsC
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const programTitle = getProgramTitle(program.content);
 	const programDescription = getProgramDescription(program.content);
-	const heroImageFilename = program.content.heroImage?.filename;
-	const heroImageAlt = program.content.heroImage?.alt ?? programTitle;
+	const heroImageFilename = program.content.primaryImage?.filename;
+	const heroImageAlt = program.content.primaryImage?.alt ?? programTitle;
 
 	return (
 		<LandingPageDetail

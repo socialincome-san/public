@@ -38,7 +38,7 @@ export const Wallet = ({
 		'--slant-position': 'calc(var(--slant-shift) + var(--slant-width))',
 		'--gradient': 'linear-gradient(to right, hsl(var(--gradient-card-from)), hsl(var(--gradient-card-to)))',
 		'--shadow-size': '11px',
-		'--stack-height': images?.mainImage?.src ? '180px' : '28px',
+		'--stack-height': images?.primaryImage?.src ? '180px' : '28px',
 		'--wallet-front-bg': variant === 'default' ? 'var(--gradient)' : 'hsl(var(--card))',
 		'--wallet-front-box-shadow':
 			variant === 'default'
@@ -48,7 +48,7 @@ export const Wallet = ({
 		'--wallet-cards-background': variant === 'default' ? 'hsl(var(--card))' : 'none',
 		'--wallet-cards-box-shadow':
 			variant === 'default'
-				? images?.mainImage?.src
+				? images?.primaryImage?.src
 					? '0 0 0 var(--shadow-size) rgba(255,255,255,0.3)'
 					: '0 0 0 var(--shadow-size) rgba(255,255,255,0.5), 0 0 0 calc(2* var(--shadow-size)) rgba(255,255,255,0.3)'
 				: 'none',

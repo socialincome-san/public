@@ -26,7 +26,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 				<meta name="app-build-timestamp" content={buildTime} />
 			</head>
 			<FirebaseAppProvider>
-				<body>
+				<body className="antialiased">
 					<Toaster />
 					{children}
 				</body>

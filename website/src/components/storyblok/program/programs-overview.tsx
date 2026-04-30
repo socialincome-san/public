@@ -1,13 +1,15 @@
-import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
+import { Wallet } from '@/components/wallet/wallet';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
+import { getCountryNameByCode } from '@/lib/types/country';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ProgramStory } from './program.types';
 import { getProgramId, getProgramSlug, getProgramTitle } from './program.utils';
 
 type Props = {
 	programs: ProgramStory[];
-	statsById: Record<string, { campaignsCount: number; recipientsCount: number } | undefined>;
+	statsById: PublicProgramStatsMap;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
@@ -20,43 +22,62 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 			{programs.length === 0 ? (
 				<p className="text-muted-foreground">{translator.t('programs-page.empty')}</p>
 			) : (
-				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 					{programs.map((program) => {
 						const programId = getProgramId(program.content);
 						const programTitle = getProgramTitle(program.content);
 						const programSlug = getProgramSlug(program);
 						const stats = programId ? statsById[programId] : undefined;
-						const heroImageFilename = program.content.heroImage.filename;
-						const heroImageAlt = program.content.heroImage.alt ?? programTitle;
+						const primaryImageFilename = program.content.primaryImage?.filename;
+						const primaryImageAlt = program.content.primaryImage?.alt ?? programTitle;
+						const secondaryImageFilename = program.content.secondaryImage?.filename;
+						const secondaryImageAlt = program.content.secondaryImage?.alt ?? programTitle;
+						const tertiaryImageFilename = program.content.tertiaryImage?.filename;
+						const tertiaryImageAlt = program.content.tertiaryImage?.alt ?? programTitle;
+						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
+						const images = primaryImageFilename
+							? {
+									primaryImage: { src: primaryImageFilename, alt: primaryImageAlt },
+									hoverEffectImage1: {
+										src: secondaryImageFilename ?? primaryImageFilename,
+										alt: secondaryImageAlt ?? primaryImageAlt,
+									},
+									hoverEffectImage2: {
+										src: tertiaryImageFilename ?? primaryImageFilename,
+										alt: tertiaryImageAlt ?? primaryImageAlt,
+									},
+								}
+							: undefined;
 
 						return (
-							<LandingPageCard
-								key={program.uuid}
-								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${programSlug}`}
-								title={programTitle}
-								heroImageFilename={heroImageFilename}
-								heroImageAlt={heroImageAlt}
-								stats={
-									stats
-										? [
-												{
-													value: stats.campaignsCount,
-													label:
-														stats.campaignsCount === 1
-															? translator.t('programs-page.campaign-singular')
-															: translator.t('programs-page.campaign-plural'),
-												},
-												{
-													value: stats.recipientsCount,
+							<li key={program.uuid} className="h-full">
+								<Wallet
+									linkHref={linkHref}
+									programName={programTitle}
+									country={stats ? getCountryNameByCode(stats.countryIsoCode) : undefined}
+									paidOut={
+										stats
+											? {
+													label: 'Paid out',
+													currency: stats.payoutCurrency,
+													amount: stats.totalPayoutsSum,
+												}
+											: undefined
+									}
+									amountOfRecipients={
+										stats
+											? {
 													label:
 														stats.recipientsCount === 1
 															? translator.t('programs-page.recipient-singular')
 															: translator.t('programs-page.recipient-plural'),
-												},
-											]
-										: []
-								}
-							/>
+													amount: stats.recipientsCount,
+												}
+											: undefined
+									}
+									images={images}
+								/>
+							</li>
 						);
 					})}
 				</ul>
