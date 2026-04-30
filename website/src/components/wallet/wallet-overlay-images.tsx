@@ -16,7 +16,7 @@ export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
 	return (
 		<div
 			className={cn(
-				'pointer-events-none absolute z-20 h-(--stack-height)',
+				'pointer-events-none absolute z-20 h-[var(--stack-height)]',
 				'top-[calc(2*var(--shadow-size))]',
 				'right-[calc(2*var(--shadow-size))]',
 				'left-[calc(2*var(--shadow-size))]',

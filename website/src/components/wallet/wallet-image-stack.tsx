@@ -12,10 +12,10 @@ export const WalletImageStack = ({ images }: WalletImageStackProps) => {
 	const hasPrimaryImage = Boolean(primaryImage?.src);
 
 	return (
-		<div className="-mb-(--slant-height) flex flex-col [background:var(--wallet-back-bg)]" data-testid="wallet-image-stack">
+		<div className="-mb-[var(--slant-height)] flex flex-col [background:var(--wallet-back-bg)]" data-testid="wallet-image-stack">
 			<div
 				className={cn(
-					'relative h-(--stack-height) overflow-hidden rounded-sm',
+					'relative h-[var(--stack-height)] overflow-hidden rounded-sm',
 					hasPrimaryImage ? 'm-[calc(2*var(--shadow-size))]' : 'm-[calc(3*var(--shadow-size))]',
 					'mb-0',
 					'[box-shadow:var(--wallet-cards-box-shadow)]',

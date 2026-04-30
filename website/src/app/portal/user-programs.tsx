@@ -30,9 +30,9 @@ export const UserPrograms = async ({ userId }: Props) => {
 						{operatedPrograms.map((program) => (
 							<Wallet
 								key={program.id}
-								linkHref={`/portal/programs/${program.id}/overview`}
-								programName={program.programName}
-								country={getCountryNameByCode(program.country)}
+								href={`/portal/programs/${program.id}/overview`}
+								title={program.programName}
+								subtitle={getCountryNameByCode(program.country)}
 								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 								paidOut={{
 									currency: program.payoutCurrency,
@@ -52,9 +52,9 @@ export const UserPrograms = async ({ userId }: Props) => {
 					{ownedPrograms.map((program) => (
 						<Wallet
 							key={program.id}
-							linkHref={`/portal/programs/${program.id}/overview`}
-							programName={program.programName}
-							country={getCountryNameByCode(program.country)}
+							href={`/portal/programs/${program.id}/overview`}
+							title={program.programName}
+							subtitle={getCountryNameByCode(program.country)}
 							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 							paidOut={{
 								currency: program.payoutCurrency,
@@ -65,7 +65,7 @@ export const UserPrograms = async ({ userId }: Props) => {
 							}}
 						/>
 					))}
-					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" programName="Create new program" />} />
+					<CreateProgramModal isAuthenticated trigger={<Wallet variant="empty" title="Create new program" />} />
 				</div>
 			</div>
 		</section>

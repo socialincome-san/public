@@ -17,19 +17,19 @@ const formatAmount = (amount?: number): string => {
 
 type WalletFrontProps = {
 	variant: WalletVariant;
-	programName: string;
-	country?: string | null;
+	title: string;
+	subtitle?: string | null;
 	badge?: WalletBadge;
 	paidOut?: WalletPaidOut;
 	amountOfRecipients?: WalletRecipientCount;
 };
 
-export const WalletFront = ({ variant, programName, country, badge, paidOut, amountOfRecipients }: WalletFrontProps) => (
+export const WalletFront = ({ variant, title, subtitle, badge, paidOut, amountOfRecipients }: WalletFrontProps) => (
 	<div className="flex aspect-[1.9] flex-1 drop-shadow-[0_4px_20px_rgba(0,0,0,0.09)]" data-testid="wallet-front">
 		<WalletFrontContent
 			variant={variant}
-			programName={programName}
-			country={country}
+			title={title}
+			subtitle={subtitle}
 			badge={badge}
 			paidOut={paidOut}
 			amountOfRecipients={amountOfRecipients}
@@ -37,7 +37,7 @@ export const WalletFront = ({ variant, programName, country, badge, paidOut, amo
 	</div>
 );
 
-const WalletFrontContent = ({ variant, programName, country, badge, paidOut, amountOfRecipients }: WalletFrontProps) => {
+const WalletFrontContent = ({ variant, title, subtitle, badge, paidOut, amountOfRecipients }: WalletFrontProps) => {
 	const { t } = useRouteTranslator({ namespace: 'website-common' });
 
 	return (
@@ -53,8 +53,8 @@ const WalletFrontContent = ({ variant, programName, country, badge, paidOut, amo
 				{variant === 'default' ? (
 					<div className="flex h-full w-full flex-col items-start justify-between gap-2">
 						<div>
-							<h3 className="mb-3 line-clamp-2 min-h-[2em] text-4xl leading-none font-normal">{programName}</h3>
-							<p className="line-clamp-1 min-h-6 text-base leading-6 font-medium">{country}</p>
+							<h3 className="mb-3 text-4xl leading-none font-normal">{title}</h3>
+							<p className="mb-3 line-clamp-1 text-base leading-6 font-medium">{subtitle}</p>
 							{badge && <div className="mt-1">{badge}</div>}
 						</div>
 
@@ -62,7 +62,7 @@ const WalletFrontContent = ({ variant, programName, country, badge, paidOut, amo
 							<div className="flex flex-col items-start">
 								<p className="text-base leading-6 font-medium">{t('wallet.paid-out')}</p>
 								<p className="flex items-baseline text-4xl leading-none font-normal">
-									<span className="mr-9 text-base leading-6 font-medium">{paidOut?.currency}</span>
+									<span className="mr-3 text-base leading-6 font-medium">{paidOut?.currency}</span>
 									<span>{formatAmount(paidOut?.amount)}</span>
 								</p>
 							</div>
@@ -77,7 +77,7 @@ const WalletFrontContent = ({ variant, programName, country, badge, paidOut, amo
 						<Button variant="secondary" size="icon" className="h-12 w-12 rounded-full shadow-xs" aria-label="Add">
 							<PlusIcon className="h-6 w-6" />
 						</Button>
-						<p className="line-clamp-2 min-h-[2.5em] text-center text-2xl leading-[1.25]">{programName}</p>
+						<p className="line-clamp-2 min-h-[2.5em] text-center text-2xl leading-[1.25]">{title}</p>
 					</div>
 				)}
 			</div>

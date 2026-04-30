@@ -52,9 +52,9 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 						return (
 							<li key={program.uuid} className="h-full">
 								<Wallet
-									linkHref={linkHref}
-									programName={programTitle}
-									country={stats ? getCountryNameByCode(stats.countryIsoCode) : undefined}
+									href={linkHref}
+									title={programTitle}
+									subtitle={stats ? getCountryNameByCode(stats.countryIsoCode) : undefined}
 									paidOut={
 										stats
 											? {

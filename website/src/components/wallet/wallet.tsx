@@ -10,23 +10,23 @@ import type { WalletBadge, WalletImages, WalletPaidOut, WalletRecipientCount, Wa
 
 type WalletProps = {
 	variant?: WalletVariant;
-	programName: string;
-	country?: string | null;
+	title: string;
+	subtitle?: string | null;
 	badge?: WalletBadge;
 	paidOut?: WalletPaidOut;
 	amountOfRecipients?: WalletRecipientCount;
-	linkHref?: string;
+	href?: string;
 	images?: WalletImages;
 };
 
 export const Wallet = ({
 	variant = 'default',
-	programName,
-	country,
+	title,
+	subtitle,
 	badge,
 	paidOut,
 	amountOfRecipients,
-	linkHref,
+	href,
 	images,
 }: WalletProps) => {
 	type WalletStyle = CSSProperties & Record<`--${string}`, string>;
@@ -64,8 +64,8 @@ export const Wallet = ({
 				<WalletImageStack images={images} />
 				<WalletFront
 					variant={variant}
-					programName={programName}
-					country={country}
+					title={title}
+					subtitle={subtitle}
 					badge={badge}
 					paidOut={paidOut}
 					amountOfRecipients={amountOfRecipients}
@@ -75,8 +75,8 @@ export const Wallet = ({
 		</div>
 	);
 
-	return linkHref ? (
-		<Link href={linkHref} className="block h-full">
+	return href ? (
+		<Link href={href} className="block h-full">
 			{content}
 		</Link>
 	) : (
