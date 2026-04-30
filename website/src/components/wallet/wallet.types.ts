@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 export type WalletImage = {
 	src: string;
-	alt?: string;
+	alt: string;
 };
 
 export type WalletImages = {

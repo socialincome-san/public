@@ -51,9 +51,9 @@ export const UserPrograms = async ({ userId }: Props) => {
 									amount: program.recipientsCount,
 								}}
 								images={{
-									mainImage: { src: programImages[idx % programImages.length] },
-									extraImage1: { src: programImages[(idx + 1) % programImages.length] },
-									extraImage2: { src: programImages[(idx + 2) % programImages.length] },
+									mainImage: { src: programImages[idx % programImages.length], alt: '' },
+									extraImage1: { src: programImages[(idx + 1) % programImages.length], alt: '' },
+									extraImage2: { src: programImages[(idx + 2) % programImages.length], alt: '' },
 								}}
 							/>
 						))}

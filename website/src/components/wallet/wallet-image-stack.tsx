@@ -22,7 +22,7 @@ export const WalletImageStack = ({ images }: WalletImageStackProps) => {
 					'[background:var(--wallet-cards-background)]',
 				)}
 			>
-				{hasMain ? (
+				{hasMain && main ? (
 					<>
 						{extra2?.src ? (
 							<div
@@ -40,9 +40,9 @@ export const WalletImageStack = ({ images }: WalletImageStackProps) => {
 						) : null}
 						<div
 							className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
-							style={{ backgroundImage: `url(${main!.src})` }}
-							aria-label={main?.alt}
-							role={main?.alt ? 'img' : undefined}
+							style={{ backgroundImage: `url(${main.src})` }}
+							aria-label={main.alt}
+							role={main.alt ? 'img' : undefined}
 						/>
 					</>
 				) : null}
