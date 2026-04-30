@@ -59,7 +59,7 @@ export const Wallet = ({
 		<div className="group relative h-full" style={walletStyle} data-testid="wallet">
 			<Card
 				variant="noPadding"
-				className="flex h-full max-w-full cursor-pointer flex-col overflow-hidden transition hover:shadow-xs"
+				className="flex h-full max-w-full flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl"
 			>
 				<WalletImageStack images={images} />
 				<WalletFront
