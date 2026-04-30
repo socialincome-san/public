@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/button';
 import { Card } from '@/components/card';
+import { cn } from '@/lib/utils/cn';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
@@ -80,12 +81,15 @@ export const Wallet = ({
 				variant="noPadding"
 				className="flex h-full max-w-full cursor-pointer flex-col overflow-hidden transition hover:shadow-xs"
 			>
-				<div className="-mb-(--slant-height) flex flex-col" style={{ background: 'var(--wallet-back-bg)' }}>
+				<div className="-mb-(--slant-height) flex flex-col [background:var(--wallet-back-bg)]">
 					<div
-						className={`relative mb-0 h-(--stack-height) overflow-hidden rounded-sm ${
-							primaryImageHref ? 'm-[calc(2*var(--shadow-size))]' : 'm-[calc(3*var(--shadow-size))]'
-						}`}
-						style={{ boxShadow: 'var(--wallet-cards-box-shadow)', background: 'var(--wallet-cards-background)' }}
+						className={cn(
+							'relative h-(--stack-height) overflow-hidden rounded-sm',
+							primaryImageHref ? 'm-[calc(2*var(--shadow-size))]' : 'm-[calc(3*var(--shadow-size))]',
+							'mb-0',
+							'[box-shadow:var(--wallet-cards-box-shadow)]',
+							'[background:var(--wallet-cards-background)]',
+						)}
 					>
 						{primaryImageHref ? (
 							<>
@@ -114,18 +118,14 @@ export const Wallet = ({
 					</div>
 				</div>
 
-				<div
-					className="flex aspect-[1.9] flex-1"
-					style={{ filter: 'drop-shadow(0 4px 20px rgba(0, 0, 0, 0.09))' }}
-				>
+				<div className="flex aspect-[1.9] flex-1 drop-shadow-[0_4px_20px_rgba(0,0,0,0.09)]">
 					<div
-						className="flex-1 pt-9"
-						style={{
-							color: 'var(--text-color)',
-							background: 'var(--wallet-front-bg)',
-							clipPath:
-								'polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%, var(--slant-shift) 0%, var(--slant-position) var(--slant-height), calc(100% - var(--slant-position)) var(--slant-height), calc(100% - var(--slant-shift)) 0%)',
-						}}
+						className={cn(
+							'flex-1 pt-9',
+							'text-[color:var(--text-color)]',
+							'[background:var(--wallet-front-bg)]',
+							'[clip-path:polygon(100%_0%,_100%_100%,_0%_100%,_0%_0%,_var(--slant-shift)_0%,_var(--slant-position)_var(--slant-height),_calc(100%_-_var(--slant-position))_var(--slant-height),_calc(100%_-_var(--slant-shift))_0%)]',
+						)}
 					>
 						<div className="h-full p-8 pt-0 pb-6">
 							{variant === 'default' ? (
@@ -153,7 +153,7 @@ export const Wallet = ({
 									<Button variant="secondary" size="icon" className="h-12 w-12 rounded-full shadow-xs" aria-label="Add">
 										<PlusIcon className="h-6 w-6" />
 									</Button>
-								<p className="min-h-[2.5em] text-center text-2xl leading-[1.25] line-clamp-2">{title}</p>
+									<p className="min-h-[2.5em] text-center text-2xl leading-[1.25] line-clamp-2">{title}</p>
 								</div>
 							)}
 						</div>
@@ -163,20 +163,18 @@ export const Wallet = ({
 
 			{primaryImageHref ? (
 				<div
-					className="pointer-events-none absolute z-20"
-					style={{
-						top: 'calc(2 * var(--shadow-size))',
-						left: 'calc(2 * var(--shadow-size))',
-						right: 'calc(2 * var(--shadow-size))',
-						height: 'var(--stack-height)',
-					}}
+					className={cn(
+						'pointer-events-none absolute z-20 h-(--stack-height)',
+						'top-[calc(2*var(--shadow-size))]',
+						'right-[calc(2*var(--shadow-size))]',
+						'left-[calc(2*var(--shadow-size))]',
+					)}
 				>
 					<div
-						className="h-full w-full overflow-visible rounded-sm"
-						style={{
-							clipPath:
-								'inset(calc(-4 * var(--shadow-size)) calc(-2 * var(--shadow-size)) calc(2 * var(--shadow-size)) calc(-2 * var(--shadow-size)) round 2px)',
-						}}
+						className={cn(
+							'h-full w-full overflow-visible rounded-sm',
+							'[clip-path:inset(calc(-4*var(--shadow-size))_calc(-2*var(--shadow-size))_calc(2*var(--shadow-size))_calc(-2*var(--shadow-size))_round_2px)]',
+						)}
 					>
 						{secondaryImageHref ? (
 							<div
