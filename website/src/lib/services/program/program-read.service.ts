@@ -26,13 +26,14 @@ export class ProgramReadService extends BaseService {
 		super(db, loggerInstance);
 	}
 
-	private readonly sumPayoutAmounts = (recipients: Array<{ payouts: Array<{ amount: unknown | null }> }>): number => {
+	private readonly sumPayoutAmounts = (recipients: { payouts: { amount: unknown }[] }[]): number => {
 		let sum = 0;
 		for (const recipient of recipients) {
 			for (const payout of recipient.payouts) {
 				sum += Number(payout.amount ?? 0);
 			}
 		}
+
 		return sum;
 	};
 
