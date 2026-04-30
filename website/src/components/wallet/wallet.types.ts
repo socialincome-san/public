@@ -25,4 +25,3 @@ export type WalletRecipientCount = {
 export type WalletVariant = 'default' | 'empty';
 
 export type WalletBadge = ReactNode;
-

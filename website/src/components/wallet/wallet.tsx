@@ -8,7 +8,7 @@ import { WalletImageStack } from './wallet-image-stack';
 import { WalletOverlayImages } from './wallet-overlay-images';
 import type { WalletBadge, WalletImages, WalletPaidOut, WalletRecipientCount, WalletVariant } from './wallet.types';
 
-export type WalletProps = {
+type WalletProps = {
 	variant?: WalletVariant;
 	programName: string;
 	country?: string | null;

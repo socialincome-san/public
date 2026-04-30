@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils/cn';
 import type { WalletImages } from './wallet.types';
 
-export type WalletOverlayImagesProps = {
+type WalletOverlayImagesProps = {
 	images?: WalletImages;
 };
 

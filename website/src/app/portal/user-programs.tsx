@@ -1,6 +1,6 @@
 import { Badge } from '@/components/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
-import { Wallet } from '@/components/wallet';
+import { Wallet } from '@/components/wallet/wallet';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
