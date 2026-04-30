@@ -12,13 +12,11 @@ export type WalletImages = {
 };
 
 export type WalletPaidOut = {
-	label: string;
 	currency: string | null;
 	amount: number;
 };
 
 export type WalletRecipientCount = {
-	label: string;
 	amount: number;
 };
 

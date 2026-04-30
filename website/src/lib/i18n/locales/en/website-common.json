@@ -158,5 +158,9 @@
 		"day-left-singular": "day left",
 		"day-left-plural": "days left",
 		"about": "About"
+	},
+	"wallet": {
+		"paid-out": "Paid out",
+		"recipients": "Recipients"
 	}
 }

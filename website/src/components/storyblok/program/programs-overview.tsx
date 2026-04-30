@@ -58,7 +58,6 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 									paidOut={
 										stats
 											? {
-													label: 'Paid out',
 													currency: stats.payoutCurrency,
 													amount: stats.totalPayoutsSum,
 												}
@@ -67,10 +66,6 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 									amountOfRecipients={
 										stats
 											? {
-													label:
-														stats.recipientsCount === 1
-															? translator.t('programs-page.recipient-singular')
-															: translator.t('programs-page.recipient-plural'),
 													amount: stats.recipientsCount,
 												}
 											: undefined

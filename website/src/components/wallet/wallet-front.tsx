@@ -1,5 +1,6 @@
 import { Button } from '@/components/button';
 import { cn } from '@/lib/utils/cn';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { PlusIcon } from 'lucide-react';
 import type { WalletBadge, WalletPaidOut, WalletRecipientCount, WalletVariant } from './wallet.types';
 
@@ -25,6 +26,21 @@ type WalletFrontProps = {
 
 export const WalletFront = ({ variant, programName, country, badge, paidOut, amountOfRecipients }: WalletFrontProps) => (
 	<div className="flex aspect-[1.9] flex-1 drop-shadow-[0_4px_20px_rgba(0,0,0,0.09)]" data-testid="wallet-front">
+		<WalletFrontContent
+			variant={variant}
+			programName={programName}
+			country={country}
+			badge={badge}
+			paidOut={paidOut}
+			amountOfRecipients={amountOfRecipients}
+		/>
+	</div>
+);
+
+const WalletFrontContent = ({ variant, programName, country, badge, paidOut, amountOfRecipients }: WalletFrontProps) => {
+	const { t } = useRouteTranslator({ namespace: 'website-common' });
+
+	return (
 		<div
 			className={cn(
 				'flex-1 pt-9',
@@ -44,14 +60,14 @@ export const WalletFront = ({ variant, programName, country, badge, paidOut, amo
 
 						<div className="flex w-full items-start justify-between">
 							<div className="flex flex-col items-start">
-								<p className="text-base leading-6 font-medium">{paidOut?.label}</p>
+								<p className="text-base leading-6 font-medium">{t('wallet.paid-out')}</p>
 								<p className="flex items-baseline text-4xl leading-none font-normal">
 									<span className="mr-9 text-base leading-6 font-medium">{paidOut?.currency}</span>
 									<span>{formatAmount(paidOut?.amount)}</span>
 								</p>
 							</div>
 							<div className="flex flex-col items-end">
-								<p className="text-base leading-6 font-medium">{amountOfRecipients?.label}</p>
+								<p className="text-base leading-6 font-medium">{t('wallet.recipients')}</p>
 								<p className="text-4xl leading-none font-normal tabular-nums">{amountOfRecipients?.amount}</p>
 							</div>
 						</div>
@@ -66,5 +82,5 @@ export const WalletFront = ({ variant, programName, country, badge, paidOut, amo
 				)}
 			</div>
 		</div>
-	</div>
-);
+	);
+};

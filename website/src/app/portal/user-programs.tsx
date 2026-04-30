@@ -35,12 +35,10 @@ export const UserPrograms = async ({ userId }: Props) => {
 								country={getCountryNameByCode(program.country)}
 								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 								paidOut={{
-									label: 'Paid out',
 									currency: program.payoutCurrency,
 									amount: program.totalPayoutsSum,
 								}}
 								amountOfRecipients={{
-									label: 'Recipients',
 									amount: program.recipientsCount,
 								}}
 							/>
@@ -59,12 +57,10 @@ export const UserPrograms = async ({ userId }: Props) => {
 							country={getCountryNameByCode(program.country)}
 							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 							paidOut={{
-								label: 'Paid out',
 								currency: program.payoutCurrency,
 								amount: program.totalPayoutsSum,
 							}}
 							amountOfRecipients={{
-								label: 'Recipients',
 								amount: program.recipientsCount,
 							}}
 						/>
