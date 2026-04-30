@@ -18,6 +18,28 @@ const ADD_CANDIDATE = {
 
 const PAYMENT_PHONE_ONE = '+23277000111';
 const PAYMENT_PHONE_TWO = '+23277000112';
+const CSV_CANDIDATES = [
+	{
+		firstName: 'Diana',
+		lastName: 'Prince',
+		localPartnerName: 'Local Partner SL Operations',
+		contactPhone: '+23277000901',
+		paymentPhone: '+23277000911',
+		dateOfBirth: '1991-04-21',
+		gender: 'female',
+		paymentInformationCode: 'CSV-CANDIDATE-001',
+	},
+	{
+		firstName: 'Barry',
+		lastName: 'Allen',
+		localPartnerName: 'Local Partner SL Operations',
+		contactPhone: '',
+		paymentPhone: '',
+		dateOfBirth: '',
+		gender: '',
+		paymentInformationCode: '',
+	},
+];
 
 const openCandidateByName = async (page: Page, firstName: string, lastName: string) => {
 	const fullName = `${firstName} ${lastName}`;
@@ -290,4 +312,91 @@ test('edit candidate and remove contact phone and address', async ({ page }) => 
 	});
 	expect(deletedPhone).toBeNull();
 	expect(deletedAddress).toBeNull();
+});
+
+test('CSV Upload', async ({ page }) => {
+	await deleteFirebasePhonesIfExist(...CSV_CANDIDATES.flatMap(({ paymentPhone }) => (paymentPhone ? [paymentPhone] : [])));
+
+	try {
+		await page.goto('/portal/admin/candidates');
+		await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
+		await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/admin/upload-example.csv');
+		await page.getByTestId('import-button').click();
+		await expect(page.getByText('Successfully imported 2 items.')).toBeVisible();
+
+		for (const expected of CSV_CANDIDATES) {
+			const row = await prisma.recipient.findFirst({
+				where: {
+					programId: null,
+					contact: {
+						firstName: expected.firstName,
+						lastName: expected.lastName,
+					},
+				},
+				select: {
+					localPartner: { select: { name: true } },
+					contact: {
+						select: {
+							phone: { select: { number: true } },
+							dateOfBirth: true,
+							gender: true,
+						},
+					},
+					paymentInformation: {
+						select: {
+							code: true,
+							phone: { select: { number: true } },
+						},
+					},
+				},
+			});
+
+			expect(row).toBeDefined();
+			expect(row?.localPartner?.name).toBe(expected.localPartnerName);
+			expect(row?.contact?.phone?.number ?? '').toBe(expected.contactPhone);
+			expect(row?.paymentInformation?.phone?.number ?? '').toBe(expected.paymentPhone);
+			expect(row?.paymentInformation?.code ?? '').toBe(expected.paymentInformationCode);
+			expect(row?.contact?.gender ?? '').toBe(expected.gender);
+			expect(row?.contact?.dateOfBirth?.toISOString().slice(0, 10) ?? '').toBe(expected.dateOfBirth);
+		}
+	} finally {
+		await deleteFirebasePhonesIfExist(...CSV_CANDIDATES.flatMap(({ paymentPhone }) => (paymentPhone ? [paymentPhone] : [])));
+	}
+});
+
+test('CSV Upload fails for invalid gender', async ({ page }) => {
+	await page.goto('/portal/admin/candidates');
+	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
+	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/admin/upload-invalid-gender.csv');
+	await page.getByTestId('import-button').click();
+	await expect(page.getByText('Row 1: gender must be one of male, female, other, private (case-insensitive)')).toBeVisible();
+
+	const created = await getCandidateByName('Hal', 'Jordan');
+	expect(created).toBeNull();
+});
+
+test('CSV Upload fails for missing localPartnerId', async ({ page }) => {
+	await page.goto('/portal/admin/candidates');
+	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
+	await page
+		.getByTestId('csv-dropzone-input')
+		.setInputFiles('./test/e2e/projects/portal/admin/upload-missing-local-partner-id.csv');
+	await page.getByTestId('import-button').click();
+	await expect(page.getByText('Row 1: localPartnerId is required')).toBeVisible();
+
+	const created = await getCandidateByName('Arthur', 'Curry');
+	expect(created).toBeNull();
+});
+
+test('CSV Upload fails for duplicate contact phone', async ({ page }) => {
+	await page.goto('/portal/admin/candidates');
+	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
+	await page
+		.getByTestId('csv-dropzone-input')
+		.setInputFiles('./test/e2e/projects/portal/admin/upload-duplicate-contact-phone.csv');
+	await page.getByTestId('import-button').click();
+	await expect(page.getByText('Row 1: A contact with this phone number already exists.')).toBeVisible();
+
+	const created = await getCandidateByName('Victor', 'Stone');
+	expect(created).toBeNull();
 });

@@ -1,0 +1,3 @@
+firstName,lastName,localPartnerId,contactPhone,paymentPhone,dateOfBirth,gender,paymentInformationCode
+Diana,Prince,local-partner-sl-1,+23277000901,+23277000911,1991-04-21,female,CSV-CANDIDATE-001
+Barry,Allen,local-partner-sl-1,,,,,

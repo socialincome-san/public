@@ -97,7 +97,7 @@ export const importCandidatesCsvAction = async (file: File, sessionType: Session
 		return sessionResult;
 	}
 	const session = sessionResult.data;
-	const result = await services.write.candidate.importCsv(session, file);
+	const result = await services.candidateImport.importCsv(session, file);
 	if (session.type === 'user') {
 		revalidatePath(ADMIN_CANDIDATES_PATH);
 	} else if (session.type === 'local-partner') {

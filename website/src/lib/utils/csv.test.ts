@@ -1,4 +1,5 @@
-import { parseCsvText } from './csv';
+import { Gender } from '@/generated/prisma/enums';
+import { parseCsvOptionalFields, parseCsvText } from './csv';
 
 type TestCase = {
 	name: string;
@@ -75,6 +76,62 @@ describe('parseCsvText', () => {
 	INVALID_TEST_CASES.forEach(({ name, input, error }) => {
 		test(name, () => {
 			expect(() => parseCsvText(input)).toThrow(error);
+		});
+	});
+});
+
+describe('parseCsvOptionalFields', () => {
+	test('parses valid optional fields', () => {
+		const result = parseCsvOptionalFields(1, {
+			contactPhone: ' +23277000111 ',
+			paymentPhone: '+23277000112',
+			dateOfBirth: '1991-04-21',
+			gender: 'FEMALE',
+			paymentInformationCode: ' code-1 ',
+		});
+
+		expect(result).toEqual({
+			success: true,
+			data: {
+				contactPhone: '+23277000111',
+				paymentPhone: '+23277000112',
+				dateOfBirth: new Date(Date.UTC(1991, 3, 21, 12)),
+				gender: Gender.female,
+				paymentInformationCode: 'code-1',
+			},
+			status: undefined,
+		});
+	});
+
+	test('returns an error for invalid gender', () => {
+		const result = parseCsvOptionalFields(1, {
+			contactPhone: '',
+			paymentPhone: '',
+			dateOfBirth: '',
+			gender: 'unknown',
+			paymentInformationCode: '',
+		});
+
+		expect(result).toEqual({
+			success: false,
+			error: 'Row 1: gender must be one of male, female, other, private (case-insensitive)',
+			status: undefined,
+		});
+	});
+
+	test('returns an error for invalid dateOfBirth', () => {
+		const result = parseCsvOptionalFields(1, {
+			contactPhone: '',
+			paymentPhone: '',
+			dateOfBirth: '1990-02-30',
+			gender: '',
+			paymentInformationCode: '',
+		});
+
+		expect(result).toEqual({
+			success: false,
+			error: 'Row 1: dateOfBirth must be a valid date in YYYY-MM-DD format',
+			status: undefined,
 		});
 	});
 });
