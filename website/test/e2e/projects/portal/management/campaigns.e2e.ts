@@ -61,7 +61,7 @@ test('edit campaign', async ({ page }) => {
 
 	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(existing!.title)}`);
 	const editableRow = page.getByRole('row').filter({ hasText: existing!.title }).first();
-	await expect(editableRow.getByTestId('action-cell-icon-edit')).toBeVisible();
+	await expect(editableRow.getByTestId('action-cell-icon')).toBeVisible();
 	await editableRow.getByRole('cell', { name: existing!.title }).click();
 	await expect(page.getByRole('heading', { name: 'Edit Campaign' })).toBeVisible();
 	await page.getByTestId('form-item-description').locator('input').fill(updatedDescription);
@@ -75,7 +75,7 @@ test('edit campaign', async ({ page }) => {
 	expect(updated.description).toBe(updatedDescription);
 });
 
-test('shows view icon and readonly dialog for owner-only campaign rows', async ({ page }) => {
+test('does not show owner-only campaign rows under management', async ({ page }) => {
 	const ownerOnly = await prisma.campaign.findUnique({
 		where: { id: 'campaign-si-health-lr-default' },
 		select: { title: true },
@@ -83,11 +83,7 @@ test('shows view icon and readonly dialog for owner-only campaign rows', async (
 	expect(ownerOnly).toBeTruthy();
 
 	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(ownerOnly!.title)}`);
-	const row = page.getByRole('row').filter({ hasText: ownerOnly!.title }).first();
-	await expect(row.getByTestId('action-cell-icon-view')).toBeVisible();
-	await row.getByRole('cell', { name: ownerOnly!.title }).click();
-	await expect(page.getByRole('heading', { name: 'View Campaign' })).toBeVisible();
-	await expect(page.getByRole('button', { name: 'Save' })).toBeHidden();
+	await expect(page.getByText(ownerOnly!.title, { exact: true })).toBeHidden();
 });
 
 test('shows uniqueness error when campaign title already exists', async ({ page }) => {

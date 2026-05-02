@@ -11,10 +11,9 @@ type SurveyFormDialogProps = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	surveyId?: string;
-	readOnly?: boolean;
 };
 
-export const SurveyFormDialog = ({ open, onOpenChange, surveyId, readOnly = false }: SurveyFormDialogProps) => {
+export const SurveyFormDialog = ({ open, onOpenChange, surveyId }: SurveyFormDialogProps) => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {
@@ -44,7 +43,6 @@ export const SurveyFormDialog = ({ open, onOpenChange, surveyId, readOnly = fals
 				)}
 				<SurveyForm
 					surveyId={surveyId}
-					readOnly={readOnly}
 					onSuccess={() => {
 						onOpenChange(false);
 					}}

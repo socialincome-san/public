@@ -1,10 +1,11 @@
 'use client';
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
+import type { Translator } from '@/lib/i18n/translator';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
@@ -13,6 +14,7 @@ import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
+import { recipientsCsvTemplate } from './recipients-csv-template';
 
 type Props = {
 	rows: RecipientTableViewRow[];
@@ -38,9 +40,16 @@ export const RecipientsTableClient = ({
 	hideProgramName = false,
 }: Props) => {
 	const canManageRecipients = sessionType === 'user';
+	const isReadOnly = readOnly ?? false;
+	const canDownloadCsv = sessionType === 'local-partner' || !isReadOnly;
+	const tableConfig = {
+		...recipientsTableConfig,
+		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => {
+			return makeRecipientColumns(hideProgramName, hideLocalPartner, translator, isReadOnly);
+		},
+	};
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
-	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
 	const [recipientError, setRecipientError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
@@ -48,14 +57,16 @@ export const RecipientsTableClient = ({
 	const openCreateRecipientDialog = () => {
 		setRecipientError(null);
 		setSelectedRecipientId(undefined);
-		setIsRecipientReadOnly(readOnly ?? false);
 		setIsRecipientDialogOpen(true);
 	};
 
 	const openEditRecipientDialog = (row: RecipientTableViewRow) => {
+		if (isReadOnly) {
+			return;
+		}
+
 		setRecipientError(null);
 		setSelectedRecipientId(row.id);
-		setIsRecipientReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
 		setIsRecipientDialogOpen(true);
 	};
 
@@ -65,6 +76,10 @@ export const RecipientsTableClient = ({
 	};
 
 	const handleDownloadCsv = async () => {
+		if (!canDownloadCsv) {
+			return;
+		}
+
 		setIsCsvDownloading(true);
 		const result = await downloadRecipientsCsvAction(sessionType);
 		setIsCsvDownloading(false);
@@ -82,7 +97,7 @@ export const RecipientsTableClient = ({
 		{
 			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
 			icon: <DownloadIcon />,
-			disabled: isCsvDownloading,
+			disabled: isCsvDownloading || !canDownloadCsv,
 			onSelect: () => {
 				void handleDownloadCsv();
 			},
@@ -92,13 +107,13 @@ export const RecipientsTableClient = ({
 					{
 						label: 'Add new recipient',
 						icon: <PlusIcon />,
-						disabled: readOnly,
+						disabled: isReadOnly,
 						onSelect: openCreateRecipientDialog,
 					},
 					{
 						label: 'Upload CSV',
 						icon: <UploadIcon />,
-						disabled: readOnly,
+						disabled: isReadOnly,
 						onSelect: () => setIsCsvUploadDialogOpen(true),
 					},
 				]
@@ -108,7 +123,7 @@ export const RecipientsTableClient = ({
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={recipientsTableConfig}
+				config={tableConfig}
 				titleInfoTooltip="Shows recipients in programs you can access."
 				rows={rows}
 				error={error}
@@ -118,29 +133,26 @@ export const RecipientsTableClient = ({
 				hideProgramName={hideProgramName}
 				hideLocalPartner={sessionType === 'local-partner'}
 				showEntityIdColumn={sessionType !== 'local-partner'}
-				onRowClick={openEditRecipientDialog}
+				onRowClick={isReadOnly ? undefined : openEditRecipientDialog}
 			/>
 
-			<RecipientDialog
-				open={isRecipientDialogOpen}
-				onOpenChange={closeRecipientDialog}
-				recipientId={selectedRecipientId}
-				readOnly={isRecipientReadOnly}
-				programId={programId}
-				sessionType={sessionType}
-				errorMessage={recipientError}
-				onError={setRecipientError}
-			/>
+			{!isReadOnly && (
+				<RecipientDialog
+					open={isRecipientDialogOpen}
+					onOpenChange={closeRecipientDialog}
+					recipientId={selectedRecipientId}
+					programId={programId}
+					sessionType={sessionType}
+					errorMessage={recipientError}
+					onError={setRecipientError}
+				/>
+			)}
 
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
 				title="Upload recipients CSV"
-				template={{
-					headers: ['firstName', 'lastName', 'programId', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
-					filename: 'recipients-import-template.csv',
-				}}
+				template={recipientsCsvTemplate}
 				onImport={(file) => importRecipientsCsvAction(file, sessionType)}
 			/>
 		</>

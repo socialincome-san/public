@@ -87,7 +87,7 @@ export const getRecipientOptions = async (sessionType: Session['type'] = 'user')
 		return sessionResult;
 	}
 	const session = sessionResult.data;
-	const programs = await services.read.program.getOptions(session.id);
+	const programs = await services.read.program.getEditableOptions(session.id);
 	if (!programs.success) {
 		return resultFail(programs.error);
 	}
@@ -105,7 +105,7 @@ export const importRecipientsCsvAction = async (file: File, sessionType: Session
 		return sessionResult;
 	}
 	const session = sessionResult.data;
-	const result = await services.write.recipient.importCsv(session, file);
+	const result = await services.recipientImport.importCsv(session, file);
 	if (session.type === 'user') {
 		revalidatePath(PORTAL_RECIPIENTS_PATH);
 		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');

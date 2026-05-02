@@ -103,11 +103,12 @@
 			"research": "Research",
 			"design": "Design",
 			"editorial": "Editorial & Content",
-			"socialmedia": "Social Media"
+			"socialmedia": "Social Media",
+			"volunteer-coordinator": "Volunteer Coordinator"
 		},
 		"groups": {
 			"staff": {
-				"name": "Local Staff",
+				"name": "Country Offices",
 				"subtitle": "Working in the field, ensuring that recipients and partners have a reliable point of contact.",
 				"description": "The local staff manages local operations and offers support to partners and recipients. Their insights are re-integrated into the technological tools we develop. They are compensated with a fair local salary."
 			},

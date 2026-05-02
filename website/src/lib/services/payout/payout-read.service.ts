@@ -121,7 +121,7 @@ export class PayoutReadService extends BaseService {
 				return this.resultFail(accessResult.error);
 			}
 
-			const accessiblePrograms = accessResult.data;
+			const accessiblePrograms = accessResult.data.filter((program) => program.permission === ProgramPermission.operator);
 			if (accessiblePrograms.length === 0) {
 				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [], statusFilterOptions: [] });
 			}
@@ -186,27 +186,16 @@ export class PayoutReadService extends BaseService {
 
 			const tableRows: PayoutTableViewRow[] = payouts
 				.filter((p) => p.recipient.program !== null)
-				.map((payout) => {
-					const programPermissions = accessiblePrograms
-						.filter((x) => x.programId === payout.recipient.program!.id)
-						.map((x) => x.permission);
-
-					const permission = programPermissions.includes(ProgramPermission.operator)
-						? ProgramPermission.operator
-						: ProgramPermission.owner;
-
-					return {
-						id: payout.id,
-						recipientFirstName: payout.recipient.contact.firstName,
-						recipientLastName: payout.recipient.contact.lastName,
-						programName: payout.recipient.program!.name,
-						amount: Number(payout.amount),
-						currency: payout.currency,
-						status: payout.status,
-						paymentAt: payout.paymentAt,
-						permission,
-					};
-				});
+				.map((payout) => ({
+					id: payout.id,
+					recipientFirstName: payout.recipient.contact.firstName,
+					recipientLastName: payout.recipient.contact.lastName,
+					programName: payout.recipient.program!.name,
+					amount: Number(payout.amount),
+					currency: payout.currency,
+					status: payout.status,
+					paymentAt: payout.paymentAt,
+				}));
 
 			return this.resultOk({ tableRows, totalCount, programFilterOptions, statusFilterOptions });
 		} catch (error) {
@@ -226,17 +215,19 @@ export class PayoutReadService extends BaseService {
 				return this.resultFail(accessResult.error);
 			}
 
-			const accessiblePrograms = accessResult.data;
-			if (accessiblePrograms.length === 0) {
+			const operatorAccessiblePrograms = accessResult.data.filter(
+				(program) => program.permission === ProgramPermission.operator,
+			);
+			if (operatorAccessiblePrograms.length === 0) {
 				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [] });
 			}
 
-			const programIds = accessiblePrograms.map((p) => p.programId);
+			const programIds = operatorAccessiblePrograms.map((p) => p.programId);
 			const selectedProgramIdRaw = query.programId?.trim();
 			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
 			const programFilterOptions = Array.from(
-				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
+				new Map(operatorAccessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
 			);
 			if (selectedProgramId && filteredProgramIds.length === 0) {
 				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions });
@@ -277,7 +268,7 @@ export class PayoutReadService extends BaseService {
 			const tableRows: OngoingPayoutTableViewRow[] = recipients
 				.filter((r) => r.program !== null)
 				.map((recipient) => {
-					const programPermissions = accessiblePrograms
+					const programPermissions = operatorAccessiblePrograms
 						.filter((p) => p.programId === recipient.program!.id)
 						.map((p) => p.permission);
 
@@ -472,7 +463,7 @@ export class PayoutReadService extends BaseService {
 				return this.resultFail(accessResult.error);
 			}
 
-			const accessiblePrograms = accessResult.data;
+			const accessiblePrograms = accessResult.data.filter((program) => program.permission === ProgramPermission.operator);
 			if (accessiblePrograms.length === 0) {
 				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [], statusFilterOptions: [] });
 			}
@@ -534,28 +525,17 @@ export class PayoutReadService extends BaseService {
 
 			const tableRows: PayoutConfirmationTableViewRow[] = payouts
 				.filter((p) => p.recipient.program !== null)
-				.map((payout) => {
-					const programPermissions = accessiblePrograms
-						.filter((p) => p.programId === payout.recipient.program!.id)
-						.map((p) => p.permission);
-
-					const permission = programPermissions.includes(ProgramPermission.operator)
-						? ProgramPermission.operator
-						: ProgramPermission.owner;
-
-					return {
-						id: payout.id,
-						recipientFirstName: payout.recipient.contact.firstName,
-						recipientLastName: payout.recipient.contact.lastName,
-						programName: payout.recipient.program!.name,
-						amount: Number(payout.amount),
-						currency: payout.currency,
-						status: payout.status,
-						paymentAt: payout.paymentAt,
-						phoneNumber: payout.phoneNumber,
-						permission,
-					};
-				});
+				.map((payout) => ({
+					id: payout.id,
+					recipientFirstName: payout.recipient.contact.firstName,
+					recipientLastName: payout.recipient.contact.lastName,
+					programName: payout.recipient.program!.name,
+					amount: Number(payout.amount),
+					currency: payout.currency,
+					status: payout.status,
+					paymentAt: payout.paymentAt,
+					phoneNumber: payout.phoneNumber,
+				}));
 
 			return this.resultOk({ tableRows, totalCount, programFilterOptions, statusFilterOptions });
 		} catch (error) {
@@ -597,9 +577,7 @@ export class PayoutReadService extends BaseService {
 					return this.resultFail(access.error);
 				}
 
-				const allowed = access.data.some(
-					(p) => p.programId === payout.recipient.program!.id && p.permission !== null && p.permission !== undefined,
-				);
+				const allowed = this.programAccessService.hasOperatorAccess(access.data, payout.recipient.program.id);
 
 				if (!allowed) {
 					return this.resultFail('Access denied to this payout');

@@ -80,4 +80,5 @@ export type UserSession = {
 		id: string;
 		name: string;
 	}[];
+	hasAnyOperatorProgramAccess: boolean;
 };

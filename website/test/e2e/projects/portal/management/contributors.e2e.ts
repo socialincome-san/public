@@ -151,7 +151,7 @@ test('edit contributor and remove phone and address', async ({ page }) => {
 
 	await page.goto(`/portal/management/contributors?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	const editableRow = page.getByRole('row').filter({ hasText: firstName }).first();
-	await expect(editableRow.getByTestId('action-cell-icon-edit')).toBeVisible();
+	await expect(editableRow.getByTestId('action-cell-icon')).toBeVisible();
 	await editableRow.getByRole('cell', { name: firstName }).click();
 	await page.getByTestId('form-accordion-trigger-contact').click();
 	await page.getByTestId('form-item-contact.phone').locator('input').clear();

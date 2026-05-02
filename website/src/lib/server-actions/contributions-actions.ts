@@ -45,11 +45,11 @@ export const getContributionsOptionsAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	const contributorOptions = await services.read.contributor.getOptions(sessionResult.data.id);
+	const contributorOptions = await services.read.contributor.getEditableOptions(sessionResult.data.id);
 	if (!contributorOptions.success) {
 		return resultFail(contributorOptions.error);
 	}
-	const campaignOptions = await services.read.campaign.getOptions(sessionResult.data.id);
+	const campaignOptions = await services.read.campaign.getEditableOptions(sessionResult.data.id);
 	if (!campaignOptions.success) {
 		return resultFail(campaignOptions.error);
 	}

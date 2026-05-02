@@ -1,4 +1,4 @@
-firstName,lastName,status,programId,localPartnerId
-Bruce,Banner,active,program-si-core-sl,local-partner-sl-1
-Natasha,Romanoff,suspended,program-si-core-sl,local-partner-sl-1
-Clint,Barton,active,program-si-education-sl,local-partner-sl-1
+firstName,lastName,programId,localPartnerId,contactPhone,paymentPhone,dateOfBirth,gender,paymentInformationCode
+Bruce,Banner,program-si-core-sl,local-partner-sl-1,+23277000801,+23277000811,1991-04-21,male,CSV-RECIPIENT-001
+Natasha,Romanoff,program-si-core-sl,local-partner-sl-1,,,,,
+Clint,Barton,program-si-education-sl,local-partner-sl-1,+23277000803,+23277000813,1988-08-14,private,CSV-RECIPIENT-003

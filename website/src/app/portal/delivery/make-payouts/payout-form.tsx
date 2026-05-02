@@ -5,6 +5,7 @@ import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components
 import { PayoutStatus } from '@/generated/prisma/enums';
 import {
 	createPayoutAction,
+	deletePayoutAction,
 	getPayoutAction,
 	getPayoutRecipientOptionsAction,
 	updatePayoutAction,
@@ -22,7 +23,6 @@ type PayoutFormProps = {
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	payoutId?: string;
-	readOnly?: boolean;
 };
 
 export type PayoutFormSchema = {
@@ -72,7 +72,7 @@ const initialFormSchema: PayoutFormSchema = {
 	},
 };
 
-export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) => {
+export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFormProps) => {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [payout, setPayout] = useState<PayoutPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -145,12 +145,29 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId, readOnly }:
 		});
 	};
 
-	let mode: 'readonly' | 'edit' | 'add' = 'add';
-	if (readOnly) {
-		mode = 'readonly';
-	} else if (payoutId) {
-		mode = 'edit';
-	}
+	const onDelete =
+		payoutId && payout?.status === PayoutStatus.failed
+			? () => {
+					startTransition(async () => {
+						const res = await deletePayoutAction(payoutId);
+						handleServiceResult(res, {
+							onSuccess: () => onSuccess?.(),
+							onError: (error) => onError?.(error),
+						});
+					});
+				}
+			: undefined;
 
-	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={mode} />;
+	const mode = payoutId ? 'edit' : 'add';
+
+	return (
+		<DynamicForm
+			formSchema={formSchema}
+			isLoading={isLoading}
+			onSubmit={onSubmit}
+			onCancel={onCancel}
+			onDelete={onDelete}
+			mode={mode}
+		/>
+	);
 };

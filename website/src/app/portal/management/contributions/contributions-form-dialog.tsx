@@ -11,17 +11,15 @@ export const ContributionFormDialog = ({
 	open,
 	onOpenChange,
 	contributionId,
-	readOnly,
 }: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	contributionId?: string;
-	readOnly: boolean;
 }) => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	let dialogTitle = 'Add Contribution';
 	if (contributionId) {
-		dialogTitle = readOnly ? 'View Contribution' : 'Edit Contribution';
+		dialogTitle = 'Edit Contribution';
 	}
 
 	const onError = (error?: unknown) => {
@@ -55,7 +53,6 @@ export const ContributionFormDialog = ({
 					onSuccess={() => handleOpenChange(false)}
 					onCancel={() => handleOpenChange(false)}
 					onError={onError}
-					readOnly={readOnly}
 				/>
 			</DialogContent>
 		</Dialog>
