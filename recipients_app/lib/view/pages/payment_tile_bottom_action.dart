@@ -1,5 +1,6 @@
-import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/payment/payment.dart";
+import "package:app/core/cubits/payment/payouts_cubit.dart";
+import "package:app/data/enums/payout_ui_status.dart";
+import "package:app/data/models/payment/mapped_payout.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
@@ -8,7 +9,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 class PaymentTileBottomAction extends StatelessWidget {
-  final MappedPayment mappedPayment;
+  final MappedPayout mappedPayment;
 
   const PaymentTileBottomAction({
     super.key,
@@ -18,8 +19,8 @@ class PaymentTileBottomAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foregroundColor = _getForegroundColor(mappedPayment.uiStatus);
-    final isContested = mappedPayment.uiStatus == PaymentUiStatus.contested ||
-        mappedPayment.uiStatus == PaymentUiStatus.onHoldContested;
+    final isContested =
+        mappedPayment.uiStatus == PayoutUiStatus.contested || mappedPayment.uiStatus == PayoutUiStatus.onHoldContested;
 
     return Container(
       color: _getBackgroundColor(mappedPayment.uiStatus),
@@ -37,7 +38,7 @@ class PaymentTileBottomAction extends StatelessWidget {
             Row(
               children: [
                 ButtonSmall(
-                  onPressed: () => context.read<PaymentsCubit>().confirmPayment(mappedPayment.payment),
+                  onPressed: () => context.read<PayoutsCubit>().confirmPayment(mappedPayment.payout),
                   label: isContested ? context.l10n.resolved : context.l10n.yes,
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
@@ -62,36 +63,36 @@ class PaymentTileBottomAction extends StatelessWidget {
   }
 
   void _onPressedNo(BuildContext context) {
-    final paymentsCubit = context.read<PaymentsCubit>();
+    final paymentsCubit = context.read<PayoutsCubit>();
     showDialog(
       context: context,
       builder: (context) => BlocProvider.value(
         value: paymentsCubit,
-        child: ReviewPaymentModal(mappedPayment.payment),
+        child: ReviewPaymentModal(mappedPayment.payout),
       ),
     );
   }
 
-  Color _getBackgroundColor(PaymentUiStatus status) {
+  Color _getBackgroundColor(PayoutUiStatus status) {
     switch (status) {
-      case PaymentUiStatus.onHoldContested:
-      case PaymentUiStatus.onHoldToReview:
+      case PayoutUiStatus.onHoldContested:
+      case PayoutUiStatus.onHoldToReview:
         return AppColors.redColor;
-      case PaymentUiStatus.toReview:
-      case PaymentUiStatus.contested:
+      case PayoutUiStatus.toReview:
+      case PayoutUiStatus.contested:
         return AppColors.yellowColor;
       default:
         return AppColors.primaryColor;
     }
   }
 
-  Color _getForegroundColor(PaymentUiStatus status) {
+  Color _getForegroundColor(PayoutUiStatus status) {
     switch (status) {
-      case PaymentUiStatus.onHoldContested:
-      case PaymentUiStatus.onHoldToReview:
+      case PayoutUiStatus.onHoldContested:
+      case PayoutUiStatus.onHoldToReview:
         return AppColors.fontColorDark;
-      case PaymentUiStatus.toReview:
-      case PaymentUiStatus.contested:
+      case PayoutUiStatus.toReview:
+      case PayoutUiStatus.contested:
         return AppColors.fontColorDark;
       default:
         return Colors.white;

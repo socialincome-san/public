@@ -1,4 +1,4 @@
-import "package:app/data/models/payment/payment.dart";
+import "package:app/data/enums/balance_card_status.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";

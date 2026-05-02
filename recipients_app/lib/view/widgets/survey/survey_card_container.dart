@@ -1,7 +1,7 @@
 import "package:app/data/models/survey/mapped_survey.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/widgets/dashboard_item.dart";
+import "package:app/view/widgets/dashboard/dashboard_item.dart";
 import "package:app/view/widgets/survey/survey_card_bottom_action.dart";
 import "package:flutter/material.dart";
 

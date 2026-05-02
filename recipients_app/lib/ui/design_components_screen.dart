@@ -1,4 +1,4 @@
-import "package:app/data/models/payment/payment_ui_status.dart";
+import "package:app/data/enums/payout_ui_status.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/icons/icons.dart";
@@ -28,35 +28,35 @@ class DesignComponentsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 PaymentStatusIcon(
-                  status: PaymentUiStatus.confirmed,
+                  status: PayoutUiStatus.confirmed,
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIcon(
-                  status: PaymentUiStatus.contested,
+                  status: PayoutUiStatus.contested,
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIcon(
-                  status: PaymentUiStatus.onHoldContested,
+                  status: PayoutUiStatus.onHoldContested,
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIcon(
-                  status: PaymentUiStatus.onHoldToReview,
+                  status: PayoutUiStatus.onHoldToReview,
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIcon(
-                  status: PaymentUiStatus.recentToReview,
+                  status: PayoutUiStatus.recentToReview,
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIcon(
-                  status: PaymentUiStatus.toBePaid,
+                  status: PayoutUiStatus.toBePaid,
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIcon(
-                  status: PaymentUiStatus.empty,
+                  status: PayoutUiStatus.empty,
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIcon(
-                  status: PaymentUiStatus.toReview,
+                  status: PayoutUiStatus.toReview,
                 ),
               ],
             ),
@@ -91,42 +91,42 @@ class DesignComponentsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.confirmed,
+                  status: PayoutUiStatus.confirmed,
                   text: "Confirmed",
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.contested,
+                  status: PayoutUiStatus.contested,
                   text: "Contested",
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.onHoldContested,
+                  status: PayoutUiStatus.onHoldContested,
                   text: "On Hold contested",
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.onHoldToReview,
+                  status: PayoutUiStatus.onHoldToReview,
                   text: "On Hold to review",
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.recentToReview,
+                  status: PayoutUiStatus.recentToReview,
                   text: "Recent To Review",
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.toBePaid,
+                  status: PayoutUiStatus.toBePaid,
                   text: "To Be Paid",
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.empty,
+                  status: PayoutUiStatus.empty,
                   text: "Empty",
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.toReview,
+                  status: PayoutUiStatus.toReview,
                   text: "To Review",
                 ),
               ],

@@ -12,6 +12,7 @@ class ButtonSmall extends StatelessWidget {
   final ButtonSmallType buttonType;
   final Color color;
   final Color fontColor;
+  final bool isLoading;
 
   const ButtonSmall({
     super.key,
@@ -20,6 +21,7 @@ class ButtonSmall extends StatelessWidget {
     required this.buttonType,
     this.color = AppColors.primaryColor,
     this.fontColor = AppColors.fontColorDark,
+    this.isLoading = false,
   });
 
   @override
@@ -30,24 +32,35 @@ class ButtonSmall extends StatelessWidget {
           height: 26,
           child: ElevatedButton(
             style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                  backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                  foregroundColor: WidgetStateProperty.all(color),
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-                      side: BorderSide(
-                        color: color,
-                      ),
-                    ),
+              backgroundColor: WidgetStateProperty.all(Colors.transparent),
+              foregroundColor: WidgetStateProperty.all(color),
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+                  side: BorderSide(
+                    color: color,
                   ),
                 ),
-            onPressed: onPressed,
-            child: Text(
-              label,
-              style: AppStyles.buttonLabelSmall.copyWith(
-                color: fontColor,
               ),
             ),
+            onPressed: onPressed,
+            child: isLoading
+                ? SizedBox(
+                    height: 12,
+                    width: 12,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                        color: fontColor,
+                      ),
+                    ),
+                  )
+                : Text(
+                    label,
+                    style: AppStyles.buttonLabelSmall.copyWith(
+                      color: fontColor,
+                    ),
+                  ),
           ),
         );
       case ButtonSmallType.filled:
@@ -55,19 +68,30 @@ class ButtonSmall extends StatelessWidget {
           height: 26,
           child: ElevatedButton(
             style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                  backgroundColor: WidgetStateProperty.all(color),
-                  foregroundColor: WidgetStateProperty.all(Colors.white),
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-                    ),
-                  ),
+              backgroundColor: WidgetStateProperty.all(color),
+              foregroundColor: WidgetStateProperty.all(Colors.white),
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
                 ),
-            onPressed: onPressed,
-            child: Text(
-              label,
-              style: AppStyles.buttonLabelSmall.copyWith(color: fontColor),
+              ),
             ),
+            onPressed: onPressed,
+            child: isLoading
+                ? SizedBox(
+                    height: 12,
+                    width: 12,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                        color: fontColor,
+                      ),
+                    ),
+                  )
+                : Text(
+                    label,
+                    style: AppStyles.buttonLabelSmall.copyWith(color: fontColor),
+                  ),
           ),
         );
     }
