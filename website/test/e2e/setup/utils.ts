@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { APIResponse, Browser, expect } from '@playwright/test';
 
 const ACTORS = {
@@ -46,12 +45,20 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 
 	const { email, testId, expectedPath, state } = ACTORS[actor];
 
-	await page.goto(`/en/int/${NEW_WEBSITE_SLUG}`);
-	await page.getByTestId('login-button').click();
+	await page.goto('/en/int/login');
 	await page.fill('input[type="email"]', email);
 	await page.click('button[type="submit"]');
+	await expect
+		.poll(
+			async () => {
+				const response: APIResponse = await page.request.get(EMULATOR_API);
+				const json: FirebaseOobCodesResponse = await response.json();
 
-	await expect(page.getByText(`If an account exists for ${email}`)).toBeVisible();
+				return json.oobCodes.some((x) => x.email === email && x.requestType === 'EMAIL_SIGNIN');
+			},
+			{ timeout: 15_000 },
+		)
+		.toBeTruthy();
 
 	const response: APIResponse = await page.request.get(EMULATOR_API);
 	const json: FirebaseOobCodesResponse = await response.json();

@@ -59,10 +59,13 @@ class _InputDropdownState<T> extends State<InputDropdown<T>> {
             fontWeight: FontWeight.bold,
           ),
           onChanged: (newValue) {
-            setState(() {
-              value = newValue;
-            });
-            widget.onChanged(newValue);
+            // Only call onChanged if value actually changed
+            if (value != newValue) {
+              setState(() {
+                value = newValue;
+              });
+              widget.onChanged(newValue);
+            }
           },
           validator: widget.validator,
         ),

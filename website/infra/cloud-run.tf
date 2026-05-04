@@ -37,6 +37,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "STORYBLOK_WEBHOOK_SECRET"
+          value = var.storyblok_webhook_secret
+        }
+
+        env {
           name  = "DATABASE_URL"
           value = "postgresql://${google_sql_user.google_sql_user.name}:${random_password.psql_admin_password.result}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}?sslmode=disable"
         }

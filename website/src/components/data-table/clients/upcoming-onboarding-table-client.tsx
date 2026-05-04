@@ -6,7 +6,6 @@ import {
 	upcomingOnboardingTableConfig,
 } from '@/components/data-table/configs/upcoming-onboarding-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import { ProgramPermission } from '@/generated/prisma/enums';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
 import type { RecipientProgramFilterOption, UpcomingOnboardingTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
@@ -15,19 +14,18 @@ import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
+import { recipientsCsvTemplate } from './recipients-csv-template';
 
 type Props = {
 	rows: UpcomingOnboardingTableViewRow[];
 	error: string | null;
-	readOnly?: boolean;
 	query?: TableQueryState & { totalRows: number };
 	programFilterOptions?: RecipientProgramFilterOption[];
 };
 
-export const UpcomingOnboardingTableClient = ({ rows, error, readOnly, query, programFilterOptions = [] }: Props) => {
+export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilterOptions = [] }: Props) => {
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
-	const [isRecipientReadOnly, setIsRecipientReadOnly] = useState(readOnly ?? false);
 	const [recipientError, setRecipientError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
@@ -35,14 +33,12 @@ export const UpcomingOnboardingTableClient = ({ rows, error, readOnly, query, pr
 	const openCreateRecipientDialog = () => {
 		setRecipientError(null);
 		setSelectedRecipientId(undefined);
-		setIsRecipientReadOnly(readOnly ?? false);
 		setIsRecipientDialogOpen(true);
 	};
 
 	const openEditRecipientDialog = (row: UpcomingOnboardingTableViewRow) => {
 		setRecipientError(null);
 		setSelectedRecipientId(row.id);
-		setIsRecipientReadOnly(row.permission === ProgramPermission.owner ? true : (readOnly ?? false));
 		setIsRecipientDialogOpen(true);
 	};
 
@@ -77,13 +73,11 @@ export const UpcomingOnboardingTableClient = ({ rows, error, readOnly, query, pr
 		{
 			label: 'Add new recipient',
 			icon: <PlusIcon />,
-			disabled: readOnly,
 			onSelect: openCreateRecipientDialog,
 		},
 		{
 			label: 'Upload CSV',
 			icon: <UploadIcon />,
-			disabled: readOnly,
 			onSelect: () => setIsCsvUploadDialogOpen(true),
 		},
 	];
@@ -105,7 +99,6 @@ export const UpcomingOnboardingTableClient = ({ rows, error, readOnly, query, pr
 				open={isRecipientDialogOpen}
 				onOpenChange={closeRecipientDialog}
 				recipientId={selectedRecipientId}
-				readOnly={isRecipientReadOnly}
 				sessionType="user"
 				errorMessage={recipientError}
 				onError={setRecipientError}
@@ -115,11 +108,7 @@ export const UpcomingOnboardingTableClient = ({ rows, error, readOnly, query, pr
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
 				title="Upload recipients CSV"
-				template={{
-					headers: ['firstName', 'lastName', 'programId', 'localPartnerId'],
-					exampleRow: ['John', 'Doe', 'program_id_here', 'local_partner_id_here'],
-					filename: 'recipients-import-template.csv',
-				}}
+				template={recipientsCsvTemplate}
 				onImport={(file) => importRecipientsCsvAction(file, 'user')}
 			/>
 		</>

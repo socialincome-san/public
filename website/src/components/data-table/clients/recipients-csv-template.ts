@@ -1,0 +1,25 @@
+export const recipientsCsvTemplate = {
+	headers: [
+		'firstName',
+		'lastName',
+		'programId',
+		'localPartnerId',
+		'contactPhone',
+		'paymentPhone',
+		'dateOfBirth',
+		'gender',
+		'paymentInformationCode',
+	],
+	exampleRow: [
+		'John',
+		'Doe',
+		'program_id_here',
+		'local_partner_id_here',
+		'+256700000001',
+		'+256700000002',
+		'1990-04-28',
+		'male',
+		'payment_code_here',
+	],
+	filename: 'recipients-import-template.csv',
+};

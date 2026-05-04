@@ -1,11 +1,10 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
-import "package:app/data/datasource/demo/organization_demo_data_source.dart";
-import "package:app/data/datasource/demo/payment_demo_data_source.dart";
+import "package:app/core/helpers/flushbar_helper.dart";
+import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/remote/organization_remote_data_source.dart";
-import "package:app/data/datasource/remote/payment_remote_data_source.dart";
+import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/models/app_version_info.dart";
@@ -15,6 +14,7 @@ import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
 import "package:app/l10n/arb/app_localizations.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/navigation/app_navigation_keys.dart";
 import "package:app/view/pages/main_app_page.dart";
@@ -36,14 +36,11 @@ class MyApp extends StatelessWidget {
   final UserRemoteDataSource userRemoteDataSource;
   final UserDemoDataSource userDemoDataSource;
 
-  final PaymentRemoteDataSource paymentRemoteDataSource;
-  final PaymentDemoDataSource paymentDemoDataSource;
+  final PayoutRemoteDataSource payoutRemoteDataSource;
+  final PayoutDemoDataSource payoutDemoDataSource;
 
   final SurveyRemoteDataSource surveyRemoteDataSource;
   final SurveyDemoDataSource surveyDemoDataSource;
-
-  final OrganizationRemoteDataSource organizationRemoteDataSource;
-  final OrganizationDemoDataSource organizationDemoDataSource;
 
   final AuthService authService;
   final FirebaseRemoteConfigService firebaseRemoteConfigService;
@@ -56,12 +53,10 @@ class MyApp extends StatelessWidget {
     required this.demoManager,
     required this.userRemoteDataSource,
     required this.userDemoDataSource,
-    required this.paymentRemoteDataSource,
-    required this.paymentDemoDataSource,
+    required this.payoutRemoteDataSource,
+    required this.payoutDemoDataSource,
     required this.surveyRemoteDataSource,
     required this.surveyDemoDataSource,
-    required this.organizationRemoteDataSource,
-    required this.organizationDemoDataSource,
     required this.authService,
     required this.firebaseRemoteConfigService,
     required this.crashReportingRepository,
@@ -85,8 +80,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider.value(value: crashReportingRepository),
         RepositoryProvider(
           create: (context) => PaymentRepository(
-            remoteDataSource: paymentRemoteDataSource,
-            demoDataSource: paymentDemoDataSource,
+            remoteDataSource: payoutRemoteDataSource,
+            demoDataSource: payoutDemoDataSource,
             demoManager: demoManager,
           ),
         ),
@@ -94,13 +89,6 @@ class MyApp extends StatelessWidget {
           create: (context) => SurveyRepository(
             remoteDataSource: surveyRemoteDataSource,
             demoDataSource: surveyDemoDataSource,
-            demoManager: demoManager,
-          ),
-        ),
-        RepositoryProvider(
-          create: (context) => OrganizationRepository(
-            remoteDataSource: organizationRemoteDataSource,
-            demoDataSource: organizationDemoDataSource,
             demoManager: demoManager,
           ),
         ),
@@ -114,7 +102,6 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) => AuthCubit(
               crashReportingRepository: context.read<CrashReportingRepository>(),
-              organizationRepository: context.read<OrganizationRepository>(),
               userRepository: context.read<UserRepository>(),
               authService: context.read<AuthService>(),
             )..init(),
@@ -162,9 +149,19 @@ class _App extends StatelessWidget {
         appVersionInfo: appVersionInfo,
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
+            if (state.status == AuthStatus.authenticatedWithoutRecipient) {
+              // Sign out the user to clean up auth state
+              context.read<AuthService>().signOut();
+              // Show error message to user
+              FlushbarHelper.showFlushbar(
+                context,
+                message: context.l10n.recipientNotFound,
+                type: FlushbarType.error,
+              );
+            }
             if (state.status == AuthStatus.authenticated) {
               // change language to the user's preferred language
-              final selectedLanguage = state.recipient?.selectedLanguage;
+              final selectedLanguage = state.recipient?.contact.language;
 
               if (selectedLanguage != null) {
                 context.read<SettingsCubit>().changeLanguage(selectedLanguage);
@@ -178,6 +175,7 @@ class _App extends StatelessWidget {
                   case AuthStatus.loading:
                     return const SizedBox.shrink();
                   case AuthStatus.unauthenticated:
+                  case AuthStatus.authenticatedWithoutRecipient:
                   case AuthStatus.failure:
                     FlutterNativeSplash.remove();
                     return const WelcomePage();

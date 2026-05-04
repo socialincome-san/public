@@ -103,12 +103,13 @@
 			"research": "Forschung",
 			"design": "Design",
 			"editorial": "Redaktion & Content",
-			"socialmedia": "Social Media"
+			"socialmedia": "Social Media",
+			"volunteer-coordinator": "Freiwilligenkoordination"
 		},
 		"groups": {
 			"staff": {
-				"name": "Örtliche Mitarbeitende",
-				"subtitle": "Sie leiten den Betrieb und dessen Weiterentwicklung im Auszahlungsland.",
+				"name": "Länderbüros",
+				"subtitle": "Mitarbeitende der Länderbüros leiten den Betrieb und dessen Weiterentwicklung im Auszahlungsland.",
 				"description": "Das lokale Personal bietet zuverlässige Unterstützung für Partner:innen und Empfänger:innen. Ihre Erkenntnisse fliessen in die von uns entwickelten Tools ein. Sie werden mit einem fairen lokalen Gehalt vergütet."
 			},
 			"volunteers": {

@@ -105,7 +105,7 @@ class DemoUser implements User {
   String? get tenantId => throw UnimplementedError();
 
   @override
-  String get uid => throw UnimplementedError();
+  String get uid => "demo";
 
   @override
   Future<User> unlink(String providerId) {

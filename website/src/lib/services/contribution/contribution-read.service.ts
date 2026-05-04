@@ -139,13 +139,14 @@ export class ContributionReadService extends BaseService {
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const accessiblePrograms = accessibleProgramsResult.data;
+			const accessiblePrograms = accessibleProgramsResult.data.filter(
+				(program) => program.permission === ProgramPermission.operator,
+			);
 			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((p) => p.programId)));
 			if (accessibleProgramIds.length === 0) {
 				return this.resultOk({
 					tableRows: [],
 					totalCount: 0,
-					permission: ProgramPermission.owner,
 					filterOptions: { programs: [], campaigns: [], paymentEventTypes: [] },
 				});
 			}
@@ -193,9 +194,7 @@ export class ContributionReadService extends BaseService {
 					? campaigns.filter((campaign) => campaign.program?.id === selectedProgramId).map((campaign) => campaign.id)
 					: campaignIds;
 			if (filteredCampaignIds.length === 0) {
-				const readOnlyPermission = ProgramPermission.owner;
-
-				return this.resultOk({ tableRows: [], totalCount: 0, permission: readOnlyPermission, filterOptions });
+				return this.resultOk({ tableRows: [], totalCount: 0, filterOptions });
 			}
 
 			const where = {
@@ -256,14 +255,6 @@ export class ContributionReadService extends BaseService {
 				this.db.contribution.count({ where }),
 			]);
 
-			const permissionByProgramId = new Map<string, ProgramPermission>();
-			for (const access of accessiblePrograms) {
-				const current = permissionByProgramId.get(access.programId);
-				if (access.permission === ProgramPermission.operator || current === undefined) {
-					permissionByProgramId.set(access.programId, access.permission);
-				}
-			}
-
 			const tableRows: ContributionTableViewRow[] = contributions.map((c) => ({
 				id: c.id,
 				firstName: c.contributor?.contact?.firstName ?? '',
@@ -276,20 +267,9 @@ export class ContributionReadService extends BaseService {
 				paymentEventType: c.paymentEvent?.type ?? null,
 				programName: c.campaign?.program?.name ?? null,
 				createdAt: c.createdAt,
-				permission: permissionByProgramId.get(c.campaign?.program?.id ?? '') ?? ProgramPermission.owner,
 			}));
 
-			const selectedCampaigns = campaigns.filter((campaign) => filteredCampaignIds.includes(campaign.id));
-			const selectedProgramIds = Array.from(new Set(selectedCampaigns.map((campaign) => campaign.programId)));
-			const permission = selectedProgramIds.some((programId) =>
-				accessiblePrograms.some(
-					(program) => program.programId === programId && program.permission === ProgramPermission.operator,
-				),
-			)
-				? ProgramPermission.operator
-				: ProgramPermission.owner;
-
-			return this.resultOk({ tableRows, totalCount, permission, filterOptions });
+			return this.resultOk({ tableRows, totalCount, filterOptions });
 		} catch (error) {
 			this.logger.error(error);
 

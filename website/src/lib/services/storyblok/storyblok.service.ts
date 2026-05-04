@@ -29,6 +29,7 @@ export class StoryblokService extends BaseService {
 		tag: 'tag',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
+	private static readonly standardStoryRelationsToResolve = ['faqSelection.questions'];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
@@ -152,7 +153,10 @@ export class StoryblokService extends BaseService {
 		try {
 			const data = await this.withLanguageFallback(
 				async (language: string) => {
-					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, await this.getStoryParams(language));
+					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, {
+						...(await this.getStoryParams(language)),
+						resolve_relations: StoryblokService.standardStoryRelationsToResolve,
+					});
 					const responseData = response.data as { story: T };
 
 					return responseData.story;
@@ -223,6 +227,29 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to count articles by author: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPersonsByUuids(lang: string, personUuids: string[]): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+		try {
+			const uuids = [...new Set(personUuids.map((u) => u.trim()).filter(Boolean))];
+			if (!uuids.length) {
+				return this.resultOk([]);
+			}
+
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(lang)),
+				per_page: uuids.length,
+				content_type: StoryblokService.contentType.person,
+			};
+			(params as ISbStoriesParams & { by_uuids_ordered: string }).by_uuids_ordered = uuids.join(',');
+			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
+
+			return this.resultOk((res.data as { stories: ISbStoryData<Person>[] }).stories);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch persons by UUIDs: ${JSON.stringify(error)}`);
 		}
 	}
 

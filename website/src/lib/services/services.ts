@@ -4,6 +4,7 @@ import { BankTransferService } from './bank-transfer/bank-transfer.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
+import { CandidateImportService } from './candidate/candidate-import.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
 import { CandidateValidationService } from './candidate/candidate-validation.service';
 import { CandidateWriteService } from './candidate/candidate-write.service';
@@ -51,6 +52,7 @@ import { ProgramStatsService } from './program-stats/program-stats.service';
 import { ProgramReadService } from './program/program-read.service';
 import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
+import { RecipientImportService } from './recipient/recipient-import.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
 import { RecipientStatusService } from './recipient/recipient-status.service';
 import { RecipientValidationService } from './recipient/recipient-validation.service';
@@ -91,6 +93,7 @@ const candidateRead = new CandidateReadService(prisma, userRead);
 const contactRelations = new ContactRelationsService(prisma);
 const candidateValidation = new CandidateValidationService(prisma);
 const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin, candidateValidation, contactRelations);
+const candidateImport = new CandidateImportService(candidateWrite, candidateValidation);
 const recipientRead = new RecipientReadService(prisma, programAccessRead, firebaseAdmin, appReviewMode, recipientStatus);
 const recipientValidation = new RecipientValidationService(prisma);
 const recipientWrite = new RecipientWriteService(
@@ -100,6 +103,7 @@ const recipientWrite = new RecipientWriteService(
 	recipientValidation,
 	contactRelations,
 );
+const recipientImport = new RecipientImportService(recipientWrite, recipientValidation);
 const payoutValidation = new PayoutValidationService(prisma);
 const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutValidation);
 const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
@@ -225,10 +229,12 @@ export const services = {
 	bankTransfer,
 	createPaymentFileImport,
 	exchangeRateImport,
+	candidateImport,
 	firebaseAdmin,
 	firebaseSession,
 	payoutProcess,
 	programStats,
+	recipientImport,
 	sendgrid,
 	storyblok,
 	stripe,

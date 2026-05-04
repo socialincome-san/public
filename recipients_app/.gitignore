@@ -55,3 +55,6 @@ macos/Runner/GoogleService-Info.plist
 macos/flavors/*/GoogleService-Info.plist
 android/app/google-services.json
 android/app/src/*/google-services.json
+
+# FVM Version Cache
+.fvm/

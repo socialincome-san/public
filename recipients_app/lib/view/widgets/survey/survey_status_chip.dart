@@ -1,5 +1,5 @@
-import "package:app/data/models/survey/survey.dart";
 import "package:app/data/models/survey/survey_card_status.dart";
+import "package:app/data/models/survey/survey_status.dart";
 import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
@@ -9,7 +9,7 @@ const statusIconHeight = 26.0;
 
 class SurveyServerStatusChip extends StatelessWidget {
   final SurveyCardStatus status;
-  final SurveyServerStatus? serverStatus;
+  final SurveyStatus? serverStatus;
 
   const SurveyServerStatusChip({
     super.key,
@@ -68,7 +68,7 @@ class SurveyServerStatusChip extends StatelessWidget {
 
 String _getStatusName(
   SurveyCardStatus status,
-  SurveyServerStatus? serverStatus,
+  SurveyStatus? serverStatus,
   AppLocalizations localizations,
 ) {
   final String statusName;
@@ -76,7 +76,7 @@ String _getStatusName(
     case SurveyCardStatus.newSurvey:
     case SurveyCardStatus.firstReminder:
     case SurveyCardStatus.overdue:
-      if (serverStatus != SurveyServerStatus.inProgress) {
+      if (serverStatus != SurveyStatus.inProgress) {
         statusName = localizations.surveyDue;
       } else {
         statusName = localizations.surveyInProgress;

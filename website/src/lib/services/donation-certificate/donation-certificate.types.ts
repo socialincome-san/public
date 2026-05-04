@@ -1,5 +1,3 @@
-import { ProgramPermission } from '@/generated/prisma/client';
-
 export type DonationCertificateTableViewRow = {
 	id: string;
 	year: number;
@@ -8,7 +6,6 @@ export type DonationCertificateTableViewRow = {
 	email: string;
 	storagePath: string;
 	createdAt: Date;
-	permission: ProgramPermission;
 };
 
 export type DonationCertificateTableQuery = {
