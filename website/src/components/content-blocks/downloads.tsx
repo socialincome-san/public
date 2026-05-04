@@ -53,7 +53,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 									className="grid grid-cols-2 gap-2 px-4 py-4 text-sm md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center md:gap-12 md:py-3"
 								>
 									<div className="col-span-2 md:col-span-1">
-										<p className="font-medium">{content?.title}</p>
+										<p className="font-medium">{content.title}</p>
 									</div>
 									<div className="text-gray-600 md:text-gray-900">
 										<p>{content.language ?? '-'}</p>
