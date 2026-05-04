@@ -11,7 +11,7 @@ type Props = {
 };
 
 const getFileHref = (file: StoryblokAsset) => {
-	return file.filename || file.src || null;
+	return file.filename ?? file.src ?? null;
 };
 
 const getDocumentContent = (document: ISbStoryData<Document> | string) => {
