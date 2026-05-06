@@ -11,6 +11,7 @@ import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { now } from '@/lib/utils/now';
 import { ISbStoryData } from '@storyblok/js';
+import NextImage from 'next/image';
 import NextLink from 'next/link';
 
 type Props = {
@@ -30,11 +31,34 @@ export const Footer = async ({ lang, region }: Props) => {
 	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
 	const footerMenu = result.success ? result.data.content.footerMenu : [];
 	const copyrightNotice = result.success ? result.data.content.copyrightNotice : undefined;
+	const supportedByLabel = result.success ? result.data.content.supportedByLabel : undefined;
+	const supportedByLogo = result.success ? result.data.content.supportedByLogo : undefined;
+	const supportedByUrl = result.success ? result.data.content.supportedByUrl : undefined;
+	const supportedByHref = supportedByUrl ? resolveStoryblokLink(supportedByUrl, lang, region) : undefined;
+	const hasSupportedByLink = Boolean(supportedByHref && supportedByHref !== '#');
+	const showSupportedBy = Boolean(supportedByLabel && supportedByLogo?.filename);
 
 	return (
 		<div className="bg-primary max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 text-white sm:px-16 sm:pt-14 lg:mb-10 lg:grid-cols-[334px_auto] lg:rounded-3xl">
-			<div>
+			<div className="flex flex-col">
 				<SocialIncomeLogo width={222} height={22} />
+				{showSupportedBy && (
+					<div className="mt-8 flex flex-col gap-2 lg:mt-auto">
+						<p className="text-xs leading-normal font-medium text-white/50">{supportedByLabel}</p>
+						{hasSupportedByLink ? (
+							<NextLink
+								href={supportedByHref!}
+								target={supportedByUrl?.target ?? undefined}
+								rel={supportedByUrl?.target === '_blank' ? 'noopener noreferrer' : undefined}
+								className="w-fit"
+							>
+								<NextImage src={supportedByLogo.filename} alt={supportedByLogo.alt ?? ''} width={120} height={22} />
+							</NextLink>
+						) : (
+							<NextImage src={supportedByLogo.filename} alt={supportedByLogo.alt ?? ''} width={120} height={22} />
+						)}
+					</div>
+				)}
 			</div>
 			<div className="mt-8 lg:mt-16">
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">

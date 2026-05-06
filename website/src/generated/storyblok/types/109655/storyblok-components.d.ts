@@ -99,6 +99,16 @@ export interface CountryGrid {
   [k: string]: unknown;
 }
 
+export interface Document {
+  title?: string;
+  file: StoryblokAsset;
+  language?: string;
+  downloadButtonName: string;
+  component: "document";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
@@ -108,22 +118,12 @@ export interface DonationsTotal {
   [k: string]: unknown;
 }
 
-export interface Download {
-  title: string;
-  file: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  language?: string;
-  linkName: string;
-  component: "download";
-  _uid: string;
-  [k: string]: unknown;
-}
-
 export interface Downloads {
   heading?: string;
   tableHeaderLabelFilename: string;
   tableHeaderLabelInfo: string;
   tableHeaderLabelLink: string;
-  files: Download[];
+  documents: (ISbStoryData<Document> | string)[];
   component: "downloads";
   _uid: string;
   [k: string]: unknown;
@@ -228,6 +228,9 @@ export interface Layout {
   menu: (MenuItem | DropdownItem)[];
   footerMenu: MenuItemGroup[];
   copyrightNotice?: string;
+  supportedByLabel?: string;
+  supportedByLogo?: StoryblokAsset;
+  supportedByUrl?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "layout";
   _uid: string;
   [k: string]: unknown;
@@ -303,7 +306,6 @@ export interface Page {
     | CampaignGrid
     | CountryGrid
     | DonationsTotal
-    | Download
     | Downloads
     | FaqSelection
     | FocusGrid
@@ -350,16 +352,21 @@ export interface Person {
 export interface Program {
   id: string;
   title: string;
-  heroImage: StoryblokAsset;
   description: string;
+  primaryImage: StoryblokAsset;
+  secondaryImage: StoryblokAsset;
+  tertiaryImage: StoryblokAsset;
   component: "program";
   _uid: string;
   [k: string]: unknown;
 }
 
 export interface ProgramGrid {
+  heading?: string;
+  description?: string;
   showAllPrograms?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
+  button?: Button[];
   component: "programGrid";
   _uid: string;
   [k: string]: unknown;
@@ -461,6 +468,7 @@ export type ContentType =
   | ArticleType
   | Campaign
   | Country
+  | Document
   | Faq
   | Focus
   | Layout
