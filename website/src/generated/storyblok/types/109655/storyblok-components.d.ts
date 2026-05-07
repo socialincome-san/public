@@ -103,7 +103,6 @@ export interface Document {
   title?: string;
   file: StoryblokAsset;
   language?: string;
-  downloadButtonName: string;
   component: "document";
   _uid: string;
   [k: string]: unknown;
@@ -228,6 +227,9 @@ export interface Layout {
   menu: (MenuItem | DropdownItem)[];
   footerMenu: MenuItemGroup[];
   copyrightNotice?: string;
+  supportedByLabel?: string;
+  supportedByLogo?: StoryblokAsset;
+  supportedByUrl?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "layout";
   _uid: string;
   [k: string]: unknown;
