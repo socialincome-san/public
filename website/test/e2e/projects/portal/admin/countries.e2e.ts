@@ -3,7 +3,12 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { bestGuessCurrency } from '@/lib/types/currency';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, expectToHaveScreenshot, selectMultiOptionsByTestId, selectOptionByTestId } from '../../../utils';
+import {
+	clickDataTableActionItem,
+	expectToHaveScreenshot,
+	selectMultiOptionsByTestId,
+	selectOptionByTestId,
+} from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();

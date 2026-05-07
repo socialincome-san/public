@@ -24,5 +24,6 @@ export const buildUpdateMobileMoneyProviderInput = (
 	id: existing.id,
 	name: asString(schema.fields.name.value).trim() || existing.name,
 	isSupported: schema.fields.isSupported.value ?? existing.isSupported,
-	parentId: schema.fields.parentId.value === undefined ? existing.parentId : emptyToNull(asString(schema.fields.parentId.value)),
+	parentId:
+		schema.fields.parentId.value === undefined ? existing.parentId : emptyToNull(asString(schema.fields.parentId.value)),
 });
