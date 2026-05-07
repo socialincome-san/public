@@ -228,6 +228,9 @@ export interface Layout {
   menu: (MenuItem | DropdownItem)[];
   footerMenu: MenuItemGroup[];
   copyrightNotice?: string;
+  supportedByLabel?: string;
+  supportedByLogo?: StoryblokAsset;
+  supportedByUrl?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "layout";
   _uid: string;
   [k: string]: unknown;
@@ -352,6 +355,9 @@ export interface Program {
   title: string;
   heroImage: StoryblokAsset;
   description: string;
+  primaryImage: StoryblokAsset;
+  secondaryImage: StoryblokAsset;
+  tertiaryImage: StoryblokAsset;
   component: "program";
   _uid: string;
   [k: string]: unknown;

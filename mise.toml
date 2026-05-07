@@ -3,7 +3,7 @@ node = "24"
 java = "23"
 
 [tasks.install]
-run = "npm install"
+run = "npm ci"
 
 [tasks.db]
 run = "npm run db:up"
