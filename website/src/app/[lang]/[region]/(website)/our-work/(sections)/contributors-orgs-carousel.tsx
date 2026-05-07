@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-unsafe-assignment -- legacy asset typing; will be removed soon */
+
 import { useScreenSize } from '@/lib/hooks/useScreenSize';
 import { Carousel, CarouselContent } from '@socialincome/ui';
 import Image from 'next/image';

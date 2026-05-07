@@ -21,6 +21,7 @@ const Portrait = ({ name, text, country, image }: PortraitProps) => {
 				<Image src={image} alt={`${name} Image`} className="max-h-96 grow rounded-sm object-contain md:max-h-full" />
 			</div>
 			<div className="space-y-4 p-4 md:basis-1/2 md:space-y-8 md:p-8">
+				{/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- legacy asset typing; will be removed soon */}
 				<Image src={doubleQuotesSVG} alt="double quotes" className="text-accent h-8 w-8 md:h-16 md:w-16" />
 				<Typography size="xl">{text}</Typography>
 				<div>

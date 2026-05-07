@@ -22,6 +22,7 @@ const SDGBadge = ({
 			</HoverCardTrigger>
 			<HoverCardContent>
 				<div className="flex items-center">
+					{/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- legacy asset typing; will be removed soon */}
 					<Image className="mr-1 h-4 w-4 rounded-full" src={SdgIcon} alt="SDG Icon" />
 					<Typography size="sm" weight="normal">
 						{translatorSdg} {sdgNumber?.toString() || ''}: {translatorSdgTitle}

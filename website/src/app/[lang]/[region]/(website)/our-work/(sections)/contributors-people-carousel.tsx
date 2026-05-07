@@ -18,6 +18,7 @@ const Portrait = ({ name, text, country, image }: PortraitProps) => {
 	return (
 		<Card className="flex min-h-96 flex-col">
 			<CardHeader>
+				{/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- legacy asset typing; will be removed soon */}
 				<Image src={doubleQuotesSVG} alt="Double quotes" className="text-accent h-16 w-16" />
 			</CardHeader>
 			<CardContent className="grow">

@@ -25,6 +25,7 @@ export const SDGGoals = async ({ lang }: DefaultParams) => {
 					</Typography>
 				))}
 			</Typography>
+			{/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- legacy asset typing; will be removed soon */}
 			<Image className="mx-auto mt-8 w-96 max-w-[75%]" src={sdgLogo} alt="Sustainable Development Goals Logo" />
 			<div className="mx-auto -mb-6 flex w-4/5 max-w-xl pt-20 text-center text-xl text-white md:pt-40 md:text-2xl">
 				<div className="bg-primary flex h-72 flex-1 -rotate-6 flex-col items-center justify-between py-4 md:h-96">

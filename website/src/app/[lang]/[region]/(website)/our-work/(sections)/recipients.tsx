@@ -40,6 +40,7 @@ export const Recipients = async ({ lang }: DefaultParams) => {
 			<div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
 				<Image
 					className="flex-1 px-16 py-4"
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- legacy asset typing; will be removed soon
 					src={mapAfrica}
 					alt="Change animation"
 					// eslint-disable-next-line react/forbid-component-props
