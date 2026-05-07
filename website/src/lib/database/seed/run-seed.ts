@@ -64,7 +64,10 @@ export const seedDatabase = async () => {
 		await tx.sourceLink.createMany({ data: sourceLinksData, skipDuplicates: true });
 		await tx.country.createMany({ data: countriesData, skipDuplicates: true });
 		await tx.mobileMoneyProvider.createMany({ data: mobileMoneyProvidersData, skipDuplicates: true });
-		await tx.countryMobileMoneyProviderMapping.createMany({data: countryMobileMoneyProviderMappingsData, skipDuplicates: true,});
+		await tx.countryMobileMoneyProviderMapping.createMany({
+			data: countryMobileMoneyProviderMappingsData,
+			skipDuplicates: true,
+		});
 		await tx.account.createMany({ data: accountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });

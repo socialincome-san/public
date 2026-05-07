@@ -124,6 +124,7 @@ export class AppReviewModeService extends BaseService {
 					id: 'mobile-money-provider-id-1',
 					name: 'Orange Money',
 					isSupported: true,
+					parentId: null,
 					createdAt: now(),
 					updatedAt: now(),
 				},

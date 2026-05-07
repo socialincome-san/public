@@ -39,4 +39,3 @@ export const countryMobileMoneyProviderMappingsData: CountryMobileMoneyProviderM
 		updatedAt: null,
 	},
 ];
-
