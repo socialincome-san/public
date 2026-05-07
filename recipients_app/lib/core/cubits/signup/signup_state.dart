@@ -1,16 +1,7 @@
 part of "signup_cubit.dart";
 
-enum SignupStatus {
-  loadingPhoneNumber,
-  loadingVerificationCode,
-  phoneNumberFailure,
-  enterPhoneNumber,
-  enterVerificationCode,
-  verificationSuccess,
-  verificationFailure,
-}
-
-class SignupState extends Equatable {
+@MappableClass()
+class SignupState with SignupStateMappable {
   final SignupStatus status;
   final String? phoneNumber;
   final String? verificationId;
@@ -24,23 +15,15 @@ class SignupState extends Equatable {
     this.forceResendingToken,
     this.exception,
   });
+}
 
-  @override
-  List<Object?> get props => [status, phoneNumber, verificationId, forceResendingToken, exception];
-
-  SignupState copyWith({
-    SignupStatus? status,
-    String? phoneNumber,
-    String? verificationId,
-    int? forceResendingToken,
-    Exception? exception,
-  }) {
-    return SignupState(
-      status: status ?? this.status,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      verificationId: verificationId ?? this.verificationId,
-      forceResendingToken: forceResendingToken ?? this.forceResendingToken,
-      exception: exception ?? this.exception,
-    );
-  }
+@MappableEnum()
+enum SignupStatus {
+  loadingPhoneNumber,
+  loadingVerificationCode,
+  phoneNumberFailure,
+  enterPhoneNumber,
+  enterVerificationCode,
+  verificationSuccess,
+  verificationFailure,
 }

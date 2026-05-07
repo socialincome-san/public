@@ -1,5 +1,6 @@
 part of "settings_cubit.dart";
 
+@MappableEnum()
 enum SettingsStatus {
   initial,
   loading,
@@ -7,7 +8,8 @@ enum SettingsStatus {
   failure,
 }
 
-class SettingsState extends Equatable {
+@MappableClass()
+class SettingsState with SettingsStateMappable {
   final SettingsStatus status;
   final Locale locale;
   final Exception? exception;
@@ -17,7 +19,4 @@ class SettingsState extends Equatable {
     required this.locale,
     this.exception,
   });
-
-  @override
-  List<Object?> get props => [status, locale, exception];
 }

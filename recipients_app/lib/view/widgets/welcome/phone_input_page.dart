@@ -6,7 +6,6 @@ import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl_phone_number_input/intl_phone_number_input.dart";
-import "package:rounded_loading_button/rounded_loading_button.dart";
 
 class PhoneInputPage extends StatefulWidget {
   const PhoneInputPage({super.key});
@@ -16,14 +15,12 @@ class PhoneInputPage extends StatefulWidget {
 }
 
 class _PhoneInputPageState extends State<PhoneInputPage> {
-  late final RoundedLoadingButtonController btnController;
   late final TextEditingController phoneNumberController;
   late PhoneNumber number;
 
   @override
   void initState() {
     super.initState();
-    btnController = RoundedLoadingButtonController();
     phoneNumberController = TextEditingController();
     number = PhoneNumber(isoCode: "SL");
   }
@@ -112,8 +109,9 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                           ),
                           inputDecoration: InputDecoration(
                             labelText: context.l10n.phoneNumber,
-                            labelStyle:
-                                Theme.of(context).textTheme.headlineMedium!.copyWith(color: AppColors.primaryColor),
+                            labelStyle: Theme.of(
+                              context,
+                            ).textTheme.headlineMedium!.copyWith(color: AppColors.primaryColor),
                             enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: AppColors.primaryColor),
                               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -145,8 +143,8 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                   onPressed: () {
                     if (number.phoneNumber != null && number.phoneNumber!.isNotEmpty) {
                       context.read<SignupCubit>().signupWithPhoneNumber(
-                            phoneNumber: number.phoneNumber!,
-                          );
+                        phoneNumber: number.phoneNumber!,
+                      );
                     }
                   },
                   label: context.l10n.continueText,

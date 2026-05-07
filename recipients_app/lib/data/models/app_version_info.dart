@@ -1,28 +1,15 @@
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-class AppVersionInfo extends Equatable {
+part "app_version_info.mapper.dart";
+
+@MappableClass()
+class AppVersionInfo with AppVersionInfoMappable {
   final String version;
+  @MappableField(key: "is_optional")
   final bool isOptional;
 
   const AppVersionInfo({
     required this.version,
     required this.isOptional,
   });
-
-  factory AppVersionInfo.fromJson(Map<String, dynamic> json) {
-    return AppVersionInfo(
-      version: json["version"] as String,
-      isOptional: json["is_optional"] as bool,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "version": version,
-      "is_optional": isOptional,
-    };
-  }
-
-  @override
-  List<Object?> get props => [version, isOptional];
 }
