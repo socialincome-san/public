@@ -29,33 +29,50 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 
 export const Footer = async ({ lang, region }: Props) => {
 	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
-	const footerMenu = result.success ? result.data.content.footerMenu : [];
-	const copyrightNotice = result.success ? result.data.content.copyrightNotice : undefined;
-	const supportedByLabel = result.success ? result.data.content.supportedByLabel : undefined;
-	const supportedByLogo = result.success ? result.data.content.supportedByLogo : undefined;
-	const supportedByUrl = result.success ? result.data.content.supportedByUrl : undefined;
-	const supportedByHref = supportedByUrl ? resolveStoryblokLink(supportedByUrl, lang, region) : undefined;
-	const hasSupportedByLink = Boolean(supportedByHref && supportedByHref !== '#');
-	const showSupportedBy = Boolean(supportedByLabel && supportedByLogo?.filename);
+	const layoutContent = result.success ? result.data.content : undefined;
+	const footerMenu = layoutContent?.footerMenu ?? [];
+	const copyrightNotice = layoutContent?.copyrightNotice;
+	const supportedByLogo = layoutContent?.supportedByLogo;
+	const supportedByLink = layoutContent?.supportedByUrl;
+	const supportedByDetails =
+		layoutContent?.supportedByLabel && supportedByLogo?.filename
+			? {
+					label: layoutContent.supportedByLabel,
+					logoFilename: supportedByLogo.filename,
+					logoAlt: supportedByLogo.alt ?? '',
+				}
+			: null;
+	const supportedByHref = supportedByLink ? resolveStoryblokLink(supportedByLink, lang, region) : undefined;
+	const supportedByLinkProps =
+		supportedByHref && supportedByHref !== '#'
+			? {
+					href: supportedByHref,
+					target: supportedByLink?.target,
+					rel: supportedByLink?.target === '_blank' ? 'noopener noreferrer' : undefined,
+				}
+			: null;
+	const supportedByLogoNode = supportedByDetails ? (
+		<NextImage src={supportedByDetails.logoFilename} alt={supportedByDetails.logoAlt} width={120} height={22} />
+	) : null;
 
 	return (
 		<div className="bg-primary max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 text-white sm:px-16 sm:pt-14 lg:mb-10 lg:grid-cols-[334px_auto] lg:rounded-3xl">
 			<div className="flex flex-col">
 				<SocialIncomeLogo width={222} height={22} />
-				{showSupportedBy && (
+				{supportedByDetails && (
 					<div className="mt-8 flex flex-col gap-2 lg:mt-auto">
-						<p className="text-xs leading-normal font-medium text-white/50">{supportedByLabel}</p>
-						{hasSupportedByLink ? (
+						<p className="text-xs leading-normal font-medium text-white/50">{supportedByDetails.label}</p>
+						{supportedByLinkProps ? (
 							<NextLink
-								href={supportedByHref!}
-								target={supportedByUrl?.target ?? undefined}
-								rel={supportedByUrl?.target === '_blank' ? 'noopener noreferrer' : undefined}
+								href={supportedByLinkProps.href}
+								target={supportedByLinkProps.target}
+								rel={supportedByLinkProps.rel}
 								className="w-fit"
 							>
-								<NextImage src={supportedByLogo.filename} alt={supportedByLogo.alt ?? ''} width={120} height={22} />
+								{supportedByLogoNode}
 							</NextLink>
 						) : (
-							<NextImage src={supportedByLogo.filename} alt={supportedByLogo.alt ?? ''} width={120} height={22} />
+							supportedByLogoNode
 						)}
 					</div>
 				)}
