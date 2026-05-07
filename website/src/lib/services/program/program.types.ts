@@ -63,6 +63,9 @@ export type PublicPreviewProgram = {
 export type PublicProgramStats = {
 	campaignsCount: number;
 	recipientsCount: number;
+	countryIsoCode: CountryCode;
+	payoutCurrency: Currency;
+	totalPayoutsSum: number;
 };
 
 export type PublicProgramStatsMap = Record<string, PublicProgramStats>;

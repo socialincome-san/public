@@ -158,5 +158,9 @@
 		"day-left-singular": "Tag verbleibend",
 		"day-left-plural": "Tage verbleibend",
 		"about": "Über"
+	},
+	"wallet": {
+		"paid-out": "Ausbezahlt",
+		"recipients": "Empfänger:innen"
 	}
 }

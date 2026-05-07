@@ -583,13 +583,13 @@
             }
           ]
         },
-        "cv": 1775677717,
+        "cv": 1777554431,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1775677717&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -603,7 +603,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 12
+      "durationMs": 16
     },
     {
       "body": {
@@ -1188,13 +1188,13 @@
             }
           ]
         },
-        "cv": 1775677717,
+        "cv": 1777554431,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1775677717&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1208,7 +1208,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 11
+      "durationMs": 15
     }
   ],
   "59e7d046e94f2dee578f1c3733c95723f7e09055c560478f602770d60c8a02ea": [
@@ -1307,8 +1307,8 @@
           {
             "name": "SI Women Support SL",
             "created_at": "2026-03-31T11:22:34.823Z",
-            "published_at": "2026-03-31T15:17:35.662Z",
-            "updated_at": "2026-03-31T15:17:35.675Z",
+            "published_at": "2026-04-30T11:40:57.133Z",
+            "updated_at": "2026-04-30T11:40:57.147Z",
             "id": 160835808599512,
             "uuid": "1bb3fbd5-ef11-4a04-b02e-1bb4e329dc1c",
             "content": {
@@ -1316,7 +1316,8 @@
               "_uid": "2656bc35-9588-4a34-a22b-4b32a3ac991c",
               "title": "SI Women Support SL",
               "component": "program",
-              "heroImage": {
+              "description": "awesome woman support program",
+              "primaryImage": {
                 "id": 158317739968950,
                 "alt": "",
                 "name": "",
@@ -1329,7 +1330,32 @@
                 "meta_data": {},
                 "is_external_url": false
               },
-              "description": "awesome woman support program"
+              "tertiaryImage": {
+                "id": 163003919700287,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "secondaryImage": {
+                "id": 155169049725309,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              }
             },
             "slug": "si-women-support-sl",
             "full_slug": "new-website/programs/si-women-support-sl",
@@ -1370,8 +1396,8 @@
           {
             "name": "SI Core Program SL",
             "created_at": "2026-03-31T11:20:27.032Z",
-            "published_at": "2026-03-31T15:17:35.910Z",
-            "updated_at": "2026-03-31T15:17:35.923Z",
+            "published_at": "2026-04-30T11:41:11.665Z",
+            "updated_at": "2026-04-30T11:41:11.678Z",
             "id": 160835285158126,
             "uuid": "005956bd-a370-470d-bc53-6ed078892467",
             "content": {
@@ -1379,7 +1405,8 @@
               "_uid": "26f7dc14-470a-4de3-80a5-d842afd11d69",
               "title": "SI Core Program SL",
               "component": "program",
-              "heroImage": {
+              "description": "awesome core program",
+              "primaryImage": {
                 "id": 158389168950833,
                 "alt": "",
                 "name": "",
@@ -1397,7 +1424,32 @@
                 },
                 "is_external_url": false
               },
-              "description": "awesome core program"
+              "tertiaryImage": {
+                "id": 155169049725309,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "secondaryImage": {
+                "id": 163003919700287,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              }
             },
             "slug": "si-core-program-sl",
             "full_slug": "new-website/programs/si-core-program-sl",
@@ -1436,13 +1488,13 @@
             ]
           }
         ],
-        "cv": 1775677717,
+        "cv": 1777554431,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1775677717",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=en&version=published&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1777554431",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1456,7 +1508,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 69
+      "durationMs": 34
     }
   ],
   "71f514ad71facc6f6ae1acb7448645d1c87ff6adcc5572fb2b0a8a3def1c19b0": [
@@ -1466,7 +1518,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1775677717&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1480,7 +1532,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 11
+      "durationMs": 13
     },
     {
       "body": [
@@ -1488,7 +1540,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1775677717&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1509,13 +1561,13 @@
     {
       "body": {
         "stories": [],
-        "cv": 1775677717,
+        "cv": 1777554431,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1775677717",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1777554431",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1529,7 +1581,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 11
+      "durationMs": 13
     }
   ],
   "fce7173ea2aaa9a73d17396d9302fce5027dc24e52e784859627726b3cc6feae": [
@@ -1631,8 +1683,8 @@
           {
             "name": "SI Women Support SL",
             "created_at": "2026-03-31T11:22:34.823Z",
-            "published_at": "2026-03-31T15:17:35.662Z",
-            "updated_at": "2026-03-31T15:17:35.675Z",
+            "published_at": "2026-04-30T11:40:57.133Z",
+            "updated_at": "2026-04-30T11:40:57.147Z",
             "id": 160835808599512,
             "uuid": "1bb3fbd5-ef11-4a04-b02e-1bb4e329dc1c",
             "content": {
@@ -1640,7 +1692,8 @@
               "_uid": "2656bc35-9588-4a34-a22b-4b32a3ac991c",
               "title": "SI Women Support SL",
               "component": "program",
-              "heroImage": {
+              "description": "awesome woman support program",
+              "primaryImage": {
                 "id": 158317739968950,
                 "alt": "",
                 "name": "",
@@ -1653,7 +1706,32 @@
                 "meta_data": {},
                 "is_external_url": false
               },
-              "description": "awesome woman support program",
+              "tertiaryImage": {
+                "id": 163003919700287,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "secondaryImage": {
+                "id": 155169049725309,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
               "_editable": "<!--#storyblok#{\"name\": \"program\", \"space\": \"109655\", \"uid\": \"2656bc35-9588-4a34-a22b-4b32a3ac991c\", \"id\": \"160835808599512\"}-->"
             },
             "slug": "si-women-support-sl",
@@ -1695,8 +1773,8 @@
           {
             "name": "SI Core Program SL",
             "created_at": "2026-03-31T11:20:27.032Z",
-            "published_at": "2026-03-31T15:17:35.910Z",
-            "updated_at": "2026-03-31T15:17:35.923Z",
+            "published_at": "2026-04-30T11:41:11.665Z",
+            "updated_at": "2026-04-30T11:41:11.678Z",
             "id": 160835285158126,
             "uuid": "005956bd-a370-470d-bc53-6ed078892467",
             "content": {
@@ -1704,7 +1782,8 @@
               "_uid": "26f7dc14-470a-4de3-80a5-d842afd11d69",
               "title": "SI Core Program SL",
               "component": "program",
-              "heroImage": {
+              "description": "awesome core program",
+              "primaryImage": {
                 "id": 158389168950833,
                 "alt": "",
                 "name": "",
@@ -1722,7 +1801,32 @@
                 },
                 "is_external_url": false
               },
-              "description": "awesome core program",
+              "tertiaryImage": {
+                "id": 155169049725309,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "secondaryImage": {
+                "id": 163003919700287,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
               "_editable": "<!--#storyblok#{\"name\": \"program\", \"space\": \"109655\", \"uid\": \"26f7dc14-470a-4de3-80a5-d842afd11d69\", \"id\": \"160835285158126\"}-->"
             },
             "slug": "si-core-program-sl",
@@ -1762,13 +1866,13 @@
             ]
           }
         ],
-        "cv": 1775677717,
+        "cv": 1777554431,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1775677717",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1777554431",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1782,7 +1886,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 222
+      "durationMs": 79
     }
   ]
 }
