@@ -34,7 +34,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 					</h2>
 				)}
 				<div className="overflow-hidden rounded-md border border-gray-200">
-					<div className="hidden grid-cols-[minmax(0,1fr)_auto_auto] gap-12 border-b border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium md:grid">
+					<div className="hidden grid-cols-[minmax(0,1fr)_8rem_5rem] gap-12 border-b border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium md:grid">
 						<div>{blok.tableHeaderLabelFilename}</div>
 						<div>{blok.tableHeaderLabelInfo}</div>
 						<div className="justify-self-end">{blok.tableHeaderLabelLink}</div>
@@ -52,7 +52,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 							return (
 								<div
 									key={typeof document === 'string' ? document : document.uuid}
-									className="grid grid-cols-2 gap-2 px-4 py-4 text-sm md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center md:gap-12 md:py-3"
+									className="grid grid-cols-2 gap-2 px-4 py-4 text-sm md:grid-cols-[minmax(0,1fr)_8rem_5rem] md:items-center md:gap-12 md:py-3"
 								>
 									<div className="col-span-2 md:col-span-1">
 										<p className="font-medium">{content.title}</p>
