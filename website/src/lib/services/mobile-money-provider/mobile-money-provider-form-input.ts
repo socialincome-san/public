@@ -5,6 +5,7 @@ const requiredTrimmedString = (label: string) => z.string().trim().min(1, `${lab
 export const mobileMoneyProviderCreateInputSchema = z.object({
 	name: requiredTrimmedString('Name'),
 	isSupported: z.boolean().optional().default(false),
+	parentId: z.string().trim().min(1).optional().nullable(),
 });
 
 export const mobileMoneyProviderUpdateInputSchema = mobileMoneyProviderCreateInputSchema.extend({

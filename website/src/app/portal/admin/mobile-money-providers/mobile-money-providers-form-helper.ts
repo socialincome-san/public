@@ -7,12 +7,14 @@ import type { MobileMoneyProviderPayload } from '@/lib/services/mobile-money-pro
 import type { MobileMoneyProviderFormSchema } from './mobile-money-providers-form';
 
 const asString = (value: unknown): string => (typeof value === 'string' ? value : '');
+const emptyToNull = (value: string): string | null => (value.trim().length > 0 ? value.trim() : null);
 
 export const buildCreateMobileMoneyProviderInput = (
 	schema: MobileMoneyProviderFormSchema,
 ): MobileMoneyProviderFormCreateInput => ({
 	name: asString(schema.fields.name.value).trim(),
 	isSupported: schema.fields.isSupported.value ?? false,
+	parentId: emptyToNull(asString(schema.fields.parentId.value)),
 });
 
 export const buildUpdateMobileMoneyProviderInput = (
@@ -22,4 +24,5 @@ export const buildUpdateMobileMoneyProviderInput = (
 	id: existing.id,
 	name: asString(schema.fields.name.value).trim() || existing.name,
 	isSupported: schema.fields.isSupported.value ?? existing.isSupported,
+	parentId: schema.fields.parentId.value === undefined ? existing.parentId : emptyToNull(asString(schema.fields.parentId.value)),
 });

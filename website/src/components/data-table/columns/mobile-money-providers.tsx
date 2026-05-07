@@ -15,6 +15,11 @@ export const makeMobileMoneyProviderColumns = (): ColumnDef<MobileMoneyProviderT
 		cell: (ctx) => <TextCell ctx={ctx} />,
 	},
 	{
+		accessorKey: 'parentName',
+		header: (ctx) => <SortableHeader ctx={ctx}>Parent</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
 		id: 'isSupported',
 		header: (ctx) => <SortableHeader ctx={ctx}>Supported</SortableHeader>,
 		accessorFn: (row) => row.isSupported,

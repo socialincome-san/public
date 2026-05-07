@@ -6,6 +6,7 @@ import { contactsData } from './data/contacts.data';
 import { contributionsData } from './data/contributions.data';
 import { contributorsData } from './data/contributors.data';
 import { countriesData } from './data/countries.data';
+import { countryMobileMoneyProviderMappingsData } from './data/country-mobile-money-provider-mappings.data';
 import { donationCertificatesData } from './data/donation-certificates.data';
 import { exchangeRatesData } from './data/exchange-rates.data';
 import { expensesData } from './data/expenses.data';
@@ -56,12 +57,14 @@ export const seedDatabase = async () => {
 		await tx.address.deleteMany();
 		await tx.account.deleteMany();
 		await tx.sourceLink.deleteMany();
+		await tx.countryMobileMoneyProviderMapping.deleteMany();
 		await tx.country.deleteMany();
 		await tx.mobileMoneyProvider.deleteMany();
 
 		await tx.sourceLink.createMany({ data: sourceLinksData, skipDuplicates: true });
 		await tx.country.createMany({ data: countriesData, skipDuplicates: true });
 		await tx.mobileMoneyProvider.createMany({ data: mobileMoneyProvidersData, skipDuplicates: true });
+		await tx.countryMobileMoneyProviderMapping.createMany({data: countryMobileMoneyProviderMappingsData, skipDuplicates: true,});
 		await tx.account.createMany({ data: accountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });

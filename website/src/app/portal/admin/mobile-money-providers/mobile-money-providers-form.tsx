@@ -1,11 +1,12 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
+import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import {
 	createMobileMoneyProviderAction,
 	deleteMobileMoneyProviderAction,
 	getMobileMoneyProviderAction,
+	getMobileMoneyProviderOptionsAction,
 	updateMobileMoneyProviderAction,
 } from '@/lib/server-actions/mobile-money-provider-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
@@ -28,6 +29,7 @@ export type MobileMoneyProviderFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
+		parentId: FormField;
 		isSupported: FormField;
 	};
 };
@@ -39,6 +41,13 @@ const initialFormSchema: MobileMoneyProviderFormSchema = {
 			placeholder: 'e.g. Orange Money',
 			label: 'Name',
 			zodSchema: z.string().trim().min(1, 'Name is required.'),
+		},
+		parentId: {
+			placeholder: 'None',
+			label: 'Parent provider',
+			zodSchema: z.nativeEnum(getZodEnum([{ id: '', label: 'None' }])).optional(),
+			useCombobox: true,
+			options: [{ id: '', label: 'None' }],
 		},
 		isSupported: {
 			placeholder: 'Supported',
@@ -86,24 +95,53 @@ export default function MobileMoneyProvidersForm({
 	};
 
 	useEffect(() => {
-		if (!providerId) {
-			return;
-		}
 		startTransition(async () => {
-			const result = await getMobileMoneyProviderAction(providerId);
-			handleServiceResult(result, {
-				onSuccess: (data) => {
-					setProvider(data);
-					setFormSchema((prev) => {
-						const next = clearFormSchemaValues(prev);
-						next.fields.name.value = data.name;
-						next.fields.isSupported.value = data.isSupported;
+			try {
+				const [optionsResult, providerResult] = await Promise.all([
+					getMobileMoneyProviderOptionsAction(),
+					providerId ? getMobileMoneyProviderAction(providerId) : Promise.resolve(null),
+				]);
 
-						return next;
-					});
-				},
-				onError: (error) => onError?.(error),
-			});
+				if (optionsResult.success) {
+					// no-op (used below to build schema)
+				}
+
+				if (providerId && providerResult?.success) {
+					setProvider(providerResult.data);
+				}
+
+				setFormSchema(() => {
+					const next = cloneFormSchema(initialFormSchema);
+
+					const filteredOptions = (optionsResult.success ? optionsResult.data : [])
+						.filter((o) => o.id !== providerId)
+						.map((o) => ({ id: o.id, label: o.name }));
+
+					const parentEnum = getZodEnum([{ id: '', label: 'None' }, ...filteredOptions]);
+					next.fields.parentId = {
+						...next.fields.parentId,
+						options: [{ id: '', label: 'None' }, ...filteredOptions],
+						zodSchema: z.nativeEnum(parentEnum).optional(),
+					};
+
+					if (providerId && providerResult?.success) {
+						next.fields.name.value = providerResult.data.name;
+						next.fields.isSupported.value = providerResult.data.isSupported;
+						next.fields.parentId.value = providerResult.data.parentId ?? '';
+					}
+
+					return next;
+				});
+
+				if (providerId && providerResult && !providerResult.success) {
+					onError?.(providerResult.error);
+				}
+				if (!optionsResult.success) {
+					onError?.(optionsResult.error);
+				}
+			} catch (e) {
+				onError?.(e);
+			}
 		});
 	}, [providerId, onError]);
 

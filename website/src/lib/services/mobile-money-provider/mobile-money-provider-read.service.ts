@@ -25,12 +25,14 @@ export class MobileMoneyProviderReadService extends BaseService {
 		query: MobileMoneyProviderTableQuery,
 	): Prisma.MobileMoneyProviderOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'name', 'isSupported', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'name', 'parentName', 'isSupported', 'createdAt'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
 			case 'name':
 				return [{ name: direction }];
+			case 'parentName':
+				return [{ parent: { name: direction } }];
 			case 'isSupported':
 				return [{ isSupported: direction }];
 			case 'createdAt':
@@ -58,6 +60,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 				id: provider.id,
 				name: provider.name,
 				isSupported: provider.isSupported,
+				parentId: provider.parentId,
 				createdAt: provider.createdAt,
 				updatedAt: provider.updatedAt,
 			});
@@ -95,6 +98,15 @@ export class MobileMoneyProviderReadService extends BaseService {
 			const [providers, totalCount] = await Promise.all([
 				this.db.mobileMoneyProvider.findMany({
 					where,
+					select: {
+						id: true,
+						name: true,
+						isSupported: true,
+						createdAt: true,
+						parent: {
+							select: { name: true },
+						},
+					},
 					orderBy: this.buildMobileMoneyProviderOrderBy(query),
 					skip: (query.page - 1) * query.pageSize,
 					take: query.pageSize,
@@ -104,6 +116,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 			const tableRows: MobileMoneyProviderTableViewRow[] = providers.map((p) => ({
 				id: p.id,
 				name: p.name,
+				parentName: p.parent?.name ?? null,
 				isSupported: p.isSupported,
 				createdAt: p.createdAt,
 			}));
@@ -133,6 +146,27 @@ export class MobileMoneyProviderReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch mobile money provider options: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getRootOptions(userId: string): Promise<ServiceResult<MobileMoneyProviderOption[]>> {
+		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			const providers = await this.db.mobileMoneyProvider.findMany({
+				where: { parentId: null },
+				select: { id: true, name: true },
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(providers);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch root mobile money provider options: ${JSON.stringify(error)}`);
 		}
 	}
 

@@ -1011,7 +1011,7 @@ model Country {
   microfinanceSourceLinkId     String?               @map("microfinance_source_link_id")
   microfinanceSourceLink       SourceLink?           @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
   mobileMoneyConditionOverride Boolean               @default(false) @map("mobile_money_condition_override")
-  mobileMoneyProviders         MobileMoneyProvider[]
+  mobileMoneyProviders         CountryMobileMoneyProviderMapping[]
 
   populationCoverage Decimal?           @map("population_coverage") @db.Decimal(5, 2)
   networkTechnology  NetworkTechnology? @map("network_technology")
@@ -1032,13 +1032,30 @@ model MobileMoneyProvider {
   id          String    @id @default(cuid()) @map("id")
   name        String    @unique @map("name")
   isSupported Boolean   @map("is_supported")
+  parentId    String?   @map("parent_id")
+  parent      MobileMoneyProvider? @relation("MobileMoneyProviderParent", fields: [parentId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  countries           Country[]
+  children MobileMoneyProvider[] @relation("MobileMoneyProviderParent")
+  countries           CountryMobileMoneyProviderMapping[]
   paymentInformations PaymentInformation[]
 
   @@map("mobile_money_provider")
+}
+
+model CountryMobileMoneyProviderMapping {
+  id                   String             @id @default(cuid()) @map("id")
+  countryId             String             @map("country_id")
+  country               Country            @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  mobileMoneyProviderId String             @map("mobile_money_provider_id")
+  mobileMoneyProvider   MobileMoneyProvider @relation(fields: [mobileMoneyProviderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([countryId, mobileMoneyProviderId])
+  @@map("country_mobile_money_provider_mapping")
 }
 
 model SourceLink {

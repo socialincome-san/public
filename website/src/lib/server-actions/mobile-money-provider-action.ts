@@ -62,6 +62,15 @@ export const getMobileMoneyProviderOptionsAction = async () => {
 	return services.read.mobileMoneyProvider.getOptions(sessionResult.data.id);
 };
 
+export const getRootMobileMoneyProviderOptionsAction = async () => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	return services.read.mobileMoneyProvider.getRootOptions(sessionResult.data.id);
+};
+
 export const getSupportedMobileMoneyProviderOptionsAction = async (sessionType: Session['type'] = 'user') => {
 	if (sessionType !== 'user') {
 		return resultOk([]);

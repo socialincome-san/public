@@ -3,7 +3,7 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { bestGuessCurrency } from '@/lib/types/currency';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, expectToHaveScreenshot, selectOptionByTestId } from '../../../utils';
+import { clickDataTableActionItem, expectToHaveScreenshot, selectMultiOptionsByTestId, selectOptionByTestId } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -191,4 +191,45 @@ test('update country clears existing source URLs', async ({ page }) => {
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 	await expect(microfinanceSourceHrefInput).toHaveValue('');
 	await expect(networkSourceHrefInput).toHaveValue('');
+});
+
+test('mobile money providers options only show root providers (no children)', async ({ page }) => {
+	const countryOption = await pickUnusedCountryOption();
+	const currency = bestGuessCurrency(countryOption.code);
+
+	await page.goto('/portal/admin/countries');
+	await clickDataTableActionItem(page, 'data-table-action-item-add-country');
+	await selectOptionByTestId(page, 'countrySettings.isoCode', countryOption.name);
+	await selectOptionByTestId(page, 'countrySettings.currency', currency);
+
+	// open mobile money providers multi-select (in "mobileMoney" accordion)
+	await page.getByTestId('form-accordion-trigger-mobileMoney').click();
+	await page.getByTestId('form-item-mobileMoney.mobileMoneyProviders').locator('button[role="combobox"]').click();
+
+	// root providers should be visible
+	await expect(page.getByRole('option', { name: 'Orange Money' })).toBeVisible();
+	await expect(page.getByRole('option', { name: 'Yellow Money' })).toBeVisible();
+
+	// children should not be offered for country mapping
+	await expect(page.getByRole('option', { name: 'Orange Money SL 🇸🇱' })).toHaveCount(0);
+	await expect(page.getByRole('option', { name: 'Orange Money LR 🇱🇷' })).toHaveCount(0);
+
+	await page.keyboard.press('Escape');
+
+	// selecting a root provider should persist via mapping table
+	await selectMultiOptionsByTestId(page, 'mobileMoney.mobileMoneyProviders', ['Orange Money']);
+	await page.getByTestId('form-item-countrySettings.defaultPayoutAmount').locator('input').fill('123');
+	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const created = await prisma.country.findUniqueOrThrow({
+		where: { isoCode: countryOption.code },
+		select: { id: true },
+	});
+	const mappings = await prisma.countryMobileMoneyProviderMapping.findMany({
+		where: { countryId: created.id },
+		select: { mobileMoneyProviderId: true },
+	});
+
+	expect(mappings.map((m) => m.mobileMoneyProviderId)).toContain('mobile-money-provider-id-1');
 });

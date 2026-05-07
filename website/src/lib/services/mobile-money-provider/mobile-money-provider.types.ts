@@ -1,6 +1,7 @@
 export type MobileMoneyProviderTableViewRow = {
 	id: string;
 	name: string;
+	parentName: string | null;
 	isSupported: boolean;
 	createdAt: Date;
 };
@@ -22,6 +23,7 @@ export type MobileMoneyProviderPayload = {
 	id: string;
 	name: string;
 	isSupported: boolean;
+	parentId: string | null;
 	createdAt: Date;
 	updatedAt: Date | null;
 };
