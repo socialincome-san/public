@@ -1,8 +1,10 @@
 import { BlockWrapper } from '@/components/block-wrapper';
+import { Button } from '@/components/button';
 import type { Document, Downloads } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { DownloadIcon } from 'lucide-react';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 
@@ -45,7 +47,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 							}
 
 							const href = getFileHref(content.file);
-							const linkName = content.downloadButtonName;
+							const downloadLabel = `Download ${content.title}`;
 
 							return (
 								<div
@@ -60,11 +62,15 @@ export const DownloadsBlock = ({ blok }: Props) => {
 									</div>
 									<div className="justify-self-end">
 										{href ? (
-											<Link href={href} target="_blank" rel="noopener noreferrer" className="text-primary underline">
-												{linkName}
-											</Link>
+											<Button variant="outline" size="icon" asChild>
+												<Link href={href} target="_blank" rel="noopener noreferrer" aria-label={downloadLabel}>
+													<DownloadIcon />
+												</Link>
+											</Button>
 										) : (
-											<span className="text-gray-500">{linkName}</span>
+											<Button variant="outline" size="icon" disabled aria-label={downloadLabel}>
+												<DownloadIcon />
+											</Button>
 										)}
 									</div>
 								</div>
