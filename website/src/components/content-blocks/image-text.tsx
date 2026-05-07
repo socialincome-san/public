@@ -11,18 +11,35 @@ type Props = {
 	blok: ImageText;
 };
 
+const IMAGE_MAX_WIDTH = 600;
+
+const isSvgAsset = (filename: string, contentType?: string) => {
+	const pathWithoutQuery = filename.split('?')[0] ?? '';
+
+	return contentType === 'image/svg+xml' || pathWithoutQuery.toLowerCase().endsWith('.svg');
+};
+
 export const ImageTextBlock = ({ blok }: Props) => {
 	if (!blok.content) {
 		return null;
 	}
 
-	const dimensions = blok.image.filename ? getScaledDimensions(blok.image.filename, 600) : null;
+	const imageFilename = blok.image.filename;
+	const isSvg = imageFilename ? isSvgAsset(imageFilename, blok.image.content_type) : false;
+	const dimensions =
+		imageFilename && !isSvg
+			? (getScaledDimensions(imageFilename, IMAGE_MAX_WIDTH) ?? {
+					width: blok.image.width ?? IMAGE_MAX_WIDTH,
+					height: blok.image.height ?? IMAGE_MAX_WIDTH,
+				})
+			: null;
 	const widthClassesByRatio = {
 		'': { image: 'md:w-1/2', text: 'md:w-1/2' },
 		'1/3': { image: 'md:w-1/3', text: 'md:w-2/3' },
 		'1/2': { image: 'md:w-1/2', text: 'md:w-1/2' },
 		'2/3': { image: 'md:w-2/3', text: 'md:w-1/3' },
 	};
+
 	const imageToTextRatio = blok.imageToTextRatio ?? '1/2';
 
 	const widthClasses = widthClassesByRatio[imageToTextRatio] ?? widthClassesByRatio['1/2'];
@@ -35,14 +52,30 @@ export const ImageTextBlock = ({ blok }: Props) => {
 				blok.layout === 'imageRight' && 'md:flex-row-reverse',
 			)}
 		>
-			{blok.image.filename && dimensions && (
-				<NextImage
-					src={blok.image.filename}
-					alt={blok.image.alt ?? ''}
-					width={dimensions.width}
-					height={dimensions.height}
-					className={cn('order-2 rounded-2xl md:order-none', widthClasses.image)}
-				/>
+			{imageFilename && (
+				<div className={cn('order-2 md:order-none', widthClasses.image)}>
+					{isSvg ? (
+						// SVGs should keep their original vector source instead of going through the Storyblok raster loader.
+						// eslint-disable-next-line @next/next/no-img-element
+						<img
+							src={imageFilename}
+							alt={blok.image.alt ?? ''}
+							width={blok.image.width ?? undefined}
+							height={blok.image.height ?? undefined}
+							className={cn('order-2 rounded-2xl md:order-none', widthClasses.image)}
+							/>
+					) : (
+						dimensions && (
+							<NextImage
+								src={imageFilename}
+								alt={blok.image.alt ?? ''}
+								width={dimensions.width}
+								height={dimensions.height}
+								className={cn('order-2 rounded-2xl md:order-none', widthClasses.image)}
+								/>
+						)
+					)}
+				</div>
 			)}
 			<div className={cn('order-1 flex-1 md:order-none', widthClasses.text)}>
 				<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />
