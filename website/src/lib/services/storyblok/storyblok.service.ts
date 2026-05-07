@@ -29,7 +29,7 @@ export class StoryblokService extends BaseService {
 		tag: 'tag',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
-	private static readonly standardStoryRelationsToResolve = ['faqSelection.questions'];
+	private static readonly standardStoryRelationsToResolve = ['faqSelection.questions', 'partnershipsCarousel.partnerships'];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';

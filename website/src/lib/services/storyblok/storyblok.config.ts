@@ -10,6 +10,7 @@ import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measu
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
+import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
@@ -41,6 +42,7 @@ const storyblokComponents = {
 	modalCards: ModalCardsBlock,
 	journalTeasers: JournalTeasersBlock,
 	localPartnerGrid: LocalPartnerGridBlock,
+	partnershipsCarousel: PartnershipsCarouselBlock,
 	programGrid: ProgramGridBlock,
 	teamGrid: TeamGridBlock,
 	testimonialCarousel: TestimonialCarouselBlock,

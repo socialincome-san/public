@@ -99,6 +99,15 @@ export interface CountryGrid {
   [k: string]: unknown;
 }
 
+export interface Document {
+  title?: string;
+  file: StoryblokAsset;
+  language?: string;
+  component: "document";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
@@ -108,22 +117,12 @@ export interface DonationsTotal {
   [k: string]: unknown;
 }
 
-export interface Download {
-  title: string;
-  file: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  language?: string;
-  linkName: string;
-  component: "download";
-  _uid: string;
-  [k: string]: unknown;
-}
-
 export interface Downloads {
   heading?: string;
   tableHeaderLabelFilename: string;
   tableHeaderLabelInfo: string;
   tableHeaderLabelLink: string;
-  files: Download[];
+  documents: (ISbStoryData<Document> | string)[];
   component: "downloads";
   _uid: string;
   [k: string]: unknown;
@@ -306,7 +305,6 @@ export interface Page {
     | CampaignGrid
     | CountryGrid
     | DonationsTotal
-    | Download
     | Downloads
     | FaqSelection
     | FocusGrid
@@ -316,6 +314,7 @@ export interface Page {
     | JournalTeasers
     | LocalPartnerGrid
     | ModalCards
+    | PartnershipsCarousel
     | ProgramGrid
     | TeamGrid
     | Testimonial
@@ -325,6 +324,22 @@ export interface Page {
     | VideoText
   )[];
   component: "page";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Partnership {
+  name: string;
+  logo: StoryblokAsset;
+  website: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  component: "partnership";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface PartnershipsCarousel {
+  partnerships: (ISbStoryData<Partnership> | string)[];
+  component: "partnershipsCarousel";
   _uid: string;
   [k: string]: unknown;
 }
@@ -469,11 +484,13 @@ export type ContentType =
   | ArticleType
   | Campaign
   | Country
+  | Document
   | Faq
   | Focus
   | Layout
   | LocalPartner
   | Page
+  | Partnership
   | Person
   | Program
   | ReferenceArticle
