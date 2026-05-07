@@ -33,6 +33,7 @@ export default async function Page({ params }: DefaultPageProps) {
 							target="_blank"
 							rel="noopener noreferrer"
 						>
+							{/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- legacy asset typing; will be removed soon */}
 							<Image src={Playstore} width={150} height={50} alt="Playstore Button" />
 						</Link>
 					</div>
@@ -46,6 +47,7 @@ export default async function Page({ params }: DefaultPageProps) {
 							target="_blank"
 							rel="noopener noreferrer"
 						>
+							{/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- legacy asset typing; will be removed soon */}
 							<Image src={Applestore} width={150} height={50} alt="Appstore Button" />
 						</Link>
 					</div>
