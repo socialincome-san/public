@@ -26,6 +26,17 @@ export class ProgramReadService extends BaseService {
 		super(db, loggerInstance);
 	}
 
+	private readonly sumPayoutAmounts = (recipients: { payouts: { amount: unknown }[] }[]): number => {
+		let sum = 0;
+		for (const recipient of recipients) {
+			for (const payout of recipient.payouts) {
+				sum += Number(payout.amount ?? 0);
+			}
+		}
+
+		return sum;
+	};
+
 	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
@@ -70,13 +81,7 @@ export class ProgramReadService extends BaseService {
 						: ProgramPermission.owner;
 
 					const recipientsCount = program.recipients.length;
-
-					let totalPayoutsSum = 0;
-					for (const recipient of program.recipients) {
-						for (const payout of recipient.payouts) {
-							totalPayoutsSum += Number(payout.amount ?? 0);
-						}
-					}
+					const totalPayoutsSum = this.sumPayoutAmounts(program.recipients);
 
 					const isReadyForFirstPayoutsResult = await this.programStatsService.isReadyForFirstPayoutInterval(program.id);
 
@@ -210,10 +215,8 @@ export class ProgramReadService extends BaseService {
 					earliestStart = r.startDate;
 				}
 
-				for (const payout of r.payouts) {
-					totalPayoutsSum += Number(payout.amount ?? 0);
-					totalPayoutsCount++;
-				}
+				totalPayoutsSum += this.sumPayoutAmounts([r]);
+				totalPayoutsCount += r.payouts.length;
 
 				completedSurveysCount += r.surveys.length;
 			}
@@ -301,10 +304,21 @@ export class ProgramReadService extends BaseService {
 				where: { id: { in: normalizedProgramIds } },
 				select: {
 					id: true,
+					country: {
+						select: { isoCode: true, currency: true },
+					},
 					_count: {
 						select: {
 							campaigns: true,
 							recipients: true,
+						},
+					},
+					recipients: {
+						select: {
+							payouts: {
+								where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
+								select: { amount: true },
+							},
 						},
 					},
 				},
@@ -312,9 +326,14 @@ export class ProgramReadService extends BaseService {
 
 			const statsById: PublicProgramStatsMap = {};
 			for (const program of programs) {
+				const totalPayoutsSum = this.sumPayoutAmounts(program.recipients);
+
 				const stats: PublicProgramStats = {
 					campaignsCount: program._count.campaigns,
 					recipientsCount: program._count.recipients,
+					countryIsoCode: program.country.isoCode,
+					payoutCurrency: program.country.currency,
+					totalPayoutsSum,
 				};
 				statsById[program.id] = stats;
 			}

@@ -1,6 +1,6 @@
 import { Badge } from '@/components/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
-import { Wallet } from '@/components/wallet';
+import { Wallet } from '@/components/wallet/wallet';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
@@ -34,13 +34,11 @@ export const UserPrograms = async ({ userId }: Props) => {
 								title={program.programName}
 								subtitle={getCountryNameByCode(program.country)}
 								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
-								footerLeft={{
-									label: 'Paid out',
+								paidOut={{
 									currency: program.payoutCurrency,
 									amount: program.totalPayoutsSum,
 								}}
-								footerRight={{
-									label: 'Recipients',
+								amountOfRecipients={{
 									amount: program.recipientsCount,
 								}}
 							/>
@@ -58,13 +56,11 @@ export const UserPrograms = async ({ userId }: Props) => {
 							title={program.programName}
 							subtitle={getCountryNameByCode(program.country)}
 							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
-							footerLeft={{
-								label: 'Paid out',
+							paidOut={{
 								currency: program.payoutCurrency,
 								amount: program.totalPayoutsSum,
 							}}
-							footerRight={{
-								label: 'Recipients',
+							amountOfRecipients={{
 								amount: program.recipientsCount,
 							}}
 						/>

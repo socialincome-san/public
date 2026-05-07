@@ -353,7 +353,6 @@ export interface Person {
 export interface Program {
   id: string;
   title: string;
-  heroImage: StoryblokAsset;
   description: string;
   primaryImage: StoryblokAsset;
   secondaryImage: StoryblokAsset;
@@ -364,8 +363,11 @@ export interface Program {
 }
 
 export interface ProgramGrid {
+  heading?: string;
+  description?: string;
   showAllPrograms?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
+  button?: Button[];
   component: "programGrid";
   _uid: string;
   [k: string]: unknown;
