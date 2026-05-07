@@ -63,7 +63,7 @@ export const ImageTextBlock = ({ blok }: Props) => {
 							width={blok.image.width ?? undefined}
 							height={blok.image.height ?? undefined}
 							className={cn('order-2 rounded-2xl md:order-none', widthClasses.image)}
-							/>
+						/>
 					) : (
 						dimensions && (
 							<NextImage
@@ -72,7 +72,7 @@ export const ImageTextBlock = ({ blok }: Props) => {
 								width={dimensions.width}
 								height={dimensions.height}
 								className={cn('order-2 rounded-2xl md:order-none', widthClasses.image)}
-								/>
+							/>
 						)
 					)}
 				</div>
