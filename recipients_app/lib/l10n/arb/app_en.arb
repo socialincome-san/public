@@ -3,6 +3,7 @@
     "ok": "OK",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateError": "Failed to update profile. Please try again or contact our support",
+    "anErrorOccurred": "An error occurred",
     "profile": "Profile",
     "personal": "Personal",
     "name": "Name",
@@ -178,7 +179,14 @@
     },
     "mySurveysTitle": "My surveys",
     "invalidPhoneNumberError": "Invalid phone number. Please check your phone number and try again.",
-    "failedSentVerificationCodeError": "Failed to send verification code. Please check your Internet and try again.",
+    "failedSentVerificationCodeError": "Failed to send verification code. Please check your Internet and try again. {errorMessage}",
+    "@failedSentVerificationCodeError": {
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
     "failedCodeVerificationCodeError": "Failed to verify the code. Please check your Internet and try again.",
     "invalidAppCheckTokenError": "Invalid App Check token. Can't use backend service. Please update the app.",
     "invalidVerificationCodeError": "Invalid verification code. Please check provided SMS code and try again.",
@@ -309,5 +317,7 @@
 		}
 	},
 	"noInternetConnection": "No internet connection. Cannot refresh data.",
-	"anErrorOccurred": "An error occurred"
+    "offlineBanner": "No internet connection",
+    "offlineMutationError": "This action requires an internet connection",
+    "offlineBannerMessage": "You are offline. Showing cached data."
 }

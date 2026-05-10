@@ -110,6 +110,12 @@ abstract class AppLocalizations {
   /// **'Failed to update profile. Please try again or contact our support'**
   String get profileUpdateError;
 
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
+
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
@@ -815,8 +821,8 @@ abstract class AppLocalizations {
   /// No description provided for @failedSentVerificationCodeError.
   ///
   /// In en, this message translates to:
-  /// **'Failed to send verification code. Please check your Internet and try again.'**
-  String get failedSentVerificationCodeError;
+  /// **'Failed to send verification code. Please check your Internet and try again. {errorMessage}'**
+  String failedSentVerificationCodeError(String errorMessage);
 
   /// No description provided for @failedCodeVerificationCodeError.
   ///
@@ -1556,11 +1562,23 @@ abstract class AppLocalizations {
   /// **'No internet connection. Cannot refresh data.'**
   String get noInternetConnection;
 
-  /// No description provided for @anErrorOccurred.
+  /// No description provided for @offlineBanner.
   ///
   /// In en, this message translates to:
-  /// **'An error occurred'**
-  String get anErrorOccurred;
+  /// **'No internet connection'**
+  String get offlineBanner;
+
+  /// No description provided for @offlineMutationError.
+  ///
+  /// In en, this message translates to:
+  /// **'This action requires an internet connection'**
+  String get offlineMutationError;
+
+  /// No description provided for @offlineBannerMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You are offline. Showing cached data.'**
+  String get offlineBannerMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

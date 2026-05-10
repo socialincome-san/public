@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileUpdateError => 'Failed to update profile. Please try again or contact our support';
 
   @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
   String get profile => 'Profile';
 
   @override
@@ -384,8 +387,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidPhoneNumberError => 'Invalid phone number. Please check your phone number and try again.';
 
   @override
-  String get failedSentVerificationCodeError =>
-      'Failed to send verification code. Please check your Internet and try again.';
+  String failedSentVerificationCodeError(String errorMessage) {
+    return 'Failed to send verification code. Please check your Internet and try again. $errorMessage';
+  }
 
   @override
   String get failedCodeVerificationCodeError => 'Failed to verify the code. Please check your Internet and try again.';
@@ -762,5 +766,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noInternetConnection => 'No internet connection. Cannot refresh data.';
 
   @override
-  String get anErrorOccurred => 'An error occurred';
+  String get offlineBanner => 'No internet connection';
+
+  @override
+  String get offlineMutationError => 'This action requires an internet connection';
+
+  @override
+  String get offlineBannerMessage => 'You are offline. Showing cached data.';
 }

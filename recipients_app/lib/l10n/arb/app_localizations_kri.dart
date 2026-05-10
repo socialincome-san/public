@@ -18,6 +18,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get profileUpdateError => 'Ɔltin bɔt yu nɔ go insay. Duya tray bak ɔ rich awt to wit';
 
   @override
+  String get anErrorOccurred => 'Sɔntin nɔ go rayt';
+
+  @override
   String get profile => 'Ɔltin bɔt yu';
 
   @override
@@ -385,7 +388,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get invalidPhoneNumberError => 'Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.';
 
   @override
-  String get failedSentVerificationCodeError => 'Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak.';
+  String failedSentVerificationCodeError(String errorMessage) {
+    return 'Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak. $errorMessage';
+  }
 
   @override
   String get failedCodeVerificationCodeError => 'Failed fɔ chɛk di kɔd. Duya chɛk yu Intanɛt ɛn tray bak.';
@@ -762,5 +767,11 @@ class AppLocalizationsKri extends AppLocalizations {
   String get noInternetConnection => 'Nɔ intanɛt kɔnɛkshɔn. Nɔ ebul fɔ rifrɛsh data.';
 
   @override
-  String get anErrorOccurred => 'Sɔntin nɔ go rayt';
+  String get offlineBanner => 'Nɔ intanɛt kɔnɛkshɔn';
+
+  @override
+  String get offlineMutationError => 'Dis akshɔn nid intanɛt kɔnɛkshɔn';
+
+  @override
+  String get offlineBannerMessage => 'Yu de ɔflayna. Sho di data we dɛn dɔn kech.';
 }
