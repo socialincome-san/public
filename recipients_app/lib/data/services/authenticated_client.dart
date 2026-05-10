@@ -76,14 +76,25 @@ class AuthenticatedClient extends http.BaseClient {
   }
 
   Future<String> _getAppCheckToken() async {
-    final appCheckToken = await FirebaseAppCheck.instance.getToken();
-    if (appCheckToken == null) {
-      throw AuthException(
-        code: "invalid-app-check-token",
-        message: "Failed to get App Check token. Can't verify user. Please try again later and update the app.",
-      );
+    try {
+      final appCheckToken = await FirebaseAppCheck.instance.getToken();
+      if (appCheckToken == null) {
+        throw AuthException(
+          code: "invalid-app-check-token",
+          message: "Failed to get App Check token. Can't verify user. Please try again later and update the app.",
+        );
+      }
+      return appCheckToken;
+    } on FirebaseException catch (e) {
+      // Play Integrity exposes its error code only in the message string
+      // (e.g. "IntegrityServiceException: -1: Integrity API is not available"),
+      // so we substring-match. -1 = API_NOT_AVAILABLE, fixable by updating Play Store.
+      final message = (e.message ?? "").toLowerCase();
+      if (message.contains("integrity api is not available") || message.contains("integrityserviceexception: -1")) {
+        throw AuthException(code: "play-integrity-unavailable", message: e.toString());
+      }
+      rethrow;
     }
-    return appCheckToken;
   }
 
   /// Close both this wrapper and the inner http client.
