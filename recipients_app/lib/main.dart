@@ -123,6 +123,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
       // ignore: experimental_member_use
       options.profilesSampleRate = 1.0;
       options.environment = appFlavor;
+      options.enableTombstone = true;
     },
     appRunner: () => runApp(
       MyApp(
