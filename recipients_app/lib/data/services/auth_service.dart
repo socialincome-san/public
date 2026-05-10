@@ -23,6 +23,8 @@ class AuthService {
   Future<void> verifyPhoneNumber(String phoneNumber) async {
     try {
       await _requestOtp(phoneNumber);
+    } on AuthException {
+      rethrow;
     } catch (e) {
       throw AuthException(code: "failed-sent-verification-code", message: "Exception when calling api->requestOtp: $e");
     }
@@ -35,6 +37,8 @@ class AuthService {
       final customToken = result.customToken;
       // Sign in with the custom token
       await firebaseAuth.signInWithCustomToken(customToken);
+    } on AuthException {
+      rethrow;
     } catch (e) {
       throw AuthException(code: "failed-code-verification", message: "Exception when calling api->verifyOtp: $e");
     }

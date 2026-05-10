@@ -398,6 +398,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidAppCheckTokenError => 'Invalid App Check token. Can\'t use backend service. Please update the app.';
 
   @override
+  String get playIntegrityUnavailableError =>
+      'Google Play Store needs an update to continue. Please update Play Store and try again.\n\nOpen the Google Play app. At the top right, tap your Profile picture. Tap \'Settings\' -> \'About\' -> \'Update Play Store\'. You’ll get a message that tells you if the Google Play app is up to date. Tap Got it. If an update is available, it\'ll automatically download and install in a few minutes.';
+
+  @override
   String get invalidVerificationCodeError => 'Invalid verification code. Please check provided SMS code and try again.';
 
   @override
@@ -773,4 +777,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offlineBannerMessage => 'You are offline. Showing cached data.';
+
+  @override
+  String get openGoogleSupportPageUpdatePlayStore => 'Open Support Page';
 }

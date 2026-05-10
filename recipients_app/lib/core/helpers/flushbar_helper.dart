@@ -12,17 +12,22 @@ abstract class FlushbarHelper {
     String? title,
     required String message,
     FlushbarType type = FlushbarType.success,
+    Widget? mainButton,
+    Duration? duration,
+    bool persistent = false,
   }) {
     Flushbar(
       title: title,
       message: message,
-      duration: _getDuration(type),
+      // `null` keeps the flushbar visible until manually dismissed.
+      duration: persistent ? null : (duration ?? _getDuration(type)),
       backgroundColor: _getBackgroundColor(type),
       margin: const EdgeInsets.all(8),
       borderRadius: BorderRadius.circular(8),
       flushbarPosition: FlushbarPosition.TOP,
       titleColor: _getFontColor(type),
       messageColor: _getFontColor(type),
+      mainButton: mainButton,
     ).show(context);
   }
 

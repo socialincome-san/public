@@ -141,6 +141,7 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
       "failed-code-verification" => localizations.failedCodeVerificationCodeError,
       "invalid-verification-code" => localizations.invalidVerificationCodeError,
       "invalid-app-check-token" => localizations.invalidAppCheckTokenError,
+      "play-integrity-unavailable" => localizations.playIntegrityUnavailableError,
       "invalid-phone-number" => localizations.invalidPhoneNumberError,
       _ => ex.toString(),
     };
