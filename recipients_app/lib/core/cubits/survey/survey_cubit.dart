@@ -28,6 +28,8 @@ class SurveyCubit extends Cubit<SurveyState> {
   final SurveyRepository surveyRepository;
   final CrashReportingRepository crashReportingRepository;
 
+  StreamSubscription<List<Survey>>? _surveysSubscription;
+
   SurveyCubit({
     required this.recipient,
     required this.surveyRepository,
@@ -35,44 +37,47 @@ class SurveyCubit extends Cubit<SurveyState> {
   }) : super(const SurveyState());
 
   Future<void> getSurveys() async {
-    try {
-      final mappedSurveys = await _getSurveys();
+    await _surveysSubscription?.cancel();
+    // Since dashboard_page.dart calls ..getSurveys() fire-and-forget, 
+    // close() can win that race and the listen() method below will still attach a fresh
+    // listener to a closed cubit. That why we need to check if the cubit is closed before 
+    // attaching the listener, to avoid emitting states on a closed cubit.
+    if (isClosed) return;
 
-      final dashboardSurveys = mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
+    _surveysSubscription = surveyRepository
+        .fetchSurveys(recipientId: recipient.id)
+        .listen(
+          (surveys) {
+            final mappedSurveys = _mapSurveys(surveys);
+            final dashboardSurveys = mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
 
-      emit(
-        SurveyState(
-          status: SurveyStateStatus.updatedSuccess,
-          mappedSurveys: mappedSurveys,
-          dashboardMappedSurveys: dashboardSurveys,
-        ),
-      );
-    } on Exception catch (ex, stackTrace) {
-      if (ex is SocketException) {
-        emit(
-          SurveyState(
-            status: SurveyStateStatus.updatedFailure,
-            exception: ex,
-          ),
+            emit(
+              SurveyState(
+                status: SurveyStateStatus.updatedSuccess,
+                mappedSurveys: mappedSurveys,
+                dashboardMappedSurveys: dashboardSurveys,
+              ),
+            );
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            if (error is SocketException) {
+              // Do not log this kind of errors in Sentry as they are caused by network issues on the client side
+              // and do not indicate a problem in the app itself.
+            } else {
+              crashReportingRepository.logError(error is Exception ? error : Exception(error.toString()), stackTrace);
+            }
+            emit(
+              SurveyState(
+                status: SurveyStateStatus.updatedFailure,
+                exception: error is Exception ? error : Exception(error.toString()),
+              ),
+            );
+          },
         );
-      } else {
-        crashReportingRepository.logError(ex, stackTrace);
-        emit(
-          SurveyState(
-            status: SurveyStateStatus.updatedFailure,
-            exception: ex,
-          ),
-        );
-      }
-    }
   }
 
-  Future<List<MappedSurvey>> _getSurveys() async {
-    final surveys = await surveyRepository.fetchSurveys(
-      recipientId: recipient.id,
-    );
-
-    final mappedSurveys = surveys
+  List<MappedSurvey> _mapSurveys(List<Survey> surveys) {
+    return surveys
         .map(
           (survey) => MappedSurvey(
             name: _getReadableName(survey.name),
@@ -88,8 +93,12 @@ class SurveyCubit extends Cubit<SurveyState> {
         )
         .sortedBy((element) => element.survey.dueAt)
         .toList();
+  }
 
-    return mappedSurveys;
+  @override
+  Future<void> close() async {
+    await _surveysSubscription?.cancel();
+    return super.close();
   }
 
   String _getSurveyUrl(Survey survey, String recipientId) {

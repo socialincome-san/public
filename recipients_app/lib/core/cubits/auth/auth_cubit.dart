@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:app/data/datasource/local/app_cache_database.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
@@ -15,45 +16,64 @@ class AuthCubit extends Cubit<AuthState> {
   final UserRepository userRepository;
   final CrashReportingRepository crashReportingRepository;
   final AuthService authService;
+  final AppCacheDatabase cacheDatabase;
 
   late final StreamSubscription<User?> _authSubscription;
+  StreamSubscription<Recipient?>? _recipientSubscription;
 
   AuthCubit({
     required this.userRepository,
     required this.crashReportingRepository,
     required this.authService,
+    required this.cacheDatabase,
   }) : super(const AuthState()) {
     /// Register a listener which will be triggered if the auth state of the user
     /// changes for whatever reason.
-    _authSubscription = authService.authStateChanges().listen((user) async {
+    _authSubscription = authService.authStateChanges().listen((user) async{
       if (user != null) {
-        try {
-          final recipient = await userRepository.fetchRecipient(user);
-          if (recipient == null) {
-            emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
-            return;
-          }
-
-          emit(
-            AuthState(
-              status: AuthStatus.authenticated,
-              firebaseUser: user,
-              recipient: recipient,
-            ),
-          );
-        } on Exception catch (ex, stackTrace) {
-          crashReportingRepository.logError(ex, stackTrace);
-          emit(
-            AuthState(
-              status: AuthStatus.failure,
-              exception: ex,
-            ),
-          );
-        }
+        await _listenToRecipient(user);
       } else {
+        await _recipientSubscription?.cancel();
+        _recipientSubscription = null;
         emit(const AuthState());
       }
     });
+  }
+
+  Future<void> _listenToRecipient(User user) async{
+    await _recipientSubscription?.cancel();
+    _recipientSubscription = userRepository
+        .fetchRecipient(user)
+        .listen(
+          (recipient) {
+            if (recipient == null) {
+              emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
+              return;
+            }
+
+            emit(
+              AuthState(
+                status: AuthStatus.authenticated,
+                firebaseUser: user,
+                recipient: recipient,
+              ),
+            );
+          },
+          onError: (Object ex, StackTrace stackTrace) {
+            if (ex is Exception) {
+              crashReportingRepository.logError(ex, stackTrace);
+            }
+            // Only emit failure if we don't already have a recipient
+            if (state.recipient == null) {
+              emit(
+                AuthState(
+                  status: AuthStatus.failure,
+                  exception: ex is Exception ? ex : Exception(ex.toString()),
+                ),
+              );
+            }
+          },
+        );
   }
 
   /// Checks if user is logged in already.
@@ -65,26 +85,14 @@ class AuthCubit extends Cubit<AuthState> {
     final user = userRepository.currentUser;
 
     if (user != null) {
-      final recipient = await userRepository.fetchRecipient(user);
-      if (recipient == null) {
-        emit(const AuthState(status: AuthStatus.authenticatedWithoutRecipient));
-        return;
-      }
-
-      emit(
-        AuthState(
-          status: AuthStatus.authenticated,
-          firebaseUser: user,
-          recipient: recipient,
-        ),
-      );
+      await _listenToRecipient(user);
     } else {
       emit(const AuthState());
     }
   }
 
   /// Use the RecipientSelfUpdate model to update the recipient.
-  Future<void> updateRecipient({required RecipientSelfUpdate selfUpdate}) async {
+  Future<bool> updateRecipient({required RecipientSelfUpdate selfUpdate}) async {
     emit(state.copyWith(status: AuthStatus.updatingRecipient));
 
     try {
@@ -97,6 +105,7 @@ class AuthCubit extends Cubit<AuthState> {
           exception: null,
         ),
       );
+      return true;
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
@@ -105,6 +114,7 @@ class AuthCubit extends Cubit<AuthState> {
           exception: ex,
         ),
       );
+      return false;
     }
   }
 
@@ -112,6 +122,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState(status: AuthStatus.loading));
     try {
       await authService.signOut();
+      await cacheDatabase.clearAll();
       emit(const AuthState());
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
@@ -125,8 +136,9 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   @override
-  Future<void> close() {
-    _authSubscription.cancel();
+  Future<void> close() async {
+    await _authSubscription.cancel();
+    await _recipientSubscription?.cancel();
     return super.close();
   }
 }

@@ -25,41 +25,45 @@ class PaymentTileBottomAction extends StatelessWidget {
     return Container(
       color: _getBackgroundColor(mappedPayment.uiStatus),
       child: Padding(
-        padding: AppSpacings.a16,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                isContested ? context.l10n.underInvestigation : context.l10n.didYouGetSocialIncome,
-                style: TextStyle(color: foregroundColor),
-              ),
-            ),
-            Row(
-              children: [
-                ButtonSmall(
-                  onPressed: () => context.read<PayoutsCubit>().confirmPayment(mappedPayment.payout),
-                  label: isContested ? context.l10n.resolved : context.l10n.yes,
-                  buttonType: ButtonSmallType.outlined,
-                  color: foregroundColor,
-                  fontColor: foregroundColor,
+          padding: AppSpacings.a16,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  isContested ? context.l10n.underInvestigation : context.l10n.didYouGetSocialIncome,
+                  style: TextStyle(color: foregroundColor),
                 ),
-                if (!isContested) ...[
-                  const SizedBox(width: 8),
+              ),
+              Row(
+                children: [
                   ButtonSmall(
-                    onPressed: () => _onPressedNo(context),
-                    label: context.l10n.no,
+                    onPressed: () => _onPressedYes(context),
+                    label: isContested ? context.l10n.resolved : context.l10n.yes,
                     buttonType: ButtonSmallType.outlined,
                     color: foregroundColor,
                     fontColor: foregroundColor,
                   ),
+                  if (!isContested) ...[
+                    const SizedBox(width: 8),
+                    ButtonSmall(
+                      onPressed: () => _onPressedNo(context),
+                      label: context.l10n.no,
+                      buttonType: ButtonSmallType.outlined,
+                      color: foregroundColor,
+                      fontColor: foregroundColor,
+                    ),
+                  ],
                 ],
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
-      ),
     );
+  }
+
+  void _onPressedYes(BuildContext context) {
+    context.read<PayoutsCubit>().confirmPayment(mappedPayment.payout);
   }
 
   void _onPressedNo(BuildContext context) {

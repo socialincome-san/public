@@ -23,6 +23,8 @@ class AuthService {
   Future<void> verifyPhoneNumber(String phoneNumber) async {
     try {
       await _requestOtp(phoneNumber);
+    } on AuthException {
+      rethrow;
     } catch (e) {
       throw AuthException(code: "failed-sent-verification-code", message: "Exception when calling api->requestOtp: $e");
     }
@@ -35,6 +37,8 @@ class AuthService {
       final customToken = result.customToken;
       // Sign in with the custom token
       await firebaseAuth.signInWithCustomToken(customToken);
+    } on AuthException {
+      rethrow;
     } catch (e) {
       throw AuthException(code: "failed-code-verification", message: "Exception when calling api->verifyOtp: $e");
     }
@@ -87,8 +91,8 @@ class AuthService {
     // This allows the app to switch between demo mode and normal mode seamlessly.
     // When the demo mode is enabled, we will emit the demo user as the auth state.
     // When the demo mode is disabled, we will emit the Firebase auth state.
-    _demoModeSubscription = demoManager.isDemoEnabledStream.listen((isDemoMode) {
-      _authStateSubscription?.cancel();
+    _demoModeSubscription = demoManager.isDemoEnabledStream.listen((isDemoMode) async {
+      await _authStateSubscription?.cancel();
 
       _authStateSubscription = _getInternalAuthStateSteam(isDemoMode).listen((authState) {
         authStateController.add(authState);
@@ -125,10 +129,10 @@ class AuthService {
     demoManager.isDemoEnabled = false;
   }
 
-  void dispose() {
-    _demoModeSubscription?.cancel();
-    _authStateSubscription?.cancel();
-    _demoUserStreamController.close();
+  Future<void> dispose() async {
+    await _demoModeSubscription?.cancel();
+    await _authStateSubscription?.cancel();
+    await _demoUserStreamController.close();
   }
 }
 

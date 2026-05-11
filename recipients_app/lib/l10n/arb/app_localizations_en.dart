@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileUpdateError => 'Failed to update profile. Please try again or contact our support';
 
   @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
   String get profile => 'Profile';
 
   @override
@@ -384,14 +387,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidPhoneNumberError => 'Invalid phone number. Please check your phone number and try again.';
 
   @override
-  String get failedSentVerificationCodeError =>
-      'Failed to send verification code. Please check your Internet and try again.';
+  String failedSentVerificationCodeError(String errorMessage) {
+    return 'Failed to send verification code. Please check your Internet and try again. $errorMessage';
+  }
 
   @override
   String get failedCodeVerificationCodeError => 'Failed to verify the code. Please check your Internet and try again.';
 
   @override
   String get invalidAppCheckTokenError => 'Invalid App Check token. Can\'t use backend service. Please update the app.';
+
+  @override
+  String get playIntegrityUnavailableError =>
+      'Google Play Store needs an update to continue. Please update Play Store and try again.\n\nOpen the Google Play app. At the top right, tap your Profile picture. Tap \'Settings\' -> \'About\' -> \'Update Play Store\'. You’ll get a message that tells you if the Google Play app is up to date. Tap Got it. If an update is available, it\'ll automatically download and install in a few minutes.';
 
   @override
   String get invalidVerificationCodeError => 'Invalid verification code. Please check provided SMS code and try again.';
@@ -762,5 +770,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noInternetConnection => 'No internet connection. Cannot refresh data.';
 
   @override
-  String get anErrorOccurred => 'An error occurred';
+  String get offlineBanner => 'No internet connection';
+
+  @override
+  String get offlineMutationError => 'This action requires an internet connection';
+
+  @override
+  String get offlineBannerMessage => 'You are offline. Showing cached data.';
+
+  @override
+  String get openGoogleSupportPageUpdatePlayStore => 'Open Support Page';
 }

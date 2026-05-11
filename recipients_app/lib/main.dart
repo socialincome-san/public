@@ -2,15 +2,18 @@ import "package:app/core/helpers/custom_bloc_observer.dart";
 import "package:app/data/datasource/demo/payout_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
+import "package:app/data/datasource/local/app_cache_database.dart";
 import "package:app/data/datasource/remote/payout_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/data/services/authenticated_client.dart";
+import "package:app/data/services/connectivity_service.dart";
 import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
+import "package:connectivity_plus/connectivity_plus.dart";
 import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
@@ -89,6 +92,14 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   );
   final surveyDemoDataSource = SurveyDemoDataSource();
 
+  final cacheDatabase = AppCacheDatabase();
+
+  final connectivityService = ConnectivityService(
+    connectivity: Connectivity(),
+    reachabilityUrl: Uri.parse("https://socialincome.org/en/int/partners"),
+  );
+  await connectivityService.initialize();
+
   final packageInfo = await PackageInfo.fromPlatform();
 
   const crashReportingRepository = CrashReportingRepository();
@@ -112,6 +123,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
       // ignore: experimental_member_use
       options.profilesSampleRate = 1.0;
       options.environment = appFlavor;
+      options.enableTombstone = true;
     },
     appRunner: () => runApp(
       MyApp(
@@ -127,6 +139,8 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
         firebaseRemoteConfigService: firebaseRemoteConfigService,
         crashReportingRepository: crashReportingRepository,
         appVersionInfo: appVersionInfo,
+        cacheDatabase: cacheDatabase,
+        connectivityService: connectivityService,
       ),
     ),
   );
