@@ -1,5 +1,51 @@
 {
-  "468a39b1e5bb34c54db46ea4598ebed14124a756302389a9e76e0017028390aa": [
+  "29c25d09f73de913029e46e8c26bdd9a84262dd032b0e0ed3aa82596efc3fd68": [
+    {
+      "body": [
+        "This record could not be found"
+      ],
+      "status": 404,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "29c25d09f73de913029e46e8c26bdd9a84262dd032b0e0ed3aa82596efc3fd68",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 8
+    },
+    {
+      "body": [
+        "This record could not be found"
+      ],
+      "status": 404,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "29c25d09f73de913029e46e8c26bdd9a84262dd032b0e0ed3aa82596efc3fd68",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 9
+    }
+  ],
+  "47a144616eb206dc2659fb270a7f5486b89210957ec769eba45f22e4571bb565": [
     {
       "body": {
         "story": {
@@ -91,19 +137,19 @@
             }
           ]
         },
-        "cv": 1777554431,
+        "cv": 1778155279,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/programs?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/programs?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "468a39b1e5bb34c54db46ea4598ebed14124a756302389a9e76e0017028390aa",
+          "x-mock-hash": "47a144616eb206dc2659fb270a7f5486b89210957ec769eba45f22e4571bb565",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -111,17 +157,17 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 80
+      "durationMs": 70
     }
   ],
-  "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695": [
+  "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5": [
     {
       "body": {
         "story": {
           "name": "Layout",
           "created_at": "2026-02-09T15:29:57.490Z",
-          "published_at": "2026-03-31T11:37:22.284Z",
-          "updated_at": "2026-03-31T11:37:22.306Z",
+          "published_at": "2026-05-07T12:01:19.341Z",
+          "updated_at": "2026-05-07T12:01:19.360Z",
           "id": 143201884212331,
           "uuid": "7d96ab3b-7c09-4b8e-b87e-ad24b8e9e094",
           "content": {
@@ -343,6 +389,7 @@
               },
               {
                 "_uid": "8db6ddcf-be2e-4d2b-b3e5-8be593943745",
+                "icon": "",
                 "link": {
                   "id": "",
                   "url": "#",
@@ -660,7 +707,33 @@
                 "component": "menuItemGroup"
               }
             ],
-            "copyrightNotice": "© %YEAR% Social Income · Registered Non-Profit in Switzerland       "
+            "supportedByUrl": {
+              "id": "",
+              "url": "https://somaha-stiftung.ch/",
+              "linktype": "url",
+              "fieldtype": "multilink",
+              "cached_url": "https://somaha-stiftung.ch/"
+            },
+            "copyrightNotice": "© %YEAR% Social Income · Registered Non-Profit in Switzerland       ",
+            "supportedByLogo": {
+              "id": 173575959449669,
+              "alt": "",
+              "name": "",
+              "focus": "",
+              "title": "",
+              "source": "",
+              "filename": "/assets/e2e-media-placeholder.svg",
+              "copyright": "",
+              "fieldtype": "asset",
+              "meta_data": {
+                "alt": "",
+                "title": "",
+                "source": "",
+                "copyright": ""
+              },
+              "is_external_url": false
+            },
+            "supportedByLabel": "Platform partner"
           },
           "slug": "layout",
           "full_slug": "new-website/layout/",
@@ -698,19 +771,19 @@
             }
           ]
         },
-        "cv": 1777554431,
+        "cv": 1778155279,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695",
+          "x-mock-hash": "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -725,8 +798,8 @@
         "story": {
           "name": "Layout",
           "created_at": "2026-02-09T15:29:57.490Z",
-          "published_at": "2026-03-31T11:37:22.284Z",
-          "updated_at": "2026-03-31T11:37:22.306Z",
+          "published_at": "2026-05-07T12:01:19.341Z",
+          "updated_at": "2026-05-07T12:01:19.360Z",
           "id": 143201884212331,
           "uuid": "7d96ab3b-7c09-4b8e-b87e-ad24b8e9e094",
           "content": {
@@ -948,6 +1021,7 @@
               },
               {
                 "_uid": "8db6ddcf-be2e-4d2b-b3e5-8be593943745",
+                "icon": "",
                 "link": {
                   "id": "",
                   "url": "#",
@@ -1265,7 +1339,33 @@
                 "component": "menuItemGroup"
               }
             ],
-            "copyrightNotice": "© %YEAR% Social Income · Registered Non-Profit in Switzerland       "
+            "supportedByUrl": {
+              "id": "",
+              "url": "https://somaha-stiftung.ch/",
+              "linktype": "url",
+              "fieldtype": "multilink",
+              "cached_url": "https://somaha-stiftung.ch/"
+            },
+            "copyrightNotice": "© %YEAR% Social Income · Registered Non-Profit in Switzerland       ",
+            "supportedByLogo": {
+              "id": 173575959449669,
+              "alt": "",
+              "name": "",
+              "focus": "",
+              "title": "",
+              "source": "",
+              "filename": "/assets/e2e-media-placeholder.svg",
+              "copyright": "",
+              "fieldtype": "asset",
+              "meta_data": {
+                "alt": "",
+                "title": "",
+                "source": "",
+                "copyright": ""
+              },
+              "is_external_url": false
+            },
+            "supportedByLabel": "Platform partner"
           },
           "slug": "layout",
           "full_slug": "new-website/layout/",
@@ -1303,19 +1403,19 @@
             }
           ]
         },
-        "cv": 1777554431,
+        "cv": 1778155279,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "4cc9fc934b8a415e93af918d31c207d94070ac6888b17e5701d8dc4f5f010695",
+          "x-mock-hash": "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1323,90 +1423,20 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 11
-    }
-  ],
-  "69b0a2da7e6666126969f1c8dad8fd98dc4aae84755842f1446e2406a1434c3e": [
-    {
-      "body": [
-        "This record could not be found"
-      ],
-      "status": 404,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/programs?language=de&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "69b0a2da7e6666126969f1c8dad8fd98dc4aae84755842f1446e2406a1434c3e",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 59
-    }
-  ],
-  "71f514ad71facc6f6ae1acb7448645d1c87ff6adcc5572fb2b0a8a3def1c19b0": [
-    {
-      "body": [
-        "This record could not be found"
-      ],
-      "status": 404,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "71f514ad71facc6f6ae1acb7448645d1c87ff6adcc5572fb2b0a8a3def1c19b0",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 12
-    },
-    {
-      "body": [
-        "This record could not be found"
-      ],
-      "status": 404,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions&token=__TOKEN__&cv=1777554431&resolve_level=2",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "71f514ad71facc6f6ae1acb7448645d1c87ff6adcc5572fb2b0a8a3def1c19b0",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 12
+      "durationMs": 10
     }
   ],
   "754bdb727b7e549d2e9dc7ad6cbd9e7ec645b99bf56378ad3517940b8a8224e2": [
     {
       "body": {
         "stories": [],
-        "cv": 1777554431,
+        "cv": 1778155279,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1777554431",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1778155279",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1420,7 +1450,31 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 95
+      "durationMs": 57
+    }
+  ],
+  "77f2772d4df62c62ff66021ea140220c8a65d395a623565e86e69a74f1aa4f23": [
+    {
+      "body": [
+        "This record could not be found"
+      ],
+      "status": 404,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/programs?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "77f2772d4df62c62ff66021ea140220c8a65d395a623565e86e69a74f1aa4f23",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 92
     }
   ],
   "fce7173ea2aaa9a73d17396d9302fce5027dc24e52e784859627726b3cc6feae": [
@@ -1705,13 +1759,13 @@
             ]
           }
         ],
-        "cv": 1777554431,
+        "cv": 1778155279,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1777554431",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fprograms%2F&per_page=25&page=1&token=__TOKEN__&cv=1778155279",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1725,7 +1779,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 78
+      "durationMs": 98
     }
   ]
 }

@@ -18,6 +18,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get profileUpdateError => 'Ɔltin bɔt yu nɔ go insay. Duya tray bak ɔ rich awt to wit';
 
   @override
+  String get anErrorOccurred => 'Sɔntin nɔ go rayt';
+
+  @override
   String get profile => 'Ɔltin bɔt yu';
 
   @override
@@ -385,13 +388,19 @@ class AppLocalizationsKri extends AppLocalizations {
   String get invalidPhoneNumberError => 'Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.';
 
   @override
-  String get failedSentVerificationCodeError => 'Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak.';
+  String failedSentVerificationCodeError(String errorMessage) {
+    return 'Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak. $errorMessage';
+  }
 
   @override
   String get failedCodeVerificationCodeError => 'Failed fɔ chɛk di kɔd. Duya chɛk yu Intanɛt ɛn tray bak.';
 
   @override
   String get invalidAppCheckTokenError => 'Invalid Ap Chɛk token. Nɔ ebul fɔ yuz bakɛnd savis. Duya, ɔpdet di ap.';
+
+  @override
+  String get playIntegrityUnavailableError =>
+      'Google Play Store nid fɔ gɛt ɔpdet fɔ kɔntinyu. Duya ɔpdet Ple Stɔ ɛn tray bak.\n\nOpin di Google Play ap. Na di ɔp rayt say, tap yu Profayl pikchɔ. Tap ‘Sɛtin dɛn’ -> ‘Bɔt’ -> ‘Ɔpdet Ple Stɔ’. Yu go gɛt mɛsej we go tɛl yu if di Google Play ap de ɔp to det. Tap Gɛt am. If ɔpdet de, i go dawnlod ɛn instɔl am ɔtomɛtik insay sɔm minit.';
 
   @override
   String get invalidVerificationCodeError => 'Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.';
@@ -762,5 +771,14 @@ class AppLocalizationsKri extends AppLocalizations {
   String get noInternetConnection => 'Nɔ intanɛt kɔnɛkshɔn. Nɔ ebul fɔ rifrɛsh data.';
 
   @override
-  String get anErrorOccurred => 'Sɔntin nɔ go rayt';
+  String get offlineBanner => 'Nɔ intanɛt kɔnɛkshɔn';
+
+  @override
+  String get offlineMutationError => 'Dis akshɔn nid intanɛt kɔnɛkshɔn';
+
+  @override
+  String get offlineBannerMessage => 'Yu de ɔflayna. Sho di data we dɛn dɔn kech.';
+
+  @override
+  String get openGoogleSupportPageUpdatePlayStore => 'Opin Sɔpɔt Pej';
 }

@@ -3,6 +3,7 @@
     "ok": "OK",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateError": "Failed to update profile. Please try again or contact our support",
+    "anErrorOccurred": "An error occurred",
     "profile": "Profile",
     "personal": "Personal",
     "name": "Name",
@@ -178,9 +179,17 @@
     },
     "mySurveysTitle": "My surveys",
     "invalidPhoneNumberError": "Invalid phone number. Please check your phone number and try again.",
-    "failedSentVerificationCodeError": "Failed to send verification code. Please check your Internet and try again.",
+    "failedSentVerificationCodeError": "Failed to send verification code. Please check your Internet and try again. {errorMessage}",
+    "@failedSentVerificationCodeError": {
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
     "failedCodeVerificationCodeError": "Failed to verify the code. Please check your Internet and try again.",
     "invalidAppCheckTokenError": "Invalid App Check token. Can't use backend service. Please update the app.",
+    "playIntegrityUnavailableError": "Google Play Store needs an update to continue. Please update Play Store and try again.\n\nOpen the Google Play app. At the top right, tap your Profile picture. Tap 'Settings' -> 'About' -> 'Update Play Store'. You’ll get a message that tells you if the Google Play app is up to date. Tap 'Got it'. If an update is available, it'll automatically download and install in a few minutes.",
     "invalidVerificationCodeError": "Invalid verification code. Please check provided SMS code and try again.",
     "userDisabledError": "Your user account was disabled. Contact with us if you need more information.",
     "invalidCredentialError": "Provided phone number or verification code are no longer valid. Please try again.",
@@ -309,5 +318,8 @@
 		}
 	},
 	"noInternetConnection": "No internet connection. Cannot refresh data.",
-	"anErrorOccurred": "An error occurred"
+    "offlineBanner": "No internet connection",
+    "offlineMutationError": "This action requires an internet connection",
+    "offlineBannerMessage": "You are offline. Showing cached data.",
+    "openGoogleSupportPageUpdatePlayStore" : "Open Support Page"
 }

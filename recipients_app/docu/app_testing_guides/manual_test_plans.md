@@ -1,23 +1,23 @@
 # Manual test plans
 
-Usually these tests are done on the environment STAGING with the
-corresponding
-[test accounts](https://docs.google.com/document/d/1-y__kbnLX3KCHp2pdXhzq58rbMmnXwUI-Cirihy224o/edit?pli=1#heading=h.4a9qjbxltxku).
-
-## Registration
-
-- On the Account creation page, by clicking the text link “Privacy
-  Policy” a webview with the privacy policy is opened.
-- TODO: Click on the button “Create Account” then …
+Usually these tests are done on the environment STAGING. Testaccounts
+can be created in the Admin Staging Tool
+https://staging.socialincome.org/en/int/login.
 
 ## Phone verification and Login, Logout
 
-- Test Phone verification (Happy Path)
-  - with not existing Firebase Auth user
-  - with existing Firebase Auth user
-- Test Resending of OTP code
-- Test OTP Code expired (Expired after 10 Minutes) => Shows user
-  friendly error message
+- Login via phone number (Success case)
+- Login via phone number (Error cases)
+  - Enter wrong OTP
+  - Test Resending of OTP code
+  - Test OTP Code expired (Expired after 10 Minutes) => Shows user
+    friendly error message
+- Login via phone number and Terms accepted == false
+- Login with phone number but no recipient account exists
+
+- On the Account creation page, by clicking the text link “Privacy
+  Policy” a webview with the privacy policy is opened.
+
 - User stays logged in after app restart
 - Switch off the internet and try to login. => An error message occurs
 - Logout of the app: Go to “Edit”, scroll down and “Sign Out” => The
@@ -28,23 +28,28 @@ corresponding
 
 - Switch between normal mode and demo mode
 
-## Profile
+## Profile/Account
 
 - Tap on “Edit” and change personal data. => There should be a message
   “Profile updated successfully” after the change
 - Switch off the internet and tap on “Edit” and change personal data. =>
-  There is no message. Data is saved locally and will be synced once the
-  internet is back again. This is also the case if you leave the Profile
-  page.
+  There is a message which tells you that you are offline and you can
+  not do this change at the moment.
+- Payment phone number and mobile money provider can not be changed in
+  the mobile app. Fields are read-only.
+- Test contact phone is missing. A DashboardCard is visible and asks for
+  using the payment number as contact phone number.
+- Test language settings
 
 ## Payments
 
 - Can you pull to refresh to see a newly added payment in the Admin
   Staging Tool
 - Can you confirm if a payment has been made and if the change has been
-  stored in Firebase?
+  stored into the Backend?
   - Offline feature: Additionally, if you confirm while in flight mode
-    and then reconnect to the internet, is it also stored in Firebase?
+    you get a message which tells you that you are offline and you can
+    not do this change at the moment.
 - Can you deny a payment?
 - Can you resolve the issue from the mobile phone?
 
@@ -53,8 +58,8 @@ corresponding
 - Do you see the card “My surveys”
 - If you tap the button “Overview”, then a new page with a list of all
   surveys is shown.
-  - If there is a due survey, then the list entry of this survey has a
-    “Start Survey” button
+- If there is a due survey, then the list entry of this survey has a
+  “Start Survey” button
 - Can you pull to refresh to see a changed survey status in the Admin
   Staging Tool
 - Is a survey that is due shown as a separate card on the main screen?
@@ -67,6 +72,17 @@ corresponding
 - Does the survey open on a new page when you tap “Start Survey”?
 - Can you fill out the survey?
 - If you filled out a survey, then the survey is shown as “Completed”.
+
+## Test offline case
+
+- Offline banner should be shown if no internet connection
+- Offline on first launch of the app
+- Offline on non first app launch
+- Offline and want to change data
+  - Give payment feedback
+  - Do recipient changes
+  - Add missing contact number via dashboard
+  - Accept Terms
 
 ## OS Permission stuff
 
@@ -86,14 +102,16 @@ Settings->Apps->Social Income-> Notifications are allowed.
 
 Not yet added as feature
 
-# Video manuals for Admin Staging Tool
+# Admin Staging Tool
 
-#### How do you add a new payment in the Admin Staging Tool?
+## How do you add a new recipient in the Admin Staging Tool?
 
-→
-[Add payment.mov](https://drive.google.com/file/d/1I6PFLXp3BpN1v3X1mPL4wofL5SEG2rTy/view?usp=drive_link)
+TODO
 
-#### How do you change a survey status in the Admin Staging Tool?
+## How do you add a new payment in the Admin Staging Tool?
 
-→
-[Change survey status.mov](https://drive.google.com/file/d/1I3SELIPc0ReLpIGc_Q0lY291GWUjFrgU/view?usp=sharing)
+TODO
+
+## How do you change a survey status in the Admin Staging Tool?
+
+TODO
