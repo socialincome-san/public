@@ -86,6 +86,8 @@ export interface Country {
   title: string;
   description: string;
   heroImage: StoryblokAsset;
+  countryOfficeTitle?: string;
+  countryOfficeDescription?: string;
   component: "Country";
   _uid: string;
   [k: string]: unknown;

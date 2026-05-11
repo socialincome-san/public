@@ -18,7 +18,7 @@ export const PersonCard = ({ person }: Props) => {
 	const role = typeof primaryRole === 'string' ? primaryRole.trim() : '';
 
 	return (
-		<li className="w-full max-w-[305px] overflow-hidden rounded-xl bg-white p-3 shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]">
+		<div className="w-full max-w-[305px] overflow-hidden rounded-xl bg-white p-3 shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]">
 			<div className="relative aspect-[280/350] w-full overflow-hidden rounded-lg bg-muted">
 				{imageSource ? (
 					<NextImage
@@ -54,6 +54,6 @@ export const PersonCard = ({ person }: Props) => {
 				</h3>
 				{role ? <p className="relative shrink-0 pb-1 text-sm leading-none">{role}</p> : null}
 			</div>
-		</li>
+		</div>
 	);
 };

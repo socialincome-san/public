@@ -7,9 +7,9 @@ import { services } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
+import { CountryPersonCarousel } from './country-person-carousel';
 import type { CountryStory } from './country.types';
 import { getCountryDescription, getCountryIsoCode, getCountryTitle } from './country.utils';
-import { PersonCard } from './person-card';
 
 type Props = {
 	country: CountryStory;
@@ -74,11 +74,14 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				descriptionHeading={`${translator.t('countries-page.about')} ${countryTitle}`}
 			/>
 			{countryOfficePersons.length > 0 ? (
-				<ul className="w-site-width max-w-content mx-auto grid grid-cols-1 gap-6 px-6 pb-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-					{countryOfficePersons.map((person) => (
-						<PersonCard key={person.uuid} person={person} />
-					))}
-				</ul>
+				<div className="ml-[max(3vw,calc((100vw-1400px)*0.5))] pl-6 pb-8">
+					<CountryPersonCarousel
+						persons={countryOfficePersons}
+						countryName={countryTitle}
+						countryOfficeTitle={country.content.countryOfficeTitle?.trim()}
+						countryOfficeDescription={country.content.countryOfficeDescription?.trim()}
+					/>
+				</div>
 			) : null}
 		</div>
 	);
