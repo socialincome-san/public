@@ -6,7 +6,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -28,7 +28,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -52,7 +52,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -74,7 +74,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -96,7 +96,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -118,7 +118,7 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -752,7 +752,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1384,7 +1384,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1463,7 +1463,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1540,7 +1540,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1617,7 +1617,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1694,7 +1694,7 @@
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/impact-measurement?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778155279&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
