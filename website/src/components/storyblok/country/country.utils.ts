@@ -2,7 +2,7 @@ import type { CountryStory } from '@/components/storyblok/country/country.types'
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
 
 export const getCountryIsoCode = (country: Country) => {
-	return country.isoCode?.trim() ?? '-';
+	return country.isoCode.toString().trim() ?? '-';
 };
 
 export const getCountryDescription = (country: Country) => {

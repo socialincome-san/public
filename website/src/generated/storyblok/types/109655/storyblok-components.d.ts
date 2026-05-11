@@ -82,7 +82,7 @@ export interface CampaignGrid {
 }
 
 export interface Country {
-  isoCode: string;
+  isoCode: number | string;
   title: string;
   description: string;
   heroImage: StoryblokAsset;
@@ -314,6 +314,7 @@ export interface Page {
     | JournalTeasers
     | LocalPartnerGrid
     | ModalCards
+    | PartnershipsCarousel
     | ProgramGrid
     | TeamGrid
     | Testimonial
@@ -323,6 +324,22 @@ export interface Page {
     | VideoText
   )[];
   component: "page";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Partnership {
+  name: string;
+  logo: StoryblokAsset;
+  website: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  component: "partnership";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface PartnershipsCarousel {
+  partnerships: (ISbStoryData<Partnership> | string)[];
+  component: "partnershipsCarousel";
   _uid: string;
   [k: string]: unknown;
 }
@@ -342,7 +359,7 @@ export interface Person {
   fieldTrips?: {
     [k: string]: unknown;
   }[];
-  countryOffice?: ("" | "GHA" | "SLE" | "LBR")[];
+  countryOffice?: (number | string)[];
   component: "person";
   _uid: string;
   [k: string]: unknown;
@@ -473,6 +490,7 @@ export type ContentType =
   | Layout
   | LocalPartner
   | Page
+  | Partnership
   | Person
   | Program
   | ReferenceArticle
