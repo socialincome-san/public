@@ -34,7 +34,7 @@ export const CountryPersonCarousel = ({
 				) : null}
 			</div>
 			<div className="relative min-w-0 lg:col-span-2">
-				<Carousel setApi={setApi} opts={{ align: 'start', loop: true }}>
+				<Carousel setApi={setApi} opts={{ align: 'start' }}>
 					<CarouselContent className="-ml-6">
 						{persons.map((person) => (
 							<CarouselItem key={person.uuid} className="basis-[305px] pl-6">
