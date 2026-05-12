@@ -6,10 +6,8 @@ import type { Partnership, PartnershipsCarousel } from '@/generated/storyblok/ty
 import { getScaledDimensions } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import Autoplay from 'embla-carousel-autoplay';
 import NextImage from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
 
 type Props = {
 	blok: PartnershipsCarousel;
