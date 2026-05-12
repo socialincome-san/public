@@ -21,7 +21,6 @@ type PartnershipWithLogo = Partnership & {
 	};
 };
 
-const AUTOPLAY_DELAY_MS = 4000;
 const LOGO_MAX_WIDTH = 240;
 const LOGO_FALLBACK_HEIGHT = 120;
 
@@ -40,7 +39,6 @@ const getWebsiteHref = (website: Partnership['website']) => {
 };
 
 export const PartnershipsCarouselBlock = ({ blok }: Props) => {
-	const autoplayPlugin = useRef(Autoplay({ delay: AUTOPLAY_DELAY_MS, stopOnInteraction: false }));
 	const entries = blok.partnerships
 		.filter((entry): entry is ISbStoryData<Partnership> => typeof entry !== 'string')
 		.map((entry) => entry.content)
@@ -58,7 +56,6 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 					align: 'center',
 					loop: true,
 				}}
-				plugins={[autoplayPlugin.current]}
 			>
 				<CarouselContent>
 					{entries.map((entry, index) => {
