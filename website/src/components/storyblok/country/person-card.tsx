@@ -52,7 +52,7 @@ export const PersonCard = ({ person }: Props) => {
 						</>
 					) : null}
 				</h3>
-				{role ? <p className="relative shrink-0 pb-1 text-sm leading-none">{role}</p> : null}
+				{role ? <p className="capitalize relative shrink-0 pb-1 text-sm leading-none">{role}</p> : null}
 			</div>
 		</div>
 	);
