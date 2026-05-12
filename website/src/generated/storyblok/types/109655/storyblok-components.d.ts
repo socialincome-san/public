@@ -338,6 +338,8 @@ export interface Partnership {
 }
 
 export interface PartnershipsCarousel {
+  heading?: string;
+  description?: string;
   partnerships: (ISbStoryData<Partnership> | string)[];
   component: "partnershipsCarousel";
   _uid: string;
@@ -359,7 +361,7 @@ export interface Person {
   fieldTrips?: {
     [k: string]: unknown;
   }[];
-  countryOffice?: ("" | "GHA" | "SLE" | "LBR")[];
+  countryOffice?: (number | string)[];
   component: "person";
   _uid: string;
   [k: string]: unknown;

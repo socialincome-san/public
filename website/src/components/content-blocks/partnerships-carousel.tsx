@@ -8,6 +8,7 @@ import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
 import Link from 'next/link';
+import Markdown from 'react-markdown';
 
 type Props = {
 	blok: PartnershipsCarousel;
@@ -49,6 +50,12 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+			{blok.heading && <h2 className="text-3xl font-bold">{blok.heading}</h2>}
+			{blok.description && (
+				<div className="mt-4 text-lg text-black">
+					<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.description}</Markdown>
+				</div>
+			)}
 			<Carousel
 				opts={{
 					align: 'center',
