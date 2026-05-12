@@ -19,7 +19,7 @@ export const PersonCard = ({ person }: Props) => {
 
 	return (
 		<div className="w-full max-w-[305px] overflow-hidden rounded-xl bg-white p-3 shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]">
-			<div className="relative aspect-[280/350] w-full overflow-hidden rounded-lg bg-muted">
+			<div className="bg-muted relative aspect-[280/350] w-full overflow-hidden rounded-lg">
 				{imageSource ? (
 					<NextImage
 						src={imageSource}
@@ -52,7 +52,7 @@ export const PersonCard = ({ person }: Props) => {
 						</>
 					) : null}
 				</h3>
-				{role ? <p className="capitalize relative shrink-0 pb-1 text-sm leading-none">{role}</p> : null}
+				{role ? <p className="relative shrink-0 pb-1 text-sm leading-none capitalize">{role}</p> : null}
 			</div>
 		</div>
 	);
