@@ -272,7 +272,7 @@ export class StoryblokService extends BaseService {
 
 	async getPersonsByCountryOffice(lang: string, isoCode: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
-			const countryOfficeCode = isoCode.trim();
+			const countryOfficeCode = isoCode?.trim() ?? '';
 			if (!countryOfficeCode) {
 				return this.resultOk([]);
 			}
