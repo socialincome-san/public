@@ -74,7 +74,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				descriptionHeading={`${translator.t('countries-page.about')} ${countryTitle}`}
 			/>
 			{countryOfficePersons.length > 0 ? (
-				<div className="max-w-content 2xl:w-site-width ml-[2vw] 2xl:mx-auto pl-6 py-8">
+				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
 					<CountryPersonCarousel
 						persons={countryOfficePersons}
 						countryName={countryTitle}

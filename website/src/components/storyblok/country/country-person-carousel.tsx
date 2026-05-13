@@ -14,20 +14,13 @@ type Props = {
 	countryOfficeDescription?: string;
 };
 
-export const CountryPersonCarousel = ({
-	persons,
-	countryName,
-	countryOfficeTitle,
-	countryOfficeDescription,
-}: Props) => {
+export const CountryPersonCarousel = ({ persons, countryName, countryOfficeTitle, countryOfficeDescription }: Props) => {
 	const [api, setApi] = useState<CarouselApi>();
 
 	return (
 		<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
 			<div className="space-y-4 lg:col-span-1">
-				{countryOfficeTitle ? (
-					<p className="text-foreground text-4xl font-bold break-words">{countryOfficeTitle}</p>
-				) : null}
+				{countryOfficeTitle ? <p className="text-foreground text-4xl font-bold break-words">{countryOfficeTitle}</p> : null}
 				<h2 className="text-foreground text-4xl font-normal break-words">{countryName}</h2>
 				{countryOfficeDescription ? (
 					<p className="text-muted-foreground text-lg leading-7">{countryOfficeDescription}</p>
