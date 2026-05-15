@@ -8,6 +8,7 @@ import NextImage from 'next/image';
 import NextLink from 'next/link';
 import type { CountryStory } from './country.types';
 import { getCountryDescription, getCountryIsoCode, getCountryTitle } from './country.utils';
+import { MapBubble } from './map-bubble';
 
 type Props = {
 	country: CountryStory;
@@ -21,52 +22,68 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const countryDescription = getCountryDescription(country.content);
 	const isoCode = getCountryIsoCode(country.content);
+	const hasIsoCode = isoCode !== '-';
 	const isoCodeLower = isoCode.toLowerCase();
 	const countryTitle = getCountryTitle(country.content);
 	const heroImageFilename = country.content.heroImage?.filename;
 	const heroImageAlt = country.content.heroImage?.alt ?? countryTitle;
 
 	return (
-		<LandingPageDetail
-			title={countryTitle}
-			description={countryDescription}
-			heroImageFilename={heroImageFilename}
-			heroImageAlt={heroImageAlt}
-			titleVisual={
-				<NextImage
-					src={`/assets/flags/${isoCodeLower}.svg`}
-					alt={`${isoCode} flag`}
-					width={44}
-					height={32}
-					className="h-8 w-auto rounded-sm"
-				/>
-			}
-			stats={[
-				{
-					value: activeProgramsCount,
-					label:
-						activeProgramsCount === 1
-							? translator.t('countries-page.active-program-singular')
-							: translator.t('countries-page.active-program-plural'),
-				},
-				{
-					value: recipientsCount,
-					label:
-						recipientsCount === 1
-							? translator.t('countries-page.recipient-singular')
-							: translator.t('countries-page.recipient-plural'),
-				},
-			]}
-			actions={
-				<Button variant="outline" size="lg" asChild>
-					<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/donate`}>
-						{translator.t('countries-page.donate-now')}
-					</NextLink>
-				</Button>
-			}
-			sideContent={<MakeDonationForm lang={lang} />}
-			mobileContent={<MakeDonationForm lang={lang} />}
-			descriptionHeading={`${translator.t('countries-page.about')} ${countryTitle}`}
-		/>
+		<>
+			<LandingPageDetail
+				title={countryTitle}
+				description={countryDescription}
+				heroImageFilename={heroImageFilename}
+				heroImageAlt={heroImageAlt}
+				titleVisual={
+					<NextImage
+						src={`/assets/flags/${isoCodeLower}.svg`}
+						alt={`${isoCode} flag`}
+						width={44}
+						height={32}
+						className="h-8 w-auto rounded-sm"
+					/>
+				}
+				stats={[
+					{
+						value: activeProgramsCount,
+						label:
+							activeProgramsCount === 1
+								? translator.t('countries-page.active-program-singular')
+								: translator.t('countries-page.active-program-plural'),
+					},
+					{
+						value: recipientsCount,
+						label:
+							recipientsCount === 1
+								? translator.t('countries-page.recipient-singular')
+								: translator.t('countries-page.recipient-plural'),
+					},
+				]}
+				actions={
+					<Button variant="outline" size="lg" asChild>
+						<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/donate`}>
+							{translator.t('countries-page.donate-now')}
+						</NextLink>
+					</Button>
+				}
+				sideContent={<MakeDonationForm lang={lang} />}
+				mobileContent={<MakeDonationForm lang={lang} />}
+				descriptionHeading={`${translator.t('countries-page.about')} ${countryTitle}`}
+			/>
+			{hasIsoCode ? (
+				<section className="w-site-width max-w-content mx-auto px-6 py-8 lg:py-12">
+					<div className="flex flex-col gap-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
+						<div className="flex justify-center lg:justify-start">
+							<MapBubble isoCode={isoCode} countryName={countryTitle} />
+						</div>
+						<div className="flex flex-col gap-4">
+							<h2 className="text-2xl font-semibold md:text-3xl">{`${translator.t('countries-page.about')} ${countryTitle}`}</h2>
+							<p className="text-base">{countryDescription || '-'}</p>
+						</div>
+					</div>
+				</section>
+			) : null}
+		</>
 	);
 };
