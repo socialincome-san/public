@@ -1,10 +1,9 @@
 import { getCountryStaticMapUrl, isMapboxMapVariant } from '@/lib/mapbox/country-map';
 
-const MAP_IMAGE_CACHE_HEADER = 'no-store, no-cache, must-revalidate, proxy-revalidate';
+const MAP_IMAGE_CACHE_SECONDS = 60 * 60 * 24; // 24 hours
+const MAP_IMAGE_CACHE_HEADER = `public, max-age=${MAP_IMAGE_CACHE_SECONDS}, s-maxage=${MAP_IMAGE_CACHE_SECONDS}, stale-while-revalidate=${MAP_IMAGE_CACHE_SECONDS}`;
 
 export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
 export const GET = async (request: Request) => {
 	const { searchParams } = new URL(request.url);
@@ -36,7 +35,7 @@ export const GET = async (request: Request) => {
 	}
 
 	const mapboxResponse = await fetch(mapboxStaticImageUrl, {
-		cache: 'no-store',
+		next: { revalidate: MAP_IMAGE_CACHE_SECONDS },
 	});
 
 	if (!mapboxResponse.ok || !mapboxResponse.body) {
