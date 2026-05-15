@@ -9,6 +9,7 @@ type BoundaryStyle = {
 
 type VariantConfig = {
 	padding: number;
+	imageSize: number;
 	boundaryStyle: BoundaryStyle;
 	customStyleUrl: string;
 	showSurroundingCountries: boolean;
@@ -61,10 +62,10 @@ type MapboxStyleReference = {
 
 type UnknownRecord = Record<string, unknown>;
 
-const DEFAULT_MAPBOX_IMAGE_SIZE = 1024;
+const MAPBOX_DATA_REVALIDATE_SECONDS = 60 * 60 * 24; // 24 hours
 const MAPBOX_COUNTRY_BOUNDARIES_SOURCE_URL = 'mapbox://mapbox.country-boundaries-v1';
 const MAPBOX_COUNTRY_BOUNDARIES_SOURCE_LAYER = 'country_boundaries';
-const MAPBOX_BOUNDARY_INSERT_BEFORE_LAYER = 'country-label'; // TODO: Find a more robust way to determine the layer to insert country boundaries before, as this may change with different Mapbox styles.
+const MAPBOX_BOUNDARY_INSERT_BEFORE_LAYER = 'country-label';
 const MAIN_MAP_CUSTOM_STYLE_URL = 'mapbox://styles/socialincome/cmov6zy8j006u01sb4px41uld';
 const INSET_MAP_CUSTOM_STYLE_URL = 'mapbox://styles/socialincome/cmp5dzq70000701qr07nh9ck9';
 
@@ -253,6 +254,7 @@ const visibleCountryFeaturesFilter = [
 const MAP_VARIANT_CONFIG: Record<MapboxMapVariant, VariantConfig> = {
 	main: {
 		padding: 128,
+		imageSize: 1024,
 		customStyleUrl: MAIN_MAP_CUSTOM_STYLE_URL,
 		showSurroundingCountries: true,
 		boundaryStyle: {
@@ -268,11 +270,12 @@ const MAP_VARIANT_CONFIG: Record<MapboxMapVariant, VariantConfig> = {
 	},
 	inset: {
 		padding: 48,
+		imageSize: 512,
 		customStyleUrl: INSET_MAP_CUSTOM_STYLE_URL,
 		showSurroundingCountries: false,
 		boundaryStyle: {
 			fill: '#D25B4D',
-			fillOpacity: 1, // TODO: 0.25
+			fillOpacity: 1,
 			outline: '#C64A3A',
 		},
 	},
@@ -370,7 +373,7 @@ const buildMapboxStaticImageUrl = ({
 	const styleReference = getRequiredMapboxStyleReference(variantConfig.customStyleUrl);
 	const viewport = `[${boundingBox.map((coordinate) => coordinate.toFixed(4)).join(',')}]`;
 	const url = new URL(
-		`https://api.mapbox.com/styles/v1/${styleReference.username}/${styleReference.styleId}/static/${viewport}/${DEFAULT_MAPBOX_IMAGE_SIZE}x${DEFAULT_MAPBOX_IMAGE_SIZE}`,
+		`https://api.mapbox.com/styles/v1/${styleReference.username}/${styleReference.styleId}/static/${viewport}/${variantConfig.imageSize}x${variantConfig.imageSize}`,
 	);
 
 	url.searchParams.set('addlayer', JSON.stringify(buildCountryFillLayer(isoCode, variant, variantConfig)));
@@ -380,8 +383,6 @@ const buildMapboxStaticImageUrl = ({
 	url.searchParams.set('logo', 'false');
 	url.searchParams.set('attribution', 'false');
 	url.searchParams.set('access_token', accessToken);
-
-	console.error('Generated Mapbox Static Image URL:', url.toString());
 
 	return url.toString();
 };
@@ -495,7 +496,7 @@ const getGeocodingCountryFeature = async (isoCode: string, accessToken: string):
 	url.searchParams.set('limit', '10');
 	url.searchParams.set('access_token', accessToken);
 
-	const response = await fetch(url, { cache: 'no-store' });
+	const response = await fetch(url, { next: { revalidate: MAPBOX_DATA_REVALIDATE_SECONDS } });
 
 	if (!response.ok) {
 		return null;
@@ -520,8 +521,7 @@ const getCountryRegionByPoint = async ({
 	url.searchParams.set('layers', MAPBOX_COUNTRY_BOUNDARIES_SOURCE_LAYER);
 	url.searchParams.set('limit', '5');
 	url.searchParams.set('access_token', accessToken);
-	console.error(center[0], center[1], url.toString());
-	const response = await fetch(url, { cache: 'no-store' });
+	const response = await fetch(url, { next: { revalidate: MAPBOX_DATA_REVALIDATE_SECONDS } });
 
 	if (!response.ok) {
 		return null;
@@ -618,7 +618,7 @@ const isRecord = (value: unknown): value is UnknownRecord => {
 };
 
 const isNonNullable = <T>(value: T | null | undefined): value is T => {
-	return value != null;
+	return value !== null && value !== undefined;
 };
 
 const toCountryBoundingBox = (value: number[] | undefined): CountryBoundingBox | null => {

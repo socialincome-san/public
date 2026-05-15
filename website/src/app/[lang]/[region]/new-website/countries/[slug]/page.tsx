@@ -14,7 +14,7 @@ export default async function CountryPage({ params }: DefaultLayoutPropsWithSlug
 		return notFound();
 	}
 
-	const isoCode = countryResult.data.content.isoCode;
+	const isoCode = countryResult.data.content.isoCode.toString();
 	const statsResult = await services.read.country.getPublicCountryStatsByIsoCode(isoCode);
 	const activeProgramsCount = statsResult.success ? statsResult.data.programsCount : 0;
 	const recipientsCount = statsResult.success ? statsResult.data.recipientsCount : 0;
