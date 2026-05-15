@@ -1,5 +1,5 @@
-export type CountryBoundingBox = [number, number, number, number];
-export type MapboxMapVariant = 'main' | 'inset';
+type CountryBoundingBox = [number, number, number, number];
+type MapboxMapVariant = 'main' | 'inset';
 
 type BoundaryStyle = {
 	fill: string;
