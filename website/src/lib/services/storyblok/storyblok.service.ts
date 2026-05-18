@@ -29,6 +29,8 @@ export class StoryblokService extends BaseService {
 		tag: 'tag',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
+	// Changes in this array should be reflected in the mock server recordings
+	// Check the README.md for more details.
 	private static readonly standardStoryRelationsToResolve = [
 		'faqSelection.questions',
 		'downloads.documents',

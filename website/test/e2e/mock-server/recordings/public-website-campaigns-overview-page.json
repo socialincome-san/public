@@ -160,13 +160,13 @@
             ]
           }
         ],
-        "cv": 1778155279,
+        "cv": 1778589135,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1778155279",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1778589135",
         "body": {},
         "method": "GET",
         "headers": {
@@ -180,20 +180,20 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 88
+      "durationMs": 141
     }
   ],
   "131957dd62176c00e95a2fe3db6a30beb707d23be56fb2132d787884f19f00c4": [
     {
       "body": {
         "stories": [],
-        "cv": 1778155279,
+        "cv": 1778589135,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1778155279",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcampaigns%2F&per_page=25&page=1&token=__TOKEN__&cv=1778589135",
         "body": {},
         "method": "GET",
         "headers": {
@@ -207,10 +207,10 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 75
+      "durationMs": 73
     }
   ],
-  "29c25d09f73de913029e46e8c26bdd9a84262dd032b0e0ed3aa82596efc3fd68": [
+  "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa": [
     {
       "body": [
         "This record could not be found"
@@ -223,7 +223,7 @@
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "29c25d09f73de913029e46e8c26bdd9a84262dd032b0e0ed3aa82596efc3fd68",
+          "x-mock-hash": "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -231,7 +231,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 229
+      "durationMs": 169
     },
     {
       "body": [
@@ -245,7 +245,7 @@
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "29c25d09f73de913029e46e8c26bdd9a84262dd032b0e0ed3aa82596efc3fd68",
+          "x-mock-hash": "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -253,34 +253,10 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 266
+      "durationMs": 173
     }
   ],
-  "4218d815e4a97275149e96a7d2b119f83a59e9535da65557ac9f9f989d21a272": [
-    {
-      "body": [
-        "This record could not be found"
-      ],
-      "status": 404,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/campaigns?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&resolve_level=2",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "4218d815e4a97275149e96a7d2b119f83a59e9535da65557ac9f9f989d21a272",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 409
-    }
-  ],
-  "4975cead6088eebd04f80099e58c201a1d3f3f68853f0487b9f6196978777f8b": [
+  "6336e77e08c3ab00d62e3fa3ff77312525780c0a9803847f6beb14c523d392bd": [
     {
       "body": {
         "story": {
@@ -372,7 +348,7 @@
             }
           ]
         },
-        "cv": 1778155279,
+        "cv": 1778589135,
         "rels": [],
         "links": []
       },
@@ -384,7 +360,7 @@
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "4975cead6088eebd04f80099e58c201a1d3f3f68853f0487b9f6196978777f8b",
+          "x-mock-hash": "6336e77e08c3ab00d62e3fa3ff77312525780c0a9803847f6beb14c523d392bd",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -392,10 +368,10 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 159
+      "durationMs": 101
     }
   ],
-  "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5": [
+  "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7": [
     {
       "body": {
         "story": {
@@ -1006,7 +982,7 @@
             }
           ]
         },
-        "cv": 1778155279,
+        "cv": 1778589135,
         "rels": [],
         "links": []
       },
@@ -1018,7 +994,7 @@
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5",
+          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1026,7 +1002,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 70
+      "durationMs": 106
     },
     {
       "body": {
@@ -1638,7 +1614,7 @@
             }
           ]
         },
-        "cv": 1778155279,
+        "cv": 1778589135,
         "rels": [],
         "links": []
       },
@@ -1650,7 +1626,7 @@
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5",
+          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1658,7 +1634,31 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 100
+      "durationMs": 108
+    }
+  ],
+  "ec73d1b6f8c7be370924470665b640d25170d13a01498c020e582de688dfcfdc": [
+    {
+      "body": [
+        "This record could not be found"
+      ],
+      "status": 404,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/campaigns?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&resolve_level=2",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "ec73d1b6f8c7be370924470665b640d25170d13a01498c020e582de688dfcfdc",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 215
     }
   ]
 }
