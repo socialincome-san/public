@@ -340,6 +340,8 @@ export interface Partnership {
 }
 
 export interface PartnershipsCarousel {
+  heading?: string;
+  description?: string;
   partnerships: (ISbStoryData<Partnership> | string)[];
   component: "partnershipsCarousel";
   _uid: string;
