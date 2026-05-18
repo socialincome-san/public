@@ -29,7 +29,13 @@ export class StoryblokService extends BaseService {
 		tag: 'tag',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
-	private static readonly standardStoryRelationsToResolve = ['faqSelection.questions', 'downloads.documents'];
+	// Changes in this array should be reflected in the mock server recordings
+	// Check the README.md for more details.
+	private static readonly standardStoryRelationsToResolve = [
+		'faqSelection.questions',
+		'downloads.documents',
+		'partnershipsCarousel.partnerships',
+	];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
@@ -267,6 +273,28 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to fetch focuses: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPersonsByCountryOffice(lang: string, isoCode: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+		try {
+			const countryOfficeCode = isoCode?.trim() ?? '';
+			if (!countryOfficeCode) {
+				return this.resultOk([]);
+			}
+
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(lang)),
+				content_type: StoryblokService.contentType.person,
+				filter_query: { countryOffice: { any_in_array: countryOfficeCode } },
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
+			return this.resultOk(data);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch persons by country office: ${JSON.stringify(error)}`);
 		}
 	}
 

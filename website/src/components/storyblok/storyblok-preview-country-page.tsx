@@ -36,7 +36,7 @@ export const StoryblokPreviewCountryPage = async ({ storyPath, lang, region, pre
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const { activeProgramsCount, recipientsCount } = await getCountryStats(story.content.isoCode);
+			const { activeProgramsCount, recipientsCount } = await getCountryStats(story.content.isoCode.toString());
 
 			return (
 				<CountryDetail
