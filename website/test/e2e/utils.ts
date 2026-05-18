@@ -104,12 +104,6 @@ export const selectOptionByTestId = async (page: Page, fieldName: string, option
 	await page.getByRole('option').first().click();
 };
 
-export const selectDataTableFilter = async (page: Page, filterId: string, optionName: string) => {
-	await page.getByTestId('data-table-filters-button').click();
-	await page.getByTestId(`data-table-filter-${filterId}-trigger`).click();
-	await page.getByRole('option', { name: optionName }).click();
-};
-
 export const clickDataTableActionItem = async (page: Page, actionItemTestId: string) => {
 	const actionButton = page.getByTestId('data-table-actions-button');
 

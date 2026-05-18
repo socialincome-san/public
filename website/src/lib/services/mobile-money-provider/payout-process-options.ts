@@ -2,7 +2,7 @@ import { PayoutProcess } from '@/generated/prisma/enums';
 
 export const PAYOUT_PROCESS_OPTIONS = [{ id: PayoutProcess.orange_money_csv, label: 'Orange Money CSV upload' }] as const;
 
-export const PAYOUT_PROCESS_VALUES = Object.values(PayoutProcess);
+const PAYOUT_PROCESS_VALUES = Object.values(PayoutProcess);
 
 export const formatPayoutProcessLabel = (process: string | null | undefined): string | null => {
 	if (!process) {
