@@ -63,7 +63,7 @@ export const LandingPageDetail = ({
 
 			{mobileContent ? <div className="flex justify-center lg:hidden">{mobileContent}</div> : null}
 
-			<div className="w-site-width max-w-content mx-auto flex min-h-96 flex-col gap-4 px-6 py-8">
+			<div className="w-site-width max-w-content mx-auto flex flex-col gap-4 px-6 py-8">
 				{descriptionHeading ? <h2 className="text-2xl font-semibold">{descriptionHeading}</h2> : null}
 				<p className="text-base">{description || '-'}</p>
 			</div>

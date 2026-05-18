@@ -276,6 +276,28 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getPersonsByCountryOffice(lang: string, isoCode: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+		try {
+			const countryOfficeCode = isoCode?.trim() ?? '';
+			if (!countryOfficeCode) {
+				return this.resultOk([]);
+			}
+
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(lang)),
+				content_type: StoryblokService.contentType.person,
+				filter_query: { countryOffice: { any_in_array: countryOfficeCode } },
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
+			return this.resultOk(data);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch persons by country office: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getOverviewTags(lang: string): Promise<ServiceResult<ISbStoryData<Tag>[]>> {
 		try {
 			const params: ISbStoriesParams = {
