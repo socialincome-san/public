@@ -1,4 +1,4 @@
-import { PayoutsTableClient } from '@/app/portal/delivery/make-payouts/payouts-table-client';
+import { PayoutsTableClient } from '@/app/portal/delivery/payouts/payouts-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -28,6 +28,7 @@ const PayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const programFilterOptions = result.success ? result.data.programFilterOptions : [];
 	const statusFilterOptions = result.success ? result.data.statusFilterOptions : [];
+	const mobileMoneyProviderFilterOptions = result.success ? result.data.mobileMoneyProviderFilterOptions : [];
 
 	return (
 		<PayoutsTableClient
@@ -36,6 +37,7 @@ const PayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 			query={{ ...tableQuery, totalRows }}
 			programFilterOptions={programFilterOptions}
 			statusFilterOptions={statusFilterOptions}
+			mobileMoneyProviderFilterOptions={mobileMoneyProviderFilterOptions}
 		/>
 	);
 };

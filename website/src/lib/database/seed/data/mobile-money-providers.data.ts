@@ -4,7 +4,7 @@ export const mobileMoneyProvidersData: MobileMoneyProvider[] = [
 	{
 		id: 'mobile-money-provider-id-1',
 		name: 'Orange Money',
-		isSupported: false,
+		payoutProcess: null,
 		parentId: null,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null,
@@ -12,7 +12,7 @@ export const mobileMoneyProvidersData: MobileMoneyProvider[] = [
 	{
 		id: 'mobile-money-provider-id-2',
 		name: 'Yellow Money',
-		isSupported: false,
+		payoutProcess: null,
 		parentId: null,
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null,
@@ -20,7 +20,7 @@ export const mobileMoneyProvidersData: MobileMoneyProvider[] = [
 	{
 		id: 'mobile-money-provider-id-3',
 		name: 'Orange Money SL 🇸🇱',
-		isSupported: true,
+		payoutProcess: 'orange_money_csv',
 		parentId: 'mobile-money-provider-id-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null,
@@ -28,7 +28,7 @@ export const mobileMoneyProvidersData: MobileMoneyProvider[] = [
 	{
 		id: 'mobile-money-provider-id-4',
 		name: 'Orange Money LR 🇱🇷',
-		isSupported: true,
+		payoutProcess: 'orange_money_csv',
 		parentId: 'mobile-money-provider-id-1',
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null,

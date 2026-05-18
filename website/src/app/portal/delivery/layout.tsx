@@ -25,7 +25,10 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 		{ href: '/portal/delivery', label: 'Delivery' },
 	];
 
-	const sections = [{ href: `/portal/delivery/make-payouts`, label: 'Make Payouts' }];
+	const sections = [
+		{ href: '/portal/delivery/overview', label: 'Overview' },
+		{ href: '/portal/delivery/payouts', label: 'Payouts' },
+	];
 
 	return (
 		<>

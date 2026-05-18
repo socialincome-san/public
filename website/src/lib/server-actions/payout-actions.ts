@@ -5,7 +5,7 @@ import { type PayoutFormCreateInput, type PayoutFormUpdateInput } from '@/lib/se
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-const PORTAL_DELIVERY_MAKE_PAYOUTS_PATH = '/portal/delivery/make-payouts';
+const PORTAL_DELIVERY_PAYOUTS_PATH = '/portal/delivery/payouts';
 const PORTAL_MANAGEMENT_ONGOING_PAYOUTS_PATH = '/portal/management/ongoing-payouts';
 const PORTAL_MANAGEMENT_RECIPIENTS_PATH = '/portal/management/recipients';
 const PORTAL_PROGRAM_RECIPIENTS_PATH = '/portal/programs/[programId]/recipients';
@@ -16,7 +16,7 @@ export const createPayoutAction = async (input: PayoutFormCreateInput) => {
 		return sessionResult;
 	}
 	const result = await services.write.payout.create(sessionResult.data.id, input);
-	revalidatePath(PORTAL_DELIVERY_MAKE_PAYOUTS_PATH);
+	revalidatePath(PORTAL_DELIVERY_PAYOUTS_PATH);
 
 	return result;
 };
@@ -27,7 +27,7 @@ export const updatePayoutAction = async (input: PayoutFormUpdateInput) => {
 		return sessionResult;
 	}
 	const result = await services.write.payout.update(sessionResult.data.id, input);
-	revalidatePath(PORTAL_DELIVERY_MAKE_PAYOUTS_PATH);
+	revalidatePath(PORTAL_DELIVERY_PAYOUTS_PATH);
 
 	return result;
 };
@@ -38,7 +38,7 @@ export const deletePayoutAction = async (payoutId: string) => {
 		return sessionResult;
 	}
 	const result = await services.write.payout.delete(sessionResult.data.id, payoutId);
-	revalidatePath(PORTAL_DELIVERY_MAKE_PAYOUTS_PATH);
+	revalidatePath(PORTAL_DELIVERY_PAYOUTS_PATH);
 	revalidatePath(PORTAL_MANAGEMENT_ONGOING_PAYOUTS_PATH);
 	revalidatePath(PORTAL_MANAGEMENT_RECIPIENTS_PATH);
 	revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');

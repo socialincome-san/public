@@ -11,6 +11,7 @@ import {
 } from '@/lib/server-actions/mobile-money-provider-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { MobileMoneyProviderPayload } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+import { PAYOUT_PROCESS_OPTIONS } from '@/lib/services/mobile-money-provider/payout-process-options';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import {
@@ -30,9 +31,11 @@ export type MobileMoneyProviderFormSchema = {
 	fields: {
 		name: FormField;
 		parentId: FormField;
-		isSupported: FormField;
+		payoutProcess: FormField;
 	};
 };
+
+const payoutProcessFormOptions = [{ id: '', label: 'None' }, ...PAYOUT_PROCESS_OPTIONS];
 
 const initialFormSchema: MobileMoneyProviderFormSchema = {
 	label: 'Mobile Money Provider',
@@ -49,10 +52,12 @@ const initialFormSchema: MobileMoneyProviderFormSchema = {
 			useCombobox: true,
 			options: [{ id: '', label: 'None' }],
 		},
-		isSupported: {
-			placeholder: 'Supported',
-			label: 'Is Supported',
-			zodSchema: z.boolean().optional(),
+		payoutProcess: {
+			placeholder: 'None',
+			label: 'Payout process',
+			zodSchema: z.nativeEnum(getZodEnum(payoutProcessFormOptions)).optional(),
+			useCombobox: true,
+			options: payoutProcessFormOptions,
 		},
 	},
 };
@@ -102,10 +107,6 @@ export default function MobileMoneyProvidersForm({
 					providerId ? getMobileMoneyProviderAction(providerId) : Promise.resolve(null),
 				]);
 
-				if (optionsResult.success) {
-					// no-op (used below to build schema)
-				}
-
 				if (providerId && providerResult?.success) {
 					setProvider(providerResult.data);
 				}
@@ -126,7 +127,7 @@ export default function MobileMoneyProvidersForm({
 
 					if (providerId && providerResult?.success) {
 						next.fields.name.value = providerResult.data.name;
-						next.fields.isSupported.value = providerResult.data.isSupported;
+						next.fields.payoutProcess.value = providerResult.data.payoutProcess ?? '';
 						next.fields.parentId.value = providerResult.data.parentId ?? '';
 					}
 

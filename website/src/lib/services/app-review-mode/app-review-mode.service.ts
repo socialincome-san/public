@@ -123,7 +123,7 @@ export class AppReviewModeService extends BaseService {
 				mobileMoneyProvider: {
 					id: 'mobile-money-provider-id-1',
 					name: 'Orange Money',
-					isSupported: true,
+					payoutProcess: null,
 					parentId: null,
 					createdAt: now(),
 					updatedAt: now(),

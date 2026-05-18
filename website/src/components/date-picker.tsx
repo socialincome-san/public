@@ -55,6 +55,7 @@ export const DatePicker = ({
 						className="w-72"
 						mode="single"
 						selected={date}
+						defaultMonth={date}
 						captionLayout="dropdown"
 						startMonth={startMonth}
 						endMonth={endMonth}

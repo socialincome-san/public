@@ -5,7 +5,7 @@ const createdAt = new Date('2025-01-01T13:00:00.000Z');
 export const paymentInformationsData: PaymentInformation[] = [
 	{
 		id: 'payment-information-core-sl-active',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-CORE_SL_ACTIVE',
 		phoneId: 'ph-recipient-core-sl-active',
 		createdAt,
@@ -13,7 +13,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-core-sl-future',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-CORE_SL_FUTURE',
 		phoneId: 'ph-recipient-core-sl-future',
 		createdAt,
@@ -21,7 +21,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-core-sl-completed',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-CORE_SL_COMPLETED',
 		phoneId: 'ph-recipient-core-sl-completed',
 		createdAt,
@@ -29,7 +29,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-core-sl-suspended',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-CORE_SL_SUSPENDED',
 		phoneId: 'ph-recipient-core-sl-suspended',
 		createdAt,
@@ -37,7 +37,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-women-sl-active',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-WOMEN_SL_ACTIVE',
 		phoneId: 'ph-recipient-women-sl-active',
 		createdAt,
@@ -45,7 +45,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-women-sl-future',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-WOMEN_SL_FUTURE',
 		phoneId: 'ph-recipient-women-sl-future',
 		createdAt,
@@ -53,7 +53,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-women-sl-completed',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-WOMEN_SL_COMPLETED',
 		phoneId: 'ph-recipient-women-sl-completed',
 		createdAt,
@@ -61,7 +61,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-women-sl-suspended',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-WOMEN_SL_SUSPENDED',
 		phoneId: 'ph-recipient-women-sl-suspended',
 		createdAt,
@@ -69,7 +69,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-education-sl-active',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-EDUCATION_SL_ACTIVE',
 		phoneId: 'ph-recipient-education-sl-active',
 		createdAt,
@@ -77,7 +77,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-education-sl-future',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-EDUCATION_SL_FUTURE',
 		phoneId: 'ph-recipient-education-sl-future',
 		createdAt,
@@ -85,7 +85,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-education-sl-completed',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-EDUCATION_SL_COMPLETED',
 		phoneId: 'ph-recipient-education-sl-completed',
 		createdAt,
@@ -93,7 +93,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-education-sl-suspended',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-EDUCATION_SL_SUSPENDED',
 		phoneId: 'ph-recipient-education-sl-suspended',
 		createdAt,
@@ -101,7 +101,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-livelihood-gh-active',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-LIVELIHOOD_GH_ACTIVE',
 		phoneId: 'ph-recipient-livelihood-gh-active',
 		createdAt,
@@ -109,7 +109,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-livelihood-gh-future',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-LIVELIHOOD_GH_FUTURE',
 		phoneId: 'ph-recipient-livelihood-gh-future',
 		createdAt,
@@ -117,7 +117,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-livelihood-gh-completed',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-LIVELIHOOD_GH_COMPLETED',
 		phoneId: 'ph-recipient-livelihood-gh-completed',
 		createdAt,
@@ -125,7 +125,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-livelihood-gh-suspended',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-LIVELIHOOD_GH_SUSPENDED',
 		phoneId: 'ph-recipient-livelihood-gh-suspended',
 		createdAt,
@@ -133,7 +133,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-education-gh-active',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-EDUCATION_GH_ACTIVE',
 		phoneId: 'ph-recipient-education-gh-active',
 		createdAt,
@@ -141,7 +141,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-education-gh-future',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-EDUCATION_GH_FUTURE',
 		phoneId: 'ph-recipient-education-gh-future',
 		createdAt,
@@ -149,7 +149,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-education-gh-completed',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-EDUCATION_GH_COMPLETED',
 		phoneId: 'ph-recipient-education-gh-completed',
 		createdAt,
@@ -157,7 +157,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-education-gh-suspended',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-3',
 		code: 'PI-EDUCATION_GH_SUSPENDED',
 		phoneId: 'ph-recipient-education-gh-suspended',
 		createdAt,
@@ -165,7 +165,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-resilience-lr-active',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-RESILIENCE_LR_ACTIVE',
 		phoneId: 'ph-recipient-resilience-lr-active',
 		createdAt,
@@ -173,7 +173,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-resilience-lr-future',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-RESILIENCE_LR_FUTURE',
 		phoneId: 'ph-recipient-resilience-lr-future',
 		createdAt,
@@ -181,7 +181,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-resilience-lr-completed',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-RESILIENCE_LR_COMPLETED',
 		phoneId: 'ph-recipient-resilience-lr-completed',
 		createdAt,
@@ -189,7 +189,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-resilience-lr-suspended',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-RESILIENCE_LR_SUSPENDED',
 		phoneId: 'ph-recipient-resilience-lr-suspended',
 		createdAt,
@@ -197,7 +197,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-health-lr-active',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-HEALTH_LR_ACTIVE',
 		phoneId: 'ph-recipient-health-lr-active',
 		createdAt,
@@ -205,7 +205,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-health-lr-future',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-HEALTH_LR_FUTURE',
 		phoneId: 'ph-recipient-health-lr-future',
 		createdAt,
@@ -213,7 +213,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-health-lr-completed',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-HEALTH_LR_COMPLETED',
 		phoneId: 'ph-recipient-health-lr-completed',
 		createdAt,
@@ -221,7 +221,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-health-lr-suspended',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-HEALTH_LR_SUSPENDED',
 		phoneId: 'ph-recipient-health-lr-suspended',
 		createdAt,
@@ -229,7 +229,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-somaha-lr-active',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-SOMAHA_LR_ACTIVE',
 		phoneId: 'ph-recipient-somaha-lr-active',
 		createdAt,
@@ -237,7 +237,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-somaha-lr-future',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-SOMAHA_LR_FUTURE',
 		phoneId: 'ph-recipient-somaha-lr-future',
 		createdAt,
@@ -245,7 +245,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-somaha-lr-completed',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-SOMAHA_LR_COMPLETED',
 		phoneId: 'ph-recipient-somaha-lr-completed',
 		createdAt,
@@ -253,7 +253,7 @@ export const paymentInformationsData: PaymentInformation[] = [
 	},
 	{
 		id: 'payment-information-somaha-lr-suspended',
-		mobileMoneyProviderId: 'mobile-money-provider-id-1',
+		mobileMoneyProviderId: 'mobile-money-provider-id-4',
 		code: 'PI-SOMAHA_LR_SUSPENDED',
 		phoneId: 'ph-recipient-somaha-lr-suspended',
 		createdAt,

@@ -1,43 +1,52 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { ServiceResult } from '@/lib/services/core/base.types';
 import { services } from '@/lib/services/services';
 import { revalidatePath } from 'next/cache';
 
-export const generateRegistrationCsvAction = async () => {
-	const sessionResult = await getSessionByType('user');
-	if (!sessionResult.success) {
-		return sessionResult;
+const forUser = async <T>(run: (userId: string) => Promise<ServiceResult<T>>) => {
+	const session = await getSessionByType('user');
+	if (!session.success) {
+		return session;
 	}
 
-	return services.payoutProcess.generateRegistrationCSV(sessionResult.data.id);
+	return run(session.data.id);
 };
 
-export const generatePayoutCsvAction = async (selectedDate: Date) => {
-	const sessionResult = await getSessionByType('user');
-	if (!sessionResult.success) {
-		return sessionResult;
+export const generateRegistrationCsvAction = async (mobileMoneyProviderId: string) =>
+	forUser((userId) => services.payoutProcess.generateRegistrationCSV(userId, mobileMoneyProviderId));
+
+export const generatePayoutCsvAction = async (mobileMoneyProviderId: string, selectedDate: Date) =>
+	forUser((userId) => services.payoutProcess.generatePayoutCSV(userId, mobileMoneyProviderId, selectedDate));
+
+export const getPayoutRecipientCountsByProviderAction = async (mobileMoneyProviderIds: string[], selectedDate: Date) =>
+	forUser(async (userId) => {
+		const counts: Record<string, number> = {};
+
+		for (const providerId of mobileMoneyProviderIds) {
+			const result = await services.payoutProcess.countCurrentMonthPayouts(userId, providerId, selectedDate);
+			if (!result.success) {
+				return result;
+			}
+			counts[providerId] = result.data;
+		}
+
+		return { success: true as const, data: counts };
+	});
+
+export const previewCurrentMonthPayoutsAction = async (mobileMoneyProviderId: string, selectedDate: Date) =>
+	forUser((userId) => services.payoutProcess.previewCurrentMonthPayouts(userId, mobileMoneyProviderId, selectedDate));
+
+export const generateCurrentMonthPayoutsAction = async (mobileMoneyProviderId: string, selectedDate: Date) => {
+	const result = await forUser((userId) =>
+		services.payoutProcess.generateCurrentMonthPayouts(userId, mobileMoneyProviderId, selectedDate),
+	);
+
+	if (result.success) {
+		revalidatePath('/portal/delivery/payouts');
+		revalidatePath('/portal/delivery/overview');
 	}
-
-	return services.payoutProcess.generatePayoutCSV(sessionResult.data.id, selectedDate);
-};
-
-export const previewCurrentMonthPayoutsAction = async (selectedDate: Date) => {
-	const sessionResult = await getSessionByType('user');
-	if (!sessionResult.success) {
-		return sessionResult;
-	}
-
-	return services.payoutProcess.previewCurrentMonthPayouts(sessionResult.data.id, selectedDate);
-};
-
-export const generateCurrentMonthPayoutsAction = async (selectedDate: Date) => {
-	const sessionResult = await getSessionByType('user');
-	if (!sessionResult.success) {
-		return sessionResult;
-	}
-	const result = await services.payoutProcess.generateCurrentMonthPayouts(sessionResult.data.id, selectedDate);
-	revalidatePath('/portal/delivery/make-payouts');
 
 	return result;
 };

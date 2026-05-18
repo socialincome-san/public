@@ -30,7 +30,7 @@ test('add manual payout', async ({ page }) => {
 	const amount = 77.7;
 	const phoneNumber = `+23277${String(unique).slice(-6)}`;
 
-	await page.goto('/portal/delivery/make-payouts');
+	await page.goto('/portal/delivery/payouts');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-manually');
 	await selectOptionByTestId(page, 'recipientId');
 	await page.getByTestId('form-item-amount').locator('input').fill(`${amount}`);
@@ -102,7 +102,7 @@ test('edit payout', async ({ page }) => {
 
 	const updatedAmount = 123.4;
 
-	await page.goto(`/portal/delivery/make-payouts?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	await page.goto(`/portal/delivery/payouts?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
 	await page.locator('tbody tr').first().locator('td').first().click();
 	await page.getByTestId('form-item-amount').locator('input').fill(`${updatedAmount}`);
 	await selectOptionByTestId(page, 'status', 'paid');
