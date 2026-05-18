@@ -40,7 +40,15 @@ export class PayoutReadService extends BaseService {
 
 	private buildPayoutOrderBy(query: PayoutTableQuery): Prisma.PayoutOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'recipient', 'programName', 'amount', 'status', 'paymentAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'recipient',
+			'programName',
+			'mobileMoneyProviderName',
+			'amount',
+			'status',
+			'paymentAt',
+		] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
@@ -48,6 +56,8 @@ export class PayoutReadService extends BaseService {
 				return [{ recipient: { contact: { firstName: direction } } }, { recipient: { contact: { lastName: direction } } }];
 			case 'programName':
 				return [{ recipient: { program: { name: direction } } }];
+			case 'mobileMoneyProviderName':
+				return [{ recipient: { paymentInformation: { mobileMoneyProvider: { name: direction } } } }];
 			case 'amount':
 				return [{ amount: direction }];
 			case 'status':
@@ -123,13 +133,22 @@ export class PayoutReadService extends BaseService {
 
 			const accessiblePrograms = accessResult.data.filter((program) => program.permission === ProgramPermission.operator);
 			if (accessiblePrograms.length === 0) {
-				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [], statusFilterOptions: [] });
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					programFilterOptions: [],
+					statusFilterOptions: [],
+					mobileMoneyProviderFilterOptions: [],
+				});
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
 			const selectedProgramIdRaw = query.programId?.trim();
 			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const filteredProgramIds = selectedProgramId ? programIds.filter((id) => id === selectedProgramId) : programIds;
+			const selectedMobileMoneyProviderIdRaw = query.mobileMoneyProviderId?.trim();
+			const selectedMobileMoneyProviderId =
+				selectedMobileMoneyProviderIdRaw === '' ? undefined : selectedMobileMoneyProviderIdRaw;
 			const statusValues = Object.values(PayoutStatus);
 			const selectedStatus = statusValues.find((status) => status === query.payoutStatus);
 			const statusFilterOptions = statusValues.map((status) => ({
@@ -139,13 +158,54 @@ export class PayoutReadService extends BaseService {
 			const programFilterOptions = Array.from(
 				new Map(accessiblePrograms.map((p) => [p.programId, { id: p.programId, name: p.programName }])).values(),
 			);
+			const mobileMoneyProviderFilterOptions = await this.db.mobileMoneyProvider.findMany({
+				where: {
+					paymentInformations: {
+						some: {
+							recipients: {
+								some: {
+									programId: { in: programIds },
+									payouts: { some: {} },
+								},
+							},
+						},
+					},
+				},
+				select: { id: true, name: true },
+				orderBy: { name: 'asc' },
+			});
 			if (selectedProgramId && filteredProgramIds.length === 0) {
-				return this.resultOk({ tableRows: [], totalCount: 0, programFilterOptions, statusFilterOptions });
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					programFilterOptions,
+					statusFilterOptions,
+					mobileMoneyProviderFilterOptions,
+				});
+			}
+			if (
+				selectedMobileMoneyProviderId &&
+				!mobileMoneyProviderFilterOptions.some((provider) => provider.id === selectedMobileMoneyProviderId)
+			) {
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					programFilterOptions,
+					statusFilterOptions,
+					mobileMoneyProviderFilterOptions,
+				});
 			}
 			const search = query.search.trim();
 			const where = {
 				recipient: {
 					programId: { in: filteredProgramIds },
+					...(selectedMobileMoneyProviderId
+						? {
+								paymentInformation: {
+									mobileMoneyProviderId: selectedMobileMoneyProviderId,
+								},
+							}
+						: {}),
 				},
 				...(selectedStatus ? { status: selectedStatus } : {}),
 				...(search
@@ -156,6 +216,13 @@ export class PayoutReadService extends BaseService {
 								{ recipient: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
 								{ recipient: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
 								{ recipient: { program: { name: { contains: search, mode: 'insensitive' as const } } } },
+								{
+									recipient: {
+										paymentInformation: {
+											mobileMoneyProvider: { name: { contains: search, mode: 'insensitive' as const } },
+										},
+									},
+								},
 							],
 						}
 					: {}),
@@ -174,6 +241,11 @@ export class PayoutReadService extends BaseService {
 							select: {
 								contact: { select: { firstName: true, lastName: true } },
 								program: { select: { id: true, name: true } },
+								paymentInformation: {
+									select: {
+										mobileMoneyProvider: { select: { name: true } },
+									},
+								},
 							},
 						},
 					},
@@ -191,13 +263,20 @@ export class PayoutReadService extends BaseService {
 					recipientFirstName: payout.recipient.contact.firstName,
 					recipientLastName: payout.recipient.contact.lastName,
 					programName: payout.recipient.program!.name,
+					mobileMoneyProviderName: payout.recipient.paymentInformation?.mobileMoneyProvider?.name ?? null,
 					amount: Number(payout.amount),
 					currency: payout.currency,
 					status: payout.status,
 					paymentAt: payout.paymentAt,
 				}));
 
-			return this.resultOk({ tableRows, totalCount, programFilterOptions, statusFilterOptions });
+			return this.resultOk({
+				tableRows,
+				totalCount,
+				programFilterOptions,
+				statusFilterOptions,
+				mobileMoneyProviderFilterOptions,
+			});
 		} catch (error) {
 			this.logger.error(error);
 

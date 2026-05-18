@@ -8,9 +8,11 @@ import {
 	MobileMoneyProviderOption,
 	MobileMoneyProviderPaginatedTableView,
 	MobileMoneyProviderPayload,
+	MobileMoneyProviderPayoutProcessOption,
 	MobileMoneyProviderTableQuery,
 	MobileMoneyProviderTableViewRow,
 } from './mobile-money-provider.types';
+import { formatPayoutProcessLabel } from './payout-process-options';
 
 export class MobileMoneyProviderReadService extends BaseService {
 	constructor(
@@ -25,14 +27,16 @@ export class MobileMoneyProviderReadService extends BaseService {
 		query: MobileMoneyProviderTableQuery,
 	): Prisma.MobileMoneyProviderOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['id', 'name', 'isSupported', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, ['id', 'name', 'parentName', 'payoutProcess', 'createdAt'] as const);
 		switch (sortBy) {
 			case 'id':
 				return [{ id: direction }];
 			case 'name':
 				return [{ name: direction }];
-			case 'isSupported':
-				return [{ isSupported: direction }];
+			case 'parentName':
+				return [{ parent: { name: direction } }];
+			case 'payoutProcess':
+				return [{ payoutProcess: direction }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
 			default:
@@ -57,7 +61,8 @@ export class MobileMoneyProviderReadService extends BaseService {
 			return this.resultOk({
 				id: provider.id,
 				name: provider.name,
-				isSupported: provider.isSupported,
+				payoutProcess: provider.payoutProcess,
+				parentId: provider.parentId,
 				createdAt: provider.createdAt,
 				updatedAt: provider.updatedAt,
 			});
@@ -95,6 +100,15 @@ export class MobileMoneyProviderReadService extends BaseService {
 			const [providers, totalCount] = await Promise.all([
 				this.db.mobileMoneyProvider.findMany({
 					where,
+					select: {
+						id: true,
+						name: true,
+						payoutProcess: true,
+						createdAt: true,
+						parent: {
+							select: { name: true },
+						},
+					},
 					orderBy: this.buildMobileMoneyProviderOrderBy(query),
 					skip: (query.page - 1) * query.pageSize,
 					take: query.pageSize,
@@ -104,7 +118,9 @@ export class MobileMoneyProviderReadService extends BaseService {
 			const tableRows: MobileMoneyProviderTableViewRow[] = providers.map((p) => ({
 				id: p.id,
 				name: p.name,
-				isSupported: p.isSupported,
+				parentName: p.parent?.name ?? null,
+				payoutProcess: p.payoutProcess,
+				payoutProcessLabel: formatPayoutProcessLabel(p.payoutProcess),
 				createdAt: p.createdAt,
 			}));
 
@@ -136,10 +152,31 @@ export class MobileMoneyProviderReadService extends BaseService {
 		}
 	}
 
+	async getRootOptions(userId: string): Promise<ServiceResult<MobileMoneyProviderOption[]>> {
+		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
+			const providers = await this.db.mobileMoneyProvider.findMany({
+				where: { parentId: null },
+				select: { id: true, name: true },
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(providers);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch root mobile money provider options: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getSupportedOptions(): Promise<ServiceResult<MobileMoneyProviderOption[]>> {
 		try {
 			const providers = await this.db.mobileMoneyProvider.findMany({
-				where: { isSupported: true },
+				where: { payoutProcess: { not: null } },
 				select: { id: true, name: true },
 				orderBy: { name: 'asc' },
 			});
@@ -149,6 +186,28 @@ export class MobileMoneyProviderReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch supported mobile money providers: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getSupportedPayoutProcessOptions(): Promise<ServiceResult<MobileMoneyProviderPayoutProcessOption[]>> {
+		try {
+			const providers = await this.db.mobileMoneyProvider.findMany({
+				where: { payoutProcess: { not: null } },
+				select: { id: true, name: true, payoutProcess: true },
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(
+				providers.map((provider) => ({
+					id: provider.id,
+					name: provider.name,
+					payoutProcess: provider.payoutProcess!,
+				})),
+			);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch supported payout process providers: ${JSON.stringify(error)}`);
 		}
 	}
 }

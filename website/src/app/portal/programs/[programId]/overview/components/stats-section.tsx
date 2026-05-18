@@ -181,7 +181,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 							</div>
 						</SectionBox>
 
-						<SectionBox href="/portal/delivery/make-payouts" className="h-full">
+						<SectionBox href="/portal/delivery/payouts" className="h-full">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
 									<StatProgressCard

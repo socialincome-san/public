@@ -50,7 +50,14 @@ export class CountryWriteService extends BaseService {
 						? (validatedInput.networkTechnology as NetworkTechnology)
 						: undefined,
 					mobileMoneyProviders: validatedInput.mobileMoneyProviderIds?.length
-						? { connect: validatedInput.mobileMoneyProviderIds.map((id) => ({ id })) }
+						? {
+								createMany: {
+									data: validatedInput.mobileMoneyProviderIds.map((id) => ({
+										mobileMoneyProviderId: id,
+									})),
+									skipDuplicates: true,
+								},
+							}
 						: undefined,
 					mobileMoneyConditionOverride: validatedInput.mobileMoneyConditionOverride,
 					sanctions: validatedInput.sanctions ? (validatedInput.sanctions as SanctionRegime[]) : undefined,
@@ -69,7 +76,7 @@ export class CountryWriteService extends BaseService {
 				include: {
 					microfinanceSourceLink: true,
 					networkSourceLink: true,
-					mobileMoneyProviders: { select: { id: true, name: true } },
+					mobileMoneyProviders: { include: { mobileMoneyProvider: { select: { id: true, name: true } } } },
 				},
 			});
 
@@ -84,7 +91,7 @@ export class CountryWriteService extends BaseService {
 				populationCoverage: created.populationCoverage ? Number(created.populationCoverage) : null,
 				latestSurveyDate: created.latestSurveyDate ?? null,
 				networkTechnology: created.networkTechnology ?? null,
-				mobileMoneyProviders: created.mobileMoneyProviders ?? [],
+				mobileMoneyProviders: (created.mobileMoneyProviders ?? []).map((link) => link.mobileMoneyProvider),
 				mobileMoneyConditionOverride: created.mobileMoneyConditionOverride ?? false,
 				sanctions: created.sanctions ?? [],
 				microfinanceSourceLink: created.microfinanceSourceLink
@@ -158,7 +165,15 @@ export class CountryWriteService extends BaseService {
 						: undefined,
 					mobileMoneyProviders:
 						validatedInput.mobileMoneyProviderIds !== undefined
-							? { set: validatedInput.mobileMoneyProviderIds.map((id) => ({ id })) }
+							? {
+									deleteMany: {},
+									createMany: {
+										data: validatedInput.mobileMoneyProviderIds.map((id) => ({
+											mobileMoneyProviderId: id,
+										})),
+										skipDuplicates: true,
+									},
+								}
 							: undefined,
 					mobileMoneyConditionOverride: validatedInput.mobileMoneyConditionOverride,
 					sanctions: validatedInput.sanctions ? (validatedInput.sanctions as SanctionRegime[]) : undefined,
@@ -188,7 +203,7 @@ export class CountryWriteService extends BaseService {
 				include: {
 					microfinanceSourceLink: true,
 					networkSourceLink: true,
-					mobileMoneyProviders: { select: { id: true, name: true } },
+					mobileMoneyProviders: { include: { mobileMoneyProvider: { select: { id: true, name: true } } } },
 				},
 			});
 
@@ -203,7 +218,7 @@ export class CountryWriteService extends BaseService {
 				populationCoverage: updated.populationCoverage ? Number(updated.populationCoverage) : null,
 				latestSurveyDate: updated.latestSurveyDate ?? null,
 				networkTechnology: updated.networkTechnology ?? null,
-				mobileMoneyProviders: updated.mobileMoneyProviders ?? [],
+				mobileMoneyProviders: (updated.mobileMoneyProviders ?? []).map((link) => link.mobileMoneyProvider),
 				mobileMoneyConditionOverride: updated.mobileMoneyConditionOverride ?? false,
 				sanctions: updated.sanctions ?? [],
 				microfinanceSourceLink: updated.microfinanceSourceLink

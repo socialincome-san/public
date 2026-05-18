@@ -1,15 +1,17 @@
 'use client';
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
+import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import {
 	createMobileMoneyProviderAction,
 	deleteMobileMoneyProviderAction,
 	getMobileMoneyProviderAction,
+	getMobileMoneyProviderOptionsAction,
 	updateMobileMoneyProviderAction,
 } from '@/lib/server-actions/mobile-money-provider-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { MobileMoneyProviderPayload } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+import { PAYOUT_PROCESS_OPTIONS } from '@/lib/services/mobile-money-provider/payout-process-options';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import {
@@ -28,9 +30,12 @@ export type MobileMoneyProviderFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
-		isSupported: FormField;
+		parentId: FormField;
+		payoutProcess: FormField;
 	};
 };
+
+const payoutProcessFormOptions = [{ id: '', label: 'None' }, ...PAYOUT_PROCESS_OPTIONS];
 
 const initialFormSchema: MobileMoneyProviderFormSchema = {
 	label: 'Mobile Money Provider',
@@ -40,10 +45,19 @@ const initialFormSchema: MobileMoneyProviderFormSchema = {
 			label: 'Name',
 			zodSchema: z.string().trim().min(1, 'Name is required.'),
 		},
-		isSupported: {
-			placeholder: 'Supported',
-			label: 'Is Supported',
-			zodSchema: z.boolean().optional(),
+		parentId: {
+			placeholder: 'None',
+			label: 'Parent provider',
+			zodSchema: z.nativeEnum(getZodEnum([{ id: '', label: 'None' }])).optional(),
+			useCombobox: true,
+			options: [{ id: '', label: 'None' }],
+		},
+		payoutProcess: {
+			placeholder: 'None',
+			label: 'Payout process',
+			zodSchema: z.nativeEnum(getZodEnum(payoutProcessFormOptions)).optional(),
+			useCombobox: true,
+			options: payoutProcessFormOptions,
 		},
 	},
 };
@@ -86,24 +100,49 @@ export default function MobileMoneyProvidersForm({
 	};
 
 	useEffect(() => {
-		if (!providerId) {
-			return;
-		}
 		startTransition(async () => {
-			const result = await getMobileMoneyProviderAction(providerId);
-			handleServiceResult(result, {
-				onSuccess: (data) => {
-					setProvider(data);
-					setFormSchema((prev) => {
-						const next = clearFormSchemaValues(prev);
-						next.fields.name.value = data.name;
-						next.fields.isSupported.value = data.isSupported;
+			try {
+				const [optionsResult, providerResult] = await Promise.all([
+					getMobileMoneyProviderOptionsAction(),
+					providerId ? getMobileMoneyProviderAction(providerId) : Promise.resolve(null),
+				]);
 
-						return next;
-					});
-				},
-				onError: (error) => onError?.(error),
-			});
+				if (providerId && providerResult?.success) {
+					setProvider(providerResult.data);
+				}
+
+				setFormSchema(() => {
+					const next = cloneFormSchema(initialFormSchema);
+
+					const filteredOptions = (optionsResult.success ? optionsResult.data : [])
+						.filter((o) => o.id !== providerId)
+						.map((o) => ({ id: o.id, label: o.name }));
+
+					const parentEnum = getZodEnum([{ id: '', label: 'None' }, ...filteredOptions]);
+					next.fields.parentId = {
+						...next.fields.parentId,
+						options: [{ id: '', label: 'None' }, ...filteredOptions],
+						zodSchema: z.nativeEnum(parentEnum).optional(),
+					};
+
+					if (providerId && providerResult?.success) {
+						next.fields.name.value = providerResult.data.name;
+						next.fields.payoutProcess.value = providerResult.data.payoutProcess ?? '';
+						next.fields.parentId.value = providerResult.data.parentId ?? '';
+					}
+
+					return next;
+				});
+
+				if (providerId && providerResult && !providerResult.success) {
+					onError?.(providerResult.error);
+				}
+				if (!optionsResult.success) {
+					onError?.(optionsResult.error);
+				}
+			} catch (e) {
+				onError?.(e);
+			}
 		});
 	}, [providerId, onError]);
 
