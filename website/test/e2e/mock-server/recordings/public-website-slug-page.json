@@ -1,5 +1,5 @@
 {
-  "119d11aac9de9dbef2b131efdafbc9a231af06b1b5c830fcd67f2e2bc3c751f0": [
+  "4c7c3323d447d72b58bf75855b7dce94f27112f03cd3581647caca19b7a38bf2": [
     {
       "body": {
         "story": {
@@ -202,19 +202,19 @@
             }
           ]
         },
-        "cv": 1778155279,
+        "cv": 1778589135,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "119d11aac9de9dbef2b131efdafbc9a231af06b1b5c830fcd67f2e2bc3c751f0",
+          "x-mock-hash": "4c7c3323d447d72b58bf75855b7dce94f27112f03cd3581647caca19b7a38bf2",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -222,10 +222,10 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 124
+      "durationMs": 55
     }
   ],
-  "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5": [
+  "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7": [
     {
       "body": {
         "story": {
@@ -836,19 +836,19 @@
             }
           ]
         },
-        "cv": 1778155279,
+        "cv": 1778589135,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5",
+          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -856,7 +856,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 25
+      "durationMs": 12
     },
     {
       "body": {
@@ -1468,19 +1468,19 @@
             }
           ]
         },
-        "cv": 1778155279,
+        "cv": 1778589135,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents&token=__TOKEN__&cv=1778155279&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "707d20308219979019a2c671562d7fbf1f22c093d83cb947365725c44e93c3a5",
+          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1488,7 +1488,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 20
+      "durationMs": 14
     }
   ]
 }
