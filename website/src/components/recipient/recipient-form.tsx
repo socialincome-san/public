@@ -2,7 +2,12 @@
 
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
-import { clearFormSchemaValues, getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
+import {
+	clearFormSchemaValues,
+	getContactValuesFromPayload,
+	getOptionalDropdownFieldConfig,
+	getZodEnum,
+} from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
 import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import {
@@ -256,8 +261,9 @@ export const RecipientForm = ({
 			const partnersObj = optionsToZodEnum(localPartner);
 			const programsToFilter = programs.filter((p) => !programId || p.id === programId);
 			const programsObj = optionsToZodEnum(programsToFilter);
-			const providerOptions = mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name }));
-			const providerEnum = getZodEnum(providerOptions);
+			const providerFieldConfig = getOptionalDropdownFieldConfig(
+				mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name })),
+			);
 
 			setFormSchema((prevSchema) => {
 				const updated = { ...prevSchema, fields: { ...prevSchema.fields } };
@@ -280,8 +286,7 @@ export const RecipientForm = ({
 						...updated.fields.paymentInformation.fields,
 						provider: {
 							...updated.fields.paymentInformation.fields.provider,
-							options: providerOptions,
-							zodSchema: providerOptions.length > 0 ? z.nativeEnum(providerEnum) : z.string().optional(),
+							...providerFieldConfig,
 						},
 					},
 				};

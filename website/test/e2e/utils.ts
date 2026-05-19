@@ -97,7 +97,7 @@ export const selectOptionByTestId = async (page: Page, fieldName: string, option
 	await page.getByTestId(`form-item-${fieldName}`).waitFor({ state: 'visible' });
 	await trigger.click();
 	if (optionName) {
-		await page.getByRole('option', { name: optionName }).click();
+		await page.getByRole('option', { name: optionName, exact: true }).click();
 
 		return;
 	}

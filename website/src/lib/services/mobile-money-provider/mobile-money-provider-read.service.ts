@@ -176,7 +176,6 @@ export class MobileMoneyProviderReadService extends BaseService {
 	async getSupportedOptions(): Promise<ServiceResult<MobileMoneyProviderOption[]>> {
 		try {
 			const providers = await this.db.mobileMoneyProvider.findMany({
-				where: { payoutProcess: { not: null } },
 				select: { id: true, name: true },
 				orderBy: { name: 'asc' },
 			});
