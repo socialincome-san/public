@@ -22,6 +22,7 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 	const localPartnersTitle = translator.t('local-partners-page.teaser-title');
 	const localPartnersSubtitle = translator.t('local-partners-page.teaser-subtitle');
 	const localPartnersText = translator.t('local-partners-page.teaser-text');
+	const nextButtonAriaLabel = translator.t('local-partners-page.teaser-next-button-aria');
 
 	return (
 		<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
@@ -44,7 +45,7 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 							</CarouselItem>
 						))}
 					</CarouselContent>
-					<CarouselScrollNextButton aria-label="Show next local partner" />
+					<CarouselScrollNextButton aria-label={nextButtonAriaLabel} />
 				</Carousel>
 			</div>
 		</div>

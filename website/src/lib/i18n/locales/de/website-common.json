@@ -133,7 +133,8 @@
 		"view-details": "Details anzeigen",
 		"teaser-title": "Lokal verwurzelt.",
 		"teaser-subtitle": "Lernen Sie unsere Partner kennen.",
-		"teaser-text": "Durch die Zusammenarbeit mit lokalen Partnern stellen wir sicher, dass Projekte wirksamer, widerstandsfähiger und in den Realitäten der Gemeinden verwurzelt sind, die wir unterstützen möchten."
+		"teaser-text": "Durch die Zusammenarbeit mit lokalen Partnern stellen wir sicher, dass Projekte wirksamer, widerstandsfähiger und in den Realitäten der Gemeinden verwurzelt sind, die wir unterstützen möchten.",
+		"teaser-next-button-aria": "Nächsten lokalen Partner anzeigen"
 	},
 	"focuses-page": {
 		"empty": "Keine Schwerpunkte gefunden.",

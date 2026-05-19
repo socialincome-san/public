@@ -133,7 +133,8 @@
 		"view-details": "View details",
 		"teaser-title": "Locally Driven.",
 		"teaser-subtitle": "Meet Our Partners.",
-		"teaser-text": "By working together with local partners, we ensure that projects are more effective, resilient, and rooted in the realities of the communities we aim to support."
+		"teaser-text": "By working together with local partners, we ensure that projects are more effective, resilient, and rooted in the realities of the communities we aim to support.",
+		"teaser-next-button-aria": "Show next local partner"
 	},
 	"focuses-page": {
 		"empty": "No focuses found.",
