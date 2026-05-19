@@ -88,6 +88,7 @@ export interface Country {
   heroImage: StoryblokAsset;
   countryOfficeTitle?: string;
   countryOfficeDescription?: string;
+  partners?: (ISbStoryData<LocalPartner> | string)[];
   component: "Country";
   _uid: string;
   [k: string]: unknown;

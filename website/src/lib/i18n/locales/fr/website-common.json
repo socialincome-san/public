@@ -129,7 +129,11 @@
 		"recipient-in-program-plural": "bénéficiaires dans un programme",
 		"recipient-waiting-singular": "bénéficiaire en attente",
 		"recipient-waiting-plural": "bénéficiaires en attente",
-		"about": "À propos de"
+		"about": "À propos de",
+		"view-details": "Voir les détails",
+		"teaser-title": "Ancré localement.",
+		"teaser-subtitle": "Rencontrez nos partenaires.",
+		"teaser-text": "En travaillant avec des partenaires locaux, nous veillons à ce que les projets soient plus efficaces, plus résilients et ancrés dans la réalité des communautés que nous souhaitons soutenir."
 	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",

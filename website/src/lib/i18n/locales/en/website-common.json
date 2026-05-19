@@ -129,7 +129,11 @@
 		"recipient-in-program-plural": "recipients in a program",
 		"recipient-waiting-singular": "recipient waiting",
 		"recipient-waiting-plural": "recipients waiting",
-		"about": "About"
+		"about": "About",
+		"view-details": "View details",
+		"teaser-title": "Locally Driven.",
+		"teaser-subtitle": "Meet Our Partners.",
+		"teaser-text": "By working together with local partners, we ensure that projects are more effective, resilient, and rooted in the realities of the communities we aim to support."
 	},
 	"focuses-page": {
 		"empty": "No focuses found.",

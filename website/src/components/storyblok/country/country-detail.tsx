@@ -1,4 +1,5 @@
 import { Button } from '@/components/button';
+import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { MakeDonationForm } from '@/components/make-donation-form';
 import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
 import { Translator } from '@/lib/i18n/translator';
@@ -9,7 +10,7 @@ import NextImage from 'next/image';
 import NextLink from 'next/link';
 import { CountryPersonCarousel } from './country-person-carousel';
 import type { CountryStory } from './country.types';
-import { getCountryDescription, getCountryIsoCode, getCountryTitle } from './country.utils';
+import { getCountryDescription, getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
 
 type Props = {
 	country: CountryStory;
@@ -29,6 +30,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	const heroImageAlt = country.content.heroImage?.alt ?? countryTitle;
 	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(lang, isoCode);
 	const countryOfficePersons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
+	const localPartners = getCountryLocalPartners(country.content);
 
 	return (
 		<div>
@@ -81,6 +83,11 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 						countryOfficeTitle={country.content.countryOfficeTitle?.trim()}
 						countryOfficeDescription={country.content.countryOfficeDescription?.trim()}
 					/>
+				</div>
+			) : null}
+			{localPartners.length > 0 ? (
+				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
+					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
 				</div>
 			) : null}
 		</div>

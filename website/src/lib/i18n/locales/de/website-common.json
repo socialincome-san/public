@@ -129,7 +129,11 @@
 		"recipient-in-program-plural": "Empfänger:innen in einem Programm",
 		"recipient-waiting-singular": "Empfänger:in wartet",
 		"recipient-waiting-plural": "Empfänger:innen warten",
-		"about": "Über"
+		"about": "Über",
+		"view-details": "Details anzeigen",
+		"teaser-title": "Lokal verwurzelt.",
+		"teaser-subtitle": "Lernen Sie unsere Partner kennen.",
+		"teaser-text": "Durch die Zusammenarbeit mit lokalen Partnern stellen wir sicher, dass Projekte wirksamer, widerstandsfähiger und in den Realitäten der Gemeinden verwurzelt sind, die wir unterstützen möchten."
 	},
 	"focuses-page": {
 		"empty": "Keine Schwerpunkte gefunden.",

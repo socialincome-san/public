@@ -35,7 +35,9 @@ export class StoryblokService extends BaseService {
 		'faqSelection.questions',
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
+		'Country.partners',
 	];
+	private static readonly countryRelationsToResolve = ['Country.partners'];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
@@ -337,6 +339,7 @@ export class StoryblokService extends BaseService {
 			const params: ISbStoriesParams = {
 				...baseParams,
 				starts_with: `${StoryblokService.countriesPath}/`,
+				resolve_relations: StoryblokService.countryRelationsToResolve,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 			let countries = data.filter((story) => StoryblokService.isCountryStory(story));
@@ -346,6 +349,7 @@ export class StoryblokService extends BaseService {
 					...baseParams,
 					version: 'draft',
 					starts_with: `${StoryblokService.countriesPath}/`,
+					resolve_relations: StoryblokService.countryRelationsToResolve,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
 				countries = draftData.filter((story) => StoryblokService.isCountryStory(story));
