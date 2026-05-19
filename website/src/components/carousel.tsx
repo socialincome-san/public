@@ -171,16 +171,26 @@ type CarouselScrollNextButtonProps = React.ButtonHTMLAttributes<HTMLButtonElemen
 };
 
 const CarouselScrollNextButton = React.forwardRef<HTMLButtonElement, CarouselScrollNextButtonProps>(
-	({ className, ...props }, ref) => {
-		const { scrollNext } = useCarousel();
+	({ className, disabled, onClick, ...props }, ref) => {
+		const { scrollNext, canScrollNext } = useCarousel();
+		const isDisabled = disabled ?? !canScrollNext;
 
 		return (
 			<button
 				ref={ref}
 				type="button"
-				onClick={scrollNext}
+				disabled={isDisabled}
+				aria-disabled={isDisabled}
+				onClick={(event) => {
+					if (isDisabled) {
+						return;
+					}
+
+					scrollNext();
+					onClick?.(event);
+				}}
 				className={cn(
-					'absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)]',
+					'absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)] disabled:pointer-events-none disabled:opacity-50',
 					className,
 				)}
 				{...props}
