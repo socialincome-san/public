@@ -1,18 +1,18 @@
 {
-  "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa": [
+  "107467ea5e80fcbf7e7dd3939e5c06cd644e187ad0a997b5cd56e60119b439e9": [
     {
       "body": [
         "This record could not be found"
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa",
+          "x-mock-hash": "107467ea5e80fcbf7e7dd3939e5c06cd644e187ad0a997b5cd56e60119b439e9",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -20,7 +20,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 33
+      "durationMs": 40
     },
     {
       "body": [
@@ -28,13 +28,13 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa",
+          "x-mock-hash": "107467ea5e80fcbf7e7dd3939e5c06cd644e187ad0a997b5cd56e60119b439e9",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -42,20 +42,20 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 35
+      "durationMs": 40
     }
   ],
   "45872c732878a479ec89ed4e4075b961f5cbeee4f19ec4303462c08bac4bcfd4": [
     {
       "body": {
         "stories": [],
-        "cv": 1778589135,
+        "cv": 1779193218,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Flocal-partners%2F&per_page=25&page=1&token=__TOKEN__&cv=1778589135",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Flocal-partners%2F&per_page=25&page=1&token=__TOKEN__&cv=1779193218",
         "body": {},
         "method": "GET",
         "headers": {
@@ -69,10 +69,10 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 45
+      "durationMs": 41
     }
   ],
-  "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7": [
+  "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f": [
     {
       "body": {
         "story": {
@@ -683,19 +683,19 @@
             }
           ]
         },
-        "cv": 1778589135,
+        "cv": 1779193218,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
+          "x-mock-hash": "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1315,19 +1315,19 @@
             }
           ]
         },
-        "cv": 1778589135,
+        "cv": 1779193218,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
+          "x-mock-hash": "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1335,7 +1335,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 12
+      "durationMs": 15
     }
   ],
   "e6646ea82cac0881d4e48315c83f9e2334dc32b51f8684748d2e4fb15579d4dc": [
@@ -1438,7 +1438,7 @@
             "name": "widows",
             "created_at": "2026-03-30T11:54:22.964Z",
             "published_at": "2026-03-31T15:17:49.028Z",
-            "updated_at": "2026-03-31T15:17:49.042Z",
+            "updated_at": "2026-05-19T12:19:28.209Z",
             "id": 160489729929614,
             "uuid": "141721b0-71ac-4ff8-8c2a-22e11abb6be6",
             "content": {
@@ -1446,6 +1446,9 @@
               "_uid": "41c1d588-6473-4dcb-b2df-f86d7847ee28",
               "title": "Widows",
               "component": "Local Partner",
+              "countries": [
+                "sl"
+              ],
               "heroImage": {
                 "id": 158389168950833,
                 "alt": "",
@@ -1464,7 +1467,7 @@
                 },
                 "is_external_url": false
               },
-              "description": "nice",
+              "description": "The NGO encourages creativity and helps people improve their lives and communities through development and cultural projects.",
               "_editable": "<!--#storyblok#{\"name\": \"Local Partner\", \"space\": \"109655\", \"uid\": \"41c1d588-6473-4dcb-b2df-f86d7847ee28\", \"id\": \"160489729929614\"}-->"
             },
             "slug": "widows",
@@ -1507,7 +1510,7 @@
             "name": "ebola survivors",
             "created_at": "2026-03-30T11:14:31.013Z",
             "published_at": "2026-03-31T15:17:49.289Z",
-            "updated_at": "2026-03-31T15:17:49.304Z",
+            "updated_at": "2026-05-19T12:19:31.727Z",
             "id": 160479932498954,
             "uuid": "bc2b78b8-35ef-423e-8fe9-e05f794f6f70",
             "content": {
@@ -1515,6 +1518,9 @@
               "_uid": "23a24755-2d91-4a0c-9421-7a7f1593a664",
               "title": "Ebola Survivors",
               "component": "Local Partner",
+              "countries": [
+                "sl"
+              ],
               "heroImage": {
                 "id": 138530341154783,
                 "alt": "",
@@ -1528,7 +1534,7 @@
                 "meta_data": {},
                 "is_external_url": false
               },
-              "description": "awesome partner",
+              "description": "The NGO encourages creativity and helps people improve their lives and communities through development and cultural projects.",
               "_editable": "<!--#storyblok#{\"name\": \"Local Partner\", \"space\": \"109655\", \"uid\": \"23a24755-2d91-4a0c-9421-7a7f1593a664\", \"id\": \"160479932498954\"}-->"
             },
             "slug": "ebola-survivors",
@@ -1568,13 +1574,13 @@
             ]
           }
         ],
-        "cv": 1778589135,
+        "cv": 1779193218,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Flocal-partners%2F&per_page=25&page=1&token=__TOKEN__&cv=1778589135",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Flocal-partners%2F&per_page=25&page=1&token=__TOKEN__&cv=1779193218",
         "body": {},
         "method": "GET",
         "headers": {
@@ -1588,7 +1594,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 115
+      "durationMs": 94
     }
   ]
 }

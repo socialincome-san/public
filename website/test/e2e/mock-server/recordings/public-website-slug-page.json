@@ -1,231 +1,5 @@
 {
-  "4c7c3323d447d72b58bf75855b7dce94f27112f03cd3581647caca19b7a38bf2": [
-    {
-      "body": {
-        "story": {
-          "name": "Example",
-          "created_at": "2026-01-29T13:53:24.402Z",
-          "published_at": "2026-02-06T13:22:41.038Z",
-          "updated_at": "2026-02-06T13:22:41.053Z",
-          "id": 139285317331160,
-          "uuid": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
-          "content": {
-            "_uid": "682b8ecd-1d3c-48b5-92c4-bbc0ccd70ba7",
-            "content": [
-              {
-                "_uid": "531b81b0-28d3-4b6a-91b3-eef75720e2ae",
-                "image": {
-                  "id": 85866835993871,
-                  "alt": "",
-                  "name": "",
-                  "focus": "1263x924:1264x925",
-                  "title": "",
-                  "source": "",
-                  "filename": "/assets/e2e-media-placeholder.svg",
-                  "copyright": "",
-                  "fieldtype": "asset",
-                  "meta_data": {
-                    "alt": "",
-                    "title": "",
-                    "source": "",
-                    "copyright": ""
-                  },
-                  "is_external_url": false
-                },
-                "layout": "imageLeft",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 2,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Image with text",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "This is a comprehensive and detailed description that can extend across multiple lines, offering crucial information in a clear and concise manner while ensuring that all necessary details are effectively communicated.",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "textStyle",
-                              "attrs": {
-                                "color": ""
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "component": "imageText"
-              },
-              {
-                "_uid": "0121978d-75b0-4cbd-ba3c-9479d4cd6390",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 1,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Example page",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                          "type": "text"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "component": "text"
-              },
-              {
-                "_uid": "839e9e9b-2a5e-4180-bb40-2c0128fcb31c",
-                "image": {
-                  "id": 130819426533088,
-                  "alt": "",
-                  "name": "",
-                  "focus": "",
-                  "title": "",
-                  "source": "",
-                  "filename": "/assets/e2e-media-placeholder.svg",
-                  "copyright": "",
-                  "fieldtype": "asset",
-                  "meta_data": {},
-                  "is_external_url": false
-                },
-                "layout": "imageRight",
-                "content": {
-                  "type": "doc",
-                  "content": [
-                    {
-                      "type": "heading",
-                      "attrs": {
-                        "level": 2,
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "Image with text",
-                          "type": "text"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "paragraph",
-                      "attrs": {
-                        "textAlign": null
-                      },
-                      "content": [
-                        {
-                          "text": "This is a comprehensive and detailed description that can extend across multiple lines, offering crucial information in a clear and concise manner while ensuring that all necessary details are effectively communicated.",
-                          "type": "text",
-                          "marks": [
-                            {
-                              "type": "textStyle",
-                              "attrs": {
-                                "color": ""
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "component": "imageText"
-              }
-            ],
-            "component": "page"
-          },
-          "slug": "example",
-          "full_slug": "new-website/example",
-          "sort_by_date": null,
-          "position": -30,
-          "tag_list": [],
-          "is_startpage": false,
-          "parent_id": 133906872082434,
-          "meta_data": null,
-          "group_id": "64828717-980e-4a89-8e6d-b14ccd18165d",
-          "first_published_at": "2026-01-29T13:54:36.144Z",
-          "release_id": null,
-          "lang": "default",
-          "path": null,
-          "alternates": [],
-          "default_full_slug": "new-website/example",
-          "translated_slugs": [
-            {
-              "path": "new-website/example",
-              "name": null,
-              "lang": "fr",
-              "published": null
-            },
-            {
-              "path": "new-website/example",
-              "name": null,
-              "lang": "it",
-              "published": null
-            },
-            {
-              "path": "new-website/example",
-              "name": null,
-              "lang": "de",
-              "published": null
-            }
-          ]
-        },
-        "cv": 1778589135,
-        "rels": [],
-        "links": []
-      },
-      "status": 200,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "4c7c3323d447d72b58bf75855b7dce94f27112f03cd3581647caca19b7a38bf2",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 55
-    }
-  ],
-  "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7": [
+  "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f": [
     {
       "body": {
         "story": {
@@ -836,19 +610,19 @@
             }
           ]
         },
-        "cv": 1778589135,
+        "cv": 1779193218,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
+          "x-mock-hash": "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -856,7 +630,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 12
+      "durationMs": 44
     },
     {
       "body": {
@@ -1468,19 +1242,19 @@
             }
           ]
         },
-        "cv": 1778589135,
+        "cv": 1779193218,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
+          "x-mock-hash": "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1488,7 +1262,233 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 14
+      "durationMs": 44
+    }
+  ],
+  "d12dcb1ff87c54ebb2ebd395e03ecdee31464dee8316e6f02a8a6ab9f160b411": [
+    {
+      "body": {
+        "story": {
+          "name": "Example",
+          "created_at": "2026-01-29T13:53:24.402Z",
+          "published_at": "2026-02-06T13:22:41.038Z",
+          "updated_at": "2026-02-06T13:22:41.053Z",
+          "id": 139285317331160,
+          "uuid": "9d2e8b68-7165-4faa-b212-ec2f520d8d0b",
+          "content": {
+            "_uid": "682b8ecd-1d3c-48b5-92c4-bbc0ccd70ba7",
+            "content": [
+              {
+                "_uid": "531b81b0-28d3-4b6a-91b3-eef75720e2ae",
+                "image": {
+                  "id": 85866835993871,
+                  "alt": "",
+                  "name": "",
+                  "focus": "1263x924:1264x925",
+                  "title": "",
+                  "source": "",
+                  "filename": "/assets/e2e-media-placeholder.svg",
+                  "copyright": "",
+                  "fieldtype": "asset",
+                  "meta_data": {
+                    "alt": "",
+                    "title": "",
+                    "source": "",
+                    "copyright": ""
+                  },
+                  "is_external_url": false
+                },
+                "layout": "imageLeft",
+                "content": {
+                  "type": "doc",
+                  "content": [
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 2,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Image with text",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "This is a comprehensive and detailed description that can extend across multiple lines, offering crucial information in a clear and concise manner while ensuring that all necessary details are effectively communicated.",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "textStyle",
+                              "attrs": {
+                                "color": ""
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "component": "imageText"
+              },
+              {
+                "_uid": "0121978d-75b0-4cbd-ba3c-9479d4cd6390",
+                "content": {
+                  "type": "doc",
+                  "content": [
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 1,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Example page",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "component": "text"
+              },
+              {
+                "_uid": "839e9e9b-2a5e-4180-bb40-2c0128fcb31c",
+                "image": {
+                  "id": 130819426533088,
+                  "alt": "",
+                  "name": "",
+                  "focus": "",
+                  "title": "",
+                  "source": "",
+                  "filename": "/assets/e2e-media-placeholder.svg",
+                  "copyright": "",
+                  "fieldtype": "asset",
+                  "meta_data": {},
+                  "is_external_url": false
+                },
+                "layout": "imageRight",
+                "content": {
+                  "type": "doc",
+                  "content": [
+                    {
+                      "type": "heading",
+                      "attrs": {
+                        "level": 2,
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "Image with text",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "textAlign": null
+                      },
+                      "content": [
+                        {
+                          "text": "This is a comprehensive and detailed description that can extend across multiple lines, offering crucial information in a clear and concise manner while ensuring that all necessary details are effectively communicated.",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "textStyle",
+                              "attrs": {
+                                "color": ""
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "component": "imageText"
+              }
+            ],
+            "component": "page"
+          },
+          "slug": "example",
+          "full_slug": "new-website/example",
+          "sort_by_date": null,
+          "position": -30,
+          "tag_list": [],
+          "is_startpage": false,
+          "parent_id": 133906872082434,
+          "meta_data": null,
+          "group_id": "64828717-980e-4a89-8e6d-b14ccd18165d",
+          "first_published_at": "2026-01-29T13:54:36.144Z",
+          "release_id": null,
+          "lang": "default",
+          "path": null,
+          "alternates": [],
+          "default_full_slug": "new-website/example",
+          "translated_slugs": [
+            {
+              "path": "new-website/example",
+              "name": null,
+              "lang": "fr",
+              "published": null
+            },
+            {
+              "path": "new-website/example",
+              "name": null,
+              "lang": "it",
+              "published": null
+            },
+            {
+              "path": "new-website/example",
+              "name": null,
+              "lang": "de",
+              "published": null
+            }
+          ]
+        },
+        "cv": 1779193218,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/example?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "d12dcb1ff87c54ebb2ebd395e03ecdee31464dee8316e6f02a8a6ab9f160b411",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 92
     }
   ]
 }

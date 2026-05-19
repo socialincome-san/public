@@ -1,18 +1,18 @@
 {
-  "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa": [
+  "107467ea5e80fcbf7e7dd3939e5c06cd644e187ad0a997b5cd56e60119b439e9": [
     {
       "body": [
         "This record could not be found"
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa",
+          "x-mock-hash": "107467ea5e80fcbf7e7dd3939e5c06cd644e187ad0a997b5cd56e60119b439e9",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -20,7 +20,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 35
+      "durationMs": 41
     },
     {
       "body": [
@@ -28,13 +28,13 @@
       ],
       "status": 404,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=de&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "32eb5a08d7a73c579000dc688463b6b49b4d07e151f33dbb9ce8d1dd21219efa",
+          "x-mock-hash": "107467ea5e80fcbf7e7dd3939e5c06cd644e187ad0a997b5cd56e60119b439e9",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -42,10 +42,10 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 42
+      "durationMs": 46
     }
   ],
-  "6fbae1a71b9da72243ae87c71cbdad2dfab1cd4d12db466d67fcb17a1de9f487": [
+  "11065249a22f7fed8b75036da0861dc6435b9e27a448cc61dc7f9ca21a37889f": [
     {
       "body": {
         "stories": [
@@ -337,13 +337,17 @@
             "name": "Liberia",
             "created_at": "2026-03-26T15:31:28.364Z",
             "published_at": "2026-03-31T15:17:56.065Z",
-            "updated_at": "2026-03-31T15:17:56.080Z",
+            "updated_at": "2026-05-19T12:04:00.829Z",
             "id": 159127504372629,
             "uuid": "3e95acfa-5773-4cf7-a126-6a2589c33074",
             "content": {
               "_uid": "537c19d3-5205-40fc-9b59-6b94323b1e9f",
               "title": "Liberia",
               "isoCode": "lr",
+              "partners": [
+                "141721b0-71ac-4ff8-8c2a-22e11abb6be6",
+                "bc2b78b8-35ef-423e-8fe9-e05f794f6f70"
+              ],
               "component": "Country",
               "heroImage": {
                 "id": 158389168950833,
@@ -364,6 +368,8 @@
                 "is_external_url": false
               },
               "description": "Nice Country",
+              "countryOfficeTitle": "",
+              "countryOfficeDescription": "",
               "_editable": "<!--#storyblok#{\"name\": \"Country\", \"space\": \"109655\", \"uid\": \"537c19d3-5205-40fc-9b59-6b94323b1e9f\", \"id\": \"159127504372629\"}-->"
             },
             "slug": "liberia",
@@ -406,13 +412,17 @@
             "name": "Sierra Leone",
             "created_at": "2026-03-26T13:00:58.743Z",
             "published_at": "2026-03-31T15:17:56.320Z",
-            "updated_at": "2026-05-11T11:33:29.358Z",
+            "updated_at": "2026-05-19T12:18:42.870Z",
             "id": 159090519040967,
             "uuid": "23fcc517-6433-44e4-a209-dfa4f741e3b3",
             "content": {
               "_uid": "dc944870-1eb1-4fa3-a895-1db158e3bf90",
               "title": "Sierra Leone",
               "isoCode": "sl",
+              "partners": [
+                "141721b0-71ac-4ff8-8c2a-22e11abb6be6",
+                "bc2b78b8-35ef-423e-8fe9-e05f794f6f70"
+              ],
               "component": "Country",
               "heroImage": {
                 "id": 158317739968950,
@@ -470,19 +480,159 @@
             ]
           }
         ],
-        "cv": 1778589135,
-        "rels": [],
+        "cv": 1779193218,
+        "rels": [
+          {
+            "name": "widows",
+            "created_at": "2026-03-30T11:54:22.964Z",
+            "published_at": "2026-03-31T15:17:49.028Z",
+            "updated_at": "2026-05-19T12:19:28.209Z",
+            "id": 160489729929614,
+            "uuid": "141721b0-71ac-4ff8-8c2a-22e11abb6be6",
+            "content": {
+              "id": "test",
+              "_uid": "41c1d588-6473-4dcb-b2df-f86d7847ee28",
+              "title": "Widows",
+              "component": "Local Partner",
+              "countries": [
+                "sl"
+              ],
+              "heroImage": {
+                "id": 158389168950833,
+                "alt": "",
+                "name": "",
+                "focus": "1125x964:1126x965",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "",
+                  "title": "",
+                  "source": "",
+                  "copyright": ""
+                },
+                "is_external_url": false
+              },
+              "description": "The NGO encourages creativity and helps people improve their lives and communities through development and cultural projects.",
+              "_editable": "<!--#storyblok#{\"name\": \"Local Partner\", \"space\": \"109655\", \"uid\": \"41c1d588-6473-4dcb-b2df-f86d7847ee28\", \"id\": \"160489729929614\"}-->"
+            },
+            "slug": "widows",
+            "full_slug": "de/new-website/local-partners/widows",
+            "sort_by_date": null,
+            "position": -10,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 160479824364543,
+            "meta_data": null,
+            "group_id": "b26a2647-660f-4ad8-9f17-1141168c017e",
+            "first_published_at": "2026-03-31T15:17:09.548Z",
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/local-partners/widows",
+            "translated_slugs": [
+              {
+                "path": "new-website/local-partners/widows",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/widows",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/widows",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          },
+          {
+            "name": "ebola survivors",
+            "created_at": "2026-03-30T11:14:31.013Z",
+            "published_at": "2026-03-31T15:17:49.289Z",
+            "updated_at": "2026-05-19T12:19:31.727Z",
+            "id": 160479932498954,
+            "uuid": "bc2b78b8-35ef-423e-8fe9-e05f794f6f70",
+            "content": {
+              "id": "local-partner-gh-1",
+              "_uid": "23a24755-2d91-4a0c-9421-7a7f1593a664",
+              "title": "Ebola Survivors",
+              "component": "Local Partner",
+              "countries": [
+                "sl"
+              ],
+              "heroImage": {
+                "id": 138530341154783,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "/assets/e2e-media-placeholder.svg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {},
+                "is_external_url": false
+              },
+              "description": "The NGO encourages creativity and helps people improve their lives and communities through development and cultural projects.",
+              "_editable": "<!--#storyblok#{\"name\": \"Local Partner\", \"space\": \"109655\", \"uid\": \"23a24755-2d91-4a0c-9421-7a7f1593a664\", \"id\": \"160479932498954\"}-->"
+            },
+            "slug": "ebola-survivors",
+            "full_slug": "de/new-website/local-partners/ebola-survivors",
+            "sort_by_date": null,
+            "position": 0,
+            "tag_list": [],
+            "is_startpage": false,
+            "parent_id": 160479824364543,
+            "meta_data": null,
+            "group_id": "88314521-883a-4ae7-8261-37fbc1b0682d",
+            "first_published_at": "2026-03-30T11:43:24.273Z",
+            "release_id": null,
+            "lang": "de",
+            "path": null,
+            "alternates": [],
+            "default_full_slug": "new-website/local-partners/ebola-survivors",
+            "translated_slugs": [
+              {
+                "path": "new-website/local-partners/ebola-survivors",
+                "name": null,
+                "lang": "fr",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/ebola-survivors",
+                "name": null,
+                "lang": "it",
+                "published": null
+              },
+              {
+                "path": "new-website/local-partners/ebola-survivors",
+                "name": null,
+                "lang": "de",
+                "published": null
+              }
+            ]
+          }
+        ],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1778589135",
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=draft&starts_with=new-website%2Fcountries%2F&resolve_relations=Country.partners&per_page=25&page=1&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "6fbae1a71b9da72243ae87c71cbdad2dfab1cd4d12db466d67fcb17a1de9f487",
+          "x-mock-hash": "11065249a22f7fed8b75036da0861dc6435b9e27a448cc61dc7f9ca21a37889f",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -490,10 +640,64 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 96
+      "durationMs": 101
     }
   ],
-  "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7": [
+  "305a7f99dd58959ac299df14751c7d0273e292d82135a3c600655953e65691b3": [
+    {
+      "body": {
+        "stories": [],
+        "cv": 1779193218,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&content_type=person&filter_query%5BcountryOffice%5D%5Bany_in_array%5D=sl&per_page=25&page=1&token=__TOKEN__&cv=1779193218",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "305a7f99dd58959ac299df14751c7d0273e292d82135a3c600655953e65691b3",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 24
+    }
+  ],
+  "4b1c69081f967eafbd9d143d1bf52c89f5973fcadbc076a3ecf422fd06fe0d98": [
+    {
+      "body": {
+        "stories": [],
+        "cv": 1779193218,
+        "rels": [],
+        "links": []
+      },
+      "status": 200,
+      "request": {
+        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcountries%2F&resolve_relations=Country.partners&per_page=25&page=1&token=__TOKEN__&cv=1779193218&resolve_level=2",
+        "body": {},
+        "method": "GET",
+        "headers": {
+          "host": "",
+          "connection": "keep-alive",
+          "x-mock-hash": "4b1c69081f967eafbd9d143d1bf52c89f5973fcadbc076a3ecf422fd06fe0d98",
+          "accept": "*/*",
+          "accept-language": "*",
+          "sec-fetch-mode": "cors",
+          "user-agent": "node",
+          "accept-encoding": "gzip, deflate"
+        }
+      },
+      "durationMs": 44
+    }
+  ],
+  "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f": [
     {
       "body": {
         "story": {
@@ -1104,19 +1308,19 @@
             }
           ]
         },
-        "cv": 1778589135,
+        "cv": 1779193218,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
+          "x-mock-hash": "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1124,7 +1328,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 10
+      "durationMs": 12
     },
     {
       "body": {
@@ -1736,19 +1940,19 @@
             }
           ]
         },
-        "cv": 1778589135,
+        "cv": 1779193218,
         "rels": [],
         "links": []
       },
       "status": 200,
       "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships&token=__TOKEN__&cv=1778589135&resolve_level=2",
+        "url": "/api.storyblok.com/v2/cdn/stories/new-website/layout?language=en&version=published&resolve_relations=faqSelection.questions%2Cdownloads.documents%2CpartnershipsCarousel.partnerships%2CCountry.partners&token=__TOKEN__&cv=1779193218&resolve_level=2",
         "body": {},
         "method": "GET",
         "headers": {
           "host": "",
           "connection": "keep-alive",
-          "x-mock-hash": "94e368acb8b8dadf0f712b2dc710b798d3a97d14f2ab11b630f0773bb99b62c7",
+          "x-mock-hash": "7bfccd9a0d96906c436a8de369ce270f5a0873e6450ce61fe8be125f2254168f",
           "accept": "*/*",
           "accept-language": "*",
           "sec-fetch-mode": "cors",
@@ -1756,34 +1960,7 @@
           "accept-encoding": "gzip, deflate"
         }
       },
-      "durationMs": 13
-    }
-  ],
-  "f81aca3ec6d44399806dc5a93db743b9c0b5ed311be92da2a2124f3de9e09cb8": [
-    {
-      "body": {
-        "stories": [],
-        "cv": 1778589135,
-        "rels": [],
-        "links": []
-      },
-      "status": 200,
-      "request": {
-        "url": "/api.storyblok.com/v2/cdn/stories?language=de&version=published&starts_with=new-website%2Fcountries%2F&per_page=25&page=1&token=__TOKEN__&cv=1778589135",
-        "body": {},
-        "method": "GET",
-        "headers": {
-          "host": "",
-          "connection": "keep-alive",
-          "x-mock-hash": "f81aca3ec6d44399806dc5a93db743b9c0b5ed311be92da2a2124f3de9e09cb8",
-          "accept": "*/*",
-          "accept-language": "*",
-          "sec-fetch-mode": "cors",
-          "user-agent": "node",
-          "accept-encoding": "gzip, deflate"
-        }
-      },
-      "durationMs": 49
+      "durationMs": 11
     }
   ]
 }
