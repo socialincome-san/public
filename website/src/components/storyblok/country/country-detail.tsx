@@ -87,7 +87,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					/>
 				</div>
 			) : null}
-			
+
 			{donationsBlock ? <CountryDonationsTotal blok={donationsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
 			{programsBlock ? <CountryPrograms blok={programsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
 		</div>
