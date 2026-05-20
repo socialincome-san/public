@@ -7,6 +7,11 @@ import { Button } from './button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
+// avoid time zone issues by normalizing date to noon
+export const normalizeToNoon = (date: Date) => {
+	return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0);
+};
+
 export const DatePicker = ({
 	selected,
 	onSelect,
@@ -29,10 +34,6 @@ export const DatePicker = ({
 		day: '2-digit',
 	});
 
-	// avoid time zone issues by normalizing date to noon
-	const normalizeToNoon = (date: Date) => {
-		return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0);
-	};
 	const date = selected ? normalizeToNoon(selected) : undefined;
 
 	return (
@@ -55,6 +56,7 @@ export const DatePicker = ({
 						className="w-72"
 						mode="single"
 						selected={date}
+						defaultMonth={date}
 						captionLayout="dropdown"
 						startMonth={startMonth}
 						endMonth={endMonth}

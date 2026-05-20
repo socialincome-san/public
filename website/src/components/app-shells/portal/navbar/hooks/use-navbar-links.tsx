@@ -34,7 +34,7 @@ export const useNavbarLinks = (sessions: Session[]) => {
 						label: 'Management',
 					},
 					{
-						href: '/portal/delivery/make-payouts',
+						href: '/portal/delivery/overview',
 						activeBase: '/portal/delivery',
 						label: 'Delivery',
 					},

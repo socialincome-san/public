@@ -76,7 +76,7 @@ export class CountryReadService extends BaseService {
 				include: {
 					microfinanceSourceLink: true,
 					networkSourceLink: true,
-					mobileMoneyProviders: { select: { id: true, name: true } },
+					mobileMoneyProviders: { include: { mobileMoneyProvider: { select: { id: true, name: true } } } },
 				},
 			});
 
@@ -95,7 +95,7 @@ export class CountryReadService extends BaseService {
 				populationCoverage: country.populationCoverage ? Number(country.populationCoverage) : null,
 				latestSurveyDate: country.latestSurveyDate ?? null,
 				networkTechnology: country.networkTechnology ?? null,
-				mobileMoneyProviders: country.mobileMoneyProviders ?? [],
+				mobileMoneyProviders: (country.mobileMoneyProviders ?? []).map((link) => link.mobileMoneyProvider),
 				mobileMoneyConditionOverride: country.mobileMoneyConditionOverride ?? false,
 				sanctions: country.sanctions ?? [],
 				microfinanceSourceLink: country.microfinanceSourceLink
@@ -172,7 +172,7 @@ export class CountryReadService extends BaseService {
 						populationCoverage: true,
 						networkTechnology: true,
 						latestSurveyDate: true,
-						mobileMoneyProviders: { select: { id: true, name: true } },
+						mobileMoneyProviders: { include: { mobileMoneyProvider: { select: { id: true, name: true } } } },
 						sanctions: true,
 						createdAt: true,
 						updatedAt: true,
@@ -192,7 +192,7 @@ export class CountryReadService extends BaseService {
 				populationCoverage: c.populationCoverage ? Number(c.populationCoverage) : null,
 				networkTechnology: c.networkTechnology ? NETWORK_TECH_LABELS[c.networkTechnology] : null,
 				latestSurveyDate: c.latestSurveyDate ?? null,
-				mobileMoneyProviders: c.mobileMoneyProviders ?? [],
+				mobileMoneyProviders: (c.mobileMoneyProviders ?? []).map((link) => link.mobileMoneyProvider),
 				sanctions: c.sanctions ?? [],
 				updatedAt: c.updatedAt ?? c.createdAt,
 			}));
@@ -211,7 +211,7 @@ export class CountryReadService extends BaseService {
 				include: {
 					microfinanceSourceLink: true,
 					networkSourceLink: true,
-					mobileMoneyProviders: { select: { id: true, name: true } },
+					mobileMoneyProviders: { include: { mobileMoneyProvider: { select: { id: true, name: true } } } },
 					programs: {
 						include: {
 							_count: {
@@ -232,8 +232,8 @@ export class CountryReadService extends BaseService {
 				const cashIsOverridden = country.cashConditionOverride ?? false;
 				const mobileMoneyIsOverridden = country.mobileMoneyConditionOverride ?? false;
 				const cashCondition = this.getCashCondition(microfinanceIndex, cashIsOverridden);
-				const mobileMoneyCondition = this.getMobileMoneyCondition(country.mobileMoneyProviders, mobileMoneyIsOverridden);
-				const mobileMoneyProviders = country.mobileMoneyProviders ?? [];
+				const mobileMoneyProviders = (country.mobileMoneyProviders ?? []).map((link) => link.mobileMoneyProvider);
+				const mobileMoneyCondition = this.getMobileMoneyCondition(mobileMoneyProviders, mobileMoneyIsOverridden);
 				const mobileMoneyProviderCount = mobileMoneyProviders.length;
 				const mobileMoneyProviderNames = mobileMoneyProviders.map((provider) => provider.name).join(', ');
 				const mobileNetworkCondition = this.getMobileNetworkCondition(populationCoverage);

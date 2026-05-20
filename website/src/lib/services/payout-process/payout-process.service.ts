@@ -1,4 +1,4 @@
-import { PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { PayoutProcess, PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { format, isSameMonth, startOfMonth } from 'date-fns';
@@ -22,8 +22,29 @@ export class PayoutProcessService extends BaseService {
 		super(db, loggerInstance);
 	}
 
-	async getRecipientsReadyForFirstPayout(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
+	private async validatePayoutProvider(mobileMoneyProviderId: string): Promise<ServiceResult<void>> {
+		const provider = await this.db.mobileMoneyProvider.findUnique({
+			where: { id: mobileMoneyProviderId },
+			select: { payoutProcess: true },
+		});
+
+		if (!provider?.payoutProcess || provider.payoutProcess !== PayoutProcess.orange_money_csv) {
+			return this.resultFail('Mobile money provider has no payout process configured');
+		}
+
+		return this.resultOk(undefined);
+	}
+
+	async getRecipientsReadyForFirstPayout(
+		userId: string,
+		mobileMoneyProviderId: string,
+	): Promise<ServiceResult<PayoutRecipient[]>> {
 		try {
+			const providerResult = await this.validatePayoutProvider(mobileMoneyProviderId);
+			if (!providerResult.success) {
+				return this.resultFail(providerResult.error);
+			}
+
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
 			if (!accessResult.success) {
@@ -50,6 +71,7 @@ export class PayoutProcessService extends BaseService {
 			const recipients = await this.db.recipient.findMany({
 				where: {
 					programId: { in: programIdsReadyForFirstPayoutInterval },
+					paymentInformation: { mobileMoneyProviderId },
 				},
 				select: {
 					id: true,
@@ -131,9 +153,9 @@ export class PayoutProcessService extends BaseService {
 		}
 	}
 
-	async generateRegistrationCSV(userId: string): Promise<ServiceResult<string>> {
+	async generateRegistrationCSV(userId: string, mobileMoneyProviderId: string): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId);
+			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -155,9 +177,13 @@ export class PayoutProcessService extends BaseService {
 		}
 	}
 
-	async generatePayoutCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
+	async generatePayoutCSV(
+		userId: string,
+		mobileMoneyProviderId: string,
+		selectedDate: Date,
+	): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId);
+			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -195,9 +221,31 @@ export class PayoutProcessService extends BaseService {
 		}
 	}
 
-	async previewCurrentMonthPayouts(userId: string, selectedDate: Date): Promise<ServiceResult<PreviewPayout[]>> {
+	async countCurrentMonthPayouts(
+		userId: string,
+		mobileMoneyProviderId: string,
+		selectedDate: Date,
+	): Promise<ServiceResult<number>> {
+		const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId);
+		if (!recipientsResult.success) {
+			return this.resultFail(recipientsResult.error);
+		}
+
+		const monthStart = startOfMonth(selectedDate);
+		const count = recipientsResult.data.filter(
+			(recipient) => !recipient.payouts.some((payout) => isSameMonth(payout.paymentAt, monthStart)),
+		).length;
+
+		return this.resultOk(count);
+	}
+
+	async previewCurrentMonthPayouts(
+		userId: string,
+		mobileMoneyProviderId: string,
+		selectedDate: Date,
+	): Promise<ServiceResult<PreviewPayout[]>> {
 		try {
-			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId);
+			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -245,9 +293,13 @@ export class PayoutProcessService extends BaseService {
 		}
 	}
 
-	async generateCurrentMonthPayouts(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
+	async generateCurrentMonthPayouts(
+		userId: string,
+		mobileMoneyProviderId: string,
+		selectedDate: Date,
+	): Promise<ServiceResult<string>> {
 		try {
-			const previewResult = await this.previewCurrentMonthPayouts(userId, selectedDate);
+			const previewResult = await this.previewCurrentMonthPayouts(userId, mobileMoneyProviderId, selectedDate);
 			if (!previewResult.success) {
 				return this.resultFail(previewResult.error);
 			}
