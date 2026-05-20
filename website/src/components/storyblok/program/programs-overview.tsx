@@ -1,4 +1,5 @@
 import { Wallet } from '@/components/wallet/wallet';
+import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
@@ -55,18 +56,20 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 									href={linkHref}
 									title={programTitle}
 									subtitle={stats ? getCountryNameByCode(stats.countryIsoCode) : undefined}
-									paidOut={
+									footerLeft={
 										stats
 											? {
-													currency: stats.payoutCurrency,
-													amount: stats.totalPayoutsSum,
+													label: translator.t('wallet.paid-out'),
+													prefix: stats.payoutCurrency,
+													value: formatWalletAmount(stats.totalPayoutsSum),
 												}
 											: undefined
 									}
-									amountOfRecipients={
+									footerRight={
 										stats
 											? {
-													amount: stats.recipientsCount,
+													label: translator.t('wallet.recipients'),
+													value: formatWalletAmount(stats.recipientsCount),
 												}
 											: undefined
 									}

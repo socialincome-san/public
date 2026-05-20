@@ -48,3 +48,7 @@ export const getProgramsOptions = async () => {
 export const getCampaignByIdAction = async (id: string) => {
 	return await services.read.campaign.getById(id);
 };
+
+export const getCampaignBySlugAction = async (slug: string) => {
+	return await services.read.campaign.getBySlug(slug);
+};

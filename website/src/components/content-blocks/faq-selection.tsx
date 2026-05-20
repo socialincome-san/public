@@ -2,6 +2,7 @@
 
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
+import { SectionHeading } from '@/components/section-heading';
 import { FaqSelection } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
@@ -22,24 +23,24 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 	const button = blok.button?.[0];
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
 
-	const resolvedQuestions = questions.flatMap((questionReference) => {
+	const resolvedQuestions = [];
+
+	for (const questionReference of questions) {
 		if (typeof questionReference === 'string') {
-			return [];
+			continue;
 		}
 
 		const question = questionReference.content.question?.trim();
 		if (!question) {
-			return [];
+			continue;
 		}
 
-		return [
-			{
-				id: questionReference.uuid,
-				question,
-				answer: questionReference.content.answer?.trim(),
-			},
-		];
-	});
+		resolvedQuestions.push({
+			id: questionReference.uuid,
+			question,
+			answer: questionReference.content.answer?.trim(),
+		});
+	}
 
 	if (!resolvedQuestions.length) {
 		return null;
@@ -48,7 +49,7 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="mx-auto max-w-4xl">
-				{heading && <h2 className="mb-8 text-center text-4xl font-bold text-[#0d3652] md:mb-10 md:text-5xl">{heading}</h2>}
+				{heading ? <SectionHeading bold>{heading}</SectionHeading> : null}
 				<RadixAccordion.Root type="single" collapsible className="border-input w-full border-b">
 					{resolvedQuestions.map((item) => (
 						<RadixAccordion.Item key={item.id} value={item.id} className="border-input border-b last:border-b-0">

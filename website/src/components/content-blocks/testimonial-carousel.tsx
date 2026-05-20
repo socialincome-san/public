@@ -2,6 +2,7 @@
 
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/carousel';
+import { SectionHeading } from '@/components/section-heading';
 import { Testimonial } from '@/components/testimonial';
 import type {
 	Testimonial as StoryblokTestimonial,
@@ -123,9 +124,9 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="space-y-8">
 				{blok.heading && (
-					<h2 className="text-center text-4xl xl:text-5xl [&_strong]:font-bold">
+					<SectionHeading className="mb-0 md:mb-0">
 						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
-					</h2>
+					</SectionHeading>
 				)}
 				<Carousel
 					setApi={setApi}

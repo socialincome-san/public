@@ -1,5 +1,6 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
+import { SectionHeading } from '@/components/section-heading';
 import type { Document, Downloads } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import type { ISbStoryData } from '@storyblok/js';
@@ -29,9 +30,9 @@ export const DownloadsBlock = ({ blok }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="space-y-6">
 				{blok.heading && (
-					<h2 className="text-4xl xl:text-5xl [&_strong]:font-bold">
+					<SectionHeading align="left">
 						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
-					</h2>
+					</SectionHeading>
 				)}
 				<div className="overflow-hidden rounded-md border border-gray-200">
 					<div className="hidden grid-cols-[minmax(0,1fr)_8rem_5rem] gap-12 border-b border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium md:grid">

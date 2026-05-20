@@ -16,6 +16,8 @@
 		"from-original-language": "Tradotto da"
 	},
 	"teasers": {
+		"heading-prefix": "Storie e aggiornamenti dal ",
+		"heading-emphasis": "nostro journal",
 		"goToJournal": "Vai al giornale"
 	},
 	"reference-article": {
