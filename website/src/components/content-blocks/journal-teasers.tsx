@@ -1,10 +1,11 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
-import { JournalTeaserCard } from '@/components/journal-teaser-card';
+import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { createNewWebsiteJournalPath } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Link from 'next/link';
@@ -72,17 +73,17 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 				)}
 				<div>
 					<Button variant="outline" asChild>
-						<Link href={`/${lang}/${region}/journal`}>{translator.t('teasers.goToJournal')}</Link>
+						<Link href={createNewWebsiteJournalPath(lang, region)}>{translator.t('teasers.goToJournal')}</Link>
 					</Button>
 				</div>
 			</div>
 
 			<div className={cn('grid grid-cols-1 gap-4 lg:gap-8', hasSecondaryArticles && 'lg:grid-cols-2')}>
-				<JournalTeaserCard article={featuredArticle} lang={lang} region={region} isFeatured />
+				<JournalArticleCard article={featuredArticle} lang={lang} region={region} variant="featured" />
 				{hasSecondaryArticles && (
 					<div className={cn('grid h-full grid-cols-1 gap-4 lg:gap-8', secondaryArticles.length > 1 && 'lg:grid-rows-2')}>
 						{secondaryArticles.map((article) => (
-							<JournalTeaserCard key={article.uuid} article={article} lang={lang} region={region} isFeatured={false} />
+							<JournalArticleCard key={article.uuid} article={article} lang={lang} region={region} variant="secondary" />
 						))}
 					</div>
 				)}

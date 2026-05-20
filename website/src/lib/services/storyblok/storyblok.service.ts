@@ -236,6 +236,20 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async resolveArticleCountInDefaultLanguage(
+		lang: string,
+		countInSelectedLanguage: number,
+		fetchDefaultLanguageCount: () => Promise<ServiceResult<number>>,
+	): Promise<number> {
+		if (lang === defaultLanguage) {
+			return countInSelectedLanguage;
+		}
+
+		const result = await fetchDefaultLanguageCount();
+
+		return result.success ? result.data : countInSelectedLanguage;
+	}
+
 	async getPersonsByUuids(lang: string, personUuids: string[]): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
 			const uuids = [...new Set(personUuids.map((u) => u.trim()).filter(Boolean))];

@@ -1,24 +1,34 @@
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import NextImage from 'next/image';
+import NextLink from 'next/link';
 
 const PERSON_CARD_IMAGE_WIDTH = 400;
 const PERSON_CARD_IMAGE_HEIGHT = 500;
 
 type Props = {
 	person: ISbStoryData<Person>;
+	href?: string;
+	className?: string;
 };
 
-export const PersonCard = ({ person }: Props) => {
+export const PersonCard = ({ person, href, className }: Props) => {
 	const { avatar, firstName, fullName, lastName, primaryRole } = person.content;
 	const imageSource = avatar?.filename
 		? formatStoryblokUrl(avatar.filename, PERSON_CARD_IMAGE_WIDTH, PERSON_CARD_IMAGE_HEIGHT, avatar.focus)
 		: null;
 	const role = typeof primaryRole === 'string' ? primaryRole.trim() : '';
 
-	return (
-		<div className="w-full max-w-[305px] overflow-hidden rounded-xl bg-white p-3 shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]">
+	const card = (
+		<div
+			className={cn(
+				'w-full max-w-[305px] overflow-hidden rounded-xl bg-white p-3 shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
+				href && 'transition-transform hover:scale-[1.01]',
+				className,
+			)}
+		>
 			<div className="bg-muted relative aspect-[280/350] w-full overflow-hidden rounded-lg">
 				{imageSource ? (
 					<NextImage
@@ -55,5 +65,15 @@ export const PersonCard = ({ person }: Props) => {
 				{role ? <p className="relative shrink-0 pb-1 text-sm leading-none capitalize">{role}</p> : null}
 			</div>
 		</div>
+	);
+
+	if (!href) {
+		return card;
+	}
+
+	return (
+		<NextLink href={href} className={cn('block w-full max-w-[305px]', className)}>
+			{card}
+		</NextLink>
 	);
 };

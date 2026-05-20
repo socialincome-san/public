@@ -31,6 +31,7 @@ import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { FocusReadService } from './focus/focus-read.service';
 import { FocusValidationService } from './focus/focus-validation.service';
 import { FocusWriteService } from './focus/focus-write.service';
+import { JournalService } from './journal/journal.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
@@ -83,6 +84,7 @@ const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma);
 const storyblok = new StoryblokService(prisma);
+const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
 const recipientStatus = new RecipientStatusService(prisma);
 
@@ -236,6 +238,7 @@ export const services = {
 	programStats,
 	recipientImport,
 	sendgrid,
+	journal,
 	storyblok,
 	stripe,
 	surveyImpact,

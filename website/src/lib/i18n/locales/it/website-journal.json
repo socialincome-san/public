@@ -11,6 +11,9 @@
 		"editors": "Redattori collaboratori",
 		"more-articles": "Ci sono altri articoli disponibili in inglese"
 	},
+	"person": {
+		"articles": "Articoli"
+	},
 	"article": {
 		"keep-reading": "Continua a leggere",
 		"from-original-language": "Tradotto da"
