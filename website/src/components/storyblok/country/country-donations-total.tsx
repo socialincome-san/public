@@ -18,12 +18,5 @@ export const CountryDonationsTotal = async ({ blok, isoCode, lang, region }: Pro
 		return null;
 	}
 
-	return (
-		<DonationsTotalBlock
-			blok={blok}
-			lang={lang}
-			region={region}
-			totalChf={totalChf}
-		/>
-	);
+	return <DonationsTotalBlock blok={blok} lang={lang} region={region} totalChf={totalChf} />;
 };
