@@ -15,6 +15,9 @@ export const CountryDonationsTotal = async ({ blok, isoCode, lang, region }: Pro
 	const totalsResult = await services.transparency.getTransparencyTotalsForCountry(isoCode);
 	const totalChf = totalsResult.success ? totalsResult.data.totalContributionsChf : 0;
 
+	if (totalChf === 0) {
+		return null;
+	}
 	return (
 		<DonationsTotalBlock
 			blok={blok}

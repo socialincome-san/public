@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
 import { getProgramId } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
@@ -7,9 +6,7 @@ import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-c
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextLink from 'next/link';
-import Markdown from 'react-markdown';
 
 type Props = {
 	programs: ProgramStory[];
@@ -26,17 +23,7 @@ export const ProgramGridView = async ({ programs, blok, lang, region }: Props) =
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			{blok.heading && (
-				<h2 className="mb-8 text-center text-3xl leading-[1.2] whitespace-pre-line md:text-4xl xl:text-5xl [&_strong]:font-bold">
-					<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
-				</h2>
-			)}
-			{blok.description && (
-				<p className="text-foreground -mt-4 mb-10 text-center text-lg leading-7 font-normal whitespace-pre-line">
-					<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.description}</Markdown>
-				</p>
-			)}
+		<>
 			<ProgramsOverview programs={programs} statsById={statsById} lang={lang} region={region} />
 			{button && buttonHref && (
 				<div className="mt-10 flex justify-center">
@@ -45,6 +32,6 @@ export const ProgramGridView = async ({ programs, blok, lang, region }: Props) =
 					</Button>
 				</div>
 			)}
-		</BlockWrapper>
+		</>
 	);
 };

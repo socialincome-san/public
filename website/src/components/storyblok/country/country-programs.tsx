@@ -1,8 +1,11 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import Markdown from 'react-markdown';
 
 type Props = {
 	blok: ProgramGrid;
@@ -16,5 +19,27 @@ export const CountryPrograms = async ({ blok, isoCode, lang, region }: Props) =>
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
-	return <ProgramGridView programs={programs} blok={blok} lang={lang} region={region} />;
+	if (programs.length === 0) {
+		return null;
+	}
+
+	return (
+		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+			{(blok.heading || blok.description) && (
+				<div className="mb-10 text-center">
+					{blok.heading && (
+						<h2 className="m-0 text-3xl leading-[1.2] font-normal whitespace-pre-line md:text-4xl xl:text-5xl">
+							<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
+						</h2>
+					)}
+					{blok.description && (
+						<p className="text-foreground m-0 text-3xl leading-[1.2] font-bold whitespace-pre-line md:text-4xl xl:text-5xl">
+							<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.description}</Markdown>
+						</p>
+					)}
+				</div>
+			)}
+			<ProgramGridView programs={programs} blok={blok} lang={lang} region={region} />
+		</BlockWrapper>
+	);
 };
