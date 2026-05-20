@@ -1,7 +1,7 @@
 import { Button } from '@/components/button';
+import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramId } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
-import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
