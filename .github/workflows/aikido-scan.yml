@@ -1,0 +1,27 @@
+name: Aikido Scan
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  aikido-local-scan-repo:
+    name: "🛡️ Aikido Security Scan"
+    runs-on: ubuntu-latest
+
+    container:
+      image: aikidosecurity/local-scanner:latest@sha256:9a2d70020c613b6795514528eccd930c239594547950e932ab63873440a4e8ed
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
+      - name: Run scan
+        run: |
+          aikido-local-scanner scan ./ \
+            --apikey ${{ secrets.AIKIDO_API_KEY }} \
+            --repositoryname socialincome-public \
+            --branchname main

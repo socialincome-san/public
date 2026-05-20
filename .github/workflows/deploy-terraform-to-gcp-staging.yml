@@ -81,6 +81,7 @@ jobs:
           TF_VAR_firebase_service_account_json: ${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }}
           TF_VAR_storyblok_preview_secret: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
           TF_VAR_storyblok_webhook_secret: ${{ secrets.TF_STAGING_STORYBLOK_WEBHOOK_SECRET }}
+          TF_VAR_mapbox_token: ${{ secrets.TF_STAGING_MAPBOX_TOKEN }}
           TF_VAR_env: ${{ env.ENVIRONMENT }}
           TF_VAR_app_name: ${{ env.APP_NAME }}
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}

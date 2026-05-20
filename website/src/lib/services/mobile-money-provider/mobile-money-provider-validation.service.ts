@@ -15,6 +15,29 @@ export class MobileMoneyProviderValidationService extends BaseService {
 		super(db, loggerInstance);
 	}
 
+	async validateParentId(
+		parentId: string | null | undefined,
+		context?: { providerId?: string },
+	): Promise<ServiceResult<void>> {
+		if (!parentId) {
+			return this.resultOk(undefined);
+		}
+
+		if (context?.providerId && parentId === context.providerId) {
+			return this.resultFail('A mobile money provider cannot be its own parent.');
+		}
+
+		const exists = await this.db.mobileMoneyProvider.findUnique({
+			where: { id: parentId },
+			select: { id: true },
+		});
+		if (!exists) {
+			return this.resultFail('Selected parent mobile money provider does not exist.');
+		}
+
+		return this.resultOk(undefined);
+	}
+
 	validateCreateInput(input: MobileMoneyProviderFormCreateInput): ServiceResult<MobileMoneyProviderFormCreateInput> {
 		const parsedInput = mobileMoneyProviderCreateInputSchema.safeParse(input);
 		if (!parsedInput.success) {
