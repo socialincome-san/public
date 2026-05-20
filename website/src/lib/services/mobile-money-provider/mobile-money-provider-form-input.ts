@@ -1,10 +1,12 @@
+import { PayoutProcess } from '@/generated/prisma/enums';
 import z from 'zod';
 
 const requiredTrimmedString = (label: string) => z.string().trim().min(1, `${label} is required.`);
 
 export const mobileMoneyProviderCreateInputSchema = z.object({
 	name: requiredTrimmedString('Name'),
-	isSupported: z.boolean().optional().default(false),
+	payoutProcess: z.nativeEnum(PayoutProcess).optional().nullable(),
+	parentId: z.string().trim().min(1).optional().nullable(),
 });
 
 export const mobileMoneyProviderUpdateInputSchema = mobileMoneyProviderCreateInputSchema.extend({

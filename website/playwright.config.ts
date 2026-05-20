@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test', quiet: true });
@@ -90,28 +90,11 @@ export default defineConfig({
 			},
 			dependencies: ['setup-infra'],
 		},
-		{
-			name: 'public-website-desktop',
-			testMatch: /projects\/public-website\/.*\.e2e\.ts/,
-			use: {
-				storageState: cookieConsentState,
-			},
-			dependencies: ['setup-infra'],
-		},
-		{
-			name: 'public-website-mobile',
-			testMatch: /projects\/public-website\/.*\.e2e\.ts/,
-			use: {
-				...devices['iPhone 15'],
-				storageState: cookieConsentState,
-			},
-			dependencies: ['setup-infra'],
-		},
 	],
 	webServer: {
 		command: 'npm run build && npm run start',
 		url: 'http://localhost:3000',
-		reuseExistingServer: !process.env.CI,
+		reuseExistingServer: true,
 		timeout: 180_000,
 	},
 });

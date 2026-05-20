@@ -38,17 +38,24 @@ export class MobileMoneyProviderWriteService extends BaseService {
 				return this.resultFail(uniquenessResult.error);
 			}
 
+			const parentValidationResult = await this.validationService.validateParentId(validatedInput.parentId);
+			if (!parentValidationResult.success) {
+				return this.resultFail(parentValidationResult.error);
+			}
+
 			const created = await this.db.mobileMoneyProvider.create({
 				data: {
 					name: validatedInput.name,
-					isSupported: validatedInput.isSupported,
+					payoutProcess: validatedInput.payoutProcess ?? null,
+					parentId: validatedInput.parentId ?? null,
 				},
 			});
 
 			return this.resultOk({
 				id: created.id,
 				name: created.name,
-				isSupported: created.isSupported,
+				payoutProcess: created.payoutProcess,
+				parentId: created.parentId,
 				createdAt: created.createdAt,
 				updatedAt: created.updatedAt,
 			});
@@ -94,18 +101,27 @@ export class MobileMoneyProviderWriteService extends BaseService {
 				return this.resultFail(uniquenessResult.error);
 			}
 
+			const parentValidationResult = await this.validationService.validateParentId(validatedInput.parentId, {
+				providerId: existing.id,
+			});
+			if (!parentValidationResult.success) {
+				return this.resultFail(parentValidationResult.error);
+			}
+
 			const updated = await this.db.mobileMoneyProvider.update({
 				where: { id: validatedInput.id },
 				data: {
 					name: validatedInput.name,
-					isSupported: validatedInput.isSupported,
+					payoutProcess: validatedInput.payoutProcess ?? null,
+					parentId: validatedInput.parentId ?? null,
 				},
 			});
 
 			return this.resultOk({
 				id: updated.id,
 				name: updated.name,
-				isSupported: updated.isSupported,
+				payoutProcess: updated.payoutProcess,
+				parentId: updated.parentId,
 				createdAt: updated.createdAt,
 				updatedAt: updated.updatedAt,
 			});

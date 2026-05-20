@@ -1,4 +1,5 @@
 import { Address, Gender, Phone } from '@/generated/prisma/client';
+import z from 'zod';
 import { FormField, FormSchema } from './dynamic-form';
 
 type Contact = {
@@ -43,6 +44,8 @@ type DropdownItem = {
 	label: string;
 };
 
+const DROPDOWN_NONE_OPTION: DropdownItem = { id: '', label: 'None' };
+
 export const getZodEnum = (items: DropdownItem[]) => {
 	const object = items.reduce<Record<string, string>>((acc, item) => {
 		acc[item.label] = item.id;
@@ -51,6 +54,23 @@ export const getZodEnum = (items: DropdownItem[]) => {
 	}, {});
 
 	return object;
+};
+
+export const getOptionalDropdownFieldConfig = (items: DropdownItem[]) => {
+	if (items.length === 0) {
+		return {
+			options: [] as DropdownItem[],
+			zodSchema: z.string().optional(),
+		};
+	}
+
+	const options = [DROPDOWN_NONE_OPTION, ...items];
+
+	return {
+		options,
+		useCombobox: true as const,
+		zodSchema: z.nativeEnum(getZodEnum(options)).optional(),
+	};
 };
 
 export const cloneFormSchema = <TSchema extends FormSchema>(schema: TSchema): TSchema => {

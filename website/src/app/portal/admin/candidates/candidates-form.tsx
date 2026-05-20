@@ -2,7 +2,12 @@
 
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
-import { clearFormSchemaValues, getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
+import {
+	clearFormSchemaValues,
+	getContactValuesFromPayload,
+	getOptionalDropdownFieldConfig,
+	getZodEnum,
+} from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
 import {
 	createCandidateAction,
@@ -116,8 +121,9 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 
 	const setOptions = (localPartner: LocalPartnerOption[], mobileMoneyProviders: { id: string; name: string }[]) => {
 		const partnersObj = getZodEnum(localPartner.map(({ id, name }) => ({ id, label: name })));
-		const providerOptions = mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name }));
-		const providerEnum = getZodEnum(providerOptions);
+		const providerFieldConfig = getOptionalDropdownFieldConfig(
+			mobileMoneyProviders.map((p) => ({ id: p.id, label: p.name })),
+		);
 
 		setFormSchema((prev) => ({
 			...prev,
@@ -135,8 +141,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 						...prev.fields.paymentInformation.fields,
 						provider: {
 							...prev.fields.paymentInformation.fields.provider,
-							options: providerOptions,
-							zodSchema: providerOptions.length > 0 ? z.nativeEnum(providerEnum) : z.string().optional(),
+							...providerFieldConfig,
 						},
 					},
 				},

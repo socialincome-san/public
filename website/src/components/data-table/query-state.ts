@@ -23,6 +23,7 @@ export type TableQueryState = {
 	paymentEventType?: string;
 	payoutStatus?: string;
 	recipientStatus?: string;
+	mobileMoneyProviderId?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -42,6 +43,7 @@ type TableQueryInput = {
 	paymentEventType?: QueryValue;
 	payoutStatus?: QueryValue;
 	recipientStatus?: QueryValue;
+	mobileMoneyProviderId?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
@@ -103,6 +105,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const paymentEventType = normalizeToken(input.paymentEventType, MAX_QUERY_TOKEN_LENGTH);
 	const payoutStatus = normalizeToken(input.payoutStatus, MAX_QUERY_TOKEN_LENGTH);
 	const recipientStatus = normalizeToken(input.recipientStatus, MAX_QUERY_TOKEN_LENGTH);
+	const mobileMoneyProviderId = normalizeToken(input.mobileMoneyProviderId, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
@@ -119,6 +122,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		paymentEventType: paymentEventType || undefined,
 		payoutStatus: payoutStatus || undefined,
 		recipientStatus: recipientStatus || undefined,
+		mobileMoneyProviderId: mobileMoneyProviderId || undefined,
 	};
 };
 
@@ -138,6 +142,7 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		paymentEventType: searchParams.paymentEventType,
 		payoutStatus: searchParams.payoutStatus,
 		recipientStatus: searchParams.recipientStatus,
+		mobileMoneyProviderId: searchParams.mobileMoneyProviderId,
 	});
 };
 
@@ -162,6 +167,9 @@ export const applyTableQueryPatch = (
 		paymentEventType: hasPatchKey('paymentEventType') ? patch.paymentEventType : currentSearchParams.get('paymentEventType'),
 		payoutStatus: hasPatchKey('payoutStatus') ? patch.payoutStatus : currentSearchParams.get('payoutStatus'),
 		recipientStatus: hasPatchKey('recipientStatus') ? patch.recipientStatus : currentSearchParams.get('recipientStatus'),
+		mobileMoneyProviderId: hasPatchKey('mobileMoneyProviderId')
+			? patch.mobileMoneyProviderId
+			: currentSearchParams.get('mobileMoneyProviderId'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -224,6 +232,11 @@ export const applyTableQueryPatch = (
 		nextParams.set('recipientStatus', nextQuery.recipientStatus);
 	} else {
 		nextParams.delete('recipientStatus');
+	}
+	if (nextQuery.mobileMoneyProviderId) {
+		nextParams.set('mobileMoneyProviderId', nextQuery.mobileMoneyProviderId);
+	} else {
+		nextParams.delete('mobileMoneyProviderId');
 	}
 
 	return nextParams;

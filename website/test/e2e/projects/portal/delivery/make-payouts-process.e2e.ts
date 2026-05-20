@@ -1,6 +1,5 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -12,14 +11,31 @@ const expected = {
 	step4: 'Created',
 };
 
-test('Payout Process', async ({ page }) => {
-	await page.goto('/portal/delivery/make-payouts');
-	await clickDataTableActionItem(page, 'data-table-action-item-start-payout-process');
+test('Payout process overview shows providers and recipient counts', async ({ page }) => {
+	await page.goto('/portal/delivery/overview');
 
-	await page.getByTestId('date-picker-button').click();
+	await expect(page.getByTestId('payout-overview-month-picker')).toBeVisible();
+	await expect(page.getByTestId('start-payout-process-mobile-money-provider-id-3')).toBeVisible();
+	await expect(page.getByTestId('start-payout-process-mobile-money-provider-id-4')).toBeVisible();
+
+	const orangeMoneySlCount = page.getByTestId('payout-recipient-count-mobile-money-provider-id-3');
+	await expect(orangeMoneySlCount).not.toHaveText('Loading recipient count…');
+	await expect(orangeMoneySlCount).toContainText(/recipient(s)? would receive a payout/);
+
+	const orangeMoneyLrCount = page.getByTestId('payout-recipient-count-mobile-money-provider-id-4');
+	await expect(orangeMoneyLrCount).not.toHaveText('Loading recipient count…');
+	await expect(orangeMoneyLrCount).toContainText(/recipient(s)? would receive a payout/);
+});
+
+test('Payout Process', async ({ page }) => {
+	await page.goto('/portal/delivery/overview');
+
+	await page.getByTestId('payout-overview-month-picker').getByTestId('date-picker-button').click();
 	await page.getByLabel('Choose the Month').selectOption('2');
 	await page.getByLabel('Choose the Year').selectOption('2025');
 	await page.getByRole('button', { name: 'Wednesday, March 12th,' }).click();
+
+	await page.getByTestId('start-payout-process-mobile-money-provider-id-3').click();
 
 	await page.getByTestId('payout-step-1-button').click();
 	await page

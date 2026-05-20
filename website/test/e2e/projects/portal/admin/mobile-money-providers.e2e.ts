@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, expectToHaveScreenshot } from '../../../utils';
+import { clickDataTableActionItem, expectToHaveScreenshot, selectOptionByTestId } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -34,17 +34,17 @@ test('add new mobile money provider', async ({ page }) => {
 	await page.goto('/portal/admin/mobile-money-providers');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-provider');
 	await page.getByTestId('form-item-name').locator('input').fill(name);
-	await page.getByTestId('form-item-isSupported').locator('button').click();
+	await selectOptionByTestId(page, 'payoutProcess', 'Orange Money CSV upload');
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
 	const created = await prisma.mobileMoneyProvider.findUnique({
 		where: { name },
-		select: { id: true, name: true, isSupported: true },
+		select: { id: true, name: true, payoutProcess: true },
 	});
 	expect(created).toBeDefined();
 	expect(created?.name).toBe(name);
-	expect(created?.isSupported).toBe(true);
+	expect(created?.payoutProcess).toBe('orange_money_csv');
 });
 
 test('shows uniqueness error when provider name already exists', async ({ page }) => {
@@ -74,7 +74,6 @@ test('update mobile money provider', async ({ page }) => {
 	const created = await prisma.mobileMoneyProvider.create({
 		data: {
 			name: initialName,
-			isSupported: false,
 		},
 		select: { id: true },
 	});
@@ -91,15 +90,15 @@ test('update mobile money provider', async ({ page }) => {
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 
 	await page.getByTestId('form-item-name').locator('input').fill(updatedName);
-	await page.getByTestId('form-item-isSupported').locator('button').click();
+	await selectOptionByTestId(page, 'payoutProcess', 'Orange Money CSV upload');
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
 	const updated = await prisma.mobileMoneyProvider.findUnique({
 		where: { id: created.id },
-		select: { name: true, isSupported: true },
+		select: { name: true, payoutProcess: true },
 	});
 	expect(updated).toBeDefined();
 	expect(updated?.name).toBe(updatedName);
-	expect(updated?.isSupported).toBe(true);
+	expect(updated?.payoutProcess).toBe('orange_money_csv');
 });
