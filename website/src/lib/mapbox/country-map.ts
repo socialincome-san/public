@@ -259,7 +259,7 @@ const MAP_VARIANT_CONFIG: Record<MapboxMapVariant, VariantConfig> = {
 		showSurroundingCountries: true,
 		boundaryStyle: {
 			fill: '#DCE5D4',
-			fillOpacity: 0.55,
+			fillOpacity: 1,
 			outline: 'rgba(80,75,65,0.4)',
 		},
 		surroundingCountriesStyle: {
