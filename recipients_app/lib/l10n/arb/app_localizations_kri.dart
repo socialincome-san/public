@@ -400,7 +400,7 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get playIntegrityUnavailableError =>
-      'Google Play Store nid fɔ gɛt ɔpdet fɔ kɔntinyu. Duya ɔpdet Ple Stɔ ɛn tray bak.\n\nOpin di Google Play ap. Na di ɔp rayt say, tap yu Profayl pikchɔ. Tap ‘Sɛtin dɛn’ -> ‘Bɔt’ -> ‘Ɔpdet Ple Stɔ’. Yu go gɛt mɛsej we go tɛl yu if di Google Play ap de ɔp to det. Tap Gɛt am. If ɔpdet de, i go dawnlod ɛn instɔl am ɔtomɛtik insay sɔm minit.';
+      'Google Play Store nid fɔ gɛt ɔpdet fɔ kɔntinyu. Duya ɔpdet Ple Stɔ ɛn tray bak.\n\nOpin di Google Play ap. Na di ɔp rayt say, tap yu Profayl pikchɔ. Tap ‘Sɛtin dɛn’ -> ‘Bɔt’ -> ‘Ɔpdet Ple Stɔ’. Yu go gɛt mɛsej we go tɛl yu if di Google Play ap de ɔp to det. Tap \'Gɛt am\'. If ɔpdet de, i go dawnlod ɛn instɔl am ɔtomɛtik insay sɔm minit.';
 
   @override
   String get invalidVerificationCodeError => 'Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.';
