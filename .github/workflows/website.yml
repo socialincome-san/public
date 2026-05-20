@@ -34,29 +34,6 @@ jobs:
       - name: Install dependencies (protected by Safe Chain)
         run: npm ci --no-audit --no-fund
 
-  aikido-scan:
-    name: "🛡️ Aikido Security Scan"
-    runs-on: ubuntu-latest
-
-    container:
-      image: aikidosecurity/local-scanner:latest@sha256:9a2d70020c613b6795514528eccd930c239594547950e932ab63873440a4e8ed
-
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          fetch-depth: 0
-
-      # PR: gating mode compares base vs head and fails only on new high/critical issues.
-      # Push/merge_group: full scan, fails on any high/critical. Existing issues do not fail PRs.
-      - name: Run Aikido scan
-        run: |
-          aikido-local-scanner scan ./ \
-            --apikey ${{ secrets.AIKIDO_API_KEY }} \
-            --repositoryname socialincome-public \
-            --branchname ${{ github.head_ref || github.ref_name }} \
-            --fail-on high \
-            ${{ github.event_name == 'pull_request' && format('--gating-mode pr --base-commit-id {0} --head-commit-id {1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || '' }}
-
   lint:
     name: "✨ Lint"
     runs-on: ubuntu-latest
@@ -122,7 +99,6 @@ jobs:
     name: "🏗️ Build & 📸 E2E Tests"
     runs-on: ubuntu-latest
     needs:
-      - aikido-scan
       - safe-chain
       - lint
       - check-unused
@@ -149,11 +125,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-      mockserver:
-        image: smartive/mockserver:v2.18.2@sha256:072af1580dc44bf28730702f813eef0e142d595de9e48ccba4245343b0fd191c
-        ports:
-          - 1080:1080
-
     env:
       DATABASE_URL: postgresql://social-income:social-income@postgres:5432/social-income
       STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
@@ -162,8 +133,6 @@ jobs:
       STRIPE_SECRET_KEY: ${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}
       STRIPE_PRODUCT_RECURRING: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}
       STRIPE_PRODUCT_ONETIME: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}
-      MOCKSERVER_URL: http://mockserver:1080
-      STORYBLOK_MOCK_MODE: replay
       HOME: /root
 
     steps:

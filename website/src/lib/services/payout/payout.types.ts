@@ -7,6 +7,7 @@ export type PayoutTableViewRow = {
 	recipientFirstName: string;
 	recipientLastName: string;
 	programName: string;
+	mobileMoneyProviderName: string | null;
 	amount: number;
 	currency: Currency;
 	status: PayoutStatus;
@@ -21,6 +22,7 @@ export type PayoutTableQuery = {
 	sortDirection?: 'asc' | 'desc';
 	programId?: string;
 	payoutStatus?: string;
+	mobileMoneyProviderId?: string;
 };
 
 export type PayoutPaginatedTableView = {
@@ -33,6 +35,10 @@ export type PayoutPaginatedTableView = {
 	statusFilterOptions: {
 		value: string;
 		label: string;
+	}[];
+	mobileMoneyProviderFilterOptions: {
+		id: string;
+		name: string;
 	}[];
 };
 

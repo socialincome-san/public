@@ -839,7 +839,7 @@ abstract class AppLocalizations {
   /// No description provided for @playIntegrityUnavailableError.
   ///
   /// In en, this message translates to:
-  /// **'Google Play Store needs an update to continue. Please update Play Store and try again.\n\nOpen the Google Play app. At the top right, tap your Profile picture. Tap \'Settings\' -> \'About\' -> \'Update Play Store\'. You’ll get a message that tells you if the Google Play app is up to date. Tap Got it. If an update is available, it\'ll automatically download and install in a few minutes.'**
+  /// **'Google Play Store needs an update to continue. Please update Play Store and try again.\n\nOpen the Google Play app. At the top right, tap your Profile picture. Tap \'Settings\' -> \'About\' -> \'Update Play Store\'. You’ll get a message that tells you if the Google Play app is up to date. Tap \'Got it\'. If an update is available, it\'ll automatically download and install in a few minutes.'**
   String get playIntegrityUnavailableError;
 
   /// No description provided for @invalidVerificationCodeError.

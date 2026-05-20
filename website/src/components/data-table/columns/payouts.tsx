@@ -23,6 +23,11 @@ export const makePayoutColumns = (): ColumnDef<PayoutTableViewRow>[] => {
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
+			accessorKey: 'mobileMoneyProviderName',
+			header: (ctx) => <SortableHeader ctx={ctx}>Mobile money provider</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			id: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,
 			accessorFn: (row) => row.amount,

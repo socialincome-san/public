@@ -1,4 +1,6 @@
+import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import type { CountryStory } from '@/components/storyblok/country/country.types';
+import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
 
 export const getCountryIsoCode = (country: Country) => {
@@ -17,4 +19,8 @@ export const getCountrySlug = (country: CountryStory) => {
 
 export const getCountryTitle = (country: Country) => {
 	return country.title?.trim() ?? getCountryIsoCode(country);
+};
+
+export const getCountryLocalPartners = (country: Country): LocalPartnerStory[] => {
+	return resolveSelectedStories(country.partners, []);
 };

@@ -8,6 +8,7 @@ type PayoutsFilterArgs = {
 	filterOptions: {
 		programs: { value: string; label: string }[];
 		statuses: { value: string; label: string }[];
+		mobileMoneyProviders: { value: string; label: string }[];
 	};
 };
 
@@ -15,10 +16,11 @@ export const payoutsTableConfig: DataTableConfig<PayoutTableViewRow> = {
 	id: 'payouts',
 	title: 'Payouts',
 	emptyMessage: 'No payouts found',
-	searchKeys: ['id', 'recipientFirstName', 'recipientLastName', 'programName'],
+	searchKeys: ['id', 'recipientFirstName', 'recipientLastName', 'programName', 'mobileMoneyProviderName'],
 	sortOptions: [
 		{ id: 'recipient', label: 'Recipient' },
 		{ id: 'programName', label: 'Program' },
+		{ id: 'mobileMoneyProviderName', label: 'Mobile money provider' },
 		{ id: 'amount', label: 'Amount' },
 		{ id: 'status', label: 'Status' },
 		{ id: 'paymentAt', label: 'Payment date' },
@@ -48,6 +50,14 @@ export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterAr
 			placeholder: 'All statuses',
 			value: query.payoutStatus,
 			options: filterOptions.statuses,
+		},
+		{
+			id: 'mobileMoneyProvider',
+			queryKey: 'mobileMoneyProviderId',
+			label: 'Mobile money provider',
+			placeholder: 'All providers',
+			value: query.mobileMoneyProviderId,
+			options: filterOptions.mobileMoneyProviders,
 		},
 	];
 };
