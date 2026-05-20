@@ -1,5 +1,5 @@
-import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
+import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
