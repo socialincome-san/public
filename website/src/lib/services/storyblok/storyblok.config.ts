@@ -19,10 +19,7 @@ import { TextBlock } from '@/components/content-blocks/text';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import PageContentType from '@/components/content-types/page';
-import { mockStoryblokIfTestMode } from '@/lib/services/storyblok/storyblok.mock';
 import { apiPlugin, storyblokInit } from '@storyblok/react';
-
-mockStoryblokIfTestMode();
 
 /**
  * Storyblok component registry mapping component names to React components.
