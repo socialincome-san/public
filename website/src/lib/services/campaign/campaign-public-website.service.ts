@@ -26,14 +26,20 @@ export class CampaignPublicWebsiteService extends BaseService {
 	}
 
 	async getPageContent(lang: WebsiteLanguage): Promise<ServiceResult<CampaignPageContent>> {
-		const [translator, faqsResult] = await Promise.all([
-			Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
-			this.storyblok.getFaqs(lang, 5),
-		]);
+		try {
+			const [translator, faqsResult] = await Promise.all([
+				Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
+				this.storyblok.getFaqs(lang, 5),
+			]);
 
-		const faqs: ISbStoryData<Faq>[] = faqsResult.success ? faqsResult.data : [];
+			const faqs: ISbStoryData<Faq>[] = faqsResult.success ? faqsResult.data : [];
 
-		return this.resultOk({ translator, faqs });
+			return this.resultOk({ translator, faqs });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not load campaign page content: ${JSON.stringify(error)}`);
+		}
 	}
 
 	getPageMetadata(

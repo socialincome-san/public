@@ -2,8 +2,7 @@ import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getCampaignPageMetadataAction } from '@/lib/server-actions/campaign-page-actions';
-import { getCampaignBySlugAction } from '@/lib/server-actions/campaigns-actions';
+import { getCampaignBySlugAction, getCampaignPageMetadataAction } from '@/lib/server-actions/campaigns-actions';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;

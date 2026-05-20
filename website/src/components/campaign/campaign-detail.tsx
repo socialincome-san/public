@@ -6,7 +6,7 @@ import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-te
 import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getCampaignPageContentAction } from '@/lib/server-actions/campaign-page-actions';
+import { getCampaignPageContentAction } from '@/lib/server-actions/campaigns-actions';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 
 type Props = {
