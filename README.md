@@ -257,18 +257,18 @@ This starts:
 
 # 🧪 pg_dump / pg_restore
 
-Useful commands for copying local DB → staging (or vice versa).
+Useful commands for copying PROD DB → local (or vice versa).
 
-### Dump your local database:
-
-```
-pg_dump -Fc --no-owner "postgresql://social-income:social-income@localhost:5432/social-income" > local.dump
-```
-
-### Restore into staging:
+### Dump the prod database:
 
 ```
-pg_restore   --clean --if-exists   --no-owner   -d "postgresql://staging-website_google_sql_user:xxxx@yyyy:5432/staging-website-google-sql-database"   local.dump
+pg_dump -Fc --no-owner "postgresql://USER:PASSWORD@IP/DB" > prod.dump
+```
+
+### Restore into local:
+
+```
+pg_restore --clean --if-exists --no-owner -d "postgresql://social-income:social-income@localhost:5432/social-income" prod.dump
 ```
 
 ---

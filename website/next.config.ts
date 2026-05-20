@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 import path from 'path';
 
 let nextConfig: NextConfig = {
-	transpilePackages: ['@socialincome/ui'],
+	transpilePackages: ['@socialincome/ui', 'globe.gl', 'three-globe', 'three'],
 	reactStrictMode: true,
 	turbopack: {
 		root: path.join(process.cwd(), '..'),

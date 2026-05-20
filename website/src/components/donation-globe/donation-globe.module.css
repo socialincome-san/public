@@ -1,0 +1,62 @@
+.badgeAnchor {
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24px;
+	height: 24px;
+}
+
+.badgeAnimWrapper {
+	animation: badgeFade 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.donationBadge {
+	transform: translateY(-10px);
+	background: white;
+	border-radius: 4px;
+	padding: 6px 10px;
+	color: #083344;
+	font-weight: 600;
+	font-size: 11px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	white-space: nowrap;
+	text-align: center;
+	line-height: 1.3;
+}
+
+@keyframes badgeFade {
+	0% {
+		opacity: 0;
+		transform: scale(0.8) translateY(10px);
+	}
+	15% {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+	85% {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(0.8) translateY(-10px);
+	}
+}
+
+.globeContainer {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	cursor: grab;
+}
+
+.globeContainer:active {
+	cursor: grabbing;
+}
