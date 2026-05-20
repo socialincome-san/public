@@ -1,3 +1,4 @@
+import type { CountryCode } from '@/generated/prisma/enums';
 import type {
 	Campaign,
 	Country,
@@ -380,6 +381,41 @@ export class StoryblokService extends BaseService {
 			}
 
 			return this.resultOk(programs);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
+	async getCountryPrograms(lang: string, isoCode: string): Promise<ServiceResult<ISbStoryData<Program>[]>> {
+		try {
+			const normalizedIsoCode = isoCode.trim().toUpperCase();
+			if (!normalizedIsoCode) {
+				return this.resultOk([]);
+			}
+
+			const programsResult = await this.getPrograms(lang);
+			if (!programsResult.success) {
+				return this.resultOk([]);
+			}
+
+			const programsInCountry = await this.db.program.findMany({
+				where: { country: { isoCode: normalizedIsoCode as CountryCode } },
+				select: { id: true },
+			});
+			const programIdsInCountry = new Set(programsInCountry.map((program) => program.id));
+
+			const countryPrograms = programsResult.data.filter((story) => {
+				const programId = story.content?.id?.toString().trim();
+				if (!programId) {
+					return false;
+				}
+
+				return programIdsInCountry.has(programId);
+			});
+
+			return this.resultOk(countryPrograms);
 		} catch (error) {
 			this.logger.error(error);
 

@@ -9,6 +9,7 @@ import NextImage from 'next/image';
 import NextLink from 'next/link';
 import { CountryDonationsTotal } from './country-donations-total';
 import { CountryPersonCarousel } from './country-person-carousel';
+import { CountryPrograms } from './country-programs';
 import type { CountryStory } from './country.types';
 import { getCountryDescription, getCountryIsoCode, getCountryTitle } from './country.utils';
 
@@ -31,6 +32,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(lang, isoCode);
 	const countryOfficePersons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
 	const donationsBlock = country.content.donations?.[0] ?? null;
+	const programsBlock = country.content.programs?.[0] ?? null;
 
 	return (
 		<div>
@@ -87,6 +89,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			) : null}
 			
 			{donationsBlock ? <CountryDonationsTotal blok={donationsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
+			{programsBlock ? <CountryPrograms blok={programsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
 		</div>
 	);
 };
