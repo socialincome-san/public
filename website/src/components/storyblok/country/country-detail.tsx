@@ -77,6 +77,19 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				mobileContent={<MakeDonationForm lang={lang} />}
 				descriptionHeading={`${translator.t('countries-page.about')} ${countryTitle}`}
 			/>
+			{hasIsoCode ? (
+				<section className="w-site-width max-w-content mx-auto px-6 py-8 lg:py-12">
+					<div className="flex flex-col gap-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
+						<div className="flex justify-center lg:justify-start">
+							<MapBubble isoCode={isoCode} countryName={countryTitle} />
+						</div>
+						<div className="flex flex-col gap-4">
+							<h2 className="text-2xl font-semibold md:text-3xl">{`${translator.t('countries-page.about')} ${countryTitle}`}</h2>
+							<p className="text-base">{countryDescription || '-'}</p>
+						</div>
+					</div>
+				</section>
+			) : null}
 			{countryOfficePersons.length > 0 ? (
 				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
 					<CountryPersonCarousel
@@ -91,19 +104,6 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
 					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
 				</div>
-			) : null}
-			{hasIsoCode ? (
-				<section className="w-site-width max-w-content mx-auto px-6 py-8 lg:py-12">
-					<div className="flex flex-col gap-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
-						<div className="flex justify-center lg:justify-start">
-							<MapBubble isoCode={isoCode} countryName={countryTitle} />
-						</div>
-						<div className="flex flex-col gap-4">
-							<h2 className="text-2xl font-semibold md:text-3xl">{`${translator.t('countries-page.about')} ${countryTitle}`}</h2>
-							<p className="text-base">{countryDescription || '-'}</p>
-						</div>
-					</div>
-				</section>
 			) : null}
 		</>
 	);
