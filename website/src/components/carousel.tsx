@@ -1,6 +1,7 @@
 'use client';
 
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react';
+import { ChevronRightIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../lib/utils/cn';
@@ -165,4 +166,40 @@ const CarouselItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLD
 );
 CarouselItem.displayName = 'CarouselItem';
 
-export { Carousel, CarouselContent, CarouselItem, type CarouselApi };
+type CarouselScrollNextButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+	'aria-label': string;
+};
+
+const CarouselScrollNextButton = React.forwardRef<HTMLButtonElement, CarouselScrollNextButtonProps>(
+	({ className, disabled, onClick, ...props }, ref) => {
+		const { scrollNext, canScrollNext } = useCarousel();
+		const isDisabled = disabled ?? !canScrollNext;
+
+		return (
+			<button
+				ref={ref}
+				type="button"
+				disabled={isDisabled}
+				aria-disabled={isDisabled}
+				onClick={(event) => {
+					if (isDisabled) {
+						return;
+					}
+
+					scrollNext();
+					onClick?.(event);
+				}}
+				className={cn(
+					'absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)] disabled:pointer-events-none disabled:opacity-50',
+					className,
+				)}
+				{...props}
+			>
+				<ChevronRightIcon className="size-5" aria-hidden="true" />
+			</button>
+		);
+	},
+);
+CarouselScrollNextButton.displayName = 'CarouselScrollNextButton';
+
+export { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton, type CarouselApi };

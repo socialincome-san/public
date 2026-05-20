@@ -164,6 +164,12 @@ variable "storyblok_webhook_secret" {
   sensitive   = true
 }
 
+variable "mapbox_token" {
+  description = "Mapbox token for generating country map images"
+  type        = string
+  sensitive   = true
+}
+
 variable "app_review_mode_enabled" {
   description = "Flag to enable or disable app review mode"
   type        = string

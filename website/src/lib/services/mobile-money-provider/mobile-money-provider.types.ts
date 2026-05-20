@@ -1,7 +1,11 @@
+import type { PayoutProcess } from '@/generated/prisma/enums';
+
 export type MobileMoneyProviderTableViewRow = {
 	id: string;
 	name: string;
-	isSupported: boolean;
+	parentName: string | null;
+	payoutProcess: PayoutProcess | null;
+	payoutProcessLabel: string | null;
 	createdAt: Date;
 };
 
@@ -21,7 +25,8 @@ export type MobileMoneyProviderPaginatedTableView = {
 export type MobileMoneyProviderPayload = {
 	id: string;
 	name: string;
-	isSupported: boolean;
+	payoutProcess: PayoutProcess | null;
+	parentId: string | null;
 	createdAt: Date;
 	updatedAt: Date | null;
 };
@@ -29,4 +34,10 @@ export type MobileMoneyProviderPayload = {
 export type MobileMoneyProviderOption = {
 	id: string;
 	name: string;
+};
+
+export type MobileMoneyProviderPayoutProcessOption = {
+	id: string;
+	name: string;
+	payoutProcess: string;
 };

@@ -2,7 +2,6 @@ import { HeroVideoBlock, type HeroVideoControlTranslations } from '@/components/
 import type { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { isStoryblokMockRecordOrReplay } from '@/lib/utils/environment';
 
 type Props = {
 	blok: HeroVideo;
@@ -45,7 +44,6 @@ export const HeroVideoBlockServer = async ({ blok, lang, region }: Props) => {
 			region={region}
 			subtitleUrl={translator.t('video-subtitle')}
 			translations={getVideoControlTranslations(translator)}
-			disableAutoplay={isStoryblokMockRecordOrReplay()}
 		/>
 	);
 };

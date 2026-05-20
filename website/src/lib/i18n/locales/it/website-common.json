@@ -129,7 +129,12 @@
 		"recipient-in-program-plural": "beneficiari in un programma",
 		"recipient-waiting-singular": "beneficiario in attesa",
 		"recipient-waiting-plural": "beneficiari in attesa",
-		"about": "Informazioni su"
+		"about": "Informazioni su",
+		"view-details": "Vedi dettagli",
+		"teaser-title": "Radicati a livello locale.",
+		"teaser-subtitle": "Conosci i nostri partner.",
+		"teaser-text": "Collaborando con partner locali, ci assicuriamo che i progetti siano più efficaci, resilienti e radicati nelle realtà delle comunità che vogliamo sostenere.",
+		"teaser-next-button-aria": "Mostra il partner locale successivo"
 	},
 	"focuses-page": {
 		"empty": "Nessun focus trovato.",
