@@ -353,6 +353,16 @@ mise dev
 npm run firebase:export
 ```
 
+### Docker environment “stuck” (migrations, leftover containers, weird DB state)?
+
+If you run into Prisma migration issues, suspect stale PostgreSQL data, or you have leftover/orphan containers from older setups, you can fully tear down the website docker environment:
+
+```
+docker compose -f website/docker-compose.yml down --remove-orphans --volumes
+```
+
+This stops and removes the `website/` Compose containers, deletes orphaned containers, and **removes the named volumes** (including the PostgreSQL data volume). Use this when you want a clean slate; it will wipe local DB data.
+
 ---
 
 # Financial Contributions
