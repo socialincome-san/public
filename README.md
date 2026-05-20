@@ -191,8 +191,13 @@ We use **Playwright** for end‑to‑end testing of the website.
 
 **Known issue (PR checks can look “stuck”)**
 
-The `e2e` GitHub Actions job auto‑commits updated screenshots/snapshots back into the PR branch. This creates a new HEAD commit, and GitHub expects a fresh set of checks for that new SHA. But pushes made by `github-actions` (via `GITHUB_TOKEN`) often **don’t trigger a new workflow run** (loop protection), so the checks stay attached to the previous SHA and the PR can appear like “pipelines not running”, even though they already ran successfully.
-
+The `e2e` GitHub Actions job auto‑commits updated screenshots/snapshots
+back into the PR branch. This creates a new HEAD commit, and GitHub
+expects a fresh set of checks for that new SHA. But pushes made by
+`github-actions` (via `GITHUB_TOKEN`) often **don’t trigger a new
+workflow run** (loop protection), so the checks stay attached to the
+previous SHA and the PR can appear like “pipelines not running”, even
+though they already ran successfully.
 
 ---
 
