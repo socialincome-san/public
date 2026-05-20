@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { DatePicker } from '@/components/date-picker';
+import { DatePicker, normalizeToNoon } from '@/components/date-picker';
 import { getPayoutRecipientCountsByProviderAction } from '@/lib/server-actions/payout-process-actions';
 import type { MobileMoneyProviderPayoutProcessOption } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
 import { formatPayoutProcessLabel } from '@/lib/services/mobile-money-provider/payout-process-options';
@@ -11,12 +11,6 @@ import { format } from 'date-fns';
 import { CalendarIcon, CircleDollarSignIcon, FileSpreadsheet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { StartPayoutProcessDialog } from './start-payout-process-dialog';
-
-const selectedDateAtNoon = () => {
-	const today = now();
-
-	return new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12);
-};
 
 const groupByPayoutProcess = (providers: MobileMoneyProviderPayoutProcessOption[]) => {
 	const groups: Record<string, MobileMoneyProviderPayoutProcessOption[]> = {};
@@ -139,7 +133,7 @@ export const PayoutProcessOverviewClient = ({
 	providers: MobileMoneyProviderPayoutProcessOption[];
 	error: string | null;
 }) => {
-	const [selectedDate, setSelectedDate] = useState(selectedDateAtNoon);
+	const [selectedDate, setSelectedDate] = useState(() => normalizeToNoon(now()));
 	const [activeProvider, setActiveProvider] = useState<MobileMoneyProviderPayoutProcessOption | null>(null);
 	const [gridKey, setGridKey] = useState(0);
 

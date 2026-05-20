@@ -10,17 +10,12 @@ import {
 	previewCurrentMonthPayoutsAction,
 } from '@/lib/server-actions/payout-process-actions';
 import type { ServiceResult } from '@/lib/services/core/base.types';
+import { slugify } from '@/lib/utils/string-utils';
 import { format } from 'date-fns';
 import { EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
 import { useState } from 'react';
 
 type StepResult = string | object | string[] | null;
-
-const toProviderSlug = (name: string) =>
-	name
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-|-$/g, '');
 
 export const StartPayoutProcessDialog = ({
 	providerId,
@@ -39,7 +34,7 @@ export const StartPayoutProcessDialog = ({
 }) => {
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 	const monthKey = format(selectedDate, 'yyyy-MM');
-	const providerSlug = toProviderSlug(providerName);
+	const providerSlug = slugify(providerName);
 
 	const setResult = (step: number, value: StepResult) => {
 		setResults((previous) => ({ ...previous, [step]: value }));
