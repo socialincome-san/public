@@ -9,8 +9,3 @@ services:
       POSTGRES_DB: social-income
       TZ: "Europe/Zurich"
       PGTZ: "Europe/Zurich"
-
-  mockserver:
-    image: smartive/mockserver:v2.18.2@sha256:072af1580dc44bf28730702f813eef0e142d595de9e48ccba4245343b0fd191c
-    ports:
-      - "1080:1080"

@@ -188,35 +188,11 @@ We use **Playwright** for end‑to‑end testing of the website.
 - Tests run against the real app in CI
 - Visual regression screenshots are automatically updated in the
   pipeline and committed into the PR
-- External Storyblok requests are mocked using a
-  [mockserver](https://github.com/smartive/mockserver/tree/master)
 
-**Mock recording system**
+**Known issue (PR checks can look “stuck”)**
 
-We use a record/replay mechanism for deterministic tests.
+The `e2e` GitHub Actions job auto‑commits updated screenshots/snapshots back into the PR branch. This creates a new HEAD commit, and GitHub expects a fresh set of checks for that new SHA. But pushes made by `github-actions` (via `GITHUB_TOKEN`) often **don’t trigger a new workflow run** (loop protection), so the checks stay attached to the previous SHA and the PR can appear like “pipelines not running”, even though they already ran successfully.
 
-**Record mode**
-
-1. Set STORYBLOK_MOCK_MODE in .env.development to 'record'
-2. Restart dev server `mise dev`
-3. run tests:
-   `STORYBLOK_MOCK_MODE=record npm run test:e2e -- --project=public-website-desktop --update-snapshots`
-
-This:
-
-- starts the mockserver as proxy
-- records all outgoing Storyblok API requests
-- stores them as JSON fixtures inside the repo
-
-These recordings should be committed.
-
-**Replay mode (CI default)**
-
-In CI the environment runs in replay mode:
-
-- mockserver serves recorded responses
-- no external API calls are made
-- tests are fully deterministic and fast
 
 ---
 
