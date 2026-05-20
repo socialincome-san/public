@@ -14,6 +14,7 @@ depends = ["install"]
 
 [tasks.build-paths]
 run = "npm run website:build-paths"
+depends = ["install"]
 
 [tasks.website]
 run = "npm run website:serve"
