@@ -25,7 +25,7 @@ export const CountryPrograms = async ({ blok, isoCode, lang, region }: Props) =>
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			{(blok.heading || blok.description) && (
+			{[blok.heading, blok.description].some(Boolean) && (
 				<div className="mb-10 text-center">
 					{blok.heading && (
 						<h2 className="m-0 text-3xl leading-[1.2] font-normal whitespace-pre-line md:text-4xl xl:text-5xl">
