@@ -60,7 +60,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			<div className="max-w-content 2xl:w-site-width ml-[2vw] 2xl:mx-auto pl-8">
 				<Breadcrumb links={breadcrumbLinks} />
 				<CountryMap country={country} lang={lang} />
-				<CountryPersonCarousel country={country} />
+				<CountryPersonCarousel country={country} lang={lang} />
 				<CountryDonationsTotal country={country} lang={lang} region={region} />
 				<CountryPrograms country={country} lang={lang} region={region} />
 				{localPartners.length > 0 ? (
