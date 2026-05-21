@@ -38,8 +38,8 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				title={countryTitle}
 				heroImageFilename={country.content.heroImage?.filename}
 				heroImageAlt={country.content.heroImage?.alt ?? countryTitle}
-				titleIcon={`/assets/flags/${isoCode.toLowerCase()}.svg`}
-				titleIconAlt={`${isoCode} flag`}
+				titleIcon={isoCode === '-' ? undefined : `/assets/flags/${isoCode.toLowerCase()}.svg`}
+				titleIconAlt={isoCode === '-' ? undefined : `${isoCode} flag`}
 				stats={[
 					{
 						value: activeProgramsCount,
