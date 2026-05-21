@@ -59,7 +59,7 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 					/>
 				)}
 				<div className="flex flex-1 flex-col justify-between gap-3 p-4 lg:p-6">
-					<h3 className="text-foreground text-2xl font-semibold md:text-3xl">{title}</h3>
+					<h3 className="text-foreground text-2xl md:text-3xl">{title}</h3>
 					<div className="flex items-center gap-2">
 						<AuthorAvatar author={author} size="sm" />
 						<span className="text-sm font-semibold">{getPersonDisplayName(author)}</span>
@@ -79,7 +79,7 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 				)}
 			>
 				<div className="flex flex-col justify-between gap-3 py-3 lg:px-4 lg:py-6">
-					<h3 className="text-foreground text-xl font-semibold md:text-2xl lg:text-3xl">{title}</h3>
+					<h3 className="text-foreground text-xl md:text-2xl lg:text-3xl">{title}</h3>
 					<div className="flex items-center gap-2">
 						<AuthorAvatar author={author} size="sm" />
 						<span className="text-sm font-semibold">{getPersonDisplayName(author)}</span>
