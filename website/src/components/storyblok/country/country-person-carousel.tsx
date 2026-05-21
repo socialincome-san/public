@@ -1,4 +1,6 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton } from '@/components/carousel';
+import { Translator } from '@/lib/i18n/translator';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
@@ -7,9 +9,10 @@ import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	country: CountryStory;
+	lang: WebsiteLanguage;
 };
 
-export const CountryPersonCarousel = async ({ country }: Props) => {
+export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
 	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(country.lang, isoCode);
 	const persons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
@@ -21,6 +24,8 @@ export const CountryPersonCarousel = async ({ country }: Props) => {
 	const countryName = getCountryTitle(country.content);
 	const countryOfficeTitle = country.content.countryOfficeTitle?.trim();
 	const countryOfficeDescription = country.content.countryOfficeDescription?.trim();
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const nextButtonAriaLabel = translator.t('countries-page.person-carousel-next-button-aria');
 
 	return (
 		<BlockWrapper>
@@ -41,7 +46,7 @@ export const CountryPersonCarousel = async ({ country }: Props) => {
 								</CarouselItem>
 							))}
 						</CarouselContent>
-						<CarouselScrollNextButton aria-label="Show next person" />
+						<CarouselScrollNextButton aria-label={nextButtonAriaLabel} />
 					</Carousel>
 				</div>
 			</div>

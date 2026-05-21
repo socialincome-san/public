@@ -121,7 +121,8 @@
 		"recipient-singular": "recipient",
 		"recipient-plural": "recipients",
 		"donate-now": "Donate now",
-		"about": "About"
+		"about": "About",
+		"person-carousel-next-button-aria": "Show next person"
 	},
 	"local-partners-page": {
 		"empty": "No local partners found.",

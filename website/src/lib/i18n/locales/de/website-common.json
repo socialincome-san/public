@@ -121,7 +121,8 @@
 		"recipient-singular": "Empfänger:in",
 		"recipient-plural": "Empfänger:innen",
 		"donate-now": "Jetzt spenden",
-		"about": "Über"
+		"about": "Über",
+		"person-carousel-next-button-aria": "Nächste Person anzeigen"
 	},
 	"local-partners-page": {
 		"empty": "Keine lokalen Partner gefunden.",

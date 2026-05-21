@@ -121,7 +121,8 @@
 		"recipient-singular": "beneficiario",
 		"recipient-plural": "beneficiari",
 		"donate-now": "Dona ora",
-		"about": "Informazioni su"
+		"about": "Informazioni su",
+		"person-carousel-next-button-aria": "Mostra la persona successiva"
 	},
 	"local-partners-page": {
 		"empty": "Nessun partner locale trovato.",
