@@ -30,7 +30,14 @@ export const HeroDonationsHeader = ({
 		<section className="hero-video hero-video-block flex flex-col gap-6">
 			<div className="relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl bg-black md:min-h-160 md:rounded-b-[56px]">
 				{heroImageFilename ? (
-					<NextImage src={heroImageFilename} alt={heroImageAlt ?? title} fill sizes="100vw" className="object-cover" priority />
+					<NextImage
+						src={heroImageFilename}
+						alt={heroImageAlt ?? title}
+						fill
+						sizes="100vw"
+						className="object-cover"
+						priority
+					/>
 				) : (
 					<div className="bg-primary/20 absolute inset-0" />
 				)}
