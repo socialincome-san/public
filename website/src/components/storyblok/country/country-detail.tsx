@@ -8,7 +8,9 @@ import { services } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
+import { CountryDonationsTotal } from './country-donations-total';
 import { CountryPersonCarousel } from './country-person-carousel';
+import { CountryPrograms } from './country-programs';
 import type { CountryStory } from './country.types';
 import { getCountryDescription, getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
 import { MapBubble } from './map-bubble';
@@ -32,6 +34,8 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	const heroImageAlt = country.content.heroImage?.alt ?? countryTitle;
 	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(lang, isoCode);
 	const countryOfficePersons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
+	const donationsBlock = country.content.donations?.[0] ?? null;
+	const programsBlock = country.content.programs?.[0] ?? null;
 	const localPartners = getCountryLocalPartners(country.content);
 
 	return (
@@ -100,6 +104,9 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					/>
 				</div>
 			) : null}
+
+			{donationsBlock ? <CountryDonationsTotal blok={donationsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
+			{programsBlock ? <CountryPrograms blok={programsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
 			{localPartners.length > 0 ? (
 				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
 					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />

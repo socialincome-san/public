@@ -24,6 +24,10 @@ export type TransparencyTotals = {
 	totalContributionsCount: number;
 };
 
+export type CountryTransparencyTotals = {
+	totalContributionsChf: number;
+};
+
 export type TransparencyData = {
 	totals: TransparencyTotals;
 	timeRanges: ContributionTimeRange[];
