@@ -2,9 +2,9 @@ import { getCountryTitle } from '@/components/storyblok/country/country.utils';
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { StoryTitleData } from '@/lib/services/storyblok/storyblok.service';
 import { services } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import type { ISbStoryData } from '@storyblok/js';
 
 export type BreadcrumbLink = {
 	label: string;
@@ -13,6 +13,7 @@ export type BreadcrumbLink = {
 
 type BuildBreadcrumbLinksParams = {
 	fullSlug: string;
+	currentLabel: string;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
@@ -32,7 +33,7 @@ const capitalizeLabel = (label: string) => {
 		.join(' ');
 };
 
-const getStoryLabel = (story: ISbStoryData, fallbackSegment: string) => {
+const getStoryLabel = (story: StoryTitleData, fallbackSegment: string) => {
 	if (story.content?.component === 'Country') {
 		return getCountryTitle(story.content as Country);
 	}
@@ -41,7 +42,7 @@ const getStoryLabel = (story: ISbStoryData, fallbackSegment: string) => {
 };
 
 const fetchStoryLabel = async (slugPath: string, lang: WebsiteLanguage, fallbackSegment: string) => {
-	const result = await services.storyblok.getStoryWithFallback<ISbStoryData>(slugPath, lang);
+	const result = await services.storyblok.getStoryTitle(slugPath, lang);
 
 	if (!result.success) {
 		return humanizeSlugSegment(fallbackSegment);
@@ -52,15 +53,12 @@ const fetchStoryLabel = async (slugPath: string, lang: WebsiteLanguage, fallback
 
 export const buildBreadcrumbLinks = async ({
 	fullSlug,
+	currentLabel,
 	lang,
 	region,
 }: BuildBreadcrumbLinksParams): Promise<BreadcrumbLink[]> => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const segments = fullSlug.split('/')
-		.filter(Boolean)
-		.filter((segment) => segment !== lang.toLowerCase())
-		.filter((segment) => segment !== region.toLowerCase())
-		.filter((segment) => segment !== NEW_WEBSITE_SLUG);
+	const segments = fullSlug.split('/').filter(Boolean);
 
 	if (segments.length === 0) {
 		return [];
@@ -74,7 +72,10 @@ export const buildBreadcrumbLinks = async ({
 	];
 
 	const startIndex = segments[0] === NEW_WEBSITE_SLUG ? 1 : 0;
-	const ancestorSegments = segments.slice(startIndex, -1);
+	const ancestorSegments = segments
+		.filter((segment) => segment !== lang.toLowerCase())
+		.filter((segment) => segment !== region.toLowerCase())
+		.slice(startIndex, -1);
 
 	const ancestorLabels = await Promise.all(
 		ancestorSegments.map((segment, index) => {
@@ -93,12 +94,9 @@ export const buildBreadcrumbLinks = async ({
 		});
 	}
 
-	const lastSegment = segments.at(-1) ?? '';
-	const resolvedCurrentLabel = await fetchStoryLabel(fullSlug, lang, lastSegment);
-
 	links.push({
 		href: '',
-		label: resolvedCurrentLabel,
+		label: currentLabel,
 	});
 
 	return links;
