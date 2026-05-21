@@ -10,7 +10,6 @@ type Stat = {
 type Props = {
 	lang: WebsiteLanguage;
 	title: string;
-	description: string;
 	heroImageFilename?: string | null;
 	heroImageAlt?: string | null;
 	stats: Stat[];
@@ -21,7 +20,6 @@ type Props = {
 export const HeroDonationsHeader = ({
 	lang,
 	title,
-	description,
 	heroImageFilename,
 	heroImageAlt,
 	stats,
@@ -39,7 +37,7 @@ export const HeroDonationsHeader = ({
 
 				<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/15" />
 
-				<div className="w-site-width max-w-content absolute inset-0 z-20 mx-auto flex flex-row items-center justify-between gap-4 text-white">
+				<div className="max-w-content 2xl:w-site-width ml-[2vw] 2xl:mx-auto pl-8 pr-24 pb-24 2xl:pr-0 absolute inset-0 z-20 flex flex-row items-end justify-between gap-4 text-white">
 					<div className="flex max-w-2xl flex-col gap-4 text-white">
 						<div className="flex items-center gap-4">
 							{titleIcon ? (
@@ -53,11 +51,14 @@ export const HeroDonationsHeader = ({
 							) : null}
 							<h1 className="text-4xl font-bold xl:text-6xl">{title}</h1>
 						</div>
-						<div className="flex flex-col gap-1 text-xl">
+						<div className="flex flex-wrap gap-2">
 							{stats.map((stat) => (
-								<p key={stat.label}>
+								<span
+									key={stat.label}
+									className="inline-flex items-center justify-center rounded-full border border-white/50 bg-black/40 px-3 py-1 text-xs leading-none font-medium text-white"
+								>
 									{stat.value} {stat.label}
-								</p>
+								</span>
 							))}
 						</div>
 					</div>

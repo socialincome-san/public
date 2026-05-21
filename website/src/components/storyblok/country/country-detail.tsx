@@ -41,7 +41,6 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			<HeroDonationsHeader
 				lang={lang}
 				title={countryTitle}
-				description={countryDescription}
 				heroImageFilename={heroImageFilename}
 				heroImageAlt={heroImageAlt}
 				titleIcon={`/assets/flags/${isoCodeLower}.svg`}
