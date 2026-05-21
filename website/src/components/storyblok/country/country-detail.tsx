@@ -1,17 +1,14 @@
-import { Button } from '@/components/button';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
-import { MakeDonationForm } from '@/components/make-donation-form';
-import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
+import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import NextImage from 'next/image';
-import NextLink from 'next/link';
 import { CountryPersonCarousel } from './country-person-carousel';
 import type { CountryStory } from './country.types';
 import { getCountryDescription, getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
 import { MapBubble } from './map-bubble';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 
 type Props = {
 	country: CountryStory;
@@ -33,23 +30,22 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(lang, isoCode);
 	const countryOfficePersons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
 	const localPartners = getCountryLocalPartners(country.content);
+	const breadcrumbLinks = await buildBreadcrumbLinks({
+		fullSlug: country.full_slug,
+		lang,
+		region,
+	});
 
 	return (
 		<>
-			<LandingPageDetail
+			<HeroDonationsHeader
+				lang={lang}
 				title={countryTitle}
 				description={countryDescription}
 				heroImageFilename={heroImageFilename}
 				heroImageAlt={heroImageAlt}
-				titleVisual={
-					<NextImage
-						src={`/assets/flags/${isoCodeLower}.svg`}
-						alt={`${isoCode} flag`}
-						width={44}
-						height={32}
-						className="h-8 w-auto rounded-sm"
-					/>
-				}
+				titleIcon={`/assets/flags/${isoCodeLower}.svg`}
+				titleIconAlt={`${isoCode} flag`}
 				stats={[
 					{
 						value: activeProgramsCount,
@@ -66,45 +62,38 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 								: translator.t('countries-page.recipient-plural'),
 					},
 				]}
-				actions={
-					<Button variant="outline" size="lg" asChild>
-						<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/donate`}>
-							{translator.t('countries-page.donate-now')}
-						</NextLink>
-					</Button>
-				}
-				sideContent={<MakeDonationForm lang={lang} />}
-				mobileContent={<MakeDonationForm lang={lang} />}
-				descriptionHeading={`${translator.t('countries-page.about')} ${countryTitle}`}
 			/>
-			{hasIsoCode ? (
-				<section className="w-site-width max-w-content mx-auto px-6 py-8 lg:py-12">
-					<div className="flex flex-col gap-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
-						<div className="flex justify-center lg:justify-start">
-							<MapBubble isoCode={isoCode} countryName={countryTitle} />
+			<div className="max-w-content 2xl:w-site-width ml-[2vw] 2xl:mx-auto pl-8">
+				<Breadcrumb links={breadcrumbLinks} />
+				{hasIsoCode ? (
+					<section className="py-8 lg:py-12">
+						<div className="flex flex-col gap-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
+							<div className="flex justify-center lg:justify-start">
+								<MapBubble isoCode={isoCode} countryName={countryTitle} />
+							</div>
+							<div className="flex flex-col gap-4">
+								<h2 className="text-4xl font-semibold md:text-3xl">{`${translator.t('countries-page.about')} ${countryTitle}`}</h2>
+								<p className="text-base">{countryDescription || '-'}</p>
+							</div>
 						</div>
-						<div className="flex flex-col gap-4">
-							<h2 className="text-2xl font-semibold md:text-3xl">{`${translator.t('countries-page.about')} ${countryTitle}`}</h2>
-							<p className="text-base">{countryDescription || '-'}</p>
-						</div>
-					</div>
-				</section>
-			) : null}
-			{countryOfficePersons.length > 0 ? (
-				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
-					<CountryPersonCarousel
-						persons={countryOfficePersons}
-						countryName={countryTitle}
-						countryOfficeTitle={country.content.countryOfficeTitle?.trim()}
-						countryOfficeDescription={country.content.countryOfficeDescription?.trim()}
-					/>
-				</div>
-			) : null}
-			{localPartners.length > 0 ? (
-				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
-					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
-				</div>
-			) : null}
+					</section>
+				) : null}
+				{countryOfficePersons.length > 0 ? (
+					<section className="py-8">
+						<CountryPersonCarousel
+							persons={countryOfficePersons}
+							countryName={countryTitle}
+							countryOfficeTitle={country.content.countryOfficeTitle?.trim()}
+							countryOfficeDescription={country.content.countryOfficeDescription?.trim()}
+						/>
+					</section>
+				) : null}
+				{localPartners.length > 0 ? (
+					<section className="py-8">
+						<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
+					</section>
+				) : null}
+			</div>
 		</>
 	);
 };

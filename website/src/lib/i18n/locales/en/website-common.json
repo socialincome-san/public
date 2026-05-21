@@ -164,6 +164,9 @@
 		"day-left-plural": "days left",
 		"about": "About"
 	},
+	"breadcrumb": {
+		"home": "Home"
+	},
 	"wallet": {
 		"paid-out": "Paid out",
 		"recipients": "Recipients"

@@ -164,6 +164,9 @@
 		"day-left-plural": "giorni rimanenti",
 		"about": "Informazioni su"
 	},
+	"breadcrumb": {
+		"home": "Inizio"
+	},
 	"wallet": {
 		"paid-out": "Versato",
 		"recipients": "Beneficiari"

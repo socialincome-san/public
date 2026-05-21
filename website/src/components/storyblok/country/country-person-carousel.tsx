@@ -19,11 +19,11 @@ export const CountryPersonCarousel = ({ persons, countryName, countryOfficeTitle
 
 	return (
 		<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
-			<div className="space-y-4 lg:col-span-1">
-				{countryOfficeTitle ? <p className="text-foreground text-4xl font-bold break-words">{countryOfficeTitle}</p> : null}
+			<div className="space-y-4 lg:col-span-1 pr-8 lg:pr-0">
+				{countryOfficeTitle ? <p className="text-foreground text-4xl mb-0 font-bold break-words">{countryOfficeTitle}</p> : null}
 				<h2 className="text-foreground text-4xl font-normal break-words">{countryName}</h2>
 				{countryOfficeDescription ? (
-					<p className="text-muted-foreground text-lg leading-7">{countryOfficeDescription}</p>
+					<p className="text-muted-foreground text-base leading-7">{countryOfficeDescription}</p>
 				) : null}
 			</div>
 			<div className="relative min-w-0 lg:col-span-2">

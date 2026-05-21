@@ -164,6 +164,9 @@
 		"day-left-plural": "Tage verbleibend",
 		"about": "Über"
 	},
+	"breadcrumb": {
+		"home": "Startseite"
+	},
 	"wallet": {
 		"paid-out": "Ausbezahlt",
 		"recipients": "Empfänger:innen"
