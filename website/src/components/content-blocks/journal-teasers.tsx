@@ -1,17 +1,11 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button';
-import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
+import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { createNewWebsiteJournalPath } from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import Link from 'next/link';
+import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import type { SbBlokData } from '@storyblok/react';
 import Markdown from 'react-markdown';
-
-const MAX_ARTICLES = 3;
 
 type Props = {
 	blok: JournalTeasers;
@@ -23,11 +17,12 @@ const getSelectedArticleUuids = (selectedArticles: JournalTeasers['selectedArtic
 	if (!selectedArticles?.length) {
 		return [];
 	}
+
 	const uuids = selectedArticles
 		.map((article) => (typeof article === 'string' ? article : article.uuid))
 		.filter((uuid): uuid is string => Boolean(uuid));
 
-	return [...new Set(uuids)].slice(0, MAX_ARTICLES);
+	return [...new Set(uuids)].slice(0, StoryblokService.journalTeaserLimit);
 };
 
 const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
@@ -36,23 +31,21 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 		if (!articleUuids.length) {
 			return [];
 		}
+
 		const selectedResult = await services.storyblok.getArticlesByUuids(lang, articleUuids);
 
-		return selectedResult.success ? selectedResult.data.slice(0, MAX_ARTICLES) : [];
+		return selectedResult.success ? selectedResult.data.slice(0, StoryblokService.journalTeaserLimit) : [];
 	}
 
-	const latestResult = await services.storyblok.getOverviewArticles(lang, undefined, MAX_ARTICLES);
+	const latestResult = await services.storyblok.getLatestJournalArticles(lang);
 
-	return latestResult.success ? latestResult.data.slice(0, MAX_ARTICLES) : [];
+	return latestResult.success ? latestResult.data : [];
 };
 
 export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 	const { heading } = blok;
 	const [translator, articles] = await Promise.all([
-		Translator.getInstance({
-			language: lang,
-			namespaces: 'website-journal',
-		}),
+		Translator.getInstance({ language: lang, namespaces: ['website-journal'] }),
 		getArticles(blok, lang),
 	]);
 
@@ -60,34 +53,14 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 		return null;
 	}
 
-	const [featuredArticle, ...secondaryArticles] = articles;
-	const hasSecondaryArticles = secondaryArticles.length > 0;
-
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			<div className="mb-6 flex flex-col justify-between gap-4 md:mb-8 md:flex-row md:items-center">
-				{heading && (
-					<h2 className="text-4xl xl:text-5xl [&_strong]:font-bold">
-						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown>
-					</h2>
-				)}
-				<div>
-					<Button variant="outline" asChild>
-						<Link href={createNewWebsiteJournalPath(lang, region)}>{translator.t('teasers.goToJournal')}</Link>
-					</Button>
-				</div>
-			</div>
-
-			<div className={cn('grid grid-cols-1 gap-4 lg:gap-8', hasSecondaryArticles && 'lg:grid-cols-2')}>
-				<JournalArticleCard article={featuredArticle} lang={lang} region={region} variant="featured" />
-				{hasSecondaryArticles && (
-					<div className={cn('grid h-full grid-cols-1 gap-4 lg:gap-8', secondaryArticles.length > 1 && 'lg:grid-rows-2')}>
-						{secondaryArticles.map((article) => (
-							<JournalArticleCard key={article.uuid} article={article} lang={lang} region={region} variant="secondary" />
-						))}
-					</div>
-				)}
-			</div>
-		</BlockWrapper>
+		<JournalTeasersSection
+			heading={heading ? <Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown> : undefined}
+			articles={articles}
+			lang={lang}
+			region={region}
+			journalCtaLabel={translator.t('teasers.goToJournal')}
+			blok={blok as SbBlokData}
+		/>
 	);
 };

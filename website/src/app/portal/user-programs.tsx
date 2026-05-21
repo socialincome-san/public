@@ -1,7 +1,10 @@
 import { Badge } from '@/components/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet/wallet';
+import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { ProgramPermission } from '@/generated/prisma/enums';
+import { Translator } from '@/lib/i18n/translator';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 
@@ -11,6 +14,7 @@ type Props = {
 
 export const UserPrograms = async ({ userId }: Props) => {
 	const result = await services.read.program.getProgramWallets(userId);
+	const translator = await Translator.getInstance({ language: defaultLanguage, namespaces: ['website-common'] });
 
 	if (!result.success) {
 		return <div>{result.error}</div>;
@@ -34,12 +38,14 @@ export const UserPrograms = async ({ userId }: Props) => {
 								title={program.programName}
 								subtitle={getCountryNameByCode(program.country)}
 								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
-								paidOut={{
-									currency: program.payoutCurrency,
-									amount: program.totalPayoutsSum,
+								footerLeft={{
+									label: translator.t('wallet.paid-out'),
+									prefix: program.payoutCurrency,
+									value: formatWalletAmount(program.totalPayoutsSum),
 								}}
-								amountOfRecipients={{
-									amount: program.recipientsCount,
+								footerRight={{
+									label: translator.t('wallet.recipients'),
+									value: formatWalletAmount(program.recipientsCount),
 								}}
 							/>
 						))}
@@ -56,12 +62,14 @@ export const UserPrograms = async ({ userId }: Props) => {
 							title={program.programName}
 							subtitle={getCountryNameByCode(program.country)}
 							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
-							paidOut={{
-								currency: program.payoutCurrency,
-								amount: program.totalPayoutsSum,
+							footerLeft={{
+								label: translator.t('wallet.paid-out'),
+								prefix: program.payoutCurrency,
+								value: formatWalletAmount(program.totalPayoutsSum),
 							}}
-							amountOfRecipients={{
-								amount: program.recipientsCount,
+							footerRight={{
+								label: translator.t('wallet.recipients'),
+								value: formatWalletAmount(program.recipientsCount),
 							}}
 						/>
 					))}

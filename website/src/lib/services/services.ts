@@ -1,6 +1,7 @@
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankTransferService } from './bank-transfer/bank-transfer.service';
+import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
@@ -152,6 +153,7 @@ const donationCertificateRead = new DonationCertificateReadService(prisma, progr
 
 const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
 const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
+const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
 const programValidation = new ProgramValidationService(prisma);
 const programWrite = new ProgramWriteService(
@@ -192,6 +194,7 @@ export const services = {
 	read: {
 		candidate: candidateRead,
 		campaign: campaignRead,
+		campaignPublicWebsite,
 		focus: focusRead,
 		contribution: contributionRead,
 		contributor: contributorRead,

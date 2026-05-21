@@ -1,48 +1,49 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
-import { PreviewCampaign } from '@/components/public-landing/preview-campaign';
-import { CampaignDetail } from '@/components/storyblok/campaign/campaign-detail';
-import { getCampaignId } from '@/components/storyblok/campaign/campaign.utils';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { CampaignDetail } from '@/components/campaign/campaign-detail';
+import { Translator } from '@/lib/i18n/translator';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getCampaignBySlugAction, getCampaignPageMetadataAction } from '@/lib/server-actions/campaigns-actions';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlug) {
+export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { slug, lang } = await params;
-	const campaignResult = await services.storyblok.getCampaignBySlug(slug, lang);
 
-	if (campaignResult.success) {
-		const campaignId = getCampaignId(campaignResult.data.content);
-		const statsResult = campaignId ? await services.read.campaign.getPublicCampaignStatsById(campaignId) : undefined;
+	return getCampaignPageMetadataAction(slug, lang as WebsiteLanguage);
+};
 
-		return (
-			<CampaignDetail
-				campaign={campaignResult.data}
-				lang={lang as WebsiteLanguage}
-				contributionsCount={statsResult?.success ? statsResult.data.contributionsCount : undefined}
-				daysLeft={statsResult?.success ? statsResult.data.daysLeft : undefined}
-			/>
-		);
-	}
+const CampaignInactiveMessage = async ({ lang }: { lang: WebsiteLanguage }) => {
+	const translator = await Translator.getInstance({
+		language: lang,
+		namespaces: ['website-campaign'],
+	});
 
-	const previewCampaignResult = await services.read.campaign.getPublicPreviewCampaignBySlug(slug);
-	if (!previewCampaignResult.success) {
+	return (
+		<section className="w-site-width max-w-content mx-auto px-6 py-16">
+			<p className="text-primary text-center text-2xl font-medium">{translator.t('campaign.not-found')}</p>
+		</section>
+	);
+};
+
+export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlug) {
+	const { slug, lang, region } = await params;
+	const result = await getCampaignBySlugAction(slug);
+
+	if (!result.success || !result.data) {
 		return notFound();
 	}
 
-	const statsResult = await services.read.campaign.getPublicCampaignStatsById(previewCampaignResult.data.id);
-	if (!statsResult.success) {
-		return notFound();
+	if (!result.data.isActive) {
+		return <CampaignInactiveMessage lang={lang as WebsiteLanguage} />;
 	}
 
 	return (
-		<PreviewCampaign
-			title={previewCampaignResult.data.title}
-			description={previewCampaignResult.data.description}
+		<CampaignDetail
+			campaign={result.data}
+			campaignSlug={slug}
 			lang={lang as WebsiteLanguage}
-			contributionsCount={statsResult.data.contributionsCount}
-			daysLeft={statsResult.data.daysLeft}
+			region={region as WebsiteRegion}
 		/>
 	);
 }
