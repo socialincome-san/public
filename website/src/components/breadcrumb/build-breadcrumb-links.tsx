@@ -38,7 +38,7 @@ const getStoryLabel = (story: StoryTitleData, fallbackSegment: string) => {
 		return getCountryTitle(story.content as Country);
 	}
 
-	return story.name?.trim() || humanizeSlugSegment(fallbackSegment);
+	return story.name?.trim() ?? humanizeSlugSegment(fallbackSegment);
 };
 
 const fetchStoryLabel = async (slugPath: string, lang: WebsiteLanguage, fallbackSegment: string) => {
@@ -85,7 +85,7 @@ export const buildBreadcrumbLinks = async ({
 		}),
 	);
 
-	for (const [index, segment] of ancestorSegments.entries()) {
+	for (const [index] of ancestorSegments.entries()) {
 		const slugPath = segments.slice(0, startIndex + index + 1).join('/');
 
 		links.push({
