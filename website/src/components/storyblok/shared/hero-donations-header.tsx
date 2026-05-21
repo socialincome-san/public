@@ -37,7 +37,7 @@ export const HeroDonationsHeader = ({
 
 				<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/15" />
 
-				<div className="max-w-content 2xl:w-site-width ml-[2vw] 2xl:mx-auto pl-8 pr-24 pb-24 2xl:pr-0 absolute inset-0 z-20 flex flex-row items-end justify-between gap-4 text-white">
+				<div className="max-w-content 2xl:w-site-width absolute inset-0 z-20 ml-[2vw] flex flex-row items-end justify-between gap-4 pr-24 pb-24 pl-8 text-white 2xl:mx-auto 2xl:pr-0">
 					<div className="flex max-w-2xl flex-col gap-4 text-white">
 						<div className="flex items-center gap-4">
 							{titleIcon ? (

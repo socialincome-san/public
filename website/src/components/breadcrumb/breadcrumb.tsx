@@ -1,4 +1,3 @@
-import type { BreadcrumbLink as BreadcrumbLinkItem } from '@/components/breadcrumb/build-breadcrumb-links';
 import {
 	BreadcrumbElements,
 	BreadcrumbItem,
@@ -6,6 +5,7 @@ import {
 	BreadcrumbList,
 	BreadcrumbSeparator,
 } from '@/components/breadcrumb/breadcrumb-elements';
+import type { BreadcrumbLink as BreadcrumbLinkItem } from '@/components/breadcrumb/build-breadcrumb-links';
 import React from 'react';
 
 export const Breadcrumb = ({ links }: { links: BreadcrumbLinkItem[] }) => {
