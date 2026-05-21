@@ -2,8 +2,8 @@ import { getCountryTitle } from '@/components/storyblok/country/country.utils';
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { StoryTitleData } from '@/lib/services/storyblok/storyblok.service';
 import { services } from '@/lib/services/services';
+import type { StoryTitleData } from '@/lib/services/storyblok/storyblok.service';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 export type BreadcrumbLink = {

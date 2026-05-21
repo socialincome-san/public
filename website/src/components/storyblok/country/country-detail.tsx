@@ -1,3 +1,5 @@
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
@@ -8,8 +10,6 @@ import { CountryPersonCarousel } from './country-person-carousel';
 import { CountryPrograms } from './country-programs';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
-import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 
 type Props = {
 	country: CountryStory;
@@ -57,7 +57,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					},
 				]}
 			/>
-			<div className="max-w-content 2xl:w-site-width ml-[2vw] 2xl:mx-auto pl-8">
+			<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-8 2xl:mx-auto">
 				<Breadcrumb links={breadcrumbLinks} />
 				<CountryMap country={country} lang={lang} />
 				<CountryPersonCarousel country={country} lang={lang} />

@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton } from '@/components/carousel';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -5,7 +6,6 @@ import { services } from '@/lib/services/services';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
 import { PersonCard } from './person-card';
-import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	country: CountryStory;
@@ -30,8 +30,10 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 	return (
 		<BlockWrapper>
 			<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
-				<div className="space-y-4 lg:col-span-1 pr-8 lg:pr-0">
-					{countryOfficeTitle ? <p className="text-foreground text-4xl mb-0 font-bold break-words">{countryOfficeTitle}</p> : null}
+				<div className="space-y-4 pr-8 lg:col-span-1 lg:pr-0">
+					{countryOfficeTitle ? (
+						<p className="text-foreground mb-0 text-4xl font-bold break-words">{countryOfficeTitle}</p>
+					) : null}
 					<h2 className="text-foreground text-4xl font-normal break-words">{countryName}</h2>
 					{countryOfficeDescription ? (
 						<p className="text-muted-foreground text-base leading-7">{countryOfficeDescription}</p>
