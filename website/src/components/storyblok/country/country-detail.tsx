@@ -2,7 +2,10 @@ import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local
 import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { services } from '@/lib/services/services';
+import { CountryDonationsTotal } from './country-donations-total';
 import { CountryPersonCarousel } from './country-person-carousel';
+import { CountryPrograms } from './country-programs';
 import type { CountryStory } from './country.types';
 import { getCountryDescription, getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
 import { MapBubble } from './map-bubble';
@@ -22,6 +25,8 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	const countryDescription = getCountryDescription(country.content);
 	const isoCode = getCountryIsoCode(country.content);
 	const countryTitle = getCountryTitle(country.content);
+	const donationsBlock = country.content.donations?.[0] ?? null;
+	const programsBlock = country.content.programs?.[0] ?? null;
 	const localPartners = getCountryLocalPartners(country.content);
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: country.full_slug,
@@ -72,6 +77,8 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					</section>
 				) : null}
 				<CountryPersonCarousel country={country} />
+				{donationsBlock ? <CountryDonationsTotal blok={donationsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
+				{programsBlock ? <CountryPrograms blok={programsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
 				{localPartners.length > 0 ? (
 					<section className="py-8">
 						<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
