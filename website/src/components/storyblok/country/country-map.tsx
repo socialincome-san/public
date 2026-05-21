@@ -3,6 +3,7 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { CountryStory } from './country.types';
 import { getCountryDescription, getCountryIsoCode, getCountryTitle } from './country.utils';
 import { MapBubble } from './map-bubble';
+import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	country: CountryStory;
@@ -21,7 +22,7 @@ export const CountryMap = async ({ country, lang, region }: Props) => {
 	const countryDescription = getCountryDescription(country.content);
 
 	return (
-		<section className="py-8 lg:py-12">
+		<BlockWrapper>
 			<div className="flex flex-col gap-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
 				<div className="flex justify-center lg:justify-start">
 					<MapBubble isoCode={isoCode} countryName={countryTitle} />
@@ -31,6 +32,6 @@ export const CountryMap = async ({ country, lang, region }: Props) => {
 					<p className="text-base">{countryDescription || '-'}</p>
 				</div>
 			</div>
-		</section>
+		</BlockWrapper>
 	);
 };

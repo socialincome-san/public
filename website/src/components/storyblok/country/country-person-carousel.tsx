@@ -3,6 +3,7 @@ import { services } from '@/lib/services/services';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
 import { PersonCard } from './person-card';
+import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	country: CountryStory;
@@ -22,7 +23,7 @@ export const CountryPersonCarousel = async ({ country }: Props) => {
 	const countryOfficeDescription = country.content.countryOfficeDescription?.trim();
 
 	return (
-		<section className="py-8">
+		<BlockWrapper>
 			<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
 				<div className="space-y-4 lg:col-span-1 pr-8 lg:pr-0">
 					{countryOfficeTitle ? <p className="text-foreground text-4xl mb-0 font-bold break-words">{countryOfficeTitle}</p> : null}
@@ -44,6 +45,6 @@ export const CountryPersonCarousel = async ({ country }: Props) => {
 					</Carousel>
 				</div>
 			</div>
-		</section>
+		</BlockWrapper>
 	);
 };
