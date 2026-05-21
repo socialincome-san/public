@@ -47,11 +47,11 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => 
 				>
 					{article.title}
 				</h1>
-				{article.subtitle ? (
+				{article.subtitle && (
 					<p className={cn('text-2xl font-normal md:text-3xl', hasHero ? 'text-accent/90' : 'text-foreground')}>
 						{article.subtitle}
 					</p>
-				) : null}
+				)}
 			</div>
 
 			<Link
@@ -62,13 +62,13 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => 
 				<span className="text-lg font-medium">{getPersonDisplayName(author)}</span>
 			</Link>
 
-			{article.tags && article.tags.length > 0 ? (
+			{article.tags && article.tags.length > 0 && (
 				<div className="flex flex-wrap gap-2">
 					{article.tags.map((tag) => (
 						<TagBadge key={tag.slug} tag={tag} lang={lang} region={region} variant={hasHero ? 'hero' : 'default'} />
 					))}
 				</div>
-			) : null}
+			)}
 		</header>
 	);
 };

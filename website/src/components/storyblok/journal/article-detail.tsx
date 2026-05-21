@@ -1,4 +1,5 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
+import { SectionHeading } from '@/components/section-heading';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { ArticleDetailBody } from '@/components/storyblok/journal/article-detail-body';
 import { ArticleDetailHeader, ArticleDetailHeroImage } from '@/components/storyblok/journal/article-detail-header';
@@ -40,22 +41,22 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 			)}
 
 			<div className="w-site-width max-w-content mx-auto space-y-10 px-4 py-8 sm:px-0 sm:py-10">
-				{hasHero ? <JournalBreadcrumb links={breadcrumbs} /> : null}
+				{hasHero && <JournalBreadcrumb links={breadcrumbs} />}
 				<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} translator={translator} />
 			</div>
 
-			{article.showRelativeArticles && relatedArticles.length > 0 ? (
+			{article.showRelativeArticles && relatedArticles.length > 0 && (
 				<section className="w-site-width max-w-content mx-auto px-4 pb-16 sm:px-0">
-					<h2 className="text-foreground mb-8 text-center text-2xl font-semibold md:text-3xl">
+					<SectionHeading size="medium" className="text-foreground">
 						{translator.t('article.keep-reading')}
-					</h2>
+					</SectionHeading>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{relatedArticles.map((related) => (
 							<JournalArticleCard key={related.uuid} lang={lang} region={region} article={related} />
 						))}
 					</div>
 				</section>
-			) : null}
+			)}
 		</article>
 	);
 };

@@ -32,27 +32,27 @@ export const ArticleDetailBody = ({ story, slug, lang, region, translator }: Pro
 				languageName={translator.t('language-name.' + article.originalLanguage)}
 			/>
 
-			{article.leadText ? (
+			{article.leadText && (
 				<p className="text-foreground text-xl leading-relaxed font-medium md:text-2xl">{article.leadText}</p>
-			) : null}
+			)}
 
 			<div className="prose prose-neutral text-foreground prose-headings:font-semibold prose-a:text-primary max-w-none">
 				<ArticleRichText document={article.content as StoryblokRichtext} translator={translator} lang={lang} />
 			</div>
 
-			{article.footnotes ? (
+			{article.footnotes && (
 				<div className="prose prose-neutral text-muted-foreground max-w-none text-sm">
 					<ArticleRichText document={article.footnotes as StoryblokRichtext} translator={translator} lang={lang} />
 				</div>
-			) : null}
+			)}
 
-			{article.tags && article.tags.length > 0 ? (
+			{article.tags && article.tags.length > 0 && (
 				<div className="flex flex-wrap gap-2">
 					{article.tags.map((tag) => (
 						<TagBadge key={tag.slug} tag={tag} lang={lang} region={region} />
 					))}
 				</div>
-			) : null}
+			)}
 
 			<Link
 				href={createNewWebsitePersonLink(author.slug, lang, region)}

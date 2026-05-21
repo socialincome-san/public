@@ -1,3 +1,4 @@
+import { SectionHeading } from '@/components/section-heading';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getPersonGitHubUrl, getPersonLinkedInUrl } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
@@ -21,7 +22,7 @@ export const PersonProfileHeader = ({ person, name, portraitSrc }: Props) => {
 
 	return (
 		<header className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
-			{portraitSrc ? (
+			{portraitSrc && (
 				<div className="relative mx-auto aspect-4/5 w-44 shrink-0 overflow-hidden rounded-2xl bg-cyan-100 sm:mx-0 sm:w-48">
 					<Image
 						src={portraitSrc}
@@ -32,17 +33,24 @@ export const PersonProfileHeader = ({ person, name, portraitSrc }: Props) => {
 						priority
 					/>
 				</div>
-			) : null}
+			)}
 
 			<div className="min-w-0 flex-1 space-y-4 text-center sm:text-left">
 				<div className="space-y-2">
-					<h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">{name}</h1>
-					{role ? <p className="text-base text-cyan-800 capitalize sm:text-lg">{role}</p> : null}
+					<SectionHeading
+						as="h1"
+						align="left"
+						bold
+						className="mb-0 text-4xl leading-tight text-cyan-900 sm:text-5xl md:mb-0"
+					>
+						{name}
+					</SectionHeading>
+					{role && <p className="text-base text-cyan-800 capitalize sm:text-lg">{role}</p>}
 				</div>
-				{bioText ? <p className="text-base leading-7 text-cyan-950 sm:text-lg sm:leading-8">{bioText}</p> : null}
-				{(linkedinName ?? githubName) ? (
+				{bioText && <p className="text-base leading-7 text-cyan-950 sm:text-lg sm:leading-8">{bioText}</p>}
+				{(linkedinName ?? githubName) && (
 					<div className="flex flex-wrap justify-center gap-4 sm:justify-start">
-						{linkedinName ? (
+						{linkedinName && (
 							<Link
 								href={getPersonLinkedInUrl(linkedinName)}
 								target="_blank"
@@ -52,8 +60,8 @@ export const PersonProfileHeader = ({ person, name, portraitSrc }: Props) => {
 								LinkedIn
 								<ExternalLinkIcon className="size-3.5" aria-hidden="true" />
 							</Link>
-						) : null}
-						{githubName ? (
+						)}
+						{githubName && (
 							<Link
 								href={getPersonGitHubUrl(githubName)}
 								target="_blank"
@@ -63,9 +71,9 @@ export const PersonProfileHeader = ({ person, name, portraitSrc }: Props) => {
 								GitHub
 								<ExternalLinkIcon className="size-3.5" aria-hidden="true" />
 							</Link>
-						) : null}
+						)}
 					</div>
-				) : null}
+				)}
 			</div>
 		</header>
 	);

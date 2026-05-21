@@ -33,14 +33,14 @@ export const CampaignDetail = async ({ campaign, campaignSlug, lang, region }: P
 	return (
 		<>
 			<CampaignHero campaign={campaign} lang={lang} region={region} translator={translator} />
-			{campaign.secondDescription && campaign.thirdDescription ? <CampaignExtraText campaign={campaign} /> : null}
+			{campaign.secondDescription && campaign.thirdDescription && <CampaignExtraText campaign={campaign} />}
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignAboutSection translator={translator} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
 			<CampaignJournalTeaser lang={lang} region={region} />
-			{faqs.length > 0 ? (
+			{faqs.length > 0 && (
 				<CampaignFaqSection heading={translator.t('campaign.title')} faqs={faqs} lang={lang} region={region} />
-			) : null}
+			)}
 		</>
 	);
 };

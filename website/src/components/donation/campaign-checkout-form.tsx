@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
 
 const DonationInterval = {
@@ -96,8 +96,9 @@ export const CampaignCheckoutForm = ({ lang, region, campaignId, translations, d
 		},
 	});
 
-	const interval = form.watch('interval');
-	const paymentType = form.watch('paymentType');
+	const interval = useWatch({ control: form.control, name: 'interval' });
+	const paymentType = useWatch({ control: form.control, name: 'paymentType' });
+	const amount = useWatch({ control: form.control, name: 'amount' });
 	const amountPresets = interval === DonationInterval.Monthly ? monthlyAmounts : oneTimeAmounts;
 	const showBankTransfer = region === 'ch' && ['CHF', 'EUR'].includes(currency ?? '');
 
@@ -225,7 +226,7 @@ export const CampaignCheckoutForm = ({ lang, region, campaignId, translations, d
 					{paymentType === PaymentTypes.BANK_TRANSFER ? (
 						<div className="bg-muted/40 rounded-2xl p-4">
 							<BankTransferForm
-								amount={form.watch('amount')}
+								amount={amount}
 								intervalCount={interval === DonationInterval.Monthly ? 1 : 0}
 								translations={translations.bankTransfer}
 								lang={lang}

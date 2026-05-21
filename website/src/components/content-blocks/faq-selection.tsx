@@ -49,7 +49,7 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="mx-auto max-w-4xl">
-				{heading ? <SectionHeading bold>{heading}</SectionHeading> : null}
+				{heading && <SectionHeading bold>{heading}</SectionHeading>}
 				<RadixAccordion.Root type="single" collapsible className="border-input w-full border-b">
 					{resolvedQuestions.map((item) => (
 						<RadixAccordion.Item key={item.id} value={item.id} className="border-input border-b last:border-b-0">

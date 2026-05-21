@@ -1,11 +1,12 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
+import { SectionHeading } from '@/components/section-heading';
+import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import Markdown from 'react-markdown';
 
 type Props = {
 	blok: ProgramGrid;
@@ -25,19 +26,15 @@ export const CountryPrograms = async ({ blok, isoCode, lang, region }: Props) =>
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			{[blok.heading, blok.description].some(Boolean) && (
-				<div className="mb-10 text-center">
-					{blok.heading && (
-						<h2 className="m-0 text-3xl leading-[1.2] font-normal whitespace-pre-line md:text-4xl xl:text-5xl">
-							<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
-						</h2>
-					)}
-					{blok.description && (
-						<p className="text-foreground m-0 text-3xl leading-[1.2] font-bold whitespace-pre-line md:text-4xl xl:text-5xl">
-							<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.description}</Markdown>
-						</p>
-					)}
-				</div>
+			{blok.heading && (
+				<SectionHeading size="large">
+					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+				</SectionHeading>
+			)}
+			{blok.description && (
+				<p className="text-foreground -mt-4 mb-10 text-center text-lg leading-7 font-normal whitespace-pre-line">
+					<StoryblokMarkdown>{blok.description}</StoryblokMarkdown>
+				</p>
 			)}
 			<ProgramGridView programs={programs} blok={blok} lang={lang} region={region} />
 		</BlockWrapper>

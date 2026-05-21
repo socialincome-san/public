@@ -3,6 +3,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/carousel';
 import { SectionHeading } from '@/components/section-heading';
+import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { Testimonial } from '@/components/testimonial';
 import type {
 	Testimonial as StoryblokTestimonial,
@@ -12,7 +13,6 @@ import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Autoplay from 'embla-carousel-autoplay';
 import { useEffect, useRef, useState } from 'react';
-import Markdown from 'react-markdown';
 
 type Props = {
 	blok: TestimonialCarousel;
@@ -125,7 +125,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 			<div className="space-y-8">
 				{blok.heading && (
 					<SectionHeading className="mb-0 md:mb-0">
-						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
+						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
 				<Carousel

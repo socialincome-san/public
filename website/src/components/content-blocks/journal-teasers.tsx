@@ -1,11 +1,11 @@
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
+import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import type { SbBlokData } from '@storyblok/react';
-import Markdown from 'react-markdown';
 
 type Props = {
 	blok: JournalTeasers;
@@ -55,7 +55,7 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 
 	return (
 		<JournalTeasersSection
-			heading={heading ? <Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown> : undefined}
+			heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
 			articles={articles}
 			lang={lang}
 			region={region}

@@ -78,14 +78,14 @@ export const JournalOverview = ({
 			))}
 		</div>
 
-		{showMoreArticlesLink ? <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} /> : null}
+		{showMoreArticlesLink && <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} />}
 
-		{showMoreArticlesLink && authors.length > 0 ? <Separator /> : null}
+		{showMoreArticlesLink && authors.length > 0 && <Separator />}
 
-		{authors.length > 0 ? (
+		{authors.length > 0 && (
 			<section>
 				<PersonCarousel persons={authors} sidebar={{ heading: editorsHeading }} personLink={{ lang, region }} />
 			</section>
-		) : null}
+		)}
 	</JournalPageShell>
 );

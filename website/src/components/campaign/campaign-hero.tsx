@@ -60,7 +60,7 @@ export const CampaignHero = ({ campaign, lang, region, translator }: Props) => {
 					<h1 className="text-primary text-4xl font-bold xl:text-5xl">{campaign.title}</h1>
 					<p className="text-lg text-black">{campaign.description}</p>
 
-					{!hasGoal ? (
+					{!hasGoal && (
 						<p className="text-primary text-xl font-semibold">
 							{translator.t('campaign.without-goal.collected', {
 								context: {
@@ -71,9 +71,9 @@ export const CampaignHero = ({ campaign, lang, region, translator }: Props) => {
 								},
 							})}
 						</p>
-					) : null}
+					)}
 
-					{showProgress ? (
+					{showProgress && (
 						<div className="flex flex-col gap-2">
 							<div className="text-primary flex justify-between text-sm font-medium">
 								<span>
@@ -104,16 +104,16 @@ export const CampaignHero = ({ campaign, lang, region, translator }: Props) => {
 								</span>
 							</div>
 						</div>
-					) : null}
+					)}
 
-					{campaign.daysLeft < 0 ? (
+					{campaign.daysLeft < 0 && (
 						<p className="text-destructive text-lg font-medium">
 							{translator.t('campaign.ended', { context: { count: campaign.daysLeft } })}
 						</p>
-					) : null}
+					)}
 				</div>
 
-				{campaign.daysLeft >= 0 ? (
+				{campaign.daysLeft >= 0 && (
 					<div className="flex justify-center lg:justify-end">
 						<MakeDonationForm
 							lang={lang}
@@ -124,7 +124,7 @@ export const CampaignHero = ({ campaign, lang, region, translator }: Props) => {
 							campaignTranslations={checkoutTranslations}
 						/>
 					</div>
-				) : null}
+				)}
 			</div>
 		</section>
 	);

@@ -1,13 +1,13 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
 import { SectionHeading } from '@/components/section-heading';
+import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Document, Downloads } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { DownloadIcon } from 'lucide-react';
 import Link from 'next/link';
-import Markdown from 'react-markdown';
 
 type Props = {
 	blok: Downloads;
@@ -30,8 +30,8 @@ export const DownloadsBlock = ({ blok }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="space-y-6">
 				{blok.heading && (
-					<SectionHeading align="left">
-						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
+					<SectionHeading align="left" className="mb-0 md:mb-0">
+						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
 				<div className="overflow-hidden rounded-md border border-gray-200">

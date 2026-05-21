@@ -24,14 +24,14 @@ type Props = {
 
 export const CampaignsGridSection = ({ heading, data, lang, region, cta, blok }: Props) => (
 	<BlockWrapper {...(blok ? storyblokEditable(blok) : {})}>
-		{heading ? <SectionHeading>{heading}</SectionHeading> : null}
+		{heading && <SectionHeading>{heading}</SectionHeading>}
 		<CampaignsOverview campaigns={data.campaigns} statsById={data.statsById} lang={lang} region={region} />
-		{cta ? (
+		{cta && (
 			<div className="mt-10 flex justify-center">
 				<Button variant="outline" asChild>
 					<NextLink href={cta.href}>{cta.label}</NextLink>
 				</Button>
 			</div>
-		) : null}
+		)}
 	</BlockWrapper>
 );

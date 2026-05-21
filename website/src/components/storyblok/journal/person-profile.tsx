@@ -1,4 +1,5 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
+import { SectionHeading } from '@/components/section-heading';
 import { Separator } from '@/components/separator';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
@@ -37,18 +38,20 @@ export const PersonProfile = ({
 		<JournalBreadcrumb links={breadcrumbs} />
 		<PersonProfileHeader person={person} name={getPersonDisplayName(person)} portraitSrc={getPersonPortraitSrc(person)} />
 
-		{articles.length > 0 ? (
+		{articles.length > 0 && (
 			<section className="space-y-8">
 				<Separator />
-				<h2 className="text-2xl font-semibold text-cyan-900 sm:text-3xl">{articlesHeading}</h2>
+				<SectionHeading align="left" size="medium" className="mb-0 text-cyan-900 md:mb-0">
+					{articlesHeading}
+				</SectionHeading>
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{articles.map((article) => (
 						<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} />
 					))}
 				</div>
 			</section>
-		) : null}
+		)}
 
-		{showMoreArticlesLink ? <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} /> : null}
+		{showMoreArticlesLink && <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} />}
 	</JournalPageShell>
 );
