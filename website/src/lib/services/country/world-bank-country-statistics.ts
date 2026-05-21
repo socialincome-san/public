@@ -33,15 +33,13 @@ export const COUNTRY_STATISTIC_DEFINITIONS = [
 	},
 ] as const;
 
+const WORLD_BANK_RECENT_VALUE_COUNT = 10;
 const WORLD_BANK_REVALIDATE_SECONDS = 60 * 60 * 24;
 
 type CountryStatisticDefinition = (typeof COUNTRY_STATISTIC_DEFINITIONS)[number];
-type WorldBankIndicatorResponse = [
-	unknown,
-	{
-		value?: number | string | null;
-	}[]?,
-];
+type WorldBankIndicatorEntry = {
+	value?: number | string | null;
+};
 
 export type CountryStatisticKey = CountryStatisticDefinition['key'];
 export type CountryStatisticFormat = CountryStatisticDefinition['format'];
@@ -64,13 +62,29 @@ const EMPTY_COUNTRY_STATISTIC_VALUE_MAP: CountryStatisticValueMap = {
 	lifeExpectancy: null,
 };
 
+const isWorldBankIndicatorEntry = (entry: unknown): entry is WorldBankIndicatorEntry => {
+	return typeof entry === 'object' && entry !== null && 'value' in entry;
+};
+
+const hasWorldBankIndicatorValue = (entry: unknown): entry is WorldBankIndicatorEntry => {
+	return isWorldBankIndicatorEntry(entry) && entry.value !== null && entry.value !== undefined;
+};
+
+const isArray = (value: unknown): value is unknown[] => {
+	return Array.isArray(value);
+};
+
 export const extractLatestWorldBankValue = (payload: unknown): number | null => {
-	if (!Array.isArray(payload) || payload.length < 2) {
+	if (!isArray(payload)) {
 		return null;
 	}
 
-	const [, entries] = payload as WorldBankIndicatorResponse;
-	const latestEntry = entries?.find((entry) => entry?.value !== null && entry?.value !== undefined);
+	const entries = payload[1];
+	if (!isArray(entries)) {
+		return null;
+	}
+
+	const latestEntry = entries.find(hasWorldBankIndicatorValue);
 	const { value } = latestEntry ?? {};
 
 	if (typeof value === 'number' && Number.isFinite(value)) {
@@ -115,7 +129,12 @@ export const fetchWorldBankIndicator = async (
 	indicator: CountryStatisticDefinition['indicator'],
 ): Promise<number | null> => {
 	try {
-		const response = await fetch(`${WORLD_BANK_BASE_URL}/${countryCode}/indicator/${indicator}?format=json&mrv=1`, {
+		const query = new URLSearchParams({
+			format: 'json',
+			mrv: WORLD_BANK_RECENT_VALUE_COUNT.toString(),
+			per_page: WORLD_BANK_RECENT_VALUE_COUNT.toString(),
+		});
+		const response = await fetch(`${WORLD_BANK_BASE_URL}/${countryCode}/indicator/${indicator}?${query}`, {
 			next: { revalidate: WORLD_BANK_REVALIDATE_SECONDS },
 		});
 
@@ -123,7 +142,9 @@ export const fetchWorldBankIndicator = async (
 			return null;
 		}
 
-		return extractLatestWorldBankValue((await response.json()) as unknown);
+		const payload: unknown = await response.json();
+
+		return extractLatestWorldBankValue(payload);
 	} catch {
 		return null;
 	}

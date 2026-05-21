@@ -49,7 +49,9 @@ const normalizeCountryCode = (value: string | undefined): CountryCode | null => 
 	return normalizedValue;
 };
 
-const resolveVisitorCountryCode = async (): Promise<CountryCode | null> => {
+const FALLBACK_VISITOR_COUNTRY_CODE: CountryCode = 'CH';
+
+const resolveVisitorCountryCode = async (): Promise<CountryCode> => {
 	const cookieStore = await cookies();
 	const countryFromCookie = normalizeCountryCode(cookieStore.get(COUNTRY_COOKIE)?.value);
 	if (countryFromCookie) {
@@ -62,7 +64,7 @@ const resolveVisitorCountryCode = async (): Promise<CountryCode | null> => {
 		return countryFromHeader;
 	}
 
-	return 'CH'; // Default fallback country code
+	return FALLBACK_VISITOR_COUNTRY_CODE;
 };
 
 type CountryHeaderProps = {
@@ -111,10 +113,6 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 	}
 
 	const visitorCountryCode = await resolveVisitorCountryCode();
-	if (!visitorCountryCode) {
-		return null;
-	}
-
 	const rows = await loadCountryStatisticsComparison(normalizedCountryIsoCode, visitorCountryCode);
 	if (rows.length === 0) {
 		return null;
