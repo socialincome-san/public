@@ -8,10 +8,9 @@ import { BlockWrapper } from '@/components/block-wrapper';
 type Props = {
 	country: CountryStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const CountryMap = async ({ country, lang, region }: Props) => {
+export const CountryMap = async ({ country, lang }: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
 	if (isoCode === '-') {
 		return null;
