@@ -3,6 +3,7 @@ import { LocalPartnerTeaserCard } from '@/components/storyblok/local-partner/loc
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { BlockWrapper } from '@/components/block-wrapper';
 
 type ContentProps = {
 	localPartners: LocalPartnerStory[];
@@ -25,29 +26,31 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 	const nextButtonAriaLabel = translator.t('local-partners-page.teaser-next-button-aria');
 
 	return (
-		<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
-			<div className="space-y-8 lg:col-span-1 pr-8 lg:pr-0">
-				<p className="text-foreground mb-0 text-4xl break-words">{localPartnersTitle}</p>
-				<p className="text-foreground text-4xl font-bold break-words">{localPartnersSubtitle}</p>
-				<p className="text-muted-foreground text-base leading-7">{localPartnersText}</p>
+		<BlockWrapper>
+			<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
+				<div className="space-y-8 lg:col-span-1 pr-8 lg:pr-0">
+					<p className="text-foreground mb-0 text-4xl break-words">{localPartnersTitle}</p>
+					<p className="text-foreground text-4xl font-bold break-words">{localPartnersSubtitle}</p>
+					<p className="text-muted-foreground text-base leading-7">{localPartnersText}</p>
+				</div>
+				<div className="relative min-w-0 lg:col-span-2">
+					<Carousel opts={{ align: 'start' }}>
+						<CarouselContent className="-ml-6">
+							{localPartners.map((localPartner) => (
+								<CarouselItem key={localPartner.uuid} className="basis-[305px] pl-6">
+									<LocalPartnerTeaserCard
+										localPartner={localPartner}
+										lang={lang}
+										region={region}
+										viewDetailsLabel={viewDetailsLabel}
+									/>
+								</CarouselItem>
+							))}
+						</CarouselContent>
+						<CarouselScrollNextButton aria-label={nextButtonAriaLabel} />
+					</Carousel>
+				</div>
 			</div>
-			<div className="relative min-w-0 lg:col-span-2">
-				<Carousel opts={{ align: 'start' }}>
-					<CarouselContent className="-ml-6">
-						{localPartners.map((localPartner) => (
-							<CarouselItem key={localPartner.uuid} className="basis-[305px] pl-6">
-								<LocalPartnerTeaserCard
-									localPartner={localPartner}
-									lang={lang}
-									region={region}
-									viewDetailsLabel={viewDetailsLabel}
-								/>
-							</CarouselItem>
-						))}
-					</CarouselContent>
-					<CarouselScrollNextButton aria-label={nextButtonAriaLabel} />
-				</Carousel>
-			</div>
-		</div>
+		</BlockWrapper>
 	);
 };

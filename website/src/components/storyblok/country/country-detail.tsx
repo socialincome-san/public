@@ -64,9 +64,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				<CountryDonationsTotal country={country} lang={lang} region={region} />
 				<CountryPrograms country={country} lang={lang} region={region} />
 				{localPartners.length > 0 ? (
-					<section className="py-8">
-						<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
-					</section>
+					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
 				) : null}
 			</div>
 		</>
