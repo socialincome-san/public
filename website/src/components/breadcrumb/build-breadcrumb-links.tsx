@@ -77,22 +77,19 @@ export const buildBreadcrumbLinks = async ({
 		.filter((segment) => segment !== region.toLowerCase())
 		.slice(startIndex, -1);
 
-	const ancestorLabels = await Promise.all(
-		ancestorSegments.map((segment, index) => {
-			const slugPath = segments.slice(0, startIndex + index + 1).join('/');
+	links.push(
+		...(await Promise.all(
+			ancestorSegments.map(async (segment, index) => {
+				const slugPath = segments.slice(0, startIndex + index + 1).join('/');
+				const label = await fetchStoryLabel(slugPath, lang, segment);
 
-			return fetchStoryLabel(slugPath, lang, segment);
-		}),
+				return {
+					href: `/${lang}/${region}/${slugPath}`,
+					label: capitalizeLabel(label),
+				};
+			}),
+		)),
 	);
-
-	for (const [index] of ancestorSegments.entries()) {
-		const slugPath = segments.slice(0, startIndex + index + 1).join('/');
-
-		links.push({
-			href: `/${lang}/${region}/${slugPath}`,
-			label: capitalizeLabel(ancestorLabels[index]),
-		});
-	}
 
 	links.push({
 		href: '',
