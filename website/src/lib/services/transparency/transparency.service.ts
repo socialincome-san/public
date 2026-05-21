@@ -1,10 +1,11 @@
 import { CountryCode } from '@/generated/prisma/enums';
-import { getCountryNameByCode } from '@/lib/types/country';
+import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
 	ContributionsByCountry,
 	ContributionTimeRange,
+	CountryTransparencyTotals,
 	TimeRange,
 	TransparencyData,
 	TransparencyTotals,
@@ -20,6 +21,27 @@ export class TransparencyService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch transparency totals: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getTransparencyTotalsForCountry(isoCode: string): Promise<ServiceResult<CountryTransparencyTotals>> {
+		try {
+			const normalizedIsoCode = isoCode.trim().toUpperCase();
+			if (!normalizedIsoCode) {
+				return this.resultFail('Missing isoCode');
+			}
+
+			if (!isValidCountryCode(normalizedIsoCode)) {
+				return this.resultFail('Invalid country code');
+			}
+
+			const totals = await this.getTotalsForCountry(normalizedIsoCode);
+
+			return this.resultOk(totals);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch transparency totals for country: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -57,6 +79,26 @@ export class TransparencyService extends BaseService {
 			totalContributionsChf: Number(aggregate._sum.amountChf ?? 0),
 			totalContributors: distinctContributors.length,
 			totalContributionsCount: aggregate._count._all,
+		};
+	}
+
+	private async getTotalsForCountry(countryCode: CountryCode): Promise<CountryTransparencyTotals> {
+		const aggregate = await this.db.contribution.aggregate({
+			where: {
+				status: 'succeeded',
+				campaign: {
+					program: {
+						country: {
+							isoCode: countryCode,
+						},
+					},
+				},
+			},
+			_sum: { amountChf: true },
+		});
+
+		return {
+			totalContributionsChf: Number(aggregate._sum.amountChf ?? 0),
 		};
 	}
 
