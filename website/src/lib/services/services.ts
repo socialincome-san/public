@@ -153,7 +153,7 @@ const donationCertificateRead = new DonationCertificateReadService(prisma, progr
 
 const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
 const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
-const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok);
+const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok, campaignRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
 const programValidation = new ProgramValidationService(prisma);
 const programWrite = new ProgramWriteService(

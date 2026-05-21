@@ -19,17 +19,39 @@ type RichTextLinkProps = {
 	rel?: string;
 };
 
+const linkClassName = 'text-primary font-medium underline-offset-4';
+
+const buildLinkRel = (target?: string, rel?: string) => {
+	if (target !== '_blank') {
+		return rel;
+	}
+
+	const tokens = new Set(rel?.split(/\s+/).filter(Boolean) ?? []);
+	tokens.add('noopener');
+	tokens.add('noreferrer');
+
+	return [...tokens].join(' ');
+};
+
 export const storyblokRichTextMarkResolvers = {
-	[MARK_LINK]: (children: ReactNode, props: RichTextLinkProps) => (
-		<NextLink
-			href={props.href ?? '#'}
-			className="text-primary font-medium underline-offset-4 hover:underline"
-			target={props.target}
-			rel={props.rel}
-		>
-			{children}
-		</NextLink>
-	),
+	[MARK_LINK]: (children: ReactNode, props: RichTextLinkProps) => {
+		const href = props.href?.trim();
+
+		if (!href) {
+			return <span className={linkClassName}>{children}</span>;
+		}
+
+		return (
+			<NextLink
+				href={href}
+				className={cn(linkClassName, 'hover:underline')}
+				target={props.target}
+				rel={buildLinkRel(props.target, props.rel)}
+			>
+				{children}
+			</NextLink>
+		);
+	},
 };
 
 const headingStyles: Record<number, string> = {
@@ -49,22 +71,14 @@ export const storyblokRichTextBasicNodeResolvers = {
 };
 
 const storyblokRichTextTableNodeResolvers = {
-	[NODE_TABLE]: (children: ReactNode, props: Record<string, unknown>) => (
-		<Table className="text-foreground my-6" {...(props as object)}>
+	[NODE_TABLE]: (children: ReactNode) => (
+		<Table className="text-foreground my-6">
 			<TableBody>{children}</TableBody>
 		</Table>
 	),
-	[NODE_TABLE_HEADER]: (children: ReactNode, props: Record<string, unknown>) => (
-		<TableHead className="font-semibold" {...(props as object)}>
-			{children}
-		</TableHead>
-	),
-	[NODE_TABLE_ROW]: (children: ReactNode, props: Record<string, unknown>) => (
-		<TableRow {...(props as object)}>{children}</TableRow>
-	),
-	[NODE_TABLE_CELL]: (children: ReactNode, props: Record<string, unknown>) => (
-		<TableCell {...(props as object)}>{children}</TableCell>
-	),
+	[NODE_TABLE_HEADER]: (children: ReactNode) => <TableHead className="font-semibold">{children}</TableHead>,
+	[NODE_TABLE_ROW]: (children: ReactNode) => <TableRow>{children}</TableRow>,
+	[NODE_TABLE_CELL]: (children: ReactNode) => <TableCell>{children}</TableCell>,
 };
 
 export const storyblokRichTextNodeResolvers = {

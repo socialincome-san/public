@@ -33,9 +33,11 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => 
 		>
 			<div className="flex flex-wrap items-center gap-3 text-sm">
 				{article.type?.content?.value && <span className="capitalize opacity-90">{article.type.content.value}</span>}
-				<time dateTime={story.first_published_at ?? undefined} className="opacity-80">
-					{formatStoryblokDate(story.first_published_at, lang)}
-				</time>
+				{story.first_published_at && (
+					<time dateTime={story.first_published_at} className="opacity-80">
+						{formatStoryblokDate(story.first_published_at, lang)}
+					</time>
+				)}
 			</div>
 
 			<div className="space-y-3">

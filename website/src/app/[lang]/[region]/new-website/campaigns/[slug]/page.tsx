@@ -2,7 +2,7 @@ import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getCampaignBySlugAction, getCampaignPageMetadataAction } from '@/lib/server-actions/campaigns-actions';
+import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
@@ -10,7 +10,7 @@ export const revalidate = 900;
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { slug, lang } = await params;
 
-	return getCampaignPageMetadataAction(slug, lang as WebsiteLanguage);
+	return services.read.campaignPublicWebsite.getMetadataForSlug(slug, lang as WebsiteLanguage);
 };
 
 const CampaignInactiveMessage = async ({ lang }: { lang: WebsiteLanguage }) => {
@@ -28,7 +28,7 @@ const CampaignInactiveMessage = async ({ lang }: { lang: WebsiteLanguage }) => {
 
 export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = await params;
-	const result = await getCampaignBySlugAction(slug);
+	const result = await services.read.campaign.getBySlug(slug);
 
 	if (!result.success || !result.data) {
 		return notFound();

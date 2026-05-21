@@ -6,8 +6,8 @@ import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-te
 import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getCampaignPageContentAction } from '@/lib/server-actions/campaigns-actions';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
+import { services } from '@/lib/services/services';
 
 type Props = {
 	campaign: CampaignPage;
@@ -17,13 +17,14 @@ type Props = {
 };
 
 export const CampaignDetail = async ({ campaign, campaignSlug, lang, region }: Props) => {
-	const pageContentResult = await getCampaignPageContentAction(lang);
+	const pageContentResult = await services.read.campaignPublicWebsite.getPageContent(lang);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
 	}
 	const { translator, faqs } = pageContentResult.data;
 	const newsletterTranslations = {
 		title: translator.t('popup.information-label'),
+		emailLabel: translator.t('updates.email'),
 		emailPlaceholder: translator.t('popup.email-placeholder'),
 		buttonAddSubscriber: translator.t('popup.button-subscribe'),
 		toastSuccess: translator.t('popup.toast-success'),
@@ -38,9 +39,7 @@ export const CampaignDetail = async ({ campaign, campaignSlug, lang, region }: P
 			<CampaignAboutSection translator={translator} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
 			<CampaignJournalTeaser lang={lang} region={region} />
-			{faqs.length > 0 && (
-				<CampaignFaqSection heading={translator.t('campaign.title')} faqs={faqs} lang={lang} region={region} />
-			)}
+			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('campaign.title')} faqs={faqs} />}
 		</>
 	);
 };

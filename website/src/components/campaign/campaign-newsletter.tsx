@@ -15,11 +15,14 @@ import * as z from 'zod';
 
 type CampaignNewsletterTranslations = {
 	title: string;
+	emailLabel: string;
 	emailPlaceholder: string;
 	buttonAddSubscriber: string;
 	toastSuccess: string;
 	toastFailure: string;
 };
+
+const emailInputId = 'campaign-newsletter-email';
 
 type Props = {
 	lang: LanguageCode;
@@ -72,8 +75,12 @@ export const CampaignNewsletter = ({ lang, translations }: Props) => {
 								render={({ field }) => (
 									<FormItem className="w-full">
 										<div className="border-input/80 flex w-full flex-col gap-1.5 rounded-xl border bg-white p-1.5 sm:flex-row sm:items-center sm:rounded-full">
+											<label htmlFor={emailInputId} className="sr-only">
+												{translations.emailLabel}
+											</label>
 											<FormControl>
 												<Input
+													id={emailInputId}
 													type="email"
 													autoComplete="email"
 													placeholder={translations.emailPlaceholder}

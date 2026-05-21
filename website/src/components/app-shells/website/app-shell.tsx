@@ -23,8 +23,8 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 				className={
 					isContained
 						? 'w-site-width max-w-content mx-auto mt-20 flex-1 pb-8'
-						: // Full-bleed heroes (e.g. program landing, journal article) use `hero-video-block` on a direct child.
-							'[&:not(:has(>.hero-video-block))]:mt-20'
+						: // Skip top offset when the page starts with a full-bleed hero (mark the root block with `full-bleed-hero`).
+							'[&:not(:has(>.full-bleed-hero))]:mt-20'
 				}
 			>
 				{children}

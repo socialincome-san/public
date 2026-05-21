@@ -45,7 +45,6 @@ export const ArticleRichText = ({ document, translator, lang }: Props) => {
 
 	return render(document, {
 		markResolvers: storyblokRichTextMarkResolvers,
-		// @ts-expect-error Resolver prop typing from library is too broad for table nodes.
 		nodeResolvers: storyblokRichTextNodeResolvers,
 		blokResolvers: {
 			quotedText: (props: StoryblokBlockProps) => <QuotedText {...(props as ComponentProps<typeof QuotedText>)} />,

@@ -27,7 +27,7 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 	const heroImageSrc = getArticleHeroImageSrc(article);
 
 	return (
-		<article className={cn('w-full', hasHero && 'hero-video hero-video-block')}>
+		<article className={cn('w-full', hasHero && 'full-bleed-hero')}>
 			{hasHero && heroImageSrc ? (
 				<div className="flex min-h-[70vh] flex-col lg:flex-row">
 					<ArticleDetailHeroImage heroImageSrc={heroImageSrc} alt={article.image?.alt ?? ''} />
@@ -41,7 +41,7 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 			)}
 
 			<div className="w-site-width max-w-content mx-auto space-y-10 px-4 py-8 sm:px-0 sm:py-10">
-				{hasHero && <JournalBreadcrumb links={breadcrumbs} />}
+				{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
 				<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} translator={translator} />
 			</div>
 

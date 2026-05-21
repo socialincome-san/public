@@ -11,7 +11,7 @@ import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions'
 import { cn } from '@/lib/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -101,6 +101,13 @@ export const CampaignCheckoutForm = ({ lang, region, campaignId, translations, d
 	const amount = useWatch({ control: form.control, name: 'amount' });
 	const amountPresets = interval === DonationInterval.Monthly ? monthlyAmounts : oneTimeAmounts;
 	const showBankTransfer = region === 'ch' && ['CHF', 'EUR'].includes(currency ?? '');
+	const isBankTransfer = showBankTransfer && paymentType === PaymentTypes.BANK_TRANSFER;
+
+	useEffect(() => {
+		if (!showBankTransfer && paymentType === PaymentTypes.BANK_TRANSFER) {
+			form.setValue('paymentType', PaymentTypes.CREDIT_CARD);
+		}
+	}, [showBankTransfer, paymentType, form]);
 
 	const onSubmit = async (values: FormSchema) => {
 		if (values.paymentType === PaymentTypes.BANK_TRANSFER) {
@@ -108,23 +115,27 @@ export const CampaignCheckoutForm = ({ lang, region, campaignId, translations, d
 		}
 
 		setSubmitting(true);
-		const result = await createStripeCheckoutAction({
-			amount: values.amount * 100,
-			currency,
-			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
-			recurring: values.interval === DonationInterval.Monthly,
-			intervalCount: values.interval === DonationInterval.Monthly ? 1 : undefined,
-			campaignId,
-		});
-		setSubmitting(false);
 
-		if (!result.success) {
-			console.error(result.error);
+		try {
+			const result = await createStripeCheckoutAction({
+				amount: values.amount * 100,
+				currency,
+				successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
+				recurring: values.interval === DonationInterval.Monthly,
+				intervalCount: values.interval === DonationInterval.Monthly ? 1 : undefined,
+				campaignId,
+			});
 
-			return;
+			if (!result.success) {
+				console.error(result.error);
+
+				return;
+			}
+
+			router.push(result.data);
+		} finally {
+			setSubmitting(false);
 		}
-
-		router.push(result.data);
 	};
 
 	return (
@@ -223,7 +234,7 @@ export const CampaignCheckoutForm = ({ lang, region, campaignId, translations, d
 						/>
 					) : null}
 
-					{paymentType === PaymentTypes.BANK_TRANSFER ? (
+					{isBankTransfer ? (
 						<div className="bg-muted/40 rounded-2xl p-4">
 							<BankTransferForm
 								amount={amount}

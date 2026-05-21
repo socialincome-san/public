@@ -1,7 +1,7 @@
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getLatestJournalArticlesAction } from '@/lib/server-actions/journal-actions';
+import { services } from '@/lib/services/services';
 
 type Props = {
 	lang: WebsiteLanguage;
@@ -9,10 +9,12 @@ type Props = {
 };
 
 export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
-	const [translator, articles] = await Promise.all([
+	const [translator, articlesResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-journal'] }),
-		getLatestJournalArticlesAction(lang),
+		services.storyblok.getLatestJournalArticles(lang),
 	]);
+
+	const articles = articlesResult.success ? articlesResult.data : [];
 
 	if (articles.length === 0) {
 		return null;

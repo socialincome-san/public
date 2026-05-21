@@ -1,16 +1,17 @@
-import { buildTwoColumnTextBlok } from '@/components/campaign/campaign-blok-builders';
-import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
+import { BlockWrapper } from '@/components/block-wrapper';
+import { TwoColumnTextContent } from '@/components/content-blocks/two-column-text-content';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
+import { titledParagraphRichText } from '@/lib/storyblok/plain-text-rich-text';
 
 type Props = {
 	campaign: CampaignPage;
 };
 
 export const CampaignExtraText = ({ campaign }: Props) => (
-	<TwoColumnTextBlock
-		blok={buildTwoColumnTextBlok(
-			{ title: campaign.secondDescriptionTitle ?? '', text: campaign.secondDescription ?? '' },
-			{ title: campaign.thirdDescriptionTitle ?? '', text: campaign.thirdDescription ?? '' },
-		)}
-	/>
+	<BlockWrapper>
+		<TwoColumnTextContent
+			leftText={titledParagraphRichText(campaign.secondDescriptionTitle ?? '', campaign.secondDescription ?? '')}
+			rightText={titledParagraphRichText(campaign.thirdDescriptionTitle ?? '', campaign.thirdDescription ?? '')}
+		/>
+	</BlockWrapper>
 );
