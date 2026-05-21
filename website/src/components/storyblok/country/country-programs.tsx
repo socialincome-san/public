@@ -1,20 +1,26 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
-import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Markdown from 'react-markdown';
+import type { CountryStory } from './country.types';
+import { getCountryIsoCode } from './country.utils';
 
 type Props = {
-	blok: ProgramGrid;
-	isoCode: string;
+	country: CountryStory;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const CountryPrograms = async ({ blok, isoCode, lang, region }: Props) => {
+export const CountryPrograms = async ({ country, lang, region }: Props) => {
+	const blok = country.content.programs?.[0];
+	if (!blok) {
+		return null;
+	}
+
+	const isoCode = getCountryIsoCode(country.content);
 	const programsResult = await services.storyblok.getCountryPrograms(lang, isoCode);
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);

@@ -1,16 +1,22 @@
 import { DonationsTotalBlock } from '@/components/content-blocks/donations-total';
-import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import type { CountryStory } from './country.types';
+import { getCountryIsoCode } from './country.utils';
 
 type Props = {
-	blok: DonationsTotal;
-	isoCode: string;
+	country: CountryStory;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const CountryDonationsTotal = async ({ blok, isoCode, lang, region }: Props) => {
+export const CountryDonationsTotal = async ({ country, lang, region }: Props) => {
+	const blok = country.content.donations?.[0];
+	if (!blok) {
+		return null;
+	}
+
+	const isoCode = getCountryIsoCode(country.content);
 	const totalsResult = await services.transparency.getTransparencyTotalsForCountry(isoCode);
 	const totalChf = totalsResult.success ? totalsResult.data.totalContributionsChf : 0;
 
