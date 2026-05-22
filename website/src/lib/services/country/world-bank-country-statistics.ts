@@ -1,6 +1,6 @@
 import { type CountryCode } from '@/generated/prisma/enums';
 
-export const COUNTRY_STATISTIC_DEFINITIONS = [
+const COUNTRY_STATISTIC_DEFINITIONS = [
 	{
 		key: 'population',
 		indicator: 'SP.POP.TOTL',
@@ -41,9 +41,9 @@ type WorldBankIndicatorEntry = {
 	value?: number | string | null;
 };
 
-export type CountryStatisticKey = CountryStatisticDefinition['key'];
+type CountryStatisticKey = CountryStatisticDefinition['key'];
 export type CountryStatisticFormat = CountryStatisticDefinition['format'];
-export type CountryStatisticRow = {
+type CountryStatisticRow = {
 	key: CountryStatisticKey;
 	labelKey: CountryStatisticDefinition['labelKey'];
 	format: CountryStatisticFormat;
@@ -74,7 +74,7 @@ const isArray = (value: unknown): value is unknown[] => {
 	return Array.isArray(value);
 };
 
-export const extractLatestWorldBankValue = (payload: unknown): number | null => {
+const extractLatestWorldBankValue = (payload: unknown): number | null => {
 	if (!isArray(payload)) {
 		return null;
 	}
@@ -100,7 +100,7 @@ export const extractLatestWorldBankValue = (payload: unknown): number | null => 
 	return null;
 };
 
-export const buildCountryStatisticRows = (
+const buildCountryStatisticRows = (
 	countryValues: CountryStatisticValueMap,
 	visitorValues: CountryStatisticValueMap,
 ): CountryStatisticRow[] => {
@@ -124,7 +124,7 @@ export const buildCountryStatisticRows = (
 	});
 };
 
-export const fetchWorldBankIndicator = async (
+const fetchWorldBankIndicator = async (
 	countryCode: CountryCode,
 	indicator: CountryStatisticDefinition['indicator'],
 ): Promise<number | null> => {
@@ -150,7 +150,7 @@ export const fetchWorldBankIndicator = async (
 	}
 };
 
-export const loadCountryStatisticValues = async (countryCode: CountryCode): Promise<CountryStatisticValueMap> => {
+const loadCountryStatisticValues = async (countryCode: CountryCode): Promise<CountryStatisticValueMap> => {
 	const indicatorResults = await Promise.all(
 		COUNTRY_STATISTIC_DEFINITIONS.map(async (definition) => ({
 			key: definition.key,
