@@ -5,6 +5,8 @@ const SkeletonBar = ({ className }: { className: string }) => (
 	<div className={`animate-pulse rounded-full bg-slate-200 ${className}`} />
 );
 
+const SKELETON_ROW_COUNT = 5;
+
 type Props = {
 	lang: WebsiteLanguage;
 };
@@ -27,7 +29,7 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 									<SkeletonBar className="h-7 w-7 rounded-full" />
 									<SkeletonBar className="mt-3 h-5 w-28 rounded-md" />
 									<div className="mt-8 flex flex-col gap-7">
-										{Array.from({ length: 4 }, (_, index) => (
+										{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 											<div key={`country-statistics-skeleton-mobile-left-${index}`} className="flex flex-col gap-0">
 												<SkeletonBar className="h-5 w-20 rounded-md" />
 												<SkeletonBar className="mt-0.5 h-5 w-16 rounded-md" />
@@ -39,7 +41,7 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 									<SkeletonBar className="h-7 w-7 rounded-full" />
 									<SkeletonBar className="mt-3 h-5 w-28 rounded-md" />
 									<div className="mt-8 flex flex-col gap-7">
-										{Array.from({ length: 4 }, (_, index) => (
+										{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 											<div key={`country-statistics-skeleton-mobile-right-${index}`} className="flex flex-col gap-0">
 												<SkeletonBar className="pointer-events-none invisible h-5 w-20 rounded-md" />
 												<SkeletonBar className="mt-0.5 h-5 w-16 rounded-md" />
@@ -61,7 +63,7 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 										<SkeletonBar className="mt-3 h-8 w-40 rounded-md" />
 									</div>
 									<div className="mt-8 flex flex-col gap-4">
-										{Array.from({ length: 4 }, (_, index) => (
+										{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 											<SkeletonBar key={`country-statistics-skeleton-label-${index}`} className="h-6 w-32 rounded-md" />
 										))}
 									</div>
@@ -70,7 +72,7 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 									<SkeletonBar className="h-7 w-7 rounded-full" />
 									<SkeletonBar className="mt-3 h-8 w-40 rounded-md" />
 									<div className="mt-8 flex flex-col gap-4">
-										{Array.from({ length: 4 }, (_, index) => (
+										{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 											<SkeletonBar key={`country-statistics-skeleton-country-${index}`} className="h-6 w-24 rounded-md" />
 										))}
 									</div>
@@ -79,7 +81,7 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 									<SkeletonBar className="h-7 w-7 rounded-full" />
 									<SkeletonBar className="mt-3 h-8 w-40 rounded-md" />
 									<div className="mt-8 flex flex-col gap-4">
-										{Array.from({ length: 4 }, (_, index) => (
+										{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 											<SkeletonBar key={`country-statistics-skeleton-visitor-${index}`} className="h-6 w-24 rounded-md" />
 										))}
 									</div>
