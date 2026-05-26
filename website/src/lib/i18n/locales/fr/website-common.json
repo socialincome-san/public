@@ -122,6 +122,7 @@
 		"recipient-plural": "bénéficiaires",
 		"donate-now": "Faire un don",
 		"about": "À propos de",
+		"person-carousel-next-button-aria": "Afficher la personne suivante",
 		"statistics": {
 			"title": "Chiffres clés",
 			"population": "Population",
@@ -173,6 +174,9 @@
 		"day-left-singular": "jour restant",
 		"day-left-plural": "jours restants",
 		"about": "À propos de"
+	},
+	"breadcrumb": {
+		"home": "Accueil"
 	},
 	"wallet": {
 		"paid-out": "Versé",

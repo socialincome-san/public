@@ -1,22 +1,18 @@
-import { Button } from '@/components/button';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
-import { MakeDonationForm } from '@/components/make-donation-form';
-import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
+import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import NextImage from 'next/image';
-import NextLink from 'next/link';
 import { Suspense } from 'react';
 import { CountryDonationsTotal } from './country-donations-total';
+import { CountryMap } from './country-map';
 import { CountryPersonCarousel } from './country-person-carousel';
 import { CountryPrograms } from './country-programs';
 import { CountryStatistics } from './country-statistics';
 import { CountryStatisticsSkeleton } from './country-statistics-skeleton';
 import type { CountryStory } from './country.types';
-import { getCountryDescription, getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
-import { MapBubble } from './map-bubble';
+import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
 
 type Props = {
 	country: CountryStory;
@@ -28,35 +24,25 @@ type Props = {
 
 export const CountryDetail = async ({ country, lang, region, activeProgramsCount, recipientsCount }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const countryDescription = getCountryDescription(country.content);
 	const isoCode = getCountryIsoCode(country.content);
-	const hasIsoCode = isoCode !== '-';
-	const isoCodeLower = isoCode.toLowerCase();
 	const countryTitle = getCountryTitle(country.content);
-	const heroImageFilename = country.content.heroImage?.filename;
-	const heroImageAlt = country.content.heroImage?.alt ?? countryTitle;
-	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(lang, isoCode);
-	const countryOfficePersons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
-	const donationsBlock = country.content.donations?.[0] ?? null;
-	const programsBlock = country.content.programs?.[0] ?? null;
 	const localPartners = getCountryLocalPartners(country.content);
+	const breadcrumbLinks = await buildBreadcrumbLinks({
+		fullSlug: country.full_slug,
+		currentLabel: countryTitle,
+		lang,
+		region,
+	});
 
 	return (
 		<>
-			<LandingPageDetail
+			<HeroDonationsHeader
+				lang={lang}
 				title={countryTitle}
-				description={countryDescription}
-				heroImageFilename={heroImageFilename}
-				heroImageAlt={heroImageAlt}
-				titleVisual={
-					<NextImage
-						src={`/assets/flags/${isoCodeLower}.svg`}
-						alt={`${isoCode} flag`}
-						width={44}
-						height={32}
-						className="h-8 w-auto rounded-sm"
-					/>
-				}
+				heroImageFilename={country.content.heroImage?.filename}
+				heroImageAlt={country.content.heroImage?.alt ?? countryTitle}
+				titleIcon={isoCode === '-' ? undefined : `/assets/flags/${isoCode.toLowerCase()}.svg`}
+				titleIconAlt={isoCode === '-' ? undefined : `${isoCode} flag`}
 				stats={[
 					{
 						value: activeProgramsCount,
@@ -73,52 +59,22 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 								: translator.t('countries-page.recipient-plural'),
 					},
 				]}
-				actions={
-					<Button variant="outline" size="lg" asChild>
-						<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/donate`}>
-							{translator.t('countries-page.donate-now')}
-						</NextLink>
-					</Button>
-				}
-				sideContent={<MakeDonationForm lang={lang} />}
-				mobileContent={<MakeDonationForm lang={lang} />}
-				descriptionHeading={`${translator.t('countries-page.about')} ${countryTitle}`}
 			/>
-			{hasIsoCode ? (
-				<section className="w-site-width max-w-content mx-auto px-6 py-8 lg:py-12">
-					<div className="flex flex-col gap-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
-						<div className="flex justify-center lg:justify-start">
-							<MapBubble isoCode={isoCode} countryName={countryTitle} />
-						</div>
-						<div className="flex flex-col gap-4">
-							<h2 className="text-2xl font-semibold md:text-3xl">{`${translator.t('countries-page.about')} ${countryTitle}`}</h2>
-							<p className="text-base">{countryDescription || '-'}</p>
-						</div>
-					</div>
-				</section>
-			) : null}
-			{countryOfficePersons.length > 0 ? (
-				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
-					<CountryPersonCarousel
-						persons={countryOfficePersons}
-						countryName={countryTitle}
-						countryOfficeTitle={country.content.countryOfficeTitle?.trim()}
-						countryOfficeDescription={country.content.countryOfficeDescription?.trim()}
-					/>
-				</div>
-			) : null}
-			{donationsBlock ? <CountryDonationsTotal blok={donationsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
-			{hasIsoCode ? (
-				<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
-					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
-				</Suspense>
-			) : null}
-			{programsBlock ? <CountryPrograms blok={programsBlock} isoCode={isoCode} lang={lang} region={region} /> : null}
-			{localPartners.length > 0 ? (
-				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">
+			<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-8 2xl:mx-auto">
+				<Breadcrumb links={breadcrumbLinks} />
+				<CountryMap country={country} lang={lang} />
+				<CountryPersonCarousel country={country} lang={lang} />
+				<CountryDonationsTotal country={country} lang={lang} region={region} />
+				{isoCode !== '-' && (
+					<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
+						<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
+					</Suspense>
+				)}
+				<CountryPrograms country={country} lang={lang} region={region} />
+				{localPartners.length > 0 && (
 					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
-				</div>
-			) : null}
+				)}
+			</div>
 		</>
 	);
 };
