@@ -5,20 +5,18 @@ import {
 	BreadcrumbList,
 	BreadcrumbSeparator,
 } from '@/components/breadcrumb/breadcrumb-elements';
+import type { BreadcrumbLink as BreadcrumbLinkItem } from '@/components/breadcrumb/build-breadcrumb-links';
 import { cn } from '@/lib/utils/cn';
 import React from 'react';
 
-export type BreadcrumbLinkType = {
-	label: string;
-	href: string;
-};
+export type { BreadcrumbLink as BreadcrumbLinkType } from '@/components/breadcrumb/build-breadcrumb-links';
 
-export const Breadcrumb = ({ links, className }: { links: BreadcrumbLinkType[]; className?: string }) => {
+export const Breadcrumb = ({ links, className }: { links: BreadcrumbLinkItem[]; className?: string }) => {
 	return (
 		<div className={cn('py-9', className)}>
 			<BreadcrumbElements>
 				<BreadcrumbList>
-					{links.map((link: BreadcrumbLinkType, index: number) => {
+					{links.map((link: BreadcrumbLinkItem, index: number) => {
 						const isLast: boolean = index === links.length - 1;
 
 						return (
