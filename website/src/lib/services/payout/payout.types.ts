@@ -138,6 +138,10 @@ export type PayoutForecastPaginatedTableView = {
 	totalCount: number;
 };
 
+export type CountryPayoutTotals = {
+	totalPayoutsChf: number;
+};
+
 export type PayoutPayload = {
 	id: string;
 	recipient: {
