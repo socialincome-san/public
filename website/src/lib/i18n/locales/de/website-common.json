@@ -122,7 +122,17 @@
 		"recipient-plural": "Empfänger:innen",
 		"donate-now": "Jetzt spenden",
 		"about": "Über",
-		"person-carousel-next-button-aria": "Nächste Person anzeigen"
+		"person-carousel-next-button-aria": "Nächste Person anzeigen",
+		"statistics": {
+			"title": "Wichtige Kennzahlen",
+			"population": "Bevölkerung",
+			"growth-rate": "Wachstumsrate",
+			"literacy-rate": "Alphabetisierungsrate",
+			"poverty-level": "Armutsquote",
+			"life-expectancy": "Lebenserwartung",
+			"years": "Jahre",
+			"vs": "vs"
+		}
 	},
 	"local-partners-page": {
 		"empty": "Keine lokalen Partner gefunden.",

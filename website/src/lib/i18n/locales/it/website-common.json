@@ -122,7 +122,17 @@
 		"recipient-plural": "beneficiari",
 		"donate-now": "Dona ora",
 		"about": "Informazioni su",
-		"person-carousel-next-button-aria": "Mostra la persona successiva"
+		"person-carousel-next-button-aria": "Mostra la persona successiva",
+		"statistics": {
+			"title": "Statistiche chiave",
+			"population": "Popolazione",
+			"growth-rate": "Tasso di crescita",
+			"literacy-rate": "Tasso di alfabetizzazione",
+			"poverty-level": "Livello di povertà",
+			"life-expectancy": "Aspettativa di vita",
+			"years": "anni",
+			"vs": "vs"
+		}
 	},
 	"local-partners-page": {
 		"empty": "Nessun partner locale trovato.",

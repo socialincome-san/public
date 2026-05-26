@@ -4,10 +4,13 @@ import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local
 import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { Suspense } from 'react';
 import { CountryDonationsTotal } from './country-donations-total';
 import { CountryMap } from './country-map';
 import { CountryPersonCarousel } from './country-person-carousel';
 import { CountryPrograms } from './country-programs';
+import { CountryStatistics } from './country-statistics';
+import { CountryStatisticsSkeleton } from './country-statistics-skeleton';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
 
@@ -62,10 +65,15 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				<CountryMap country={country} lang={lang} />
 				<CountryPersonCarousel country={country} lang={lang} />
 				<CountryDonationsTotal country={country} lang={lang} region={region} />
+				{isoCode !== '-' && (
+					<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
+						<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
+					</Suspense>
+				)}
 				<CountryPrograms country={country} lang={lang} region={region} />
-				{localPartners.length > 0 ? (
+				{localPartners.length > 0 && (
 					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
-				) : null}
+				)}
 			</div>
 		</>
 	);
