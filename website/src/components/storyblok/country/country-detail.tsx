@@ -10,8 +10,11 @@ import { services } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
+import { Suspense } from 'react';
 import { CountryDonationsTotal } from './country-donations-total';
 import { CountryPrograms } from './country-programs';
+import { CountryStatistics } from './country-statistics';
+import { CountryStatisticsSkeleton } from './country-statistics-skeleton';
 import type { CountryStory } from './country.types';
 import { getCountryDescription, getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
 import { MapBubble } from './map-bubble';
@@ -111,6 +114,11 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			)}
 
 			{donationsBlock && <CountryDonationsTotal blok={donationsBlock} isoCode={isoCode} lang={lang} region={region} />}
+			{hasIsoCode && (
+				<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
+					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
+				</Suspense>
+			)}
 			{programsBlock && <CountryPrograms blok={programsBlock} isoCode={isoCode} lang={lang} region={region} />}
 			{localPartners.length > 0 && (
 				<div className="max-w-content 2xl:w-site-width ml-[2vw] py-8 pl-6 2xl:mx-auto">

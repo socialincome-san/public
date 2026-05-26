@@ -121,7 +121,17 @@
 		"recipient-singular": "Empfänger:in",
 		"recipient-plural": "Empfänger:innen",
 		"donate-now": "Jetzt spenden",
-		"about": "Über"
+		"about": "Über",
+		"statistics": {
+			"title": "Wichtige Kennzahlen",
+			"population": "Bevölkerung",
+			"growth-rate": "Wachstumsrate",
+			"literacy-rate": "Alphabetisierungsrate",
+			"poverty-level": "Armutsquote",
+			"life-expectancy": "Lebenserwartung",
+			"years": "Jahre",
+			"vs": "vs"
+		}
 	},
 	"local-partners-page": {
 		"empty": "Keine lokalen Partner gefunden.",
