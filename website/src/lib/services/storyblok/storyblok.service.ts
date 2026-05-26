@@ -18,6 +18,15 @@ import { ServiceResult } from '../core/base.types';
 import { getStoryblokApi } from './storyblok.config';
 import type { ResolvedArticle } from './storyblok.utils';
 
+export type StoryTitleData = {
+	name?: string;
+	content?: {
+		component?: string;
+		title?: string;
+		isoCode?: number | string;
+	};
+};
+
 export class StoryblokService extends BaseService {
 	static readonly journalTeaserLimit = 3;
 
@@ -157,6 +166,26 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	private async withOptionalLanguageFallback<T>(
+		loader: (lang: string, slug: string) => Promise<T>,
+		lang: string,
+		slug: string,
+	): Promise<T | undefined> {
+		try {
+			return await loader(lang, slug);
+		} catch (error: unknown) {
+			const errorStatus = typeof error === 'object' && error !== null && 'status' in error ? error.status : undefined;
+			if (errorStatus === 404) {
+				if (lang === defaultLanguage) {
+					return undefined;
+				}
+
+				return await this.withOptionalLanguageFallback(loader, defaultLanguage, slug);
+			}
+			throw error;
+		}
+	}
+
 	async getStoryWithFallback<T>(slug: string, lang: string): Promise<ServiceResult<T>> {
 		try {
 			const data = await this.withLanguageFallback(
@@ -178,6 +207,31 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to fetch story: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getStoryTitle(slug: string, lang: string): Promise<ServiceResult<StoryTitleData>> {
+		try {
+			const data = await this.withOptionalLanguageFallback(
+				async (language: string) => {
+					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, await this.getStoryParams(language));
+					const responseData = response.data as { story: StoryTitleData };
+
+					return responseData.story;
+				},
+				lang,
+				slug,
+			);
+
+			if (!data) {
+				return this.resultFail('Story not found');
+			}
+
+			return this.resultOk(data);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch story title: ${JSON.stringify(error)}`);
 		}
 	}
 

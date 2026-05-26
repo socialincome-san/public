@@ -122,6 +122,7 @@
 		"recipient-plural": "Empfänger:innen",
 		"donate-now": "Jetzt spenden",
 		"about": "Über",
+		"person-carousel-next-button-aria": "Nächste Person anzeigen",
 		"statistics": {
 			"title": "Wichtige Kennzahlen",
 			"population": "Bevölkerung",
@@ -173,6 +174,9 @@
 		"day-left-singular": "Tag verbleibend",
 		"day-left-plural": "Tage verbleibend",
 		"about": "Über"
+	},
+	"breadcrumb": {
+		"home": "Startseite"
 	},
 	"wallet": {
 		"paid-out": "Ausbezahlt",
