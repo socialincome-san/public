@@ -5,8 +5,8 @@ import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donation
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Suspense } from 'react';
-import { CountryPayoutsTotal } from './country-payouts-total';
 import { CountryMap } from './country-map';
+import { CountryPayoutsTotal } from './country-payouts-total';
 import { CountryPersonCarousel } from './country-person-carousel';
 import { CountryPrograms } from './country-programs';
 import { CountryStatistics } from './country-statistics';
