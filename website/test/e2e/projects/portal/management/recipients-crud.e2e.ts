@@ -42,6 +42,8 @@ const EXISTING_RECIPIENT = {
 	paymentPhone: '+23231000001',
 };
 
+const SUSPENDED_RECIPIENT_ID = 'recipient-core-sl-suspended';
+
 const buildUnusedPaymentPhoneNumbers = async () => {
 	const phones: string[] = [];
 	let counter = Date.now() % 100000;
@@ -348,6 +350,40 @@ test('edit recipient and remove contact phone and address', async ({ page }) => 
 	});
 	expect(deletedPhone).toBeNull();
 	expect(deletedAddress).toBeNull();
+});
+
+test('edit recipient can clear suspendedAt date', async ({ page }) => {
+	const before = await prisma.recipient.findUniqueOrThrow({
+		where: { id: SUSPENDED_RECIPIENT_ID },
+		select: {
+			suspendedAt: true,
+			contact: { select: { firstName: true } },
+		},
+	});
+	expect(before.suspendedAt).not.toBeNull();
+
+	await page.goto(
+		`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(before.contact.firstName)}`,
+	);
+	await page.getByRole('cell', { name: before.contact.firstName }).click();
+
+	const suspendedAtField = page.getByTestId('form-item-suspendedAt');
+	const datePickerButton = suspendedAtField.getByTestId('date-picker-button');
+	await expect(suspendedAtField.getByTestId('date-field-clear')).toBeVisible();
+	await expect(datePickerButton).not.toHaveText('Select date');
+
+	await suspendedAtField.getByTestId('date-field-clear').click();
+	await expect(suspendedAtField.getByTestId('date-field-clear')).toHaveCount(0);
+	await expect(datePickerButton).toHaveText('Select date');
+
+	await page.getByRole('button', { name: 'Save' }).click();
+	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+	const updated = await prisma.recipient.findUniqueOrThrow({
+		where: { id: SUSPENDED_RECIPIENT_ID },
+		select: { suspendedAt: true },
+	});
+	expect(updated.suspendedAt).toBeNull();
 });
 
 test('recipient payment phone stays aligned in Firebase after phone changes', async ({ page }) => {

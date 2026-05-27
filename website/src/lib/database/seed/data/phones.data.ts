@@ -32,6 +32,7 @@ const phoneSeeds: readonly PhoneSeed[] = [
 	{ id: 'ph-recipient-core-sl-future', number: '+23231000002' },
 	{ id: 'ph-recipient-core-sl-completed', number: '+23231000003' },
 	{ id: 'ph-recipient-core-sl-suspended', number: '+23231000004' },
+	{ id: 'ph-recipient-core-sl-suspended-contact', number: '+23231000014' },
 	{ id: 'ph-recipient-women-sl-active', number: '+23231000005' },
 	{ id: 'ph-recipient-women-sl-future', number: '+23231000006' },
 	{ id: 'ph-recipient-women-sl-completed', number: '+23231000007' },
