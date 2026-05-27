@@ -362,9 +362,7 @@ test('edit recipient can clear suspendedAt date', async ({ page }) => {
 	});
 	expect(before.suspendedAt).not.toBeNull();
 
-	await page.goto(
-		`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(before.contact.firstName)}`,
-	);
+	await page.goto(`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(before.contact.firstName)}`);
 	await page.getByRole('cell', { name: before.contact.firstName }).click();
 
 	const suspendedAtField = page.getByTestId('form-item-suspendedAt');
