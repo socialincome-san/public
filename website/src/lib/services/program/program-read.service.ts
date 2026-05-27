@@ -254,7 +254,7 @@ export class ProgramReadService extends BaseService {
 					name: true,
 				},
 			});
-			const program = programs.find((currentProgram) => slugify(currentProgram.name) === slug);
+			const program = programs.find((currentProgram) => (slugify(currentProgram.name) === slug || currentProgram.id === slug));
 
 			if (!program) {
 				return this.resultFail('Program not found');
