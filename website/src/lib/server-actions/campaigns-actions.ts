@@ -44,7 +44,3 @@ export const getProgramsOptions = async () => {
 
 	return services.read.program.getEditableOptions(sessionResult.data.id);
 };
-
-export const getCampaignByIdAction = async (id: string) => {
-	return await services.read.campaign.getById(id);
-};

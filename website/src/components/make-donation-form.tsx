@@ -1,8 +1,9 @@
 'use client';
 
 import { Button } from '@/components/button';
+import { CampaignCheckoutForm, type CampaignCheckoutTranslations } from '@/components/donation/campaign-checkout-form';
 import { useTranslator } from '@/lib/hooks/useTranslator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { useState } from 'react';
 
@@ -18,15 +19,33 @@ type Amount = (typeof amountOptions)[number]['value'] | undefined;
 
 type Props = {
 	lang: WebsiteLanguage;
+	region?: WebsiteRegion;
+	campaignId?: string;
+	daysLeft?: number;
+	daysLeftLabel?: string;
+	campaignTranslations?: CampaignCheckoutTranslations;
 };
 
-export const MakeDonationForm = ({ lang }: Props) => {
+export const MakeDonationForm = ({ lang, region, campaignId, daysLeft, daysLeftLabel, campaignTranslations }: Props) => {
 	const [selectedAmount, setSelectedAmount] = useState<Amount | null>(undefined);
 	const [cadence, setCadence] = useState<Cadence>('monthly');
 	const [monthlyIncome, setMonthlyIncome] = useState(6000);
 
 	const translator = useTranslator(lang, 'website-donate');
 	const t = (key: string) => translator?.t(`donation-form.${key}`) ?? '';
+
+	if (campaignId && region && campaignTranslations && daysLeft !== undefined && daysLeftLabel) {
+		return (
+			<CampaignCheckoutForm
+				lang={lang}
+				region={region}
+				campaignId={campaignId}
+				daysLeft={daysLeft}
+				daysLeftLabel={daysLeftLabel}
+				translations={campaignTranslations}
+			/>
+		);
+	}
 
 	return (
 		<div className="text-foreground border-border max-w-site-width w-full rounded-3xl border bg-white p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)] md:p-9">

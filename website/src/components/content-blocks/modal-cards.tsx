@@ -2,6 +2,8 @@
 
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
+import { SectionHeading } from '@/components/section-heading';
+import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ModalCards } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -11,7 +13,6 @@ import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { PlayIcon, PlusIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { useState } from 'react';
-import Markdown from 'react-markdown';
 import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 type Props = {
@@ -37,9 +38,9 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row lg:mb-14">
 				{heading && (
-					<h1 className="text-3xl leading-[1.2] whitespace-pre-line md:text-4xl xl:text-5xl [&_strong]:font-bold">
-						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown>
-					</h1>
+					<SectionHeading as="h1" align="left" size="large" className="mb-0 md:mb-0">
+						<StoryblokMarkdown>{heading}</StoryblokMarkdown>
+					</SectionHeading>
 				)}
 				{hasExplainerVideo &&
 					(explainerVideoThumbnailSrc ? (

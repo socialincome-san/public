@@ -1,11 +1,11 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton } from '@/components/carousel';
+import { PersonCard } from '@/components/storyblok/shared/person-card';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
-import { PersonCard } from './person-card';
 
 type Props = {
 	country: CountryStory;

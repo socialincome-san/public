@@ -11,11 +11,16 @@
 		"editors": "Contributing Editors",
 		"more-articles": "There are more articles available in English"
 	},
+	"person": {
+		"articles": "Articles"
+	},
 	"article": {
 		"keep-reading": "Keep reading",
 		"from-original-language": "Translated from"
 	},
 	"teasers": {
+		"heading-prefix": "Stories & Updates from ",
+		"heading-emphasis": "our journal",
 		"goToJournal": "Go to journal"
 	},
 	"reference-article": {

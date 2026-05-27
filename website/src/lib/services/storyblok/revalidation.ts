@@ -4,7 +4,7 @@ import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 /**
  * Paths (without `/{lang}/{region}` prefix) that should be revalidated on any Storyblok webhook.
  */
-const aggregateRelativePaths = ['/new-website', '/journal', '/impact-measurement'] as const;
+const aggregateRelativePaths = ['/new-website', '/new-website/journal', '/journal', '/impact-measurement'] as const;
 
 /**
  * Maps a Storyblok `full_slug` to its Next.js relative path (without `/{lang}/{region}` prefix).
@@ -35,6 +35,14 @@ export const pathsForStory = (fullSlug: string | undefined | null): string[] => 
 	const storyPath = slug ? relativePathForSlug(slug) : null;
 	if (storyPath) {
 		relativePaths.add(storyPath);
+		if (storyPath.startsWith('/journal/tag/')) {
+			relativePaths.add('/new-website/journal');
+		} else if (storyPath.startsWith('/journal')) {
+			relativePaths.add(storyPath.replace('/journal', '/new-website/journal'));
+		}
+		if (storyPath.startsWith('/person/')) {
+			relativePaths.add(storyPath.replace('/person/', '/new-website/person/'));
+		}
 	}
 
 	const paths = new Set<string>();
