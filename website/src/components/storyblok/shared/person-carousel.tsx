@@ -21,11 +21,13 @@ type Props = {
 	sidebar?: PersonCarouselSidebar;
 	/** When set, each card links to the person profile under new-website. */
 	personLink?: { lang: string; region: string };
+	size?: 'default' | 'small';
 };
 
-export const PersonCarousel = ({ persons, sidebar, personLink }: Props) => {
+export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default' }: Props) => {
 	const [api, setApi] = useState<CarouselApi>();
 	const hasSidebar = Boolean(sidebar?.title ?? sidebar?.heading ?? sidebar?.description);
+	const isSmall = size === 'small';
 
 	if (!persons.length) {
 		return null;
@@ -48,9 +50,10 @@ export const PersonCarousel = ({ persons, sidebar, personLink }: Props) => {
 				<Carousel setApi={setApi} opts={{ align: 'start', loop: persons.length > 1 }}>
 					<CarouselContent className="-ml-6">
 						{persons.map((person) => (
-							<CarouselItem key={person.uuid} className="basis-[305px] pl-6">
+							<CarouselItem key={person.uuid} className={cn('pl-6', isSmall ? 'basis-[260px]' : 'basis-[305px]')}>
 								<PersonCard
 									person={person}
+									size={size}
 									href={personLink ? createNewWebsitePersonLink(person.slug, personLink.lang, personLink.region) : undefined}
 								/>
 							</CarouselItem>

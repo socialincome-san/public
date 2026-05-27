@@ -40,9 +40,11 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 				</div>
 			)}
 
-			<div className="w-site-width max-w-content mx-auto space-y-10 px-4 py-8 sm:px-0 sm:py-10">
-				{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
-				<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} translator={translator} />
+			<div className="w-site-width max-w-content mx-auto px-4 py-8 sm:px-0 sm:py-10">
+				<div className="mx-auto max-w-2xl space-y-10">
+					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
+					<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} translator={translator} />
+				</div>
 			</div>
 
 			{article.showRelativeArticles && relatedArticles.length > 0 && (

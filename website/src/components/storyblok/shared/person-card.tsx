@@ -11,31 +11,44 @@ const PERSON_CARD_IMAGE_HEIGHT = 500;
 type Props = {
 	person: ISbStoryData<Person>;
 	href?: string;
+	size?: 'default' | 'small';
 	className?: string;
 };
 
-export const PersonCard = ({ person, href, className }: Props) => {
+export const PersonCard = ({ person, href, size = 'default', className }: Props) => {
 	const { avatar, firstName, fullName, lastName, primaryRole } = person.content;
 	const imageSource = avatar?.filename
 		? formatStoryblokUrl(avatar.filename, PERSON_CARD_IMAGE_WIDTH, PERSON_CARD_IMAGE_HEIGHT, avatar.focus)
 		: null;
 	const role = typeof primaryRole === 'string' ? primaryRole.trim() : '';
 
+	const isSmall = size === 'small';
+
 	const card = (
 		<div
 			className={cn(
-				'w-full max-w-[305px] overflow-hidden rounded-xl bg-white p-3 shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
+				'w-full overflow-hidden rounded-xl bg-white shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
+				isSmall ? 'max-w-[260px] p-2.5' : 'max-w-[305px] p-3',
 				href && 'transition-transform hover:scale-[1.01]',
 				className,
 			)}
 		>
-			<div className="bg-muted relative aspect-[280/350] w-full overflow-hidden rounded-lg">
+			<div
+				className={cn(
+					'bg-muted relative w-full overflow-hidden rounded-lg',
+					isSmall ? 'aspect-[240/300]' : 'aspect-[280/350]',
+				)}
+			>
 				{imageSource ? (
 					<NextImage
 						src={imageSource}
 						alt={avatar?.alt ?? fullName}
 						fill
-						sizes="(min-width: 1280px) 281px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+						sizes={
+							isSmall
+								? '(min-width: 1280px) 240px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw'
+								: '(min-width: 1280px) 281px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw'
+						}
 						className="object-cover"
 					/>
 				) : null}
@@ -52,8 +65,13 @@ export const PersonCard = ({ person, href, className }: Props) => {
 					/>
 				</svg>
 			</div>
-			<div className="relative z-20 -mt-6 flex items-end justify-between gap-4 rounded-b-lg px-2 pt-3 pb-3">
-				<h3 className="relative text-2xl leading-8 font-bold">
+			<div
+				className={cn(
+					'relative z-20 flex items-end justify-between gap-4 rounded-b-lg px-2 pb-3',
+					isSmall ? '-mt-5 pt-2.5' : '-mt-6 pt-3',
+				)}
+			>
+				<h3 className={cn('relative font-bold', isSmall ? 'text-xl leading-7' : 'text-2xl leading-8')}>
 					{firstName || fullName}
 					{lastName ? (
 						<>
@@ -62,7 +80,9 @@ export const PersonCard = ({ person, href, className }: Props) => {
 						</>
 					) : null}
 				</h3>
-				{role ? <p className="relative shrink-0 pb-1 text-sm leading-none capitalize">{role}</p> : null}
+				{role ? (
+					<p className={cn('relative shrink-0 pb-1 leading-none capitalize', isSmall ? 'text-xs' : 'text-sm')}>{role}</p>
+				) : null}
 			</div>
 		</div>
 	);
@@ -72,7 +92,7 @@ export const PersonCard = ({ person, href, className }: Props) => {
 	}
 
 	return (
-		<NextLink href={href} className={cn('block w-full max-w-[305px]', className)}>
+		<NextLink href={href} className={cn('block w-full', isSmall ? 'max-w-[260px]' : 'max-w-[305px]', className)}>
 			{card}
 		</NextLink>
 	);

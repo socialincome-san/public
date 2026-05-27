@@ -84,7 +84,7 @@ export const JournalOverview = ({
 
 		{authors.length > 0 && (
 			<section>
-				<PersonCarousel persons={authors} sidebar={{ heading: editorsHeading }} personLink={{ lang, region }} />
+				<PersonCarousel persons={authors} sidebar={{ heading: editorsHeading }} personLink={{ lang, region }} size="small" />
 			</section>
 		)}
 	</JournalPageShell>
