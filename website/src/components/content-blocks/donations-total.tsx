@@ -3,6 +3,8 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
 import { FloatingImage } from '@/components/floating-image';
+import { SectionHeading } from '@/components/section-heading';
+import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { useDonationTotalAnimations } from '@/lib/hooks/use-donation-total-animations';
@@ -11,7 +13,6 @@ import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextLink from 'next/link';
-import Markdown from 'react-markdown';
 
 type Props = {
 	blok: DonationsTotal;
@@ -41,9 +42,9 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalChf, disableAnima
 
 			<div className="relative z-10 flex flex-col items-center justify-center py-16 text-center md:py-24 lg:py-32">
 				{blok.heading && (
-					<h2 className="text-primary mb-6 text-2xl leading-tight whitespace-pre-wrap md:text-3xl lg:text-5xl [&_strong]:font-bold">
-						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
-					</h2>
+					<SectionHeading className="mb-6 text-2xl leading-tight whitespace-pre-wrap md:mb-6 md:text-3xl lg:text-5xl">
+						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+					</SectionHeading>
 				)}
 
 				<div className="text-primary mb-8 flex items-baseline justify-center gap-3">

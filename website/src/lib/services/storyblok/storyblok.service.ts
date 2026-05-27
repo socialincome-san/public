@@ -1,7 +1,7 @@
 import type { CountryCode } from '@/generated/prisma/enums';
 import type {
-	Campaign,
 	Country,
+	Faq,
 	Focus,
 	LocalPartner,
 	Person,
@@ -28,9 +28,10 @@ export type StoryTitleData = {
 };
 
 export class StoryblokService extends BaseService {
+	static readonly journalTeaserLimit = 3;
+
 	private static readonly contentType = {
 		article: 'article',
-		campaign: 'campaign',
 		country: 'Country',
 		focus: 'Focus',
 		localPartner: 'Local Partner',
@@ -51,10 +52,10 @@ export class StoryblokService extends BaseService {
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
 	private static readonly countriesPath = `${NEW_WEBSITE_SLUG}/countries`;
-	private static readonly campaignsPath = `${NEW_WEBSITE_SLUG}/campaigns`;
 	private static readonly focusesPath = `${NEW_WEBSITE_SLUG}/focuses`;
 	private static readonly localPartnersPath = `${NEW_WEBSITE_SLUG}/local-partners`;
 	private static readonly programsPath = `${NEW_WEBSITE_SLUG}/programs`;
+	private static readonly faqsPath = `${NEW_WEBSITE_SLUG}/faq`;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
 		',',
 	);
@@ -89,7 +90,7 @@ export class StoryblokService extends BaseService {
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.program.toLowerCase();
 	}
 
-	private static isCampaignStory(story: unknown): story is ISbStoryData<Campaign> {
+	private static isFaqStory(story: unknown): story is ISbStoryData<Faq> {
 		if (!story || typeof story !== 'object' || !('content' in story)) {
 			return false;
 		}
@@ -101,7 +102,7 @@ export class StoryblokService extends BaseService {
 
 		const contentWithComponent = storyWithContent.content as { component?: string };
 
-		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.campaign.toLowerCase();
+		return contentWithComponent.component?.toLowerCase() === 'faq';
 	}
 
 	private static isLocalPartnerStory(story: unknown): story is ISbStoryData<LocalPartner> {
@@ -289,6 +290,20 @@ export class StoryblokService extends BaseService {
 
 			return this.resultFail(`Failed to count articles by author: ${JSON.stringify(error)}`);
 		}
+	}
+
+	async resolveArticleCountInDefaultLanguage(
+		lang: string,
+		countInSelectedLanguage: number,
+		fetchDefaultLanguageCount: () => Promise<ServiceResult<number>>,
+	): Promise<number> {
+		if (lang === defaultLanguage) {
+			return countInSelectedLanguage;
+		}
+
+		const result = await fetchDefaultLanguageCount();
+
+		return result.success ? result.data : countInSelectedLanguage;
 	}
 
 	async getPersonsByUuids(lang: string, personUuids: string[]): Promise<ServiceResult<ISbStoryData<Person>[]>> {
@@ -511,63 +526,33 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getCampaigns(lang: string): Promise<ServiceResult<ISbStoryData<Campaign>[]>> {
+	async getFaqs(lang: string, limit = 5): Promise<ServiceResult<ISbStoryData<Faq>[]>> {
 		try {
 			const baseParams = await this.getStoryParams(lang);
 			const params: ISbStoriesParams = {
 				...baseParams,
-				starts_with: `${StoryblokService.campaignsPath}/`,
+				starts_with: `${StoryblokService.faqsPath}/`,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
-			let campaigns = data.filter((story) => StoryblokService.isCampaignStory(story));
+			let faqs = data.filter((story) => StoryblokService.isFaqStory(story));
 
-			if (campaigns.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
+			if (faqs.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
 				const draftParams: ISbStoriesParams = {
 					...baseParams,
 					version: 'draft',
-					starts_with: `${StoryblokService.campaignsPath}/`,
+					starts_with: `${StoryblokService.faqsPath}/`,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
-				campaigns = draftData.filter((story) => StoryblokService.isCampaignStory(story));
+				faqs = draftData.filter((story) => StoryblokService.isFaqStory(story));
 			}
 
-			return this.resultOk(campaigns);
+			const sortedFaqs = [...faqs].sort((left, right) => (left.position ?? 0) - (right.position ?? 0));
+
+			return this.resultOk(sortedFaqs.slice(0, limit));
 		} catch (error) {
 			this.logger.error(error);
 
 			return this.resultOk([]);
-		}
-	}
-
-	async getCampaignBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Campaign>>> {
-		const loadCampaign = async (language: string) => {
-			const campaigns = await this.getCampaigns(language);
-			if (!campaigns.success) {
-				return undefined;
-			}
-
-			return campaigns.data.find((campaign) => {
-				const fullSlugTail = campaign.full_slug?.split('/').at(-1);
-
-				return campaign.slug === slug || fullSlugTail === slug;
-			});
-		};
-
-		try {
-			let story = await loadCampaign(lang);
-			if (!story && lang !== defaultLanguage) {
-				story = await loadCampaign(defaultLanguage);
-			}
-
-			if (!story) {
-				return this.resultFail(`Failed to fetch campaign: not found for slug '${slug}'`);
-			}
-
-			return this.resultOk(story);
-		} catch (error) {
-			this.logger.error(error);
-
-			return this.resultFail(`Failed to fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -825,6 +810,12 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk([]);
 		}
+	}
+
+	async getLatestJournalArticles(lang: string, limit = StoryblokService.journalTeaserLimit) {
+		const result = await this.getOverviewArticles(lang, undefined, limit);
+
+		return this.resultOk(result.success ? result.data.slice(0, limit) : []);
 	}
 
 	async getArticlesByUuids(lang: string, articleUuids: string[]): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {

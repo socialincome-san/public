@@ -3,7 +3,7 @@ import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { pathsForStory } from './revalidation';
 
 const localeCount = mainWebsiteLanguages.length * websiteRegions.length;
-const aggregatePathCount = 3 * localeCount;
+const aggregatePathCount = 4 * localeCount;
 const sitemapCount = 1;
 
 const expectPathsForLocales = (relativePath: string, result: string[]) => {
@@ -20,6 +20,7 @@ describe('pathsForStory', () => {
 		const result = pathsForStory('');
 		expect(result).toHaveLength(aggregatePathCount + sitemapCount);
 		expectPathsForLocales('/new-website', result);
+		expectPathsForLocales('/new-website/journal', result);
 		expectPathsForLocales('/journal', result);
 		expectPathsForLocales('/impact-measurement', result);
 		expect(result).toContain('/sitemap.xml');
@@ -44,27 +45,31 @@ describe('pathsForStory', () => {
 
 	it('adds the story path for journal articles', () => {
 		const result = pathsForStory('journal/my-article');
-		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expect(result).toHaveLength(aggregatePathCount + 2 * localeCount + sitemapCount);
 		expectPathsForLocales('/journal/my-article', result);
+		expectPathsForLocales('/new-website/journal/my-article', result);
 	});
 
 	it('handles journal/tag without double-prefixing', () => {
 		const result = pathsForStory('journal/tag/design');
 		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
 		expectPathsForLocales('/journal/tag/design', result);
-		expect(result.some((p) => p.includes('/journal/journal/'))).toBe(false);
+		expectPathsForLocales('/new-website/journal', result);
+		expect(result.some((p) => p.includes('/new-website/journal/tag/'))).toBe(false);
 	});
 
 	it('rewrites top-level tag/ slugs under /journal/tag/', () => {
 		const result = pathsForStory('tag/design');
 		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
 		expectPathsForLocales('/journal/tag/design', result);
+		expectPathsForLocales('/new-website/journal', result);
 	});
 
 	it('adds the story path for person stories', () => {
 		const result = pathsForStory('person/jane-doe');
-		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expect(result).toHaveLength(aggregatePathCount + 2 * localeCount + sitemapCount);
 		expectPathsForLocales('/person/jane-doe', result);
+		expectPathsForLocales('/new-website/person/jane-doe', result);
 	});
 
 	it('returns sorted, de-duplicated paths', () => {

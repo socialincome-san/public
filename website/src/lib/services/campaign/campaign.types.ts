@@ -66,10 +66,9 @@ export type CampaignPage = CampaignPayload & {
 
 export type CampaignOption = { id: string; name: string };
 
-export type PublicPreviewCampaign = {
+export type PublicCampaignCard = {
 	id: string;
 	title: string;
-	description: string;
 	slug: string;
 };
 
@@ -79,3 +78,8 @@ export type PublicCampaignStats = {
 };
 
 export type PublicCampaignStatsMap = Record<string, PublicCampaignStats>;
+
+export type PublicCampaignsWithStats = {
+	campaigns: PublicCampaignCard[];
+	statsById: PublicCampaignStatsMap;
+};
