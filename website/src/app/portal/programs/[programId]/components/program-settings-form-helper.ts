@@ -37,6 +37,7 @@ const toStringArray = (value: FormField['value']): string[] =>
 
 type ProgramSettingsFormFields = {
 	name: FormField;
+	slug: FormField;
 	country: FormField;
 	coveredByReserves: FormField;
 	programDurationInMonths: FormField;
@@ -61,6 +62,7 @@ export const buildUpdateProgramSettingsInput = (
 	return {
 		id: programId,
 		name: typeof fields.name.value === 'string' ? fields.name.value : '',
+		slug: typeof fields.slug.value === 'string' ? fields.slug.value : '',
 		countryId: typeof fields.country.value === 'string' ? fields.country.value : '',
 		coveredByReserves: fields.coveredByReserves.value === true,
 		programDurationInMonths: toNumber(fields.programDurationInMonths.value),

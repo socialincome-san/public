@@ -252,9 +252,11 @@ export class ProgramReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 				},
 			});
-			const program = programs.find((currentProgram) => slugify(currentProgram.name) === slug);
+
+			const program = programs.find((currentProgram) => currentProgram.slug === slug);
 
 			if (!program) {
 				return this.resultFail('Program not found');
@@ -348,17 +350,35 @@ export class ProgramReadService extends BaseService {
 
 	async getProgramIdBySlug(slug: string): Promise<ServiceResult<string>> {
 		try {
-			const programs = await this.db.program.findMany({ select: { id: true, name: true } });
-			const match = programs.find((p) => slugify(p.name) === slug);
-			if (!match) {
+			const program = await this.db.program.findUnique({ where: { slug }, select: { id: true } });
+			if (!program) {
 				return this.resultFail('Program not found');
 			}
 
-			return this.resultOk(match.id);
+			return this.resultOk(program.id);
 		} catch (error) {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not resolve programId by slug: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getProgramSlugById(programId: string): Promise<ServiceResult<string>> {
+		try {
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: { slug: true },
+			});
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			return this.resultOk(program.slug);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program slug: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -401,6 +421,7 @@ export class ProgramReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 					countryId: true,
 					country: {
 						select: {
@@ -437,6 +458,7 @@ export class ProgramReadService extends BaseService {
 			return this.resultOk({
 				id: program.id,
 				name: program.name,
+				slug: program.slug,
 				countryId: program.countryId,
 				country: program.country,
 				amountOfRecipientsForStart: program.amountOfRecipientsForStart,

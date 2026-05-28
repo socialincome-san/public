@@ -1,10 +1,12 @@
 import { MakeDonationForm } from '@/components/make-donation-form';
+import type { CountryCode } from '@/generated/prisma/client';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import NextImage from 'next/image';
 
 type Stat = {
-	value: number;
+	value?: number;
 	label: string;
+	isoCode?: CountryCode;
 };
 
 type Props = {
@@ -15,6 +17,7 @@ type Props = {
 	stats: Stat[];
 	titleIcon?: string;
 	titleIconAlt?: string;
+	showDonationForm?: boolean;
 };
 
 export const HeroDonationsHeader = ({
@@ -25,6 +28,7 @@ export const HeroDonationsHeader = ({
 	stats,
 	titleIcon,
 	titleIconAlt,
+	showDonationForm = true,
 }: Props) => {
 	return (
 		<section className="hero-video hero-video-block flex flex-col gap-6">
@@ -61,17 +65,29 @@ export const HeroDonationsHeader = ({
 						<div className="flex flex-wrap gap-2">
 							{stats.map((stat) => (
 								<span
-									key={stat.label}
-									className="inline-flex items-center justify-center rounded-full border border-white/50 bg-black/40 px-3 py-1 text-xs leading-none font-medium text-white"
+									key={stat.isoCode ?? `${stat.value}-${stat.label}`}
+									className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/50 bg-black/40 px-3 py-1 text-xs leading-none font-medium text-white"
 								>
-									{stat.value} {stat.label}
+									{stat.isoCode ? (
+										<NextImage
+											src={`/assets/flags/${stat.isoCode.toLowerCase()}.svg`}
+											alt={`${stat.label} flag`}
+											width={16}
+											height={12}
+											className="h-3 w-auto rounded-sm"
+										/>
+									) : null}
+									{stat.value !== undefined ? `${stat.value} ` : null}
+									{stat.label}
 								</span>
 							))}
 						</div>
 					</div>
-					<div className="hidden shrink-0 lg:block">
-						<MakeDonationForm lang={lang} />
-					</div>
+					{showDonationForm ? (
+						<div className="hidden shrink-0 lg:block">
+							<MakeDonationForm lang={lang} />
+						</div>
+					) : null}
 				</div>
 			</div>
 

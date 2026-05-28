@@ -1,50 +1,59 @@
-import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { ProgramStory } from './program.types';
-import { getProgramDescription, getProgramTitle } from './program.utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { PublicProgramStats } from '@/lib/services/program/program.types';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
-	program: ProgramStory;
+	title: string;
 	lang: WebsiteLanguage;
-	campaignsCount?: number;
-	recipientsCount?: number;
+	region: WebsiteRegion;
+	fullSlug: string;
+	heroImageFilename?: string;
+	heroImageAlt: string;
+	stats?: PublicProgramStats;
 };
 
-export const ProgramDetail = async ({ program, lang, campaignsCount, recipientsCount }: Props) => {
+export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImageFilename, heroImageAlt, stats }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const programTitle = getProgramTitle(program.content);
-	const programDescription = getProgramDescription(program.content);
-	const heroImageFilename = program.content.primaryImage?.filename;
-	const heroImageAlt = program.content.primaryImage?.alt ?? programTitle;
+	const breadcrumbLinks = await buildBreadcrumbLinks({
+		fullSlug,
+		currentLabel: title,
+		lang,
+		region,
+	});
 
 	return (
-		<LandingPageDetail
-			title={programTitle}
-			description={programDescription}
-			heroImageFilename={heroImageFilename}
-			heroImageAlt={heroImageAlt}
-			stats={
-				campaignsCount !== undefined && recipientsCount !== undefined
-					? [
-							{
-								value: campaignsCount,
-								label:
-									campaignsCount === 1
-										? translator.t('programs-page.campaign-singular')
-										: translator.t('programs-page.campaign-plural'),
-							},
-							{
-								value: recipientsCount,
-								label:
-									recipientsCount === 1
-										? translator.t('programs-page.recipient-singular')
-										: translator.t('programs-page.recipient-plural'),
-							},
-						]
-					: []
-			}
-			descriptionHeading={`${translator.t('programs-page.about')} ${programTitle}`}
-		/>
+		<>
+			<HeroDonationsHeader
+				lang={lang}
+				showDonationForm={true}
+				title={title}
+				heroImageFilename={heroImageFilename}
+				heroImageAlt={heroImageAlt}
+				stats={
+					stats
+						? [
+								{
+									isoCode: stats.countryIsoCode,
+									label: getCountryNameByCode(stats.countryIsoCode),
+								},
+								{
+									value: stats.recipientsCount,
+									label:
+										stats.recipientsCount === 1
+											? translator.t('programs-page.recipient-singular')
+											: translator.t('programs-page.recipient-plural'),
+								},
+							]
+						: []
+				}
+			/>
+			<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-8 2xl:mx-auto">
+				<Breadcrumb links={breadcrumbLinks} />
+			</div>
+		</>
 	);
 };

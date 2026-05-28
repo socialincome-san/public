@@ -241,10 +241,14 @@ export interface Layout {
 }
 
 export interface LocalPartner {
-  id: string;
+  id: string
+  portalSlug?: string;
+  countryIsoCode?: number | string;
   heroImage: StoryblokAsset;
   title: string;
   description: string;
+  focuses?: (ISbStoryData<Focus> | string)[];
+  payouts?: DonationsTotal[];
   component: "Local Partner";
   _uid: string;
   [k: string]: unknown;
@@ -395,6 +399,14 @@ export interface ProgramGrid {
   [k: string]: unknown;
 }
 
+export interface ProgramOverview {
+  title?: string;
+  programDefaultImage: StoryblokAsset;
+  component: "programOverview";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface QuotedText {
   text: string;
   author?: string;
@@ -500,5 +512,6 @@ export type ContentType =
   | Partnership
   | Person
   | Program
+  | ProgramOverview
   | ReferenceArticle
   | Tag;

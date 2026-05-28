@@ -3,6 +3,7 @@ import { getCountryNameByCode } from '@/lib/types/country';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
+import { slugify } from '@/lib/utils/string-utils';
 import { CandidateWriteService } from '../candidate/candidate-write.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -72,9 +73,13 @@ export class ProgramWriteService extends BaseService {
 				return this.resultFail('Country not found');
 			}
 
+			const programName = `${getCountryNameByCode(country.isoCode)} Program ${Math.floor(10000 + Math.random() * 90000)}`;
+			const programSlug = slugify(programName);
+
 			const program = await this.db.program.create({
 				data: {
-					name: `${getCountryNameByCode(country.isoCode)} Program ${Math.floor(10000 + Math.random() * 90000)}`,
+					name: programName,
+					slug: programSlug,
 					countryId: input.countryId,
 					amountOfRecipientsForStart: input.amountOfRecipientsForStart ?? null,
 					coveredByReserves: false,
@@ -266,6 +271,7 @@ export class ProgramWriteService extends BaseService {
 					where: { id: parsedInput.id },
 					data: {
 						name: parsedInput.name,
+						slug: slugify(parsedInput.slug),
 						countryId: parsedInput.countryId,
 						coveredByReserves: parsedInput.coveredByReserves,
 						programDurationInMonths: parsedInput.programDurationInMonths,
