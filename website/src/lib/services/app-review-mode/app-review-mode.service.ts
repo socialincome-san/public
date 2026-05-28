@@ -78,6 +78,7 @@ export class AppReviewModeService extends BaseService {
 			program: {
 				id: 'avengers-program',
 				name: 'Avengers Initiative',
+				slug: 'avengers-initiative',
 				amountOfRecipientsForStart: 6,
 				coveredByReserves: false,
 				programDurationInMonths: 60,
