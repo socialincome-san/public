@@ -1,6 +1,7 @@
 import { Currency, PrismaClient, ProgramPermission, UserRole } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { logger } from '@/lib/utils/logger';
+import { slugify } from '@/lib/utils/string-utils';
 import { now } from '@/lib/utils/now';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
 import { CandidateWriteService } from '../candidate/candidate-write.service';
@@ -72,9 +73,13 @@ export class ProgramWriteService extends BaseService {
 				return this.resultFail('Country not found');
 			}
 
+			const programName = `${getCountryNameByCode(country.isoCode)} Program ${Math.floor(10000 + Math.random() * 90000)}`;
+			const programSlug = slugify(programName);
+
 			const program = await this.db.program.create({
 				data: {
-					name: `${getCountryNameByCode(country.isoCode)} Program ${Math.floor(10000 + Math.random() * 90000)}`,
+					name: programName,
+					slug: programSlug,
 					countryId: input.countryId,
 					amountOfRecipientsForStart: input.amountOfRecipientsForStart ?? null,
 					coveredByReserves: false,
