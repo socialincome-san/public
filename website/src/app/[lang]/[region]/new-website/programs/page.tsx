@@ -12,7 +12,7 @@ export const revalidate = 900;
 export default async function ProgramsOverviewRoute({ params }: DefaultLayoutProps) {
 	const { lang, region } = await params;
 	const overviewResult = await services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(
-		`${NEW_WEBSITE_SLUG}/programs/overview`,
+		`${NEW_WEBSITE_SLUG}/programs`,
 		lang,
 	);
 

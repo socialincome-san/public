@@ -1,13 +1,15 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
-import { PreviewProgram } from '@/components/public-landing/preview-program';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import {
 	getProgramDescription,
 	getProgramId,
 	getProgramTitle,
 } from '@/components/storyblok/program/program.utils';
+import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
@@ -35,21 +37,35 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 		);
 	}
 
-	const previewProgramResult = await services.read.program.getPublicPreviewProgramBySlug(slug);
+	const [previewProgramResult, overviewResult] = await Promise.all([
+		services.read.program.getPublicPreviewProgramBySlug(slug),
+		services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(
+			`${NEW_WEBSITE_SLUG}/programs`,
+			lang,
+		),
+	]);
 	if (!previewProgramResult.success) {
 		return notFound();
 	}
+	console.log("previewProgramResult", previewProgramResult);
 
 	const statsResult = await services.read.program.getPublicProgramStatsById(previewProgramResult.data.id);
+	console.log('statsResult', statsResult);
 	if (!statsResult.success) {
 		return notFound();
 	}
 
+	const programTitle = previewProgramResult.data.name;
+	const defaultImage = overviewResult.success ? overviewResult.data.content.programDefaultImage : undefined;
+
 	return (
-		<PreviewProgram
-			title={previewProgramResult.data.name}
+		<ProgramDetail
+			title={programTitle}
+			description="-"
 			lang={lang as WebsiteLanguage}
-			campaignsCount={statsResult.data.campaignsCount}
+			heroImageFilename={defaultImage?.filename ?? undefined}
+			heroImageAlt={defaultImage?.alt ?? programTitle}
+			campaignsCount={statsResult?.success ? statsResult.data.campaignsCount : undefined}
 			recipientsCount={statsResult.data.recipientsCount}
 		/>
 	);
