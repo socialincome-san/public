@@ -1,9 +1,9 @@
 import { Currency, PrismaClient, ProgramPermission, UserRole } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { logger } from '@/lib/utils/logger';
-import { slugify } from '@/lib/utils/string-utils';
 import { now } from '@/lib/utils/now';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
+import { slugify } from '@/lib/utils/string-utils';
 import { CandidateWriteService } from '../candidate/candidate-write.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';

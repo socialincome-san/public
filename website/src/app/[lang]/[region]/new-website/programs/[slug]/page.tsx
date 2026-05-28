@@ -1,10 +1,6 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
-import {
-	getProgramDescription,
-	getProgramId,
-	getProgramTitle,
-} from '@/components/storyblok/program/program.utils';
+import { getProgramDescription, getProgramId, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -40,10 +36,7 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 
 	const [previewProgramResult, overviewResult] = await Promise.all([
 		services.read.program.getPublicPreviewProgramBySlug(slug),
-		services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(
-			`${NEW_WEBSITE_SLUG}/programs`,
-			lang,
-		),
+		services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(`${NEW_WEBSITE_SLUG}/programs`, lang),
 	]);
 	if (!previewProgramResult.success) {
 		return notFound();

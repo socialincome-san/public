@@ -1,10 +1,6 @@
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import {
-	getProgramDescription,
-	getProgramId,
-	getProgramTitle,
-} from '@/components/storyblok/program/program.utils';
+import { getProgramDescription, getProgramId, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';

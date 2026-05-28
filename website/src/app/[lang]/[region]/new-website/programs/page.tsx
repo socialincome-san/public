@@ -21,10 +21,6 @@ export default async function ProgramsOverviewRoute({ params }: DefaultLayoutPro
 	}
 
 	return (
-		<ProgramsOverviewPage
-			overview={overviewResult.data}
-			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
-		/>
+		<ProgramsOverviewPage overview={overviewResult.data} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />
 	);
 }

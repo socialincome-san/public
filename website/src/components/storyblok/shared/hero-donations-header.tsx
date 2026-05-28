@@ -83,9 +83,11 @@ export const HeroDonationsHeader = ({
 							))}
 						</div>
 					</div>
-					{ showDonationForm ? <div className="hidden shrink-0 lg:block">
-						<MakeDonationForm lang={lang} />
-					</div> : null}
+					{showDonationForm ? (
+						<div className="hidden shrink-0 lg:block">
+							<MakeDonationForm lang={lang} />
+						</div>
+					) : null}
 				</div>
 			</div>
 

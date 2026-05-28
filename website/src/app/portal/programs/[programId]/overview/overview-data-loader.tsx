@@ -1,6 +1,5 @@
 import { services } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import { slugify } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { FirstIntervalFundingSection } from './components/first-interval-funding-section';
