@@ -8,7 +8,6 @@ import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
 	title: string;
-	description: string;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	fullSlug: string;
@@ -19,7 +18,6 @@ type Props = {
 
 export const ProgramDetail = async ({
 	title,
-	description,
 	lang,
 	region,
 	fullSlug,
@@ -34,6 +32,7 @@ export const ProgramDetail = async ({
 		lang,
 		region,
 	});
+	
 	return (
 		<>
 			<HeroDonationsHeader

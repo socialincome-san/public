@@ -18,11 +18,12 @@ export const ProgramsOverviewPage = async ({ overview, lang, region }: Props) =>
 	const programIds = [...new Set(programs.map((program) => getProgramId(program.content)).filter(Boolean))];
 	const statsResult = await services.read.program.getPublicProgramStatsByIds(programIds);
 	const statsById = statsResult.success ? statsResult.data : {};
-	const title = overview.content.title?.trim() || overview.name;
+	const title = overview.content.title?.trim() ?? overview.name;
 
 	return (
 		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
 			{title ? <h1 className="text-4xl font-bold xl:text-6xl">{title}</h1> : null}
+			// Filter here
 			<ProgramsOverview programs={programs} statsById={statsById} lang={lang} region={region} />
 		</div>
 	);
