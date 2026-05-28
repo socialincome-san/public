@@ -38,6 +38,7 @@ export class PayoutProcessService extends BaseService {
 	async getRecipientsReadyForFirstPayout(
 		userId: string,
 		mobileMoneyProviderId: string,
+		referenceDate: Date = now(),
 	): Promise<ServiceResult<PayoutRecipient[]>> {
 		try {
 			const providerResult = await this.validatePayoutProvider(mobileMoneyProviderId);
@@ -66,7 +67,7 @@ export class PayoutProcessService extends BaseService {
 				}
 			}
 
-			const nowDate = now();
+			const nowDate = referenceDate;
 
 			const recipients = await this.db.recipient.findMany({
 				where: {
@@ -183,7 +184,7 @@ export class PayoutProcessService extends BaseService {
 		selectedDate: Date,
 	): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId);
+			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId, selectedDate);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -226,7 +227,7 @@ export class PayoutProcessService extends BaseService {
 		mobileMoneyProviderId: string,
 		selectedDate: Date,
 	): Promise<ServiceResult<number>> {
-		const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId);
+		const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId, selectedDate);
 		if (!recipientsResult.success) {
 			return this.resultFail(recipientsResult.error);
 		}
@@ -245,7 +246,7 @@ export class PayoutProcessService extends BaseService {
 		selectedDate: Date,
 	): Promise<ServiceResult<PreviewPayout[]>> {
 		try {
-			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId);
+			const recipientsResult = await this.getRecipientsReadyForFirstPayout(userId, mobileMoneyProviderId, selectedDate);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
