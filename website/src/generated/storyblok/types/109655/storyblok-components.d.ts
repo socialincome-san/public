@@ -89,7 +89,7 @@ export interface Country {
   countryOfficeTitle?: string;
   countryOfficeDescription?: string;
   partners?: (ISbStoryData<LocalPartner> | string)[];
-  donations?: DonationsTotal[];
+  payouts?: DonationsTotal[];
   programs?: ProgramGrid[];
   component: "Country";
   _uid: string;

@@ -1,4 +1,6 @@
 import { PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { CountryCode } from '@/generated/prisma/enums';
+import { isValidCountryCode } from '@/lib/types/country';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
@@ -9,6 +11,7 @@ import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.ser
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { RecipientStatusService } from '../recipient/recipient-status.service';
 import {
+	CountryPayoutTotals,
 	OngoingPayoutPaginatedTableView,
 	OngoingPayoutTableQuery,
 	OngoingPayoutTableViewRow,
@@ -121,6 +124,47 @@ export class PayoutReadService extends BaseService {
 			current: { start: startOfMonth(nowDate), end: endOfMonth(nowDate) },
 			last: { start: startOfMonth(subMonths(nowDate, 1)), end: endOfMonth(subMonths(nowDate, 1)) },
 			twoAgo: { start: startOfMonth(subMonths(nowDate, 2)), end: endOfMonth(subMonths(nowDate, 2)) },
+		};
+	}
+
+	async getPayoutTotalsForCountry(isoCode: string): Promise<ServiceResult<CountryPayoutTotals>> {
+		try {
+			const normalizedIsoCode = isoCode.trim().toUpperCase();
+			if (!normalizedIsoCode) {
+				return this.resultFail('Missing isoCode');
+			}
+
+			if (!isValidCountryCode(normalizedIsoCode)) {
+				return this.resultFail('Invalid country code');
+			}
+
+			const totals = await this.getTotalsForCountry(normalizedIsoCode);
+
+			return this.resultOk(totals);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch payout totals for country: ${JSON.stringify(error)}`);
+		}
+	}
+
+	private async getTotalsForCountry(countryCode: CountryCode): Promise<CountryPayoutTotals> {
+		const aggregate = await this.db.payout.aggregate({
+			where: {
+				status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] },
+				recipient: {
+					program: {
+						country: {
+							isoCode: countryCode,
+						},
+					},
+				},
+			},
+			_sum: { amountChf: true },
+		});
+
+		return {
+			totalPayoutsChf: Number(aggregate._sum.amountChf ?? 0),
 		};
 	}
 
