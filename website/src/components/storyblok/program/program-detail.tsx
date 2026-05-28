@@ -1,4 +1,4 @@
-import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
+import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 
@@ -24,14 +24,16 @@ export const ProgramDetail = async ({
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
 	return (
-		<LandingPageDetail
-			title={title}
-			description={description}
-			heroImageFilename={heroImageFilename}
-			heroImageAlt={heroImageAlt}
-			stats={
-				campaignsCount !== undefined && recipientsCount !== undefined
-					? [
+		<>
+			<HeroDonationsHeader
+				lang={lang}
+				showDonationForm={false}
+				title={title}
+				heroImageFilename={heroImageFilename}
+				heroImageAlt={heroImageAlt}
+				stats={
+					campaignsCount !== undefined && recipientsCount !== undefined
+						? [
 							{
 								value: campaignsCount,
 								label:
@@ -47,9 +49,12 @@ export const ProgramDetail = async ({
 										: translator.t('programs-page.recipient-plural'),
 							},
 						]
-					: []
-			}
-			descriptionHeading={`${translator.t('programs-page.about')} ${title}`}
-		/>
+						: []
+				}
+			/>
+			<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-8 2xl:mx-auto">
+				<p className="text-base">{description || '-'}</p>
+			</div>
+		</>
 	);
 };

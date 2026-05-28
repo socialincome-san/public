@@ -15,6 +15,7 @@ type Props = {
 	stats: Stat[];
 	titleIcon?: string;
 	titleIconAlt?: string;
+	showDonationForm?: boolean;
 };
 
 export const HeroDonationsHeader = ({
@@ -25,6 +26,7 @@ export const HeroDonationsHeader = ({
 	stats,
 	titleIcon,
 	titleIconAlt,
+	showDonationForm = true,
 }: Props) => {
 	return (
 		<section className="hero-video hero-video-block flex flex-col gap-6">
@@ -69,9 +71,9 @@ export const HeroDonationsHeader = ({
 							))}
 						</div>
 					</div>
-					<div className="hidden shrink-0 lg:block">
+					{ showDonationForm ? <div className="hidden shrink-0 lg:block">
 						<MakeDonationForm lang={lang} />
-					</div>
+					</div> : null}
 				</div>
 			</div>
 
