@@ -166,7 +166,7 @@ test('Edit existing recipient', async ({ page }) => {
 		await page.goto('/portal/management/recipients');
 		await page.getByRole('cell', { name: EXISTING_RECIPIENT.firstName }).click();
 
-		await page.getByTestId('form-item-startDate').locator('button').click();
+		await page.getByTestId('form-item-startDate').getByTestId('date-picker-button').click();
 		await page.getByLabel('Choose the Month').selectOption('2');
 		await page.getByLabel('Choose the Year').selectOption('2020');
 		await page.getByRole('button', { name: 'Thursday, March 12th,' }).click();
@@ -184,7 +184,7 @@ test('Edit existing recipient', async ({ page }) => {
 		await page.getByTestId('form-item-contact.callingName').locator('input').fill(EDIT_RECIPIENT.callingName);
 		await page.getByTestId('form-item-contact.email').locator('input').fill(EDIT_RECIPIENT.email);
 		await selectOptionByTestId(page, 'contact.language', EDIT_RECIPIENT.language);
-		await page.getByTestId('form-item-contact.dateOfBirth').locator('button').click();
+		await page.getByTestId('form-item-contact.dateOfBirth').getByTestId('date-picker-button').click();
 		await page.getByLabel('Choose the Year').selectOption('1996');
 		await page.getByLabel('Choose the Month').selectOption('2');
 		await page.getByRole('button', { name: 'Tuesday, March 12th,' }).click();
