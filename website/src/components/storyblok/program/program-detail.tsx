@@ -1,59 +1,67 @@
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { PublicProgramStats } from '@/lib/services/program/program.types';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
 	title: string;
 	description: string;
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
+	fullSlug: string;
 	heroImageFilename?: string;
 	heroImageAlt: string;
-	campaignsCount?: number;
-	recipientsCount?: number;
+	stats?: PublicProgramStats;
 };
 
 export const ProgramDetail = async ({
 	title,
 	description,
 	lang,
+	region,
+	fullSlug,
 	heroImageFilename,
 	heroImageAlt,
-	campaignsCount,
-	recipientsCount,
+	stats,
 }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-
+	const breadcrumbLinks = await buildBreadcrumbLinks({
+		fullSlug,
+		currentLabel: title,
+		lang,
+		region,
+	});
 	return (
 		<>
 			<HeroDonationsHeader
 				lang={lang}
-				showDonationForm={false}
+				showDonationForm={true}
 				title={title}
 				heroImageFilename={heroImageFilename}
 				heroImageAlt={heroImageAlt}
 				stats={
-					campaignsCount !== undefined && recipientsCount !== undefined
+					stats
 						? [
-							{
-								value: campaignsCount,
-								label:
-									campaignsCount === 1
-										? translator.t('programs-page.campaign-singular')
-										: translator.t('programs-page.campaign-plural'),
-							},
-							{
-								value: recipientsCount,
-								label:
-									recipientsCount === 1
-										? translator.t('programs-page.recipient-singular')
-										: translator.t('programs-page.recipient-plural'),
-							},
-						]
+								{
+									isoCode: stats.countryIsoCode,
+									label: getCountryNameByCode(stats.countryIsoCode),
+								},
+								{
+									value: stats.recipientsCount,
+									label:
+										stats.recipientsCount === 1
+											? translator.t('programs-page.recipient-singular')
+											: translator.t('programs-page.recipient-plural'),
+								},
+							]
 						: []
 				}
 			/>
 			<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-8 2xl:mx-auto">
-				<p className="text-base">{description || '-'}</p>
+				<Breadcrumb links={breadcrumbLinks} />
 			</div>
 		</>
 	);

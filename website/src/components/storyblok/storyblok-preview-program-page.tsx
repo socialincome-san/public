@@ -6,12 +6,13 @@ import {
 	getProgramTitle,
 } from '@/components/storyblok/program/program.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
@@ -22,7 +23,7 @@ const getProgramStats = async (programId: string) => {
 	return statsResult.success ? statsResult.data : undefined;
 };
 
-export const StoryblokPreviewProgramPage = async ({ storyPath, lang, previewRoutePath, searchParams }: Props) => {
+export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
 	return await StoryblokPreviewStory<ProgramStory>({
 		storyPath,
 		lang,
@@ -43,10 +44,11 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, previewRout
 					title={programTitle}
 					description={getProgramDescription(story.content)}
 					lang={lang}
+					region={region}
+					fullSlug={story.full_slug}
 					heroImageFilename={story.content.primaryImage?.filename ?? undefined}
 					heroImageAlt={story.content.primaryImage?.alt ?? programTitle}
-					campaignsCount={stats?.campaignsCount}
-					recipientsCount={stats?.recipientsCount}
+					stats={stats}
 				/>
 			);
 		},
