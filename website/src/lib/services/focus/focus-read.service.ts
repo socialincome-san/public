@@ -67,6 +67,7 @@ export class FocusReadService extends BaseService {
 			return this.resultOk({
 				id: focus.id,
 				name: focus.name,
+				slug: focus.slug,
 				createdAt: focus.createdAt,
 				updatedAt: focus.updatedAt,
 			});

@@ -5,6 +5,8 @@ import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-for
 import { createFocusAction, deleteFocusAction, getFocusAction, updateFocusAction } from '@/lib/server-actions/focus-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { FocusPayload } from '@/lib/services/focus/focus.types';
+import { SLUG_REGEX } from '@/lib/utils/regex';
+import { slugify } from '@/lib/utils/string-utils';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateFocusInput, buildUpdateFocusInput } from './focuses-form-helper';
@@ -20,6 +22,7 @@ export type FocusFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
+		slug: FormField;
 	};
 };
 
@@ -30,6 +33,20 @@ const initialFormSchema: FocusFormSchema = {
 			placeholder: 'e.g. poverty',
 			label: 'Name',
 			zodSchema: z.string().trim().min(1, 'Name is required.'),
+			onChange: (value, form) => {
+				const nextName = typeof value === 'string' ? value : '';
+				const previousName = String(form.getValues('name') ?? '');
+				const currentSlug = String(form.getValues('slug') ?? '');
+				const previousAutoSlug = slugify(previousName);
+				if (!currentSlug || currentSlug === previousAutoSlug) {
+					form.setValue('slug', slugify(nextName));
+				}
+			},
+		},
+		slug: {
+			placeholder: 'unique-readable-id',
+			label: 'Slug (URL Identifier)',
+			zodSchema: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
 		},
 	},
 };
@@ -78,6 +95,7 @@ export default function FocusesForm({ onSuccess, onError, onCancel, focusId }: F
 					setFormSchema((prev) => {
 						const next = clearFormSchemaValues(prev);
 						next.fields.name.value = data.name;
+						next.fields.slug.value = data.slug;
 
 						return next;
 					});

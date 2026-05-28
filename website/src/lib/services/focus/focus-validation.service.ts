@@ -42,6 +42,14 @@ export class FocusValidationService extends BaseService {
 			return this.resultFail('A focus with this name already exists.');
 		}
 
+		const slugConflict = await this.db.focus.findUnique({
+			where: { slug: input.slug },
+			select: { id: true },
+		});
+		if (slugConflict) {
+			return this.resultFail('A focus with this slug already exists.');
+		}
+
 		return this.resultOk(undefined);
 	}
 
@@ -56,6 +64,16 @@ export class FocusValidationService extends BaseService {
 			});
 			if (nameConflict && nameConflict.id !== context.focusId) {
 				return this.resultFail('A focus with this name already exists.');
+			}
+		}
+
+		if (input.slug !== context.existingSlug) {
+			const slugConflict = await this.db.focus.findUnique({
+				where: { slug: input.slug },
+				select: { id: true },
+			});
+			if (slugConflict && slugConflict.id !== context.focusId) {
+				return this.resultFail('A focus with this slug already exists.');
 			}
 		}
 

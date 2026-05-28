@@ -157,6 +157,7 @@ export class LocalPartnerReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 					focuses: { select: { focusId: true } },
 					contact: {
 						select: {
@@ -183,6 +184,7 @@ export class LocalPartnerReadService extends BaseService {
 			return this.resultOk({
 				id: partner.id,
 				name: partner.name,
+				slug: partner.slug,
 				focuses: partner.focuses.map((focus) => focus.focusId),
 				contact: partner.contact,
 			});

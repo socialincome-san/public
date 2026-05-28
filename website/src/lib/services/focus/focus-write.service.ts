@@ -50,12 +50,14 @@ export class FocusWriteService extends BaseService {
 			const created = await this.db.focus.create({
 				data: {
 					name: validatedInput.name,
+					slug: validatedInput.slug,
 				},
 			});
 
 			return this.resultOk({
 				id: created.id,
 				name: created.name,
+				slug: created.slug,
 				createdAt: created.createdAt,
 				updatedAt: created.updatedAt,
 			});
@@ -84,7 +86,7 @@ export class FocusWriteService extends BaseService {
 
 			const existing = await this.db.focus.findUnique({
 				where: { id: validatedInput.id },
-				select: { id: true, name: true },
+				select: { id: true, name: true, slug: true },
 			});
 			if (!existing) {
 				return this.resultFail('Focus not found');
@@ -93,6 +95,7 @@ export class FocusWriteService extends BaseService {
 			const uniquenessResult = await this.validationService.validateUpdateUniqueness(validatedInput, {
 				focusId: existing.id,
 				existingName: existing.name,
+				existingSlug: existing.slug,
 			});
 			if (!uniquenessResult.success) {
 				return this.resultFail(uniquenessResult.error);
@@ -102,12 +105,14 @@ export class FocusWriteService extends BaseService {
 				where: { id: validatedInput.id },
 				data: {
 					name: validatedInput.name,
+					slug: validatedInput.slug,
 				},
 			});
 
 			return this.resultOk({
 				id: updated.id,
 				name: updated.name,
+				slug: updated.slug,
 				createdAt: updated.createdAt,
 				updatedAt: updated.updatedAt,
 			});

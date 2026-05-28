@@ -28,19 +28,26 @@ test('admin focuses with direct URL sorting matches screenshot', async ({ page }
 test('add new focus', async ({ page }) => {
 	const unique = Date.now();
 	const name = `e2e-focus-${unique}`;
+	const expectedSlug = name
+		.toLowerCase()
+		.trim()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
 
 	await page.goto('/portal/admin/focuses');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-focus');
 	await page.getByTestId('form-item-name').locator('input').fill(name);
+	await expect(page.getByTestId('form-item-slug').locator('input')).toHaveValue(expectedSlug);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
 	const created = await prisma.focus.findUnique({
 		where: { name },
-		select: { id: true, name: true },
+		select: { id: true, name: true, slug: true },
 	});
 	expect(created).toBeDefined();
 	expect(created?.name).toBe(name);
+	expect(created?.slug).toBe(expectedSlug);
 });
 
 test('shows uniqueness error when focus name already exists', async ({ page }) => {
@@ -66,10 +73,16 @@ test('update focus', async ({ page }) => {
 	const unique = Date.now();
 	const initialName = `e2e-focus-initial-${unique}`;
 	const updatedName = `e2e-focus-updated-${unique}`;
+	const expectedUpdatedSlug = updatedName
+		.toLowerCase()
+		.trim()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
 
 	const created = await prisma.focus.create({
 		data: {
 			name: initialName,
+			slug: initialName,
 		},
 		select: { id: true },
 	});
@@ -86,6 +99,7 @@ test('update focus', async ({ page }) => {
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 
 	await page.getByTestId('form-item-name').locator('input').fill(updatedName);
+	await expect(page.getByTestId('form-item-slug').locator('input')).toHaveValue(expectedUpdatedSlug);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 

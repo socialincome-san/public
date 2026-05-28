@@ -29,6 +29,11 @@ test('add new local partner', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-local-partner-${unique}`;
 	const email = `e2e.local.partner.${unique}@example.com`;
+	const expectedSlug = partnerName
+		.toLowerCase()
+		.trim()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
 
 	await deleteFirebaseEmailsIfExist(email);
 
@@ -38,6 +43,7 @@ test('add new local partner', async ({ page }) => {
 		await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 
 		await page.getByTestId('form-item-name').locator('input').fill(partnerName);
+		await expect(page.getByTestId('form-item-slug').locator('input')).toHaveValue(expectedSlug);
 		await page.getByTestId('form-accordion-trigger-contact').click();
 		await page.getByTestId('form-item-contact.firstName').locator('input').fill('E2E');
 		await page.getByTestId('form-item-contact.lastName').locator('input').fill('Partner');
@@ -92,6 +98,7 @@ test('edit local partner and remove phone number', async ({ page }) => {
 	await prisma.localPartner.create({
 		data: {
 			name: partnerName,
+			slug: partnerName,
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-local-partner-uid-${unique}`,
@@ -149,6 +156,7 @@ test('edit local partner and remove address', async ({ page }) => {
 	const created = await prisma.localPartner.create({
 		data: {
 			name: partnerName,
+			slug: partnerName,
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-local-partner-uid-address-${unique}`,
@@ -218,6 +226,7 @@ test('delete local partner from admin table', async ({ page }) => {
 	const created = await prisma.localPartner.create({
 		data: {
 			name: partnerName,
+			slug: partnerName,
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-delete-local-partner-uid-${unique}`,
@@ -266,6 +275,11 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const partnerName = `e2e-firebase-partner-${unique}`;
+	const expectedSlug = partnerName
+		.toLowerCase()
+		.trim()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
 	const initialFirstName = 'Firebase';
 	const initialLastName = 'Create';
 	const initialEmail = `e2e.firebase.create.${unique}@example.com`;
@@ -284,6 +298,7 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 		await page.getByTestId('data-table-actions-button').click();
 		await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 		await page.getByTestId('form-item-name').locator('input').fill(partnerName);
+		await expect(page.getByTestId('form-item-slug').locator('input')).toHaveValue(expectedSlug);
 		await page.getByTestId('form-accordion-trigger-contact').click();
 		await page.getByTestId('form-item-contact.firstName').locator('input').fill(initialFirstName);
 		await page.getByTestId('form-item-contact.lastName').locator('input').fill(initialLastName);

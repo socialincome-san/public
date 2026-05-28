@@ -48,6 +48,7 @@ export class AppReviewModeService extends BaseService {
 				accountId: 'stark-industries-account',
 				legacyFirestoreId: null,
 				name: 'Stark Industries',
+				slug: 'stark-industries',
 				contactId: 'stark-industries-contact',
 				createdAt: now(),
 				updatedAt: now(),

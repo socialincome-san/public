@@ -6,6 +6,7 @@ import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contr
 import { LocalPartnerFormUpdateInput } from '@/lib/services/local-partner/local-partner-form-input';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
+import { slugify } from '@/lib/utils/string-utils';
 import { toggleNewsletter } from './newsletter';
 import { ProfileFormOutput } from './schemas';
 
@@ -52,6 +53,7 @@ export const submitProfileForm = async (
 	if (values.type === 'local-partner') {
 		const update: LocalPartnerFormUpdateInput = {
 			name: values.name,
+			slug: slugify(values.name),
 			focuses: values.focuses ?? [],
 			contact: {
 				firstName: values.firstName,

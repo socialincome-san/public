@@ -13,6 +13,8 @@ import {
 import { ServiceResult } from '@/lib/services/core/base.types';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { LocalPartnerPayload } from '@/lib/services/local-partner/local-partner.types';
+import { SLUG_REGEX } from '@/lib/utils/regex';
+import { slugify } from '@/lib/utils/string-utils';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateLocalPartnerInput, buildUpdateLocalPartnerInput } from './local-partners-form-helper';
@@ -21,6 +23,7 @@ export type LocalPartnerFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
+		slug: FormField;
 		focuses: FormField;
 		contact: FormSchema;
 	};
@@ -33,6 +36,20 @@ const initialFormSchema: LocalPartnerFormSchema = {
 			placeholder: 'Name',
 			label: 'Name',
 			zodSchema: z.string().trim().min(1, 'Name is required.'),
+			onChange: (value, form) => {
+				const nextName = typeof value === 'string' ? value : '';
+				const previousName = String(form.getValues('name') ?? '');
+				const currentSlug = String(form.getValues('slug') ?? '');
+				const previousAutoSlug = slugify(previousName);
+				if (!currentSlug || currentSlug === previousAutoSlug) {
+					form.setValue('slug', slugify(nextName));
+				}
+			},
+		},
+		slug: {
+			placeholder: 'unique-readable-id',
+			label: 'Slug (URL Identifier)',
+			zodSchema: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
 		},
 		focuses: {
 			placeholder: 'Focuses',
@@ -67,6 +84,7 @@ export default function LocalPartnersForm({
 			const next = clearFormSchemaValues(prev);
 			const contactValues = getContactValuesFromPayload(partner.contact, next.fields.contact.fields);
 			next.fields.name.value = partner.name;
+			next.fields.slug.value = partner.slug;
 			next.fields.contact.fields = contactValues;
 			next.fields.focuses.value = partner.focuses ?? [];
 
