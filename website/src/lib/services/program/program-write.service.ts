@@ -271,6 +271,7 @@ export class ProgramWriteService extends BaseService {
 					where: { id: parsedInput.id },
 					data: {
 						name: parsedInput.name,
+						slug: slugify(parsedInput.slug),
 						countryId: parsedInput.countryId,
 						coveredByReserves: parsedInput.coveredByReserves,
 						programDurationInMonths: parsedInput.programDurationInMonths,

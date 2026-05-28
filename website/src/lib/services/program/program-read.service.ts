@@ -1,5 +1,6 @@
 import { PayoutStatus, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
+import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -349,13 +350,12 @@ export class ProgramReadService extends BaseService {
 
 	async getProgramIdBySlug(slug: string): Promise<ServiceResult<string>> {
 		try {
-			const programs = await this.db.program.findMany({ select: { id: true, name: true } });
-			const match = programs.find((p) =>p.slug === slug);
-			if (!match) {
+			const program = await this.db.program.findUnique({ where: { slug }, select: { id: true } });
+			if (!program) {
 				return this.resultFail('Program not found');
 			}
 
-			return this.resultOk(match.id);
+			return this.resultOk(program.id);
 		} catch (error) {
 			this.logger.error(error);
 
@@ -402,6 +402,7 @@ export class ProgramReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 					countryId: true,
 					country: {
 						select: {
@@ -438,6 +439,7 @@ export class ProgramReadService extends BaseService {
 			return this.resultOk({
 				id: program.id,
 				name: program.name,
+				slug: program.slug,
 				countryId: program.countryId,
 				country: program.country,
 				amountOfRecipientsForStart: program.amountOfRecipientsForStart,
