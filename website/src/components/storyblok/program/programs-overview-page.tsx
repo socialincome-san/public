@@ -23,7 +23,6 @@ export const ProgramsOverviewPage = async ({ overview, lang, region }: Props) =>
 	return (
 		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
 			{title ? <h1 className="text-4xl font-bold xl:text-6xl">{title}</h1> : null}
-			// Filter here
 			<ProgramsOverview programs={programs} statsById={statsById} lang={lang} region={region} />
 		</div>
 	);
