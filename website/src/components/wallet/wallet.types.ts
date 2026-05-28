@@ -11,13 +11,10 @@ export type WalletImages = {
 	hoverEffectImage2: WalletImage;
 };
 
-export type WalletPaidOut = {
-	currency: string | null;
-	amount: number;
-};
-
-export type WalletRecipientCount = {
-	amount: number;
+export type WalletFooterColumn = {
+	label: string;
+	prefix?: string | null;
+	value: string;
 };
 
 export type WalletVariant = 'default' | 'empty';

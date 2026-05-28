@@ -32,7 +32,7 @@ export const LandingPageDetail = ({
 	descriptionHeading,
 }: Props) => {
 	return (
-		<section className="hero-video hero-video-block flex flex-col gap-6">
+		<section className="full-bleed-hero flex flex-col gap-6">
 			<div className="relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl bg-black md:min-h-160 md:rounded-b-[56px]">
 				{heroImageFilename ? (
 					<NextImage src={heroImageFilename} alt={heroImageAlt ?? title} fill className="object-cover" priority />

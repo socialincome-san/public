@@ -51,15 +51,19 @@ export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, t
 			});
 			setContributionReference(contributionReferenceId);
 
-			setQrBillSvg(
-				generateQrBillSvg({
-					amount,
-					contributorReferenceId,
-					contributionReferenceId,
-					currency: currency as 'CHF' | 'EUR',
-					type: qrBillType,
-				}),
-			);
+			try {
+				setQrBillSvg(
+					generateQrBillSvg({
+						amount,
+						contributorReferenceId,
+						contributionReferenceId,
+						currency: currency as 'CHF' | 'EUR',
+						type: qrBillType,
+					}),
+				);
+			} catch {
+				toast.error(translations.errors.qrBillError);
+			}
 		});
 	};
 

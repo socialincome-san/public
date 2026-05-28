@@ -69,7 +69,7 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations, 
 	};
 
 	return (
-		<div {...storyblokEditable(blok as SbBlokData)} className="storyblok__outline hero-video-block flex flex-col gap-6">
+		<div {...storyblokEditable(blok as SbBlokData)} className="storyblok__outline full-bleed-hero flex flex-col gap-6">
 			<div
 				className={cn(
 					'relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden bg-black transition-[border-radius] duration-300 ease-out md:min-h-160',

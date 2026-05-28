@@ -1,6 +1,7 @@
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankTransferService } from './bank-transfer/bank-transfer.service';
+import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
@@ -31,6 +32,7 @@ import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { FocusReadService } from './focus/focus-read.service';
 import { FocusValidationService } from './focus/focus-validation.service';
 import { FocusWriteService } from './focus/focus-write.service';
+import { JournalService } from './journal/journal.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
@@ -83,6 +85,7 @@ const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma);
 const storyblok = new StoryblokService(prisma);
+const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
 const recipientStatus = new RecipientStatusService(prisma);
 
@@ -150,6 +153,7 @@ const donationCertificateRead = new DonationCertificateReadService(prisma, progr
 
 const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
 const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
+const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok, campaignRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
 const programValidation = new ProgramValidationService(prisma);
 const programWrite = new ProgramWriteService(
@@ -190,6 +194,7 @@ export const services = {
 	read: {
 		candidate: candidateRead,
 		campaign: campaignRead,
+		campaignPublicWebsite,
 		focus: focusRead,
 		contribution: contributionRead,
 		contributor: contributorRead,
@@ -236,6 +241,7 @@ export const services = {
 	programStats,
 	recipientImport,
 	sendgrid,
+	journal,
 	storyblok,
 	stripe,
 	surveyImpact,

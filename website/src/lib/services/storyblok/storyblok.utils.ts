@@ -24,6 +24,24 @@ export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>) => {
 	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
 };
 
+const PERSON_AVATAR_SIZE = 300;
+
+export const getPersonDisplayName = (person: ISbStoryData<Person>) =>
+	`${person.content.firstName} ${person.content.lastName}`.trim() || person.content.fullName;
+
+export const getPersonAvatarSrc = (person: ISbStoryData<Person>) => {
+	const filename = person.content.avatar?.filename;
+	if (!filename) {
+		return null;
+	}
+
+	return formatStoryblokUrl(filename, PERSON_AVATAR_SIZE, PERSON_AVATAR_SIZE, person.content.avatar.focus);
+};
+
+export const getPersonLinkedInUrl = (handle: string) => `https://www.linkedin.com/in/${encodeURIComponent(handle)}`;
+
+export const getPersonGitHubUrl = (username: string) => `https://github.com/${encodeURIComponent(username)}`;
+
 // ==================== Image Utilities ====================
 
 /**
@@ -126,7 +144,27 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
 // ==================== URL Utilities ====================
 
 /**
- * Create a link URL for a journal article.
+ * Build a path under /{lang}/{region}/new-website/…
+ */
+const createNewWebsitePath = (lang: string, region: string, ...segments: string[]) =>
+	`/${lang}/${region}/${NEW_WEBSITE_SLUG}/${segments.join('/')}`;
+
+export const createNewWebsiteJournalPath = (lang: string, region: string) => createNewWebsitePath(lang, region, 'journal');
+
+export const createNewWebsiteJournalArticleLink = (slug: string, lang: string, region: string) =>
+	createNewWebsitePath(lang, region, 'journal', slug);
+
+export const createNewWebsiteJournalTagLink = (tagSlug: string, lang: string, region: string) =>
+	`${createNewWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
+
+export const createNewWebsitePersonLink = (slug: string, lang: string, region: string) =>
+	createNewWebsitePath(lang, region, 'person', slug);
+
+export const createNewWebsiteJournalArticleCanonicalUrl = (slug: string, lang: string) =>
+	`https://socialincome.org/${lang}/${NEW_WEBSITE_SLUG}/journal/${slug}`;
+
+/**
+ * Create a link URL for a journal article on the legacy website.
  */
 export const createLinkForArticle = (slug: string, lang: string, region: string) => {
 	return `/${lang}/${region}/journal/${slug}`;

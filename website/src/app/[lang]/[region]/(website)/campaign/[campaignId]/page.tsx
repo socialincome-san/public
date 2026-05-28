@@ -5,7 +5,7 @@ import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-contain
 import { VimeoVideo } from '@/components/legacy/vimeo-video';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getCampaignByIdAction } from '@/lib/server-actions/campaigns-actions';
+import { services } from '@/lib/services/services';
 import { getMetadata } from '@/lib/utils/metadata';
 import {
 	Accordion,
@@ -36,7 +36,7 @@ export type CampaignPageProps = {
 
 export const generateMetadata = async ({ params }: CampaignPageProps) => {
 	const { campaignId, lang } = await params;
-	const result = await getCampaignByIdAction(campaignId);
+	const result = await services.read.campaign.getById(campaignId);
 	if (!result.success) {
 		return getMetadata(lang as WebsiteLanguage, 'website-campaign');
 	}
@@ -71,7 +71,7 @@ export default async function Page({ params }: CampaignPageProps) {
 		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq', 'website-newsletter'],
 	});
 
-	const result = await getCampaignByIdAction(campaignId);
+	const result = await services.read.campaign.getById(campaignId);
 
 	if (!result.success || !result.data || !result.data.isActive) {
 		return (

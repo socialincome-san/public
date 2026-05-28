@@ -28,7 +28,7 @@ const MapImageBubble = ({ src, alt, sizes, wrapperClassName, bubbleClassName, im
 						<div className="bg-primary/15 h-[56%] w-[56%] rounded-full" />
 					</div>
 				</div>
-				{!hasImageError ? (
+				{!hasImageError && (
 					<Image
 						src={src}
 						alt={alt}
@@ -38,7 +38,7 @@ const MapImageBubble = ({ src, alt, sizes, wrapperClassName, bubbleClassName, im
 						onError={() => setHasImageError(true)}
 						unoptimized
 					/>
-				) : null}
+				)}
 			</div>
 		</div>
 	);

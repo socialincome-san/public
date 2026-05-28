@@ -10,15 +10,15 @@ type Props = {
 	region: WebsiteRegion;
 };
 
-export const CountryDonationsTotal = async ({ country, lang, region }: Props) => {
-	const blok = country.content.donations?.[0];
+export const CountryPayoutsTotal = async ({ country, lang, region }: Props) => {
+	const blok = country.content.payouts?.[0];
 	if (!blok) {
 		return null;
 	}
 
 	const isoCode = getCountryIsoCode(country.content);
-	const totalsResult = await services.transparency.getTransparencyTotalsForCountry(isoCode);
-	const totalChf = totalsResult.success ? totalsResult.data.totalContributionsChf : 0;
+	const totalsResult = await services.read.payout.getPayoutTotalsForCountry(isoCode);
+	const totalChf = totalsResult.success ? totalsResult.data.totalPayoutsChf : 0;
 
 	if (totalChf === 0) {
 		return null;
