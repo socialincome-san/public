@@ -16,15 +16,7 @@ type Props = {
 	stats?: PublicProgramStats;
 };
 
-export const ProgramDetail = async ({
-	title,
-	lang,
-	region,
-	fullSlug,
-	heroImageFilename,
-	heroImageAlt,
-	stats,
-}: Props) => {
+export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImageFilename, heroImageAlt, stats }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug,
@@ -32,7 +24,7 @@ export const ProgramDetail = async ({
 		lang,
 		region,
 	});
-	
+
 	return (
 		<>
 			<HeroDonationsHeader
