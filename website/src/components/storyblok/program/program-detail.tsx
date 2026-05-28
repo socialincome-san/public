@@ -1,27 +1,32 @@
 import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { ProgramStory } from './program.types';
-import { getProgramDescription, getProgramTitle } from './program.utils';
 
 type Props = {
-	program: ProgramStory;
+	title: string;
+	description: string;
 	lang: WebsiteLanguage;
+	heroImageFilename?: string;
+	heroImageAlt: string;
 	campaignsCount?: number;
 	recipientsCount?: number;
 };
 
-export const ProgramDetail = async ({ program, lang, campaignsCount, recipientsCount }: Props) => {
+export const ProgramDetail = async ({
+	title,
+	description,
+	lang,
+	heroImageFilename,
+	heroImageAlt,
+	campaignsCount,
+	recipientsCount,
+}: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const programTitle = getProgramTitle(program.content);
-	const programDescription = getProgramDescription(program.content);
-	const heroImageFilename = program.content.primaryImage?.filename;
-	const heroImageAlt = program.content.primaryImage?.alt ?? programTitle;
 
 	return (
 		<LandingPageDetail
-			title={programTitle}
-			description={programDescription}
+			title={title}
+			description={description}
 			heroImageFilename={heroImageFilename}
 			heroImageAlt={heroImageAlt}
 			stats={
@@ -44,7 +49,7 @@ export const ProgramDetail = async ({ program, lang, campaignsCount, recipientsC
 						]
 					: []
 			}
-			descriptionHeading={`${translator.t('programs-page.about')} ${programTitle}`}
+			descriptionHeading={`${translator.t('programs-page.about')} ${title}`}
 		/>
 	);
 };

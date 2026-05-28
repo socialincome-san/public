@@ -1,7 +1,11 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { PreviewProgram } from '@/components/public-landing/preview-program';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
-import { getProgramId } from '@/components/storyblok/program/program.utils';
+import {
+	getProgramDescription,
+	getProgramId,
+	getProgramTitle,
+} from '@/components/storyblok/program/program.utils';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';
@@ -13,13 +17,18 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 	const programResult = await services.storyblok.getProgramBySlug(slug, lang);
 
 	if (programResult.success) {
-		const programId = getProgramId(programResult.data.content);
+		const program = programResult.data;
+		const programTitle = getProgramTitle(program.content);
+		const programId = getProgramId(program.content);
 		const statsResult = programId ? await services.read.program.getPublicProgramStatsById(programId) : undefined;
 
 		return (
 			<ProgramDetail
-				program={programResult.data}
+				title={programTitle}
+				description={getProgramDescription(program.content)}
 				lang={lang as WebsiteLanguage}
+				heroImageFilename={program.content.primaryImage?.filename ?? undefined}
+				heroImageAlt={program.content.primaryImage?.alt ?? programTitle}
 				campaignsCount={statsResult?.success ? statsResult.data.campaignsCount : undefined}
 				recipientsCount={statsResult?.success ? statsResult.data.recipientsCount : undefined}
 			/>
