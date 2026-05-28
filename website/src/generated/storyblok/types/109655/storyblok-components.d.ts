@@ -84,7 +84,7 @@ export interface CampaignGrid {
 export interface Country {
   isoCode: number | string;
   title: string;
-  description: StoryblokRichtext;
+  description: string;
   heroImage: StoryblokAsset;
   countryOfficeTitle?: string;
   countryOfficeDescription?: string;
@@ -241,11 +241,12 @@ export interface Layout {
 }
 
 export interface LocalPartner {
+  id: string
   portalSlug?: string;
   countryIsoCode?: number | string;
   heroImage: StoryblokAsset;
   title: string;
-  description: StoryblokRichtext;
+  description: string;
   focuses?: (ISbStoryData<Focus> | string)[];
   payouts?: DonationsTotal[];
   component: "Local Partner";

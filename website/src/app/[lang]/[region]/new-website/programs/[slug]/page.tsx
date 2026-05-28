@@ -23,7 +23,6 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 		return (
 			<ProgramDetail
 				title={programTitle}
-				description={getProgramDescription(program.content)}
 				lang={lang as WebsiteLanguage}
 				region={region as WebsiteRegion}
 				fullSlug={program.full_slug}
@@ -53,7 +52,6 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 	return (
 		<ProgramDetail
 			title={programTitle}
-			description="-"
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
 			fullSlug={`${NEW_WEBSITE_SLUG}/programs/${slug}`}

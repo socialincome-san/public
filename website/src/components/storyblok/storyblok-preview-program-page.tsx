@@ -38,7 +38,6 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 			return (
 				<ProgramDetail
 					title={programTitle}
-					description={getProgramDescription(story.content)}
 					lang={lang}
 					region={region}
 					fullSlug={story.full_slug}
