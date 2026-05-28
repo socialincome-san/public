@@ -20,6 +20,7 @@ export const StoryblokPreviewProgramsOverviewPage = async ({
 	previewRoutePath,
 	searchParams,
 }: Props) => {
+	console.log('storyPath', storyPath);
 	return await StoryblokPreviewStory<ISbStoryData<ProgramOverview>>({
 		storyPath,
 		lang,

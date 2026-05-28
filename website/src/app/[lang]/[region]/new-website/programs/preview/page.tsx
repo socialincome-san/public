@@ -13,10 +13,10 @@ export default async function ProgramsOverviewPreviewRoute({ params, searchParam
 
 	return (
 		<StoryblokPreviewProgramsOverviewPage
-			storyPath={`${NEW_WEBSITE_SLUG}/programs/overview`}
+			storyPath={`${NEW_WEBSITE_SLUG}/programs/`}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
-			previewRoutePath={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/overview/preview`}
+			previewRoutePath={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/preview`}
 			searchParams={resolvedSearchParams}
 		/>
 	);
