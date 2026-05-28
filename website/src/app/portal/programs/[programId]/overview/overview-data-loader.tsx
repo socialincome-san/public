@@ -16,6 +16,9 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 	const programNameResult = await services.read.program.getProgramNameById(programId);
 	const programSlugResult = await services.read.program.getProgramSlugById(programId);
+	if (!programSlugResult.success || !programSlugResult.data) {
+		return <div className="p-4">Error loading the program overview</div>;
+	}
 	const programSlug = programSlugResult.success ? programSlugResult.data : undefined;
 
 	if (!programNameResult.success || !programNameResult.data) {
