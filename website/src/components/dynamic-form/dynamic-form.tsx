@@ -446,7 +446,22 @@ const GenericFormField = ({
 						key={optionKey}
 						render={({ field }) => (
 							<FormItem>
-								<Label>{label}</Label>
+								<div className="flex items-center justify-between gap-2">
+									<Label>{label}</Label>
+									{isOptional(option, zodSchema, parentOption) && !readOnly && field.value ? (
+										<button
+											type="button"
+											data-testid="date-field-clear"
+											className="text-muted-foreground hover:text-foreground text-sm"
+											onClick={() => {
+												field.onChange(undefined);
+												emitChange(undefined);
+											}}
+										>
+											Clear
+										</button>
+									) : null}
+								</div>
 								<FormControl>
 									<DatePicker
 										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
