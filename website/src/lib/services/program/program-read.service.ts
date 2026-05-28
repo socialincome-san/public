@@ -363,6 +363,25 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
+	async getProgramSlugById(programId: string): Promise<ServiceResult<string>> {
+		try {
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: { slug: true },
+			});
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			return this.resultOk(program.slug);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program slug: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getProgramNameById(programId: string): Promise<ServiceResult<string>> {
 		try {
 			const program = await this.db.program.findUnique({
