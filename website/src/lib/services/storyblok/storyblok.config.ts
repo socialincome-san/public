@@ -25,8 +25,8 @@ import { apiPlugin, storyblokInit } from '@storyblok/react';
  * Storyblok component registry mapping component names to React components.
  */
 const storyblokComponents = {
-	campaignGrid: CampaignGridBlock,
 	page: PageContentType,
+	campaignGrid: CampaignGridBlock,
 	countryGrid: CountryGridBlock,
 	donationsTotal: DonationsTotalBlockServer,
 	downloads: DownloadsBlock,

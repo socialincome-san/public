@@ -3,7 +3,6 @@ import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
-import { slugify } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -16,9 +15,10 @@ import {
 	CampaignPayload,
 	CampaignTableQuery,
 	CampaignTableViewRow,
+	PublicCampaignCard,
 	PublicCampaignStats,
 	PublicCampaignStatsMap,
-	PublicPreviewCampaign,
+	PublicCampaignsWithStats,
 } from './campaign.types';
 
 export class CampaignReadService extends BaseService {
@@ -196,57 +196,114 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getPublicPreviewCampaignBySlug(slug: string): Promise<ServiceResult<PublicPreviewCampaign>> {
+	async getBySlug(slug: string): Promise<ServiceResult<CampaignPage>> {
 		try {
 			const normalizedSlug = slug.trim();
 			if (!normalizedSlug) {
 				return this.resultFail('Missing campaign slug');
 			}
 
-			const campaigns = await this.db.campaign.findMany({
-				select: { id: true, title: true, description: true, slug: true },
+			const campaign = await this.db.campaign.findFirst({
+				where: { slug: normalizedSlug },
+				select: {
+					id: true,
+					title: true,
+					description: true,
+					secondDescriptionTitle: true,
+					secondDescription: true,
+					thirdDescriptionTitle: true,
+					thirdDescription: true,
+					linkWebsite: true,
+					linkFacebook: true,
+					linkInstagram: true,
+					goal: true,
+					currency: true,
+					additionalAmountChf: true,
+					endDate: true,
+					isActive: true,
+					public: true,
+					featured: true,
+					slug: true,
+					metadataDescription: true,
+					metadataOgImage: true,
+					metadataTwitterImage: true,
+					creatorName: true,
+					creatorEmail: true,
+					program: { select: { id: true, name: true } },
+					createdAt: true,
+					updatedAt: true,
+					contributions: { select: { id: true, amount: true, amountChf: true } },
+				},
 			});
-			const campaign = campaigns.find((currentCampaign) => slugify(currentCampaign.title) === normalizedSlug);
 
-			if (!campaign?.slug) {
+			if (!campaign) {
 				return this.resultFail('Campaign not found');
 			}
 
+			const exchangeRateRes = await this.exchangeRateService.getLatestRateForCurrency(campaign.currency);
+			const exchangeRate = exchangeRateRes.success ? exchangeRateRes.data.rate : 1.0;
+
+			let amountCollected = campaign.contributions?.reduce((sum, c) => sum + Number(c.amountChf), 0) || 0;
+			amountCollected += Number(campaign.additionalAmountChf) || 0;
+			amountCollected *= exchangeRate;
+
+			const percentageCollected = campaign.goal ? Math.round((amountCollected / Number(campaign.goal)) * 100) : null;
+			const daysLeft = this.daysUntilTs(campaign.endDate);
+
 			return this.resultOk({
-				id: campaign.id,
-				title: campaign.title,
-				description: campaign.description,
-				slug: campaign.slug,
+				...campaign,
+				goal: campaign.goal ? Number(campaign.goal) : null,
+				additionalAmountChf: campaign.additionalAmountChf ? Number(campaign.additionalAmountChf) : null,
+				numberOfContributions: campaign.contributions.length,
+				percentageCollected,
+				daysLeft,
+				amountCollected,
 			});
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not load public preview campaign: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getPublicCampaignStatsById(campaignId: string): Promise<ServiceResult<PublicCampaignStats>> {
+	async getPublicCampaigns(): Promise<ServiceResult<PublicCampaignCard[]>> {
 		try {
-			const normalizedCampaignId = campaignId.trim();
-			if (!normalizedCampaignId) {
-				return this.resultFail('Missing campaign id');
+			const campaigns = await this.db.campaign.findMany({
+				where: {
+					isActive: true,
+					slug: { not: null },
+					OR: [{ public: true }, { public: null }],
+				},
+				select: {
+					id: true,
+					title: true,
+					slug: true,
+					featured: true,
+					createdAt: true,
+				},
+				orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+			});
+
+			const publicCampaigns: PublicCampaignCard[] = [];
+
+			for (const campaign of campaigns) {
+				const campaignSlug = campaign.slug?.trim();
+				if (!campaignSlug) {
+					continue;
+				}
+
+				publicCampaigns.push({
+					id: campaign.id,
+					title: campaign.title,
+					slug: campaignSlug,
+				});
 			}
 
-			const statsMapResult = await this.getPublicCampaignStatsByIds([normalizedCampaignId]);
-			if (!statsMapResult.success) {
-				return this.resultFail(statsMapResult.error);
-			}
-
-			const stats = statsMapResult.data[normalizedCampaignId];
-			if (!stats) {
-				return this.resultFail('Campaign not found');
-			}
-
-			return this.resultOk(stats);
+			return this.resultOk(publicCampaigns);
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not fetch campaign stats: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch public campaigns: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -285,6 +342,61 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultFail(`Could not fetch campaign stats map: ${JSON.stringify(error)}`);
 		}
+	}
+
+	async getPublicCampaignsWithStats(campaigns: PublicCampaignCard[]): Promise<ServiceResult<PublicCampaignsWithStats>> {
+		const campaignIds = [...new Set(campaigns.map((campaign) => campaign.id))];
+		const statsResult = await this.getPublicCampaignStatsByIds(campaignIds);
+
+		return this.resultOk({
+			campaigns,
+			statsById: statsResult.success ? statsResult.data : {},
+		});
+	}
+
+	async getAllPublicCampaignsWithStats(): Promise<ServiceResult<PublicCampaignsWithStats>> {
+		const campaignsResult = await this.getPublicCampaigns();
+		if (!campaignsResult.success) {
+			return this.resultFail(campaignsResult.error);
+		}
+
+		return this.getPublicCampaignsWithStats(campaignsResult.data);
+	}
+
+	async getOtherPublicCampaignsWithStats(
+		excludeSlug: string,
+		limit: number,
+	): Promise<ServiceResult<PublicCampaignsWithStats>> {
+		const allResult = await this.getAllPublicCampaignsWithStats();
+		if (!allResult.success) {
+			return this.resultFail(allResult.error);
+		}
+
+		const campaigns = allResult.data.campaigns.filter((campaign) => campaign.slug !== excludeSlug).slice(0, limit);
+
+		if (campaigns.length === 0) {
+			return this.resultOk({ campaigns: [], statsById: {} });
+		}
+
+		return this.getPublicCampaignsWithStats(campaigns);
+	}
+
+	resolvePublicCampaignsBySlugs(slugs: string[], allCampaigns: PublicCampaignCard[]): PublicCampaignCard[] {
+		const resolved: PublicCampaignCard[] = [];
+
+		for (const slug of slugs) {
+			const normalizedSlug = slug.trim();
+			if (!normalizedSlug) {
+				continue;
+			}
+
+			const campaign = allCampaigns.find((candidate) => candidate.slug === normalizedSlug);
+			if (campaign) {
+				resolved.push(campaign);
+			}
+		}
+
+		return resolved;
 	}
 
 	async getEditableOptions(userId: string): Promise<ServiceResult<CampaignOption[]>> {
@@ -360,6 +472,7 @@ export class CampaignReadService extends BaseService {
 					select: {
 						id: true,
 						legacyFirestoreId: true,
+						slug: true,
 						title: true,
 						description: true,
 						currency: true,

@@ -6,15 +6,15 @@ import type { CSSProperties } from 'react';
 import { WalletFront } from './wallet-front';
 import { WalletImageStack } from './wallet-image-stack';
 import { WalletOverlayImages } from './wallet-overlay-images';
-import type { WalletBadge, WalletImages, WalletPaidOut, WalletRecipientCount, WalletVariant } from './wallet.types';
+import type { WalletBadge, WalletFooterColumn, WalletImages, WalletVariant } from './wallet.types';
 
 type WalletProps = {
 	variant?: WalletVariant;
 	title: string;
 	subtitle?: string | null;
 	badge?: WalletBadge;
-	paidOut?: WalletPaidOut;
-	amountOfRecipients?: WalletRecipientCount;
+	footerLeft?: WalletFooterColumn;
+	footerRight?: WalletFooterColumn;
 	href?: string;
 	images?: WalletImages;
 };
@@ -24,8 +24,8 @@ export const Wallet = ({
 	title,
 	subtitle,
 	badge,
-	paidOut,
-	amountOfRecipients,
+	footerLeft,
+	footerRight,
 	href,
 	images,
 }: WalletProps) => {
@@ -67,8 +67,8 @@ export const Wallet = ({
 					title={title}
 					subtitle={subtitle}
 					badge={badge}
-					paidOut={paidOut}
-					amountOfRecipients={amountOfRecipients}
+					footerLeft={footerLeft}
+					footerRight={footerRight}
 				/>
 			</Card>
 			<WalletOverlayImages images={images} />
