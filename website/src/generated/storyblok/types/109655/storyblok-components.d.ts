@@ -241,12 +241,11 @@ export interface Layout {
 }
 
 export interface LocalPartner {
-  id: string;
   portalSlug?: string;
   countryIsoCode?: number | string;
   heroImage: StoryblokAsset;
   title: string;
-  description: string;
+  description: StoryblokRichtext;
   focuses?: (ISbStoryData<Focus> | string)[];
   payouts?: DonationsTotal[];
   component: "Local Partner";
