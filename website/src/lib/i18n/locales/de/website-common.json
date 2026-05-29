@@ -161,6 +161,8 @@
 	},
 	"programs-page": {
 		"empty": "Keine Programme gefunden.",
+		"search-label": "Programme suchen",
+		"search-placeholder": "Suchen",
 		"campaign-singular": "Kampagne",
 		"campaign-plural": "Kampagnen",
 		"recipient-singular": "Empfänger:in",

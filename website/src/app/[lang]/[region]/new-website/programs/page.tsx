@@ -1,4 +1,4 @@
-import { DefaultLayoutProps } from '@/app/[lang]/[region]';
+import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { ProgramsOverviewPage } from '@/components/storyblok/program/programs-overview-page';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -9,8 +9,9 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function ProgramsOverviewRoute({ params }: DefaultLayoutProps) {
+export default async function ProgramsOverviewRoute({ params, searchParams }: DefaultPageProps) {
 	const { lang, region } = await params;
+	const resolvedSearchParams = await searchParams;
 	const overviewResult = await services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(
 		`${NEW_WEBSITE_SLUG}/programs`,
 		lang,
@@ -21,6 +22,11 @@ export default async function ProgramsOverviewRoute({ params }: DefaultLayoutPro
 	}
 
 	return (
-		<ProgramsOverviewPage overview={overviewResult.data} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />
+		<ProgramsOverviewPage
+			overview={overviewResult.data}
+			lang={lang as WebsiteLanguage}
+			region={region as WebsiteRegion}
+			searchParams={resolvedSearchParams}
+		/>
 	);
 }
