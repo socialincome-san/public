@@ -163,6 +163,8 @@
 		"empty": "Keine Programme gefunden.",
 		"search-label": "Programme suchen",
 		"search-placeholder": "Suchen",
+		"all-countries": "Alle Länder ({{count}})",
+		"all-focuses": "Alle Schwerpunkte ({{count}})",
 		"campaign-singular": "Kampagne",
 		"campaign-plural": "Kampagnen",
 		"recipient-singular": "Empfänger:in",

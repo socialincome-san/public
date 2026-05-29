@@ -192,6 +192,8 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 			</div>
 			<div className="flex flex-wrap items-center justify-between gap-4">
 				<ProgramsOverviewFilters
+					allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
+					allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusOptions.length } })}
 					countryOptions={countryOptions}
 					selectedCountry={selectedCountry}
 					focusOptions={focusOptions}

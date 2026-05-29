@@ -12,6 +12,8 @@ type FilterOption = {
 };
 
 type ProgramsOverviewFiltersProps = {
+	allCountriesLabel: string;
+	allFocusesLabel: string;
 	countryOptions: FilterOption[];
 	selectedCountry?: string;
 	focusOptions: FilterOption[];
@@ -27,9 +29,6 @@ type FilterDropdownProps = {
 
 const COUNTRY_QUERY_KEY = 'country';
 const FOCUS_QUERY_KEY = 'focus';
-
-const getAllCountriesLabel = (countryCount: number) => `All countries (${countryCount})`;
-const getAllFocusesLabel = (focusCount: number) => `All focuses (${focusCount})`;
 
 const updateFilterQuery = ({
 	pathname,
@@ -96,6 +95,8 @@ const FilterDropdown = ({ allLabel, options, queryKey, selectedValue }: FilterDr
 };
 
 export const ProgramsOverviewFilters = ({
+	allCountriesLabel,
+	allFocusesLabel,
 	countryOptions,
 	selectedCountry,
 	focusOptions,
@@ -104,13 +105,13 @@ export const ProgramsOverviewFilters = ({
 	return (
 		<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
 			<FilterDropdown
-				allLabel={getAllCountriesLabel(countryOptions.length)}
+				allLabel={allCountriesLabel}
 				options={countryOptions}
 				queryKey={COUNTRY_QUERY_KEY}
 				selectedValue={selectedCountry}
 			/>
 			<FilterDropdown
-				allLabel={getAllFocusesLabel(focusOptions.length)}
+				allLabel={allFocusesLabel}
 				options={focusOptions}
 				queryKey={FOCUS_QUERY_KEY}
 				selectedValue={selectedFocus}
