@@ -3,7 +3,7 @@
 import { Input } from '@/components/input';
 import { SearchIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 type Props = {
 	defaultValue: string;
@@ -12,31 +12,41 @@ type Props = {
 };
 
 const SEARCH_QUERY_KEY = 'search';
+const SEARCH_DEBOUNCE_MS = 300;
 
 export const ProgramsOverviewSearch = ({ defaultValue, label, placeholder }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const currentValue = searchParams.get(SEARCH_QUERY_KEY) ?? defaultValue;
-	const [value, setValue] = useState(currentValue);
+	const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	useEffect(() => {
-		setValue(currentValue);
-	}, [currentValue]);
+		return () => {
+			if (searchDebounceRef.current) {
+				clearTimeout(searchDebounceRef.current);
+			}
+		};
+	}, []);
 
 	const updateSearch = (nextValue: string) => {
-		setValue(nextValue);
-		const nextParams = new URLSearchParams(searchParams.toString());
-		const searchQuery = nextValue.trim();
-
-		if (searchQuery.length > 0) {
-			nextParams.set(SEARCH_QUERY_KEY, searchQuery);
-		} else {
-			nextParams.delete(SEARCH_QUERY_KEY);
+		if (searchDebounceRef.current) {
+			clearTimeout(searchDebounceRef.current);
 		}
 
-		const nextQuery = nextParams.toString();
-		router.replace(nextQuery.length > 0 ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+		searchDebounceRef.current = setTimeout(() => {
+			const nextParams = new URLSearchParams(searchParams.toString());
+			const searchQuery = nextValue.trim();
+
+			if (searchQuery.length > 0) {
+				nextParams.set(SEARCH_QUERY_KEY, searchQuery);
+			} else {
+				nextParams.delete(SEARCH_QUERY_KEY);
+			}
+
+			const nextQuery = nextParams.toString();
+			router.replace(nextQuery.length > 0 ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+		}, SEARCH_DEBOUNCE_MS);
 	};
 
 	return (
@@ -46,7 +56,7 @@ export const ProgramsOverviewSearch = ({ defaultValue, label, placeholder }: Pro
 				type="search"
 				aria-label={label}
 				placeholder={placeholder}
-				value={value}
+				defaultValue={currentValue}
 				onChange={(event) => updateSearch(event.target.value)}
 				className="bg-white pl-9"
 			/>
