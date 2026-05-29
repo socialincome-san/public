@@ -70,6 +70,13 @@ export type PublicProgramStats = {
 
 export type PublicProgramStatsMap = Record<string, PublicProgramStats>;
 
+export type PublicProgramFocus = {
+	id: string;
+	name: string;
+};
+
+export type PublicProgramFocusMap = Record<string, PublicProgramFocus[]>;
+
 export type ProgramSettingsPayload = {
 	id: string;
 	name: string;

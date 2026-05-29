@@ -12,6 +12,7 @@ import {
 	ProgramWallets,
 	PublicPreviewProgram,
 	PublicProgramDetails,
+	PublicProgramFocusMap,
 	PublicProgramStats,
 	PublicProgramStatsMap,
 } from './program.types';
@@ -345,6 +346,46 @@ export class ProgramReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch program stats map: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicProgramFocusMapByIds(programIds: string[]): Promise<ServiceResult<PublicProgramFocusMap>> {
+		try {
+			const normalizedProgramIds = [...new Set(programIds.map((programId) => programId.trim()).filter(Boolean))];
+			if (!normalizedProgramIds.length) {
+				return this.resultOk({});
+			}
+
+			const programs = await this.db.program.findMany({
+				where: { id: { in: normalizedProgramIds } },
+				select: {
+					id: true,
+					targetFocuses: {
+						select: {
+							focus: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+				},
+			});
+
+			const focusMap: PublicProgramFocusMap = {};
+			for (const program of programs) {
+				focusMap[program.id] = program.targetFocuses.map(({ focus }) => ({
+					id: focus.id,
+					name: focus.name,
+				}));
+			}
+
+			return this.resultOk(focusMap);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program focus map: ${JSON.stringify(error)}`);
 		}
 	}
 
