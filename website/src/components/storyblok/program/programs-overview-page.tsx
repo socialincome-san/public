@@ -1,11 +1,14 @@
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramId, getProgramSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
+import { ProgramsOverviewFilters } from '@/components/storyblok/program/programs-overview-filters';
 import { ProgramsOverviewSearch } from '@/components/storyblok/program/programs-overview-search';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
+import { getCountryNameByCode } from '@/lib/types/country';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ISbStoryData } from '@storyblok/js';
 
@@ -16,11 +19,26 @@ type Props = {
 	searchParams?: AnySearchParams;
 };
 
-const getSearchQuery = (searchParams?: AnySearchParams) => {
-	const search = searchParams?.search;
-	const value = Array.isArray(search) ? search.at(0) : search;
+const COUNTRY_QUERY_KEY = 'country';
 
-	return typeof value === 'string' ? value.trim() : '';
+type CountryFilterOption = {
+	value: string;
+	label: string;
+};
+
+const getQueryValue = (searchParams: AnySearchParams | undefined, key: string) => {
+	const value = searchParams?.[key];
+	const firstValue = Array.isArray(value) ? value.at(0) : value;
+
+	return typeof firstValue === 'string' ? firstValue.trim() : '';
+};
+
+const getSearchQuery = (searchParams?: AnySearchParams) => {
+	return getQueryValue(searchParams, 'search');
+};
+
+const getCountryQuery = (searchParams?: AnySearchParams) => {
+	return getQueryValue(searchParams, COUNTRY_QUERY_KEY);
 };
 
 const normalizeSearchValue = (value: string) => value.toLowerCase();
@@ -39,6 +57,38 @@ const programMatchesSearchQuery = (program: ProgramStory, searchQuery: string) =
 	return searchTerms.every((term) => keywords.includes(term));
 };
 
+const programMatchesCountryQuery = (
+	program: ProgramStory,
+	statsById: PublicProgramStatsMap,
+	selectedCountry: string | undefined,
+) => {
+	if (!selectedCountry) {
+		return true;
+	}
+
+	const programId = getProgramId(program.content);
+
+	return Boolean(programId && statsById[programId]?.countryIsoCode === selectedCountry);
+};
+
+const getCountryFilterOptions = (programs: ProgramStory[], statsById: PublicProgramStatsMap): CountryFilterOption[] => {
+	const optionsByCountry = new Map<string, CountryFilterOption>();
+
+	programs.forEach((program) => {
+		const programId = getProgramId(program.content);
+		const countryIsoCode = programId ? statsById[programId]?.countryIsoCode : undefined;
+
+		if (countryIsoCode) {
+			optionsByCountry.set(countryIsoCode, {
+				value: countryIsoCode,
+				label: getCountryNameByCode(countryIsoCode),
+			});
+		}
+	});
+
+	return [...optionsByCountry.values()].sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
+};
+
 export const ProgramsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
 	const programsResult = await services.storyblok.getPrograms(lang);
 	const programs = (programsResult.success ? programsResult.data : []) as ProgramStory[];
@@ -49,9 +99,15 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 	const text = overview.content.text?.trim();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const searchQuery = getSearchQuery(searchParams);
+	const countryQuery = getCountryQuery(searchParams);
+	const countryOptions = getCountryFilterOptions(programs, statsById);
+	const selectedCountry = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
+	const countryFilteredPrograms = programs.filter((program) =>
+		programMatchesCountryQuery(program, statsById, selectedCountry),
+	);
 	const filteredPrograms = searchQuery
-		? programs.filter((program) => programMatchesSearchQuery(program, searchQuery))
-		: programs;
+		? countryFilteredPrograms.filter((program) => programMatchesSearchQuery(program, searchQuery))
+		: countryFilteredPrograms;
 
 	console.warn('programs', { programs, statsById });
 
@@ -62,7 +118,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 				{text ? <p className="text-foreground font-sans text-lg font-normal not-italic">{text}</p> : null}
 			</div>
 			<div className="flex flex-wrap items-center justify-between gap-4">
-				<div className="min-h-10 flex-1" aria-hidden />
+				<ProgramsOverviewFilters countryOptions={countryOptions} selectedCountry={selectedCountry} />
 				<ProgramsOverviewSearch
 					defaultValue={searchQuery}
 					label={translator.t('programs-page.search-label')}
