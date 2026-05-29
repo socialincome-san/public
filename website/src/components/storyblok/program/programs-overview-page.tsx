@@ -46,6 +46,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 	const statsResult = await services.read.program.getPublicProgramStatsByIds(programIds);
 	const statsById = statsResult.success ? statsResult.data : {};
 	const title = overview.content.title?.trim() ?? overview.name;
+	const text = overview.content.text?.trim();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const searchQuery = getSearchQuery(searchParams);
 	const filteredPrograms = searchQuery
@@ -56,7 +57,10 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 
 	return (
 		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
-			{title ? <h1 className="text-4xl font-bold xl:text-6xl">{title}</h1> : null}
+			<div className="flex flex-col gap-4">
+				{title ? <h1 className="font-sans text-5xl font-normal text-cyan-900">{title}</h1> : null}
+				{text ? <p className="text-foreground font-sans text-lg font-normal not-italic">{text}</p> : null}
+			</div>
 			<div className="flex flex-wrap items-center justify-between gap-4">
 				<div className="min-h-10 flex-1" aria-hidden />
 				<ProgramsOverviewSearch
