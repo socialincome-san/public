@@ -151,13 +151,17 @@ const getFocusFilterOptions = (
 };
 
 export const ProgramsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
-	const programsResult = await services.storyblok.getPrograms(lang);
-	const focusesResult = await services.storyblok.getFocuses(lang);
+	const [programsResult, focusesResult] = await Promise.all([
+		services.storyblok.getPrograms(lang),
+		services.storyblok.getFocuses(lang),
+	]);
 	const programs = (programsResult.success ? programsResult.data : []) as ProgramStory[];
 	const focuses = (focusesResult.success ? focusesResult.data : []) as FocusStory[];
 	const programIds = [...new Set(programs.map((program) => getProgramId(program.content)).filter(Boolean))];
-	const statsResult = await services.read.program.getPublicProgramStatsByIds(programIds);
-	const focusMapResult = await services.read.program.getPublicProgramFocusMapByIds(programIds);
+	const [statsResult, focusMapResult] = await Promise.all([
+		services.read.program.getPublicProgramStatsByIds(programIds),
+		services.read.program.getPublicProgramFocusMapByIds(programIds),
+	]);
 	const statsById = statsResult.success ? statsResult.data : {};
 	const focusMap = focusMapResult.success ? focusMapResult.data : {};
 	const title = overview.content.title?.trim() ?? overview.name;

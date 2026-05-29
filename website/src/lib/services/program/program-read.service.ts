@@ -362,12 +362,7 @@ export class ProgramReadService extends BaseService {
 					id: true,
 					targetFocuses: {
 						select: {
-							focus: {
-								select: {
-									id: true,
-									name: true,
-								},
-							},
+							focusId: true,
 						},
 					},
 				},
@@ -375,9 +370,8 @@ export class ProgramReadService extends BaseService {
 
 			const focusMap: PublicProgramFocusMap = {};
 			for (const program of programs) {
-				focusMap[program.id] = program.targetFocuses.map(({ focus }) => ({
-					id: focus.id,
-					name: focus.name,
+				focusMap[program.id] = program.targetFocuses.map(({ focusId }) => ({
+					id: focusId,
 				}));
 			}
 

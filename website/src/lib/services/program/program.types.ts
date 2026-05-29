@@ -72,7 +72,6 @@ export type PublicProgramStatsMap = Record<string, PublicProgramStats>;
 
 export type PublicProgramFocus = {
 	id: string;
-	name: string;
 };
 
 export type PublicProgramFocusMap = Record<string, PublicProgramFocus[]>;
