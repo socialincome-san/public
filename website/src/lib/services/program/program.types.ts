@@ -70,9 +70,16 @@ export type PublicProgramStats = {
 
 export type PublicProgramStatsMap = Record<string, PublicProgramStats>;
 
+export type PublicProgramFocus = {
+	id: string;
+};
+
+export type PublicProgramFocusMap = Record<string, PublicProgramFocus[]>;
+
 export type ProgramSettingsPayload = {
 	id: string;
 	name: string;
+	slug: string;
 	countryId: string;
 	country: {
 		isoCode: CountryCode;
@@ -96,6 +103,7 @@ export type ProgramSettingsPayload = {
 export type ProgramSettingsUpdateInput = {
 	id: string;
 	name: string;
+	slug: string;
 	countryId: string;
 	coveredByReserves: boolean;
 	programDurationInMonths: number;

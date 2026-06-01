@@ -1,10 +1,12 @@
 import { MakeDonationForm } from '@/components/make-donation-form';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
+import type { CountryCode } from '@/generated/prisma/client';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type Stat = {
-	value: number;
+	value?: number;
 	label: string;
+	isoCode?: CountryCode;
 };
 
 type Props = {
@@ -15,6 +17,7 @@ type Props = {
 	stats: Stat[];
 	titleIcon?: string;
 	titleIconAlt?: string;
+	showDonationForm?: boolean;
 };
 
 export const HeroDonationsHeader = ({
@@ -25,6 +28,7 @@ export const HeroDonationsHeader = ({
 	stats,
 	titleIcon,
 	titleIconAlt,
+	showDonationForm = true,
 }: Props) => {
 	return (
 		<HeroHeader

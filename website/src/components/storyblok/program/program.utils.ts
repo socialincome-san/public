@@ -5,10 +5,6 @@ export const getProgramId = (program: Program) => {
 	return program.id.trim();
 };
 
-export const getProgramDescription = (program: Program) => {
-	return program.description.trim();
-};
-
 export const getProgramSlug = (program: ProgramStory) => {
 	const fullSlugTail = program.full_slug?.split('/').at(-1);
 

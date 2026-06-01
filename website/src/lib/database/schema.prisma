@@ -806,6 +806,7 @@ model Organization {
 model Program {
   id   String @id @default(cuid()) @map("id")
   name String @unique @map("name")
+  slug String @unique @map("slug")
 
   amountOfRecipientsForStart Int?                 @map("amount_of_recipients_for_start")
   coveredByReserves          Boolean              @default(false) @map("covered_by_reserves")
