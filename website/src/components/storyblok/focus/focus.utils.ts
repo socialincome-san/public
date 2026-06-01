@@ -18,13 +18,7 @@ export const isFocusStory = (value: unknown): value is FocusStory => {
 	return story.content.component?.toLowerCase() === 'focus';
 };
 
-export const getFocusId = (focus: Focus) => {
-	return focus.id.trim();
-};
-
-export const getFocusDescription = (focus: Focus) => {
-	return focus.description.trim();
-};
+const getFocusContentSlug = (focus: Focus) => focus.slug.trim();
 
 export const getFocusSlug = (focus: FocusStory) => {
 	const fullSlugTail = focus.full_slug?.split('/').at(-1);
@@ -33,5 +27,8 @@ export const getFocusSlug = (focus: FocusStory) => {
 };
 
 export const getFocusTitle = (focus: Focus) => {
-	return focus.title.trim() || getFocusId(focus);
+	const title = focus.title.trim();
+	const slug = getFocusContentSlug(focus);
+
+	return title || slug;
 };

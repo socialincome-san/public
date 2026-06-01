@@ -1,5 +1,3 @@
-import type { FocusStory } from '@/components/storyblok/focus/focus.types';
-import { getFocusId, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramId, getProgramSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
@@ -110,15 +108,11 @@ const getCountryFilterOptions = (programs: ProgramStory[], statsById: PublicProg
 	return [...optionsByCountry.values()].sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
 };
 
-const getFocusTitleById = (focuses: FocusStory[]) => {
+const getFocusTitleById = (focusOptions: { id: string; name: string }[]) => {
 	const focusTitleById = new Map<string, string>();
 
-	focuses.forEach((focus) => {
-		const focusId = getFocusId(focus.content);
-
-		if (focusId) {
-			focusTitleById.set(focusId, getFocusTitle(focus.content));
-		}
+	focusOptions.forEach(({ id, name }) => {
+		focusTitleById.set(id, name);
 	});
 
 	return focusTitleById;
@@ -151,12 +145,12 @@ const getFocusFilterOptions = (
 };
 
 export const ProgramsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
-	const [programsResult, focusesResult] = await Promise.all([
+	const [programsResult, focusOptionsResult] = await Promise.all([
 		services.storyblok.getPrograms(lang),
-		services.storyblok.getFocuses(lang),
+		services.read.focus.getOptions(),
 	]);
 	const programs = (programsResult.success ? programsResult.data : []) as ProgramStory[];
-	const focuses = (focusesResult.success ? focusesResult.data : []) as FocusStory[];
+	const dbFocusOptions = focusOptionsResult.success ? focusOptionsResult.data : [];
 	const programIds = [...new Set(programs.map((program) => getProgramId(program.content)).filter(Boolean))];
 	const [statsResult, focusMapResult] = await Promise.all([
 		services.read.program.getPublicProgramStatsByIds(programIds),
@@ -171,9 +165,9 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 	const countryQuery = getCountryQuery(searchParams);
 	const focusQuery = getFocusQuery(searchParams);
 	const countryOptions = getCountryFilterOptions(programs, statsById);
-	const focusOptions = getFocusFilterOptions(programs, focusMap, getFocusTitleById(focuses));
+	const focusFilterOptions = getFocusFilterOptions(programs, focusMap, getFocusTitleById(dbFocusOptions));
 	const selectedCountry = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
-	const selectedFocus = focusOptions.some((option) => option.value === focusQuery) ? focusQuery : undefined;
+	const selectedFocus = focusFilterOptions.some((option) => option.value === focusQuery) ? focusQuery : undefined;
 	const countryFilteredPrograms = programs.filter((program) =>
 		programMatchesCountryQuery(program, statsById, selectedCountry),
 	);
@@ -193,10 +187,10 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 			<div className="flex flex-wrap items-center justify-between gap-4">
 				<ProgramsOverviewFilters
 					allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
-					allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusOptions.length } })}
+					allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusFilterOptions.length } })}
 					countryOptions={countryOptions}
 					selectedCountry={selectedCountry}
-					focusOptions={focusOptions}
+					focusOptions={focusFilterOptions}
 					selectedFocus={selectedFocus}
 				/>
 				<ProgramsOverviewSearch

@@ -11,13 +11,22 @@ type Props = {
 	statsByIsoCode: Record<string, { programsCount: number; recipientsCount: number } | undefined>;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	title?: string;
+	text?: string;
 };
 
-export const CountriesOverview = async ({ countries, statsByIsoCode, lang, region }: Props) => {
+export const CountriesOverview = async ({ countries, statsByIsoCode, lang, region, title, text }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 
 	return (
-		<div className="flex w-full flex-col gap-6">
+		<div className="flex w-full flex-col gap-8">
+			{hasCmsHeader ? (
+				<div className="flex flex-col gap-4">
+					{title?.trim() ? <h1 className="font-sans text-5xl font-normal text-cyan-900">{title.trim()}</h1> : null}
+					{text?.trim() ? <p className="text-foreground font-sans text-lg font-normal not-italic">{text.trim()}</p> : null}
+				</div>
+			) : null}
 			{countries.length === 0 ? (
 				<p className="text-muted-foreground">{translator.t('countries-page.empty')}</p>
 			) : (

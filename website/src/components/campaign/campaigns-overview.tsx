@@ -10,27 +10,38 @@ type Props = {
 	statsById: PublicCampaignStatsMap;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	title?: string;
+	text?: string;
 };
 
-export const CampaignsOverview = async ({ campaigns, statsById, lang, region }: Props) => {
+export const CampaignsOverview = async ({ campaigns, statsById, lang, region, title, text }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const t = (key: string) => translator.t(key);
-
-	if (campaigns.length === 0) {
-		return <p className="text-muted-foreground">{t('campaigns-page.empty')}</p>;
-	}
+	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 
 	return (
-		<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-			{campaigns.map((campaign) => (
-				<li key={campaign.id} className="h-full">
-					<Wallet
-						href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/campaigns/${campaign.slug}`}
-						title={campaign.title}
-						{...getCampaignWalletFooterProps(statsById[campaign.id], t)}
-					/>
-				</li>
-			))}
-		</ul>
+		<div className="flex w-full flex-col gap-8">
+			{hasCmsHeader ? (
+				<div className="flex flex-col gap-4">
+					{title?.trim() ? <h1 className="font-sans text-5xl font-normal text-cyan-900">{title.trim()}</h1> : null}
+					{text?.trim() ? <p className="text-foreground font-sans text-lg font-normal not-italic">{text.trim()}</p> : null}
+				</div>
+			) : null}
+			{campaigns.length === 0 ? (
+				<p className="text-muted-foreground">{t('campaigns-page.empty')}</p>
+			) : (
+				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+					{campaigns.map((campaign) => (
+						<li key={campaign.id} className="h-full">
+							<Wallet
+								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/campaigns/${campaign.slug}`}
+								title={campaign.title}
+								{...getCampaignWalletFooterProps(statsById[campaign.id], t)}
+							/>
+						</li>
+					))}
+				</ul>
+			)}
+		</div>
 	);
 };

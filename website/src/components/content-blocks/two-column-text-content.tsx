@@ -1,3 +1,5 @@
+'use client';
+
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 

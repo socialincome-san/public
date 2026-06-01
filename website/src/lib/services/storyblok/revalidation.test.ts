@@ -1,5 +1,4 @@
 import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { pathsForStory } from './revalidation';
 
 const localeCount = mainWebsiteLanguages.length * websiteRegions.length;
@@ -31,16 +30,71 @@ describe('pathsForStory', () => {
 		expect(result).toHaveLength(aggregatePathCount + sitemapCount);
 	});
 
-	it('does not add a story path for the new-website root', () => {
-		const result = pathsForStory(NEW_WEBSITE_SLUG);
+	it('maps pages/about to /new-website/about', () => {
+		const result = pathsForStory('pages/about');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/about', result);
+		expect(result.some((p) => p.includes('/new-website/pages/'))).toBe(false);
+	});
+
+	it('does not add a story path for pages/home', () => {
+		const result = pathsForStory('pages/home');
 		expect(result).toHaveLength(aggregatePathCount + sitemapCount);
 		expectPathsForLocales('/new-website', result);
 	});
 
-	it('adds the story path for new-website nested slugs', () => {
-		const result = pathsForStory(`${NEW_WEBSITE_SLUG}/campaigns/summer`);
+	it('maps pages/countries overview to /new-website/countries', () => {
+		const result = pathsForStory('pages/countries/countries');
 		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
-		expectPathsForLocales('/new-website/campaigns/summer', result);
+		expectPathsForLocales('/new-website/countries', result);
+	});
+
+	it('maps pages/countries/foo to /new-website/countries/foo', () => {
+		const result = pathsForStory('pages/countries/sierra-leone');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/countries/sierra-leone', result);
+	});
+
+	it('maps pages/focuses overview to /new-website/focuses', () => {
+		const result = pathsForStory('pages/focuses/focuses');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/focuses', result);
+	});
+
+	it('maps pages/focuses/foo to /new-website/focuses/foo', () => {
+		const result = pathsForStory('pages/focuses/poverty');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/focuses/poverty', result);
+	});
+
+	it('maps pages/local-partners overview to /new-website/local-partners', () => {
+		const result = pathsForStory('pages/local-partners/local-partners');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/local-partners', result);
+	});
+
+	it('maps pages/local-partners/foo to /new-website/local-partners/foo', () => {
+		const result = pathsForStory('pages/local-partners/acme-ngo');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/local-partners/acme-ngo', result);
+	});
+
+	it('maps pages/programs/foo to /new-website/programs/foo', () => {
+		const result = pathsForStory('pages/programs/foo');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/programs/foo', result);
+	});
+
+	it('maps pages/programs overview to /new-website/programs', () => {
+		const result = pathsForStory('pages/programs/programs');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/programs', result);
+	});
+
+	it('maps pages/campaigns overview to /new-website/campaigns', () => {
+		const result = pathsForStory('pages/campaigns/campaigns');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/new-website/campaigns', result);
 	});
 
 	it('adds the story path for journal articles', () => {

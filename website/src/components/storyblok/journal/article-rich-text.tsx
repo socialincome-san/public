@@ -1,3 +1,5 @@
+'use client';
+
 import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/action-button';
 import { ArticleDonationCta } from '@/components/storyblok/journal/rich-text/article-donation-cta';
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';

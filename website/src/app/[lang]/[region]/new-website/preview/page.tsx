@@ -1,6 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { StoryblokPreviewPage } from '@/components/storyblok/storyblok-preview-page';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getHomeStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 type PreviewPageProps = DefaultPageProps & {
@@ -13,7 +14,7 @@ export default async function PreviewPage({ params, searchParams }: PreviewPageP
 
 	return (
 		<StoryblokPreviewPage
-			storyPath={NEW_WEBSITE_SLUG}
+			storyPath={getHomeStoryPath()}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
 			previewRoutePath={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/preview`}

@@ -81,6 +81,14 @@ export interface CampaignGrid {
   [k: string]: unknown;
 }
 
+export interface CampaignOverview {
+  title?: string;
+  text?: string;
+  component: "Campaign Overview";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Country {
   isoCode: number | string;
   title: string;
@@ -100,6 +108,14 @@ export interface CountryGrid {
   showAllCountries?: boolean;
   countries?: (ISbStoryData<Country> | string)[];
   component: "countryGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface CountryOverview {
+  title?: string;
+  text?: string;
+  component: "Country Overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -168,10 +184,8 @@ export interface FaqSelection {
 }
 
 export interface Focus {
-  id: string;
-  heroImage: StoryblokAsset;
+  slug: string;
   title: string;
-  description: string;
   component: "Focus";
   _uid: string;
   [k: string]: unknown;
@@ -181,6 +195,14 @@ export interface FocusGrid {
   showAllFocuses?: boolean;
   focuses?: (ISbStoryData<Focus> | string)[];
   component: "focusGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface FocusOverview {
+  title?: string;
+  text?: string;
+  component: "focus overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -269,6 +291,14 @@ export interface LocalPartnerGrid {
   showAllLocalPartners?: boolean;
   localPartners?: (ISbStoryData<LocalPartner> | string)[];
   component: "localPartnerGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface LocalPartnersOverview {
+  title?: string;
+  text?: string;
+  component: "local partners overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -514,12 +544,16 @@ export type ContentType =
   | Article
   | ArticleType
   | Campaign
+  | CampaignOverview
   | Country
+  | CountryOverview
   | Document
   | Faq
   | Focus
+  | FocusOverview
   | Layout
   | LocalPartner
+  | LocalPartnersOverview
   | Page
   | Partnership
   | Person

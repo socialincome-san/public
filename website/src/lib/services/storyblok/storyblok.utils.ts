@@ -1,8 +1,8 @@
 import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
+import { getNewWebsitePublicPath, getWebsitePathTailFromStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import { makeNewWebsiteSlugPrefixRegex } from '@/lib/utils/regex';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import { Metadata } from 'next';
@@ -184,11 +184,11 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 	}
 
 	if (link.linktype === 'story') {
-		// cached_url contains the full Storyblok slug, e.g. "new-website/about"
-		// Strip the "new-website/" prefix to get the page slug
-		const slug = link.cached_url?.replace(makeNewWebsiteSlugPrefixRegex(NEW_WEBSITE_SLUG), '') || '';
+		// cached_url is the Storyblok full_slug, e.g. "new-website/pages/about"
+		const cachedUrl = link.cached_url?.trim() ?? '';
+		const websitePathTail = getWebsitePathTailFromStoryblokSlug(cachedUrl);
 
-		return `/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}`;
+		return getNewWebsitePublicPath(lang, region, websitePathTail);
 	}
 
 	return '#';

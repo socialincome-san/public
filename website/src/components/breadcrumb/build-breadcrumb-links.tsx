@@ -4,7 +4,12 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { StoryTitleData } from '@/lib/services/storyblok/storyblok.service';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import {
+	getNewWebsitePublicPath,
+	getPageStoryPath,
+	getWebsitePathTailFromStoryblokSlug,
+	STORYBLOK_PAGES_FOLDER,
+} from '@/lib/storyblok/storyblok-paths';
 
 export type BreadcrumbLink = {
 	label: string;
@@ -51,6 +56,18 @@ const fetchStoryLabel = async (slugPath: string, lang: WebsiteLanguage, fallback
 	return getStoryLabel(result.data, fallbackSegment);
 };
 
+const getAncestorStoryblokPaths = (fullSlug: string): string[] => {
+	const segments = fullSlug.split('/').filter(Boolean);
+
+	if (segments[0] === STORYBLOK_PAGES_FOLDER) {
+		const pageSegments = segments.slice(1);
+
+		return pageSegments.slice(0, -1).map((_, index) => getPageStoryPath(pageSegments.slice(0, index + 1).join('/')));
+	}
+
+	return segments.slice(0, -1).map((_, index) => segments.slice(0, index + 1).join('/'));
+};
+
 export const buildBreadcrumbLinks = async ({
 	fullSlug,
 	currentLabel,
@@ -66,25 +83,21 @@ export const buildBreadcrumbLinks = async ({
 
 	const links: BreadcrumbLink[] = [
 		{
-			href: `/${lang}/${region}/${NEW_WEBSITE_SLUG}`,
+			href: getNewWebsitePublicPath(lang, region, ''),
 			label: capitalizeLabel(translator.t('breadcrumb.home')),
 		},
 	];
 
-	const startIndex = segments[0] === NEW_WEBSITE_SLUG ? 1 : 0;
-	const ancestorSegments = segments
-		.filter((segment) => segment !== lang.toLowerCase())
-		.filter((segment) => segment !== region.toLowerCase())
-		.slice(startIndex, -1);
+	const ancestorStoryblokPaths = getAncestorStoryblokPaths(fullSlug);
 
 	links.push(
 		...(await Promise.all(
-			ancestorSegments.map(async (segment, index) => {
-				const slugPath = segments.slice(0, startIndex + index + 1).join('/');
-				const label = await fetchStoryLabel(slugPath, lang, segment);
+			ancestorStoryblokPaths.map(async (storyblokPath) => {
+				const segment = storyblokPath.split('/').at(-1) ?? storyblokPath;
+				const label = await fetchStoryLabel(storyblokPath, lang, segment);
 
 				return {
-					href: `/${lang}/${region}/${slugPath}`,
+					href: getNewWebsitePublicPath(lang, region, getWebsitePathTailFromStoryblokSlug(storyblokPath)),
 					label: capitalizeLabel(label),
 				};
 			}),
