@@ -148,6 +148,37 @@ export class PayoutReadService extends BaseService {
 		}
 	}
 
+	async getPayoutTotalsForLocalPartnerSlug(localPartnerSlug: string): Promise<ServiceResult<{ totalPayoutsChf: number }>> {
+		try {
+			const normalizedSlug = localPartnerSlug.trim();
+			if (!normalizedSlug) {
+				return this.resultFail('Missing local partner slug');
+			}
+
+			const localPartner = await this.db.localPartner.findUnique({
+				where: { slug: normalizedSlug },
+				select: { id: true },
+			});
+			if (!localPartner) {
+				return this.resultFail('Local partner not found');
+			}
+
+			const aggregate = await this.db.payout.aggregate({
+				where: {
+					status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] },
+					recipient: { localPartnerId: localPartner.id },
+				},
+				_sum: { amountChf: true },
+			});
+
+			return this.resultOk({ totalPayoutsChf: Number(aggregate._sum.amountChf ?? 0) });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch payout totals for local partner: ${JSON.stringify(error)}`);
+		}
+	}
+
 	private async getTotalsForCountry(countryCode: CountryCode): Promise<CountryPayoutTotals> {
 		const aggregate = await this.db.payout.aggregate({
 			where: {

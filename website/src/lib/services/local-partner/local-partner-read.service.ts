@@ -110,6 +110,44 @@ export class LocalPartnerReadService extends BaseService {
 		}
 	}
 
+	async getPublicLocalPartnerDashboardStatsBySlug(
+		localPartnerSlug: string,
+	): Promise<ServiceResult<{ recipientsCount: number; completedSurveysCount: number }>> {
+		try {
+			const normalizedSlug = localPartnerSlug.trim();
+			if (!normalizedSlug) {
+				return this.resultFail('Missing local partner slug');
+			}
+
+			const localPartner = await this.db.localPartner.findUnique({
+				where: { slug: normalizedSlug },
+				select: { id: true },
+			});
+
+			if (!localPartner) {
+				return this.resultFail('Local partner not found');
+			}
+
+			const [recipientsCount, completedSurveysCount] = await Promise.all([
+				this.db.recipient.count({
+					where: { localPartnerId: localPartner.id },
+				}),
+				this.db.survey.count({
+					where: {
+						completedAt: { not: null },
+						recipient: { localPartnerId: localPartner.id },
+					},
+				}),
+			]);
+
+			return this.resultOk({ recipientsCount, completedSurveysCount });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch local partner dashboard stats: ${JSON.stringify(error)}`);
+		}
+	}
+
 	private buildLocalPartnerOrderBy(query: LocalPartnerTableQuery): Prisma.LocalPartnerOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, [
@@ -157,6 +195,7 @@ export class LocalPartnerReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 					focuses: { select: { focusId: true } },
 					contact: {
 						select: {
@@ -183,6 +222,7 @@ export class LocalPartnerReadService extends BaseService {
 			return this.resultOk({
 				id: partner.id,
 				name: partner.name,
+				slug: partner.slug,
 				focuses: partner.focuses.map((focus) => focus.focusId),
 				contact: partner.contact,
 			});

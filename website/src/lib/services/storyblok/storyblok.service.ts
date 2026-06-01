@@ -45,8 +45,11 @@ export class StoryblokService extends BaseService {
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
 		'Country.partners',
+		'Local Partner.focuses',
+		'Local Partner.partners',
 	];
 	private static readonly countryRelationsToResolve = ['Country.partners'];
+	private static readonly localPartnerRelationsToResolve = ['Local Partner.focuses', 'Local Partner.partners'];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
@@ -588,12 +591,42 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getCountryByIsoCode(isoCode: string, lang: string): Promise<ServiceResult<ISbStoryData<Country>>> {
+		const normalizedIsoCode = isoCode.trim();
+		const loadCountry = async (language: string) => {
+			const countries = await this.getCountries(language);
+			if (!countries.success) {
+				return undefined;
+			}
+
+			return countries.data.find((country) => country.content.isoCode?.toString().trim() === normalizedIsoCode);
+		};
+
+		try {
+			let story = await loadCountry(lang);
+			if (!story && lang !== defaultLanguage) {
+				story = await loadCountry(defaultLanguage);
+			}
+
+			if (!story) {
+				return this.resultFail(`Failed to fetch country: not found for isoCode '${isoCode}'`);
+			}
+
+			return this.resultOk(story);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch country: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getLocalPartners(lang: string): Promise<ServiceResult<ISbStoryData<LocalPartner>[]>> {
 		try {
 			const baseParams = await this.getStoryParams(lang);
 			const params: ISbStoriesParams = {
 				...baseParams,
 				starts_with: `${StoryblokService.localPartnersPath}/`,
+				resolve_relations: StoryblokService.localPartnerRelationsToResolve,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 			let localPartners = data.filter((story) => StoryblokService.isLocalPartnerStory(story));
@@ -603,6 +636,7 @@ export class StoryblokService extends BaseService {
 					...baseParams,
 					version: 'draft',
 					starts_with: `${StoryblokService.localPartnersPath}/`,
+					resolve_relations: StoryblokService.localPartnerRelationsToResolve,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
 				localPartners = draftData.filter((story) => StoryblokService.isLocalPartnerStory(story));

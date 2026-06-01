@@ -3,13 +3,14 @@ import { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import { CampaignFormCreateInput, CampaignFormUpdateInput } from '@/lib/services/campaign/campaign-form-input';
 import { allCurrencies } from '@/lib/types/currency';
-import { CAMPAIGN_SLUG_REGEX } from '@/lib/utils/regex';
+import { SLUG_REGEX } from '@/lib/utils/regex';
 import z from 'zod';
 
 type CampaignsFormSchema = {
 	label: string;
 	fields: {
 		title: FormField;
+		slug: FormField;
 		description: FormField;
 		secondDescriptionTitle: FormField;
 		secondDescription: FormField;
@@ -27,7 +28,6 @@ type CampaignsFormSchema = {
 		isActive: FormField;
 		public: FormField;
 		featured: FormField;
-		slug: FormField;
 		metadataDescription: FormField;
 		metadataOgImage: FormField;
 		metadataTwitterImage: FormField;
@@ -43,6 +43,11 @@ export const initialFormSchema: CampaignsFormSchema = {
 			placeholder: 'Title of the content',
 			label: 'Title',
 			zodSchema: z.string().min(1, 'Title is required.'),
+		},
+		slug: {
+			placeholder: 'unique-readable-id',
+			label: 'Slug (URL Identifier)',
+			zodSchema: z.string().trim().regex(SLUG_REGEX, 'Invalid slug format.').or(z.literal('')).optional(),
 		},
 		description: {
 			placeholder: 'A detailed description...',
@@ -127,11 +132,6 @@ export const initialFormSchema: CampaignsFormSchema = {
 			placeholder: 'Should the item be featured?',
 			label: 'Featured',
 			zodSchema: z.boolean().optional(),
-		},
-		slug: {
-			placeholder: 'unique-readable-id',
-			label: 'Slug (URL Identifier)',
-			zodSchema: z.string().regex(CAMPAIGN_SLUG_REGEX, 'Invalid slug format.').or(z.literal('')).optional(),
 		},
 		metadataDescription: {
 			placeholder: 'SEO description for search engines',

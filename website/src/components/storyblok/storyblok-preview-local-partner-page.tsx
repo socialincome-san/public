@@ -1,24 +1,25 @@
 import { LocalPartnerDetail } from '@/components/storyblok/local-partner/local-partner-detail';
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
-import { getLocalPartnerId } from '@/components/storyblok/local-partner/local-partner.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { getLocalPartnerDashboardStats } from '@/lib/storyblok/local-partner-dashboard-stats';
 
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
 
-const getLocalPartnerStats = async (localPartnerId: string) => {
-	const statsResult = await services.read.localPartner.getPublicLocalPartnerStatsById(localPartnerId);
-
-	return statsResult.success ? statsResult.data : undefined;
-};
-
-export const StoryblokPreviewLocalPartnerPage = async ({ storyPath, lang, previewRoutePath, searchParams }: Props) => {
+export const StoryblokPreviewLocalPartnerPage = async ({
+	storyPath,
+	lang,
+	region,
+	previewRoutePath,
+	searchParams,
+}: Props) => {
 	return await StoryblokPreviewStory<LocalPartnerStory>({
 		storyPath,
 		lang,
@@ -30,15 +31,15 @@ export const StoryblokPreviewLocalPartnerPage = async ({ storyPath, lang, previe
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const localPartnerId = getLocalPartnerId(story.content);
-			const stats = localPartnerId ? await getLocalPartnerStats(localPartnerId) : undefined;
+			const { recipientsCount, completedSurveysCount } = await getLocalPartnerDashboardStats(story.content.portalSlug);
 
 			return (
 				<LocalPartnerDetail
 					localPartner={story}
 					lang={lang}
-					assignedRecipientsCount={stats?.assignedRecipientsCount}
-					waitingRecipientsCount={stats?.waitingRecipientsCount}
+					region={region}
+					recipientsCount={recipientsCount}
+					completedSurveysCount={completedSurveysCount}
 				/>
 			);
 		},

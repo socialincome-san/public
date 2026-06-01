@@ -6,6 +6,7 @@ import type { FocusFormSchema } from './focuses-form';
 export const buildCreateFocusInput = (schema: FocusFormSchema): FocusFormCreateInput => {
 	return {
 		name: schema.fields.name.value,
+		slug: schema.fields.slug.value,
 	};
 };
 
@@ -13,5 +14,6 @@ export const buildUpdateFocusInput = (schema: FocusFormSchema, focus: FocusPaylo
 	return {
 		id: focus.id,
 		name: schema.fields.name.value,
+		slug: schema.fields.slug.value,
 	};
 };

@@ -2,6 +2,7 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
+import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Suspense } from 'react';
@@ -60,7 +61,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					},
 				]}
 			/>
-			<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-8 2xl:mx-auto">
+			<StoryDetailContent>
 				<Breadcrumb links={breadcrumbLinks} />
 				<CountryMap country={country} lang={lang} />
 				<CountryPersonCarousel country={country} lang={lang} />
@@ -74,7 +75,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				{localPartners.length > 0 && (
 					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
 				)}
-			</div>
+			</StoryDetailContent>
 		</>
 	);
 };

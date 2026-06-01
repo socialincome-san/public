@@ -29,7 +29,6 @@ export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImageFi
 		<>
 			<HeroDonationsHeader
 				lang={lang}
-				showDonationForm={true}
 				title={title}
 				heroImageFilename={heroImageFilename}
 				heroImageAlt={heroImageAlt}
@@ -37,7 +36,6 @@ export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImageFi
 					stats
 						? [
 								{
-									isoCode: stats.countryIsoCode,
 									label: getCountryNameByCode(stats.countryIsoCode),
 								},
 								{

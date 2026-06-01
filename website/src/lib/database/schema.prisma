@@ -739,14 +739,15 @@ model SurveySchedule {
 }
 
 model LocalPartner {
-  id                String  @id @default(cuid()) @map("id")
-  legacyFirestoreId String? @unique @map("legacy_firestore_id")
-  name              String  @unique @map("name")
+  id                String              @id @default(cuid()) @map("id")
+  legacyFirestoreId String?             @unique @map("legacy_firestore_id")
+  name              String              @unique @map("name")
+  slug              String              @unique @map("slug")
   focuses           LocalPartnerFocus[]
-  contactId         String  @unique @map("contact_id")
-  contact           Contact @relation(fields: [contactId], references: [id])
-  accountId         String  @unique @map("account_id")
-  account           Account @relation(fields: [accountId], references: [id])
+  contactId         String              @unique @map("contact_id")
+  contact           Contact             @relation(fields: [contactId], references: [id])
+  accountId         String              @unique @map("account_id")
+  account           Account             @relation(fields: [accountId], references: [id])
 
   recipients Recipient[]
 
@@ -807,13 +808,13 @@ model Program {
   name String @unique @map("name")
   slug String @unique @map("slug")
 
-  amountOfRecipientsForStart Int?           @map("amount_of_recipients_for_start")
-  coveredByReserves          Boolean        @default(false) @map("covered_by_reserves")
-  programDurationInMonths    Int            @map("program_duration_in_months")
-  payoutPerInterval          Decimal        @map("payout_per_interval") @db.Decimal(12, 4)
-  payoutInterval             PayoutInterval @default(monthly) @map("payout_interval")
+  amountOfRecipientsForStart Int?                 @map("amount_of_recipients_for_start")
+  coveredByReserves          Boolean              @default(false) @map("covered_by_reserves")
+  programDurationInMonths    Int                  @map("program_duration_in_months")
+  payoutPerInterval          Decimal              @map("payout_per_interval") @db.Decimal(12, 4)
+  payoutInterval             PayoutInterval       @default(monthly) @map("payout_interval")
   targetFocuses              ProgramTargetFocus[]
-  targetProfiles             Profile[]      @default([]) @map("target_profiles")
+  targetProfiles             Profile[]            @default([]) @map("target_profiles")
 
   countryId String  @map("country_id")
   country   Country @relation(fields: [countryId], references: [id])
@@ -832,6 +833,7 @@ model Program {
 model Focus {
   id   String @id @default(cuid()) @map("id")
   name String @unique @map("name")
+  slug String @unique @map("slug")
 
   localPartners LocalPartnerFocus[]
   programs      ProgramTargetFocus[]
@@ -865,35 +867,35 @@ model ProgramTargetFocus {
 }
 
 model Campaign {
-  id                     String       @id @default(cuid()) @map("id")
-  legacyFirestoreId      String?      @unique @map("legacy_firestore_id")
-  title                  String       @unique @map("title")
-  description            String       @map("description")
-  secondDescriptionTitle String?      @map("second_description_title")
-  secondDescription      String?      @map("second_description")
-  thirdDescriptionTitle  String?      @map("third_description_title")
-  thirdDescription       String?      @map("third_description")
-  linkWebsite            String?      @map("link_website")
-  linkInstagram          String?      @map("link_instagram")
-  linkTiktok             String?      @map("link_tiktok")
-  linkFacebook           String?      @map("link_facebook")
-  linkX                  String?      @map("link_x")
-  goal                   Decimal?     @map("goal") @db.Decimal(12, 4)
-  currency               Currency     @map("currency")
-  additionalAmountChf    Decimal?     @map("additional_amount_chf") @db.Decimal(12, 4)
-  endDate                DateTime     @map("end_date") @db.Timestamptz(3)
-  isActive               Boolean      @default(false) @map("is_active")
-  public                 Boolean?     @map("public")
-  featured               Boolean?     @map("featured")
-  isFallback             Boolean      @default(false) @map("is_fallback")
-  slug                   String?      @map("slug")
-  metadataDescription    String?      @map("metadata_description")
-  metadataOgImage        String?      @map("metadata_og_image")
-  metadataTwitterImage   String?      @map("metadata_twitter_image")
-  creatorName            String?      @map("creator_name")
-  creatorEmail           String?      @map("creator_email")
-  programId              String       @map("program_id")
-  program                Program      @relation(fields: [programId], references: [id])
+  id                     String   @id @default(cuid()) @map("id")
+  legacyFirestoreId      String?  @unique @map("legacy_firestore_id")
+  title                  String   @unique @map("title")
+  description            String   @map("description")
+  secondDescriptionTitle String?  @map("second_description_title")
+  secondDescription      String?  @map("second_description")
+  thirdDescriptionTitle  String?  @map("third_description_title")
+  thirdDescription       String?  @map("third_description")
+  linkWebsite            String?  @map("link_website")
+  linkInstagram          String?  @map("link_instagram")
+  linkTiktok             String?  @map("link_tiktok")
+  linkFacebook           String?  @map("link_facebook")
+  linkX                  String?  @map("link_x")
+  goal                   Decimal? @map("goal") @db.Decimal(12, 4)
+  currency               Currency @map("currency")
+  additionalAmountChf    Decimal? @map("additional_amount_chf") @db.Decimal(12, 4)
+  endDate                DateTime @map("end_date") @db.Timestamptz(3)
+  isActive               Boolean  @default(false) @map("is_active")
+  public                 Boolean? @map("public")
+  featured               Boolean? @map("featured")
+  isFallback             Boolean  @default(false) @map("is_fallback")
+  slug                   String?  @map("slug")
+  metadataDescription    String?  @map("metadata_description")
+  metadataOgImage        String?  @map("metadata_og_image")
+  metadataTwitterImage   String?  @map("metadata_twitter_image")
+  creatorName            String?  @map("creator_name")
+  creatorEmail           String?  @map("creator_email")
+  programId              String   @map("program_id")
+  program                Program  @relation(fields: [programId], references: [id])
 
   contributions Contribution[]
 
@@ -1005,17 +1007,17 @@ model ExchangeRate {
 }
 
 model Country {
-  id                           String                @id @default(cuid()) @map("id")
-  isoCode                      CountryCode           @unique @map("iso_code")
-  isActive                     Boolean               @default(false) @map("is_active")
-  currency                     Currency              @map("currency")
-  defaultPayoutAmount          Decimal               @map("default_payout_amount") @db.Decimal(12, 4)
-  cashConditionOverride        Boolean               @default(false) @map("cash_condition_override")
-  microfinanceIndex            Decimal?              @map("microfinance_index") @db.Decimal(4, 2)
-  latestSurveyDate             DateTime?             @map("latest_survey_date") @db.Date
-  microfinanceSourceLinkId     String?               @map("microfinance_source_link_id")
-  microfinanceSourceLink       SourceLink?           @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
-  mobileMoneyConditionOverride Boolean               @default(false) @map("mobile_money_condition_override")
+  id                           String                              @id @default(cuid()) @map("id")
+  isoCode                      CountryCode                         @unique @map("iso_code")
+  isActive                     Boolean                             @default(false) @map("is_active")
+  currency                     Currency                            @map("currency")
+  defaultPayoutAmount          Decimal                             @map("default_payout_amount") @db.Decimal(12, 4)
+  cashConditionOverride        Boolean                             @default(false) @map("cash_condition_override")
+  microfinanceIndex            Decimal?                            @map("microfinance_index") @db.Decimal(4, 2)
+  latestSurveyDate             DateTime?                           @map("latest_survey_date") @db.Date
+  microfinanceSourceLinkId     String?                             @map("microfinance_source_link_id")
+  microfinanceSourceLink       SourceLink?                         @relation("microfinanceSource", fields: [microfinanceSourceLinkId], references: [id])
+  mobileMoneyConditionOverride Boolean                             @default(false) @map("mobile_money_condition_override")
   mobileMoneyProviders         CountryMobileMoneyProviderMapping[]
 
   populationCoverage Decimal?           @map("population_coverage") @db.Decimal(5, 2)
@@ -1034,15 +1036,15 @@ model Country {
 }
 
 model MobileMoneyProvider {
-  id                String             @id @default(cuid()) @map("id")
-  name              String             @unique @map("name")
-  payoutProcess PayoutProcess? @map("payout_process")
-  parentId          String?            @map("parent_id")
-  parent      MobileMoneyProvider? @relation("MobileMoneyProviderParent", fields: [parentId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id            String               @id @default(cuid()) @map("id")
+  name          String               @unique @map("name")
+  payoutProcess PayoutProcess?       @map("payout_process")
+  parentId      String?              @map("parent_id")
+  parent        MobileMoneyProvider? @relation("MobileMoneyProviderParent", fields: [parentId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  createdAt     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime?            @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  children MobileMoneyProvider[] @relation("MobileMoneyProviderParent")
+  children            MobileMoneyProvider[]               @relation("MobileMoneyProviderParent")
   countries           CountryMobileMoneyProviderMapping[]
   paymentInformations PaymentInformation[]
 
@@ -1050,10 +1052,10 @@ model MobileMoneyProvider {
 }
 
 model CountryMobileMoneyProviderMapping {
-  id                   String             @id @default(cuid()) @map("id")
-  countryId             String             @map("country_id")
-  country               Country            @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  mobileMoneyProviderId String             @map("mobile_money_provider_id")
+  id                    String              @id @default(cuid()) @map("id")
+  countryId             String              @map("country_id")
+  country               Country             @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  mobileMoneyProviderId String              @map("mobile_money_provider_id")
   mobileMoneyProvider   MobileMoneyProvider @relation(fields: [mobileMoneyProviderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)

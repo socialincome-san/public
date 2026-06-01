@@ -120,6 +120,23 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 		return null;
 	}
 
+	if (entries.length === 1) {
+		return (
+			<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+				<div className="space-y-8">
+					{blok.heading && (
+						<SectionHeading className="mb-0 md:mb-0">
+							<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+						</SectionHeading>
+					)}
+					<div className="mx-auto w-full max-w-4xl">
+						<Testimonial entry={entries[0]} />
+					</div>
+				</div>
+			</BlockWrapper>
+		);
+	}
+
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="space-y-8">

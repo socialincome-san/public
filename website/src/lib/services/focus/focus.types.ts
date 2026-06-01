@@ -20,6 +20,7 @@ export type FocusPaginatedTableView = {
 export type FocusPayload = {
 	id: string;
 	name: string;
+	slug: string;
 	createdAt: Date;
 	updatedAt: Date | null;
 };

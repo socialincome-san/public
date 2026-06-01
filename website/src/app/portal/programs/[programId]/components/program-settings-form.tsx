@@ -14,6 +14,7 @@ import {
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ProgramSettingsPayload } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { SLUG_REGEX } from '@/lib/utils/regex';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -60,9 +61,9 @@ const initialFormSchema: ProgramSettingsFormSchema = {
 			zodSchema: z.string().trim().min(2, 'Program name must be at least 2 characters.'),
 		},
 		slug: {
-			label: 'Slug',
+			label: 'Slug (URL Identifier)',
 			placeholder: 'program-slug',
-			zodSchema: z.string().trim().min(1, 'Slug is required.'),
+			zodSchema: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
 		},
 		country: {
 			label: 'Country (currency)',

@@ -1,4 +1,5 @@
 import { CountryCode, Gender } from '@/generated/prisma/enums';
+import { SLUG_REGEX } from '@/lib/utils/regex';
 import z from 'zod';
 
 const nullableTrimmedString = z.preprocess((value) => {
@@ -47,6 +48,7 @@ const localPartnerContactInputSchema = z.object({
 
 export const localPartnerCreateInputSchema = z.object({
 	name: z.string().trim().min(1, 'Name is required.'),
+	slug: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
 	focuses: z.array(z.string().trim().min(1)).default([]),
 	contact: localPartnerContactInputSchema,
 });
