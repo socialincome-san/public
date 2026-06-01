@@ -4,7 +4,6 @@ import { getZodEnum } from '@/components/dynamic-form/helper';
 import { CampaignFormCreateInput, CampaignFormUpdateInput } from '@/lib/services/campaign/campaign-form-input';
 import { allCurrencies } from '@/lib/types/currency';
 import { SLUG_REGEX } from '@/lib/utils/regex';
-import { slugify } from '@/lib/utils/string-utils';
 import z from 'zod';
 
 type CampaignsFormSchema = {
@@ -44,20 +43,11 @@ export const initialFormSchema: CampaignsFormSchema = {
 			placeholder: 'Title of the content',
 			label: 'Title',
 			zodSchema: z.string().min(1, 'Title is required.'),
-			onChange: (value, form) => {
-				const nextTitle = typeof value === 'string' ? value : '';
-				const previousTitle = String(form.getValues('title') ?? '');
-				const currentSlug = String(form.getValues('slug') ?? '');
-				const previousAutoSlug = slugify(previousTitle);
-				if (!currentSlug || currentSlug === previousAutoSlug) {
-					form.setValue('slug', slugify(nextTitle));
-				}
-			},
 		},
 		slug: {
 			placeholder: 'unique-readable-id',
 			label: 'Slug (URL Identifier)',
-			zodSchema: z.string().regex(SLUG_REGEX, 'Invalid slug format.').or(z.literal('')).optional(),
+			zodSchema: z.string().trim().regex(SLUG_REGEX, 'Invalid slug format.').or(z.literal('')).optional(),
 		},
 		description: {
 			placeholder: 'A detailed description...',

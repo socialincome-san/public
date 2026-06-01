@@ -15,7 +15,6 @@ import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ProgramSettingsPayload } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { SLUG_REGEX } from '@/lib/utils/regex';
-import { slugify } from '@/lib/utils/string-utils';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -60,15 +59,6 @@ const initialFormSchema: ProgramSettingsFormSchema = {
 			label: 'Name',
 			placeholder: 'Program name',
 			zodSchema: z.string().trim().min(2, 'Program name must be at least 2 characters.'),
-			onChange: (value, form) => {
-				const nextName = typeof value === 'string' ? value : '';
-				const previousName = String(form.getValues('name') ?? '');
-				const currentSlug = String(form.getValues('slug') ?? '');
-				const previousAutoSlug = slugify(previousName);
-				if (!currentSlug || currentSlug === previousAutoSlug) {
-					form.setValue('slug', slugify(nextName));
-				}
-			},
 		},
 		slug: {
 			label: 'Slug (URL Identifier)',

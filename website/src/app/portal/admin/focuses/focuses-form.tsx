@@ -6,7 +6,6 @@ import { createFocusAction, deleteFocusAction, getFocusAction, updateFocusAction
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { FocusPayload } from '@/lib/services/focus/focus.types';
 import { SLUG_REGEX } from '@/lib/utils/regex';
-import { slugify } from '@/lib/utils/string-utils';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateFocusInput, buildUpdateFocusInput } from './focuses-form-helper';
@@ -33,15 +32,6 @@ const initialFormSchema: FocusFormSchema = {
 			placeholder: 'e.g. poverty',
 			label: 'Name',
 			zodSchema: z.string().trim().min(1, 'Name is required.'),
-			onChange: (value, form) => {
-				const nextName = typeof value === 'string' ? value : '';
-				const previousName = String(form.getValues('name') ?? '');
-				const currentSlug = String(form.getValues('slug') ?? '');
-				const previousAutoSlug = slugify(previousName);
-				if (!currentSlug || currentSlug === previousAutoSlug) {
-					form.setValue('slug', slugify(nextName));
-				}
-			},
 		},
 		slug: {
 			placeholder: 'unique-readable-id',

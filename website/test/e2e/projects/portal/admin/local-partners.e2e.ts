@@ -28,12 +28,8 @@ test('admin local partners with direct URL sorting matches screenshot', async ({
 test('add new local partner', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-local-partner-${unique}`;
+	const slug = `e2e-local-partner-${unique}`;
 	const email = `e2e.local.partner.${unique}@example.com`;
-	const expectedSlug = partnerName
-		.toLowerCase()
-		.trim()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-+|-+$/g, '');
 
 	await deleteFirebaseEmailsIfExist(email);
 
@@ -43,7 +39,7 @@ test('add new local partner', async ({ page }) => {
 		await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 
 		await page.getByTestId('form-item-name').locator('input').fill(partnerName);
-		await expect(page.getByTestId('form-item-slug').locator('input')).toHaveValue(expectedSlug);
+		await page.getByTestId('form-item-slug').locator('input').fill(slug);
 		await page.getByTestId('form-accordion-trigger-contact').click();
 		await page.getByTestId('form-item-contact.firstName').locator('input').fill('E2E');
 		await page.getByTestId('form-item-contact.lastName').locator('input').fill('Partner');
@@ -56,6 +52,7 @@ test('add new local partner', async ({ page }) => {
 			where: { name: partnerName },
 			select: {
 				id: true,
+				slug: true,
 				contact: {
 					select: {
 						email: true,
@@ -66,6 +63,7 @@ test('add new local partner', async ({ page }) => {
 		});
 
 		expect(created).toBeDefined();
+		expect(created?.slug).toBe(slug);
 		expect(created?.contact.email).toBe(email);
 		expect(created?.contact.phone?.number).toBe('+41791230001');
 	} finally {
@@ -74,11 +72,14 @@ test('add new local partner', async ({ page }) => {
 });
 
 test('shows uniqueness error when email already exists', async ({ page }) => {
+	const unique = Date.now();
+
 	await page.goto('/portal/admin/local-partners');
 	await page.getByTestId('data-table-actions-button').click();
 	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 
-	await page.getByTestId('form-item-name').locator('input').fill(`e2e-duplicate-email-${Date.now()}`);
+	await page.getByTestId('form-item-name').locator('input').fill(`e2e-duplicate-email-${unique}`);
+	await page.getByTestId('form-item-slug').locator('input').fill(`e2e-duplicate-email-slug-${unique}`);
 	await page.getByTestId('form-accordion-trigger-contact').click();
 	await page.getByTestId('form-item-contact.firstName').locator('input').fill('Dup');
 	await page.getByTestId('form-item-contact.lastName').locator('input').fill('Email');
@@ -92,13 +93,14 @@ test('shows uniqueness error when email already exists', async ({ page }) => {
 test('edit local partner and remove phone number', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-remove-phone-${unique}`;
+	const slug = `e2e-remove-phone-${unique}`;
 	const email = `e2e.remove.phone.${unique}@example.com`;
 	const initialPhone = '+41791230002';
 
 	await prisma.localPartner.create({
 		data: {
 			name: partnerName,
-			slug: partnerName,
+			slug,
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-local-partner-uid-${unique}`,
@@ -151,12 +153,13 @@ test('edit local partner and remove phone number', async ({ page }) => {
 test('edit local partner and remove address', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-remove-address-${unique}`;
+	const slug = `e2e-remove-address-${unique}`;
 	const email = `e2e.remove.address.${unique}@example.com`;
 
 	const created = await prisma.localPartner.create({
 		data: {
 			name: partnerName,
-			slug: partnerName,
+			slug,
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-local-partner-uid-address-${unique}`,
@@ -221,12 +224,13 @@ test('edit local partner and remove address', async ({ page }) => {
 test('delete local partner from admin table', async ({ page }) => {
 	const unique = Date.now();
 	const partnerName = `e2e-delete-partner-${unique}`;
+	const slug = `e2e-delete-partner-${unique}`;
 	const email = `e2e.delete.partner.${unique}@example.com`;
 
 	const created = await prisma.localPartner.create({
 		data: {
 			name: partnerName,
-			slug: partnerName,
+			slug,
 			account: {
 				create: {
 					firebaseAuthUserId: `e2e-delete-local-partner-uid-${unique}`,
@@ -275,11 +279,7 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const partnerName = `e2e-firebase-partner-${unique}`;
-	const expectedSlug = partnerName
-		.toLowerCase()
-		.trim()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-+|-+$/g, '');
+	const slug = `e2e-firebase-partner-${unique}`;
 	const initialFirstName = 'Firebase';
 	const initialLastName = 'Create';
 	const initialEmail = `e2e.firebase.create.${unique}@example.com`;
@@ -298,13 +298,19 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 		await page.getByTestId('data-table-actions-button').click();
 		await page.getByTestId('data-table-action-item-add-new-local-partner').click();
 		await page.getByTestId('form-item-name').locator('input').fill(partnerName);
-		await expect(page.getByTestId('form-item-slug').locator('input')).toHaveValue(expectedSlug);
+		await page.getByTestId('form-item-slug').locator('input').fill(slug);
 		await page.getByTestId('form-accordion-trigger-contact').click();
 		await page.getByTestId('form-item-contact.firstName').locator('input').fill(initialFirstName);
 		await page.getByTestId('form-item-contact.lastName').locator('input').fill(initialLastName);
 		await page.getByTestId('form-item-contact.email').locator('input').fill(initialEmail);
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
+
+		const createdPartner = await prisma.localPartner.findUnique({
+			where: { name: partnerName },
+			select: { slug: true },
+		});
+		expect(createdPartner?.slug).toBe(slug);
 
 		const firebaseCreatedResult = await firebaseService.getByEmail(initialEmail);
 		expect(firebaseCreatedResult.success).toBeTruthy();

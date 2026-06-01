@@ -423,17 +423,13 @@ const GenericFormField = ({
 						control={form.control}
 						name={optionKey}
 						key={optionKey}
-						render={({ field }) => (
+						render={() => (
 							<FormItem>
 								<Label>{label}</Label>
 								<FormControl>
 									<Input
-										{...field}
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
-										onChange={(e) => {
-											emitChange(e.target.value);
-											field.onChange(e);
-										}}
+										{...form.register(optionKey)}
 										disabled={Boolean(formFieldSchema.disabled) || Boolean(isLoading) || Boolean(readOnly)}
 									/>
 								</FormControl>
