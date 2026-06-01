@@ -161,6 +161,10 @@
 	},
 	"programs-page": {
 		"empty": "Aucun programme trouvé.",
+		"search-label": "Rechercher des programmes",
+		"search-placeholder": "Rechercher",
+		"all-countries": "Tous les pays ({{count}})",
+		"all-focuses": "Tous les axes ({{count}})",
 		"campaign-singular": "campagne",
 		"campaign-plural": "campagnes",
 		"recipient-singular": "bénéficiaire",

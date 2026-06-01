@@ -30,6 +30,8 @@ export const StoryblokPreviewProgramsOverviewPage = async ({
 
 			return storyResult.success ? storyResult.data : null;
 		},
-		renderStory: (overview) => <ProgramsOverviewPage overview={overview} lang={lang} region={region} />,
+		renderStory: (overview) => (
+			<ProgramsOverviewPage overview={overview} lang={lang} region={region} searchParams={searchParams} />
+		),
 	});
 };

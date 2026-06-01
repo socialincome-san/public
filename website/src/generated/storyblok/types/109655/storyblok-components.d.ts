@@ -401,6 +401,7 @@ export interface ProgramGrid {
 
 export interface ProgramOverview {
   title?: string;
+  text?: string;
   programDefaultImage: StoryblokAsset;
   component: "programOverview";
   _uid: string;
