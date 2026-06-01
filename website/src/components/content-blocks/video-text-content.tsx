@@ -1,6 +1,6 @@
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
+import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 import { cn } from '@/lib/utils/cn';
-import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 type Props = {
 	content: StoryblokRichtext;

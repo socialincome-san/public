@@ -13,7 +13,6 @@ import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { PlayIcon, PlusIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { useState } from 'react';
-import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 type Props = {
 	blok: ModalCards;
@@ -124,7 +123,7 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 								<DialogTitle>{heading}</DialogTitle>
 								{modalContent && (
 									<div className="text-base text-black">
-										<RichTextRenderer richTextDocument={modalContent as StoryblokRichtext} />
+										<RichTextRenderer richTextDocument={modalContent} />
 									</div>
 								)}
 							</DialogContent>

@@ -1,4 +1,4 @@
-import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
+import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 
 const textNode = (text: string) => ({ type: 'text' as const, text });
 

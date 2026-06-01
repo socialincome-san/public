@@ -84,7 +84,7 @@ export interface CampaignGrid {
 export interface Country {
   isoCode: number | string;
   title: string;
-  description: string;
+  description: StoryblokRichtext;
   heroImage: StoryblokAsset;
   countryOfficeTitle?: string;
   countryOfficeDescription?: string;
@@ -241,10 +241,25 @@ export interface Layout {
 }
 
 export interface LocalPartner {
-  id: string;
+  portalSlug?: string;
+  countryIsoCode?: number | string;
+  focuses?: (ISbStoryData<Focus> | string)[];
   heroImage: StoryblokAsset;
   title: string;
-  description: string;
+  description: StoryblokRichtext;
+  mission?: string;
+  partnerSince?: string;
+  foundingYear?: string;
+  location?: string;
+  website?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  linkedin?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  instagram?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  facebook?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  youtube?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  payouts?: DonationsTotal[];
+  programs?: ProgramGrid[];
+  partners?: (ISbStoryData<LocalPartner> | string)[];
+  testimonial?: TestimonialCarousel[];
   component: "Local Partner";
   _uid: string;
   [k: string]: unknown;
@@ -395,6 +410,14 @@ export interface ProgramGrid {
   [k: string]: unknown;
 }
 
+export interface ProgramOverview {
+  title?: string;
+  programDefaultImage: StoryblokAsset;
+  component: "programOverview";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface QuotedText {
   text: string;
   author?: string;
@@ -500,5 +523,6 @@ export type ContentType =
   | Partnership
   | Person
   | Program
+  | ProgramOverview
   | ReferenceArticle
   | Tag;

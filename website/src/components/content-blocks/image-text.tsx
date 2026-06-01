@@ -5,7 +5,6 @@ import { getScaledDimensions } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
-import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 type Props = {
 	blok: ImageText;
@@ -78,7 +77,7 @@ export const ImageTextBlock = ({ blok }: Props) => {
 				</div>
 			)}
 			<div className={cn('order-1 flex-1 md:order-none', widthClasses.text)}>
-				<RichTextRenderer richTextDocument={blok.content as StoryblokRichtext} />
+				<RichTextRenderer richTextDocument={blok.content} />
 			</div>
 		</BlockWrapper>
 	);

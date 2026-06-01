@@ -1,5 +1,5 @@
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
-import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
+import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 
 type Props = {
 	leftText?: StoryblokRichtext;
