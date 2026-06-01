@@ -428,8 +428,8 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<FormControl>
 									<Input
+										{...field}
 										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
-										{...form.register(optionKey)}
 										onChange={(e) => {
 											emitChange(e.target.value);
 											field.onChange(e);
