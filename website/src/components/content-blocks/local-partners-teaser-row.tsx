@@ -1,8 +1,8 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton } from '@/components/carousel';
 import { LocalPartnerTeaserCard } from '@/components/storyblok/local-partner/local-partner-teaser-card';
-import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
+import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 

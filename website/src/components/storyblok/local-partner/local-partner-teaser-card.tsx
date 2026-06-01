@@ -1,7 +1,7 @@
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { cn } from '@/lib/utils/cn';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ChevronRightIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
