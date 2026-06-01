@@ -3,6 +3,7 @@ import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-
 import { Country } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { getCountryPageStats } from '@/lib/storyblok/country-page-stats';
 import type { ISbStoryData } from '@storyblok/js';
 
 type CountryStory = ISbStoryData<Country>;
@@ -13,15 +14,6 @@ type Props = {
 	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
-};
-
-const getCountryStats = async (isoCode: string) => {
-	const statsResult = await services.read.country.getPublicCountryStatsByIsoCode(isoCode);
-
-	return {
-		activeProgramsCount: statsResult.success ? statsResult.data.programsCount : 0,
-		recipientsCount: statsResult.success ? statsResult.data.recipientsCount : 0,
-	};
 };
 
 export const StoryblokPreviewCountryPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
@@ -36,7 +28,7 @@ export const StoryblokPreviewCountryPage = async ({ storyPath, lang, region, pre
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const { activeProgramsCount, recipientsCount } = await getCountryStats(story.content.isoCode.toString());
+			const { activeProgramsCount, recipientsCount } = await getCountryPageStats(story.content.isoCode.toString());
 
 			return (
 				<CountryDetail

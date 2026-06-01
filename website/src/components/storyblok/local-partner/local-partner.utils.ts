@@ -10,6 +10,16 @@ const storyblokRichtextToPlainText = (node: StoryblokRichtext): string => {
 	return node.content?.map(storyblokRichtextToPlainText).join(' ') ?? '';
 };
 
+export const getLocalPartnerIsoCode = (localPartner: LocalPartner) => {
+	const isoCode = localPartner.countryIsoCode?.toString().trim();
+
+	if (!isoCode) {
+		return undefined;
+	}
+
+	return isoCode;
+};
+
 export const getLocalPartnerId = (localPartner: LocalPartner) => {
 	const id = (localPartner as { id?: unknown }).id;
 

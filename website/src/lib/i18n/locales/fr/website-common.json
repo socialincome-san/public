@@ -136,6 +136,10 @@
 	},
 	"local-partners-page": {
 		"empty": "Aucun partenaire local trouvé.",
+		"recipient-singular": "bénéficiaire",
+		"recipient-plural": "bénéficiaires",
+		"completed-survey-singular": "enquête complétée",
+		"completed-survey-plural": "enquêtes complétées",
 		"recipient-in-program-singular": "bénéficiaire dans un programme",
 		"recipient-in-program-plural": "bénéficiaires dans un programme",
 		"recipient-waiting-singular": "bénéficiaire en attente",

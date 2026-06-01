@@ -1,4 +1,4 @@
-import { DonationsTotalBlock } from '@/components/content-blocks/donations-total';
+import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-payouts-total';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { LocalPartnerStory } from './local-partner.types';
@@ -11,21 +11,13 @@ type Props = {
 
 export const LocalPartnerPayoutsTotal = async ({ localPartner, lang, region }: Props) => {
 	const blok = localPartner.content.payouts?.[0];
-	if (!blok) {
-		return null;
-	}
-
 	const localPartnerSlug = localPartner.content.portalSlug?.trim();
 	if (!localPartnerSlug) {
-		return null;
+		return <StoryblokPayoutsTotal blok={blok} totalChf={0} lang={lang} region={region} />;
 	}
 
 	const totalsResult = await services.read.payout.getPayoutTotalsForLocalPartnerSlug(localPartnerSlug);
 	const totalChf = totalsResult.success ? totalsResult.data.totalPayoutsChf : 0;
 
-	if (totalChf === 0) {
-		return null;
-	}
-
-	return <DonationsTotalBlock blok={blok} lang={lang} region={region} totalChf={totalChf} />;
+	return <StoryblokPayoutsTotal blok={blok} totalChf={totalChf} lang={lang} region={region} />;
 };

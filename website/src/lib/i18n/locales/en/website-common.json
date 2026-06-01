@@ -136,6 +136,10 @@
 	},
 	"local-partners-page": {
 		"empty": "No local partners found.",
+		"recipient-singular": "recipient",
+		"recipient-plural": "recipients",
+		"completed-survey-singular": "completed survey",
+		"completed-survey-plural": "completed surveys",
 		"recipient-in-program-singular": "recipient in a program",
 		"recipient-in-program-plural": "recipients in a program",
 		"recipient-waiting-singular": "recipient waiting",
