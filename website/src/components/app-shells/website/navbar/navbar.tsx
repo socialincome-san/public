@@ -57,9 +57,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 						{translator.t('donation-form.donate-now')}
 					</Button>
 				)}
-				{showWebsiteMenu && (
-					<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
-				)}
+				{showWebsiteMenu && <MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />}
 			</div>
 		</nav>
 	);
