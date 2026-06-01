@@ -1,6 +1,6 @@
 import { services } from '@/lib/services/services';
 
-export type CountryPageStats = {
+type CountryPageStats = {
 	activeProgramsCount: number;
 	recipientsCount: number;
 };

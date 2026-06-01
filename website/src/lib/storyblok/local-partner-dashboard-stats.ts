@@ -1,6 +1,6 @@
 import { services } from '@/lib/services/services';
 
-export type LocalPartnerDashboardStats = {
+type LocalPartnerDashboardStats = {
 	recipientsCount: number;
 	completedSurveysCount: number;
 };

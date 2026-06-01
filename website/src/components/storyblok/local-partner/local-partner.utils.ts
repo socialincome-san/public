@@ -20,7 +20,7 @@ export const getLocalPartnerIsoCode = (localPartner: LocalPartner) => {
 	return isoCode;
 };
 
-export const getLocalPartnerId = (localPartner: LocalPartner) => {
+const getLocalPartnerId = (localPartner: LocalPartner) => {
 	const id = (localPartner as { id?: unknown }).id;
 
 	return typeof id === 'string' ? id.trim() : '';
