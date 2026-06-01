@@ -15,8 +15,6 @@ import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ISbStoryData } from '@storyblok/js';
 import NextLink from 'next/link';
 
-const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
-
 type Props = {
 	sessions: Session[];
 	lang: WebsiteLanguage;
@@ -26,9 +24,12 @@ type Props = {
 
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	const session = displaySession(sessions, scope);
+	const showWebsiteMenu = scope === 'website';
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
-	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
-	const menu = result.success ? result.data.content.menu : [];
+	const result = showWebsiteMenu
+		? await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang)
+		: null;
+	const menu = result?.success ? result.data.content.menu : [];
 
 	return (
 		<nav
@@ -41,7 +42,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				<SocialIncomeLogo />
 			</NextLink>
 
-			{ENABLE_NEW_WEBSITE && (
+			{showWebsiteMenu && (
 				<div className="hidden lg:block">
 					<MenuDesktop menu={menu} lang={lang} region={region} />
 				</div>
@@ -56,7 +57,9 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 						{translator.t('donation-form.donate-now')}
 					</Button>
 				)}
-				{ENABLE_NEW_WEBSITE && <MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />}
+				{showWebsiteMenu && (
+					<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
+				)}
 			</div>
 		</nav>
 	);
