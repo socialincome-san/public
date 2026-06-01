@@ -1,8 +1,8 @@
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
 
-type Stat = {
-	value: number;
+export type HeroHeaderStat = {
+	value?: number;
 	label: string;
 };
 
@@ -10,7 +10,7 @@ type Props = {
 	title: string;
 	heroImageFilename?: string | null;
 	heroImageAlt?: string | null;
-	stats: Stat[];
+	stats: HeroHeaderStat[];
 	titleIcon?: string;
 	titleIconAlt?: string;
 	preTitle?: ReactNode;
@@ -72,7 +72,8 @@ export const HeroHeader = ({
 										key={stat.label}
 										className="inline-flex items-center justify-center rounded-full border border-white/50 bg-black/40 px-3 py-1 text-xs leading-none font-medium text-white"
 									>
-										{stat.value} {stat.label}
+										{stat.value !== undefined ? `${stat.value} ` : ''}
+										{stat.label}
 									</span>
 								))}
 							</div>
