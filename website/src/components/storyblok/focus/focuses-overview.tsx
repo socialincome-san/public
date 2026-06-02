@@ -1,3 +1,4 @@
+import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
@@ -15,16 +16,10 @@ type Props = {
 
 export const FocusesOverview = async ({ focuses, lang, region, title, text }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 
 	return (
 		<div className="flex w-full flex-col gap-8">
-			{hasCmsHeader ? (
-				<div className="flex flex-col gap-4">
-					{title?.trim() ? <h1 className="font-sans text-5xl font-normal text-cyan-900">{title.trim()}</h1> : null}
-					{text?.trim() ? <p className="text-foreground font-sans text-lg font-normal not-italic">{text.trim()}</p> : null}
-				</div>
-			) : null}
+			<CmsHeader title={title} text={text} />
 			{focuses.length === 0 ? (
 				<p className="text-muted-foreground">{translator.t('focuses-page.empty')}</p>
 			) : (
