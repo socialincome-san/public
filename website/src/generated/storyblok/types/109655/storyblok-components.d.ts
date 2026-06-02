@@ -158,7 +158,7 @@ export interface FaqSelection {
 }
 
 export interface Focus {
-  slug: string;
+  portalSlug: string;
   title: string;
   component: "Focus";
   _uid: string;
@@ -373,7 +373,7 @@ export interface Person {
 }
 
 export interface Program {
-  id: string;
+  portalSlug: string;
   title: string;
   description: string;
   primaryImage: StoryblokAsset;

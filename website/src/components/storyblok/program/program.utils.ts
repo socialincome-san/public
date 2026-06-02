@@ -2,7 +2,7 @@ import type { Program } from '@/generated/storyblok/types/109655/storyblok-compo
 import type { ProgramStory } from './program.types';
 
 export const getProgramId = (program: Program) => {
-	return program.id.trim();
+	return program.portalSlug.trim();
 };
 
 export const getProgramSlug = (program: ProgramStory) => {
