@@ -140,6 +140,13 @@ describe('pathsForStory', () => {
 		expectPathsForLocales('/new-website/person/jane-doe', result);
 	});
 
+	it('adds the story path for person stories under pages/persons', () => {
+		const result = pathsForStory('pages/persons/jane-doe');
+		expect(result).toHaveLength(aggregatePathCount + 2 * localeCount + sitemapCount);
+		expectPathsForLocales('/person/jane-doe', result);
+		expectPathsForLocales('/new-website/person/jane-doe', result);
+	});
+
 	it('returns sorted, de-duplicated paths', () => {
 		const result = pathsForStory('journal/a');
 		expect(result).toEqual([...result].sort());

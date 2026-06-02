@@ -57,8 +57,8 @@ describe('storyblok-paths', () => {
 		expect(getLocalPartnerStoryPath('acme-ngo')).toBe('pages/local-partners/acme-ngo');
 	});
 
-	it('builds person story paths under person/', () => {
-		expect(getPersonStoryPath('jane-doe')).toBe('person/jane-doe');
+	it('builds person story paths under pages/persons', () => {
+		expect(getPersonStoryPath('jane-doe')).toBe('pages/persons/jane-doe');
 	});
 
 	it('builds journal article story paths under pages/journal', () => {
@@ -83,9 +83,9 @@ describe('storyblok-paths', () => {
 		expect(normalizeStoryblokSlug('new-website/campaigns')).toBe('pages/campaigns/campaigns');
 		expect(normalizeStoryblokSlug('new-website/faq/donations')).toBe('pages/faq/donations');
 		expect(normalizeStoryblokSlug('faq/donations')).toBe('pages/faq/donations');
-		expect(normalizeStoryblokSlug('person/jane-doe')).toBe('person/jane-doe');
-		expect(normalizeStoryblokSlug('persons/jane-doe')).toBe('person/jane-doe');
-		expect(normalizeStoryblokSlug('pages/persons/jane-doe')).toBe('person/jane-doe');
+		expect(normalizeStoryblokSlug('person/jane-doe')).toBe('pages/persons/jane-doe');
+		expect(normalizeStoryblokSlug('persons/jane-doe')).toBe('pages/persons/jane-doe');
+		expect(normalizeStoryblokSlug('pages/persons/jane-doe')).toBe('pages/persons/jane-doe');
 		expect(normalizeStoryblokSlug('journal/my-article')).toBe('pages/journal/my-article');
 		expect(normalizeStoryblokSlug('journal/tag/design')).toBe('globals/journal/tags/design');
 		expect(normalizeStoryblokSlug('tag/design')).toBe('globals/journal/tags/design');
@@ -115,6 +115,7 @@ describe('storyblok-paths', () => {
 		expect(getWebsitePathTailFromStoryblokSlug('pages/countries/countries')).toBe('countries');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/campaigns/campaigns')).toBe('campaigns');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/campaigns/summer')).toBe('campaigns/summer');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/persons/jane-doe')).toBe('person/jane-doe');
 		expect(getWebsitePathTailFromStoryblokSlug('person/jane-doe')).toBe('person/jane-doe');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/journal/my-article')).toBe('journal/my-article');
 		expect(getWebsitePathTailFromStoryblokSlug('journal/my-article')).toBe('journal/my-article');
@@ -126,7 +127,7 @@ describe('storyblok-paths', () => {
 		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/home')).toBe('/new-website');
 		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/programs/foo')).toBe('/new-website/programs/foo');
 		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/programs/programs')).toBe('/new-website/programs');
-		expect(getNewWebsiteRelativePathFromStoryblokSlug('person/jane-doe')).toBe('/new-website/person/jane-doe');
+		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/persons/jane-doe')).toBe('/new-website/person/jane-doe');
 		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/journal/my-article')).toBe('/new-website/journal/my-article');
 	});
 });

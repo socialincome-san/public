@@ -730,7 +730,7 @@ export class StoryblokService extends BaseService {
 		const findFocus = (focuses: ISbStoryData<Focus>[]) => {
 			return focuses.find((focus) => {
 				const fullSlugTail = focus.full_slug?.split('/').at(-1);
-				const contentSlug = focus.content.slug?.trim();
+				const contentSlug = focus.content.portalSlug?.trim();
 
 				return focus.slug === normalizedSlug || fullSlugTail === normalizedSlug || contentSlug === normalizedSlug;
 			});
