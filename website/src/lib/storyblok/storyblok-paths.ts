@@ -56,7 +56,7 @@ export const getCampaignsOverviewStoryPath = () => `${STORYBLOK_CAMPAIGNS_FOLDER
 
 export const STORYBLOK_FAQ_FOLDER = `${STORYBLOK_PAGES_FOLDER}/faq`;
 
-const STORYBLOK_PERSONS_FOLDER = 'person';
+const STORYBLOK_PERSONS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/persons`;
 
 export const WEBSITE_PERSON_PATH_SEGMENT = 'person';
 
@@ -148,11 +148,11 @@ export const normalizeStoryblokSlug = (rawSlug: string): string => {
 		return `${STORYBLOK_PAGES_FOLDER}/${slug}`;
 	}
 
-	if (slug.startsWith(`${STORYBLOK_PAGES_FOLDER}/persons/`)) {
-		return getPersonStoryPath(slug.slice(`${STORYBLOK_PAGES_FOLDER}/persons/`.length));
+	if (slug.startsWith('person/') && !slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`)) {
+		return getPersonStoryPath(slug.slice('person/'.length));
 	}
 
-	if (slug.startsWith('persons/')) {
+	if (slug.startsWith('persons/') && !slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`)) {
 		return getPersonStoryPath(slug.slice('persons/'.length));
 	}
 
@@ -264,5 +264,5 @@ export const isAllowedStoryblokPreviewSlug = (rawSlug: string) => {
 		return false;
 	}
 
-	return slug.startsWith(pagesPrefix) || slug === STORYBLOK_LAYOUT_PATH || slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`);
+	return slug.startsWith(pagesPrefix) || slug === STORYBLOK_LAYOUT_PATH;
 };

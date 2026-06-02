@@ -1,9 +1,8 @@
 'use client';
 
 import { Card } from '@/components/card';
-import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
-import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 
@@ -14,12 +13,16 @@ type SerializedTimeRange = {
 
 type TimeSeriesSectionProps = {
 	timeRanges: SerializedTimeRange[];
-	exchangeRate: number;
-	currency: WebsiteCurrency;
 	lang: WebsiteLanguage;
 };
 
-export const TimeSeriesSection = ({ timeRanges, exchangeRate, currency, lang }: TimeSeriesSectionProps) => {
+const formatChf = (value: number) => {
+	const number = new Intl.NumberFormat('de-CH', { maximumFractionDigits: 0 }).format(value);
+
+	return `CHF ${number}`;
+};
+
+export const TimeSeriesSection = ({ timeRanges }: TimeSeriesSectionProps) => {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
 	const convertedRanges = timeRanges.map((range) => {
@@ -27,7 +30,7 @@ export const TimeSeriesSection = ({ timeRanges, exchangeRate, currency, lang }: 
 
 		return {
 			startIso: range.startIso,
-			total: range.totalChf * exchangeRate,
+			total: range.totalChf,
 			label: start.toFormat('MMM'),
 			fullLabel: start.toFormat('MMMM yyyy'),
 		};
@@ -54,7 +57,7 @@ export const TimeSeriesSection = ({ timeRanges, exchangeRate, currency, lang }: 
 								{isHovered && (
 									<div className="bg-popover text-popover-foreground absolute -top-16 z-10 rounded-md border px-3 py-2 text-sm shadow-md">
 										<div className="font-medium">{range.fullLabel}</div>
-										<div>{formatCurrencyLocale(range.total, currency, lang)}</div>
+										<div>{formatChf(range.total)}</div>
 									</div>
 								)}
 								<div className="relative flex h-48 w-full items-end justify-center">

@@ -1,29 +1,32 @@
 import { Card } from '@/components/card';
 import { CountryFlag } from '@/components/country-flag';
 import { Progress } from '@/components/progress';
-import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributionsByCountry } from '@/lib/services/transparency/transparency.types';
-import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type CountriesSectionProps = {
 	countries: ContributionsByCountry[];
-	exchangeRate: number;
-	currency: WebsiteCurrency;
 	lang: WebsiteLanguage;
+};
+
+const formatChf = (value: number) => {
+	const number = new Intl.NumberFormat('de-CH', { maximumFractionDigits: 0 }).format(value);
+
+	return `CHF ${number}`;
 };
 
 const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
 };
 
-export const CountriesSection = ({ countries, exchangeRate, currency, lang }: CountriesSectionProps) => {
+export const CountriesSection = ({ countries, lang }: CountriesSectionProps) => {
 	return (
 		<section>
 			<h2 className="mb-6 text-2xl font-semibold">Top Contributing Countries</h2>
 			<Card>
 				<div className="space-y-6">
 					{countries.map((country) => {
-						const totalConverted = country.totalChf * exchangeRate;
+						const totalConverted = country.totalChf;
 
 						return (
 							<div key={country.countryCode} className="space-y-2">
@@ -33,7 +36,7 @@ export const CountriesSection = ({ countries, exchangeRate, currency, lang }: Co
 										<span className="font-medium">{country.country}</span>
 									</div>
 									<div className="text-right">
-										<span className="font-semibold">{formatCurrencyLocale(totalConverted, currency, lang)}</span>
+										<span className="font-semibold">{formatChf(totalConverted)}</span>
 										<span className="text-muted-foreground ml-2 text-sm">
 											({formatNumber(country.contributorCount, lang)} contributors)
 										</span>

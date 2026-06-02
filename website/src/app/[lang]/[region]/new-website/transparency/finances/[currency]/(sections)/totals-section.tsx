@@ -1,21 +1,24 @@
 import { Card } from '@/components/card';
-import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { TransparencyTotals } from '@/lib/services/transparency/transparency.types';
-import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type TotalsSectionProps = {
 	totals: TransparencyTotals;
-	exchangeRate: number;
-	currency: WebsiteCurrency;
 	lang: WebsiteLanguage;
+};
+
+const formatChf = (value: number) => {
+	const number = new Intl.NumberFormat('de-CH', { maximumFractionDigits: 0 }).format(value);
+
+	return `CHF ${number}`;
 };
 
 const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
 };
 
-export const TotalsSection = ({ totals, exchangeRate, currency, lang }: TotalsSectionProps) => {
-	const totalContributions = totals.totalContributionsChf * exchangeRate;
+export const TotalsSection = ({ totals, lang }: TotalsSectionProps) => {
+	const totalContributions = totals.totalContributionsChf;
 
 	return (
 		<section>
@@ -24,7 +27,7 @@ export const TotalsSection = ({ totals, exchangeRate, currency, lang }: TotalsSe
 				<Card>
 					<div className="space-y-2">
 						<p className="text-muted-foreground text-sm">Total Contributions</p>
-						<p className="text-3xl font-bold">{formatCurrencyLocale(totalContributions, currency, lang)}</p>
+						<p className="text-3xl font-bold">{formatChf(totalContributions)}</p>
 					</div>
 				</Card>
 				<Card>

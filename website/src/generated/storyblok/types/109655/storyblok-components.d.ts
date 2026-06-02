@@ -326,6 +326,7 @@ export interface Page {
     | Text
     | TwoColumnText
     | VideoText
+    | Transparency
   )[];
   component: "page";
   _uid: string;
@@ -472,6 +473,12 @@ export interface TestimonialCarousel {
 export interface Text {
   content?: StoryblokRichtext;
   component: "text";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Transparency {
+  component: "transparency";
   _uid: string;
   [k: string]: unknown;
 }
