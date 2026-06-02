@@ -33,10 +33,11 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{countries.map((country) => {
 						const countryIsoCode = getCountryIsoCode(country.content);
-						const countryIsoCodeLower = countryIsoCode.toLowerCase();
+						const normalizedIsoCode = countryIsoCode.trim().toUpperCase();
+						const countryIsoCodeLower = normalizedIsoCode.toLowerCase();
 						const countryTitle = getCountryTitle(country.content);
 						const countrySlug = getCountrySlug(country);
-						const stats = statsByIsoCode[countryIsoCode] ?? { programsCount: 0, recipientsCount: 0 };
+						const stats = statsByIsoCode[normalizedIsoCode] ?? { programsCount: 0, recipientsCount: 0 };
 						const heroImageFilename = country.content.heroImage?.filename;
 						const heroImageAlt = country.content.heroImage?.alt ?? countryTitle;
 
@@ -50,7 +51,7 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 								titleVisual={
 									<NextImage
 										src={`/assets/flags/${countryIsoCodeLower}.svg`}
-										alt={`${countryIsoCode} flag`}
+										alt={`${normalizedIsoCode} flag`}
 										width={36}
 										height={26}
 										className="h-6 w-auto rounded-sm"

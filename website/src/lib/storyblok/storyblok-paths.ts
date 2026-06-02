@@ -56,16 +56,14 @@ export const getCampaignsOverviewStoryPath = () => `${STORYBLOK_CAMPAIGNS_FOLDER
 
 export const STORYBLOK_FAQ_FOLDER = `${STORYBLOK_PAGES_FOLDER}/faq`;
 
-const STORYBLOK_PERSONS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/persons`;
+const STORYBLOK_PERSONS_FOLDER = 'person';
 
-/** Public URL segment (legacy site and new-website both use singular `person`). */
 export const WEBSITE_PERSON_PATH_SEGMENT = 'person';
 
 export const getPersonStoryPath = (personSlug: string) => `${STORYBLOK_PERSONS_FOLDER}/${personSlug}`;
 
 const STORYBLOK_JOURNAL_FOLDER = `${STORYBLOK_PAGES_FOLDER}/journal`;
 
-/** Public URL segment for journal articles (legacy site and new-website). */
 export const WEBSITE_JOURNAL_PATH_SEGMENT = 'journal';
 
 const STORYBLOK_GLOBALS_JOURNAL_FOLDER = `${STORYBLOK_GLOBALS_FOLDER}/journal`;
@@ -81,7 +79,6 @@ export const getJournalTagStoryPath = (tagSlug: string) => `${STORYBLOK_JOURNAL_
 const getJournalArticleTypeStoryPath = (articleTypeSlug: string) =>
 	`${STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER}/${articleTypeSlug}`;
 
-/** Public URL path tail for a tag filter page, e.g. `journal/tag/design`. */
 export const getJournalTagWebsitePathTail = (tagSlug: string) => `${WEBSITE_JOURNAL_PATH_SEGMENT}/tag/${tagSlug}`;
 
 const isJournalGlobalsReferenceSlug = (slug: string) =>
@@ -151,11 +148,11 @@ export const normalizeStoryblokSlug = (rawSlug: string): string => {
 		return `${STORYBLOK_PAGES_FOLDER}/${slug}`;
 	}
 
-	if (slug.startsWith('person/') && !slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`)) {
-		return getPersonStoryPath(slug.slice('person/'.length));
+	if (slug.startsWith(`${STORYBLOK_PAGES_FOLDER}/persons/`)) {
+		return getPersonStoryPath(slug.slice(`${STORYBLOK_PAGES_FOLDER}/persons/`.length));
 	}
 
-	if (slug.startsWith('persons/') && !slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`)) {
+	if (slug.startsWith('persons/')) {
 		return getPersonStoryPath(slug.slice('persons/'.length));
 	}
 
@@ -267,5 +264,5 @@ export const isAllowedStoryblokPreviewSlug = (rawSlug: string) => {
 		return false;
 	}
 
-	return slug.startsWith(pagesPrefix) || slug === STORYBLOK_LAYOUT_PATH;
+	return slug.startsWith(pagesPrefix) || slug === STORYBLOK_LAYOUT_PATH || slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`);
 };
