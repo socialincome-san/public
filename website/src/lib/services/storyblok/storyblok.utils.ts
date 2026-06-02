@@ -189,8 +189,14 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 
 	if (link.linktype === 'story') {
 		// cached_url is the Storyblok full_slug, e.g. "new-website/pages/about"
-		const cachedUrl = link.cached_url?.trim() ?? '';
-		const websitePathTail = getWebsitePathTailFromStoryblokSlug(cachedUrl);
+		const cachedUrlRaw = link.cached_url?.trim() ?? '';
+		const cachedUrlWithoutLeadingSlashes = cachedUrlRaw.replace(/^\/+/, '');
+		const cachedUrlWithoutLangPrefix =
+			cachedUrlWithoutLeadingSlashes.toLowerCase() === lang.toLowerCase()
+				? ''
+				: cachedUrlWithoutLeadingSlashes.replace(new RegExp(`^${lang}/`, 'i'), '');
+
+		const websitePathTail = getWebsitePathTailFromStoryblokSlug(cachedUrlWithoutLangPrefix);
 
 		return getNewWebsitePublicPath(lang, region, websitePathTail);
 	}
