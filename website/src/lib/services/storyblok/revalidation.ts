@@ -2,8 +2,11 @@ import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
 import {
 	getHomeStoryPath,
 	getNewWebsiteRelativePathFromStoryblokSlug,
+	getWebsitePathTailFromStoryblokSlug,
 	isRoutableNewWebsiteStoryblokSlug,
 	STORYBLOK_LAYOUT_PATH,
+	WEBSITE_JOURNAL_PATH_SEGMENT,
+	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
 
 /**
@@ -21,11 +24,12 @@ const relativePathForSlug = (fullSlug: string): string | null => {
 	if (STORYBLOK_SLUGS_WITHOUT_PUBLIC_PAGE.has(fullSlug)) {
 		return null;
 	}
-	if (fullSlug.startsWith('journal/') || fullSlug.startsWith('person/')) {
-		return `/${fullSlug}`;
+	const websitePathTail = getWebsitePathTailFromStoryblokSlug(fullSlug);
+	if (websitePathTail.startsWith(`${WEBSITE_JOURNAL_PATH_SEGMENT}/`)) {
+		return `/${websitePathTail}`;
 	}
-	if (fullSlug.startsWith('tag/')) {
-		return `/journal/${fullSlug}`;
+	if (websitePathTail.startsWith(`${WEBSITE_PERSON_PATH_SEGMENT}/`)) {
+		return `/${websitePathTail}`;
 	}
 
 	if (!isRoutableNewWebsiteStoryblokSlug(fullSlug)) {

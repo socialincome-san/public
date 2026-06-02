@@ -15,6 +15,9 @@ import {
 	STORYBLOK_FOCUSES_FOLDER,
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
 	STORYBLOK_PROGRAMS_FOLDER,
+	getJournalArticleStoryPath,
+	getJournalTagStoryPath,
+	getPersonStoryPath,
 } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
@@ -397,7 +400,7 @@ export class StoryblokService extends BaseService {
 	async getTag(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Tag>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/tag/${s}`, await this.getStoryParams(l)),
+				async (l, s) => getStoryblokApi().get(`cdn/stories/${getJournalTagStoryPath(s)}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
@@ -764,7 +767,7 @@ export class StoryblokService extends BaseService {
 	async getPerson(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Person>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/person/${s}`, await this.getStoryParams(l)),
+				async (l, s) => getStoryblokApi().get(`cdn/stories/${getPersonStoryPath(s)}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
@@ -893,7 +896,7 @@ export class StoryblokService extends BaseService {
 						resolve_relations: StoryblokService.standardArticleRelationsToResolve,
 					};
 
-					return getStoryblokApi().get(`cdn/stories/journal/${s}`, params);
+					return getStoryblokApi().get(`cdn/stories/${getJournalArticleStoryPath(s)}`, params);
 				},
 				lang,
 				slug,

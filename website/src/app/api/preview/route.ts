@@ -2,13 +2,13 @@ import {
 	getWebsitePathTailFromStoryblokSlug,
 	isAllowedStoryblokPreviewSlug,
 	normalizeStoryblokSlug,
+	STORYBLOK_LAYOUT_PATH,
 } from '@/lib/storyblok/storyblok-paths';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { makeLanguagePrefixRegex } from '@/lib/utils/regex';
 import { cookies, draftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
-const SLUGS_UNDER_JOURNAL = ['tag'];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
@@ -46,11 +46,7 @@ const removeLanguagePrefix = (slug: string | null, language: string) => {
 const toPreviewPath = (rawStoryblokSlug: string) => {
 	const storyblokSlug = normalizeStoryblokSlug(rawStoryblokSlug);
 
-	if (storyblokSlug.startsWith('journal/') || storyblokSlug.startsWith('person/') || storyblokSlug.startsWith('tag/')) {
-		return `${storyblokSlug}/preview`;
-	}
-
-	if (storyblokSlug.startsWith('globals/')) {
+	if (storyblokSlug === STORYBLOK_LAYOUT_PATH) {
 		return `${NEW_WEBSITE_SLUG}/preview`;
 	}
 
@@ -88,8 +84,7 @@ export const GET = async (request: Request) => {
 	const { searchParams } = new URL(request.url);
 	const secret = searchParams.get('secret');
 	const lang = getLanguage(searchParams.get('slug'));
-	const simpleSlug = removeLanguagePrefix(searchParams.get('slug'), lang);
-	const slug = SLUGS_UNDER_JOURNAL.some((prefix) => simpleSlug?.startsWith(prefix)) ? `journal/${simpleSlug}` : simpleSlug;
+	const slug = removeLanguagePrefix(searchParams.get('slug'), lang);
 
 	if (!slug || !isAllowedStoryblokPreviewSlug(slug)) {
 		return new Response('Invalid slug', { status: 400 });

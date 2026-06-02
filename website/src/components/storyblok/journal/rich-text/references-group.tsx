@@ -49,7 +49,6 @@ export const ReferencesGroupBlock = ({ references, context, lang, labels }: Prop
 								>
 									{reference.title}
 								</Link>
-								{reference.mediaOutlet && <p className="text-muted-foreground text-sm">{reference.mediaOutlet}</p>}
 								<p className="text-muted-foreground text-sm">
 									{reference.author && <span>{labels.author(reference.author)}</span>}
 									{reference.publicationDate && (

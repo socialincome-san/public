@@ -7,13 +7,18 @@ import {
 	getFocusStoryPath,
 	getFocusesOverviewStoryPath,
 	getHomeStoryPath,
+	getJournalArticleStoryPath,
+	getJournalTagStoryPath,
+	getJournalTagWebsitePathTail,
 	getLocalPartnerStoryPath,
 	getLocalPartnersOverviewStoryPath,
 	getNewWebsiteRelativePathFromStoryblokSlug,
 	getPageStoryPath,
+	getPersonStoryPath,
 	getProgramStoryPath,
 	getProgramsOverviewStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
+	isAllowedStoryblokPreviewSlug,
 	normalizeStoryblokSlug,
 } from './storyblok-paths';
 
@@ -52,6 +57,19 @@ describe('storyblok-paths', () => {
 		expect(getLocalPartnerStoryPath('acme-ngo')).toBe('pages/local-partners/acme-ngo');
 	});
 
+	it('builds person story paths under pages/persons', () => {
+		expect(getPersonStoryPath('jane-doe')).toBe('pages/persons/jane-doe');
+	});
+
+	it('builds journal article story paths under pages/journal', () => {
+		expect(getJournalArticleStoryPath('my-article')).toBe('pages/journal/my-article');
+	});
+
+	it('builds journal tag story paths under globals/journal/tags', () => {
+		expect(getJournalTagStoryPath('design')).toBe('globals/journal/tags/design');
+		expect(getJournalTagWebsitePathTail('design')).toBe('journal/tag/design');
+	});
+
 	it('normalizes legacy new-website preview slugs', () => {
 		expect(normalizeStoryblokSlug('new-website/programs/si-women-support-sl')).toBe('pages/programs/si-women-support-sl');
 		expect(normalizeStoryblokSlug('new-website/programs')).toBe('pages/programs/programs');
@@ -65,6 +83,21 @@ describe('storyblok-paths', () => {
 		expect(normalizeStoryblokSlug('new-website/campaigns')).toBe('pages/campaigns/campaigns');
 		expect(normalizeStoryblokSlug('new-website/faq/donations')).toBe('pages/faq/donations');
 		expect(normalizeStoryblokSlug('faq/donations')).toBe('pages/faq/donations');
+		expect(normalizeStoryblokSlug('person/jane-doe')).toBe('pages/persons/jane-doe');
+		expect(normalizeStoryblokSlug('persons/jane-doe')).toBe('pages/persons/jane-doe');
+		expect(normalizeStoryblokSlug('journal/my-article')).toBe('pages/journal/my-article');
+		expect(normalizeStoryblokSlug('journal/tag/design')).toBe('globals/journal/tags/design');
+		expect(normalizeStoryblokSlug('tag/design')).toBe('globals/journal/tags/design');
+		expect(normalizeStoryblokSlug('tags/design')).toBe('globals/journal/tags/design');
+		expect(normalizeStoryblokSlug('article-type/essay')).toBe('globals/journal/article-types/essay');
+	});
+
+	it('allows preview only for pages and layout, not journal reference entries', () => {
+		expect(isAllowedStoryblokPreviewSlug('pages/journal/my-article')).toBe(true);
+		expect(isAllowedStoryblokPreviewSlug('globals/layout')).toBe(true);
+		expect(isAllowedStoryblokPreviewSlug('globals/journal/tags/design')).toBe(false);
+		expect(isAllowedStoryblokPreviewSlug('tag/design')).toBe(false);
+		expect(isAllowedStoryblokPreviewSlug('globals/journal/article-types/essay')).toBe(false);
 	});
 
 	it('maps program slugs to public URL paths under new-website', () => {
@@ -79,6 +112,11 @@ describe('storyblok-paths', () => {
 		expect(getWebsitePathTailFromStoryblokSlug('pages/countries/countries')).toBe('countries');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/campaigns/campaigns')).toBe('campaigns');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/campaigns/summer')).toBe('campaigns/summer');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/persons/jane-doe')).toBe('person/jane-doe');
+		expect(getWebsitePathTailFromStoryblokSlug('person/jane-doe')).toBe('person/jane-doe');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/journal/my-article')).toBe('journal/my-article');
+		expect(getWebsitePathTailFromStoryblokSlug('journal/my-article')).toBe('journal/my-article');
+		expect(getWebsitePathTailFromStoryblokSlug('globals/journal/tags/design')).toBe('journal/tag/design');
 	});
 
 	it('builds relative paths for revalidation', () => {
@@ -86,5 +124,7 @@ describe('storyblok-paths', () => {
 		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/home')).toBe('/new-website');
 		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/programs/foo')).toBe('/new-website/programs/foo');
 		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/programs/programs')).toBe('/new-website/programs');
+		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/persons/jane-doe')).toBe('/new-website/person/jane-doe');
+		expect(getNewWebsiteRelativePathFromStoryblokSlug('pages/journal/my-article')).toBe('/new-website/journal/my-article');
 	});
 });

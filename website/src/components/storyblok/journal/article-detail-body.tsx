@@ -37,12 +37,12 @@ export const ArticleDetailBody = ({ story, slug, lang, region, translator }: Pro
 			)}
 
 			<div className="prose prose-neutral text-foreground prose-headings:font-semibold prose-a:text-primary max-w-none">
-				<ArticleRichText document={article.content as StoryblokRichtext} translator={translator} lang={lang} />
+				<ArticleRichText document={article.content as StoryblokRichtext} lang={lang} />
 			</div>
 
 			{article.footnotes && (
 				<div className="prose prose-neutral text-muted-foreground max-w-none text-sm">
-					<ArticleRichText document={article.footnotes as StoryblokRichtext} translator={translator} lang={lang} />
+					<ArticleRichText document={article.footnotes as StoryblokRichtext} lang={lang} />
 				</div>
 			)}
 

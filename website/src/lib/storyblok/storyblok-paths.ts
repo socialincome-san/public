@@ -56,6 +56,37 @@ export const getCampaignsOverviewStoryPath = () => `${STORYBLOK_CAMPAIGNS_FOLDER
 
 export const STORYBLOK_FAQ_FOLDER = `${STORYBLOK_PAGES_FOLDER}/faq`;
 
+const STORYBLOK_PERSONS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/persons`;
+
+/** Public URL segment (legacy site and new-website both use singular `person`). */
+export const WEBSITE_PERSON_PATH_SEGMENT = 'person';
+
+export const getPersonStoryPath = (personSlug: string) => `${STORYBLOK_PERSONS_FOLDER}/${personSlug}`;
+
+const STORYBLOK_JOURNAL_FOLDER = `${STORYBLOK_PAGES_FOLDER}/journal`;
+
+/** Public URL segment for journal articles (legacy site and new-website). */
+export const WEBSITE_JOURNAL_PATH_SEGMENT = 'journal';
+
+const STORYBLOK_GLOBALS_JOURNAL_FOLDER = `${STORYBLOK_GLOBALS_FOLDER}/journal`;
+
+const STORYBLOK_JOURNAL_TAGS_FOLDER = `${STORYBLOK_GLOBALS_JOURNAL_FOLDER}/tags`;
+
+const STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER = `${STORYBLOK_GLOBALS_JOURNAL_FOLDER}/article-types`;
+
+export const getJournalArticleStoryPath = (articleSlug: string) => `${STORYBLOK_JOURNAL_FOLDER}/${articleSlug}`;
+
+export const getJournalTagStoryPath = (tagSlug: string) => `${STORYBLOK_JOURNAL_TAGS_FOLDER}/${tagSlug}`;
+
+const getJournalArticleTypeStoryPath = (articleTypeSlug: string) =>
+	`${STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER}/${articleTypeSlug}`;
+
+/** Public URL path tail for a tag filter page, e.g. `journal/tag/design`. */
+export const getJournalTagWebsitePathTail = (tagSlug: string) => `${WEBSITE_JOURNAL_PATH_SEGMENT}/tag/${tagSlug}`;
+
+const isJournalGlobalsReferenceSlug = (slug: string) =>
+	slug.startsWith(`${STORYBLOK_JOURNAL_TAGS_FOLDER}/`) || slug.startsWith(`${STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER}/`);
+
 /**
  * Normalizes slugs from Storyblok preview URLs or legacy paths to current space paths.
  * e.g. `new-website/programs/foo` → `pages/programs/foo`
@@ -120,6 +151,44 @@ export const normalizeStoryblokSlug = (rawSlug: string): string => {
 		return `${STORYBLOK_PAGES_FOLDER}/${slug}`;
 	}
 
+	if (slug.startsWith('person/') && !slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`)) {
+		return getPersonStoryPath(slug.slice('person/'.length));
+	}
+
+	if (slug.startsWith('persons/') && !slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`)) {
+		return getPersonStoryPath(slug.slice('persons/'.length));
+	}
+
+	if (slug.startsWith('journal/tag/')) {
+		return getJournalTagStoryPath(slug.slice('journal/tag/'.length));
+	}
+
+	if (slug.startsWith('tag/') && !slug.startsWith(`${STORYBLOK_JOURNAL_TAGS_FOLDER}/`)) {
+		return getJournalTagStoryPath(slug.slice('tag/'.length));
+	}
+
+	if (slug.startsWith('tags/') && !slug.startsWith(`${STORYBLOK_JOURNAL_TAGS_FOLDER}/`)) {
+		return getJournalTagStoryPath(slug.slice('tags/'.length));
+	}
+
+	if (slug.startsWith('article-type/') && !slug.startsWith(`${STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER}/`)) {
+		return getJournalArticleTypeStoryPath(slug.slice('article-type/'.length));
+	}
+
+	if (slug.startsWith('article-types/') && !slug.startsWith(`${STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER}/`)) {
+		return getJournalArticleTypeStoryPath(slug.slice('article-types/'.length));
+	}
+
+	if (slug.startsWith(`${WEBSITE_JOURNAL_PATH_SEGMENT}/`) && !slug.startsWith(`${STORYBLOK_JOURNAL_FOLDER}/`)) {
+		const journalTail = slug.slice(`${WEBSITE_JOURNAL_PATH_SEGMENT}/`.length);
+
+		if (journalTail.startsWith('tag/')) {
+			return getJournalTagStoryPath(journalTail.slice('tag/'.length));
+		}
+
+		return getJournalArticleStoryPath(journalTail);
+	}
+
 	return slug;
 };
 
@@ -154,6 +223,18 @@ export const getWebsitePathTailFromStoryblokSlug = (storyblokSlug: string): stri
 		return 'campaigns';
 	}
 
+	if (slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`)) {
+		return `${WEBSITE_PERSON_PATH_SEGMENT}/${slug.slice(STORYBLOK_PERSONS_FOLDER.length + 1)}`;
+	}
+
+	if (slug.startsWith(`${STORYBLOK_JOURNAL_FOLDER}/`)) {
+		return `${WEBSITE_JOURNAL_PATH_SEGMENT}/${slug.slice(STORYBLOK_JOURNAL_FOLDER.length + 1)}`;
+	}
+
+	if (slug.startsWith(`${STORYBLOK_JOURNAL_TAGS_FOLDER}/`)) {
+		return getJournalTagWebsitePathTail(slug.slice(STORYBLOK_JOURNAL_TAGS_FOLDER.length + 1));
+	}
+
 	if (slug.startsWith(pagesPrefix)) {
 		return slug.slice(pagesPrefix.length);
 	}
@@ -182,9 +263,9 @@ export const isRoutableNewWebsiteStoryblokSlug = (storyblokSlug: string) => {
 export const isAllowedStoryblokPreviewSlug = (rawSlug: string) => {
 	const slug = normalizeStoryblokSlug(rawSlug);
 
-	if (slug.startsWith('journal/') || slug.startsWith('person/') || slug.startsWith('tag/')) {
-		return true;
+	if (isJournalGlobalsReferenceSlug(slug)) {
+		return false;
 	}
 
-	return slug.startsWith(pagesPrefix) || slug.startsWith(`${STORYBLOK_GLOBALS_FOLDER}/`);
+	return slug.startsWith(pagesPrefix) || slug === STORYBLOK_LAYOUT_PATH;
 };

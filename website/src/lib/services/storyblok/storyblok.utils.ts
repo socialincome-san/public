@@ -1,7 +1,11 @@
 import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { getNewWebsitePublicPath, getWebsitePathTailFromStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
+import {
+	getNewWebsitePublicPath,
+	getWebsitePathTailFromStoryblokSlug,
+	WEBSITE_PERSON_PATH_SEGMENT,
+} from '@/lib/storyblok/storyblok-paths';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
@@ -158,7 +162,7 @@ export const createNewWebsiteJournalTagLink = (tagSlug: string, lang: string, re
 	`${createNewWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
 
 export const createNewWebsitePersonLink = (slug: string, lang: string, region: string) =>
-	createNewWebsitePath(lang, region, 'person', slug);
+	createNewWebsitePath(lang, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
 
 export const createNewWebsiteJournalArticleCanonicalUrl = (slug: string, lang: string) =>
 	`https://socialincome.org/${lang}/${NEW_WEBSITE_SLUG}/journal/${slug}`;

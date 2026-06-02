@@ -104,6 +104,13 @@ describe('pathsForStory', () => {
 		expectPathsForLocales('/new-website/journal/my-article', result);
 	});
 
+	it('adds the story path for journal articles under pages/journal', () => {
+		const result = pathsForStory('pages/journal/my-article');
+		expect(result).toHaveLength(aggregatePathCount + 2 * localeCount + sitemapCount);
+		expectPathsForLocales('/journal/my-article', result);
+		expectPathsForLocales('/new-website/journal/my-article', result);
+	});
+
 	it('handles journal/tag without double-prefixing', () => {
 		const result = pathsForStory('journal/tag/design');
 		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
@@ -119,8 +126,22 @@ describe('pathsForStory', () => {
 		expectPathsForLocales('/new-website/journal', result);
 	});
 
+	it('rewrites tags under globals/journal/tags', () => {
+		const result = pathsForStory('globals/journal/tags/design');
+		expect(result).toHaveLength(aggregatePathCount + localeCount + sitemapCount);
+		expectPathsForLocales('/journal/tag/design', result);
+		expectPathsForLocales('/new-website/journal', result);
+	});
+
 	it('adds the story path for person stories', () => {
 		const result = pathsForStory('person/jane-doe');
+		expect(result).toHaveLength(aggregatePathCount + 2 * localeCount + sitemapCount);
+		expectPathsForLocales('/person/jane-doe', result);
+		expectPathsForLocales('/new-website/person/jane-doe', result);
+	});
+
+	it('adds the story path for person stories under pages/persons', () => {
+		const result = pathsForStory('pages/persons/jane-doe');
 		expect(result).toHaveLength(aggregatePathCount + 2 * localeCount + sitemapCount);
 		expectPathsForLocales('/person/jane-doe', result);
 		expectPathsForLocales('/new-website/person/jane-doe', result);
