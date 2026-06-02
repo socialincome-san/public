@@ -1,10 +1,14 @@
+import {
+	getWebsitePathTailFromStoryblokSlug,
+	isAllowedStoryblokPreviewSlug,
+	normalizeStoryblokSlug,
+	STORYBLOK_LAYOUT_PATH,
+} from '@/lib/storyblok/storyblok-paths';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { makeLanguagePrefixRegex } from '@/lib/utils/regex';
 import { cookies, draftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
-const ALLOWED_SLUGS_PREFIXES = ['journal', 'person', 'tag', NEW_WEBSITE_SLUG];
-const SLUGS_UNDER_JOURNAL = ['tag'];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
@@ -26,10 +30,6 @@ const validateSecret = (secret: string | null) => {
 	return process.env.STORYBLOK_PREVIEW_SECRET && secret === process.env.STORYBLOK_PREVIEW_SECRET;
 };
 
-const validateSlug = (slug: string | undefined | null) => {
-	return slug && ALLOWED_SLUGS_PREFIXES.some((value) => slug.toLowerCase().startsWith(value.toLowerCase()));
-};
-
 const removeLanguagePrefix = (slug: string | null, language: string) => {
 	if (!slug) {
 		return slug;
@@ -41,6 +41,18 @@ const removeLanguagePrefix = (slug: string | null, language: string) => {
 	}
 
 	return slug;
+};
+
+const toPreviewPath = (rawStoryblokSlug: string) => {
+	const storyblokSlug = normalizeStoryblokSlug(rawStoryblokSlug);
+
+	if (storyblokSlug === STORYBLOK_LAYOUT_PATH) {
+		return `${NEW_WEBSITE_SLUG}/preview`;
+	}
+
+	const websitePathTail = getWebsitePathTailFromStoryblokSlug(storyblokSlug);
+
+	return `${NEW_WEBSITE_SLUG}${websitePathTail ? `/${websitePathTail}` : ''}/preview`;
 };
 
 const enableDraftModeAndAdaptCookie = async () => {
@@ -72,10 +84,9 @@ export const GET = async (request: Request) => {
 	const { searchParams } = new URL(request.url);
 	const secret = searchParams.get('secret');
 	const lang = getLanguage(searchParams.get('slug'));
-	const simpleSlug = removeLanguagePrefix(searchParams.get('slug'), lang);
-	const slug = SLUGS_UNDER_JOURNAL.some((prefix) => simpleSlug?.startsWith(prefix)) ? `journal/${simpleSlug}` : simpleSlug;
+	const slug = removeLanguagePrefix(searchParams.get('slug'), lang);
 
-	if (!validateSlug(slug)) {
+	if (!slug || !isAllowedStoryblokPreviewSlug(slug)) {
 		return new Response('Invalid slug', { status: 400 });
 	}
 
@@ -84,7 +95,7 @@ export const GET = async (request: Request) => {
 	}
 	await enableDraftModeAndAdaptCookie();
 
-	const path = slug!.toLowerCase().startsWith(NEW_WEBSITE_SLUG) ? `${slug}/preview` : slug!;
+	const path = toPreviewPath(slug);
 	const storyblokParams = new URLSearchParams();
 	for (const [key, value] of searchParams.entries()) {
 		if (key.startsWith('_storyblok')) {

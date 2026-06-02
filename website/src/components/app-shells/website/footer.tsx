@@ -8,7 +8,7 @@ import { Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-c
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import { now } from '@/lib/utils/now';
 import { ISbStoryData } from '@storyblok/js';
 import NextImage from 'next/image';
@@ -28,7 +28,7 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 };
 
 export const Footer = async ({ lang, region }: Props) => {
-	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
+	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang);
 	const layoutContent = result.success ? result.data.content : undefined;
 	const footerMenu = layoutContent?.footerMenu ?? [];
 	const copyrightNotice = layoutContent?.copyrightNotice;

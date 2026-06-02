@@ -56,16 +56,6 @@ export interface Button {
   [k: string]: unknown;
 }
 
-export interface Campaign {
-  id: string;
-  title: string;
-  heroImage: StoryblokAsset;
-  description: string;
-  component: "campaign";
-  _uid: string;
-  [k: string]: unknown;
-}
-
 export interface CampaignDonate {
   campaignId?: string;
   component: "campaignDonate";
@@ -73,10 +63,10 @@ export interface CampaignDonate {
   [k: string]: unknown;
 }
 
-export interface CampaignGrid {
-  showAllCampaigns?: boolean;
-  campaigns?: (ISbStoryData<Campaign> | string)[];
-  component: "campaignGrid";
+export interface CampaignOverview {
+  title?: string;
+  text?: string;
+  component: "Campaign Overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -96,10 +86,10 @@ export interface Country {
   [k: string]: unknown;
 }
 
-export interface CountryGrid {
-  showAllCountries?: boolean;
-  countries?: (ISbStoryData<Country> | string)[];
-  component: "countryGrid";
+export interface CountryOverview {
+  title?: string;
+  text?: string;
+  component: "Country Overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -168,19 +158,17 @@ export interface FaqSelection {
 }
 
 export interface Focus {
-  id: string;
-  heroImage: StoryblokAsset;
+  slug: string;
   title: string;
-  description: string;
   component: "Focus";
   _uid: string;
   [k: string]: unknown;
 }
 
-export interface FocusGrid {
-  showAllFocuses?: boolean;
-  focuses?: (ISbStoryData<Focus> | string)[];
-  component: "focusGrid";
+export interface FocusOverview {
+  title?: string;
+  text?: string;
+  component: "focus overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -265,10 +253,10 @@ export interface LocalPartner {
   [k: string]: unknown;
 }
 
-export interface LocalPartnerGrid {
-  showAllLocalPartners?: boolean;
-  localPartners?: (ISbStoryData<LocalPartner> | string)[];
-  component: "localPartnerGrid";
+export interface LocalPartnersOverview {
+  title?: string;
+  text?: string;
+  component: "local partners overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -322,17 +310,13 @@ export interface NewsletterSignup {
 
 export interface Page {
   content: (
-    | CampaignGrid
-    | CountryGrid
     | DonationsTotal
     | Downloads
     | FaqSelection
-    | FocusGrid
     | HeroVideo
     | ImageText
     | ImpactMeasurement
     | JournalTeasers
-    | LocalPartnerGrid
     | ModalCards
     | PartnershipsCarousel
     | ProgramGrid
@@ -513,13 +497,16 @@ export type ContentType =
   | ActionButton
   | Article
   | ArticleType
-  | Campaign
+  | CampaignOverview
   | Country
+  | CountryOverview
   | Document
   | Faq
   | Focus
+  | FocusOverview
   | Layout
   | LocalPartner
+  | LocalPartnersOverview
   | Page
   | Partnership
   | Person

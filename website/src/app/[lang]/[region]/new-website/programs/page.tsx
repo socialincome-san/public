@@ -3,7 +3,7 @@ import { ProgramsOverviewPage } from '@/components/storyblok/program/programs-ov
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
@@ -13,7 +13,7 @@ export default async function ProgramsOverviewRoute({ params, searchParams }: De
 	const { lang, region } = await params;
 	const resolvedSearchParams = await searchParams;
 	const overviewResult = await services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(
-		`${NEW_WEBSITE_SLUG}/programs`,
+		getProgramsOverviewStoryPath(),
 		lang,
 	);
 

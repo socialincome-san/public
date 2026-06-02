@@ -4,7 +4,7 @@ import { getProgramId, getProgramTitle } from '@/components/storyblok/program/pr
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
@@ -35,7 +35,7 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 
 	const [previewProgramResult, overviewResult] = await Promise.all([
 		services.read.program.getPublicPreviewProgramBySlug(slug),
-		services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(`${NEW_WEBSITE_SLUG}/programs`, lang),
+		services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(getProgramsOverviewStoryPath(), lang),
 	]);
 	if (!previewProgramResult.success) {
 		return notFound();
@@ -54,7 +54,7 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 			title={programTitle}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
-			fullSlug={`${NEW_WEBSITE_SLUG}/programs/${slug}`}
+			fullSlug={getProgramStoryPath(slug)}
 			heroImageFilename={defaultImage?.filename ?? undefined}
 			heroImageAlt={defaultImage?.alt ?? programTitle}
 			stats={statsResult.data}

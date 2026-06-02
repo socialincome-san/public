@@ -9,7 +9,16 @@ import type {
 	Tag,
 } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import {
+	STORYBLOK_COUNTRIES_FOLDER,
+	STORYBLOK_FAQ_FOLDER,
+	STORYBLOK_FOCUSES_FOLDER,
+	STORYBLOK_LOCAL_PARTNERS_FOLDER,
+	STORYBLOK_PROGRAMS_FOLDER,
+	getJournalArticleStoryPath,
+	getJournalTagStoryPath,
+	getPersonStoryPath,
+} from '@/lib/storyblok/storyblok-paths';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -54,11 +63,11 @@ export class StoryblokService extends BaseService {
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
-	private static readonly countriesPath = `${NEW_WEBSITE_SLUG}/countries`;
-	private static readonly focusesPath = `${NEW_WEBSITE_SLUG}/focuses`;
-	private static readonly localPartnersPath = `${NEW_WEBSITE_SLUG}/local-partners`;
-	private static readonly programsPath = `${NEW_WEBSITE_SLUG}/programs`;
-	private static readonly faqsPath = `${NEW_WEBSITE_SLUG}/faq`;
+	private static readonly countriesPath = STORYBLOK_COUNTRIES_FOLDER;
+	private static readonly focusesPath = STORYBLOK_FOCUSES_FOLDER;
+	private static readonly localPartnersPath = STORYBLOK_LOCAL_PARTNERS_FOLDER;
+	private static readonly programsPath = STORYBLOK_PROGRAMS_FOLDER;
+	private static readonly faqsPath = STORYBLOK_FAQ_FOLDER;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
 		',',
 	);
@@ -391,7 +400,7 @@ export class StoryblokService extends BaseService {
 	async getTag(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Tag>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/tag/${s}`, await this.getStoryParams(l)),
+				async (l, s) => getStoryblokApi().get(`cdn/stories/${getJournalTagStoryPath(s)}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
@@ -721,9 +730,9 @@ export class StoryblokService extends BaseService {
 		const findFocus = (focuses: ISbStoryData<Focus>[]) => {
 			return focuses.find((focus) => {
 				const fullSlugTail = focus.full_slug?.split('/').at(-1);
-				const focusId = focus.content.id?.trim();
+				const contentSlug = focus.content.slug?.trim();
 
-				return focus.slug === normalizedSlug || fullSlugTail === normalizedSlug || focusId === normalizedSlug;
+				return focus.slug === normalizedSlug || fullSlugTail === normalizedSlug || contentSlug === normalizedSlug;
 			});
 		};
 
@@ -758,7 +767,7 @@ export class StoryblokService extends BaseService {
 	async getPerson(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Person>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/person/${s}`, await this.getStoryParams(l)),
+				async (l, s) => getStoryblokApi().get(`cdn/stories/${getPersonStoryPath(s)}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
@@ -887,7 +896,7 @@ export class StoryblokService extends BaseService {
 						resolve_relations: StoryblokService.standardArticleRelationsToResolve,
 					};
 
-					return getStoryblokApi().get(`cdn/stories/journal/${s}`, params);
+					return getStoryblokApi().get(`cdn/stories/${getJournalArticleStoryPath(s)}`, params);
 				},
 				lang,
 				slug,

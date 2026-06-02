@@ -14,7 +14,7 @@ type Props = {
 
 export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
-	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(country.lang, isoCode);
+	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(lang, isoCode);
 	const persons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
 
 	if (persons.length === 0) {

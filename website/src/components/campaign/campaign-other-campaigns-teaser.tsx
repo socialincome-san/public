@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { CampaignsGridSection } from '@/components/campaign/campaigns-grid-section';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -23,20 +24,22 @@ export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, 
 	}
 
 	return (
-		<CampaignsGridSection
-			heading={
-				<>
-					{translator.t('campaign.other-campaigns.heading-prefix')}
-					<strong>{translator.t('campaign.other-campaigns.heading-emphasis')}</strong>
-				</>
-			}
-			data={dataResult.data}
-			lang={lang}
-			region={region}
-			cta={{
-				href: `/${lang}/${region}/${NEW_WEBSITE_SLUG}/campaigns`,
-				label: translator.t('campaign.other-campaigns.show-all'),
-			}}
-		/>
+		<BlockWrapper>
+			<CampaignsGridSection
+				heading={
+					<>
+						{translator.t('campaign.other-campaigns.heading-prefix')}
+						<strong>{translator.t('campaign.other-campaigns.heading-emphasis')}</strong>
+					</>
+				}
+				data={dataResult.data}
+				lang={lang}
+				region={region}
+				cta={{
+					href: `/${lang}/${region}/${NEW_WEBSITE_SLUG}/campaigns`,
+					label: translator.t('campaign.other-campaigns.show-all'),
+				}}
+			/>
+		</BlockWrapper>
 	);
 };

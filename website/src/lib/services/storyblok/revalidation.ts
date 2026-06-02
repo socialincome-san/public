@@ -1,27 +1,42 @@
 import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import {
+	getHomeStoryPath,
+	getNewWebsiteRelativePathFromStoryblokSlug,
+	getWebsitePathTailFromStoryblokSlug,
+	isRoutableNewWebsiteStoryblokSlug,
+	STORYBLOK_LAYOUT_PATH,
+	WEBSITE_JOURNAL_PATH_SEGMENT,
+	WEBSITE_PERSON_PATH_SEGMENT,
+} from '@/lib/storyblok/storyblok-paths';
 
 /**
  * Paths (without `/{lang}/{region}` prefix) that should be revalidated on any Storyblok webhook.
  */
 const aggregateRelativePaths = ['/new-website', '/new-website/journal', '/journal', '/impact-measurement'] as const;
 
+const STORYBLOK_SLUGS_WITHOUT_PUBLIC_PAGE = new Set([getHomeStoryPath(), STORYBLOK_LAYOUT_PATH]);
+
 /**
  * Maps a Storyblok `full_slug` to its Next.js relative path (without `/{lang}/{region}` prefix).
- * Returns `null` if the slug is not tied to a specific page (e.g. root or unsupported prefix).
+ * Returns `null` if the slug is not tied to a specific page (e.g. home or layout).
  */
 const relativePathForSlug = (fullSlug: string): string | null => {
-	if (fullSlug === NEW_WEBSITE_SLUG) {
+	if (STORYBLOK_SLUGS_WITHOUT_PUBLIC_PAGE.has(fullSlug)) {
 		return null;
 	}
-	if (fullSlug.startsWith(`${NEW_WEBSITE_SLUG}/`) || fullSlug.startsWith('journal/') || fullSlug.startsWith('person/')) {
-		return `/${fullSlug}`;
+	const websitePathTail = getWebsitePathTailFromStoryblokSlug(fullSlug);
+	if (websitePathTail.startsWith(`${WEBSITE_JOURNAL_PATH_SEGMENT}/`)) {
+		return `/${websitePathTail}`;
 	}
-	if (fullSlug.startsWith('tag/')) {
-		return `/journal/${fullSlug}`;
+	if (websitePathTail.startsWith(`${WEBSITE_PERSON_PATH_SEGMENT}/`)) {
+		return `/${websitePathTail}`;
 	}
 
-	return null;
+	if (!isRoutableNewWebsiteStoryblokSlug(fullSlug)) {
+		return null;
+	}
+
+	return getNewWebsiteRelativePathFromStoryblokSlug(fullSlug);
 };
 
 /**

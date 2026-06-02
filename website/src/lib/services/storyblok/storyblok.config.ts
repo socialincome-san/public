@@ -1,14 +1,10 @@
-import { CampaignGridBlock } from '@/components/content-blocks/campaign-grid';
-import { CountryGridBlock } from '@/components/content-blocks/country-grid';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
-import { FocusGridBlock } from '@/components/content-blocks/focus-grid';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
-import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
@@ -26,11 +22,8 @@ import { apiPlugin, storyblokInit } from '@storyblok/react';
  */
 const storyblokComponents = {
 	page: PageContentType,
-	campaignGrid: CampaignGridBlock,
-	countryGrid: CountryGridBlock,
 	donationsTotal: DonationsTotalBlockServer,
 	downloads: DownloadsBlock,
-	focusGrid: FocusGridBlock,
 	heroVideo: HeroVideoBlockServer,
 	impactMeasurement: ImpactMeasurementBlock,
 	text: TextBlock,
@@ -38,7 +31,6 @@ const storyblokComponents = {
 	imageText: ImageTextBlock,
 	modalCards: ModalCardsBlock,
 	journalTeasers: JournalTeasersBlock,
-	localPartnerGrid: LocalPartnerGridBlock,
 	partnershipsCarousel: PartnershipsCarouselBlock,
 	programGrid: ProgramGridBlock,
 	teamGrid: TeamGridBlock,

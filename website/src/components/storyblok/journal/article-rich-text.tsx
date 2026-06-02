@@ -1,3 +1,5 @@
+'use client';
+
 import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/action-button';
 import { ArticleDonationCta } from '@/components/storyblok/journal/rich-text/article-donation-cta';
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';
@@ -8,6 +10,7 @@ import {
 	storyblokRichTextMarkResolvers,
 	storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/shared-resolvers';
+import { useTranslator } from '@/lib/hooks/useTranslator';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { QuotedText } from '@socialincome/ui';
@@ -18,7 +21,6 @@ type StoryblokBlockProps = Record<string, unknown>;
 
 type Props = {
 	document: StoryblokRichtext;
-	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
@@ -39,9 +41,16 @@ const buildReferenceLabels = (translator: Translator) => ({
 	context: (contextKey: string) => translator.t(`reference-article.context.${contextKey}`),
 });
 
-export const ArticleRichText = ({ document, translator, lang }: Props) => {
-	const newsletterLabels = buildNewsletterLabels(translator);
-	const referenceLabels = buildReferenceLabels(translator);
+export const ArticleRichText = ({ document, lang }: Props) => {
+	const journalTranslator = useTranslator(lang, 'website-journal');
+	const newsletterTranslator = useTranslator(lang, 'website-newsletter');
+
+	if (!journalTranslator || !newsletterTranslator) {
+		return null;
+	}
+
+	const newsletterLabels = buildNewsletterLabels(newsletterTranslator);
+	const referenceLabels = buildReferenceLabels(journalTranslator);
 
 	return render(document, {
 		markResolvers: storyblokRichTextMarkResolvers,

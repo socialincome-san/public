@@ -1,10 +1,8 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
 import { CampaignsOverview } from '@/components/campaign/campaigns-overview';
 import { SectionHeading } from '@/components/section-heading';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicCampaignsWithStats } from '@/lib/services/campaign/campaign.types';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextLink from 'next/link';
 import type { ReactNode } from 'react';
 
@@ -19,11 +17,10 @@ type Props = {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	cta?: Cta;
-	blok?: SbBlokData;
 };
 
-export const CampaignsGridSection = ({ heading, data, lang, region, cta, blok }: Props) => (
-	<BlockWrapper {...(blok ? storyblokEditable(blok) : {})}>
+export const CampaignsGridSection = ({ heading, data, lang, region, cta }: Props) => (
+	<>
 		{heading && <SectionHeading>{heading}</SectionHeading>}
 		<CampaignsOverview campaigns={data.campaigns} statsById={data.statsById} lang={lang} region={region} />
 		{cta && (
@@ -33,5 +30,5 @@ export const CampaignsGridSection = ({ heading, data, lang, region, cta, blok }:
 				</Button>
 			</div>
 		)}
-	</BlockWrapper>
+	</>
 );

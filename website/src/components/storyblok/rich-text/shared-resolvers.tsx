@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/lib/utils/cn';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/ui';
 import NextLink from 'next/link';
