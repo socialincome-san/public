@@ -1,3 +1,5 @@
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CountriesOverview } from '@/components/storyblok/country/countries-overview';
 import type { CountryStory } from '@/components/storyblok/country/country.types';
 import { getCountryIsoCode } from '@/components/storyblok/country/country.utils';
@@ -20,9 +22,16 @@ export const CountriesOverviewPage = async ({ overview, lang, region }: Props) =
 	const statsByIsoCode = statsResult.success ? statsResult.data : {};
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
+	const breadcrumbLinks = await buildBreadcrumbLinks({
+		fullSlug: overview.full_slug,
+		currentLabel: title,
+		lang,
+		region,
+	});
 
 	return (
 		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			<CountriesOverview
 				countries={countries}
 				statsByIsoCode={statsByIsoCode}

@@ -22,9 +22,11 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 	return (
 		<div className="flex w-full flex-col gap-8">
 			{hasCmsHeader ? (
-				<div className="flex flex-col gap-4">
-					{title?.trim() ? <h1 className="font-sans text-5xl font-normal text-cyan-900">{title.trim()}</h1> : null}
-					{text?.trim() ? <p className="text-foreground font-sans text-lg font-normal not-italic">{text.trim()}</p> : null}
+				<div className="space-y-5">
+					{title?.trim() ? (
+						<h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">{title.trim()}</h1>
+					) : null}
+					{text?.trim() ? <p className="text-base leading-6 text-cyan-950 sm:text-lg sm:leading-7">{text.trim()}</p> : null}
 				</div>
 			) : null}
 			{countries.length === 0 ? (

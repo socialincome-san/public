@@ -4,9 +4,9 @@ import { services } from '@/lib/services/services';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { DateTime } from 'luxon';
 
-import { CountriesSection } from '@/app/[lang]/[region]/new-website/transparency/finances/[currency]/(sections)/countries-section';
-import { TimeSeriesSection } from '@/app/[lang]/[region]/new-website/transparency/finances/[currency]/(sections)/time-series-section';
-import { TotalsSection } from '@/app/[lang]/[region]/new-website/transparency/finances/[currency]/(sections)/totals-section';
+import { CountriesSection } from '@/components/transparency/countries-section';
+import { TimeSeriesSection } from '@/components/transparency/time-series-section';
+import { TotalsSection } from '@/components/transparency/totals-section';
 
 type Props = {
 	blok: Transparency;
