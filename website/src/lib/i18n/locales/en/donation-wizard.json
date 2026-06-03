@@ -1,0 +1,69 @@
+{
+	"modal": {
+		"title": "Make a donation"
+	},
+	"step1": {
+		"title": "Make a donation",
+		"monthly-income-label": "Your monthly income (CHF)",
+		"choose-own-amount": "Or choose own amount",
+		"your-one-percent": "Your 1%",
+		"other": "Other",
+		"monthly": "Monthly",
+		"one-time": "One-time",
+		"donate-now": "Donate now",
+		"donate-now-with-amount": "Donate {{amount}} now",
+		"custom-amount-placeholder": "Amount"
+	},
+	"step2": {
+		"monthly-title": "Monthly Donation",
+		"one-time-title": "One-time Donation",
+		"switch-to-one-time": "One-time",
+		"switch-to-monthly": "Monthly",
+		"amount-label": "Amount",
+		"one-time-option-label": "One-time",
+		"one-time-option-hint": "Single payment",
+		"upsell-title": "Would you like to switch to the monthly plan?",
+		"upsell-subtitle": "Half the amount, paid monthly. It helps us even more.",
+		"monthly-half-note": "Monthly plans based on half your one-time amount.",
+		"upsell-preferred": "Preferred",
+		"upsell-benefit-stability": "Helps Social Income being financial stable and plan ahead",
+		"upsell-benefit-impact": "Biggest impact",
+		"upsell-benefit-cancel": "Cancel anytime",
+		"switch-to-monthly-plan": "Switch to monthly plan",
+		"per-month": "/month",
+		"plan-1x": "1% Plan",
+		"plan-2x": "2% Plan",
+		"monthly-plan": "Monthly plan",
+		"benefit-beneficiaries": "{{count}} direct and indirect beneficiaries",
+		"benefit-fees": "Transaction costs covered",
+		"benefit-community": "Join a community of {{count}} supporters",
+		"benefit-double-impact": "Double the impact",
+		"back": "Back",
+		"choose-payment": "Choose Payment Method"
+	},
+	"step3": {
+		"title": "Payment Method",
+		"qr-payment": "QR-Payment",
+		"minimal-costs": "Minimal Costs",
+		"online": "Online",
+		"your-donation": "Your donation",
+		"generate-qr-code": "Generate QR-Code",
+		"pay-online": "Pay online",
+		"cover-costs-description": "Helps cover online payment fees.",
+		"cover-costs-label-monthly": "Cover transaction costs (CHF 2/month)",
+		"cover-costs-label-one-time": "Cover transaction costs (CHF 2)"
+	},
+	"thankYou": {
+		"message": "Thank you for your help!"
+	},
+	"impact": {
+		"title": "Direct cash to people in need",
+		"tax-deductible": "Tax-deductible",
+		"cancel-anytime": "Cancel anytime",
+		"supporters": "{{supporterCount}} supporters from {{countryCount}} countries",
+		"supporters-no-countries": "{{supporterCount}} supporters worldwide",
+		"zewo": "ZEWO certified",
+		"why-one-percent": "Why 1%?",
+		"pay-with": "Pay with"
+	}
+}

@@ -1,0 +1,69 @@
+{
+	"modal": {
+		"title": "Spenden"
+	},
+	"step1": {
+		"title": "Spenden",
+		"monthly-income-label": "Ihr monatliches Einkommen (CHF)",
+		"choose-own-amount": "Oder eigenen Betrag wählen",
+		"your-one-percent": "Ihr 1%",
+		"other": "Andere",
+		"monthly": "Monatlich",
+		"one-time": "Einmalig",
+		"donate-now": "Jetzt spenden",
+		"donate-now-with-amount": "Jetzt {{amount}} spenden",
+		"custom-amount-placeholder": "Betrag"
+	},
+	"step2": {
+		"monthly-title": "Monatliche Spende",
+		"one-time-title": "Einmalige Spende",
+		"switch-to-one-time": "Einmalig",
+		"switch-to-monthly": "Monatlich",
+		"amount-label": "Betrag",
+		"one-time-option-label": "Einmalig",
+		"one-time-option-hint": "Einmalige Zahlung",
+		"upsell-title": "Möchten Sie zum monatlichen Plan wechseln?",
+		"upsell-subtitle": "Die Hälfte des Betrags, monatlich. Das hilft uns noch mehr.",
+		"monthly-half-note": "Monatspläne basieren auf der Hälfte Ihres einmaligen Betrags.",
+		"upsell-preferred": "Empfohlen",
+		"upsell-benefit-stability": "Hilft Social Income, finanziell stabil zu sein und vorauszuplanen",
+		"upsell-benefit-impact": "Grösste Wirkung",
+		"upsell-benefit-cancel": "Jederzeit kündbar",
+		"switch-to-monthly-plan": "Zum monatlichen Plan wechseln",
+		"per-month": "/Monat",
+		"plan-1x": "1%-Plan",
+		"plan-2x": "2%-Plan",
+		"monthly-plan": "Monatsplan",
+		"benefit-beneficiaries": "{{count}} direkte und indirekte Begünstigte",
+		"benefit-fees": "Transaktionskosten gedeckt",
+		"benefit-community": "Werde Teil einer Community mit {{count}} Unterstützern",
+		"benefit-double-impact": "Verdoppeln Sie die Wirkung",
+		"back": "Zurück",
+		"choose-payment": "Zahlungsmethode wählen"
+	},
+	"step3": {
+		"title": "Zahlungsmethode",
+		"qr-payment": "QR-Zahlung",
+		"minimal-costs": "Minimale Kosten",
+		"online": "Online",
+		"your-donation": "Ihre Spende",
+		"generate-qr-code": "QR-Code generieren",
+		"pay-online": "Online bezahlen",
+		"cover-costs-description": "Deckt Gebühren bei Online-Zahlung.",
+		"cover-costs-label-monthly": "Transaktionskosten decken (CHF 2/Monat)",
+		"cover-costs-label-one-time": "Transaktionskosten decken (CHF 2)"
+	},
+	"thankYou": {
+		"message": "Danke für deine Hilfe!"
+	},
+	"impact": {
+		"title": "Direktes Bargeld für Menschen in Not",
+		"tax-deductible": "Steuerlich absetzbar",
+		"cancel-anytime": "Jederzeit kündbar",
+		"supporters": "{{supporterCount}} Unterstützer aus {{countryCount}} Ländern",
+		"supporters-no-countries": "{{supporterCount}} Unterstützer weltweit",
+		"zewo": "ZEWO zertifiziert",
+		"why-one-percent": "Warum 1%?",
+		"pay-with": "Bezahlen mit"
+	}
+}

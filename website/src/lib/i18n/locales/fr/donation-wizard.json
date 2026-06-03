@@ -1,0 +1,69 @@
+{
+	"modal": {
+		"title": "Faire un don"
+	},
+	"step1": {
+		"title": "Faire un don",
+		"monthly-income-label": "Votre revenu mensuel (CHF)",
+		"choose-own-amount": "Ou choisis ton propre montant",
+		"your-one-percent": "Votre 1%",
+		"other": "Autre",
+		"monthly": "Mensuel",
+		"one-time": "Unique",
+		"donate-now": "Donner maintenant",
+		"donate-now-with-amount": "Donner {{amount}} maintenant",
+		"custom-amount-placeholder": "Montant"
+	},
+	"step2": {
+		"monthly-title": "Don mensuel",
+		"one-time-title": "Don unique",
+		"switch-to-one-time": "Unique",
+		"switch-to-monthly": "Mensuel",
+		"amount-label": "Montant",
+		"one-time-option-label": "Unique",
+		"one-time-option-hint": "Paiement unique",
+		"upsell-title": "Souhaitez-vous passer au plan mensuel ?",
+		"upsell-subtitle": "La moitié du montant, chaque mois. Cela nous aide encore plus.",
+		"monthly-half-note": "Les plans mensuels sont basés sur la moitié de votre don unique.",
+		"upsell-preferred": "Recommandé",
+		"upsell-benefit-stability": "Aide Social Income à être financièrement stable et à planifier",
+		"upsell-benefit-impact": "Impact maximal",
+		"upsell-benefit-cancel": "Annulable à tout moment",
+		"switch-to-monthly-plan": "Passer au plan mensuel",
+		"per-month": "/mois",
+		"plan-1x": "Plan 1%",
+		"plan-2x": "Plan 2%",
+		"monthly-plan": "Plan mensuel",
+		"benefit-beneficiaries": "{{count}} bénéficiaires directs et indirects",
+		"benefit-fees": "Frais de transaction couverts",
+		"benefit-community": "Rejoignez une communauté de {{count}} supporters",
+		"benefit-double-impact": "Doublez l'impact",
+		"back": "Retour",
+		"choose-payment": "Choisir le mode de paiement"
+	},
+	"step3": {
+		"title": "Mode de paiement",
+		"qr-payment": "Paiement QR",
+		"minimal-costs": "Coûts minimaux",
+		"online": "En ligne",
+		"your-donation": "Votre don",
+		"generate-qr-code": "Générer le code QR",
+		"pay-online": "Payer en ligne",
+		"cover-costs-description": "Couvre les frais en ligne.",
+		"cover-costs-label-monthly": "Couvrir les frais de transaction (CHF 2/mois)",
+		"cover-costs-label-one-time": "Couvrir les frais de transaction (CHF 2)"
+	},
+	"thankYou": {
+		"message": "Merci pour ton aide !"
+	},
+	"impact": {
+		"title": "Argent liquide direct aux personnes dans le besoin",
+		"tax-deductible": "Déductible des impôts",
+		"cancel-anytime": "Annulable à tout moment",
+		"supporters": "{{supporterCount}} supporters de {{countryCount}} pays",
+		"supporters-no-countries": "{{supporterCount}} supporters dans le monde",
+		"zewo": "Certifié ZEWO",
+		"why-one-percent": "Pourquoi 1 % ?",
+		"pay-with": "Payer avec"
+	}
+}

@@ -1,0 +1,69 @@
+{
+	"modal": {
+		"title": "Fai una donazione"
+	},
+	"step1": {
+		"title": "Fai una donazione",
+		"monthly-income-label": "Il tuo reddito mensile (CHF)",
+		"choose-own-amount": "Oppure scegli un importo personalizzato",
+		"your-one-percent": "Il tuo 1%",
+		"other": "Altro",
+		"monthly": "Mensile",
+		"one-time": "Una tantum",
+		"donate-now": "Dona ora",
+		"donate-now-with-amount": "Dona {{amount}} ora",
+		"custom-amount-placeholder": "Importo"
+	},
+	"step2": {
+		"monthly-title": "Donazione mensile",
+		"one-time-title": "Donazione una tantum",
+		"switch-to-one-time": "Una tantum",
+		"switch-to-monthly": "Mensile",
+		"amount-label": "Importo",
+		"one-time-option-label": "Una tantum",
+		"one-time-option-hint": "Pagamento unico",
+		"upsell-title": "Vuoi passare al piano mensile?",
+		"upsell-subtitle": "La metà dell'importo, ogni mese. Ci aiuta ancora di più.",
+		"monthly-half-note": "I piani mensili si basano sulla metà del tuo importo una tantum.",
+		"upsell-preferred": "Consigliato",
+		"upsell-benefit-stability": "Aiuta Social Income a essere finanziariamente stabile e a pianificare",
+		"upsell-benefit-impact": "Massimo impatto",
+		"upsell-benefit-cancel": "Annullabile in qualsiasi momento",
+		"switch-to-monthly-plan": "Passa al piano mensile",
+		"per-month": "/mese",
+		"plan-1x": "Piano 1%",
+		"plan-2x": "Piano 2%",
+		"monthly-plan": "Piano mensile",
+		"benefit-beneficiaries": "{{count}} beneficiari diretti e indiretti",
+		"benefit-fees": "Costi di transazione coperti",
+		"benefit-community": "Unisciti a una community di {{count}} sostenitori",
+		"benefit-double-impact": "Raddoppia l'impatto",
+		"back": "Indietro",
+		"choose-payment": "Scegli metodo di pagamento"
+	},
+	"step3": {
+		"title": "Metodo di pagamento",
+		"qr-payment": "Pagamento QR",
+		"minimal-costs": "Costi minimi",
+		"online": "Online",
+		"your-donation": "La tua donazione",
+		"generate-qr-code": "Genera codice QR",
+		"pay-online": "Paga online",
+		"cover-costs-description": "Copre le commissioni online.",
+		"cover-costs-label-monthly": "Copri i costi di transazione (CHF 2/mese)",
+		"cover-costs-label-one-time": "Copri i costi di transazione (CHF 2)"
+	},
+	"thankYou": {
+		"message": "Grazie per il tuo aiuto!"
+	},
+	"impact": {
+		"title": "Contanti diretti a persone in difficoltà",
+		"tax-deductible": "Deducibile dalle tasse",
+		"cancel-anytime": "Annullabile in qualsiasi momento",
+		"supporters": "{{supporterCount}} sostenitori da {{countryCount}} paesi",
+		"supporters-no-countries": "{{supporterCount}} sostenitori in tutto il mondo",
+		"zewo": "Certificato ZEWO",
+		"why-one-percent": "Perché l'1%?",
+		"pay-with": "Paga con"
+	}
+}
