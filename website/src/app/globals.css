@@ -46,8 +46,7 @@
 	}
 
 	.bg-donation-modal-gradient {
-		background:
-			linear-gradient(-17deg, var(--gradient-background-from) 19%, var(--gradient-background-to) 50%), white;
+		background: linear-gradient(-17deg, var(--gradient-background-from) 19%, var(--gradient-background-to) 50%), white;
 	}
 
 	@font-face {
