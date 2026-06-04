@@ -16,8 +16,10 @@ const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmoun
 
 const segmentActive = 'bg-white shadow-xs';
 
-type DonationFormFieldsValues = {
-	monthlyIncome: number;
+const monthlyIncomeInputId = 'donation-monthly-income';
+
+type DonationAmountFieldsValues = {
+	monthlyIncome: number | null;
 	selectedAmount: PresetAmount | 'other' | null;
 	customAmount: number | null;
 	cadence: Cadence;
@@ -27,21 +29,21 @@ type DonationFormFieldsValues = {
 	isValid: boolean;
 };
 
-type DonationFormFieldsActions = {
+type DonationAmountFieldsActions = {
 	selectOnePercent: () => void;
-	setMonthlyIncome: (value: number) => void;
+	setMonthlyIncome: (value: number | null) => void;
 	setPresetAmount: (value: PresetAmount | 'other') => void;
 	setCustomAmount: (value: number | null) => void;
 	setCadence: (value: Cadence) => void;
 };
 
 type Props = {
-	values: DonationFormFieldsValues;
-	actions: DonationFormFieldsActions;
+	values: DonationAmountFieldsValues;
+	actions: DonationAmountFieldsActions;
 	onSubmit: () => void;
 };
 
-export const DonationFormFields = ({ values, actions, onSubmit }: Props) => {
+export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 
@@ -58,14 +60,27 @@ export const DonationFormFields = ({ values, actions, onSubmit }: Props) => {
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
-					<div className="text-[10px] font-medium">{t('step1.monthly-income-label')}</div>
+					<label htmlFor={monthlyIncomeInputId} className="text-[10px] font-medium">
+						{t('step1.monthly-income-label')}
+					</label>
 					<input
+						id={monthlyIncomeInputId}
 						type="number"
-						value={values.monthlyIncome}
+						min={0}
+						value={values.monthlyIncome ?? ''}
 						onFocus={actions.selectOnePercent}
 						onChange={(e) => {
-							const parsed = parseFloat(e.target.value);
-							actions.setMonthlyIncome(isNaN(parsed) ? 0 : parsed);
+							const raw = e.target.value;
+							if (raw === '') {
+								actions.setMonthlyIncome(null);
+
+								return;
+							}
+
+							const parsed = parseFloat(raw);
+							if (!isNaN(parsed)) {
+								actions.setMonthlyIncome(parsed);
+							}
 						}}
 						className="w-full bg-transparent text-lg leading-none font-medium text-inherit outline-hidden"
 					/>

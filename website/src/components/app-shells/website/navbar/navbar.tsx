@@ -3,7 +3,7 @@ import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout
 import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
-import { OpenDonationWizardButton } from '@/components/donation-wizard/open-donation-wizard-button';
+import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { Session } from '@/lib/firebase/current-account';

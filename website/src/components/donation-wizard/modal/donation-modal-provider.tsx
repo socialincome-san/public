@@ -7,12 +7,12 @@ import { websiteCurrencies } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { useMachine } from '@xstate/react';
 import { useCallback, type ReactNode } from 'react';
-import { useDonationCampaignTitle } from './hooks/use-donation-campaign-title';
-import { DonationModalContext } from './hooks/use-donation-modal';
-import { ThankYouStep } from './steps/thank-you/thank-you-step';
-import type { DonationAmountContext } from './utils/donation-amount';
-import { donationWizardMachine } from './wizard/donation-machine';
-import { DonationWizard } from './wizard/donation-wizard';
+import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
+import { DonationModalContext } from '../hooks/use-donation-modal';
+import { ThankYouStep } from '../steps/thank-you/thank-you-step';
+import type { DonationAmountContext } from '../utils/donation-amount';
+import { donationWizardMachine } from '../wizard/donation-machine';
+import { DonationWizard } from '../wizard/donation-wizard';
 
 type Props = {
 	children: ReactNode;
@@ -27,11 +27,11 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const campaignId = state.context.campaignId;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && !isThankYou);
 
-	const openDonationWizard = useCallback(() => {
+	const openWizardAtAmountStep = useCallback(() => {
 		send({ type: 'OPEN' });
 	}, [send]);
 
-	const openDonationWizardFromForm = useCallback(
+	const openWizardWithFormAmount = useCallback(
 		(context: DonationAmountContext) => {
 			send({ type: 'OPEN_FROM_FORM', context });
 		},
@@ -39,7 +39,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 	);
 
 	return (
-		<DonationModalContext.Provider value={{ openDonationWizard, openDonationWizardFromForm }}>
+		<DonationModalContext.Provider value={{ openWizardAtAmountStep, openWizardWithFormAmount }}>
 			{children}
 
 			<Dialog
@@ -51,8 +51,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 				}}
 			>
 				<DialogContent
-					variant="gradient"
-					fullscreenOnMobile
+					hasGradient
 					className={cn(
 						'!flex flex-col gap-0 overflow-hidden overscroll-contain !p-0',
 						isThankYou

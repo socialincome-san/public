@@ -1,11 +1,11 @@
 import type { DonationWizardEntry } from './donation-wizard-context';
 import type { DonationWizardState } from './types';
 
-export type ActiveDonationWizardStep = DonationWizardEntry | 'step3Payment';
+type ActiveDonationWizardStep = DonationWizardEntry | 'step3Payment';
 
 export const getActiveWizardStep = (state: DonationWizardState): ActiveDonationWizardStep | null => {
 	if (state.matches('loadingCommunityStats')) {
-		return state.context.entryAfterStatsLoad;
+		return state.context.pendingStep;
 	}
 
 	if (state.matches('step1')) {

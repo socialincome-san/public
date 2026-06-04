@@ -54,7 +54,7 @@
 		"cover-costs-label-monthly": "Transaktionskosten decken ({{fee}}/Monat)",
 		"cover-costs-label-one-time": "Transaktionskosten decken ({{fee}})",
 		"cover-costs-tooltip-aria": "So werden die Transaktionskosten berechnet",
-		"cover-costs-tooltip": "Dein Betrag wird erhöht, damit nach der Kartengebühr (2,9 % + CHF 0.30 pro Zahlung) die volle Spende bei uns ankommt."
+		"cover-costs-tooltip": "Wir rechnen 3 % auf deine Spende auf, damit der volle Betrag nach den Online-Kartengebühren bei uns ankommt."
 	},
 	"thankYou": {
 		"message": "Danke für deine Hilfe!"

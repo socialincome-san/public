@@ -9,8 +9,8 @@ import {
 	isMenuItem,
 	Scope,
 } from '@/components/app-shells/website/navbar/utils';
-import { OpenDonationWizardButton } from '@/components/donation-wizard/open-donation-wizard-button';
-import { MakeDonationForm } from '@/components/make-donation-form';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
+import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Session } from '@/lib/firebase/current-account';
@@ -125,7 +125,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 									})}
 								</ul>
 								<div className="mt-4">
-									<MakeDonationForm />
+									<DonationForm />
 								</div>
 							</div>
 

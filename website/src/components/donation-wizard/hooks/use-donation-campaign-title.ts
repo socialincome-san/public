@@ -20,13 +20,16 @@ export const useDonationCampaignTitle = (campaignId: string | undefined, enabled
 		const requestedCampaignId = campaignId;
 		let cancelled = false;
 
-		void getPublicCampaignTitleAction(requestedCampaignId).then((result) => {
+		const loadTitle = async () => {
+			const result = await getPublicCampaignTitleAction(requestedCampaignId);
 			if (cancelled) {
 				return;
 			}
 
 			setFetched(result.success ? { campaignId: requestedCampaignId, title: result.data.title } : null);
-		});
+		};
+
+		void loadTitle();
 
 		return () => {
 			cancelled = true;

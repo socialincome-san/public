@@ -4,9 +4,10 @@ import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
-import { OnlinePaymentLogos, QrPaymentLogo } from '../../shared/payment-logos';
-import { getDonationBaseAmount, getDonationDisplayAmount, getOnlineTransactionCostChf } from '../../utils/donation-amount';
+import { OnlinePaymentLogos } from '../../shared/payment-logos/online-payment-logos';
+import { QrPaymentLogo } from '../../shared/payment-logos/qr-payment-logo';
 import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
+import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { CoverTransactionCostsToggle } from './cover-transaction-costs-toggle';
 import { PaymentMethodOption } from './payment-method-option';
@@ -14,10 +15,7 @@ import { PaymentMethodOption } from './payment-method-option';
 export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
-	const { paymentMethod, cadence, coverTransactionCosts } = state.context;
-	const baseAmount = getDonationBaseAmount(state.context);
-	const displayAmount = getDonationDisplayAmount(state.context);
-	const transactionCost = getOnlineTransactionCostChf(baseAmount);
+	const view = selectPaymentView(state.context);
 
 	return (
 		<div className={cn(donationPaymentStepCardClass, 'text-foreground')}>
@@ -27,25 +25,25 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				<PaymentMethodOption
 					label={t('step3.qr-payment')}
 					badge={t('step3.minimal-costs')}
-					selected={paymentMethod === 'qr'}
+					selected={view.paymentMethod === 'qr'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'qr' })}
 					trailing={<QrPaymentLogo />}
 				/>
 				<PaymentMethodOption
 					label={t('step3.online')}
-					selected={paymentMethod === 'online'}
+					selected={view.paymentMethod === 'online'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'online' })}
 					trailing={<OnlinePaymentLogos />}
 				/>
 			</div>
 
-			{paymentMethod === 'online' && (
+			{view.showTransactionCostToggle && (
 				<div className="mb-5">
 					<CoverTransactionCostsToggle
-						cadence={cadence}
+						cadence={view.cadence}
 						currency={currency}
-						transactionCost={transactionCost}
-						checked={coverTransactionCosts}
+						transactionCost={view.transactionCost}
+						checked={view.coverTransactionCosts}
 						onCheckedChange={(value) => send({ type: 'SET_COVER_TRANSACTION_COSTS', value })}
 					/>
 				</div>
@@ -54,11 +52,11 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 			<DonationStepFooter
 				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => send({ type: 'COMPLETE' })}
-				continueLabel={paymentMethod === 'qr' ? t('step3.generate-qr-code') : t('step3.pay-online')}
+				continueLabel={t(view.continueLabelKey)}
 				summary={{
-					amount: displayAmount,
+					amount: view.summary.amount,
 					currency,
-					showPerMonth: cadence === 'monthly',
+					showPerMonth: view.summary.showPerMonth,
 				}}
 			/>
 		</div>

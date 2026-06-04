@@ -1,7 +1,7 @@
 import { Footer } from '@/components/app-shells/website/footer';
 import { Navbar } from '@/components/app-shells/website/navbar/navbar';
 import { Scope } from '@/components/app-shells/website/navbar/utils';
-import { DonationModalProvider } from '@/components/donation-wizard/donation-modal-provider';
+import { DonationModalProvider } from '@/components/donation-wizard/modal/donation-modal-provider';
 import type { Session } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ReactNode } from 'react';

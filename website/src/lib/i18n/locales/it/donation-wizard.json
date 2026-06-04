@@ -54,7 +54,7 @@
 		"cover-costs-label-monthly": "Copri i costi di transazione ({{fee}}/mese)",
 		"cover-costs-label-one-time": "Copri i costi di transazione ({{fee}})",
 		"cover-costs-tooltip-aria": "Come vengono calcolati i costi di transazione",
-		"cover-costs-tooltip": "Aumentiamo il pagamento così l'intera donazione ci arriva dopo la commissione sulla carta (2,9% + CHF 0,30 per pagamento)."
+		"cover-costs-tooltip": "Aggiungiamo il 3% alla donazione così l'importo completo ci arriva dopo le commissioni della carta online."
 	},
 	"thankYou": {
 		"message": "Grazie per il tuo aiuto!"

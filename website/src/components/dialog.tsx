@@ -25,21 +25,21 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+const mobileFullscreenClasses =
+	'max-sm:inset-0 max-sm:h-dvh max-sm:min-h-dvh max-sm:w-full max-sm:max-w-none max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-none max-sm:data-[state=open]:zoom-in-100 max-sm:data-[state=closed]:zoom-out-100';
+
 const DialogContent = React.forwardRef<
 	React.ElementRef<typeof DialogPrimitive.Content>,
 	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-		variant?: 'default' | 'large' | 'gradient';
+		variant?: 'default' | 'large';
+		hasGradient?: boolean;
 		overlayClassName?: string;
-		fullscreenOnMobile?: boolean;
 	}
->(({ className, children, variant = 'default', overlayClassName, fullscreenOnMobile = false, ...props }, ref) => {
-	const isWide = variant === 'large' || variant === 'gradient';
-	const sizeClasses = isWide ? 'w-[80vw] max-w-none sm:max-w-none' : 'w-full max-w-lg sm:max-w-[425px]';
-	const variantClasses =
-		variant === 'gradient' ? 'bg-donation-modal-gradient rounded-3xl border-0 shadow-lg' : 'bg-background rounded-lg border';
-	const mobileFullscreenClasses = fullscreenOnMobile
-		? 'max-sm:inset-0 max-sm:h-dvh max-sm:min-h-dvh max-sm:w-full max-sm:max-w-none max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-none max-sm:data-[state=open]:zoom-in-100 max-sm:data-[state=closed]:zoom-out-100'
-		: '';
+>(({ className, children, variant = 'default', hasGradient = false, overlayClassName, ...props }, ref) => {
+	const sizeClasses = variant === 'large' ? 'w-[80vw] max-w-none sm:max-w-none' : 'w-full max-w-lg sm:max-w-[425px]';
+	const surfaceClasses = hasGradient
+		? 'bg-donation-modal-gradient rounded-3xl border-0 shadow-lg'
+		: 'bg-background rounded-lg border';
 
 	return (
 		<DialogPortal>
@@ -48,7 +48,7 @@ const DialogContent = React.forwardRef<
 				ref={ref}
 				className={cn(
 					'max-w-site-width data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 theme-new fixed top-[50%] left-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 p-6 duration-200',
-					variantClasses,
+					surfaceClasses,
 					sizeClasses,
 					mobileFullscreenClasses,
 					className,

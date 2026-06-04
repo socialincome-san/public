@@ -2,58 +2,19 @@
 
 import { cn } from '@/lib/utils/cn';
 import { Check, Heart, Smile } from 'lucide-react';
-
-type Benefit = {
-	id: string;
-	label: string;
-	icon?: 'check' | 'heart';
-	emphasis?: boolean;
-};
+import type { PlanTierBenefit } from './plan-tier-benefit';
 
 type Props = {
 	amount: number;
 	currency: string;
 	perMonthLabel?: string;
 	planLabel?: string;
-	badgeVariant?: 'plan' | 'preferred';
-	heartCount?: 1 | 2;
-	selected: boolean;
-	benefits: Benefit[];
-	onSelect: () => void;
+	badgeVariant: 'plan' | 'preferred';
+	heartCount: 1 | 2;
+	benefits: PlanTierBenefit[];
 };
 
-export const PlanTierCard = ({
-	amount,
-	currency,
-	perMonthLabel,
-	planLabel,
-	badgeVariant = 'plan',
-	heartCount = 1,
-	selected,
-	benefits,
-	onSelect,
-}: Props) => {
-	const className = cn(
-		'w-full rounded-[10px] border p-4 text-left transition-colors',
-		selected ? 'border-slate-500 bg-slate-50' : 'border-border bg-white',
-	);
-
-	return (
-		<button type="button" onClick={onSelect} className={className}>
-			<PlanTierCardContent
-				amount={amount}
-				currency={currency}
-				perMonthLabel={perMonthLabel}
-				planLabel={planLabel}
-				badgeVariant={badgeVariant}
-				heartCount={heartCount}
-				benefits={benefits}
-			/>
-		</button>
-	);
-};
-
-const PlanTierCardContent = ({
+export const PlanTierCardContent = ({
 	amount,
 	currency,
 	perMonthLabel,
@@ -61,9 +22,7 @@ const PlanTierCardContent = ({
 	badgeVariant,
 	heartCount,
 	benefits,
-}: Pick<Props, 'amount' | 'currency' | 'perMonthLabel' | 'planLabel' | 'badgeVariant' | 'heartCount' | 'benefits'> & {
-	heartCount: 1 | 2;
-}) => (
+}: Props) => (
 	<>
 		<div className="mb-2.5 flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
 			<span className="text-lg leading-none font-medium tabular-nums">

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { MakeDonationForm } from '@/components/make-donation-form';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { VideoControlButton } from '@/components/video-control-button';
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -170,14 +170,14 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations, 
 							)}
 						</div>
 						<div className="hidden shrink-0 lg:block">
-							<MakeDonationForm />
+							<DonationForm />
 						</div>
 					</div>
 				)}
 			</div>
 			{!isExpanded && (
 				<div className="flex justify-center lg:hidden">
-					<MakeDonationForm />
+					<DonationForm />
 				</div>
 			)}
 		</div>

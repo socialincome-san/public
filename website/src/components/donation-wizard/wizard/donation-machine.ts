@@ -4,56 +4,19 @@ import { assign, fromPromise, setup } from 'xstate';
 import {
 	type Cadence,
 	type DonationAmountContext,
-	type OneTimeCheckoutChoice,
+	type OneTimePlanChoice,
 	type PaymentMethod,
 	type PlanTier,
 	type PresetAmount,
 	isAmountValid,
 } from '../utils/donation-amount';
+import {
+	monthlyPlanStepDefaults,
+	oneTimePlanStepDefaults,
+	paymentContextForOneTimePlanChoice,
+	wizardContextFromFormAmount,
+} from './donation-machine-logic';
 import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
-
-const prepareWizardContext = (context: DonationAmountContext): DonationWizardContext => ({
-	...getInitialWizardContext(),
-	...context,
-	selectedTier: '1x',
-	paymentMethod: 'qr',
-	useHalfMonthlyAmount: false,
-	coverTransactionCosts: false,
-	oneTimeCheckoutChoice: 'one-time',
-	checkoutFromOneTimeStep: false,
-	campaignId: context.campaignId,
-});
-
-const enterStep2OneTime: Pick<
-	DonationWizardContext,
-	'oneTimeCheckoutChoice' | 'checkoutFromOneTimeStep' | 'useHalfMonthlyAmount'
-> = {
-	oneTimeCheckoutChoice: 'one-time',
-	checkoutFromOneTimeStep: true,
-	useHalfMonthlyAmount: false,
-};
-
-const enterStep2Monthly: Pick<DonationWizardContext, 'checkoutFromOneTimeStep' | 'useHalfMonthlyAmount'> = {
-	checkoutFromOneTimeStep: false,
-	useHalfMonthlyAmount: false,
-};
-
-const applyOneTimeCheckoutChoice = (choice: OneTimeCheckoutChoice) => {
-	if (choice === 'monthly-half') {
-		return {
-			cadence: 'monthly' as const,
-			useHalfMonthlyAmount: true,
-			selectedTier: '1x' as const,
-			checkoutFromOneTimeStep: true,
-		};
-	}
-
-	return {
-		cadence: 'one-time' as const,
-		useHalfMonthlyAmount: false,
-		checkoutFromOneTimeStep: true,
-	};
-};
 
 export const donationWizardMachine = setup({
 	types: {} as {
@@ -62,12 +25,12 @@ export const donationWizardMachine = setup({
 			| { type: 'OPEN' }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
 			| { type: 'CLOSE' }
-			| { type: 'SET_MONTHLY_INCOME'; value: number }
+			| { type: 'SET_MONTHLY_INCOME'; value: number | null }
 			| { type: 'SELECT_ONE_PERCENT' }
 			| { type: 'SET_PRESET_AMOUNT'; value: PresetAmount | 'other' }
 			| { type: 'SET_CUSTOM_AMOUNT'; value: number | null }
 			| { type: 'SET_CADENCE'; value: Cadence }
-			| { type: 'SET_ONE_TIME_CHECKOUT_CHOICE'; value: OneTimeCheckoutChoice }
+			| { type: 'SET_ONE_TIME_PLAN_CHOICE'; value: OneTimePlanChoice }
 			| { type: 'SET_TIER'; value: PlanTier }
 			| { type: 'SET_PAYMENT_METHOD'; value: PaymentMethod }
 			| { type: 'SET_COVER_TRANSACTION_COSTS'; value: boolean }
@@ -93,15 +56,15 @@ export const donationWizardMachine = setup({
 		isMonthlyCadence: ({ event }) => event.type === 'SET_CADENCE' && event.value === 'monthly',
 		isOneTimeCadence: ({ event }) => event.type === 'SET_CADENCE' && event.value === 'one-time',
 		isMonthlyContext: ({ context }) => context.cadence === 'monthly',
-		checkoutFromOneTimeStep: ({ context }) => context.checkoutFromOneTimeStep,
-		entryIsStep2Monthly: ({ context }) => context.entryAfterStatsLoad === 'step2Monthly',
-		entryIsStep2OneTime: ({ context }) => context.entryAfterStatsLoad === 'step2OneTime',
+		returnsToOneTimePlanStep: ({ context }) => context.returnsToOneTimePlanStep,
+		pendingStepIsMonthlyPlan: ({ context }) => context.pendingStep === 'step2Monthly',
+		pendingStepIsOneTimePlan: ({ context }) => context.pendingStep === 'step2OneTime',
 	},
 	actions: {
 		resetContext: assign(() => getInitialWizardContext()),
 		assignFailedCommunityStats: assign({
 			communityStats: () => null,
-			entryAfterStatsLoad: () => null,
+			pendingStep: () => null,
 		}),
 	},
 }).createMachine({
@@ -115,7 +78,7 @@ export const donationWizardMachine = setup({
 					target: 'loadingCommunityStats',
 					actions: assign(() => ({
 						...getInitialWizardContext(),
-						entryAfterStatsLoad: 'step1' as const,
+						pendingStep: 'step1' as const,
 					})),
 				},
 				OPEN_FROM_FORM: [
@@ -123,18 +86,18 @@ export const donationWizardMachine = setup({
 						guard: 'fromFormMonthly',
 						target: 'loadingCommunityStats',
 						actions: assign(({ event }) => ({
-							...prepareWizardContext(event.context),
-							...enterStep2Monthly,
-							entryAfterStatsLoad: 'step2Monthly' as const,
+							...wizardContextFromFormAmount(event.context),
+							...monthlyPlanStepDefaults,
+							pendingStep: 'step2Monthly' as const,
 						})),
 					},
 					{
 						guard: 'fromFormOneTime',
 						target: 'loadingCommunityStats',
 						actions: assign(({ event }) => ({
-							...prepareWizardContext(event.context),
-							...enterStep2OneTime,
-							entryAfterStatsLoad: 'step2OneTime' as const,
+							...wizardContextFromFormAmount(event.context),
+							...oneTimePlanStepDefaults,
+							pendingStep: 'step2OneTime' as const,
 						})),
 					},
 				],
@@ -145,37 +108,37 @@ export const donationWizardMachine = setup({
 				src: 'loadCommunityStats',
 				onDone: [
 					{
-						guard: 'entryIsStep2Monthly',
+						guard: 'pendingStepIsMonthlyPlan',
 						target: 'step2Monthly',
 						actions: assign({
 							communityStats: ({ event }) => event.output,
-							entryAfterStatsLoad: () => null,
+							pendingStep: () => null,
 						}),
 					},
 					{
-						guard: 'entryIsStep2OneTime',
+						guard: 'pendingStepIsOneTimePlan',
 						target: 'step2OneTime',
 						actions: assign({
 							communityStats: ({ event }) => event.output,
-							entryAfterStatsLoad: () => null,
+							pendingStep: () => null,
 						}),
 					},
 					{
 						target: 'step1',
 						actions: assign({
 							communityStats: ({ event }) => event.output,
-							entryAfterStatsLoad: () => null,
+							pendingStep: () => null,
 						}),
 					},
 				],
 				onError: [
 					{
-						guard: 'entryIsStep2Monthly',
+						guard: 'pendingStepIsMonthlyPlan',
 						target: 'step2Monthly',
 						actions: 'assignFailedCommunityStats',
 					},
 					{
-						guard: 'entryIsStep2OneTime',
+						guard: 'pendingStepIsOneTimePlan',
 						target: 'step2OneTime',
 						actions: 'assignFailedCommunityStats',
 					},
@@ -230,13 +193,13 @@ export const donationWizardMachine = setup({
 						target: 'step2Monthly',
 						actions: assign({
 							selectedTier: () => '1x' as const,
-							...enterStep2Monthly,
+							...monthlyPlanStepDefaults,
 						}),
 					},
 					{
 						guard: 'canSubmitOneTime',
 						target: 'step2OneTime',
-						actions: assign(enterStep2OneTime),
+						actions: assign(oneTimePlanStepDefaults),
 					},
 				],
 				CLOSE: {
@@ -258,7 +221,7 @@ export const donationWizardMachine = setup({
 						target: 'step2OneTime',
 						actions: assign({
 							cadence: () => 'one-time' as const,
-							...enterStep2OneTime,
+							...oneTimePlanStepDefaults,
 						}),
 					},
 				],
@@ -267,7 +230,7 @@ export const donationWizardMachine = setup({
 					actions: assign({
 						paymentMethod: () => 'qr' as const,
 						coverTransactionCosts: () => false,
-						...enterStep2Monthly,
+						...monthlyPlanStepDefaults,
 					}),
 				},
 				BACK: 'step1',
@@ -279,9 +242,9 @@ export const donationWizardMachine = setup({
 		},
 		step2OneTime: {
 			on: {
-				SET_ONE_TIME_CHECKOUT_CHOICE: {
+				SET_ONE_TIME_PLAN_CHOICE: {
 					actions: assign({
-						oneTimeCheckoutChoice: ({ event }) => event.value,
+						oneTimePlanChoice: ({ event }) => event.value,
 					}),
 				},
 				SET_CADENCE: [
@@ -291,7 +254,7 @@ export const donationWizardMachine = setup({
 						actions: assign({
 							cadence: () => 'monthly' as const,
 							selectedTier: () => '1x' as const,
-							...enterStep2Monthly,
+							...monthlyPlanStepDefaults,
 						}),
 					},
 				],
@@ -300,7 +263,7 @@ export const donationWizardMachine = setup({
 					actions: assign(({ context }) => ({
 						paymentMethod: 'qr' as const,
 						coverTransactionCosts: false,
-						...applyOneTimeCheckoutChoice(context.oneTimeCheckoutChoice),
+						...paymentContextForOneTimePlanChoice(context.oneTimePlanChoice),
 					})),
 				},
 				BACK: 'step1',
@@ -325,7 +288,7 @@ export const donationWizardMachine = setup({
 				},
 				BACK: [
 					{
-						guard: 'checkoutFromOneTimeStep',
+						guard: 'returnsToOneTimePlanStep',
 						target: 'step2OneTime',
 					},
 					{

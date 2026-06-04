@@ -2,48 +2,31 @@ export type PresetAmount = 25 | 50 | 100;
 export type Cadence = 'monthly' | 'one-time';
 export type PlanTier = '1x' | '2x';
 export type PaymentMethod = 'qr' | 'online';
-export type OneTimeCheckoutChoice = 'one-time' | 'monthly-half';
+export type OneTimePlanChoice = 'one-time' | 'monthly-half';
 
-/** Stripe card pricing for CH: 2.9% + CHF 0.30 per charge. */
-const STRIPE_CARD_FEE_RATE = 0.029;
-const STRIPE_CARD_FEE_FIXED_CHF = 0.3;
+const ONLINE_TRANSACTION_FEE_RATE = 0.03;
 
 const roundChf = (amount: number): number => Math.round(amount * 100) / 100;
-
-/** Gross-up so the net after Stripe fees is at least `baseAmountChf`. */
-export const getDonationAmountWithFeesCovered = (baseAmountChf: number): number => {
-	if (baseAmountChf <= 0) {
-		return 0;
-	}
-
-	const gross = (baseAmountChf + STRIPE_CARD_FEE_FIXED_CHF) / (1 - STRIPE_CARD_FEE_RATE);
-
-	return roundChf(gross);
-};
 
 export const getOnlineTransactionCostChf = (baseAmountChf: number): number => {
 	if (baseAmountChf <= 0) {
 		return 0;
 	}
 
-	return roundChf(getDonationAmountWithFeesCovered(baseAmountChf) - baseAmountChf);
+	return roundChf(baseAmountChf * ONLINE_TRANSACTION_FEE_RATE);
 };
 
 export type DonationAmountContext = {
-	monthlyIncome: number;
+	monthlyIncome: number | null;
 	selectedAmount: PresetAmount | 'other' | null;
 	customAmount: number | null;
 	cadence: Cadence;
 	selectedTier: PlanTier;
 	paymentMethod: PaymentMethod;
-	/** True when paying monthly at half the resolved one-time amount. */
-	useHalfMonthlyAmount: boolean;
+	chargeMonthlyHalfOfOneTimeAmount: boolean;
 	coverTransactionCosts: boolean;
-	/** Selected plan on step 2 one-time (before payment). */
-	oneTimeCheckoutChoice: OneTimeCheckoutChoice;
-	/** Return from payment step to step 2 one-time instead of step 2 monthly. */
-	checkoutFromOneTimeStep: boolean;
-	/** Campaign to credit when checkout completes (campaign pages only). */
+	oneTimePlanChoice: OneTimePlanChoice;
+	returnsToOneTimePlanStep: boolean;
 	campaignId?: string;
 };
 
@@ -54,14 +37,15 @@ export const getInitialDonationContext = (): DonationAmountContext => ({
 	cadence: 'monthly',
 	selectedTier: '1x',
 	paymentMethod: 'qr',
-	useHalfMonthlyAmount: false,
+	chargeMonthlyHalfOfOneTimeAmount: false,
 	coverTransactionCosts: false,
-	oneTimeCheckoutChoice: 'one-time',
-	checkoutFromOneTimeStep: false,
+	oneTimePlanChoice: 'one-time',
+	returnsToOneTimePlanStep: false,
 	campaignId: undefined,
 });
 
-export const getOnePercentAmount = (monthlyIncome: number): number => Math.round(monthlyIncome / 100);
+export const getOnePercentAmount = (monthlyIncome: number | null): number =>
+	monthlyIncome === null || monthlyIncome < 1 ? 0 : Math.round(monthlyIncome / 100);
 
 export const resolveAmount = (context: DonationAmountContext): number | null => {
 	if (context.selectedAmount === 'other') {
@@ -76,7 +60,7 @@ export const resolveAmount = (context: DonationAmountContext): number | null => 
 		return context.selectedAmount;
 	}
 
-	if (context.monthlyIncome >= 1) {
+	if (context.monthlyIncome !== null && context.monthlyIncome >= 1) {
 		return getOnePercentAmount(context.monthlyIncome);
 	}
 
@@ -93,7 +77,7 @@ export const getMonthlyUpsellAmount = (oneTimeAmount: number): number => Math.ma
 export const getMonthlyPlanBaseAmount = (context: DonationAmountContext): number => {
 	const resolved = resolveAmount(context) ?? 0;
 
-	if (context.useHalfMonthlyAmount) {
+	if (context.chargeMonthlyHalfOfOneTimeAmount) {
 		return getMonthlyUpsellAmount(resolved);
 	}
 
@@ -119,7 +103,7 @@ export const getDonationDisplayAmount = (context: DonationAmountContext): number
 	const base = getDonationBaseAmount(context);
 
 	if (context.paymentMethod === 'online' && context.coverTransactionCosts) {
-		return getDonationAmountWithFeesCovered(base);
+		return roundChf(base + getOnlineTransactionCostChf(base));
 	}
 
 	return base;

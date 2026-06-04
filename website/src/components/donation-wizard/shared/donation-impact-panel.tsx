@@ -13,7 +13,7 @@ import {
 	donationImpactExplainerClass,
 	donationImpactRowClass,
 } from '../utils/donation-wizard-layout';
-import { ImpactPaymentLogos } from './payment-logos';
+import { ImpactPaymentLogos } from './payment-logos/impact-payment-logos';
 
 const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 

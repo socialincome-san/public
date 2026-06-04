@@ -54,7 +54,7 @@
 		"cover-costs-label-monthly": "Cover transaction costs ({{fee}}/month)",
 		"cover-costs-label-one-time": "Cover transaction costs ({{fee}})",
 		"cover-costs-tooltip-aria": "How transaction costs are calculated",
-		"cover-costs-tooltip": "We increase your payment so your full donation reaches us after the card processing fee (2.9% + CHF 0.30 per charge)."
+		"cover-costs-tooltip": "We add 3% to your donation so the full amount reaches us after online card fees."
 	},
 	"thankYou": {
 		"message": "Thank you for your help!"

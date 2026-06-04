@@ -29,18 +29,3 @@ export const getSupportersImpactLabel = (
 
 	return t('impact.supporters-no-countries', { supporterCount });
 };
-
-export const getCommunityBenefit = (t: Translate, language: LanguageCode, stats: ContributorCommunityStats | null) => {
-	if (!stats || stats.supporterCount <= 0) {
-		return null;
-	}
-
-	return {
-		id: 'community' as const,
-		label: t('step2.benefit-community', {
-			count: formatCommunityCount(stats.supporterCount, language),
-		}),
-		icon: 'heart' as const,
-		emphasis: true,
-	};
-};

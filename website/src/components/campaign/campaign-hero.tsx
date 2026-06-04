@@ -1,4 +1,4 @@
-import { MakeDonationForm } from '@/components/make-donation-form';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { Progress } from '@/components/progress';
 import type { Translator } from '@/lib/i18n/translator';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
@@ -77,7 +77,7 @@ export const CampaignHero = ({ campaign, translator }: Props) => {
 
 				{campaign.daysLeft >= 0 && (
 					<div className="flex justify-center lg:justify-end">
-						<MakeDonationForm campaignId={campaign.id} />
+						<DonationForm campaignId={campaign.id} />
 					</div>
 				)}
 			</div>

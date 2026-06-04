@@ -3,26 +3,22 @@
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
-import { getCommunityBenefit } from '../../utils/community-stats';
-import {
-	getBeneficiaryCount,
-	getMonthlyPlanBaseAmount,
-	getTierAmounts,
-	isOnePercentPlanSelected,
-} from '../../utils/donation-amount';
 import { donationStepCardClass } from '../../utils/donation-wizard-layout';
+import {
+	type PlanBenefitDescriptor,
+	resolvePlanBenefit,
+	selectMonthlyPlanView,
+} from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { PlanStepHeader } from './plan-step-header';
-import { PlanTierCard } from './plan-tier-card';
+import { PlanTierCard } from './plan-tier-card/plan-tier-card';
 
 export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
-	const { selectedTier } = state.context;
-	const showPlanBadges = isOnePercentPlanSelected(state.context);
-	const baseAmount = getMonthlyPlanBaseAmount(state.context);
-	const { tier1x, tier2x } = getTierAmounts(baseAmount);
-	const communityBenefit = getCommunityBenefit(t, language, state.context.communityStats);
+	const view = selectMonthlyPlanView(state.context);
+	const toBenefits = (descriptors: PlanBenefitDescriptor[]) =>
+		descriptors.map((descriptor) => resolvePlanBenefit(descriptor, t, language));
 
 	return (
 		<div className={donationStepCardClass}>
@@ -30,37 +26,24 @@ export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 
 			<div className="mb-5 flex flex-col gap-3">
 				<PlanTierCard
-					amount={tier1x}
+					amount={view.tier1x}
 					currency={currency}
 					perMonthLabel={t('step2.per-month')}
-					planLabel={showPlanBadges ? t('step2.plan-1x') : undefined}
+					planLabel={view.showPlanBadges ? t('step2.plan-1x') : undefined}
 					heartCount={1}
-					selected={selectedTier === '1x'}
+					selected={view.selectedTier === '1x'}
 					onSelect={() => send({ type: 'SET_TIER', value: '1x' })}
-					benefits={[
-						{
-							id: 'beneficiaries',
-							label: t('step2.benefit-beneficiaries', { count: getBeneficiaryCount(tier1x) }),
-						},
-						{ id: 'fees', label: t('step2.benefit-fees') },
-						...(communityBenefit ? [communityBenefit] : []),
-					]}
+					benefits={toBenefits(view.tier1Benefits)}
 				/>
 				<PlanTierCard
-					amount={tier2x}
+					amount={view.tier2x}
 					currency={currency}
 					perMonthLabel={t('step2.per-month')}
-					planLabel={showPlanBadges ? t('step2.plan-2x') : undefined}
+					planLabel={view.showPlanBadges ? t('step2.plan-2x') : undefined}
 					heartCount={2}
-					selected={selectedTier === '2x'}
+					selected={view.selectedTier === '2x'}
 					onSelect={() => send({ type: 'SET_TIER', value: '2x' })}
-					benefits={[
-						{ id: 'double', label: t('step2.benefit-double-impact') },
-						{
-							id: 'beneficiaries',
-							label: t('step2.benefit-beneficiaries', { count: getBeneficiaryCount(tier2x) }),
-						},
-					]}
+					benefits={toBenefits(view.tier2Benefits)}
 				/>
 			</div>
 

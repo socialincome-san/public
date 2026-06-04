@@ -1,7 +1,7 @@
 'use client';
 
 import { hasDropdownChildren, isDropdownItem, isMenuItem } from '@/components/app-shells/website/navbar/utils';
-import { MakeDonationForm } from '@/components/make-donation-form';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
@@ -98,7 +98,7 @@ export const MenuDesktop = ({ menu, lang, region }: Props) => (
 									))}
 								</div>
 								<div className="w-96 shrink-0">
-									<MakeDonationForm />
+									<DonationForm />
 								</div>
 							</div>
 						</NavigationMenu.Content>

@@ -1,7 +1,7 @@
 'use client';
 
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/action-button';
-import { ArticleDonationCta } from '@/components/storyblok/journal/rich-text/article-donation-cta';
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';
 import { ImageWithCaption } from '@/components/storyblok/journal/rich-text/image-with-caption';
 import { NewsletterSignup, type NewsletterSignupLabels } from '@/components/storyblok/journal/rich-text/newsletter-signup';
@@ -74,7 +74,11 @@ export const ArticleRichText = ({ document, lang }: Props) => {
 				<ActionButtonBlock {...(props as ComponentProps<typeof ActionButtonBlock>)} />
 			),
 			newsletterSignup: () => <NewsletterSignup lang={lang} labels={newsletterLabels} />,
-			campaignDonate: () => <ArticleDonationCta />,
+			campaignDonate: () => (
+				<div className="my-10">
+					<DonationForm />
+				</div>
+			),
 		},
 	}) as ReactNode;
 };

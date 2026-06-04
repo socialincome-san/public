@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { useDonationModal } from './hooks/use-donation-modal';
+import { useDonationModal } from '../hooks/use-donation-modal';
 
 type Props = {
 	label: string;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const OpenDonationWizardButton = ({ label, className, onBeforeOpen }: Props) => {
-	const { openDonationWizard } = useDonationModal();
+	const { openWizardAtAmountStep } = useDonationModal();
 
 	return (
 		<Button
@@ -20,7 +20,7 @@ export const OpenDonationWizardButton = ({ label, className, onBeforeOpen }: Pro
 			className={className}
 			onClick={() => {
 				onBeforeOpen?.();
-				openDonationWizard();
+				openWizardAtAmountStep();
 			}}
 		>
 			{label}
