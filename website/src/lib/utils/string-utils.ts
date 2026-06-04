@@ -146,3 +146,16 @@ export const formatDate = (date: Date | string | null | undefined, pattern = 'dd
 		return '—';
 	}
 };
+
+export const isSafeHref = (value: string) => {
+	if (value.startsWith('/')) {
+		return true;
+	}
+	try {
+		const protocol = new URL(value).protocol.toLowerCase();
+
+		return protocol === 'http:' || protocol === 'https:' || protocol === 'mailto:' || protocol === 'tel:';
+	} catch {
+		return false;
+	}
+};
