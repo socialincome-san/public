@@ -1,4 +1,6 @@
-import { assign, setup } from 'xstate';
+import { getContributorCommunityStatsAction } from '@/lib/server-actions/contributor-public-actions';
+import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
+import { assign, fromPromise, setup } from 'xstate';
 import {
 	type Cadence,
 	type DonationAmountContext,
@@ -6,11 +8,12 @@ import {
 	type PaymentMethod,
 	type PlanTier,
 	type PresetAmount,
-	getInitialDonationContext,
 	isAmountValid,
 } from '../utils/donation-amount';
+import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
 
-const prepareWizardContext = (context: DonationAmountContext): DonationAmountContext => ({
+const prepareWizardContext = (context: DonationAmountContext): DonationWizardContext => ({
+	...getInitialWizardContext(),
 	...context,
 	selectedTier: '1x',
 	paymentMethod: 'qr',
@@ -22,7 +25,7 @@ const prepareWizardContext = (context: DonationAmountContext): DonationAmountCon
 });
 
 const enterStep2OneTime: Pick<
-	DonationAmountContext,
+	DonationWizardContext,
 	'oneTimeCheckoutChoice' | 'checkoutFromOneTimeStep' | 'useHalfMonthlyAmount'
 > = {
 	oneTimeCheckoutChoice: 'one-time',
@@ -30,7 +33,7 @@ const enterStep2OneTime: Pick<
 	useHalfMonthlyAmount: false,
 };
 
-const enterStep2Monthly: Pick<DonationAmountContext, 'checkoutFromOneTimeStep' | 'useHalfMonthlyAmount'> = {
+const enterStep2Monthly: Pick<DonationWizardContext, 'checkoutFromOneTimeStep' | 'useHalfMonthlyAmount'> = {
 	checkoutFromOneTimeStep: false,
 	useHalfMonthlyAmount: false,
 };
@@ -54,7 +57,7 @@ const applyOneTimeCheckoutChoice = (choice: OneTimeCheckoutChoice) => {
 
 export const donationWizardMachine = setup({
 	types: {} as {
-		context: DonationAmountContext;
+		context: DonationWizardContext;
 		events:
 			| { type: 'OPEN' }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
@@ -73,6 +76,13 @@ export const donationWizardMachine = setup({
 			| { type: 'COMPLETE' }
 			| { type: 'BACK' };
 	},
+	actors: {
+		loadCommunityStats: fromPromise(async (): Promise<ContributorCommunityStats | null> => {
+			const result = await getContributorCommunityStatsAction();
+
+			return result.success ? result.data : null;
+		}),
+	},
 	guards: {
 		canSubmitMonthly: ({ context }) => isAmountValid(context) && context.cadence === 'monthly',
 		canSubmitOneTime: ({ context }) => isAmountValid(context) && context.cadence === 'one-time',
@@ -84,39 +94,102 @@ export const donationWizardMachine = setup({
 		isOneTimeCadence: ({ event }) => event.type === 'SET_CADENCE' && event.value === 'one-time',
 		isMonthlyContext: ({ context }) => context.cadence === 'monthly',
 		checkoutFromOneTimeStep: ({ context }) => context.checkoutFromOneTimeStep,
+		entryIsStep2Monthly: ({ context }) => context.entryAfterStatsLoad === 'step2Monthly',
+		entryIsStep2OneTime: ({ context }) => context.entryAfterStatsLoad === 'step2OneTime',
 	},
 	actions: {
-		resetContext: assign(() => getInitialDonationContext()),
+		resetContext: assign(() => getInitialWizardContext()),
+		assignFailedCommunityStats: assign({
+			communityStats: () => null,
+			entryAfterStatsLoad: () => null,
+		}),
 	},
 }).createMachine({
 	id: 'donationWizard',
 	initial: 'closed',
-	context: getInitialDonationContext(),
+	context: getInitialWizardContext(),
 	states: {
 		closed: {
 			on: {
 				OPEN: {
-					target: 'step1',
-					actions: 'resetContext',
+					target: 'loadingCommunityStats',
+					actions: assign(() => ({
+						...getInitialWizardContext(),
+						entryAfterStatsLoad: 'step1' as const,
+					})),
 				},
 				OPEN_FROM_FORM: [
 					{
 						guard: 'fromFormMonthly',
-						target: 'step2Monthly',
+						target: 'loadingCommunityStats',
 						actions: assign(({ event }) => ({
 							...prepareWizardContext(event.context),
 							...enterStep2Monthly,
+							entryAfterStatsLoad: 'step2Monthly' as const,
 						})),
 					},
 					{
 						guard: 'fromFormOneTime',
-						target: 'step2OneTime',
+						target: 'loadingCommunityStats',
 						actions: assign(({ event }) => ({
 							...prepareWizardContext(event.context),
 							...enterStep2OneTime,
+							entryAfterStatsLoad: 'step2OneTime' as const,
 						})),
 					},
 				],
+			},
+		},
+		loadingCommunityStats: {
+			invoke: {
+				src: 'loadCommunityStats',
+				onDone: [
+					{
+						guard: 'entryIsStep2Monthly',
+						target: 'step2Monthly',
+						actions: assign({
+							communityStats: ({ event }) => event.output,
+							entryAfterStatsLoad: () => null,
+						}),
+					},
+					{
+						guard: 'entryIsStep2OneTime',
+						target: 'step2OneTime',
+						actions: assign({
+							communityStats: ({ event }) => event.output,
+							entryAfterStatsLoad: () => null,
+						}),
+					},
+					{
+						target: 'step1',
+						actions: assign({
+							communityStats: ({ event }) => event.output,
+							entryAfterStatsLoad: () => null,
+						}),
+					},
+				],
+				onError: [
+					{
+						guard: 'entryIsStep2Monthly',
+						target: 'step2Monthly',
+						actions: 'assignFailedCommunityStats',
+					},
+					{
+						guard: 'entryIsStep2OneTime',
+						target: 'step2OneTime',
+						actions: 'assignFailedCommunityStats',
+					},
+					{
+						target: 'step1',
+						actions: 'assignFailedCommunityStats',
+					},
+				],
+			},
+			on: {
+				CLOSE: {
+					target: 'closed',
+					actions: 'resetContext',
+				},
 			},
 		},
 		step1: {

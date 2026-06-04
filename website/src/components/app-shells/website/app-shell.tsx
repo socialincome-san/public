@@ -4,7 +4,6 @@ import { Scope } from '@/components/app-shells/website/navbar/utils';
 import { DonationModalProvider } from '@/components/donation-wizard/donation-modal-provider';
 import type { Session } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { ReactNode } from 'react';
 
 type WebsiteAppShellProps = {
@@ -15,13 +14,11 @@ type WebsiteAppShellProps = {
 	scope: Scope;
 };
 
-export const WebsiteAppShell = async ({ children, sessions, lang, region, scope }: WebsiteAppShellProps) => {
+export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: WebsiteAppShellProps) => {
 	const isContained = scope === 'dashboard' || scope === 'partner-space';
-	const communityStatsResult = await services.read.contributor.getCommunityStats();
-	const communityStats = communityStatsResult.success ? communityStatsResult.data : null;
 
 	return (
-		<DonationModalProvider communityStats={communityStats}>
+		<DonationModalProvider>
 			<div className="theme-new bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
 				<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
 				<div

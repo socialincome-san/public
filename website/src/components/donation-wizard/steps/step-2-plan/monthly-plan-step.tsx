@@ -11,18 +11,18 @@ import {
 	isOnePercentPlanSelected,
 } from '../../utils/donation-amount';
 import { donationStepCardClass } from '../../utils/donation-wizard-layout';
-import type { DonationWizardWithCommunityProps } from '../../wizard/types';
+import type { DonationWizardStepProps } from '../../wizard/types';
 import { PlanStepHeader } from './plan-step-header';
 import { PlanTierCard } from './plan-tier-card';
 
-export const MonthlyPlanStep = ({ state, send, communityStats }: DonationWizardWithCommunityProps) => {
+export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 	const { selectedTier } = state.context;
 	const showPlanBadges = isOnePercentPlanSelected(state.context);
 	const baseAmount = getMonthlyPlanBaseAmount(state.context);
 	const { tier1x, tier2x } = getTierAmounts(baseAmount);
-	const communityBenefit = getCommunityBenefit(t, language, communityStats);
+	const communityBenefit = getCommunityBenefit(t, language, state.context.communityStats);
 
 	return (
 		<div className={donationStepCardClass}>

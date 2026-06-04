@@ -1,19 +1,15 @@
 'use client';
 
-import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
 import { DonationImpactPanel } from '../shared/donation-impact-panel';
 import { donationWizardStepColumnClass } from '../utils/donation-wizard-layout';
 import { DonationSteps } from './donation-steps';
-import type { DonationWizardSend, DonationWizardState } from './types';
+import { getActiveWizardStep } from './get-active-wizard-step';
+import type { DonationWizardStepProps } from './types';
 
-type Props = {
-	state: DonationWizardState;
-	send: DonationWizardSend;
-	communityStats: ContributorCommunityStats | null;
-};
-
-export const DonationWizard = ({ state, send, communityStats }: Props) => {
-	const isPaymentStep = state.matches('step3Payment');
+export const DonationWizard = ({ state, send }: DonationWizardStepProps) => {
+	const activeStep = getActiveWizardStep(state);
+	const isPaymentStep = activeStep === 'step3Payment';
+	const showImpactPanel = activeStep === 'step1' || activeStep === 'step2Monthly' || activeStep === 'step2OneTime';
 
 	return (
 		<div className="flex min-h-0 flex-1 flex-col overflow-hidden" role="region" aria-label="Donation wizard">
@@ -24,11 +20,11 @@ export const DonationWizard = ({ state, send, communityStats }: Props) => {
 							isPaymentStep ? 'flex w-full min-w-0 justify-center md:justify-stretch' : donationWizardStepColumnClass
 						}
 					>
-						<DonationSteps state={state} send={send} communityStats={communityStats} />
+						<DonationSteps state={state} send={send} />
 					</div>
-					{!isPaymentStep && (
+					{showImpactPanel && (
 						<div className="w-full max-w-[400px] min-w-0 md:max-w-none md:flex-1">
-							<DonationImpactPanel communityStats={communityStats} />
+							<DonationImpactPanel communityStats={state.context.communityStats} />
 						</div>
 					)}
 				</div>

@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
 import { DonationCurrencySelector } from '@/components/donation/currency-selector';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
-import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
 import { cn } from '@/lib/utils/cn';
 import { useMachine } from '@xstate/react';
 import { useCallback, type ReactNode } from 'react';
@@ -17,10 +16,9 @@ import { DonationWizard } from './wizard/donation-wizard';
 
 type Props = {
 	children: ReactNode;
-	communityStats?: ContributorCommunityStats | null;
 };
 
-export const DonationModalProvider = ({ children, communityStats = null }: Props) => {
+export const DonationModalProvider = ({ children }: Props) => {
 	const [state, send] = useMachine(donationWizardMachine);
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
@@ -85,7 +83,7 @@ export const DonationModalProvider = ({ children, communityStats = null }: Props
 									className="h-9 w-[4.75rem] shrink-0 rounded-full border-slate-300 px-2.5"
 								/>
 							</div>
-							<DonationWizard state={state} send={send} communityStats={communityStats} />
+							<DonationWizard state={state} send={send} />
 						</>
 					)}
 				</DialogContent>

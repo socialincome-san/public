@@ -2,6 +2,7 @@
 
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
 import { cn } from '@/lib/utils/cn';
 import { CircleCheckBig } from 'lucide-react';
 import Image from 'next/image';
@@ -12,12 +13,13 @@ import {
 	donationImpactExplainerClass,
 	donationImpactRowClass,
 } from '../utils/donation-wizard-layout';
-import type { DonationWizardWithCommunityProps } from '../wizard/types';
 import { ImpactPaymentLogos } from './payment-logos';
 
 const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 
-type Props = Pick<DonationWizardWithCommunityProps, 'communityStats'>;
+type Props = {
+	communityStats: ContributorCommunityStats | null;
+};
 
 export const DonationImpactPanel = ({ communityStats }: Props) => {
 	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
