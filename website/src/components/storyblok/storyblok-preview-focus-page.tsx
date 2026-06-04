@@ -1,18 +1,26 @@
 import { FocusDetail } from '@/components/storyblok/focus/focus-detail';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 
 type Props = {
 	storyPath: string;
 	slug: string;
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
 
-export const StoryblokPreviewFocusPage = async ({ storyPath, slug, lang, previewRoutePath, searchParams }: Props) => {
+export const StoryblokPreviewFocusPage = async ({
+	storyPath,
+	slug,
+	lang,
+	region,
+	previewRoutePath,
+	searchParams,
+}: Props) => {
 	return await StoryblokPreviewStory<FocusStory>({
 		storyPath,
 		lang,
@@ -23,6 +31,6 @@ export const StoryblokPreviewFocusPage = async ({ storyPath, slug, lang, preview
 
 			return storyResult.success ? storyResult.data : null;
 		},
-		renderStory: (focus) => <FocusDetail focus={focus} />,
+		renderStory: (focus) => <FocusDetail focus={focus} lang={lang} region={region} />,
 	});
 };

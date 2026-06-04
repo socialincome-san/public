@@ -160,6 +160,9 @@ export interface FaqSelection {
 export interface Focus {
   portalSlug: string;
   title: string;
+  text?: string;
+  studiesTitle?: string;
+  studies?: (ISbStoryData<Study> | string)[];
   component: "Focus";
   _uid: string;
   [k: string]: unknown;
@@ -433,6 +436,18 @@ export interface ReferencesGroup {
   [k: string]: unknown;
 }
 
+export interface Study {
+  title: string;
+  description: string;
+  subtitle?: string;
+  year?: string;
+  link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  linkText?: string;
+  component: "study";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Tag {
   value: string;
   description?: string;
@@ -520,4 +535,5 @@ export type ContentType =
   | Program
   | ProgramOverview
   | ReferenceArticle
+  | Study
   | Tag;
