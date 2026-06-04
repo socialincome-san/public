@@ -74,7 +74,7 @@ export const ArticleRichText = ({ document, lang }: Props) => {
 				<ActionButtonBlock {...(props as ComponentProps<typeof ActionButtonBlock>)} />
 			),
 			newsletterSignup: () => <NewsletterSignup lang={lang} labels={newsletterLabels} />,
-			campaignDonate: () => <ArticleDonationCta lang={lang} />,
+			campaignDonate: () => <ArticleDonationCta />,
 		},
 	}) as ReactNode;
 };

@@ -21,7 +21,6 @@ export const DonationFormStep = ({ state, send }: Props) => {
 
 	return (
 		<DonationFormFields
-			showTitle
 			values={getDonationFormFieldValues(context)}
 			actions={getDonationFormFieldActions(send)}
 			onSubmit={() => send({ type: 'SUBMIT' })}

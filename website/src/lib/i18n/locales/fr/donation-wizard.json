@@ -1,6 +1,7 @@
 {
 	"modal": {
-		"title": "Faire un don"
+		"title": "Faire un don",
+		"campaign-for": "Pour {{title}}"
 	},
 	"step1": {
 		"title": "Faire un don",

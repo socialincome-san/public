@@ -10,13 +10,7 @@ import type { CampaignPageContent } from './campaign-public-website.types';
 import type { CampaignReadService } from './campaign-read.service';
 import type { CampaignPage } from './campaign.types';
 
-const campaignPageNamespaces = [
-	'website-campaign',
-	'website-donate',
-	'website-videos',
-	'website-newsletter',
-	'website-faq',
-] as const;
+const campaignPageNamespaces = ['website-campaign', 'website-videos', 'website-newsletter', 'website-faq'] as const;
 
 export class CampaignPublicWebsiteService extends BaseService {
 	private readonly storyblok: StoryblokService;

@@ -5,12 +5,10 @@ import type { DonationAmountContext } from '../utils/donation-amount';
 import { DonationFormFields } from './donation-form-fields';
 
 type Props = {
-	showTitle?: boolean;
-	className?: string;
 	onDonate: (context: DonationAmountContext) => void;
 };
 
-export const DonationForm = ({ showTitle = false, className, onDonate }: Props) => {
+export const DonationForm = ({ onDonate }: Props) => {
 	const form = useDonationFormState();
 
 	const handleDonate = () => {
@@ -21,8 +19,6 @@ export const DonationForm = ({ showTitle = false, className, onDonate }: Props) 
 
 	return (
 		<DonationFormFields
-			showTitle={showTitle}
-			className={className}
 			values={{
 				monthlyIncome: form.monthlyIncome,
 				selectedAmount: form.selectedAmount,

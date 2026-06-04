@@ -28,7 +28,6 @@ export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImageFi
 	return (
 		<>
 			<HeroDonationsHeader
-				lang={lang}
 				title={title}
 				heroImageFilename={heroImageFilename}
 				heroImageAlt={heroImageAlt}

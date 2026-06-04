@@ -38,30 +38,18 @@ type DonationFormFieldsActions = {
 type Props = {
 	values: DonationFormFieldsValues;
 	actions: DonationFormFieldsActions;
-	showTitle?: boolean;
-	className?: string;
 	onSubmit: () => void;
 };
 
-export const DonationFormFields = ({ values, actions, showTitle = false, className, onSubmit }: Props) => {
+export const DonationFormFields = ({ values, actions, onSubmit }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 
 	return (
-		<div
-			className={cn(
-				donationStepCardClass,
-				'text-foreground',
-				showTitle && 'md:px-9 md:py-9',
-				!showTitle && 'md:px-7 md:py-7',
-				className,
-			)}
-		>
-			{showTitle && (
-				<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
-					{t('step1.title')}
-				</h3>
-			)}
+		<div className={cn(donationStepCardClass, 'text-foreground md:px-9 md:py-9')}>
+			<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
+				{t('step1.title')}
+			</h3>
 
 			<div className="border-muted mb-3 grid grid-cols-1 overflow-hidden rounded-md border sm:grid-cols-[minmax(0,1fr)_auto]">
 				<div

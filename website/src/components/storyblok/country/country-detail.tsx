@@ -38,7 +38,6 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	return (
 		<>
 			<HeroDonationsHeader
-				lang={lang}
 				title={countryTitle}
 				heroImageFilename={country.content.heroImage?.filename}
 				heroImageAlt={country.content.heroImage?.alt ?? countryTitle}

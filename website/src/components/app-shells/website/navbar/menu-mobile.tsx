@@ -11,7 +11,7 @@ import {
 } from '@/components/app-shells/website/navbar/utils';
 import { Button } from '@/components/button';
 import { DonateNowTrigger } from '@/components/donation-wizard/donate-now-trigger';
-import { EmbeddedDonationForm } from '@/components/donation-wizard/embedded-donation-form';
+import { MakeDonationForm } from '@/components/make-donation-form';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Session } from '@/lib/firebase/current-account';
@@ -126,7 +126,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 									})}
 								</ul>
 								<div className="mt-4">
-									<EmbeddedDonationForm />
+									<MakeDonationForm />
 								</div>
 							</div>
 

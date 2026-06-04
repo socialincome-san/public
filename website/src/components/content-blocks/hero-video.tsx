@@ -170,14 +170,14 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations, 
 							)}
 						</div>
 						<div className="hidden shrink-0 lg:block">
-							<MakeDonationForm lang={lang} />
+							<MakeDonationForm />
 						</div>
 					</div>
 				)}
 			</div>
 			{!isExpanded && (
 				<div className="flex justify-center lg:hidden">
-					<MakeDonationForm lang={lang} />
+					<MakeDonationForm />
 				</div>
 			)}
 		</div>

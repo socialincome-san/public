@@ -18,6 +18,7 @@ const prepareWizardContext = (context: DonationAmountContext): DonationAmountCon
 	coverTransactionCosts: false,
 	oneTimeCheckoutChoice: 'one-time',
 	checkoutFromOneTimeStep: false,
+	campaignId: context.campaignId,
 });
 
 const enterStep2OneTime: Pick<

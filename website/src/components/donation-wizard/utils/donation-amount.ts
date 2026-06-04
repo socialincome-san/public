@@ -43,6 +43,8 @@ export type DonationAmountContext = {
 	oneTimeCheckoutChoice: OneTimeCheckoutChoice;
 	/** Return from payment step to step 2 one-time instead of step 2 monthly. */
 	checkoutFromOneTimeStep: boolean;
+	/** Campaign to credit when checkout completes (campaign pages only). */
+	campaignId?: string;
 };
 
 export const getInitialDonationContext = (): DonationAmountContext => ({
@@ -56,6 +58,7 @@ export const getInitialDonationContext = (): DonationAmountContext => ({
 	coverTransactionCosts: false,
 	oneTimeCheckoutChoice: 'one-time',
 	checkoutFromOneTimeStep: false,
+	campaignId: undefined,
 });
 
 export const getOnePercentAmount = (monthlyIncome: number): number => Math.round(monthlyIncome / 100);

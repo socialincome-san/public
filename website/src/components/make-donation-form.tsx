@@ -1,31 +1,16 @@
 'use client';
 
-import { EmbeddedDonationForm } from '@/components/donation-wizard/embedded-donation-form';
-import { CampaignCheckoutForm, type CampaignCheckoutTranslations } from '@/components/donation/campaign-checkout-form';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { DonationForm } from '@/components/donation-wizard/embedded-form/donation-form';
+import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 
 type Props = {
-	lang: WebsiteLanguage;
-	region?: WebsiteRegion;
 	campaignId?: string;
-	daysLeft?: number;
-	daysLeftLabel?: string;
-	campaignTranslations?: CampaignCheckoutTranslations;
 };
 
-export const MakeDonationForm = ({ lang, region, campaignId, daysLeft, daysLeftLabel, campaignTranslations }: Props) => {
-	if (campaignId && region && campaignTranslations && daysLeft !== undefined && daysLeftLabel) {
-		return (
-			<CampaignCheckoutForm
-				lang={lang}
-				region={region}
-				campaignId={campaignId}
-				daysLeft={daysLeft}
-				daysLeftLabel={daysLeftLabel}
-				translations={campaignTranslations}
-			/>
-		);
-	}
+export const MakeDonationForm = ({ campaignId }: Props) => {
+	const { openDonationWizardFromForm } = useDonationModal();
 
-	return <EmbeddedDonationForm showTitle />;
+	return (
+		<DonationForm onDonate={(context) => openDonationWizardFromForm(campaignId ? { ...context, campaignId } : context)} />
+	);
 };

@@ -41,7 +41,6 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 	return (
 		<>
 			<HeroDonationsHeader
-				lang={lang}
 				title={localPartnerTitle}
 				heroImageFilename={localPartner.content.heroImage?.filename}
 				heroImageAlt={localPartner.content.heroImage?.alt ?? localPartnerTitle}
