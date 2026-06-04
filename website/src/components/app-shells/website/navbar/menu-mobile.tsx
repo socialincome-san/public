@@ -9,8 +9,7 @@ import {
 	isMenuItem,
 	Scope,
 } from '@/components/app-shells/website/navbar/utils';
-import { Button } from '@/components/button';
-import { DonateNowTrigger } from '@/components/donation-wizard/donate-now-trigger';
+import { OpenDonationWizardButton } from '@/components/donation-wizard/open-donation-wizard-button';
 import { MakeDonationForm } from '@/components/make-donation-form';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -186,11 +185,11 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 							</div>
 						</div>
 						<div className="border-muted flex h-18 shrink-0 items-center justify-between border-t px-4 shadow-[0_-3px_14px_rgba(0,0,0,0.05)]">
-							<DonateNowTrigger onBeforeOpen={() => handleOpenChange(false)}>
-								<Button className="h-11 rounded-full px-5 text-sm font-medium">
-									{donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
-								</Button>
-							</DonateNowTrigger>
+							<OpenDonationWizardButton
+								label={donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
+								className="h-11 rounded-full px-5 text-sm font-medium"
+								onBeforeOpen={() => handleOpenChange(false)}
+							/>
 							{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 						</div>
 					</Dialog.Content>
