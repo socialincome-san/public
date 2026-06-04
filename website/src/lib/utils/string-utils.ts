@@ -148,7 +148,7 @@ export const formatDate = (date: Date | string | null | undefined, pattern = 'dd
 };
 
 export const isSafeHref = (value: string) => {
-	if (value.startsWith('/')) {
+	if (value.startsWith('/') && !value.startsWith('//')) {
 		return true;
 	}
 	try {
