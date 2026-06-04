@@ -1,6 +1,7 @@
 'use client';
 
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
+import { ImpactPaymentLogos } from '@/components/payment-logos/impact-payment-logos';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
 import { cn } from '@/lib/utils/cn';
@@ -13,7 +14,6 @@ import {
 	donationImpactExplainerClass,
 	donationImpactRowClass,
 } from '../utils/donation-wizard-layout';
-import { ImpactPaymentLogos } from '@/components/payment-logos/impact-payment-logos';
 
 const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 

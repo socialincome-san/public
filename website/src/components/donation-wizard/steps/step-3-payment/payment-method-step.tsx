@@ -1,11 +1,11 @@
 'use client';
 
+import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-logos';
+import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
-import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-logos';
-import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
 import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
