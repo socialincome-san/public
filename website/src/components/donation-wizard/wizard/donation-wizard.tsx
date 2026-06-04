@@ -1,6 +1,7 @@
 'use client';
 
 import { DonationImpactPanel } from '../shared/donation-impact-panel';
+import { QrContactHintsPanel } from '../steps/step-qr-contact/qr-contact-hints-panel';
 import { donationWizardStepColumnClass } from '../utils/donation-wizard-layout';
 import { selectWizardShellView } from './donation-machine-selectors';
 import { DonationSteps } from './donation-steps';
@@ -15,7 +16,11 @@ export const DonationWizard = ({ state, send }: DonationWizardStepProps) => {
 				<div className="mx-auto flex w-full max-w-[890px] flex-col items-center gap-8 md:flex-row md:items-start md:justify-center">
 					<div
 						className={
-							shell.isPaymentStep ? 'flex w-full min-w-0 justify-center md:justify-stretch' : donationWizardStepColumnClass
+							shell.usesSplitLayout
+								? donationWizardStepColumnClass
+								: shell.isPaymentStep
+									? 'flex w-full min-w-0 justify-center md:justify-stretch'
+									: donationWizardStepColumnClass
 						}
 					>
 						<DonationSteps state={state} send={send} />
@@ -23,6 +28,11 @@ export const DonationWizard = ({ state, send }: DonationWizardStepProps) => {
 					{shell.showImpactPanel && (
 						<div className="w-full max-w-[400px] min-w-0 md:max-w-none md:flex-1">
 							<DonationImpactPanel communityStats={shell.communityStats} />
+						</div>
+					)}
+					{shell.showQrContactHintsPanel && (
+						<div className="w-full max-w-[400px] min-w-0 md:max-w-none md:flex-1">
+							<QrContactHintsPanel />
 						</div>
 					)}
 				</div>

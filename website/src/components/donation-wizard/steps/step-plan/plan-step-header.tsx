@@ -7,7 +7,7 @@ import type { DonationWizardSend } from '../../wizard/types';
 import { CadenceSwitch } from './cadence-switch';
 
 type Props = {
-	titleKey: 'step2.monthly-title' | 'step2.one-time-title';
+	titleKey: 'stepPlan.monthly-title' | 'stepPlan.one-time-title';
 	cadence: Cadence;
 	send: DonationWizardSend;
 };

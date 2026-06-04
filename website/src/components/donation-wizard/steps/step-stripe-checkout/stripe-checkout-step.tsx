@@ -15,7 +15,7 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 	const { context } = state;
-	const { stripeClientSecret, stripePublishableKey, stripeCheckoutStatus, stripeCheckoutError } = context;
+	const { stripeClientSecret, stripePublishableKey, stripeCheckoutStatus } = context;
 
 	const isSessionReady = stripeCheckoutStatus === 'ready' && Boolean(stripeClientSecret) && Boolean(stripePublishableKey);
 	const stripePromise = isSessionReady && stripePublishableKey ? loadStripe(stripePublishableKey) : null;
@@ -30,13 +30,12 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 		<div className={donationPaymentStepCardClass}>
 			{stripeCheckoutStatus === 'error' && (
 				<div className="flex flex-col gap-4 p-4">
-					<p className="text-destructive text-sm">{stripeCheckoutError ?? t('step4.payment-error')}</p>
 					<div className="flex gap-2">
 						<Button type="button" variant="outline" onClick={() => send({ type: 'STRIPE_CHECKOUT_BACK' })}>
-							{t('step2.back')}
+							{t('stepPlan.back')}
 						</Button>
 						<Button type="button" onClick={retryCheckout}>
-							{t('step4.try-again')}
+							{t('stepStripeCheckout.try-again')}
 						</Button>
 					</div>
 				</div>
@@ -46,7 +45,7 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 				<div className={`relative ${stripeCheckoutFrameClass}`}>
 					{isLoading && (
 						<div className="flex items-center justify-center p-6">
-							<p className="text-muted-foreground text-sm">{t('step4.loading')}</p>
+							<p className="text-muted-foreground text-sm">{t('stepStripeCheckout.loading')}</p>
 						</div>
 					)}
 
@@ -75,7 +74,7 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 						disabled={isLoading}
 						onClick={() => send({ type: 'STRIPE_CHECKOUT_BACK' })}
 					>
-						{t('step2.back')}
+						{t('stepPlan.back')}
 					</Button>
 				</div>
 			)}

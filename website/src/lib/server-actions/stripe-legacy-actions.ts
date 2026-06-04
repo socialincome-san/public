@@ -5,8 +5,6 @@ import { services } from '@/lib/services/services';
 import { type UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/legacy/legacy-stripe.types';
 import { getOptionalContributor } from '../firebase/current-contributor';
 
-/** @deprecated Remove at go-live with blue-theme donate routes. */
-
 export const createStripeCheckoutAction = async (input: {
 	amount: number;
 	intervalCount?: number;

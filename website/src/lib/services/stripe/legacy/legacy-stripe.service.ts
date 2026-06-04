@@ -44,7 +44,6 @@ type LegacyHostedCheckoutInput = {
 	source?: string;
 };
 
-/** @deprecated Delete at go-live together with blue-theme donate routes. */
 export class LegacyStripeService extends BaseService {
 	constructor(
 		db: PrismaClient,

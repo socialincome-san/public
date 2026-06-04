@@ -58,7 +58,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 	return (
 		<div className={cn(donationStepCardClass, 'text-foreground md:px-9 md:py-9')}>
 			<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
-				{t('step1.title')}
+				{t('stepAmount.title')}
 			</h3>
 
 			<div className="border-muted mb-3 grid grid-cols-1 overflow-hidden rounded-md border sm:grid-cols-[minmax(0,1fr)_auto]">
@@ -69,7 +69,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 					)}
 				>
 					<label htmlFor={monthlyIncomeInputId} className="text-[10px] font-medium">
-						{t('step1.monthly-income-label')}
+						{t('stepAmount.monthly-income-label')}
 					</label>
 					<Input
 						id={monthlyIncomeInputId}
@@ -105,14 +105,14 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 							: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground bg-white',
 					)}
 				>
-					<div className="text-[10px] font-medium">{t('step1.your-one-percent')}</div>
+					<div className="text-[10px] font-medium">{t('stepAmount.your-one-percent')}</div>
 					<div className="text-lg leading-none font-medium whitespace-nowrap">
 						{currency} {values.onePercent}
 					</div>
 				</button>
 			</div>
 
-			<div className="mb-2 text-center text-[10px] font-medium">{t('step1.choose-own-amount')}</div>
+			<div className="mb-2 text-center text-[10px] font-medium">{t('stepAmount.choose-own-amount')}</div>
 			<div className="border-muted divide-muted mb-4 grid grid-cols-2 divide-y overflow-hidden rounded-xl border sm:grid-cols-4 sm:divide-x sm:divide-y-0">
 				{amountOptions.map((option) => {
 					const isSelected = option.value === values.selectedAmount;
@@ -129,7 +129,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 							)}
 						>
 							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-[10px]')}>
-								{option.labelKey === 'other' ? t('step1.other') : currency}
+								{option.labelKey === 'other' ? t('stepAmount.other') : currency}
 							</span>
 							{option.value !== 'other' && <span>{option.value}</span>}
 						</button>
@@ -142,7 +142,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 					type="number"
 					min={DONATION_CUSTOM_AMOUNT_MIN}
 					max={DONATION_CUSTOM_AMOUNT_MAX}
-					placeholder={t('step1.custom-amount-placeholder')}
+					placeholder={t('stepAmount.custom-amount-placeholder')}
 					value={values.customAmount ?? ''}
 					onChange={(e) => {
 						const raw = e.target.value;
@@ -172,7 +172,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 							: 'text-muted-foreground hover:text-foreground',
 					)}
 				>
-					{t('step1.monthly')}
+					{t('stepAmount.monthly')}
 				</button>
 				<button
 					type="button"
@@ -185,14 +185,14 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 							: 'text-muted-foreground hover:text-foreground',
 					)}
 				>
-					{t('step1.one-time')}
+					{t('stepAmount.one-time')}
 				</button>
 			</div>
 
 			<Button type="button" className="h-10 w-full text-sm font-semibold" disabled={!values.isValid} onClick={onSubmit}>
 				{values.resolvedAmount !== null
-					? t('step1.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
-					: t('step1.donate-now')}
+					? t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
+					: t('stepAmount.donate-now')}
 			</Button>
 		</div>
 	);

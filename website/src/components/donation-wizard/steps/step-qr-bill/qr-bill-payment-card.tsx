@@ -1,0 +1,51 @@
+'use client';
+
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { Scan } from 'lucide-react';
+import Image from 'next/image';
+import { QrPaymentDetailField } from '../step-qr-contact/qr-payment-detail-field';
+
+type QrBillPaymentCardProps = {
+	qrBillSvg: string;
+	donorName: string;
+	amountLabel: string;
+	paymentTypeLabel: string;
+};
+
+const qrSvgClass =
+	'[&_svg]:block [&_svg]:aspect-square [&_svg]:h-auto [&_svg]:w-[min(46mm,calc(100%-0.5rem))] [&_svg]:max-h-[46mm] [&_svg]:max-w-[46mm] [&_svg]:shrink-0 sm:[&_svg]:h-[46mm] sm:[&_svg]:w-[46mm]';
+
+export const QrBillPaymentCard = ({ qrBillSvg, donorName, amountLabel, paymentTypeLabel }: QrBillPaymentCardProps) => {
+	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+
+	return (
+		<div className="border-border relative mx-auto w-full max-w-[771px] overflow-hidden rounded-[10px] border">
+			<Image
+				src="/assets/postfinance.svg"
+				alt="PostFinance"
+				width={98}
+				height={28}
+				className="absolute top-0 right-0 z-10 h-7 w-[98px] rounded-tr-[10px]"
+			/>
+
+			<div className="bg-background px-5 pt-10 pb-6 sm:px-8 sm:pb-8">
+				<div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-8">
+					<div className="box-content flex shrink-0 items-center justify-center p-1">
+						<div className={qrSvgClass} dangerouslySetInnerHTML={{ __html: qrBillSvg }} />
+					</div>
+					<div className="flex w-full min-w-0 flex-1 flex-col gap-4">
+						<QrPaymentDetailField label={t('stepQrBill.paymentToLabel')} value={t('stepQrBill.paymentToValue')} />
+						<QrPaymentDetailField label={t('stepQrBill.fromLabel')} value={donorName} />
+						<QrPaymentDetailField label={t('stepQrBill.amountLabel')} value={amountLabel} />
+						<QrPaymentDetailField label={t('stepQrBill.paymentTypeLabel')} value={paymentTypeLabel} />
+					</div>
+				</div>
+			</div>
+
+			<div className="flex items-center gap-2 bg-green-200 px-4 py-3">
+				<Scan className="text-foreground size-4 shrink-0" strokeWidth={1.75} aria-hidden />
+				<p className="text-foreground text-sm leading-5 font-medium">{t('stepQrBill.scanHint')}</p>
+			</div>
+		</div>
+	);
+};

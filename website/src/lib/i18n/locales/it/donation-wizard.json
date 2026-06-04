@@ -9,7 +9,7 @@
 			"confirm": "Chiudi"
 		}
 	},
-	"step1": {
+	"stepAmount": {
 		"title": "Fai una donazione",
 		"monthly-income-label": "Il tuo reddito mensile (CHF)",
 		"choose-own-amount": "Oppure scegli un importo personalizzato",
@@ -21,7 +21,7 @@
 		"donate-now-with-amount": "Dona {{amount}} ora",
 		"custom-amount-placeholder": "Importo"
 	},
-	"step2": {
+	"stepPlan": {
 		"monthly-title": "Donazione mensile",
 		"one-time-title": "Donazione una tantum",
 		"switch-to-one-time": "Una tantum",
@@ -48,12 +48,40 @@
 		"back": "Indietro",
 		"choose-payment": "Scegli metodo di pagamento"
 	},
-	"step4": {
+	"stepStripeCheckout": {
 		"loading": "Caricamento del modulo di pagamento…",
 		"payment-error": "Impossibile avviare il pagamento.",
 		"try-again": "Riprova"
 	},
-	"step3": {
+	"stepQrContact": {
+		"hintsTitle": "Da sapere",
+		"titleStandingOrder": "Genera codice QR per ordine permanente",
+		"titleOneTime": "Genera codice QR per il pagamento",
+		"firstName": "Nome",
+		"lastName": "Cognome",
+		"email": "E-mail",
+		"accountCreateHint": "Se non esiste ancora un account con questa e-mail, ne creeremo uno per te.",
+		"noBackAfterGenerateHint": "Dopo aver generato il codice QR, non potrai più modificare importo, metodo di pagamento o dati di contatto in questo flusso.",
+		"generateCta": "Genera codice QR per il pagamento",
+		"generating": "Generazione…",
+		"generateError": "Impossibile generare la QR-fattura. Riprova."
+	},
+	"stepQrBill": {
+		"title": "Pagamento QR",
+		"scanHint": "Scansiona con la tua app bancaria",
+		"paymentToLabel": "Pagamento a",
+		"paymentToValue": "Social Income, Postfinance AG, 8000 Zürich",
+		"fromLabel": "Da",
+		"amountLabel": "Importo",
+		"paymentTypeLabel": "Tipo di pagamento",
+		"paymentTypeStandingOrder": "Ordine permanente (mensile)",
+		"paymentTypeOneTime": "Pagamento una tantum",
+		"confirmStandingOrder": "Conferma ordine permanente",
+		"confirmOneTime": "Conferma pagamento",
+		"confirming": "Elaborazione…",
+		"confirmError": "Impossibile confermare il pagamento. Riprova."
+	},
+	"stepPayment": {
 		"title": "Metodo di pagamento",
 		"qr-payment": "Pagamento QR",
 		"minimal-costs": "Costi minimi",

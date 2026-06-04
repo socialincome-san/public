@@ -9,7 +9,7 @@ import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
-import { requestStripeEmbeddedCheckout } from '../step-4-stripe/request-stripe-embedded-checkout';
+import { requestStripeEmbeddedCheckout } from '../step-stripe-checkout/request-stripe-embedded-checkout';
 import { CoverTransactionCostsToggle } from './cover-transaction-costs-toggle';
 import { PaymentMethodOption } from './payment-method-option';
 
@@ -20,18 +20,18 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className={cn(donationPaymentStepCardClass, 'text-foreground')}>
-			<h3 className="mb-4 text-base font-medium sm:text-lg">{t('step3.title')}</h3>
+			<h3 className="mb-4 text-base font-medium sm:text-lg">{t('stepPayment.title')}</h3>
 
 			<div className="mb-5 flex flex-col gap-3">
 				<PaymentMethodOption
-					label={t('step3.qr-payment')}
-					badge={t('step3.minimal-costs')}
+					label={t('stepPayment.qr-payment')}
+					badge={t('stepPayment.minimal-costs')}
 					selected={view.paymentMethod === 'qr'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'qr' })}
 					trailing={<QrPaymentLogo />}
 				/>
 				<PaymentMethodOption
-					label={t('step3.online')}
+					label={t('stepPayment.online')}
 					selected={view.paymentMethod === 'online'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'online' })}
 					trailing={<OnlinePaymentLogos />}
@@ -60,7 +60,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 						return;
 					}
 
-					send({ type: 'COMPLETE' });
+					send({ type: 'START_QR_FLOW' });
 				}}
 				continueLabel={t(view.continueLabelKey)}
 				summary={{

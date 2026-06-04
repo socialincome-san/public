@@ -1,16 +1,16 @@
 import { ContributionStatus, DonationInterval, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
-import { CampaignReadService } from '../campaign/campaign-read.service';
-import { ContributionWriteService } from '../contribution/contribution-write.service';
-import { PaymentEventCreateInput } from '../contribution/contribution.types';
-import { ContributorWriteService } from '../contributor/contributor-write.service';
-import { BankContributorData } from '../contributor/contributor.types';
-import { BaseService } from '../core/base.service';
-import { ServiceResult } from '../core/base.types';
-import { BankTransferPayment, BankTransferQrReferenceData } from './bank-transfer.types';
+import { CampaignReadService } from '../../campaign/campaign-read.service';
+import { ContributionWriteService } from '../../contribution/contribution-write.service';
+import { type PaymentEventCreateInput } from '../../contribution/contribution.types';
+import { ContributorWriteService } from '../../contributor/contributor-write.service';
+import { type BankContributorData } from '../../contributor/contributor.types';
+import { BaseService } from '../../core/base.service';
+import { type ServiceResult } from '../../core/base.types';
+import { type LegacyQrBillPayment, type LegacyQrBillReferenceData } from './legacy-qr-bill.types';
 
-export class BankTransferService extends BaseService {
+export class LegacyQrBillService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly contributorService: ContributorWriteService,
@@ -22,7 +22,7 @@ export class BankTransferService extends BaseService {
 	}
 
 	async getOrCreateQrReferences(
-		contributorData: BankTransferQrReferenceData,
+		contributorData: LegacyQrBillReferenceData,
 	): Promise<ServiceResult<{ contributorReferenceId: string; contributionReferenceId: string }>> {
 		const contributorReferenceIdResult = await this.contributorService.getOrCreateReferenceIdByEmail(contributorData.email);
 		if (!contributorReferenceIdResult.success) {
@@ -46,7 +46,7 @@ export class BankTransferService extends BaseService {
 	}
 
 	async createContributionForNewOrExistingContributor(
-		payment: BankTransferPayment,
+		payment: LegacyQrBillPayment,
 		userData: BankContributorData,
 	): Promise<ServiceResult<string>> {
 		try {
@@ -74,7 +74,7 @@ export class BankTransferService extends BaseService {
 	}
 
 	private async buildContribution(
-		payment: BankTransferPayment,
+		payment: LegacyQrBillPayment,
 		contributorId: string,
 	): Promise<ServiceResult<PaymentEventCreateInput>> {
 		const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
@@ -84,7 +84,7 @@ export class BankTransferService extends BaseService {
 		const campaignId = fallbackCampaignResult.data.id;
 		const paymentEvent: PaymentEventCreateInput = {
 			type: PaymentEventType.bank_transfer,
-			transactionId: payment.referenceId, // this will be used as ID to find contribution in paymen file import
+			transactionId: payment.referenceId,
 			metadata: {
 				raw_content: '',
 			},

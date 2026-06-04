@@ -1,7 +1,7 @@
 import { getContributorCommunityStatsAction } from '@/lib/server-actions/contributor-public-actions';
 import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
 import { assign, fromPromise, setup } from 'xstate';
-import { buildCompletedDonationSummary } from '../steps/step-4-stripe/map-wizard-to-stripe-checkout';
+import { buildCompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 import {
 	type Cadence,
 	type DonationAmountContext,
@@ -17,15 +17,13 @@ import {
 	paymentContextForOneTimePlanChoice,
 	wizardContextFromFormAmount,
 } from './donation-machine-logic';
-import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
-
-const resetStripeCheckoutContext = {
-	stripeCheckoutSessionId: null,
-	stripeClientSecret: null,
-	stripePublishableKey: null,
-	stripeCheckoutStatus: 'idle' as const,
-	stripeCheckoutError: null,
-};
+import {
+	type DonationWizardContext,
+	type QrDonorContext,
+	getInitialWizardContext,
+	resetQrBillContext,
+	resetStripeCheckoutContext,
+} from './donation-wizard-context';
 
 export const donationWizardMachine = setup({
 	types: {} as {
@@ -46,6 +44,11 @@ export const donationWizardMachine = setup({
 			| { type: 'SUBMIT' }
 			| { type: 'PROCEED_TO_PAYMENT' }
 			| { type: 'COMPLETE' }
+			| { type: 'START_QR_FLOW' }
+			| { type: 'QR_CONTACT_SUBMIT'; donor: Omit<QrDonorContext, 'language'>; language: string }
+			| { type: 'QR_BILL_READY'; contributorReferenceId: string; contributionReferenceId: string; qrBillSvg: string }
+			| { type: 'QR_BILL_ERROR'; message: string }
+			| { type: 'QR_PAYMENT_CONFIRMED' }
 			| { type: 'START_STRIPE_CHECKOUT' }
 			| { type: 'STRIPE_CHECKOUT_READY'; clientSecret: string; sessionId: string; publishableKey: string }
 			| { type: 'STRIPE_CHECKOUT_ERROR'; message: string }
@@ -76,8 +79,8 @@ export const donationWizardMachine = setup({
 		isMonthlyContext: ({ context }) => context.cadence === 'monthly',
 		isOnlinePayment: ({ context }) => context.paymentMethod === 'online',
 		returnsToOneTimePlanStep: ({ context }) => context.returnsToOneTimePlanStep,
-		pendingStepIsMonthlyPlan: ({ context }) => context.pendingStep === 'step2Monthly',
-		pendingStepIsOneTimePlan: ({ context }) => context.pendingStep === 'step2OneTime',
+		pendingStepIsMonthlyPlan: ({ context }) => context.pendingStep === 'stepPlanMonthly',
+		pendingStepIsOneTimePlan: ({ context }) => context.pendingStep === 'stepPlanOneTime',
 	},
 	actions: {
 		resetContext: assign(() => getInitialWizardContext()),
@@ -97,7 +100,7 @@ export const donationWizardMachine = setup({
 					target: 'loadingCommunityStats',
 					actions: assign(() => ({
 						...getInitialWizardContext(),
-						pendingStep: 'step1' as const,
+						pendingStep: 'stepAmount' as const,
 					})),
 				},
 				OPEN_FROM_FORM: [
@@ -107,7 +110,7 @@ export const donationWizardMachine = setup({
 						actions: assign(({ event }) => ({
 							...wizardContextFromFormAmount(event.context),
 							...monthlyPlanStepDefaults,
-							pendingStep: 'step2Monthly' as const,
+							pendingStep: 'stepPlanMonthly' as const,
 						})),
 					},
 					{
@@ -116,7 +119,7 @@ export const donationWizardMachine = setup({
 						actions: assign(({ event }) => ({
 							...wizardContextFromFormAmount(event.context),
 							...oneTimePlanStepDefaults,
-							pendingStep: 'step2OneTime' as const,
+							pendingStep: 'stepPlanOneTime' as const,
 						})),
 					},
 				],
@@ -128,7 +131,7 @@ export const donationWizardMachine = setup({
 				onDone: [
 					{
 						guard: 'pendingStepIsMonthlyPlan',
-						target: 'step2Monthly',
+						target: 'stepPlanMonthly',
 						actions: assign({
 							communityStats: ({ event }) => event.output,
 							pendingStep: () => null,
@@ -136,14 +139,14 @@ export const donationWizardMachine = setup({
 					},
 					{
 						guard: 'pendingStepIsOneTimePlan',
-						target: 'step2OneTime',
+						target: 'stepPlanOneTime',
 						actions: assign({
 							communityStats: ({ event }) => event.output,
 							pendingStep: () => null,
 						}),
 					},
 					{
-						target: 'step1',
+						target: 'stepAmount',
 						actions: assign({
 							communityStats: ({ event }) => event.output,
 							pendingStep: () => null,
@@ -153,16 +156,16 @@ export const donationWizardMachine = setup({
 				onError: [
 					{
 						guard: 'pendingStepIsMonthlyPlan',
-						target: 'step2Monthly',
+						target: 'stepPlanMonthly',
 						actions: 'assignFailedCommunityStats',
 					},
 					{
 						guard: 'pendingStepIsOneTimePlan',
-						target: 'step2OneTime',
+						target: 'stepPlanOneTime',
 						actions: 'assignFailedCommunityStats',
 					},
 					{
-						target: 'step1',
+						target: 'stepAmount',
 						actions: 'assignFailedCommunityStats',
 					},
 				],
@@ -174,7 +177,7 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		step1: {
+		stepAmount: {
 			on: {
 				SET_MONTHLY_INCOME: {
 					actions: assign({
@@ -209,7 +212,7 @@ export const donationWizardMachine = setup({
 				SUBMIT: [
 					{
 						guard: 'canSubmitMonthly',
-						target: 'step2Monthly',
+						target: 'stepPlanMonthly',
 						actions: assign({
 							selectedTier: () => '1x' as const,
 							...monthlyPlanStepDefaults,
@@ -217,7 +220,7 @@ export const donationWizardMachine = setup({
 					},
 					{
 						guard: 'canSubmitOneTime',
-						target: 'step2OneTime',
+						target: 'stepPlanOneTime',
 						actions: assign(oneTimePlanStepDefaults),
 					},
 				],
@@ -227,7 +230,7 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		step2Monthly: {
+		stepPlanMonthly: {
 			on: {
 				SET_TIER: {
 					actions: assign({
@@ -237,7 +240,7 @@ export const donationWizardMachine = setup({
 				SET_CADENCE: [
 					{
 						guard: 'isOneTimeCadence',
-						target: 'step2OneTime',
+						target: 'stepPlanOneTime',
 						actions: assign({
 							cadence: () => 'one-time' as const,
 							...oneTimePlanStepDefaults,
@@ -245,22 +248,24 @@ export const donationWizardMachine = setup({
 					},
 				],
 				PROCEED_TO_PAYMENT: {
-					target: 'step3Payment',
+					target: 'stepPayment',
 					actions: assign({
 						paymentMethod: () => 'qr' as const,
 						coverTransactionCosts: () => false,
 						...monthlyPlanStepDefaults,
 						...resetStripeCheckoutContext,
+						...resetQrBillContext,
+						wizardPaymentSource: null,
 					}),
 				},
-				BACK: 'step1',
+				BACK: 'stepAmount',
 				CLOSE: {
 					target: 'closed',
 					actions: 'resetContext',
 				},
 			},
 		},
-		step2OneTime: {
+		stepPlanOneTime: {
 			on: {
 				SET_ONE_TIME_PLAN_CHOICE: {
 					actions: assign({
@@ -270,7 +275,7 @@ export const donationWizardMachine = setup({
 				SET_CADENCE: [
 					{
 						guard: 'isMonthlyCadence',
-						target: 'step2Monthly',
+						target: 'stepPlanMonthly',
 						actions: assign({
 							cadence: () => 'monthly' as const,
 							selectedTier: () => '1x' as const,
@@ -279,29 +284,32 @@ export const donationWizardMachine = setup({
 					},
 				],
 				PROCEED_TO_PAYMENT: {
-					target: 'step3Payment',
+					target: 'stepPayment',
 					actions: assign(({ context }) => ({
 						paymentMethod: 'qr' as const,
 						coverTransactionCosts: false,
 						...paymentContextForOneTimePlanChoice(context.oneTimePlanChoice),
 						...resetStripeCheckoutContext,
+						...resetQrBillContext,
+						wizardPaymentSource: null,
 					})),
 				},
-				BACK: 'step1',
+				BACK: 'stepAmount',
 				CLOSE: {
 					target: 'closed',
 					actions: 'resetContext',
 				},
 			},
 		},
-		step3Payment: {
+		stepPayment: {
 			on: {
 				SET_PAYMENT_METHOD: {
-					actions: assign({
-						paymentMethod: ({ event }) => event.value,
-						coverTransactionCosts: ({ event, context }) => (event.value === 'qr' ? false : context.coverTransactionCosts),
+					actions: assign(({ event, context }) => ({
+						paymentMethod: event.value,
+						coverTransactionCosts: event.value === 'qr' ? false : context.coverTransactionCosts,
 						...resetStripeCheckoutContext,
-					}),
+						...(event.value === 'online' ? resetQrBillContext : {}),
+					})),
 				},
 				SET_COVER_TRANSACTION_COSTS: {
 					actions: assign({
@@ -311,26 +319,34 @@ export const donationWizardMachine = setup({
 				BACK: [
 					{
 						guard: 'returnsToOneTimePlanStep',
-						target: 'step2OneTime',
+						target: 'stepPlanOneTime',
 					},
 					{
 						guard: 'isMonthlyContext',
-						target: 'step2Monthly',
+						target: 'stepPlanMonthly',
 					},
 					{
-						target: 'step2OneTime',
+						target: 'stepPlanOneTime',
 					},
 				],
 				START_STRIPE_CHECKOUT: {
 					guard: 'isOnlinePayment',
-					target: 'step4StripeCheckout',
+					target: 'stepStripeCheckout',
 					actions: assign({
 						...resetStripeCheckoutContext,
+						...resetQrBillContext,
+						wizardPaymentSource: 'stripe',
 						stripeCheckoutStatus: () => 'loading' as const,
 					}),
 				},
-				COMPLETE: {
-					target: 'step7ThankYou',
+				START_QR_FLOW: {
+					guard: ({ context }) => context.paymentMethod === 'qr',
+					target: 'stepQrContact',
+					actions: assign({
+						...resetQrBillContext,
+						...resetStripeCheckoutContext,
+						wizardPaymentSource: 'qr',
+					}),
 				},
 				CLOSE: {
 					target: 'closed',
@@ -338,7 +354,60 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		step4StripeCheckout: {
+		stepQrContact: {
+			on: {
+				QR_CONTACT_SUBMIT: {
+					actions: assign({
+						qrDonor: ({ event }) => ({
+							...event.donor,
+							language: event.language,
+						}),
+						qrBillStatus: () => 'loading' as const,
+						qrBillError: () => null,
+					}),
+				},
+				QR_BILL_READY: {
+					target: 'stepQrBill',
+					actions: assign({
+						qrContributorReferenceId: ({ event }) => event.contributorReferenceId,
+						qrContributionReferenceId: ({ event }) => event.contributionReferenceId,
+						qrBillSvg: ({ event }) => event.qrBillSvg,
+						qrBillStatus: () => 'ready' as const,
+						qrBillError: () => null,
+					}),
+				},
+				QR_BILL_ERROR: {
+					actions: assign({
+						qrBillStatus: () => 'error' as const,
+						qrBillError: ({ event }) => event.message,
+					}),
+				},
+				BACK: {
+					guard: ({ context }) => context.qrContributorReferenceId === null,
+					target: 'stepPayment',
+				},
+				CLOSE: {
+					target: 'closed',
+					actions: 'resetContext',
+				},
+			},
+		},
+		stepQrBill: {
+			on: {
+				QR_PAYMENT_CONFIRMED: {
+					target: 'stepOnboardingPersonal',
+					actions: assign(({ context }) => ({
+						completedDonationSummary: buildCompletedDonationSummary(context),
+						qrBillSvg: null,
+					})),
+				},
+				CLOSE: {
+					target: 'closed',
+					actions: 'resetContext',
+				},
+			},
+		},
+		stepStripeCheckout: {
 			on: {
 				STRIPE_CHECKOUT_READY: {
 					actions: assign({
@@ -367,13 +436,14 @@ export const donationWizardMachine = setup({
 					}),
 				},
 				STRIPE_CHECKOUT_BACK: {
-					target: 'step3Payment',
+					target: 'stepPayment',
 					actions: assign(resetStripeCheckoutContext),
 				},
 				STRIPE_CHECKOUT_COMPLETE: {
-					target: 'step5OnboardingPersonal',
+					target: 'stepOnboardingPersonal',
 					actions: assign(({ context }) => ({
 						completedDonationSummary: buildCompletedDonationSummary(context),
+						wizardPaymentSource: 'stripe',
 						stripeClientSecret: null,
 						stripePublishableKey: null,
 						stripeCheckoutStatus: 'idle' as const,
@@ -385,13 +455,13 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		step5OnboardingPersonal: {
+		stepOnboardingPersonal: {
 			on: {
 				DONATION_ONBOARDING_PERSONAL_COMPLETE: {
-					target: 'step6OnboardingReferral',
+					target: 'stepOnboardingReferral',
 				},
 				DONATION_ONBOARDING_SKIP_TO_THANK_YOU: {
-					target: 'step7ThankYou',
+					target: 'stepThankYou',
 				},
 				CLOSE: {
 					target: 'closed',
@@ -399,13 +469,13 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		step6OnboardingReferral: {
+		stepOnboardingReferral: {
 			on: {
 				DONATION_ONBOARDING_REFERRAL_COMPLETE: {
-					target: 'step7ThankYou',
+					target: 'stepThankYou',
 				},
 				DONATION_ONBOARDING_SKIP_TO_THANK_YOU: {
-					target: 'step7ThankYou',
+					target: 'stepThankYou',
 				},
 				CLOSE: {
 					target: 'closed',
@@ -413,7 +483,7 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		step7ThankYou: {
+		stepThankYou: {
 			on: {
 				CLOSE: {
 					target: 'closed',

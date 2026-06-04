@@ -9,7 +9,7 @@
 			"confirm": "Schliessen"
 		}
 	},
-	"step1": {
+	"stepAmount": {
 		"title": "Spenden",
 		"monthly-income-label": "Ihr monatliches Einkommen (CHF)",
 		"choose-own-amount": "Oder eigenen Betrag wählen",
@@ -21,7 +21,7 @@
 		"donate-now-with-amount": "Jetzt {{amount}} spenden",
 		"custom-amount-placeholder": "Betrag"
 	},
-	"step2": {
+	"stepPlan": {
 		"monthly-title": "Monatliche Spende",
 		"one-time-title": "Einmalige Spende",
 		"switch-to-one-time": "Einmalig",
@@ -48,12 +48,40 @@
 		"back": "Zurück",
 		"choose-payment": "Zahlungsmethode wählen"
 	},
-	"step4": {
+	"stepStripeCheckout": {
 		"loading": "Zahlungsformular wird geladen…",
 		"payment-error": "Zahlung konnte nicht gestartet werden.",
 		"try-again": "Erneut versuchen"
 	},
-	"step3": {
+	"stepQrContact": {
+		"hintsTitle": "Gut zu wissen",
+		"titleStandingOrder": "QR-Code für Dauerauftrag generieren",
+		"titleOneTime": "QR-Code für Zahlung generieren",
+		"firstName": "Vorname",
+		"lastName": "Nachname",
+		"email": "E-Mail",
+		"accountCreateHint": "Wenn es noch kein Konto mit dieser E-Mail gibt, legen wir eines für dich an.",
+		"noBackAfterGenerateHint": "Nach dem Generieren des QR-Codes kannst du Betrag, Zahlungsart und Kontaktdaten in diesem Ablauf nicht mehr ändern.",
+		"generateCta": "QR-Code für Zahlung generieren",
+		"generating": "Wird generiert…",
+		"generateError": "QR-Rechnung konnte nicht erstellt werden. Bitte erneut versuchen."
+	},
+	"stepQrBill": {
+		"title": "QR-Zahlung",
+		"scanHint": "Mit deiner Banking-App scannen",
+		"paymentToLabel": "Zahlung an",
+		"paymentToValue": "Social Income, Postfinance AG, 8000 Zürich",
+		"fromLabel": "Von",
+		"amountLabel": "Betrag",
+		"paymentTypeLabel": "Zahlungsart",
+		"paymentTypeStandingOrder": "Dauerauftrag (monatlich)",
+		"paymentTypeOneTime": "Einmalzahlung",
+		"confirmStandingOrder": "Dauerauftrag bestätigen",
+		"confirmOneTime": "Zahlung bestätigen",
+		"confirming": "Wird verarbeitet…",
+		"confirmError": "Zahlung konnte nicht bestätigt werden. Bitte erneut versuchen."
+	},
+	"stepPayment": {
 		"title": "Zahlungsmethode",
 		"qr-payment": "QR-Zahlung",
 		"minimal-costs": "Minimale Kosten",

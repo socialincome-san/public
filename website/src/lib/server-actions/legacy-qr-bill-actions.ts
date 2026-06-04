@@ -1,8 +1,8 @@
 'use server';
 
-import { BankTransferPayment } from '@/lib/services/bank-transfer/bank-transfer.types';
-import { BankContributorData } from '@/lib/services/contributor/contributor.types';
-import { ServiceResult } from '@/lib/services/core/base.types';
+import { type BankContributorData } from '@/lib/services/contributor/contributor.types';
+import { type ServiceResult } from '@/lib/services/core/base.types';
+import { type LegacyQrBillPayment } from '@/lib/services/qr-bill/legacy/legacy-qr-bill.types';
 import { services } from '@/lib/services/services';
 
 export const getReferenceIds = async (
@@ -11,7 +11,7 @@ export const getReferenceIds = async (
 	lastName: string,
 	language: string,
 ): Promise<ServiceResult<{ contributorReferenceId: string; contributionReferenceId: string }>> => {
-	return await services.bankTransfer.getOrCreateQrReferences({
+	return await services.qrBillLegacy.getOrCreateQrReferences({
 		email,
 		firstName,
 		lastName,
@@ -20,8 +20,8 @@ export const getReferenceIds = async (
 };
 
 export const createContributionForContributor = async (
-	payment: BankTransferPayment,
+	payment: LegacyQrBillPayment,
 	userData: BankContributorData,
 ): Promise<ServiceResult<unknown>> => {
-	return await services.bankTransfer.createContributionForNewOrExistingContributor(payment, userData);
+	return await services.qrBillLegacy.createContributionForNewOrExistingContributor(payment, userData);
 };

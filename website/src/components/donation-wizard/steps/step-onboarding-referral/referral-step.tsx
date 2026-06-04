@@ -4,10 +4,13 @@ import { Button } from '@/components/button';
 import { RadioCard } from '@/components/create-program-wizard/radio-card';
 import { RadioCardGroup } from '@/components/create-program-wizard/radio-card-group';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { updateContributorReferralAfterWizardQrAction } from '@/lib/server-actions/qr-wizard-actions';
 import { updateContributorReferralAfterWizardCheckoutAction } from '@/lib/server-actions/stripe-wizard-actions';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { OnboardingSuccessHeader, useOnboardingAmountLine } from '../../shared/onboarding-success-header';
+import { useOnboardingAmountLine } from '../../hooks/use-onboarding-amount-line';
+import { OnboardingSkipFallback } from '../../shared/onboarding-skip-fallback';
+import { OnboardingSuccessHeader } from '../../shared/onboarding-success-header';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import {
 	toContributorReferralSource,
@@ -17,47 +20,73 @@ import {
 
 export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { stripeCheckoutSessionId, completedDonationSummary } = state.context;
+	const { wizardPaymentSource, stripeCheckoutSessionId, qrContributorReferenceId, qrDonor, completedDonationSummary } =
+		state.context;
 	const amountLine = useOnboardingAmountLine(completedDonationSummary);
 
 	const [selectedReferral, setSelectedReferral] = useState<WizardReferralOptionValue | undefined>();
 	const [submitting, setSubmitting] = useState(false);
 
+	const hasStripeReferralContext = wizardPaymentSource === 'stripe' && Boolean(stripeCheckoutSessionId);
+	const hasQrReferralContext = wizardPaymentSource === 'qr' && Boolean(qrContributorReferenceId) && Boolean(qrDonor);
+	const hasReferralContext = hasStripeReferralContext || hasQrReferralContext;
+
 	const onSubmit = async () => {
-		if (!stripeCheckoutSessionId || selectedReferral === undefined) {
+		if (!hasReferralContext || selectedReferral === undefined) {
 			return;
 		}
 
 		setSubmitting(true);
 
 		try {
-			const result = await updateContributorReferralAfterWizardCheckoutAction({
-				stripeCheckoutSessionId,
-				referral: toContributorReferralSource(selectedReferral),
-			});
+			const referral = toContributorReferralSource(selectedReferral);
 
-			if (!result.success) {
-				toast.error(t('onboarding.referral.updateError'));
-				setSubmitting(false);
+			if (hasStripeReferralContext && stripeCheckoutSessionId) {
+				const result = await updateContributorReferralAfterWizardCheckoutAction({
+					stripeCheckoutSessionId,
+					referral,
+				});
+
+				if (!result.success) {
+					toast.error(t('onboarding.referral.updateError'));
+					setSubmitting(false);
+
+					return;
+				}
+
+				send({ type: 'DONATION_ONBOARDING_REFERRAL_COMPLETE' });
 
 				return;
 			}
 
-			send({ type: 'DONATION_ONBOARDING_REFERRAL_COMPLETE' });
+			if (hasQrReferralContext && qrContributorReferenceId && qrDonor) {
+				const result = await updateContributorReferralAfterWizardQrAction({
+					paymentReferenceId: qrContributorReferenceId,
+					expectedEmail: qrDonor.email,
+					referral,
+				});
+
+				if (!result.success) {
+					toast.error(t('onboarding.referral.updateError'));
+					setSubmitting(false);
+
+					return;
+				}
+
+				send({ type: 'DONATION_ONBOARDING_REFERRAL_COMPLETE' });
+			}
 		} catch {
 			toast.error(t('onboarding.referral.updateError'));
 			setSubmitting(false);
 		}
 	};
 
-	if (!stripeCheckoutSessionId) {
+	if (!hasReferralContext) {
 		return (
-			<div className="flex min-h-[200px] flex-col items-center justify-center gap-4 px-6 py-10">
-				<p className="text-destructive text-sm">{t('onboarding.referral.updateError')}</p>
-				<Button type="button" onClick={() => send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' })}>
-					{t('onboarding.continue')}
-				</Button>
-			</div>
+			<OnboardingSkipFallback
+				onContinue={() => send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' })}
+				label={t('onboarding.continue')}
+			/>
 		);
 	}
 

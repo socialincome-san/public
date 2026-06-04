@@ -9,7 +9,7 @@
 			"confirm": "Close"
 		}
 	},
-	"step1": {
+	"stepAmount": {
 		"title": "Make a donation",
 		"monthly-income-label": "Your monthly income (CHF)",
 		"choose-own-amount": "Or choose own amount",
@@ -21,7 +21,7 @@
 		"donate-now-with-amount": "Donate {{amount}} now",
 		"custom-amount-placeholder": "Amount"
 	},
-	"step2": {
+	"stepPlan": {
 		"monthly-title": "Monthly Donation",
 		"one-time-title": "One-time Donation",
 		"switch-to-one-time": "One-time",
@@ -48,12 +48,40 @@
 		"back": "Back",
 		"choose-payment": "Choose Payment Method"
 	},
-	"step4": {
+	"stepStripeCheckout": {
 		"loading": "Loading payment form…",
 		"payment-error": "Payment could not be started.",
 		"try-again": "Try again"
 	},
-	"step3": {
+	"stepQrContact": {
+		"hintsTitle": "Good to know",
+		"titleStandingOrder": "Generate QR-Code for Standing Order",
+		"titleOneTime": "Generate QR-Code for Payment",
+		"firstName": "First Name",
+		"lastName": "Last Name",
+		"email": "E-Mail",
+		"accountCreateHint": "If no account exists for this email yet, we'll create one for you.",
+		"noBackAfterGenerateHint": "After you generate the QR code, you can't change the amount, payment method, or contact details in this flow.",
+		"generateCta": "Generate QR-Code for payment",
+		"generating": "Generating…",
+		"generateError": "Could not generate QR bill. Please try again."
+	},
+	"stepQrBill": {
+		"title": "QR-Payment",
+		"scanHint": "Scan with your banking app",
+		"paymentToLabel": "Payment to",
+		"paymentToValue": "Social Income, Postfinance AG, 8000 Zürich",
+		"fromLabel": "From",
+		"amountLabel": "Amount",
+		"paymentTypeLabel": "Payment Type",
+		"paymentTypeStandingOrder": "Standing Order (monthly)",
+		"paymentTypeOneTime": "One-time payment",
+		"confirmStandingOrder": "Confirm Standing Order",
+		"confirmOneTime": "Confirm Payment",
+		"confirming": "Processing…",
+		"confirmError": "Could not confirm payment. Please try again."
+	},
+	"stepPayment": {
 		"title": "Payment Method",
 		"qr-payment": "QR-Payment",
 		"minimal-costs": "Minimal Costs",

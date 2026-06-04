@@ -1,6 +1,6 @@
 import type { LanguageCode } from '@/lib/types/language';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
-import type { PlanTierBenefit } from '../steps/step-2-plan/plan-tier-card/plan-tier-benefit';
+import type { PlanTierBenefit } from '../steps/step-plan/plan-tier-card/plan-tier-benefit';
 import {
 	getBeneficiaryCount,
 	getDonationBaseAmount,
@@ -44,26 +44,26 @@ export const resolvePlanBenefit = (
 ): PlanTierBenefit => {
 	switch (descriptor.type) {
 		case 'beneficiaries':
-			return { id: descriptor.id, label: t('step2.benefit-beneficiaries', { count: descriptor.count }) };
+			return { id: descriptor.id, label: t('stepPlan.benefit-beneficiaries', { count: descriptor.count }) };
 		case 'fees':
-			return { id: descriptor.id, label: t('step2.benefit-fees') };
+			return { id: descriptor.id, label: t('stepPlan.benefit-fees') };
 		case 'double-impact':
-			return { id: descriptor.id, label: t('step2.benefit-double-impact') };
+			return { id: descriptor.id, label: t('stepPlan.benefit-double-impact') };
 		case 'community':
 			return {
 				id: descriptor.id,
-				label: t('step2.benefit-community', {
+				label: t('stepPlan.benefit-community', {
 					count: formatCommunityCount(descriptor.supporterCount, language),
 				}),
 				icon: 'heart',
 				emphasis: true,
 			};
 		case 'one-time-hint':
-			return { id: descriptor.id, label: t('step2.one-time-option-hint') };
+			return { id: descriptor.id, label: t('stepPlan.one-time-option-hint') };
 		case 'upsell-subtitle':
-			return { id: descriptor.id, label: t('step2.upsell-subtitle') };
+			return { id: descriptor.id, label: t('stepPlan.upsell-subtitle') };
 		case 'upsell-cancel':
-			return { id: descriptor.id, label: t('step2.upsell-benefit-cancel') };
+			return { id: descriptor.id, label: t('stepPlan.upsell-benefit-cancel') };
 	}
 };
 
@@ -135,7 +135,8 @@ export const selectPaymentView = (context: DonationWizardContext) => {
 		coverTransactionCosts: context.coverTransactionCosts,
 		transactionCost: getOnlineTransactionCostChf(baseAmount),
 		showTransactionCostToggle: context.paymentMethod === 'online',
-		continueLabelKey: context.paymentMethod === 'qr' ? ('step3.generate-qr-code' as const) : ('step3.pay-online' as const),
+		continueLabelKey:
+			context.paymentMethod === 'qr' ? ('stepPayment.generate-qr-code' as const) : ('stepPayment.pay-online' as const),
 		summary: {
 			amount: displayAmount,
 			showPerMonth: context.cadence === 'monthly',
@@ -145,16 +146,27 @@ export const selectPaymentView = (context: DonationWizardContext) => {
 
 export const selectCadenceSwitchView = (currentCadence: Cadence) => ({
 	targetCadence: currentCadence === 'monthly' ? ('one-time' as const) : ('monthly' as const),
-	labelKey: currentCadence === 'monthly' ? ('step2.switch-to-one-time' as const) : ('step2.switch-to-monthly' as const),
+	labelKey:
+		currentCadence === 'monthly' ? ('stepPlan.switch-to-one-time' as const) : ('stepPlan.switch-to-monthly' as const),
 });
 
 export const selectWizardShellView = (state: DonationWizardState) => {
 	const activeStep = getActiveWizardStep(state);
 
+	const showImpactPanel =
+		activeStep === 'stepAmount' || activeStep === 'stepPlanMonthly' || activeStep === 'stepPlanOneTime';
+	const showQrContactHintsPanel = activeStep === 'stepQrContact';
+
 	return {
 		activeStep,
-		isPaymentStep: activeStep === 'step3Payment' || activeStep === 'step4StripeCheckout',
-		showImpactPanel: activeStep === 'step1' || activeStep === 'step2Monthly' || activeStep === 'step2OneTime',
+		isPaymentStep:
+			activeStep === 'stepPayment' ||
+			activeStep === 'stepStripeCheckout' ||
+			activeStep === 'stepQrContact' ||
+			activeStep === 'stepQrBill',
+		showImpactPanel,
+		showQrContactHintsPanel,
+		usesSplitLayout: showImpactPanel || showQrContactHintsPanel,
 		communityStats: state.context.communityStats,
 	};
 };

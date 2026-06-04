@@ -3,47 +3,57 @@ import type { DonationWizardState } from './types';
 
 type ActiveDonationWizardStep =
 	| DonationWizardEntry
-	| 'step3Payment'
-	| 'step4StripeCheckout'
-	| 'step5OnboardingPersonal'
-	| 'step6OnboardingReferral'
-	| 'step7ThankYou';
+	| 'stepPayment'
+	| 'stepQrContact'
+	| 'stepQrBill'
+	| 'stepStripeCheckout'
+	| 'stepOnboardingPersonal'
+	| 'stepOnboardingReferral'
+	| 'stepThankYou';
 
 export const getActiveWizardStep = (state: DonationWizardState): ActiveDonationWizardStep | null => {
 	if (state.matches('loadingCommunityStats')) {
 		return state.context.pendingStep;
 	}
 
-	if (state.matches('step1')) {
-		return 'step1';
+	if (state.matches('stepAmount')) {
+		return 'stepAmount';
 	}
 
-	if (state.matches('step2Monthly')) {
-		return 'step2Monthly';
+	if (state.matches('stepPlanMonthly')) {
+		return 'stepPlanMonthly';
 	}
 
-	if (state.matches('step2OneTime')) {
-		return 'step2OneTime';
+	if (state.matches('stepPlanOneTime')) {
+		return 'stepPlanOneTime';
 	}
 
-	if (state.matches('step3Payment')) {
-		return 'step3Payment';
+	if (state.matches('stepPayment')) {
+		return 'stepPayment';
 	}
 
-	if (state.matches('step4StripeCheckout')) {
-		return 'step4StripeCheckout';
+	if (state.matches('stepQrContact')) {
+		return 'stepQrContact';
 	}
 
-	if (state.matches('step5OnboardingPersonal')) {
-		return 'step5OnboardingPersonal';
+	if (state.matches('stepQrBill')) {
+		return 'stepQrBill';
 	}
 
-	if (state.matches('step6OnboardingReferral')) {
-		return 'step6OnboardingReferral';
+	if (state.matches('stepStripeCheckout')) {
+		return 'stepStripeCheckout';
 	}
 
-	if (state.matches('step7ThankYou')) {
-		return 'step7ThankYou';
+	if (state.matches('stepOnboardingPersonal')) {
+		return 'stepOnboardingPersonal';
+	}
+
+	if (state.matches('stepOnboardingReferral')) {
+		return 'stepOnboardingReferral';
+	}
+
+	if (state.matches('stepThankYou')) {
+		return 'stepThankYou';
 	}
 
 	return null;

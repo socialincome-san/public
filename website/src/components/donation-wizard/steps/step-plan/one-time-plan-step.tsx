@@ -22,7 +22,7 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className={donationStepCardClass}>
-			<PlanStepHeader titleKey="step2.one-time-title" cadence="one-time" send={send} />
+			<PlanStepHeader titleKey="stepPlan.one-time-title" cadence="one-time" send={send} />
 
 			<div className="mb-5 flex flex-col gap-3">
 				<PlanTierCard
@@ -35,8 +35,8 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 				<PlanTierCard
 					amount={view.monthlyUpsellAmount}
 					currency={currency}
-					perMonthLabel={t('step2.per-month')}
-					planLabel={t('step2.upsell-preferred')}
+					perMonthLabel={t('stepPlan.per-month')}
+					planLabel={t('stepPlan.upsell-preferred')}
 					badgeVariant="preferred"
 					selected={view.oneTimePlanChoice === 'monthly-half'}
 					onSelect={() => send({ type: 'SET_ONE_TIME_PLAN_CHOICE', value: 'monthly-half' })}
@@ -47,7 +47,7 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 			<DonationStepFooter
 				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => send({ type: 'PROCEED_TO_PAYMENT' })}
-				continueLabel={t('step2.choose-payment')}
+				continueLabel={t('stepPlan.choose-payment')}
 			/>
 		</div>
 	);

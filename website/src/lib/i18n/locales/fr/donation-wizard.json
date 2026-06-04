@@ -9,7 +9,7 @@
 			"confirm": "Fermer"
 		}
 	},
-	"step1": {
+	"stepAmount": {
 		"title": "Faire un don",
 		"monthly-income-label": "Votre revenu mensuel (CHF)",
 		"choose-own-amount": "Ou choisis ton propre montant",
@@ -21,7 +21,7 @@
 		"donate-now-with-amount": "Donner {{amount}} maintenant",
 		"custom-amount-placeholder": "Montant"
 	},
-	"step2": {
+	"stepPlan": {
 		"monthly-title": "Don mensuel",
 		"one-time-title": "Don unique",
 		"switch-to-one-time": "Unique",
@@ -48,12 +48,40 @@
 		"back": "Retour",
 		"choose-payment": "Choisir le mode de paiement"
 	},
-	"step4": {
+	"stepStripeCheckout": {
 		"loading": "Chargement du formulaire de paiement…",
 		"payment-error": "Le paiement n'a pas pu être démarré.",
 		"try-again": "Réessayer"
 	},
-	"step3": {
+	"stepQrContact": {
+		"hintsTitle": "À savoir",
+		"titleStandingOrder": "Générer le code QR pour ordre permanent",
+		"titleOneTime": "Générer le code QR pour le paiement",
+		"firstName": "Prénom",
+		"lastName": "Nom",
+		"email": "E-mail",
+		"accountCreateHint": "S'il n'existe pas encore de compte avec cet e-mail, nous en créerons un pour toi.",
+		"noBackAfterGenerateHint": "Après la génération du code QR, tu ne pourras plus modifier le montant, le mode de paiement ni les coordonnées dans ce parcours.",
+		"generateCta": "Générer le code QR pour le paiement",
+		"generating": "Génération…",
+		"generateError": "Impossible de générer la facture QR. Réessaie."
+	},
+	"stepQrBill": {
+		"title": "Paiement QR",
+		"scanHint": "Scanne avec ton application bancaire",
+		"paymentToLabel": "Paiement à",
+		"paymentToValue": "Social Income, Postfinance AG, 8000 Zürich",
+		"fromLabel": "De",
+		"amountLabel": "Montant",
+		"paymentTypeLabel": "Type de paiement",
+		"paymentTypeStandingOrder": "Ordre permanent (mensuel)",
+		"paymentTypeOneTime": "Paiement unique",
+		"confirmStandingOrder": "Confirmer l'ordre permanent",
+		"confirmOneTime": "Confirmer le paiement",
+		"confirming": "Traitement…",
+		"confirmError": "Impossible de confirmer le paiement. Réessaie."
+	},
+	"stepPayment": {
 		"title": "Mode de paiement",
 		"qr-payment": "Paiement QR",
 		"minimal-costs": "Coûts minimaux",

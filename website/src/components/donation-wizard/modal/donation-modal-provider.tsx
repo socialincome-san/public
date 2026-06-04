@@ -25,13 +25,14 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
 	const isOpen = !state.matches('closed');
-	const isThankYou = state.matches('step7ThankYou');
-	const isOnboardingPersonal = state.matches('step5OnboardingPersonal');
-	const isOnboardingReferral = state.matches('step6OnboardingReferral');
+	const isThankYou = state.matches('stepThankYou');
+	const isOnboardingPersonal = state.matches('stepOnboardingPersonal');
+	const isOnboardingReferral = state.matches('stepOnboardingReferral');
 	const isPostCheckoutStep = isThankYou || isOnboardingPersonal || isOnboardingReferral;
 	const isNarrowModal = isThankYou;
 	const campaignId = state.context.campaignId;
-	const isStripeCheckout = state.matches('step4StripeCheckout');
+	const showCurrencySelector =
+		state.matches('stepAmount') || state.matches('stepPlanMonthly') || state.matches('stepPlanOneTime');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
 
@@ -96,12 +97,12 @@ export const DonationModalProvider = ({ children }: Props) => {
 										</p>
 									) : null}
 								</div>
-								{!isStripeCheckout && (
+								{showCurrencySelector ? (
 									<DonationCurrencySelector
 										currencies={websiteCurrencies}
 										className="h-9 w-[4.75rem] shrink-0 rounded-full border-slate-300 px-2.5"
 									/>
-								)}
+								) : null}
 							</div>
 							<DonationWizard state={state} send={send} />
 						</>

@@ -26,7 +26,7 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 			<span className="text-lg leading-none font-medium tabular-nums">
 				{summary.currency} {summary.amount}
 			</span>
-			{summary.showPerMonth && <span className="text-muted-foreground shrink-0 text-sm">{t('step2.per-month')}</span>}
+			{summary.showPerMonth && <span className="text-muted-foreground shrink-0 text-sm">{t('stepPlan.per-month')}</span>}
 		</>
 	) : null;
 
@@ -34,7 +34,7 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 		<div className="flex flex-col gap-3">
 			{summary && (
 				<div className="border-border flex items-center justify-between gap-2 border-y py-2.5 text-sm sm:hidden">
-					<span className="text-muted-foreground shrink-0">{t('step3.your-donation')}</span>
+					<span className="text-muted-foreground shrink-0">{t('stepPayment.your-donation')}</span>
 					<div className="flex min-w-0 items-center gap-1.5">{summaryAmount}</div>
 				</div>
 			)}
@@ -47,13 +47,13 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 					onClick={onBack}
 				>
 					<ChevronLeft className="size-4" aria-hidden />
-					{t('step2.back')}
+					{t('stepPlan.back')}
 				</Button>
 
 				<div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
 					{summary && (
 						<div className="hidden min-w-0 items-center gap-1.5 text-sm sm:flex">
-							<span>{t('step3.your-donation')}</span>
+							<span>{t('stepPayment.your-donation')}</span>
 							{summaryAmount}
 						</div>
 					)}
